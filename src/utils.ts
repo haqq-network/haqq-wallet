@@ -798,7 +798,7 @@ export function isContractTransaction(
 
 export const calculateBalances = (
   data: WalletBalance,
-  wallets: Realm.Results<Wallet>,
+  wallets: Wallet[],
 ): BalanceData => {
   return wallets.reduce(
     (acc, curr) => {

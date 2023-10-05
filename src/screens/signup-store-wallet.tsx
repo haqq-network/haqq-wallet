@@ -50,15 +50,12 @@ export const SignUpStoreWalletScreen = () => {
           provider instanceof ProviderSSSReactNative
             ? WalletType.sss
             : WalletType.mnemonic;
-        await Wallet.create(
-          {
-            address,
-            accountId: provider.getIdentifier(),
-            path: hdPath,
-            type,
-          },
-          name,
-        );
+        await Wallet.create(name, {
+          address,
+          accountId: provider.getIdentifier(),
+          path: hdPath,
+          type,
+        });
 
         navigation.navigate(route.params.nextScreen ?? 'onboardingFinish');
       } catch (error) {

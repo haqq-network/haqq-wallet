@@ -23,7 +23,7 @@ export async function onWalletCreate(wallet: Wallet) {
         Cosmos.addressToBech32(wallet.address),
       );
 
-      wallet.update({subscription});
+      Wallet.update(wallet.address, {subscription});
     }
 
     await onWalletsBalanceCheck();
@@ -54,7 +54,7 @@ export async function onWalletCreate(wallet: Wallet) {
           mnemonicSaved = true;
       }
 
-      wallet.update({
+      Wallet.update(wallet.address, {
         mnemonicSaved,
       });
     }

@@ -1,7 +1,6 @@
 import React from 'react';
 
 import {FlatList} from 'react-native';
-import {Results} from 'realm';
 
 import {PopupContainer} from '@app/components/ui';
 import {WalletRow} from '@app/components/wallet-row';
@@ -9,7 +8,7 @@ import {createTheme} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
 
 type TransactionAccountProps = {
-  rows: Wallet[] | Results<Wallet>;
+  rows: Wallet[];
   onPressRow: (address: string) => void;
 };
 

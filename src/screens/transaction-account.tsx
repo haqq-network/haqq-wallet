@@ -1,17 +1,20 @@
 import React, {useCallback} from 'react';
 
-import {TransactionAccount} from '@app/components/transaction-account';
-import {useTypedNavigation, useTypedRoute, useWalletsList} from '@app/hooks';
-import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
+import {observer} from 'mobx-react';
 
-export const TransactionAccountScreen = () => {
+import {TransactionAccount} from '@app/components/transaction-account';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
+import {Wallet} from '@app/models/wallet';
+
+export const TransactionAccountScreen = observer(() => {
   const navigation = useTypedNavigation();
   useAndroidBackHandler(() => {
     navigation.goBack();
     return true;
   }, [navigation]);
   const route = useTypedRoute<'transactionAccount'>();
-  const wallets = useWalletsList();
+  const wallets = Wallet.getAll();
   const onPressRow = useCallback(
     (address: string) => {
       navigation.navigate('transactionAddress', {
@@ -23,4 +26,4 @@ export const TransactionAccountScreen = () => {
   );
 
   return <TransactionAccount rows={wallets} onPressRow={onPressRow} />;
-};
+});

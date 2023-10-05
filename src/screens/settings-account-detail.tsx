@@ -1,12 +1,12 @@
 import React, {useCallback, useEffect} from 'react';
 
+import {observer} from 'mobx-react';
 import {Alert} from 'react-native';
 
 import {SettingsAccountDetail} from '@app/components/settings-account-detail';
 import {CustomHeader, IconsName} from '@app/components/ui';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {hideModal, showModal} from '@app/helpers';
-import {useWallet} from '@app/hooks';
 import {useTypedNavigation} from '@app/hooks/use-typed-navigation';
 import {useTypedRoute} from '@app/hooks/use-typed-route';
 import {I18N, getText} from '@app/i18n';
@@ -15,11 +15,11 @@ import {sendNotification} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {AdjustEvents} from '@app/types';
 
-export const SettingsAccountDetailScreen = () => {
+export const SettingsAccountDetailScreen = observer(() => {
   const navigation = useTypedNavigation();
   const params = useTypedRoute<'settingsAccountDetail'>().params;
   const {address} = params;
-  const wallet = useWallet(address);
+  const wallet = Wallet.getById(address);
 
   const onPressRename = useCallback(() => {
     navigation.navigate('settingsAccountEdit', params);
@@ -39,7 +39,7 @@ export const SettingsAccountDetailScreen = () => {
 
   const onToggleIsHidden = useCallback(async () => {
     if (wallet) {
-      await wallet.toggleIsHidden();
+      await Wallet.toggleIsHidden(wallet.address);
       if (wallet.isHidden) {
         sendNotification(I18N.notificationAccountHidden);
       }
@@ -92,7 +92,7 @@ export const SettingsAccountDetailScreen = () => {
     });
   }, [navigation, wallet?.accountId]);
 
-  if (!(wallet && wallet.isValid())) {
+  if (!wallet) {
     return null;
   }
 
@@ -116,4 +116,4 @@ export const SettingsAccountDetailScreen = () => {
       />
     </>
   );
-};
+});

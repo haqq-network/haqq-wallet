@@ -25,9 +25,7 @@ export async function onStakingRewards() {
     }
   }
 
-  const exists = visible.filter(
-    w => w.isValid() && w.cosmosAddress in delegators,
-  );
+  const exists = visible.filter(w => w.cosmosAddress in delegators);
 
   const queue = exists.map(async w => {
     const provider = await getProviderInstanceForWallet(w);

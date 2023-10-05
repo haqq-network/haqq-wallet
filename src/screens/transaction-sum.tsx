@@ -2,11 +2,12 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {TransactionSum} from '@app/components/transaction-sum';
 import {app} from '@app/contexts';
-import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {Contact} from '@app/models/contact';
+import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
@@ -21,7 +22,7 @@ export const TransactionSumScreen = () => {
   const route = useTypedRoute<'transactionSum'>();
   const event = useMemo(() => generateUUID(), []);
   const [to, setTo] = useState(route.params.to);
-  const wallet = useWallet(route.params.from);
+  const wallet = Wallet.getById(route.params.from);
   const balances = useWalletsBalance([wallet!]);
   const currentBalance = useMemo(
     () => balances[route.params.from],
