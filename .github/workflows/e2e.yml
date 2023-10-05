@@ -128,5 +128,5 @@ jobs:
         if: ${{ failure() }}
         with:
           name: Detox Artifacts
-          path: /artifacts
+          path: artifacts
           retention-days: 3
