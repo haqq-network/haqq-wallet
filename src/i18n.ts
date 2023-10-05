@@ -772,6 +772,13 @@ export enum I18N {
   lockedTokensVested,
   lockedTokensStaked,
   estimatingGas,
+  transactionInfoSendingFunds,
+  transactionInfoContractInteraction,
+  transactionInfoTypeOperation,
+  transactionInfoCryptocurrency,
+  transactionInfoNetwork,
+  transactionInfoAmount,
+  transactionInfoNetworkFee,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1683,4 +1690,11 @@ const en: Record<I18N, string> = {
   [I18N.lockedTokensVested]: 'Vested: {{count}}',
   [I18N.lockedTokensStaked]: 'Staked: {{count}}',
   [I18N.estimatingGas]: 'Estimating...',
+  [I18N.transactionInfoContractInteraction]: 'Contract interaction',
+  [I18N.transactionInfoSendingFunds]: 'Sending funds',
+  [I18N.transactionInfoTypeOperation]: 'Type of operation',
+  [I18N.transactionInfoCryptocurrency]: 'Cryptocurrency',
+  [I18N.transactionInfoNetwork]: 'Network',
+  [I18N.transactionInfoAmount]: 'Amount',
+  [I18N.transactionInfoNetworkFee]: 'Network Fee',
 };

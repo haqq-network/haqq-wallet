@@ -56,6 +56,7 @@ import {
   openInAppBrowser,
   openWeb3Browser,
 } from '@app/utils';
+import {HAQQ_METADATA} from '@app/variables/common';
 
 const logger = Logger.create('SettingsTestScreen', {
   emodjiPrefix: '🔵',
@@ -590,10 +591,7 @@ export const SettingsTestScreen = observer(() => {
         disabled={!isValidRawSignData}
         onPress={() => {
           awaitForJsonRpcSign({
-            metadata: {
-              url: 'https://shell.haqq.network',
-              iconUrl: 'https://shell.haqq.network/assets/favicon.svg',
-            },
+            metadata: HAQQ_METADATA,
             request: signData!,
           });
         }}

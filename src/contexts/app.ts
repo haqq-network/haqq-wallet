@@ -19,6 +19,7 @@ import {Events} from '@app/events';
 import {AsyncEventEmitter} from '@app/helpers/async-event-emitter';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {checkNeedUpdate} from '@app/helpers/check-app-version';
+import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {getUid} from '@app/helpers/get-uid';
 import {seedData} from '@app/models/seed-data';
 import {VariablesBool} from '@app/models/variables-bool';
@@ -26,6 +27,7 @@ import {VariablesString} from '@app/models/variables-string';
 import {VestingMetadataType} from '@app/models/vesting-metadata';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
+import {Cosmos} from '@app/services/cosmos';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {SystemDialog} from '@app/services/system-dialog';
 
@@ -172,6 +174,10 @@ class App extends AsyncEventEmitter {
         ? MAIN_NETWORK
         : TEST_NETWORK)
     );
+  }
+
+  get cosmos() {
+    return new Cosmos(app.provider);
   }
 
   set providerId(value) {
@@ -543,6 +549,10 @@ class App extends AsyncEventEmitter {
 
   async rehydrateUserAttempts() {
     await this.user.rehydrate();
+  }
+
+  async getRpcProvider() {
+    return await getRpcProvider(this.provider);
   }
 }
 

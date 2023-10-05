@@ -1,4 +1,5 @@
 import Decimal from 'decimal.js';
+import {BigNumber} from 'ethers';
 
 import {Balance} from '@app/services/balance';
 import {CURRENCY_NAME, WEI} from '@app/variables/common';
@@ -61,6 +62,11 @@ describe('Balance Test Suite', () => {
       const decimal = new Decimal(1.23);
       const balance = new Balance(decimal);
       expect(balance.toNumber()).toEqual(decimal.toNumber());
+    });
+    it('should handle BigNumber instance', () => {
+      const bn = BigNumber.from(1.2345);
+      const balance = new Balance(bn);
+      expect(balance.toNumber()).toEqual(bn.toNumber());
     });
   });
   describe('method cases', () => {
