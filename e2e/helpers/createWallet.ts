@@ -14,7 +14,7 @@ export const createWallet = async (PIN: string, attempt: number = 1) => {
 
   await element(by.id('sss_login_later')).tap();
   // Modal window
-  await element(by.label('Accept')).tap();
+  await element(by.label('Accept')).atIndex(0).tap();
   await expect(element(by.id('onboarding_setup_pin_set'))).toBeVisible();
 
   for (const num of PIN.split('')) {
@@ -58,6 +58,6 @@ export const createWallet = async (PIN: string, attempt: number = 1) => {
       .withTimeout(15000);
 
     await element(by.id('backup_sss_suggestion_skip_button')).tap();
-    await element(by.label('Accept')).tap();
+    await element(by.label('Accept')).atIndex(0).tap();
   }
 };

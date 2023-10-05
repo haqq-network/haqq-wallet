@@ -39,7 +39,7 @@ describe('Signup', () => {
       .withTimeout(3000);
 
     for (const word of mnemonic_words) {
-      const el = element(by.id(`backup_verify_word_${word}`));
+      const el = element(by.id(`backup_verify_word_${word}`)).atIndex(0);
       await waitFor(el).toBeVisible().withTimeout(3000);
       await el.tap();
     }

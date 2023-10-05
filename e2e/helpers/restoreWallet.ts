@@ -77,6 +77,6 @@ export const restoreWallet = async (
       .withTimeout(15000);
 
     await element(by.id('backup_sss_suggestion_skip_button')).tap();
-    await element(by.label('Accept')).tap();
+    await element(by.label('Accept')).atIndex(0).tap();
   }
 };
