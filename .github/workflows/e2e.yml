@@ -122,7 +122,10 @@ jobs:
       - name: Run tests
         run: yarn detox:${{github.event.inputs.OS}}:test && killall node
 
-      - uses: actions/upload-artifact@v3
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        if: ${{ failure() }}
         with:
           name: Detox Artifacts
           path: /artifacts
