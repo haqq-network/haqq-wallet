@@ -24,6 +24,13 @@ on:
           - true
           - false
 
+      OS:
+        type: choice
+        description: Platform for e2e
+        options:
+          - ios
+          - android
+
   workflow_call:
     inputs:
       IS_DEVELOPMENT:
@@ -33,6 +40,9 @@ on:
         required: true
         type: string
       IS_STAKED_VESTED_ENABLED:
+        required: true
+        type: string
+      OS:
         required: true
         type: string
 
@@ -92,7 +102,7 @@ jobs:
         run: |
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${MATCH_DEPLOY_KEY}"
-          yarn detox:ios:build & yarn detox:android:build && killall node
+          eval "$(yarn detox:$OS:build)" && killall node
         env:
           DEVELOPER_APP_IDENTIFIER: ${{ secrets.IOS_IDENTIFIER }}
           GIT_AUTHORIZATION: ${{ secrets.GIT_AUTHORIZATION }}
@@ -110,4 +120,4 @@ jobs:
           PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}
 
       - name: Run tests
-        run: yarn detox:ios:test & yarn detox:android:test && killall node
+        run: eval "$(yarn detox:$OS:test)" && killall node
