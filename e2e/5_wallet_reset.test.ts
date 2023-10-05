@@ -25,9 +25,7 @@ describe('Reset Wallet', () => {
     await device.reloadReactNative();
     await element(by.id('forgot_the_code')).tap();
     await element(by.id('reset_wallet')).tap();
-    await element(
-      by.label('Reset').and(by.type('_UIAlertControllerActionView')),
-    ).tap();
+    await element(by.label('Reset')).tap();
     await restoreWallet(mnemonic, PIN, 2);
     await ensureWalletIsVisible(mnemonic);
   });
@@ -37,9 +35,7 @@ describe('Reset Wallet', () => {
     await device.reloadReactNative();
     await element(by.id('forgot_the_code')).tap();
     await element(by.id('reset_wallet')).tap();
-    await element(
-      by.label('Reset').and(by.type('_UIAlertControllerActionView')),
-    ).tap();
+    await element(by.label('Reset')).tap();
     await createWallet(PIN, 2);
   });
 });

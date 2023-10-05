@@ -7,6 +7,7 @@ import {sleep} from './helpers/sleep';
 import {PIN, PROVIDER, SOURCE_WALLET} from './test-variables';
 
 describe('Routine', () => {
+  const isAndroid = device.getPlatform() === 'android';
   let mnemonic = '';
   let milkWallet: Wallet;
   beforeAll(async () => {
@@ -46,7 +47,7 @@ describe('Routine', () => {
 
     const wallet = Wallet.fromMnemonic(mnemonic);
 
-    const amountInEther = '0.00101';
+    const amountInEther = '0.0017';
     const tx = {
       to: wallet.address,
       value: utils.parseEther(amountInEther),
@@ -54,7 +55,7 @@ describe('Routine', () => {
 
     await milkWallet.sendTransaction(tx);
 
-    await sleep(10000);
+    await sleep(15_000);
 
     await element(by.id(`wallets_${wallet.address.toLowerCase()}_send`)).tap();
 
@@ -67,6 +68,10 @@ describe('Routine', () => {
     await input_address.replaceText(milkWallet.address);
 
     await element(by.id('transaction_address_next')).tap();
+    if (isAndroid) {
+      // Previous step was for keyboard hide
+      await element(by.id('transaction_address_next')).tap();
+    }
 
     await waitFor(element(by.id('transaction_sum')))
       .toBeVisible()
