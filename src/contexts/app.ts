@@ -27,6 +27,7 @@ import {VariablesString} from '@app/models/variables-string';
 import {VestingMetadataType} from '@app/models/vesting-metadata';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
+import {Cosmos} from '@app/services/cosmos';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {SystemDialog} from '@app/services/system-dialog';
 
@@ -173,6 +174,10 @@ class App extends AsyncEventEmitter {
         ? MAIN_NETWORK
         : TEST_NETWORK)
     );
+  }
+
+  get cosmos() {
+    return new Cosmos(app.provider);
   }
 
   set providerId(value) {
