@@ -2,7 +2,7 @@ module.exports = function (api) {
   api.cache(true);
   const currentEnv =
     process.env.BABEL_ENV || process.env.NODE_ENV || 'development';
-  const isTestEnv = !!process.env.SDKROOT && process.env.SDKROOT.includes("iPhoneSimulator");
+  const isTestEnv = (!!process.env.SDKROOT && process.env.SDKROOT.includes("iPhoneSimulator") || !!process.env.FOR_DETOX);
 
   const presets = [
     'module:metro-react-native-babel-preset',

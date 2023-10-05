@@ -107,6 +107,8 @@ android {
     manifestPlaceholders = [
       appAuthRedirectScheme    : 'haqq'
     ]
+    testBuildType System.getProperty('testBuildType', 'debug')
+    testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
   }
 
   packagingOptions {
@@ -147,6 +149,7 @@ android {
       signingConfig signingConfigs.release
       minifyEnabled enableProguardInReleaseBuilds
       proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+      proguardFile "${rootProject.projectDir}/../node_modules/detox/android/detox/proguard-rules-app.pro"
     }
   }
 
@@ -168,6 +171,8 @@ android {
 }
 
 dependencies {
+  androidTestImplementation('com.wix:detox:+')
+  implementation 'androidx.appcompat:appcompat:1.1.0'
   implementation "com.facebook.react:react-android"
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
   implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
@@ -222,9 +227,8 @@ android.testOptions {
   }
 }
 
-//test {
-//  useJUnitPlatform()
-//  testLogging {
-//    showStandardStreams = true
-//  }
-//}
+configurations.all {
+    resolutionStrategy {
+        force 'androidx.test:core:1.5.0'
+    }
+}
