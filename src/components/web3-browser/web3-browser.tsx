@@ -15,6 +15,7 @@ import {WebViewLogger} from '@app/helpers/webview-logger';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useLayout} from '@app/hooks/use-layout';
 import {usePrevious} from '@app/hooks/use-previous';
+import {useTesterModeEnabled} from '@app/hooks/use-tester-mode-enabled';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
@@ -110,6 +111,7 @@ export const Web3Browser = ({
   addSiteToSearchHistory,
   onFileDownload,
 }: Web3BrowserProps) => {
+  const isTesterMode = useTesterModeEnabled();
   const userAgent = useRef(getUserAgent()).current;
   const [inpageBridgeWeb3, setInpageBridgeWeb3] = useState('');
   const [selectedAccount, setSelectedAccount] = useState<string | undefined>();
@@ -315,7 +317,7 @@ export const Web3Browser = ({
       <View style={styles.webviewContainer}>
         <WebView
           contentMode={'mobile'}
-          webviewDebuggingEnabled={__DEV__}
+          webviewDebuggingEnabled={__DEV__ || isTesterMode}
           pullToRefreshEnabled
           javaScriptCanOpenWindowsAutomatically
           setSupportMultipleWindows

@@ -37,7 +37,7 @@ const debug: DebugVars = {
   disableWeb3DomainBlocking: false,
   enableHttpErrorDetails: true,
   enableAsyncEventEmitterLogs: false,
-  enableAwaitJsonRpcSignLogger: true,
+  enableAwaitJsonRpcSignLogger: false,
 };
 
 export const DEBUG_VARS = __DEV__ ? debug : production;

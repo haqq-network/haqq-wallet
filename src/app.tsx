@@ -98,6 +98,7 @@ import {SettingsAccountStyleScreen} from './screens/settings-account-style';
 import {SettingsAccountsScreen} from './screens/settings-accounts';
 import {SettingsAddressBookScreen} from './screens/settings-address-book';
 import {SettingsContactEditScreen} from './screens/settings-contact-edit';
+import {SettingsDeveloperTools} from './screens/settings-developer-tools';
 import {SettingsFAQScreen} from './screens/settings-faq';
 import {SettingsLanguageScreen} from './screens/settings-language';
 import {SettingsProviderEditScreen} from './screens/settings-provider-edit';
@@ -606,6 +607,13 @@ export const App = () => {
                   component={themeUpdaterHOC(SettingsTestScreen)}
                   options={{
                     title: 'Test',
+                  }}
+                />
+                <Stack.Screen
+                  name="settingsDeveloperTools"
+                  component={themeUpdaterHOC(SettingsDeveloperTools)}
+                  options={{
+                    title: 'Developer Tools',
                   }}
                 />
                 <Stack.Screen

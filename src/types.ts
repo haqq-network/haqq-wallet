@@ -230,6 +230,7 @@ export type RootStackParamList = {
   detailsQr: {address: string};
   settingsTheme: undefined;
   settingsTest: undefined;
+  settingsDeveloperTools: undefined;
   settingsAccounts: undefined;
   ourNews: undefined;
   settingsAccountDetail: {address: string};

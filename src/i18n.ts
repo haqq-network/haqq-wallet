@@ -779,6 +779,11 @@ export enum I18N {
   transactionInfoNetwork,
   transactionInfoAmount,
   transactionInfoNetworkFee,
+  developerModeAttentionTitle,
+  developerModeAttentionDescription,
+  developerModeAttentionEnable,
+  developerModeAttentionCancel,
+  homeSettingsDeveloperTools,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -959,6 +964,7 @@ const en: Record<I18N, string> = {
   [I18N.homeSettingsProviders]: 'Providers',
   [I18N.homeSettingsFAQ]: 'FAQ',
   [I18N.homeSettingsTest]: 'Test',
+  [I18N.homeSettingsDeveloperTools]: 'Developer tools',
   [I18N.homeSettingsLanguage]: 'Language',
   [I18N.backupNotificationTitle]: 'Backup your account, keep your assets safe',
   [I18N.backupNotificationDescription]:
@@ -1697,4 +1703,9 @@ const en: Record<I18N, string> = {
   [I18N.transactionInfoNetwork]: 'Network',
   [I18N.transactionInfoAmount]: 'Amount',
   [I18N.transactionInfoNetworkFee]: 'Network Fee',
+  [I18N.developerModeAttentionEnable]: 'Enable',
+  [I18N.developerModeAttentionCancel]: 'Cancel',
+  [I18N.developerModeAttentionTitle]: 'Developer Mode',
+  [I18N.developerModeAttentionDescription]:
+    'Attention!!! In this mode, browser restrictions will be reset and application functionality will be slightly expanded. The mode is only active in the test network.',
 };

@@ -3,7 +3,7 @@ import {Platform} from 'react-native';
 import {Easing} from 'react-native-reanimated';
 
 import {PushNotificationTopicsEnum} from '@app/services/push-notifications';
-import {HexNumber, JsonRpcMetadata} from '@app/types';
+import {HexNumber, JsonRpcMetadata, Link} from '@app/types';
 
 export const LIGHT_TEXT_BASE_1 = '#2E312D';
 export const DARK_TEXT_BASE_1 = '#FFFFFF';
@@ -273,3 +273,31 @@ export const HAQQ_METADATA: JsonRpcMetadata = {
   url: 'https://haqq.network',
   iconUrl: 'https://haqq.network/icon.png',
 };
+
+export const TESTEDGE2_ETH_CHAIN_ID = 54211;
+export const MAINNET_ETH_CHAIN_ID = 11235;
+
+export const TEST_URLS: Partial<Link>[] = [
+  {
+    title: 'HAQQ Dashboard',
+    url: 'https://shell.haqq.network',
+    icon: 'https://shell.haqq.network/assets/favicon.svg',
+  },
+  {
+    title: 'HAQQ Vesting',
+    url: 'https://vesting.haqq.network',
+    icon: 'https://vesting.haqq.network/assets/favicon.svg',
+  },
+  {title: 'MuslimGocci', url: 'https://muslimgocci.app'},
+  {
+    title: 'metamask test dapp',
+    url: 'https://metamask.github.io/test-dapp/',
+  },
+  {title: 'HAQQ Faucet', url: 'https://testedge2.haqq.network'},
+  {title: 'app uniswap', url: 'https://app.uniswap.org'},
+  {title: 'safe', url: 'https://safe.testedge2.haqq.network'},
+  {
+    title: 'ChainList app',
+    url: 'https://chainlist.org/',
+  },
+];

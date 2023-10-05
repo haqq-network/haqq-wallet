@@ -45,6 +45,7 @@ import {
 } from '../types';
 import {
   LIGHT_GRAPHIC_GREEN_1,
+  MAINNET_ETH_CHAIN_ID,
   MAIN_NETWORK,
   TEST_NETWORK,
 } from '../variables/common';
@@ -137,6 +138,7 @@ class App extends AsyncEventEmitter {
     if (!VariablesBool.exists('isDeveloper')) {
       VariablesBool.set('isDeveloper', IS_DEVELOPMENT === 'true');
     }
+    this.setEnabledLoggersForTestMode(this.isTesterMode);
   }
 
   private _biometryType: BiometryType | null = null;
@@ -284,6 +286,18 @@ class App extends AsyncEventEmitter {
     VariablesBool.set('isDeveloper', value);
   }
 
+  get isTesterMode() {
+    return (
+      (VariablesBool.get('isTesterMode') ?? false) &&
+      this.provider.ethChainId !== MAINNET_ETH_CHAIN_ID
+    );
+  }
+
+  set isTesterMode(value) {
+    this.onTesterModeChange(value);
+    VariablesBool.set('isTesterMode', value);
+  }
+
   get currentTheme() {
     return this.theme === AppTheme.system
       ? this._systemTheme ?? AppTheme.light
@@ -310,6 +324,19 @@ class App extends AsyncEventEmitter {
         value === AppTheme.dark ? 'light-content' : 'dark-content',
         false,
       );
+    }
+  }
+
+  onTesterModeChange(value: boolean) {
+    this.setEnabledLoggersForTestMode(value);
+    this.emit(Events.onTesterModeChanged, value);
+  }
+
+  setEnabledLoggersForTestMode(enabled: boolean) {
+    if (!__DEV__) {
+      DEBUG_VARS.enableWeb3BrowserLogger = enabled;
+      DEBUG_VARS.enableWalletConnectLogger = enabled;
+      DEBUG_VARS.enableAwaitJsonRpcSignLogger = enabled;
     }
   }
 

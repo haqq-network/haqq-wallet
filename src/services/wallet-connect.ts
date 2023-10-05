@@ -190,7 +190,10 @@ export class WalletConnect extends EventEmitter {
 
     const {requiredNamespaces, optionalNamespaces, relays} = params;
 
-    const allowedNamespaces = DEBUG_VARS.allowAnySourcesForWalletConnectLogin
+    const useDebugNamespaces =
+      app.isTesterMode || DEBUG_VARS.allowAnySourcesForWalletConnectLogin;
+
+    const allowedNamespaces = useDebugNamespaces
       ? requiredNamespaces
       : RemoteConfig.get('wallet_connect');
 
