@@ -40,7 +40,7 @@ module.exports = {
     simulator: {
       type: 'ios.simulator',
       device: {
-        type: 'HAQQ_e2e',
+        name: 'HAQQ_e2e',
       },
     },
     attached: {
