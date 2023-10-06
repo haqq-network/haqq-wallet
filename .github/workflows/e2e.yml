@@ -72,7 +72,7 @@ jobs:
           echo "PROVIDER_CHAIN_ID=${{secrets.PROVIDER_CHAIN_ID}}" >> .env
           echo "SENTRY_DSN=${{secrets.SENTRY_DSN}}" >> .env
           echo "NETWORK_EXPLORER=${{secrets.NETWORK_EXPLORER}}" >> .env
-          echo "ENVIRONMENT=distribution" >> .env
+          echo "ENVIRONMENT=test" >> .env
           echo "IS_DEVELOPMENT=${{github.event.inputs.IS_DEVELOPMENT}}" >> .env
           echo "WALLET_CONNECT_PROJECT_ID=${{secrets.WALLET_CONNECT_PROJECT_ID}}" >> .env
           echo "WALLET_CONNECT_RELAY_URL=${{secrets.WALLET_CONNECT_RELAY_URL}}" >> .env
