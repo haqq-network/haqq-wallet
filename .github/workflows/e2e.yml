@@ -120,8 +120,7 @@ jobs:
           PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}
 
       - name: Run tests
-        run: yarn detox:${{github.event.inputs.OS}}:test && killall node
-
+        run: yarn detox:${{github.event.inputs.OS}}:test
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
