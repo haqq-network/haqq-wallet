@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import _ from 'lodash';
 import {Dimensions, StatusBar, View} from 'react-native';
@@ -9,14 +9,22 @@ import {QRreader, QRscanner} from 'react-native-qr-decode-image-camera';
 
 import {Color, getColor} from '@app/colors';
 import {Text} from '@app/components/ui';
+import {app} from '@app/contexts';
 import {onDeepLink} from '@app/event-actions/on-deep-link';
 import {createTheme} from '@app/helpers';
+import {
+  AwaitForScanQrError,
+  AwaitForScanQrEvents,
+  SCAN_QR_TASK_ID_LENGTH,
+} from '@app/helpers/await-for-scan-qr';
 import {useTheme} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
+import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {SystemDialog} from '@app/services/system-dialog';
 import {Modals} from '@app/types';
+import {isError} from '@app/utils';
 import {IS_IOS, QR_STATUS_BAR} from '@app/variables/common';
 
 import {QrBottomView} from './qr-bottom-view';
@@ -27,58 +35,111 @@ export type QRModalProps = Modals['qr'];
 
 const debbouncedVibrate = _.debounce(vibrate, 1000);
 
-export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
+const ERROR_RESET_TIMEOUT = 5000;
+
+export const QRModal = ({onClose, eventTaskId, pattern}: QRModalProps) => {
   const [code, setCode] = useState('');
   const isProcessing = useRef(false);
 
   const [error, setError] = useState(false);
   const [flashMode, setFlashMode] = useState(false);
   const [isAuthorized, setIsAuthorized] = useState(false);
+  const timeoutId = useRef<NodeJS.Timeout | null>(null);
   const theme = useTheme();
 
-  useEffect(() => {
-    SystemDialog.requestCameraPermissions().then(result => {
-      Logger.log('Camera permission is authorized: ', result);
-      setIsAuthorized(result);
-    });
-  }, []);
+  const isRequestFromEvent = useMemo(
+    () =>
+      typeof eventTaskId === 'string' &&
+      eventTaskId?.length === SCAN_QR_TASK_ID_LENGTH,
+    [eventTaskId],
+  );
 
-  useAndroidBackHandler(() => {
-    onClose();
-    return true;
-  }, [onClose]);
+  const succesEventName = useMemo(
+    () => `${AwaitForScanQrEvents.succes}:${eventTaskId}`,
+    [eventTaskId],
+  );
+  const errorEventName = useMemo(
+    () => `${AwaitForScanQrEvents.error}:${eventTaskId}`,
+    [eventTaskId],
+  );
 
-  useEffect(() => {
-    if (IS_IOS) {
-      return;
+  const emmitSucces = useCallback(
+    (data: string) => {
+      app.emit(succesEventName, data);
+    },
+    [succesEventName],
+  );
+
+  const emmitError = useCallback(
+    (e?: string | AwaitForScanQrError) => {
+      app.emit(errorEventName, e);
+    },
+    [errorEventName],
+  );
+
+  const onCloseWrapper = useCallback(() => {
+    if (isRequestFromEvent) {
+      const errorMessage = isAuthorized
+        ? AwaitForScanQrError.getError()
+        : AwaitForScanQrError.getCameraPermissionError();
+
+      emmitError(errorMessage);
+    }
+    onClose?.();
+  }, [emmitError, isAuthorized, isRequestFromEvent, onClose]);
+
+  const handleError = useCallback(() => {
+    if (timeoutId.current) {
+      clearTimeout(timeoutId.current);
     }
 
-    StatusBar.setBackgroundColor(QR_STATUS_BAR);
-    return () => {
-      StatusBar.setBackgroundColor('transparent');
-    };
-  }, [theme]);
+    setError(true);
+    debbouncedVibrate(HapticEffects.error);
+
+    timeoutId.current = setTimeout(() => {
+      setError(false);
+    }, ERROR_RESET_TIMEOUT);
+  }, []);
 
   const handleQRData = useCallback(
     async (data: string) => {
       vibrate(HapticEffects.selection);
+      Logger.log('qr raw string: ', data);
+
+      if (typeof pattern === 'string') {
+        try {
+          const regex = new RegExp(pattern);
+          if (!regex.test(data)) {
+            return handleError();
+          }
+        } catch (err) {
+          if (isError(err)) {
+            emmitError(err);
+          }
+        }
+      }
+
+      if (isRequestFromEvent) {
+        return emmitSucces(data);
+      }
+
       setCode(data);
-
-      Logger.log(data);
-
-      const isUrlHandled = await onDeepLink(data, qrWithoutFrom);
+      const isUrlHandled = await onDeepLink(data);
 
       if (isUrlHandled) {
-        onClose();
+        onCloseWrapper();
       } else {
-        setError(true);
-        debbouncedVibrate(HapticEffects.error);
-        setTimeout(() => {
-          setError(false);
-        }, 5000);
+        handleError();
       }
     },
-    [onClose, qrWithoutFrom],
+    [
+      pattern,
+      isRequestFromEvent,
+      handleError,
+      emmitError,
+      emmitSucces,
+      onCloseWrapper,
+    ],
   );
 
   const onSuccess = useCallback(
@@ -117,13 +178,13 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
   }, []);
 
   const renserNotAuthorizedView = useCallback(
-    () => <QrNoAccess onClose={onClose} />,
-    [onClose],
+    () => <QrNoAccess onClose={onCloseWrapper} />,
+    [onCloseWrapper],
   );
 
   const renderTopView = useCallback(
-    () => <QrTopView onClose={onClose} />,
-    [onClose],
+    () => <QrTopView onClose={onCloseWrapper} />,
+    [onCloseWrapper],
   );
 
   const renderBottomView = useCallback(
@@ -136,6 +197,36 @@ export const QRModal = ({onClose = () => {}, qrWithoutFrom}: QRModalProps) => {
     ),
     [flashMode, onClickGallery, onToggleFlashMode],
   );
+
+  useEffectAsync(async () => {
+    const result = await SystemDialog.requestCameraPermissions();
+    Logger.log('Camera permission is authorized: ', result);
+    setIsAuthorized(result);
+  }, []);
+
+  useAndroidBackHandler(() => {
+    onCloseWrapper();
+    return true;
+  }, [onCloseWrapper]);
+
+  useEffect(() => {
+    if (IS_IOS) {
+      return;
+    }
+
+    StatusBar.setBackgroundColor(QR_STATUS_BAR);
+    return () => {
+      StatusBar.setBackgroundColor('transparent');
+    };
+  }, [theme]);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutId.current) {
+        clearTimeout(timeoutId.current);
+      }
+    };
+  }, []);
 
   if (!isAuthorized) {
     return renserNotAuthorizedView();

@@ -1,4 +1,5 @@
 import {hashMessage} from '@walletconnect/utils';
+import {Keyboard} from 'react-native';
 
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
@@ -32,6 +33,7 @@ async function processNextInQueue() {
   if (isProcessing || queue.length === 0) {
     return;
   }
+  Keyboard.dismiss();
 
   isProcessing = true;
   let isFinish = false;

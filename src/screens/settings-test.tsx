@@ -26,6 +26,7 @@ import {
 } from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
+import {awaitForScanQr} from '@app/helpers/await-for-scan-qr';
 import {getUid} from '@app/helpers/get-uid';
 import {getAdjustAdid} from '@app/helpers/get_adjust_adid';
 import {shortAddress} from '@app/helpers/short-address';
@@ -111,7 +112,6 @@ const getTestModals = (): TestModals => {
     },
     qr: {
       onClose: () => logger.log('qr closed'),
-      qrWithoutFrom: false,
     },
     bluetoothPoweredOff: {
       onClose: () => logger.log('bluetoothPoweredOff closed'),
@@ -323,6 +323,7 @@ export const SettingsTestScreen = observer(() => {
   const [signData, setSignData] = useState<PartialJsonRpcRequest>();
   const [isValidRawSignData, setValidRawSignData] = useState(false);
   const [deeplink, setDeeplink] = useState('');
+  const [regexp, setRegexp] = useState('');
   const [browserUrl, setBrowserUrl] = useState('');
   const [contract] = useState('0xB641EcDDdE1C0A9cC83B70B15eC9789c1365B3d2');
   const navigation = useTypedNavigation();
@@ -603,6 +604,27 @@ export const SettingsTestScreen = observer(() => {
         onPress={onPressDeepLink}
         variant={ButtonVariant.contained}
       />
+      <Spacer height={8} />
+      <Title text="Camera" />
+      <Input
+        placeholder="regexp pattern"
+        value={regexp}
+        onChangeText={setRegexp}
+      />
+      <Spacer height={8} />
+      <Button
+        title="QR scanner"
+        onPress={async () => {
+          try {
+            const result = await awaitForScanQr({pattern: regexp});
+            Alert.alert('result', JSON.stringify(result, null, 2));
+          } catch (err) {
+            Alert.alert('error', JSON.stringify(err, null, 2));
+          }
+        }}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
       <Title text="Browser" />
       <Input
         placeholder="https://shell.haqq.network"

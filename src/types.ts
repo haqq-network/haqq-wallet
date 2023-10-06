@@ -939,7 +939,11 @@ export type Modals = {
   } & ErrorModalImage;
   qr: {
     onClose?: () => void;
-    qrWithoutFrom?: boolean;
+    eventTaskId?: string;
+    /**
+     * @description regex pattern to match the scanned data
+     */
+    pattern?: string;
   };
   cardDetailsQr: {
     address: string;
@@ -1103,13 +1107,6 @@ export interface IBalance {
     operation: 'eq' | 'lt' | 'lte' | 'gt' | 'gte',
   ) => boolean;
 }
-
-export enum ValidUrlProtocol {
-  haqq = 'haqq',
-  etherium = 'etherium',
-  wc = 'wc',
-}
-
 export interface IWidgetBase {
   component: string;
 }
