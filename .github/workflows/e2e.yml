@@ -26,7 +26,7 @@ on:
 
       OS:
         type: choice
-        description: Platform for e2e
+        description: Platform for e2e test
         options:
           - ios
           - android
@@ -48,7 +48,7 @@ on:
 
 jobs:
   build:
-    name: Run e2e for both platforms
+    name: Run e2e test for selected platform
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
@@ -72,7 +72,7 @@ jobs:
           echo "PROVIDER_CHAIN_ID=${{secrets.PROVIDER_CHAIN_ID}}" >> .env
           echo "SENTRY_DSN=${{secrets.SENTRY_DSN}}" >> .env
           echo "NETWORK_EXPLORER=${{secrets.NETWORK_EXPLORER}}" >> .env
-          echo "ENVIRONMENT=distribution" >> .env
+          echo "ENVIRONMENT=test" >> .env
           echo "IS_DEVELOPMENT=${{github.event.inputs.IS_DEVELOPMENT}}" >> .env
           echo "WALLET_CONNECT_PROJECT_ID=${{secrets.WALLET_CONNECT_PROJECT_ID}}" >> .env
           echo "WALLET_CONNECT_RELAY_URL=${{secrets.WALLET_CONNECT_RELAY_URL}}" >> .env
@@ -102,7 +102,7 @@ jobs:
         run: |
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${MATCH_DEPLOY_KEY}"
-          eval "$(yarn detox:$OS:build)" && killall node
+          yarn detox:${{github.event.inputs.OS}}:build && killall node
         env:
           DEVELOPER_APP_IDENTIFIER: ${{ secrets.IOS_IDENTIFIER }}
           GIT_AUTHORIZATION: ${{ secrets.GIT_AUTHORIZATION }}
@@ -120,4 +120,12 @@ jobs:
           PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}
 
       - name: Run tests
-        run: eval "$(yarn detox:$OS:test)" && killall node
+        run: yarn detox:${{github.event.inputs.OS}}:test
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        if: ${{ failure() }}
+        with:
+          name: Detox Artifacts
+          path: artifacts
+          retention-days: 3

@@ -91,7 +91,7 @@ def reactNativeArchitectures() {
     return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
 }
 
-apply from: "../../node_modules/@sentry/react-native/sentry.gradle"
+// apply from: "../../node_modules/@sentry/react-native/sentry.gradle"
 android {
   ndkVersion rootProject.ext.ndkVersion
 
@@ -107,6 +107,8 @@ android {
     manifestPlaceholders = [
       appAuthRedirectScheme    : 'haqq'
     ]
+    testBuildType System.getProperty('testBuildType', 'debug')
+    testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
   }
 
   packagingOptions {
@@ -129,12 +131,10 @@ android {
       keyPassword 'android'
     }
     release {
-      if (project.hasProperty('HAQQ_UPLOAD_STORE_FILE')) {
-        storeFile file(HAQQ_UPLOAD_STORE_FILE)
-        storePassword HAQQ_UPLOAD_STORE_PASSWORD
-        keyAlias HAQQ_UPLOAD_KEY_ALIAS
-        keyPassword HAQQ_UPLOAD_KEY_PASSWORD
-      }
+      storeFile file('debug.keystore')
+      storePassword 'android'
+      keyAlias 'androiddebugkey'
+      keyPassword 'android'
     }
   }
   buildTypes {
@@ -147,6 +147,7 @@ android {
       signingConfig signingConfigs.release
       minifyEnabled enableProguardInReleaseBuilds
       proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+      proguardFile "${rootProject.projectDir}/../node_modules/detox/android/detox/proguard-rules-app.pro"
     }
   }
 
@@ -168,6 +169,8 @@ android {
 }
 
 dependencies {
+  androidTestImplementation('com.wix:detox:+')
+  implementation 'androidx.appcompat:appcompat:1.1.0'
   implementation "com.facebook.react:react-android"
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
   implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
@@ -222,9 +225,8 @@ android.testOptions {
   }
 }
 
-//test {
-//  useJUnitPlatform()
-//  testLogging {
-//    showStandardStreams = true
-//  }
-//}
+configurations.all {
+    resolutionStrategy {
+        force 'androidx.test:core:1.5.0'
+    }
+}
