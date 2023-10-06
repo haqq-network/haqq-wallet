@@ -40,6 +40,7 @@ export enum Events {
   onThemeChanged = 'onThemeChanged',
   onBlockRequestCheck = 'onBlockRequestCheck',
   onRequestMarkup = 'onRequestMarkup',
+  onTesterModeChanged = 'onTesterModeChanged',
 }
 
 export enum WalletConnectEvents {

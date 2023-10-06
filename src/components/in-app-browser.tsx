@@ -24,6 +24,7 @@ import {
   showPhishingAlert,
 } from '@app/helpers/web3-browser-utils';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
+import {useTesterModeEnabled} from '@app/hooks/use-tester-mode-enabled';
 import {getUserAgent} from '@app/services/version';
 import {getHostnameFromUrl} from '@app/utils';
 import {IS_ANDROID} from '@app/variables/common';
@@ -60,6 +61,7 @@ export const InAppBrowser = ({
   const isFirstPageLoaded = useRef(false);
   const userAgent = useRef(getUserAgent()).current;
   const phishingController = useRef(new PhishingController()).current;
+  const isTesterMode = useTesterModeEnabled();
 
   const pageTitle = useMemo(
     () =>
@@ -232,7 +234,7 @@ export const InAppBrowser = ({
       <View style={styles.webviewContainer}>
         <WebView
           contentMode={'mobile'}
-          webviewDebuggingEnabled={__DEV__}
+          webviewDebuggingEnabled={__DEV__ || isTesterMode}
           pullToRefreshEnabled
           javaScriptCanOpenWindowsAutomatically
           setSupportMultipleWindows

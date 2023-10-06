@@ -1,17 +1,49 @@
-import React from 'react';
+import React, {useCallback} from 'react';
+
+import {Alert} from 'react-native';
 
 import {SettingsAbout} from '@app/components/settings-about';
+import {app} from '@app/contexts';
+import {I18N, getText} from '@app/i18n';
+import {navigator} from '@app/navigator';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 
 export const SettingsAboutScreen = () => {
-  // const onPressRate = useCallback(() => {
-  //   const url = 'https://example.com';
-  //   openURL(url);
-  // }, []);
+  // const navigator = useTypedNavigation();
+  const onEnableDevMode = useCallback(() => {
+    vibrate(HapticEffects.warning);
+    Alert.alert(
+      getText(I18N.developerModeAttentionTitle),
+      getText(I18N.developerModeAttentionDescription),
+      [
+        {
+          text: getText(I18N.developerModeAttentionEnable),
+          style: 'destructive',
+          onPress: () => {
+            app.isTesterMode = true;
+            vibrate(HapticEffects.success);
+            navigator.goBack();
+          },
+        },
+        {
+          isPreferred: true,
+          text: getText(I18N.developerModeAttentionCancel),
+          style: 'default',
+        },
+      ],
+    );
+  }, []);
 
-  // const onPressInstagram = useCallback(() => {
-  //   const url = 'https://twitter.com/Islamic_coin';
-  //   openURL(url);
-  // }, []);
+  const onPressEnableDevMode = useCallback((clickCount: number) => {
+    if (clickCount > 2) {
+      vibrate(HapticEffects.impactLight);
+    }
+  }, []);
 
-  return <SettingsAbout />;
+  return (
+    <SettingsAbout
+      onEnableDevMode={onEnableDevMode}
+      onPressEnableDevMode={onPressEnableDevMode}
+    />
+  );
 };
