@@ -5,7 +5,7 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "start": "react-native start",
+    "start": "watchman watch-del-all & react-native start --reset-cache",
     "test": "jest",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "typescript:check": "tsc",
@@ -25,7 +25,7 @@
     "clean-android-app": "sh ./scripts/clean-android-app.sh",
     "devmode:ios": "xcrun simctl openurl booted haqq:enableDeveloperMode:true",
     "devmode:android": "adb shell am start -a android.intent.action.VIEW -d haqq:enableDeveloperMode:true",
-    "reset-cache": "watchman watch-del-all & npx react-native start --reset-cache"
+    "clean": "sh ./scripts/clean.sh"
   },
   "dependencies": {
     "@birdwingo/react-native-spinning-numbers": "1.0.5",
