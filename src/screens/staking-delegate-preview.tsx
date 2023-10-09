@@ -1,5 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
+import {observer} from 'mobx-react';
+
 import {StakingDelegatePreview} from '@app/components/staking-delegate-preview';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {showModal} from '@app/helpers';
@@ -9,22 +11,18 @@ import {
   abortProviderInstanceForWallet,
   getProviderInstanceForWallet,
 } from '@app/helpers/provider-instance';
-import {
-  useCosmos,
-  useTypedNavigation,
-  useTypedRoute,
-  useWallet,
-} from '@app/hooks';
+import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {Wallet} from '@app/models/wallet';
 import {AdjustEvents, WalletType} from '@app/types';
 import {makeID} from '@app/utils';
 
-export const StakingDelegatePreviewScreen = () => {
+export const StakingDelegatePreviewScreen = observer(() => {
   const navigation = useTypedNavigation();
   const {account, amount, validator, fee} =
     useTypedRoute<'stakingDelegatePreview'>().params;
 
-  const wallet = useWallet(account);
+  const wallet = Wallet.getById(account);
   const cosmos = useCosmos();
 
   const [unboundingTime, setUnboundingTime] = useState(604800000);
@@ -42,7 +40,7 @@ export const StakingDelegatePreviewScreen = () => {
   }, [cosmos]);
 
   const onDone = useCallback(async () => {
-    if (wallet && wallet.isValid()) {
+    if (wallet) {
       let errMessage = '';
       try {
         setDisabled(true);
@@ -115,7 +113,7 @@ export const StakingDelegatePreviewScreen = () => {
 
   useEffect(() => {
     return () => {
-      wallet && wallet.isValid() && abortProviderInstanceForWallet(wallet);
+      wallet && abortProviderInstanceForWallet(wallet);
     };
   }, [wallet]);
 
@@ -130,4 +128,4 @@ export const StakingDelegatePreviewScreen = () => {
       error={error}
     />
   );
-};
+});

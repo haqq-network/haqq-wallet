@@ -64,7 +64,10 @@ export const JsonRpcSignScreen = () => {
 
   const onPressSign = useCallback(async () => {
     try {
-      if (!isAllowed && !DEBUG_VARS.disableWeb3DomainBlocking) {
+      if (
+        !isAllowed &&
+        !(DEBUG_VARS.disableWeb3DomainBlocking || app.isTesterMode)
+      ) {
         return onPressReject('domain is blocked');
       }
       setSignLoading(true);
@@ -131,7 +134,10 @@ export const JsonRpcSignScreen = () => {
       new RegExp(host).test(url),
     )?.length;
     setIsAllowed(isAllowedDomain);
-    if (!isAllowedDomain && !DEBUG_VARS.disableWeb3DomainBlocking) {
+    if (
+      !isAllowedDomain &&
+      !(DEBUG_VARS.disableWeb3DomainBlocking || app.isTesterMode)
+    ) {
       showModal('domainBlocked', {
         domain: host,
         onClose: () => onPressReject('domain is blocked'),

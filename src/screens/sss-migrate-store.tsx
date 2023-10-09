@@ -71,7 +71,7 @@ export const SssMigrateStoreScreen = () => {
             wallet.accountId === route.params.accountId &&
             wallet.type === WalletType.mnemonic
           ) {
-            wallet.update({
+            Wallet.update(wallet.address, {
               type: WalletType.sss,
               accountId: provider.getIdentifier(),
             });

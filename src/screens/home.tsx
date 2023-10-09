@@ -17,7 +17,7 @@ import {Spacer} from '@app/components/ui';
 import {useTypedNavigation} from '@app/hooks';
 import {useProvider} from '@app/hooks/use-provider';
 import {HomeNewsScreen} from '@app/screens/home-news';
-import {IS_IOS} from '@app/variables/common';
+import {IS_IOS, MAINNET_ETH_CHAIN_ID} from '@app/variables/common';
 
 import {HomeBrowserScreen} from './home-browser';
 import {HomeFeedScreen} from './home-feed';
@@ -110,13 +110,14 @@ export const HomeScreen = () => {
         component={HomeFeedScreen}
         options={feedOptions}
       />
-      {provider?.ethChainId && provider?.ethChainId !== 11235 && (
-        <Tab.Screen
-          name="homeBrowser"
-          component={HomeBrowserScreen}
-          options={browserOptions}
-        />
-      )}
+      {provider?.ethChainId &&
+        provider?.ethChainId !== MAINNET_ETH_CHAIN_ID && (
+          <Tab.Screen
+            name="homeBrowser"
+            component={HomeBrowserScreen}
+            options={browserOptions}
+          />
+        )}
       <Tab.Screen
         name="homeNews"
         component={HomeNewsScreen}

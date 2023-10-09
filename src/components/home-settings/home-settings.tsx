@@ -4,12 +4,15 @@ import {ScrollView} from 'react-native';
 
 import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
+import {useTesterModeEnabled} from '@app/hooks/use-tester-mode-enabled';
 import {useWalletConnectAccounts} from '@app/hooks/use-wallet-connect-accounts';
 import {I18N} from '@app/i18n';
 import {AppTheme} from '@app/types';
 import {capitalize} from '@app/utils';
 
 import {SettingsButton} from './settings-button';
+
+import {IconsName} from '../ui';
 
 type Props = {
   theme: AppTheme;
@@ -18,18 +21,19 @@ type Props = {
 export const HomeSettings = memo(({theme}: Props) => {
   const capitalizedTheme = capitalize(theme);
   const {accounts} = useWalletConnectAccounts();
+  const isTesterMode = useTesterModeEnabled();
 
   return (
     <ScrollView contentContainerStyle={page.container}>
       <SettingsButton
-        icon="wallet"
+        icon={IconsName.wallet}
         title={I18N.homeSettingsAccounts}
         next="settingsAccounts"
         testID="settings_manage_accounts"
       />
 
       <SettingsButton
-        icon="address_book"
+        icon={IconsName.address_book}
         title={I18N.homeSettingsAddressBook}
         next="settingsAddressBook"
       />
@@ -37,14 +41,14 @@ export const HomeSettings = memo(({theme}: Props) => {
       {!!accounts?.length && (
         <SettingsButton
           rightTitle={`${accounts.length}`}
-          icon="wallet_connect"
+          icon={IconsName.wallet_connect}
           title={I18N.homeSettingsWalletConnect}
           next="walletConnectWalletList"
         />
       )}
 
       {/* <SettingsButton
-        icon="language"
+        icon={IconsName.language}
         rightTitle="EN"
         title={getText(I18N.homeSettingsLanguage)}
         next="settingsLanguage"
@@ -52,25 +56,25 @@ export const HomeSettings = memo(({theme}: Props) => {
 
       <SettingsButton
         rightTitle={capitalizedTheme}
-        icon="brush"
+        icon={IconsName.brush}
         title={I18N.homeSettingsAppearance}
         next="settingsTheme"
       />
 
       <SettingsButton
-        icon="shield"
+        icon={IconsName.shield}
         title={I18N.homeSettingsSecurity}
         next="settingsSecurity"
       />
 
       <SettingsButton
-        icon="bell"
+        icon={IconsName.bell}
         title={I18N.homeSettingsNotification}
         next="settingsNotification"
       />
 
       <SettingsButton
-        icon="providers"
+        icon={IconsName.providers}
         title={I18N.homeSettingsProviders}
         next="settingsProviders"
         style={page.button}
@@ -84,15 +88,23 @@ export const HomeSettings = memo(({theme}: Props) => {
       {/*/>*/}
 
       <SettingsButton
-        icon="islm"
+        icon={IconsName.islm}
         title={I18N.homeSettingsAbout}
         next="settingsAbout"
         style={page.button}
       />
 
+      {isTesterMode && (
+        <SettingsButton
+          icon={IconsName.settings}
+          title={I18N.homeSettingsDeveloperTools}
+          next="settingsDeveloperTools"
+        />
+      )}
+
       {app.isDeveloper && (
         <SettingsButton
-          icon="settings"
+          icon={IconsName.settings}
           title={I18N.homeSettingsTest}
           next="settingsTest"
           style={page.button}

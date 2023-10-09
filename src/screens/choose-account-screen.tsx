@@ -157,7 +157,7 @@ export const ChooseAccountScreen = memo(() => {
 
   const onAdd = useCallback(async () => {
     walletsToCreate.forEach(item => {
-      Wallet.create(item, item.name);
+      Wallet.create(item.name, item);
     });
     try {
       if (mnemonicProvider.current) {

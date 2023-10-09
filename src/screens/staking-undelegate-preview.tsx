@@ -1,5 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
+import {observer} from 'mobx-react';
+
 import {StakingUnDelegatePreview} from '@app/components/staking-undelegate-preview';
 import {showModal} from '@app/helpers';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
@@ -7,24 +9,20 @@ import {
   abortProviderInstanceForWallet,
   getProviderInstanceForWallet,
 } from '@app/helpers/provider-instance';
-import {
-  useCosmos,
-  useTypedNavigation,
-  useTypedRoute,
-  useWallet,
-} from '@app/hooks';
+import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {Wallet} from '@app/models/wallet';
 import {WalletType} from '@app/types';
 import {makeID} from '@app/utils';
 
-export const StakingUnDelegatePreviewScreen = () => {
+export const StakingUnDelegatePreviewScreen = observer(() => {
   const navigation = useTypedNavigation();
   const {account, amount, validator, fee} =
     useTypedRoute<'stakingDelegatePreview'>().params;
   const [unboundingTime, setUnboundingTime] = useState(604800000);
   const [error, setError] = useState('');
   const cosmos = useCosmos();
-  const wallet = useWallet(account);
+  const wallet = Wallet.getById(account);
 
   useEffect(() => {
     cosmos.getStakingParams().then(resp => {
@@ -39,7 +37,7 @@ export const StakingUnDelegatePreviewScreen = () => {
   const [disabled, setDisabled] = useState(false);
 
   const onDone = useCallback(async () => {
-    if (wallet && wallet.isValid()) {
+    if (wallet) {
       let errMessage = '';
       try {
         setDisabled(true);
@@ -102,7 +100,7 @@ export const StakingUnDelegatePreviewScreen = () => {
 
   useEffect(() => {
     return () => {
-      wallet && wallet.isValid() && abortProviderInstanceForWallet(wallet);
+      wallet && abortProviderInstanceForWallet(wallet);
     };
   }, [wallet]);
 
@@ -117,4 +115,4 @@ export const StakingUnDelegatePreviewScreen = () => {
       error={error}
     />
   );
-};
+});

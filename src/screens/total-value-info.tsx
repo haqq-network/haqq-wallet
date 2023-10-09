@@ -1,9 +1,11 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
+import {observer} from 'mobx-react';
+
 import {TotalValueInfo} from '@app/components/total-value-info';
 import {Loading} from '@app/components/ui';
 import {showModal} from '@app/helpers';
-import {useTypedNavigation, useWalletsVisible} from '@app/hooks';
+import {useTypedNavigation} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useTransactionList} from '@app/hooks/use-transaction-list';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
@@ -16,9 +18,9 @@ import {
 } from '@app/types';
 import {calculateBalances} from '@app/utils';
 
-export const TotalValueInfoScreen = () => {
+export const TotalValueInfoScreen = observer(() => {
   const navigation = useTypedNavigation();
-  const wallets = useWalletsVisible();
+  const wallets = Wallet.getAllVisible();
   const adressList = useMemo(() => Wallet.addressList(), []);
   const transactionsList = useTransactionList(adressList);
   const balances = useWalletsBalance(wallets);
@@ -66,4 +68,4 @@ export const TotalValueInfoScreen = () => {
       contractNameMap={contractNameMap}
     />
   );
-};
+});

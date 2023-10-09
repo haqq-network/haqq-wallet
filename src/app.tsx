@@ -42,6 +42,7 @@ import {trackEvent} from '@app/helpers/track-event';
 import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
+import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 import {AccountDetailScreen} from '@app/screens/account-detail';
 import {AccountInfoScreen} from '@app/screens/account-info';
@@ -98,6 +99,7 @@ import {SettingsAccountStyleScreen} from './screens/settings-account-style';
 import {SettingsAccountsScreen} from './screens/settings-accounts';
 import {SettingsAddressBookScreen} from './screens/settings-address-book';
 import {SettingsContactEditScreen} from './screens/settings-contact-edit';
+import {SettingsDeveloperTools} from './screens/settings-developer-tools';
 import {SettingsFAQScreen} from './screens/settings-faq';
 import {SettingsLanguageScreen} from './screens/settings-language';
 import {SettingsProviderEditScreen} from './screens/settings-provider-edit';
@@ -205,7 +207,7 @@ export const App = () => {
           await app.init();
           await migrationWallets();
           // MobX stores migration
-          await Promise.all([Contact.migrate()]);
+          await Promise.all([Contact.migrate(), Wallet.migrate()]);
         }
       })
       .then(() => awaitForEventDone(Events.onAppLoggedId))
@@ -606,6 +608,13 @@ export const App = () => {
                   component={themeUpdaterHOC(SettingsTestScreen)}
                   options={{
                     title: 'Test',
+                  }}
+                />
+                <Stack.Screen
+                  name="settingsDeveloperTools"
+                  component={themeUpdaterHOC(SettingsDeveloperTools)}
+                  options={{
+                    title: 'Developer Tools',
                   }}
                 />
                 <Stack.Screen

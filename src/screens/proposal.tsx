@@ -1,5 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 
+import {observer} from 'mobx-react';
+
 import {Proposal} from '@app/components/proposal';
 import {VotingCardDetailRefInterface} from '@app/components/proposal/voting-card-detail';
 import {app} from '@app/contexts';
@@ -7,14 +9,13 @@ import {getWindowHeight, showModal} from '@app/helpers';
 import {depositSum} from '@app/helpers/governance';
 import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {VoteNamesType} from '@app/types';
 import {VOTES} from '@app/variables/votes';
 
-export const ProposalScreen = () => {
+export const ProposalScreen = observer(() => {
   const {proposal} = useTypedRoute<'proposal'>().params;
   const {navigate} = useTypedNavigation();
 
@@ -27,7 +28,7 @@ export const ProposalScreen = () => {
   const [modalIsVisible, setModalIsVisible] = useState(false);
 
   const cosmos = useCosmos();
-  const visible = useWalletsVisible();
+  const visible = Wallet.getAllVisible();
 
   const onDepositSubmit = async (address: string) => {
     navigate('proposalDeposit', {
@@ -121,4 +122,4 @@ export const ProposalScreen = () => {
       modalOnVote={onVote}
     />
   );
-};
+});

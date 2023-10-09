@@ -24,15 +24,12 @@ export const LedgerStoreWalletScreen = () => {
       const lastIndex = route.params.hdPath.split('/').pop() ?? '0';
 
       actions.push(
-        Wallet.create(
-          {
-            type: WalletType.ledgerBt,
-            path: route.params.hdPath,
-            address: route.params.address,
-            accountId: route?.params?.deviceId,
-          },
-          `${route?.params?.deviceName} #${lastIndex}`,
-        ),
+        Wallet.create(`${route?.params?.deviceName} #${lastIndex}`, {
+          type: WalletType.ledgerBt,
+          path: route.params.hdPath,
+          address: route.params.address,
+          accountId: route?.params?.deviceId,
+        }),
       );
 
       Promise.all(actions)

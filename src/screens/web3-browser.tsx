@@ -1,13 +1,16 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
+import {useFocusEffect} from '@react-navigation/native';
 import {Linking, Share} from 'react-native';
 import WebView from 'react-native-webview';
 import {FileDownloadEvent} from 'react-native-webview/lib/WebViewTypes';
 
+import {Loading} from '@app/components/ui';
 import {
   Web3Browser,
   Web3BrowserHelper,
+  WebViewEventsEnum,
   WindowInfoEvent,
 } from '@app/components/web3-browser';
 import {Web3BrowserPressHeaderEvent} from '@app/components/web3-browser/web3-browser-header';
@@ -20,6 +23,7 @@ import {useWeb3BrowserBookmark} from '@app/hooks/use-web3-browser-bookmark';
 import {useWeb3BrowserSessions} from '@app/hooks/use-web3-browser-sessions';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
+import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
@@ -37,16 +41,21 @@ export const Web3BrowserScreen = () => {
   const sessions = useWeb3BrowserSessions();
   const bookmarks = useWeb3BrowserBookmark();
   const webviewRef = useRef<WebView>(null);
-  const helper = useRef<Web3BrowserHelper>(
+  const helper = useRef<Web3BrowserHelper | null>(
     new Web3BrowserHelper({webviewRef, initialUrl: url}),
-  ).current;
+  );
   const userProvider = useMemo(() => Provider.getById(app.providerId), []);
-
-  const onPressHeaderUrl = useCallback(({}: Web3BrowserPressHeaderEvent) => {
-    // navigation.navigate('browserSearchPage', {
-    //   initialSearchText: siteUrl || clearSiteUrl,
-    // });
-  }, []);
+  const [isLoading, setLoading] = useState(true);
+  const onPressHeaderUrl = useCallback(
+    ({}: Web3BrowserPressHeaderEvent) => {
+      if (app.isTesterMode) {
+        navigation.navigate('browserSearchPage', {
+          initialSearchText: helper.current?.currentUrl || url,
+        });
+      }
+    },
+    [helper, navigation, url],
+  );
 
   const onPressHeaderWallet = useCallback(
     async (accountId: string) => {
@@ -57,7 +66,7 @@ export const Web3BrowserScreen = () => {
         autoSelectWallet: false,
         initialAddress: accountId,
       });
-      helper.changeAccount(selectedAccount);
+      helper.current?.changeAccount?.(selectedAccount);
     },
     [helper],
   );
@@ -80,7 +89,7 @@ export const Web3BrowserScreen = () => {
   const onPressProviders = useCallback(async () => {
     setShowActionMenu(false);
     const providers = Provider.getAll();
-    const session = Web3BrowserSession.getByOrigin(helper.origin);
+    const session = Web3BrowserSession.getByOrigin(helper.current?.origin!);
 
     const initialProviderId = Provider.getByChainIdHex(
       session?.selectedChainIdHex!,
@@ -93,7 +102,7 @@ export const Web3BrowserScreen = () => {
     });
     const provider = Provider.getById(providerId);
     if (provider) {
-      helper.changeChainId(provider.ethChainIdHex);
+      helper.current?.changeChainId(provider.ethChainIdHex);
     }
   }, [helper]);
 
@@ -137,16 +146,16 @@ export const Web3BrowserScreen = () => {
   }, []);
   const onPressCopyLink = useCallback(() => {
     setShowActionMenu(false);
-    Clipboard.setString(helper.currentUrl);
+    Clipboard.setString(helper.current?.currentUrl!);
     sendNotification(I18N.browserToastLinkCopied);
-  }, [helper.currentUrl]);
+  }, [helper]);
   const onPressDisconnect = useCallback(() => {
     setShowActionMenu(false);
-    helper.disconnectAccount();
+    helper.current?.disconnectAccount?.();
   }, [helper]);
   const onPressShare = useCallback(() => {
     setShowActionMenu(false);
-    Share.share({url: helper.currentUrl});
+    Share.share({url: helper.current?.currentUrl!});
   }, [helper]);
 
   const addSiteToSearchHistory = useCallback(
@@ -170,11 +179,52 @@ export const Web3BrowserScreen = () => {
     [],
   );
 
+  useFocusEffect(() => {
+    setLoading(true);
+    const currentUrl = helper.current?.currentUrl || url;
+    const isClearHistory = VariablesBool.get(WebViewEventsEnum.CLEAR_HISTORY);
+    const isClearCache = VariablesBool.get(WebViewEventsEnum.CLEAR_CACHE);
+
+    try {
+      if (isClearHistory) {
+        webviewRef?.current?.clearHistory?.();
+        VariablesBool.set(WebViewEventsEnum.CLEAR_HISTORY, false);
+      }
+
+      if (isClearCache) {
+        helper.current?.disconnectAccount?.();
+        helper.current?.dispose?.();
+        webviewRef?.current?.clearCache?.(true);
+        webviewRef?.current?.clearFormData?.();
+        webviewRef?.current?.clearHistory?.();
+        VariablesBool.set(WebViewEventsEnum.CLEAR_CACHE, false);
+        helper.current = null;
+        helper.current = new Web3BrowserHelper({
+          webviewRef,
+          initialUrl: currentUrl,
+        });
+      }
+    } catch (err) {
+      Logger.captureException(err, 'Web3BrowserScreen:reset', {
+        currentUrl,
+        isClearHistory,
+        isClearCache,
+      });
+    } finally {
+      webviewRef.current?.reload?.();
+      setLoading(false);
+    }
+  });
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <Web3Browser
       popup={popup}
       webviewRef={webviewRef}
-      helper={helper}
+      helper={helper.current!}
       initialUrl={url}
       sessions={sessions}
       bookmarks={bookmarks}

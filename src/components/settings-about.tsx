@@ -10,8 +10,17 @@ import {I18N} from '@app/i18n';
 import {PRIVACY_POLICY, TERMS_OF_CONDITIONS} from '@app/variables/common';
 
 import {SettingsAboutButton} from './settings-about-button';
+import {MulticlickTouchable} from './ui/multiclick-touchable';
 
-export const SettingsAbout = () => {
+export type SettingsAboutProps = {
+  onEnableDevMode(): void;
+  onPressEnableDevMode(clickCount: number): void;
+};
+
+export const SettingsAbout = ({
+  onEnableDevMode,
+  onPressEnableDevMode,
+}: SettingsAboutProps) => {
   const insets = useSafeAreaInsets();
   return (
     <ScrollView
@@ -72,13 +81,19 @@ export const SettingsAbout = () => {
           url="https://twitter.com/Islamic_coin"
         />
       </View>
-      <Text
-        t11
-        center
-        color={Color.textBase1}
-        i18n={I18N.settingsAboutRights}
-        style={styles.terms}
-      />
+      <MulticlickTouchable
+        numberOfClicks={10}
+        resetTimeout={1000}
+        onAction={onEnableDevMode}
+        onChangeClickCount={onPressEnableDevMode}>
+        <Text
+          t11
+          center
+          color={Color.textBase1}
+          i18n={I18N.settingsAboutRights}
+          style={styles.terms}
+        />
+      </MulticlickTouchable>
     </ScrollView>
   );
 };
@@ -100,7 +115,8 @@ const styles = createTheme({
     marginBottom: 24,
   },
   terms: {
-    marginBottom: 10,
+    marginBottom: 20,
+    marginTop: 10,
   },
   animation: {
     justifyContent: 'center',

@@ -32,25 +32,32 @@ async function processNextInQueue() {
   if (isProcessing || queue.length === 0) {
     return;
   }
-  logger.log('🟣 call processNextInQueue');
-  logger.log('🟣 queue length: ', queue.length);
 
   isProcessing = true;
   let isFinish = false;
 
   const {params, resolve, reject} = queue.shift()!;
-  logger.log('🟣 shift params account: ', params.selectedAccount);
+
+  logger.log(
+    '🟣 start sign operation for: ',
+    params.selectedAccount,
+    params.request.method,
+  );
   logger.log('🟣 params hash: ', hashMessage(JSON.stringify(params)));
+  logger.log('🟣 queue length: ', queue.length);
 
   const removeAllListeners = async () => {
     app.removeListener('json-rpc-sign-success', onAction);
     app.removeListener('json-rpc-sign-reject', onReject);
-    logger.log('🔴 FINISH');
-    logger.log('🔴 queue length: ', queue.length);
-    logger.log('🔴 shift params account: ', params.selectedAccount);
-    logger.log('🔴 params hash: ', hashMessage(JSON.stringify(params)));
     await sleep(1000);
     isProcessing = false;
+    logger.log(
+      '✅ operation finish: ',
+      params.selectedAccount,
+      params.request.method,
+    );
+    logger.log('✅ params hash: ', hashMessage(JSON.stringify(params)));
+
     processNextInQueue(); // Continue with the next item in the queue
   };
 
@@ -60,6 +67,11 @@ async function processNextInQueue() {
     }
     isFinish = true;
     resolve(address);
+
+    logger.log('🟢 sign operation done for wallet: ', params.selectedAccount);
+    logger.log('🟢 params hash: ', hashMessage(JSON.stringify(params)));
+    logger.log('🟢 queue length: ', queue.length);
+
     removeAllListeners();
   };
 
@@ -74,6 +86,12 @@ async function processNextInQueue() {
       reject(error);
       logger.captureException(error, 'onReject');
     }
+
+    logger.error(error);
+    logger.log('🔴 sign operation error for wallet: ', params.selectedAccount);
+    logger.log('🔴 params hash: ', hashMessage(JSON.stringify(params)));
+    logger.log('🔴 queue length: ', queue.length);
+
     removeAllListeners();
   };
 
@@ -86,10 +104,12 @@ export async function awaitForJsonRpcSign(
   params: AwaitJsonRpcSignParams,
 ): Promise<string> {
   return new Promise((resolve, reject) => {
-    logger.log('🟠 call awaitForJsonRpcSign: ', params.selectedAccount);
-    logger.log('🟠 queue length: ', queue.length);
-    logger.log('🟠 isProcessing: ', isProcessing);
-    logger.log('🟠 params hash: ', hashMessage(JSON.stringify(params)));
+    logger.log('🟡 sign operation for wallet: ', params.selectedAccount);
+    logger.log('🟡 sign operation request: ', params.request);
+    logger.log('🟡 sign operation metadata: ', params.metadata);
+    logger.log('🟡 params hash: ', hashMessage(JSON.stringify(params)));
+    logger.log('🟡 queue length: ', queue.length);
+    logger.log('🟡 in progress: ', isProcessing);
 
     queue.push({params, resolve, reject});
     if (!isProcessing) {

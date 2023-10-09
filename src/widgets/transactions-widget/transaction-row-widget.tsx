@@ -28,7 +28,7 @@ import {
 export type Props = {
   item: TransactionListSend | TransactionListReceive | TransactionListContract;
   onPress: OnTransactionRowPress;
-  wallets: Realm.Results<Wallet>;
+  wallets: Wallet[];
   contractNameMap: ContractNameMap;
 };
 

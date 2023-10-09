@@ -1,5 +1,3 @@
-import {Results} from 'realm';
-
 import {app} from '@app/contexts';
 import {showModal} from '@app/helpers/modal';
 import {I18N, getText} from '@app/i18n';
@@ -14,7 +12,7 @@ export enum WalletSelectType {
 }
 
 export interface AwaitForWalletParams {
-  wallets: Wallet[] | Results<Wallet>;
+  wallets: Wallet[];
   title: I18N;
   type?: WalletSelectType;
   initialAddress?: string;

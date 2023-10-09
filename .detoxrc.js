@@ -26,21 +26,21 @@ module.exports = {
       type: 'android.apk',
       binaryPath: 'android/app/build/outputs/apk/debug/app-debug.apk',
       build:
-        'cd android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug',
+        'cd android && FOR_DETOX=true ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug',
       reversePorts: [8081],
     },
     'android.release': {
       type: 'android.apk',
       binaryPath: 'android/app/build/outputs/apk/release/app-release.apk',
       build:
-        'cd android && ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release',
+        'cd android && FOR_DETOX=true ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release',
     },
   },
   devices: {
     simulator: {
       type: 'ios.simulator',
       device: {
-        type: 'iPhone 14',
+        name: 'HAQQ_e2e',
       },
     },
     attached: {
@@ -52,7 +52,7 @@ module.exports = {
     emulator: {
       type: 'android.emulator',
       device: {
-        avdName: 'Pixel_3a_API_30_x86',
+        avdName: 'HAQQ_e2e',
       },
     },
   },
@@ -73,11 +73,11 @@ module.exports = {
       device: 'attached',
       app: 'android.release',
     },
-    'android.emu.debug': {
+    'android.sim.debug': {
       device: 'emulator',
       app: 'android.debug',
     },
-    'android.emu.release': {
+    'android.sim.release': {
       device: 'emulator',
       app: 'android.release',
     },

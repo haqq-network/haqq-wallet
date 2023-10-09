@@ -23,7 +23,7 @@ type Props = {
     | TransactionListContract
   )[];
   onRowPress: OnTransactionRowPress;
-  wallets: Realm.Results<Wallet>;
+  wallets: Wallet[];
   contractNameMap: ContractNameMap;
 };
 

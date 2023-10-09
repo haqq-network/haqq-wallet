@@ -1,11 +1,19 @@
 import React, {useCallback} from 'react';
 
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Button, ButtonVariant, LottieWrap} from '@app/components/ui';
+import {
+  Button,
+  ButtonVariant,
+  Icon,
+  IconsName,
+  Input,
+  LottieWrap,
+} from '@app/components/ui';
 import {useThemeSelector} from '@app/hooks';
-import {I18N} from '@app/i18n';
+import {useTesterModeEnabled} from '@app/hooks/use-tester-mode-enabled';
+import {I18N, getText} from '@app/i18n';
 import {Link} from '@app/types';
 
 import {BrowserHomePageLinkList} from './browser-home-page-link-list';
@@ -31,12 +39,14 @@ export const BrowserHomePage = ({
   favouriteLinks,
   recentLinks,
   focused,
-  // onSearchPress,
+  onSearchPress,
   onFavouritePress,
   onRecentPress,
   onClearRecentPress,
   onEditFavouritePress,
 }: BrowserHomePageProps) => {
+  const isTesterMode = useTesterModeEnabled();
+
   const animation = useThemeSelector({
     light: require('@assets/animations/islm-logo-dotted-circle-light.json'),
     dark: require('@assets/animations/islm-logo-dotted-circle-dark.json'),
@@ -77,17 +87,19 @@ export const BrowserHomePage = ({
         )}
       </View>
       <View style={styles.searchContainer}>
-        {/*<TouchableOpacity onPress={onSearchPress}>*/}
-        {/*  <Input*/}
-        {/*    leftAction={*/}
-        {/*      <Icon color={Color.graphicBase2} name={IconsName.search} />*/}
-        {/*    }*/}
-        {/*    placeholder={getText(I18N.browserEnterSiteNameOrURL)}*/}
-        {/*    keyboardType={'web-search'}*/}
-        {/*    editable={false}*/}
-        {/*    onPressIn={onSearchPress}*/}
-        {/*  />*/}
-        {/*</TouchableOpacity>*/}
+        {isTesterMode && (
+          <TouchableOpacity onPress={onSearchPress}>
+            <Input
+              leftAction={
+                <Icon color={Color.graphicBase2} name={IconsName.search} />
+              }
+              placeholder={getText(I18N.browserEnterSiteNameOrURL)}
+              keyboardType={'web-search'}
+              editable={false}
+              onPressIn={onSearchPress}
+            />
+          </TouchableOpacity>
+        )}
       </View>
 
       <View>

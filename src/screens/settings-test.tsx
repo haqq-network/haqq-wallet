@@ -47,7 +47,7 @@ import {HapticEffects, vibrate} from '@app/services/haptic';
 import {SssProviders} from '@app/services/provider-sss';
 import {message as toastMessage} from '@app/services/toast';
 import {getUserAgent} from '@app/services/version';
-import {Link, Modals, PartialJsonRpcRequest} from '@app/types';
+import {Modals, PartialJsonRpcRequest} from '@app/types';
 import {
   generateMockBanner,
   isError,
@@ -55,7 +55,7 @@ import {
   openInAppBrowser,
   openWeb3Browser,
 } from '@app/utils';
-import {HAQQ_METADATA} from '@app/variables/common';
+import {HAQQ_METADATA, TEST_URLS} from '@app/variables/common';
 
 const logger = Logger.create('SettingsTestScreen', {
   emodjiPrefix: '🔵',
@@ -292,30 +292,6 @@ const abi = [
     constant: true,
   },
 ];
-const TEST_URLS: Partial<Link>[] = [
-  {
-    title: 'HAQQ Dashboard',
-    url: 'https://shell.haqq.network',
-    icon: 'https://shell.haqq.network/assets/favicon.svg',
-  },
-  {
-    title: 'HAQQ Vesting',
-    url: 'https://vesting.haqq.network',
-    icon: 'https://vesting.haqq.network/assets/favicon.svg',
-  },
-  {title: 'MuslimGocci', url: 'https://muslimgocci.app'},
-  {
-    title: 'metamask test dapp',
-    url: 'https://metamask.github.io/test-dapp/',
-  },
-  {title: 'HAQQ Faucet', url: 'https://testedge2.haqq.network'},
-  {title: 'app uniswap', url: 'https://app.uniswap.org'},
-  {title: 'safe', url: 'https://safe.testedge2.haqq.network'},
-  {
-    title: 'ChainList app',
-    url: 'https://chainlist.org/',
-  },
-];
 
 const BACKENDS = [
   ['production', HAQQ_BACKEND],
@@ -420,7 +396,7 @@ export const SettingsTestScreen = observer(() => {
     logger.log('data', data);
 
     const walletId = await awaitForWallet({
-      wallets: Wallet.getAll().snapshot(),
+      wallets: Wallet.getAll(),
       title: I18N.stakingDelegateAccountTitle,
     });
 
@@ -494,7 +470,7 @@ export const SettingsTestScreen = observer(() => {
   }, [showActionSheetWithOptions]);
 
   const onSetLeadingAccount = useCallback(() => {
-    const wallets = Wallet.getAll().snapshot();
+    const wallets = Wallet.getAll();
     const walletsKeys = wallets.map(
       wallet => `${wallet.name} ${shortAddress(wallet.address ?? '', '•')}`,
     );

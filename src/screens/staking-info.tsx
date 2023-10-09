@@ -1,5 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
+import {observer} from 'mobx-react';
+
 import {StakingInfo} from '@app/components/staking-info';
 import {app} from '@app/contexts';
 import {
@@ -12,21 +14,21 @@ import {getMinStakingRewardAmount} from '@app/helpers/get-min-staking-reward-amo
 import {reduceAmounts} from '@app/helpers/staking';
 import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useMinAmount} from '@app/hooks/use-min-amount';
-import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {I18N} from '@app/i18n';
 import {
   StakingMetadata,
   StakingMetadataType,
 } from '@app/models/staking-metadata';
+import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {WalletType} from '@app/types';
 
-export const StakingInfoScreen = () => {
+export const StakingInfoScreen = observer(() => {
   const {validator} = useTypedRoute<'stakingInfo'>().params;
   const {operator_address} = validator;
   const navigation = useTypedNavigation();
-  const visible = useWalletsVisible();
+  const visible = Wallet.getAllVisible();
   const cosmos = useCosmos();
   const minAmount = useMinAmount();
 
@@ -214,4 +216,4 @@ export const StakingInfoScreen = () => {
       onPressGetReward={onPressGetReward}
     />
   );
-};
+});

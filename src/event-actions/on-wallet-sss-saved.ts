@@ -31,7 +31,7 @@ export async function onWalletSssSaved(accountId: string) {
 
   for (const wallet of wallets) {
     if (wallet.accountId === accountId && wallet.type === WalletType.sss) {
-      wallet.update({mnemonicSaved});
+      Wallet.update(wallet.address, {mnemonicSaved});
       // TODO: socialLinkEnabled
       // wallet.update({socialLinkEnabled: true});
     }

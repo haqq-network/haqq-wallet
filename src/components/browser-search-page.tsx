@@ -6,6 +6,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {useTesterModeEnabled} from '@app/hooks/use-tester-mode-enabled';
 import {I18N, getText} from '@app/i18n';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
 import {Link} from '@app/types';
@@ -46,6 +47,8 @@ export const BrowserSearchPage = ({
   onSubmitSearch,
   onPressClearHistory,
 }: BrowserSearchPageProps) => {
+  const isTesterMode = useTesterModeEnabled();
+
   const [text, setText] = useState(initialSearchText || '');
   const phishingController = useRef(new PhishingController()).current;
   const recentLinks = useMemo(
@@ -142,7 +145,7 @@ export const BrowserSearchPage = ({
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Input
-          editable={false}
+          editable={isTesterMode}
           leftAction={
             <Icon i16 color={Color.graphicBase2} name={IconsName.search} />
           }

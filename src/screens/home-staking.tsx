@@ -1,5 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
+import {observer} from 'mobx-react';
+
 import {HomeStaking} from '@app/components/home-staking';
 import {app} from '@app/contexts';
 import {onStakingRewards} from '@app/event-actions/on-staking-rewards';
@@ -8,11 +10,11 @@ import {Events} from '@app/events';
 import {abortProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {sumReduce} from '@app/helpers/staking';
 import {useTypedNavigation} from '@app/hooks';
-import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {
   StakingMetadata,
   StakingMetadataType,
 } from '@app/models/staking-metadata';
+import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {AdjustEvents} from '@app/types';
 
@@ -23,8 +25,8 @@ const initData = {
   loading: true,
 };
 
-export const HomeStakingScreen = () => {
-  const visible = useWalletsVisible();
+export const HomeStakingScreen = observer(() => {
+  const visible = Wallet.getAllVisible();
 
   const [data, setData] = useState({
     ...initData,
@@ -113,4 +115,4 @@ export const HomeStakingScreen = () => {
       onPressValidators={onPressValidators}
     />
   );
-};
+});

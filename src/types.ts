@@ -230,6 +230,7 @@ export type RootStackParamList = {
   detailsQr: {address: string};
   settingsTheme: undefined;
   settingsTest: undefined;
+  settingsDeveloperTools: undefined;
   settingsAccounts: undefined;
   ourNews: undefined;
   settingsAccountDetail: {address: string};
@@ -503,7 +504,7 @@ export type RootStackParamList = {
   };
   settingsSecurity: undefined;
   walletSelector: {
-    wallets: Wallet[] | Results<Wallet>;
+    wallets: Wallet[];
     title: string;
     initialAddress?: string;
     eventSuffix?: string;
@@ -608,6 +609,14 @@ export type SwipeableAction<T> = {
   backgroundColor: string;
   onPress: (item: T) => void;
   key: string;
+};
+
+export type WalletCardStyleT = {
+  cardStyle: WalletCardStyle;
+  colorFrom: string;
+  colorTo: string;
+  colorPattern: string;
+  pattern: string;
 };
 
 export enum WalletCardStyle {
@@ -969,7 +978,7 @@ export type Modals = {
   };
   walletsBottomSheet: {
     onClose?: () => void;
-    wallets: Wallet[] | Results<Wallet>;
+    wallets: Wallet[];
     closeDistance?: () => number;
     title: I18N;
     eventSuffix?: string;
