@@ -124,6 +124,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
 
       // first connection
       if (!session) {
+        Logger.warn('eth_requestAccounts: first connection');
         const selectedAccount = await requestAccount();
 
         Web3BrowserSession.create(helper.origin, {
@@ -135,6 +136,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
 
       // get saved account for site
       if (session.selectedAccount && !session?.disconected) {
+        Logger.warn('eth_requestAccounts: get saved account for site');
         session.update({
           onlineAt: new Date(),
         });
@@ -143,6 +145,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
 
       // login again after disconect
       if (!session.selectedAccount && session?.disconected) {
+        Logger.warn('eth_requestAccounts: login again after disconect');
         const selectedAccount = await requestAccount();
         session.update({
           onlineAt: new Date(),
@@ -155,12 +158,14 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
 
       // handle user disconect
       if (session?.selectedAccount && session.disconected) {
+        Logger.warn('eth_requestAccounts: user disconected');
         helper.disconnectAccount();
         return [];
       }
 
       return [];
     } catch (err) {
+      Logger.warn('eth_requestAccounts: error', err);
       if (err instanceof AwaitForWalletError) {
         return [];
       }

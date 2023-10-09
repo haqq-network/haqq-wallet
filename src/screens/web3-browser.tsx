@@ -184,26 +184,30 @@ export const Web3BrowserScreen = () => {
     const currentUrl = helper.current?.currentUrl || url;
     const isClearHistory = VariablesBool.get(WebViewEventsEnum.CLEAR_HISTORY);
     const isClearCache = VariablesBool.get(WebViewEventsEnum.CLEAR_CACHE);
-
+    Logger.log('Web3BrowserScreen:reset', {
+      isClearCache,
+      isClearHistory,
+      currentUrl,
+    });
     try {
-      if (isClearHistory) {
+      if (isClearHistory && helper.current) {
         webviewRef?.current?.clearHistory?.();
         VariablesBool.set(WebViewEventsEnum.CLEAR_HISTORY, false);
       }
 
-      if (isClearCache) {
+      if (isClearCache && helper.current) {
         helper.current?.disconnectAccount?.();
         helper.current?.dispose?.();
         webviewRef?.current?.clearCache?.(true);
         webviewRef?.current?.clearFormData?.();
         webviewRef?.current?.clearHistory?.();
-        VariablesBool.set(WebViewEventsEnum.CLEAR_CACHE, false);
         helper.current = null;
         helper.current = new Web3BrowserHelper({
           webviewRef,
           initialUrl: currentUrl,
         });
       }
+      VariablesBool.set(WebViewEventsEnum.CLEAR_CACHE, false);
     } catch (err) {
       Logger.captureException(err, 'Web3BrowserScreen:reset', {
         currentUrl,
@@ -211,7 +215,6 @@ export const Web3BrowserScreen = () => {
         isClearCache,
       });
     } finally {
-      webviewRef.current?.reload?.();
       setLoading(false);
     }
   });
