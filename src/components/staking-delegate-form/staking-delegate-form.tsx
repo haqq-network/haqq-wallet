@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 
 import {View} from 'react-native';
 
@@ -61,6 +61,20 @@ export const StakingDelegateForm = ({
   const onPressMax = useCallback(() => {
     amounts.setMax();
   }, [amounts]);
+
+  useEffect(() => {
+    const INPUT_PRECISION = 3;
+    const first = new Balance(+amounts.amount, INPUT_PRECISION)
+      .toEther()
+      .toPrecision(INPUT_PRECISION);
+    const second = new Balance(amounts.maxAmount, INPUT_PRECISION)
+      .toEther()
+      .toPrecision(INPUT_PRECISION);
+    if (first >= second) {
+      amounts.setMax();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fee, amounts.maxAmount.toHex()]);
 
   return (
     <KeyboardSafeArea isNumeric style={styles.container}>
