@@ -56,11 +56,10 @@ export function useSumAmount(
       const a =
         Math.floor(maxAmount.toFloat() / minimumAmountConst.toFloat()) *
         minimumAmountConst.toFloat();
-      // eslint-disable-next-line @typescript-eslint/no-shadow
-      setAmount(({changed}) => ({
+      setAmount(({changed: _changed}) => ({
         amountText: String(a),
         amount: maxAmount,
-        changed: changed,
+        changed: _changed,
       }));
     },
     setAmount(text: string) {
