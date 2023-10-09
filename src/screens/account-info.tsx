@@ -1,19 +1,18 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import {observer} from 'mobx-react';
-import {Collection, CollectionChangeSet} from 'realm';
 
 import {AccountInfo} from '@app/components/account-info';
 import {Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
-import {prepareTransactions, showModal} from '@app/helpers';
+import {showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
+import {useTransactionList} from '@app/hooks/use-transaction-list';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
 import {Indexer} from '@app/services/indexer';
-import {TransactionList} from '@app/types';
 
 export const AccountInfoScreen = observer(() => {
   const route = useTypedRoute<'accountInfo'>();
@@ -25,6 +24,7 @@ export const AccountInfoScreen = observer(() => {
     () => balances[wallet?.address!],
     [balances, wallet],
   );
+  const transactionsList = useTransactionList([accountId]);
 
   const transactions = useMemo(() => {
     return Transaction.getAllByAccountIdAndProviderId(
@@ -45,28 +45,6 @@ export const AccountInfoScreen = observer(() => {
     }
   }, []);
 
-  const [transactionsList, setTransactionsList] = useState<TransactionList[]>(
-    prepareTransactions([route.params.accountId], transactions.snapshot()),
-  );
-
-  const onTransactionList = useCallback(
-    (collection: Collection<Transaction>, changes: CollectionChangeSet) => {
-      if (
-        changes.insertions.length ||
-        changes.newModifications.length ||
-        changes.deletions.length
-      ) {
-        setTransactionsList(
-          prepareTransactions(
-            [route.params.accountId],
-            transactions.snapshot(),
-          ),
-        );
-      }
-    },
-    [route.params.accountId, transactions],
-  );
-
   const onReceive = useCallback(() => {
     showModal('cardDetailsQr', {address: route.params.accountId});
   }, [route.params.accountId]);
@@ -85,13 +63,6 @@ export const AccountInfoScreen = observer(() => {
   );
 
   const onPressInfo = useCallback(() => showModal('lockedTokensInfo'), []);
-
-  useEffect(() => {
-    transactions.addListener(onTransactionList);
-    return () => {
-      transactions.removeListener(onTransactionList);
-    };
-  }, [onTransactionList, transactions]);
 
   if (!wallet) {
     return <Loading />;

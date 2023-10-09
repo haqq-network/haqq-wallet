@@ -1,12 +1,44 @@
 import {TransactionReceipt} from '@ethersproject/abstract-provider';
-import {BigNumber} from '@ethersproject/bignumber';
 import {utils} from 'ethers';
+import {makeAutoObservable, when} from 'mobx';
+import {isHydrated, makePersistable} from 'mobx-persist-store';
 
 import {calcFee} from '@app/helpers';
+import {awaitForRealm} from '@app/helpers/await-for-realm';
 import {realm} from '@app/models/index';
 import {Balance} from '@app/services/balance';
+import {storage} from '@app/services/mmkv';
+import {MobXStoreFromRealm} from '@app/types';
+import {STORE_REHYDRATION_TIMEOUT_MS} from '@app/variables/common';
 
-export class Transaction extends Realm.Object {
+export enum TransactionStatus {
+  failed,
+  success,
+  inProgress,
+}
+
+export type Transaction = {
+  account: string;
+  raw: string;
+  fee: number;
+  feeHex: string;
+  providerId: string;
+  hash: string;
+  block?: string;
+  from: string;
+  to: string;
+  value: number;
+  chainId: string | number;
+  timeStamp?: number | string;
+  createdAt: number;
+  confirmations?: number | string;
+  contractAddress: string | null;
+  confirmed: boolean;
+  input: string;
+  status: TransactionStatus;
+};
+
+export class TransactionRealmObject extends Realm.Object {
   static schema = {
     name: 'Transaction',
     properties: {
@@ -28,134 +60,150 @@ export class Transaction extends Realm.Object {
     },
     primaryKey: 'hash',
   };
-  hash!: string;
-  block: string;
-  account!: string;
-  raw!: string;
-  from!: string;
-  to: string;
-  contractAddress: string;
-  value!: number;
-  fee!: number;
-  createdAt!: Date;
-  confirmed!: boolean;
-  providerId!: string;
-  chainId!: string;
-  feeHex!: string;
-  input!: string;
+}
 
-  get feeFormatted() {
-    return this.fee.toFixed(15);
-  }
+class TransactionStore implements MobXStoreFromRealm {
+  realmSchemaName = TransactionRealmObject.schema.name;
+  transactions: Transaction[] = [];
 
-  static getAll() {
-    return realm.objects<Transaction>(Transaction.schema.name);
-  }
-
-  static remove(id: string) {
-    const obj = Transaction.getById(id);
-
-    if (obj) {
-      realm.write(() => {
-        realm.delete(obj);
+  constructor(shouldSkipPersisting: boolean = false) {
+    makeAutoObservable(this);
+    if (!shouldSkipPersisting) {
+      makePersistable(this, {
+        name: this.constructor.name,
+        properties: ['transactions'],
+        storage: storage,
       });
     }
   }
 
-  static getById(id: string) {
-    return realm.objectForPrimaryKey<Transaction>(Transaction.schema.name, id);
+  get isHydrated() {
+    return isHydrated(this);
   }
 
-  static getAllByProviderId(providerId: string) {
-    return realm
-      .objects<Transaction>(Transaction.schema.name)
-      .filtered('providerId == $0', providerId);
-  }
-
-  static getAllByAccountIdAndProviderId(accountId: string, providerId: string) {
-    return realm
-      .objects<Transaction>(Transaction.schema.name)
-      .filtered(
-        'providerId == $0 && ( from == $1 || to == $1 )',
-        providerId,
-        accountId.toLowerCase(),
-      );
-  }
-
-  static removeAll() {
-    const transactions = realm.objects<Transaction>(Transaction.schema.name);
-
-    realm.write(() => {
-      realm.delete(transactions);
+  migrate = async () => {
+    await awaitForRealm();
+    await when(() => this.isHydrated, {
+      timeout: STORE_REHYDRATION_TIMEOUT_MS,
     });
-  }
 
-  static create(
-    transaction: {
-      hash: string;
-      block?: string;
-      from: string;
-      to?: string;
-      value: BigNumber;
-      chainId: string | number;
-      timeStamp?: number | string;
-      confirmations?: number | string;
-      contractAddress?: string;
-      input: string;
-    },
+    const realmData = realm.objects<Transaction>(this.realmSchemaName);
+    if (realmData.length > 0) {
+      realmData.forEach(item => {
+        realm.write(() => realm.delete(item));
+      });
+    }
+  };
+
+  create(
+    transaction: Transaction,
     providerId: string,
     fee: Balance = Balance.Empty,
   ) {
-    const exists = Transaction.getById(transaction.hash.toLowerCase());
+    const existingTransaction = this.getById(transaction.hash.toLowerCase());
+    const newTransaction: Transaction = {
+      ...existingTransaction,
+      hash: transaction.hash.toLowerCase(),
+      block: transaction.block,
+      account: transaction.from.toLowerCase(),
+      raw: JSON.stringify(transaction),
+      from: transaction.from.toLowerCase(),
+      to: transaction.to.toLowerCase(),
+      contractAddress: transaction.contractAddress
+        ? transaction.contractAddress.toLowerCase()
+        : null,
+      value: parseFloat(utils.formatEther(transaction.value ?? 0)),
+      fee: fee.toEther(),
+      feeHex: fee.toHex(),
+      providerId,
+      chainId: String(transaction.chainId),
+      createdAt: existingTransaction
+        ? existingTransaction.createdAt
+        : transaction.timeStamp
+        ? parseInt(String(transaction.timeStamp), 10) * 1000
+        : Date.now(),
+      confirmed: transaction.confirmations
+        ? parseInt(String(transaction.confirmations), 10) > 10
+        : false,
+      input: transaction.input ?? '0x',
+      status: existingTransaction
+        ? existingTransaction.status
+        : transaction.status || TransactionStatus.inProgress,
+    };
 
-    realm.write(() => {
-      realm.create(
-        Transaction.schema.name,
-        {
-          ...exists?.toJSON(),
-          hash: transaction.hash.toLowerCase(),
-          block: transaction.block,
-          account: transaction.from.toLowerCase(),
-          raw: JSON.stringify(transaction),
-          from: transaction.from.toLowerCase(),
-          to: transaction.to ? transaction.to.toLowerCase() : null,
-          contractAddress: transaction.contractAddress
-            ? transaction.contractAddress.toLowerCase()
-            : null,
-          value: parseFloat(utils.formatEther(transaction.value)),
-          fee: fee.toEther(),
-          feeHex: fee.toHex(),
-          providerId,
-          chainId: String(transaction.chainId),
-          createdAt: exists
-            ? exists.createdAt
-            : transaction.timeStamp &&
-              new Date(parseInt(String(transaction.timeStamp), 10) * 1000),
-          confirmed: transaction.confirmations
-            ? parseInt(String(transaction.confirmations), 10) > 10
-            : false,
-          input: transaction.input ?? '0x',
-        },
-        Realm.UpdateMode.Modified,
-      );
-    });
+    if (existingTransaction) {
+      this.update(transaction.hash.toLowerCase(), newTransaction);
+    } else {
+      this.transactions.push(newTransaction);
+    }
 
     return transaction.hash;
   }
 
-  setConfirmed(receipt: TransactionReceipt) {
-    try {
-      realm.write(() => {
-        this.confirmed = true;
-        this.fee = calcFee(
-          receipt.effectiveGasPrice ?? 7,
-          receipt.cumulativeGasUsed,
-        );
-      });
-    } catch (e) {
-      Logger.captureException(e, 'Transaction.setConfirmed', {
-        receipt: JSON.stringify(receipt),
+  update(id: string, params: Partial<Transaction>) {
+    const transaction = this.getById(id);
+
+    if (transaction) {
+      this.transactions = this.transactions.map(t => {
+        if (t.hash === transaction.hash) {
+          return {...t, ...params};
+        }
+        return t;
       });
     }
   }
+
+  getById(id: string) {
+    const transactionLowerCaseId = id.toLowerCase();
+    return (
+      this.transactions.find(
+        transaction =>
+          transaction.hash.toLowerCase() === transactionLowerCaseId,
+      ) || null
+    );
+  }
+
+  getAll() {
+    return this.transactions;
+  }
+
+  getAllByProviderId(providerId: string) {
+    return this.transactions.filter(
+      transaction => transaction.providerId === providerId,
+    );
+  }
+
+  getAllByAccountIdAndProviderId(accountId: string, providerId: string) {
+    const accountIdLowerCase = accountId.toLowerCase();
+    return this.transactions.filter(
+      ({providerId: pid, from, to}) =>
+        pid === providerId &&
+        (from === accountIdLowerCase || to === accountIdLowerCase),
+    );
+  }
+
+  remove(id: string) {
+    this.transactions = this.transactions.filter(
+      transaction => transaction.hash !== id,
+    );
+  }
+
+  removeAll() {
+    this.transactions = [];
+  }
+
+  setConfirmed(id: string, receipt: TransactionReceipt) {
+    const transaction = this.getById(id);
+
+    if (transaction) {
+      transaction.confirmed = true;
+      transaction.fee = calcFee(
+        receipt.effectiveGasPrice ?? 7,
+        receipt.cumulativeGasUsed,
+      );
+    }
+  }
 }
+
+const instance = new TransactionStore(Boolean(process.env.JEST_WORKER_ID));
+export {instance as Transaction};

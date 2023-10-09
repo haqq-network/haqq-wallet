@@ -16,7 +16,7 @@ export async function onTransactionCheck(hash: string) {
           transaction.hash,
         );
         if (receipt && receipt.confirmations > 0) {
-          transaction.setConfirmed(receipt);
+          Transaction.setConfirmed(transaction.hash, receipt);
         }
       }
     } catch (e) {
