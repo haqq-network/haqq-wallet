@@ -23,7 +23,6 @@ export const StakingValidators = ({
   onGoBack,
 }: StakingValidatorsProps) => {
   const [search, setSearch] = useState('');
-
   const onSearchChange = useCallback((text: string) => {
     setSearch(text.toLowerCase());
   }, []);
@@ -31,11 +30,15 @@ export const StakingValidators = ({
   const validators = [
     {
       title: getText(I18N.stakingValidatorsStaked),
-      data: stakedValidators.filter(v => v.searchString?.includes(search)),
+      data: Array.isArray(stakedValidators)
+        ? stakedValidators.filter(v => v.searchString?.includes(search))
+        : [],
     },
     {
       title: getText(I18N.stakingValidatorsUnStaked),
-      data: unStakedValidators.filter(v => v.searchString?.includes(search)),
+      data: Array.isArray(unStakedValidators)
+        ? unStakedValidators.filter(v => v.searchString?.includes(search))
+        : [],
     },
   ].filter(r => !!r.data.length);
 
