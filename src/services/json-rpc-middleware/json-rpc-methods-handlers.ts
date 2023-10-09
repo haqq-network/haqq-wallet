@@ -8,6 +8,10 @@ import {
   AwaitProviderError,
   awaitForProvider,
 } from '@app/helpers/await-for-provider';
+import {
+  AwaitForScanQrError,
+  awaitForScanQr,
+} from '@app/helpers/await-for-scan-qr';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {isEthereumChainParams} from '@app/helpers/web3-browser-utils';
 import {I18N} from '@app/i18n';
@@ -16,6 +20,7 @@ import {Wallet} from '@app/models/wallet';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {getDefaultNetwork} from '@app/network';
 import {getAppVersion} from '@app/services/version';
+import {requestQRScannerPermission} from '@app/utils';
 
 type TJsonRpcRequest = JsonRpcRequest<any>;
 type JsonRpcMethodHandlerParams = {
@@ -299,6 +304,26 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
     const chainInfo = req.params?.[0];
     if (isEthereumChainParams(chainInfo)) {
       Logger.log('wallet_addEthereumChain', chainInfo?.chainName);
+    }
+  },
+  wallet_scanQRCode: async ({req, helper}) => {
+    try {
+      const isAccesGranted = await requestQRScannerPermission(
+        helper.currentUrl,
+      );
+
+      if (!isAccesGranted) {
+        rejectJsonRpcRequest(
+          AwaitForScanQrError.getCameraPermissionError().message!,
+        );
+      }
+
+      const pattern = req.params?.[0] as string;
+      return (await awaitForScanQr({pattern})).rawData;
+    } catch (err) {
+      if (err instanceof Error) {
+        rejectJsonRpcRequest(err.message);
+      }
     }
   },
 };

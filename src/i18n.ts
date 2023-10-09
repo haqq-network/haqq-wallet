@@ -784,6 +784,10 @@ export enum I18N {
   developerModeAttentionEnable,
   developerModeAttentionCancel,
   homeSettingsDeveloperTools,
+  unknownError,
+  unrecognizedDataFormat,
+  qrPermissionRequestDescription,
+  qrPermissionRequest,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1708,4 +1712,9 @@ const en: Record<I18N, string> = {
   [I18N.developerModeAttentionTitle]: 'Developer Mode',
   [I18N.developerModeAttentionDescription]:
     'Attention!!! In this mode, browser restrictions will be reset and application functionality will be slightly expanded. The mode is only active in the test network.',
+  [I18N.unknownError]: 'Unknown error',
+  [I18N.unrecognizedDataFormat]: 'Unrecognized data format. Please try again.',
+  [I18N.qrPermissionRequest]: 'QR Permission Request',
+  [I18N.qrPermissionRequestDescription]:
+    'Allow this website {{url}} to use the QR scanner?',
 };

@@ -12,6 +12,7 @@ import Decimal from 'decimal.js';
 import {utils} from 'ethers';
 import _ from 'lodash';
 import {
+  Alert,
   Animated,
   Linking,
   NativeModules,
@@ -27,9 +28,9 @@ import {Color, getColor} from './colors';
 import {DEBUG_VARS} from './debug-vars';
 import {Events} from './events';
 import {shortAddress} from './helpers/short-address';
-import {onUrlSubmit} from './helpers/web3-browser-utils';
+import {getHost, onUrlSubmit} from './helpers/web3-browser-utils';
 import {WalletBalance} from './hooks/use-wallets-balance';
-import {I18N} from './i18n';
+import {I18N, getText} from './i18n';
 import {Banner, BannerButtonEvent, BannerType} from './models/banner';
 import {Wallet} from './models/wallet';
 import {navigator} from './navigator';
@@ -862,3 +863,26 @@ export const generateMockBanner = (): Banner => {
     priority: 1,
   };
 };
+
+export const showUnrecognizedDataAttention = () =>
+  Alert.alert(getText(I18N.unknownError), getText(I18N.unrecognizedDataFormat));
+
+export const requestQRScannerPermission = (url: string) =>
+  new Promise<boolean>(resolve => {
+    Alert.alert(
+      getText(I18N.qrPermissionRequest),
+      getText(I18N.qrPermissionRequestDescription, {ur: getHost(url)}),
+      [
+        {
+          text: getText(I18N.cancel),
+          onPress: () => resolve(false),
+          style: 'cancel',
+        },
+        {
+          text: getText(I18N.accept),
+          onPress: () => resolve(true),
+        },
+      ],
+      {cancelable: false},
+    );
+  });

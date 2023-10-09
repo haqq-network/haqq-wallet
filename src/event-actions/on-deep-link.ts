@@ -5,11 +5,11 @@ import base64 from 'react-native-base64';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {awaitForWallet} from '@app/helpers';
+import {ValidUrlProtocol} from '@app/helpers/parse-deep-link';
 import {I18N} from '@app/i18n';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
-import {ValidUrlProtocol} from '@app/types';
 
 const handleAddress = async (
   address: string,

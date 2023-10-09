@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
-import {TouchableOpacity, View} from 'react-native';
+import {Keyboard, TouchableOpacity, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Pin, PinInterface} from '@app/components/pin/pin';
@@ -18,6 +18,10 @@ export const PinModal = () => {
   const pinRef = useRef<PinInterface>();
   const theme = useTheme();
   const [showRestore, setShowRestore] = useState(false);
+
+  useEffect(() => {
+    Keyboard.dismiss();
+  }, []);
 
   useEffect(() => {
     if (app.pinBanned) {
