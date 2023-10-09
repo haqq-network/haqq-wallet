@@ -74,6 +74,9 @@ export const StakingValidatorsScreen = () => {
   );
 
   const [stakedValidators, unStakedValidators] = useMemo(() => {
+    if (!Array.isArray(validators)) {
+      return [[], []];
+    }
     const staked = [];
     const unStaked = [];
     for (const validator of validators) {
