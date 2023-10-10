@@ -1,7 +1,7 @@
 // @refresh reset
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
-import {SafeAreaView, View} from 'react-native';
+import {Platform, SafeAreaView, View} from 'react-native';
 import WebView, {WebViewProps} from 'react-native-webview';
 import {
   FileDownloadEvent,
@@ -192,6 +192,7 @@ export const Web3Browser = ({
         if(window.ethereum) {
           window.ethereum.isMetaMask = false;
           window.ethereum.isHaqqWallet = true;
+          window.platformOS = '${Platform.OS}'
         }
       });
       ${WebViewEventsJS.getWindowInformation}

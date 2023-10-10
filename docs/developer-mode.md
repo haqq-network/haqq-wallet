@@ -22,9 +22,9 @@ In Haqq Wallet, a Developer Mode is available for enhanced functionalities and t
 
 Once activated, Developer Mode will:
 
-- Lift all restrictions for WalletConnect and browser, 
+- Disable all restrictions for WalletConnect and Web3 Browser, 
 - Enable transaction signing on non-whitelisted sites,
-- Allow WalletConnect to any site,
+- Allow connect WalletConnect to any chain,
 - Enable use of the browser search bar.
 
 In the settings screen, a `Developer Tools` section will appear with the following functionalities:
@@ -54,9 +54,9 @@ Utilities for browser operations will be available.
 
 Debug WebView contents on iOS simulator or device using Safari Developer Toolkit:
 
-1. Enable developer mode.
+1. Enable developer mode in Haqq Wallet.
 2. Open `Safari Preferences > Advanced tab > enable "Show Develop menu in menu bar"`.
-3. Start app with React Native WebView in iOS simulator or device.
+3. Start Haqq Wallet and open any page with Web3 Browser in iOS simulator or device.
 4. Navigate to `Safari > Develop > [device name] > [app name] > [url - title]`.
 5. Debug WebView contents as on web.
 
@@ -66,10 +66,11 @@ Debug WebView contents on iOS simulator or device using Safari Developer Toolkit
 
 Debug WebView contents on Android emulator or device using Chrome DevTools:
 
-1. Enable developer mode.
-2. Start app with React Native WebView in Android emulator or device.
-3. Open `chrome://inspect/#devices` on Chrome.
-4. Select device on left, select "Inspect" on WebView contents to debug.
+1. Enable developer mode in Haqq Wallet.
+2. Start Haqq Wallet and open any page with Web3 Browser in Android emulator or device.
+3. (If you using emulator skip this step) Connect device via usb to your computer.
+4. Open `chrome://inspect/#devices` on Chrome.
+5. Select device on left, select "Inspect" on WebView contents to debug.
 
 **Note:** Enable `USB debugging` in device settings: `Settings > System > About Phone > Developer options > enable USB debugging`.
 
