@@ -3,7 +3,12 @@ import {BigNumber, BigNumberish} from 'ethers';
 
 import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N, getText} from '@app/i18n';
-import {BalanceConstructor, IBalance} from '@app/types';
+import {
+  BalanceConstructor,
+  HexNumber,
+  IBalance,
+  ISerializable,
+} from '@app/types';
 import {
   NUM_DELIMITER,
   NUM_PRECISION,
@@ -11,7 +16,7 @@ import {
 } from '@app/variables/common';
 const zeroBN = new Decimal(0);
 
-export class Balance implements IBalance {
+export class Balance implements IBalance, ISerializable {
   static readonly Empty = new Balance(zeroBN);
   private bnRaw = zeroBN;
   private _precission: number;
@@ -209,9 +214,33 @@ export class Balance implements IBalance {
       amount: String(this.toWei()),
     });
   };
-  toBigNumberish(): BigNumberish {
+  toBigNumberish = (): BigNumberish => {
     return BigNumber.from(this.toHex());
-  }
+  };
+
+  toJsonString = (): string => {
+    const serializedValue = {value: this.toHex(), precision: this._precission};
+    return JSON.stringify(serializedValue);
+  };
+
+  static fromJsonString = (obj: string | Balance) => {
+    const serializedValue: {value: HexNumber; precision: number} = JSON.parse(
+      String(obj),
+    );
+    return new Balance(serializedValue.value, serializedValue.precision);
+  };
+
+  /**
+   * Custom console.log implementation for Hermes engine
+   * @returns {string}
+   */
+  toJSON = (): string => {
+    const hex = this.toHex();
+    const ether = this.toEtherString();
+    const wei = this.toWeiString();
+    const precision = this._precission;
+    return `Hex: ${hex}, Ether: ${ether}, Wei: ${wei}, Precision: ${precision}}`;
+  };
 }
 
 export const MIN_AMOUNT = new Balance(0.001);

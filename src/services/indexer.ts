@@ -3,10 +3,16 @@ import {jsonrpcRequest} from '@haqq/shared-react-native';
 import {app} from '@app/contexts';
 import {I18N, getText} from '@app/i18n';
 import {Cosmos} from '@app/services/cosmos';
-import {ContractNameMap, IndexerBalance, IndexerTime} from '@app/types';
+import {
+  ContractNameMap,
+  IContract,
+  IndexerBalance,
+  IndexerTime,
+  IndexerToken,
+} from '@app/types';
 
 export type IndexerUpdatesResponse = {
-  addresses: string[];
+  addresses: IContract[];
   balance: IndexerBalance;
   staked: IndexerBalance;
   vested: IndexerBalance;
@@ -19,7 +25,7 @@ export type IndexerUpdatesResponse = {
   last_update: string;
   // TODO: add types
   nfts: unknown[];
-  tokens: unknown[];
+  tokens: IndexerToken[];
   transactions: unknown[];
 };
 
