@@ -16,7 +16,6 @@ import {app} from '@app/contexts';
 import {onDeepLink} from '@app/event-actions/on-deep-link';
 import {Events} from '@app/events';
 import {
-  awaitForLedger,
   awaitForWallet,
   createTheme,
   getProviderInstanceForWallet,
@@ -49,7 +48,7 @@ import {HapticEffects, vibrate} from '@app/services/haptic';
 import {SssProviders} from '@app/services/provider-sss';
 import {message as toastMessage} from '@app/services/toast';
 import {getUserAgent} from '@app/services/version';
-import {Modals, PartialJsonRpcRequest, WalletType} from '@app/types';
+import {Modals, PartialJsonRpcRequest} from '@app/types';
 import {
   generateMockBanner,
   isError,
@@ -418,12 +417,8 @@ export const SettingsTestScreen = observer(() => {
       new Balance(250000, 0),
     );
 
-    const result = transport.signTransaction(wallet.path!, unsignedTx);
-    if (wallet.type === WalletType.ledgerBt) {
-      await awaitForLedger(transport);
-    }
-    const signedTx = await result;
-    logger.log('signedTx', signedTx);
+    const signedTx = await transport.signTransaction(wallet.path!, unsignedTx);
+    Logger.log('signedTx', signedTx);
 
     const resp = await EthNetwork.sendTransaction(signedTx);
 

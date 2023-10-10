@@ -5,6 +5,7 @@ import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native'
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 
 import {app} from '@app/contexts';
+import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {Wallet} from '@app/models/wallet';
 import {WalletType} from '@app/types';
@@ -67,14 +68,15 @@ export async function getProviderInstanceForWallet(
         );
         break;
       case WalletType.ledgerBt:
-        cache.set(
-          id,
-          new ProviderLedgerReactNative({
+        {
+          const provider = new ProviderLedgerReactNative({
             getPassword: app.getPassword.bind(app),
             deviceId: wallet.accountId!,
             appName: LEDGER_APP,
-          }),
-        );
+          });
+          awaitForLedger(provider);
+          cache.set(id, provider);
+        }
         break;
       case WalletType.sss:
         const storage = await getProviderStorage(wallet.accountId as string);

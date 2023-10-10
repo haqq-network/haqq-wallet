@@ -2,11 +2,7 @@ import {TransactionRequest} from '@haqq/provider-base';
 
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
-import {
-  awaitForLedger,
-  getProviderInstanceForWallet,
-  hideModal,
-} from '@app/helpers';
+import {getProviderInstanceForWallet, hideModal} from '@app/helpers';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
@@ -105,12 +101,6 @@ export class SignJsonRpcRequest {
       ? await getRpcProvider(provider)
       : getDefaultNetwork();
 
-    const checkLedger = async () => {
-      if ((wallet as Wallet)?.type === WalletType.ledgerBt) {
-        await awaitForLedger(instanceProvider);
-      }
-    };
-
     const path = wallet.path || '/';
     let result: string | undefined;
 
@@ -129,7 +119,6 @@ export class SignJsonRpcRequest {
           path,
           message,
         );
-        await checkLedger();
         result = await signPersonalMessageResult;
         break;
       case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA:
@@ -146,7 +135,6 @@ export class SignJsonRpcRequest {
             typedData.types,
             typedData.message,
           );
-          await checkLedger();
           const signedMessageHash = await signTypedDataResult;
 
           if (wallet.type === WalletType.ledgerBt) {
@@ -206,7 +194,6 @@ export class SignJsonRpcRequest {
           path,
           signTransactionRequest,
         );
-        await checkLedger();
         result = await signTransactionResult;
         break;
       default:

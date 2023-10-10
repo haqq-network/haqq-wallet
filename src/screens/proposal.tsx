@@ -6,14 +6,13 @@ import {Proposal} from '@app/components/proposal';
 import {VotingCardDetailRefInterface} from '@app/components/proposal/voting-card-detail';
 import {app} from '@app/contexts';
 import {getWindowHeight, showModal} from '@app/helpers';
-import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {depositSum} from '@app/helpers/governance';
 import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
-import {VoteNamesType, WalletType} from '@app/types';
+import {VoteNamesType} from '@app/types';
 import {VOTES} from '@app/variables/votes';
 
 export const ProposalScreen = observer(() => {
@@ -50,18 +49,12 @@ export const ProposalScreen = observer(() => {
       try {
         const transport = await getProviderInstanceForWallet(wallet);
 
-        const query = cosmos.vote(
+        await cosmos.vote(
           transport,
           wallet.path!,
           item.proposal_id,
           opinion?.value || 0,
         );
-
-        if (wallet.type === WalletType.ledgerBt) {
-          await awaitForLedger(transport);
-        }
-
-        await query;
 
         const prop = await cosmos.getProposalDetails(item.proposal_id);
         setItem(prop.proposal);
