@@ -50,6 +50,7 @@ export type Wallet = {
   version: number;
   accountId: string | null;
   cosmosAddress: string;
+  position: number;
 };
 
 export class WalletRealmObject extends Realm.Object {
@@ -89,7 +90,14 @@ class WalletStore implements MobXStoreFromRealm {
     if (!shouldSkipPersisting) {
       makePersistable(this, {
         name: this.constructor.name,
-        properties: ['wallets'],
+        properties: [
+          {
+            key: 'wallets',
+            deserialize: value =>
+              value.sort((a: Wallet, b: Wallet) => a.position - b.position),
+            serialize: value => value,
+          },
+        ],
         storage: storage,
       });
     }
@@ -113,6 +121,8 @@ class WalletStore implements MobXStoreFromRealm {
           accountId: item.accountId || '',
           path: item.path || '',
           type: item.type,
+          pattern: item.pattern,
+          cardStyle: item.cardStyle,
         });
         realm.write(() => {
           realm.delete(item);
@@ -126,20 +136,22 @@ class WalletStore implements MobXStoreFromRealm {
     walletParams: AddWalletParams,
   ): Promise<Wallet | null> {
     const cards = Object.keys(WalletCardStyle);
-    const cardStyle = cards[
-      Math.floor(Math.random() * cards.length)
-    ] as WalletCardStyle;
+    const cardStyle =
+      walletParams.cardStyle ??
+      (cards[Math.floor(Math.random() * cards.length)] as WalletCardStyle);
 
     const patterns = Object.keys(WalletCardPattern);
     const patternVariant =
       patterns[Math.floor(Math.random() * patterns.length)];
 
-    const pattern = `card-${patternVariant}-${Math.floor(
-      Math.random() *
-        (patternVariant === WalletCardPattern.circle
-          ? CARD_CIRCLE_TOTAL
-          : CARD_RHOMBUS_TOTAL),
-    )}`;
+    const pattern =
+      walletParams.pattern ??
+      `card-${patternVariant}-${Math.floor(
+        Math.random() *
+          (patternVariant === WalletCardPattern.circle
+            ? CARD_CIRCLE_TOTAL
+            : CARD_RHOMBUS_TOTAL),
+      )}`;
 
     const usedColors = new Set(this.wallets.map(w => w.colorFrom));
 
@@ -148,6 +160,7 @@ class WalletStore implements MobXStoreFromRealm {
     ).filter(c => !usedColors.has(c[0]));
 
     let colors: string[];
+
     if (availableColors.length) {
       colors =
         availableColors[Math.floor(Math.random() * availableColors.length)];
@@ -156,6 +169,18 @@ class WalletStore implements MobXStoreFromRealm {
         cardStyle === WalletCardStyle.flat
           ? generateFlatColors()
           : generateGradientColors();
+    }
+
+    if (walletParams.colorFrom) {
+      colors[0] = walletParams.colorFrom;
+    }
+
+    if (walletParams.colorTo) {
+      colors[1] = walletParams.colorTo;
+    }
+
+    if (walletParams.colorPattern) {
+      colors[2] = walletParams.colorPattern;
     }
 
     const existingWallet = this.getById(walletParams.address);
@@ -178,6 +203,7 @@ class WalletStore implements MobXStoreFromRealm {
       isMain: false,
       subscription: null,
       cosmosAddress: Cosmos.addressToBech32(walletParams.address.toLowerCase()),
+      position: this.getSize(),
       ...existingWallet,
     };
 
@@ -247,7 +273,9 @@ class WalletStore implements MobXStoreFromRealm {
       const otherWallets = this.wallets.filter(
         w => w.address.toLowerCase() !== address.toLowerCase(),
       );
-      this.wallets = [...otherWallets, {...wallet, ...params}];
+      this.wallets = [...otherWallets, {...wallet, ...params}].sort(
+        (a, b) => a.position - b.position,
+      );
     }
   }
 
