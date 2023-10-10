@@ -14,7 +14,7 @@ import {
 } from '@app/helpers/await-for-scan-qr';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {isEthereumChainParams} from '@app/helpers/web3-browser-utils';
-import {I18N} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
@@ -38,7 +38,14 @@ const rejectJsonRpcRequest = (message: string) => {
   };
 };
 
+const checkParamsExists = (req: TJsonRpcRequest) => {
+  if (!req.params?.[0]) {
+    rejectJsonRpcRequest(getText(I18N.jsonRpcErrorInvalidParams));
+  }
+};
+
 const signTransaction = async ({helper, req}: JsonRpcMethodHandlerParams) => {
+  checkParamsExists(req);
   try {
     const session = Web3BrowserSession.getByOrigin(helper.origin);
     const provider = getNetworkProvier(helper);
@@ -213,14 +220,17 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   },
   eth_hashrate: () => '0x00',
   eth_getBlockByNumber: async ({req, helper}) => {
+    checkParamsExists(req);
     const rpcProvider = await getLocalRpcProvider(helper);
     return await rpcProvider.getBlock(req.params?.[0]);
   },
   eth_getBlock: async ({req, helper}) => {
+    checkParamsExists(req);
     const rpcProvider = await getLocalRpcProvider(helper);
     return await rpcProvider.getBlock(req.params?.[0]);
   },
   eth_call: async ({req, helper}) => {
+    checkParamsExists(req);
     try {
       const rpcProvider = await getLocalRpcProvider(helper);
       return await rpcProvider.call(req.params[0], req.params[1]);
@@ -231,6 +241,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
     }
   },
   eth_getTransactionCount: async ({req, helper}) => {
+    checkParamsExists(req);
     try {
       const rpcProvider = await getLocalRpcProvider(helper);
       return rpcProvider.getTransactionCount(req.params[0], req.params[1]);
@@ -243,6 +254,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   eth_mining: () => false,
   net_listening: () => true,
   eth_estimateGas: async ({req, helper}) => {
+    checkParamsExists(req);
     try {
       const rpcProvider = await getLocalRpcProvider(helper);
       return rpcProvider.estimateGas(req.params[0]);
@@ -257,6 +269,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
     return `HAQQ/${appVersion}/Wallet`;
   },
   eth_getCode: async ({req, helper}) => {
+    checkParamsExists(req);
     try {
       const rpcProvider = await getLocalRpcProvider(helper);
       return await rpcProvider.getCode(req.params[0], req.params[1]);
@@ -277,6 +290,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
     }
   },
   eth_getTransactionByHash: async ({req, helper}) => {
+    checkParamsExists(req);
     try {
       const rpcProvider = await getLocalRpcProvider(helper);
       return await rpcProvider.getTransaction(req.params?.[0]);
@@ -287,6 +301,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
     }
   },
   eth_getTransactionReceipt: async ({req, helper}) => {
+    checkParamsExists(req);
     try {
       const rpcProvider = await getLocalRpcProvider(helper);
       return await rpcProvider.getTransactionReceipt(req.params?.[0]);
@@ -303,12 +318,19 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   eth_signTypedData_v3: signTransaction,
   eth_signTypedData_v4: signTransaction,
   wallet_addEthereumChain: ({req}) => {
+    checkParamsExists(req);
     const chainInfo = req.params?.[0];
     if (isEthereumChainParams(chainInfo)) {
       Logger.log('wallet_addEthereumChain', chainInfo?.chainName);
     }
   },
   wallet_scanQRCode: async ({req, helper}) => {
+    const pattern = req.params?.[0] as string;
+
+    if (!!pattern && typeof pattern !== 'string') {
+      rejectJsonRpcRequest(getText(I18N.jsonRpcErrorInvalidParams));
+    }
+
     try {
       const isAccesGranted = await requestQRScannerPermission(
         helper.currentUrl,
@@ -320,7 +342,6 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
         );
       }
 
-      const pattern = req.params?.[0] as string;
       return (await awaitForScanQr({pattern})).rawData;
     } catch (err) {
       if (err instanceof Error) {

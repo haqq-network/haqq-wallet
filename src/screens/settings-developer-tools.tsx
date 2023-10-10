@@ -184,8 +184,9 @@ export const SettingsDeveloperTools = observer(() => {
       <Button
         title="Developer mode docs"
         onPress={() => openWeb3Browser(DEVELOPER_MODE_DOCS)}
-        variant={ButtonVariant.contained}
+        variant={ButtonVariant.second}
       />
+      <Spacer height={8} />
       <Button
         title="Turn off developer mode"
         error
