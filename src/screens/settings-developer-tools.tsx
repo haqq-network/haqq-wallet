@@ -19,7 +19,11 @@ import {message as toastMessage} from '@app/services/toast';
 import {getUserAgent} from '@app/services/version';
 import {PartialJsonRpcRequest} from '@app/types';
 import {openInAppBrowser, openWeb3Browser} from '@app/utils';
-import {HAQQ_METADATA, TEST_URLS} from '@app/variables/common';
+import {
+  DEVELOPER_MODE_DOCS,
+  HAQQ_METADATA,
+  TEST_URLS,
+} from '@app/variables/common';
 
 const Title = ({text = ''}) => (
   <>
@@ -177,6 +181,11 @@ export const SettingsDeveloperTools = observer(() => {
       />
       <Spacer height={8} />
       <Title text="Others" />
+      <Button
+        title="Developer mode docs"
+        onPress={() => openWeb3Browser(DEVELOPER_MODE_DOCS)}
+        variant={ButtonVariant.contained}
+      />
       <Button
         title="Turn off developer mode"
         error

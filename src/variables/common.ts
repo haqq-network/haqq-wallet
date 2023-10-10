@@ -301,3 +301,6 @@ export const TEST_URLS: Partial<Link>[] = [
     url: 'https://chainlist.org/',
   },
 ];
+
+export const DEVELOPER_MODE_DOCS =
+  'https://github.com/haqq-network/haqq-wallet/blob/main/docs/developer-mode.md';
