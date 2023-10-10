@@ -29,15 +29,15 @@ const production: DebugVars = {
 const debug: DebugVars = {
   enableSentry: false,
   enableWeb3BrowserIncognito: false,
-  enableWalletConnectLogger: false,
+  enableWalletConnectLogger: true,
   enableCaptchaLogger: true,
   enableSkipPinOnLogin: false,
   enableWeb3BrowserLogger: true,
-  allowAnySourcesForWalletConnectLogin: false,
-  disableWeb3DomainBlocking: false,
+  allowAnySourcesForWalletConnectLogin: true,
+  disableWeb3DomainBlocking: true,
   enableHttpErrorDetails: true,
   enableAsyncEventEmitterLogs: false,
-  enableAwaitJsonRpcSignLogger: false,
+  enableAwaitJsonRpcSignLogger: true,
 };
 
 export const DEBUG_VARS = __DEV__ ? debug : production;
