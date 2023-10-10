@@ -10,7 +10,7 @@
 window.ethereum.isHaqqWallet: boolean;
 ```
 
-This property is `true` if the user has MetaMask installed.
+This property is `true` if the user use Haqq Wallet.
 
 ```ts
 window.platformOS: 'ios' | 'android';
