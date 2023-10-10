@@ -46,8 +46,7 @@ export const TransactionFinish = ({
   };
 
   const fee = useMemo(() => {
-    //@ts-ignore
-    if (transaction instanceof Transaction) {
+    if ((transaction as Transaction).input) {
       return new Balance((transaction as Transaction)?.fee ?? 0);
     }
     return Balance.Empty;
