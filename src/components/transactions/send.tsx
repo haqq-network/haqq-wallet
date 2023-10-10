@@ -3,6 +3,7 @@ import React, {useCallback, useMemo} from 'react';
 import {TouchableWithoutFeedback, View} from 'react-native';
 
 import {Color} from '@app/colors';
+import {TransactionStatus} from '@app/components/transaction-status/transaction-status';
 import {DataContent, Icon, IconsName, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
@@ -32,8 +33,15 @@ export const TransactionSend = ({item, onPress}: TransactionPreviewProps) => {
         </View>
         <DataContent
           style={styles.infoContainer}
-          titleI18n={I18N.transactionSendTitle}
-          transactionStatus={item.status}
+          title={
+            <View style={styles.titleWrapper}>
+              <Text i18n={I18N.transactionSendTitle} color={Color.textBase1} />
+              <TransactionStatus
+                status={item.status}
+                style={styles.transactionIcon}
+              />
+            </View>
+          }
           subtitleI18nParams={{
             address,
           }}
@@ -70,4 +78,9 @@ const styles = createTheme({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  titleWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  transactionIcon: {marginLeft: 4},
 });

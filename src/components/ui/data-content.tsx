@@ -1,13 +1,11 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 
 import {View, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Icon, IconsName} from '@app/components/ui/icon';
 import {Text} from '@app/components/ui/text';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {TransactionStatus} from '@app/models/transaction';
 
 export type DataContentProps = {
   title?: React.ReactNode;
@@ -21,7 +19,6 @@ export type DataContentProps = {
   subtitleI18nParams?: Record<string, string>;
   titleI18nParams?: Record<string, string>;
   onPress?: () => void;
-  transactionStatus?: TransactionStatus;
 };
 export const DataContent = ({
   title,
@@ -34,20 +31,8 @@ export const DataContent = ({
   subtitleI18n,
   subtitleI18nParams,
   titleI18nParams,
-  transactionStatus,
   numberOfLines = 1,
 }: DataContentProps) => {
-  const transactionIcon = useMemo((): {icon: IconsName; color: string} => {
-    switch (transactionStatus) {
-      case TransactionStatus.failed:
-        return {icon: IconsName.close, color: Color.textRed1};
-      case TransactionStatus.success:
-        return {icon: IconsName.check, color: Color.textGreen1};
-      default:
-        return {icon: IconsName.scroll, color: Color.textBlue1};
-    }
-  }, [transactionStatus]);
-
   return (
     <View
       style={[
@@ -69,14 +54,6 @@ export const DataContent = ({
           onPress={onPress}>
           {title}
         </Text>
-        {transactionStatus !== undefined && (
-          <Icon
-            i16
-            name={transactionIcon.icon}
-            color={transactionIcon.color}
-            style={styles.transactionIcon}
-          />
-        )}
       </View>
       {(subtitleI18n || subtitle) && (
         <>
@@ -109,9 +86,6 @@ const styles = createTheme({
     alignItems: 'center',
     minHeight: 22,
     flexDirection: 'row',
-  },
-  transactionIcon: {
-    marginLeft: 8,
   },
   reverse: {flexDirection: 'column-reverse'},
 });
