@@ -6,7 +6,7 @@ import {TransactionConfirmation} from '@app/components/transaction-confirmation'
 import {app} from '@app/contexts';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
-import {awaitForLedger, removeProviderInstanceForWallet} from '@app/helpers';
+import {removeProviderInstanceForWallet} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {
   abortProviderInstanceForWallet,
@@ -20,7 +20,7 @@ import {Contact} from '@app/models/contact';
 import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
-import {AdjustEvents, WalletType} from '@app/types';
+import {AdjustEvents} from '@app/types';
 import {makeID} from '@app/utils';
 import {FEE_ESTIMATING_TIMEOUT_MS} from '@app/variables/common';
 
@@ -70,18 +70,12 @@ export const TransactionConfirmationScreen = observer(() => {
 
         const provider = await getProviderInstanceForWallet(wallet);
 
-        const result = ethNetworkProvider.transferTransaction(
+        const transaction = await ethNetworkProvider.transferTransaction(
           provider,
           wallet.path!,
           route.params.to,
           route.params.amount,
         );
-
-        if (wallet.type === WalletType.ledgerBt) {
-          await awaitForLedger(provider);
-        }
-
-        const transaction = await result;
 
         if (transaction) {
           onTrackEvent(AdjustEvents.sendFund);

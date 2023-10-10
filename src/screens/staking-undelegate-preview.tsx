@@ -5,7 +5,6 @@ import {observer} from 'mobx-react';
 import {StakingUnDelegatePreview} from '@app/components/staking-undelegate-preview';
 import {showModal} from '@app/helpers';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
-import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {
   abortProviderInstanceForWallet,
   getProviderInstanceForWallet,
@@ -49,18 +48,12 @@ export const StakingUnDelegatePreviewScreen = observer(() => {
 
         const transport = await getProviderInstanceForWallet(wallet);
 
-        const query = cosmos.unDelegate(
+        const resp = await cosmos.unDelegate(
           transport,
           wallet.path!,
           validator.operator_address,
           amount,
         );
-
-        if (wallet.type === WalletType.ledgerBt) {
-          await awaitForLedger(transport);
-        }
-
-        const resp = await query;
 
         if (!resp) {
           throw new Error('transaction_error');
