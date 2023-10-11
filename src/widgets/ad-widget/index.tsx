@@ -113,22 +113,24 @@ export const AdWidget = ({banner, style}: HomeBannerProps) => {
             {banner.description}
           </Text>
         )}
-        <Spacer height={12} />
         {banner.buttons && (
-          <Inline gap={20}>
-            {banner.buttons.map(button => (
-              <Button
-                key={banner.id}
-                loading={loading}
-                color={getColor(button.backgroundColor)}
-                textColor={button.color}
-                loadingColor={button.color}
-                variant={ButtonVariant.contained}
-                size={ButtonSize.small}
-                title={button.title}
-              />
-            ))}
-          </Inline>
+          <>
+            <Spacer height={12} />
+            <Inline gap={20}>
+              {banner.buttons.map(button => (
+                <Button
+                  key={banner.id}
+                  loading={loading}
+                  color={getColor(button.backgroundColor)}
+                  textColor={button.color}
+                  loadingColor={button.color}
+                  variant={ButtonVariant.contained}
+                  size={ButtonSize.small}
+                  title={button.title}
+                />
+              ))}
+            </Inline>
+          </>
         )}
         {banner.closeEvent && (
           <IconButton style={styles.closeButton} onPress={onPressClose}>
@@ -161,7 +163,7 @@ const styles = StyleSheet.create({
     borderRadius: 13,
     padding: 16,
     flex: 1,
-    height: 111,
+    minHeight: 111,
   },
   inner: {
     borderRadius: 13,
@@ -175,6 +177,7 @@ const styles = StyleSheet.create({
   },
   description: {
     marginTop: 8,
+    maxWidth: '65%',
   },
   small: {
     height: 188,
