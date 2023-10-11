@@ -12,6 +12,7 @@ import {
   BlurView,
   Card,
   CopyButton,
+  First,
   Icon,
   IconButton,
   IconsName,
@@ -20,6 +21,7 @@ import {
 } from '@app/components/ui';
 import {cleanNumber, createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
+import {useIsBalancesFirstSync} from '@app/hooks/use-is-balances-sync';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
@@ -30,6 +32,8 @@ import {
   SHADOW_COLOR_1,
   SYSTEM_BLUR_2,
 } from '@app/variables/common';
+
+import {Placeholder} from './ui/placeholder';
 
 export type BalanceProps = {
   testID?: string;
@@ -59,6 +63,7 @@ export const WalletCard = memo(
   }: BalanceProps) => {
     const {locked, total} = balance ?? {};
     const [cardState, setCardState] = useState('loading');
+    const isBalancesFirstSync = useIsBalancesFirstSync();
     const screenWidth = useWindowDimensions().width;
     const enableProtectionWarning =
       !wallet.mnemonicSaved && !wallet.socialLinkEnabled;
@@ -122,6 +127,7 @@ export const WalletCard = memo(
             ellipsizeMode="tail"
             numberOfLines={1}
             suppressHighlighting={true}
+            disabled={isBalancesFirstSync}
             onPress={onAccountInfo}>
             {wallet.name || 'name'}
           </Text>
@@ -168,44 +174,61 @@ export const WalletCard = memo(
             </IconButton>
           )}
         </View>
-        <View style={styles.row}>
-          <Text
-            t0
-            color={Color.textBase3}
-            numberOfLines={1}
-            adjustsFontSizeToFit
-            i18n={I18N.amountISLM}
-            i18params={{amount: cleanNumber(parsedTotal)}}
-            onPress={onAccountInfo}
-            suppressHighlighting={true}
-          />
-          <TouchableWithoutFeedback onPress={onAccountInfo}>
-            <View style={styles.openDetailsIconContainer}>
-              <Icon
-                i16
-                name={IconsName.arrow_forward}
-                color={Color.graphicBase3}
-                style={styles.openDetailsIcon}
-              />
-            </View>
-          </TouchableWithoutFeedback>
-        </View>
+        <First>
+          {isBalancesFirstSync && (
+            <Placeholder opacity={0.6}>
+              <Placeholder.Item width={110} height={35} />
+            </Placeholder>
+          )}
+          <View style={styles.row}>
+            <Text
+              t0
+              color={Color.textBase3}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              i18n={I18N.amountISLM}
+              i18params={{amount: cleanNumber(parsedTotal)}}
+              onPress={onAccountInfo}
+              suppressHighlighting={true}
+            />
+            <TouchableWithoutFeedback onPress={onAccountInfo}>
+              <View style={styles.openDetailsIconContainer}>
+                <Icon
+                  i16
+                  name={IconsName.arrow_forward}
+                  color={Color.graphicBase3}
+                  style={styles.openDetailsIcon}
+                />
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </First>
 
-        {showLockedTokens && locked?.isPositive() && (
-          <>
-            <View style={[styles.row, styles.lokedTokensContainer]}>
-              <Icon i16 color={Color.textBase3} name={IconsName.lock} />
-              <Spacer width={4} />
-              <Text
-                t15
-                color={Color.textBase3}
-                i18n={I18N.walletCardLocked}
-                i18params={{count: locked?.toEtherString() ?? '0'}}
-                onPress={onAccountInfo}
-                suppressHighlighting={true}
-              />
-            </View>
-          </>
+        {showLockedTokens && (
+          <First>
+            {isBalancesFirstSync && (
+              <>
+                <Spacer height={8} />
+                <Placeholder opacity={0.6}>
+                  <Placeholder.Item width={'25%'} height={14} />
+                </Placeholder>
+              </>
+            )}
+            {locked?.isPositive() && (
+              <View style={[styles.row, styles.lokedTokensContainer]}>
+                <Icon i16 color={Color.textBase3} name={IconsName.lock} />
+                <Spacer width={4} />
+                <Text
+                  t15
+                  color={Color.textBase3}
+                  i18n={I18N.walletCardLocked}
+                  i18params={{count: locked?.toEtherString() ?? '0'}}
+                  onPress={onAccountInfo}
+                  suppressHighlighting={true}
+                />
+              </View>
+            )}
+          </First>
         )}
         <Spacer />
         <View style={styles.buttonsContainer}>
