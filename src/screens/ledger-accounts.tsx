@@ -32,7 +32,7 @@ export const LedgerAccountsScreen = () => {
   const [tab, setTab] = useState<ChooseAccountTabNames>(
     ChooseAccountTabNames.Ledger,
   );
-
+  const loadAbortController = useRef<AbortController | null>(null);
   useEffect(() => {
     return () => {
       provider.abort();
@@ -40,28 +40,43 @@ export const LedgerAccountsScreen = () => {
   }, [provider]);
 
   const onTabChanged = useCallback((item: ChooseAccountTabNames) => {
+    loadAbortController.current?.abort();
     setLastIndex(0);
     setAddresses([]);
     setTab(item);
-    loadAccounts();
+    loadAccounts(item);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const loadAccounts = useCallback(() => {
-    setLoading(true);
-    requestAnimationFrame(async () => {
+  const loadAccounts = useCallback(
+    async (currentTab?: ChooseAccountTabNames) => {
+      if (loading) {
+        setLoading(false);
+        loadAbortController.current?.abort();
+      }
+
+      const controller = new AbortController();
+      loadAbortController.current = controller;
+
+      setLoading(true);
       try {
         await awaitForBluetooth();
 
         const addressList: LedgerAccountItem[] = [];
 
         for (let i = lastIndex; i < lastIndex + 5; i += 1) {
+          if (controller.signal.aborted) {
+            throw new Error('Aborted');
+          }
+
           let hdPath = '';
 
-          if (tab === ChooseAccountTabNames.Ledger) {
-            hdPath = `${ETH_HD_SHORT_PATH}/${i}`;
-          } else {
+          const activeTab = currentTab ?? tab;
+
+          if (activeTab === ChooseAccountTabNames.Ledger) {
             hdPath = LEDGER_HD_PATH_TEMPLATE.replace('index', String(i));
+          } else {
+            hdPath = `${ETH_HD_SHORT_PATH}/${i}`;
           }
 
           const data = await provider.getAccountInfo(hdPath);
@@ -86,8 +101,9 @@ export const LedgerAccountsScreen = () => {
       } finally {
         setLoading(false);
       }
-    });
-  }, [lastIndex, provider, tab]);
+    },
+    [lastIndex, loading, provider, tab],
+  );
 
   useEffect(() => {
     if (lastIndex === 0 && !loading) {
