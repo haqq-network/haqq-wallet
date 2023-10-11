@@ -1,4 +1,4 @@
-# Haqq Wallet Documentation
+# Developer Mode Documentation
 
 ## Table of Contents
 1. [Developer Mode](#developer-mode)
@@ -33,9 +33,9 @@ In the settings screen, a `Developer Tools` section will appear with the followi
 
 Enter a valid JSON for JSON RPC requests in the provided field. Supported methods include:
 - `personal_sign` - [MetaMask Documentation](https://docs.metamask.io/wallet/reference/personal_sign)
-- `eth_sign` - [MetaMask Documentation](https://docs.metamask.io/wallet/reference/eth_sign)
-- `eth_signTransaction` - [MetaMask Documentation](https://docs.metamask.io/wallet/reference/eth_signtransaction)
+- `eth_sign` - [MetaMask Documentation](https://docs.metamask.io/wallet/concepts/signing-methods/#eth_sign)
 - `eth_sendTransaction` - [MetaMask Documentation](https://docs.metamask.io/wallet/reference/eth_sendtransaction)
+- `eth_signTransaction` - functions similarly to `eth_sendTransaction`, but does not send the transaction to the blockchain.
 - `eth_signTypedData_v4` - [MetaMask Documentation](https://docs.metamask.io/wallet/reference/eth_signtypeddata_v4)
 
 ### WalletConnect

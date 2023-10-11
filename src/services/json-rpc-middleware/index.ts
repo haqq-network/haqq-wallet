@@ -1,3 +1,4 @@
+import {getSdkError} from '@walletconnect/utils';
 import {JsonRpcError, createAsyncMiddleware} from 'json-rpc-engine';
 
 import {WebViewEventsEnum} from '@app/components/web3-browser/scripts';
@@ -48,6 +49,7 @@ export const createJsonRpcMiddleware = ({
         res.error = err as JsonRpcError;
       } else {
         logger.error('middleware error', req, err);
+        res.error = getSdkError('USER_REJECTED', JSON.stringify(err || {}));
       }
       logger.captureException(err, 'createJsonRpcMiddleware:error', {req, res});
     }
