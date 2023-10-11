@@ -63,6 +63,11 @@ export const SettingsDeveloperTools = observer(() => {
     toastMessage('History cleared');
   };
 
+  const deleteAllBookmarks = async () => {
+    await Web3BrowserBookmark.removeAll();
+    toastMessage('Bookmarks cleared');
+  };
+
   const clearCache = async () => {
     clearHistory();
     VariablesBool.set(WebViewEventsEnum.CLEAR_CACHE, true);
@@ -169,6 +174,13 @@ export const SettingsDeveloperTools = observer(() => {
       <Button
         title="Clear history"
         onPress={clearHistory}
+        error
+        variant={ButtonVariant.second}
+      />
+      <Spacer height={8} />
+      <Button
+        title="Delete all bookmarks"
+        onPress={deleteAllBookmarks}
         error
         variant={ButtonVariant.second}
       />

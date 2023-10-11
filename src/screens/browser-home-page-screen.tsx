@@ -15,7 +15,7 @@ export const STRICT_URLS: Partial<Link>[] = [
   {
     title: 'HAQQ Dashboard',
     url: 'https://shell.haqq.network',
-    icon: 'https://shell.haqq.network/assets/favicon.svg',
+    icon: 'https://shell.haqq.network/assets/favicon.png',
   },
   {
     title: 'HAQQ Vesting',
