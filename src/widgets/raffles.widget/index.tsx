@@ -96,6 +96,10 @@ export const RafflesWidgetWrapper = memo(() => {
     [navigation, raffles],
   );
 
+  if (!raffles.length) {
+    return null;
+  }
+
   return (
     <RafflesWidget
       data={raffles}
