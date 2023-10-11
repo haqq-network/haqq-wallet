@@ -1,11 +1,18 @@
 import {makeAutoObservable, runInAction} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
+import {Contracts} from '@app/models/contracts';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {Indexer, IndexerUpdatesResponse} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
-import {IContract, IToken, IndexerTokensData, MobXStore} from '@app/types';
+import {
+  HaqqCosmosAddress,
+  IContract,
+  IToken,
+  IndexerTokensData,
+  MobXStore,
+} from '@app/types';
 import {WEI_PRECISION} from '@app/variables/common';
 
 class TokensStore implements MobXStore<IToken> {
@@ -15,12 +22,6 @@ class TokensStore implements MobXStore<IToken> {
    * @value IToken
    */
   data: Record<string, IToken> = {};
-  /**
-   * Token's contracts (using for caching)
-   * @key Token contract address
-   * @value IContract
-   */
-  contracts: Record<string, IContract> = {};
   /**
    * Indexer response with token info
    * @key Wallet address
@@ -123,19 +124,19 @@ class TokensStore implements MobXStore<IToken> {
     } else {
       this.data = {
         ...this.data,
-        [params.id]: newItem,
+        [id]: newItem,
       };
     }
 
-    return params.id;
+    return id;
   }
 
   remove(id: string | undefined) {
     if (!id) {
       return false;
     }
-    const bannerToRemove = this.getById(id);
-    if (!bannerToRemove) {
+    const itemToRemove = this.getById(id);
+    if (!itemToRemove) {
       return false;
     }
     const newData = {
@@ -152,21 +153,11 @@ class TokensStore implements MobXStore<IToken> {
   }
 
   getAll() {
-    const keys = Object.keys(this.data);
-    return keys.map(id => {
-      const item = this.data[id];
-      return {...item, id};
-    });
+    return Object.values(this.data);
   }
 
   getAllVisible() {
-    const keys = Object.keys(this.data);
-    return keys
-      .map(id => {
-        const item = this.data[id];
-        return {...item, id};
-      })
-      .filter(item => !!item.is_in_white_list);
+    return Object.values(this.data).filter(item => !!item.is_in_white_list);
   }
 
   getById(id: string) {
@@ -212,7 +203,7 @@ class TokensStore implements MobXStore<IToken> {
       const addressTokens: IToken[] = data.tokens
         .filter(token => !!token.contract)
         .map(token => {
-          const hasCache = !!this.contracts[token.contract];
+          const hasCache = this.hasContractCache(token.contract);
           if (!hasCache) {
             const contract = data.addresses.find(
               item => item.id === token.contract,
@@ -220,7 +211,8 @@ class TokensStore implements MobXStore<IToken> {
             this.saveContract(contract);
           }
 
-          const contract = this.contracts[token.contract]!;
+          // We saved contract in cache on previous step
+          const contract = this.getContract(token.contract);
           const result = {
             id: contract.id,
             contract_created_at: contract.created_at,
@@ -248,14 +240,20 @@ class TokensStore implements MobXStore<IToken> {
     }, {});
   };
 
+  private hasContractCache = (id: HaqqCosmosAddress) => {
+    return !!Contracts.getById(id);
+  };
+
   private saveContract = (contract: IContract | undefined) => {
     if (!contract) {
       return;
     }
-    this.contracts = {
-      ...this.contracts,
-      [contract.id]: contract,
-    };
+
+    Contracts.create(contract.id, contract);
+  };
+
+  private getContract = (id: HaqqCosmosAddress) => {
+    return Contracts.getById(id);
   };
 
   fetchTokens = async () => {
