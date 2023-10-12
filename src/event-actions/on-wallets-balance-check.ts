@@ -97,6 +97,8 @@ export async function onWalletsBalanceCheck() {
       const updates = JSON.parse(balancesRaw) as IndexerUpdatesResponse;
       const result = parseIndexerBalances(updates);
       app.onWalletsBalance(result);
+    } else {
+      app.emit(Events.onWalletsBalanceCheckError, e);
     }
   }
 }
