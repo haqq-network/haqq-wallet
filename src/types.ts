@@ -692,6 +692,11 @@ export type AddWalletParams = {
   accountId: string;
   path: string;
   type: WalletType;
+  pattern?: string;
+  cardStyle?: WalletCardStyle;
+  colorFrom?: string;
+  colorTo?: string;
+  colorPattern?: string;
 };
 
 export enum ValidatorStatus {

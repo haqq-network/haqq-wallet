@@ -2361,9 +2361,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@haqq/provider-ledger-react-native@npm:0.0.19":
-  version: 0.0.19
-  resolution: "@haqq/provider-ledger-react-native@npm:0.0.19"
+"@haqq/provider-ledger-react-native@npm:0.0.20":
+  version: 0.0.20
+  resolution: "@haqq/provider-ledger-react-native@npm:0.0.20"
   dependencies:
     "@ethersproject/abstract-provider": ^5.7.0
     "@ledgerhq/hw-app-eth": 6.30.0
@@ -2377,7 +2377,7 @@ __metadata:
     react: "*"
     react-native: "*"
     react-native-ble-plx: "*"
-  checksum: 2b92eb16d88e06f2393fbc18c8cc92459470e2b4c1d871f3398c2d1923a89d1e305bd3274cb62572e3c24d74d6930835768521eb6fd3914bfcb34130634c395a
+  checksum: dde057d9e6be68601910f7f9f924b041de3b541822ecfc655c93598f4889289d80a93c3bc64a9276c124af21b0129bddcd6f89cc7debd237247113ecd4f97602
   languageName: node
   linkType: hard
 
@@ -3484,6 +3484,16 @@ __metadata:
     expo:
       optional: true
   checksum: d147a7ca4fbcc877efd21510670499a0be9f91b43d2b02bfee00f43d27ffe0920bbebc24b95f07443e375f4fd42f9403f91290541e120b1e9c26171b0796210a
+  languageName: node
+  linkType: hard
+
+"@react-native-masked-view/masked-view@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "@react-native-masked-view/masked-view@npm:0.3.0"
+  peerDependencies:
+    react: ">=16"
+    react-native: ">=0.57"
+  checksum: 77cf06947640abf5e7bf8c63ba6ee79f7cb409f4a40d3a0242790ff3f61d1b08c4f51373668b0e0e0bb2f60ffe3e4d2e4ea26c7358874f94ac9317841fce1751
   languageName: node
   linkType: hard
 
@@ -9251,7 +9261,7 @@ __metadata:
     "@haqq/encryption-react-native": 0.0.4
     "@haqq/provider-base": 0.0.18
     "@haqq/provider-hot-react-native": 0.0.6
-    "@haqq/provider-ledger-react-native": 0.0.19
+    "@haqq/provider-ledger-react-native": 0.0.20
     "@haqq/provider-mnemonic-react-native": 0.0.11
     "@haqq/provider-sss-react-native": 0.0.11
     "@haqq/provider-web3-utils": 0.0.14
@@ -9269,6 +9279,7 @@ __metadata:
     "@react-native-firebase/dynamic-links": 18.2.0
     "@react-native-firebase/messaging": 18.2.0
     "@react-native-google-signin/google-signin": ^10.0.1
+    "@react-native-masked-view/masked-view": ^0.3.0
     "@react-native/metro-config": 0.72.11
     "@react-navigation/bottom-tabs": 6.5.8
     "@react-navigation/native": 6.1.7
@@ -9370,6 +9381,7 @@ __metadata:
     react-native-redash: ^18.1.0
     react-native-safe-area-context: 4.7.1
     react-native-screens: 3.22.1
+    react-native-skeleton-placeholder: ^5.2.4
     react-native-splash-screen: 3.3.0
     react-native-svg: 13.10.0
     react-native-system-navigation-bar: 2.6.1
@@ -14702,6 +14714,18 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 3b592ff31d9dfde5e2ce967f85f3ad17a94f4f3bee2248a3dad9ec791e7cda72a431f86b468b3b2a70ebeffb49b462f8162668a58fb9ddabb10b5a369816850d
+  languageName: node
+  linkType: hard
+
+"react-native-skeleton-placeholder@npm:^5.2.4":
+  version: 5.2.4
+  resolution: "react-native-skeleton-placeholder@npm:5.2.4"
+  peerDependencies:
+    "@react-native-masked-view/masked-view": ^0.2.8
+    react: ">=0.14.8"
+    react-native: ">=0.50.1"
+    react-native-linear-gradient: ^2.5.6
+  checksum: c90176c55d0a8342724c38ed5af8baff8ed879b04feeff027574c3c405f3d1be193614bd65e30ddf46407cb951d412f6cc5e2aa4a8e179c589c865f83bdae39e
   languageName: node
   linkType: hard
 

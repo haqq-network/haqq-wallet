@@ -790,6 +790,9 @@ export enum I18N {
   qrPermissionRequest,
   plusOtherTokens,
   plusOtherToken,
+  jsonRpcErrorInvalidParams,
+  jsonRpcErrorInvalidWallet,
+  jsonRpcErrorInvalidProvider,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1721,4 +1724,7 @@ const en: Record<I18N, string> = {
     'Allow this website {{url}} to use the QR scanner?',
   [I18N.plusOtherTokens]: '+ {{value}} other tokens',
   [I18N.plusOtherToken]: '+ {{value}} other token',
+  [I18N.jsonRpcErrorInvalidParams]: 'Invalid params',
+  [I18N.jsonRpcErrorInvalidProvider]: 'Wallet is undefined',
+  [I18N.jsonRpcErrorInvalidWallet]: 'Wallet provider is undefined',
 };

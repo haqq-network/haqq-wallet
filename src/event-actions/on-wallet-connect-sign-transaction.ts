@@ -10,14 +10,19 @@ export async function onWalletConnectSignTransaction(
   try {
     const session = WalletConnect.instance.getSessionByTopic(event.topic);
     if (session) {
-      const chainId = Number(event?.params?.chainId?.split?.(':')?.[1]);
+      const [_, chainId, accountId] =
+        session.namespaces.eip155?.accounts?.[0]?.split?.(':');
+
+      const chainIdFromParams = event?.params?.chainId?.split?.(':')?.[1];
+
       const result = await awaitForJsonRpcSign({
-        chainId,
+        chainId: Number(chainId || chainIdFromParams),
         request: event.params?.request,
         metadata: {
           url: session.peer.metadata.url,
           iconUrl: session.peer.metadata.icons?.[0],
         },
+        selectedAccount: accountId,
       });
       await WalletConnect.instance.approveSessionRequest(result, event);
     } else {
