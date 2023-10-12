@@ -12,19 +12,18 @@ import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
 import {Results} from 'realm';
 
 import {Color} from '@app/colors';
+import {CaptchaType} from '@app/components/captcha';
 import {IconProps} from '@app/components/ui';
 import {I18N} from '@app/i18n';
 import {Banner} from '@app/models/banner';
 import {Provider} from '@app/models/provider';
+import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
-
-import {CaptchaType} from './components/captcha';
-import {Transaction} from './models/transaction';
-import {SssProviders} from './services/provider-sss';
-import {WalletConnectApproveConnectionEvent} from './types/wallet-connect';
-import {EIP155_SIGNING_METHODS} from './variables/EIP155';
+import {SssProviders} from '@app/services/provider-sss';
+import {WalletConnectApproveConnectionEvent} from '@app/types/wallet-connect';
+import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 export enum AdjustEvents {
   accountCreated = 'q3vxmg',
@@ -1112,6 +1111,16 @@ export interface IBalance {
     operation: 'eq' | 'lt' | 'lte' | 'gt' | 'gte',
   ) => boolean;
 }
+
+export abstract class ISerializable {
+  static fromJsonString: (obj: string | ISerializable) => ISerializable;
+  abstract toJsonString(): string;
+  /**
+   * Custom console.log for an object
+   */
+  abstract toJSON(): string;
+}
+
 export interface IWidgetBase {
   component: string;
 }
@@ -1196,6 +1205,13 @@ export type HaqqEthereumAddress = `0x${string}` | string;
 export type HexNumber = `0x${string}`;
 
 export type IndexerBalance = Record<HaqqCosmosAddress, HexNumber>;
+export type IndexerToken = {
+  address: HaqqCosmosAddress;
+  contract: HaqqCosmosAddress;
+  created_at: string;
+  updated_at: string;
+  value: string;
+};
 export type IndexerTime = Record<HaqqCosmosAddress, number>;
 export interface BalanceData {
   vested: Balance;
@@ -1258,11 +1274,11 @@ export interface MobXStoreItem {
 }
 
 export interface MobXStore<TData extends MobXStoreItem> {
-  data: Record<string, TData>;
-  getById(id: string): TData;
+  data: Record<string, TData | TData[]>;
+  getById(id: string): TData | undefined;
   getAll(): TData[];
-  create(id: string, item: TData): void;
-  update(id: string, item: Partial<TData>): boolean;
+  create(id: string, item: TData): string;
+  update(id: string | undefined, item: Omit<Partial<TData>, 'id'>): boolean;
   remove(id: string): boolean;
   removeAll(): void;
 }
@@ -1329,3 +1345,42 @@ export interface EIPTypedData {
 }
 
 export type ExtractPromiseType<T> = T extends Promise<infer U> ? U : T;
+
+export type IToken = {
+  /**
+   * Token contract address
+   */
+  id: string;
+  contract_created_at: IContract['created_at'];
+  contract_updated_at: IContract['updated_at'];
+  value: Balance;
+
+  decimals: IContract['decimals'];
+  is_erc20: IContract['is_erc20'];
+  is_erc721: IContract['is_erc721'];
+  is_erc1155: IContract['is_erc1155'];
+  /**
+   * Should be visible or not
+   */
+  is_in_white_list: IContract['is_in_white_list'];
+  name: IContract['name'];
+  symbol: IContract['symbol'];
+  created_at: string;
+  updated_at: string;
+};
+
+export type IContract = {
+  address_type: 'contract';
+  created_at: string;
+  decimals: number | null;
+  id: HaqqCosmosAddress;
+  is_erc20: boolean | null;
+  is_erc721: boolean | null;
+  is_erc1155: boolean | null;
+  is_in_white_list: boolean | null;
+  name: string | null;
+  symbol: string | null;
+  updated_at: string;
+};
+
+export type IndexerTokensData = Record<HaqqEthereumAddress, IToken[]>;
