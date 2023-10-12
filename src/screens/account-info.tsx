@@ -24,7 +24,7 @@ export const AccountInfoScreen = observer(() => {
     () => balances[wallet?.address!],
     [balances, wallet],
   );
-  const transactionsList = useTransactionList([accountId]);
+  const transactionList = useTransactionList([accountId]);
 
   const transactions = useMemo(() => {
     return Transaction.getAllByAccountIdAndProviderId(
@@ -71,7 +71,7 @@ export const AccountInfoScreen = observer(() => {
   return (
     <AccountInfo
       wallet={wallet}
-      transactionsList={transactionsList}
+      transactionsList={transactionList}
       onPressInfo={onPressInfo}
       onReceive={onReceive}
       onSend={onSend}

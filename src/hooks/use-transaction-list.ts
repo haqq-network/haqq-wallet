@@ -1,12 +1,10 @@
-import {useCallback, useEffect, useRef, useState} from 'react';
-
-import {autorun} from 'mobx';
+import {useCallback, useEffect, useState} from 'react';
 
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {prepareTransactions} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
-import {Transaction, TransactionStatus} from '@app/models/transaction';
+import {Transaction} from '@app/models/transaction';
 import {TransactionList} from '@app/types';
 
 /**
@@ -15,82 +13,33 @@ import {TransactionList} from '@app/types';
  *  const transactionsList = useTransactionList(addressList);
  */
 export function useTransactionList(addressList: string[]) {
-  const prevAddressList = useRef<string[]>(addressList);
-  const [transactionsList, setTransactionsList] = useState<TransactionList[]>(
+  const [transactionList, setTransactionList] = useState<TransactionList[]>(
     prepareTransactions(
       addressList,
       Transaction.getAllByProviderId(app.providerId),
     ),
   );
 
-  const txUpdateTimeout = useRef<ReturnType<typeof setTimeout>>();
-  const loadTransactionInfo = useCallback(async (txHash: string) => {
-    // Wait while transaction status will be updated
-    await awaitForEventDone(Events.onTransactionStatusLoad, txHash);
-    // Get transaction from store
-    const tx = Transaction.getById(txHash);
+  const updateTransactions = useCallback(
+    async (address: string) => {
+      await awaitForEventDone(Events.onTransactionsLoad, address);
+      const transactions = Transaction.getAllByProviderId(app.providerId);
+      setTransactionList(prepareTransactions(addressList, transactions));
+    },
+    [addressList],
+  );
 
-    if (tx) {
-      // Run timer if transaction still in progress
-      if (tx.status === TransactionStatus.inProgress) {
-        txUpdateTimeout.current = setTimeout(
-          () => loadTransactionInfo(txHash),
-          5000,
-        );
-      }
-    }
-  }, []);
+  const fetchTransactions = useCallback(() => {
+    addressList.forEach(address => updateTransactions(address));
+  }, [addressList, updateTransactions]);
 
   useEffect(() => {
-    const transactions = Transaction.getAllByProviderId(app.providerId);
-    // Run status check for all in progress transactions
-    (async () =>
-      await Promise.all(
-        transactions
-          .filter(tx => tx.status === TransactionStatus.inProgress)
-          .map(({hash}) => loadTransactionInfo(hash)),
-      ))();
-  }, [loadTransactionInfo]);
-
-  useEffect(() => {
-    // Deep check if addressList changed
-    let isAddressListChanged = false;
-    if (prevAddressList.current.length !== addressList.length) {
-      prevAddressList.current = addressList;
-      isAddressListChanged = true;
-    } else {
-      for (let i = 0; i < addressList.length; i++) {
-        if (prevAddressList.current[i] !== addressList[i]) {
-          prevAddressList.current = addressList;
-          isAddressListChanged = true;
-          break;
-        }
-      }
-    }
-
-    const transactions = Transaction.getAllByProviderId(app.providerId);
-
-    const updateTransactionsList = () => {
-      // Update transactionList only when addressList deeply changed
-      if (isAddressListChanged) {
-        setTransactionsList(prepareTransactions(addressList, transactions));
-      }
-    };
-
-    const disposer = autorun(updateTransactionsList);
-    app.on(Events.onProviderChanged, updateTransactionsList);
+    app.on(Events.onProviderChanged, fetchTransactions);
 
     return () => {
-      clearTimer();
-      disposer();
-      app.off(Events.onProviderChanged, updateTransactionsList);
+      app.off(Events.onProviderChanged, fetchTransactions);
     };
-  }, [addressList]);
+  }, [addressList, fetchTransactions]);
 
-  const clearTimer = () => {
-    clearTimeout(txUpdateTimeout.current);
-    txUpdateTimeout.current = undefined;
-  };
-
-  return transactionsList;
+  return transactionList;
 }
