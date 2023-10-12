@@ -1042,14 +1042,6 @@ export interface NftCollection {
   created_at: number;
 }
 
-export interface TokenItem {
-  icon: string;
-  name: string;
-  ticker: string;
-  count: number;
-  priceUsd: number;
-}
-
 export interface BaseNewsItem {
   id: string;
   title: string;
@@ -1157,6 +1149,10 @@ export interface IBannerWidget extends IWidgetBase, Banner {
   target?: string;
 }
 
+export interface ITokensWidget extends IWidgetBase {
+  component: 'Tokens';
+}
+
 export type IWidget =
   | ITransactionsWidget
   | ITransactionsShortWidget
@@ -1165,7 +1161,8 @@ export type IWidget =
   | IGovernanceWidget
   | ILayoutWidget
   | IAdWidget
-  | IBannerWidget;
+  | IBannerWidget
+  | ITokensWidget;
 
 export interface MarkupResponse {
   blocks: ILayoutWidget;

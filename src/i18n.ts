@@ -788,6 +788,8 @@ export enum I18N {
   unrecognizedDataFormat,
   qrPermissionRequestDescription,
   qrPermissionRequest,
+  plusOtherTokens,
+  plusOtherToken,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1717,4 +1719,6 @@ const en: Record<I18N, string> = {
   [I18N.qrPermissionRequest]: 'QR Permission Request',
   [I18N.qrPermissionRequestDescription]:
     'Allow this website {{url}} to use the QR scanner?',
+  [I18N.plusOtherTokens]: '+ {{value}} other tokens',
+  [I18N.plusOtherToken]: '+ {{value}} other token',
 };
