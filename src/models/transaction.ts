@@ -9,7 +9,7 @@ import {realm} from '@app/models/index';
 import {Balance} from '@app/services/balance';
 import {storage} from '@app/services/mmkv';
 import {MobXStoreFromRealm} from '@app/types';
-import {STORE_REHYDRATION_TIMEOUT_MS} from '@app/variables/common';
+import {DEFAULT_FEE, STORE_REHYDRATION_TIMEOUT_MS} from '@app/variables/common';
 
 export enum TransactionStatus {
   failed,
@@ -126,18 +126,19 @@ class TransactionStore implements MobXStoreFromRealm {
         ? parseInt(String(transaction.confirmations), 10) > 10
         : false,
       input: transaction.input ?? '0x',
-      status: existingTransaction
-        ? existingTransaction.status
-        : transaction.status || TransactionStatus.inProgress,
+      status:
+        transaction.status ||
+        existingTransaction?.status ||
+        TransactionStatus.inProgress,
     };
 
     if (existingTransaction) {
-      this.update(transaction.hash.toLowerCase(), newTransaction);
+      this.update(newTransaction.hash, newTransaction);
     } else {
       this.transactions.push(newTransaction);
     }
 
-    return transaction.hash;
+    return newTransaction;
   }
 
   update(id: string, params: Partial<Transaction>) {
@@ -193,14 +194,17 @@ class TransactionStore implements MobXStoreFromRealm {
   }
 
   setConfirmed(id: string, receipt: TransactionReceipt) {
-    const transaction = this.getById(id);
+    const tx = this.getById(id);
+    const txIndex = this.transactions.findIndex(({hash}) => hash === id);
 
-    if (transaction) {
-      transaction.confirmed = true;
-      transaction.fee = calcFee(
-        receipt.effectiveGasPrice ?? 7,
+    if (tx) {
+      tx.confirmed = true;
+      tx.fee = calcFee(
+        receipt.effectiveGasPrice ?? DEFAULT_FEE,
         receipt.cumulativeGasUsed,
       );
+
+      this.transactions.splice(txIndex, 1, tx);
     }
   }
 }

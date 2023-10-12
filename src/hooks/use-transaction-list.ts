@@ -1,11 +1,12 @@
-import {useEffect, useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 
 import {autorun} from 'mobx';
 
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {prepareTransactions} from '@app/helpers';
-import {Transaction} from '@app/models/transaction';
+import {awaitForEventDone} from '@app/helpers/await-for-event-done';
+import {Transaction, TransactionStatus} from '@app/models/transaction';
 import {TransactionList} from '@app/types';
 
 /**
@@ -21,6 +22,35 @@ export function useTransactionList(addressList: string[]) {
       Transaction.getAllByProviderId(app.providerId),
     ),
   );
+
+  const txUpdateTimeout = useRef<ReturnType<typeof setTimeout>>();
+  const loadTransactionInfo = useCallback(async (txHash: string) => {
+    // Wait while transaction status will be updated
+    await awaitForEventDone(Events.onTransactionStatusLoad, txHash);
+    // Get transaction from store
+    const tx = Transaction.getById(txHash);
+
+    if (tx) {
+      // Run timer if transaction still in progress
+      if (tx.status === TransactionStatus.inProgress) {
+        txUpdateTimeout.current = setTimeout(
+          () => loadTransactionInfo(txHash),
+          5000,
+        );
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    const transactions = Transaction.getAllByProviderId(app.providerId);
+    // Run status check for all in progress transactions
+    (async () =>
+      await Promise.all(
+        transactions
+          .filter(tx => tx.status === TransactionStatus.inProgress)
+          .map(({hash}) => loadTransactionInfo(hash)),
+      ))();
+  }, [loadTransactionInfo]);
 
   useEffect(() => {
     // Deep check if addressList changed
@@ -39,6 +69,7 @@ export function useTransactionList(addressList: string[]) {
     }
 
     const transactions = Transaction.getAllByProviderId(app.providerId);
+
     const updateTransactionsList = () => {
       // Update transactionList only when addressList deeply changed
       if (isAddressListChanged) {
@@ -50,10 +81,16 @@ export function useTransactionList(addressList: string[]) {
     app.on(Events.onProviderChanged, updateTransactionsList);
 
     return () => {
+      clearTimer();
       disposer();
       app.off(Events.onProviderChanged, updateTransactionsList);
     };
   }, [addressList]);
+
+  const clearTimer = () => {
+    clearTimeout(txUpdateTimeout.current);
+    txUpdateTimeout.current = undefined;
+  };
 
   return transactionsList;
 }

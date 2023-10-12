@@ -46,7 +46,7 @@ export const TransactionStatus = ({
     }
   }, [status]);
 
-  if (!status) {
+  if (status === undefined) {
     return null;
   }
 

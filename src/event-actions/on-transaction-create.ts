@@ -8,12 +8,7 @@ export async function onTransactionCreate(
   providerId: string,
   fee: Balance,
 ) {
-  const txId = Transaction.create(transactionRaw, providerId, fee);
-
-  const tx = Transaction.getById(txId);
-  if (!tx) {
-    return;
-  }
+  const tx = Transaction.create(transactionRaw, providerId, fee);
 
   const provider = Provider.getById(providerId);
   if (!provider) {

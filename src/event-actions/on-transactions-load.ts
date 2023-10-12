@@ -45,7 +45,10 @@ async function loadTransactionsFromExplorerWithProvider(
     }
 
     return rows.result
-      .filter(row => !Transaction.getById(row.hash))
+      .filter(row => {
+        const tx = Transaction.getById(row.hash);
+        return tx && tx.status !== getTransactionStatus(row);
+      })
       .map(row => ({
         row: {
           ...row,
