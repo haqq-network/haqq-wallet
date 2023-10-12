@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback} from 'react';
 
 import {observer} from 'mobx-react';
 
@@ -14,10 +14,6 @@ export const WalletsWrapper = observer(() => {
   const navigation = useTypedNavigation();
   const visible = Wallet.getAllVisible();
   const balance = useWalletsBalance(visible);
-  const showLockedTokens = useMemo(
-    () => isFeatureEnabled(Feature.lockedStakedVestedTokens),
-    [],
-  );
 
   const onPressSend = useCallback(
     (address: string) => {
@@ -94,7 +90,7 @@ export const WalletsWrapper = observer(() => {
     <Wallets
       balance={balance}
       wallets={visible}
-      showLockedTokens={showLockedTokens}
+      showLockedTokens
       onPressWalletConnect={onPressWalletConnect}
       onPressSend={onPressSend}
       onPressLedger={onPressLedger}

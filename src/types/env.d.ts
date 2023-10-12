@@ -13,7 +13,6 @@ declare module '@env' {
   export const METADATA_URL: string;
   export const GENERATE_SHARES_URL: string;
   export const IS_SSS_ENABLED: string;
-  export const IS_STAKED_VESTED_ENABLED: string;
   export const AIRDROP_MAINNET_URL: string;
   export const HAQQ_BACKEND: string;
   export const HAQQ_BACKEND_DEV: string;
