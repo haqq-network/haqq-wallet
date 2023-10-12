@@ -18,8 +18,8 @@ export const useIsBalancesFirstSync = () => {
       }
 
       awaitForEventDone(Events.onWalletsBalanceCheck).then(() => {
-        setBalanceLoading(!error);
         setError(null);
+        setBalanceLoading(false);
       });
     };
 
