@@ -3,13 +3,6 @@ name: Distribute apps
 on:
   workflow_dispatch:
     inputs:
-      IS_STAKED_VESTED_ENABLED:
-        type: choice
-        description: IS_STAKED_VESTED_ENABLED
-        options:
-          - true
-          - false
-
       IS_SSS_ENABLED:
         type: choice
         description: IS_SSS_ENABLED
@@ -51,7 +44,6 @@ jobs:
     with:
       IS_DEVELOPMENT: false
       IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
-      IS_STAKED_VESTED_ENABLED: ${{github.event.inputs.IS_STAKED_VESTED_ENABLED}}
     needs:
       - test
 

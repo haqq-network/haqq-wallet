@@ -14,7 +14,6 @@ import {CarouselItem} from '@app/components/wallets/carousel-item';
 import {Dot} from '@app/components/wallets/dot';
 import {Plus} from '@app/components/wallets/plus';
 import {createTheme} from '@app/helpers';
-import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useWalletConnectSessions} from '@app/hooks/use-wallet-connect-sessions';
 import {WalletBalance} from '@app/hooks/use-wallets-balance';
 import {Wallet} from '@app/models/wallet';
@@ -72,9 +71,7 @@ export const Wallets = ({
 
   return (
     <>
-      <Spacer
-        height={isFeatureEnabled(Feature.lockedStakedVestedTokens) ? 12 : 24}
-      />
+      <Spacer height={12} />
       <Animated.ScrollView
         testID={testID}
         pagingEnabled

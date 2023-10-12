@@ -3,7 +3,6 @@ import React, {useCallback, useMemo} from 'react';
 import {observer} from 'mobx-react';
 
 import {LockedTokens} from '@app/components/locked-tokens';
-import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useTypedNavigation} from '@app/hooks';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {Wallet} from '@app/models/wallet';
@@ -24,10 +23,7 @@ export const LockedTokensWrapper = observer(() => {
     [navigation],
   );
 
-  if (
-    visible.length <= 1 ||
-    !isFeatureEnabled(Feature.lockedStakedVestedTokens)
-  ) {
+  if (visible.length <= 1) {
     return null;
   }
 

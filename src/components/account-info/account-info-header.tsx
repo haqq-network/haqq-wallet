@@ -14,7 +14,6 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
@@ -81,15 +80,13 @@ export const AccountInfoHeader = ({
         </View>
       </View>
       <First>
-        {isFeatureEnabled(Feature.lockedStakedVestedTokens) && (
-          <StackedVestedTokens
-            availableBalance={available}
-            lockedBalance={locked}
-            vestedBalance={vested}
-            stakingBalance={staked}
-            onPressInfo={onPressInfo}
-          />
-        )}
+        <StackedVestedTokens
+          availableBalance={available}
+          lockedBalance={locked}
+          vestedBalance={vested}
+          stakingBalance={staked}
+          onPressInfo={onPressInfo}
+        />
         <Spacer height={24} />
       </First>
       <Inline gap={12} style={styles.iconButtons}>
