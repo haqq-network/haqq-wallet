@@ -1,63 +1,57 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useMemo} from 'react';
 
-import {Image, TouchableOpacity, View} from 'react-native';
+import {Image, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {cleanNumber, createTheme} from '@app/helpers';
-import {TokenItem} from '@app/types';
-
-import {Spacer, Text} from './ui';
+import {Spacer, Text} from '@app/components/ui';
+import {createTheme} from '@app/helpers';
+import {IToken} from '@app/types';
 
 export interface TokenRowProps {
-  item: TokenItem;
-  islmPrice: number;
-
-  onPress?(tiker: string): void;
+  item: IToken;
+  usdPrice?: number;
 }
 
-export function TokenRow({item, islmPrice, onPress}: TokenRowProps) {
-  const totalUsd = useMemo(() => item.priceUsd * item.count, [item]);
-  const totalUsdFormatted = useMemo(() => cleanNumber(totalUsd), [totalUsd]);
-
-  const islmCount = useMemo(
-    () => cleanNumber(totalUsd / islmPrice),
-    [islmPrice, totalUsd],
-  );
-
-  const handlerPress = useCallback(
-    () => onPress?.(item?.ticker),
-    [onPress, item],
-  );
+export const TokenRow = ({item, usdPrice = 0}: TokenRowProps) => {
+  const priceInUSD = useMemo(() => {
+    const price = item.value.toEther() * usdPrice;
+    if (price > 0) {
+      return `$${price}`;
+    }
+    return '';
+  }, [item, usdPrice]);
   return (
-    <TouchableOpacity style={styles.container} onPress={handlerPress}>
+    <View style={styles.container}>
       <View style={styles.row}>
-        <Image style={styles.icon} source={{uri: item.icon}} />
+        <Image
+          style={styles.icon}
+          source={require('@assets/images/empty-icon.png')}
+          resizeMode="cover"
+        />
         <Spacer width={12} />
         <View style={styles.textContainer}>
           <View style={styles.row}>
             <Text t11>{item.name}</Text>
             <Spacer />
-            <Text t11>{islmCount} ISLM</Text>
+            <Text t11>{item.value.toEtherString()}</Text>
           </View>
           <View style={styles.row}>
             <Text t14 color={Color.textBase2}>
-              {item.ticker}
+              {item.symbol}
             </Text>
             <Spacer />
             <Text t14 color={Color.textBase2}>
-              ${totalUsdFormatted}
+              {priceInUSD}
             </Text>
           </View>
         </View>
       </View>
-    </TouchableOpacity>
+    </View>
   );
-}
+};
 
 const styles = createTheme({
   container: {
-    marginHorizontal: 20,
-    marginVertical: 8,
     flex: 1,
   },
   row: {
@@ -67,7 +61,6 @@ const styles = createTheme({
     width: 42,
     height: 42,
     borderRadius: 12,
-    backgroundColor: Color.graphicBase2,
   },
   textContainer: {
     flex: 1,
