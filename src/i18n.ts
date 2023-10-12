@@ -788,6 +788,8 @@ export enum I18N {
   unrecognizedDataFormat,
   qrPermissionRequestDescription,
   qrPermissionRequest,
+  plusOtherTokens,
+  plusOtherToken,
   jsonRpcErrorInvalidParams,
   jsonRpcErrorInvalidWallet,
   jsonRpcErrorInvalidProvider,
@@ -1720,6 +1722,8 @@ const en: Record<I18N, string> = {
   [I18N.qrPermissionRequest]: 'QR Permission Request',
   [I18N.qrPermissionRequestDescription]:
     'Allow this website {{url}} to use the QR scanner?',
+  [I18N.plusOtherTokens]: '+ {{value}} other tokens',
+  [I18N.plusOtherToken]: '+ {{value}} other token',
   [I18N.jsonRpcErrorInvalidParams]: 'Invalid params',
   [I18N.jsonRpcErrorInvalidProvider]: 'Wallet is undefined',
   [I18N.jsonRpcErrorInvalidWallet]: 'Wallet provider is undefined',

@@ -4,6 +4,7 @@ import {makePersistable} from 'mobx-persist-store';
 import {Contracts} from '@app/models/contracts';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
+import {Cosmos} from '@app/services/cosmos';
 import {Indexer, IndexerUpdatesResponse} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
 import {
@@ -13,7 +14,7 @@ import {
   IndexerTokensData,
   MobXStore,
 } from '@app/types';
-import {WEI_PRECISION} from '@app/variables/common';
+import {CURRENCY_NAME, WEI_PRECISION} from '@app/variables/common';
 
 class TokensStore implements MobXStore<IToken> {
   /**
@@ -36,38 +37,6 @@ class TokensStore implements MobXStore<IToken> {
       makePersistable(this, {
         name: this.constructor.name,
         properties: [
-          {
-            key: 'data',
-            deserialize: (stringObject: string): this['data'] => {
-              const value = JSON.parse(stringObject) as this['data'];
-              const keys = Object.keys(value);
-              const newValue = keys.reduce((prev, cur) => {
-                return {
-                  ...prev,
-                  [cur]: {
-                    ...value[cur],
-                    value: Balance.fromJsonString(value[cur].value),
-                  },
-                };
-              }, {});
-
-              return newValue;
-            },
-            serialize: (value: this['data']): string => {
-              const keys = Object.keys(value);
-              const newValue = keys.reduce((prev, cur) => {
-                return {
-                  ...prev,
-                  [cur]: {
-                    ...value[cur],
-                    value: value[cur].value.toJsonString(),
-                  },
-                };
-              }, {});
-
-              return JSON.stringify(newValue);
-            },
-          },
           // https://github.com/quarrant/mobx-persist-store/issues/97
           // @ts-ignore
           'contracts',
@@ -114,17 +83,13 @@ class TokensStore implements MobXStore<IToken> {
 
   create(id: string, params: IToken) {
     const existingItem = this.getById(params.id);
-    const newItem = {
-      ...existingItem,
-      ...params,
-    };
 
     if (existingItem) {
       this.update(existingItem.id, params);
     } else {
       this.data = {
         ...this.data,
-        [id]: newItem,
+        [id]: params,
       };
     }
 
@@ -157,14 +122,20 @@ class TokensStore implements MobXStore<IToken> {
   }
 
   getAllVisible() {
-    return Object.values(this.data).filter(item => !!item.is_in_white_list);
+    return this.getAll().filter(item => !!item.is_in_white_list);
+  }
+
+  getAllPositive() {
+    return this.getAll().filter(
+      item => !!item.is_in_white_list && item.value.isPositive(),
+    );
   }
 
   getById(id: string) {
     return this.data[id];
   }
 
-  update(id: string | undefined, item: Omit<Partial<IToken>, 'id'>) {
+  update(id: string | undefined, item: Omit<IToken, 'id'>) {
     if (!id) {
       return false;
     }
@@ -173,10 +144,7 @@ class TokensStore implements MobXStore<IToken> {
       return false;
     }
 
-    const updatedValue = new Balance(itemToUpdate.value).operate(
-      item.value,
-      'add',
-    );
+    const updatedValue = itemToUpdate.value.operate(item.value, 'add');
 
     this.data = {
       ...this.data,
@@ -201,7 +169,11 @@ class TokensStore implements MobXStore<IToken> {
       }
 
       const addressTokens: IToken[] = data.tokens
-        .filter(token => !!token.contract)
+        .filter(
+          token =>
+            !!token.contract &&
+            Cosmos.bech32ToAddress(token.address) === w.address,
+        )
         .map(token => {
           const hasCache = this.hasContractCache(token.contract);
           if (!hasCache) {
@@ -217,7 +189,11 @@ class TokensStore implements MobXStore<IToken> {
             id: contract.id,
             contract_created_at: contract.created_at,
             contract_updated_at: contract.updated_at,
-            value: new Balance(token.value, contract.decimals || WEI_PRECISION),
+            value: new Balance(
+              token.value,
+              contract.decimals || WEI_PRECISION,
+              contract.symbol || CURRENCY_NAME,
+            ),
             decimals: contract.decimals,
             is_erc20: contract.is_erc20,
             is_erc721: contract.is_erc721,
@@ -228,7 +204,6 @@ class TokensStore implements MobXStore<IToken> {
             created_at: token.created_at,
             updated_at: token.updated_at,
           };
-          this.create(result.id, result);
 
           return result;
         });
@@ -256,12 +231,19 @@ class TokensStore implements MobXStore<IToken> {
     return Contracts.getById(id);
   };
 
+  private recalculateCommulativeSum = (tokens: TokensStore['tokens']) => {
+    const walletsTokens = Object.values(tokens).flat(2);
+    this.removeAll();
+    walletsTokens.forEach(token => this.create(token.id, token));
+  };
+
   fetchTokens = async () => {
     const wallets = Wallet.getAll();
     const accounts = wallets.map(w => w.cosmosAddress);
     const updates = await Indexer.instance.updates(accounts, this.lastUpdate);
     const result = this.parseIndexerTokens(updates);
     // this.lastUpdate = new Date();
+    this.recalculateCommulativeSum(result);
 
     runInAction(() => {
       this.tokens = result;

@@ -2,7 +2,6 @@ import Decimal from 'decimal.js';
 import {BigNumber, BigNumberish} from 'ethers';
 
 import {cleanNumber} from '@app/helpers/clean-number';
-import {I18N, getText} from '@app/i18n';
 import {
   BalanceConstructor,
   HexNumber,
@@ -10,6 +9,7 @@ import {
   ISerializable,
 } from '@app/types';
 import {
+  CURRENCY_NAME,
   NUM_DELIMITER,
   NUM_PRECISION,
   WEI_PRECISION,
@@ -19,12 +19,18 @@ const zeroBN = new Decimal(0);
 export class Balance implements IBalance, ISerializable {
   static readonly Empty = new Balance(zeroBN);
   private bnRaw = zeroBN;
-  private _precission: number;
+  private precission: number;
+  private symbol: string;
   public originalValue: BalanceConstructor;
 
-  constructor(balance: BalanceConstructor, precission = WEI_PRECISION) {
+  constructor(
+    balance: BalanceConstructor,
+    precission = WEI_PRECISION,
+    symbol = CURRENCY_NAME,
+  ) {
     this.originalValue = balance;
-    this._precission = precission;
+    this.precission = precission;
+    this.symbol = symbol;
 
     if (BigNumber.isBigNumber(balance)) {
       const {_hex} = BigNumber.from(balance);
@@ -39,6 +45,8 @@ export class Balance implements IBalance, ISerializable {
 
     if (balance instanceof Balance) {
       this.bnRaw = balance.bnRaw as Decimal;
+      this.precission = balance.precission;
+      this.symbol = balance.symbol;
       return;
     }
 
@@ -54,7 +62,7 @@ export class Balance implements IBalance, ISerializable {
     }
 
     if (typeof balance === 'number') {
-      this.bnRaw = new Decimal(balance * 10 ** this._precission);
+      this.bnRaw = new Decimal(balance * 10 ** this.precission);
       return;
     }
   }
@@ -77,7 +85,7 @@ export class Balance implements IBalance, ISerializable {
   /**
    * Convert balance to float according to WEI
    */
-  toFloat = (precission: number = this._precission) => {
+  toFloat = (precission: number = this.precission) => {
     const float = this.bnRaw.div(10 ** precission).toNumber();
     return float;
   };
@@ -88,7 +96,7 @@ export class Balance implements IBalance, ISerializable {
    */
   toFloatString = (
     fixed = NUM_PRECISION,
-    precission: number = this._precission,
+    precission: number = this.precission,
   ) => {
     return cleanNumber(this.toFloat(precission), NUM_DELIMITER, fixed);
   };
@@ -99,11 +107,9 @@ export class Balance implements IBalance, ISerializable {
    */
   toBalanceString = (
     fixed = NUM_PRECISION,
-    precission: number = this._precission,
+    precission: number = this.precission,
   ) => {
-    return getText(I18N.amountISLM, {
-      amount: this.toFloatString(fixed, precission),
-    });
+    return this.toFloatString(fixed, precission) + ` ${this.symbol}`;
   };
 
   toString = () => {
@@ -138,7 +144,7 @@ export class Balance implements IBalance, ISerializable {
     }
 
     const result = this.bnRaw[operation](bnRaw);
-    return new Balance(result);
+    return new Balance(result, this.precission, this.symbol);
   };
 
   /**
@@ -173,7 +179,7 @@ export class Balance implements IBalance, ISerializable {
     }
 
     const result = Decimal.max(this.bnRaw, bnRaw);
-    return new Balance(result);
+    return new Balance(result, this.precission, this.symbol);
   };
 
   /**
@@ -189,7 +195,7 @@ export class Balance implements IBalance, ISerializable {
     }
 
     const result = Decimal.min(this.bnRaw, bnRaw);
-    return new Balance(result);
+    return new Balance(result, this.precission, this.symbol);
   };
 
   private getBnRaw = (
@@ -202,7 +208,7 @@ export class Balance implements IBalance, ISerializable {
     if (value instanceof Balance) {
       return value.bnRaw;
     } else {
-      return new Balance(value).bnRaw;
+      return new Balance(value, this.precission, this.symbol).bnRaw;
     }
   };
 
@@ -210,24 +216,32 @@ export class Balance implements IBalance, ISerializable {
   toEtherString = () => this.toBalanceString();
   toWei = () => this.toNumber();
   toWeiString = () => {
-    return getText(I18N.amountAISLM, {
-      amount: String(this.toWei()),
-    });
+    return this.toWei() + ` ${this.symbol}`;
   };
   toBigNumberish = (): BigNumberish => {
     return BigNumber.from(this.toHex());
   };
 
   toJsonString = (): string => {
-    const serializedValue = {value: this.toHex(), precision: this._precission};
+    const serializedValue = {
+      value: this.toHex(),
+      precision: this.precission,
+      symbol: this.symbol,
+    };
     return JSON.stringify(serializedValue);
   };
 
   static fromJsonString = (obj: string | Balance) => {
-    const serializedValue: {value: HexNumber; precision: number} = JSON.parse(
-      String(obj),
+    const serializedValue: {
+      value: HexNumber;
+      precision: number;
+      symbol: string;
+    } = JSON.parse(String(obj));
+    return new Balance(
+      serializedValue.value,
+      serializedValue.precision,
+      serializedValue.symbol,
     );
-    return new Balance(serializedValue.value, serializedValue.precision);
   };
 
   /**
@@ -238,8 +252,9 @@ export class Balance implements IBalance, ISerializable {
     const hex = this.toHex();
     const ether = this.toEtherString();
     const wei = this.toWeiString();
-    const precision = this._precission;
-    return `Hex: ${hex}, Ether: ${ether}, Wei: ${wei}, Precision: ${precision}}`;
+    const precision = this.precission;
+    const symbol = this.symbol;
+    return `Hex: ${hex}, Ether: ${ether}, Wei: ${wei}, Precision: ${precision}, Symbol: ${symbol}`;
   };
 }
 
