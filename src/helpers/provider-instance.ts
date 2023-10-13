@@ -73,19 +73,18 @@ export async function getProviderInstanceForWallet(
           }),
         );
         break;
-      case WalletType.ledgerBt:
-        {
-          const provider = new ProviderLedgerReactNative({
-            getPassword: app.getPassword.bind(app),
-            deviceId: wallet.accountId!,
-            appName: LEDGER_APP,
-          });
-          if (!skipAwaitForLedgerCall) {
-            awaitForLedger(provider);
-          }
+      case WalletType.ledgerBt: {
+        const provider = new ProviderLedgerReactNative({
+          getPassword: app.getPassword.bind(app),
+          deviceId: wallet.accountId!,
+          appName: LEDGER_APP,
+        });
+        if (!skipAwaitForLedgerCall) {
+          awaitForLedger(provider);
           cache.set(id, provider);
         }
-        break;
+        return provider;
+      }
       case WalletType.sss:
         const storage = await getProviderStorage(wallet.accountId as string);
         cache.set(
