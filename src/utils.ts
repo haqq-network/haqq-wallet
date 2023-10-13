@@ -42,6 +42,7 @@ import {
   BalanceData,
   EthType,
   EthTypedData,
+  HaqqCosmosAddress,
   JsonRpcTransactionRequest,
   PartialJsonRpcRequest,
   SendTransactionError,
@@ -886,3 +887,6 @@ export const requestQRScannerPermission = (url: string) =>
       {cancelable: false},
     );
   });
+
+export const isHaqqAddress = (address: string): address is HaqqCosmosAddress =>
+  typeof address === 'string' && address.startsWith('haqq');

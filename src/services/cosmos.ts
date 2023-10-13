@@ -63,7 +63,7 @@ import {
   CosmosTxV1betaSimulateResponse,
   EvmosVestingV1BalancesResponse,
 } from '@app/types/cosmos';
-import {getHttpResponse} from '@app/utils';
+import {getHttpResponse, isHaqqAddress} from '@app/utils';
 import {COSMOS_PREFIX, WEI} from '@app/variables/common';
 
 import {EthSign} from './eth-sign';
@@ -635,33 +635,42 @@ export class Cosmos {
     hdPath: string,
     validatorAddresses: string[],
   ) {
-    const sender = await this.getSender(transport, hdPath);
+    try {
+      const sender = await this.getSender(transport, hdPath);
 
-    const params = {
-      validatorAddresses,
-    };
+      const params = {
+        validatorAddresses,
+      };
 
-    const memo = '';
+      const memo = '';
 
-    const fee = await this.getFee(
-      params.validatorAddresses.map(v => ({
-        '@type': '/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward',
-        ...createMsgWithdrawDelegatorReward(sender.accountAddress, v).value,
-      })),
-      sender,
-    );
+      const fee = await this.getFee(
+        params.validatorAddresses.map(v => ({
+          '@type': '/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward',
+          ...createMsgWithdrawDelegatorReward(sender.accountAddress, v).value,
+        })),
+        sender,
+      );
 
-    const msg = createTxMsgMultipleWithdrawDelegatorReward(
-      this.haqqChain,
-      sender,
-      fee,
-      memo,
-      params,
-    );
+      const msg = createTxMsgMultipleWithdrawDelegatorReward(
+        this.haqqChain,
+        sender,
+        fee,
+        memo,
+        params,
+      );
 
-    const {address: from} = await transport.getAccountInfo(hdPath);
-    const signature = await EthSign.signTypedData(from, msg.eipToSign);
-    await this.sendSignedMsg(signature, sender, msg);
+      const {address} = await transport.getAccountInfo(hdPath);
+      let from = sender.accountAddress || address;
+      if (isHaqqAddress(from)) {
+        from = Cosmos.bech32ToAddress(from);
+      }
+      const signature = await EthSign.signTypedData(from, msg.eipToSign);
+      await this.sendSignedMsg(signature, sender, msg);
+    } catch (err) {
+      Logger.captureException(err, 'multipleWithdrawDelegatorReward');
+      throw err;
+    }
   }
 
   async withdrawDelegatorReward(
@@ -669,39 +678,48 @@ export class Cosmos {
     hdPath: string,
     validatorAddress: string,
   ) {
-    const sender = await this.getSender(transport, hdPath);
+    try {
+      const sender = await this.getSender(transport, hdPath);
 
-    const params = {
-      validatorAddress,
-    };
+      const params = {
+        validatorAddress,
+      };
 
-    const fee = await this.getFee(
-      {
-        '@type': '/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward',
-        ...createMsgWithdrawDelegatorReward(
-          sender.accountAddress,
-          params.validatorAddress,
-        ).value,
-      },
-      sender,
-    );
+      const fee = await this.getFee(
+        {
+          '@type': '/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward',
+          ...createMsgWithdrawDelegatorReward(
+            sender.accountAddress,
+            params.validatorAddress,
+          ).value,
+        },
+        sender,
+      );
 
-    Logger.log('fee', fee);
+      Logger.log('fee', fee);
 
-    const memo = '';
+      const memo = '';
 
-    const msg = createTxMsgWithdrawDelegatorReward(
-      this.haqqChain,
-      sender,
-      fee,
-      memo,
-      params,
-    );
+      const msg = createTxMsgWithdrawDelegatorReward(
+        this.haqqChain,
+        sender,
+        fee,
+        memo,
+        params,
+      );
 
-    const {address: from} = await ledgerTransportCbWrapper(transport, () =>
-      transport.getAccountInfo(hdPath),
-    );
-    const signature = await EthSign.signTypedData(from, msg.eipToSign);
-    return await this.sendSignedMsg(signature, sender, msg);
+      const {address} = await ledgerTransportCbWrapper(transport, () =>
+        transport.getAccountInfo(hdPath),
+      );
+      let from = sender.accountAddress || address;
+      if (isHaqqAddress(from)) {
+        from = Cosmos.bech32ToAddress(from);
+      }
+      const signature = await EthSign.signTypedData(from, msg.eipToSign);
+      return await this.sendSignedMsg(signature, sender, msg);
+    } catch (err) {
+      Logger.captureException(err, 'withdrawDelegatorReward');
+      throw err;
+    }
   }
 }
