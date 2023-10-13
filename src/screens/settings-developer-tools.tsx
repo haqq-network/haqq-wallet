@@ -10,6 +10,7 @@ import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {createTheme} from '@app/helpers';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
+import {getLeadingAccount} from '@app/helpers/get-leading-account';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
@@ -111,6 +112,7 @@ export const SettingsDeveloperTools = observer(() => {
             const result = await awaitForJsonRpcSign({
               metadata: HAQQ_METADATA,
               request: signData!,
+              selectedAccount: getLeadingAccount()?.address,
             });
             Alert.alert('Result', result, [
               {text: 'Close'},
