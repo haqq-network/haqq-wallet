@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 
-import {Image, View} from 'react-native';
+import {Image, Keyboard, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {BottomPopupContainer} from '@app/components/bottom-popups';
@@ -19,6 +19,7 @@ import {Modals} from '@app/types';
 export const LedgerLocked = ({onClose}: Modals['ledgerLocked']) => {
   useEffect(() => {
     vibrate(HapticEffects.error);
+    Keyboard.dismiss();
   }, []);
 
   return (
