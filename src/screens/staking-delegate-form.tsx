@@ -1,5 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
+import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
+
 import {StakingDelegateForm} from '@app/components/staking-delegate-form';
 import {app} from '@app/contexts';
 import {getProviderInstanceForWallet} from '@app/helpers';
@@ -19,23 +21,37 @@ export const StakingDelegateFormScreen = () => {
   const currentBalance = useMemo(() => balances[account], [balances, account]);
   const [fee, setFee] = useState<Balance | null>(null);
 
-  useLayoutEffectAsync(async () => {
-    const timer = setTimeout(
-      () => setFee(new Balance(Cosmos.fee.amount)),
-      FEE_ESTIMATING_TIMEOUT_MS,
-    );
+  const setDefaultFee = useCallback(
+    () => setFee(new Balance(Cosmos.fee.amount)),
+    [],
+  );
 
-    const instance = await getProviderInstanceForWallet(wallet!);
+  useLayoutEffectAsync(async () => {
+    const timer = setTimeout(() => {
+      setDefaultFee();
+    }, FEE_ESTIMATING_TIMEOUT_MS);
+
+    const instance = await getProviderInstanceForWallet(wallet!, true);
     const cosmos = new Cosmos(app.provider);
-    const f = await cosmos.simulateDelegate(
-      instance,
-      wallet?.path!,
-      validator.operator_address,
-      currentBalance.availableForStake,
-    );
-    Logger.log('f.amount', f.amount);
-    clearTimeout(timer);
-    setFee(new Balance(f.amount));
+    try {
+      setFee(null);
+      const f = await cosmos.simulateDelegate(
+        instance,
+        wallet!.path!,
+        validator.operator_address,
+        currentBalance.availableForStake,
+      );
+      Logger.log('f.amount', f.amount);
+      setFee(new Balance(f.amount));
+    } catch (err) {
+      if (instance instanceof ProviderLedgerReactNative) {
+        instance.abort();
+        clearTimeout(timer);
+        setDefaultFee();
+      }
+    } finally {
+      clearTimeout(timer);
+    }
 
     return () => {
       clearTimeout(timer);

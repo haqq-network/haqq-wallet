@@ -4,7 +4,7 @@ import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
 import {hideModal, showModal} from './';
 import {ExtractPromiseType} from '../types';
 
-const WAIT_FOR_CONNECTION_TIME = 1000;
+const WAIT_FOR_CONNECTION_TIME = 5_000;
 
 export const ledgerTransportCbWrapper = async <ReturnType>(
   transport: ProviderInterface,
@@ -13,6 +13,7 @@ export const ledgerTransportCbWrapper = async <ReturnType>(
   const timeount = setTimeout(() => {
     if (transport instanceof ProviderLedgerReactNative) {
       showModal('ledgerLocked');
+      Promise.reject('ledgerTransportCbWrapper timeout');
     }
   }, WAIT_FOR_CONNECTION_TIME);
 

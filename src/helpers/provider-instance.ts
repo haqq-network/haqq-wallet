@@ -43,8 +43,14 @@ export function removeProviderInstanceForWallet(wallet: Wallet) {
   }
 }
 
+/**
+ * getProviderInstanceForWallet helper
+ * @param {Wallet} wallet
+ * @param {boolean} [skipAwaitForLedgerCall=false] Use `true` for synthetic transaction on Ledger. Default is `false`.
+ */
 export async function getProviderInstanceForWallet(
   wallet: Wallet,
+  skipAwaitForLedgerCall: boolean = false,
 ): Promise<ProviderInterface> {
   const id = getId(wallet);
   if (!hasProviderInstanceForWallet(wallet)) {
@@ -74,7 +80,9 @@ export async function getProviderInstanceForWallet(
             deviceId: wallet.accountId!,
             appName: LEDGER_APP,
           });
-          awaitForLedger(provider);
+          if (!skipAwaitForLedgerCall) {
+            awaitForLedger(provider);
+          }
           cache.set(id, provider);
         }
         break;
