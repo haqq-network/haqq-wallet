@@ -16,9 +16,11 @@ const logger = Logger.create('AwaitJsonRpcSign', {
 export class AwaitJsonRpcSignError {
   name = 'AwaitJsonRpcSignError';
   message?: string;
+  reason?: string;
 
   constructor(message?: string) {
     this.message = message;
+    this.reason = message;
   }
 }
 
