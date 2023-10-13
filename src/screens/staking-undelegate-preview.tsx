@@ -3,7 +3,6 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {observer} from 'mobx-react';
 
 import {StakingUnDelegatePreview} from '@app/components/staking-undelegate-preview';
-import {showModal} from '@app/helpers';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {
   abortProviderInstanceForWallet,
@@ -77,7 +76,6 @@ export const StakingUnDelegatePreviewScreen = observer(() => {
           switch (e.message) {
             case 'can_not_connected':
             case 'ledger_locked':
-              showModal('ledgerLocked');
               break;
             default:
               Logger.captureException(e, 'staking-undelegate', {

@@ -4,7 +4,6 @@ import {observer} from 'mobx-react';
 
 import {StakingDelegatePreview} from '@app/components/staking-delegate-preview';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
-import {showModal} from '@app/helpers';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {
   abortProviderInstanceForWallet,
@@ -83,7 +82,6 @@ export const StakingDelegatePreviewScreen = observer(() => {
           switch (e.message) {
             case 'can_not_connected':
             case 'ledger_locked':
-              showModal('ledgerLocked');
               break;
             default:
               Logger.captureException(e, 'staking-delegate', {
