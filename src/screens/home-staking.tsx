@@ -102,7 +102,7 @@ export const HomeStakingScreen = observer(() => {
     return () => {
       visible.map(w => abortProviderInstanceForWallet(w));
     };
-  }, [visible]);
+  }, []);
 
   return (
     <HomeStaking

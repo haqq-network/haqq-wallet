@@ -267,7 +267,7 @@ export const RAFFLE_TOPIC_VARIABLE_NAME = `notificationsTopic:${PushNotification
 export const DEFAULT_GOVERNANCE_LINK = 'https://shell.haqq.network/governance';
 
 export const ZERO_HEX_NUMBER: HexNumber = '0x0';
-export const FEE_ESTIMATING_TIMEOUT_MS = 5000;
+export const FEE_ESTIMATING_TIMEOUT_MS = 5_000;
 
 export const HAQQ_METADATA: JsonRpcMetadata = {
   url: 'https://haqq.network',
