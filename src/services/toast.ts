@@ -9,6 +9,6 @@ export const message = (msg: string) => {
   RNToast.message(msg, app.currentTheme);
 };
 
-export function sendNotification(text: I18N) {
-  message(getText(text));
+export function sendNotification(text: I18N, params = {}) {
+  message(getText(text, params));
 }
