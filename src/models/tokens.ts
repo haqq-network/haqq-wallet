@@ -1,6 +1,8 @@
 import {makeAutoObservable, runInAction} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
+import {app} from '@app/contexts';
+import {I18N, getText} from '@app/i18n';
 import {Contracts} from '@app/models/contracts';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
@@ -14,7 +16,7 @@ import {
   IndexerTokensData,
   MobXStore,
 } from '@app/types';
-import {CURRENCY_NAME, WEI_PRECISION} from '@app/variables/common';
+import {CURRENCY_NAME, WEI, WEI_PRECISION} from '@app/variables/common';
 
 class TokensStore implements MobXStore<IToken> {
   /**
@@ -157,6 +159,27 @@ class TokensStore implements MobXStore<IToken> {
     return true;
   }
 
+  private generateIslamicToken = (wallet: Wallet): IToken => {
+    const balance = app.getAvailableBalance(wallet.address);
+
+    return {
+      id: wallet.address,
+      contract_created_at: '',
+      contract_updated_at: '',
+      value: balance,
+      decimals: WEI,
+      is_erc20: true,
+      is_erc721: false,
+      is_erc1155: false,
+      is_in_white_list: true,
+      name: getText(I18N.transactionConfirmationIslamicCoin),
+      symbol: CURRENCY_NAME,
+      created_at: '',
+      updated_at: '',
+      image: require('@assets/images/islm_icon.png'),
+    };
+  };
+
   private parseIndexerTokens = (
     data: IndexerUpdatesResponse,
   ): IndexerTokensData => {
@@ -164,7 +187,7 @@ class TokensStore implements MobXStore<IToken> {
       if (!Array.isArray(data.tokens)) {
         return {
           ...acc,
-          [w.address]: [],
+          [w.address]: [this.generateIslamicToken(w)],
         };
       }
 
@@ -185,7 +208,7 @@ class TokensStore implements MobXStore<IToken> {
 
           // We saved contract in cache on previous step
           const contract = this.getContract(token.contract);
-          const result = {
+          const result: IToken = {
             id: contract.id,
             contract_created_at: contract.created_at,
             contract_updated_at: contract.updated_at,
@@ -203,6 +226,8 @@ class TokensStore implements MobXStore<IToken> {
             symbol: contract.symbol,
             created_at: token.created_at,
             updated_at: token.updated_at,
+            //TODO: Add image on the backend side
+            image: undefined,
           };
 
           return result;
@@ -210,7 +235,7 @@ class TokensStore implements MobXStore<IToken> {
 
       return {
         ...acc,
-        [w.address]: addressTokens,
+        [w.address]: [this.generateIslamicToken(w), ...addressTokens],
       };
     }, {});
   };

@@ -793,6 +793,11 @@ export enum I18N {
   jsonRpcErrorInvalidParams,
   jsonRpcErrorInvalidWallet,
   jsonRpcErrorInvalidProvider,
+  tokensZeroBalance,
+  noTokens,
+  tokensSorting,
+  tokensSortingByAmount,
+  tokensSortingByAvailable,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1727,4 +1732,9 @@ const en: Record<I18N, string> = {
   [I18N.jsonRpcErrorInvalidParams]: 'Invalid params',
   [I18N.jsonRpcErrorInvalidProvider]: 'Wallet is undefined',
   [I18N.jsonRpcErrorInvalidWallet]: 'Wallet provider is undefined',
+  [I18N.tokensZeroBalance]: ' Zero Balance',
+  [I18N.noTokens]: 'No Tokens',
+  [I18N.tokensSorting]: 'Tokens Sorting',
+  [I18N.tokensSortingByAmount]: 'By Amount',
+  [I18N.tokensSortingByAvailable]: 'By Available',
 };
