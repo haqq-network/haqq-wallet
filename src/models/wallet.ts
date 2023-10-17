@@ -247,7 +247,7 @@ class WalletStore implements MobXStoreFromRealm {
   async remove(address: string) {
     const obj = this.getById(address);
     if (obj) {
-      this.wallets.filter(
+      this.wallets = this.wallets.filter(
         w => w.address.toLowerCase() !== address.toLowerCase(),
       );
       await awaitForEventDone(Events.onWalletRemove, address);
