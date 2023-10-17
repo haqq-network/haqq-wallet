@@ -32,7 +32,6 @@ export const LedgerAccounts = ({
 }: LedgerDeviceProps) => {
   const onTabChange = useCallback((tabName: ChooseAccountTabNames) => {
     onTabChanged(tabName);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
