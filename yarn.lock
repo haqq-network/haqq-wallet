@@ -9366,6 +9366,7 @@ __metadata:
     react-native-base64: 0.2.1
     react-native-ble-plx: 2.0.3
     react-native-camera: 4.2.1
+    react-native-context-menu-view: ^1.11.0
     react-native-crypto: 2.2.0
     react-native-detector: 0.2.3
     react-native-dotenv: 3.4.9
@@ -14379,6 +14380,16 @@ __metadata:
   dependencies:
     prop-types: ^15.6.2
   checksum: 0e84ce657774694d1cc49395c43a8f2caabc03df36aa77aacfb5c797ad8cfe0368f4807deccc54e82ff2b193e8c2d1ce7ad504eedf7a9fc4719b38e39958a804
+  languageName: node
+  linkType: hard
+
+"react-native-context-menu-view@npm:^1.11.0":
+  version: 1.11.0
+  resolution: "react-native-context-menu-view@npm:1.11.0"
+  peerDependencies:
+    react: ^16.8.1 || ^17.0.0 || ^18.0.0
+    react-native: ">=0.60.0-rc.0 <1.0.x"
+  checksum: 0df0622e48d0c3b3d656c3eef61f54b5b4dc11678ed79f6fe5c453fe512d2cbc4a0ff967aeb32d47280dfd349414cf452e8fd717f27e96c3d64ff3609e7f59e7
   languageName: node
   linkType: hard
 

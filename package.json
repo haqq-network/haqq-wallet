@@ -98,6 +98,7 @@
     "react-native-base64": "0.2.1",
     "react-native-ble-plx": "2.0.3",
     "react-native-camera": "4.2.1",
+    "react-native-context-menu-view": "^1.11.0",
     "react-native-crypto": "2.2.0",
     "react-native-detector": "0.2.3",
     "react-native-dotenv": "3.4.9",
