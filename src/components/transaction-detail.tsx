@@ -6,6 +6,7 @@ import {View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {BottomSheet} from '@app/components/bottom-sheet';
+import {TransactionStatus} from '@app/components/transaction-status/transaction-status';
 import {DataContent, Icon, IconButton, Text} from '@app/components/ui';
 import {cleanNumber, createTheme} from '@app/helpers';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
@@ -124,6 +125,18 @@ export const TransactionDetail = ({
           reversed
           short
         />
+        <DataContent
+          titleI18n={
+            isSent ? I18N.transactionSendTitle : I18N.transactionReceiveTitle
+          }
+          subtitle={
+            <TransactionStatus
+              status={transaction.status}
+              style={styles.transactionIcon}
+              hasTitle
+            />
+          }
+        />
         {!isContract && (
           <DataContent
             title={
@@ -237,4 +250,5 @@ const styles = createTheme({
   iconView: {top: IS_IOS ? -1.7 : 0},
   iconButton: {flexDirection: 'row', marginBottom: 50},
   textStyle: {marginLeft: 8},
+  transactionIcon: {marginRight: 8},
 });

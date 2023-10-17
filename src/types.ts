@@ -1328,6 +1328,15 @@ export interface ExplorerTransactionInfo extends ExplorerBaseTransaction {
   success: boolean;
 }
 
+export interface ExplorerReceiptStatusInfo {
+  status: '0' | '1';
+}
+
+export interface ExplorerTransactionStatus {
+  errDescription: string;
+  isError: '0' | '1';
+}
+
 export interface ExplorerApiResponse<T> {
   message: string;
   result: T | null;

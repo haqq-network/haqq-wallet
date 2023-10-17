@@ -32,6 +32,7 @@ export enum IconsName {
   governance = 'governance',
   help = 'help',
   image = 'image',
+  inprogress = 'inprogress',
   instagram = 'instagram',
   invoice = 'invoice',
   islm = 'islm',

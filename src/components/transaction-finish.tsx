@@ -1,5 +1,6 @@
 import React, {useMemo} from 'react';
 
+import {BigNumber} from '@ethersproject/bignumber';
 import {Image, View} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -45,17 +46,17 @@ export const TransactionFinish = ({
   };
 
   const fee = useMemo(() => {
-    if (transaction instanceof Transaction) {
-      return new Balance(transaction?.fee ?? 0);
+    if ((transaction as Transaction).input) {
+      return new Balance((transaction as Transaction)?.fee ?? 0);
     }
     return Balance.Empty;
   }, [transaction]);
 
   const transactionAmount = useMemo(() => {
-    if (transaction instanceof Transaction) {
-      return new Balance(transaction?.value ?? 0);
+    if (transaction?.value instanceof BigNumber) {
+      return new Balance((transaction as TransactionResponse)?.value._hex ?? 0);
     }
-    return new Balance(transaction?.value._hex ?? 0);
+    return new Balance(transaction?.value ?? 0);
   }, [transaction]);
 
   return (
