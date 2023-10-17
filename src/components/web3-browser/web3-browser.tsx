@@ -2,26 +2,23 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {Platform, SafeAreaView, View} from 'react-native';
-import WebView, {WebViewProps} from 'react-native-webview';
+import WebView from 'react-native-webview';
 import {
-  FileDownloadEvent,
   WebViewNavigation,
   WebViewNavigationEvent,
 } from 'react-native-webview/lib/WebViewTypes';
 
-import {DEBUG_VARS} from '@app/debug-vars';
 import {createTheme} from '@app/helpers';
 import {WebViewLogger} from '@app/helpers/webview-logger';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useLayout} from '@app/hooks/use-layout';
 import {usePrevious} from '@app/hooks/use-previous';
-import {useTesterModeEnabled} from '@app/hooks/use-tester-mode-enabled';
+import {useWebViewSharedProps} from '@app/hooks/use-webview-shared-props';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
-import {getUserAgent} from '@app/services/version';
 
 import {
   InpageBridgeWeb3,
@@ -37,7 +34,6 @@ import {
 import {Web3BrowserHelper} from './web3-browser-helper';
 
 import {clearUrl, getOriginFromUrl} from '../../helpers/web3-browser-utils';
-import {BrowserError} from '../browser-error';
 
 export interface Web3BrowserProps {
   initialUrl: string;
@@ -79,8 +75,6 @@ export interface Web3BrowserProps {
 
   onPressRemoveBookmark(url: string): void;
 
-  onFileDownload(event: FileDownloadEvent): void;
-
   addSiteToSearchHistory(windowInfo: WindowInfoEvent['payload']): void;
 }
 
@@ -109,10 +103,7 @@ export const Web3Browser = ({
   onPressAddBookmark,
   onPressRemoveBookmark,
   addSiteToSearchHistory,
-  onFileDownload,
 }: Web3BrowserProps) => {
-  const isTesterMode = useTesterModeEnabled();
-  const userAgent = useRef(getUserAgent()).current;
   const [inpageBridgeWeb3, setInpageBridgeWeb3] = useState('');
   const [selectedAccount, setSelectedAccount] = useState<string | undefined>();
   const [windowInfo, setWindowInfo] = useState<WindowInfoEvent['payload']>();
@@ -200,6 +191,15 @@ export const Web3Browser = ({
     [inpageBridgeWeb3],
   );
 
+  const webViewDefaultProps = useWebViewSharedProps(
+    webviewRef,
+    {
+      onMessage: helper.handleMessage,
+      injectedJavaScriptBeforeContentLoaded: injectedJSBeforeContentLoaded,
+    },
+    [injectedJSBeforeContentLoaded],
+  );
+
   const onContentProcessDidTerminate = useCallback(() => {
     webviewRef?.current?.reload?.();
   }, [webviewRef]);
@@ -241,13 +241,6 @@ export const Web3Browser = ({
       }
     },
     [helper, webviewRef],
-  );
-
-  const renderError = useCallback(
-    (...args: Parameters<NonNullable<WebViewProps['renderError']>>) => (
-      <BrowserError reason={args[2]} />
-    ),
-    [],
   );
 
   const onNavigationStateChange = useCallback((navState: WebViewNavigation) => {
@@ -317,37 +310,13 @@ export const Web3Browser = ({
       />
       <View style={styles.webviewContainer}>
         <WebView
-          contentMode={'mobile'}
-          webviewDebuggingEnabled={__DEV__ || isTesterMode}
-          pullToRefreshEnabled
-          javaScriptCanOpenWindowsAutomatically
-          setSupportMultipleWindows
-          sharedCookiesEnabled
-          useSharedProcessPool
-          useWebView2
-          javaScriptEnabled
-          cacheEnabled
-          domStorageEnabled
-          allowsBackForwardNavigationGestures
-          thirdPartyCookiesEnabled
-          incognito={DEBUG_VARS.enableWeb3BrowserIncognito}
-          allowsInlineMediaPlayback
-          dataDetectorTypes={'all'}
-          originWhitelist={['*']}
+          {...webViewDefaultProps}
           ref={webviewRef}
-          userAgent={userAgent}
-          onMessage={helper.handleMessage}
           onLoad={onLoad}
           onLoadEnd={helper.onLoadEnd}
           onShouldStartLoadWithRequest={helper.onShouldStartLoadWithRequest}
-          renderError={renderError}
           onContentProcessDidTerminate={onContentProcessDidTerminate}
           source={{uri: initialUrl}}
-          decelerationRate={'normal'}
-          testID={'web3-browser-webview'}
-          applicationNameForUserAgent={'HAQQ Wallet'}
-          injectedJavaScriptBeforeContentLoaded={injectedJSBeforeContentLoaded}
-          onFileDownload={onFileDownload}
           onNavigationStateChange={onNavigationStateChange}
         />
       </View>

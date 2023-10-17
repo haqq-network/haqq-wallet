@@ -1275,8 +1275,14 @@ export interface MobXStoreItem {
   id: string;
 }
 
-export interface MobXStore<TData extends MobXStoreItem> {
-  data: Record<string, TData | TData[]>;
+type MobXStoreData =
+  | MobXStoreItem
+  | MobXStoreItem[]
+  | Record<any, MobXStoreItem>
+  | Record<any, Record<any, MobXStoreItem>>;
+
+export interface MobXStore<TData extends MobXStoreData> {
+  data: Record<string, TData>;
   getById(id: string): TData | undefined;
   getAll(): TData[];
   create(id: string, item: TData): string;
@@ -1388,3 +1394,28 @@ export type IContract = {
 };
 
 export type IndexerTokensData = Record<HaqqEthereumAddress, IToken[]>;
+
+export enum BrowserPermissionStatus {
+  allow = 'allow',
+  allowOnce = 'allowOnce',
+  deny = 'deny',
+}
+
+export enum BrowserPermissionType {
+  geolocation = 'geolocation',
+  // TODO:
+  // camera = 'camera',
+  // microphone = 'microphone',
+}
+
+export type BrowserPermissionItem = MobXStoreItem & {
+  status: BrowserPermissionStatus;
+  type: BrowserPermissionType;
+  createdAt: number;
+  lastUsedAt: number;
+};
+
+/**
+ * @description mark all fields as optional and make selected field as requered
+ */
+export type PartialRequired<T, K extends keyof T> = Partial<T> & Pick<T, K>;

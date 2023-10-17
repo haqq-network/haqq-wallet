@@ -2,9 +2,8 @@ import React, {useCallback, useMemo, useRef, useState} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
 import {useFocusEffect} from '@react-navigation/native';
-import {Linking, Share} from 'react-native';
+import {Share} from 'react-native';
 import WebView from 'react-native-webview';
-import {FileDownloadEvent} from 'react-native-webview/lib/WebViewTypes';
 
 import {Loading} from '@app/components/ui';
 import {
@@ -170,15 +169,6 @@ export const Web3BrowserScreen = () => {
     [],
   );
 
-  const onFileDownload = useCallback(
-    ({nativeEvent: {downloadUrl}}: FileDownloadEvent) => {
-      if (downloadUrl) {
-        Linking.openURL(downloadUrl);
-      }
-    },
-    [],
-  );
-
   useFocusEffect(() => {
     setLoading(true);
     const currentUrl = helper.current?.currentUrl || url;
@@ -249,7 +239,6 @@ export const Web3BrowserScreen = () => {
       onPressAddBookmark={onPressAddBookmark}
       onPressRemoveBookmark={onPressRemoveBookmark}
       addSiteToSearchHistory={addSiteToSearchHistory}
-      onFileDownload={onFileDownload}
     />
   );
 };

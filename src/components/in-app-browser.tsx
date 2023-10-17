@@ -3,9 +3,8 @@ import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {PhishingController} from '@metamask/phishing-controller';
 import {parseUri} from '@walletconnect/utils';
 import {SafeAreaView, StyleSheet, View} from 'react-native';
-import WebView, {WebViewProps} from 'react-native-webview';
+import WebView from 'react-native-webview';
 import {
-  FileDownloadEvent,
   ShouldStartLoadRequest,
   WebViewNavigation,
   WebViewNavigationEvent,
@@ -24,12 +23,10 @@ import {
   showPhishingAlert,
 } from '@app/helpers/web3-browser-utils';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
-import {useTesterModeEnabled} from '@app/hooks/use-tester-mode-enabled';
-import {getUserAgent} from '@app/services/version';
+import {useWebViewSharedProps} from '@app/hooks/use-webview-shared-props';
 import {getHostnameFromUrl} from '@app/utils';
 import {IS_ANDROID} from '@app/variables/common';
 
-import {BrowserError} from './browser-error';
 import {Icon, IconButton, IconsName, Spacer, Text} from './ui';
 import {Separator} from './ui/separator';
 
@@ -42,7 +39,6 @@ type InAppBrowserProps = {
   onPressGoForward: () => void;
   onPressExport: (url: string) => void;
   onPressBrowser: (url: string) => void;
-  onFileDownload: (event: FileDownloadEvent) => void;
 };
 
 export const InAppBrowser = ({
@@ -54,15 +50,12 @@ export const InAppBrowser = ({
   onPressGoForward,
   onPressBrowser,
   onPressExport,
-  onFileDownload,
 }: InAppBrowserProps) => {
   const [navigationEvent, setNavigationEvent] = useState<WebViewNavigation>();
   const [isPageLoading, setPageLoading] = useState(false);
   const isFirstPageLoaded = useRef(false);
-  const userAgent = useRef(getUserAgent()).current;
   const phishingController = useRef(new PhishingController()).current;
-  const isTesterMode = useTesterModeEnabled();
-
+  const webViewDefaultProps = useWebViewSharedProps(webviewRef);
   const pageTitle = useMemo(
     () =>
       title ||
@@ -70,13 +63,6 @@ export const InAppBrowser = ({
       getHostnameFromUrl(url) ||
       'In-App Browser',
     [navigationEvent?.title, title, url],
-  );
-
-  const renderError = useCallback(
-    (...args: Parameters<NonNullable<WebViewProps['renderError']>>) => (
-      <BrowserError reason={args[2]} />
-    ),
-    [],
   );
 
   const onContentProcessDidTerminate = useCallback(() => {
@@ -233,39 +219,15 @@ export const InAppBrowser = ({
       </View>
       <View style={styles.webviewContainer}>
         <WebView
-          contentMode={'mobile'}
-          webviewDebuggingEnabled={__DEV__ || isTesterMode}
-          pullToRefreshEnabled
-          javaScriptCanOpenWindowsAutomatically
-          setSupportMultipleWindows
-          sharedCookiesEnabled
-          useSharedProcessPool
-          useWebView2
-          javaScriptEnabled
-          cacheEnabled
-          domStorageEnabled
-          allowsBackForwardNavigationGestures
-          thirdPartyCookiesEnabled
-          allowsInlineMediaPlayback
-          allowsFullscreenVideo
-          allowsLinkPreview
-          mediaPlaybackRequiresUserAction
-          dataDetectorTypes={'all'}
-          originWhitelist={['*']}
+          {...webViewDefaultProps}
           ref={webviewRef}
-          userAgent={userAgent}
           onLoad={onLoad}
           onLoadStart={onLoadStart}
           onLoadEnd={onLoadEnd}
-          renderError={renderError}
           onContentProcessDidTerminate={onContentProcessDidTerminate}
           onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
           onNavigationStateChange={onNavigationStateChange}
           source={{uri: url}}
-          decelerationRate={'normal'}
-          testID={'in-app-browser-webview'}
-          applicationNameForUserAgent={'HAQQ Wallet'}
-          onFileDownload={onFileDownload}
         />
       </View>
       <View style={styles.actionPanel}>

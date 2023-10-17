@@ -87,9 +87,11 @@ class App extends AsyncEventEmitter {
       ios: appleAuth.isSupported,
     }) || false;
   private _systemTheme: AppTheme = Appearance.getColorScheme() as AppTheme;
+  private _startUpTime: number;
 
   constructor() {
     super();
+    this._startUpTime = Date.now();
 
     seedData();
 
@@ -145,6 +147,10 @@ class App extends AsyncEventEmitter {
 
   get biometryType() {
     return this._biometryType;
+  }
+
+  get startUpTime() {
+    return this._startUpTime;
   }
 
   get isGoogleSigninSupported() {

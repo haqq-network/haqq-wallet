@@ -798,6 +798,12 @@ export enum I18N {
   tokensSorting,
   tokensSortingByAmount,
   tokensSortingByAvailable,
+  browserGeolocationPermissionPromptTitle,
+  browserGeolocationPermissionPromptMessage,
+  browserPermissionPromptAllowOnce,
+  browserPermissionPromptDeny,
+  browserPermissionPromptAllow,
+  browserGeolocationPermissioUseLocationMessage,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1737,4 +1743,13 @@ const en: Record<I18N, string> = {
   [I18N.tokensSorting]: 'Tokens Sorting',
   [I18N.tokensSortingByAmount]: 'By Amount',
   [I18N.tokensSortingByAvailable]: 'By Available',
+  [I18N.browserGeolocationPermissionPromptTitle]:
+    'This website would like to use your current location.',
+  [I18N.browserGeolocationPermissionPromptMessage]:
+    '"{{hostname}}" will use your precise location. Your precise location will be shared with this website because the "Haqq Wallet" app has access to it. Please note: "Haqq Wallet" does not store your location data and will only share it with the website after obtaining your consent.',
+  [I18N.browserPermissionPromptAllow]: 'Allow',
+  [I18N.browserPermissionPromptAllowOnce]: 'Allow once',
+  [I18N.browserPermissionPromptDeny]: 'Deny',
+  [I18N.browserGeolocationPermissioUseLocationMessage]:
+    '"{{hostname}}" is requesting your current location.',
 };
