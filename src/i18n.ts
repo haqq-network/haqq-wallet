@@ -798,6 +798,7 @@ export enum I18N {
   tokensSorting,
   tokensSortingByAmount,
   tokensSortingByAvailable,
+  tokensWidgetTitle,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1737,4 +1738,5 @@ const en: Record<I18N, string> = {
   [I18N.tokensSorting]: 'Tokens Sorting',
   [I18N.tokensSortingByAmount]: 'By Amount',
   [I18N.tokensSortingByAvailable]: 'By Available',
+  [I18N.tokensWidgetTitle]: 'Tokens',
 };
