@@ -66,7 +66,10 @@ export const AccountInfoHeader = ({
         />
         <View style={styles.headerContent}>
           <Text t3 children={total.toBalanceString()} />
-          <CopyMenu value={wallet.address} style={styles.copyButton}>
+          <CopyMenu
+            value={wallet.address}
+            style={styles.copyButton}
+            withSettings>
             <Text t14 color={Color.textBase2}>
               {formattedAddress}
             </Text>

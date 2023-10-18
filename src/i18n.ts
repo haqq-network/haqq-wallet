@@ -802,6 +802,8 @@ export enum I18N {
   browserPermissionPromptDeny,
   browserPermissionPromptAllow,
   browserGeolocationPermissioUseLocationMessage,
+  copyAddress,
+  copyBech32Address,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1748,4 +1750,6 @@ const en: Record<I18N, string> = {
   [I18N.browserPermissionPromptDeny]: 'Deny',
   [I18N.browserGeolocationPermissioUseLocationMessage]:
     '"{{hostname}}" is requesting your current location.',
+  [I18N.copyAddress]: 'Copy address',
+  [I18N.copyBech32Address]: 'Copy bech32 address',
 };
