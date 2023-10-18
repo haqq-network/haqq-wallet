@@ -236,7 +236,10 @@ export const Web3Browser = ({
       helper.onLoad(event);
       setWebviewNavigationData(event.nativeEvent);
 
-      if (event?.nativeEvent?.navigationType === 'backforward') {
+      if (
+        event?.nativeEvent?.navigationType === 'backforward' &&
+        !event.nativeEvent?.loading
+      ) {
         webviewRef?.current?.reload();
       }
     },
