@@ -808,6 +808,8 @@ export enum I18N {
   browserPermissionPromptDeny,
   browserPermissionPromptAllow,
   browserGeolocationPermissioUseLocationMessage,
+  nftWidgetTitle,
+  nftWidgetItems,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1760,4 +1762,6 @@ const en: Record<I18N, string> = {
   [I18N.browserPermissionPromptDeny]: 'Deny',
   [I18N.browserGeolocationPermissioUseLocationMessage]:
     '"{{hostname}}" is requesting your current location.',
+  [I18N.nftWidgetTitle]: 'NFT',
+  [I18N.nftWidgetItems]: '{{count}} items',
 };

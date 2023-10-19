@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import {FlatList, ListRenderItem} from 'react-native';
 
@@ -7,6 +7,7 @@ import {TransactionEmpty} from '@app/components/transaction-empty';
 import {TransactionRow} from '@app/components/transaction-row';
 import {First, PopupContainer, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {useNftCollections} from '@app/hooks/use-nft-collections';
 import {I18N} from '@app/i18n';
 import {
   BalanceData,
@@ -18,14 +19,19 @@ import {
 import {TotalValueInfoHeader} from './total-value-info-header';
 
 import {NftViewer} from '../nft-viewer';
-import {createNftCollectionSet} from '../nft-viewer/mock';
 import {TopTabNavigator, TopTabNavigatorVariant} from '../top-tab-navigator';
 
-enum TabNames {
+export enum TotalValueTabNames {
   tokens = 'tokens',
   transactions = 'transactions',
   nft = 'nft',
 }
+
+const TabIndexMap = {
+  [TotalValueTabNames.tokens]: 0,
+  [TotalValueTabNames.transactions]: 1,
+  [TotalValueTabNames.nft]: 2,
+};
 
 export type TotalValueInfoProps = {
   transactionsList: TransactionList[];
@@ -34,6 +40,7 @@ export type TotalValueInfoProps = {
   onPressRow: (hash: string) => void;
   contractNameMap: ContractNameMap;
   tokens: Record<string, IToken[]>;
+  initialTab?: TotalValueTabNames;
 };
 
 const PAGE_ITEMS_COUNT = 15;
@@ -45,28 +52,40 @@ export const TotalValueInfo = ({
   onPressRow,
   contractNameMap,
   tokens,
+  initialTab,
 }: TotalValueInfoProps) => {
-  const nftCollections = useRef(createNftCollectionSet()).current;
+  const nftCollections = useNftCollections();
+  const initialTabName = useMemo(
+    () => initialTab || TotalValueTabNames.tokens,
+    [initialTab],
+  );
+  const initialTabIndex = useMemo(
+    () => TabIndexMap[initialTabName] ?? 0,
+    [initialTabName],
+  );
+  const [activeTab, setActiveTab] = useState(initialTabName);
   const [page, setPage] = useState(1);
   const transactionListdata = useMemo(
     () => transactionsList.slice(0, PAGE_ITEMS_COUNT * page),
     [page, transactionsList],
   );
-  const [activeTab, setActiveTab] = useState(TabNames.tokens);
   const scrollEnabled = useMemo(
     () =>
-      activeTab === TabNames.transactions ? !!transactionsList.length : true,
+      activeTab === TotalValueTabNames.transactions
+        ? !!transactionsList.length
+        : true,
     [activeTab, transactionsList.length],
   );
   const data = useMemo(
-    () => (activeTab === TabNames.transactions ? transactionListdata : []),
+    () =>
+      activeTab === TotalValueTabNames.transactions ? transactionListdata : [],
     [activeTab, transactionListdata],
   );
 
   const onEndReached = useCallback(() => {
     setPage(prevState => prevState + 1);
   }, []);
-  const onTabChange = useCallback((tabName: TabNames) => {
+  const onTabChange = useCallback((tabName: TotalValueTabNames) => {
     setActiveTab(tabName);
   }, []);
   const renderListHeader = useCallback(
@@ -74,24 +93,24 @@ export const TotalValueInfo = ({
       <>
         <TotalValueInfoHeader balance={balance} onPressInfo={onPressInfo} />
         <TopTabNavigator
-          initialTabIndex={0}
+          initialTabIndex={initialTabIndex}
           showSeparators
           contentContainerStyle={styles.tabsContentContainerStyle}
           tabHeaderStyle={styles.tabHeaderStyle}
           variant={TopTabNavigatorVariant.large}
           onTabChange={onTabChange}>
           <TopTabNavigator.Tab
-            name={TabNames.tokens}
+            name={TotalValueTabNames.tokens}
             title={'Tokens'}
             component={null}
           />
           <TopTabNavigator.Tab
-            name={TabNames.transactions}
+            name={TotalValueTabNames.transactions}
             title={I18N.accountInfoTransactionTabTitle}
             component={null}
           />
           <TopTabNavigator.Tab
-            name={TabNames.nft}
+            name={TotalValueTabNames.nft}
             title={I18N.accountInfoNftTabTitle}
             component={null}
           />
@@ -113,8 +132,8 @@ export const TotalValueInfo = ({
   const renderListEmptyComponent = useCallback(
     () => (
       <First>
-        {activeTab === TabNames.transactions && <TransactionEmpty />}
-        {activeTab === TabNames.nft && (
+        {activeTab === TotalValueTabNames.transactions && <TransactionEmpty />}
+        {activeTab === TotalValueTabNames.nft && (
           <>
             <Spacer height={24} />
             <NftViewer
@@ -124,7 +143,7 @@ export const TotalValueInfo = ({
             />
           </>
         )}
-        {activeTab === TabNames.tokens && (
+        {activeTab === TotalValueTabNames.tokens && (
           <>
             <Spacer height={24} />
             <TokenViewer data={tokens} style={styles.nftViewerContainer} />

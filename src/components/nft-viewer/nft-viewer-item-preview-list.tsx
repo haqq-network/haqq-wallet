@@ -17,7 +17,7 @@ export interface NftViewerItemPreviewListProps {
   variant: NftViewerItemPreviewVariant;
   scrollEnabled?: boolean;
 
-  onPress(item: NftItem): void;
+  onPress?(item: NftItem): void;
 }
 
 export const NftViewerItemPreviewList = ({
@@ -41,6 +41,7 @@ export const NftViewerItemPreviewList = ({
   );
 
   switch (variant) {
+    case NftViewerItemPreviewVariant.small:
     case NftViewerItemPreviewVariant.medium:
       return (
         <FlatList

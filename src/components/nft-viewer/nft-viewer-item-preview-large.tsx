@@ -32,6 +32,7 @@ export const NftViewerItemPreviewLarge = ({
 
   return (
     <TouchableOpacity
+      disabled={!onPress}
       onPress={handlePress}
       style={styles.container}
       onLayout={onLayout}>
