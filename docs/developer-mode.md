@@ -29,6 +29,10 @@ Once activated, Developer Mode will:
 
 In the settings screen, a `Developer Tools` section will appear with the following functionalities:
 
+### Bech32/Hex Converter
+
+Enter a valid hex address or Bech32 address to convert.
+
 ### Raw Sign Request
 
 Enter a valid JSON for JSON RPC requests in the provided field. Supported methods include:
