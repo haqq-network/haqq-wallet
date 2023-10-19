@@ -22,8 +22,8 @@ import {calculateBalances} from '@app/utils';
 export const TotalValueInfoScreen = observer(() => {
   const navigation = useTypedNavigation();
   const wallets = Wallet.getAllVisible();
-  const adressList = useMemo(() => Wallet.addressList(), []);
-  const transactionsList = useTransactionList(adressList);
+  const addressList = useMemo(() => Wallet.addressList(), []);
+  const transactionsList = useTransactionList(addressList);
   const balances = useWalletsBalance(wallets);
   const calculatedBalance = useMemo(
     () => calculateBalances(balances, wallets),

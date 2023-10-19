@@ -1,5 +1,4 @@
 import {formatISO} from 'date-fns';
-import {Results} from 'realm';
 
 import {Transaction} from '@app/models/transaction';
 import {
@@ -20,15 +19,17 @@ const getSource = (transaction: Transaction, source: string[]) => {
 
 export function prepareTransactions(
   source: string[],
-  transactions: Transaction[] | Results<Transaction>,
+  transactions: Transaction[],
 ): TransactionList[] {
   const hash = new Map();
 
   for (const row of transactions) {
+    const createdAt = new Date(row.createdAt);
+
     const result = new Date(
-      row.createdAt.getUTCFullYear(),
-      row.createdAt.getUTCMonth(),
-      row.createdAt.getUTCDate(),
+      createdAt.getUTCFullYear(),
+      createdAt.getUTCMonth(),
+      createdAt.getUTCDate(),
       0,
       0,
       0,
@@ -40,7 +41,7 @@ export function prepareTransactions(
     hash.set(
       k,
       (hash.get(k) ?? []).concat({
-        ...row.toJSON(),
+        ...row,
         source: getSource(row, source),
       }),
     );

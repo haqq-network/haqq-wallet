@@ -25,13 +25,13 @@ export async function onWalletRemove(address: string) {
       });
     }
 
-    const transactions = Transaction.getAll().snapshot();
-    const transactionsTo = transactions.filtered(
-      `to = '${address.toLowerCase()}'`,
+    const transactions = Transaction.getAll();
+    const transactionsTo = transactions.filter(
+      tx => tx.to === address.toLowerCase(),
     );
 
-    const transactionsFrom = transactions.filtered(
-      `from = '${address.toLowerCase()}'`,
+    const transactionsFrom = transactions.filter(
+      tx => tx.from === address.toLowerCase(),
     );
 
     for (const transaction of transactionsTo) {

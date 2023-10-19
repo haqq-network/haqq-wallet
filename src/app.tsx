@@ -42,6 +42,7 @@ import {trackEvent} from '@app/helpers/track-event';
 import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
+import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 import {AccountDetailScreen} from '@app/screens/account-detail';
@@ -207,7 +208,11 @@ export const App = () => {
           await app.init();
           await migrationWallets();
           // MobX stores migration
-          await Promise.all([Contact.migrate(), Wallet.migrate()]);
+          await Promise.all([
+            Contact.migrate(),
+            Wallet.migrate(),
+            Transaction.migrate(),
+          ]);
         }
       })
       .then(() => awaitForEventDone(Events.onAppLoggedId))

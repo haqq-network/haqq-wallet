@@ -43,18 +43,20 @@ export const DataContent = ({
         short && styles.short,
         style,
       ]}>
-      {/* @ts-expect-error */}
-      <Text
-        t11
-        style={[styles.title, bold && styles.boldTitle]}
-        color={Color.textBase1}
-        ellipsizeMode="tail"
-        i18n={titleI18n}
-        i18params={titleI18nParams}
-        numberOfLines={numberOfLines}
-        onPress={onPress}>
-        {title}
-      </Text>
+      <View style={styles.titleContainer}>
+        {/* @ts-expect-error */}
+        <Text
+          t11
+          style={[styles.title, bold && styles.boldTitle]}
+          color={Color.textBase1}
+          ellipsizeMode="tail"
+          i18n={titleI18n}
+          i18params={titleI18nParams}
+          numberOfLines={numberOfLines}
+          onPress={onPress}>
+          {title}
+        </Text>
+      </View>
       {(subtitleI18n || subtitle) && (
         <>
           {/* @ts-expect-error */}
@@ -76,6 +78,10 @@ const styles = createTheme({
   },
   short: {
     paddingVertical: 8,
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   title: {
     marginBottom: 2,

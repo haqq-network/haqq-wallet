@@ -58,7 +58,7 @@ export const AccountInfo = ({
 }: AccountInfoProps) => {
   const nftCollections = useRef(createNftCollectionSet()).current;
   const [page, setPage] = useState(1);
-  const transactionListdata = useMemo(
+  const transactionListData = useMemo(
     () => transactionsList.slice(0, PAGE_ITEMS_COUNT * page),
     [page, transactionsList],
   );
@@ -69,8 +69,8 @@ export const AccountInfo = ({
     [activeTab, transactionsList.length],
   );
   const data = useMemo(
-    () => (activeTab === TabNames.transactions ? transactionListdata : []),
-    [activeTab, transactionListdata],
+    () => (activeTab === TabNames.transactions ? transactionListData : []),
+    [activeTab, transactionListData],
   );
 
   const onEndReached = useCallback(() => {

@@ -11,8 +11,8 @@ import {
 import {TransactionsShortWidget} from '@app/widgets/transactions-short-widget/transactions-short-widget';
 
 export const TransactionsShortWidgetWrapper = memo(() => {
-  const adressList = Wallet.addressList();
-  const transactions = useTransactionList(adressList);
+  const addressList = Wallet.addressList();
+  const transactions = useTransactionList(addressList);
   // We should filter transactions between our local wallets
   const filteredTransactions = transactions.filter(transaction => {
     const sourceWhiteList = [TransactionSource.send, TransactionSource.receive];
@@ -22,8 +22,8 @@ export const TransactionsShortWidgetWrapper = memo(() => {
     }
 
     const item = transaction as TransactionListSend | TransactionListReceive;
-    const isFromMyWallet = item.from && adressList.includes(item.from);
-    const isToMyWallet = item.to && adressList.includes(item.to);
+    const isFromMyWallet = item.from && addressList.includes(item.from);
+    const isToMyWallet = item.to && addressList.includes(item.to);
     return !(isFromMyWallet && isToMyWallet);
   }) as (TransactionListSend | TransactionListReceive)[];
   const navigation = useTypedNavigation();
@@ -34,7 +34,7 @@ export const TransactionsShortWidgetWrapper = memo(() => {
   const calculateInfo = () => {
     const info = filteredTransactions.reduce(
       (acc, current) => {
-        if (adressList.includes(current.from?.toLowerCase())) {
+        if (addressList.includes(current.from?.toLowerCase())) {
           return {
             ...acc,
             send: acc.send + (current.value ?? 0) + (current.fee ?? 0),
