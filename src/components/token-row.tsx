@@ -22,28 +22,26 @@ export const TokenRow = ({item, usdPrice = 0}: TokenRowProps) => {
   }, [item, usdPrice]);
   return (
     <View style={styles.container}>
-      <View style={styles.row}>
-        <Image
-          style={styles.icon}
-          source={require('@assets/images/empty-icon.png')}
-          resizeMode="cover"
-        />
-        <Spacer width={12} />
-        <View style={styles.textContainer}>
-          <View style={styles.row}>
-            <Text t11>{item.name}</Text>
-            <Spacer />
-            <Text t11>{item.value.toEtherString()}</Text>
-          </View>
-          <View style={styles.row}>
-            <Text t14 color={Color.textBase2}>
-              {item.symbol}
-            </Text>
-            <Spacer />
-            <Text t14 color={Color.textBase2}>
-              {priceInUSD}
-            </Text>
-          </View>
+      <Image
+        style={styles.icon}
+        source={item.image || require('@assets/images/empty-icon.png')}
+        resizeMode="cover"
+      />
+      <Spacer width={12} />
+      <View style={styles.textContainer}>
+        <View style={styles.row}>
+          <Text t11>{item.name}</Text>
+          <Spacer />
+          <Text t11>{item.value.toEtherString()}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text t14 color={Color.textBase2}>
+            {item.symbol}
+          </Text>
+          <Spacer />
+          <Text t14 color={Color.textBase2}>
+            {priceInUSD}
+          </Text>
         </View>
       </View>
     </View>
@@ -53,6 +51,8 @@ export const TokenRow = ({item, usdPrice = 0}: TokenRowProps) => {
 const styles = createTheme({
   container: {
     flex: 1,
+    flexDirection: 'row',
+    marginVertical: 8,
   },
   row: {
     flexDirection: 'row',

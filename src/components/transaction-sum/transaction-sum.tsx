@@ -52,7 +52,6 @@ export const TransactionSum = ({
 
   useEffect(() => {
     amounts.setMaxAmount(balance.operate(transactionFee, 'sub'));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [balance, transactionFee]);
 
   const inputSumRef = useRef<TextInput>(null);

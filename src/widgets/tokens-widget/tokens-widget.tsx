@@ -34,7 +34,7 @@ export const TokensWidget = ({onPress, tokens}: Props) => {
   }
   return (
     <ShadowCard onPress={onPress} style={styles.wrapper}>
-      <WidgetHeader title={getText(I18N.transactionWidgetShortTitle)} />
+      <WidgetHeader title={getText(I18N.tokensWidgetTitle)} />
       <Spacer height={8} />
       {tokens.slice(0, VISIBLE_ITEM_AMOUNT).map(item => {
         return <TokenRow key={item.id} item={item} />;

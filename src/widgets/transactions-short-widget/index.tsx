@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, {memo, useCallback, useEffect, useState} from 'react';
 
 import {useTypedNavigation} from '@app/hooks';

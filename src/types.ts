@@ -8,7 +8,12 @@ import {AccessListish, BigNumberish} from '@haqq/provider-base';
 import type {StackNavigationOptions} from '@react-navigation/stack';
 import {SessionTypes} from '@walletconnect/types';
 import Decimal from 'decimal.js';
-import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
+import {
+  ImageSourcePropType,
+  ImageStyle,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
 import {Results} from 'realm';
 
 import {Color} from '@app/colors';
@@ -1379,6 +1384,8 @@ export type IToken = {
   symbol: IContract['symbol'];
   created_at: string;
   updated_at: string;
+
+  image?: ImageSourcePropType;
 };
 
 export type IContract = {

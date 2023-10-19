@@ -119,7 +119,7 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
       [SliderCaptchaState.success]: getColor(Color.graphicGreen1),
       [SliderCaptchaState.error]: getColor(Color.graphicRed1),
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
     [theme],
   );
 

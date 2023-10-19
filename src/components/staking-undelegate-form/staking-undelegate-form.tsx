@@ -58,7 +58,6 @@ export const StakingUnDelegateForm = ({
     if (first >= second) {
       amounts.setMax();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fee, amounts.maxAmount.toHex()]);
 
   return (

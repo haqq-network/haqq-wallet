@@ -45,7 +45,6 @@ export const LedgerAccountsScreen = () => {
     setAddresses([]);
     setTab(item);
     loadAccounts(item);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadAccounts = useCallback(
