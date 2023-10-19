@@ -67,7 +67,7 @@ export const StakingValidators = ({
           return (
             <View>
               {/*When validators array has only one object it means only one unstacked section.
-              In this case title should be shown*/}
+              In this case title should not be shown*/}
               {validators.length > 1 && <SectionHeader title={title} />}
               {/*Sort by random hint section should be shown only for unstacked validators*/}
               {title === getText(I18N.stakingValidatorsUnStaked) && (
