@@ -73,7 +73,10 @@ export const InAppBrowser = ({
     (event: WebViewNavigationEvent) => {
       setNavigationEvent(event.nativeEvent);
 
-      if (event?.nativeEvent?.navigationType === 'backforward') {
+      if (
+        event?.nativeEvent?.navigationType === 'backforward' &&
+        !event.nativeEvent?.loading
+      ) {
         webviewRef?.current?.reload();
       }
     },
