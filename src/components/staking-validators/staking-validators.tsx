@@ -72,7 +72,7 @@ export const StakingValidators = ({
               {/*Sort by random hint section should be shown only for unstacked validators*/}
               {title === getText(I18N.stakingValidatorsUnStaked) && (
                 <View style={styles.sortSectionContainer}>
-                  <Icon name={IconsName.sort} color={Color.textBase1} />
+                  <Icon name={IconsName.arrow_sort} color={Color.textBase1} />
                   <Text t9 i18n={I18N.byRandomTitle} style={styles.sortTitle} />
                 </View>
               )}
