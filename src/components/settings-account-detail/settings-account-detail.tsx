@@ -91,7 +91,7 @@ export const SettingsAccountDetail = ({
         <View style={styles.hDevider} />
         <AddressInfo copyValue={Cosmos.addressToBech32(wallet?.address)}>
           <Text t14 color={Color.textBase2}>
-            Bech32:{' '}
+            {`${I18N.bech32Title}: `}
           </Text>
           <Text t14>{Cosmos.addressToBech32(wallet?.address)}</Text>
         </AddressInfo>
