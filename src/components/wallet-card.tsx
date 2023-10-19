@@ -11,7 +11,6 @@ import {Color} from '@app/colors';
 import {
   BlurView,
   Card,
-  CopyButton,
   First,
   Icon,
   IconButton,
@@ -19,6 +18,7 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
+import {CopyMenu} from '@app/components/ui/copy-menu';
 import {cleanNumber, createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {useIsBalancesFirstSync} from '@app/hooks/use-is-balances-sync';
@@ -134,6 +134,7 @@ export const WalletCard = memo(
           <CopyButton
             style={styles.copyIcon}
             value={wallet.address}
+            withSettings
             secondValue={wallet.cosmosAddress}>
             <Text t14 color={Color.textBase3} testID={`${testID}_address`}>
               {formattedAddress}
@@ -144,7 +145,7 @@ export const WalletCard = memo(
               color={Color.graphicBase3}
               style={styles.marginLeft}
             />
-          </CopyButton>
+          </CopyMenu>
         </View>
         <View style={styles.row}>
           {enableProtectionWarning && (

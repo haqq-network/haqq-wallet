@@ -22,12 +22,15 @@ export function parseVersion(version: string): Version | null {
     return null;
   }
 
-  const [major, minor, patch] = match.slice(1).map(Number);
+  const [major, minor, patch] = match
+    .slice(1)
+    .map(Number)
+    .map(num => (Number.isNaN(num) ? 0 : num));
 
   return {
-    major: major ?? 0,
-    minor: minor ?? 0,
-    patch: patch ?? 0,
+    major,
+    minor,
+    patch,
   };
 }
 

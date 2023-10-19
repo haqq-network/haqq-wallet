@@ -349,4 +349,8 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
       }
     }
   },
+  eth_gasPrice: async ({helper}) => {
+    const rpcProvider = await getLocalRpcProvider(helper);
+    return rpcProvider.getGasPrice();
+  },
 };
