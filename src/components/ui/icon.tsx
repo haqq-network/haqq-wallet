@@ -58,6 +58,7 @@ export enum IconsName {
   servers = 'servers',
   settings = 'settings',
   shield = 'shield',
+  sort = 'sort',
   staking = 'staking',
   star = 'star',
   swap = 'swap',

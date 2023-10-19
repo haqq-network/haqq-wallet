@@ -816,6 +816,7 @@ export enum I18N {
   copyBech32Address,
   evmTitle,
   bech32Title,
+  byRandomTitle,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1776,4 +1777,5 @@ const en: Record<I18N, string> = {
   [I18N.copyBech32Address]: 'Copy bech32 address',
   [I18N.evmTitle]: 'EVM',
   [I18N.bech32Title]: 'Bech32',
+  [I18N.byRandomTitle]: 'By random',
 };
