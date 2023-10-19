@@ -5,7 +5,6 @@ import {View} from 'react-native';
 import {Color} from '@app/colors';
 import {
   CardSmall,
-  CopyButton,
   First,
   Icon,
   IconButton,
@@ -13,6 +12,7 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
+import {CopyMenu} from '@app/components/ui/copy-menu';
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
@@ -66,7 +66,10 @@ export const AccountInfoHeader = ({
         />
         <View style={styles.headerContent}>
           <Text t3 children={total.toBalanceString()} />
-          <CopyButton value={wallet.address} style={styles.copyButton}>
+          <CopyMenu
+            value={wallet.address}
+            style={styles.copyButton}
+            withSettings>
             <Text t14 color={Color.textBase2}>
               {formattedAddress}
             </Text>
@@ -76,7 +79,7 @@ export const AccountInfoHeader = ({
               color={Color.graphicBase2}
               style={styles.copyIcon}
             />
-          </CopyButton>
+          </CopyMenu>
         </View>
       </View>
       <First>
