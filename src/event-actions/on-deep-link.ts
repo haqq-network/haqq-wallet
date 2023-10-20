@@ -10,6 +10,7 @@ import {I18N} from '@app/i18n';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
+import {openInAppBrowser, openWeb3Browser} from '@app/utils';
 
 const handleAddress = async (
   address: string,
@@ -61,6 +62,20 @@ export async function onDeepLink(
 
   if (link.startsWith(`${ValidUrlProtocol.haqq}:`)) {
     let params = link.split(':');
+
+    if (link.startsWith('haqq://browser')) {
+      const uri = decodeURIComponent(link.replace('haqq://browser?uri=', ''));
+      openInAppBrowser(uri);
+      return true;
+    }
+
+    if (link.startsWith('haqq://web3browser')) {
+      const uri = decodeURIComponent(
+        link.replace('haqq://web3browser?uri=', ''),
+      );
+      openWeb3Browser(uri);
+      return true;
+    }
 
     if (link.startsWith('haqq://wc')) {
       const uri = decodeURIComponent(link.replace('haqq://wc?uri=', ''));
