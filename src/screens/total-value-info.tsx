@@ -5,7 +5,7 @@ import {observer} from 'mobx-react';
 import {TotalValueInfo} from '@app/components/total-value-info';
 import {Loading} from '@app/components/ui';
 import {showModal} from '@app/helpers';
-import {useTypedNavigation} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useTransactionList} from '@app/hooks/use-transaction-list';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
@@ -21,9 +21,10 @@ import {calculateBalances} from '@app/utils';
 
 export const TotalValueInfoScreen = observer(() => {
   const navigation = useTypedNavigation();
+  const route = useTypedRoute<'totalValueInfo'>();
   const wallets = Wallet.getAllVisible();
-  const adressList = useMemo(() => Wallet.addressList(), []);
-  const transactionsList = useTransactionList(adressList);
+  const addressList = useMemo(() => Wallet.addressList(), []);
+  const transactionsList = useTransactionList(addressList);
   const balances = useWalletsBalance(wallets);
   const calculatedBalance = useMemo(
     () => calculateBalances(balances, wallets),
@@ -70,6 +71,7 @@ export const TotalValueInfoScreen = observer(() => {
       onPressRow={onPressRow}
       contractNameMap={contractNameMap}
       tokens={Token.tokens}
+      initialTab={route?.params?.tab}
     />
   );
 });

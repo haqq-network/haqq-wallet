@@ -6,7 +6,7 @@ import {NftCollection} from '@app/models/nft-collection';
 import {Provider} from '@app/models/provider';
 import {Refferal} from '@app/models/refferal';
 import {StakingMetadata} from '@app/models/staking-metadata';
-import {Transaction} from '@app/models/transaction';
+import {TransactionRealmObject} from '@app/models/transaction';
 import {UserSchema, UserType} from '@app/models/user';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesDate} from '@app/models/variables-date';
@@ -37,7 +37,7 @@ export const realm = new Realm({
     WalletConnectSessionMetadata,
     WalletRealmObject,
     UserSchema,
-    Transaction,
+    TransactionRealmObject,
     ContactRealmObject,
     Provider,
     StakingMetadata,

@@ -18,6 +18,7 @@ import {Results} from 'realm';
 
 import {Color} from '@app/colors';
 import {CaptchaType} from '@app/components/captcha';
+import {TotalValueTabNames} from '@app/components/total-value-info';
 import {IconProps} from '@app/components/ui';
 import {I18N} from '@app/i18n';
 import {Banner} from '@app/models/banner';
@@ -186,7 +187,9 @@ export type RootStackParamList = {
   accountInfo: {
     accountId: string;
   };
-  totalValueInfo: undefined;
+  totalValueInfo?: {
+    tab?: TotalValueTabNames;
+  };
   welcome: undefined;
   welcomeNews: undefined;
   create: undefined;
@@ -1163,6 +1166,16 @@ export interface ITokensWidget extends IWidgetBase {
   component: 'Tokens';
 }
 
+export enum NftWidgetSize {
+  small = 'small',
+  medium = 'medium',
+  large = 'large',
+}
+export interface INftWidget extends IWidgetBase {
+  component: 'Nft';
+  size: NftWidgetSize;
+}
+
 export type IWidget =
   | ITransactionsWidget
   | ITransactionsShortWidget
@@ -1172,7 +1185,8 @@ export type IWidget =
   | ILayoutWidget
   | IAdWidget
   | IBannerWidget
-  | ITokensWidget;
+  | ITokensWidget
+  | INftWidget;
 
 export interface MarkupResponse {
   blocks: ILayoutWidget;
@@ -1333,6 +1347,15 @@ export interface ExplorerTransactionInfo extends ExplorerBaseTransaction {
   success: boolean;
 }
 
+export interface ExplorerReceiptStatusInfo {
+  status: '0' | '1';
+}
+
+export interface ExplorerTransactionStatus {
+  errDescription: string;
+  isError: '0' | '1';
+}
+
 export interface ExplorerApiResponse<T> {
   message: string;
   result: T | null;
@@ -1391,6 +1414,7 @@ export type IContract = {
   name: string | null;
   symbol: string | null;
   updated_at: string;
+  icon: string | null;
 };
 
 export type IndexerTokensData = Record<HaqqEthereumAddress, IToken[]>;

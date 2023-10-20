@@ -890,3 +890,7 @@ export const requestQRScannerPermission = (url: string) =>
 
 export const isHaqqAddress = (address: string): address is HaqqCosmosAddress =>
   typeof address === 'string' && address.startsWith('haqq');
+
+export const getRandomItemFromArray = <T>(array: T[]): T => {
+  return array[Math.floor(Math.random() * array?.length)] as T;
+};

@@ -788,6 +788,9 @@ export enum I18N {
   unrecognizedDataFormat,
   qrPermissionRequestDescription,
   qrPermissionRequest,
+  transactionStatusSuccess,
+  transactionStatusFailed,
+  transactionStatusInProgress,
   plusOtherTokens,
   plusOtherToken,
   jsonRpcErrorInvalidParams,
@@ -798,12 +801,19 @@ export enum I18N {
   tokensSorting,
   tokensSortingByAmount,
   tokensSortingByAvailable,
+  tokensWidgetTitle,
   browserGeolocationPermissionPromptTitle,
   browserGeolocationPermissionPromptMessage,
   browserPermissionPromptAllowOnce,
   browserPermissionPromptDeny,
   browserPermissionPromptAllow,
   browserGeolocationPermissioUseLocationMessage,
+  nftWidgetTitle,
+  nftWidgetItems,
+  copyAddress,
+  copyBech32Address,
+  evmTitle,
+  bech32Title,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1733,6 +1743,9 @@ const en: Record<I18N, string> = {
   [I18N.qrPermissionRequest]: 'QR Permission Request',
   [I18N.qrPermissionRequestDescription]:
     'Allow this website {{url}} to use the QR scanner?',
+  [I18N.transactionStatusSuccess]: 'Success',
+  [I18N.transactionStatusFailed]: 'Failed',
+  [I18N.transactionStatusInProgress]: 'In progress',
   [I18N.plusOtherTokens]: '+ {{value}} other tokens',
   [I18N.plusOtherToken]: '+ {{value}} other token',
   [I18N.jsonRpcErrorInvalidParams]: 'Invalid params',
@@ -1743,6 +1756,7 @@ const en: Record<I18N, string> = {
   [I18N.tokensSorting]: 'Tokens Sorting',
   [I18N.tokensSortingByAmount]: 'By Amount',
   [I18N.tokensSortingByAvailable]: 'By Available',
+  [I18N.tokensWidgetTitle]: 'Tokens',
   [I18N.browserGeolocationPermissionPromptTitle]:
     'This website would like to use your current location.',
   [I18N.browserGeolocationPermissionPromptMessage]:
@@ -1752,4 +1766,10 @@ const en: Record<I18N, string> = {
   [I18N.browserPermissionPromptDeny]: 'Deny',
   [I18N.browserGeolocationPermissioUseLocationMessage]:
     '"{{hostname}}" is requesting your current location.',
+  [I18N.nftWidgetTitle]: 'NFT',
+  [I18N.nftWidgetItems]: '{{count}} items',
+  [I18N.copyAddress]: 'Copy address',
+  [I18N.copyBech32Address]: 'Copy bech32 address',
+  [I18N.evmTitle]: 'EVM',
+  [I18N.bech32Title]: 'Bech32',
 };

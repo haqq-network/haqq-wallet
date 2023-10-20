@@ -17,8 +17,8 @@ import {TransactionsWidget} from '@app/widgets/transactions-widget/transactions-
 export const TransactionsWidgetWrapper = memo(() => {
   const navigation = useTypedNavigation();
   const wallets = useMemo(() => Wallet.getAll(), []);
-  const adressList = Wallet.addressList();
-  const transactions = useTransactionList(adressList);
+  const addressList = Wallet.addressList();
+  const transactions = useTransactionList(addressList);
   const [contractNameMap, setContractNameMap] = useState({});
 
   const openTotalInfo = useCallback(() => {

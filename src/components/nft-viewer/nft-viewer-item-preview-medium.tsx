@@ -22,7 +22,10 @@ export const NftViewerItemPreviewMedium = ({
   const handlePress = useCallback(() => onPress?.(item), [onPress, item]);
 
   return (
-    <TouchableOpacity onPress={handlePress} style={styles.container}>
+    <TouchableOpacity
+      disabled={!onPress}
+      onPress={handlePress}
+      style={styles.container}>
       <ImageBackground
         imageStyle={styles.imageContainer}
         style={styles.image}

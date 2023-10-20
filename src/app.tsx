@@ -25,6 +25,7 @@ import {AppState, Linking, Platform, StatusBar, StyleSheet} from 'react-native';
 import {Adjust, AdjustConfig} from 'react-native-adjust';
 import {AdjustOaid} from 'react-native-adjust-oaid';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {MenuProvider} from 'react-native-popup-menu';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
@@ -42,6 +43,7 @@ import {trackEvent} from '@app/helpers/track-event';
 import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
+import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 import {AccountDetailScreen} from '@app/screens/account-detail';
@@ -207,7 +209,11 @@ export const App = () => {
           await app.init();
           await migrationWallets();
           // MobX stores migration
-          await Promise.all([Contact.migrate(), Wallet.migrate()]);
+          await Promise.all([
+            Contact.migrate(),
+            Wallet.migrate(),
+            Transaction.migrate(),
+          ]);
         }
       })
       .then(() => awaitForEventDone(Events.onAppLoggedId))
@@ -316,372 +322,376 @@ export const App = () => {
   return (
     <GestureHandlerRootView style={styles.rootView}>
       <ActionSheetProvider>
-        <SafeAreaProvider>
-          <NavigationContainer
-            key={initialRoute}
-            onUnhandledAction={onUnhandledAction}
-            ref={navigator}
-            theme={navTheme}
-            onStateChange={onStateChange}>
-            <Stack.Navigator
-              screenOptions={basicScreenOptions}
-              initialRouteName={initialRoute}>
-              <Stack.Screen
-                name="home"
-                component={themeUpdaterHOC(HomeScreen)}
-              />
-              <Stack.Screen
-                name="welcome"
-                component={themeUpdaterHOC(WelcomeScreen)}
-              />
-              <Stack.Screen
-                name="welcomeNews"
-                component={themeUpdaterHOC(WelcomeNewsScreen)}
-              />
-              <Stack.Screen
-                name="inAppBrowser"
-                component={themeUpdaterHOC(InAppBrowserScreen)}
-                options={fullScreenModalOptions}
-              />
-              {/* Modals group */}
-              <Stack.Group screenOptions={stackScreenOptions}>
+        <MenuProvider>
+          <SafeAreaProvider>
+            <NavigationContainer
+              key={initialRoute}
+              onUnhandledAction={onUnhandledAction}
+              ref={navigator}
+              theme={navTheme}
+              onStateChange={onStateChange}>
+              <Stack.Navigator
+                screenOptions={basicScreenOptions}
+                initialRouteName={initialRoute}>
                 <Stack.Screen
-                  name="cloudProblems"
-                  component={themeUpdaterHOC(CloudProblemsScreen)}
-                  options={cloudProblemsScreenOptions}
+                  name="home"
+                  component={themeUpdaterHOC(HomeScreen)}
                 />
                 <Stack.Screen
-                  name="web3BrowserPopup"
-                  component={themeUpdaterHOC(Web3BrowserPopup)}
+                  name="welcome"
+                  component={themeUpdaterHOC(WelcomeScreen)}
                 />
                 <Stack.Screen
-                  name="sssMigrate"
-                  component={themeUpdaterHOC(SssMigrateScreen)}
+                  name="welcomeNews"
+                  component={themeUpdaterHOC(WelcomeNewsScreen)}
                 />
                 <Stack.Screen
-                  name="jsonRpcSign"
-                  component={themeUpdaterHOC(JsonRpcSignPopup)}
+                  name="inAppBrowser"
+                  component={themeUpdaterHOC(InAppBrowserScreen)}
+                  options={fullScreenModalOptions}
+                />
+                {/* Modals group */}
+                <Stack.Group screenOptions={stackScreenOptions}>
+                  <Stack.Screen
+                    name="cloudProblems"
+                    component={themeUpdaterHOC(CloudProblemsScreen)}
+                    options={cloudProblemsScreenOptions}
+                  />
+                  <Stack.Screen
+                    name="web3BrowserPopup"
+                    component={themeUpdaterHOC(Web3BrowserPopup)}
+                  />
+                  <Stack.Screen
+                    name="sssMigrate"
+                    component={themeUpdaterHOC(SssMigrateScreen)}
+                  />
+                  <Stack.Screen
+                    name="jsonRpcSign"
+                    component={themeUpdaterHOC(JsonRpcSignPopup)}
+                  />
+                  <Stack.Screen
+                    name="nftDetails"
+                    component={themeUpdaterHOC(NftDetailsScreen)}
+                  />
+                  <Stack.Screen
+                    name="backup"
+                    component={themeUpdaterHOC(BackupScreen)}
+                  />
+                  <Stack.Screen
+                    name="signin"
+                    component={themeUpdaterHOC(SignInScreen)}
+                  />
+                  <Stack.Screen
+                    name="signup"
+                    component={themeUpdaterHOC(SignUpScreen)}
+                  />
+                  <Stack.Screen
+                    name="transaction"
+                    component={themeUpdaterHOC(TransactionScreen)}
+                  />
+                  <Stack.Screen
+                    name="walletConnect"
+                    component={themeUpdaterHOC(WalletConnectScreen)}
+                  />
+                  <Stack.Screen
+                    name="walletConnectApplicationListPopup"
+                    component={themeUpdaterHOC(
+                      WalletConnectApplicationListPopupScreen,
+                    )}
+                  />
+                  <Stack.Screen
+                    name="walletProtectionPopup"
+                    component={themeUpdaterHOC(WalletProtectionPopup)}
+                  />
+                  <Stack.Screen
+                    name="walletConnectApplicationDetailsPopup"
+                    component={themeUpdaterHOC(
+                      WalletConnectApplicationDetailsPopupScreen,
+                    )}
+                  />
+                  <Stack.Screen
+                    name="walletSelector"
+                    component={themeUpdaterHOC(WalletSelectorScreen)}
+                  />
+                  <Stack.Screen
+                    name="restore"
+                    component={themeUpdaterHOC(RestoreScreen)}
+                  />
+                  <Stack.Screen
+                    name="create"
+                    component={themeUpdaterHOC(CreateScreen)}
+                  />
+                  <Stack.Screen
+                    name="ledger"
+                    component={themeUpdaterHOC(LedgerScreen)}
+                  />
+                  <Stack.Screen
+                    name="stakingDelegate"
+                    component={themeUpdaterHOC(StakingDelegateScreen)}
+                  />
+                  <Stack.Screen
+                    name="stakingUnDelegate"
+                    component={themeUpdaterHOC(StakingUnDelegateScreen)}
+                  />
+                  <Stack.Screen
+                    name="proposalDeposit"
+                    component={themeUpdaterHOC(ProposalDepositScreen)}
+                  />
+                </Stack.Group>
+                <Stack.Screen
+                  name="accountInfo"
+                  component={themeUpdaterHOC(AccountInfoScreen)}
+                  options={getWalletTitle}
                 />
                 <Stack.Screen
-                  name="nftDetails"
-                  component={themeUpdaterHOC(NftDetailsScreen)}
+                  name="totalValueInfo"
+                  component={themeUpdaterHOC(TotalValueInfoScreen)}
+                  options={totalValueInfoOptions}
                 />
                 <Stack.Screen
-                  name="backup"
-                  component={themeUpdaterHOC(BackupScreen)}
+                  name="backupNotification"
+                  component={themeUpdaterHOC(BackupNotificationScreen)}
+                  options={actionsSheet}
                 />
                 <Stack.Screen
-                  name="signin"
-                  component={themeUpdaterHOC(SignInScreen)}
+                  name="backupSssNotification"
+                  component={themeUpdaterHOC(BackupSssNotificationScreen)}
+                  options={actionsSheet}
                 />
                 <Stack.Screen
-                  name="signup"
-                  component={themeUpdaterHOC(SignUpScreen)}
+                  name="backupSssSuggestion"
+                  component={BackupSssSuggestionScreen}
+                  options={actionsSheet}
                 />
                 <Stack.Screen
-                  name="transaction"
-                  component={themeUpdaterHOC(TransactionScreen)}
+                  name="popupNotification"
+                  component={themeUpdaterHOC(PopupNotificationScreen)}
+                  options={actionsSheet}
                 />
                 <Stack.Screen
-                  name="walletConnect"
-                  component={themeUpdaterHOC(WalletConnectScreen)}
+                  name="popupNotificationNews"
+                  component={themeUpdaterHOC(PopupNotificationNewsScreen)}
+                  options={actionsSheet}
                 />
                 <Stack.Screen
-                  name="walletConnectApplicationListPopup"
-                  component={themeUpdaterHOC(
-                    WalletConnectApplicationListPopupScreen,
-                  )}
+                  name="popupTrackActivity"
+                  component={themeUpdaterHOC(PopupTrackActivityScreen)}
+                  options={actionsSheet}
                 />
                 <Stack.Screen
-                  name="walletProtectionPopup"
-                  component={themeUpdaterHOC(WalletProtectionPopup)}
+                  name="transactionDetail"
+                  component={themeUpdaterHOC(TransactionDetailScreen)}
+                  options={actionsSheet}
                 />
                 <Stack.Screen
-                  name="walletConnectApplicationDetailsPopup"
-                  component={themeUpdaterHOC(
-                    WalletConnectApplicationDetailsPopupScreen,
-                  )}
+                  name="accountDetail"
+                  component={themeUpdaterHOC(AccountDetailScreen)}
+                  options={actionsSheet}
                 />
                 <Stack.Screen
-                  name="walletSelector"
-                  component={themeUpdaterHOC(WalletSelectorScreen)}
+                  name="news"
+                  component={themeUpdaterHOC(NewsScreen)}
                 />
                 <Stack.Screen
-                  name="restore"
-                  component={themeUpdaterHOC(RestoreScreen)}
-                />
-                <Stack.Screen
-                  name="create"
-                  component={themeUpdaterHOC(CreateScreen)}
-                />
-                <Stack.Screen
-                  name="ledger"
-                  component={themeUpdaterHOC(LedgerScreen)}
-                />
-                <Stack.Screen
-                  name="stakingDelegate"
-                  component={themeUpdaterHOC(StakingDelegateScreen)}
-                />
-                <Stack.Screen
-                  name="stakingUnDelegate"
-                  component={themeUpdaterHOC(StakingUnDelegateScreen)}
-                />
-                <Stack.Screen
-                  name="proposalDeposit"
-                  component={themeUpdaterHOC(ProposalDepositScreen)}
-                />
-              </Stack.Group>
-              <Stack.Screen
-                name="accountInfo"
-                component={themeUpdaterHOC(AccountInfoScreen)}
-                options={getWalletTitle}
-              />
-              <Stack.Screen
-                name="totalValueInfo"
-                component={themeUpdaterHOC(TotalValueInfoScreen)}
-                options={totalValueInfoOptions}
-              />
-              <Stack.Screen
-                name="backupNotification"
-                component={themeUpdaterHOC(BackupNotificationScreen)}
-                options={actionsSheet}
-              />
-              <Stack.Screen
-                name="backupSssNotification"
-                component={themeUpdaterHOC(BackupSssNotificationScreen)}
-                options={actionsSheet}
-              />
-              <Stack.Screen
-                name="backupSssSuggestion"
-                component={BackupSssSuggestionScreen}
-                options={actionsSheet}
-              />
-              <Stack.Screen
-                name="popupNotification"
-                component={themeUpdaterHOC(PopupNotificationScreen)}
-                options={actionsSheet}
-              />
-              <Stack.Screen
-                name="popupNotificationNews"
-                component={themeUpdaterHOC(PopupNotificationNewsScreen)}
-                options={actionsSheet}
-              />
-              <Stack.Screen
-                name="popupTrackActivity"
-                component={themeUpdaterHOC(PopupTrackActivityScreen)}
-                options={actionsSheet}
-              />
-              <Stack.Screen
-                name="transactionDetail"
-                component={themeUpdaterHOC(TransactionDetailScreen)}
-                options={actionsSheet}
-              />
-              <Stack.Screen
-                name="accountDetail"
-                component={themeUpdaterHOC(AccountDetailScreen)}
-                options={actionsSheet}
-              />
-              <Stack.Screen
-                name="news"
-                component={themeUpdaterHOC(NewsScreen)}
-              />
-              <Stack.Screen
-                name="governance"
-                component={themeUpdaterHOC(GovernanceScreen)}
-                options={{
-                  title: getText(I18N.homeGovernanceTitle),
-                }}
-              />
-              <Stack.Screen
-                name="newsDetail"
-                component={themeUpdaterHOC(NewsDetailScreen)}
-                options={getNewsDetailAppTitle}
-              />
-              <Stack.Group screenOptions={screenOptions}>
-                <Stack.Screen
-                  name="settingsAccounts"
-                  component={themeUpdaterHOC(SettingsAccountsScreen)}
+                  name="governance"
+                  component={themeUpdaterHOC(GovernanceScreen)}
                   options={{
-                    title: 'Manage accounts',
+                    title: getText(I18N.homeGovernanceTitle),
                   }}
                 />
                 <Stack.Screen
-                  name="ourNews"
-                  component={themeUpdaterHOC(OurNewsScreen)}
-                  options={{
-                    title: getText(I18N.ourNewsTitle),
-                  }}
+                  name="newsDetail"
+                  component={themeUpdaterHOC(NewsDetailScreen)}
+                  options={getNewsDetailAppTitle}
                 />
-                <Stack.Screen
-                  name="raffleDetails"
-                  component={themeUpdaterHOC(RaffleDetailsScreen)}
-                />
-                <Stack.Screen
-                  name="raffleReward"
-                  component={themeUpdaterHOC(RaffleRewardScreen)}
-                  options={withoutHeader}
-                />
-                <Stack.Screen
-                  name="staking"
-                  component={themeUpdaterHOC(HomeStakingScreen)}
-                />
-                <Stack.Screen
-                  name="settingsAccountDetail"
-                  component={themeUpdaterHOC(SettingsAccountDetailScreen)}
-                  options={withoutHeader}
-                />
-                <Stack.Screen
-                  name="walletConnectWalletList"
-                  component={themeUpdaterHOC(WalletConnectWalletListScreen)}
-                  options={{
-                    title: getText(I18N.walletConnectWalletListTitle),
-                  }}
-                />
-                <Stack.Screen
-                  name="walletConnectApplicationList"
-                  component={themeUpdaterHOC(
-                    WalletConnectApplicationListScreen,
-                  )}
-                />
-                <Stack.Screen
-                  name="walletConnectApplicationDetails"
-                  component={themeUpdaterHOC(
-                    WalletConnectApplicationDetailsScreen,
-                  )}
-                />
-                <Stack.Screen
-                  name="settingsAccountStyle"
-                  component={themeUpdaterHOC(SettingsAccountStyleScreen)}
-                  options={{
-                    title: 'Change style',
-                  }}
-                />
-                <Stack.Screen
-                  name="settingsAddressBook"
-                  component={themeUpdaterHOC(SettingsAddressBookScreen)}
-                  options={{
-                    title: 'Address book',
-                  }}
-                />
-                <Stack.Screen
-                  name="settingsLanguage"
-                  component={themeUpdaterHOC(SettingsLanguageScreen)}
-                  options={{
-                    title: 'Language',
-                  }}
-                />
-                <Stack.Screen
-                  name="settingsProviders"
-                  component={themeUpdaterHOC(SettingsProvidersScreen)}
-                  options={withoutHeader}
-                />
-                <Stack.Screen
-                  name="settingsSecurityPin"
-                  component={themeUpdaterHOC(SettingsSecurityPinScreen)}
-                  options={{
-                    title: 'Change PIN',
-                  }}
-                />
-                <Stack.Screen
-                  name="settingsNotification"
-                  component={themeUpdaterHOC(SettingsNotificationScreen)}
-                  options={{
-                    title: getText(I18N.settingsNotification),
-                  }}
-                />
-                <Stack.Screen
-                  name="settingsFaq"
-                  component={themeUpdaterHOC(SettingsFAQScreen)}
-                  options={{
-                    title: getText(I18N.settingsSecurity),
-                  }}
-                />
-                <Stack.Screen
-                  name="settingsAbout"
-                  component={themeUpdaterHOC(SettingsAboutScreen)}
-                  options={{
-                    title: 'About',
-                  }}
-                />
-                <Stack.Screen
-                  name="settingsTest"
-                  component={themeUpdaterHOC(SettingsTestScreen)}
-                  options={{
-                    title: 'Test',
-                  }}
-                />
-                <Stack.Screen
-                  name="settingsDeveloperTools"
-                  component={themeUpdaterHOC(SettingsDeveloperTools)}
-                  options={{
-                    title: 'Developer Tools',
-                  }}
-                />
-                <Stack.Screen
-                  name="settingsAccountEdit"
-                  component={themeUpdaterHOC(SettingsAccountEditScreen)}
-                  options={withoutHeader}
-                />
-                <Stack.Screen
-                  name="settingsContactEdit"
-                  component={themeUpdaterHOC(SettingsContactEditScreen)}
-                  options={withoutHeader}
-                />
+                <Stack.Group screenOptions={screenOptions}>
+                  <Stack.Screen
+                    name="settingsAccounts"
+                    component={themeUpdaterHOC(SettingsAccountsScreen)}
+                    options={{
+                      title: 'Manage accounts',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="ourNews"
+                    component={themeUpdaterHOC(OurNewsScreen)}
+                    options={{
+                      title: getText(I18N.ourNewsTitle),
+                    }}
+                  />
+                  <Stack.Screen
+                    name="raffleDetails"
+                    component={themeUpdaterHOC(RaffleDetailsScreen)}
+                  />
+                  <Stack.Screen
+                    name="raffleReward"
+                    component={themeUpdaterHOC(RaffleRewardScreen)}
+                    options={withoutHeader}
+                  />
+                  <Stack.Screen
+                    name="staking"
+                    component={themeUpdaterHOC(HomeStakingScreen)}
+                  />
+                  <Stack.Screen
+                    name="settingsAccountDetail"
+                    component={themeUpdaterHOC(SettingsAccountDetailScreen)}
+                    options={withoutHeader}
+                  />
+                  <Stack.Screen
+                    name="walletConnectWalletList"
+                    component={themeUpdaterHOC(WalletConnectWalletListScreen)}
+                    options={{
+                      title: getText(I18N.walletConnectWalletListTitle),
+                    }}
+                  />
+                  <Stack.Screen
+                    name="walletConnectApplicationList"
+                    component={themeUpdaterHOC(
+                      WalletConnectApplicationListScreen,
+                    )}
+                  />
+                  <Stack.Screen
+                    name="walletConnectApplicationDetails"
+                    component={themeUpdaterHOC(
+                      WalletConnectApplicationDetailsScreen,
+                    )}
+                  />
+                  <Stack.Screen
+                    name="settingsAccountStyle"
+                    component={themeUpdaterHOC(SettingsAccountStyleScreen)}
+                    options={{
+                      title: 'Change style',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsAddressBook"
+                    component={themeUpdaterHOC(SettingsAddressBookScreen)}
+                    options={{
+                      title: 'Address book',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsLanguage"
+                    component={themeUpdaterHOC(SettingsLanguageScreen)}
+                    options={{
+                      title: 'Language',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsProviders"
+                    component={themeUpdaterHOC(SettingsProvidersScreen)}
+                    options={withoutHeader}
+                  />
+                  <Stack.Screen
+                    name="settingsSecurityPin"
+                    component={themeUpdaterHOC(SettingsSecurityPinScreen)}
+                    options={{
+                      title: 'Change PIN',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsNotification"
+                    component={themeUpdaterHOC(SettingsNotificationScreen)}
+                    options={{
+                      title: getText(I18N.settingsNotification),
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsFaq"
+                    component={themeUpdaterHOC(SettingsFAQScreen)}
+                    options={{
+                      title: getText(I18N.settingsSecurity),
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsAbout"
+                    component={themeUpdaterHOC(SettingsAboutScreen)}
+                    options={{
+                      title: 'About',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsTest"
+                    component={themeUpdaterHOC(SettingsTestScreen)}
+                    options={{
+                      title: 'Test',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsDeveloperTools"
+                    component={themeUpdaterHOC(SettingsDeveloperTools)}
+                    options={{
+                      title: 'Developer Tools',
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsAccountEdit"
+                    component={themeUpdaterHOC(SettingsAccountEditScreen)}
+                    options={withoutHeader}
+                  />
+                  <Stack.Screen
+                    name="settingsContactEdit"
+                    component={themeUpdaterHOC(SettingsContactEditScreen)}
+                    options={withoutHeader}
+                  />
 
-                <Stack.Screen
-                  name="settingsProviderForm"
-                  component={themeUpdaterHOC(SettingsProviderEditScreen)}
-                  options={withoutHeader}
-                />
-                <Stack.Screen
-                  name="settingsTheme"
-                  component={themeUpdaterHOC(SettingsThemeScreen)}
-                  options={{
-                    title: getText(I18N.settingsThemeScreen),
-                  }}
-                />
-                <Stack.Screen
-                  name="settingsViewRecoveryPhrase"
-                  options={{
-                    title: getText(I18N.settingsViewRecoveryPhraseTitle),
-                  }}
-                  component={themeUpdaterHOC(SettingsViewRecoveryPhraseScreen)}
-                />
-                <Stack.Screen
-                  name="settingsSecurity"
-                  options={{
-                    title: getText(I18N.settingsSecurity),
-                  }}
-                  component={themeUpdaterHOC(SettingsSecurityScreen)}
-                />
-              </Stack.Group>
-              <Stack.Group screenOptions={screenOptions}>
-                <Stack.Screen
-                  name="stakingValidators"
-                  component={themeUpdaterHOC(StakingValidatorsScreen)}
-                  options={withoutHeader}
-                />
-                <Stack.Screen
-                  name="stakingInfo"
-                  component={themeUpdaterHOC(StakingInfoScreen)}
-                  options={{
-                    title: getText(I18N.stakingInfo),
-                  }}
-                />
-              </Stack.Group>
-              <Stack.Group screenOptions={screenOptions}>
-                <Stack.Screen
-                  name="proposal"
-                  component={themeUpdaterHOC(ProposalScreen)}
-                  options={{
-                    title: getText(I18N.proposalTitle),
-                  }}
-                />
-              </Stack.Group>
-            </Stack.Navigator>
-          </NavigationContainer>
-          <ModalsScreen initialModal={{type: 'splash'}} />
-        </SafeAreaProvider>
+                  <Stack.Screen
+                    name="settingsProviderForm"
+                    component={themeUpdaterHOC(SettingsProviderEditScreen)}
+                    options={withoutHeader}
+                  />
+                  <Stack.Screen
+                    name="settingsTheme"
+                    component={themeUpdaterHOC(SettingsThemeScreen)}
+                    options={{
+                      title: getText(I18N.settingsThemeScreen),
+                    }}
+                  />
+                  <Stack.Screen
+                    name="settingsViewRecoveryPhrase"
+                    options={{
+                      title: getText(I18N.settingsViewRecoveryPhraseTitle),
+                    }}
+                    component={themeUpdaterHOC(
+                      SettingsViewRecoveryPhraseScreen,
+                    )}
+                  />
+                  <Stack.Screen
+                    name="settingsSecurity"
+                    options={{
+                      title: getText(I18N.settingsSecurity),
+                    }}
+                    component={themeUpdaterHOC(SettingsSecurityScreen)}
+                  />
+                </Stack.Group>
+                <Stack.Group screenOptions={screenOptions}>
+                  <Stack.Screen
+                    name="stakingValidators"
+                    component={themeUpdaterHOC(StakingValidatorsScreen)}
+                    options={withoutHeader}
+                  />
+                  <Stack.Screen
+                    name="stakingInfo"
+                    component={themeUpdaterHOC(StakingInfoScreen)}
+                    options={{
+                      title: getText(I18N.stakingInfo),
+                    }}
+                  />
+                </Stack.Group>
+                <Stack.Group screenOptions={screenOptions}>
+                  <Stack.Screen
+                    name="proposal"
+                    component={themeUpdaterHOC(ProposalScreen)}
+                    options={{
+                      title: getText(I18N.proposalTitle),
+                    }}
+                  />
+                </Stack.Group>
+              </Stack.Navigator>
+            </NavigationContainer>
+            <ModalsScreen initialModal={{type: 'splash'}} />
+          </SafeAreaProvider>
+        </MenuProvider>
       </ActionSheetProvider>
     </GestureHandlerRootView>
   );

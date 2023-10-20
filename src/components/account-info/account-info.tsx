@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import {FlatList, ListRenderItem} from 'react-native';
 
@@ -7,6 +7,7 @@ import {TransactionRow} from '@app/components/transaction-row';
 import {First, PopupContainer, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
+import {useNftCollections} from '@app/hooks/use-nft-collections';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
@@ -15,7 +16,6 @@ import {ContractNameMap, TransactionList} from '@app/types';
 import {AccountInfoHeader} from './account-info-header';
 
 import {NftViewer} from '../nft-viewer';
-import {createNftCollectionSet} from '../nft-viewer/mock';
 import {TopTabNavigator, TopTabNavigatorVariant} from '../top-tab-navigator';
 
 enum TabNames {
@@ -56,9 +56,9 @@ export const AccountInfo = ({
   onPressRow,
   contractNameMap,
 }: AccountInfoProps) => {
-  const nftCollections = useRef(createNftCollectionSet()).current;
+  const nftCollections = useNftCollections();
   const [page, setPage] = useState(1);
-  const transactionListdata = useMemo(
+  const transactionListData = useMemo(
     () => transactionsList.slice(0, PAGE_ITEMS_COUNT * page),
     [page, transactionsList],
   );
@@ -69,8 +69,8 @@ export const AccountInfo = ({
     [activeTab, transactionsList.length],
   );
   const data = useMemo(
-    () => (activeTab === TabNames.transactions ? transactionListdata : []),
-    [activeTab, transactionListdata],
+    () => (activeTab === TabNames.transactions ? transactionListData : []),
+    [activeTab, transactionListData],
   );
 
   const onEndReached = useCallback(() => {

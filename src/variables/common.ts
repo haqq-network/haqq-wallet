@@ -255,6 +255,8 @@ export const AWAIT_NEW_BLOCK_MS = 10_000;
 
 export const STORE_REHYDRATION_TIMEOUT_MS = 2000;
 
+export const DEFAULT_FEE = 7;
+
 export const HAQQ_DYNAMIC_LINKS_HOSTNAME = [
   'haqq.page.link',
   'preview.page.link',
