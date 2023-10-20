@@ -810,6 +810,10 @@ export enum I18N {
   browserGeolocationPermissioUseLocationMessage,
   nftWidgetTitle,
   nftWidgetItems,
+  copyAddress,
+  copyBech32Address,
+  evmTitle,
+  bech32Title,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1764,4 +1768,8 @@ const en: Record<I18N, string> = {
     '"{{hostname}}" is requesting your current location.',
   [I18N.nftWidgetTitle]: 'NFT',
   [I18N.nftWidgetItems]: '{{count}} items',
+  [I18N.copyAddress]: 'Copy address',
+  [I18N.copyBech32Address]: 'Copy bech32 address',
+  [I18N.evmTitle]: 'EVM',
+  [I18N.bech32Title]: 'Bech32',
 };
