@@ -184,9 +184,7 @@ export const NftViewer = ({
           {NftSortingNamesMap[sortFieldName]}
         </Text>
         <IconButton onPress={onChangeViewModePress}>
-          <First>
-            <Icon color={Color.graphicBase1} name={viewModeIconName} />
-          </First>
+          <Icon color={Color.graphicBase1} name={viewModeIconName} />
         </IconButton>
       </View>
       <Spacer height={19} />

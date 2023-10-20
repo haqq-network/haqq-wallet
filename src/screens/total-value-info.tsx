@@ -5,10 +5,11 @@ import {observer} from 'mobx-react';
 import {TotalValueInfo} from '@app/components/total-value-info';
 import {Loading} from '@app/components/ui';
 import {showModal} from '@app/helpers';
-import {useTypedNavigation} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useTransactionList} from '@app/hooks/use-transaction-list';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
+import {Token} from '@app/models/tokens';
 import {Wallet} from '@app/models/wallet';
 import {Indexer} from '@app/services/indexer';
 import {
@@ -20,6 +21,7 @@ import {calculateBalances} from '@app/utils';
 
 export const TotalValueInfoScreen = observer(() => {
   const navigation = useTypedNavigation();
+  const route = useTypedRoute<'totalValueInfo'>();
   const wallets = Wallet.getAllVisible();
   const addressList = useMemo(() => Wallet.addressList(), []);
   const transactionsList = useTransactionList(addressList);
@@ -32,6 +34,8 @@ export const TotalValueInfoScreen = observer(() => {
   const [contractNameMap, setContractNameMap] = useState({});
 
   useEffectAsync(async () => {
+    Token.fetchTokens();
+
     const names = transactionsList
       .filter(({source}) => source === TransactionSource.contract)
       .map(item => (item as TransactionListContract).to);
@@ -66,6 +70,8 @@ export const TotalValueInfoScreen = observer(() => {
       onPressInfo={onPressInfo}
       onPressRow={onPressRow}
       contractNameMap={contractNameMap}
+      tokens={Token.tokens}
+      initialTab={route?.params?.tab}
     />
   );
 });

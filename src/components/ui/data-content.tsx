@@ -19,6 +19,7 @@ export type DataContentProps = {
   subtitleI18nParams?: Record<string, string>;
   titleI18nParams?: Record<string, string>;
   onPress?: () => void;
+  bold?: boolean;
 };
 export const DataContent = ({
   title,
@@ -32,11 +33,12 @@ export const DataContent = ({
   subtitleI18nParams,
   titleI18nParams,
   numberOfLines = 1,
+  bold = false,
 }: DataContentProps) => {
   return (
     <View
       style={[
-        styles.container,
+        !bold && styles.container,
         reversed && styles.reverse,
         short && styles.short,
         style,
@@ -45,7 +47,7 @@ export const DataContent = ({
         {/* @ts-expect-error */}
         <Text
           t11
-          style={styles.title}
+          style={[styles.title, bold && styles.boldTitle]}
           color={Color.textBase1}
           ellipsizeMode="tail"
           i18n={titleI18n}
@@ -88,4 +90,5 @@ const styles = createTheme({
     flexDirection: 'row',
   },
   reverse: {flexDirection: 'column-reverse'},
+  boldTitle: {fontSize: 16, fontWeight: 'bold', marginBottom: 6},
 });

@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useMemo} from 'react';
 
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';

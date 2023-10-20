@@ -105,7 +105,6 @@ const TopTabNavigator: TopTabNavigatorComponent = ({
     setActiveTabIndex(index);
     setActiveTab(tab);
     onTabChange?.(tab?.props?.name);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

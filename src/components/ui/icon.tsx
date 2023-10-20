@@ -95,6 +95,9 @@ export enum IconsName {
   staking_thin = 'staking_thin',
   home = 'home',
   contract = 'contract',
+  eye_open = 'eye_open',
+  eye_close = 'eye_close',
+  arrow_sort = 'arrow_sort',
 }
 
 export type IconSize =

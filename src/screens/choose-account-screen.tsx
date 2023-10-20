@@ -119,7 +119,6 @@ export const ChooseAccountScreen = memo(() => {
   const onTabChanged = useCallback((item: ChooseAccountTabNames) => {
     setAddresses([]);
     loadMore(true, item);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const data = useMemo(

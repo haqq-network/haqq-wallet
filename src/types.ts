@@ -8,11 +8,17 @@ import {AccessListish, BigNumberish} from '@haqq/provider-base';
 import type {StackNavigationOptions} from '@react-navigation/stack';
 import {SessionTypes} from '@walletconnect/types';
 import Decimal from 'decimal.js';
-import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
+import {
+  ImageSourcePropType,
+  ImageStyle,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
 import {Results} from 'realm';
 
 import {Color} from '@app/colors';
 import {CaptchaType} from '@app/components/captcha';
+import {TotalValueTabNames} from '@app/components/total-value-info';
 import {IconProps} from '@app/components/ui';
 import {I18N} from '@app/i18n';
 import {Banner} from '@app/models/banner';
@@ -181,7 +187,9 @@ export type RootStackParamList = {
   accountInfo: {
     accountId: string;
   };
-  totalValueInfo: undefined;
+  totalValueInfo?: {
+    tab?: TotalValueTabNames;
+  };
   welcome: undefined;
   welcomeNews: undefined;
   create: undefined;
@@ -1158,6 +1166,16 @@ export interface ITokensWidget extends IWidgetBase {
   component: 'Tokens';
 }
 
+export enum NftWidgetSize {
+  small = 'small',
+  medium = 'medium',
+  large = 'large',
+}
+export interface INftWidget extends IWidgetBase {
+  component: 'Nft';
+  size: NftWidgetSize;
+}
+
 export type IWidget =
   | ITransactionsWidget
   | ITransactionsShortWidget
@@ -1167,7 +1185,8 @@ export type IWidget =
   | ILayoutWidget
   | IAdWidget
   | IBannerWidget
-  | ITokensWidget;
+  | ITokensWidget
+  | INftWidget;
 
 export interface MarkupResponse {
   blocks: ILayoutWidget;
@@ -1379,6 +1398,8 @@ export type IToken = {
   symbol: IContract['symbol'];
   created_at: string;
   updated_at: string;
+
+  image?: ImageSourcePropType;
 };
 
 export type IContract = {
@@ -1393,6 +1414,7 @@ export type IContract = {
   name: string | null;
   symbol: string | null;
   updated_at: string;
+  icon: string | null;
 };
 
 export type IndexerTokensData = Record<HaqqEthereumAddress, IToken[]>;

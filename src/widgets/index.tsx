@@ -18,6 +18,7 @@ import {AdWidget} from '@app/widgets/ad-widget';
 import {BannerWidget} from '@app/widgets/banner-widget';
 import {GovernanceWidgetWrapper} from '@app/widgets/governance-widget';
 import {LayoutWidgetWrapper} from '@app/widgets/layout-widget';
+import {NftWidgetWrapper} from '@app/widgets/nft-widget';
 import {RafflesWidgetWrapper} from '@app/widgets/raffles.widget';
 import {StakingWidgetWrapper} from '@app/widgets/staking-widget';
 import {TokensWidgetWrapper} from '@app/widgets/tokens-widget';
@@ -53,6 +54,7 @@ const WidgetMap: IWidgetMap = {
   Ad: params => <AdWidget key={generateUUID()} banner={params} />,
   Banner: params => <BannerWidget key={generateUUID()} banner={params} />,
   Tokens: params => <TokensWidgetWrapper key={generateUUID()} {...params} />,
+  Nft: params => <NftWidgetWrapper key={generateUUID()} {...params} />,
 };
 
 export const WidgetRoot = memo(({lastUpdate}: {lastUpdate: number}) => {
