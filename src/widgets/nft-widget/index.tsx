@@ -10,6 +10,7 @@ import {TotalValueTabNames} from '@app/components/total-value-info';
 import {Spacer} from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
 import {WidgetHeader} from '@app/components/ui/widget-header';
+import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useTypedNavigation} from '@app/hooks';
 import {useNftCollections} from '@app/hooks/use-nft-collections';
 import {I18N, getText} from '@app/i18n';
@@ -33,7 +34,11 @@ export const NftWidgetWrapper = observer(({size}: INftWidget) => {
     [nftCollections],
   );
 
-  if (!nftCollections?.length || !allNft?.length) {
+  if (
+    !isFeatureEnabled(Feature.nft) ||
+    !nftCollections?.length ||
+    !allNft?.length
+  ) {
     return null;
   }
 

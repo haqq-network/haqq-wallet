@@ -7,6 +7,11 @@ import {TransactionEmpty} from '@app/components/transaction-empty';
 import {TransactionRow} from '@app/components/transaction-row';
 import {First, PopupContainer, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {
+  Feature,
+  isFeatureEnabled,
+  isSomeFeaturesEnabled,
+} from '@app/helpers/is-feature-enabled';
 import {useNftCollections} from '@app/hooks/use-nft-collections';
 import {I18N} from '@app/i18n';
 import {
@@ -55,10 +60,23 @@ export const TotalValueInfo = ({
   initialTab,
 }: TotalValueInfoProps) => {
   const nftCollections = useNftCollections();
-  const initialTabName = useMemo(
-    () => initialTab || TotalValueTabNames.tokens,
-    [initialTab],
-  );
+  const initialTabName = useMemo(() => {
+    if (
+      initialTab === TotalValueTabNames.tokens &&
+      isFeatureEnabled(Feature.tokens)
+    ) {
+      return TotalValueTabNames.tokens;
+    }
+
+    if (
+      initialTab === TotalValueTabNames.nft &&
+      isFeatureEnabled(Feature.nft)
+    ) {
+      return TotalValueTabNames.nft;
+    }
+
+    return TotalValueTabNames.transactions;
+  }, []);
   const initialTabIndex = useMemo(
     () => TabIndexMap[initialTabName] ?? 0,
     [initialTabName],
@@ -92,29 +110,36 @@ export const TotalValueInfo = ({
     () => (
       <>
         <TotalValueInfoHeader balance={balance} onPressInfo={onPressInfo} />
-        <TopTabNavigator
-          initialTabIndex={initialTabIndex}
-          showSeparators
-          contentContainerStyle={styles.tabsContentContainerStyle}
-          tabHeaderStyle={styles.tabHeaderStyle}
-          variant={TopTabNavigatorVariant.large}
-          onTabChange={onTabChange}>
-          <TopTabNavigator.Tab
-            name={TotalValueTabNames.tokens}
-            title={'Tokens'}
-            component={null}
-          />
-          <TopTabNavigator.Tab
-            name={TotalValueTabNames.transactions}
-            title={I18N.accountInfoTransactionTabTitle}
-            component={null}
-          />
-          <TopTabNavigator.Tab
-            name={TotalValueTabNames.nft}
-            title={I18N.accountInfoNftTabTitle}
-            component={null}
-          />
-        </TopTabNavigator>
+        {isSomeFeaturesEnabled([Feature.nft, Feature.tokens]) && (
+          <TopTabNavigator
+            initialTabIndex={initialTabIndex}
+            showSeparators
+            contentContainerStyle={styles.tabsContentContainerStyle}
+            tabHeaderStyle={styles.tabHeaderStyle}
+            variant={TopTabNavigatorVariant.large}
+            onTabChange={onTabChange}>
+            {isFeatureEnabled(Feature.tokens) && (
+              <TopTabNavigator.Tab
+                name={TotalValueTabNames.tokens}
+                title={I18N.accountInfoTokensTabTitle}
+                component={null}
+              />
+            )}
+            <TopTabNavigator.Tab
+              name={TotalValueTabNames.transactions}
+              title={I18N.accountInfoTransactionTabTitle}
+              component={null}
+            />
+            x
+            {isFeatureEnabled(Feature.nft) && (
+              <TopTabNavigator.Tab
+                name={TotalValueTabNames.nft}
+                title={I18N.accountInfoNftTabTitle}
+                component={null}
+              />
+            )}
+          </TopTabNavigator>
+        )}
       </>
     ),
     [balance, onPressInfo, onTabChange],

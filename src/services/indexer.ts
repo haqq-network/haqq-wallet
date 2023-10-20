@@ -49,11 +49,70 @@ export class Indexer {
 
     const updated = lastUpdated || new Date(0);
 
-    return await jsonrpcRequest(
+    const result: IndexerUpdatesResponse = await jsonrpcRequest(
       app.provider.indexer,
       'updates',
       [accounts, updated].filter(Boolean),
     );
+
+    return {
+      ...result,
+      tokens: [
+        {
+          address: 'haqq1dqkx0uhsr0q5adj09qxzc52jfaehkxkd43dwtd',
+          contract: 'haqq1plk7pd2nyp6v727kqqc676hj7n0ch459wy3yy2',
+          created_at: '2023-10-18T09:25:44.432964Z',
+          updated_at: '2023-10-18T09:25:44.611416Z',
+          value: '5000000000000000000',
+        },
+      ],
+      addresses: [
+        // nft
+        {
+          address_type: 'contract',
+          created_at: '2023-10-18T07:22:13.948344Z',
+          decimals: null,
+          icon: null,
+          id: 'haqq1du65aw4dm9665y6rw6k2f8f9rvkg3qd246yjqt',
+          is_erc1155: true,
+          is_erc20: null,
+          is_erc721: false,
+          is_in_white_list: null,
+          name: null,
+          symbol: null,
+          updated_at: '2023-10-18T07:22:13.948343Z',
+        },
+        {
+          address_type: 'contract',
+          created_at: '2023-10-17T10:01:13.950901Z',
+          decimals: null,
+          icon: null,
+          id: 'haqq1uy9rr0qdgr84jcgmlgp0hlmj3jtuma045r863q',
+          is_erc1155: true,
+          is_erc20: null,
+          is_erc721: false,
+          is_in_white_list: null,
+          name: null,
+          symbol: null,
+          updated_at: '2023-10-17T10:01:13.950900Z',
+        },
+        // tokens
+        {
+          address_type: 'contract',
+          created_at: '2023-10-17T09:57:47.211126Z',
+          decimals: 18,
+          icon: null,
+          id: 'haqq1plk7pd2nyp6v727kqqc676hj7n0ch459wy3yy2',
+          is_erc1155: null,
+          is_erc20: true,
+          is_erc721: null,
+          is_in_white_list: null,
+          name: 'HaqqTokenDemo',
+          symbol: 'HTD',
+          updated_at: '2023-10-17T09:57:47.211125Z',
+        },
+      ],
+    };
   }
 
   async getContractName(address: string): Promise<string> {
