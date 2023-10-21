@@ -131,11 +131,7 @@ export const WalletCard = memo(
             onPress={onAccountInfo}>
             {wallet.name || 'name'}
           </Text>
-          <CopyButton
-            style={styles.copyIcon}
-            value={wallet.address}
-            withSettings
-            secondValue={wallet.cosmosAddress}>
+          <CopyMenu style={styles.copyIcon} value={wallet.address} withSettings>
             <Text t14 color={Color.textBase3} testID={`${testID}_address`}>
               {formattedAddress}
             </Text>

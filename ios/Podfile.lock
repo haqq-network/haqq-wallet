@@ -553,8 +553,6 @@ PODS:
     - React-Core
   - react-native-cameraroll (4.1.2):
     - React-Core
-  - react-native-context-menu-view (1.11.0):
-    - React
   - react-native-detector (0.2.3):
     - React
   - react-native-encrypted-storage (4.0.3):
@@ -845,7 +843,6 @@ DEPENDENCIES:
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-camera (from `../node_modules/react-native-camera`)
   - "react-native-cameraroll (from `../node_modules/@react-native-community/cameraroll`)"
-  - react-native-context-menu-view (from `../node_modules/react-native-context-menu-view`)
   - react-native-detector (from `../node_modules/react-native-detector`)
   - react-native-encrypted-storage (from `../node_modules/react-native-encrypted-storage`)
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
@@ -1012,8 +1009,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-camera"
   react-native-cameraroll:
     :path: "../node_modules/@react-native-community/cameraroll"
-  react-native-context-menu-view:
-    :path: "../node_modules/react-native-context-menu-view"
   react-native-detector:
     :path: "../node_modules/react-native-detector"
   react-native-encrypted-storage:
@@ -1185,7 +1180,6 @@ SPEC CHECKSUMS:
   react-native-blur: cfdad7b3c01d725ab62a8a729f42ea463998afa2
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
   react-native-cameraroll: 2957f2bce63ae896a848fbe0d5352c1bd4d20866
-  react-native-context-menu-view: c13b66d44f85b7e7d791a6fbc1e6218c6047eb90
   react-native-detector: 751696a5534f6bbc11be87515cca3d8d32593d73
   react-native-encrypted-storage: db300a3f2f0aba1e818417c1c0a6be549038deb7
   react-native-geolocation: ef66fb798d96284c6043f0b16c15d9d1d4955db4
