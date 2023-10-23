@@ -422,6 +422,7 @@ class App extends AsyncEventEmitter {
   }
 
   async auth() {
+    this.resetAuth();
     await SystemDialog.getResult(async () => {
       const close = showModal('pin');
 
@@ -586,6 +587,10 @@ class App extends AsyncEventEmitter {
 
   async getRpcProvider() {
     return await getRpcProvider(this.provider);
+  }
+
+  resetAuth() {
+    this.authenticated = false;
   }
 }
 

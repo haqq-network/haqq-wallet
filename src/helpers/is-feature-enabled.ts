@@ -15,7 +15,7 @@ export enum Feature {
 export const isFeatureEnabled = (feature: Feature): boolean => {
   switch (feature) {
     case Feature.sss:
-      return IS_SSS_ENABLED === 'true' && app.isOathSigninSupported;
+      return IS_SSS_ENABLED === 'true';
     case Feature.earn:
       return true;
     case Feature.governanceAndStaking:
