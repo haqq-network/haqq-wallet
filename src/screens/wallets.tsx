@@ -3,6 +3,7 @@ import React, {useCallback} from 'react';
 import {observer} from 'mobx-react';
 
 import {Wallets} from '@app/components/wallets';
+import {app} from '@app/contexts';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useTypedNavigation} from '@app/hooks';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
@@ -30,8 +31,9 @@ export const WalletsWrapper = observer(() => {
   );
 
   const onPressProtection = useCallback(
-    (accountId: string) => {
+    async (accountId: string) => {
       if (isFeatureEnabled(Feature.sss)) {
+        await app.auth();
         navigation.navigate('walletProtectionPopup', {accountId});
       } else {
         navigation.navigate('backup', {accountId});

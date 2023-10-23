@@ -10,6 +10,7 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks/use-theme-selector';
 import {I18N, getText} from '@app/i18n';
@@ -46,6 +47,11 @@ export const BackupSssSuggestion = ({
     light: require('@assets/images/backup-sss-suggestion-light.png'),
   });
 
+  const onBackup = useCallback(async () => {
+    await app.auth();
+    onClickBackup();
+  }, [onClickBackup]);
+
   return (
     <View style={styles.sub} testID="backup_sss_suggestion">
       <Image source={suggestionImage} style={styles.suggestionImage} />
@@ -62,7 +68,7 @@ export const BackupSssSuggestion = ({
       <Button
         i18n={I18N.backupSssSuggestionConnect}
         variant={ButtonVariant.contained}
-        onPress={onClickBackup}
+        onPress={onBackup}
         style={styles.margin}
         size={ButtonSize.middle}
       />

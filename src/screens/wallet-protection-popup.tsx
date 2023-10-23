@@ -22,6 +22,7 @@ const screenOptions: ScreenOptionType = {
 
 export const WalletProtectionPopup = () => {
   const route = useTypedRoute<'walletProtectionPopup'>();
+
   return (
     <WalletProtection.Navigator screenOptions={screenOptions}>
       <WalletProtection.Screen

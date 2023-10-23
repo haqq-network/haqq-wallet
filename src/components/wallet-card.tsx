@@ -48,6 +48,12 @@ export type BalanceProps = {
   onPressWalletConnect?: (address: string) => void;
 };
 
+enum ProtectionStatus {
+  empty,
+  partially,
+  full,
+}
+
 export const WalletCard = memo(
   ({
     testID,
@@ -65,11 +71,16 @@ export const WalletCard = memo(
     const [cardState, setCardState] = useState('loading');
     const isBalancesFirstSync = useIsBalancesFirstSync();
     const screenWidth = useWindowDimensions().width;
-    const enableProtectionWarning =
-      !wallet.mnemonicSaved && !wallet.socialLinkEnabled;
-    const disableTopNavMarginBottom =
-      enableProtectionWarning || !!walletConnectSessions?.length;
 
+    const protectionStatus = useMemo(() => {
+      if (!wallet.mnemonicSaved && !wallet.socialLinkEnabled) {
+        return ProtectionStatus.empty;
+      }
+      if (!wallet.mnemonicSaved || !wallet.socialLinkEnabled) {
+        return ProtectionStatus.partially;
+      }
+      return ProtectionStatus.full;
+    }, [wallet.mnemonicSaved, wallet.socialLinkEnabled]);
     const formattedAddress = useMemo(
       () => shortAddress(wallet?.address ?? '', '•'),
       [wallet?.address],
@@ -116,11 +127,7 @@ export const WalletCard = memo(
         onLoad={() => {
           setCardState('laded');
         }}>
-        <View
-          style={[
-            styles.topNav,
-            disableTopNavMarginBottom && styles.marginBottom,
-          ]}>
+        <View style={[styles.topNav, styles.marginBottom]}>
           <Text
             t12
             style={styles.name}
@@ -144,16 +151,43 @@ export const WalletCard = memo(
           </CopyMenu>
         </View>
         <View style={styles.row}>
-          {enableProtectionWarning && (
+          {protectionStatus === ProtectionStatus.empty && (
             <>
               <IconButton
                 testID="wallet_without_protection_button"
                 onPress={onProtection}
                 style={styles.withoutProtection}>
+                <Icon
+                  name={IconsName.shield_empty}
+                  color={Color.graphicBase3}
+                  i16
+                />
+                <Spacer width={4} />
                 <Text
                   t15
                   i18n={I18N.walletCardWithoutProtection}
                   color={Color.textBase3}
+                />
+              </IconButton>
+              <Spacer width={8} />
+            </>
+          )}
+          {protectionStatus === ProtectionStatus.partially && (
+            <>
+              <IconButton
+                testID="wallet_without_protection_button"
+                onPress={onProtection}
+                style={styles.partiallyProtection}>
+                <Icon
+                  name={IconsName.shield_partially}
+                  color={Color.textYellow1}
+                  i16
+                />
+                <Spacer width={4} />
+                <Text
+                  t15
+                  i18n={I18N.walletCardPartiallyProtection}
+                  color={Color.textYellow1}
                 />
               </IconButton>
               <Spacer width={8} />
@@ -172,6 +206,23 @@ export const WalletCard = memo(
                 color={Color.textBase3}
               />
             </IconButton>
+          )}
+          {protectionStatus === ProtectionStatus.full && (
+            <>
+              <IconButton
+                testID="wallet_without_protection_button"
+                onPress={onProtection}
+                style={styles.fullProtection}>
+                <Icon name={IconsName.shield} color={Color.textSecond2} i16 />
+                <Spacer width={4} />
+                <Text
+                  t15
+                  i18n={I18N.walletCardFullProtection}
+                  color={Color.textSecond2}
+                />
+              </IconButton>
+              <Spacer width={8} />
+            </>
           )}
         </View>
         <First>
@@ -325,9 +376,29 @@ const styles = createTheme({
     marginLeft: 12,
   },
   withoutProtection: {
+    flexDirection: 'row',
     alignSelf: 'flex-start',
     marginBottom: 8,
     backgroundColor: Color.bg5,
+    borderRadius: 4,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    height: 20,
+  },
+  partiallyProtection: {
+    flexDirection: 'row',
+    alignSelf: 'flex-start',
+    marginBottom: 8,
+    backgroundColor: Color.bg6,
+    borderRadius: 4,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    height: 20,
+  },
+  fullProtection: {
+    flexDirection: 'row',
+    alignSelf: 'flex-start',
+    marginBottom: 8,
     borderRadius: 4,
     paddingHorizontal: 6,
     paddingVertical: 2,
