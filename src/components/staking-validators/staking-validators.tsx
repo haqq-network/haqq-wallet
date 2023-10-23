@@ -97,8 +97,9 @@ const styles = createTheme({
   sortSectionContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: 20,
-    marginVertical: 8,
+    paddingHorizontal: 20,
+    paddingBottom: 8,
+    backgroundColor: Color.bg1,
   },
   sortTitle: {
     fontSize: 12,
