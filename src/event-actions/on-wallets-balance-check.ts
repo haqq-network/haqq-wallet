@@ -74,8 +74,6 @@ export async function onWalletsBalanceCheck() {
       lastBalanceUpdates,
     );
 
-    Logger.log('updates', JSON.stringify(updates, null, 2));
-
     VariablesDate.set(
       `indexer_${app.provider.cosmosChainId}`,
       new Date(updates.last_update),
