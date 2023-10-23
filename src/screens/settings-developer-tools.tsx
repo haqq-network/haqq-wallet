@@ -1,6 +1,7 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
+import {utils} from 'ethers';
 import {observer} from 'mobx-react';
 import {Alert, ScrollView} from 'react-native';
 
@@ -16,10 +17,11 @@ import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {navigator} from '@app/navigator';
+import {Cosmos} from '@app/services/cosmos';
 import {message as toastMessage} from '@app/services/toast';
 import {getUserAgent} from '@app/services/version';
 import {PartialJsonRpcRequest} from '@app/types';
-import {openInAppBrowser, openWeb3Browser} from '@app/utils';
+import {isHaqqAddress, openInAppBrowser, openWeb3Browser} from '@app/utils';
 import {
   DEVELOPER_MODE_DOCS,
   HAQQ_METADATA,
@@ -40,6 +42,12 @@ export const SettingsDeveloperTools = observer(() => {
   const [signData, setSignData] = useState<PartialJsonRpcRequest>();
   const [isValidRawSignData, setValidRawSignData] = useState(false);
   const [browserUrl, setBrowserUrl] = useState('');
+  const [convertAddress, setConvertAddress] = useState('');
+
+  const isValidConvertAddress = useMemo(
+    () => isHaqqAddress(convertAddress) || utils.isAddress(convertAddress),
+    [convertAddress],
+  );
 
   const onTurnOffDeveloper = useCallback(() => {
     app.isTesterMode = false;
@@ -87,6 +95,38 @@ export const SettingsDeveloperTools = observer(() => {
         }}>
         {getUserAgent()}
       </Text>
+      <Spacer height={8} />
+      <Title text="bench32/hex converter" />
+      <Input
+        placeholder="haqq... or 0x..."
+        value={convertAddress}
+        error={!isValidConvertAddress}
+        onChangeText={setConvertAddress}
+      />
+      <Spacer height={8} />
+      <Button
+        title="convert"
+        disabled={!isValidConvertAddress}
+        onPress={() => {
+          try {
+            let converted = '';
+            if (isHaqqAddress(convertAddress)) {
+              converted = Cosmos.bech32ToAddress(convertAddress);
+            }
+            if (utils.isAddress(convertAddress)) {
+              converted = Cosmos.addressToBech32(convertAddress);
+            }
+            if (converted) {
+              setConvertAddress(converted);
+              Clipboard.setString(converted);
+              toastMessage('Copied to clipboard');
+            }
+          } catch (err) {
+            Alert.alert('error', JSON.stringify(err, null, 2));
+          }
+        }}
+        variant={ButtonVariant.contained}
+      />
       <Spacer height={8} />
       <Title text="Raw Sign Request" />
       <Input
