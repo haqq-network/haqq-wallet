@@ -98,6 +98,8 @@ export enum IconsName {
   eye_open = 'eye_open',
   eye_close = 'eye_close',
   arrow_sort = 'arrow_sort',
+  shield_empty = 'shield_empty',
+  shield_partially = 'shield_partially',
 }
 
 export type IconSize =
