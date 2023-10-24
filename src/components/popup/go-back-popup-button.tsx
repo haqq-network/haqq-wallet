@@ -6,11 +6,15 @@ import {Color} from '@app/colors';
 import {Icon, IconButton} from '@app/components/ui';
 import {DEFAULT_HITSLOP} from '@app/variables/common';
 
-export const GoBackPopupButton = () => {
+type Props = {
+  onBack?: () => void;
+};
+
+export const GoBackPopupButton = ({onBack}: Props) => {
   const navigation = useNavigation();
   return (
     <IconButton
-      onPress={navigation.goBack}
+      onPress={onBack ?? navigation.goBack}
       hitSlop={DEFAULT_HITSLOP}
       testID="go_back">
       <Icon i24 name="arrow_back" color={Color.graphicBase1} />
