@@ -21,7 +21,12 @@ import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
-import {ChooseAccountItem, ModalType, WalletInitialData, WalletType} from '@app/types';
+import {
+  ChooseAccountItem,
+  ModalType,
+  WalletInitialData,
+  WalletType,
+} from '@app/types';
 
 const PAGE_SIZE = 5;
 
