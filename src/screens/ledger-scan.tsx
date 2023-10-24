@@ -12,6 +12,7 @@ import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {useTypedNavigation} from '@app/hooks';
+import {ModalType} from '@app/types';
 import {generateUUID} from '@app/utils';
 import {LEDGER_APP} from '@app/variables/common';
 
@@ -104,7 +105,7 @@ export const LedgerScanScreen = () => {
 
       try {
         await suggestApp(transport, LEDGER_APP);
-        hideModal('ledgerNoApp');
+        hideModal(ModalType.ledgerNoApp);
         navigation.navigate('ledgerAccounts', {
           deviceId: item.id,
           deviceName: `Ledger ${item.name}`,
@@ -161,7 +162,7 @@ export const LedgerScanScreen = () => {
             case 'can_not_connected':
               break;
             case 'app_not_found':
-              showModal('ledgerNoApp', {
+              showModal(ModalType.ledgerNoApp, {
                 onRetry: () => {
                   return onRetry(item);
                 },

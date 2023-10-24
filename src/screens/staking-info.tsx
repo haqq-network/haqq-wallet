@@ -22,7 +22,7 @@ import {
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {Balance} from '@app/services/balance';
-import {WalletType} from '@app/types';
+import {ModalType, WalletType} from '@app/types';
 
 export const StakingInfoScreen = observer(() => {
   const {validator} = useTypedRoute<'stakingInfo'>().params;
@@ -119,7 +119,7 @@ export const StakingInfoScreen = observer(() => {
             // await awaitForLedger(transport);
           } catch (e) {
             if (e === '27010') {
-              await awaitForPopupClosed('ledgerLocked');
+              await awaitForPopupClosed(ModalType.ledgerLocked);
             }
             transport.abort();
           }

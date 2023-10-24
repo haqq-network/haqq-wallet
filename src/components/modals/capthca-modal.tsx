@@ -6,6 +6,7 @@ import {BottomPopupContainer} from '@app/components/bottom-popups';
 import {app} from '@app/contexts';
 import {createTheme, hideModal} from '@app/helpers';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {ModalType} from '@app/types';
 
 import {Captcha, CaptchaType} from '../captcha';
 
@@ -32,7 +33,7 @@ export const CaptchaModal = ({onClose, variant}: CaptchaModalProps) => {
 
               onCloseModal(() => {
                 app.emit('captcha-data', data);
-                hideModal('captcha');
+                hideModal(ModalType.captcha);
                 onClose?.();
               });
             }}

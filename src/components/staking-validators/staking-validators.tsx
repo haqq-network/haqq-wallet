@@ -1,8 +1,16 @@
 import React, {useCallback, useState} from 'react';
 
-import {SectionList} from 'react-native';
+import {SectionList, View} from 'react-native';
 
-import {CustomHeader, Loading, Spacer} from '@app/components/ui';
+import {Color} from '@app/colors';
+import {
+  CustomHeader,
+  Icon,
+  IconsName,
+  Loading,
+  Spacer,
+  Text,
+} from '@app/components/ui';
 import {SectionHeader} from '@app/components/ui/section-header';
 import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
@@ -55,9 +63,22 @@ export const StakingValidators = ({
       <SectionList
         style={styles.container}
         renderItem={({item}) => <ValidatorRow item={item} onPress={onPress} />}
-        renderSectionHeader={({section: {title}}) => (
-          <SectionHeader title={title} />
-        )}
+        renderSectionHeader={({section: {title}}) => {
+          return (
+            <View>
+              {/*When validators array has only one object it means only one unstacked section.
+              In this case title should not be shown*/}
+              {validators.length > 1 && <SectionHeader title={title} />}
+              {/*Sort by random hint section should be shown only for unstacked validators*/}
+              {title === getText(I18N.stakingValidatorsUnStaked) && (
+                <View style={styles.sortSectionContainer}>
+                  <Icon name={IconsName.arrow_sort} color={Color.textBase1} />
+                  <Text t9 i18n={I18N.byRandomTitle} style={styles.sortTitle} />
+                </View>
+              )}
+            </View>
+          );
+        }}
         ListEmptyComponent={Loading}
         contentContainerStyle={styles.grow}
         sections={validators}
@@ -72,5 +93,15 @@ const styles = createTheme({
   },
   grow: {
     flexGrow: 1,
+  },
+  sortSectionContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingBottom: 8,
+    backgroundColor: Color.bg1,
+  },
+  sortTitle: {
+    fontSize: 12,
   },
 });

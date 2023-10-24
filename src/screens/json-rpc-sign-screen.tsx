@@ -13,7 +13,7 @@ import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {EthSignErrorDataDetails} from '@app/services/eth-sign';
 import {SignJsonRpcRequest} from '@app/services/sign-json-rpc-request';
-import {VerifyAddressResponse} from '@app/types';
+import {ModalType, VerifyAddressResponse} from '@app/types';
 import {
   getTransactionFromJsonRpcRequest,
   getUserAddressFromJRPCRequest,
@@ -92,7 +92,7 @@ export const JsonRpcSignScreen = () => {
           new Balance(txInfo.maxFeePerGas),
           'mul',
         );
-        showModal('notEnoughGas', {
+        showModal(ModalType.notEnoughGas, {
           gasLimit: fee,
           currentAmount: app.getAvailableBalance(wallet!.address),
         });
@@ -138,7 +138,7 @@ export const JsonRpcSignScreen = () => {
       !isAllowedDomain &&
       !(DEBUG_VARS.disableWeb3DomainBlocking || app.isTesterMode)
     ) {
-      showModal('domainBlocked', {
+      showModal(ModalType.domainBlocked, {
         domain: host,
         onClose: () => onPressReject('domain is blocked'),
       });

@@ -1,19 +1,18 @@
-import React, {useEffect} from 'react';
+import {useEffect} from 'react';
 
 import {GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
-import {View} from 'react-native';
 
 import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
-import {createWalletsForProvider} from '@app/helpers/create-wallets-for-provider';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {RemoteConfig} from '@app/services/remote-config';
+import {ModalType} from '@app/types';
 import {WalletType} from '@app/types';
 import {MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
@@ -22,12 +21,12 @@ export const SignInStoreWalletScreen = () => {
   const {nextScreen, ...params} = useTypedRoute<'restoreStore'>().params;
 
   useEffect(() => {
-    showModal('loading', {text: getText(I18N.signinStoreWalletText)});
+    showModal(ModalType.loading, {text: getText(I18N.signinStoreWalletText)});
   }, []);
 
   useEffect(() => {
     const goBack = () => {
-      hideModal('loading');
+      hideModal(ModalType.loading);
       navigation.replace('signin', {next: ''});
     };
     setTimeout(async () => {
@@ -100,22 +99,25 @@ export const SignInStoreWalletScreen = () => {
               },
             );
 
-            await createWalletsForProvider(sssProvider, WalletType.sss);
+            hideModal('loading');
+            navigation.navigate('chooseAccount', {provider: sssProvider});
             break;
         }
 
-        navigation.navigate(nextScreen ?? 'onboardingFinish');
+        if (params.type !== 'sss') {
+          navigation.navigate(nextScreen ?? 'onboardingFinish');
+        }
       } catch (error) {
         Logger.captureException(error, 'restoreStore');
         switch (error) {
           case 'wallet_already_exists':
-            showModal('errorAccountAdded');
+            showModal(ModalType.errorAccountAdded);
             goBack();
             break;
           default:
             if (error instanceof Error) {
               Logger.log('error.message', error.message);
-              showModal('errorCreateAccount');
+              showModal(ModalType.errorCreateAccount);
               goBack();
             }
         }
@@ -123,5 +125,5 @@ export const SignInStoreWalletScreen = () => {
     }, 350);
   }, [navigation, nextScreen, params]);
 
-  return <View />;
+  return null;
 };

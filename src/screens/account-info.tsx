@@ -13,6 +13,7 @@ import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
 import {Indexer} from '@app/services/indexer';
+import {ModalType} from '@app/types';
 
 export const AccountInfoScreen = observer(() => {
   const route = useTypedRoute<'accountInfo'>();
@@ -46,7 +47,7 @@ export const AccountInfoScreen = observer(() => {
   }, []);
 
   const onReceive = useCallback(() => {
-    showModal('cardDetailsQr', {address: route.params.accountId});
+    showModal(ModalType.cardDetailsQr, {address: route.params.accountId});
   }, [route.params.accountId]);
 
   const onSend = useCallback(() => {
@@ -62,7 +63,10 @@ export const AccountInfoScreen = observer(() => {
     [navigation],
   );
 
-  const onPressInfo = useCallback(() => showModal('lockedTokensInfo'), []);
+  const onPressInfo = useCallback(
+    () => showModal(ModalType.lockedTokensInfo),
+    [],
+  );
 
   if (!wallet) {
     return <Loading />;
