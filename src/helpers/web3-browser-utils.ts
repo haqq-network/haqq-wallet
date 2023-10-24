@@ -258,11 +258,10 @@ export function getHost(url: string, defaultProtocol = 'https://') {
   const startIndex = sanitizedUrl.indexOf('//') + 2;
   const endIndex = sanitizedUrl.indexOf('/', startIndex);
   const hostname =
-    endIndex === -1
-      ? url.substring(startIndex)
-      : url.substring(startIndex, endIndex);
-  const result = hostname === '' ? url : hostname;
-  return result;
+    endIndex > -1
+      ? sanitizedUrl.substring(startIndex, endIndex)
+      : sanitizedUrl.substring(startIndex);
+  return (hostname || url).trim();
 }
 
 export const getFavIconUrl = (url?: string | undefined) => {

@@ -100,6 +100,7 @@ export enum IconsName {
   arrow_sort = 'arrow_sort',
   shield_empty = 'shield_empty',
   shield_partially = 'shield_partially',
+  privacy = 'privacy',
 }
 
 export type IconSize =

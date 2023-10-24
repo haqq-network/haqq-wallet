@@ -44,7 +44,7 @@ export const LinkPreviewLine = ({
             numberOfLines={1}
             style={styles.text}
             color={Color.textBase2}>
-            {link.url}
+            {link.subtitle || link.url}
           </Text>
         </View>
       </View>

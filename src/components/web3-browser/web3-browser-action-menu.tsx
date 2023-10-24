@@ -42,6 +42,8 @@ interface Web3BrowserActionMenuProps {
   onPressAddBookmark(): void;
 
   onPressRemoveBookmark(): void;
+
+  onPressPrivacy(): void;
 }
 
 export const Web3BrowserActionMenu = ({
@@ -62,6 +64,7 @@ export const Web3BrowserActionMenu = ({
   onPressCopyLink,
   onPressDisconnect,
   onPressShare,
+  onPressPrivacy,
 }: Web3BrowserActionMenuProps) => {
   return (
     <>
@@ -160,6 +163,12 @@ export const Web3BrowserActionMenu = ({
             <IconButton style={styles.actionMenuButton} onPress={onPressShare}>
               <DataContent short titleI18n={I18N.browserActionMenuShare} />
               <Icon name={IconsName.share} color={Color.graphicBase1} />
+            </IconButton>
+            <IconButton
+              style={styles.actionMenuButton}
+              onPress={onPressPrivacy}>
+              <DataContent short titleI18n={I18N.browserPrivacy} />
+              <Icon name={IconsName.privacy} color={Color.graphicBase1} />
             </IconButton>
             {!!walletAddress && (
               <>

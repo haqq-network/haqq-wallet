@@ -78,6 +78,7 @@ import {getModalScreenOptions} from './helpers/get-modal-screen-options';
 import {themeUpdaterHOC} from './helpers/theme-updater-hoc';
 import {migrationWallets} from './models/migration-wallets';
 import {BackupScreen} from './screens/backup';
+import {BrowserPrivacyPopupStack} from './screens/browser-privacy-popup-stack';
 import {CreateScreen} from './screens/create';
 import {HomeScreen} from './screens/home';
 import {HomeStakingScreen} from './screens/home-staking';
@@ -117,6 +118,7 @@ import {SssMigrateScreen} from './screens/sss-migrate';
 import {TotalValueInfoScreen} from './screens/total-value-info';
 import {TransactionScreen} from './screens/transaction';
 import {TransactionDetailScreen} from './screens/transaction-detail';
+import {ValueSelectorScreen} from './screens/value-selector-screen';
 import {WalletConnectScreen} from './screens/wallet-connect';
 import {WalletConnectApplicationDetailsScreen} from './screens/wallet-connect-application-details';
 import {WalletConnectApplicationDetailsPopupScreen} from './screens/wallet-connect-application-details-popup';
@@ -412,6 +414,14 @@ export const App = () => {
                   <Stack.Screen
                     name="walletSelector"
                     component={themeUpdaterHOC(WalletSelectorScreen)}
+                  />
+                  <Stack.Screen
+                    name="valueSelector"
+                    component={themeUpdaterHOC(ValueSelectorScreen)}
+                  />
+                  <Stack.Screen
+                    name="browserPrivacyPopupStack"
+                    component={themeUpdaterHOC(BrowserPrivacyPopupStack)}
                   />
                   <Stack.Screen
                     name="restore"
