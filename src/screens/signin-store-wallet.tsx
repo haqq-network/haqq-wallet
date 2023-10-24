@@ -12,6 +12,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {RemoteConfig} from '@app/services/remote-config';
+import {ModalType} from '@app/types';
 import {WalletType} from '@app/types';
 import {MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
@@ -20,12 +21,12 @@ export const SignInStoreWalletScreen = () => {
   const {nextScreen, ...params} = useTypedRoute<'restoreStore'>().params;
 
   useEffect(() => {
-    showModal('loading', {text: getText(I18N.signinStoreWalletText)});
+    showModal(ModalType.loading, {text: getText(I18N.signinStoreWalletText)});
   }, []);
 
   useEffect(() => {
     const goBack = () => {
-      hideModal('loading');
+      hideModal(ModalType.loading);
       navigation.replace('signin', {next: ''});
     };
     setTimeout(async () => {
@@ -110,13 +111,13 @@ export const SignInStoreWalletScreen = () => {
         Logger.captureException(error, 'restoreStore');
         switch (error) {
           case 'wallet_already_exists':
-            showModal('errorAccountAdded');
+            showModal(ModalType.errorAccountAdded);
             goBack();
             break;
           default:
             if (error instanceof Error) {
               Logger.log('error.message', error.message);
-              showModal('errorCreateAccount');
+              showModal(ModalType.errorCreateAccount);
               goBack();
             }
         }

@@ -14,9 +14,9 @@ import {
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {Modals} from '@app/types';
+import {ModalType, Modals} from '@app/types';
 
-export const LedgerLocked = ({onClose}: Modals['ledgerLocked']) => {
+export const LedgerLocked = ({onClose}: Modals[ModalType.ledgerLocked]) => {
   useEffect(() => {
     vibrate(HapticEffects.error);
     Keyboard.dismiss();

@@ -16,6 +16,7 @@ import {
 import {hideModal} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {SystemDialog} from '@app/services/system-dialog';
+import {ModalType} from '@app/types';
 
 interface SinginRestoreWalletProps {
   onDoneTry: (seed: string) => void;
@@ -51,7 +52,7 @@ export const SignInRestore = ({
       Logger.captureException(e);
     } finally {
       setDisabled(false);
-      hideModal('loading');
+      hideModal(ModalType.loading);
     }
   }, [seed, onDoneTry]);
 

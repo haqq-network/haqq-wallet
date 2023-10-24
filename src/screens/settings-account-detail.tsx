@@ -13,6 +13,7 @@ import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {ModalType} from '@app/types';
 import {AdjustEvents} from '@app/types';
 
 export const SettingsAccountDetailScreen = observer(() => {
@@ -69,10 +70,10 @@ export const SettingsAccountDetailScreen = observer(() => {
           style: 'destructive',
           text: getText(I18N.settingsAccountRemoveConfirm),
           onPress: () => {
-            showModal('loading');
+            showModal(ModalType.loading);
             requestAnimationFrame(async () => {
               await Wallet.remove(address);
-              hideModal('loading');
+              hideModal(ModalType.loading);
               navigation.goBack();
               sendNotification(I18N.notificationAccountDeleted);
             });

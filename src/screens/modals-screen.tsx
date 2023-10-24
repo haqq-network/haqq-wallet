@@ -4,7 +4,7 @@ import {Modal} from '@app/components/modal';
 import {ModalWrapper} from '@app/components/modals/modal-wrapper';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
-import {Modals, ModalsListBase} from '@app/types';
+import {ModalType, Modals, ModalsListBase} from '@app/types';
 import {makeID} from '@app/utils';
 
 type ModalStates<
@@ -12,7 +12,7 @@ type ModalStates<
   ModalName extends keyof ModalsList,
 > = ModalsList[ModalName] & {type: ModalName; uid: string};
 
-type ModalState = ModalStates<Modals, keyof Modals>;
+type ModalState = ModalStates<Modals, ModalType>;
 
 export type ModalProps = {
   initialModal?: Partial<ModalState>;

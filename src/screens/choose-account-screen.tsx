@@ -21,7 +21,12 @@ import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
-import {ChooseAccountItem, WalletInitialData, WalletType} from '@app/types';
+import {
+  ChooseAccountItem,
+  ModalType,
+  WalletInitialData,
+  WalletType,
+} from '@app/types';
 
 const PAGE_SIZE = 5;
 
@@ -113,13 +118,13 @@ export const ChooseAccountScreen = memo(() => {
       Logger.captureException(error, 'chooseAccount');
       switch (error) {
         case 'wallet_already_exists':
-          showModal('errorAccountAdded');
+          showModal(ModalType.errorAccountAdded);
           goBack();
           break;
         default:
           if (error instanceof Error) {
             Logger.log('error.message', error.message);
-            showModal('errorCreateAccount');
+            showModal(ModalType.errorCreateAccount);
             goBack();
           }
       }

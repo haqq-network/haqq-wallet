@@ -1399,7 +1399,7 @@ const en: Record<I18N, string> = {
   [I18N.bluetoothUnauthorizedDescription]:
     'The app does not have access to your Bluetooth. Please go to your phone settings and allow the app to use Bluetooth. Without this, we will not be able to find your Ledger Nano X',
   [I18N.bluetoothUnauthorizedClose]: 'Close',
-  [I18N.transactionFailed]: 'Something went wrong\n#{{id}}',
+  [I18N.transactionFailed]: 'Something went wrong\ncode: {{id}}',
   [I18N.walletConnectTitle]: 'WalletConnect',
   [I18N.walletConnectSignTitle]: 'Sign operation',
   [I18N.pinCodeWrongPin]: 'wrong pin {{attempts}} attempts left',

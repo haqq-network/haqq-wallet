@@ -6,6 +6,7 @@ import {hideModal} from '@app/helpers/modal';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {ModalType} from '@app/types';
 
 export const LedgerFinishScreen = () => {
   const navigation = useTypedNavigation();
@@ -19,7 +20,7 @@ export const LedgerFinishScreen = () => {
   }, [navigation]);
 
   useEffect(() => {
-    hideModal('loading');
+    hideModal(ModalType.loading);
     vibrate(HapticEffects.success);
   }, []);
 

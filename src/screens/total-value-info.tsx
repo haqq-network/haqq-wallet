@@ -13,6 +13,7 @@ import {Token} from '@app/models/tokens';
 import {Wallet} from '@app/models/wallet';
 import {Indexer} from '@app/services/indexer';
 import {
+  ModalType,
   OnTransactionRowPress,
   TransactionListContract,
   TransactionSource,
@@ -57,7 +58,10 @@ export const TotalValueInfoScreen = observer(() => {
     [navigation],
   );
 
-  const onPressInfo = useCallback(() => showModal('lockedTokensInfo'), []);
+  const onPressInfo = useCallback(
+    () => showModal(ModalType.lockedTokensInfo),
+    [],
+  );
 
   if (!wallets?.length) {
     return <Loading />;

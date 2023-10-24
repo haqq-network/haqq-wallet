@@ -5,7 +5,7 @@ import {Spacer} from '@app/components/ui';
 import {WalletRow} from '@app/components/wallet-row';
 import {app} from '@app/contexts';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
-import {Modals} from '@app/types';
+import {ModalType, Modals} from '@app/types';
 
 export function WalletsBottomSheet({
   closeDistance,
@@ -14,7 +14,7 @@ export function WalletsBottomSheet({
   autoSelectWallet = true,
   eventSuffix = '',
   onClose,
-}: Modals['walletsBottomSheet']) {
+}: Modals[ModalType.walletsBottomSheet]) {
   const closeDistanceCalculated = useCalculatedDimensionsValue(
     () => closeDistance?.(),
     [closeDistance],

@@ -7,6 +7,7 @@ import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
+import {ModalType} from '@app/types';
 
 export const SettingsSecurityPinScreen = () => {
   const {goBack} = useTypedNavigation();
@@ -16,7 +17,7 @@ export const SettingsSecurityPinScreen = () => {
       if (pin !== repeatedPin) {
         return false;
       }
-      const close = showModal('loading');
+      const close = showModal(ModalType.loading);
       const wallets = Wallet.getAll();
       const viewed = new Set();
 

@@ -9,11 +9,11 @@ import {RiveWrapper} from '@app/components/ui/rive-wrapper';
 import {createTheme, hideModal} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {Modals} from '@app/types';
+import {ModalType, Modals} from '@app/types';
 import {ProviderNameMap} from '@app/variables/sss';
 
 export const CloudVerification = memo(
-  ({sssProvider, showClose = false}: Modals['cloudVerification']) => {
+  ({sssProvider, showClose = false}: Modals[ModalType.cloudVerification]) => {
     const cloudAnimationName = useThemeSelector({
       light: 'cloud_verification_light',
       dark: 'cloud_verification_dark',
@@ -44,7 +44,7 @@ export const CloudVerification = memo(
               <Button
                 variant={ButtonVariant.second}
                 title={'OK'}
-                onPress={() => hideModal('cloudVerification')}
+                onPress={() => hideModal(ModalType.cloudVerification)}
                 style={styles.closeButton}
               />
             )}

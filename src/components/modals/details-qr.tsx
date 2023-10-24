@@ -21,7 +21,7 @@ import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
-import {Modals} from '@app/types';
+import {ModalType, Modals} from '@app/types';
 import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
 
 export interface DetailsQrModalProps {
@@ -29,7 +29,7 @@ export interface DetailsQrModalProps {
 }
 
 export const DetailsQrModal = observer(
-  ({address, onClose}: Modals['cardDetailsQr']) => {
+  ({address, onClose}: Modals[ModalType.cardDetailsQr]) => {
     const svg = useRef();
     // TODO wallet can be null
     const wallet = Wallet.getById(address) as Wallet;

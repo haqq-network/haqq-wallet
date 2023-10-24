@@ -14,13 +14,13 @@ import {
 import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {Modals} from '@app/types';
+import {ModalType, Modals} from '@app/types';
 
 export const NotEnoughGas = ({
   onClose,
   currentAmount,
   gasLimit,
-}: Modals['notEnoughGas']) => {
+}: Modals[ModalType.notEnoughGas]) => {
   useEffect(() => {
     vibrate(HapticEffects.error);
   }, []);

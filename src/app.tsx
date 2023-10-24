@@ -65,6 +65,7 @@ import {WelcomeNewsScreen} from '@app/screens/welcome-news';
 import {
   ActionSheetType,
   AppTheme,
+  ModalType,
   PresentationNavigation,
   RootStackParamList,
   ScreenOptionType,
@@ -199,7 +200,7 @@ export const App = () => {
 
   useEffect(() => {
     const splashTimer = setTimeout(() => {
-      hideModal('splash');
+      hideModal(ModalType.splash);
     }, SPLASH_TIMEOUT_MS);
     sleep(150)
       .then(() => SplashScreen.hide())
@@ -219,7 +220,7 @@ export const App = () => {
       .then(() => awaitForEventDone(Events.onAppLoggedId))
       .then(() => {
         clearTimeout(splashTimer);
-        hideModal('splash');
+        hideModal(ModalType.splash);
       })
       .catch(async e => {
         Logger.captureException(e, 'app init');
@@ -240,7 +241,9 @@ export const App = () => {
   useEffect(() => {
     if (initialized) {
       const subscription = ({isConnected}: NetInfoState) => {
-        isConnected ? hideModal('noInternet') : showModal('noInternet');
+        isConnected
+          ? hideModal(ModalType.noInternet)
+          : showModal(ModalType.noInternet);
       };
 
       const linkingSubscription = ({url}: {url: string}) => {
@@ -689,7 +692,7 @@ export const App = () => {
                 </Stack.Group>
               </Stack.Navigator>
             </NavigationContainer>
-            <ModalsScreen initialModal={{type: 'splash'}} />
+            <ModalsScreen initialModal={{type: ModalType.splash}} />
           </SafeAreaProvider>
         </MenuProvider>
       </ActionSheetProvider>
