@@ -1,14 +1,12 @@
-import React, {useEffect} from 'react';
+import {useEffect} from 'react';
 
 import {GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
-import {View} from 'react-native';
 
 import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
-import {createWalletsForProvider} from '@app/helpers/create-wallets-for-provider';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
@@ -100,11 +98,14 @@ export const SignInStoreWalletScreen = () => {
               },
             );
 
-            await createWalletsForProvider(sssProvider, WalletType.sss);
+            hideModal('loading');
+            navigation.navigate('chooseAccount', {provider: sssProvider});
             break;
         }
 
-        navigation.navigate(nextScreen ?? 'onboardingFinish');
+        if (params.type !== 'sss') {
+          navigation.navigate(nextScreen ?? 'onboardingFinish');
+        }
       } catch (error) {
         Logger.captureException(error, 'restoreStore');
         switch (error) {
@@ -123,5 +124,5 @@ export const SignInStoreWalletScreen = () => {
     }, 350);
   }, [navigation, nextScreen, params]);
 
-  return <View />;
+  return null;
 };

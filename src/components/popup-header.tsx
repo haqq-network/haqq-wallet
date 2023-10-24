@@ -13,7 +13,7 @@ import {ScreenOptionType} from '@app/types';
 import {IS_ANDROID} from '@app/variables/common';
 
 type PopupHeaderProps = StackHeaderProps & {
-  options: ScreenOptionType;
+  options: ScreenOptionType & {customBackFunction?: () => void};
 };
 
 export const PopupHeader = ({options, back, navigation}: PopupHeaderProps) => {
@@ -50,7 +50,7 @@ export const PopupHeader = ({options, back, navigation}: PopupHeaderProps) => {
       {options.headerLeft ? (
         options.headerLeft({})
       ) : canGoBack ? (
-        <GoBackPopupButton />
+        <GoBackPopupButton onBack={options.customBackFunction} />
       ) : (
         <SpacerPopupButton />
       )}
