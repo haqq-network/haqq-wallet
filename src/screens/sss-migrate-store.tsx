@@ -12,6 +12,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {RemoteConfig} from '@app/services/remote-config';
+import {ModalType} from '@app/types';
 import {WalletType} from '@app/types';
 
 export const SssMigrateStoreScreen = () => {
@@ -19,7 +20,7 @@ export const SssMigrateStoreScreen = () => {
   const navigation = useTypedNavigation();
 
   useEffect(() => {
-    showModal('loading', {text: getText(I18N.sssStoreWalletSaving)});
+    showModal(ModalType.loading, {text: getText(I18N.sssStoreWalletSaving)});
   }, []);
 
   useEffect(() => {
@@ -81,7 +82,7 @@ export const SssMigrateStoreScreen = () => {
         navigation.navigate('sssMigrateFinish');
       } catch (e) {
         if (e instanceof Error) {
-          showModal('errorCreateAccount');
+          showModal(ModalType.errorCreateAccount);
           navigation.getParent()?.goBack();
           Logger.captureException(e, 'SssMigrateStoreScreen');
         }

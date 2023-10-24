@@ -14,7 +14,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
-import {AdjustEvents} from '@app/types';
+import {AdjustEvents, ModalType} from '@app/types';
 
 export const TransactionLedgerScreen = () => {
   const route = useTypedRoute<'transactionLedger'>();
@@ -29,7 +29,7 @@ export const TransactionLedgerScreen = () => {
 
   useEffect(() => {
     const subscription = (modal: string) => {
-      if (modal === 'ledgerLocked') {
+      if (modal === ModalType.ledgerLocked) {
         navigation.goBack();
       }
     };
@@ -78,7 +78,7 @@ export const TransactionLedgerScreen = () => {
             e.message === 'can_not_connected' ||
             e.message === 'ledger_locked'
           ) {
-            showModal('ledgerLocked');
+            showModal(ModalType.ledgerLocked);
           } else {
             navigation.goBack();
           }

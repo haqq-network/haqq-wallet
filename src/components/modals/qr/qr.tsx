@@ -23,7 +23,7 @@ import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {SystemDialog} from '@app/services/system-dialog';
-import {Modals} from '@app/types';
+import {ModalType, Modals} from '@app/types';
 import {isError} from '@app/utils';
 import {IS_IOS, QR_STATUS_BAR} from '@app/variables/common';
 
@@ -31,7 +31,7 @@ import {QrBottomView} from './qr-bottom-view';
 import {QrNoAccess} from './qr-no-access';
 import {QrTopView} from './qr-top-view';
 
-export type QRModalProps = Modals['qr'];
+export type QRModalProps = Modals[ModalType.qr];
 
 const debbouncedVibrate = _.debounce(vibrate, 1000);
 

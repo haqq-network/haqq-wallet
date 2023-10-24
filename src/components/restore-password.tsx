@@ -9,6 +9,7 @@ import {hideModal, showModal} from '@app/helpers';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N, getText} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {ModalType} from '@app/types';
 import {sleep} from '@app/utils';
 
 import {BottomSheet, BottomSheetRef} from './bottom-sheet';
@@ -25,12 +26,12 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
   const closeDistance = useCalculatedDimensionsValue(({height}) => height / 5);
   const onClickResetConfirm = useCallback(async () => {
     await bottomSheetRef.current?.close?.();
-    const closeLoading = showModal('loading');
+    const closeLoading = showModal(ModalType.loading);
     try {
       await sleep(LOADING_DURATION);
       await onAppReset();
-      hideModal('pin');
-      hideModal('splash');
+      hideModal(ModalType.pin);
+      hideModal(ModalType.splash);
       await onWalletReset();
     } catch (e) {
       Logger.captureException(e, 'onClickResetConfirm');

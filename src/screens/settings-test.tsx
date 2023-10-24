@@ -48,6 +48,7 @@ import {HapticEffects, vibrate} from '@app/services/haptic';
 import {SssProviders} from '@app/services/provider-sss';
 import {message as toastMessage} from '@app/services/toast';
 import {getUserAgent} from '@app/services/version';
+import {ModalType} from '@app/types';
 import {Modals, PartialJsonRpcRequest} from '@app/types';
 import {
   generateMockBanner,
@@ -103,7 +104,7 @@ const getTestModals = (): TestModals => {
     },
     error: {
       onClose: () => {
-        hideModal('loading');
+        hideModal(ModalType.loading);
       },
       title: 'Something went wrong',
       description: 'Please try again later',
@@ -672,9 +673,9 @@ export const SettingsTestScreen = observer(() => {
           showActionSheetWithOptions({options: modalsKeys}, index => {
             if (typeof index === 'number') {
               const name = modalsKeys[index];
-              if (name === 'loading') {
+              if (name === ModalType.loading) {
                 setTimeout(() => {
-                  hideModal('loading');
+                  hideModal(ModalType.loading);
                 }, 5000);
               }
               // @ts-ignore

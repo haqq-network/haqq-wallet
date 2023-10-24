@@ -12,7 +12,7 @@ import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
-import {VoteNamesType} from '@app/types';
+import {ModalType, VoteNamesType} from '@app/types';
 import {VOTES} from '@app/variables/votes';
 
 export const ProposalScreen = observer(() => {
@@ -88,7 +88,7 @@ export const ProposalScreen = observer(() => {
     setModalIsLoading(true);
     voteSelectedRef.current = decision;
     cardRef.current?.setSelected(decision);
-    showModal('walletsBottomSheet', {
+    showModal(ModalType.walletsBottomSheet, {
       wallets: visible,
       closeDistance: () => getWindowHeight() / 6,
       title: I18N.proposalAccountTitle,

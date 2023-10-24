@@ -1031,6 +1031,34 @@ export type Modals = {
   };
 };
 
+export enum ModalType {
+  loading = 'loading',
+  pin = 'pin',
+  splash = 'splash',
+  noInternet = 'noInternet',
+  bluetoothPoweredOff = 'bluetoothPoweredOff',
+  bluetoothUnauthorized = 'bluetoothUnauthorized',
+  qr = 'qr',
+  cardDetailsQr = 'cardDetailsQr',
+  error = 'error',
+  claimOnMainnet = 'claimOnMainnet',
+  ledgerNoApp = 'ledgerNoApp',
+  ledgerAttention = 'ledgerAttention',
+  ledgerLocked = 'ledgerLocked',
+  errorAccountAdded = 'errorAccountAdded',
+  errorCreateAccount = 'errorCreateAccount',
+  walletsBottomSheet = 'walletsBottomSheet',
+  transactionError = 'transactionError',
+  locationUnauthorized = 'locationUnauthorized',
+  providersBottomSheet = 'providersBottomSheet',
+  captcha = 'captcha',
+  domainBlocked = 'domainBlocked',
+  raffleAgreement = 'raffleAgreement',
+  lockedTokensInfo = 'lockedTokensInfo',
+  notEnoughGas = 'notEnoughGas',
+  cloudVerification = 'cloudVerification',
+}
+
 export interface NftAttribute {
   trait_type: string;
   value: string;

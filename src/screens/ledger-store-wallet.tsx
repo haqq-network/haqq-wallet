@@ -6,6 +6,7 @@ import {showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {ModalType} from '@app/types';
 import {WalletType} from '@app/types';
 import {sleep} from '@app/utils';
 
@@ -14,7 +15,7 @@ export const LedgerStoreWalletScreen = () => {
   const route = useTypedRoute<'ledgerStore'>();
 
   useEffect(() => {
-    showModal('loading', {text: getText(I18N.ledgerStoreWalletSaving)});
+    showModal(ModalType.loading, {text: getText(I18N.ledgerStoreWalletSaving)});
   }, []);
 
   useEffect(() => {
@@ -39,12 +40,12 @@ export const LedgerStoreWalletScreen = () => {
         .catch(error => {
           switch (error) {
             case 'wallet_already_exists':
-              showModal('errorAccountAdded');
+              showModal(ModalType.errorAccountAdded);
               navigation.getParent()?.goBack();
               break;
             default:
               if (error instanceof Error) {
-                showModal('errorCreateAccount');
+                showModal(ModalType.errorCreateAccount);
                 navigation.getParent()?.goBack();
                 Logger.captureException(error, 'ledgerStore');
               }

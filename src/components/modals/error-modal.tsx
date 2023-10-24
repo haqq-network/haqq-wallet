@@ -14,7 +14,7 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {Modals} from '@app/types';
+import {ModalType, Modals} from '@app/types';
 
 export const ErrorModal = ({
   title,
@@ -22,7 +22,7 @@ export const ErrorModal = ({
   close,
   onClose,
   ...props
-}: Modals['error']) => {
+}: Modals[ModalType.error]) => {
   useEffect(() => {
     vibrate(HapticEffects.error);
   }, []);
