@@ -822,6 +822,7 @@ export enum I18N {
   browserSecurityAllowOnce,
   browserSecurityDeny,
   byRandomTitle,
+  viewDetailsTitle,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1788,4 +1789,5 @@ const en: Record<I18N, string> = {
   [I18N.browserPrivacyTitle]: 'Privacy',
   [I18N.browserPrivacy]: 'Privacy',
   [I18N.byRandomTitle]: 'By random',
+  [I18N.viewDetailsTitle]: 'View details',
 };
