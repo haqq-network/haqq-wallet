@@ -28,8 +28,7 @@ import {TransactionError} from '@app/components/modals/transaction-error';
 import {WalletsBottomSheet} from '@app/components/modals/wallets-bottom-sheet';
 import {hideModal} from '@app/helpers';
 import {useTheme} from '@app/hooks';
-import {ModalType} from '@app/types';
-import {Modals, ModalsListBase} from '@app/types';
+import {ModalType, Modals, ModalsListBase} from '@app/types';
 
 import {DomainBlocked} from './domain-blocked';
 import {LockedTokensInfo} from './locked-tokens-info';
@@ -39,7 +38,7 @@ export type ModalWrapperProps<
   ModalsList extends ModalsListBase,
   ModalName extends keyof ModalsList,
 > = {
-  type: keyof Modals;
+  type: ModalType;
   modal: ModalsList[ModalName];
   onClose: (modal: Extract<ModalName, string>) => void;
 };
