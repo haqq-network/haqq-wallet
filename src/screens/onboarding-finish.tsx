@@ -9,6 +9,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {WalletConnect} from '@app/services/wallet-connect';
+import {ModalType} from '@app/types';
 
 export const OnboardingFinishScreen = () => {
   const navigation = useTypedNavigation();
@@ -41,7 +42,7 @@ export const OnboardingFinishScreen = () => {
     }
 
     onTrackEvent(route.params.event);
-    hideModal('loading');
+    hideModal(ModalType.loading);
     vibrate(HapticEffects.success);
   }, [route.params.event]);
 

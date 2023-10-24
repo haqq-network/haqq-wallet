@@ -15,9 +15,12 @@ import {createTheme} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {Modals} from '@app/types';
+import {ModalType, Modals} from '@app/types';
 
-export const DomainBlocked = ({onClose, domain}: Modals['domainBlocked']) => {
+export const DomainBlocked = ({
+  onClose,
+  domain,
+}: Modals[ModalType.domainBlocked]) => {
   useEffect(() => {
     vibrate(HapticEffects.error);
   }, []);

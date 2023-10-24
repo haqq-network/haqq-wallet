@@ -5,6 +5,8 @@ import {Validator} from '@evmos/provider';
 import {Proposal} from '@evmos/provider/dist/rest/gov';
 import {Coin} from '@evmos/transactions';
 import {AccessListish, BigNumberish} from '@haqq/provider-base';
+import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import type {StackNavigationOptions} from '@react-navigation/stack';
 import {SessionTypes} from '@walletconnect/types';
 import Decimal from 'decimal.js';
@@ -135,10 +137,11 @@ export type WalletInitialData =
   | {type: 'empty'};
 
 export type RootStackParamList = {
-  chooseAccount: {
-    type: 'mnemonic';
-    mnemonic: string;
-  };
+  chooseAccount:
+    | (WalletInitialData & {provider: ProviderMnemonicReactNative})
+    | {
+        provider: ProviderSSSReactNative;
+      };
   cloudProblems: {sssProvider: SssProviders; onNext: () => void};
   home: undefined;
   homeFeed: undefined;
@@ -735,6 +738,7 @@ export type ValidatorItem = Validator & {
   localRewards?: number;
   localUnDelegations?: number;
   searchString?: string;
+  power?: number;
 };
 
 export type ColorType = Color | string;
@@ -1044,6 +1048,34 @@ export type Modals = {
     showClose?: boolean;
   };
 };
+
+export enum ModalType {
+  loading = 'loading',
+  pin = 'pin',
+  splash = 'splash',
+  noInternet = 'noInternet',
+  bluetoothPoweredOff = 'bluetoothPoweredOff',
+  bluetoothUnauthorized = 'bluetoothUnauthorized',
+  qr = 'qr',
+  cardDetailsQr = 'cardDetailsQr',
+  error = 'error',
+  claimOnMainnet = 'claimOnMainnet',
+  ledgerNoApp = 'ledgerNoApp',
+  ledgerAttention = 'ledgerAttention',
+  ledgerLocked = 'ledgerLocked',
+  errorAccountAdded = 'errorAccountAdded',
+  errorCreateAccount = 'errorCreateAccount',
+  walletsBottomSheet = 'walletsBottomSheet',
+  transactionError = 'transactionError',
+  locationUnauthorized = 'locationUnauthorized',
+  providersBottomSheet = 'providersBottomSheet',
+  captcha = 'captcha',
+  domainBlocked = 'domainBlocked',
+  raffleAgreement = 'raffleAgreement',
+  lockedTokensInfo = 'lockedTokensInfo',
+  notEnoughGas = 'notEnoughGas',
+  cloudVerification = 'cloudVerification',
+}
 
 export interface NftAttribute {
   trait_type: string;

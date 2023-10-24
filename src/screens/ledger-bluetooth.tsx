@@ -8,6 +8,7 @@ import {showModal} from '@app/helpers';
 import {requestLocationPermission} from '@app/helpers/request-location-permission';
 import {useTypedNavigation} from '@app/hooks';
 import {SystemDialog} from '@app/services/system-dialog';
+import {ModalType} from '@app/types';
 
 import {LedgerBluetooth} from '../components/ledger-bluetooth';
 
@@ -32,7 +33,7 @@ export const LedgerBluetoothScreen = () => {
     if (granted) {
       navigation.navigate('ledgerScan');
     } else {
-      showModal('locationUnauthorized');
+      showModal(ModalType.locationUnauthorized);
     }
 
     requestAnimationFrame(() => {

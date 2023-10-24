@@ -895,10 +895,6 @@ export const getRandomItemFromArray = <T>(array: T[]): T => {
   return array[Math.floor(Math.random() * array?.length)] as T;
 };
 
-export function isInteger(value: any): value is number {
-  return Number.isInteger(value);
-}
-
 export const uppercaseFirtsLetter = (str: string) =>
   str
     .toLowerCase()

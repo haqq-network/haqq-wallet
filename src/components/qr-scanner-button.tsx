@@ -9,7 +9,7 @@ import {Color} from '@app/colors';
 import {Icon, IconButton} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
-import {RootStackParamList} from '@app/types';
+import {ModalType, RootStackParamList} from '@app/types';
 
 export const QrScannerButton = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -18,13 +18,13 @@ export const QrScannerButton = () => {
     const subscription = ({from, to}: any) => {
       if (utils.isAddress(to)) {
         app.off('address', subscription);
-        hideModal('qr');
+        hideModal(ModalType.qr);
         navigation.navigate('transaction', {to, from});
       }
     };
 
     app.on('address', subscription);
-    showModal('qr');
+    showModal(ModalType.qr);
   }, [navigation]);
 
   return (

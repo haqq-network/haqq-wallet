@@ -6,11 +6,13 @@ import {Color, getColor} from '@app/colors';
 import {Button, ButtonVariant, NoInternetIcon, Text} from '@app/components/ui';
 import {createTheme, hideModal} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Modals} from '@app/types';
+import {ModalType, Modals} from '@app/types';
 
 import {BottomPopupContainer} from '../bottom-popups';
 
-export const NoInternet = ({showClose = false}: Modals['noInternet']) => {
+export const NoInternet = ({
+  showClose = false,
+}: Modals[ModalType.noInternet]) => {
   return (
     <BottomPopupContainer>
       {() => (
@@ -30,7 +32,7 @@ export const NoInternet = ({showClose = false}: Modals['noInternet']) => {
             <Button
               variant={ButtonVariant.second}
               title={'OK'}
-              onPress={() => hideModal('noInternet')}
+              onPress={() => hideModal(ModalType.noInternet)}
               style={page.closeButton}
             />
           )}

@@ -4,7 +4,7 @@ import {BottomSheet} from '@app/components/bottom-sheet';
 import {Spacer} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
-import {Modals} from '@app/types';
+import {ModalType, Modals} from '@app/types';
 
 import {SettingsProvidersRow} from '../settings-providers/settings-providers-row';
 
@@ -15,7 +15,7 @@ export function ProvidersBottomSheet({
   closeDistance,
   eventSuffix = '',
   onClose,
-}: Modals['providersBottomSheet']) {
+}: Modals[ModalType.providersBottomSheet]) {
   const closeDistanceCalculated = useCalculatedDimensionsValue(
     () => closeDistance?.(),
     [closeDistance],

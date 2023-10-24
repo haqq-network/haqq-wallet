@@ -28,6 +28,10 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
     return parseInt(item.tokens ?? '0', 10) / WEI;
   }, [item.tokens]);
 
+  const votingPowerPercents = useMemo(() => {
+    return item.power ? cleanNumber(item.power) : null;
+  }, [item.power]);
+
   const onPressRow = useCallback(() => {
     onPress(item);
   }, [item, onPress]);
@@ -58,12 +62,19 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
               <Text t11>{validatorCommission}%</Text>
             </View>
             <View style={styles.infoRow}>
-              <Text
-                t14
-                color={Color.textBase2}
-                i18n={I18N.stakingValidatorsRowPower}
-                i18params={{power: cleanNumber(votingPower)}}
-              />
+              <View style={styles.powerRow}>
+                <Text
+                  t14
+                  color={Color.textBase2}
+                  i18n={I18N.stakingValidatorsRowPower}
+                  i18params={{power: cleanNumber(votingPower)}}
+                />
+                {votingPowerPercents && (
+                  <Text t14 color={Color.textBase2}>
+                    {` · ${votingPowerPercents}%`}
+                  </Text>
+                )}
+              </View>
               <Text t14 color={textColor} i18n={item.localStatus as number} />
             </View>
           </View>
@@ -113,6 +124,9 @@ const styles = createTheme({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginVertical: 1,
+  },
+  powerRow: {
+    flexDirection: 'row',
   },
   iconWrapper: {
     width: 42,
