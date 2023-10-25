@@ -33,6 +33,8 @@ import {SssProviders} from '@app/services/provider-sss';
 import {WalletConnectApproveConnectionEvent} from '@app/types/wallet-connect';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
+import {AwaitValue} from './helpers/await-for-value';
+
 export enum AdjustEvents {
   accountCreated = 'q3vxmg',
   accountAdded = 'tgdgp7',
@@ -153,6 +155,14 @@ export type RootStackParamList = {
   browserHomePage: undefined;
   browserSearchPage: undefined | {initialSearchText?: string};
   browserEditBookmarksScreen: undefined;
+  browserPrivacy: undefined;
+  browserPrivacyDetails: {
+    hostname: string;
+  };
+  browserPrivacyPopupStack: {
+    screen: 'browserPrivacyDetails' | 'browserPrivacy';
+    params?: RootStackParamList[RootStackParamList['browserPrivacyPopupStack']['screen']];
+  };
   homeBrowser:
     | undefined
     | {
@@ -519,6 +529,12 @@ export type RootStackParamList = {
     initialAddress?: string;
     eventSuffix?: string;
   };
+  valueSelector: {
+    title: string;
+    values: AwaitValue[];
+    initialIndex?: number;
+    eventSuffix?: string;
+  };
   walletConnect?: {
     screen: 'walletConnectApproval' | 'walletConnectSign';
     params: RootStackParamList['walletConnectApproval'];
@@ -794,6 +810,7 @@ export interface Link {
   id: string;
   url: string;
   title: string;
+  subtitle?: string;
   icon?: string;
 }
 
