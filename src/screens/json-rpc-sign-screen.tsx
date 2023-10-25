@@ -6,6 +6,7 @@ import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {showModal} from '@app/helpers';
 import {getHost} from '@app/helpers/web3-browser-utils';
+import {Whitelist} from '@app/helpers/whitelist';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useRemoteConfigVar} from '@app/hooks/use-remote-config';
@@ -128,18 +129,12 @@ export const JsonRpcSignScreen = () => {
     }
   }, []);
 
-  useEffect(() => {
-    const host = getHost(metadata.url);
-    const isAllowedDomain = !!whitelist?.find?.(url =>
-      new RegExp(host).test(url),
-    )?.length;
+  useEffectAsync(async () => {
+    const isAllowedDomain = await Whitelist.check(metadata.url);
     setIsAllowed(isAllowedDomain);
-    if (
-      !isAllowedDomain &&
-      !(DEBUG_VARS.disableWeb3DomainBlocking || app.isTesterMode)
-    ) {
+    if (!isAllowedDomain) {
       showModal(ModalType.domainBlocked, {
-        domain: host,
+        domain: getHost(metadata.url),
         onClose: () => onPressReject('domain is blocked'),
       });
     }

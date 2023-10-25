@@ -2,12 +2,14 @@ import {getSdkError} from '@walletconnect/utils';
 import {JsonRpcError, createAsyncMiddleware} from 'json-rpc-engine';
 
 import {WebViewEventsEnum} from '@app/components/web3-browser/scripts';
-import {Web3BrowserHelper} from '@app/components/web3-browser/web3-browser-helper';
 
-import {JsonRpcMethodsHandlers} from './json-rpc-methods-handlers';
+import {
+  JsonRpcHelper,
+  JsonRpcMethodsHandlers,
+} from './json-rpc-methods-handlers';
 
 type CreateJsonRpcMiddlewareParams = {
-  helper: Web3BrowserHelper;
+  helper: JsonRpcHelper;
   // if in the engine has less than one middleware `next` method is crash app
   useNext?: boolean;
 };

@@ -103,6 +103,11 @@ const requestGeoLocationPermissionForSite = async (
         hostname,
         BrowserPermissionType.geolocation,
       );
+
+      if (permission?.status === BrowserPermissionStatus.deny) {
+        return false;
+      }
+
       const status = await showGeolocationPermissionPropmt(hostname);
 
       if (permission) {

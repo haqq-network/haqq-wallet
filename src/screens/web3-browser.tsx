@@ -114,6 +114,10 @@ export const Web3BrowserScreen = () => {
     navigation.goBack();
   }, [navigation]);
 
+  const onPressPrivacy = useCallback(() => {
+    navigation.navigate('browserPrivacyPopupStack', {screen: 'browserPrivacy'});
+  }, [navigation]);
+
   const onPressAddBookmark = useCallback(
     (windowInfo: WindowInfoEvent['payload']) => {
       setShowActionMenu(false);
@@ -239,6 +243,7 @@ export const Web3BrowserScreen = () => {
       onPressAddBookmark={onPressAddBookmark}
       onPressRemoveBookmark={onPressRemoveBookmark}
       addSiteToSearchHistory={addSiteToSearchHistory}
+      onPressPrivacy={onPressPrivacy}
     />
   );
 };
