@@ -25,7 +25,8 @@ interface TransactionConfirmationProps {
   amount: Balance;
   fee: Balance | null;
   contact: Contact | null;
-  error?: string;
+  error: string;
+  errorDetails: string;
 
   disabled?: boolean;
   onConfirmTransaction: () => void;
@@ -34,6 +35,7 @@ interface TransactionConfirmationProps {
 export const TransactionConfirmation = ({
   testID,
   error,
+  errorDetails,
   disabled,
   contact,
   to,
@@ -116,7 +118,7 @@ export const TransactionConfirmation = ({
           </DataView>
         </View>
         {error && (
-          <ErrorText center e0>
+          <ErrorText center e0 errorDetails={errorDetails}>
             {error}
           </ErrorText>
         )}
