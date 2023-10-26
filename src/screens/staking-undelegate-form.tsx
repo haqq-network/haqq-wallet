@@ -20,12 +20,33 @@ export const StakingUnDelegateFormScreen = observer(() => {
   const cosmos = useCosmos();
   const wallet = Wallet.getById(account);
   const [unboundingTime, setUnboundingTime] = useState(604800000);
-  const [fee, setFee] = useState<Balance | null>(null);
+  const [fee, _setFee] = useState<Balance | null>(null);
 
   const setDefaultFee = useCallback(
-    () => setFee(new Balance(Cosmos.fee.amount)),
+    () => _setFee(new Balance(Cosmos.fee.amount)),
     [],
   );
+
+  const setFee = useCallback(async (amount?: string) => {
+    const instance = await getProviderInstanceForWallet(wallet!, true);
+
+    try {
+      _setFee(null);
+      const f = await cosmos.simulateUndelegate(
+        instance,
+        wallet?.path!,
+        validator.operator_address,
+        amount ? new Balance(amount) : balance,
+      );
+      Logger.log('f.amount', f.amount);
+      _setFee(new Balance(f.amount));
+    } catch (err) {
+      if (instance instanceof ProviderLedgerReactNative) {
+        instance.abort();
+        setDefaultFee();
+      }
+    }
+  }, []);
 
   const balance = useMemo(() => {
     const delegations =
@@ -41,26 +62,8 @@ export const StakingUnDelegateFormScreen = observer(() => {
   useLayoutEffectAsync(async () => {
     const timer = setTimeout(() => setDefaultFee(), FEE_ESTIMATING_TIMEOUT_MS);
 
-    const instance = await getProviderInstanceForWallet(wallet!, true);
-    try {
-      setFee(null);
-      const f = await cosmos.simulateUndelegate(
-        instance,
-        wallet?.path!,
-        validator.operator_address,
-        balance,
-      );
-      Logger.log('f.amount', f.amount);
-      setFee(new Balance(f.amount));
-    } catch (err) {
-      if (instance instanceof ProviderLedgerReactNative) {
-        instance.abort();
-        clearTimeout(timer);
-        setDefaultFee();
-      }
-    } finally {
-      clearTimeout(timer);
-    }
+    await setFee();
+    clearTimeout(timer);
 
     return () => {
       clearTimeout(timer);
@@ -96,6 +99,7 @@ export const StakingUnDelegateFormScreen = observer(() => {
       balance={balance}
       onAmount={onAmount}
       fee={fee}
+      setFee={setFee}
       unboundingTime={unboundingTime}
     />
   );

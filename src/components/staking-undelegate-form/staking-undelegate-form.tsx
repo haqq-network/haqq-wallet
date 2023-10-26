@@ -23,6 +23,7 @@ export type StakingDelegateFormProps = {
   balance: Balance;
   onAmount: (amount: number) => void;
   fee: Balance | null;
+  setFee: (amount?: string) => Promise<void>;
   unboundingTime: number;
 };
 
@@ -31,6 +32,7 @@ export const StakingUnDelegateForm = ({
   balance,
   onAmount,
   fee,
+  setFee,
 }: StakingDelegateFormProps) => {
   const amounts = useSumAmount(Balance.Empty, balance);
 
@@ -46,6 +48,10 @@ export const StakingUnDelegateForm = ({
   const onPressMax = useCallback(() => {
     amounts.setMax();
   }, [amounts]);
+
+  useEffect(() => {
+    setFee(amounts.amount);
+  }, [setFee, amounts.amount]);
 
   useEffect(() => {
     const INPUT_PRECISION = 3;

@@ -27,6 +27,7 @@ export type StakingDelegateFormProps = {
   account: string;
   onAmount: (amount: number) => void;
   fee: Balance | null;
+  setFee: (amount?: string) => Promise<void>;
   balance: Balance;
 };
 
@@ -37,6 +38,7 @@ export const StakingDelegateForm = ({
   },
   onAmount,
   fee,
+  setFee,
   balance,
 }: StakingDelegateFormProps) => {
   const transactionFee = useMemo(
@@ -61,6 +63,10 @@ export const StakingDelegateForm = ({
   const onPressMax = useCallback(() => {
     amounts.setMax();
   }, [amounts]);
+
+  useEffect(() => {
+    setFee(amounts.amount);
+  }, [setFee, amounts.amount]);
 
   useEffect(() => {
     const INPUT_PRECISION = 3;
