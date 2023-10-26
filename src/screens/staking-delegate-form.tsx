@@ -7,6 +7,7 @@ import {app} from '@app/contexts';
 import {getProviderInstanceForWallet} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useLayoutEffectAsync} from '@app/hooks/use-effect-async';
+import {useThrottle} from '@app/hooks/use-throttle';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
@@ -26,7 +27,7 @@ export const StakingDelegateFormScreen = () => {
     [],
   );
 
-  const setFee = useCallback(async (amount?: string) => {
+  const setFee = useThrottle(async (amount?: string) => {
     const cosmos = new Cosmos(app.provider);
     const instance = await getProviderInstanceForWallet(wallet!, true);
 
@@ -46,7 +47,7 @@ export const StakingDelegateFormScreen = () => {
         setDefaultFee();
       }
     }
-  }, []);
+  }, 500);
 
   useLayoutEffectAsync(async () => {
     const timer = setTimeout(() => {

@@ -27,7 +27,7 @@ export type StakingDelegateFormProps = {
   account: string;
   onAmount: (amount: number) => void;
   fee: Balance | null;
-  setFee: (amount?: string) => Promise<void>;
+  setFee: (amount?: string) => void;
   balance: Balance;
 };
 

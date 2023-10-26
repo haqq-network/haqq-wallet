@@ -7,6 +7,7 @@ import {StakingUnDelegateForm} from '@app/components/staking-undelegate-form';
 import {getProviderInstanceForWallet} from '@app/helpers';
 import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useLayoutEffectAsync} from '@app/hooks/use-effect-async';
+import {useThrottle} from '@app/hooks/use-throttle';
 import {StakingMetadata} from '@app/models/staking-metadata';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
@@ -27,7 +28,7 @@ export const StakingUnDelegateFormScreen = observer(() => {
     [],
   );
 
-  const setFee = useCallback(async (amount?: string) => {
+  const setFee = useThrottle(async (amount?: string) => {
     const instance = await getProviderInstanceForWallet(wallet!, true);
 
     try {
@@ -46,7 +47,7 @@ export const StakingUnDelegateFormScreen = observer(() => {
         setDefaultFee();
       }
     }
-  }, []);
+  }, 500);
 
   const balance = useMemo(() => {
     const delegations =
