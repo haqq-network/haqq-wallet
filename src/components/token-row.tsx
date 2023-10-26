@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 
-import {Image, View} from 'react-native';
+import {Image, TouchableOpacity, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Spacer, Text} from '@app/components/ui';
@@ -10,9 +10,10 @@ import {IToken} from '@app/types';
 export interface TokenRowProps {
   item: IToken;
   usdPrice?: number;
+  onPress?: () => void;
 }
 
-export const TokenRow = ({item, usdPrice = 0}: TokenRowProps) => {
+export const TokenRow = ({item, usdPrice = 0, onPress}: TokenRowProps) => {
   const priceInUSD = useMemo(() => {
     const price = item.value.toEther() * usdPrice;
     if (price > 0) {
@@ -21,7 +22,10 @@ export const TokenRow = ({item, usdPrice = 0}: TokenRowProps) => {
     return '';
   }, [item, usdPrice]);
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      disabled={!onPress}
+      onPress={onPress}
+      style={styles.container}>
       <Image
         style={styles.icon}
         source={item.image || require('@assets/images/empty-icon.png')}
@@ -30,7 +34,9 @@ export const TokenRow = ({item, usdPrice = 0}: TokenRowProps) => {
       <Spacer width={12} />
       <View style={styles.textContainer}>
         <View style={styles.row}>
-          <Text t11>{item.name}</Text>
+          <Text t11 numberOfLines={1} style={styles.tokenName}>
+            {item.name}
+          </Text>
           <Spacer />
           <Text t11>{item.value.toEtherString()}</Text>
         </View>
@@ -44,11 +50,12 @@ export const TokenRow = ({item, usdPrice = 0}: TokenRowProps) => {
           </Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
 const styles = createTheme({
+  tokenName: {maxWidth: 220},
   container: {
     flex: 1,
     flexDirection: 'row',

@@ -352,14 +352,17 @@ export type RootStackParamList = {
   transactionAccount: {
     from: string;
   };
-
+  transactionSelectCrypto: {from: string; to: string};
   transactionSum: {
     from: string;
     to: string;
+    token: IToken;
   };
   transactionFinish: {
     transaction: TransactionResponse;
     hash: string;
+    token: IToken;
+    amount?: Balance;
   };
   transactionNftFinish: {
     hash: string;
@@ -373,6 +376,7 @@ export type RootStackParamList = {
     to: string;
     amount: Balance;
     fee?: Balance;
+    token: IToken;
   };
   transactionNftConfirmation: {
     from: string;
@@ -1435,7 +1439,7 @@ export type IToken = {
   /**
    * Token contract address
    */
-  id: string;
+  id: HaqqCosmosAddress;
   contract_created_at: IContract['created_at'];
   contract_updated_at: IContract['updated_at'];
   value: Balance;
@@ -1453,7 +1457,7 @@ export type IToken = {
   created_at: string;
   updated_at: string;
 
-  image?: ImageSourcePropType;
+  image: ImageSourcePropType;
 };
 
 export type IContract = {

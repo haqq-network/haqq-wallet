@@ -21,8 +21,12 @@ export const TransactionFinishScreen = observer(() => {
     goBack();
     return true;
   }, [goBack]);
-  const {hash, transaction: transactionFromParent} =
-    useTypedRoute<'transactionFinish'>().params;
+  const {
+    hash,
+    transaction: transactionFromParent,
+    token,
+    amount,
+  } = useTypedRoute<'transactionFinish'>().params;
   const transaction = useTransaction(hash);
 
   const contact = Contact.getById(transaction?.to ?? '');
@@ -83,6 +87,8 @@ export const TransactionFinishScreen = observer(() => {
       contact={contact}
       short={short}
       testID="transaction_finish"
+      token={token}
+      amount={amount}
     />
   );
 });

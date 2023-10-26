@@ -216,7 +216,7 @@ export class Balance implements IBalance, ISerializable {
   toEtherString = () => this.toBalanceString();
   toWei = () => this.toNumber();
   toWeiString = () => {
-    return this.toWei() + ` ${this.symbol}`;
+    return this.toWei() + ` a${this.symbol}`;
   };
   toBigNumberish = (): BigNumberish => {
     return BigNumber.from(this.toHex());
@@ -256,10 +256,17 @@ export class Balance implements IBalance, ISerializable {
     const symbol = this.symbol;
     return `Hex: ${hex}, Ether: ${ether}, Wei: ${wei}, Precision: ${precision}, Symbol: ${symbol}`;
   };
+
+  /**
+   * Is current Balance instance is Islamic Coin
+   */
+  get isIslamic() {
+    return this.symbol === CURRENCY_NAME;
+  }
 }
 
 export const MIN_AMOUNT = new Balance(0.001);
 export const MIN_STAKING_REWARD = new Balance(0.01);
-export const MIN_GAS_LIMIT = new Balance(21_000, 0);
+export const MIN_GAS_LIMIT = new Balance(22_000, 0);
 export const FEE_AMOUNT = new Balance(0.00001);
 export const BALANCE_MULTIPLIER = new Balance(1.2, 0);

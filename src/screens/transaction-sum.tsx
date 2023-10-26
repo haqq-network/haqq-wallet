@@ -36,6 +36,9 @@ export const TransactionSumScreen = () => {
   }, []);
 
   useEffect(() => {
+    //@ts-ignore
+    navigation.setOptions({titleIcon: route.params.token.image});
+
     app.on(event, onAddress);
 
     return () => {
@@ -51,6 +54,7 @@ export const TransactionSumScreen = () => {
           from: route.params.from,
           to,
           amount,
+          token: route.params.token,
         });
       }
     },
@@ -64,6 +68,10 @@ export const TransactionSumScreen = () => {
       event,
     });
   }, [event, navigation, to]);
+
+  const onToken = useCallback(() => {
+    navigation.goBack();
+  }, []);
 
   useEffectAsync(async () => {
     const b = app.getAvailableBalance(route.params.from);
@@ -84,7 +92,9 @@ export const TransactionSumScreen = () => {
       from={route.params.from}
       onAmount={onAmount}
       onContact={onContact}
+      onToken={onToken}
       testID="transaction_sum"
+      token={route.params.token}
     />
   );
 };
