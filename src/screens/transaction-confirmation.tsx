@@ -20,6 +20,7 @@ import {Contact} from '@app/models/contact';
 import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
+import {Cosmos} from '@app/services/cosmos';
 import {AdjustEvents} from '@app/types';
 import {makeID} from '@app/utils';
 import {FEE_ESTIMATING_TIMEOUT_MS} from '@app/variables/common';
@@ -31,6 +32,7 @@ export const TransactionConfirmationScreen = observer(() => {
     return true;
   }, [navigation]);
   const route = useTypedRoute<'transactionConfirmation'>();
+  const {token} = route.params;
 
   const wallet = Wallet.getById(route.params.from);
   const contact = useMemo(
@@ -70,12 +72,23 @@ export const TransactionConfirmationScreen = observer(() => {
 
         const provider = await getProviderInstanceForWallet(wallet);
 
-        const transaction = await ethNetworkProvider.transferTransaction(
-          provider,
-          wallet.path!,
-          route.params.to,
-          route.params.amount,
-        );
+        let transaction;
+        if (token.is_erc20) {
+          transaction = await ethNetworkProvider.transferERC20(
+            provider,
+            wallet,
+            route.params.to,
+            route.params.amount,
+            Cosmos.bech32ToAddress(token.id),
+          );
+        } else {
+          transaction = await ethNetworkProvider.transferTransaction(
+            provider,
+            wallet.path!,
+            route.params.to,
+            route.params.amount,
+          );
+        }
 
         if (transaction) {
           onTrackEvent(AdjustEvents.sendFund);
@@ -90,6 +103,8 @@ export const TransactionConfirmationScreen = observer(() => {
           navigation.navigate('transactionFinish', {
             transaction,
             hash: transaction.hash,
+            token: route.params.token,
+            amount: token.is_erc20 ? route.params.amount : undefined,
           });
         }
       } catch (e) {
@@ -137,6 +152,7 @@ export const TransactionConfirmationScreen = observer(() => {
       error={error}
       errorDetails={errorDetails}
       testID="transaction_confirmation"
+      token={route.params.token}
     />
   );
 });

@@ -93,11 +93,13 @@ export const TokenViewer = observer(({data, style}: TokenViewerProps) => {
       <View style={styles.row}>
         <IconButton onPress={onPressSort} style={styles.sortWrapper}>
           <Icon color={Color.graphicBase1} name={IconsName.arrow_sort} />
-          <Text t13>{sorting}</Text>
+          <Text color={Color.graphicBase1} t13>
+            {sorting}
+          </Text>
         </IconButton>
         <IconButton onPress={onChangeViewModePress} style={styles.button}>
           <Icon color={Color.graphicBase1} name={zeroBalanceIcon} />
-          <Text i18n={I18N.tokensZeroBalance} />
+          <Text color={Color.graphicBase1} i18n={I18N.tokensZeroBalance} />
         </IconButton>
       </View>
       {Object.keys(data)

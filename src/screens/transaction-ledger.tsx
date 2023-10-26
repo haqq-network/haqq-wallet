@@ -67,6 +67,7 @@ export const TransactionLedgerScreen = () => {
             route.params.fee ?? 0,
           );
 
+          //@ts-ignore
           navigation.navigate('transactionFinish', {
             transaction,
             hash: transaction.hash,

@@ -163,7 +163,7 @@ class TokensStore implements MobXStore<IToken> {
     const balance = app.getAvailableBalance(wallet.address);
 
     return {
-      id: wallet.address,
+      id: wallet.address as HaqqCosmosAddress,
       contract_created_at: '',
       contract_updated_at: '',
       value: balance,
@@ -226,8 +226,7 @@ class TokensStore implements MobXStore<IToken> {
             symbol: contract.symbol,
             created_at: token.created_at,
             updated_at: token.updated_at,
-            //TODO: Add image on the backend side
-            image: undefined,
+            image: require('@assets/images/empty-icon.png'),
           };
 
           return result;
