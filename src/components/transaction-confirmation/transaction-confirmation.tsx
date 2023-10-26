@@ -18,7 +18,7 @@ import {Contact} from '@app/models/contact';
 import {Balance} from '@app/services/balance';
 import {IToken} from '@app/types';
 import {splitAddress} from '@app/utils';
-import {LONG_NUM_PRECISION} from '@app/variables/common';
+import {LONG_NUM_PRECISION, WEI_PRECISION} from '@app/variables/common';
 
 interface TransactionConfirmationProps {
   testID?: string;
@@ -123,7 +123,7 @@ export const TransactionConfirmation = ({
             <Text t11 color={Color.textBase1}>
               {fee === null
                 ? getText(I18N.estimatingGas)
-                : fee.toBalanceString(LONG_NUM_PRECISION)}
+                : fee.toBalanceString(LONG_NUM_PRECISION, WEI_PRECISION)}
             </Text>
           </DataView>
         </View>

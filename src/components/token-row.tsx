@@ -34,7 +34,9 @@ export const TokenRow = ({item, usdPrice = 0, onPress}: TokenRowProps) => {
       <Spacer width={12} />
       <View style={styles.textContainer}>
         <View style={styles.row}>
-          <Text t11>{item.name}</Text>
+          <Text t11 numberOfLines={1} style={styles.tokenName}>
+            {item.name}
+          </Text>
           <Spacer />
           <Text t11>{item.value.toEtherString()}</Text>
         </View>
@@ -53,6 +55,7 @@ export const TokenRow = ({item, usdPrice = 0, onPress}: TokenRowProps) => {
 };
 
 const styles = createTheme({
+  tokenName: {maxWidth: 220},
   container: {
     flex: 1,
     flexDirection: 'row',

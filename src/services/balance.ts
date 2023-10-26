@@ -216,7 +216,7 @@ export class Balance implements IBalance, ISerializable {
   toEtherString = () => this.toBalanceString();
   toWei = () => this.toNumber();
   toWeiString = () => {
-    return this.toWei() + ` ${this.symbol}`;
+    return this.toWei() + ` a${this.symbol}`;
   };
   toBigNumberish = (): BigNumberish => {
     return BigNumber.from(this.toHex());
