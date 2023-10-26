@@ -256,6 +256,13 @@ export class Balance implements IBalance, ISerializable {
     const symbol = this.symbol;
     return `Hex: ${hex}, Ether: ${ether}, Wei: ${wei}, Precision: ${precision}, Symbol: ${symbol}`;
   };
+
+  /**
+   * Is current Balance instance is Islamic Coin
+   */
+  get isIslamic() {
+    return this.symbol === CURRENCY_NAME;
+  }
 }
 
 export const MIN_AMOUNT = new Balance(0.001);

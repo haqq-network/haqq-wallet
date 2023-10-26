@@ -15,6 +15,7 @@ import {TransactionFinishScreen} from '@app/screens/transaction-finish';
 import {TransactionLedgerScreen} from '@app/screens/transaction-ledger';
 import {TransactionNftConfirmationScreen} from '@app/screens/transaction-nft-confirmation';
 import {TransactionNftFinishScreen} from '@app/screens/transaction-nft-finish';
+import {TransactionSelectCryptoScreen} from '@app/screens/transaction-select-crypto';
 import {TransactionSumScreen} from '@app/screens/transaction-sum';
 import {TransactionSumAddressScreen} from '@app/screens/transaction-sum-address';
 import {ScreenOptionType} from '@app/types';
@@ -27,26 +28,25 @@ const screenOptionsSend: ScreenOptionType = {
   title: getText(I18N.transactionSumSendTitle),
   ...hideBack,
 };
-
 const screenOptionsAddress: ScreenOptionType = {
   title: getText(I18N.transactionSumAddressTitle),
 };
-
 const screenOptionsSendFunds: ScreenOptionType = {
   title: getText(I18N.transactionAccountSendFundsTitle),
   ...hideBack,
 };
-
 const screenOptionsEditContact: ScreenOptionType = {
   title: getText(I18N.transactionContactEditHeaderTitle),
   headerRight: DismissPopupButton,
 };
-
 const screenOptionsLedger: ScreenOptionType = {
   title: getText(I18N.transactionLedgerConfirmationTitle),
 };
 const screenOptionsConfirmation: ScreenOptionType = {
   title: getText(I18N.transactionConfirmationPreviewTitle),
+};
+const screenOptionsSelectCrypto: ScreenOptionType = {
+  title: getText(I18N.transactionSelectCryptoTitle),
 };
 
 export const TransactionScreen = () => {
@@ -78,6 +78,11 @@ export const TransactionScreen = () => {
         name="transactionSum"
         component={TransactionSumScreen}
         options={screenOptionsSend}
+      />
+      <TransactionStack.Screen
+        name="transactionSelectCrypto"
+        component={TransactionSelectCryptoScreen}
+        options={screenOptionsSelectCrypto}
       />
       <TransactionStack.Screen
         name="transactionConfirmation"

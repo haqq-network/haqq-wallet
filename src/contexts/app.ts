@@ -22,6 +22,7 @@ import {checkNeedUpdate} from '@app/helpers/check-app-version';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {getUid} from '@app/helpers/get-uid';
 import {seedData} from '@app/models/seed-data';
+import {Token} from '@app/models/tokens';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
 import {VestingMetadataType} from '@app/models/vesting-metadata';
@@ -539,6 +540,7 @@ class App extends AsyncEventEmitter {
     }
 
     if (changed) {
+      Token.fetchTokens();
       this.emit(Events.onBalanceSync);
     }
   }

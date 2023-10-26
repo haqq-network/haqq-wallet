@@ -21,7 +21,8 @@ import {Contact} from '@app/models/contact';
 import {Transaction} from '@app/models/transaction';
 import {Balance} from '@app/services/balance';
 import {EthNetwork} from '@app/services/eth-network';
-import {TransactionResponse} from '@app/types';
+import {IToken, TransactionResponse} from '@app/types';
+import {CURRENCY_NAME} from '@app/variables/common';
 
 type TransactionFinishProps = {
   transaction: Transaction | TransactionResponse | null;
@@ -30,6 +31,7 @@ type TransactionFinishProps = {
   contact: Contact | null;
   short: string;
   testID?: string;
+  token: IToken;
 };
 
 export const TransactionFinish = ({
@@ -39,6 +41,7 @@ export const TransactionFinish = ({
   contact,
   short,
   testID,
+  token,
 }: TransactionFinishProps) => {
   const onPressHash = async () => {
     const url = `${EthNetwork.explorer}tx/${transaction?.hash}`;
@@ -54,10 +57,18 @@ export const TransactionFinish = ({
 
   const transactionAmount = useMemo(() => {
     if (transaction?.value instanceof BigNumber) {
-      return new Balance((transaction as TransactionResponse)?.value._hex ?? 0);
+      return new Balance(
+        (transaction as TransactionResponse)?.value._hex ?? 0,
+        undefined,
+        token.symbol ?? CURRENCY_NAME,
+      );
     }
-    return new Balance(transaction?.value ?? 0);
-  }, [transaction]);
+    return new Balance(
+      transaction?.value ?? 0,
+      undefined,
+      token.symbol ?? CURRENCY_NAME,
+    );
+  }, [transaction, token]);
 
   return (
     <PopupContainer style={styles.container} testID={testID}>
@@ -76,10 +87,7 @@ export const TransactionFinish = ({
         center
         color={Color.textGreen1}
       />
-      <Image
-        source={require('@assets/images/islm_icon.png')}
-        style={styles.icon}
-      />
+      <Image source={token.image} style={styles.icon} />
       {transaction && (
         <Text t5 center style={styles.sum}>
           - {transactionAmount.toBalanceString()}

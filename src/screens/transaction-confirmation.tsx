@@ -90,6 +90,7 @@ export const TransactionConfirmationScreen = observer(() => {
           navigation.navigate('transactionFinish', {
             transaction,
             hash: transaction.hash,
+            token: route.params.token,
           });
         }
       } catch (e) {
@@ -140,6 +141,7 @@ export const TransactionConfirmationScreen = observer(() => {
       onConfirmTransaction={onConfirmTransaction}
       error={error}
       testID="transaction_confirmation"
+      token={route.params.token}
     />
   );
 });

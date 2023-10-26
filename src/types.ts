@@ -342,14 +342,16 @@ export type RootStackParamList = {
   transactionAccount: {
     from: string;
   };
-
+  transactionSelectCrypto: {from: string; to: string};
   transactionSum: {
     from: string;
     to: string;
+    token: IToken;
   };
   transactionFinish: {
     transaction: TransactionResponse;
     hash: string;
+    token: IToken;
   };
   transactionNftFinish: {
     hash: string;
@@ -363,6 +365,7 @@ export type RootStackParamList = {
     to: string;
     amount: Balance;
     fee?: Balance;
+    token: IToken;
   };
   transactionNftConfirmation: {
     from: string;
@@ -1431,7 +1434,7 @@ export type IToken = {
   created_at: string;
   updated_at: string;
 
-  image?: ImageSourcePropType;
+  image: ImageSourcePropType;
 };
 
 export type IContract = {

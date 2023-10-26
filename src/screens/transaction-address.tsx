@@ -62,7 +62,7 @@ export const TransactionAddressScreen = observer(() => {
           setLoading(false);
         }
       } else {
-        navigation.navigate('transactionSum', {
+        navigation.navigate('transactionSelectCrypto', {
           from: route.params.from,
           to: result,
         });

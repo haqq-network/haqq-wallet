@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 
-import {Image, View} from 'react-native';
+import {Image, TouchableOpacity, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Spacer, Text} from '@app/components/ui';
@@ -10,9 +10,10 @@ import {IToken} from '@app/types';
 export interface TokenRowProps {
   item: IToken;
   usdPrice?: number;
+  onPress?: () => void;
 }
 
-export const TokenRow = ({item, usdPrice = 0}: TokenRowProps) => {
+export const TokenRow = ({item, usdPrice = 0, onPress}: TokenRowProps) => {
   const priceInUSD = useMemo(() => {
     const price = item.value.toEther() * usdPrice;
     if (price > 0) {
@@ -21,7 +22,10 @@ export const TokenRow = ({item, usdPrice = 0}: TokenRowProps) => {
     return '';
   }, [item, usdPrice]);
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      disabled={!onPress}
+      onPress={onPress}
+      style={styles.container}>
       <Image
         style={styles.icon}
         source={item.image || require('@assets/images/empty-icon.png')}
@@ -44,7 +48,7 @@ export const TokenRow = ({item, usdPrice = 0}: TokenRowProps) => {
           </Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
