@@ -62,7 +62,7 @@ export const HomeStakingScreen = observer(() => {
       const rewardsSum = new Balance(sumReduce(rewards));
       const stakingSum = new Balance(sumReduce(delegations));
       const unDelegationSum = new Balance(sumReduce(unDelegations));
-      const availableSum = visible.reduce(
+      const availableSum = Wallet.getAllVisible().reduce(
         (acc, w) =>
           acc.operate(app.getAvailableForStakeBalance(w.address), 'add'),
         Balance.Empty,
@@ -83,7 +83,7 @@ export const HomeStakingScreen = observer(() => {
       rows.removeListener(listener);
       app.removeListener(Events.onBalanceSync, listener);
     };
-  }, [visible]);
+  }, []);
 
   useEffect(() => {
     const sync = () => {
