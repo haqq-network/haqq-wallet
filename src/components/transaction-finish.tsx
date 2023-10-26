@@ -32,6 +32,7 @@ type TransactionFinishProps = {
   short: string;
   testID?: string;
   token: IToken;
+  amount?: Balance;
 };
 
 export const TransactionFinish = ({
@@ -42,6 +43,7 @@ export const TransactionFinish = ({
   short,
   testID,
   token,
+  amount,
 }: TransactionFinishProps) => {
   const onPressHash = async () => {
     const url = `${EthNetwork.explorer}tx/${transaction?.hash}`;
@@ -56,6 +58,10 @@ export const TransactionFinish = ({
   }, [transaction]);
 
   const transactionAmount = useMemo(() => {
+    if (amount) {
+      return amount;
+    }
+
     if (transaction?.value instanceof BigNumber) {
       return new Balance(
         (transaction as TransactionResponse)?.value._hex ?? 0,
@@ -68,7 +74,7 @@ export const TransactionFinish = ({
       undefined,
       token.symbol ?? CURRENCY_NAME,
     );
-  }, [transaction, token]);
+  }, [transaction, token, amount]);
 
   return (
     <PopupContainer style={styles.container} testID={testID}>

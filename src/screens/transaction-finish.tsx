@@ -25,6 +25,7 @@ export const TransactionFinishScreen = observer(() => {
     hash,
     transaction: transactionFromParent,
     token,
+    amount,
   } = useTypedRoute<'transactionFinish'>().params;
   const transaction = useTransaction(hash);
 
@@ -87,6 +88,7 @@ export const TransactionFinishScreen = observer(() => {
       short={short}
       testID="transaction_finish"
       token={token}
+      amount={amount}
     />
   );
 });
