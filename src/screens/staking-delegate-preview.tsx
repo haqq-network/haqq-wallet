@@ -10,7 +10,7 @@ import {
   getProviderInstanceForWallet,
 } from '@app/helpers/provider-instance';
 import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {I18N, getText} from '@app/i18n';
+import {useError} from '@app/hooks/use-error';
 import {Wallet} from '@app/models/wallet';
 import {AdjustEvents, WalletType} from '@app/types';
 import {makeID} from '@app/utils';
@@ -25,7 +25,7 @@ export const StakingDelegatePreviewScreen = observer(() => {
 
   const [unboundingTime, setUnboundingTime] = useState(604800000);
   const [disabled, setDisabled] = useState(false);
-  const [error, setError] = useState('');
+  const {error, errorDetails, setError} = useError();
 
   useEffect(() => {
     cosmos.getStakingParams().then(resp => {
@@ -89,11 +89,7 @@ export const StakingDelegatePreviewScreen = observer(() => {
                 message: errMessage || e.message,
               });
 
-              setError(
-                getText(I18N.transactionFailed, {
-                  id: errorId,
-                }),
-              );
+              setError(errorId, errMessage || e.message);
           }
         }
       } finally {
@@ -117,6 +113,7 @@ export const StakingDelegatePreviewScreen = observer(() => {
       disabled={disabled}
       onSend={onDone}
       error={error}
+      errorDetails={errorDetails}
     />
   );
 });

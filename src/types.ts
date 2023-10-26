@@ -1047,6 +1047,10 @@ export type Modals = {
     sssProvider: SssProviders;
     showClose?: boolean;
   };
+  viewErrorDetails: {
+    errorDetails: string;
+    onClose?: () => void;
+  };
 };
 
 export enum ModalType {
@@ -1075,6 +1079,7 @@ export enum ModalType {
   lockedTokensInfo = 'lockedTokensInfo',
   notEnoughGas = 'notEnoughGas',
   cloudVerification = 'cloudVerification',
+  viewErrorDetails = 'viewErrorDetails',
 }
 
 export interface NftAttribute {

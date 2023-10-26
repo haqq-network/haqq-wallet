@@ -178,6 +178,10 @@ const getTestModals = (): TestModals => {
       gasLimit: MIN_GAS_LIMIT,
       onClose: () => logger.log('notEnoughGas closed'),
     },
+    viewErrorDetails: {
+      errorDetails: 'viewErrorDetails',
+      onClose: () => logger.log('viewErrorDetails closed'),
+    },
   };
 
   if (wallets.length) {
