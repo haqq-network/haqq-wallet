@@ -823,6 +823,8 @@ export enum I18N {
   browserSecurityDeny,
   byRandomTitle,
   viewDetailsTitle,
+  yourAppVersion,
+  remoteAppVersion,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1790,4 +1792,6 @@ const en: Record<I18N, string> = {
   [I18N.browserPrivacy]: 'Privacy',
   [I18N.byRandomTitle]: 'By random',
   [I18N.viewDetailsTitle]: 'View details',
+  [I18N.yourAppVersion]: 'Your version: {{version}}',
+  [I18N.remoteAppVersion]: 'Available version: {{version}}',
 };
