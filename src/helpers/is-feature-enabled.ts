@@ -23,7 +23,7 @@ export const isFeatureEnabled = (feature: Feature): boolean => {
     case Feature.nft:
       return app.isDeveloper;
     case Feature.tokens:
-      return app.isTesterMode;
+      return true;
     case Feature.rtl:
       return false;
     default:
