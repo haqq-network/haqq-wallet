@@ -26,6 +26,11 @@ import {
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
 import {awaitForScanQr} from '@app/helpers/await-for-scan-qr';
+import {
+  awaitForValue,
+  objectsToValues,
+  stringsToValues,
+} from '@app/helpers/await-for-value';
 import {getUid} from '@app/helpers/get-uid';
 import {getAdjustAdid} from '@app/helpers/get_adjust_adid';
 import {shortAddress} from '@app/helpers/short-address';
@@ -172,6 +177,10 @@ const getTestModals = (): TestModals => {
       currentAmount: app.getBalanceData(firstWalletAddress).available,
       gasLimit: MIN_GAS_LIMIT,
       onClose: () => logger.log('notEnoughGas closed'),
+    },
+    viewErrorDetails: {
+      errorDetails: 'viewErrorDetails',
+      onClose: () => logger.log('viewErrorDetails closed'),
     },
   };
 
@@ -847,6 +856,67 @@ export const SettingsTestScreen = observer(() => {
           News.removeAll();
           setRssNewsCount(0);
           setNewsCount(0);
+        }}
+        variant={ButtonVariant.contained}
+      />
+      <Title text="awaitFor... examples" />
+      <Button
+        title={'EX1: awaitForValue with strings'}
+        onPress={async () => {
+          const values = stringsToValues([
+            'value 1',
+            ['value 2', 'subtitle for value 2'],
+            'value 3',
+          ]);
+          const res = await awaitForValue({
+            title: I18N.totalValueAccount,
+            values,
+            initialIndex: 1,
+          });
+          Alert.alert('result', JSON.stringify(res, null, 2));
+        }}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Button
+        title={'EX2: awaitForValue with mapped objects'}
+        onPress={async () => {
+          try {
+            const wallets = Wallet.getAll().map(w => ({
+              ...w,
+              title: w.name,
+              subtitle: w.address,
+            }));
+            const values = objectsToValues(wallets);
+            const res = await awaitForValue({
+              title: I18N.address,
+              values,
+            });
+            Alert.alert('result', JSON.stringify(res, null, 2));
+          } catch (err) {
+            Alert.alert('Error', JSON.stringify(err, null, 2));
+          }
+        }}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Button
+        title={'EX3: awaitForValue with objects'}
+        onPress={async () => {
+          try {
+            const values = objectsToValues(Wallet.getAll(), {
+              titleKey: 'name',
+              subtitleKey: 'address',
+            });
+            const res = await awaitForValue({
+              title: I18N.address,
+              values,
+              initialIndex: 0,
+            });
+            Alert.alert('result', JSON.stringify(res, null, 2));
+          } catch (err) {
+            Alert.alert('Error', JSON.stringify(err, null, 2));
+          }
         }}
         variant={ButtonVariant.contained}
       />

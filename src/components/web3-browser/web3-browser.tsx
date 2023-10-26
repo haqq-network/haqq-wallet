@@ -71,6 +71,8 @@ export interface Web3BrowserProps {
 
   onPressClose(): void;
 
+  onPressPrivacy(): void;
+
   onPressAddBookmark(windowInfo: WindowInfoEvent['payload']): void;
 
   onPressRemoveBookmark(url: string): void;
@@ -103,6 +105,7 @@ export const Web3Browser = ({
   onPressAddBookmark,
   onPressRemoveBookmark,
   addSiteToSearchHistory,
+  onPressPrivacy,
 }: Web3BrowserProps) => {
   const [inpageBridgeWeb3, setInpageBridgeWeb3] = useState('');
   const [selectedAccount, setSelectedAccount] = useState<string | undefined>();
@@ -341,6 +344,7 @@ export const Web3Browser = ({
         onPressShare={onPressShare}
         onPressAddBookmark={handlePressAddBookmark}
         onPressRemoveBookmark={handlePressRemoveBookmark}
+        onPressPrivacy={onPressPrivacy}
       />
     </ContainerComponent>
   );

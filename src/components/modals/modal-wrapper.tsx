@@ -25,6 +25,7 @@ import {LocationUnauthorized} from '@app/components/modals/location-unauthorized
 import {ProvidersBottomSheet} from '@app/components/modals/providers-bottom-sheet';
 import {RaffleAgreement} from '@app/components/modals/raffle-agreement';
 import {TransactionError} from '@app/components/modals/transaction-error';
+import {ViewErrorDetails} from '@app/components/modals/view-error-details';
 import {WalletsBottomSheet} from '@app/components/modals/wallets-bottom-sheet';
 import {hideModal} from '@app/helpers';
 import {useTheme} from '@app/hooks';
@@ -122,6 +123,8 @@ export const ModalWrapper = ({
         return <NotEnoughGas {...modal} onClose={onCloseModalPress} />;
       case ModalType.cloudVerification:
         return <CloudVerification {...modal} />;
+      case ModalType.viewErrorDetails:
+        return <ViewErrorDetails {...modal} onClose={onCloseModalPress} />;
       default:
         return null;
     }

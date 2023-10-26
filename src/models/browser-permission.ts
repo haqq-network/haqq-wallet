@@ -12,8 +12,16 @@ import {
   PartialRequired,
 } from '@app/types';
 
-type PermissionMap = Record<BrowserPermissionType, BrowserPermissionItem>;
+export type PermissionMap = Record<
+  BrowserPermissionType,
+  BrowserPermissionItem
+>;
+
 type Hostname = string;
+
+export const PERMISSION_EXPIRATION_TIME = 5 * 60 * 1000; // 5 min
+
+export type BrowserPermissionTuple = [Hostname, PermissionMap];
 
 class BrowserPermissionStore {
   /**
@@ -88,8 +96,12 @@ class BrowserPermissionStore {
     return true;
   }
 
+  getAllAsTuple(): BrowserPermissionTuple[] {
+    return Object.entries(this._data);
+  }
+
   getAll() {
-    return Object.values(this.data);
+    return this._data;
   }
 
   getByHostname(hostname: string) {
@@ -130,6 +142,7 @@ class BrowserPermissionStore {
       [params.type]: {
         ...permissionItemToUpdate,
         ...params,
+        lastUsedAt: Date.now() - PERMISSION_EXPIRATION_TIME,
       },
     };
     return true;
@@ -149,7 +162,10 @@ class BrowserPermissionStore {
         case BrowserPermissionStatus.allow:
           return true;
         case BrowserPermissionStatus.allowOnce:
-          if (permission.lastUsedAt > app.startUpTime) {
+          if (
+            permission.lastUsedAt > app.startUpTime &&
+            permission.lastUsedAt > Date.now() - PERMISSION_EXPIRATION_TIME
+          ) {
             return true;
           }
           return false;

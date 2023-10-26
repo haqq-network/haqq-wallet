@@ -818,7 +818,15 @@ export enum I18N {
   copyBech32Address,
   evmTitle,
   bech32Title,
+  browserPrivacyTitle,
+  browserPrivacy,
+  browserSecurityAllow,
+  browserSecurityAllowOnce,
+  browserSecurityDeny,
   byRandomTitle,
+  viewDetailsTitle,
+  yourAppVersion,
+  remoteAppVersion,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1772,6 +1780,9 @@ const en: Record<I18N, string> = {
   [I18N.browserPermissionPromptAllow]: 'Allow',
   [I18N.browserPermissionPromptAllowOnce]: 'Allow once',
   [I18N.browserPermissionPromptDeny]: 'Deny',
+  [I18N.browserSecurityAllow]: 'Always',
+  [I18N.browserSecurityAllowOnce]: 'Ask Next Time',
+  [I18N.browserSecurityDeny]: 'Newer',
   [I18N.browserGeolocationPermissioUseLocationMessage]:
     '"{{hostname}}" is requesting your current location.',
   [I18N.nftWidgetTitle]: 'NFT',
@@ -1780,6 +1791,11 @@ const en: Record<I18N, string> = {
   [I18N.copyBech32Address]: 'Copy bech32 address',
   [I18N.evmTitle]: 'EVM',
   [I18N.bech32Title]: 'Bech32',
+  [I18N.browserPrivacyTitle]: 'Privacy',
+  [I18N.browserPrivacy]: 'Privacy',
   [I18N.byRandomTitle]: 'By random',
   [I18N.transactionCrypto]: 'Crypto',
+  [I18N.viewDetailsTitle]: 'View details',
+  [I18N.yourAppVersion]: 'Your version: {{version}}',
+  [I18N.remoteAppVersion]: 'Available version: {{version}}',
 };
