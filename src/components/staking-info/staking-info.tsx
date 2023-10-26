@@ -27,6 +27,8 @@ import {StakingMetadata} from '@app/models/staking-metadata';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
 import {WEI} from '@app/variables/common';
 
+import {ValidatorAvatar} from '../staking-validators/validator-avatar';
+
 export type StakingInfoProps = {
   withdrawDelegatorRewardProgress: boolean;
   delegations: StakingMetadata[];
@@ -44,7 +46,7 @@ export const StakingInfo = ({
     localStatus,
     operator_address,
     tokens,
-    description: {website, moniker, details},
+    description: {website, moniker, details, identity},
     commission: {commission_rates},
   },
   rewards,
@@ -103,9 +105,7 @@ export const StakingInfo = ({
     <>
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <Spacer height={24} />
-        <View style={styles.iconContainer}>
-          <Icon color={Color.graphicBase1} name="servers" i24 />
-        </View>
+        <ValidatorAvatar identity={identity} />
         <Spacer height={16} />
         <Text t5 center style={styles.title}>
           {moniker}
@@ -274,10 +274,5 @@ const styles = createTheme({
   },
   infoBlockCommission: {
     marginHorizontal: 12,
-  },
-  iconContainer: {
-    padding: 9,
-    backgroundColor: Color.bg8,
-    borderRadius: 12,
   },
 });

@@ -3,7 +3,7 @@ import React, {useCallback, useMemo} from 'react';
 import {TouchableWithoutFeedback, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Icon, Text} from '@app/components/ui';
+import {Text} from '@app/components/ui';
 import {InfoBox} from '@app/components/ui/info-box';
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
@@ -12,6 +12,8 @@ import {useMinAmount} from '@app/hooks/use-min-amount';
 import {I18N} from '@app/i18n';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
 import {WEI} from '@app/variables/common';
+
+import {ValidatorAvatar} from './validator-avatar';
 
 export type ValidatorRowProps = {
   item: ValidatorItem;
@@ -53,9 +55,7 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
     <TouchableWithoutFeedback onPress={onPressRow}>
       <View>
         <View style={styles.container}>
-          <View style={styles.iconWrapper}>
-            <Icon name="servers" color={Color.graphicBase1} />
-          </View>
+          <ValidatorAvatar identity={item.description.identity} />
           <View style={styles.infoContainer}>
             <View style={styles.infoRow}>
               <Text t11>{item.description.moniker}</Text>
@@ -127,14 +127,6 @@ const styles = createTheme({
   },
   powerRow: {
     flexDirection: 'row',
-  },
-  iconWrapper: {
-    width: 42,
-    height: 42,
-    backgroundColor: Color.bg3,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   badges: {
     flexDirection: 'row',
