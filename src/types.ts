@@ -1501,3 +1501,18 @@ export type BrowserPermissionItem = MobXStoreItem & {
  * @description mark all fields as optional and make selected field as requered
  */
 export type PartialRequired<T, K extends keyof T> = Partial<T> & Pick<T, K>;
+
+export enum DeeplinkProtocol {
+  haqq = 'haqq',
+  etherium = 'etherium',
+  wc = 'wc',
+}
+
+export enum DeeplinkUrlKey {
+  wc = 'wc',
+  browser = 'browser',
+  web3browser = 'web3browser',
+  back9test = 'back9test',
+  provider = 'provider',
+  enableDeveloperMode = 'enableDeveloperMode',
+}

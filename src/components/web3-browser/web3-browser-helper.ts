@@ -22,6 +22,7 @@ import {
   createJsonRpcLoggerMiddleWare,
   createJsonRpcMiddleware,
 } from '@app/services/json-rpc-middleware';
+import {JsonRpcHelper} from '@app/services/json-rpc-middleware/json-rpc-methods-handlers';
 
 import {WebViewEventsEnum, WebViewEventsJS} from './scripts';
 
@@ -47,7 +48,7 @@ export interface Web3BrowserHelperConstructor {
   initialUrl: string;
 }
 
-export class Web3BrowserHelper extends EventEmitter {
+export class Web3BrowserHelper extends EventEmitter implements JsonRpcHelper {
   public currentUrl: string;
   private webviewRef: RefObject<WebView>;
   private jrpcEngine = new JsonRpcEngine();
