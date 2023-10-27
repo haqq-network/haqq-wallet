@@ -192,6 +192,10 @@ const cloudProblemsScreenOptions = {
   presentation: 'modal' as StackPresentationTypes,
 };
 
+const performanceOptions = {
+  freezeOnBlur: true,
+};
+
 export const App = () => {
   const theme = useTheme();
 
@@ -441,10 +445,12 @@ export const App = () => {
                   <Stack.Screen
                     name="stakingDelegate"
                     component={themeUpdaterHOC(StakingDelegateScreen)}
+                    options={performanceOptions}
                   />
                   <Stack.Screen
                     name="stakingUnDelegate"
                     component={themeUpdaterHOC(StakingUnDelegateScreen)}
+                    options={performanceOptions}
                   />
                   <Stack.Screen
                     name="proposalDeposit"
@@ -544,6 +550,7 @@ export const App = () => {
                   <Stack.Screen
                     name="staking"
                     component={themeUpdaterHOC(HomeStakingScreen)}
+                    options={performanceOptions}
                   />
                   <Stack.Screen
                     name="settingsAccountDetail"
@@ -681,13 +688,14 @@ export const App = () => {
                   <Stack.Screen
                     name="stakingValidators"
                     component={themeUpdaterHOC(StakingValidatorsScreen)}
-                    options={withoutHeader}
+                    options={{...withoutHeader, ...performanceOptions}}
                   />
                   <Stack.Screen
                     name="stakingInfo"
                     component={themeUpdaterHOC(StakingInfoScreen)}
                     options={{
                       title: getText(I18N.stakingInfo),
+                      ...performanceOptions,
                     }}
                   />
                 </Stack.Group>
