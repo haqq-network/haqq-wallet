@@ -1,12 +1,7 @@
 import React, {useCallback, useMemo} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
-import {
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View,
-  ViewProps,
-} from 'react-native';
+import {TouchableWithoutFeedback, View, ViewProps} from 'react-native';
 import {
   Menu,
   MenuOption,
@@ -18,11 +13,12 @@ import {
 import {Color} from '@app/colors';
 import {Icon, IconsName} from '@app/components/ui/icon';
 import {Text} from '@app/components/ui/text';
+import {createTheme} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {sendNotification} from '@app/services';
 import {Cosmos} from '@app/services/cosmos';
-import {HR_GRAY, PLACEHOLDER_GRAY} from '@app/variables/common';
+import {PLACEHOLDER_GRAY} from '@app/variables/common';
 
 export type CopyMenuProps = ViewProps & {
   value: string;
@@ -97,7 +93,7 @@ export const CopyMenu = ({
   );
 };
 
-const styles = StyleSheet.create({
+const styles = createTheme({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -105,7 +101,7 @@ const styles = StyleSheet.create({
   divider: {height: 1, width: '100%', backgroundColor: PLACEHOLDER_GRAY},
   optionsContainer: {
     borderRadius: 8,
-    backgroundColor: HR_GRAY,
+    backgroundColor: Color.bg3,
   },
   horizontalSpace: {width: 16},
   option: {
@@ -113,6 +109,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     margin: 8,
-    backgroundColor: HR_GRAY,
+    backgroundColor: Color.bg3,
   },
 });
