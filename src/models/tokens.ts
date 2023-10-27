@@ -168,7 +168,7 @@ class TokensStore implements MobXStore<IToken> {
       contract_updated_at: '',
       value: balance,
       decimals: WEI,
-      is_erc20: true,
+      is_erc20: false,
       is_erc721: false,
       is_erc1155: false,
       is_in_white_list: true,
