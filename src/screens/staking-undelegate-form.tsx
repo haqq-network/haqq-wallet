@@ -57,7 +57,7 @@ export const StakingUnDelegateFormScreen = observer(() => {
       d => d.delegator === wallet?.cosmosAddress,
     );
 
-    return delegation?.amount  ? new Balance(delegation.amount) : Balance.Empty;
+    return delegation?.amount ? new Balance(delegation.amount) : Balance.Empty;
   }, [operator_address, wallet?.cosmosAddress]);
 
   useLayoutEffectAsync(async () => {
