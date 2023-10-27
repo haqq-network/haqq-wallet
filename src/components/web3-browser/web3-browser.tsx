@@ -1,7 +1,8 @@
 // @refresh reset
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
-import {Platform, SafeAreaView, View} from 'react-native';
+import {KeyboardAvoidingView, View} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import WebView from 'react-native-webview';
 import {
   WebViewNavigation,
@@ -19,6 +20,7 @@ import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
+import {IS_ANDROID, IS_IOS} from '@app/variables/common';
 
 import {
   InpageBridgeWeb3,
@@ -114,10 +116,8 @@ export const Web3Browser = ({
     useState<WebViewNavigation>();
   const addedToSearchHistory = useRef(false);
   const [moreIconLayout, onMoreIconLayout] = useLayout();
-  const ContainerComponent = useMemo(
-    () => (popup ? View : SafeAreaView),
-    [popup],
-  );
+
+  const insets = useSafeAreaInsets();
   const currentSession = useMemo(() => {
     if (!sessions?.length) {
       return;
@@ -186,7 +186,6 @@ export const Web3Browser = ({
         if(window.ethereum) {
           window.ethereum.isMetaMask = false;
           window.ethereum.isHaqqWallet = true;
-          window.platformOS = '${Platform.OS}'
         }
       });
       ${WebViewEventsJS.getWindowInformation}
@@ -300,7 +299,13 @@ export const Web3Browser = ({
   }
 
   return (
-    <ContainerComponent style={[styles.container, !popup && styles.marginTop]}>
+    <View
+      style={[
+        styles.container,
+        IS_IOS && !popup && {paddingTop: insets.top},
+        IS_IOS && popup && {paddingBottom: insets.bottom},
+        IS_ANDROID && !popup && styles.marginTop,
+      ]}>
       <Web3BrowserHeader
         walletAddress={walletAddress}
         webviewNavigationData={webviewNavigationData!}
@@ -314,7 +319,10 @@ export const Web3Browser = ({
         popup={popup ?? false}
         onPressClose={onPressClose}
       />
-      <View style={styles.webviewContainer}>
+
+      <KeyboardAvoidingView
+        style={styles.webviewContainer}
+        behavior={IS_IOS ? 'height' : 'padding'}>
         <WebView
           {...webViewDefaultProps}
           ref={webviewRef}
@@ -325,7 +333,8 @@ export const Web3Browser = ({
           source={{uri: initialUrl}}
           onNavigationStateChange={onNavigationStateChange}
         />
-      </View>
+      </KeyboardAvoidingView>
+
       <Web3BrowserActionMenu
         walletAddress={walletAddress}
         showActionMenu={showActionMenu}
@@ -346,7 +355,7 @@ export const Web3Browser = ({
         onPressRemoveBookmark={handlePressRemoveBookmark}
         onPressPrivacy={onPressPrivacy}
       />
-    </ContainerComponent>
+    </View>
   );
 };
 

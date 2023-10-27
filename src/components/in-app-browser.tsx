@@ -2,7 +2,12 @@ import React, {useCallback, useMemo, useRef, useState} from 'react';
 
 import {PhishingController} from '@metamask/phishing-controller';
 import {parseUri} from '@walletconnect/utils';
-import {SafeAreaView, StyleSheet, View} from 'react-native';
+import {
+  KeyboardAvoidingView,
+  SafeAreaView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import WebView from 'react-native-webview';
 import {
   ShouldStartLoadRequest,
@@ -25,7 +30,7 @@ import {
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useWebViewSharedProps} from '@app/hooks/use-webview-shared-props';
 import {getHostnameFromUrl} from '@app/utils';
-import {IS_ANDROID} from '@app/variables/common';
+import {IS_ANDROID, IS_IOS} from '@app/variables/common';
 
 import {Icon, IconButton, IconsName, Spacer, Text} from './ui';
 import {Separator} from './ui/separator';
@@ -220,7 +225,9 @@ export const InAppBrowser = ({
           />
         </IconButton>
       </View>
-      <View style={styles.webviewContainer}>
+      <KeyboardAvoidingView
+        style={styles.webviewContainer}
+        behavior={IS_IOS ? 'height' : 'padding'}>
         <WebView
           {...webViewDefaultProps}
           ref={webviewRef}
@@ -232,7 +239,7 @@ export const InAppBrowser = ({
           onNavigationStateChange={onNavigationStateChange}
           source={{uri: url}}
         />
-      </View>
+      </KeyboardAvoidingView>
       <View style={styles.actionPanel}>
         <Spacer width={40} />
         <IconButton
