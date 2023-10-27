@@ -2,7 +2,7 @@ import React, {DependencyList, useCallback, useMemo, useRef} from 'react';
 
 import Geolocation from '@react-native-community/geolocation';
 import {useFocusEffect} from '@react-navigation/native';
-import {Linking, NativeSyntheticEvent} from 'react-native';
+import {Linking, NativeSyntheticEvent, Platform} from 'react-native';
 import WebView, {WebViewProps} from 'react-native-webview';
 import {WebViewMessageEvent} from 'react-native-webview/lib/RNCWebViewNativeComponent';
 import {FileDownloadEvent} from 'react-native-webview/lib/WebViewTypes';
@@ -59,7 +59,8 @@ export const useWebViewSharedProps = (
       if (!event?.nativeEvent?.data) {
         return;
       }
-      event.persist();
+
+      event?.persist?.();
 
       if (ref.current) {
         const handled = await WebViewGeolocation.handleGeolocationRequest(
@@ -110,6 +111,9 @@ export const useWebViewSharedProps = (
       injectedJavaScriptBeforeContentLoaded: `
         ${WebViewGeolocation.script}
         ${propsToMerge.injectedJavaScriptBeforeContentLoaded || ''}
+
+        // injected properties
+        window.platformOS = '${Platform.OS}'
         true;
       `,
       onMessage: onMessage,
