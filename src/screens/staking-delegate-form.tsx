@@ -7,6 +7,7 @@ import {app} from '@app/contexts';
 import {getProviderInstanceForWallet} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useLayoutEffectAsync} from '@app/hooks/use-effect-async';
+import {useThrottle} from '@app/hooks/use-throttle';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
@@ -19,39 +20,42 @@ export const StakingDelegateFormScreen = () => {
   const wallet = Wallet.getById(account);
   const balances = useWalletsBalance([wallet!]);
   const currentBalance = useMemo(() => balances[account], [balances, account]);
-  const [fee, setFee] = useState<Balance | null>(null);
+  const [fee, _setFee] = useState<Balance | null>(null);
 
   const setDefaultFee = useCallback(
-    () => setFee(new Balance(Cosmos.fee.amount)),
+    () => _setFee(new Balance(Cosmos.fee.amount)),
     [],
   );
+
+  const setFee = useThrottle(async (amount?: string) => {
+    const cosmos = new Cosmos(app.provider);
+    const instance = await getProviderInstanceForWallet(wallet!, true);
+
+    try {
+      _setFee(null);
+      const f = await cosmos.simulateDelegate(
+        instance,
+        wallet!.path!,
+        validator.operator_address,
+        amount ? new Balance(amount) : currentBalance.availableForStake,
+      );
+      Logger.log('f.amount', f.amount);
+      _setFee(new Balance(f.amount));
+    } catch (err) {
+      if (instance instanceof ProviderLedgerReactNative) {
+        instance.abort();
+        setDefaultFee();
+      }
+    }
+  }, 500);
 
   useLayoutEffectAsync(async () => {
     const timer = setTimeout(() => {
       setDefaultFee();
     }, FEE_ESTIMATING_TIMEOUT_MS);
 
-    const instance = await getProviderInstanceForWallet(wallet!, true);
-    const cosmos = new Cosmos(app.provider);
-    try {
-      setFee(null);
-      const f = await cosmos.simulateDelegate(
-        instance,
-        wallet!.path!,
-        validator.operator_address,
-        currentBalance.availableForStake,
-      );
-      Logger.log('f.amount', f.amount);
-      setFee(new Balance(f.amount));
-    } catch (err) {
-      if (instance instanceof ProviderLedgerReactNative) {
-        instance.abort();
-        clearTimeout(timer);
-        setDefaultFee();
-      }
-    } finally {
-      clearTimeout(timer);
-    }
+    await setFee();
+    clearTimeout(timer);
 
     return () => {
       clearTimeout(timer);
@@ -79,6 +83,7 @@ export const StakingDelegateFormScreen = () => {
       onAmount={onAmount}
       balance={currentBalance.availableForStake}
       fee={fee}
+      setFee={setFee}
     />
   );
 };
