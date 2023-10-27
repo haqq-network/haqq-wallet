@@ -20,6 +20,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
+import {Cosmos} from '@app/services/cosmos';
 import {Indexer} from '@app/services/indexer';
 import {
   ChooseAccountItem,
@@ -94,10 +95,15 @@ export const ChooseAccountScreen = memo(() => {
         index += 1;
       }
       const wallets = result.map(item => item.address);
-      const balances = await Indexer.instance.getBalances(wallets);
+      const balances = await Indexer.instance.updates(
+        wallets.map(item => Cosmos.addressToBech32(item)),
+        new Date(0),
+      );
       const resultWithBalances = result.map(item => ({
         ...item,
-        balance: new Balance(balances[item.address] || item.balance),
+        balance: new Balance(
+          balances.total[Cosmos.addressToBech32(item.address)] || item.balance,
+        ),
       }));
       setAddresses(resultWithBalances);
       setLoading(false);
