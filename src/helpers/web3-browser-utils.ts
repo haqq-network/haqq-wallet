@@ -261,7 +261,7 @@ export function getHost(url: string, defaultProtocol = 'https://') {
     endIndex > -1
       ? sanitizedUrl.substring(startIndex, endIndex)
       : sanitizedUrl.substring(startIndex);
-  return (hostname || url).trim();
+  return (hostname || url).trim().toLowerCase();
 }
 
 export const getFavIconUrl = (url?: string | undefined) => {

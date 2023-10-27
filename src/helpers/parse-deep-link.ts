@@ -1,10 +1,6 @@
 import {utils} from 'ethers';
 
-export enum ValidUrlProtocol {
-  haqq = 'haqq',
-  etherium = 'etherium',
-  wc = 'wc',
-}
+import {DeeplinkProtocol} from '@app/types';
 
 export enum LinkType {
   Address = 'address',
@@ -65,19 +61,19 @@ export const parseDeepLink = (link: string): LinkParseResult => {
     return {type: LinkType.Address, params: {address: link}, rawData: link};
   }
 
-  if (link.startsWith(`${ValidUrlProtocol.etherium}:`)) {
+  if (link.startsWith(`${DeeplinkProtocol.etherium}:`)) {
     const to = link.split(':')[1];
     if (isAddress(to)) {
       return {type: LinkType.Etherium, params: {address: to}, rawData: link};
     }
   }
 
-  if (link.startsWith(`${ValidUrlProtocol.wc}:`)) {
+  if (link.startsWith(`${DeeplinkProtocol.wc}:`)) {
     const uri = decodeURIComponent(link.replace(/^wc:\/{0,2}/, ''));
     return {type: LinkType.WalletConnect, params: {uri}, rawData: link};
   }
 
-  if (link.startsWith(`${ValidUrlProtocol.haqq}:`)) {
+  if (link.startsWith(`${DeeplinkProtocol.haqq}:`)) {
     let params = link.split(':');
 
     if (link.startsWith('haqq://wc')) {

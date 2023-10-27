@@ -1,6 +1,7 @@
+import EventEmitter from 'events';
+
 import {JsonRpcRequest} from 'json-rpc-engine';
 
-import {Web3BrowserHelper} from '@app/components/web3-browser/web3-browser-helper';
 import {app} from '@app/contexts';
 import {AwaitForWalletError, awaitForWallet} from '@app/helpers';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
@@ -22,10 +23,16 @@ import {getDefaultNetwork} from '@app/network';
 import {getAppVersion} from '@app/services/version';
 import {requestQRScannerPermission} from '@app/utils';
 
+export type JsonRpcHelper = EventEmitter & {
+  origin: string;
+  disconnectAccount(): void;
+  changeChainId(ethChainIdHex: string): void;
+};
+
 type TJsonRpcRequest = JsonRpcRequest<any>;
 type JsonRpcMethodHandlerParams = {
   req: TJsonRpcRequest;
-  helper: Web3BrowserHelper;
+  helper: JsonRpcHelper;
 };
 type JsonRpcMethodHandler =
   | undefined
@@ -88,7 +95,7 @@ const getEthAccounts = ({helper}: JsonRpcMethodHandlerParams) => {
   return [];
 };
 
-const getNetworkProvier = (helper: Web3BrowserHelper) => {
+const getNetworkProvier = (helper: JsonRpcHelper) => {
   // goerli
   // return {
   //   ethChainIdHex: '0x5',
@@ -112,7 +119,7 @@ const getNetworkProvier = (helper: Web3BrowserHelper) => {
   return provider;
 };
 
-const getLocalRpcProvider = async (helper: Web3BrowserHelper) => {
+const getLocalRpcProvider = async (helper: JsonRpcHelper) => {
   const provider = getNetworkProvier(helper);
   return provider ? await getRpcProvider(provider) : getDefaultNetwork();
 };
@@ -332,9 +339,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
     }
 
     try {
-      const isAccesGranted = await requestQRScannerPermission(
-        helper.currentUrl,
-      );
+      const isAccesGranted = await requestQRScannerPermission(helper.origin);
 
       if (!isAccesGranted) {
         rejectJsonRpcRequest(
