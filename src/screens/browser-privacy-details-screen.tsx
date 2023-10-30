@@ -65,11 +65,13 @@ export const BrowserPrivacyDetailsScreen = observer(() => {
     [navigation, permissions],
   );
 
-  useFocusEffect(() => {
-    navigation.setOptions({
-      title: params?.hostname,
-    });
-  });
+  useFocusEffect(
+    useCallback(() => {
+      navigation.setOptions({
+        title: params?.hostname,
+      });
+    }, []),
+  );
 
   return (
     <BrowserPrivacyDetails
