@@ -44,7 +44,7 @@ export type BalanceProps = {
   onPressAccountInfo: (address: string) => void;
   onPressSend: (address: string) => void;
   onPressQR: (address: string) => void;
-  onPressProtection: (address: string) => void;
+  onPressProtection: (wallet: Wallet) => void;
   onPressWalletConnect?: (address: string) => void;
 };
 
@@ -99,7 +99,7 @@ export const WalletCard = memo(
 
     const onProtection = () => {
       if (wallet.accountId) {
-        onPressProtection(wallet.accountId);
+        onPressProtection(wallet);
       }
     };
 

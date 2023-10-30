@@ -44,9 +44,14 @@ export const ChooseAccountScreen = memo(() => {
   const generator = useRef<ReturnType<typeof getWalletsFromProvider> | null>(
     null,
   );
-  const mnemonicProvider = useRef<
+  const walletProvider = useRef<
     ProviderMnemonicReactNative | ProviderSSSReactNative | null
   >(null);
+
+  const isMnemonicProvider =
+    walletProvider.current instanceof ProviderMnemonicReactNative;
+  const isSSSProvider =
+    walletProvider.current instanceof ProviderSSSReactNative;
 
   useEffect(() => {
     if (params.provider instanceof ProviderSSSReactNative) {
@@ -58,15 +63,15 @@ export const ChooseAccountScreen = memo(() => {
   }, []);
 
   const goBack = useCallback(() => {
-    if (mnemonicProvider.current instanceof ProviderMnemonicReactNative) {
+    if (isMnemonicProvider) {
       navigation.goBack();
     }
   }, [navigation]);
 
   const createWalletGenerator = (mnemonicType: ChooseAccountTabNames) => {
-    if (mnemonicProvider.current !== null) {
+    if (walletProvider.current !== null) {
       generator.current = getWalletsFromProvider(
-        mnemonicProvider.current,
+        walletProvider.current,
         WalletType.mnemonic,
         mnemonicType,
       );
@@ -114,9 +119,9 @@ export const ChooseAccountScreen = memo(() => {
   useEffectAsync(async () => {
     setLoading(true);
     try {
-      mnemonicProvider.current = params.provider;
-      if (mnemonicProvider.current instanceof ProviderMnemonicReactNative) {
-        await mnemonicProvider.current.setMnemonicSaved();
+      walletProvider.current = params.provider;
+      if (walletProvider.current instanceof ProviderMnemonicReactNative) {
+        await walletProvider.current.setMnemonicSaved();
       }
 
       await loadMore();
@@ -180,14 +185,17 @@ export const ChooseAccountScreen = memo(() => {
   const onAdd = useCallback(async () => {
     walletsToCreate.forEach(item => {
       Wallet.create(item.name, item);
+      if (isSSSProvider) {
+        Wallet.update(item.address, {socialLinkEnabled: true});
+      }
     });
     try {
-      if (mnemonicProvider.current) {
-        await mnemonicProvider.current.clean();
+      if (walletProvider.current) {
+        await walletProvider.current.clean();
       }
     } catch (err) {}
 
-    if (params.provider instanceof ProviderMnemonicReactNative) {
+    if (isMnemonicProvider) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const {provider, ...restParams} = params as WalletInitialData & {
         provider: ProviderMnemonicReactNative;
@@ -196,7 +204,7 @@ export const ChooseAccountScreen = memo(() => {
     } else {
       navigation.navigate('onboardingFinish');
     }
-  }, [walletsToCreate, params, navigation]);
+  }, [walletsToCreate, params, navigation, walletProvider.current]);
 
   return (
     <ChooseAccount
