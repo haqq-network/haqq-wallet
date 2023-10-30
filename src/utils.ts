@@ -1,6 +1,5 @@
 /* eslint-disable no-bitwise */
 import {PATTERNS_SOURCE} from '@env';
-import {jsonrpcRequest} from '@haqq/shared-react-native';
 import {SessionTypes} from '@walletconnect/types';
 import {
   differenceInDays,
@@ -35,7 +34,6 @@ import {Banner, BannerButtonEvent, BannerType} from './models/banner';
 import {Wallet} from './models/wallet';
 import {navigator} from './navigator';
 import {Balance} from './services/balance';
-import {Cosmos} from './services/cosmos';
 import {EthSignError} from './services/eth-sign';
 import {
   AdjustTrackingAuthorizationStatus,
@@ -46,7 +44,6 @@ import {
   JsonRpcTransactionRequest,
   PartialJsonRpcRequest,
   SendTransactionError,
-  VerifyAddressResponse,
   WalletConnectParsedAccount,
 } from './types';
 import {IS_ANDROID, STORE_PAGE_URL} from './variables/common';
@@ -764,23 +761,6 @@ export const getTransactionFromJsonRpcRequest = (
     delete params.maxPriorityFeePerGas;
 
     return params;
-  }
-};
-
-export const verifyAddress = async (address: string) => {
-  if (!app.provider.indexer || !address) {
-    return null;
-  }
-
-  try {
-    return await jsonrpcRequest<VerifyAddressResponse | null>(
-      app.provider.indexer,
-      'address',
-      [Cosmos.addressToBech32(`${address}`)],
-    );
-  } catch (err) {
-    Logger.error('verifyAddress', err);
-    return null;
   }
 };
 
