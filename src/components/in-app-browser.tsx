@@ -60,7 +60,7 @@ export const InAppBrowser = ({
   const [isPageLoading, setPageLoading] = useState(false);
   const isFirstPageLoaded = useRef(false);
   const phishingController = useRef(new PhishingController()).current;
-  const webViewDefaultProps = useWebViewSharedProps(webviewRef);
+
   const pageTitle = useMemo(
     () =>
       title ||
@@ -196,6 +196,8 @@ export const InAppBrowser = ({
     }
     return false;
   }, [navigationEvent?.canGoBack, webviewRef]);
+
+  const webViewDefaultProps = useWebViewSharedProps(webviewRef);
 
   return (
     <SafeAreaView style={styles.container}>

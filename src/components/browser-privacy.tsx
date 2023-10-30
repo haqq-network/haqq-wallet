@@ -85,7 +85,8 @@ export const BrowserPrivacy = observer(
             value={text}
             onChangeText={onChangeText}
             placeholder={getText(I18N.browserSearch)}
-            style={styles.input}
+            style={styles.inputContainer}
+            inputStyle={styles.input}
           />
         </View>
 
@@ -114,6 +115,11 @@ const styles = createTheme({
     backgroundColor: getColor(Color.bg1),
   },
   input: {
+    height: '100%',
+    width: '100%',
+    alignSelf: 'center',
+  },
+  inputContainer: {
     minHeight: 36,
     height: 36,
     maxHeight: 36,
