@@ -4,7 +4,6 @@ import {observer} from 'mobx-react';
 
 import {Wallets} from '@app/components/wallets';
 import {app} from '@app/contexts';
-import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useTypedNavigation} from '@app/hooks';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {Wallet} from '@app/models/wallet';
@@ -30,13 +29,40 @@ export const WalletsWrapper = observer(() => {
     [navigation],
   );
 
+  const onPressPharse = useCallback(
+    (accountId: string) => {
+      navigation.navigate('backup', {accountId});
+    },
+    [navigation],
+  );
+
+  const onPressSocial = useCallback(
+    (accountId: string) => {
+      navigation.navigate('sssMigrate', {accountId});
+    },
+    [navigation],
+  );
+
   const onPressProtection = useCallback(
-    async (accountId: string) => {
-      if (isFeatureEnabled(Feature.sss)) {
-        await app.auth();
+    async (wallet: Wallet) => {
+      if (!wallet.accountId) {
+        return;
+      }
+      const {accountId} = wallet;
+      const isNoBackup = !wallet.mnemonicSaved && !wallet.socialLinkEnabled;
+
+      await app.auth();
+
+      if (isNoBackup) {
         navigation.navigate('walletProtectionPopup', {accountId});
-      } else {
-        navigation.navigate('backup', {accountId});
+        return;
+      }
+
+      if (!wallet.mnemonicSaved) {
+        onPressPharse(accountId);
+      }
+      if (!wallet.socialLinkEnabled) {
+        onPressSocial(accountId);
       }
     },
     [navigation],

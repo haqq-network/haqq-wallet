@@ -22,7 +22,7 @@ import {
 import {createTheme} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
-import {I18N} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {Cosmos} from '@app/services/cosmos';
 import {WalletType} from '@app/types';
@@ -91,7 +91,7 @@ export const SettingsAccountDetail = ({
         <View style={styles.hDevider} />
         <AddressInfo copyValue={Cosmos.addressToBech32(wallet?.address)}>
           <Text t14 color={Color.textBase2}>
-            {`${I18N.bech32Title}: `}
+            {`${getText(I18N.bech32Title)}: `}
           </Text>
           <Text t14>{Cosmos.addressToBech32(wallet?.address)}</Text>
         </AddressInfo>
@@ -115,6 +115,7 @@ export const SettingsAccountDetail = ({
                     variant={ButtonVariant.second}
                     onPress={onPressPharse}
                     testID="recovery_pharse"
+                    disabled={wallet.mnemonicSaved}
                   />
                   <Spacer width={10} />
                   <Button
@@ -123,12 +124,13 @@ export const SettingsAccountDetail = ({
                     i18n={I18N.settingsAccountDetailSocial}
                     variant={ButtonVariant.second}
                     onPress={onPressSocial}
+                    disabled={wallet.socialLinkEnabled}
                   />
                 </>
               }
             />
           )}
-          {wallet.type === WalletType.mnemonic && (
+          {wallet.type === WalletType.mnemonic && !wallet.mnemonicSaved && (
             <InfoBlock
               border
               icon={<Icon name={'warning'} color={Color.graphicBase1} />}
@@ -161,6 +163,7 @@ export const SettingsAccountDetail = ({
                     i18n={I18N.settingsAccountDetailCreateBackupPhrase}
                     variant={ButtonVariant.second}
                     onPress={onPressPharse}
+                    disabled={wallet.mnemonicSaved}
                   />
                 </>
               }
