@@ -63,7 +63,7 @@ export const BrowserSearchPage = ({
   );
 
   const onChangeText = useCallback((str: string) => {
-    setText(str?.trim?.());
+    setText(str);
   }, []);
 
   const handleSubmitSearch = useCallback(async () => {
@@ -155,7 +155,8 @@ export const BrowserSearchPage = ({
           keyboardType="web-search"
           autoFocus
           onSubmitEditing={handleSubmitSearch}
-          style={styles.input}
+          style={styles.inputContainer}
+          inputStyle={styles.input}
         />
         <Button
           onPress={onPressCancel}
@@ -200,6 +201,11 @@ const styles = createTheme({
     backgroundColor: getColor(Color.bg1),
   },
   input: {
+    height: '100%',
+    width: '100%',
+    alignSelf: 'center',
+  },
+  inputContainer: {
     minHeight: 36,
     height: 36,
     maxHeight: 36,

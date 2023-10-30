@@ -10,7 +10,6 @@ import {
 } from 'react-native-webview/lib/WebViewTypes';
 
 import {createTheme} from '@app/helpers';
-import {WebViewLogger} from '@app/helpers/webview-logger';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useLayout} from '@app/hooks/use-layout';
 import {usePrevious} from '@app/hooks/use-previous';
@@ -179,7 +178,6 @@ export const Web3Browser = ({
   const injectedJSBeforeContentLoaded = useMemo(
     () =>
       `
-      ${WebViewLogger.script}
       document.addEventListener("DOMContentLoaded", function(event) {
         ${inpageBridgeWeb3}
         console.log('ethereum loaded:', !!window.ethereum);
@@ -191,15 +189,6 @@ export const Web3Browser = ({
       ${WebViewEventsJS.getWindowInformation}
       true;`,
     [inpageBridgeWeb3],
-  );
-
-  const webViewDefaultProps = useWebViewSharedProps(
-    webviewRef,
-    {
-      onMessage: helper.handleMessage,
-      injectedJavaScriptBeforeContentLoaded: injectedJSBeforeContentLoaded,
-    },
-    [injectedJSBeforeContentLoaded],
   );
 
   const onContentProcessDidTerminate = useCallback(() => {
@@ -293,6 +282,15 @@ export const Web3Browser = ({
       helper.dispose();
     };
   }, [addSiteToSearchHistory, helper]);
+
+  const webViewDefaultProps = useWebViewSharedProps(
+    webviewRef,
+    {
+      onMessage: helper.handleMessage,
+      injectedJavaScriptBeforeContentLoaded: injectedJSBeforeContentLoaded,
+    },
+    [injectedJSBeforeContentLoaded],
+  );
 
   if (!inpageBridgeWeb3) {
     return null;
