@@ -1,21 +1,24 @@
-import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+
+import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
+import {observer} from 'mobx-react';
 
 import {StakingUnDelegateForm} from '@app/components/staking-undelegate-form';
-import {
-  useCosmos,
-  useTypedNavigation,
-  useTypedRoute,
-  useWallet,
-} from '@app/hooks';
+import {getProviderInstanceForWallet} from '@app/helpers';
+import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useLayoutEffectAsync} from '@app/hooks/use-effect-async';
+import {useThrottle} from '@app/hooks/use-throttle';
 import {StakingMetadata} from '@app/models/staking-metadata';
+import {Wallet} from '@app/models/wallet';
 import {
   StakingUnDelegateStackParamList,
   StakingUnDelegateStackRoutes,
 } from '@app/screens/HomeStack/StakingUndelegateStack';
 import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
+import {FEE_ESTIMATING_TIMEOUT_MS} from '@app/variables/common';
 
-export const StakingUnDelegateFormScreen = memo(() => {
+export const StakingUnDelegateFormScreen = observer(() => {
   const navigation = useTypedNavigation<StakingUnDelegateStackParamList>();
   const {validator, account} = useTypedRoute<
     StakingUnDelegateStackParamList,
@@ -23,8 +26,57 @@ export const StakingUnDelegateFormScreen = memo(() => {
   >().params;
   const {operator_address} = validator;
   const cosmos = useCosmos();
-  const wallet = useWallet(account);
+  const wallet = Wallet.getById(account);
   const [unboundingTime, setUnboundingTime] = useState(604800000);
+  const [fee, _setFee] = useState<Balance | null>(null);
+
+  const setDefaultFee = useCallback(
+    () => _setFee(new Balance(Cosmos.fee.amount)),
+    [],
+  );
+
+  const setFee = useThrottle(async (amount?: string) => {
+    const instance = await getProviderInstanceForWallet(wallet!, true);
+
+    try {
+      _setFee(null);
+      const f = await cosmos.simulateUndelegate(
+        instance,
+        wallet?.path!,
+        validator.operator_address,
+        amount ? new Balance(amount) : balance,
+      );
+      Logger.log('f.amount', f.amount);
+      _setFee(new Balance(f.amount));
+    } catch (err) {
+      if (instance instanceof ProviderLedgerReactNative) {
+        instance.abort();
+        setDefaultFee();
+      }
+    }
+  }, 500);
+
+  const balance = useMemo(() => {
+    const delegations =
+      StakingMetadata.getDelegationsForValidator(operator_address);
+
+    const delegation = delegations.find(
+      d => d.delegator === wallet?.cosmosAddress,
+    );
+
+    return delegation?.amount ? new Balance(delegation.amount) : Balance.Empty;
+  }, [operator_address, wallet?.cosmosAddress]);
+
+  useLayoutEffectAsync(async () => {
+    const timer = setTimeout(() => setDefaultFee(), FEE_ESTIMATING_TIMEOUT_MS);
+
+    await setFee();
+    clearTimeout(timer);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
 
   useEffect(() => {
     cosmos.getStakingParams().then(resp => {
@@ -36,30 +88,19 @@ export const StakingUnDelegateFormScreen = memo(() => {
     });
   }, [cosmos]);
 
-  const balance = useMemo(() => {
-    const delegations =
-      StakingMetadata.getDelegationsForValidator(operator_address);
-
-    const delegation = delegations.find(
-      d => d.delegator === wallet?.cosmosAddress,
-    );
-
-    return new Balance(delegation?.amount ?? 0);
-  }, [operator_address, wallet?.cosmosAddress]);
-
-  const fee = useMemo(() => new Balance(Cosmos.fee.amount), []);
-
   const onAmount = useCallback(
     (amount: number) => {
-      navigation.navigate(
-        StakingUnDelegateStackRoutes.StakingUnDelegatePreview,
-        {
-          validator: validator,
-          account: account,
-          amount,
-          fee,
-        },
-      );
+      if (fee !== null) {
+        navigation.navigate(
+          StakingUnDelegateStackRoutes.StakingUnDelegatePreview,
+          {
+            validator: validator,
+            account: account,
+            amount,
+            fee,
+          },
+        );
+      }
     },
     [fee, navigation, account, validator],
   );
@@ -69,6 +110,7 @@ export const StakingUnDelegateFormScreen = memo(() => {
       balance={balance}
       onAmount={onAmount}
       fee={fee}
+      setFee={setFee}
       unboundingTime={unboundingTime}
     />
   );

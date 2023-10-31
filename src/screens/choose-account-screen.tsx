@@ -1,7 +1,14 @@
-import React, {memo, useCallback, useMemo, useRef, useState} from 'react';
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {makeID} from '@haqq/shared-react-native';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 
 import {
   ChooseAccount,
@@ -17,8 +24,14 @@ import {
   SignInStackRoutes,
 } from '@app/screens/WelcomeStack/SignInStack';
 import {Balance} from '@app/services/balance';
+import {Cosmos} from '@app/services/cosmos';
 import {Indexer} from '@app/services/indexer';
-import {ChooseAccountItem, WalletType} from '@app/types';
+import {
+  ChooseAccountItem,
+  ModalType,
+  WalletInitialData,
+  WalletType,
+} from '@app/types';
 
 const PAGE_SIZE = 5;
 
@@ -38,12 +51,23 @@ export const ChooseAccountScreen = memo(() => {
   const generator = useRef<ReturnType<typeof getWalletsFromProvider> | null>(
     null,
   );
-  const mnemonicProvider = useRef<Awaited<
-    ReturnType<typeof ProviderMnemonicReactNative.initialize>
-  > | null>(null);
+  const mnemonicProvider = useRef<
+    ProviderMnemonicReactNative | ProviderSSSReactNative | null
+  >(null);
+
+  useEffect(() => {
+    if (params.provider instanceof ProviderSSSReactNative) {
+      navigation.setOptions({
+        //@ts-ignore
+        customBackFunction: () => navigation.popToTop(),
+      });
+    }
+  }, []);
 
   const goBack = useCallback(() => {
-    navigation.goBack();
+    if (mnemonicProvider.current instanceof ProviderMnemonicReactNative) {
+      navigation.goBack();
+    }
   }, [navigation]);
 
   const createWalletGenerator = (mnemonicType: ChooseAccountTabNames) => {
@@ -78,10 +102,15 @@ export const ChooseAccountScreen = memo(() => {
         index += 1;
       }
       const wallets = result.map(item => item.address);
-      const balances = await Indexer.instance.getBalances(wallets);
+      const balances = await Indexer.instance.updates(
+        wallets.map(item => Cosmos.addressToBech32(item)),
+        new Date(0),
+      );
       const resultWithBalances = result.map(item => ({
         ...item,
-        balance: new Balance(balances[item.address] || item.balance),
+        balance: new Balance(
+          balances.total[Cosmos.addressToBech32(item.address)] || item.balance,
+        ),
       }));
       setAddresses(resultWithBalances);
       setLoading(false);
@@ -92,29 +121,23 @@ export const ChooseAccountScreen = memo(() => {
   useEffectAsync(async () => {
     setLoading(true);
     try {
-      const generatedPassword = String(makeID(10));
-      const passwordPromise = () => Promise.resolve(generatedPassword);
-
-      mnemonicProvider.current = await ProviderMnemonicReactNative.initialize(
-        params.mnemonic,
-        passwordPromise,
-        {},
-      );
-
-      await mnemonicProvider.current.setMnemonicSaved();
+      mnemonicProvider.current = params.provider;
+      if (mnemonicProvider.current instanceof ProviderMnemonicReactNative) {
+        await mnemonicProvider.current.setMnemonicSaved();
+      }
 
       await loadMore();
     } catch (error) {
       Logger.captureException(error, 'chooseAccount');
       switch (error) {
         case 'wallet_already_exists':
-          showModal('errorAccountAdded');
+          showModal(ModalType.errorAccountAdded);
           goBack();
           break;
         default:
           if (error instanceof Error) {
             Logger.log('error.message', error.message);
-            showModal('errorCreateAccount');
+            showModal(ModalType.errorCreateAccount);
             goBack();
           }
       }
@@ -126,7 +149,6 @@ export const ChooseAccountScreen = memo(() => {
   const onTabChanged = useCallback((item: ChooseAccountTabNames) => {
     setAddresses([]);
     loadMore(true, item);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const data = useMemo(
@@ -164,14 +186,23 @@ export const ChooseAccountScreen = memo(() => {
 
   const onAdd = useCallback(async () => {
     walletsToCreate.forEach(item => {
-      Wallet.create(item, item.name);
+      Wallet.create(item.name, item);
     });
     try {
       if (mnemonicProvider.current) {
         await mnemonicProvider.current.clean();
       }
     } catch (err) {}
-    navigation.navigate(SignInStackRoutes.OnboardingSetupPin, {...params});
+
+    if (params.provider instanceof ProviderMnemonicReactNative) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const {provider, ...restParams} = params as WalletInitialData & {
+        provider: ProviderMnemonicReactNative;
+      };
+      navigation.navigate(SignInStackRoutes.OnboardingSetupPin, restParams);
+    } else {
+      navigation.navigate(SignInStackRoutes.OnboardingFinish);
+    }
   }, [walletsToCreate, params, navigation]);
 
   return (

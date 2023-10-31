@@ -12,6 +12,7 @@ import {DEBUG_VARS} from '@app/debug-vars';
 import {createTheme, hideModal} from '@app/helpers';
 import {WebViewLogger} from '@app/helpers/webview-logger';
 import {getUserAgent} from '@app/services/version';
+import {ModalType} from '@app/types';
 import {openInAppBrowser} from '@app/utils';
 
 import {generateWebViewContent, patchPostMessageJsCode} from './hcaptcha-utils';
@@ -66,7 +67,7 @@ export const Hcaptcha = (props: HcaptchaProps) => {
       }
 
       if (event.url !== 'about:blank') {
-        hideModal('captcha');
+        hideModal(ModalType.captcha);
         openInAppBrowser(event.url);
       }
       return false;

@@ -1,7 +1,9 @@
-import React, {memo, useCallback, useState} from 'react';
+import React, {useCallback, useState} from 'react';
+
+import {observer} from 'mobx-react';
 
 import {SettingsAccountStyle} from '@app/components/settings-account-style';
-import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {Wallet} from '@app/models/wallet';
 import {
   ManageAccountsStackParamList,
@@ -9,14 +11,15 @@ import {
 } from '@app/screens/HomeStack/ManageAccountsStack';
 import {WalletCardPattern, WalletCardStyle} from '@app/types';
 
-export const SettingsAccountStyleScreen = memo(() => {
+export const SettingsAccountStyleScreen = observer(() => {
   const navigation = useTypedNavigation<ManageAccountsStackParamList>();
   const route = useTypedRoute<
     ManageAccountsStackParamList,
     ManageAccountsStackRoutes.SettingsAccountStyle
   >();
 
-  const wallet = useWallet(route.params.address) as Wallet;
+  // TODO Wallet can be null
+  const wallet = Wallet.getById(route.params.address) as Wallet;
   const [pattern, setPattern] = useState<string>(wallet.pattern);
 
   const [cardStyle, setCardStyle] = useState<WalletCardStyle>(
@@ -36,9 +39,15 @@ export const SettingsAccountStyleScreen = memo(() => {
   );
 
   const onPressApply = useCallback(() => {
-    wallet.setCardStyle(cardStyle, colors[0], colors[1], colors[2], pattern);
+    Wallet.setCardStyle(wallet.address, {
+      cardStyle,
+      colorFrom: colors[0],
+      colorTo: colors[1],
+      colorPattern: colors[2],
+      pattern,
+    });
     navigation.goBack();
-  }, [cardStyle, colors, navigation, wallet, pattern]);
+  }, [cardStyle, colors, navigation, pattern, wallet.address]);
 
   return (
     <SettingsAccountStyle

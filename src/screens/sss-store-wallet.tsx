@@ -12,6 +12,7 @@ import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 import {RemoteConfig} from '@app/services/remote-config';
+import {ModalType} from '@app/types';
 import {WalletType} from '@app/types';
 import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
@@ -20,7 +21,7 @@ export const SssStoreWalletScreen = () => {
   const navigation = useTypedNavigation();
 
   useEffect(() => {
-    showModal('loading', {text: getText(I18N.sssStoreWalletSaving)});
+    showModal(ModalType.loading, {text: getText(I18N.sssStoreWalletSaving)});
   }, []);
 
   useEffect(() => {
@@ -67,19 +68,16 @@ export const SssStoreWalletScreen = () => {
           const {address} = await provider.getAccountInfo(hdPath);
 
           if (!Wallet.getById(address)) {
-            const balance = app.getBalance(address);
+            const balance = app.getAvailableBalance(address);
             canNext = balance.isPositive() || index === 0;
 
             if (canNext) {
-              await Wallet.create(
-                {
-                  address: address,
-                  type: WalletType.sss,
-                  path: hdPath,
-                  accountId: provider.getIdentifier(),
-                },
-                name,
-              );
+              await Wallet.create(name, {
+                address: address,
+                type: WalletType.sss,
+                path: hdPath,
+                accountId: provider.getIdentifier(),
+              });
             }
           }
 
@@ -91,12 +89,12 @@ export const SssStoreWalletScreen = () => {
         Logger.log(e);
         switch (e) {
           case 'wallet_already_exists':
-            showModal('errorAccountAdded');
+            showModal(ModalType.errorAccountAdded);
             navigator.goBack();
             break;
           default:
             if (e instanceof Error) {
-              showModal('errorCreateAccount');
+              showModal(ModalType.errorCreateAccount);
               navigator.goBack();
               Logger.captureException(e, 'SssStoreWalletScreen');
             }

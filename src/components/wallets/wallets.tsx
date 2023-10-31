@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {SessionTypes} from '@walletconnect/types';
 import {View, useWindowDimensions} from 'react-native';
@@ -6,7 +6,6 @@ import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
 } from 'react-native-reanimated';
-import {Results} from 'realm';
 
 import {Spacer} from '@app/components/ui';
 import {WalletCard} from '@app/components/wallet-card';
@@ -15,18 +14,14 @@ import {CarouselItem} from '@app/components/wallets/carousel-item';
 import {Dot} from '@app/components/wallets/dot';
 import {Plus} from '@app/components/wallets/plus';
 import {createTheme} from '@app/helpers';
-import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
+import {useWalletConnectSessions} from '@app/hooks/use-wallet-connect-sessions';
 import {WalletBalance} from '@app/hooks/use-wallets-balance';
-import {WalletStakingBalance} from '@app/hooks/use-wallets-staking-balance';
-import {WalletVestingBalance} from '@app/hooks/use-wallets-vesting-balance';
 import {Wallet} from '@app/models/wallet';
+import {filterWalletConnectSessionsByAddress} from '@app/utils';
 
 export type WalletsProps = {
-  wallets: Wallet[] | Results<Wallet>;
+  wallets: Wallet[];
   balance: WalletBalance;
-  stakingBalance: WalletStakingBalance;
-  vestingBalance: WalletVestingBalance;
-  walletConnectSessions: SessionTypes.Struct[][];
   showLockedTokens: boolean;
   onPressSend: (address: string) => void;
   onPressQR: (address: string) => void;
@@ -42,9 +37,6 @@ export type WalletsProps = {
 export const Wallets = ({
   balance,
   wallets,
-  stakingBalance,
-  vestingBalance,
-  walletConnectSessions,
   showLockedTokens,
   onPressSend,
   onPressQR,
@@ -64,12 +56,22 @@ export const Wallets = ({
     },
     [dimensions],
   );
+  const {activeSessions} = useWalletConnectSessions();
+  const [walletConnectSessions, setWalletConnectSessions] = useState<
+    SessionTypes.Struct[][]
+  >([]);
+
+  useEffect(() => {
+    setWalletConnectSessions(
+      wallets.map(wallet =>
+        filterWalletConnectSessionsByAddress(activeSessions, wallet.address),
+      ),
+    );
+  }, [wallets, activeSessions]);
 
   return (
     <>
-      <Spacer
-        height={isFeatureEnabled(Feature.lockedStakedVestedTokens) ? 12 : 24}
-      />
+      <Spacer height={12} />
       <Animated.ScrollView
         testID={testID}
         pagingEnabled
@@ -85,8 +87,6 @@ export const Wallets = ({
               testID={`${testID}_${w.address}`}
               wallet={w}
               balance={balance[w.address]}
-              stakingBalance={stakingBalance[w.address]}
-              vestingBalance={vestingBalance[w.address]}
               walletConnectSessions={walletConnectSessions[i]}
               showLockedTokens={showLockedTokens}
               onPressSend={onPressSend}

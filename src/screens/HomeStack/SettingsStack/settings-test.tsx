@@ -6,7 +6,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import messaging from '@react-native-firebase/messaging';
 import {utils} from 'ethers';
 import {observer} from 'mobx-react';
-import {Alert, ScrollView} from 'react-native';
+import {Alert, Platform, ScrollView} from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import shajs from 'sha.js';
 
@@ -16,7 +16,6 @@ import {app} from '@app/contexts';
 import {onDeepLink} from '@app/event-actions/on-deep-link';
 import {Events} from '@app/events';
 import {
-  awaitForLedger,
   awaitForWallet,
   createTheme,
   getProviderInstanceForWallet,
@@ -26,6 +25,12 @@ import {
 } from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
+import {awaitForScanQr} from '@app/helpers/await-for-scan-qr';
+import {
+  awaitForValue,
+  objectsToValues,
+  stringsToValues,
+} from '@app/helpers/await-for-value';
 import {getUid} from '@app/helpers/get-uid';
 import {getAdjustAdid} from '@app/helpers/get_adjust_adid';
 import {shortAddress} from '@app/helpers/short-address';
@@ -44,125 +49,174 @@ import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {SettingsStackParamList} from '@app/screens/HomeStack/SettingsStack';
 import {EthNetwork} from '@app/services';
 import {Airdrop} from '@app/services/airdrop';
-import {Balance} from '@app/services/balance';
+import {Balance, MIN_GAS_LIMIT} from '@app/services/balance';
+import {HapticEffects, vibrate} from '@app/services/haptic';
+import {SssProviders} from '@app/services/provider-sss';
 import {message as toastMessage} from '@app/services/toast';
 import {getUserAgent} from '@app/services/version';
-import {Link, Modals, PartialJsonRpcRequest, WalletType} from '@app/types';
-import {isError, makeID, openInAppBrowser, openWeb3Browser} from '@app/utils';
+import {ModalType} from '@app/types';
+import {Modals, PartialJsonRpcRequest} from '@app/types';
+import {
+  generateMockBanner,
+  isError,
+  makeID,
+  openInAppBrowser,
+  openWeb3Browser,
+} from '@app/utils';
+import {HAQQ_METADATA, TEST_URLS} from '@app/variables/common';
+
+const logger = Logger.create('SettingsTestScreen', {
+  emodjiPrefix: '🔵',
+  stringifyJson: true,
+});
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
-  Logger.log('setBackgroundMessageHandler', remoteMessage);
+  logger.log('setBackgroundMessageHandler', remoteMessage);
 });
 
 messaging()
   .getInitialNotification()
   .then(remoteMessage => {
     if (remoteMessage) {
-      Logger.log('getInitialNotification', remoteMessage);
+      logger.log('getInitialNotification', remoteMessage);
     }
   });
 
-const getTestModals = (): Partial<Modals> => {
+type TestModals = {
+  [key in keyof Modals]: Modals[key] | null;
+};
+
+// When adding a new modal, popup, or bottom sheet, ensure to declare the modal props example in this function.
+const getTestModals = (): TestModals => {
   const wallets = Wallet.getAllVisible();
   const firstWalletAddress = wallets[0].address;
   const providers = Provider.getAll();
   const firstProviderId = providers[0].id;
-  const modals: Partial<Modals> = {
-    // splash: undefined,
-    // pin: undefined,
+
+  // Generate props for modals
+  const modals: TestModals = {
+    // Modals that are not currently being used are set to null.
+    splash: null,
+    pin: null,
+    // The following modals are conditionally rendered based on certain circumstances.
+    // They are placed here for better visibility and easier understanding.
+    cardDetailsQr: null,
+    walletsBottomSheet: null,
+    providersBottomSheet: null,
+    // Other modals props.
     noInternet: {showClose: true},
     loading: {
       text: 'a few moment later...',
     },
     error: {
       onClose: () => {
-        hideModal('loading');
+        hideModal(ModalType.loading);
       },
       title: 'Something went wrong',
       description: 'Please try again later',
       close: 'OK',
     },
     qr: {
-      onClose: () => {},
-      qrWithoutFrom: false,
+      onClose: () => logger.log('qr closed'),
     },
     bluetoothPoweredOff: {
-      onClose: () => {},
+      onClose: () => logger.log('bluetoothPoweredOff closed'),
     },
     bluetoothUnauthorized: {
-      onClose: () => {},
+      onClose: () => logger.log('bluetoothUnauthorized closed'),
     },
     domainBlocked: {
-      onClose: () => {},
+      onClose: () => logger.log('domainBlocked closed'),
       domain: 'example.com',
     },
     ledgerNoApp: {
-      onClose: () => {},
+      onClose: () => logger.log('ledgerNoApp closed'),
       onRetry: Promise.resolve,
     },
     ledgerAttention: {
-      onClose: () => {},
+      onClose: () => logger.log('ledgerAttention closed'),
     },
     ledgerLocked: {
-      onClose: () => {},
+      onClose: () => logger.log('ledgerLocked closed'),
     },
     errorAccountAdded: {
-      onClose: () => {},
+      onClose: () => logger.log('errorAccountAdded closed'),
     },
     errorCreateAccount: {
-      onClose: () => {},
+      onClose: () => logger.log('errorCreateAccount closed'),
     },
     claimOnMainnet: {
-      onClose: () => {},
-      onChange: () => {},
+      onClose: () => logger.log('claimOnMainnet closed'),
+      onChange: () => logger.log('claimOnMainnet onChange'),
       network: 'MainMet',
     },
     transactionError: {
-      onClose: () => {},
+      onClose: () => logger.log('transactionError closed'),
       message: 'Something went wrong',
     },
     locationUnauthorized: {
-      onClose: () => {},
+      onClose: () => logger.log('locationUnauthorized closed'),
     },
     raffleAgreement: {
-      onClose: () => {},
+      onClose: () => logger.log('raffleAgreement closed'),
     },
     captcha: {
-      onClose: () => {},
+      onClose: () => logger.log('captcha closed'),
       variant: CaptchaType.slider,
+    },
+    cloudVerification: {
+      showClose: true,
+      sssProvider: Platform.select({
+        android: SssProviders.google,
+        default: SssProviders.apple,
+      }),
+    },
+    lockedTokensInfo: {
+      onClose: () => logger.log('lockedTokensInfo closed'),
+    },
+    notEnoughGas: {
+      currentAmount: app.getBalanceData(firstWalletAddress).available,
+      gasLimit: MIN_GAS_LIMIT,
+      onClose: () => logger.log('notEnoughGas closed'),
+    },
+    viewErrorDetails: {
+      errorDetails: 'viewErrorDetails',
+      onClose: () => logger.log('viewErrorDetails closed'),
     },
   };
 
   if (wallets.length) {
     modals.walletsBottomSheet = {
-      onClose: () => {},
       wallets,
-      closeDistance: () => getWindowHeight() / 6,
       title: I18N.welcomeTitle,
       autoSelectWallet: false,
       eventSuffix: '-test',
+      closeDistance: () => getWindowHeight() / 6,
+      onClose: () => logger.log('walletsBottomSheet closed'),
     };
   }
 
   if (firstWalletAddress) {
     modals.cardDetailsQr = {
       address: firstWalletAddress,
-      onClose: () => {},
+      onClose: () => logger.log('cardDetailsQr closed'),
     };
   }
 
   if (firstProviderId) {
     modals.providersBottomSheet = {
-      onClose: () => {},
       title: I18N.welcomeTitle,
       providers,
       initialProviderId: firstProviderId,
-      closeDistance: () => getWindowHeight() / 6,
       eventSuffix: '-test',
+      closeDistance: () => getWindowHeight() / 6,
+      onClose: () => logger.log('providersBottomSheet closed'),
     };
   }
 
-  return modals;
+  return Object.fromEntries(
+    Object.entries(modals).filter(([_, v]) => !!v),
+  ) as TestModals;
 };
 
 const abi = [
@@ -249,30 +303,6 @@ const abi = [
     constant: true,
   },
 ];
-const TEST_URLS: Partial<Link>[] = [
-  {
-    title: 'HAQQ Dashboard',
-    url: 'https://shell.haqq.network',
-    icon: 'https://shell.haqq.network/assets/favicon.svg',
-  },
-  {
-    title: 'HAQQ Vesting',
-    url: 'https://vesting.haqq.network',
-    icon: 'https://vesting.haqq.network/assets/favicon.svg',
-  },
-  {title: 'MuslimGocci', url: 'https://muslimgocci.app'},
-  {
-    title: 'metamask test dapp',
-    url: 'https://metamask.github.io/test-dapp/',
-  },
-  {title: 'HAQQ Faucet', url: 'https://testedge2.haqq.network'},
-  {title: 'app uniswap', url: 'https://app.uniswap.org'},
-  {title: 'safe', url: 'https://safe.testedge2.haqq.network'},
-  {
-    title: 'ChainList app',
-    url: 'https://chainlist.org/',
-  },
-];
 
 const BACKENDS = [
   ['production', HAQQ_BACKEND],
@@ -281,7 +311,7 @@ const BACKENDS = [
 
 async function callContract(to: string, func: string, ...params: any[]) {
   const iface = new utils.Interface(abi);
-  Logger.log('params', params);
+  logger.log('params', params);
   const data = iface.encodeFunctionData(func, params);
 
   const resp = await EthNetwork.call(to, data);
@@ -303,6 +333,7 @@ export const SettingsTestScreen = observer(() => {
   const [signData, setSignData] = useState<PartialJsonRpcRequest>();
   const [isValidRawSignData, setValidRawSignData] = useState(false);
   const [deeplink, setDeeplink] = useState('');
+  const [regexp, setRegexp] = useState('');
   const [browserUrl, setBrowserUrl] = useState('');
   const [contract] = useState('0xB641EcDDdE1C0A9cC83B70B15eC9789c1365B3d2');
   const navigation = useTypedNavigation<SettingsStackParamList>();
@@ -364,20 +395,20 @@ export const SettingsTestScreen = observer(() => {
     ]);
 
     const resp = await EthNetwork.call(contract, data);
-    Logger.log('resp', resp);
+    logger.log('resp', resp);
     const r = iface.decodeFunctionResult('tokensOfOwner', resp);
 
-    Logger.log(JSON.stringify(r));
+    logger.log(JSON.stringify(r));
   };
 
   const onMintContract = async () => {
     const iface = new utils.Interface(abi);
     const data = iface.encodeFunctionData('mintNFTs', [1]);
 
-    Logger.log('data', data);
+    logger.log('data', data);
 
     const walletId = await awaitForWallet({
-      wallets: Wallet.getAll().snapshot(),
+      wallets: Wallet.getAll(),
       title: I18N.stakingDelegateAccountTitle,
     });
 
@@ -397,24 +428,20 @@ export const SettingsTestScreen = observer(() => {
       new Balance(250000, 0),
     );
 
-    const result = transport.signTransaction(wallet.path!, unsignedTx);
-    if (wallet.type === WalletType.ledgerBt) {
-      await awaitForLedger(transport);
-    }
-    const signedTx = await result;
+    const signedTx = await transport.signTransaction(wallet.path!, unsignedTx);
     Logger.log('signedTx', signedTx);
 
     const resp = await EthNetwork.sendTransaction(signedTx);
 
-    Logger.log('resp', resp);
+    logger.log('resp', resp);
     const r = iface.decodeFunctionData('mintNFTs', resp.data);
 
-    Logger.log(JSON.stringify(r));
+    logger.log(JSON.stringify(r));
   };
 
   const onCheckContract = useCallback(async () => {
     const code = await EthNetwork.getCode(contract);
-    Logger.log('code', code);
+    logger.log('code', code);
 
     const interfaces = await callContract(
       contract,
@@ -422,13 +449,13 @@ export const SettingsTestScreen = observer(() => {
       0x80ac58cd,
     );
 
-    Logger.log('interfaces', ...interfaces);
+    logger.log('interfaces', ...interfaces);
 
     const name = await callContract(contract, 'name');
-    Logger.log('name', ...name);
+    logger.log('name', ...name);
 
     const symbol = await callContract(contract, 'symbol');
-    Logger.log('symbol', ...symbol);
+    logger.log('symbol', ...symbol);
   }, [contract]);
 
   const onResetUid = useCallback(async () => {
@@ -455,7 +482,7 @@ export const SettingsTestScreen = observer(() => {
   }, [showActionSheetWithOptions]);
 
   const onSetLeadingAccount = useCallback(() => {
-    const wallets = Wallet.getAll().snapshot();
+    const wallets = Wallet.getAll();
     const walletsKeys = wallets.map(
       wallet => `${wallet.name} ${shortAddress(wallet.address ?? '', '•')}`,
     );
@@ -547,10 +574,7 @@ export const SettingsTestScreen = observer(() => {
         disabled={!isValidRawSignData}
         onPress={() => {
           awaitForJsonRpcSign({
-            metadata: {
-              url: 'https://shell.haqq.network',
-              iconUrl: 'https://shell.haqq.network/assets/favicon.svg',
-            },
+            metadata: HAQQ_METADATA,
             request: signData!,
           });
         }}
@@ -586,6 +610,27 @@ export const SettingsTestScreen = observer(() => {
         onPress={onPressDeepLink}
         variant={ButtonVariant.contained}
       />
+      <Spacer height={8} />
+      <Title text="Camera" />
+      <Input
+        placeholder="regexp pattern"
+        value={regexp}
+        onChangeText={setRegexp}
+      />
+      <Spacer height={8} />
+      <Button
+        title="QR scanner"
+        onPress={async () => {
+          try {
+            const result = await awaitForScanQr({pattern: regexp});
+            Alert.alert('result', JSON.stringify(result, null, 2));
+          } catch (err) {
+            Alert.alert('error', JSON.stringify(err, null, 2));
+          }
+        }}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
       <Title text="Browser" />
       <Input
         placeholder="https://shell.haqq.network"
@@ -638,9 +683,9 @@ export const SettingsTestScreen = observer(() => {
           showActionSheetWithOptions({options: modalsKeys}, index => {
             if (typeof index === 'number') {
               const name = modalsKeys[index];
-              if (name === 'loading') {
+              if (name === ModalType.loading) {
                 setTimeout(() => {
-                  hideModal('loading');
+                  hideModal(ModalType.loading);
                 }, 5000);
               }
               // @ts-ignore
@@ -670,6 +715,16 @@ export const SettingsTestScreen = observer(() => {
       />
 
       <Title text="Services" />
+      <Button
+        title="Create test banner"
+        onPress={async () => {
+          vibrate(HapticEffects.impactLight);
+          await Banner.create(generateMockBanner());
+          toastMessage('banner created');
+        }}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
       <Button
         title="clear banners"
         onPress={onClearBanners}
@@ -802,6 +857,67 @@ export const SettingsTestScreen = observer(() => {
           News.removeAll();
           setRssNewsCount(0);
           setNewsCount(0);
+        }}
+        variant={ButtonVariant.contained}
+      />
+      <Title text="awaitFor... examples" />
+      <Button
+        title={'EX1: awaitForValue with strings'}
+        onPress={async () => {
+          const values = stringsToValues([
+            'value 1',
+            ['value 2', 'subtitle for value 2'],
+            'value 3',
+          ]);
+          const res = await awaitForValue({
+            title: I18N.totalValueAccount,
+            values,
+            initialIndex: 1,
+          });
+          Alert.alert('result', JSON.stringify(res, null, 2));
+        }}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Button
+        title={'EX2: awaitForValue with mapped objects'}
+        onPress={async () => {
+          try {
+            const wallets = Wallet.getAll().map(w => ({
+              ...w,
+              title: w.name,
+              subtitle: w.address,
+            }));
+            const values = objectsToValues(wallets);
+            const res = await awaitForValue({
+              title: I18N.address,
+              values,
+            });
+            Alert.alert('result', JSON.stringify(res, null, 2));
+          } catch (err) {
+            Alert.alert('Error', JSON.stringify(err, null, 2));
+          }
+        }}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Button
+        title={'EX3: awaitForValue with objects'}
+        onPress={async () => {
+          try {
+            const values = objectsToValues(Wallet.getAll(), {
+              titleKey: 'name',
+              subtitleKey: 'address',
+            });
+            const res = await awaitForValue({
+              title: I18N.address,
+              values,
+              initialIndex: 0,
+            });
+            Alert.alert('result', JSON.stringify(res, null, 2));
+          } catch (err) {
+            Alert.alert('Error', JSON.stringify(err, null, 2));
+          }
         }}
         variant={ButtonVariant.contained}
       />

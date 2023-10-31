@@ -1,34 +1,34 @@
-import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useMemo} from 'react';
+
+import {observer} from 'mobx-react';
 
 import {TransactionDetail} from '@app/components/transaction-detail';
 import {openURL} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useTransaction} from '@app/hooks/use-transaction';
 import {Provider} from '@app/models/provider';
-import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
 import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
 import {EthNetwork} from '@app/services';
 import {TransactionSource} from '@app/types';
 
-export const TransactionDetailScreen = memo(() => {
+export const TransactionDetailScreen = observer(() => {
   const navigation = useTypedNavigation<HomeStackParamList>();
   const route = useTypedRoute<
     HomeStackParamList,
     HomeStackRoutes.TransactionDetail
   >();
 
-  const [transaction, setTransaction] = useState<Transaction | null>(
-    Transaction.getById(route.params.hash),
-  );
+  const transaction = useTransaction(route.params.hash);
 
   const source = useMemo(() => {
-    const visible = Wallet.getAllVisible().map(w => w.address);
+    const visibleAddressList = Wallet.getAllVisible().map(w => w.address);
 
     if (transaction?.input.includes('0x') && transaction.input.length > 2) {
       return TransactionSource.contract;
     }
 
-    return visible.includes(transaction?.from.toLowerCase() ?? '')
+    return visibleAddressList.includes(transaction?.from.toLowerCase() ?? '')
       ? TransactionSource.send
       : TransactionSource.receive;
   }, [transaction]);
@@ -37,10 +37,6 @@ export const TransactionDetailScreen = memo(() => {
     () => (transaction ? Provider.getById(transaction.providerId) : null),
     [transaction],
   );
-
-  useEffect(() => {
-    setTransaction(Transaction.getById(route.params.hash));
-  }, [route.params.hash]);
 
   const onPressInfo = useCallback(async () => {
     try {

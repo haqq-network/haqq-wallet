@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 
 import {useFocusEffect} from '@react-navigation/native';
-import {TextInput, TouchableWithoutFeedback} from 'react-native';
+import {Image, TextInput, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -16,21 +16,24 @@ import {
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {useSumAmount} from '@app/hooks';
-import {I18N} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {BALANCE_MULTIPLIER, Balance, FEE_AMOUNT} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {IToken} from '@app/types';
 import {CURRENCY_NAME} from '@app/variables/common';
 
 export type TransactionSumProps = {
   balance: Balance;
-  fee: Balance;
+  fee: Balance | null;
   to: string;
   from: string;
   contact: Contact | null;
   onAmount: (amount: Balance) => void;
   onContact: () => void;
+  onToken: () => void;
   testID?: string;
+  token: IToken;
 };
 
 export const TransactionSum = ({
@@ -40,17 +43,32 @@ export const TransactionSum = ({
   contact,
   onAmount,
   onContact,
+  onToken,
   testID,
+  token,
 }: TransactionSumProps) => {
   const transactionFee = useMemo(() => {
-    return fee.operate(BALANCE_MULTIPLIER, 'mul').max(FEE_AMOUNT);
+    return fee !== null
+      ? fee.operate(BALANCE_MULTIPLIER, 'mul').max(FEE_AMOUNT)
+      : Balance.Empty;
   }, [fee]);
 
-  const amounts = useSumAmount();
+  const amounts = useSumAmount(undefined, undefined, undefined, () => {
+    if (token.symbol === CURRENCY_NAME) {
+      return '';
+    }
+    if (balance.compare(fee, 'lt')) {
+      return getText(I18N.sumAmountNotEnough);
+    }
+    return '';
+  });
 
   useEffect(() => {
-    amounts.setMaxAmount(balance.operate(transactionFee, 'sub'));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (token.symbol === CURRENCY_NAME) {
+      amounts.setMaxAmount(balance.operate(transactionFee, 'sub'));
+    } else {
+      amounts.setMaxAmount(token.value);
+    }
   }, [balance, transactionFee]);
 
   const inputSumRef = useRef<TextInput>(null);
@@ -67,7 +85,13 @@ export const TransactionSum = ({
   );
 
   const onDone = useCallback(() => {
-    onAmount(new Balance(parseFloat(amounts.amount)));
+    onAmount(
+      new Balance(
+        parseFloat(amounts.amount),
+        undefined,
+        token.symbol ?? undefined,
+      ),
+    );
   }, [amounts, onAmount]);
 
   const onPressMax = useCallback(() => {
@@ -77,8 +101,9 @@ export const TransactionSum = ({
 
   return (
     <KeyboardSafeArea isNumeric style={styles.container} testID={testID}>
-      <TouchableWithoutFeedback onPress={onContact}>
+      <View style={styles.row}>
         <LabeledBlock
+          onPress={onContact}
           i18nLabel={I18N.transactionSumSend}
           style={styles.sumblock}>
           <Text
@@ -89,13 +114,29 @@ export const TransactionSum = ({
             {formattedAddress}
           </Text>
         </LabeledBlock>
-      </TouchableWithoutFeedback>
+        <LabeledBlock
+          i18nLabel={I18N.transactionCrypto}
+          style={styles.cryptoBlock}
+          onPress={onToken}>
+          {!!token.image && (
+            <Image style={styles.cryptoBlockImage} source={token.image} />
+          )}
+          <Text
+            style={styles.cryptoBlockTitle}
+            t11
+            color={Color.textBase1}
+            numberOfLines={1}
+            ellipsizeMode="middle">
+            {token.symbol}
+          </Text>
+        </LabeledBlock>
+      </View>
       <Spacer centered>
         <SumBlock
           value={amounts.amount}
-          error={amounts.error}
-          currency={CURRENCY_NAME}
-          balance={balance}
+          error={amounts.error.replace('ISLM', token.symbol || CURRENCY_NAME)}
+          currency={token.symbol || ''}
+          balance={token.value}
           onChange={amounts.setAmount}
           onMax={onPressMax}
           testID={`${testID}_form`}
@@ -115,8 +156,20 @@ export const TransactionSum = ({
 };
 
 const styles = createTheme({
+  row: {flexDirection: 'row'},
+  cryptoBlockImage: {
+    maxHeight: 18,
+    maxWidth: 18,
+    marginTop: 4,
+    borderRadius: 5,
+    overflow: 'hidden',
+  },
+  cryptoBlockTitle: {marginTop: 2},
+  cryptoBlock: {width: 93},
   sumblock: {
+    flex: 1,
     paddingBottom: 8,
+    marginRight: 8,
   },
   container: {
     justifyContent: 'space-between',

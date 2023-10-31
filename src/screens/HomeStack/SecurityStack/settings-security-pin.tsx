@@ -8,6 +8,7 @@ import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {SecurityStackParamList} from '@app/screens/HomeStack/SecurityStack';
 import {sendNotification} from '@app/services';
+import {ModalType} from '@app/types';
 
 export const SettingsSecurityPinScreen = memo(() => {
   const {goBack} = useTypedNavigation<SecurityStackParamList>();
@@ -17,7 +18,7 @@ export const SettingsSecurityPinScreen = memo(() => {
       if (pin !== repeatedPin) {
         return false;
       }
-      const close = showModal('loading');
+      const close = showModal(ModalType.loading);
       const wallets = Wallet.getAll();
       const viewed = new Set();
 

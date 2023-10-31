@@ -1,30 +1,41 @@
 import React from 'react';
 
+import {BigNumber} from '@ethersproject/bignumber';
 import {Validator} from '@evmos/provider';
 import {Proposal} from '@evmos/provider/dist/rest/gov';
 import {Coin} from '@evmos/transactions';
-import {AccessListish} from '@haqq/provider-base';
+import {AccessListish, BigNumberish} from '@haqq/provider-base';
+import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {NativeStackNavigationOptions} from '@react-navigation/native-stack';
 import {SessionTypes} from '@walletconnect/types';
 import Decimal from 'decimal.js';
-import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
+import {
+  ImageSourcePropType,
+  ImageStyle,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
 import {Results} from 'realm';
 
 import {Color} from '@app/colors';
+import {CaptchaType} from '@app/components/captcha';
+import {TotalValueTabNames} from '@app/components/total-value-info';
 import {IconProps} from '@app/components/ui';
 import {I18N} from '@app/i18n';
 import {Banner} from '@app/models/banner';
 import {Provider} from '@app/models/provider';
+import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
 import {WelcomeStackRoutes} from '@app/screens/WelcomeStack';
 import {SignUpStackRoutes} from '@app/screens/WelcomeStack/SignUpStack';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
+import {SssProviders} from '@app/services/provider-sss';
+import {WalletConnectApproveConnectionEvent} from '@app/types/wallet-connect';
+import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
-import {CaptchaType} from './components/captcha';
-import {Transaction} from './models/transaction';
-import {SssProviders} from './services/provider-sss';
-import {WalletConnectApproveConnectionEvent} from './types/wallet-connect';
+import {AwaitValue} from './helpers/await-for-value';
 
 export enum AdjustEvents {
   accountCreated = 'q3vxmg',
@@ -132,10 +143,11 @@ export type LedgerWalletInitialData = {
 };
 
 export type RootStackParamList = {
-  chooseAccount: {
-    type: 'mnemonic';
-    mnemonic: string;
-  };
+  chooseAccount:
+    | (WalletInitialData & {provider: ProviderMnemonicReactNative})
+    | {
+        provider: ProviderSSSReactNative;
+      };
   cloudProblems: {sssProvider: SssProviders; onNext: () => void};
   home: undefined;
   homeFeed: undefined;
@@ -149,6 +161,14 @@ export type RootStackParamList = {
   browserHomePage: undefined;
   browserSearchPage: undefined | {initialSearchText?: string};
   browserEditBookmarksScreen: undefined;
+  browserPrivacy: undefined;
+  browserPrivacyDetails: {
+    hostname: string;
+  };
+  browserPrivacyPopupStack: {
+    screen: 'browserPrivacyDetails' | 'browserPrivacy';
+    params?: RootStackParamList[RootStackParamList['browserPrivacyPopupStack']['screen']];
+  };
   homeBrowser:
     | undefined
     | {
@@ -186,7 +206,9 @@ export type RootStackParamList = {
   accountInfo: {
     accountId: string;
   };
-  totalValueInfo: undefined;
+  totalValueInfo?: {
+    tab?: TotalValueTabNames;
+  };
   welcome: undefined;
   welcomeNews: undefined;
   create: undefined;
@@ -234,6 +256,7 @@ export type RootStackParamList = {
   detailsQr: {address: string};
   settingsTheme: undefined;
   settingsTest: undefined;
+  settingsDeveloperTools: undefined;
   settingsAccounts: undefined;
   ourNews: undefined;
   settingsAccountDetail: {address: string};
@@ -335,14 +358,17 @@ export type RootStackParamList = {
   transactionAccount: {
     from: string;
   };
-
+  transactionSelectCrypto: {from: string; to: string};
   transactionSum: {
     from: string;
     to: string;
+    token: IToken;
   };
   transactionFinish: {
     transaction: TransactionResponse;
     hash: string;
+    token: IToken;
+    amount?: Balance;
   };
   transactionNftFinish: {
     hash: string;
@@ -356,6 +382,7 @@ export type RootStackParamList = {
     to: string;
     amount: Balance;
     fee?: Balance;
+    token: IToken;
   };
   transactionNftConfirmation: {
     from: string;
@@ -507,9 +534,15 @@ export type RootStackParamList = {
   };
   settingsSecurity: undefined;
   walletSelector: {
-    wallets: Wallet[] | Results<Wallet>;
+    wallets: Wallet[];
     title: string;
     initialAddress?: string;
+    eventSuffix?: string;
+  };
+  valueSelector: {
+    title: string;
+    values: AwaitValue[];
+    initialIndex?: number;
     eventSuffix?: string;
   };
   walletConnect?: {
@@ -535,6 +568,7 @@ export type RootStackParamList = {
     metadata: JsonRpcMetadata;
     chainId?: number;
     selectedAccount?: string;
+    hideContractAttention?: boolean;
   };
   sssNetwork: undefined;
   sssBackup: {
@@ -613,6 +647,14 @@ export type SwipeableAction<T> = {
   key: string;
 };
 
+export type WalletCardStyleT = {
+  cardStyle: WalletCardStyle;
+  colorFrom: string;
+  colorTo: string;
+  colorPattern: string;
+  pattern: string;
+};
+
 export enum WalletCardStyle {
   flat = 'flat',
   gradient = 'gradient',
@@ -687,6 +729,11 @@ export type AddWalletParams = {
   accountId: string;
   path: string;
   type: WalletType;
+  pattern?: string;
+  cardStyle?: WalletCardStyle;
+  colorFrom?: string;
+  colorTo?: string;
+  colorPattern?: string;
 };
 
 export enum ValidatorStatus {
@@ -701,6 +748,7 @@ export type ValidatorItem = Validator & {
   localRewards?: number;
   localUnDelegations?: number;
   searchString?: string;
+  power?: number;
 };
 
 export type ColorType = Color | string;
@@ -772,6 +820,7 @@ export interface Link {
   id: string;
   url: string;
   title: string;
+  subtitle?: string;
   icon?: string;
 }
 
@@ -782,7 +831,7 @@ export interface DynamicLink {
 }
 
 export type PartialJsonRpcRequest = {
-  method: string;
+  method: EIP155_SIGNING_METHODS | string;
   params?: any;
 };
 
@@ -905,6 +954,11 @@ export type ErrorModalImage =
     }
   | {};
 
+/**
+ * @description When adding a new modal, popup, or bottom sheet,
+ * ensure to declare the modal props, for example,
+ * at `src/screens/settings-test.tsx` inside the `getTestModals` function.
+ */
 export type Modals = {
   splash: undefined;
   notEnoughGas: {
@@ -928,7 +982,11 @@ export type Modals = {
   } & ErrorModalImage;
   qr: {
     onClose?: () => void;
-    qrWithoutFrom?: boolean;
+    eventTaskId?: string;
+    /**
+     * @description regex pattern to match the scanned data
+     */
+    pattern?: string;
   };
   cardDetailsQr: {
     address: string;
@@ -967,7 +1025,7 @@ export type Modals = {
   };
   walletsBottomSheet: {
     onClose?: () => void;
-    wallets: Wallet[] | Results<Wallet>;
+    wallets: Wallet[];
     closeDistance?: () => number;
     title: I18N;
     eventSuffix?: string;
@@ -997,8 +1055,42 @@ export type Modals = {
   };
   cloudVerification: {
     sssProvider: SssProviders;
+    showClose?: boolean;
+  };
+  viewErrorDetails: {
+    errorDetails: string;
+    onClose?: () => void;
   };
 };
+
+export enum ModalType {
+  loading = 'loading',
+  pin = 'pin',
+  splash = 'splash',
+  noInternet = 'noInternet',
+  bluetoothPoweredOff = 'bluetoothPoweredOff',
+  bluetoothUnauthorized = 'bluetoothUnauthorized',
+  qr = 'qr',
+  cardDetailsQr = 'cardDetailsQr',
+  error = 'error',
+  claimOnMainnet = 'claimOnMainnet',
+  ledgerNoApp = 'ledgerNoApp',
+  ledgerAttention = 'ledgerAttention',
+  ledgerLocked = 'ledgerLocked',
+  errorAccountAdded = 'errorAccountAdded',
+  errorCreateAccount = 'errorCreateAccount',
+  walletsBottomSheet = 'walletsBottomSheet',
+  transactionError = 'transactionError',
+  locationUnauthorized = 'locationUnauthorized',
+  providersBottomSheet = 'providersBottomSheet',
+  captcha = 'captcha',
+  domainBlocked = 'domainBlocked',
+  raffleAgreement = 'raffleAgreement',
+  lockedTokensInfo = 'lockedTokensInfo',
+  notEnoughGas = 'notEnoughGas',
+  cloudVerification = 'cloudVerification',
+  viewErrorDetails = 'viewErrorDetails',
+}
 
 export interface NftAttribute {
   trait_type: string;
@@ -1025,14 +1117,6 @@ export interface NftCollection {
   external_link: string;
   items: NftItem[];
   created_at: number;
-}
-
-export interface TokenItem {
-  icon: string;
-  name: string;
-  ticker: string;
-  count: number;
-  priceUsd: number;
 }
 
 export interface BaseNewsItem {
@@ -1064,7 +1148,14 @@ export enum AdjustTrackingAuthorizationStatus {
   statusNotAvailable = -1,
 }
 
-export type BalanceConstructor = IBalance | Decimal | number | string;
+export type BalanceConstructor =
+  | BigNumber
+  | BigNumberish
+  | HexNumber
+  | IBalance
+  | Decimal
+  | number
+  | string;
 
 export interface IBalance {
   readonly raw: Decimal;
@@ -1085,10 +1176,13 @@ export interface IBalance {
   ) => boolean;
 }
 
-export enum ValidUrlProtocol {
-  haqq = 'haqq',
-  etherium = 'etherium',
-  wc = 'wc',
+export abstract class ISerializable {
+  static fromJsonString: (obj: string | ISerializable) => ISerializable;
+  abstract toJsonString(): string;
+  /**
+   * Custom console.log for an object
+   */
+  abstract toJSON(): string;
 }
 
 export interface IWidgetBase {
@@ -1132,6 +1226,20 @@ export interface IBannerWidget extends IWidgetBase, Banner {
   target?: string;
 }
 
+export interface ITokensWidget extends IWidgetBase {
+  component: 'Tokens';
+}
+
+export enum NftWidgetSize {
+  small = 'small',
+  medium = 'medium',
+  large = 'large',
+}
+export interface INftWidget extends IWidgetBase {
+  component: 'Nft';
+  size: NftWidgetSize;
+}
+
 export type IWidget =
   | ITransactionsWidget
   | ITransactionsShortWidget
@@ -1140,7 +1248,9 @@ export type IWidget =
   | IGovernanceWidget
   | ILayoutWidget
   | IAdWidget
-  | IBannerWidget;
+  | IBannerWidget
+  | ITokensWidget
+  | INftWidget;
 
 export interface MarkupResponse {
   blocks: ILayoutWidget;
@@ -1171,6 +1281,30 @@ export type OnTransactionRowPress = (
 export type ContractNameMap = Record<string, string>;
 
 export type HaqqCosmosAddress = `haqq${string}`;
+export type HaqqEthereumAddress = `0x${string}` | string;
+export type HexNumber = `0x${string}`;
+
+export type IndexerBalance = Record<HaqqCosmosAddress, HexNumber>;
+export type IndexerToken = {
+  address: HaqqCosmosAddress;
+  contract: HaqqCosmosAddress;
+  created_at: string;
+  updated_at: string;
+  value: string;
+};
+export type IndexerTime = Record<HaqqCosmosAddress, number>;
+export interface BalanceData {
+  vested: Balance;
+  staked: Balance;
+  available: Balance;
+  total: Balance;
+  locked: Balance;
+  availableForStake: Balance;
+  // next time to unlock vested tokens
+  unlock: Date;
+}
+
+export type IndexerBalanceData = Record<HaqqEthereumAddress, BalanceData>;
 
 export type JsonRpcTransactionRequest = {
   to?: string;
@@ -1219,12 +1353,172 @@ export interface MobXStoreItem {
   id: string;
 }
 
-export interface MobXStore<TData extends MobXStoreItem> {
+type MobXStoreData =
+  | MobXStoreItem
+  | MobXStoreItem[]
+  | Record<any, MobXStoreItem>
+  | Record<any, Record<any, MobXStoreItem>>;
+
+export interface MobXStore<TData extends MobXStoreData> {
   data: Record<string, TData>;
-  getById(id: string): TData;
+  getById(id: string): TData | undefined;
   getAll(): TData[];
-  create(id: string, item: TData): void;
-  update(id: string, item: Partial<TData>): boolean;
+  create(id: string, item: TData): string;
+  update(id: string | undefined, item: Omit<Partial<TData>, 'id'>): boolean;
   remove(id: string): boolean;
   removeAll(): void;
+}
+
+export enum ExplorerStatusEnum {
+  success = '1',
+  error = '0',
+}
+
+export interface ExplorerBaseTransaction {
+  blockNumber: number;
+  confirmations: number;
+  from: string;
+  gasPrice: string;
+  gasUsed: number;
+  hash: string;
+  input: string;
+  timeStamp: string;
+  to: string;
+  value: string;
+}
+
+export interface ExplorerTransaction extends ExplorerBaseTransaction {
+  blockHash: string;
+  contractAddress: string;
+  cumulativeGasUsed: number;
+  gas: number;
+  isError: ExplorerStatusEnum;
+  nonce: string;
+  transactionIndex: string;
+  txreceipt_status: ExplorerStatusEnum;
+}
+
+export interface ExplorerLogDetail {
+  address: string;
+  data: string;
+  topics: string[];
+}
+
+export interface ExplorerTransactionInfo extends ExplorerBaseTransaction {
+  gasLimit: string;
+  logs: ExplorerLogDetail[];
+  revertReason: string;
+  success: boolean;
+}
+
+export interface ExplorerReceiptStatusInfo {
+  status: '0' | '1';
+}
+
+export interface ExplorerTransactionStatus {
+  errDescription: string;
+  isError: '0' | '1';
+}
+
+export interface ExplorerApiResponse<T> {
+  message: string;
+  result: T | null;
+  status: ExplorerStatusEnum;
+}
+
+export interface EIPTypedData {
+  types: object;
+  primaryType: string;
+  domain: {
+    name: string;
+    version: string;
+    chainId: number;
+    verifyingContract: string;
+    salt: string;
+  };
+  message: object;
+}
+
+export type ExtractPromiseType<T> = T extends Promise<infer U> ? U : T;
+
+export type IToken = {
+  /**
+   * Token contract address
+   */
+  id: HaqqCosmosAddress;
+  contract_created_at: IContract['created_at'];
+  contract_updated_at: IContract['updated_at'];
+  value: Balance;
+
+  decimals: IContract['decimals'];
+  is_erc20: IContract['is_erc20'];
+  is_erc721: IContract['is_erc721'];
+  is_erc1155: IContract['is_erc1155'];
+  /**
+   * Should be visible or not
+   */
+  is_in_white_list: IContract['is_in_white_list'];
+  name: IContract['name'];
+  symbol: IContract['symbol'];
+  created_at: string;
+  updated_at: string;
+
+  image: ImageSourcePropType;
+};
+
+export type IContract = {
+  address_type: 'contract';
+  created_at: string;
+  decimals: number | null;
+  id: HaqqCosmosAddress;
+  is_erc20: boolean | null;
+  is_erc721: boolean | null;
+  is_erc1155: boolean | null;
+  is_in_white_list: boolean | null;
+  name: string | null;
+  symbol: string | null;
+  updated_at: string;
+  icon: string | null;
+};
+
+export type IndexerTokensData = Record<HaqqEthereumAddress, IToken[]>;
+
+export enum BrowserPermissionStatus {
+  allow = 'allow',
+  allowOnce = 'allowOnce',
+  deny = 'deny',
+}
+
+export enum BrowserPermissionType {
+  geolocation = 'geolocation',
+  // TODO:
+  // camera = 'camera',
+  // microphone = 'microphone',
+}
+
+export type BrowserPermissionItem = MobXStoreItem & {
+  status: BrowserPermissionStatus;
+  type: BrowserPermissionType;
+  createdAt: number;
+  lastUsedAt: number;
+};
+
+/**
+ * @description mark all fields as optional and make selected field as requered
+ */
+export type PartialRequired<T, K extends keyof T> = Partial<T> & Pick<T, K>;
+
+export enum DeeplinkProtocol {
+  haqq = 'haqq',
+  etherium = 'etherium',
+  wc = 'wc',
+}
+
+export enum DeeplinkUrlKey {
+  wc = 'wc',
+  browser = 'browser',
+  web3browser = 'web3browser',
+  back9test = 'back9test',
+  provider = 'provider',
+  enableDeveloperMode = 'enableDeveloperMode',
 }

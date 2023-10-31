@@ -55,6 +55,7 @@ module.exports = {
         'react-native/no-inline-styles': 2,
         'react-native/no-color-literals': 2,
         'react-native/no-single-element-style-arrays': 2,
+        'react-hooks/exhaustive-deps': 'off'
       },
     },
   ],

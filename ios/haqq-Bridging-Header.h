@@ -9,5 +9,4 @@
 #import <RNSplashScreen.h>
 
 #import <React/RCTRootView.h>
-#import <React/RCTAppSetupUtils.h>
 #import <React/RCTLinkingManager.h>

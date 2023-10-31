@@ -1,6 +1,8 @@
 export enum WebViewEventsEnum {
   WINDOW_INFO = 'WINDOW_INFO',
   ACCOUNTS_CHANGED = 'ACCOUNTS_CHANGED',
+  CLEAR_HISTORY = 'CLEAR_HISTORY',
+  CLEAR_CACHE = 'CLEAR_CACHE',
 }
 
 export interface WindowInfoEvent {

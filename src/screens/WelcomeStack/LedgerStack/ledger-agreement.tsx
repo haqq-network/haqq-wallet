@@ -9,6 +9,7 @@ import {
   LedgerStackParamList,
   LedgerStackRoutes,
 } from '@app/screens/WelcomeStack/LedgerStack';
+import {ModalType} from '@app/types';
 
 export const LedgerAgreementScreen = memo(() => {
   const navigation = useTypedNavigation<LedgerStackParamList>();
@@ -22,7 +23,7 @@ export const LedgerAgreementScreen = memo(() => {
           : LedgerStackRoutes.LedgerBluetooth,
       );
     } else {
-      showModal('locationUnauthorized');
+      showModal(ModalType.locationUnauthorized);
     }
   }, [navigation]);
 

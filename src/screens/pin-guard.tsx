@@ -6,6 +6,7 @@ import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {ModalType} from '@app/types';
 import {PIN_BANNED_ATTEMPTS} from '@app/variables/common';
 
 interface PinGuardProps {
@@ -31,7 +32,7 @@ export const PinGuardScreen = memo(
 
     const onPin = async (pin: string) => {
       const start = Date.now();
-      showModal('loading');
+      showModal(ModalType.loading);
       try {
         await app.comparePin(pin);
         app.successEnter();
@@ -50,15 +51,13 @@ export const PinGuardScreen = memo(
           pinRef.current?.locked(app.pinBanned);
         }
 
-        Logger.captureException(error, 'pin-guard');
-      }
-
-      // @todo: wtf???
-      const end = Date.now();
-      if (end - start < 500) {
-        setTimeout(() => hideModal('loading'), 1000);
-      } else {
-        hideModal('loading');
+        // @todo: wtf???
+        const end = Date.now();
+        if (end - start < 500) {
+          setTimeout(() => hideModal('loading'), 1000);
+        } else {
+          hideModal('loading');
+        }
       }
     };
 

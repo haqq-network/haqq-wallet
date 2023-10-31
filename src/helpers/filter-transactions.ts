@@ -1,9 +1,7 @@
-import {Results} from 'realm';
-
 import {Transaction} from '@app/models/transaction';
 
 export const filterTransactions = (
-  transactions: Results<Transaction>,
+  transactions: Transaction[],
   providerId: string,
 ) => {
   return transactions.filter(

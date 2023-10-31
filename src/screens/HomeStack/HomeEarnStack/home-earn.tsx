@@ -1,6 +1,7 @@
-import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {useFocusEffect} from '@react-navigation/native';
+import {observer} from 'mobx-react';
 
 import {HomeEarn} from '@app/components/home-earn';
 import {Loading} from '@app/components/ui';
@@ -12,7 +13,7 @@ import {Events} from '@app/events';
 import {getUid} from '@app/helpers/get-uid';
 import {prepareRaffles} from '@app/helpers/prepare-raffles';
 import {sumReduce} from '@app/helpers/staking';
-import {useTypedNavigation, useWalletsVisible} from '@app/hooks';
+import {useTypedNavigation} from '@app/hooks';
 import {
   StakingMetadata,
   StakingMetadataType,
@@ -34,16 +35,16 @@ const initData = {
   loading: true,
 };
 
-export const HomeEarnScreen = memo(() => {
+export const HomeEarnScreen = observer(() => {
   const navigation = useTypedNavigation<HomeEarnStackParamList>();
-  const visible = useWalletsVisible();
+  const visible = Wallet.getAllVisible();
   const [raffles, setRaffles] = useState<null | Raffle[]>(null);
   const [isRafflesLoading, setIsRafflesLoading] = useState<boolean>(false);
 
   const [data, setData] = useState({
     ...initData,
     availableSum: visible.reduce(
-      (acc, w) => acc.operate(app.getBalance(w.address), 'add'),
+      (acc, w) => acc.operate(app.getAvailableBalance(w.address), 'add'),
       Balance.Empty,
     ),
   });
@@ -76,7 +77,7 @@ export const HomeEarnScreen = memo(() => {
       const stakingSum = sumReduce(delegations);
       const unDelegationSum = sumReduce(unDelegations);
       const availableSum = visible.reduce(
-        (acc, w) => acc.operate(app.getBalance(w.address), 'add'),
+        (acc, w) => acc.operate(app.getAvailableBalance(w.address), 'add'),
         Balance.Empty,
       );
 

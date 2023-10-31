@@ -5,7 +5,7 @@ export function parseJwt<T extends Record<string, any>>(token: string): T {
 
   const base64Data = base64
     .decode(base64Url.replace(/-/g, '+').replace(/_/g, '/'))
-    .replace(/\u0000*$/, '');
+    .replace(/\0/g, '');
 
   const jsonPayload = decodeURIComponent(
     base64Data

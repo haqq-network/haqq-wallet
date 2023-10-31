@@ -18,7 +18,7 @@ import {
   TransactionStackRoutes,
 } from '@app/screens/HomeStack/TransactionStack';
 import {EthNetwork} from '@app/services';
-import {AdjustEvents} from '@app/types';
+import {AdjustEvents, ModalType} from '@app/types';
 
 export const TransactionLedgerScreen = memo(() => {
   const transport = useRef<ProviderInterface | null>(null);
@@ -34,7 +34,7 @@ export const TransactionLedgerScreen = memo(() => {
 
   useEffect(() => {
     const subscription = (modal: string) => {
-      if (modal === 'ledgerLocked') {
+      if (modal === ModalType.ledgerLocked) {
         navigation.goBack();
       }
     };
@@ -48,7 +48,7 @@ export const TransactionLedgerScreen = memo(() => {
 
   const tryToSingTransaction = useCallback(async () => {
     const wallet = Wallet.getById(route.params.from);
-    if (wallet && wallet.isValid()) {
+    if (wallet) {
       try {
         await awaitForBluetooth();
 
@@ -75,6 +75,7 @@ export const TransactionLedgerScreen = memo(() => {
           navigation.navigate(TransactionStackRoutes.TransactionFinish, {
             transaction,
             hash: transaction.hash,
+            token: route.params.token,
           });
         }
       } catch (e) {
@@ -83,7 +84,7 @@ export const TransactionLedgerScreen = memo(() => {
             e.message === 'can_not_connected' ||
             e.message === 'ledger_locked'
           ) {
-            showModal('ledgerLocked');
+            showModal(ModalType.ledgerLocked);
           } else {
             navigation.goBack();
           }

@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 
 import {formatDistance} from 'date-fns';
 
@@ -22,7 +22,8 @@ import {CURRENCY_NAME} from '@app/variables/common';
 export type StakingDelegateFormProps = {
   balance: Balance;
   onAmount: (amount: number) => void;
-  fee: Balance;
+  fee: Balance | null;
+  setFee: (amount?: string) => void;
   unboundingTime: number;
 };
 
@@ -31,6 +32,7 @@ export const StakingUnDelegateForm = ({
   balance,
   onAmount,
   fee,
+  setFee,
 }: StakingDelegateFormProps) => {
   const amounts = useSumAmount(Balance.Empty, balance);
 
@@ -47,6 +49,23 @@ export const StakingUnDelegateForm = ({
     amounts.setMax();
   }, [amounts]);
 
+  useEffect(() => {
+    setFee(amounts.amount);
+  }, [setFee, amounts.amount]);
+
+  useEffect(() => {
+    const INPUT_PRECISION = 3;
+    const first = new Balance(+amounts.amount, INPUT_PRECISION)
+      .toEther()
+      .toPrecision(INPUT_PRECISION);
+    const second = new Balance(amounts.maxAmount, INPUT_PRECISION)
+      .toEther()
+      .toPrecision(INPUT_PRECISION);
+    if (first >= second) {
+      amounts.setMax();
+    }
+  }, [fee, amounts.maxAmount.toHex()]);
+
   return (
     <KeyboardSafeArea isNumeric style={styles.container}>
       <Spacer centered>
@@ -59,7 +78,7 @@ export const StakingUnDelegateForm = ({
           onMax={onPressMax}
         />
       </Spacer>
-      <NetworkFee fee={fee} />
+      <NetworkFee fee={fee} currency="ISLM" />
       <Spacer height={16} />
       <InfoBlock
         warning
@@ -69,7 +88,7 @@ export const StakingUnDelegateForm = ({
       />
       <Spacer height={16} />
       <Button
-        disabled={!amounts.isValid}
+        disabled={!amounts.isValid || fee === null}
         variant={ButtonVariant.contained}
         i18n={I18N.stakingUnDelegateFormPreview}
         onPress={onDone}

@@ -27,7 +27,8 @@ export type StakingDelegatePreviewProps = {
   amount: number;
   fee: Balance;
   validator: ValidatorItem;
-  error?: string;
+  error: string;
+  errorDetails: string;
   disabled: boolean;
   onSend: () => void;
 };
@@ -37,6 +38,7 @@ export const StakingDelegatePreview = ({
   fee,
   validator,
   error,
+  errorDetails,
   disabled,
   unboundingTime,
   onSend,
@@ -63,9 +65,15 @@ export const StakingDelegatePreview = ({
         color={Color.textBase2}
         style={styles.subtitle}
       />
-      <Text t3 center style={styles.sum}>
-        {cleanNumber(amount)} ISLM
-      </Text>
+      <Text
+        t3
+        center
+        style={styles.sum}
+        i18n={I18N.amountISLM}
+        i18params={{
+          amount: cleanNumber(amount),
+        }}
+      />
       <Text
         t11
         center
@@ -87,12 +95,12 @@ export const StakingDelegatePreview = ({
         </DataView>
         <DataView label={getText(I18N.stakingDelegatePreviewNetworkFee)}>
           <Text t11 color={getColor(Color.textBase1)}>
-            {fee.toWeiString()}
+            {fee.toBalanceString(8)}
           </Text>
         </DataView>
       </View>
       {error && (
-        <ErrorText center e0>
+        <ErrorText center e0 errorDetails={errorDetails}>
           {error}
         </ErrorText>
       )}

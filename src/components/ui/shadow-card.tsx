@@ -7,11 +7,13 @@ import {createTheme} from '@app/helpers';
 
 type Props = {
   children: ReactNode;
+  disablePadding?: boolean;
 } & TouchableOpacityProps;
 
 export const ShadowCard = ({
   style,
   disabled = false,
+  disablePadding = false,
   children,
   onPress,
   ...props
@@ -21,7 +23,12 @@ export const ShadowCard = ({
       {...props}
       onPress={onPress}
       disabled={disabled || !onPress}
-      style={[styles.wrapper, style, disabled && styles.disabledShadow]}>
+      style={[
+        styles.wrapper,
+        style,
+        disabled && styles.disabledShadow,
+        disablePadding && styles.disablePadding,
+      ]}>
       {children}
     </TouchableOpacity>
   );
@@ -51,5 +58,8 @@ const styles = createTheme({
     shadowRadius: 0,
     shadowOpacity: 0,
     elevation: 0,
+  },
+  disablePadding: {
+    paddingVertical: 0,
   },
 });

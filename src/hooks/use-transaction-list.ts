@@ -1,61 +1,45 @@
 import {useCallback, useEffect, useState} from 'react';
 
-import {Collection, CollectionChangeSet} from 'realm';
-
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {prepareTransactions} from '@app/helpers';
+import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {Transaction} from '@app/models/transaction';
 import {TransactionList} from '@app/types';
 
 /**
  * @example
- *  const adressList = useMemo(() => Wallet.addressList(), []);
- *  const transactionsList = useTransactionList(adressList);
+ *  const addressList = useMemo(() => Wallet.addressList(), []);
+ *  const transactionsList = useTransactionList(addressList);
  */
-export function useTransactionList(adressList: string[]) {
-  const [transactionsList, setTransactionsList] = useState<TransactionList[]>(
+export function useTransactionList(addressList: string[]) {
+  const [transactionList, setTransactionList] = useState<TransactionList[]>(
     prepareTransactions(
-      adressList,
-      Transaction.getAllByProviderId(app.providerId).snapshot(),
+      addressList,
+      Transaction.getAllByProviderId(app.providerId),
     ),
   );
 
-  const updateTransactionsList = useCallback(() => {
-    const transactions = Transaction.getAllByProviderId(app.providerId);
-    setTransactionsList(
-      prepareTransactions(adressList, transactions.snapshot()),
-    );
-  }, [adressList]);
-
-  const onTransactionsList = useCallback(
-    (collection: Collection<Transaction>, changes: CollectionChangeSet) => {
-      if (
-        changes.insertions.length ||
-        changes.newModifications.length ||
-        changes.deletions.length
-      ) {
-        updateTransactionsList();
-      }
+  const updateTransactions = useCallback(
+    async (address: string) => {
+      await awaitForEventDone(Events.onTransactionsLoad, address);
+      const transactions = Transaction.getAllByProviderId(app.providerId);
+      setTransactionList(prepareTransactions(addressList, transactions));
     },
-    [updateTransactionsList],
+    [addressList],
   );
 
-  useEffect(() => {
-    const transactions = Transaction.getAllByProviderId(app.providerId);
-    transactions.addListener(onTransactionsList);
-    return () => {
-      transactions.removeListener(onTransactionsList);
-    };
-  }, [onTransactionsList]);
+  const fetchTransactions = useCallback(() => {
+    addressList.forEach(address => updateTransactions(address));
+  }, [addressList, updateTransactions]);
 
   useEffect(() => {
-    app.on(Events.onProviderChanged, updateTransactionsList);
+    app.on(Events.onProviderChanged, fetchTransactions);
 
     return () => {
-      app.off(Events.onProviderChanged, updateTransactionsList);
+      app.off(Events.onProviderChanged, fetchTransactions);
     };
-  }, [updateTransactionsList]);
+  }, [addressList, fetchTransactions]);
 
-  return transactionsList;
+  return transactionList;
 }

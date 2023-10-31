@@ -3,6 +3,7 @@ import {Platform} from 'react-native';
 import {Easing} from 'react-native-reanimated';
 
 import {PushNotificationTopicsEnum} from '@app/services/push-notifications';
+import {HexNumber, JsonRpcMetadata, Link} from '@app/types';
 
 export const LIGHT_TEXT_BASE_1 = '#2E312D';
 export const DARK_TEXT_BASE_1 = '#FFFFFF';
@@ -247,10 +248,14 @@ export const LIGHT_DISCORD_TEXT = '#FFFFFF';
 export const DARK_DISCORD_BG = '#FFFFFF';
 export const LIGHT_DISCORD_BG = '#603ACB';
 
+export const CARD_ACTION_CONTAINER_BG = 'rgba(255, 255, 255, 0.15)';
+
 export const SPLASH_TIMEOUT_MS = 30_000;
 export const AWAIT_NEW_BLOCK_MS = 10_000;
 
 export const STORE_REHYDRATION_TIMEOUT_MS = 2000;
+
+export const DEFAULT_FEE = 7;
 
 export const HAQQ_DYNAMIC_LINKS_HOSTNAME = [
   'haqq.page.link',
@@ -262,3 +267,42 @@ export const NEWS_TOPIC_VARIABLE_NAME = `notificationsTopic:${PushNotificationTo
 export const RAFFLE_TOPIC_VARIABLE_NAME = `notificationsTopic:${PushNotificationTopicsEnum.raffle}`;
 
 export const DEFAULT_GOVERNANCE_LINK = 'https://shell.haqq.network/governance';
+
+export const ZERO_HEX_NUMBER: HexNumber = '0x0';
+export const FEE_ESTIMATING_TIMEOUT_MS = 5_000;
+
+export const HAQQ_METADATA: JsonRpcMetadata = {
+  url: 'https://haqq.network',
+  iconUrl: 'https://haqq.network/icon.png',
+};
+
+export const TESTEDGE2_ETH_CHAIN_ID = 54211;
+export const MAINNET_ETH_CHAIN_ID = 11235;
+
+export const TEST_URLS: Partial<Link>[] = [
+  {
+    title: 'HAQQ Dashboard',
+    url: 'https://shell.haqq.network',
+    icon: 'https://shell.haqq.network/assets/favicon.png',
+  },
+  {
+    title: 'HAQQ Vesting',
+    url: 'https://vesting.haqq.network',
+    icon: 'https://vesting.haqq.network/assets/favicon.svg',
+  },
+  {title: 'MuslimGocci', url: 'https://muslimgocci.app'},
+  {
+    title: 'metamask test dapp',
+    url: 'https://metamask.github.io/test-dapp/',
+  },
+  {title: 'HAQQ Faucet', url: 'https://testedge2.haqq.network'},
+  {title: 'app uniswap', url: 'https://app.uniswap.org'},
+  {title: 'safe', url: 'https://safe.testedge2.haqq.network'},
+  {
+    title: 'ChainList app',
+    url: 'https://chainlist.org/',
+  },
+];
+
+export const DEVELOPER_MODE_DOCS =
+  'https://github.com/haqq-network/haqq-wallet/blob/main/docs/developer-mode.md';

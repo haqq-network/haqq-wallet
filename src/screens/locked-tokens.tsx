@@ -1,58 +1,33 @@
 import React, {useCallback, useMemo} from 'react';
 
+import {observer} from 'mobx-react';
+
 import {LockedTokens} from '@app/components/locked-tokens';
-import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
-import {useTypedNavigation, useWalletsVisible} from '@app/hooks';
+import {useTypedNavigation} from '@app/hooks';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
-import {useWalletsStakingBalance} from '@app/hooks/use-wallets-staking-balance';
-import {Balance} from '@app/services/balance';
+import {Wallet} from '@app/models/wallet';
+import {calculateBalances} from '@app/utils';
 
-export function LockedTokensWrapper() {
-  const visible = useWalletsVisible();
+export const LockedTokensWrapper = observer(() => {
+  const visible = Wallet.getAllVisible();
   const balances = useWalletsBalance(visible);
-  const stakingBalances = useWalletsStakingBalance(visible);
+  const calculatedBalance = useMemo(
+    () => calculateBalances(balances, visible),
+    [balances, visible],
+  );
+
   const navigation = useTypedNavigation();
-  const availableBalance = useMemo(
-    () =>
-      Object.values(balances).reduce(
-        (prev, curr) => prev?.operate(curr, 'add'),
-        Balance.Empty,
-      ) ?? Balance.Empty,
-    [balances],
-  );
-
-  const lockedBalance = useMemo(
-    () =>
-      Object.values(stakingBalances).reduce(
-        (prev, curr) => prev?.operate(curr, 'add'),
-        Balance.Empty,
-      ) ?? Balance.Empty,
-    [stakingBalances],
-  );
-
-  const totalBalance = useMemo(
-    () => availableBalance?.operate(lockedBalance, 'add'),
-    [availableBalance, lockedBalance],
-  );
 
   const onForwardPress = useCallback(
     () => navigation.navigate('totalValueInfo'),
     [navigation],
   );
 
-  if (
-    visible.length <= 1 ||
-    !isFeatureEnabled(Feature.lockedStakedVestedTokens)
-  ) {
+  if (visible.length <= 1) {
     return null;
   }
 
   return (
-    <LockedTokens
-      availableBalance={availableBalance}
-      lockedBalance={lockedBalance}
-      totalBalance={totalBalance}
-      onForwardPress={onForwardPress}
-    />
+    <LockedTokens balance={calculatedBalance} onForwardPress={onForwardPress} />
   );
-}
+});

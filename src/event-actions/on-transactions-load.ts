@@ -1,10 +1,11 @@
 import {Events} from '@app/events';
 import {calcFee} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
+import {getExplorerInstanceForProvider} from '@app/helpers/explorer-instance';
 import {Provider} from '@app/models/provider';
-import {Transaction} from '@app/models/transaction';
+import {Transaction, TransactionStatus} from '@app/models/transaction';
 import {Balance} from '@app/services/balance';
-import {fetchWithTimeout, getHttpResponse} from '@app/utils';
+import {ExplorerTransaction} from '@app/types';
 
 export async function onTransactionsLoad(address: string) {
   const providers = Provider.getAll().filter(p => !!p.explorer);
@@ -36,27 +37,24 @@ async function loadTransactionsFromExplorerWithProvider(
 ) {
   try {
     const p = Provider.getById(providerId);
+    const explorer = getExplorerInstanceForProvider(providerId);
+    const rows = await explorer.accountTxList(address);
 
-    if (!p?.explorer) {
+    if (!rows.result) {
       return [];
     }
 
-    const txList = await fetchWithTimeout(
-      `${p.explorer}api?module=account&action=txlist&address=${address}`,
-      {
-        headers: {
-          accept: 'application/json',
-        },
-        timeout: 10000,
-      },
-    );
-
-    const rows = await getHttpResponse(txList);
-
     return rows.result
-      .filter((row: any) => !Transaction.getById(row.hash))
-      .map((row: any) => ({
-        row: {...row, chainId: String(p?.ethChainId)},
+      .filter(row => {
+        const tx = Transaction.getById(row.hash);
+        return tx && tx.status !== getTransactionStatus(row);
+      })
+      .map(row => ({
+        row: {
+          ...row,
+          chainId: String(p?.ethChainId),
+          status: getTransactionStatus(row),
+        },
         providerId,
         fee: calcFee(row.gasPrice, row.gasUsed),
         timeStamp: Number(row.timeStamp),
@@ -66,3 +64,13 @@ async function loadTransactionsFromExplorerWithProvider(
     return [];
   }
 }
+
+const getTransactionStatus = (tx: ExplorerTransaction): TransactionStatus => {
+  if (tx.txreceipt_status === '0') {
+    return TransactionStatus.inProgress;
+  }
+  if (tx.isError === '0') {
+    return TransactionStatus.success;
+  }
+  return TransactionStatus.failed;
+};

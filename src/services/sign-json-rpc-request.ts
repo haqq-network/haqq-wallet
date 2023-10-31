@@ -1,13 +1,11 @@
 import {TransactionRequest} from '@haqq/provider-base';
+import {getSdkError} from '@walletconnect/utils';
 
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
-import {
-  awaitForLedger,
-  getProviderInstanceForWallet,
-  hideModal,
-} from '@app/helpers';
+import {getProviderInstanceForWallet, hideModal} from '@app/helpers';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
+import {I18N, getText} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {getDefaultNetwork} from '@app/network';
@@ -19,6 +17,13 @@ import {
   isEthTypedData,
 } from '@app/utils';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
+
+const logger = Logger.create('SignJsonRpcRequest', {
+  enabled:
+    DEBUG_VARS.enableWalletConnectLogger ||
+    DEBUG_VARS.enableAwaitJsonRpcSignLogger ||
+    DEBUG_VARS.enableWeb3BrowserLogger,
+});
 
 export class SignJsonRpcRequest {
   /**
@@ -86,17 +91,13 @@ export class SignJsonRpcRequest {
     }
 
     if (!wallet) {
-      throw new Error(
-        '[SignJsonRpcRequest:SignJsonRpcRequest]: wallet is undefined',
-      );
+      throw new Error(getText(I18N.jsonRpcErrorInvalidWallet));
     }
 
     const instanceProvider = await getProviderInstanceForWallet(wallet);
 
     if (!instanceProvider) {
-      throw new Error(
-        '[SignJsonRpcRequest:SignJsonRpcRequest]: provider is undefined',
-      );
+      throw new Error(getText(I18N.jsonRpcErrorInvalidProvider));
     }
 
     const provider = chainId && Provider.getByEthChainId(chainId);
@@ -104,12 +105,6 @@ export class SignJsonRpcRequest {
     const rpcProvider = provider
       ? await getRpcProvider(provider)
       : getDefaultNetwork();
-
-    const checkLedger = async () => {
-      if ((wallet as Wallet)?.type === WalletType.ledgerBt) {
-        await awaitForLedger(instanceProvider);
-      }
-    };
 
     const path = wallet.path || '/';
     let result: string | undefined;
@@ -129,7 +124,6 @@ export class SignJsonRpcRequest {
           path,
           message,
         );
-        await checkLedger();
         result = await signPersonalMessageResult;
         break;
       case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA:
@@ -146,7 +140,6 @@ export class SignJsonRpcRequest {
             typedData.types,
             typedData.message,
           );
-          await checkLedger();
           const signedMessageHash = await signTypedDataResult;
 
           if (wallet.type === WalletType.ledgerBt) {
@@ -155,7 +148,7 @@ export class SignJsonRpcRequest {
             result = `0x${signedMessageHash}`;
           }
         } else {
-          throw new Error('unsupported typed data params');
+          throw new Error(getText(I18N.jsonRpcErrorInvalidParams));
         }
         break;
       case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:
@@ -206,13 +199,10 @@ export class SignJsonRpcRequest {
           path,
           signTransactionRequest,
         );
-        await checkLedger();
         result = await signTransactionResult;
         break;
       default:
-        throw new Error(
-          '[SignJsonRpcRequest:signEIP155Request]: INVALID_METHOD',
-        );
+        throw getSdkError('UNSUPPORTED_METHODS', request.method);
     }
 
     if (wallet.type === WalletType.ledgerBt) {
@@ -220,14 +210,10 @@ export class SignJsonRpcRequest {
     }
 
     if (!result) {
-      throw new Error(
-        '[SignJsonRpcRequest:signEIP155Request]: result is undefined',
-      );
+      throw new Error('sign result is undefined');
     }
 
-    if (DEBUG_VARS.enableWalletConnectLogger) {
-      Logger.log('✅ signEIP155Request result:', result, result.length);
-    }
+    logger.log('✅ signEIP155Request result:', result, result.length);
 
     return result;
   }

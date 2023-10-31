@@ -20,7 +20,7 @@ export const ProposalDepositFormScreen = memo(() => {
   const [balance, setBalance] = useState(Balance.Empty);
 
   useEffect(() => {
-    const newBalance = app.getBalance(account);
+    const newBalance = app.getAvailableBalance(account);
     setBalance(newBalance);
   }, [account]);
 

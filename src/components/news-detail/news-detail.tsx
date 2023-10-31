@@ -1,8 +1,8 @@
 import React, {useCallback, useEffect, useRef} from 'react';
 
 import {format} from 'date-fns';
-import {head, includes, some} from 'lodash';
-import {Image, View} from 'react-native';
+import {head, includes} from 'lodash';
+import {Dimensions, Image, TextStyle, View} from 'react-native';
 import {NativeScrollEvent} from 'react-native/Libraries/Components/ScrollView/ScrollView';
 import {NativeSyntheticEvent} from 'react-native/Libraries/Types/CoreEventTypes';
 import Markdown from 'react-native-markdown-package';
@@ -14,6 +14,7 @@ import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {createTheme, openURL} from '@app/helpers';
 import {News} from '@app/models/news';
 import {AdjustEvents} from '@app/types';
+import {makeID} from '@app/utils';
 
 type NodeImage = {
   alt: string;
@@ -69,7 +70,11 @@ const rules = {
   heading: {
     react: (node: NodeHeading, output: Output, {...state}) => {
       return (
-        <Text t7 style={styles.heading} color={Color.textBase1} key={state.key}>
+        <Text
+          t7
+          style={styles.heading}
+          color={Color.textBase1}
+          key={makeID(10)}>
           {output(node.content, {
             ...state,
             withinText: true,
@@ -80,38 +85,28 @@ const rules = {
     },
   },
   image: {
-    react: (node: NodeImage, output: Output, {...state}) => {
+    react: (node: NodeImage) => {
       return (
-        <Image
-          key={state.key}
-          source={{uri: node.target}}
-          style={styles.image}
-          resizeMode="center"
-        />
+        <View key={makeID(10)} style={styles.imageWrapper}>
+          <Image
+            source={{uri: node.target}}
+            style={styles.image}
+            resizeMode="center"
+          />
+        </View>
       );
     },
   },
   paragraph: {
     react: (node: NodeParagraph, output: Output, {...state}) => {
-      if (some(node.content, {type: 'image'})) {
-        return (
-          <>
-            {output(node.content, {
-              ...state,
-            })}
-          </>
-        );
-      }
-
       return (
         <Text
           t11
           style={styles.paragraph}
           color={Color.textBase1}
-          key={state.key}>
+          key={makeID(10)}>
           {output(node.content, {
             ...state,
-            withinParagraphWithImage: false,
           })}
         </Text>
       );
@@ -119,12 +114,12 @@ const rules = {
   },
   text: {
     react: (node: NodeText, output: Output, {...state}) => {
-      let textStyle = {
+      let textStyle: TextStyle = {
         ...(state.style || {}),
       };
 
       return (
-        <Text clean key={state.key} style={textStyle}>
+        <Text clean key={makeID(10)} style={textStyle} color={Color.textBase1}>
           {node.content}
         </Text>
       );
@@ -133,7 +128,7 @@ const rules = {
   list: {
     react: function (node: NodeList, output: Output, {...state}) {
       let numberIndex = 1;
-      const items = node.items.map((item, i) => {
+      const items = node.items.map(item => {
         state.withinList = false;
 
         if (item.length > 1) {
@@ -151,25 +146,25 @@ const rules = {
           state.withinList = true;
 
           listItem = (
-            <Text t11 key={1}>
+            <Text t11 key={makeID(10)}>
               {content}
             </Text>
           );
         } else {
-          listItem = <View key={1}>{content}</View>;
+          listItem = <View key={makeID(10)}>{content}</View>;
         }
         state.withinList = false;
 
         return (
-          <View key={i} style={styles.listRow}>
-            <Text key={0} t11>
+          <View key={makeID(10)} style={styles.listRow}>
+            <Text key={makeID(10)} t11>
               {node.ordered ? numberIndex++ + '. ' : '\u2022 '}
             </Text>
             {listItem}
           </View>
         );
       });
-      return <View key={state.key}>{items}</View>;
+      return <View key={makeID(10)}>{items}</View>;
     },
   },
   link: {
@@ -188,7 +183,11 @@ const rules = {
         await openURL(node.target);
       };
       return (
-        <Text t11 onPress={_pressHandler} key={state.key} color={'blue'}>
+        <Text
+          t11
+          onPress={_pressHandler}
+          key={makeID(10)}
+          color={Color.textGreen1}>
           {output(node.content, {...state, withinLink: true})}
         </Text>
       );
@@ -251,10 +250,10 @@ export const NewsDetail = ({item}: NewsDetailProps) => {
   );
 };
 
+const HORIZONTAL_PADDING = 20;
+
 const styles = createTheme({
-  container: {
-    paddingHorizontal: 20,
-  },
+  container: {paddingHorizontal: HORIZONTAL_PADDING},
   preview: {
     aspectRatio: 16 / 9,
     width: '100%',
@@ -262,7 +261,7 @@ const styles = createTheme({
   },
   image: {
     height: 200,
-    flex: 1,
+    width: Dimensions.get('window').width - HORIZONTAL_PADDING * 2,
     borderRadius: 12,
     borderWidth: 1,
     borderColor: Color.graphicSecond1,
@@ -274,17 +273,14 @@ const styles = createTheme({
     flexDirection: 'row',
     marginBottom: 6,
   },
+  imageWrapper: {paddingTop: 28},
 });
 
 const markdownStyle = createTheme({
   // eslint-disable-next-line react-native/no-unused-styles
-  strong: {
-    textAlign: 'left',
-  },
+  strong: {textAlign: 'left'},
   // eslint-disable-next-line react-native/no-unused-styles
-  blockQuoteSection: {
-    flexDirection: 'row',
-  },
+  blockQuoteSection: {flexDirection: 'row'},
   // eslint-disable-next-line react-native/no-unused-styles
   blockQuoteSectionBar: {
     width: 3,

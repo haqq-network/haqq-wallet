@@ -1,42 +1,22 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback} from 'react';
 
-import {SessionTypes} from '@walletconnect/types';
+import {observer} from 'mobx-react';
 
 import {Wallets} from '@app/components/wallets';
+import {app} from '@app/contexts';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useTypedNavigation} from '@app/hooks';
-import {useWalletConnectSessions} from '@app/hooks/use-wallet-connect-sessions';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
-import {useWalletsStakingBalance} from '@app/hooks/use-wallets-staking-balance';
-import {useWalletsVestingBalance} from '@app/hooks/use-wallets-vesting-balance';
-import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
+import {Wallet} from '@app/models/wallet';
 import {HomeStackRoutes} from '@app/screens/HomeStack';
 import {HomeFeedStackParamList} from '@app/screens/HomeStack/HomeFeedStack';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {filterWalletConnectSessionsByAddress} from '@app/utils';
 
-export const WalletsWrapper = () => {
+export const WalletsWrapper = observer(() => {
   const navigation = useTypedNavigation<HomeFeedStackParamList>();
-  const visible = useWalletsVisible();
+  const visible = Wallet.getAllVisible();
   const balance = useWalletsBalance(visible);
-  const stakingBalance = useWalletsStakingBalance(visible);
-  const vestingBalance = useWalletsVestingBalance(visible);
-  const {activeSessions} = useWalletConnectSessions();
-  const [walletConnectSessions, setWalletConnectSessions] = useState<
-    SessionTypes.Struct[][]
-  >([]);
-  const showLockedTokens = useMemo(
-    () => isFeatureEnabled(Feature.lockedStakedVestedTokens),
-    [],
-  );
-
-  useEffect(() => {
-    setWalletConnectSessions(
-      visible.map(wallet =>
-        filterWalletConnectSessionsByAddress(activeSessions, wallet.address),
-      ),
-    );
-  }, [visible, activeSessions]);
 
   const onPressSend = useCallback(
     (address: string) => {
@@ -53,8 +33,9 @@ export const WalletsWrapper = () => {
   );
 
   const onPressProtection = useCallback(
-    (accountId: string) => {
+    async (accountId: string) => {
       if (isFeatureEnabled(Feature.sss)) {
+        await app.auth();
         navigation.navigate(HomeStackRoutes.WalletProtectionPopup, {accountId});
       } else {
         navigation.navigate(HomeStackRoutes.Backup, {accountId});
@@ -119,10 +100,7 @@ export const WalletsWrapper = () => {
     <Wallets
       balance={balance}
       wallets={visible}
-      walletConnectSessions={walletConnectSessions}
-      showLockedTokens={showLockedTokens}
-      stakingBalance={stakingBalance}
-      vestingBalance={vestingBalance}
+      showLockedTokens
       onPressWalletConnect={onPressWalletConnect}
       onPressSend={onPressSend}
       onPressLedger={onPressLedger}
@@ -134,4 +112,4 @@ export const WalletsWrapper = () => {
       testID="wallets"
     />
   );
-};
+});

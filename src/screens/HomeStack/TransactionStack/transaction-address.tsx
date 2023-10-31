@@ -1,16 +1,19 @@
-import React, {memo, useCallback, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
+
+import {observer} from 'mobx-react';
 
 import {TransactionAddress} from '@app/components/transaction-address';
-import {useTypedNavigation, useTypedRoute, useWalletsVisible} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {Contact} from '@app/models/contact';
+import {Wallet} from '@app/models/wallet';
 import {
   TransactionStackParamList,
   TransactionStackRoutes,
 } from '@app/screens/HomeStack/TransactionStack';
 import {Balance} from '@app/services/balance';
 
-export const TransactionAddressScreen = memo(() => {
+export const TransactionAddressScreen = observer(() => {
   const navigation = useTypedNavigation<TransactionStackParamList>();
   useAndroidBackHandler(() => {
     navigation.goBack();
@@ -22,7 +25,7 @@ export const TransactionAddressScreen = memo(() => {
   >();
 
   const [loading, setLoading] = React.useState(false);
-  const wallets = useWalletsVisible();
+  const wallets = Wallet.getAllVisible();
   const contacts = useRef(Contact.getAll()).current;
 
   const [address, setAddress] = useState(route.params?.to || '');
@@ -32,12 +35,15 @@ export const TransactionAddressScreen = memo(() => {
     }
 
     if (!address) {
-      return wallets.snapshot();
+      return wallets;
     }
 
-    return wallets
-      .filtered('address CONTAINS[c] $0 or name CONTAINS[c] $0', address)
-      .snapshot();
+    const lowerCaseAddress = address.toLowerCase();
+    return wallets.filter(
+      w =>
+        w.address.toLowerCase().includes(lowerCaseAddress) ||
+        w.name.toLowerCase().includes(lowerCaseAddress),
+    );
   }, [address, wallets]);
 
   const onDone = useCallback(
@@ -67,7 +73,7 @@ export const TransactionAddressScreen = memo(() => {
           setLoading(false);
         }
       } else {
-        navigation.navigate(TransactionStackRoutes.TransactionSum, {
+        navigation.navigate(TransactionStackRoutes.TransactionSelectCrypto, {
           from: route.params.from,
           to: result,
         });

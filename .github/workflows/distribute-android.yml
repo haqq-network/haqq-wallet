@@ -17,13 +17,6 @@ on:
           - true
           - false
 
-      IS_STAKED_VESTED_ENABLED:
-        type: choice
-        description: IS_STAKED_VESTED_ENABLED
-        options:
-          - true
-          - false
-
   workflow_call:
     inputs:
       IS_DEVELOPMENT:
@@ -32,14 +25,11 @@ on:
       IS_SSS_ENABLED:
         required: true
         type: string
-      IS_STAKED_VESTED_ENABLED:
-        required: true
-        type: string
 
 jobs:
   build:
     name: Build and distribute Android app
-    runs-on: [self-hosted, android]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -55,9 +45,9 @@ jobs:
           key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-gems-
-      #       - uses: ruby/setup-ruby@v1
-      #         with:
-      #           ruby-version: '3.2.0'
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2.0'
       - name: Decode secrets
         run: |
           echo ${{secrets.HAQQ_KEYSTORE}} | base64 -d > android/app/haqq-upload-key.keystore
@@ -81,7 +71,6 @@ jobs:
           echo "ADJUST_TOKEN=${{secrets.ADJUST_TOKEN}}" >> .env
           echo "ADJUST_ENVIRONMENT=${{secrets.ADJUST_ENVIRONMENT}}" >> .env
           echo "IS_SSS_ENABLED=${{github.event.inputs.IS_SSS_ENABLED}}" >> .env
-          echo "IS_STAKED_VESTED_ENABLED=${{github.event.inputs.IS_STAKED_VESTED_ENABLED}}" >> .env
           echo "GOOGLE_PLAY_PACKAGE=${{secrets.GOOGLE_PLAY_PACKAGE}}" >> .env
           echo "APPSTORE_APP_ID=${{secrets.APPSTORE_APP_ID}}" >> .env
           echo "TURNSTILE_URL=${{secrets.TURNSTILE_URL}}" >> .env

@@ -1,38 +1,41 @@
-import React, {memo, useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+
+import {observer} from 'mobx-react';
 
 import {StakingInfo} from '@app/components/staking-info';
 import {app} from '@app/contexts';
 import {
   abortProviderInstanceForWallet,
-  awaitForBluetooth,
-  awaitForLedger,
   awaitForPopupClosed,
   awaitForWallet,
   getProviderInstanceForWallet,
 } from '@app/helpers';
+import {getMinStakingRewardAmount} from '@app/helpers/get-min-staking-reward-amount';
+import {reduceAmounts} from '@app/helpers/staking';
 import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useMinAmount} from '@app/hooks/use-min-amount';
-import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {I18N} from '@app/i18n';
 import {
   StakingMetadata,
   StakingMetadataType,
 } from '@app/models/staking-metadata';
+import {Wallet} from '@app/models/wallet';
 import {
   HomeEarnStackParamList,
   HomeEarnStackRoutes,
 } from '@app/screens/HomeStack/HomeEarnStack';
 import {sendNotification} from '@app/services';
-import {WalletType} from '@app/types';
+import {Balance} from '@app/services/balance';
+import {ModalType, WalletType} from '@app/types';
 
-export const StakingInfoScreen = memo(() => {
+export const StakingInfoScreen = observer(() => {
   const {validator} = useTypedRoute<
     HomeEarnStackParamList,
     HomeEarnStackRoutes.StakingInfo
   >().params;
   const {operator_address} = validator;
   const navigation = useTypedNavigation<HomeEarnStackParamList>();
-  const visible = useWalletsVisible();
+  const visible = Wallet.getAllVisible();
   const cosmos = useCosmos();
   const minAmount = useMinAmount();
 
@@ -42,6 +45,18 @@ export const StakingInfoScreen = memo(() => {
   const [rewards, setRewards] = useState<StakingMetadata[]>([]);
   const [delegated, setDelegated] = useState<StakingMetadata[]>([]);
   const [undelegated, setUndelegated] = useState<StakingMetadata[]>([]);
+
+  const canGetRewards = useMemo(() => {
+    if (!rewards?.length) {
+      return false;
+    }
+
+    const totalRewards = reduceAmounts(rewards);
+    return new Balance(totalRewards).compare(
+      getMinStakingRewardAmount(),
+      'gte',
+    );
+  }, [rewards]);
 
   useEffect(() => {
     const r = StakingMetadata.getAllByValidator(operator_address);
@@ -70,8 +85,8 @@ export const StakingInfoScreen = memo(() => {
     };
   }, [visible]);
 
-  const onWithdrawDelegatorReward = useCallback(async () => {
-    if (rewards?.length) {
+  const onPressGetReward = useCallback(async () => {
+    if (canGetRewards) {
       setWithdrawDelegatorRewardProgress(true);
       const delegators = new Set(rewards.map(r => r.delegator));
       const exists = visible.filter(w => delegators.has(w.cosmosAddress));
@@ -97,7 +112,7 @@ export const StakingInfoScreen = memo(() => {
           const transport = await getProviderInstanceForWallet(current);
 
           try {
-            await awaitForBluetooth();
+            // await awaitForBluetooth();
 
             queue.push(
               cosmos
@@ -108,10 +123,10 @@ export const StakingInfoScreen = memo(() => {
                 )
                 .then(() => [current.cosmosAddress, operator_address]),
             );
-            await awaitForLedger(transport);
+            // await awaitForLedger(transport);
           } catch (e) {
             if (e === '27010') {
-              await awaitForPopupClosed('ledgerLocked');
+              await awaitForPopupClosed(ModalType.ledgerLocked);
             }
             transport.abort();
           }
@@ -150,11 +165,11 @@ export const StakingInfoScreen = memo(() => {
       sendNotification(I18N.stakingInfoRewardIsReceived);
       setWithdrawDelegatorRewardProgress(false);
     }
-  }, [cosmos, rewards, operator_address, visible]);
+  }, [canGetRewards, rewards, visible, cosmos, operator_address]);
 
   const onDelegate = useCallback(async () => {
     const available = visible.filter(
-      v => app.getBalance(v.address).toFloat() >= minAmount.toFloat(),
+      v => app.getAvailableBalance(v.address).toFloat() >= minAmount.toFloat(),
     );
 
     if (!available?.length) {
@@ -198,13 +213,14 @@ export const StakingInfoScreen = memo(() => {
   return (
     <StakingInfo
       withdrawDelegatorRewardProgress={withdrawDelegatorRewardProgress}
+      rewards={rewards}
       validator={validator}
+      delegations={delegated}
+      unDelegations={undelegated}
+      canGetRewards={canGetRewards}
       onDelegate={onDelegate}
       onUnDelegate={onUnDelegate}
-      onWithdrawDelegatorReward={onWithdrawDelegatorReward}
-      unDelegations={undelegated}
-      delegations={delegated}
-      rewards={rewards}
+      onPressGetReward={onPressGetReward}
     />
   );
 });

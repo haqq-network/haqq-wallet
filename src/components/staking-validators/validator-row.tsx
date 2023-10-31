@@ -3,7 +3,7 @@ import React, {useCallback, useMemo} from 'react';
 import {TouchableWithoutFeedback, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Icon, Text} from '@app/components/ui';
+import {Text} from '@app/components/ui';
 import {InfoBox} from '@app/components/ui/info-box';
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
@@ -12,6 +12,8 @@ import {useMinAmount} from '@app/hooks/use-min-amount';
 import {I18N} from '@app/i18n';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
 import {WEI} from '@app/variables/common';
+
+import {ValidatorAvatar} from './validator-avatar';
 
 export type ValidatorRowProps = {
   item: ValidatorItem;
@@ -27,6 +29,10 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
   const votingPower = useMemo(() => {
     return parseInt(item.tokens ?? '0', 10) / WEI;
   }, [item.tokens]);
+
+  const votingPowerPercents = useMemo(() => {
+    return item.power ? cleanNumber(item.power) : null;
+  }, [item.power]);
 
   const onPressRow = useCallback(() => {
     onPress(item);
@@ -49,21 +55,26 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
     <TouchableWithoutFeedback onPress={onPressRow}>
       <View>
         <View style={styles.container}>
-          <View style={styles.iconWrapper}>
-            <Icon name="servers" color={Color.graphicBase1} />
-          </View>
+          <ValidatorAvatar identity={item.description.identity} />
           <View style={styles.infoContainer}>
             <View style={styles.infoRow}>
               <Text t11>{item.description.moniker}</Text>
               <Text t11>{validatorCommission}%</Text>
             </View>
             <View style={styles.infoRow}>
-              <Text
-                t14
-                color={Color.textBase2}
-                i18n={I18N.stakingValidatorsRowPower}
-                i18params={{power: cleanNumber(votingPower)}}
-              />
+              <View style={styles.powerRow}>
+                <Text
+                  t14
+                  color={Color.textBase2}
+                  i18n={I18N.stakingValidatorsRowPower}
+                  i18params={{power: cleanNumber(votingPower)}}
+                />
+                {votingPowerPercents && (
+                  <Text t14 color={Color.textBase2}>
+                    {` · ${votingPowerPercents}%`}
+                  </Text>
+                )}
+              </View>
               <Text t14 color={textColor} i18n={item.localStatus as number} />
             </View>
           </View>
@@ -114,13 +125,8 @@ const styles = createTheme({
     justifyContent: 'space-between',
     marginVertical: 1,
   },
-  iconWrapper: {
-    width: 42,
-    height: 42,
-    backgroundColor: Color.bg3,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
+  powerRow: {
+    flexDirection: 'row',
   },
   badges: {
     flexDirection: 'row',

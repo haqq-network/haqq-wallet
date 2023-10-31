@@ -7,6 +7,7 @@ import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {LedgerStackParamList} from '@app/screens/WelcomeStack/LedgerStack';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {ModalType} from '@app/types';
 
 export const LedgerFinishScreen = memo(() => {
   const navigation = useTypedNavigation<LedgerStackParamList>();
@@ -19,7 +20,7 @@ export const LedgerFinishScreen = memo(() => {
   }, [navigation]);
 
   useEffect(() => {
-    hideModal('loading');
+    hideModal(ModalType.loading);
     vibrate(HapticEffects.success);
   }, []);
 

@@ -1,10 +1,13 @@
-import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+
+import {observer} from 'mobx-react';
 
 import {TransactionNftConfirmation} from '@app/components/transaction-nft-confirmation';
 import {abortProviderInstanceForWallet} from '@app/helpers/provider-instance';
-import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {Contact} from '@app/models/contact';
+import {Wallet} from '@app/models/wallet';
 import {
   TransactionStackParamList,
   TransactionStackRoutes,
@@ -12,7 +15,7 @@ import {
 import {Balance} from '@app/services/balance';
 
 // TODO:
-export const TransactionNftConfirmationScreen = memo(() => {
+export const TransactionNftConfirmationScreen = observer(() => {
   const navigation = useTypedNavigation<TransactionStackParamList>();
   const route = useTypedRoute<
     TransactionStackParamList,
@@ -22,7 +25,7 @@ export const TransactionNftConfirmationScreen = memo(() => {
     navigation.goBack();
     return true;
   }, [navigation]);
-  const wallet = useWallet(route.params.from);
+  const wallet = Wallet.getById(route.params.from);
   const contact = useMemo(
     () => Contact.getById(route.params.to),
     [route.params.to],
@@ -109,7 +112,7 @@ export const TransactionNftConfirmationScreen = memo(() => {
 
   useEffect(() => {
     return () => {
-      wallet && wallet.isValid() && abortProviderInstanceForWallet(wallet);
+      wallet && abortProviderInstanceForWallet(wallet);
     };
   }, [wallet]);
 

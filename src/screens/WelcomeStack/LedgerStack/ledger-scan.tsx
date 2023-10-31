@@ -16,6 +16,7 @@ import {
   LedgerStackParamList,
   LedgerStackRoutes,
 } from '@app/screens/WelcomeStack/LedgerStack';
+import {ModalType} from '@app/types';
 import {generateUUID} from '@app/utils';
 import {LEDGER_APP} from '@app/variables/common';
 
@@ -107,7 +108,7 @@ export const LedgerScanScreen = memo(() => {
 
       try {
         await suggestApp(transport, LEDGER_APP);
-        hideModal('ledgerNoApp');
+        hideModal(ModalType.ledgerNoApp);
         navigation.navigate(LedgerStackRoutes.LedgerAccounts, {
           deviceId: item.id,
           deviceName: `Ledger ${item.name}`,
@@ -164,7 +165,7 @@ export const LedgerScanScreen = memo(() => {
             case 'can_not_connected':
               break;
             case 'app_not_found':
-              showModal('ledgerNoApp', {
+              showModal(ModalType.ledgerNoApp, {
                 onRetry: () => {
                   return onRetry(item);
                 },

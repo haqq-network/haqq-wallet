@@ -4,8 +4,8 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {utils} from 'ethers';
 
 import {SettingsAddressBook} from '@app/components/settings-address-book';
-import {app} from '@app/contexts';
-import {hideModal, showModal} from '@app/helpers/modal';
+import {awaitForScanQr} from '@app/helpers/await-for-scan-qr';
+import {LinkType} from '@app/helpers/parse-deep-link';
 import {useTypedNavigation} from '@app/hooks';
 import {Contact} from '@app/models/contact';
 import {
@@ -13,6 +13,7 @@ import {
   AddressBookStackRoutes,
 } from '@app/screens/HomeStack/AddressStack';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {showUnrecognizedDataAttention} from '@app/utils';
 
 type SettingsAddressBookScreenProps = CompositeScreenProps<any, any>;
 
@@ -31,18 +32,20 @@ export const SettingsAddressBookScreen = memo(
       setCanAdd(add);
     }, [search]);
 
-    const onPressQR = useCallback(() => {
-      const subscription = ({to}: any) => {
-        if (utils.isAddress(to)) {
-          setSearch(to);
-          app.off('address', subscription);
-          hideModal('qr');
-        }
-      };
+    const onPressQR = useCallback(async () => {
+      const {type, params} = await awaitForScanQr();
 
-      app.on('address', subscription);
-
-      showModal('qr', {qrWithoutFrom: true});
+      switch (type) {
+        case LinkType.Haqq:
+        case LinkType.Address:
+        case LinkType.Etherium:
+          setSearch(params.address ?? '');
+          break;
+        case LinkType.WalletConnect:
+        case LinkType.Unrecognized:
+          showUnrecognizedDataAttention();
+          break;
+      }
     }, []);
 
     const onPressClear = useCallback(() => {

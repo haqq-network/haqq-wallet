@@ -15,7 +15,6 @@ import {HomeScreenTabBarIcon} from '@app/components/home-screen/tab-bar-icon';
 import {HomeScreenTitle} from '@app/components/home-screen/title';
 import {Spacer} from '@app/components/ui';
 import {useTypedNavigation} from '@app/hooks';
-import {useProvider} from '@app/hooks/use-provider';
 import {
   BrowserStack,
   BrowserStackRoutes,
@@ -100,7 +99,6 @@ const navigationOptions = {
 };
 
 export const HomeScreen = memo(() => {
-  const provider = useProvider();
   const navigation = useTypedNavigation();
   useEffect(() => {
     const subscription = (e: {
@@ -136,25 +134,23 @@ export const HomeScreen = memo(() => {
           })(route),
         })}
       />
-      {provider?.ethChainId && provider?.ethChainId !== 11235 && (
-        <Tab.Screen
-          name="homeBrowser"
-          component={BrowserStack}
-          options={({route}) => ({
-            ...browserOptions,
-            tabBarStyle: (routeA => {
-              const routeName = (getFocusedRouteNameFromRoute(routeA) ??
-                BrowserStackRoutes.BrowserHomePage) as BrowserStackRoutes;
-              if (routeName !== BrowserStackRoutes.BrowserHomePage) {
-                return {
-                  height: 0,
-                };
-              }
-              return screenOptions.tabBarStyle;
-            })(route),
-          })}
-        />
-      )}
+      <Tab.Screen
+        name="homeBrowser"
+        component={BrowserStack}
+        options={({route}) => ({
+          ...browserOptions,
+          tabBarStyle: (routeA => {
+            const routeName = (getFocusedRouteNameFromRoute(routeA) ??
+              BrowserStackRoutes.BrowserHomePage) as BrowserStackRoutes;
+            if (routeName !== BrowserStackRoutes.BrowserHomePage) {
+              return {
+                height: 0,
+              };
+            }
+            return screenOptions.tabBarStyle;
+          })(route),
+        })}
+      />
       <Tab.Screen
         name="homeNews"
         component={HomeNewsStack}

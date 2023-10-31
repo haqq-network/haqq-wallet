@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+import {useEffect, useLayoutEffect} from 'react';
 
 export const useEffectAsync = (
   effect: () => Promise<any> | void,
@@ -6,6 +6,14 @@ export const useEffectAsync = (
 ) => {
   useEffect(() => {
     effect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, inputs);
+};
+
+export const useLayoutEffectAsync = (
+  effect: () => Promise<any> | void,
+  inputs: any[],
+) => {
+  useLayoutEffect(() => {
+    effect();
   }, inputs);
 };

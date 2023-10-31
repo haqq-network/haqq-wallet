@@ -1,35 +1,44 @@
 import React, {memo, useMemo, useState} from 'react';
 
 import {SessionTypes} from '@walletconnect/types';
-import {View, useWindowDimensions} from 'react-native';
+import {
+  TouchableWithoutFeedback,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 
 import {Color} from '@app/colors';
-import {AnimateNumber} from '@app/components/animated-balance';
 import {
   BlurView,
   Card,
-  CopyButton,
+  First,
   Icon,
   IconButton,
   IconsName,
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
-import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
+import {CopyMenu} from '@app/components/ui/copy-menu';
+import {cleanNumber, createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
+import {useIsBalancesFirstSync} from '@app/hooks/use-is-balances-sync';
 import {I18N} from '@app/i18n';
-import {VestingMetadataType} from '@app/models/vesting-metadata';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
-import {IS_IOS, SHADOW_COLOR_1, SYSTEM_BLUR_2} from '@app/variables/common';
+import {BalanceData} from '@app/types';
+import {
+  CARD_ACTION_CONTAINER_BG,
+  IS_IOS,
+  SHADOW_COLOR_1,
+  SYSTEM_BLUR_2,
+} from '@app/variables/common';
+
+import {Placeholder} from './ui/placeholder';
 
 export type BalanceProps = {
   testID?: string;
   wallet: Wallet;
-  balance: Balance | undefined;
-  stakingBalance: Balance | undefined;
-  vestingBalance: Record<VestingMetadataType, Balance> | undefined;
+  balance?: BalanceData;
   showLockedTokens: boolean;
   walletConnectSessions: SessionTypes.Struct[];
   onPressAccountInfo: (address: string) => void;
@@ -39,49 +48,50 @@ export type BalanceProps = {
   onPressWalletConnect?: (address: string) => void;
 };
 
+enum ProtectionStatus {
+  empty,
+  partially,
+  full,
+}
+
 export const WalletCard = memo(
   ({
     testID,
     wallet,
-    balance,
     walletConnectSessions,
     showLockedTokens,
-    stakingBalance,
     onPressSend,
     onPressQR,
     onPressWalletConnect,
     onPressProtection,
     onPressAccountInfo,
+    balance,
   }: BalanceProps) => {
+    const {locked, total} = balance ?? {};
     const [cardState, setCardState] = useState('loading');
+    const isBalancesFirstSync = useIsBalancesFirstSync();
     const screenWidth = useWindowDimensions().width;
-    const enableProtectionWarning =
-      !wallet.mnemonicSaved && !wallet.socialLinkEnabled;
-    const disableTopNavMarginBottom =
-      enableProtectionWarning || !!walletConnectSessions?.length;
 
+    const protectionStatus = useMemo(() => {
+      if (!wallet.mnemonicSaved && !wallet.socialLinkEnabled) {
+        return ProtectionStatus.empty;
+      }
+      if (!wallet.mnemonicSaved || !wallet.socialLinkEnabled) {
+        return ProtectionStatus.partially;
+      }
+      return ProtectionStatus.full;
+    }, [wallet.mnemonicSaved, wallet.socialLinkEnabled]);
     const formattedAddress = useMemo(
       () => shortAddress(wallet?.address ?? '', '•'),
       [wallet?.address],
     );
-    const total = useMemo(() => {
-      if (!balance) {
+    const parsedTotal = useMemo(() => {
+      if (!total) {
         return Balance.Empty.toEther();
       }
 
-      if (isFeatureEnabled(Feature.lockedStakedVestedTokens)) {
-        return balance.operate(stakingBalance, 'add').toEther();
-      }
-
-      return balance.toEther();
-    }, [balance, stakingBalance]);
-
-    const locked = useMemo(() => {
-      if (!stakingBalance) {
-        return Balance.Empty.toFloatString();
-      }
-      return stakingBalance.toFloatString();
-    }, [stakingBalance]);
+      return total.toEther();
+    }, [total]);
 
     const onQr = () => {
       onPressQR(wallet.address);
@@ -117,20 +127,18 @@ export const WalletCard = memo(
         onLoad={() => {
           setCardState('laded');
         }}>
-        <View
-          style={[
-            styles.topNav,
-            disableTopNavMarginBottom && styles.marginBottom,
-          ]}>
+        <View style={[styles.topNav, styles.marginBottom]}>
           <Text
             t12
             style={styles.name}
             ellipsizeMode="tail"
             numberOfLines={1}
+            suppressHighlighting={true}
+            disabled={isBalancesFirstSync}
             onPress={onAccountInfo}>
             {wallet.name || 'name'}
           </Text>
-          <CopyButton style={styles.copyIcon} value={wallet.address}>
+          <CopyMenu style={styles.copyIcon} value={wallet.address} withSettings>
             <Text t14 color={Color.textBase3} testID={`${testID}_address`}>
               {formattedAddress}
             </Text>
@@ -140,19 +148,46 @@ export const WalletCard = memo(
               color={Color.graphicBase3}
               style={styles.marginLeft}
             />
-          </CopyButton>
+          </CopyMenu>
         </View>
         <View style={styles.row}>
-          {enableProtectionWarning && (
+          {protectionStatus === ProtectionStatus.empty && (
             <>
               <IconButton
                 testID="wallet_without_protection_button"
                 onPress={onProtection}
                 style={styles.withoutProtection}>
+                <Icon
+                  name={IconsName.shield_empty}
+                  color={Color.graphicBase3}
+                  i16
+                />
+                <Spacer width={4} />
                 <Text
                   t15
                   i18n={I18N.walletCardWithoutProtection}
                   color={Color.textBase3}
+                />
+              </IconButton>
+              <Spacer width={8} />
+            </>
+          )}
+          {protectionStatus === ProtectionStatus.partially && (
+            <>
+              <IconButton
+                testID="wallet_without_protection_button"
+                onPress={onProtection}
+                style={styles.partiallyProtection}>
+                <Icon
+                  name={IconsName.shield_partially}
+                  color={Color.textYellow1}
+                  i16
+                />
+                <Spacer width={4} />
+                <Text
+                  t15
+                  i18n={I18N.walletCardPartiallyProtection}
+                  color={Color.textYellow1}
                 />
               </IconButton>
               <Spacer width={8} />
@@ -172,21 +207,79 @@ export const WalletCard = memo(
               />
             </IconButton>
           )}
+          {protectionStatus === ProtectionStatus.full && (
+            <>
+              <IconButton
+                testID="wallet_without_protection_button"
+                onPress={onProtection}
+                style={styles.fullProtection}>
+                <Icon name={IconsName.shield} color={Color.textSecond2} i16 />
+                <Spacer width={4} />
+                <Text
+                  t15
+                  i18n={I18N.walletCardFullProtection}
+                  color={Color.textSecond2}
+                />
+              </IconButton>
+              <Spacer width={8} />
+            </>
+          )}
         </View>
-        <AnimateNumber value={total} initialValue={total} />
-        {showLockedTokens && stakingBalance?.isPositive() && (
-          <>
-            <View style={[styles.row, styles.lokedTokensContainer]}>
-              <Icon i16 color={Color.textBase3} name={IconsName.lock} />
-              <Spacer width={4} />
-              <Text
-                t15
-                color={Color.textBase3}
-                i18n={I18N.walletCardLocked}
-                i18params={{count: locked}}
-              />
-            </View>
-          </>
+        <First>
+          {isBalancesFirstSync && (
+            <Placeholder opacity={0.6}>
+              <Placeholder.Item width={110} height={35} />
+            </Placeholder>
+          )}
+          <View style={styles.row}>
+            <Text
+              t0
+              color={Color.textBase3}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              i18n={I18N.amountISLM}
+              i18params={{amount: cleanNumber(parsedTotal)}}
+              onPress={onAccountInfo}
+              suppressHighlighting={true}
+            />
+            <TouchableWithoutFeedback onPress={onAccountInfo}>
+              <View style={styles.openDetailsIconContainer}>
+                <Icon
+                  i16
+                  name={IconsName.arrow_forward}
+                  color={Color.graphicBase3}
+                  style={styles.openDetailsIcon}
+                />
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </First>
+
+        {showLockedTokens && (
+          <First>
+            {isBalancesFirstSync && (
+              <>
+                <Spacer height={8} />
+                <Placeholder opacity={0.6}>
+                  <Placeholder.Item width={'25%'} height={14} />
+                </Placeholder>
+              </>
+            )}
+            {locked?.isPositive() && (
+              <View style={[styles.row, styles.lokedTokensContainer]}>
+                <Icon i16 color={Color.textBase3} name={IconsName.lock} />
+                <Spacer width={4} />
+                <Text
+                  t15
+                  color={Color.textBase3}
+                  i18n={I18N.walletCardLocked}
+                  i18params={{count: locked?.toEtherString() ?? '0'}}
+                  onPress={onAccountInfo}
+                  suppressHighlighting={true}
+                />
+              </View>
+            )}
+          </First>
         )}
         <Spacer />
         <View style={styles.buttonsContainer}>
@@ -222,7 +315,20 @@ const styles = createTheme({
     alignItems: 'center',
   },
   lokedTokensContainer: {
-    transform: [{translateY: -5}],
+    transform: [{translateY: -4}],
+  },
+  openDetailsIconContainer: {
+    marginLeft: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 24,
+    width: 24,
+    borderRadius: 8,
+    transform: [{translateY: -4}],
+    backgroundColor: CARD_ACTION_CONTAINER_BG,
+  },
+  openDetailsIcon: {
+    transform: [{translateX: -4}],
   },
   container: {
     justifyContent: 'space-between',
@@ -270,9 +376,29 @@ const styles = createTheme({
     marginLeft: 12,
   },
   withoutProtection: {
+    flexDirection: 'row',
     alignSelf: 'flex-start',
     marginBottom: 8,
     backgroundColor: Color.bg5,
+    borderRadius: 4,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    height: 20,
+  },
+  partiallyProtection: {
+    flexDirection: 'row',
+    alignSelf: 'flex-start',
+    marginBottom: 8,
+    backgroundColor: Color.bg6,
+    borderRadius: 4,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    height: 20,
+  },
+  fullProtection: {
+    flexDirection: 'row',
+    alignSelf: 'flex-start',
+    marginBottom: 8,
     borderRadius: 4,
     paddingHorizontal: 6,
     paddingVertical: 2,

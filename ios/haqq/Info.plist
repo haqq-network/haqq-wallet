@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.4.8</string>
+	<string>1.5.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -61,7 +61,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>255</string>
+	<string>285</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
@@ -111,6 +111,8 @@
 	<string>App uses bluetooth to find, connect and communicate with Ledger Nano devices</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Allow $(PRODUCT_NAME) to use camera for recognize QR code</string>
+	<key>NSCrossWebsiteTrackingUsageDescription</key>
+	<true/>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Allow $(PRODUCT_NAME) to use FaceID</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -127,6 +129,10 @@
 			<string>None</string>
 		</dict>
 	</dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>"Haqq Wallet" does not store your location data and will only share it with the website after obtaining your consent.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>"Haqq Wallet" does not store your location data and will only share it with the website after obtaining your consent.</string>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>Your data will be used to track the source of the installation. We won&apos;t get access to any of your private information.</string>
 	<key>UIAppFonts</key>
@@ -167,7 +173,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSCrossWebsiteTrackingUsageDescription</key>
-	<true/>
 </dict>
 </plist>

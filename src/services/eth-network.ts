@@ -6,12 +6,37 @@ import {BigNumber, utils} from 'ethers';
 import {app} from '@app/contexts';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {Provider} from '@app/models/provider';
+import {Wallet} from '@app/models/wallet';
 import {getDefaultChainId} from '@app/network';
 import {Balance, MIN_GAS_LIMIT} from '@app/services/balance';
+import {storage} from '@app/services/mmkv';
+
+export const ABI_ERC20_TRANSFER_ACTION = {
+  name: 'transfer',
+  type: 'function',
+  inputs: [
+    {
+      name: '_to',
+      type: 'address',
+    },
+    {
+      type: 'uint256',
+      name: '_tokens',
+    },
+  ],
+  constant: false,
+  outputs: [],
+  payable: false,
+};
+
+const BALANCE_CACHE_KEY = 'balance_storage';
 
 export class EthNetwork {
   static chainId: number = getDefaultChainId();
   static explorer: string | undefined;
+
+  private static getBalanceCacheKey = (address: string) =>
+    BALANCE_CACHE_KEY + address.toLowerCase();
 
   static async populateTransaction(
     from: string,
@@ -62,11 +87,22 @@ export class EthNetwork {
   static async getBalance(address: string): Promise<Balance> {
     try {
       const rpcProvider = await getRpcProvider(app.provider);
-      const balance = await rpcProvider.getBalance(address);
-      const balanceWithWEI = new Balance(balance._hex);
-      return new Balance(balanceWithWEI);
+      const balanceResponse = await rpcProvider.getBalance(address);
+      const balanceWithWEI = new Balance(balanceResponse._hex);
+      const balance = new Balance(balanceWithWEI);
+
+      // Caching balance
+      const key = this.getBalanceCacheKey(address);
+      const value = balance.toHex();
+      storage.setItem(key, value);
+
+      return balance;
     } catch (e) {
-      return Balance.Empty;
+      // Trying to find cached balance for this wallet
+      const key = this.getBalanceCacheKey(address);
+      const possibleBalance = storage.getItem(key) as string | undefined;
+
+      return new Balance(possibleBalance ?? Balance.Empty);
     }
   }
 
@@ -119,17 +155,22 @@ export class EthNetwork {
 
     const getGasPrice = await rpcProvider.getGasPrice();
     const gasPrice = new Balance(getGasPrice._hex);
+    let estimateGas = minGas;
 
-    const estGas = await rpcProvider.estimateGas({
-      from,
-      to,
-      value: value.toHex(),
-      data,
-      maxFeePerGas: gasPrice.toHex(),
-      maxPriorityFeePerGas: gasPrice.toHex(),
-    } as Deferrable<TransactionRequest>);
+    try {
+      const estGas = await rpcProvider.estimateGas({
+        from,
+        to,
+        value: value.toHex(),
+        data,
+        maxFeePerGas: gasPrice.toHex(),
+        maxPriorityFeePerGas: gasPrice.toHex(),
+      } as Deferrable<TransactionRequest>);
 
-    const estimateGas = new Balance(estGas._hex).max(minGas);
+      estimateGas = new Balance(estGas._hex).max(minGas);
+    } catch {
+      //
+    }
 
     return {
       feeWei: estimateGas.operate(gasPrice, 'mul'),
@@ -165,5 +206,31 @@ export class EthNetwork {
 
     const resp = await EthNetwork.call(to, data);
     return iface.decodeFunctionResult(method, resp);
+  }
+
+  async transferERC20(
+    transport: ProviderInterface,
+    from: Wallet,
+    to: string,
+    amount: Balance,
+    contractAddress: string,
+  ) {
+    const abi = [ABI_ERC20_TRANSFER_ACTION];
+    const iface = new utils.Interface(abi);
+    const data = iface.encodeFunctionData(ABI_ERC20_TRANSFER_ACTION.name, [
+      to,
+      amount.toHex(),
+    ]);
+
+    const unsignedTx = await EthNetwork.populateTransaction(
+      from.address,
+      contractAddress,
+      Balance.Empty,
+      data,
+    );
+
+    const signedTx = await transport.signTransaction(from.path!, unsignedTx);
+
+    return await EthNetwork.sendTransaction(signedTx);
   }
 }

@@ -13,6 +13,7 @@ import {
 } from '@app/screens/WelcomeStack/OnboardingStack';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {WalletConnect} from '@app/services/wallet-connect';
+import {ModalType} from '@app/types';
 
 export const OnboardingFinishScreen = memo(() => {
   const navigation = useTypedNavigation<OnboardingStackParamList>();
@@ -46,7 +47,7 @@ export const OnboardingFinishScreen = memo(() => {
 
   useEffect(() => {
     onTrackEvent(route.params.event);
-    hideModal('loading');
+    hideModal(ModalType.loading);
     vibrate(HapticEffects.success);
   }, [route.params.event]);
 

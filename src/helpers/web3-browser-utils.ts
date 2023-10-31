@@ -257,17 +257,16 @@ export function getHost(url: string, defaultProtocol = 'https://') {
   const startIndex = sanitizedUrl.indexOf('//') + 2;
   const endIndex = sanitizedUrl.indexOf('/', startIndex);
   const hostname =
-    endIndex === -1
-      ? url.substring(startIndex)
-      : url.substring(startIndex, endIndex);
-  const result = hostname === '' ? url : hostname;
-  return result;
+    endIndex > -1
+      ? sanitizedUrl.substring(startIndex, endIndex)
+      : sanitizedUrl.substring(startIndex);
+  return (hostname || url).trim().toLowerCase();
 }
 
-export const getFavIconUrl = (url?: string | undefined, size = 200) => {
+export const getFavIconUrl = (url?: string | undefined) => {
   if (!url) {
     return '';
   }
 
-  return `https://api.faviconkit.com/${getHost(url)}/${size}`;
+  return `https://icons.duckduckgo.com/ip2/${getHost(url)}.ico`;
 };

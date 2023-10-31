@@ -1,49 +1,35 @@
-import React, {
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
-import {Collection, CollectionChangeSet} from 'realm';
+import {observer} from 'mobx-react';
 
 import {AccountInfo} from '@app/components/account-info';
 import {Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
-import {prepareTransactions, showModal} from '@app/helpers';
-import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
+import {showModal} from '@app/helpers';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
+import {useTransactionList} from '@app/hooks/use-transaction-list';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
-import {useWalletsStakingBalance} from '@app/hooks/use-wallets-staking-balance';
 import {Transaction} from '@app/models/transaction';
+import {Wallet} from '@app/models/wallet';
 import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
-import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
-import {TransactionList} from '@app/types';
+import {ModalType} from '@app/types';
 
-export const AccountInfoScreen = memo(() => {
+export const AccountInfoScreen = observer(() => {
   const route = useTypedRoute<
     HomeStackParamList,
     HomeStackRoutes.AccountInfo
   >();
   const navigation = useTypedNavigation<HomeStackParamList>();
   const accountId = useMemo(() => route.params.accountId, [route]);
-  const wallet = useWallet(accountId);
+  const wallet = Wallet.getById(accountId);
   const balances = useWalletsBalance([wallet!]);
-  const unvestedBalance = useRef(Balance.Empty).current;
-  const vestedBalance = useRef(Balance.Empty).current;
-  const lockedBalance = useRef(Balance.Empty).current;
-  const stakingBalances = useWalletsStakingBalance([wallet!]);
-  const currentBalance = useMemo(
+  const {available, locked, staked, total, unlock, vested} = useMemo(
     () => balances[wallet?.address!],
-    [balances, wallet?.address],
+    [balances, wallet],
   );
-  const stakingBalance = useMemo(
-    () => stakingBalances?.[wallet?.address!],
-    [stakingBalances, wallet?.address],
-  );
+  const transactionList = useTransactionList([accountId]);
 
   const transactions = useMemo(() => {
     return Transaction.getAllByAccountIdAndProviderId(
@@ -64,30 +50,8 @@ export const AccountInfoScreen = memo(() => {
     }
   }, []);
 
-  const [transactionsList, setTransactionsList] = useState<TransactionList[]>(
-    prepareTransactions([route.params.accountId], transactions.snapshot()),
-  );
-
-  const onTransactionList = useCallback(
-    (collection: Collection<Transaction>, changes: CollectionChangeSet) => {
-      if (
-        changes.insertions.length ||
-        changes.newModifications.length ||
-        changes.deletions.length
-      ) {
-        setTransactionsList(
-          prepareTransactions(
-            [route.params.accountId],
-            transactions.snapshot(),
-          ),
-        );
-      }
-    },
-    [route.params.accountId, transactions],
-  );
-
   const onReceive = useCallback(() => {
-    showModal('cardDetailsQr', {address: route.params.accountId});
+    showModal(ModalType.cardDetailsQr, {address: route.params.accountId});
   }, [route.params.accountId]);
 
   const onSend = useCallback(() => {
@@ -105,14 +69,10 @@ export const AccountInfoScreen = memo(() => {
     [navigation],
   );
 
-  const onPressInfo = useCallback(() => showModal('lockedTokensInfo'), []);
-
-  useEffect(() => {
-    transactions.addListener(onTransactionList);
-    return () => {
-      transactions.removeListener(onTransactionList);
-    };
-  }, [onTransactionList, transactions]);
+  const onPressInfo = useCallback(
+    () => showModal(ModalType.lockedTokensInfo),
+    [],
+  );
 
   if (!wallet) {
     return <Loading />;
@@ -121,17 +81,18 @@ export const AccountInfoScreen = memo(() => {
   return (
     <AccountInfo
       wallet={wallet}
-      balance={currentBalance}
-      transactionsList={transactionsList}
-      unvestedBalance={unvestedBalance}
-      lockedBalance={lockedBalance}
-      vestedBalance={vestedBalance}
-      stakingBalance={stakingBalance}
+      transactionsList={transactionList}
       onPressInfo={onPressInfo}
       onReceive={onReceive}
       onSend={onSend}
       onPressRow={onPressRow}
       contractNameMap={contractNameMap}
+      available={available}
+      locked={locked}
+      staked={staked}
+      total={total}
+      unlock={unlock}
+      vested={vested}
     />
   );
 });

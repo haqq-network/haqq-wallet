@@ -13,42 +13,56 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {I18N} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Balance} from '@app/services/balance';
+import {IToken} from '@app/types';
 import {splitAddress} from '@app/utils';
-import {LONG_NUM_PRECISION} from '@app/variables/common';
+import {LONG_NUM_PRECISION, WEI_PRECISION} from '@app/variables/common';
 
 interface TransactionConfirmationProps {
   testID?: string;
   to: string;
   amount: Balance;
-  fee: Balance;
+  fee: Balance | null;
   contact: Contact | null;
-  error?: string;
+  error: string;
+  errorDetails: string;
 
   disabled?: boolean;
   onConfirmTransaction: () => void;
+  token: IToken;
 }
 
 export const TransactionConfirmation = ({
   testID,
   error,
+  errorDetails,
   disabled,
   contact,
   to,
   amount,
   fee,
   onConfirmTransaction,
+  token,
 }: TransactionConfirmationProps) => {
   const splittedTo = useMemo(() => splitAddress(to), [to]);
 
+  const sumText = useMemo(() => {
+    if (fee === null) {
+      return getText(I18N.estimatingGas);
+    }
+
+    if (amount.isIslamic) {
+      return fee.operate(amount, 'add').toBalanceString(LONG_NUM_PRECISION);
+    }
+
+    return amount.toBalanceString(LONG_NUM_PRECISION);
+  }, [fee, amount]);
+
   return (
     <PopupContainer style={styles.container} testID={testID}>
-      <Image
-        source={require('@assets/images/islm_icon.png')}
-        style={styles.icon}
-      />
+      <Image source={token.image} style={styles.icon} />
       <Text
         t11
         color={Color.textBase2}
@@ -57,7 +71,7 @@ export const TransactionConfirmation = ({
         i18n={I18N.transactionConfirmationTotalAmount}
       />
       <Text t11 color={Color.textBase1} center style={styles.sum}>
-        {fee.operate(amount, 'add').toBalanceString(LONG_NUM_PRECISION)}
+        {sumText}
       </Text>
       <Text
         t11
@@ -107,18 +121,20 @@ export const TransactionConfirmation = ({
           </DataView>
           <DataView label="Network Fee">
             <Text t11 color={Color.textBase1}>
-              {fee.toBalanceString(LONG_NUM_PRECISION)}
+              {fee === null
+                ? getText(I18N.estimatingGas)
+                : fee.toBalanceString(LONG_NUM_PRECISION, WEI_PRECISION)}
             </Text>
           </DataView>
         </View>
         {error && (
-          <ErrorText center e0>
+          <ErrorText center e0 errorDetails={errorDetails}>
             {error}
           </ErrorText>
         )}
       </Spacer>
       <Button
-        disabled={!fee.isPositive() && !disabled}
+        disabled={!fee?.isPositive() && !disabled}
         variant={ButtonVariant.contained}
         i18n={I18N.transactionConfirmationSend}
         onPress={onConfirmTransaction}

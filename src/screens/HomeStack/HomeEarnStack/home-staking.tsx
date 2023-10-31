@@ -1,4 +1,6 @@
-import React, {memo, useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
+
+import {observer} from 'mobx-react';
 
 import {HomeStaking} from '@app/components/home-staking';
 import {app} from '@app/contexts';
@@ -8,11 +10,11 @@ import {Events} from '@app/events';
 import {abortProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {sumReduce} from '@app/helpers/staking';
 import {useTypedNavigation} from '@app/hooks';
-import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {
   StakingMetadata,
   StakingMetadataType,
 } from '@app/models/staking-metadata';
+import {Wallet} from '@app/models/wallet';
 import {
   HomeEarnStackParamList,
   HomeEarnStackRoutes,
@@ -27,13 +29,13 @@ const initData = {
   loading: true,
 };
 
-export const HomeStakingScreen = memo(() => {
-  const visible = useWalletsVisible();
+export const HomeStakingScreen = observer(() => {
+  const visible = Wallet.getAllVisible();
 
   const [data, setData] = useState({
     ...initData,
     availableSum: visible.reduce(
-      (acc, w) => acc.operate(app.getBalance(w.address), 'add'),
+      (acc, w) => acc.operate(app.getAvailableBalance(w.address), 'add'),
       Balance.Empty,
     ),
   });
@@ -64,8 +66,9 @@ export const HomeStakingScreen = memo(() => {
       const rewardsSum = new Balance(sumReduce(rewards));
       const stakingSum = new Balance(sumReduce(delegations));
       const unDelegationSum = new Balance(sumReduce(unDelegations));
-      const availableSum = visible.reduce(
-        (acc, w) => acc.operate(app.getBalance(w.address), 'add'),
+      const availableSum = Wallet.getAllVisible().reduce(
+        (acc, w) =>
+          acc.operate(app.getAvailableForStakeBalance(w.address), 'add'),
         Balance.Empty,
       );
 
@@ -84,7 +87,7 @@ export const HomeStakingScreen = memo(() => {
       rows.removeListener(listener);
       app.removeListener(Events.onBalanceSync, listener);
     };
-  }, [visible]);
+  }, []);
 
   useEffect(() => {
     const sync = () => {
@@ -103,7 +106,7 @@ export const HomeStakingScreen = memo(() => {
     return () => {
       visible.map(w => abortProviderInstanceForWallet(w));
     };
-  }, [visible]);
+  }, []);
 
   return (
     <HomeStaking

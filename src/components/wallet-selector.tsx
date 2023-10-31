@@ -1,7 +1,6 @@
 import React, {useCallback, useState} from 'react';
 
 import {StyleProp, View, ViewStyle} from 'react-native';
-import {Results} from 'realm';
 
 import {PopupContainer} from '@app/components/ui';
 import {WalletRow} from '@app/components/wallet-row';
@@ -10,7 +9,7 @@ import {Wallet} from '@app/models/wallet';
 
 interface Props {
   initialAddress?: string;
-  wallets: Wallet[] | Results<Wallet>;
+  wallets: Wallet[];
   style?: StyleProp<ViewStyle>;
 
   onWalletSelected?(address: string): void;
@@ -36,7 +35,7 @@ export const WalletSelector = ({
 
   return (
     <PopupContainer style={style}>
-      {wallets?.map?.(wallet => {
+      {wallets.map(wallet => {
         return (
           <View key={wallet.address} style={styles.walletRowContainer}>
             <WalletRow

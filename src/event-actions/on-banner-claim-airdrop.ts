@@ -3,7 +3,6 @@ import {app} from '@app/contexts';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
 import {
-  awaitForLedger,
   awaitForWallet,
   getProviderInstanceForWallet,
   showModal,
@@ -18,7 +17,7 @@ import {Refferal} from '@app/models/refferal';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {Airdrop, AirdropError, AirdropErrorCode} from '@app/services/airdrop';
-import {AdjustEvents, WalletType} from '@app/types';
+import {AdjustEvents} from '@app/types';
 
 export async function onBannerClaimAirdrop(claimCode: string) {
   const banner = Banner.getById(claimCode);
@@ -39,7 +38,7 @@ export async function onBannerClaimAirdrop(claimCode: string) {
 
     try {
       walletId = await awaitForWallet({
-        wallets: visible.snapshot(),
+        wallets: visible,
         title: I18N.stakingDelegateAccountTitle,
         suggestedAddress: referral?.wallet,
       });
@@ -62,11 +61,10 @@ export async function onBannerClaimAirdrop(claimCode: string) {
     }
 
     const walletProvider = await getProviderInstanceForWallet(wallet!);
-    const result = walletProvider.signPersonalMessage(wallet.path!, claimCode);
-    if (wallet.type === WalletType.ledgerBt) {
-      await awaitForLedger(walletProvider);
-    }
-    const signature = await result;
+    const signature = await walletProvider.signPersonalMessage(
+      wallet.path!,
+      claimCode,
+    );
     const uid = await getUid();
     const adid = await getAdjustAdid();
 

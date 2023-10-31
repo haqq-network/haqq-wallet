@@ -1,20 +1,16 @@
-import React, {memo, useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
+
+import {observer} from 'mobx-react';
 
 import {StakingUnDelegatePreview} from '@app/components/staking-undelegate-preview';
-import {showModal} from '@app/helpers';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
-import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {
   abortProviderInstanceForWallet,
   getProviderInstanceForWallet,
 } from '@app/helpers/provider-instance';
-import {
-  useCosmos,
-  useTypedNavigation,
-  useTypedRoute,
-  useWallet,
-} from '@app/hooks';
-import {I18N, getText} from '@app/i18n';
+import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useError} from '@app/hooks/use-error';
+import {Wallet} from '@app/models/wallet';
 import {
   StakingUnDelegateStackParamList,
   StakingUnDelegateStackRoutes,
@@ -22,16 +18,16 @@ import {
 import {WalletType} from '@app/types';
 import {makeID} from '@app/utils';
 
-export const StakingUnDelegatePreviewScreen = memo(() => {
+export const StakingUnDelegatePreviewScreen = observer(() => {
   const navigation = useTypedNavigation<StakingUnDelegateStackParamList>();
   const {account, amount, validator, fee} = useTypedRoute<
     StakingUnDelegateStackParamList,
     StakingUnDelegateStackRoutes.StakingUnDelegatePreview
   >().params;
   const [unboundingTime, setUnboundingTime] = useState(604800000);
-  const [error, setError] = useState('');
+  const {error, errorDetails, setError} = useError();
   const cosmos = useCosmos();
-  const wallet = useWallet(account);
+  const wallet = Wallet.getById(account);
 
   useEffect(() => {
     cosmos.getStakingParams().then(resp => {
@@ -46,7 +42,7 @@ export const StakingUnDelegatePreviewScreen = memo(() => {
   const [disabled, setDisabled] = useState(false);
 
   const onDone = useCallback(async () => {
-    if (wallet && wallet.isValid()) {
+    if (wallet) {
       let errMessage = '';
       try {
         setDisabled(true);
@@ -57,18 +53,12 @@ export const StakingUnDelegatePreviewScreen = memo(() => {
 
         const transport = await getProviderInstanceForWallet(wallet);
 
-        const query = cosmos.unDelegate(
+        const resp = await cosmos.unDelegate(
           transport,
           wallet.path!,
           validator.operator_address,
           amount,
         );
-
-        if (wallet.type === WalletType.ledgerBt) {
-          await awaitForLedger(transport);
-        }
-
-        const resp = await query;
 
         if (!resp) {
           throw new Error('transaction_error');
@@ -95,7 +85,6 @@ export const StakingUnDelegatePreviewScreen = memo(() => {
           switch (e.message) {
             case 'can_not_connected':
             case 'ledger_locked':
-              showModal('ledgerLocked');
               break;
             default:
               Logger.captureException(e, 'staking-undelegate', {
@@ -103,11 +92,7 @@ export const StakingUnDelegatePreviewScreen = memo(() => {
                 message: errMessage || e.message,
               });
 
-              setError(
-                getText(I18N.transactionFailed, {
-                  id: errorId,
-                }),
-              );
+              setError(errorId, errMessage || e.message);
           }
         }
       } finally {
@@ -118,7 +103,7 @@ export const StakingUnDelegatePreviewScreen = memo(() => {
 
   useEffect(() => {
     return () => {
-      wallet && wallet.isValid() && abortProviderInstanceForWallet(wallet);
+      wallet && abortProviderInstanceForWallet(wallet);
     };
   }, [wallet]);
 
@@ -131,6 +116,7 @@ export const StakingUnDelegatePreviewScreen = memo(() => {
       disabled={disabled}
       onSend={onDone}
       error={error}
+      errorDetails={errorDetails}
     />
   );
 });

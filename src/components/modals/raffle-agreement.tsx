@@ -15,10 +15,10 @@ import {createTheme, openURL} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {VariablesBool} from '@app/models/variables-bool';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {Modals} from '@app/types';
+import {ModalType, Modals} from '@app/types';
 import {STRINGS, TERMS_OF_CONDITIONS} from '@app/variables/common';
 
-export const RaffleAgreement = ({onClose}: Modals['ledgerLocked']) => {
+export const RaffleAgreement = ({onClose}: Modals[ModalType.ledgerLocked]) => {
   useEffect(() => {
     vibrate(HapticEffects.error);
   }, []);

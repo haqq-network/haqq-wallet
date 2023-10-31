@@ -1,5 +1,7 @@
 import React, {memo, useCallback, useMemo} from 'react';
 
+import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
@@ -64,11 +66,15 @@ export type SignInStackParamList = WelcomeStackParamList & {
     sssProvider: SssProviders;
     onNext: () => void;
   };
-  [SignInStackRoutes.SigninChooseAccount]: {
-    nextScreen?: SignInStackRoutes;
-    type: 'mnemonic';
-    mnemonic: string;
-  };
+  [SignInStackRoutes.SigninChooseAccount]:
+    | (WalletInitialData & {
+        provider: ProviderMnemonicReactNative;
+        nextScreen?: SignInStackRoutes;
+      })
+    | {
+        provider: ProviderSSSReactNative;
+        nextScreen?: SignInStackRoutes;
+      };
 };
 
 const Stack = createNativeStackNavigator<SignInStackParamList>();

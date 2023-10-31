@@ -28,19 +28,16 @@ export async function createWalletsForProvider(
     const {address} = await provider.getAccountInfo(hdPath);
 
     if (!Wallet.getById(address)) {
-      const balance = app.getBalance(address);
+      const balance = app.getAvailableBalance(address);
       canNext = balance.isPositive() || index === 0;
 
       if (canNext) {
-        await Wallet.create(
-          {
-            address: address,
-            type: walletType,
-            path: hdPath,
-            accountId: provider.getIdentifier(),
-          },
-          name,
-        );
+        await Wallet.create(name, {
+          address: address,
+          type: walletType,
+          path: hdPath,
+          accountId: provider.getIdentifier(),
+        });
       } else {
         canNext = false;
       }

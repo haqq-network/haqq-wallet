@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 
 import {View} from 'react-native';
 
@@ -26,7 +26,8 @@ export type StakingDelegateFormProps = {
   validator: ValidatorItem;
   account: string;
   onAmount: (amount: number) => void;
-  fee: Balance;
+  fee: Balance | null;
+  setFee: (amount?: string) => void;
   balance: Balance;
 };
 
@@ -37,17 +38,17 @@ export const StakingDelegateForm = ({
   },
   onAmount,
   fee,
+  setFee,
   balance,
 }: StakingDelegateFormProps) => {
-  const transactionFee = useMemo(() => {
-    const maximumFee = fee.compare(FEE_AMOUNT, 'gt') ? fee : FEE_AMOUNT;
-    return new Balance(maximumFee);
-  }, [fee]);
-
-  const maxAmount = useMemo(
-    () => balance.operate(transactionFee, 'sub'),
-    [balance, transactionFee],
+  const transactionFee = useMemo(
+    () => (fee !== null ? fee.max(FEE_AMOUNT) : Balance.Empty),
+    [fee],
   );
+
+  const maxAmount = useMemo(() => {
+    return balance.operate(transactionFee, 'sub');
+  }, [balance, transactionFee]);
 
   const amounts = useSumAmount(Balance.Empty, maxAmount, new Balance(0.01));
 
@@ -62,6 +63,23 @@ export const StakingDelegateForm = ({
   const onPressMax = useCallback(() => {
     amounts.setMax();
   }, [amounts]);
+
+  useEffect(() => {
+    setFee(amounts.amount);
+  }, [setFee, amounts.amount]);
+
+  useEffect(() => {
+    const INPUT_PRECISION = 3;
+    const first = new Balance(+amounts.amount, INPUT_PRECISION)
+      .toEther()
+      .toPrecision(INPUT_PRECISION);
+    const second = new Balance(amounts.maxAmount, INPUT_PRECISION)
+      .toEther()
+      .toPrecision(INPUT_PRECISION);
+    if (first >= second) {
+      amounts.setMax();
+    }
+  }, [fee, amounts.maxAmount.toHex()]);
 
   return (
     <KeyboardSafeArea isNumeric style={styles.container}>
@@ -79,7 +97,7 @@ export const StakingDelegateForm = ({
           onMax={onPressMax}
         />
       </Spacer>
-      <NetworkFee fee={fee} />
+      <NetworkFee fee={fee} currency="ISLM" />
       {localStatus === ValidatorStatus.inactive ||
         (localStatus === ValidatorStatus.jailed && (
           <>
@@ -94,7 +112,7 @@ export const StakingDelegateForm = ({
       <Spacer height={16} />
       <Button
         i18n={I18N.stakingDelegateFormPreview}
-        disabled={!amounts.isValid}
+        disabled={!amounts.isValid || fee === null}
         variant={ButtonVariant.contained}
         onPress={onDone}
       />

@@ -4,6 +4,7 @@ import {ScrollView} from 'react-native';
 
 import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
+import {useTesterModeEnabled} from '@app/hooks/use-tester-mode-enabled';
 import {useWalletConnectAccounts} from '@app/hooks/use-wallet-connect-accounts';
 import {I18N} from '@app/i18n';
 import {SettingsStackRoutes} from '@app/screens/HomeStack/SettingsStack';
@@ -12,6 +13,8 @@ import {capitalize} from '@app/utils';
 
 import {SettingsButton} from './settings-button';
 
+import {IconsName} from '../ui';
+
 type Props = {
   theme: AppTheme;
 };
@@ -19,18 +22,19 @@ type Props = {
 export const HomeSettings = memo(({theme}: Props) => {
   const capitalizedTheme = capitalize(theme);
   const {accounts} = useWalletConnectAccounts();
+  const isTesterMode = useTesterModeEnabled();
 
   return (
     <ScrollView contentContainerStyle={page.container}>
       <SettingsButton
-        icon="wallet"
+        icon={IconsName.wallet}
         title={I18N.homeSettingsAccounts}
         next={SettingsStackRoutes.SettingsAccounts}
         testID="settings_manage_accounts"
       />
 
       <SettingsButton
-        icon="address_book"
+        icon={IconsName.address_book}
         title={I18N.homeSettingsAddressBook}
         next={SettingsStackRoutes.SettingsAddressBook}
       />
@@ -38,7 +42,7 @@ export const HomeSettings = memo(({theme}: Props) => {
       {!!accounts?.length && (
         <SettingsButton
           rightTitle={`${accounts.length}`}
-          icon="wallet_connect"
+          icon={IconsName.wallet_connect}
           title={I18N.homeSettingsWalletConnect}
           next={SettingsStackRoutes.WalletConnectWalletList}
         />
@@ -46,40 +50,48 @@ export const HomeSettings = memo(({theme}: Props) => {
 
       <SettingsButton
         rightTitle={capitalizedTheme}
-        icon="brush"
+        icon={IconsName.brush}
         title={I18N.homeSettingsAppearance}
         next={SettingsStackRoutes.SettingsTheme}
       />
 
       <SettingsButton
-        icon="shield"
+        icon={IconsName.shield}
         title={I18N.homeSettingsSecurity}
         next={SettingsStackRoutes.SettingsSecurity}
       />
 
       <SettingsButton
-        icon="bell"
+        icon={IconsName.bell}
         title={I18N.homeSettingsNotification}
         next={SettingsStackRoutes.SettingsNotification}
       />
 
       <SettingsButton
-        icon="providers"
+        icon={IconsName.providers}
         title={I18N.homeSettingsProviders}
         next={SettingsStackRoutes.SettingsProviders}
         style={page.button}
       />
 
       <SettingsButton
-        icon="islm"
+        icon={IconsName.islm}
         title={I18N.homeSettingsAbout}
         next={SettingsStackRoutes.SettingsAbout}
         style={page.button}
       />
 
+      {isTesterMode && (
+        <SettingsButton
+          icon={IconsName.settings}
+          title={I18N.homeSettingsDeveloperTools}
+          next={SettingsStackRoutes.SettingsDeveloperTools}
+        />
+      )}
+
       {app.isDeveloper && (
         <SettingsButton
-          icon="settings"
+          icon={IconsName.settings}
           title={I18N.homeSettingsTest}
           next={SettingsStackRoutes.SettingsTest}
           style={page.button}

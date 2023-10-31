@@ -58,7 +58,7 @@ const styles = createTheme({
     marginHorizontal: 15,
   },
   scrollContainer: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
   },
   banner: {
     width: () => getWindowWidth() - 80,

@@ -20,15 +20,16 @@ import {
 import {BluetoothPoweredOff} from '@app/components/modals/bluetooth-powered-off';
 import {BluetoothUnauthorized} from '@app/components/modals/bluetooth-unauthorized';
 import {CaptchaModal} from '@app/components/modals/capthca-modal';
-import {CloudVerification} from '@app/components/modals/cloudVerification';
+import {CloudVerification} from '@app/components/modals/cloud-verification';
 import {LocationUnauthorized} from '@app/components/modals/location-unauthorized';
 import {ProvidersBottomSheet} from '@app/components/modals/providers-bottom-sheet';
 import {RaffleAgreement} from '@app/components/modals/raffle-agreement';
 import {TransactionError} from '@app/components/modals/transaction-error';
+import {ViewErrorDetails} from '@app/components/modals/view-error-details';
 import {WalletsBottomSheet} from '@app/components/modals/wallets-bottom-sheet';
 import {hideModal} from '@app/helpers';
 import {useTheme} from '@app/hooks';
-import {Modals, ModalsListBase} from '@app/types';
+import {ModalType, Modals, ModalsListBase} from '@app/types';
 
 import {DomainBlocked} from './domain-blocked';
 import {LockedTokensInfo} from './locked-tokens-info';
@@ -38,7 +39,7 @@ export type ModalWrapperProps<
   ModalsList extends ModalsListBase,
   ModalName extends keyof ModalsList,
 > = {
-  type: keyof Modals;
+  type: ModalType;
   modal: ModalsList[ModalName];
   onClose: (modal: Extract<ModalName, string>) => void;
 };
@@ -72,56 +73,58 @@ export const ModalWrapper = ({
       return null;
     }
     switch (type) {
-      case 'loading':
+      case ModalType.loading:
         return <LoadingModal {...modal} />;
-      case 'pin':
+      case ModalType.pin:
         return <PinModal />;
-      case 'splash':
+      case ModalType.splash:
         return <SplashModal />;
-      case 'noInternet':
+      case ModalType.noInternet:
         return <NoInternet {...modal} />;
-      case 'bluetoothPoweredOff':
+      case ModalType.bluetoothPoweredOff:
         return <BluetoothPoweredOff onClose={onCloseModalPress} />;
-      case 'bluetoothUnauthorized':
+      case ModalType.bluetoothUnauthorized:
         return <BluetoothUnauthorized onClose={onCloseModalPress} />;
-      case 'qr':
+      case ModalType.qr:
         return <QRModal {...modal} onClose={onCloseModalPress} />;
-      case 'cardDetailsQr':
+      case ModalType.cardDetailsQr:
         return <DetailsQrModal {...modal} onClose={onCloseModalPress} />;
-      case 'error':
+      case ModalType.error:
         return <ErrorModal {...modal} onClose={onCloseModalPress} />;
-      case 'claimOnMainnet':
+      case ModalType.claimOnMainnet:
         return <ClaimOnMainNet {...modal} onClose={onCloseModalPress} />;
-      case 'ledgerNoApp':
+      case ModalType.ledgerNoApp:
         return <LedgerNoApp {...modal} onClose={onCloseModalPress} />;
-      case 'ledgerAttention':
+      case ModalType.ledgerAttention:
         return <LedgerAttention onClose={onCloseModalPress} />;
-      case 'ledgerLocked':
+      case ModalType.ledgerLocked:
         return <LedgerLocked onClose={onCloseModalPress} />;
-      case 'errorAccountAdded':
+      case ModalType.errorAccountAdded:
         return <ErrorAccountAdded onClose={onCloseModalPress} />;
-      case 'errorCreateAccount':
+      case ModalType.errorCreateAccount:
         return <ErrorCreateAccount onClose={onCloseModalPress} />;
-      case 'walletsBottomSheet':
+      case ModalType.walletsBottomSheet:
         return <WalletsBottomSheet {...modal} onClose={onCloseModalPress} />;
-      case 'transactionError':
+      case ModalType.transactionError:
         return <TransactionError {...modal} onClose={onCloseModalPress} />;
-      case 'locationUnauthorized':
+      case ModalType.locationUnauthorized:
         return <LocationUnauthorized onClose={onCloseModalPress} />;
-      case 'providersBottomSheet':
+      case ModalType.providersBottomSheet:
         return <ProvidersBottomSheet {...modal} onClose={onCloseModalPress} />;
-      case 'captcha':
+      case ModalType.captcha:
         return <CaptchaModal onClose={modal.onClose} variant={modal.variant} />;
-      case 'domainBlocked':
+      case ModalType.domainBlocked:
         return <DomainBlocked {...modal} onClose={onCloseModalPress} />;
-      case 'raffleAgreement':
+      case ModalType.raffleAgreement:
         return <RaffleAgreement {...modal} onClose={onCloseModalPress} />;
-      case 'lockedTokensInfo':
+      case ModalType.lockedTokensInfo:
         return <LockedTokensInfo {...modal} onClose={onCloseModalPress} />;
-      case 'notEnoughGas':
+      case ModalType.notEnoughGas:
         return <NotEnoughGas {...modal} onClose={onCloseModalPress} />;
-      case 'cloudVerification':
+      case ModalType.cloudVerification:
         return <CloudVerification {...modal} />;
+      case ModalType.viewErrorDetails:
+        return <ViewErrorDetails {...modal} onClose={onCloseModalPress} />;
       default:
         return null;
     }

@@ -1,6 +1,6 @@
 import React, {memo, useCallback, useMemo} from 'react';
 
-import {SettingsProviderEdit} from '@app/components/settings-provider-edit';
+import {SettingsProviderEdit} from '@app/components/settings-providers/settings-provider-edit';
 import {app} from '@app/contexts';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {Provider} from '@app/models/provider';

@@ -18,6 +18,7 @@ export interface RemoteConfigTypes {
   welcome_screen: keyof RootStackParamList;
   version: number;
   transfer_min_amount: string;
+  staking_reward_min_amount: string;
   sss_apple: string;
   sss_google: string;
   airdrop_url: string;

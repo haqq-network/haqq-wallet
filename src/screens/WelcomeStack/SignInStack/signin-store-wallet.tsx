@@ -7,7 +7,6 @@ import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 
 import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
-import {createWalletsForProvider} from '@app/helpers/create-wallets-for-provider';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
@@ -18,6 +17,7 @@ import {
   SignInStackRoutes,
 } from '@app/screens/WelcomeStack/SignInStack';
 import {RemoteConfig} from '@app/services/remote-config';
+import {ModalType} from '@app/types';
 import {WalletType} from '@app/types';
 import {MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
@@ -29,12 +29,12 @@ export const SignInStoreWalletScreen = memo(() => {
   >().params;
 
   useEffect(() => {
-    showModal('loading', {text: getText(I18N.signinStoreWalletText)});
+    showModal(ModalType.loading, {text: getText(I18N.signinStoreWalletText)});
   }, []);
 
   useEffect(() => {
     const goBack = () => {
-      hideModal('loading');
+      hideModal(ModalType.loading);
       //@ts-ignore
       navigation.replace(WelcomeStackRoutes.SignIn, {next: ''});
     };
@@ -65,15 +65,12 @@ export const SignInStoreWalletScreen = memo(() => {
 
             const {address} = await provider.getAccountInfo('');
 
-            await Wallet.create(
-              {
-                path: '',
-                address: address,
-                type: WalletType.hot,
-                accountId: provider.getIdentifier().toLowerCase(),
-              },
-              name,
-            );
+            await Wallet.create(name, {
+              path: '',
+              address: address,
+              type: WalletType.hot,
+              accountId: provider.getIdentifier().toLowerCase(),
+            });
             break;
           case 'mnemonic':
             const mnemonicProvider =
@@ -111,23 +108,28 @@ export const SignInStoreWalletScreen = memo(() => {
               },
             );
 
-            await createWalletsForProvider(sssProvider, WalletType.sss);
+            hideModal('loading');
+            navigation.navigate(SignInStackRoutes.SigninChooseAccount, {
+              provider: sssProvider,
+            });
             break;
         }
 
-        //@ts-ignore
-        navigation.navigate(nextScreen ?? 'onboardingFinish', params);
+        if (params.type !== 'sss') {
+          //@ts-ignore
+          navigation.navigate(nextScreen ?? 'onboardingFinish', params);
+        }
       } catch (error) {
         Logger.captureException(error, 'restoreStore');
         switch (error) {
           case 'wallet_already_exists':
-            showModal('errorAccountAdded');
+            showModal(ModalType.errorAccountAdded);
             goBack();
             break;
           default:
             if (error instanceof Error) {
               Logger.log('error.message', error.message);
-              showModal('errorCreateAccount');
+              showModal(ModalType.errorCreateAccount);
               goBack();
             }
         }

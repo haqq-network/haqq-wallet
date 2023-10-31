@@ -5,7 +5,9 @@ import {app} from '@app/contexts';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
+import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {Contact} from '@app/models/contact';
+import {Wallet} from '@app/models/wallet';
 import {
   TransactionStackParamList,
   TransactionStackRoutes,
@@ -27,9 +29,13 @@ export const TransactionSumScreen = memo(() => {
   >();
   const event = useMemo(() => generateUUID(), []);
   const [to, setTo] = useState(route.params.to);
-
-  const [balance, setBalance] = useState(Balance.Empty);
-  const [fee, setFee] = useState(Balance.Empty);
+  const wallet = Wallet.getById(route.params.from);
+  const balances = useWalletsBalance([wallet!]);
+  const currentBalance = useMemo(
+    () => balances[route.params.from],
+    [balances, route],
+  );
+  const [fee, setFee] = useState<Balance | null>(null);
   const contact = useMemo(() => Contact.getById(to), [to]);
 
   const onAddress = useCallback((address: string) => {
@@ -37,6 +43,9 @@ export const TransactionSumScreen = memo(() => {
   }, []);
 
   useEffect(() => {
+    //@ts-ignore
+    navigation.setOptions({titleIcon: route.params.token.image});
+
     app.on(event, onAddress);
 
     return () => {
@@ -46,12 +55,15 @@ export const TransactionSumScreen = memo(() => {
 
   const onAmount = useCallback(
     (amount: Balance) => {
-      navigation.navigate(TransactionStackRoutes.TransactionConfirmation, {
-        fee,
-        from: route.params.from,
-        to,
-        amount,
-      });
+      if (fee !== null) {
+        navigation.navigate(TransactionStackRoutes.TransactionConfirmation, {
+          fee,
+          from: route.params.from,
+          to,
+          amount,
+          token: route.params.token,
+        });
+      }
     },
     [fee, navigation, route.params.from, to],
   );
@@ -64,27 +76,32 @@ export const TransactionSumScreen = memo(() => {
     });
   }, [event, navigation, to]);
 
+  const onToken = useCallback(() => {
+    navigation.goBack();
+  }, []);
+
   useEffectAsync(async () => {
-    const b = app.getBalance(route.params.from);
-    setBalance(b);
+    const b = app.getAvailableBalance(route.params.from);
     const estimateFee = await EthNetwork.estimateTransaction(
       route.params.from,
       to,
       b,
     );
     setFee(estimateFee.feeWei);
-  }, [route.params.from, to]);
+  }, [to]);
 
   return (
     <TransactionSum
       contact={contact}
-      balance={balance}
+      balance={currentBalance.available}
       fee={fee}
       to={to}
       from={route.params.from}
       onAmount={onAmount}
       onContact={onContact}
+      onToken={onToken}
       testID="transaction_sum"
+      token={route.params.token}
     />
   );
 });

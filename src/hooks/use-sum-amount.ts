@@ -10,6 +10,7 @@ export function useSumAmount(
   initialSum = Balance.Empty,
   initialMaxSum = Balance.Empty,
   minAmount = getMinAmount(),
+  customCheck?: (amount: Balance) => string,
 ) {
   const [{amount, amountText, changed}, setAmount] = useState({
     amount: initialSum,
@@ -24,6 +25,16 @@ export function useSumAmount(
   }, [initialMaxSum]);
 
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!customCheck) {
+      return;
+    }
+    const result = customCheck(amount);
+    if (result) {
+      setError(result);
+    }
+  }, [customCheck]);
 
   useEffect(() => {
     if (amount && changed) {
@@ -56,11 +67,10 @@ export function useSumAmount(
       const a =
         Math.floor(maxAmount.toFloat() / minimumAmountConst.toFloat()) *
         minimumAmountConst.toFloat();
-      // eslint-disable-next-line @typescript-eslint/no-shadow
-      setAmount(({changed}) => ({
+      setAmount(({changed: _changed}) => ({
         amountText: String(a),
         amount: maxAmount,
-        changed: changed,
+        changed: _changed,
       }));
     },
     setAmount(text: string) {

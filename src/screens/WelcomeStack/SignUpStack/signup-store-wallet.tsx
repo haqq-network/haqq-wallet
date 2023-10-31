@@ -12,6 +12,7 @@ import {
   SignUpStackParamList,
   SignUpStackRoutes,
 } from '@app/screens/WelcomeStack/SignUpStack';
+import {ModalType} from '@app/types';
 import {WalletType} from '@app/types';
 import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
@@ -23,12 +24,12 @@ export const SignUpStoreWalletScreen = () => {
   >();
 
   const goBack = useCallback(() => {
-    hideModal('loading');
+    hideModal(ModalType.loading);
     navigation.replace(WelcomeStackRoutes.SignUp);
   }, [navigation]);
 
   useEffect(() => {
-    showModal('loading', {
+    showModal(ModalType.loading, {
       text: getText(I18N.signupStoreWalletCreatingAccount),
     });
   }, []);
@@ -57,27 +58,24 @@ export const SignUpStoreWalletScreen = () => {
           provider instanceof ProviderSSSReactNative
             ? WalletType.sss
             : WalletType.mnemonic;
-        await Wallet.create(
-          {
-            address,
-            accountId: provider.getIdentifier(),
-            path: hdPath,
-            type,
-          },
-          name,
-        );
+        await Wallet.create(name, {
+          address,
+          accountId: provider.getIdentifier(),
+          path: hdPath,
+          type,
+        });
 
         //@ts-ignore
         navigation.navigate(route.params.nextScreen ?? 'onboardingFinish');
       } catch (error) {
         switch (error) {
           case 'wallet_already_exists':
-            showModal('errorAccountAdded');
+            showModal(ModalType.errorAccountAdded);
             goBack();
             break;
           default:
             if (error instanceof Error) {
-              showModal('errorCreateAccount');
+              showModal(ModalType.errorCreateAccount);
               goBack();
               Logger.captureException(error, 'createStoreWallet');
             }

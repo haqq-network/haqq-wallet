@@ -2,6 +2,7 @@ import React from 'react';
 
 import {StyleSheet} from 'react-native';
 
+import {Spacer} from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
 import {WidgetHeader} from '@app/components/ui/widget-header';
 import {I18N, getText} from '@app/i18n';
@@ -23,7 +24,7 @@ type Props = {
     | TransactionListContract
   )[];
   onRowPress: OnTransactionRowPress;
-  wallets: Realm.Results<Wallet>;
+  wallets: Wallet[];
   contractNameMap: ContractNameMap;
 };
 
@@ -40,6 +41,7 @@ export const TransactionsWidget = ({
   return (
     <ShadowCard onPress={onPress} style={styles.wrapper}>
       <WidgetHeader title={getText(I18N.transactionWidgetShortTitle)} />
+      <Spacer height={8} />
       {lastTransactions.map(item => {
         return (
           <TransactionRowWidget

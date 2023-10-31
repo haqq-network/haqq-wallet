@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {utils} from 'ethers';
-import {Keyboard, ListRenderItem, View} from 'react-native';
+import {ListRenderItem, View} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 
 import {Color} from '@app/colors';
@@ -18,16 +18,16 @@ import {
   Text,
   TextField,
 } from '@app/components/ui';
-import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
-import {hideModal, showModal} from '@app/helpers/modal';
+import {awaitForScanQr} from '@app/helpers/await-for-scan-qr';
+import {LinkType} from '@app/helpers/parse-deep-link';
 import {withActionsContactItem} from '@app/hocs';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Wallet} from '@app/models/wallet';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {SystemDialog} from '@app/services/system-dialog';
-import {isHexString} from '@app/utils';
+import {isHexString, showUnrecognizedDataAttention} from '@app/utils';
 
 import {WalletRow, WalletRowTypes} from './wallet-row';
 import {WALLET_ROW_4_WIDTH} from './wallet-row-variant-4';
@@ -36,7 +36,7 @@ export type TransactionAddressProps = {
   testID?: string;
   initial?: string;
   loading?: boolean;
-  filteredWallets?: Realm.Results<Wallet>;
+  filteredWallets?: Wallet[];
   contacts?: Contact[];
   address: string;
   onAddress: (address: string) => void;
@@ -85,17 +85,21 @@ export const TransactionAddress = ({
     onAddress(address.trim());
   }, [onAddress, address]);
 
-  const onPressQR = useCallback(() => {
-    Keyboard.dismiss();
-    const subscription = ({to}: any) => {
-      if (utils.isAddress(to)) {
-        setAddress(to);
-        app.off('address', subscription);
-        hideModal('qr');
-      }
-    };
-    app.on('address', subscription);
-    showModal('qr');
+  const onPressQR = useCallback(async () => {
+    const {type, params} = await awaitForScanQr();
+
+    switch (type) {
+      case LinkType.Haqq:
+      case LinkType.Address:
+      case LinkType.Etherium:
+        setAddress(params.address ?? '');
+        break;
+      case LinkType.WalletConnect:
+      case LinkType.Unrecognized:
+        setError(true);
+        showUnrecognizedDataAttention();
+        break;
+    }
   }, [setAddress]);
 
   const onPressClear = useCallback(() => {

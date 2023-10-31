@@ -32,6 +32,7 @@ export enum IconsName {
   governance = 'governance',
   help = 'help',
   image = 'image',
+  inprogress = 'inprogress',
   instagram = 'instagram',
   invoice = 'invoice',
   islm = 'islm',
@@ -94,6 +95,12 @@ export enum IconsName {
   staking_thin = 'staking_thin',
   home = 'home',
   contract = 'contract',
+  eye_open = 'eye_open',
+  eye_close = 'eye_close',
+  arrow_sort = 'arrow_sort',
+  shield_empty = 'shield_empty',
+  shield_partially = 'shield_partially',
+  privacy = 'privacy',
 }
 
 export type IconSize =

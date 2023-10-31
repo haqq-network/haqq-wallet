@@ -109,6 +109,7 @@ export type HomeStackParamList = {
     metadata: JsonRpcMetadata;
     chainId?: number;
     selectedAccount?: string;
+    hideContractAttention?: boolean;
   };
   [HomeStackRoutes.BackupSssNotification]: {accountId: string};
   [HomeStackRoutes.PopupNotificationNews]: {
@@ -120,7 +121,7 @@ export type HomeStackParamList = {
   [HomeStackRoutes.PopupTrackActivity]: {bannerId: string};
   [HomeStackRoutes.Web3BrowserPopup]: {url: string; popup?: boolean};
   [HomeStackRoutes.WalletSelector]: {
-    wallets: Wallet[] | Results<Wallet>;
+    wallets: Wallet[];
     title: string;
     initialAddress?: string;
     eventSuffix?: string;

@@ -155,6 +155,11 @@ platform :ios do
 
     current_build_number = previous_build_number + 1
 
+    xcodes(
+      version: '15',
+      select_for_current_build_only: true,
+    )
+
     increment_build_number(
       xcodeproj: './ios/haqq.xcodeproj',
       build_number: current_build_number

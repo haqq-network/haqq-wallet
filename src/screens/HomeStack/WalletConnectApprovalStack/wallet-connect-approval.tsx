@@ -1,16 +1,10 @@
-import React, {
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+
+import {observer} from 'mobx-react';
 
 import {WalletConnectApproval} from '@app/components/wallet-connect-approval';
 import {WalletSelectType, awaitForWallet} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {
@@ -19,13 +13,13 @@ import {
 } from '@app/screens/HomeStack/WalletConnectApprovalStack';
 import {WalletConnect} from '@app/services/wallet-connect';
 
-export const WalletConnectApprovalScreen = memo(() => {
+export const WalletConnectApprovalScreen = observer(() => {
   const navigation = useTypedNavigation<WalletConnectApprovalStackParamList>();
   const route = useTypedRoute<
     WalletConnectApprovalStackParamList,
     WalletConnectApprovalStackRoutes.WalletConnectApproval
   >();
-  const wallets = useWalletsVisible();
+  const wallets = Wallet.getAllVisible();
   const [selectedWallet, setSelectedWallet] = useState<Wallet>(wallets?.[0]);
   const isApproved = useRef(false);
   const event = useMemo(() => route?.params?.event, [route?.params?.event]);

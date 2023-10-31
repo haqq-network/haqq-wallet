@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import SpinningNumbers from '@birdwingo/react-native-spinning-numbers';
+// import SpinningNumbers from '@birdwingo/react-native-spinning-numbers';
 import {View} from 'react-native';
 import Timer from 'react-timer-mixin';
 
@@ -78,12 +78,13 @@ export class AnimateNumber extends Component<Props, State> {
   render() {
     return (
       <View style={styles.wrapper}>
-        <SpinningNumbers
-          duration={CONFIG.Interval}
-          autoMeasure
+        <Text
+          t0
+          // duration={0} // CONFIG.Interval
+          // autoMeasure
           style={styles.currencyText}>
           {cleanNumber(this.state.value)}
-        </SpinningNumbers>
+        </Text>
         <Text
           t0
           color={Color.textBase3}

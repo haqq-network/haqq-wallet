@@ -5,9 +5,11 @@ import {BottomSheet} from '@app/components/bottom-sheet';
 import {Spacer, Text} from '@app/components/ui';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N} from '@app/i18n';
-import {Modals} from '@app/types';
+import {ModalType, Modals} from '@app/types';
 
-export function LockedTokensInfo({onClose}: Modals['lockedTokensInfo']) {
+export function LockedTokensInfo({
+  onClose,
+}: Modals[ModalType.lockedTokensInfo]) {
   const closeDistance = useCalculatedDimensionsValue(({height}) => height / 4);
 
   return (

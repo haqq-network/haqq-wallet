@@ -6,17 +6,19 @@ import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {showModal} from '@app/helpers';
 import {getHost} from '@app/helpers/web3-browser-utils';
+import {Whitelist} from '@app/helpers/whitelist';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useRemoteConfigVar} from '@app/hooks/use-remote-config';
 import {Wallet} from '@app/models/wallet';
 import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
+import {Balance} from '@app/services/balance';
+import {EthSignErrorDataDetails} from '@app/services/eth-sign';
 import {SignJsonRpcRequest} from '@app/services/sign-json-rpc-request';
-import {VerifyAddressResponse} from '@app/types';
+import {ModalType, VerifyAddressResponse} from '@app/types';
 import {
   getTransactionFromJsonRpcRequest,
   getUserAddressFromJRPCRequest,
-  isError,
   verifyAddress,
 } from '@app/utils';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
@@ -30,9 +32,14 @@ export const JsonRpcSignScreen = memo(() => {
     useState<VerifyAddressResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigation = useTypedNavigation<HomeStackParamList>();
-  const {metadata, request, chainId, selectedAccount} =
-    useTypedRoute<HomeStackParamList, HomeStackRoutes.JsonRpcSign>().params ||
-    {};
+  const {
+    metadata,
+    request,
+    chainId,
+    selectedAccount,
+    hideContractAttention = false,
+  } = useTypedRoute<HomeStackParamList, HomeStackRoutes.JsonRpcSign>().params ||
+  {};
 
   const isTransaction = useMemo(
     () =>
@@ -50,9 +57,9 @@ export const JsonRpcSignScreen = memo(() => {
   );
 
   const onPressReject = useCallback(
-    async (errMsg?: string) => {
+    async (err?: EthSignErrorDataDetails | string) => {
       setRejectLoading(true);
-      app.emit('json-rpc-sign-reject', errMsg);
+      app.emit('json-rpc-sign-reject', err);
       navigation.goBack();
     },
     [navigation],
@@ -60,7 +67,10 @@ export const JsonRpcSignScreen = memo(() => {
 
   const onPressSign = useCallback(async () => {
     try {
-      if (!isAllowed && !DEBUG_VARS.disableWeb3DomainBlocking) {
+      if (
+        !isAllowed &&
+        !(DEBUG_VARS.disableWeb3DomainBlocking || app.isTesterMode)
+      ) {
         return onPressReject('domain is blocked');
       }
       setSignLoading(true);
@@ -71,14 +81,30 @@ export const JsonRpcSignScreen = memo(() => {
       );
       app.emit('json-rpc-sign-success', result);
       navigation.goBack();
-    } catch (err) {
-      if (isError(err)) {
-        onPressReject(err.message);
-        Logger.captureException(err, 'JsonRpcSignScreen:onPressSign', {
-          request,
-          chainId,
+    } catch (e) {
+      const err = e as EthSignErrorDataDetails;
+      const txInfo = err?.transaction;
+      const errCode = err?.code;
+      if (
+        !!txInfo?.gasLimit &&
+        !!txInfo?.maxFeePerGas &&
+        errCode === 'INSUFFICIENT_FUNDS'
+      ) {
+        err.handled = true;
+        const fee = new Balance(txInfo.gasLimit).operate(
+          new Balance(txInfo.maxFeePerGas),
+          'mul',
+        );
+        showModal(ModalType.notEnoughGas, {
+          gasLimit: fee,
+          currentAmount: app.getAvailableBalance(wallet!.address),
         });
       }
+      onPressReject(err);
+      Logger.captureException(err, 'JsonRpcSignScreen:onPressSign', {
+        request,
+        chainId,
+      });
     }
   }, [chainId, isAllowed, navigation, onPressReject, request, wallet]);
 
@@ -103,17 +129,14 @@ export const JsonRpcSignScreen = memo(() => {
     } finally {
       setIsLoading(false);
     }
-  }, [checkContractAddress]);
+  }, []);
 
-  useEffect(() => {
-    const host = getHost(metadata.url);
-    const isAllowedDomain = !!whitelist?.find?.(url =>
-      new RegExp(host).test(url),
-    )?.length;
+  useEffectAsync(async () => {
+    const isAllowedDomain = await Whitelist.check(metadata.url);
     setIsAllowed(isAllowedDomain);
-    if (!isAllowedDomain && !DEBUG_VARS.disableWeb3DomainBlocking) {
-      showModal('domainBlocked', {
-        domain: host,
+    if (!isAllowedDomain) {
+      showModal(ModalType.domainBlocked, {
+        domain: getHost(metadata.url),
         onClose: () => onPressReject('domain is blocked'),
       });
     }
@@ -149,6 +172,7 @@ export const JsonRpcSignScreen = memo(() => {
       request={request}
       chainId={chainId}
       verifyAddressResponse={verifyAddressResponse}
+      hideContractAttention={hideContractAttention}
       onPressReject={onPressReject}
       onPressSign={onPressSign}
     />

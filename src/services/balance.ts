@@ -1,23 +1,43 @@
 import Decimal from 'decimal.js';
+import {BigNumber, BigNumberish} from 'ethers';
 
 import {cleanNumber} from '@app/helpers/clean-number';
-import {I18N, getText} from '@app/i18n';
-import {BalanceConstructor, IBalance} from '@app/types';
 import {
+  BalanceConstructor,
+  HexNumber,
+  IBalance,
+  ISerializable,
+} from '@app/types';
+import {
+  CURRENCY_NAME,
   NUM_DELIMITER,
   NUM_PRECISION,
   WEI_PRECISION,
 } from '@app/variables/common';
-
 const zeroBN = new Decimal(0);
 
-export class Balance implements IBalance {
+export class Balance implements IBalance, ISerializable {
   static readonly Empty = new Balance(zeroBN);
   private bnRaw = zeroBN;
-  private _precission: number;
+  private precission: number;
+  private symbol: string;
+  public originalValue: BalanceConstructor;
 
-  constructor(balance: BalanceConstructor, precission = WEI_PRECISION) {
-    this._precission = precission;
+  constructor(
+    balance: BalanceConstructor,
+    precission = WEI_PRECISION,
+    symbol = CURRENCY_NAME,
+  ) {
+    this.originalValue = balance;
+    this.precission = precission;
+    this.symbol = symbol;
+
+    if (BigNumber.isBigNumber(balance)) {
+      const {_hex} = BigNumber.from(balance);
+      this.bnRaw = new Decimal(_hex);
+      return;
+    }
+
     if (Decimal.isDecimal(balance)) {
       this.bnRaw = balance;
       return;
@@ -25,6 +45,8 @@ export class Balance implements IBalance {
 
     if (balance instanceof Balance) {
       this.bnRaw = balance.bnRaw as Decimal;
+      this.precission = balance.precission;
+      this.symbol = balance.symbol;
       return;
     }
 
@@ -35,15 +57,12 @@ export class Balance implements IBalance {
         return;
       }
 
-      const isNegative = balance.startsWith('-');
-      this.bnRaw = new Decimal(
-        (isNegative ? '-0x' : '0x') + balance.replace('-', ''),
-      );
+      this.bnRaw = new Decimal(balance);
       return;
     }
 
     if (typeof balance === 'number') {
-      this.bnRaw = new Decimal(balance * 10 ** this._precission);
+      this.bnRaw = new Decimal(balance * 10 ** this.precission);
       return;
     }
   }
@@ -66,7 +85,7 @@ export class Balance implements IBalance {
   /**
    * Convert balance to float according to WEI
    */
-  toFloat = (precission: number = this._precission) => {
+  toFloat = (precission: number = this.precission) => {
     const float = this.bnRaw.div(10 ** precission).toNumber();
     return float;
   };
@@ -77,7 +96,7 @@ export class Balance implements IBalance {
    */
   toFloatString = (
     fixed = NUM_PRECISION,
-    precission: number = this._precission,
+    precission: number = this.precission,
   ) => {
     return cleanNumber(this.toFloat(precission), NUM_DELIMITER, fixed);
   };
@@ -88,11 +107,9 @@ export class Balance implements IBalance {
    */
   toBalanceString = (
     fixed = NUM_PRECISION,
-    precission: number = this._precission,
+    precission: number = this.precission,
   ) => {
-    return getText(I18N.amountISLM, {
-      amount: this.toFloatString(fixed, precission),
-    });
+    return this.toFloatString(fixed, precission) + ` ${this.symbol}`;
   };
 
   toString = () => {
@@ -127,7 +144,7 @@ export class Balance implements IBalance {
     }
 
     const result = this.bnRaw[operation](bnRaw);
-    return new Balance(result);
+    return new Balance(result, this.precission, this.symbol);
   };
 
   /**
@@ -162,7 +179,7 @@ export class Balance implements IBalance {
     }
 
     const result = Decimal.max(this.bnRaw, bnRaw);
-    return new Balance(result);
+    return new Balance(result, this.precission, this.symbol);
   };
 
   /**
@@ -178,7 +195,7 @@ export class Balance implements IBalance {
     }
 
     const result = Decimal.min(this.bnRaw, bnRaw);
-    return new Balance(result);
+    return new Balance(result, this.precission, this.symbol);
   };
 
   private getBnRaw = (
@@ -191,7 +208,7 @@ export class Balance implements IBalance {
     if (value instanceof Balance) {
       return value.bnRaw;
     } else {
-      return new Balance(value).bnRaw;
+      return new Balance(value, this.precission, this.symbol).bnRaw;
     }
   };
 
@@ -199,13 +216,57 @@ export class Balance implements IBalance {
   toEtherString = () => this.toBalanceString();
   toWei = () => this.toNumber();
   toWeiString = () => {
-    return getText(I18N.amountAISLM, {
-      amount: String(this.toWei()),
-    });
+    return this.toWei() + ` a${this.symbol}`;
   };
+  toBigNumberish = (): BigNumberish => {
+    return BigNumber.from(this.toHex());
+  };
+
+  toJsonString = (): string => {
+    const serializedValue = {
+      value: this.toHex(),
+      precision: this.precission,
+      symbol: this.symbol,
+    };
+    return JSON.stringify(serializedValue);
+  };
+
+  static fromJsonString = (obj: string | Balance) => {
+    const serializedValue: {
+      value: HexNumber;
+      precision: number;
+      symbol: string;
+    } = JSON.parse(String(obj));
+    return new Balance(
+      serializedValue.value,
+      serializedValue.precision,
+      serializedValue.symbol,
+    );
+  };
+
+  /**
+   * Custom console.log implementation for Hermes engine
+   * @returns {string}
+   */
+  toJSON = (): string => {
+    const hex = this.toHex();
+    const ether = this.toEtherString();
+    const wei = this.toWeiString();
+    const precision = this.precission;
+    const symbol = this.symbol;
+    return `Hex: ${hex}, Ether: ${ether}, Wei: ${wei}, Precision: ${precision}, Symbol: ${symbol}`;
+  };
+
+  /**
+   * Is current Balance instance is Islamic Coin
+   */
+  get isIslamic() {
+    return this.symbol === CURRENCY_NAME;
+  }
 }
 
 export const MIN_AMOUNT = new Balance(0.001);
+export const MIN_STAKING_REWARD = new Balance(0.01);
+export const MIN_GAS_LIMIT = new Balance(22_000, 0);
 export const FEE_AMOUNT = new Balance(0.00001);
-export const MIN_GAS_LIMIT = new Balance(21_000, 0);
 export const BALANCE_MULTIPLIER = new Balance(1.2, 0);

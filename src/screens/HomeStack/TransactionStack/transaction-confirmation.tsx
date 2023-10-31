@@ -1,29 +1,35 @@
-import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+
+import {observer} from 'mobx-react';
 
 import {TransactionConfirmation} from '@app/components/transaction-confirmation';
 import {app} from '@app/contexts';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
-import {awaitForLedger, removeProviderInstanceForWallet} from '@app/helpers';
+import {removeProviderInstanceForWallet} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {
   abortProviderInstanceForWallet,
   getProviderInstanceForWallet,
 } from '@app/helpers/provider-instance';
-import {useTypedNavigation, useTypedRoute, useWallet} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
-import {I18N, getText} from '@app/i18n';
+import {useLayoutEffectAsync} from '@app/hooks/use-effect-async';
+import {useError} from '@app/hooks/use-error';
 import {Contact} from '@app/models/contact';
+import {Wallet} from '@app/models/wallet';
 import {
   TransactionStackParamList,
   TransactionStackRoutes,
 } from '@app/screens/HomeStack/TransactionStack';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
-import {AdjustEvents, WalletType} from '@app/types';
+import {Cosmos} from '@app/services/cosmos';
+import {AdjustEvents} from '@app/types';
 import {makeID} from '@app/utils';
+import {FEE_ESTIMATING_TIMEOUT_MS} from '@app/variables/common';
 
-export const TransactionConfirmationScreen = memo(() => {
+export const TransactionConfirmationScreen = observer(() => {
   const navigation = useTypedNavigation<TransactionStackParamList>();
   useAndroidBackHandler(() => {
     navigation.goBack();
@@ -33,23 +39,36 @@ export const TransactionConfirmationScreen = memo(() => {
     TransactionStackParamList,
     TransactionStackRoutes.TransactionConfirmation
   >();
+  const {token} = route.params;
 
-  const wallet = useWallet(route.params.from);
+  const wallet = Wallet.getById(route.params.from);
   const contact = useMemo(
     () => Contact.getById(route.params.to),
     [route.params.to],
   );
-  const [error, setError] = useState('');
+  const {error, errorDetails, setError} = useError();
   const [disabled, setDisabled] = useState(false);
-  const [fee, setFee] = useState(route.params.fee ?? Balance.Empty);
+  const [fee, setFee] = useState<Balance | null>(null);
 
-  useEffect(() => {
-    EthNetwork.estimateTransaction(
+  useLayoutEffectAsync(async () => {
+    const timer = setTimeout(
+      () => setFee(route.params.fee ?? Balance.Empty),
+      FEE_ESTIMATING_TIMEOUT_MS,
+    );
+
+    const result = await EthNetwork.estimateTransaction(
       route.params.from,
       route.params.to,
       route.params.amount,
-    ).then(result => setFee(result.feeWei));
-  }, [route.params.from, route.params.to, route.params.amount]);
+    );
+
+    clearTimeout(timer);
+    setFee(result.feeWei);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
 
   const onConfirmTransaction = useCallback(async () => {
     if (wallet) {
@@ -60,18 +79,23 @@ export const TransactionConfirmationScreen = memo(() => {
 
         const provider = await getProviderInstanceForWallet(wallet);
 
-        const result = ethNetworkProvider.transferTransaction(
-          provider,
-          wallet.path!,
-          route.params.to,
-          route.params.amount,
-        );
-
-        if (wallet.type === WalletType.ledgerBt) {
-          await awaitForLedger(provider);
+        let transaction;
+        if (token.is_erc20) {
+          transaction = await ethNetworkProvider.transferERC20(
+            provider,
+            wallet,
+            route.params.to,
+            route.params.amount,
+            Cosmos.bech32ToAddress(token.id),
+          );
+        } else {
+          transaction = await ethNetworkProvider.transferTransaction(
+            provider,
+            wallet.path!,
+            route.params.to,
+            route.params.amount,
+          );
         }
-
-        const transaction = await result;
 
         if (transaction) {
           onTrackEvent(AdjustEvents.sendFund);
@@ -86,6 +110,8 @@ export const TransactionConfirmationScreen = memo(() => {
           navigation.navigate(TransactionStackRoutes.TransactionFinish, {
             transaction,
             hash: transaction.hash,
+            token: route.params.token,
+            amount: token.is_erc20 ? route.params.amount : undefined,
           });
         }
       } catch (e) {
@@ -100,11 +126,7 @@ export const TransactionConfirmationScreen = memo(() => {
         });
 
         if (e instanceof Error) {
-          setError(
-            getText(I18N.transactionFailed, {
-              id: errorId,
-            }),
-          );
+          setError(errorId, e.message);
         }
       } finally {
         setDisabled(false);
@@ -122,7 +144,7 @@ export const TransactionConfirmationScreen = memo(() => {
 
   useEffect(() => {
     return () => {
-      wallet && wallet.isValid() && abortProviderInstanceForWallet(wallet);
+      wallet && abortProviderInstanceForWallet(wallet);
     };
   }, [wallet]);
 
@@ -135,7 +157,9 @@ export const TransactionConfirmationScreen = memo(() => {
       fee={fee}
       onConfirmTransaction={onConfirmTransaction}
       error={error}
+      errorDetails={errorDetails}
       testID="transaction_confirmation"
+      token={route.params.token}
     />
   );
 });

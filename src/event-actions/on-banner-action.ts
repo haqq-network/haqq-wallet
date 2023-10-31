@@ -1,3 +1,5 @@
+import {Alert} from 'react-native';
+
 import {onBannerAnalyticsCreate} from '@app/event-actions/on-banner-analytics-click';
 import {onBannerAnalyticsSnooze} from '@app/event-actions/on-banner-analytics-snooze';
 import {onBannerClaimAirdrop} from '@app/event-actions/on-banner-claim-airdrop';
@@ -7,38 +9,43 @@ import {onBannerNotificationsSnooze} from '@app/event-actions/on-banner-notifica
 import {onBannerNotificationsTopicSnooze} from '@app/event-actions/on-banner-notifications-topic-snooze';
 import {onBannerNotificationsTopicSubscribe} from '@app/event-actions/on-banner-notifications-topic-subscribe';
 import {onBannerSnoozeUntil} from '@app/event-actions/on-banner-snooze-until';
+import {BannerButtonEvent} from '@app/models/banner';
 
 export async function onBannerAction(
   id: string,
-  event: string,
+  event: BannerButtonEvent | string,
   params: Record<string, any> = {},
 ) {
+  if (event === BannerButtonEvent.test) {
+    return Alert.alert('Test button clicked', JSON.stringify(params, null, 2));
+  }
+
   switch (event) {
-    case 'claimCode':
+    case BannerButtonEvent.claimCode:
       await onBannerClaimAirdrop(id);
       break;
-    case 'close':
+    case BannerButtonEvent.close:
       await onBannerSnoozeUntil(id);
       break;
-    case 'notificationNews':
+    case BannerButtonEvent.notificationNews:
       await onBannerNotificationsNews(id);
       break;
-    case 'notificationsEnable':
+    case BannerButtonEvent.notificationsEnable:
       await onBannerNotificationsEnable(id);
       break;
-    case 'notificationsSnooze':
+    case BannerButtonEvent.notificationsSnooze:
       await onBannerNotificationsSnooze(id);
       break;
-    case 'notificationsTopicSubscribe':
+    case BannerButtonEvent.notificationsTopicSubscribe:
       await onBannerNotificationsTopicSubscribe(id, params.topic ?? '');
       break;
-    case 'notificationsTopicSnooze':
+    case BannerButtonEvent.notificationsTopicSnooze:
       await onBannerNotificationsTopicSnooze(id, params.topic ?? '');
       break;
-    case 'trackActivityClick':
+    case BannerButtonEvent.trackActivityClick:
       await onBannerAnalyticsCreate(id);
       break;
-    case 'trackActivityClose':
+    case BannerButtonEvent.trackActivityClose:
       await onBannerAnalyticsSnooze(id);
       break;
   }

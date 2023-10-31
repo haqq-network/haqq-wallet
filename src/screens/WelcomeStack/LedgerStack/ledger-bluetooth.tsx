@@ -13,6 +13,7 @@ import {
   LedgerStackRoutes,
 } from '@app/screens/WelcomeStack/LedgerStack';
 import {SystemDialog} from '@app/services/system-dialog';
+import {ModalType} from '@app/types';
 
 export const LedgerBluetoothScreen = memo(() => {
   const navigation = useTypedNavigation<LedgerStackParamList>();
@@ -35,7 +36,7 @@ export const LedgerBluetoothScreen = memo(() => {
     if (granted) {
       navigation.navigate(LedgerStackRoutes.LedgerScan);
     } else {
-      showModal('locationUnauthorized');
+      showModal(ModalType.locationUnauthorized);
     }
 
     requestAnimationFrame(() => {

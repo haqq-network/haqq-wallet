@@ -1,12 +1,12 @@
-import React, {memo, useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 
+import {observer} from 'mobx-react';
 import {Alert} from 'react-native';
 
 import {SettingsAccountDetail} from '@app/components/settings-account-detail';
 import {CustomHeader, IconsName} from '@app/components/ui';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {hideModal, showModal} from '@app/helpers';
-import {useWallet} from '@app/hooks';
 import {useTypedNavigation} from '@app/hooks/use-typed-navigation';
 import {useTypedRoute} from '@app/hooks/use-typed-route';
 import {I18N, getText} from '@app/i18n';
@@ -19,16 +19,17 @@ import {
 import {SettingsStackRoutes} from '@app/screens/HomeStack/SettingsStack';
 import {sendNotification} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {ModalType} from '@app/types';
 import {AdjustEvents} from '@app/types';
 
-export const SettingsAccountDetailScreen = memo(() => {
+export const SettingsAccountDetailScreen = observer(() => {
   const navigation = useTypedNavigation<ManageAccountsStackParamList>();
   const params = useTypedRoute<
     ManageAccountsStackParamList,
     ManageAccountsStackRoutes.SettingsAccountDetail
   >().params;
   const {address} = params;
-  const wallet = useWallet(address);
+  const wallet = Wallet.getById(address);
 
   const onPressRename = useCallback(() => {
     navigation.navigate(ManageAccountsStackRoutes.SettingsAccountEdit, params);
@@ -48,7 +49,7 @@ export const SettingsAccountDetailScreen = memo(() => {
 
   const onToggleIsHidden = useCallback(async () => {
     if (wallet) {
-      await wallet.toggleIsHidden();
+      await Wallet.toggleIsHidden(wallet.address);
       if (wallet.isHidden) {
         sendNotification(I18N.notificationAccountHidden);
       }
@@ -81,10 +82,10 @@ export const SettingsAccountDetailScreen = memo(() => {
           style: 'destructive',
           text: getText(I18N.settingsAccountRemoveConfirm),
           onPress: () => {
-            showModal('loading');
+            showModal(ModalType.loading);
             requestAnimationFrame(async () => {
               await Wallet.remove(address);
-              hideModal('loading');
+              hideModal(ModalType.loading);
               navigation.goBack();
               sendNotification(I18N.notificationAccountDeleted);
             });
@@ -107,7 +108,7 @@ export const SettingsAccountDetailScreen = memo(() => {
     });
   }, [navigation, wallet?.accountId]);
 
-  if (!(wallet && wallet.isValid())) {
+  if (!wallet) {
     return null;
   }
 

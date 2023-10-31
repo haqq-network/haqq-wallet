@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 
 import {observer} from 'mobx-react';
 import prompt from 'react-native-prompt-android';
@@ -9,9 +9,9 @@ import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {shortAddress} from '@app/helpers/short-address';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
+import {useTransaction} from '@app/hooks/use-transaction';
 import {I18N, getText} from '@app/i18n';
 import {Contact, ContactType} from '@app/models/contact';
-import {Transaction} from '@app/models/transaction';
 import {
   TransactionStackParamList,
   TransactionStackRoutes,
@@ -26,13 +26,16 @@ export const TransactionFinishScreen = observer(() => {
     goBack();
     return true;
   }, [goBack]);
-  const {hash, transaction: transactionFromParent} = useTypedRoute<
+  const {
+    hash,
+    transaction: transactionFromParent,
+    token,
+    amount,
+  } = useTypedRoute<
     TransactionStackParamList,
     TransactionStackRoutes.TransactionFinish
   >().params;
-  const [transaction, setTransaction] = useState<Transaction | null>(
-    Transaction.getById(hash),
-  );
+  const transaction = useTransaction(hash);
 
   const contact = Contact.getById(transaction?.to ?? '');
 
@@ -81,7 +84,6 @@ export const TransactionFinishScreen = observer(() => {
   }, [transaction?.to, contact]);
 
   useEffect(() => {
-    setTransaction(Transaction.getById(hash));
     vibrate(HapticEffects.success);
   }, [hash, navigate]);
 
@@ -93,6 +95,8 @@ export const TransactionFinishScreen = observer(() => {
       contact={contact}
       short={short}
       testID="transaction_finish"
+      token={token}
+      amount={amount}
     />
   );
 });

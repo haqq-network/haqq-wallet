@@ -5,6 +5,7 @@ import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native'
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 
 import {app} from '@app/contexts';
+import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {Wallet} from '@app/models/wallet';
 import {WalletType} from '@app/types';
@@ -42,8 +43,14 @@ export function removeProviderInstanceForWallet(wallet: Wallet) {
   }
 }
 
+/**
+ * getProviderInstanceForWallet helper
+ * @param {Wallet} wallet
+ * @param {boolean} [skipAwaitForLedgerCall=false] Use `true` for synthetic transaction on Ledger. Default is `false`.
+ */
 export async function getProviderInstanceForWallet(
   wallet: Wallet,
+  skipAwaitForLedgerCall: boolean = false,
 ): Promise<ProviderInterface> {
   const id = getId(wallet);
   if (!hasProviderInstanceForWallet(wallet)) {
@@ -66,16 +73,18 @@ export async function getProviderInstanceForWallet(
           }),
         );
         break;
-      case WalletType.ledgerBt:
-        cache.set(
-          id,
-          new ProviderLedgerReactNative({
-            getPassword: app.getPassword.bind(app),
-            deviceId: wallet.accountId!,
-            appName: LEDGER_APP,
-          }),
-        );
-        break;
+      case WalletType.ledgerBt: {
+        const provider = new ProviderLedgerReactNative({
+          getPassword: app.getPassword.bind(app),
+          deviceId: wallet.accountId!,
+          appName: LEDGER_APP,
+        });
+        if (!skipAwaitForLedgerCall) {
+          awaitForLedger(provider);
+          cache.set(id, provider);
+        }
+        return provider;
+      }
       case WalletType.sss:
         const storage = await getProviderStorage(wallet.accountId as string);
         cache.set(

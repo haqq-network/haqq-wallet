@@ -8,6 +8,7 @@ import {SssPin} from '@app/components/sss-pin';
 import {app} from '@app/contexts';
 import {SssError} from '@app/helpers/sss-error';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N, getText} from '@app/i18n';
 import {
   SignUpStackParamList,
@@ -24,6 +25,13 @@ export const SignupPinScreen = memo(() => {
     SignUpStackParamList,
     SignUpStackRoutes.SignUpPin
   >();
+
+  useEffectAsync(async () => {
+    await app.rehydrateUserAttempts();
+    if (app.pinBanned) {
+      pinRef.current?.locked(app.pinBanned);
+    }
+  }, []);
 
   const onPin = useCallback(
     async (password: string) => {

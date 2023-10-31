@@ -1,13 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {ADJUST_ENVIRONMENT, ADJUST_TOKEN} from '@env';
@@ -24,6 +14,7 @@ import {AppState, Linking, Platform, StyleSheet} from 'react-native';
 import {Adjust, AdjustConfig} from 'react-native-adjust';
 import {AdjustOaid} from 'react-native-adjust-oaid';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {MenuProvider} from 'react-native-popup-menu';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
@@ -35,9 +26,11 @@ import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {trackEvent} from '@app/helpers/track-event';
 import {useTheme} from '@app/hooks';
 import {Contact} from '@app/models/contact';
+import {Transaction} from '@app/models/transaction';
+import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 import {RootStack} from '@app/screens/RootStack';
-import {AppTheme} from '@app/types';
+import {AppTheme, ModalType} from '@app/types';
 import {getAppTrackingAuthorizationStatus, sleep} from '@app/utils';
 import {SPLASH_TIMEOUT_MS} from '@app/variables/common';
 
@@ -64,7 +57,7 @@ export const App = () => {
 
   useEffect(() => {
     const splashTimer = setTimeout(() => {
-      hideModal('splash');
+      hideModal(ModalType.splash);
     }, SPLASH_TIMEOUT_MS);
     sleep(150)
       .then(() => SplashScreen.hide())
@@ -74,7 +67,11 @@ export const App = () => {
           await app.init();
           await migrationWallets();
           // MobX stores migration
-          await Promise.all([Contact.migrate()]);
+          await Promise.all([
+            Contact.migrate(),
+            Wallet.migrate(),
+            Transaction.migrate(),
+          ]);
         }
       })
       .then(() => {
@@ -86,7 +83,7 @@ export const App = () => {
       })
       .then(() => {
         clearTimeout(splashTimer);
-        hideModal('splash');
+        hideModal(ModalType.splash);
       })
       .catch(async e => {
         Logger.captureException(e, 'app init');
@@ -105,7 +102,9 @@ export const App = () => {
   useEffect(() => {
     if (initialized) {
       const subscription = ({isConnected}: NetInfoState) => {
-        isConnected ? hideModal('noInternet') : showModal('noInternet');
+        isConnected
+          ? hideModal(ModalType.noInternet)
+          : showModal(ModalType.noInternet);
       };
 
       const linkingSubscription = ({url}: {url: string}) => {
@@ -179,17 +178,19 @@ export const App = () => {
     <GestureHandlerRootView style={styles.rootView}>
       <ActionSheetProvider>
         <SafeAreaProvider>
-          <NavigationContainer
-            onUnhandledAction={onUnhandledAction}
-            ref={navigator}
-            theme={navTheme}
-            onStateChange={onStateChange}>
-            <RootStack
-              onboarded={onboarded}
-              isPinReseted={isPinReseted}
-              isReady={initialized}
-            />
-          </NavigationContainer>
+          <MenuProvider>
+            <NavigationContainer
+              onUnhandledAction={onUnhandledAction}
+              ref={navigator}
+              theme={navTheme}
+              onStateChange={onStateChange}>
+              <RootStack
+                onboarded={onboarded}
+                isPinReseted={isPinReseted}
+                isReady={initialized}
+              />
+            </NavigationContainer>
+          </MenuProvider>
         </SafeAreaProvider>
       </ActionSheetProvider>
     </GestureHandlerRootView>

@@ -2,7 +2,7 @@ import React, {useEffect, useMemo} from 'react';
 
 import {NativeStackHeaderProps} from '@react-navigation/native-stack';
 import {NavigationAction} from '@react-navigation/routers';
-import {View} from 'react-native';
+import {Image, ImageSourcePropType, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
@@ -14,7 +14,10 @@ import {ScreenOptionType} from '@app/types';
 import {IS_ANDROID} from '@app/variables/common';
 
 type PopupHeaderProps = NativeStackHeaderProps & {
-  options: ScreenOptionType;
+  options: ScreenOptionType & {
+    customBackFunction?: () => void;
+    titleIcon?: ImageSourcePropType;
+  };
 };
 
 export const PopupHeader = ({options, back, navigation}: PopupHeaderProps) => {
@@ -52,19 +55,24 @@ export const PopupHeader = ({options, back, navigation}: PopupHeaderProps) => {
       {options.headerLeft ? (
         options.headerLeft({canGoBack: canGoBack || false})
       ) : canGoBack ? (
-        <GoBackPopupButton />
+        <GoBackPopupButton onBack={options.customBackFunction} />
       ) : (
         <SpacerPopupButton />
       )}
-      <Text
-        t8
-        center
-        color={Color.textBase1}
-        numberOfLines={1}
-        ellipsizeMode="tail"
-        style={page.text}>
-        {options.title}
-      </Text>
+      <View style={page.titleWrapper}>
+        {!!options.titleIcon && (
+          <Image source={options.titleIcon} style={page.titleIcon} />
+        )}
+        <Text
+          t8
+          center
+          color={Color.textBase1}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          style={page.text}>
+          {options.title}
+        </Text>
+      </View>
       {options.headerRight ? (
         options.headerRight({canGoBack: canGoBack || false})
       ) : (
@@ -85,7 +93,17 @@ const page = createTheme({
     backgroundColor: Color.bg1,
   },
   text: {
-    flex: 1,
     marginHorizontal: 8,
+  },
+  titleWrapper: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  titleIcon: {
+    height: 18,
+    width: 18,
+    borderRadius: 5,
   },
 });

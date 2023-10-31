@@ -33,6 +33,7 @@ export enum SettingsStackRoutes {
   SettingsProviderForm = 'settingsProviderForm',
   WalletConnectWalletList = 'walletConnectWalletList',
   BackupSssSuggestion = 'backupSssSuggestion',
+  SettingsDeveloperTools = 'settingsDeveloperTools',
 }
 
 export type SettingsStackParamList = HomeStackParamList & {
@@ -54,6 +55,7 @@ export type SettingsStackParamList = HomeStackParamList & {
   [SettingsStackRoutes.SettingsProviderForm]: undefined;
   [SettingsStackRoutes.WalletConnectWalletList]: undefined;
   [SettingsStackRoutes.BackupSssSuggestion]: {accountId: string};
+  [SettingsStackRoutes.SettingsDeveloperTools]: undefined;
 };
 
 const Stack = createNativeStackNavigator<SettingsStackParamList>();

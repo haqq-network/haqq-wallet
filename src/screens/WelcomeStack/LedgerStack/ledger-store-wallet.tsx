@@ -10,6 +10,7 @@ import {
   LedgerStackParamList,
   LedgerStackRoutes,
 } from '@app/screens/WelcomeStack/LedgerStack';
+import {ModalType} from '@app/types';
 import {WalletType} from '@app/types';
 import {sleep} from '@app/utils';
 
@@ -21,7 +22,7 @@ export const LedgerStoreWalletScreen = memo(() => {
   >();
 
   useEffect(() => {
-    showModal('loading', {text: getText(I18N.ledgerStoreWalletSaving)});
+    showModal(ModalType.loading, {text: getText(I18N.ledgerStoreWalletSaving)});
   }, []);
 
   useEffect(() => {
@@ -31,15 +32,12 @@ export const LedgerStoreWalletScreen = memo(() => {
       const lastIndex = route.params.hdPath.split('/').pop() ?? '0';
 
       actions.push(
-        Wallet.create(
-          {
-            type: WalletType.ledgerBt,
-            path: route.params.hdPath,
-            address: route.params.address,
-            accountId: route?.params?.deviceId,
-          },
-          `${route?.params?.deviceName} #${lastIndex}`,
-        ),
+        Wallet.create(`${route?.params?.deviceName} #${lastIndex}`, {
+          type: WalletType.ledgerBt,
+          path: route.params.hdPath,
+          address: route.params.address,
+          accountId: route?.params?.deviceId,
+        }),
       );
 
       Promise.all(actions)
@@ -49,12 +47,12 @@ export const LedgerStoreWalletScreen = memo(() => {
         .catch(error => {
           switch (error) {
             case 'wallet_already_exists':
-              showModal('errorAccountAdded');
+              showModal(ModalType.errorAccountAdded);
               navigation.getParent()?.goBack();
               break;
             default:
               if (error instanceof Error) {
-                showModal('errorCreateAccount');
+                showModal(ModalType.errorCreateAccount);
                 navigation.getParent()?.goBack();
                 Logger.captureException(
                   error,

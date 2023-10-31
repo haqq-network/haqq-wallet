@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 
-import {View, ViewProps} from 'react-native';
+import {TouchableOpacity, TouchableOpacityProps, View} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
@@ -13,12 +13,13 @@ export enum LabelBlockVariant {
   error = 'error',
 }
 
-export type LabeledBlockProps = ViewProps & {
+export type LabeledBlockProps = TouchableOpacityProps & {
   label?: string;
   variant?: LabelBlockVariant;
   rightAction?: React.ReactNode;
   leftAction?: React.ReactNode;
   i18nLabel?: I18N;
+  onPress?: () => void;
 };
 
 export const LabeledBlock = ({
@@ -29,6 +30,7 @@ export const LabeledBlock = ({
   rightAction,
   leftAction,
   variant = LabelBlockVariant.default,
+  onPress,
   ...props
 }: LabeledBlockProps) => {
   const containerStyle = useMemo(
@@ -51,7 +53,11 @@ export const LabeledBlock = ({
   }, [variant]);
 
   return (
-    <View style={containerStyle} {...props}>
+    <TouchableOpacity
+      disabled={!onPress}
+      onPress={onPress}
+      style={containerStyle}
+      {...props}>
       {!!leftAction && <View style={styles.leftAction}>{leftAction}</View>}
       <View style={styles.flex}>
         {(label || i18nLabel) && (
@@ -65,7 +71,7 @@ export const LabeledBlock = ({
         <View style={styles.inner}>{children}</View>
       </View>
       {!!rightAction && <View style={styles.rightAction}>{rightAction}</View>}
-    </View>
+    </TouchableOpacity>
   );
 };
 

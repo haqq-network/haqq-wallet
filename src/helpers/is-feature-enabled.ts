@@ -1,4 +1,4 @@
-import {IS_SSS_ENABLED, IS_STAKED_VESTED_ENABLED} from '@env';
+import {IS_SSS_ENABLED} from '@env';
 
 import {app} from '@app/contexts';
 
@@ -10,7 +10,6 @@ export enum Feature {
   tokens,
   // right to left
   rtl,
-  lockedStakedVestedTokens,
 }
 
 export const isFeatureEnabled = (feature: Feature): boolean => {
@@ -24,12 +23,18 @@ export const isFeatureEnabled = (feature: Feature): boolean => {
     case Feature.nft:
       return app.isDeveloper;
     case Feature.tokens:
-      return app.isDeveloper;
+      return true;
     case Feature.rtl:
       return false;
-    case Feature.lockedStakedVestedTokens:
-      return IS_STAKED_VESTED_ENABLED === 'true' || app.isDeveloper;
     default:
       return false;
   }
+};
+
+export const isEveryFeaturesEnabled = (features: Feature[]): boolean => {
+  return features.every(feature => isFeatureEnabled(feature));
+};
+
+export const isSomeFeaturesEnabled = (features: Feature[]): boolean => {
+  return features.some(feature => isFeatureEnabled(feature));
 };

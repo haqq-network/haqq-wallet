@@ -5,12 +5,13 @@ import {hideModal} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
 import {SssMigrateStackParamList} from '@app/screens/HomeStack/SssMigrate';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {ModalType} from '@app/types';
 
 export const SssMigrateFinishScreen = memo(() => {
   const navigation = useTypedNavigation<SssMigrateStackParamList>();
 
   useEffect(() => {
-    hideModal('loading');
+    hideModal(ModalType.loading);
     vibrate(HapticEffects.success);
   }, []);
 

@@ -6,11 +6,10 @@ import {SvgUri} from 'react-native-svg';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
-import {getHostnameFromUrl} from '@app/utils';
 
 import {First, Text} from './ui';
 
-import {getFavIconUrl} from '../helpers/web3-browser-utils';
+import {getFavIconUrl, getHost} from '../helpers/web3-browser-utils';
 
 type DefaultProps = {
   title?: string;
@@ -110,8 +109,7 @@ export const SiteIconPreview = ({
     [sizeBoxStyle, style],
   );
   const iconChar = useMemo(
-    () =>
-      (title || getHostnameFromUrl(directIconUrl || url))?.[0]?.toUpperCase?.(),
+    () => getHost(title || directIconUrl || url || '')?.[0]?.toUpperCase?.(),
     [directIconUrl, title, url],
   );
   const textProps = useMemo(() => TEXT_PROPS_BY_SIZE_MAP[size], [size]);
@@ -136,8 +134,8 @@ export const SiteIconPreview = ({
         {!isImageFailed && (
           <Animated.View entering={FadeIn} style={sizeBoxStyle}>
             <Image
-              resizeMode={'center'}
-              style={sizeBoxStyle}
+              resizeMode={'cover'}
+              style={page.imageIcon}
               source={imageSource}
               onError={onImageError}
             />
@@ -162,3 +160,11 @@ export const SiteIconPreview = ({
     </View>
   );
 };
+
+const page = createTheme({
+  imageIcon: {
+    width: '85%',
+    height: '85%',
+    borderRadius: 12,
+  },
+});

@@ -3,6 +3,7 @@ import React, {useCallback, useMemo} from 'react';
 import {TouchableOpacity, View} from 'react-native';
 
 import {createTheme} from '@app/helpers';
+import {getHost} from '@app/helpers/web3-browser-utils';
 
 import {LinkPreviewProps} from './link-preview';
 import {SiteIconPreview, SiteIconPreviewSize} from './site-icon-preview';
@@ -32,7 +33,7 @@ export const LinkPreviewSquare = ({
         title={link.title}
       />
       <Text t15 numberOfLines={1} style={styles.title}>
-        {link.title}
+        {getHost(link.title || link.url)}
       </Text>
     </WrapperComponent>
   );

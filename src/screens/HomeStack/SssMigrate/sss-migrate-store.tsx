@@ -16,6 +16,7 @@ import {
   SssMigrateStackRoutes,
 } from '@app/screens/HomeStack/SssMigrate';
 import {RemoteConfig} from '@app/services/remote-config';
+import {ModalType} from '@app/types';
 import {WalletType} from '@app/types';
 
 export const SssMigrateStoreScreen = memo(() => {
@@ -26,7 +27,7 @@ export const SssMigrateStoreScreen = memo(() => {
   const navigation = useTypedNavigation<SssMigrateStackParamList>();
 
   useEffect(() => {
-    showModal('loading', {text: getText(I18N.sssStoreWalletSaving)});
+    showModal(ModalType.loading, {text: getText(I18N.sssStoreWalletSaving)});
   }, []);
 
   useEffect(() => {
@@ -78,7 +79,7 @@ export const SssMigrateStoreScreen = memo(() => {
             wallet.accountId === route.params.accountId &&
             wallet.type === WalletType.mnemonic
           ) {
-            wallet.update({
+            Wallet.update(wallet.address, {
               type: WalletType.sss,
               accountId: provider.getIdentifier(),
             });
@@ -88,7 +89,7 @@ export const SssMigrateStoreScreen = memo(() => {
         navigation.navigate(SssMigrateStackRoutes.SssMigrateFinish);
       } catch (e) {
         if (e instanceof Error) {
-          showModal('errorCreateAccount');
+          showModal(ModalType.errorCreateAccount);
           navigation.goBack();
           Logger.captureException(e, 'SssMigrateStoreScreen');
         }

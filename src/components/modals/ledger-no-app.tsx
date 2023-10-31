@@ -14,9 +14,12 @@ import {
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {Modals} from '@app/types';
+import {ModalType, Modals} from '@app/types';
 
-export const LedgerNoApp = ({onRetry, onClose}: Modals['ledgerNoApp']) => {
+export const LedgerNoApp = ({
+  onRetry,
+  onClose,
+}: Modals[ModalType.ledgerNoApp]) => {
   const [retry, setRetry] = useState(false);
 
   useEffect(() => {

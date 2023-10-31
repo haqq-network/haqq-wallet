@@ -14,11 +14,11 @@ import {
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {Modals} from '@app/types';
+import {ModalType, Modals} from '@app/types';
 
 export const LocationUnauthorized = ({
   onClose,
-}: Modals['locationUnauthorized']) => {
+}: Modals[ModalType.locationUnauthorized]) => {
   useEffect(() => {
     vibrate(HapticEffects.error);
   }, []);

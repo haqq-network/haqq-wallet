@@ -85,12 +85,12 @@ const HomeEarnStack = memo(() => {
       <Stack.Screen
         name={HomeEarnStackRoutes.StakingDelegate}
         component={StakingDelegateStack}
-        options={{presentation: 'modal'}}
+        options={{presentation: 'modal', freezeOnBlur: true}}
       />
       <Stack.Screen
         name={HomeEarnStackRoutes.StakingUnDelegate}
         component={StakingUnDelegateStack}
-        options={{presentation: 'modal'}}
+        options={{presentation: 'modal', freezeOnBlur: true}}
       />
 
       <Stack.Screen

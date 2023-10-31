@@ -5,9 +5,9 @@ import {View} from 'react-native';
 import {Color} from '@app/colors';
 import {Text, Waiting} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {Modals} from '@app/types';
+import {ModalType, Modals} from '@app/types';
 
-export const LoadingModal = ({text}: Modals['loading']) => {
+export const LoadingModal = ({text}: Modals[ModalType.loading]) => {
   return (
     <View style={styles.container}>
       <Waiting style={styles.waiting} />

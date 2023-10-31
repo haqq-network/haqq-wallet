@@ -19,8 +19,14 @@ import {TransactionNftConfirmationScreen} from '@app/screens/HomeStack/Transacti
 import {TransactionNftFinishScreen} from '@app/screens/HomeStack/TransactionStack/transaction-nft-finish';
 import {TransactionSumScreen} from '@app/screens/HomeStack/TransactionStack/transaction-sum';
 import {TransactionSumAddressScreen} from '@app/screens/HomeStack/TransactionStack/transaction-sum-address';
+import {TransactionSelectCryptoScreen} from '@app/screens/transaction-select-crypto';
 import {Balance} from '@app/services/balance';
-import {NftItem, ScreenOptionType, TransactionResponse} from '@app/types';
+import {
+  IToken,
+  NftItem,
+  ScreenOptionType,
+  TransactionResponse,
+} from '@app/types';
 
 export enum TransactionStackRoutes {
   TransactionAddress = 'transactionAddress',
@@ -33,6 +39,7 @@ export enum TransactionStackRoutes {
   TransactionLedger = 'transactionLedger',
   TransactionSumAddress = 'transactionSumAddress',
   TransactionContactEdit = 'transactionContactEdit',
+  TransactionSelectCrypto = 'transactionSelectCrypto',
 }
 
 export type TransactionStackParamList = HomeFeedStackParamList & {
@@ -44,12 +51,14 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
   [TransactionStackRoutes.TransactionSum]: {
     from: string;
     to: string;
+    token: IToken;
   };
   [TransactionStackRoutes.TransactionConfirmation]: {
     from: string;
     to: string;
     amount: Balance;
     fee?: Balance;
+    token: IToken;
   };
   [TransactionStackRoutes.TransactionNftConfirmation]: {
     from: string;
@@ -58,8 +67,10 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
     fee?: Balance;
   };
   [TransactionStackRoutes.TransactionFinish]: {
-    hash: string;
     transaction: TransactionResponse;
+    hash: string;
+    token: IToken;
+    amount?: Balance;
   };
   [TransactionStackRoutes.TransactionNftFinish]: {
     hash: string;
@@ -82,6 +93,10 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
   [TransactionStackRoutes.TransactionContactEdit]: {
     name: string;
     address: string;
+  };
+  [TransactionStackRoutes.TransactionSelectCrypto]: {
+    from: string;
+    to: string;
   };
 };
 
@@ -111,8 +126,13 @@ const screenOptionsEditContact: ScreenOptionType = {
 const screenOptionsLedger: ScreenOptionType = {
   title: getText(I18N.transactionLedgerConfirmationTitle),
 };
+
 const screenOptionsConfirmation: ScreenOptionType = {
   title: getText(I18N.transactionConfirmationPreviewTitle),
+};
+
+const screenOptionsSelectCrypto: ScreenOptionType = {
+  title: getText(I18N.transactionSelectCryptoTitle),
 };
 
 export const TransactionStack = memo(() => {
@@ -147,6 +167,11 @@ export const TransactionStack = memo(() => {
         name={TransactionStackRoutes.TransactionSum}
         component={TransactionSumScreen}
         options={screenOptionsSend}
+      />
+      <Stack.Screen
+        name={TransactionStackRoutes.TransactionSelectCrypto}
+        component={TransactionSelectCryptoScreen}
+        options={screenOptionsSelectCrypto}
       />
       <Stack.Screen
         name={TransactionStackRoutes.TransactionConfirmation}

@@ -1,6 +1,7 @@
+import EventEmitter from 'events';
+
 import {JsonRpcRequest} from 'json-rpc-engine';
 
-import {Web3BrowserHelper} from '@app/components/web3-browser/web3-browser-helper';
 import {app} from '@app/contexts';
 import {AwaitForWalletError, awaitForWallet} from '@app/helpers';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
@@ -8,19 +9,30 @@ import {
   AwaitProviderError,
   awaitForProvider,
 } from '@app/helpers/await-for-provider';
+import {
+  AwaitForScanQrError,
+  awaitForScanQr,
+} from '@app/helpers/await-for-scan-qr';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {isEthereumChainParams} from '@app/helpers/web3-browser-utils';
-import {I18N} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {getDefaultNetwork} from '@app/network';
 import {getAppVersion} from '@app/services/version';
+import {requestQRScannerPermission} from '@app/utils';
+
+export type JsonRpcHelper = EventEmitter & {
+  origin: string;
+  disconnectAccount(): void;
+  changeChainId(ethChainIdHex: string): void;
+};
 
 type TJsonRpcRequest = JsonRpcRequest<any>;
 type JsonRpcMethodHandlerParams = {
   req: TJsonRpcRequest;
-  helper: Web3BrowserHelper;
+  helper: JsonRpcHelper;
 };
 type JsonRpcMethodHandler =
   | undefined
@@ -33,7 +45,14 @@ const rejectJsonRpcRequest = (message: string) => {
   };
 };
 
+const checkParamsExists = (req: TJsonRpcRequest) => {
+  if (!req.params?.[0]) {
+    rejectJsonRpcRequest(getText(I18N.jsonRpcErrorInvalidParams));
+  }
+};
+
 const signTransaction = async ({helper, req}: JsonRpcMethodHandlerParams) => {
+  checkParamsExists(req);
   try {
     const session = Web3BrowserSession.getByOrigin(helper.origin);
     const provider = getNetworkProvier(helper);
@@ -76,7 +95,7 @@ const getEthAccounts = ({helper}: JsonRpcMethodHandlerParams) => {
   return [];
 };
 
-const getNetworkProvier = (helper: Web3BrowserHelper) => {
+const getNetworkProvier = (helper: JsonRpcHelper) => {
   // goerli
   // return {
   //   ethChainIdHex: '0x5',
@@ -100,7 +119,7 @@ const getNetworkProvier = (helper: Web3BrowserHelper) => {
   return provider;
 };
 
-const getLocalRpcProvider = async (helper: Web3BrowserHelper) => {
+const getLocalRpcProvider = async (helper: JsonRpcHelper) => {
   const provider = getNetworkProvier(helper);
   return provider ? await getRpcProvider(provider) : getDefaultNetwork();
 };
@@ -207,8 +226,18 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
     return null;
   },
   eth_hashrate: () => '0x00',
-  eth_getBlockByNumber: () => 0,
+  eth_getBlockByNumber: async ({req, helper}) => {
+    checkParamsExists(req);
+    const rpcProvider = await getLocalRpcProvider(helper);
+    return await rpcProvider.getBlock(req.params?.[0]);
+  },
+  eth_getBlock: async ({req, helper}) => {
+    checkParamsExists(req);
+    const rpcProvider = await getLocalRpcProvider(helper);
+    return await rpcProvider.getBlock(req.params?.[0]);
+  },
   eth_call: async ({req, helper}) => {
+    checkParamsExists(req);
     try {
       const rpcProvider = await getLocalRpcProvider(helper);
       return await rpcProvider.call(req.params[0], req.params[1]);
@@ -219,6 +248,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
     }
   },
   eth_getTransactionCount: async ({req, helper}) => {
+    checkParamsExists(req);
     try {
       const rpcProvider = await getLocalRpcProvider(helper);
       return rpcProvider.getTransactionCount(req.params[0], req.params[1]);
@@ -231,6 +261,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   eth_mining: () => false,
   net_listening: () => true,
   eth_estimateGas: async ({req, helper}) => {
+    checkParamsExists(req);
     try {
       const rpcProvider = await getLocalRpcProvider(helper);
       return rpcProvider.estimateGas(req.params[0]);
@@ -245,6 +276,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
     return `HAQQ/${appVersion}/Wallet`;
   },
   eth_getCode: async ({req, helper}) => {
+    checkParamsExists(req);
     try {
       const rpcProvider = await getLocalRpcProvider(helper);
       return await rpcProvider.getCode(req.params[0], req.params[1]);
@@ -265,6 +297,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
     }
   },
   eth_getTransactionByHash: async ({req, helper}) => {
+    checkParamsExists(req);
     try {
       const rpcProvider = await getLocalRpcProvider(helper);
       return await rpcProvider.getTransaction(req.params?.[0]);
@@ -275,6 +308,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
     }
   },
   eth_getTransactionReceipt: async ({req, helper}) => {
+    checkParamsExists(req);
     try {
       const rpcProvider = await getLocalRpcProvider(helper);
       return await rpcProvider.getTransactionReceipt(req.params?.[0]);
@@ -287,13 +321,41 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   eth_sendTransaction: signTransaction,
   eth_sign: signTransaction,
   personal_sign: signTransaction,
-  eth_signTypedData_v3: signTransaction,
   eth_signTypedData: signTransaction,
+  eth_signTypedData_v3: signTransaction,
   eth_signTypedData_v4: signTransaction,
   wallet_addEthereumChain: ({req}) => {
+    checkParamsExists(req);
     const chainInfo = req.params?.[0];
     if (isEthereumChainParams(chainInfo)) {
       Logger.log('wallet_addEthereumChain', chainInfo?.chainName);
     }
+  },
+  wallet_scanQRCode: async ({req, helper}) => {
+    const pattern = req.params?.[0] as string;
+
+    if (!!pattern && typeof pattern !== 'string') {
+      rejectJsonRpcRequest(getText(I18N.jsonRpcErrorInvalidParams));
+    }
+
+    try {
+      const isAccesGranted = await requestQRScannerPermission(helper.origin);
+
+      if (!isAccesGranted) {
+        rejectJsonRpcRequest(
+          AwaitForScanQrError.getCameraPermissionError().message!,
+        );
+      }
+
+      return (await awaitForScanQr({pattern})).rawData;
+    } catch (err) {
+      if (err instanceof Error) {
+        rejectJsonRpcRequest(err.message);
+      }
+    }
+  },
+  eth_gasPrice: async ({helper}) => {
+    const rpcProvider = await getLocalRpcProvider(helper);
+    return rpcProvider.getGasPrice();
   },
 };

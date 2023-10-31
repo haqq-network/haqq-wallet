@@ -1,30 +1,55 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
-import {I18N} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
 import {Balance} from '@app/services/balance';
 
 import {DashedLine} from './dashed-line';
 import {Icon, IconButton, IconsName, Spacer, Text} from './ui';
+import {BarChart} from './ui/bar-chart';
+import {BarChartItem} from './ui/bar-chart/bar-chart-item';
 
 export interface StackedVestedTokensProps {
-  unvestedBalance: Balance | undefined;
-  lockedBalance: Balance | undefined;
-  vestedBalance: Balance | undefined;
-  stakingBalance: Balance | undefined;
-  balance: Balance | undefined;
+  lockedBalance?: Balance;
+  vestedBalance?: Balance;
+  stakingBalance?: Balance;
+  availableBalance?: Balance;
 
   onPressInfo(): void;
 }
 
 export function StackedVestedTokens({
-  balance,
-  stakingBalance,
+  availableBalance = Balance.Empty,
+  lockedBalance = Balance.Empty,
+  stakingBalance = Balance.Empty,
+  vestedBalance = Balance.Empty,
   onPressInfo,
 }: StackedVestedTokensProps) {
+  const barChartData = useMemo(() => {
+    const onePercent = lockedBalance.operate(100, 'div');
+    return [
+      {
+        id: 'vested',
+        percentage: vestedBalance.operate(onePercent, 'div').toFloat(),
+        color: Color.textYellow1,
+        title: getText(I18N.lockedTokensVested, {
+          count: vestedBalance.toFloatString(),
+        }),
+      },
+      {
+        id: 'staking',
+        percentage: stakingBalance.operate(onePercent, 'div').toFloat(),
+        color: Color.textBlue1,
+        title: getText(I18N.lockedTokensStaked, {
+          count: stakingBalance.toFloatString(),
+        }),
+      },
+    ] as BarChartItem[];
+  }, [lockedBalance, stakingBalance, vestedBalance]);
+
   return (
     <View style={styles.container}>
       <View>
@@ -35,10 +60,10 @@ export function StackedVestedTokens({
             t10
             color={Color.textBase1}
             i18n={I18N.lockedTokensAvailable}
-            i18params={{count: balance?.toFloatString() ?? '0'}}
+            i18params={{count: availableBalance?.toFloatString() ?? '0'}}
           />
         </View>
-        {stakingBalance?.isPositive() && (
+        {lockedBalance?.isPositive() && (
           <>
             <DashedLine
               style={styles.separator}
@@ -52,13 +77,15 @@ export function StackedVestedTokens({
                 t10
                 color={Color.textBase1}
                 i18n={I18N.lockedTokensLocked}
-                i18params={{count: stakingBalance.toFloatString()}}
+                i18params={{count: lockedBalance.toFloatString()}}
               />
               <Spacer width={4} />
               <IconButton onPress={onPressInfo}>
                 <Icon i20 color={Color.graphicBase2} name={IconsName.info} />
               </IconButton>
             </View>
+            <Spacer height={8} />
+            <BarChart data={barChartData} />
           </>
         )}
       </View>

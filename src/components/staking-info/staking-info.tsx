@@ -25,7 +25,9 @@ import {formatStakingDate, reduceAmounts} from '@app/helpers/staking';
 import {I18N} from '@app/i18n';
 import {StakingMetadata} from '@app/models/staking-metadata';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
-import {NUM_PRECISION, WEI} from '@app/variables/common';
+import {WEI} from '@app/variables/common';
+
+import {ValidatorAvatar} from '../staking-validators/validator-avatar';
 
 export type StakingInfoProps = {
   withdrawDelegatorRewardProgress: boolean;
@@ -33,9 +35,10 @@ export type StakingInfoProps = {
   rewards: StakingMetadata[];
   unDelegations: StakingMetadata[];
   validator: ValidatorItem;
+  canGetRewards: boolean;
   onDelegate: () => void;
   onUnDelegate: () => void;
-  onWithdrawDelegatorReward: () => void;
+  onPressGetReward: () => void;
 };
 
 export const StakingInfo = ({
@@ -43,16 +46,17 @@ export const StakingInfo = ({
     localStatus,
     operator_address,
     tokens,
-    description: {website, moniker, details},
+    description: {website, moniker, details, identity},
     commission: {commission_rates},
   },
+  rewards,
+  delegations,
+  canGetRewards,
+  unDelegations,
+  withdrawDelegatorRewardProgress,
   onDelegate,
   onUnDelegate,
-  unDelegations,
-  delegations,
-  rewards,
-  onWithdrawDelegatorReward,
-  withdrawDelegatorRewardProgress,
+  onPressGetReward,
 }: StakingInfoProps) => {
   const insets = useSafeAreaInsets();
 
@@ -101,9 +105,7 @@ export const StakingInfo = ({
     <>
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <Spacer height={24} />
-        <View style={styles.iconContainer}>
-          <Icon color={Color.graphicBase1} name="servers" i24 />
-        </View>
+        <ValidatorAvatar identity={identity} />
         <Spacer height={16} />
         <Text t5 center style={styles.title}>
           {moniker}
@@ -203,12 +205,12 @@ export const StakingInfo = ({
         style={StyleSheet.compose(styles.footer as StyleProp<ViewStyle>, {
           paddingBottom: insets.bottom + 20,
         })}>
-        {(rewards?.length ?? 0) >= 1 / NUM_PRECISION && (
+        {canGetRewards && (
           <>
             <Button
               loading={withdrawDelegatorRewardProgress}
               variant={ButtonVariant.second}
-              onPress={onWithdrawDelegatorReward}
+              onPress={onPressGetReward}
               i18n={I18N.stakingInfoGetReward}
             />
             <Spacer height={18} />
@@ -272,10 +274,5 @@ const styles = createTheme({
   },
   infoBlockCommission: {
     marginHorizontal: 12,
-  },
-  iconContainer: {
-    padding: 9,
-    backgroundColor: Color.bg8,
-    borderRadius: 12,
   },
 });

@@ -8,10 +8,11 @@ import {onVestingSync} from '@app/event-actions/on-vesting-sync';
 import {Events} from '@app/events';
 import {getProviderInstanceForWallet} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
-import {EthNetwork} from '@app/services';
 import {Backend} from '@app/services/backend';
 import {Cosmos} from '@app/services/cosmos';
 import {WalletType} from '@app/types';
+
+import {onWalletsBalanceCheck} from './on-wallets-balance-check';
 
 export async function onWalletCreate(wallet: Wallet) {
   try {
@@ -22,13 +23,10 @@ export async function onWalletCreate(wallet: Wallet) {
         Cosmos.addressToBech32(wallet.address),
       );
 
-      wallet.update({subscription});
+      Wallet.update(wallet.address, {subscription});
     }
 
-    const balance = await EthNetwork.getBalance(wallet.address);
-    app.onWalletsBalance({
-      [wallet.address]: balance,
-    });
+    await onWalletsBalanceCheck();
 
     await Promise.all([
       onTransactionsLoad(wallet.address),
@@ -56,7 +54,7 @@ export async function onWalletCreate(wallet: Wallet) {
           mnemonicSaved = true;
       }
 
-      wallet.update({
+      Wallet.update(wallet.address, {
         mnemonicSaved,
       });
     }

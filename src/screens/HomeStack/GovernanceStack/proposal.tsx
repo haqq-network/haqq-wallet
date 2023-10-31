@@ -1,14 +1,14 @@
-import React, {memo, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
+
+import {observer} from 'mobx-react';
 
 import {Proposal} from '@app/components/proposal';
 import {VotingCardDetailRefInterface} from '@app/components/proposal/voting-card-detail';
 import {app} from '@app/contexts';
 import {getWindowHeight, showModal} from '@app/helpers';
-import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {depositSum} from '@app/helpers/governance';
 import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {useWalletsVisible} from '@app/hooks/use-wallets-visible';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {
@@ -16,10 +16,10 @@ import {
   GovernanceStackRoutes,
 } from '@app/screens/HomeStack/GovernanceStack';
 import {sendNotification} from '@app/services';
-import {VoteNamesType, WalletType} from '@app/types';
+import {ModalType, VoteNamesType} from '@app/types';
 import {VOTES} from '@app/variables/votes';
 
-export const ProposalScreen = memo(() => {
+export const ProposalScreen = observer(() => {
   const {proposal} = useTypedRoute<
     GovernanceStackParamList,
     GovernanceStackRoutes.Proposal
@@ -35,7 +35,7 @@ export const ProposalScreen = memo(() => {
   const [modalIsVisible, setModalIsVisible] = useState(false);
 
   const cosmos = useCosmos();
-  const visible = useWalletsVisible();
+  const visible = Wallet.getAllVisible();
 
   const onDepositSubmit = async (address: string) => {
     navigate(GovernanceStackRoutes.ProposalDeposit, {
@@ -56,18 +56,12 @@ export const ProposalScreen = memo(() => {
       try {
         const transport = await getProviderInstanceForWallet(wallet);
 
-        const query = cosmos.vote(
+        await cosmos.vote(
           transport,
           wallet.path!,
           item.proposal_id,
           opinion?.value || 0,
         );
-
-        if (wallet.type === WalletType.ledgerBt) {
-          await awaitForLedger(transport);
-        }
-
-        await query;
 
         const prop = await cosmos.getProposalDetails(item.proposal_id);
         setItem(prop.proposal);
@@ -101,7 +95,7 @@ export const ProposalScreen = memo(() => {
     setModalIsLoading(true);
     voteSelectedRef.current = decision;
     cardRef.current?.setSelected(decision);
-    showModal('walletsBottomSheet', {
+    showModal(ModalType.walletsBottomSheet, {
       wallets: visible,
       closeDistance: () => getWindowHeight() / 6,
       title: I18N.proposalAccountTitle,

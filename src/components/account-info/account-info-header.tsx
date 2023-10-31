@@ -5,7 +5,6 @@ import {View} from 'react-native';
 import {Color} from '@app/colors';
 import {
   CardSmall,
-  CopyButton,
   First,
   Icon,
   IconButton,
@@ -13,8 +12,8 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
+import {CopyMenu} from '@app/components/ui/copy-menu';
 import {createTheme} from '@app/helpers';
-import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
@@ -27,11 +26,12 @@ const CARD_RADIUS = 8;
 
 export type AccountInfoProps = {
   wallet: Wallet;
-  balance: Balance | undefined;
-  unvestedBalance: Balance | undefined;
-  lockedBalance: Balance | undefined;
-  vestedBalance: Balance | undefined;
-  stakingBalance: Balance | undefined;
+  available: Balance;
+  locked: Balance;
+  staked: Balance;
+  total: Balance;
+  vested: Balance;
+  unlock: Date;
   onPressInfo: () => void;
   onSend: () => void;
   onReceive: () => void;
@@ -39,11 +39,11 @@ export type AccountInfoProps = {
 
 export const AccountInfoHeader = ({
   wallet,
-  balance,
-  unvestedBalance,
-  lockedBalance,
-  vestedBalance,
-  stakingBalance,
+  locked,
+  staked,
+  total,
+  vested,
+  available,
   onPressInfo,
   onSend,
   onReceive,
@@ -51,11 +51,6 @@ export const AccountInfoHeader = ({
   const formattedAddress = useMemo(
     () => shortAddress(wallet.address, '•'),
     [wallet.address],
-  );
-
-  const totalBalance = useMemo(
-    () => balance?.operate(stakingBalance, 'add')?.toFloatString() ?? '0',
-    [balance, stakingBalance],
   );
 
   return (
@@ -70,8 +65,11 @@ export const AccountInfoHeader = ({
           colorPattern={wallet.colorPattern}
         />
         <View style={styles.headerContent}>
-          <Text t3 i18n={I18N.amountISLM} i18params={{amount: totalBalance}} />
-          <CopyButton value={wallet.address} style={styles.copyButton}>
+          <Text t3 children={total.toBalanceString()} />
+          <CopyMenu
+            value={wallet.address}
+            style={styles.copyButton}
+            withSettings>
             <Text t14 color={Color.textBase2}>
               {formattedAddress}
             </Text>
@@ -81,20 +79,17 @@ export const AccountInfoHeader = ({
               color={Color.graphicBase2}
               style={styles.copyIcon}
             />
-          </CopyButton>
+          </CopyMenu>
         </View>
       </View>
       <First>
-        {isFeatureEnabled(Feature.lockedStakedVestedTokens) && (
-          <StackedVestedTokens
-            balance={balance}
-            unvestedBalance={unvestedBalance}
-            lockedBalance={lockedBalance}
-            vestedBalance={vestedBalance}
-            stakingBalance={stakingBalance}
-            onPressInfo={onPressInfo}
-          />
-        )}
+        <StackedVestedTokens
+          availableBalance={available}
+          lockedBalance={locked}
+          vestedBalance={vested}
+          stakingBalance={staked}
+          onPressInfo={onPressInfo}
+        />
         <Spacer height={24} />
       </First>
       <Inline gap={12} style={styles.iconButtons}>

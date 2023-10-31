@@ -10,7 +10,11 @@ import {Validator} from '@evmos/provider/dist/rest/staking';
 
 import {StakingValidators} from '@app/components/staking-validators';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
-import {validatorsSort} from '@app/helpers/validators-sort';
+import {setValidatorsPower} from '@app/helpers/validators-power';
+import {
+  randomValidatorsSort,
+  validatorsSort,
+} from '@app/helpers/validators-sort';
 import {validatorsSplit} from '@app/helpers/validators-split';
 import {useCosmos, useTypedNavigation} from '@app/hooks';
 import {useThrottle} from '@app/hooks/use-throttle';
@@ -84,6 +88,9 @@ export const StakingValidatorsScreen = memoHOC(() => {
   );
 
   const [stakedValidators, unStakedValidators] = useMemo(() => {
+    if (!Array.isArray(validators)) {
+      return [[], []];
+    }
     const staked = [];
     const unStaked = [];
     for (const validator of validators) {
@@ -104,17 +111,26 @@ export const StakingValidatorsScreen = memoHOC(() => {
       }
     }
 
-    const {
+    let {
       active: stakedActive,
       inactive: stakedInactive,
       jailed: stackedJailed,
     } = validatorsSplit(staked);
 
-    const {
+    let {
       active: unStakedActive,
       inactive: unStakedInactive,
       jailed: unStackedJailed,
     } = validatorsSplit(unStaked);
+
+    // Calculate total coins amount for all active validators.
+    const totalActiveTokens = [...stakedActive, ...unStakedActive].reduce(
+      (acc, item) => acc + Number.parseInt(item.tokens, 10),
+      0,
+    );
+    // Set power field in percents for all active validators
+    stakedActive = setValidatorsPower(stakedActive, totalActiveTokens);
+    unStakedActive = setValidatorsPower(unStakedActive, totalActiveTokens);
 
     return [
       [
@@ -123,9 +139,9 @@ export const StakingValidatorsScreen = memoHOC(() => {
         validatorsSort(stackedJailed),
       ].flat(),
       [
-        validatorsSort(unStakedActive),
-        validatorsSort(unStakedInactive),
-        validatorsSort(unStackedJailed),
+        randomValidatorsSort(unStakedActive),
+        randomValidatorsSort(unStakedInactive),
+        randomValidatorsSort(unStackedJailed),
       ].flat(),
     ];
   }, [stakingCache, validators]);

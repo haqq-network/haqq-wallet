@@ -1,5 +1,6 @@
 import React, {memo, useCallback} from 'react';
 
+import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {utils} from 'ethers';
 
 import {SignInRestore} from '@app/components/singin-restore-wallet';
@@ -9,12 +10,13 @@ import {
   SignInStackParamList,
   SignInStackRoutes,
 } from '@app/screens/WelcomeStack/SignInStack';
+import {makeID} from '@app/utils';
 
 export const SignInRestoreScreen = memo(() => {
   const navigation = useTypedNavigation<SignInStackParamList>();
 
   const onDoneTry = useCallback(
-    (seed: string) => {
+    async (seed: string) => {
       const nextScreen = app.onboarded
         ? SignInStackRoutes.SigninStoreWallet
         : SignInStackRoutes.OnboardingSetupPin;
@@ -34,7 +36,17 @@ export const SignInRestoreScreen = memo(() => {
       }
 
       if (utils.isValidMnemonic(seed.trim().toLowerCase())) {
+        const generatedPassword = String(makeID(10));
+        const passwordPromise = () => Promise.resolve(generatedPassword);
+
+        const provider = await ProviderMnemonicReactNative.initialize(
+          seed.trim().toLowerCase(),
+          passwordPromise,
+          {},
+        );
+
         navigation.push(SignInStackRoutes.SigninChooseAccount, {
+          provider,
           type: 'mnemonic',
           mnemonic: seed.trim().toLowerCase(),
         });

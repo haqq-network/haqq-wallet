@@ -1,5 +1,6 @@
 import React, {useMemo} from 'react';
 
+import {BigNumber} from '@ethersproject/bignumber';
 import {Image, View} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -20,7 +21,8 @@ import {Contact} from '@app/models/contact';
 import {Transaction} from '@app/models/transaction';
 import {Balance} from '@app/services/balance';
 import {EthNetwork} from '@app/services/eth-network';
-import {TransactionResponse} from '@app/types';
+import {IToken, TransactionResponse} from '@app/types';
+import {CURRENCY_NAME} from '@app/variables/common';
 
 type TransactionFinishProps = {
   transaction: Transaction | TransactionResponse | null;
@@ -29,6 +31,8 @@ type TransactionFinishProps = {
   contact: Contact | null;
   short: string;
   testID?: string;
+  token: IToken;
+  amount?: Balance;
 };
 
 export const TransactionFinish = ({
@@ -38,6 +42,8 @@ export const TransactionFinish = ({
   contact,
   short,
   testID,
+  token,
+  amount,
 }: TransactionFinishProps) => {
   const onPressHash = async () => {
     const url = `${EthNetwork.explorer}tx/${transaction?.hash}`;
@@ -45,18 +51,30 @@ export const TransactionFinish = ({
   };
 
   const fee = useMemo(() => {
-    if (transaction instanceof Transaction) {
-      return new Balance(transaction?.fee ?? 0);
+    if ((transaction as Transaction).input) {
+      return new Balance((transaction as Transaction)?.fee ?? 0);
     }
     return Balance.Empty;
   }, [transaction]);
 
   const transactionAmount = useMemo(() => {
-    if (transaction instanceof Transaction) {
-      return new Balance(transaction?.value ?? 0);
+    if (amount) {
+      return amount;
     }
-    return new Balance(transaction?.value._hex ?? 0);
-  }, [transaction]);
+
+    if (transaction?.value instanceof BigNumber) {
+      return new Balance(
+        (transaction as TransactionResponse)?.value._hex ?? 0,
+        undefined,
+        token.symbol ?? CURRENCY_NAME,
+      );
+    }
+    return new Balance(
+      transaction?.value ?? 0,
+      undefined,
+      token.symbol ?? CURRENCY_NAME,
+    );
+  }, [transaction, token, amount]);
 
   return (
     <PopupContainer style={styles.container} testID={testID}>
@@ -75,10 +93,7 @@ export const TransactionFinish = ({
         center
         color={Color.textGreen1}
       />
-      <Image
-        source={require('@assets/images/islm_icon.png')}
-        style={styles.icon}
-      />
+      <Image source={token.image} style={styles.icon} />
       {transaction && (
         <Text t5 center style={styles.sum}>
           - {transactionAmount.toBalanceString()}
