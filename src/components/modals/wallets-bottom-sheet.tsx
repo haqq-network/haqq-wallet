@@ -2,7 +2,7 @@ import React, {useCallback, useEffect} from 'react';
 
 import {BottomSheet} from '@app/components/bottom-sheet';
 import {Spacer} from '@app/components/ui';
-import {WalletRow} from '@app/components/wallet-row';
+import {WalletRow, WalletRowTypes} from '@app/components/wallet-row';
 import {app} from '@app/contexts';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {ModalType, Modals} from '@app/types';
@@ -13,6 +13,7 @@ export function WalletsBottomSheet({
   title,
   autoSelectWallet = true,
   eventSuffix = '',
+  initialAddress,
   onClose,
 }: Modals[ModalType.walletsBottomSheet]) {
   const closeDistanceCalculated = useCalculatedDimensionsValue(
@@ -47,9 +48,23 @@ export function WalletsBottomSheet({
       onClose={onCloseSheet}
       closeDistance={closeDistanceCalculated}
       i18nTitle={title}>
-      {wallets.map((item, id) => (
-        <WalletRow key={id} item={item} onPress={onPressWallet} />
-      ))}
+      {wallets.map((item, id) => {
+        const checked =
+          !!initialAddress &&
+          String(initialAddress).toLocaleLowerCase() ===
+            item.address.toLowerCase();
+
+        return (
+          <WalletRow
+            key={id}
+            item={item}
+            onPress={onPressWallet}
+            type={WalletRowTypes.variant5}
+            hideArrow
+            checked={checked}
+          />
+        );
+      })}
       <Spacer height={50} />
     </BottomSheet>
   );
