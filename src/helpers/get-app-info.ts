@@ -5,7 +5,9 @@ import {app} from '@app/contexts';
 import {getUid} from '@app/helpers/get-uid';
 import {getAdjustAdid} from '@app/helpers/get_adjust_adid';
 import {VariablesBool} from '@app/models/variables-bool';
+import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
+import {PushNotifications} from '@app/services/push-notifications';
 import {getAppVersion} from '@app/services/version';
 import {
   NEWS_TOPIC_VARIABLE_NAME,
@@ -21,6 +23,8 @@ export type AppInfo = {
   version: string;
   adid: string | null;
   notifications: {
+    id: string | undefined | null;
+    token: string | null;
     transaction: boolean;
     news: boolean;
     raffle: boolean;
@@ -31,6 +35,8 @@ export async function getAppInfo(): Promise<AppInfo> {
   const wallets = Wallet.getAll().map(wallet => wallet.address.toLowerCase());
   const uid = await getUid();
   const adid = await getAdjustAdid();
+
+  const token = await PushNotifications.instance.getToken();
   return {
     wallets,
     uid,
@@ -39,6 +45,8 @@ export async function getAppInfo(): Promise<AppInfo> {
     version: getAppVersion(),
     adid,
     notifications: {
+      id: VariablesString.get('notificationToken'),
+      token,
       transaction: VariablesBool.get(TRANSACTION_TOPIC_VARIABLE_NAME),
       news: VariablesBool.get(NEWS_TOPIC_VARIABLE_NAME),
       raffle: VariablesBool.get(RAFFLE_TOPIC_VARIABLE_NAME),
