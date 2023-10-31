@@ -8,7 +8,11 @@ import {awaitForValue, objectsToValues} from '@app/helpers/await-for-value';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {BrowserPermission} from '@app/models/browser-permission';
-import {BrowserPermissionStatus, BrowserPermissionType} from '@app/types';
+import {
+  BrowserPermissionStatus,
+  BrowserPermissionType,
+  RootStackParamList,
+} from '@app/types';
 import {uppercaseFirtsLetter} from '@app/utils';
 
 const POSSIBLE_ANSWERS = [
@@ -40,7 +44,7 @@ const getInitialIndex = (status: BrowserPermissionStatus) => {
 
 export const BrowserPrivacyDetailsScreen = observer(() => {
   const navigation = useTypedNavigation();
-  const {params} = useTypedRoute<'browserPrivacyDetails'>();
+  const {params} = useTypedRoute<RootStackParamList, 'browserPrivacyDetails'>();
   const permissions = BrowserPermission.getByHostname(params.hostname);
 
   const onPermissionPress = useCallback(

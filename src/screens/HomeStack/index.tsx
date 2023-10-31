@@ -6,10 +6,11 @@ import {
 } from '@react-navigation/native-stack';
 import {SessionTypes} from '@walletconnect/types';
 import {StatusBar} from 'react-native';
-import {Results} from 'realm';
 
+import {TotalValueTabNames} from '@app/components/total-value-info';
 import {Spacer} from '@app/components/ui';
 import {popupScreenOptions} from '@app/helpers';
+import {AwaitValue} from '@app/helpers/await-for-value';
 import {getWalletTitle} from '@app/helpers/get-wallet-title';
 import {Wallet} from '@app/models/wallet';
 import {basicScreenOptions} from '@app/screens';
@@ -32,6 +33,7 @@ import {BackupSssNotificationScreen} from '@app/screens/popup-backup-sss-notific
 import {PopupNotificationScreen} from '@app/screens/popup-notification';
 import {PopupNotificationNewsScreen} from '@app/screens/popup-notification-news';
 import {PopupTrackActivityScreen} from '@app/screens/popup-track-activity';
+import {ValueSelectorScreen} from '@app/screens/value-selector-screen';
 import {Web3BrowserPopup as Web3BrowserPopupScreen} from '@app/screens/web3-browser-popup';
 import {LedgerStack} from '@app/screens/WelcomeStack/LedgerStack';
 import {SignInStack} from '@app/screens/WelcomeStack/SignInStack';
@@ -40,6 +42,7 @@ import {
   NftItem,
   PartialJsonRpcRequest,
   PopupNotificationBannerId,
+  RootStackParamList,
 } from '@app/types';
 import {WalletConnectApproveConnectionEvent} from '@app/types/wallet-connect';
 
@@ -67,6 +70,9 @@ export enum HomeStackRoutes {
   PopupTrackActivity = 'popupTrackActivity',
   Web3BrowserPopup = 'web3BrowserPopup',
   WalletSelector = 'walletSelector',
+  TotalValueInfo = 'totalValueInfo',
+  ValueSelector = 'valueSelector',
+  BrowserPrivacyPopupStack = 'browserPrivacyPopupStack',
 }
 
 export type HomeStackParamList = {
@@ -125,6 +131,19 @@ export type HomeStackParamList = {
     title: string;
     initialAddress?: string;
     eventSuffix?: string;
+  };
+  [HomeStackRoutes.TotalValueInfo]?: {
+    tab?: TotalValueTabNames;
+  };
+  [HomeStackRoutes.ValueSelector]: {
+    title: string;
+    values: AwaitValue[];
+    initialIndex?: number;
+    eventSuffix?: string;
+  };
+  [HomeStackRoutes.BrowserPrivacyPopupStack]: {
+    screen: 'browserPrivacyDetails' | 'browserPrivacy';
+    params?: RootStackParamList[RootStackParamList['browserPrivacyPopupStack']['screen']];
   };
 };
 
@@ -287,6 +306,12 @@ const HomeStack = memo(() => {
       <Stack.Screen
         name={HomeStackRoutes.SignIn}
         component={SignInStack}
+        options={modalOptions}
+      />
+
+      <Stack.Screen
+        name={HomeStackRoutes.ValueSelector}
+        component={ValueSelectorScreen}
         options={modalOptions}
       />
     </Stack.Navigator>

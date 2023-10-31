@@ -19,6 +19,7 @@ import {getWalletsFromProvider} from '@app/helpers/get-wallets-from-provider';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {Wallet} from '@app/models/wallet';
+import {OnboardingStackRoutes} from '@app/screens/WelcomeStack/OnboardingStack';
 import {
   SignInStackParamList,
   SignInStackRoutes,
@@ -201,7 +202,8 @@ export const ChooseAccountScreen = memo(() => {
       };
       navigation.navigate(SignInStackRoutes.OnboardingSetupPin, restParams);
     } else {
-      navigation.navigate(SignInStackRoutes.OnboardingFinish);
+      //@ts-ignore
+      navigation.navigate(OnboardingStackRoutes.OnboardingFinish);
     }
   }, [walletsToCreate, params, navigation]);
 

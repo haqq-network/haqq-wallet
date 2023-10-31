@@ -1,9 +1,6 @@
 import React from 'react';
 
-import {
-  StackNavigationOptions,
-  createStackNavigator,
-} from '@react-navigation/stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {observer} from 'mobx-react';
 
 import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
@@ -11,20 +8,24 @@ import {Spacer} from '@app/components/ui';
 import {popupScreenOptions} from '@app/helpers';
 import {useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
 
 import {BrowserPrivacyDetailsScreen} from './browser-privacy-details-screen';
 import {BrowserPrivacyScreen} from './browser-privacy-screen';
 
-const BrowserPrivacyStack = createStackNavigator();
+const BrowserPrivacyStack = createNativeStackNavigator();
 
-const screenOptions: StackNavigationOptions = {
+const screenOptions = {
   ...popupScreenOptions,
   keyboardHandlingEnabled: false,
   headerRight: DismissPopupButton,
 };
 
 export const BrowserPrivacyPopupStack = observer(() => {
-  const route = useTypedRoute<'browserPrivacyPopupStack'>();
+  const route = useTypedRoute<
+    HomeStackParamList,
+    HomeStackRoutes.BrowserPrivacyPopupStack
+  >();
   const {screen, params} = route.params;
 
   return (
