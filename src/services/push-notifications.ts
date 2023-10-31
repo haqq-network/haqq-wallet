@@ -78,6 +78,14 @@ export class PushNotifications extends EventEmitter {
     return enabled;
   }
 
+  async getToken() {
+    if (VariablesBool.get('notifications')) {
+      return await messaging().getToken();
+    }
+
+    return null;
+  }
+
   async hasPermission() {
     const authStatus = await messaging().hasPermission();
 

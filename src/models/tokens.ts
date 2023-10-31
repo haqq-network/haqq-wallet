@@ -226,7 +226,9 @@ class TokensStore implements MobXStore<IToken> {
             symbol: contract.symbol,
             created_at: token.created_at,
             updated_at: token.updated_at,
-            image: require('@assets/images/empty-icon.png'),
+            image: contract.icon
+              ? {uri: contract.icon}
+              : require('@assets/images/empty-icon.png'),
           };
 
           return result;
