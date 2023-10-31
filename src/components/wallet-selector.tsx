@@ -3,7 +3,7 @@ import React, {useCallback, useState} from 'react';
 import {StyleProp, View, ViewStyle} from 'react-native';
 
 import {PopupContainer} from '@app/components/ui';
-import {WalletRow} from '@app/components/wallet-row';
+import {WalletRow, WalletRowTypes} from '@app/components/wallet-row';
 import {createTheme} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
 
@@ -43,6 +43,7 @@ export const WalletSelector = ({
               hideArrow
               onPress={handleWalletPress}
               checked={selectedAddress === wallet?.address}
+              type={WalletRowTypes.variant5}
             />
           </View>
         );

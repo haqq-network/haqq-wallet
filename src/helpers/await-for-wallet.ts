@@ -82,6 +82,7 @@ export async function awaitForWallet({
           closeDistance: () => getWindowHeight() / 6,
           title,
           autoSelectWallet,
+          initialAddress,
         });
     }
   });
