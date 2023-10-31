@@ -19,6 +19,7 @@ import {Color} from '@app/colors';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {createTheme} from '@app/helpers';
+import {getAppHeaders} from '@app/helpers/get-app-headers';
 import {
   changeWebViewUrlJS,
   detectDeeplink,
@@ -239,7 +240,7 @@ export const InAppBrowser = ({
           onContentProcessDidTerminate={onContentProcessDidTerminate}
           onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
           onNavigationStateChange={onNavigationStateChange}
-          source={{uri: url}}
+          source={{uri: url, headers: getAppHeaders('inapp')}}
         />
       </KeyboardAvoidingView>
       <View style={styles.actionPanel}>
