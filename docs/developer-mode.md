@@ -33,6 +33,26 @@ In the settings screen, a `Developer Tools` section will appear with the followi
 
 Enter a valid hex address or Bech32 address to convert.
 
+### Addres info
+
+show info about hex or bench32 address
+ 
+```ts
+interface VerifyAddressResponse {
+  id: string;
+  addressType: 'wallet' | 'contract' |  'unknown';
+  name?: string | null;
+  symbol?: string | null;
+  decimals?: number | null;
+  isErc20?: boolean | null;
+  isErc721?: boolean | null;
+  isErc1155?: boolean | null;
+  isInWhiteList?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+```
+
 ### Raw Sign Request
 
 Enter a valid JSON for JSON RPC requests in the provided field. Supported methods include:

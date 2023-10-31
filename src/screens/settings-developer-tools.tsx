@@ -9,9 +9,13 @@ import {Button, ButtonVariant, Input, Spacer, Text} from '@app/components/ui';
 import {WebViewEventsEnum} from '@app/components/web3-browser';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
-import {createTheme} from '@app/helpers';
+import {createTheme, hideModal, showModal} from '@app/helpers';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
+import {awaitForProvider} from '@app/helpers/await-for-provider';
 import {getLeadingAccount} from '@app/helpers/get-leading-account';
+import {Whitelist} from '@app/helpers/whitelist';
+import {I18N} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
@@ -43,10 +47,16 @@ export const SettingsDeveloperTools = observer(() => {
   const [isValidRawSignData, setValidRawSignData] = useState(false);
   const [browserUrl, setBrowserUrl] = useState('');
   const [convertAddress, setConvertAddress] = useState('');
+  const [verifyAddress, setVerifyAddress] = useState('');
 
   const isValidConvertAddress = useMemo(
     () => isHaqqAddress(convertAddress) || utils.isAddress(convertAddress),
     [convertAddress],
+  );
+
+  const isValidVerifyAddress = useMemo(
+    () => isHaqqAddress(verifyAddress) || utils.isAddress(verifyAddress),
+    [verifyAddress],
   );
 
   const onTurnOffDeveloper = useCallback(() => {
@@ -86,7 +96,7 @@ export const SettingsDeveloperTools = observer(() => {
 
   return (
     <ScrollView style={styles.container}>
-      <Title text="user agent" />
+      <Title text="User agent" />
       <Text
         t11
         onPress={() => {
@@ -96,7 +106,7 @@ export const SettingsDeveloperTools = observer(() => {
         {getUserAgent()}
       </Text>
       <Spacer height={8} />
-      <Title text="bench32/hex converter" />
+      <Title text="Bench32/hex converter" />
       <Input
         placeholder="haqq... or 0x..."
         value={convertAddress}
@@ -123,6 +133,53 @@ export const SettingsDeveloperTools = observer(() => {
             }
           } catch (err) {
             Alert.alert('error', JSON.stringify(err, null, 2));
+          }
+        }}
+        variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Title text="Addres info" />
+      <Input
+        placeholder="haqq... or 0x..."
+        value={verifyAddress}
+        error={!isValidConvertAddress}
+        onChangeText={setVerifyAddress}
+      />
+      <Spacer height={8} />
+      <Button
+        title="verify address"
+        disabled={!isValidVerifyAddress}
+        onPress={async () => {
+          try {
+            showModal('loading');
+            const providerId = await awaitForProvider({
+              providers: Provider.getAll(),
+              initialProviderId: '',
+              title: I18N.networks,
+            });
+            const provider = Provider.getById(providerId);
+            const result = await Whitelist.verifyAddress(
+              verifyAddress,
+              provider!,
+            );
+
+            if (result) {
+              Alert.alert('', JSON.stringify(result, null, 2), [
+                {
+                  text: 'Close',
+                },
+                {
+                  text: 'Copy',
+                  onPress: () => Clipboard.setString(JSON.stringify(result)),
+                },
+              ]);
+            } else {
+              Alert.alert('', 'address info not found');
+            }
+          } catch (err) {
+            Alert.alert('error', JSON.stringify(err, null, 2));
+          } finally {
+            hideModal('loading');
           }
         }}
         variant={ButtonVariant.contained}
