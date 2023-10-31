@@ -52,12 +52,12 @@ export class Whitelist {
     return !!result?.isInWhiteList;
   }
 
-  static async verifyAddress(address: string) {
-    if (!app.provider.indexer || !address) {
+  static async verifyAddress(address: string, provider = app.provider) {
+    if (!provider.indexer || !address) {
       return null;
     }
 
-    const key = `${CACHE_KEY}:${address}`;
+    const key = `${CACHE_KEY}:${address}:${provider.id}`;
     let responseFromCache: CachedVerifyAddressResponse | null = null;
 
     try {
@@ -83,7 +83,7 @@ export class Whitelist {
         : Cosmos.addressToBech32(address);
 
       const response = await jsonrpcRequest<VerifyAddressResponse | null>(
-        app.provider.indexer,
+        provider.indexer,
         'address',
         [haqqAddress],
       );
