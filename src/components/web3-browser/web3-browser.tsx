@@ -10,6 +10,7 @@ import {
 } from 'react-native-webview/lib/WebViewTypes';
 
 import {createTheme} from '@app/helpers';
+import {getAppHeaders} from '@app/helpers/get-app-headers';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useLayout} from '@app/hooks/use-layout';
 import {usePrevious} from '@app/hooks/use-previous';
@@ -328,7 +329,7 @@ export const Web3Browser = ({
           onLoadEnd={helper.onLoadEnd}
           onShouldStartLoadWithRequest={helper.onShouldStartLoadWithRequest}
           onContentProcessDidTerminate={onContentProcessDidTerminate}
-          source={{uri: initialUrl}}
+          source={{uri: initialUrl, headers: getAppHeaders('web3')}}
           onNavigationStateChange={onNavigationStateChange}
         />
       </KeyboardAvoidingView>
