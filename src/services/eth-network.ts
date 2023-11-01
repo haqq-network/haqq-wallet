@@ -4,11 +4,12 @@ import {ProviderInterface} from '@haqq/provider-base';
 import {BigNumber, utils} from 'ethers';
 
 import {app} from '@app/contexts';
+import {getEthMinGasLimit} from '@app/helpers/get-eth-min-gas-limit';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {getDefaultChainId} from '@app/network';
-import {Balance, MIN_GAS_LIMIT} from '@app/services/balance';
+import {Balance} from '@app/services/balance';
 import {storage} from '@app/services/mmkv';
 
 export const ABI_ERC20_TRANSFER_ACTION = {
@@ -43,7 +44,7 @@ export class EthNetwork {
     to: string,
     value: Balance,
     data: string = '0x',
-    minGas = MIN_GAS_LIMIT,
+    minGas = getEthMinGasLimit(),
   ) {
     const rpcProvider = await getRpcProvider(app.provider);
 
@@ -145,7 +146,7 @@ export class EthNetwork {
     to: string,
     value: Balance,
     data = '0x',
-    minGas: Balance = MIN_GAS_LIMIT,
+    minGas: Balance = getEthMinGasLimit(),
   ): Promise<{
     feeWei: Balance;
     gasPrice: Balance;

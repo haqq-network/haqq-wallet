@@ -27,4 +27,8 @@ export interface RemoteConfigTypes {
   pattern_source: string;
   sss_generate_shares_url: string;
   sss_metadata_url: string;
+  cosmos_min_amount: string;
+  cosmos_min_gas_limit: string;
+  eth_min_amount: string;
+  eth_min_gas_limit: string;
 }
