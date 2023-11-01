@@ -2,6 +2,7 @@ import React from 'react';
 
 import {LayoutRectangle, StyleSheet, View} from 'react-native';
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
@@ -66,13 +67,18 @@ export const Web3BrowserActionMenu = ({
   onPressShare,
   onPressPrivacy,
 }: Web3BrowserActionMenuProps) => {
+  const insets = useSafeAreaInsets();
   return (
     <>
       {showActionMenu && (
         <>
           <View
             onTouchEnd={toggleActionMenu}
-            style={[StyleSheet.absoluteFill, styles.actionMenuOverlay]}
+            style={[
+              StyleSheet.absoluteFill,
+              styles.actionMenuOverlay,
+              {top: insets.top},
+            ]}
           />
           <Animated.View
             style={[
@@ -82,7 +88,8 @@ export const Web3BrowserActionMenu = ({
                   moreIconLayout.x! -
                   ACTION_MENU_WIDTH +
                   moreIconLayout.width! * 2,
-                top: moreIconLayout.height! + moreIconLayout.y! + 5,
+                top:
+                  moreIconLayout.height! + moreIconLayout.y! + 5 + insets.top,
               },
             ]}
             entering={FadeIn}
