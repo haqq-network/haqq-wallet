@@ -3,8 +3,10 @@ import React, {memo, useCallback, useState} from 'react';
 import {Alert} from 'react-native';
 
 import {SettingsSecurity} from '@app/components/settings-security';
+import {CustomHeader} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {useTypedNavigation} from '@app/hooks';
+import {I18N} from '@app/i18n';
 import {
   SecurityStackParamList,
   SecurityStackRoutes,
@@ -40,6 +42,11 @@ export const SettingsSecurityScreen = memo(() => {
 
   return (
     <PinGuardScreen>
+      <CustomHeader
+        onPressLeft={navigation.goBack}
+        iconLeft="arrow_back"
+        title={I18N.settingsSecurity}
+      />
       <SettingsSecurity
         onSubmit={onSubmit}
         onToggleBiometry={onToggleBiometry}

@@ -125,9 +125,11 @@ export const HomeScreen = memo(() => {
           tabBarStyle: (routeA => {
             const routeName = (getFocusedRouteNameFromRoute(routeA) ??
               HomeFeedStackRoutes.HomeFeed) as HomeFeedStackRoutes;
-            if (routeName !== HomeFeedStackRoutes.HomeFeed) {
+            const whitelist = [HomeFeedStackRoutes.HomeFeed];
+            if (!whitelist.includes(routeName)) {
               return {
                 height: 0,
+                display: 'none',
               };
             }
             return screenOptions.tabBarStyle;
@@ -142,9 +144,11 @@ export const HomeScreen = memo(() => {
           tabBarStyle: (routeA => {
             const routeName = (getFocusedRouteNameFromRoute(routeA) ??
               BrowserStackRoutes.BrowserHomePage) as BrowserStackRoutes;
-            if (routeName !== BrowserStackRoutes.BrowserHomePage) {
+            const whitelist = [BrowserStackRoutes.BrowserHomePage];
+            if (!whitelist.includes(routeName)) {
               return {
                 height: 0,
+                display: 'none',
               };
             }
             return screenOptions.tabBarStyle;
@@ -159,9 +163,11 @@ export const HomeScreen = memo(() => {
           tabBarStyle: (routeA => {
             const routeName = (getFocusedRouteNameFromRoute(routeA) ??
               NewsStackRoutes.News) as NewsStackRoutes;
-            if (routeName !== NewsStackRoutes.News) {
+            const whitelist = [NewsStackRoutes.News];
+            if (!whitelist.includes(routeName)) {
               return {
                 height: 0,
+                display: 'none',
               };
             }
             return screenOptions.tabBarStyle;
@@ -174,12 +180,13 @@ export const HomeScreen = memo(() => {
         options={({route}) => ({
           ...settingsOptions,
           tabBarStyle: (routeA => {
-            const routeName =
-              getFocusedRouteNameFromRoute(routeA) ?? SettingsStackRoutes.Home;
-
-            if (routeName !== SettingsStackRoutes.Home) {
+            const routeName = (getFocusedRouteNameFromRoute(routeA) ??
+              SettingsStackRoutes.Home) as SettingsStackRoutes;
+            const whitelist = [SettingsStackRoutes.Home];
+            if (!whitelist.includes(routeName)) {
               return {
                 height: 0,
+                display: 'none',
               };
             }
             return screenOptions.tabBarStyle;

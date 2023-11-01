@@ -19,6 +19,7 @@ import {SettingsTestScreen} from '@app/screens/HomeStack/SettingsStack/settings-
 import {SettingsThemeScreen} from '@app/screens/HomeStack/SettingsStack/settings-theme';
 import {WalletConnectStack} from '@app/screens/HomeStack/WalletConnectStack';
 import {BackupSssSuggestionScreen} from '@app/screens/popup-backup-sss-suggestion';
+import {SettingsDeveloperTools as SettingsDeveloperToolsScreen} from '@app/screens/settings-developer-tools';
 
 export enum SettingsStackRoutes {
   Home = 'homeSettings_',
@@ -145,6 +146,16 @@ const SettingsStack = memo(() => {
       <Stack.Screen
         name={SettingsStackRoutes.BackupSssSuggestion}
         component={BackupSssSuggestionScreen}
+      />
+
+      <Stack.Screen
+        name={SettingsStackRoutes.SettingsDeveloperTools}
+        component={SettingsDeveloperToolsScreen}
+        options={{
+          ...popupScreenOptionsWithMargin,
+          title: 'Developer Tools',
+          headerShown: true,
+        }}
       />
     </Stack.Navigator>
   );

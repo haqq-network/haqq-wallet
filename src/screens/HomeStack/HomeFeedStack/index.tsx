@@ -8,6 +8,7 @@ import {I18N, getText} from '@app/i18n';
 import {basicScreenOptions} from '@app/screens';
 import {HomeStackParamList} from '@app/screens/HomeStack';
 import {GovernanceStack} from '@app/screens/HomeStack/GovernanceStack';
+import {HomeEarnStack} from '@app/screens/HomeStack/HomeEarnStack';
 import {HomeFeedScreen} from '@app/screens/HomeStack/HomeFeedStack/home-feed';
 import {NftDetailsStack} from '@app/screens/HomeStack/NftDetailsStack';
 import {NftCollection, NftItem} from '@app/types';
@@ -16,6 +17,7 @@ export enum HomeFeedStackRoutes {
   HomeFeed = 'homeFeed_',
   Governance = 'governance',
   NftDetails = 'nftDetails',
+  HomeEarn = 'homeEarn',
 }
 
 export type HomeFeedStackParamList = HomeStackParamList & {
@@ -27,6 +29,7 @@ export type HomeFeedStackParamList = HomeStackParamList & {
         item: NftItem;
       }
     | {type: 'collection'; item: NftCollection};
+  [HomeFeedStackRoutes.HomeEarn]: undefined;
 };
 
 const Stack = createNativeStackNavigator<HomeFeedStackParamList>();
@@ -53,6 +56,10 @@ const HomeFeedStack = memo(() => {
       <Stack.Screen
         name={HomeFeedStackRoutes.NftDetails}
         component={NftDetailsStack}
+      />
+      <Stack.Screen
+        name={HomeFeedStackRoutes.HomeEarn}
+        component={HomeEarnStack}
       />
     </Stack.Navigator>
   );

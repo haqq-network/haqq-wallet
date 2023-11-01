@@ -1,6 +1,7 @@
-import React, {useMemo} from 'react';
+import React, {useCallback, useMemo, useRef} from 'react';
 
 import {BigNumber} from '@ethersproject/bignumber';
+import {useFocusEffect} from '@react-navigation/native';
 import {Image, View} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -10,6 +11,7 @@ import {
   Icon,
   IconButton,
   LottieWrap,
+  LottieWrapRef,
   NetworkFee,
   PopupContainer,
   Spacer,
@@ -76,13 +78,22 @@ export const TransactionFinish = ({
     );
   }, [transaction, token, amount]);
 
+  const lottie = useRef<LottieWrapRef>(null);
+  const startAnimation = useCallback(() => {
+    if (lottie.current) {
+      lottie.current.play();
+    }
+  }, [lottie.current]);
+  useFocusEffect(startAnimation);
+
   return (
     <PopupContainer style={styles.container} testID={testID}>
       <View style={styles.sub}>
         <LottieWrap
+          ref={lottie}
           source={require('@assets/animations/transaction-finish.json')}
           style={styles.image}
-          autoPlay
+          autoPlay={false}
           loop={false}
         />
       </View>

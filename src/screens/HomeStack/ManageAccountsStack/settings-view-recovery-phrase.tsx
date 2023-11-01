@@ -4,9 +4,10 @@ import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native'
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 
 import {SettingsViewRecoveryPhrase} from '@app/components/settings-view-recovery-phrase';
-import {Loading} from '@app/components/ui';
+import {CustomHeader, Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
-import {useTypedRoute} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {I18N} from '@app/i18n';
 import {
   ManageAccountsStackParamList,
   ManageAccountsStackRoutes,
@@ -17,6 +18,7 @@ import {WalletType} from '@app/types';
 import {PinGuardScreen} from '../../pin-guard';
 
 export const SettingsViewRecoveryPhraseScreen = memo(() => {
+  const navigation = useTypedNavigation<ManageAccountsStackParamList>();
   const {accountId, type} = useTypedRoute<
     ManageAccountsStackParamList,
     ManageAccountsStackRoutes.SettingsViewRecoveryPhrase
@@ -41,7 +43,6 @@ export const SettingsViewRecoveryPhraseScreen = memo(() => {
           account: accountId,
           getPassword: app.getPassword.bind(app),
         });
-
         const phraseSss = await providerSss.getMnemonicPhrase();
         setMnemonic(phraseSss ?? '');
         break;
@@ -50,6 +51,11 @@ export const SettingsViewRecoveryPhraseScreen = memo(() => {
 
   return (
     <PinGuardScreen onEnter={onEnter}>
+      <CustomHeader
+        onPressLeft={navigation.goBack}
+        iconLeft="arrow_back"
+        title={I18N.settingsViewRecoveryPhraseTitle}
+      />
       {!mnemonic && <Loading />}
       {mnemonic && <SettingsViewRecoveryPhrase mnemonic={mnemonic} />}
     </PinGuardScreen>

@@ -31,7 +31,6 @@ export const PinGuardScreen = memo(
     }, [pinRef]);
 
     const onPin = async (pin: string) => {
-      const start = Date.now();
       showModal(ModalType.loading);
       try {
         await app.comparePin(pin);
@@ -50,14 +49,8 @@ export const PinGuardScreen = memo(
         } else {
           pinRef.current?.locked(app.pinBanned);
         }
-
-        // @todo: wtf???
-        const end = Date.now();
-        if (end - start < 500) {
-          setTimeout(() => hideModal('loading'), 1000);
-        } else {
-          hideModal('loading');
-        }
+      } finally {
+        hideModal(ModalType.loading);
       }
     };
 

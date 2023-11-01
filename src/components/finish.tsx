@@ -1,11 +1,13 @@
-import React, {useMemo} from 'react';
+import React, {useCallback, useMemo, useRef} from 'react';
 
+import {useFocusEffect} from '@react-navigation/native';
 import {StyleSheet} from 'react-native';
 
 import {
   Button,
   ButtonVariant,
   LottieWrap,
+  LottieWrapRef,
   PopupContainer,
   Spacer,
   Text,
@@ -31,10 +33,24 @@ export const Finish = ({onFinish, testID, title}: FinishProps) => {
     return require('@assets/animations/success-animation-light.json');
   }, [theme]);
 
+  const lottie = useRef<LottieWrapRef>(null);
+
+  const startAnimation = useCallback(() => {
+    if (lottie.current) {
+      lottie.current.play();
+    }
+  }, [lottie.current]);
+
+  useFocusEffect(startAnimation);
   return (
     <PopupContainer>
       <Spacer>
-        <LottieWrap source={animation} autoPlay={true} loop={false} />
+        <LottieWrap
+          ref={lottie}
+          source={animation}
+          autoPlay={false}
+          loop={false}
+        />
       </Spacer>
       <Text t4 i18n={title} style={styles.title} testID={`${testID}_title`} />
       <Button

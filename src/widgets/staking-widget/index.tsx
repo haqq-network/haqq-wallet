@@ -10,7 +10,7 @@ const StakingWidgetWrapper = memo(() => {
   const rewardAmount = useStakingReward();
 
   const onPress = useCallback(() => {
-    navigation.navigate('staking');
+    navigation.navigate('homeEarn', {screen: 'staking'});
   }, [navigation]);
 
   return (

@@ -3,7 +3,6 @@ import React, {memo} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {popupScreenOptionsWithMargin} from '@app/helpers';
-import {I18N, getText} from '@app/i18n';
 import {basicScreenOptions} from '@app/screens';
 import {HomeStackParamList} from '@app/screens/HomeStack';
 import {SettingsAccountDetailScreen} from '@app/screens/HomeStack/ManageAccountsStack/settings-account-detail';
@@ -68,18 +67,14 @@ const ManageAccountsStack = memo(() => {
         name={ManageAccountsStackRoutes.SettingsAccountStyle}
         component={SettingsAccountStyleScreen}
         options={{
-          ...popupScreenOptionsWithMargin,
-          title: 'Change style',
-          headerShown: true,
+          headerShown: false,
         }}
       />
       <Stack.Screen
         name={ManageAccountsStackRoutes.SettingsViewRecoveryPhrase}
         component={SettingsViewRecoveryPhraseScreen}
         options={{
-          ...popupScreenOptionsWithMargin,
-          title: getText(I18N.settingsViewRecoveryPhraseTitle),
-          headerShown: true,
+          headerShown: false,
         }}
       />
     </Stack.Navigator>

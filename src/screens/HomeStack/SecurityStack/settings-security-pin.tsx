@@ -1,6 +1,7 @@
 import React, {memo, useCallback} from 'react';
 
 import {SettingsSecurityPin} from '@app/components/settings-security-pin';
+import {CustomHeader} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {getProviderInstanceForWallet, showModal} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
@@ -38,5 +39,14 @@ export const SettingsSecurityPinScreen = memo(() => {
     [goBack],
   );
 
-  return <SettingsSecurityPin onPinRepeated={onPinRepeated} />;
+  return (
+    <>
+      <CustomHeader
+        onPressLeft={goBack}
+        iconLeft="arrow_back"
+        title={I18N.settingsSecurityChangePin}
+      />
+      <SettingsSecurityPin onPinRepeated={onPinRepeated} />
+    </>
+  );
 });

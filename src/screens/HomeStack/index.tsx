@@ -290,7 +290,7 @@ const HomeStack = memo(() => {
       <Stack.Screen
         name={HomeStackRoutes.Web3BrowserPopup}
         component={Web3BrowserPopupScreen}
-        options={fullScreenModalOptions}
+        options={modalOptions}
       />
 
       <Stack.Screen

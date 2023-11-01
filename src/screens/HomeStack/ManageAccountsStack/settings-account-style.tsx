@@ -3,7 +3,9 @@ import React, {useCallback, useState} from 'react';
 import {observer} from 'mobx-react';
 
 import {SettingsAccountStyle} from '@app/components/settings-account-style';
+import {CustomHeader} from '@app/components/ui';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {
   ManageAccountsStackParamList,
@@ -50,17 +52,24 @@ export const SettingsAccountStyleScreen = observer(() => {
   }, [cardStyle, colors, navigation, pattern, wallet.address]);
 
   return (
-    <SettingsAccountStyle
-      setPattern={setPattern}
-      onPressApply={onPressApply}
-      patternStyle={patternStyle}
-      colors={colors}
-      cardStyle={cardStyle}
-      pattern={pattern}
-      setPatternStyle={setPatternStyle}
-      setColors={setColors}
-      setCardStyle={setCardStyle}
-      wallet={wallet}
-    />
+    <>
+      <CustomHeader
+        onPressLeft={navigation.goBack}
+        iconLeft="arrow_back"
+        title={I18N.settingsAccountDetailChangeStyleTitle}
+      />
+      <SettingsAccountStyle
+        setPattern={setPattern}
+        onPressApply={onPressApply}
+        patternStyle={patternStyle}
+        colors={colors}
+        cardStyle={cardStyle}
+        pattern={pattern}
+        setPatternStyle={setPatternStyle}
+        setColors={setColors}
+        setCardStyle={setCardStyle}
+        wallet={wallet}
+      />
+    </>
   );
 });
