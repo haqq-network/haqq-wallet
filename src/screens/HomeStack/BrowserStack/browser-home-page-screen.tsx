@@ -73,12 +73,14 @@ export const BrowserHomePageScreen = memo(() => {
     });
   }, []);
 
-  useFocusEffect(() => {
-    setFocused(true);
-    return () => {
-      setFocused(false);
-    };
-  });
+  useFocusEffect(
+    useCallback(() => {
+      setFocused(true);
+      return () => {
+        setFocused(false);
+      };
+    }, [setFocused]),
+  );
 
   useEffect(() => {
     onTrackEvent(AdjustEvents.browserOpen);

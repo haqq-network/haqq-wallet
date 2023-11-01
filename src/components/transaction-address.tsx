@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 
 import {utils} from 'ethers';
 import {ListRenderItem, View} from 'react-native';
@@ -27,7 +27,7 @@ import {Contact} from '@app/models/contact';
 import {Wallet} from '@app/models/wallet';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {SystemDialog} from '@app/services/system-dialog';
-import {isHexString, showUnrecognizedDataAttention} from '@app/utils';
+import {isHaqqAddress, showUnrecognizedDataAttention} from '@app/utils';
 
 import {WalletRow, WalletRowTypes} from './wallet-row';
 import {WALLET_ROW_4_WIDTH} from './wallet-row-variant-4';
@@ -57,29 +57,6 @@ export const TransactionAddress = ({
   testID,
 }: TransactionAddressProps) => {
   const [error, setError] = useState(false);
-  const checked = useMemo(() => utils.isAddress(address.trim()), [address]);
-
-  useEffect(() => {
-    const toTrim = address.trim();
-
-    if (toTrim.length >= 2 && !toTrim.startsWith('0x')) {
-      return setError(true);
-    }
-
-    if (toTrim.length > 2 && !isHexString(toTrim)) {
-      return setError(true);
-    }
-
-    if (toTrim.length < 42) {
-      return setError(false);
-    }
-
-    if (!utils.isAddress(toTrim.trim())) {
-      return setError(true);
-    }
-
-    setError(false);
-  }, [address]);
 
   const onDone = useCallback(async () => {
     onAddress(address.trim());
@@ -139,6 +116,14 @@ export const TransactionAddress = ({
     [onPressAddress],
   );
 
+  const handleChangeAddress = useCallback((value: string) => {
+    const nextValue = value.trim();
+    setAddress(nextValue);
+    const isValidAddress =
+      utils.isAddress(nextValue) || isHaqqAddress(nextValue);
+    setError(!isValidAddress);
+  }, []);
+
   return (
     <PopupContainer testID={testID}>
       <KeyboardSafeArea>
@@ -146,7 +131,7 @@ export const TransactionAddress = ({
           label={I18N.transactionAddressLabel}
           style={styles.input}
           value={address}
-          onChangeText={setAddress}
+          onChangeText={handleChangeAddress}
           error={error}
           errorText={getText(I18N.transactionAddressError)}
           autoFocus
@@ -200,7 +185,7 @@ export const TransactionAddress = ({
           </>
         )}
         <Button
-          disabled={!checked}
+          disabled={error}
           variant={ButtonVariant.contained}
           i18n={I18N.continue}
           onPress={onDone}

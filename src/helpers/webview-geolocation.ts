@@ -30,7 +30,7 @@ type GetCurrentPositionEvent = {
 
 type WatchPositionEvent = {
   event: BrowserGeolocationEvents.watchPosition;
-  options?: GeolocationOptions;
+  options: GeolocationOptions & {watchID: number};
 };
 
 type ClearWatchEvent = {
@@ -143,6 +143,7 @@ let geolocationEnabled = false;
 const handleGeolocationRequest = async (
   ref: WebView,
   event: WebViewMessageEvent,
+  instanceId: string,
 ) => {
   const data = getBrowserGeolocationEventData(event);
 
@@ -160,6 +161,8 @@ const handleGeolocationRequest = async (
     return true;
   };
 
+  Logger.log('data', JSON.stringify(data, null, 2));
+
   Logger.log(
     'BrowserPermission.getAll()',
     JSON.stringify(BrowserPermission.getAll(), null, 2),
@@ -167,8 +170,13 @@ const handleGeolocationRequest = async (
 
   // no need request permission for clearWatch
   if (data.event === BrowserGeolocationEvents.clearWatch) {
-    if (typeof data.watchID === 'number') {
-      Geolocation.clearWatch(data.watchID);
+    const geolocationWatchID = VariablesString.getGeoWatchId(
+      instanceId,
+      data.watchID,
+    );
+
+    if (geolocationWatchID) {
+      Geolocation.clearWatch(Number(geolocationWatchID));
     }
     return rejectResponse('`watchID` is undefined');
   }
@@ -177,18 +185,14 @@ const handleGeolocationRequest = async (
     event.nativeEvent.url,
   );
 
-  Logger.log('isAuthorizedPermission', isAuthorizedPermission);
-
   if (!isAuthorizedPermission) {
     return rejectResponse();
   }
 
   if (!geolocationEnabled) {
     geolocationEnabled = await checkGeoPermissions();
-    Logger.log('geolocationEnabled', geolocationEnabled);
     if (!geolocationEnabled) {
       const isGranted = await enableGeoPermissions();
-      Logger.log('isGranted', isGranted);
       if (!isGranted) {
         return rejectResponse();
       }
@@ -214,19 +218,20 @@ const handleGeolocationRequest = async (
       );
       return true;
     case BrowserGeolocationEvents.watchPosition:
-      const watchID = Geolocation.watchPosition(
+      const {watchID, ...options} = data.options;
+      const geolocationWatchID = Geolocation.watchPosition(
         position => {
           ref.postMessage(
             JSON.stringify({
               event: 'watchPosition',
-              data: {...position, watchID},
+              data: position,
             }),
           );
         },
         rejectResponse,
-        data.options,
+        options,
       );
-      VariablesString.set(GEO_WATCH_ID_KEY, String(watchID));
+      VariablesString.setGeoWatchId(instanceId, watchID, geolocationWatchID);
       return true;
     default:
       return false;
@@ -255,7 +260,8 @@ const getCurrentPosition = `
 
 const watchPosition = `
     navigator.geolocation.watchPosition = (success, error, options) => {
-      window.ReactNativeWebView.postMessage(JSON.stringify({ event: 'watchPosition', options: options }));
+      const watchID = Math.floor(Math.random() * 1000000000);
+      window.ReactNativeWebView.postMessage(JSON.stringify({ event: 'watchPosition', options: {...options, watchID} }));
 
       window.addEventListener('message', (e) => {
         let eventData = {}
@@ -264,12 +270,13 @@ const watchPosition = `
         } catch (e) {}
 
         if (eventData.event === 'watchPosition') {
-          console.log('eventData', eventData);
           success(eventData.data);
         } else if (eventData.event === 'watchPositionError') {
           error(eventData.data);
         }
       });
+
+      return watchID;
     };
     true;
   `;
@@ -287,6 +294,7 @@ const script = `
       ${watchPosition}
       ${clearWatch}
     })();
+    true;
   `;
 
 export const WebViewGeolocation = {

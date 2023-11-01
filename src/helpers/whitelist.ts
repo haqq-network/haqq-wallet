@@ -1,11 +1,26 @@
+import {jsonrpcRequest} from '@haqq/shared-react-native';
+
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
+import {VariablesString} from '@app/models/variables-string';
+import {Cosmos} from '@app/services/cosmos';
 import {RemoteConfig} from '@app/services/remote-config';
+import {VerifyAddressResponse} from '@app/types';
+import {isHaqqAddress} from '@app/utils';
 
 import {getHost} from './web3-browser-utils';
 
+const CACHE_KEY = 'whitelist';
+const CACHE_LIFE_TIME = 3 * 60 * 60 * 1000; // 3 hours
+
+const logger = Logger.create('Whitelist', {});
+
+type CachedVerifyAddressResponse = VerifyAddressResponse & {
+  cachedAt?: number;
+};
+
 export class Whitelist {
-  static async check(url: string | undefined): Promise<boolean> {
+  static async checkUrl(url: string | undefined): Promise<boolean> {
     if (!url) {
       return false;
     }
@@ -30,5 +45,66 @@ export class Whitelist {
     }
 
     return false;
+  }
+
+  static async checkAddress(address: string): Promise<boolean> {
+    const result = await Whitelist.verifyAddress(address);
+    return !!result?.isInWhiteList;
+  }
+
+  static async verifyAddress(address: string, provider = app.provider) {
+    if (!provider.indexer || !address) {
+      return null;
+    }
+
+    const key = `${CACHE_KEY}:${address}:${provider.id}`;
+    let responseFromCache: CachedVerifyAddressResponse | null = null;
+
+    try {
+      const cache = VariablesString.get(key);
+      if (cache) {
+        responseFromCache = JSON.parse(cache);
+
+        // Cache is valid for 3 hour
+        if (
+          responseFromCache?.cachedAt &&
+          responseFromCache.cachedAt + CACHE_LIFE_TIME > Date.now()
+        ) {
+          return responseFromCache;
+        }
+      }
+    } catch (err) {
+      logger.error('verifyAddress from cache', err);
+    }
+
+    try {
+      const haqqAddress = isHaqqAddress(address)
+        ? address
+        : Cosmos.addressToBech32(address);
+
+      const response = await jsonrpcRequest<VerifyAddressResponse | null>(
+        provider.indexer,
+        'address',
+        [haqqAddress],
+      );
+
+      if (response) {
+        const responseForCache = JSON.stringify({
+          ...response,
+          cachedAt: Date.now(),
+        });
+        VariablesString.set(key, responseForCache);
+      }
+
+      return response;
+    } catch (err) {
+      logger.error('verifyAddress', err);
+
+      if (responseFromCache) {
+        return responseFromCache;
+      }
+
+      return null;
+    }
   }
 }

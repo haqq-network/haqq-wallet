@@ -90,7 +90,7 @@ export async function onDeepLink(
         return true;
       case DeeplinkUrlKey.browser:
       case DeeplinkUrlKey.web3browser:
-        if (await Whitelist.check(url.query.uri)) {
+        if (await Whitelist.checkUrl(url.query.uri)) {
           const openBrowserFn = BROWSERS_FN[urlKey];
           openBrowserFn(url.query.uri!);
         } else {

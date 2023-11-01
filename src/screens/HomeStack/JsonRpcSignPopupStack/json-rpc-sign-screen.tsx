@@ -19,7 +19,6 @@ import {ModalType, VerifyAddressResponse} from '@app/types';
 import {
   getTransactionFromJsonRpcRequest,
   getUserAddressFromJRPCRequest,
-  verifyAddress,
 } from '@app/utils';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
@@ -113,7 +112,7 @@ export const JsonRpcSignScreen = memo(() => {
       const params = getTransactionFromJsonRpcRequest(request);
 
       if (params?.from) {
-        const info = await verifyAddress(params.from);
+        const info = await Whitelist.verifyAddress(params.from);
         if (info) {
           setVerifyAddressResponse(info);
         }
@@ -132,7 +131,7 @@ export const JsonRpcSignScreen = memo(() => {
   }, []);
 
   useEffectAsync(async () => {
-    const isAllowedDomain = await Whitelist.check(metadata.url);
+    const isAllowedDomain = await Whitelist.checkUrl(metadata.url);
     setIsAllowed(isAllowedDomain);
     if (!isAllowedDomain) {
       showModal(ModalType.domainBlocked, {

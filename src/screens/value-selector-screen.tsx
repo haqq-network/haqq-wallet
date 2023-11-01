@@ -26,15 +26,17 @@ export const ValueSelectorScreen = () => {
   const {title, values, initialIndex = -1, eventSuffix = ''} = params;
   const selectedIndex = useRef(initialIndex);
 
-  useFocusEffect(() => {
-    return () => {
-      if (selectedIndex.current > -1 && values[selectedIndex.current]) {
-        app.emit(`value-selected${eventSuffix}`, selectedIndex.current);
-      } else {
-        app.emit(`value-selected-reject${eventSuffix}`);
-      }
-    };
-  });
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        if (selectedIndex.current > -1 && values[selectedIndex.current]) {
+          app.emit(`value-selected${eventSuffix}`, selectedIndex.current);
+        } else {
+          app.emit(`value-selected-reject${eventSuffix}`);
+        }
+      };
+    }, []),
+  );
 
   const onValueSelected = useCallback(
     (index: number) => {

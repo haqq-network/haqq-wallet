@@ -180,45 +180,47 @@ export const Web3BrowserScreen = memo(() => {
     [],
   );
 
-  useFocusEffect(() => {
-    setLoading(true);
-    const currentUrl = helper.current?.currentUrl || url;
-    const isClearHistory = VariablesBool.get(WebViewEventsEnum.CLEAR_HISTORY);
-    const isClearCache = VariablesBool.get(WebViewEventsEnum.CLEAR_CACHE);
-    Logger.log('Web3BrowserScreen:reset', {
-      isClearCache,
-      isClearHistory,
-      currentUrl,
-    });
-    try {
-      if (isClearHistory && helper.current) {
-        webviewRef?.current?.clearHistory?.();
-        VariablesBool.set(WebViewEventsEnum.CLEAR_HISTORY, false);
-      }
-
-      if (isClearCache && helper.current) {
-        helper.current?.disconnectAccount?.();
-        helper.current?.dispose?.();
-        webviewRef?.current?.clearCache?.(true);
-        webviewRef?.current?.clearFormData?.();
-        webviewRef?.current?.clearHistory?.();
-        helper.current = null;
-        helper.current = new Web3BrowserHelper({
-          webviewRef,
-          initialUrl: currentUrl,
-        });
-      }
-      VariablesBool.set(WebViewEventsEnum.CLEAR_CACHE, false);
-    } catch (err) {
-      Logger.captureException(err, 'Web3BrowserScreen:reset', {
-        currentUrl,
-        isClearHistory,
+  useFocusEffect(
+    useCallback(() => {
+      setLoading(true);
+      const currentUrl = helper.current?.currentUrl || url;
+      const isClearHistory = VariablesBool.get(WebViewEventsEnum.CLEAR_HISTORY);
+      const isClearCache = VariablesBool.get(WebViewEventsEnum.CLEAR_CACHE);
+      Logger.log('Web3BrowserScreen:reset', {
         isClearCache,
+        isClearHistory,
+        currentUrl,
       });
-    } finally {
-      setLoading(false);
-    }
-  });
+      try {
+        if (isClearHistory && helper.current) {
+          webviewRef?.current?.clearHistory?.();
+          VariablesBool.set(WebViewEventsEnum.CLEAR_HISTORY, false);
+        }
+
+        if (isClearCache && helper.current) {
+          helper.current?.disconnectAccount?.();
+          helper.current?.dispose?.();
+          webviewRef?.current?.clearCache?.(true);
+          webviewRef?.current?.clearFormData?.();
+          webviewRef?.current?.clearHistory?.();
+          helper.current = null;
+          helper.current = new Web3BrowserHelper({
+            webviewRef,
+            initialUrl: currentUrl,
+          });
+        }
+        VariablesBool.set(WebViewEventsEnum.CLEAR_CACHE, false);
+      } catch (err) {
+        Logger.captureException(err, 'Web3BrowserScreen:reset', {
+          currentUrl,
+          isClearHistory,
+          isClearCache,
+        });
+      } finally {
+        setLoading(false);
+      }
+    }, [helper, webviewRef]),
+  );
 
   if (isLoading) {
     return <Loading />;

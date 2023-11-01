@@ -1,13 +1,21 @@
-# Developer Mode Documentation
+## Developer Mode Documentation
+**Table of Contents**
+- [Developer Mode Documentation](#developer-mode-documentation)
+  - [Bech32/Hex Converter](#bech32hex-converter)
+  - [Contract info](#contract-info)
+  - [Raw Sign Request](#raw-sign-request)
+  - [WalletConnect](#walletconnect)
+  - [Browser](#browser)
+- [Debugging WebView Contents](#debugging-webview-contents)
+  - [iOS \& Safari](#ios--safari)
+  - [Android \& Chrome](#android--chrome)
+- [Viewing Logs](#viewing-logs)
+  - [iOS](#ios)
+  - [Android](#android)
+- [Inpage Bridge Web3 docs](#inpage-bridge-web3-docs)
 
-## Table of Contents
-1. [Developer Mode](#developer-mode)
-2. [Debugging WebView Contents](#debugging-webview-contents)
-3. [Viewing Logs](#viewing-logs)
 
-## Developer Mode
-
-> [Inpage Bridge Web3 docs](https://github.com/haqq-network/haqq-wallet/blob/main/docs/inpage-bridge-web3.md)
+> Developer mode is not available for the `Mainnet` provider.
 
 In Haqq Wallet, a Developer Mode is available for enhanced functionalities and testing. To activate Developer Mode, follow the steps below:
 
@@ -32,6 +40,26 @@ In the settings screen, a `Developer Tools` section will appear with the followi
 ### Bech32/Hex Converter
 
 Enter a valid hex address or Bech32 address to convert.
+
+### Contract info
+
+Show info about the contract. Enter a valid hex address or Bech32 address of the contract.
+
+```ts
+interface VerifyAddressResponse {
+  id: string;
+  addressType: 'wallet' | 'contract' |  'unknown';
+  name?: string | null;
+  symbol?: string | null;
+  decimals?: number | null;
+  isErc20?: boolean | null;
+  isErc721?: boolean | null;
+  isErc1155?: boolean | null;
+  isInWhiteList?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+```
 
 ### Raw Sign Request
 
@@ -93,3 +121,10 @@ Use following commands for log viewing:
 ```bash
 adb logcat -v color -v time --pid $(adb shell ps | grep com.haqq.wallet  | tr -s ' ' | cut -d' ' -f2)
 ```
+
+## Inpage Bridge Web3 docs
+
+Haqq Wallet injects the provider API into websites visited by its users using the `window.ethereum` provider object. You can use the provider properties, methods, and events in your dapp. 
+
+[Documentation link](https://github.com/haqq-network/haqq-wallet/blob/main/docs/inpage-bridge-web3.md).
+

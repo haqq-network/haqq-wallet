@@ -19,6 +19,7 @@ import {Color} from '@app/colors';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {createTheme} from '@app/helpers';
+import {getAppHeaders} from '@app/helpers/get-app-headers';
 import {
   changeWebViewUrlJS,
   detectDeeplink,
@@ -32,6 +33,7 @@ import {useWebViewSharedProps} from '@app/hooks/use-webview-shared-props';
 import {getHostnameFromUrl} from '@app/utils';
 import {IS_ANDROID, IS_IOS} from '@app/variables/common';
 
+import {CustomHeaderWebView} from './custom-header-webview';
 import {Icon, IconButton, IconsName, Spacer, Text} from './ui';
 import {Separator} from './ui/separator';
 
@@ -60,7 +62,7 @@ export const InAppBrowser = ({
   const [isPageLoading, setPageLoading] = useState(false);
   const isFirstPageLoaded = useRef(false);
   const phishingController = useRef(new PhishingController()).current;
-  const webViewDefaultProps = useWebViewSharedProps(webviewRef);
+
   const pageTitle = useMemo(
     () =>
       title ||
@@ -197,6 +199,8 @@ export const InAppBrowser = ({
     return false;
   }, [navigationEvent?.canGoBack, webviewRef]);
 
+  const webViewDefaultProps = useWebViewSharedProps(webviewRef);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.titleContainer}>
@@ -228,8 +232,9 @@ export const InAppBrowser = ({
       <KeyboardAvoidingView
         style={styles.webviewContainer}
         behavior={IS_IOS ? 'height' : 'padding'}>
-        <WebView
+        <CustomHeaderWebView
           {...webViewDefaultProps}
+          browserType="inapp"
           ref={webviewRef}
           onLoad={onLoad}
           onLoadStart={onLoadStart}
@@ -237,7 +242,7 @@ export const InAppBrowser = ({
           onContentProcessDidTerminate={onContentProcessDidTerminate}
           onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
           onNavigationStateChange={onNavigationStateChange}
-          source={{uri: url}}
+          source={{uri: url, headers: getAppHeaders('inapp')}}
         />
       </KeyboardAvoidingView>
       <View style={styles.actionPanel}>

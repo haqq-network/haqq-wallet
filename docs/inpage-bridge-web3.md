@@ -1,10 +1,17 @@
-# Inpage Bridge Web3
+### Inpage Bridge Web3 documentation
+---
+**Table of Contents**
+- [Inpage Bridge Web3 documentation](#inpage-bridge-web3-documentation)
+- [Injected properties](#injected-properties)
+- [Supported methods for `window.ethereum.request()`](#supported-methods-for-windowethereumrequest)
+- [Custom Headers](#custom-headers)
+- [How to update `InpageBridgeWeb3.js`](#how-to-update-inpagebridgeweb3js)
 
- Haqq Wallet injects the provider API into websites visited by its users using the window.ethereum provider object. You can use the provider properties, methods, and events in your dapp.
+ Haqq Wallet injects the provider API into websites visited by its users using the `window.ethereum` provider object. You can use the provider properties, methods, and events in your dapp.
 
  > [window.ethereum provider API (MetaMask docs)](https://docs.metamask.io/wallet/reference/provider-api)
 
-## Properties
+### Injected properties
 
 ```ts
 window.ethereum.isHaqqWallet: boolean;
@@ -18,7 +25,7 @@ window.platformOS: 'ios' | 'android';
 
 This property is string value representing the current OS.
 
-## supported methods for `window.ethereum.request()`
+### Supported methods for `window.ethereum.request()`
 Below are some of the methods supported in Haqq Wallet:
 
 | Method Name                  | Params `array`                                          | Return Type                                                                                                      | Description                                                                                                                                                                                          |
@@ -56,7 +63,31 @@ Below are some of the methods supported in Haqq Wallet:
 
  > For more information, visit the [MetaMask Documentation](https://docs.metamask.io/wallet/reference/rpc-api/#provider)
 
-## How to update `InpageBridgeWeb3.js`
+### Custom Headers
+
+The Haqq-Wallet WebView sends the following [custom HTTP headers](https://github.com/react-native-webview/react-native-webview/blob/master/docs/Guide.md#working-with-custom-headers-sessions-and-cookies) with each request:
+
+1. `X-App-Name`
+
+- **Description**: The name identifier for the application.
+- **Value**: `haqq-wallet`
+
+2. `X-App-Version`
+
+- **Description**: The current version of the Haqq-Wallet application.
+- **Value**: A string representing the app version, retrieved dynamically from the app's services.
+
+3. `X-App-Platform`
+
+- **Description**: The operating system platform on which the application is running.
+- **Value**: Platform identifier (e.g., `android`, `ios`), provided by React Native's `Platform.OS`.
+
+4. `X-App-Browser`
+
+- **Description**: The type of browser session from which the request originated.
+- **Value**: Either `inapp` or `web3`, indicating an in-application browser or a web3 browser respectively.
+
+### How to update `InpageBridgeWeb3.js`
 **Instructions to Obtain InpageBridgeWeb3.js from MetaMask's mobile-provider**
 
 1. **Clone the Repository**

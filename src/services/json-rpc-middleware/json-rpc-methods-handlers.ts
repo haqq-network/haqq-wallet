@@ -77,12 +77,18 @@ const signTransaction = async ({helper, req}: JsonRpcMethodHandlerParams) => {
   }
 };
 
-const requestAccount = async () => {
+const requestAccount = async ({helper}: JsonRpcMethodHandlerParams) => {
   const wallets = Wallet.getAllVisible();
+  const session = Web3BrowserSession.getByOrigin(helper.origin);
+  const initialAddress = session?.isActive
+    ? session.selectedAccount
+    : undefined;
+
   const selectedAccount = await awaitForWallet({
     wallets,
     title: I18N.selectAccount,
     autoSelectWallet: false,
+    initialAddress,
   });
   return selectedAccount;
 };
@@ -135,7 +141,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
       isHaqqWallet: true,
     };
   },
-  eth_requestAccounts: async ({helper}) => {
+  eth_requestAccounts: async ({helper, req}) => {
     try {
       const provider = getNetworkProvier(helper);
       const session = Web3BrowserSession.getByOrigin(helper.origin);
@@ -143,7 +149,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
 
       // first connection
       if (!session) {
-        const selectedAccount = await requestAccount();
+        const selectedAccount = await requestAccount({helper, req});
 
         Web3BrowserSession.create(helper.origin, {
           selectedAccount,
@@ -162,7 +168,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
 
       // login again after disconect
       if (!session.selectedAccount && session?.disconected) {
-        const selectedAccount = await requestAccount();
+        const selectedAccount = await requestAccount({helper, req});
         session.update({
           onlineAt: new Date(),
           selectedAccount,

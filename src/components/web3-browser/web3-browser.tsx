@@ -10,7 +10,6 @@ import {
 } from 'react-native-webview/lib/WebViewTypes';
 
 import {createTheme} from '@app/helpers';
-import {WebViewLogger} from '@app/helpers/webview-logger';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useLayout} from '@app/hooks/use-layout';
 import {usePrevious} from '@app/hooks/use-previous';
@@ -36,6 +35,7 @@ import {
 import {Web3BrowserHelper} from './web3-browser-helper';
 
 import {clearUrl, getOriginFromUrl} from '../../helpers/web3-browser-utils';
+import {CustomHeaderWebView} from '../custom-header-webview';
 
 export interface Web3BrowserProps {
   initialUrl: string;
@@ -179,7 +179,6 @@ export const Web3Browser = ({
   const injectedJSBeforeContentLoaded = useMemo(
     () =>
       `
-      ${WebViewLogger.script}
       document.addEventListener("DOMContentLoaded", function(event) {
         ${inpageBridgeWeb3}
         console.log('ethereum loaded:', !!window.ethereum);
@@ -191,15 +190,6 @@ export const Web3Browser = ({
       ${WebViewEventsJS.getWindowInformation}
       true;`,
     [inpageBridgeWeb3],
-  );
-
-  const webViewDefaultProps = useWebViewSharedProps(
-    webviewRef,
-    {
-      onMessage: helper.handleMessage,
-      injectedJavaScriptBeforeContentLoaded: injectedJSBeforeContentLoaded,
-    },
-    [injectedJSBeforeContentLoaded],
   );
 
   const onContentProcessDidTerminate = useCallback(() => {
@@ -294,6 +284,15 @@ export const Web3Browser = ({
     };
   }, [addSiteToSearchHistory, helper]);
 
+  const webViewDefaultProps = useWebViewSharedProps(
+    webviewRef,
+    {
+      onMessage: helper.handleMessage,
+      injectedJavaScriptBeforeContentLoaded: injectedJSBeforeContentLoaded,
+    },
+    [injectedJSBeforeContentLoaded],
+  );
+
   if (!inpageBridgeWeb3) {
     return null;
   }
@@ -323,8 +322,9 @@ export const Web3Browser = ({
       <KeyboardAvoidingView
         style={styles.webviewContainer}
         behavior={IS_IOS ? 'height' : 'padding'}>
-        <WebView
+        <CustomHeaderWebView
           {...webViewDefaultProps}
+          browserType="web3"
           ref={webviewRef}
           onLoad={onLoad}
           onLoadEnd={helper.onLoadEnd}

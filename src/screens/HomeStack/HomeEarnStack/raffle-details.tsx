@@ -17,11 +17,13 @@ export const RaffleDetailsScreen = memo(() => {
     HomeEarnStackRoutes.RaffleDetails
   >()?.params;
 
-  useFocusEffect(() => {
-    navigation.setOptions({
-      title: params?.item?.title,
-    });
-  });
+  useFocusEffect(
+    useCallback(() => {
+      navigation.setOptions({
+        title: params?.item?.title,
+      });
+    }, []),
+  );
 
   const onPressGetTicket = useCallback(async () => {
     try {

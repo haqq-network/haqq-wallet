@@ -1,6 +1,12 @@
 import React from 'react';
 
-import {TextInput, TextInputProps} from 'react-native';
+import {
+  StyleProp,
+  TextInput,
+  TextInputProps,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
@@ -8,12 +14,14 @@ import {I18N} from '@app/i18n';
 
 import {LabelBlockVariant, LabeledBlock} from './labeled-block';
 
-export type InputProps = TextInputProps & {
+export type InputProps = Omit<TextInputProps, 'style'> & {
   label?: string;
   error?: boolean;
   rightAction?: React.ReactNode;
   leftAction?: React.ReactNode;
   i18nLabel?: I18N;
+  inputStyle?: StyleProp<TextStyle>;
+  style?: StyleProp<ViewStyle>;
 };
 
 export const Input = ({
@@ -22,6 +30,7 @@ export const Input = ({
   i18nLabel,
   rightAction,
   leftAction,
+  inputStyle,
   error,
   ...props
 }: InputProps) => {
@@ -34,7 +43,11 @@ export const Input = ({
       rightAction={rightAction}
       leftAction={leftAction}>
       <TextInput
-        style={[page.input, props.editable === false && page.inputDisabled]}
+        style={[
+          page.input,
+          props.editable === false && page.inputDisabled,
+          inputStyle,
+        ]}
         {...props}
       />
     </LabeledBlock>

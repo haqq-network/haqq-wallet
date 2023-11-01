@@ -8,12 +8,14 @@ import {WalletRowVariant1} from './wallet-row-variant-1';
 import {WalletRowVariant2} from './wallet-row-variant-2';
 import {WalletRowVariant3} from './wallet-row-variant-3';
 import {WalletRowVariant4} from './wallet-row-variant-4';
+import {WalletRowVariant5} from './wallet-row-variant-5';
 
 export enum WalletRowTypes {
   variant1,
   variant2,
   variant3,
   variant4,
+  variant5,
 }
 
 export type WalletRowProps = {
@@ -34,6 +36,8 @@ export const WalletRow = ({
   }
 
   switch (type) {
+    case WalletRowTypes.variant5:
+      return <WalletRowVariant5 {...props} />;
     case WalletRowTypes.variant4:
       return <WalletRowVariant4 {...props} />;
     case WalletRowTypes.variant3:

@@ -1,5 +1,6 @@
 import React, {DependencyList, useCallback, useMemo, useRef} from 'react';
 
+import {makeID} from '@haqq/shared-react-native';
 import Geolocation from '@react-native-community/geolocation';
 import {useFocusEffect} from '@react-navigation/native';
 import {Linking, NativeSyntheticEvent, Platform} from 'react-native';
@@ -9,10 +10,8 @@ import {FileDownloadEvent} from 'react-native-webview/lib/WebViewTypes';
 
 import {BrowserError} from '@app/components/browser-error';
 import {DEBUG_VARS} from '@app/debug-vars';
-import {
-  GEO_WATCH_ID_KEY,
-  WebViewGeolocation,
-} from '@app/helpers/webview-geolocation';
+import {WebViewGeolocation} from '@app/helpers/webview-geolocation';
+import {WebViewLogger} from '@app/helpers/webview-logger';
 import {VariablesString} from '@app/models/variables-string';
 import {getUserAgent} from '@app/services/version';
 
@@ -26,6 +25,7 @@ export const useWebViewSharedProps = (
   > = {},
   deps: DependencyList = [],
 ): Partial<WebViewProps> => {
+  const instanceId = useRef(makeID(5)).current;
   const userAgent = useRef(getUserAgent()).current;
   const isTesterMode = useTesterModeEnabled();
 
@@ -45,14 +45,17 @@ export const useWebViewSharedProps = (
     [],
   );
 
-  useFocusEffect(() => {
-    return () => {
-      const watchID = VariablesString.get(GEO_WATCH_ID_KEY);
-      if (watchID) {
-        Geolocation.clearWatch(Number(watchID));
-      }
-    };
-  });
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        VariablesString.getAllGeoWatchIds(instanceId).forEach(({id, value}) => {
+          Logger.log('clear watch', {id, value});
+          Geolocation.clearWatch(Number(value));
+          VariablesString.remove(id);
+        });
+      };
+    }, []),
+  );
 
   const onMessage = useCallback(
     async (event: NativeSyntheticEvent<WebViewMessageEvent>) => {
@@ -66,6 +69,7 @@ export const useWebViewSharedProps = (
         const handled = await WebViewGeolocation.handleGeolocationRequest(
           ref.current,
           event,
+          instanceId,
         );
 
         if (handled) {
@@ -74,13 +78,14 @@ export const useWebViewSharedProps = (
       }
 
       if (typeof propsToMerge.onMessage === 'function') {
-        propsToMerge.onMessage(event);
+        return propsToMerge.onMessage(event);
       }
     },
     [propsToMerge, ref],
   );
 
-  const props: Partial<WebViewProps> = useMemo(
+  // @ts-ignore
+  const props: WebViewProps = useMemo(
     () => ({
       contentMode: 'mobile',
       webviewDebuggingEnabled: __DEV__ || isTesterMode,
@@ -108,12 +113,15 @@ export const useWebViewSharedProps = (
       testID: 'haqq-wallet-webview',
       applicationNameForUserAgent: 'HAQQ Wallet',
       mediaCapturePermissionGrantType: 'prompt',
+      injectedJavaScriptForMainFrameOnly: true,
+      injectedJavaScriptBeforeContentLoadedForMainFrameOnly: true,
       injectedJavaScriptBeforeContentLoaded: `
-        ${WebViewGeolocation.script}
-        ${propsToMerge.injectedJavaScriptBeforeContentLoaded || ''}
-
         // injected properties
         window.platformOS = '${Platform.OS}'
+
+        ${WebViewLogger.script}
+        ${WebViewGeolocation.script}
+        ${propsToMerge.injectedJavaScriptBeforeContentLoaded || ''}
         true;
       `,
       onMessage: onMessage,

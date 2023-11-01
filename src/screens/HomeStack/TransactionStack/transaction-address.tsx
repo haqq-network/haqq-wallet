@@ -12,6 +12,8 @@ import {
   TransactionStackRoutes,
 } from '@app/screens/HomeStack/TransactionStack';
 import {Balance} from '@app/services/balance';
+import {Cosmos} from '@app/services/cosmos';
+import {isHaqqAddress} from '@app/utils';
 
 export const TransactionAddressScreen = observer(() => {
   const navigation = useTypedNavigation<TransactionStackParamList>();
@@ -42,6 +44,7 @@ export const TransactionAddressScreen = observer(() => {
     return wallets.filter(
       w =>
         w.address.toLowerCase().includes(lowerCaseAddress) ||
+        w.cosmosAddress.toLowerCase().includes(lowerCaseAddress) ||
         w.name.toLowerCase().includes(lowerCaseAddress),
     );
   }, [address, wallets]);
@@ -49,6 +52,7 @@ export const TransactionAddressScreen = observer(() => {
   const onDone = useCallback(
     async (result: string) => {
       const nft = route.params.nft;
+      result = isHaqqAddress(result) ? Cosmos.bech32ToAddress(result) : result;
       if (nft) {
         try {
           setLoading(true);

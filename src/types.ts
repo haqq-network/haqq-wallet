@@ -1030,6 +1030,7 @@ export type Modals = {
     title: I18N;
     eventSuffix?: string;
     autoSelectWallet?: boolean;
+    initialAddress?: string;
   };
   transactionError: {
     onClose?: () => void;

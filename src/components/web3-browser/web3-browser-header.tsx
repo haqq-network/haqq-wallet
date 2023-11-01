@@ -65,7 +65,7 @@ export const Web3BrowserHeader = ({
     if (!walletAddress) {
       return;
     }
-    onPressHeaderWallet?.(Wallet.getById(walletAddress)?.accountId!);
+    onPressHeaderWallet?.(walletAddress);
   }, [onPressHeaderWallet, walletAddress]);
 
   const stylesHeaderWithRule = [styles.header, IS_ANDROID && {marginTop: 40}];

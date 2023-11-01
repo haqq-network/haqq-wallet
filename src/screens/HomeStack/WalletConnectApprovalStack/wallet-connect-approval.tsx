@@ -88,6 +88,7 @@ export const WalletConnectApprovalScreen = observer(() => {
     <WalletConnectApproval
       event={event}
       selectedWallet={selectedWallet}
+      hideSelectWalletArrow={wallets.length === 1}
       onSelectWalletPress={onSelectWalletPress}
       onPressReject={onPressReject}
       onPressApprove={onPressApprove}

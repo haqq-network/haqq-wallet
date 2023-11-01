@@ -299,6 +299,10 @@ export const TEST_URLS: Partial<Link>[] = [
   {title: 'app uniswap', url: 'https://app.uniswap.org'},
   {title: 'safe', url: 'https://safe.testedge2.haqq.network'},
   {
+    title: 'TFM.com',
+    url: 'https://tfm.com',
+  },
+  {
     title: 'ChainList app',
     url: 'https://chainlist.org/',
   },

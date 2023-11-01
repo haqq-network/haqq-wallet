@@ -1,6 +1,5 @@
 /* eslint-disable no-bitwise */
 import {PATTERNS_SOURCE} from '@env';
-import {jsonrpcRequest} from '@haqq/shared-react-native';
 import {SessionTypes} from '@walletconnect/types';
 import {
   differenceInDays,
@@ -46,7 +45,6 @@ import {
   JsonRpcTransactionRequest,
   PartialJsonRpcRequest,
   SendTransactionError,
-  VerifyAddressResponse,
   WalletConnectParsedAccount,
 } from './types';
 import {IS_ANDROID, STORE_PAGE_URL} from './variables/common';
@@ -767,23 +765,6 @@ export const getTransactionFromJsonRpcRequest = (
   }
 };
 
-export const verifyAddress = async (address: string) => {
-  if (!app.provider.indexer || !address) {
-    return null;
-  }
-
-  try {
-    return await jsonrpcRequest<VerifyAddressResponse | null>(
-      app.provider.indexer,
-      'address',
-      [Cosmos.addressToBech32(`${address}`)],
-    );
-  } catch (err) {
-    Logger.error('verifyAddress', err);
-    return null;
-  }
-};
-
 export function isContractTransaction(
   tx: JsonRpcTransactionRequest | undefined,
 ): boolean {
@@ -888,8 +869,18 @@ export const requestQRScannerPermission = (url: string) =>
     );
   });
 
-export const isHaqqAddress = (address: string): address is HaqqCosmosAddress =>
-  typeof address === 'string' && address.startsWith('haqq');
+export const isHaqqAddress = (
+  address: string,
+): address is HaqqCosmosAddress => {
+  try {
+    if (typeof address === 'string' && address.startsWith('haqq')) {
+      const hex = Cosmos.bech32ToAddress(address as HaqqCosmosAddress);
+      return utils.isAddress(hex);
+    }
+  } catch (e) {}
+
+  return false;
+};
 
 export const getRandomItemFromArray = <T>(array: T[]): T => {
   return array[Math.floor(Math.random() * array?.length)] as T;

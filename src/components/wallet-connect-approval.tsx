@@ -25,6 +25,7 @@ import {getHostnameFromUrl} from '@app/utils';
 interface WalletConnectApprovalProps {
   event: WalletConnectApproveConnectionEvent;
   selectedWallet: Wallet;
+  hideSelectWalletArrow: boolean;
 
   onSelectWalletPress(): void;
 
@@ -36,6 +37,7 @@ interface WalletConnectApprovalProps {
 export const WalletConnectApproval = ({
   event,
   selectedWallet,
+  hideSelectWalletArrow,
   onSelectWalletPress,
   onPressReject,
   onPressApprove,
@@ -76,6 +78,7 @@ export const WalletConnectApproval = ({
           type={WalletRowTypes.variant2}
           item={selectedWallet}
           onPress={onSelectWalletPress}
+          hideArrow={hideSelectWalletArrow}
         />
 
         <Spacer height={12} />
