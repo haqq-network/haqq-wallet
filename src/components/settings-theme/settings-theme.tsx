@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {ThemedButton} from '@app/components/settings-theme/theme-button';
-import {PopupContainer} from '@app/components/ui';
+import {CustomHeader, PopupContainer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {AppTheme} from '@app/types';
@@ -9,11 +9,21 @@ import {AppTheme} from '@app/types';
 export type SettingsThemeProps = {
   theme: AppTheme;
   onChangeTheme: (theme: AppTheme) => void;
+  goBack: () => void;
 };
 
-export const SettingsTheme = ({theme, onChangeTheme}: SettingsThemeProps) => {
+export const SettingsTheme = ({
+  theme,
+  onChangeTheme,
+  goBack,
+}: SettingsThemeProps) => {
   return (
     <PopupContainer style={styles.container}>
+      <CustomHeader
+        onPressLeft={goBack}
+        iconLeft="arrow_back"
+        title={I18N.settingsThemeScreen}
+      />
       <ThemedButton
         value={AppTheme.system}
         name={I18N.settingsThemeSystem}

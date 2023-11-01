@@ -156,6 +156,8 @@ const modalOptions: NativeStackNavigationOptions = {
   ...popupScreenOptions,
   presentation: 'modal',
   headerShown: false,
+  gestureEnabled: true,
+  gestureDirection: 'vertical',
 };
 
 const fullScreenModalOptions: NativeStackNavigationOptions = {

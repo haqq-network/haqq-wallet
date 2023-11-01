@@ -87,9 +87,7 @@ const SettingsStack = memo(() => {
         name={SettingsStackRoutes.SettingsTheme}
         component={SettingsThemeScreen}
         options={{
-          ...popupScreenOptionsWithMargin,
-          title: getText(I18N.settingsThemeScreen),
-          headerShown: true,
+          headerShown: false,
         }}
       />
 
