@@ -7,6 +7,8 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {Contact} from '@app/models/contact';
 import {Wallet} from '@app/models/wallet';
+import {Cosmos} from '@app/services/cosmos';
+import {isHaqqAddress} from '@app/utils';
 
 export const TransactionAddressScreen = observer(() => {
   const navigation = useTypedNavigation();
@@ -34,6 +36,7 @@ export const TransactionAddressScreen = observer(() => {
     return wallets.filter(
       w =>
         w.address.toLowerCase().includes(lowerCaseAddress) ||
+        w.cosmosAddress.toLowerCase().includes(lowerCaseAddress) ||
         w.name.toLowerCase().includes(lowerCaseAddress),
     );
   }, [address, wallets]);
@@ -41,6 +44,7 @@ export const TransactionAddressScreen = observer(() => {
   const onDone = useCallback(
     async (result: string) => {
       const nft = route.params.nft;
+      result = isHaqqAddress(result) ? Cosmos.bech32ToAddress(result) : result;
       if (nft) {
         try {
           setLoading(true);
