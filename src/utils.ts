@@ -34,6 +34,7 @@ import {Banner, BannerButtonEvent, BannerType} from './models/banner';
 import {Wallet} from './models/wallet';
 import {navigator} from './navigator';
 import {Balance} from './services/balance';
+import {Cosmos} from './services/cosmos';
 import {EthSignError} from './services/eth-sign';
 import {
   AdjustTrackingAuthorizationStatus,
@@ -868,8 +869,18 @@ export const requestQRScannerPermission = (url: string) =>
     );
   });
 
-export const isHaqqAddress = (address: string): address is HaqqCosmosAddress =>
-  typeof address === 'string' && address.startsWith('haqq');
+export const isHaqqAddress = (
+  address: string,
+): address is HaqqCosmosAddress => {
+  try {
+    if (typeof address === 'string' && address.startsWith('haqq')) {
+      const hex = Cosmos.bech32ToAddress(address as HaqqCosmosAddress);
+      return utils.isAddress(hex);
+    }
+  } catch (e) {}
+
+  return false;
+};
 
 export const getRandomItemFromArray = <T>(array: T[]): T => {
   return array[Math.floor(Math.random() * array?.length)] as T;
