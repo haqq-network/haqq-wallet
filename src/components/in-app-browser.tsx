@@ -33,6 +33,7 @@ import {useWebViewSharedProps} from '@app/hooks/use-webview-shared-props';
 import {getHostnameFromUrl} from '@app/utils';
 import {IS_ANDROID, IS_IOS} from '@app/variables/common';
 
+import {CustomHeaderWebView} from './custom-header-webview';
 import {Icon, IconButton, IconsName, Spacer, Text} from './ui';
 import {Separator} from './ui/separator';
 
@@ -231,8 +232,9 @@ export const InAppBrowser = ({
       <KeyboardAvoidingView
         style={styles.webviewContainer}
         behavior={IS_IOS ? 'height' : 'padding'}>
-        <WebView
+        <CustomHeaderWebView
           {...webViewDefaultProps}
+          browserType="inapp"
           ref={webviewRef}
           onLoad={onLoad}
           onLoadStart={onLoadStart}

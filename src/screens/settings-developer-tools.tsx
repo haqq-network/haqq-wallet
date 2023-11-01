@@ -138,7 +138,7 @@ export const SettingsDeveloperTools = observer(() => {
         variant={ButtonVariant.contained}
       />
       <Spacer height={8} />
-      <Title text="Addres info" />
+      <Title text="Contract info" />
       <Input
         placeholder="haqq... or 0x..."
         value={verifyAddress}
@@ -147,7 +147,7 @@ export const SettingsDeveloperTools = observer(() => {
       />
       <Spacer height={8} />
       <Button
-        title="verify address"
+        title="verify contract"
         disabled={!isValidVerifyAddress}
         onPress={async () => {
           try {
