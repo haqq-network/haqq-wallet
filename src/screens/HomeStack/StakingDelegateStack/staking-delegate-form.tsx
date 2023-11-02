@@ -6,6 +6,7 @@ import {observer} from 'mobx-react';
 import {StakingDelegateForm} from '@app/components/staking-delegate-form';
 import {app} from '@app/contexts';
 import {getProviderInstanceForWallet} from '@app/helpers';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useLayoutEffectAsync} from '@app/hooks/use-effect-async';
 import {useThrottle} from '@app/hooks/use-throttle';
@@ -27,7 +28,10 @@ export const StakingDelegateFormScreen = observer(() => {
   >().params;
   const wallet = Wallet.getById(account);
   const balances = useWalletsBalance([wallet!]);
-  const currentBalance = useMemo(() => balances[account], [balances, account]);
+  const currentBalance = useMemo(
+    () => balances[AddressUtils.toEth(account)],
+    [balances, account],
+  );
   const [fee, _setFee] = useState<Balance | null>(null);
 
   const setDefaultFee = useCallback(

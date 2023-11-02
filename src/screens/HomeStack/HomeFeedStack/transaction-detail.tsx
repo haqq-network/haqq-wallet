@@ -4,6 +4,7 @@ import {observer} from 'mobx-react';
 
 import {TransactionDetail} from '@app/components/transaction-detail';
 import {openURL} from '@app/helpers';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useTransaction} from '@app/hooks/use-transaction';
 import {Provider} from '@app/models/provider';
@@ -11,6 +12,7 @@ import {Wallet} from '@app/models/wallet';
 import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
 import {EthNetwork} from '@app/services';
 import {TransactionSource} from '@app/types';
+import {isContractTransaction} from '@app/utils';
 
 export const TransactionDetailScreen = observer(() => {
   const navigation = useTypedNavigation<HomeStackParamList>();
@@ -24,11 +26,13 @@ export const TransactionDetailScreen = observer(() => {
   const source = useMemo(() => {
     const visibleAddressList = Wallet.getAllVisible().map(w => w.address);
 
-    if (transaction?.input.includes('0x') && transaction.input.length > 2) {
+    if (isContractTransaction(transaction)) {
       return TransactionSource.contract;
     }
 
-    return visibleAddressList.includes(transaction?.from.toLowerCase() ?? '')
+    return visibleAddressList.includes(
+      AddressUtils.toEth(transaction?.from ?? ''),
+    )
       ? TransactionSource.send
       : TransactionSource.receive;
   }, [transaction]);

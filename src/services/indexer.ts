@@ -1,8 +1,9 @@
 import {jsonrpcRequest} from '@haqq/shared-react-native';
 
 import {app} from '@app/contexts';
+import {AddressUtils} from '@app/helpers/address-utils';
+import {Whitelist} from '@app/helpers/whitelist';
 import {I18N, getText} from '@app/i18n';
-import {Cosmos} from '@app/services/cosmos';
 import {
   ContractNameMap,
   IContract,
@@ -59,16 +60,7 @@ export class Indexer {
   }
 
   async getContractName(address: string): Promise<string> {
-    if (!app.provider.indexer) {
-      throw new Error('Indexer is not configured');
-    }
-
-    const info = await jsonrpcRequest<{name: string} | null>(
-      app.provider.indexer,
-      'address',
-      [Cosmos.addressToBech32(address)],
-    );
-
+    const info = await Whitelist.verifyAddress(address);
     return info?.name ?? getText(I18N.transactionContractDefaultName);
   }
 
@@ -84,15 +76,14 @@ export class Indexer {
     const response = await jsonrpcRequest<{name: string; id: string}[]>(
       app.provider.indexer,
       'addresses',
-      [addresses.map(Cosmos.addressToBech32)],
+      [addresses.map(AddressUtils.toHaqq)],
     );
 
     const map = addresses.reduce((acc, item) => {
       const responseExist = Array.isArray(response) && response.length > 0;
       const newValue = responseExist
-        ? response.find(
-            infoItem => infoItem.id === Cosmos.addressToBech32(item),
-          )?.name
+        ? response.find(infoItem => infoItem.id === AddressUtils.toHaqq(item))
+            ?.name
         : null;
 
       acc[item] = newValue ?? getText(I18N.transactionContractDefaultName);

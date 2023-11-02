@@ -4,6 +4,7 @@ import {useTypedNavigation} from '@app/hooks';
 import {useTransactionList} from '@app/hooks/use-transaction-list';
 import {Wallet} from '@app/models/wallet';
 import {
+  HaqqEthereumAddress,
   TransactionListReceive,
   TransactionListSend,
   TransactionSource,
@@ -34,7 +35,11 @@ export const TransactionsShortWidgetWrapper = memo(() => {
   const calculateInfo = () => {
     const info = filteredTransactions.reduce(
       (acc, current) => {
-        if (addressList.includes(current.from?.toLowerCase())) {
+        if (
+          addressList.includes(
+            current.from?.toLowerCase() as HaqqEthereumAddress,
+          )
+        ) {
           return {
             ...acc,
             send: acc.send + (current.value ?? 0) + (current.fee ?? 0),

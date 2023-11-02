@@ -1,6 +1,5 @@
 import React, {useCallback, useState} from 'react';
 
-import {utils} from 'ethers';
 import {ListRenderItem, View} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 
@@ -19,6 +18,7 @@ import {
   TextField,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForScanQr} from '@app/helpers/await-for-scan-qr';
 import {LinkType} from '@app/helpers/parse-deep-link';
 import {withActionsContactItem} from '@app/hocs';
@@ -27,7 +27,7 @@ import {Contact} from '@app/models/contact';
 import {Wallet} from '@app/models/wallet';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {SystemDialog} from '@app/services/system-dialog';
-import {isHaqqAddress, showUnrecognizedDataAttention} from '@app/utils';
+import {showUnrecognizedDataAttention} from '@app/utils';
 
 import {WalletRow, WalletRowTypes} from './wallet-row';
 import {WALLET_ROW_4_WIDTH} from './wallet-row-variant-4';
@@ -119,8 +119,7 @@ export const TransactionAddress = ({
   const handleChangeAddress = useCallback((value: string) => {
     const nextValue = value.trim();
     setAddress(nextValue);
-    const isValidAddress =
-      utils.isAddress(nextValue) || isHaqqAddress(nextValue);
+    const isValidAddress = AddressUtils.isValidAddress(nextValue);
     setError(!isValidAddress);
   }, []);
 

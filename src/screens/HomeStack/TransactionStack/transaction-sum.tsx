@@ -2,6 +2,7 @@ import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {TransactionSum} from '@app/components/transaction-sum';
 import {app} from '@app/contexts';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
@@ -32,7 +33,7 @@ export const TransactionSumScreen = memo(() => {
   const wallet = Wallet.getById(route.params.from);
   const balances = useWalletsBalance([wallet!]);
   const currentBalance = useMemo(
-    () => balances[route.params.from],
+    () => balances[AddressUtils.toEth(route.params.from)],
     [balances, route],
   );
   const [fee, setFee] = useState<Balance | null>(null);

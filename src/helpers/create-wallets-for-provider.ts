@@ -6,6 +6,8 @@ import {Wallet} from '@app/models/wallet';
 import {WalletType} from '@app/types';
 import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
+import {AddressUtils} from './address-utils';
+
 export async function createWalletsForProvider(
   provider: ProviderInterface,
   walletType: WalletType,
@@ -33,7 +35,7 @@ export async function createWalletsForProvider(
 
       if (canNext) {
         await Wallet.create(name, {
-          address: address,
+          address: AddressUtils.toEth(address),
           type: walletType,
           path: hdPath,
           accountId: provider.getIdentifier(),

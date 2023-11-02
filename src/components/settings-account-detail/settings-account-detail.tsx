@@ -20,11 +20,11 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {Cosmos} from '@app/services/cosmos';
 import {WalletType} from '@app/types';
 
 type SettingsAccountDetailProps = {
@@ -89,11 +89,11 @@ export const SettingsAccountDetail = ({
           <Text t14>{wallet?.address}</Text>
         </AddressInfo>
         <View style={styles.hDevider} />
-        <AddressInfo copyValue={Cosmos.addressToBech32(wallet?.address)}>
+        <AddressInfo copyValue={AddressUtils.toHaqq(wallet?.address)}>
           <Text t14 color={Color.textBase2}>
             {`${getText(I18N.bech32Title)}: `}
           </Text>
-          <Text t14>{Cosmos.addressToBech32(wallet?.address)}</Text>
+          <Text t14>{AddressUtils.toHaqq(wallet?.address)}</Text>
         </AddressInfo>
       </View>
       {isFeatureEnabled(Feature.sss) && (

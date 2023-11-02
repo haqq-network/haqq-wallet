@@ -5,6 +5,7 @@ import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
 import {ChooseAccountTabNames} from '@app/components/choose-account/choose-account';
 import {LedgerAccounts} from '@app/components/ledger-accounts';
 import {app} from '@app/contexts';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {Wallet} from '@app/models/wallet';
@@ -93,7 +94,9 @@ export const LedgerAccountsScreen = memo(() => {
             address: data.address.toLowerCase(),
             hdPath,
             publicKey: data.publicKey,
-            exists: Wallet.addressList().includes(data.address.toLowerCase()),
+            exists: Wallet.addressList().includes(
+              AddressUtils.toEth(data.address),
+            ),
             balance: balance.toFloat(),
           });
         }
@@ -124,7 +127,7 @@ export const LedgerAccountsScreen = memo(() => {
         nextScreen: app.onboarded
           ? LedgerStackRoutes.LedgerStoreWallet
           : LedgerStackRoutes.OnboardingSetupPin,
-        address: item.address,
+        address: AddressUtils.toEth(item.address),
         hdPath: item.hdPath,
         publicKey: item.publicKey,
         deviceId,

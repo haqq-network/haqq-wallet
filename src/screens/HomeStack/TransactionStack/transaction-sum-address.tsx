@@ -29,15 +29,19 @@ export const TransactionSumAddressScreen = observer(() => {
   const [address, setAddress] = useState(route.params?.to || '');
   const filteredWallets = useMemo(() => {
     if (!wallets || !wallets.length) {
-      return;
+      return [];
     }
 
     if (!address) {
       return wallets;
     }
 
+    const lowerCaseAddress = address.toLowerCase();
     return wallets.filter(
-      w => w.address.includes(address) || w.name.includes(address),
+      w =>
+        w.address.toLowerCase().includes(lowerCaseAddress) ||
+        w.cosmosAddress.toLowerCase().includes(lowerCaseAddress) ||
+        w.name.toLowerCase().includes(lowerCaseAddress),
     );
   }, [address, wallets]);
 

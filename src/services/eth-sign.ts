@@ -1,6 +1,7 @@
 import {TransactionRequest} from '@haqq/provider-base';
 
 import {app} from '@app/contexts';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
 import {Wallet} from '@app/models/wallet';
 import {EIPTypedData} from '@app/types';
@@ -52,7 +53,7 @@ export class EthSignError extends Error {
 }
 
 const getWalletAddress = (wallet: Wallet | string) =>
-  typeof wallet === 'string' ? wallet : wallet.address;
+  typeof wallet === 'string' ? AddressUtils.toEth(wallet) : wallet.address;
 
 const prepareTransaction = async (from: string, tx: TransactionRequest) => {
   tx.from = from;

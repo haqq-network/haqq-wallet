@@ -7,6 +7,7 @@ import {app} from '@app/contexts';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
 import {removeProviderInstanceForWallet} from '@app/helpers';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {
   abortProviderInstanceForWallet,
@@ -24,7 +25,6 @@ import {
 } from '@app/screens/HomeStack/TransactionStack';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
-import {Cosmos} from '@app/services/cosmos';
 import {AdjustEvents} from '@app/types';
 import {makeID} from '@app/utils';
 import {FEE_ESTIMATING_TIMEOUT_MS} from '@app/variables/common';
@@ -86,7 +86,7 @@ export const TransactionConfirmationScreen = observer(() => {
             wallet,
             route.params.to,
             route.params.amount,
-            Cosmos.bech32ToAddress(token.id),
+            AddressUtils.toEth(token.id),
           );
         } else {
           transaction = await ethNetworkProvider.transferTransaction(

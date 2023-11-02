@@ -8,7 +8,7 @@ import {awaitForRealm} from '@app/helpers/await-for-realm';
 import {realm} from '@app/models/index';
 import {Balance} from '@app/services/balance';
 import {storage} from '@app/services/mmkv';
-import {MobXStoreFromRealm} from '@app/types';
+import {HaqqEthereumAddress, MobXStoreFromRealm} from '@app/types';
 import {DEFAULT_FEE, STORE_REHYDRATION_TIMEOUT_MS} from '@app/variables/common';
 
 export enum TransactionStatus {
@@ -25,8 +25,8 @@ export type Transaction = {
   providerId: string;
   hash: string;
   block?: string;
-  from: string;
-  to: string;
+  from: HaqqEthereumAddress;
+  to: HaqqEthereumAddress;
   value: number;
   chainId: string | number;
   timeStamp?: number | string;
@@ -107,8 +107,8 @@ class TransactionStore implements MobXStoreFromRealm {
       block: transaction.block,
       account: transaction.from.toLowerCase(),
       raw: JSON.stringify(transaction),
-      from: transaction.from.toLowerCase(),
-      to: transaction.to.toLowerCase(),
+      from: transaction.from.toLowerCase() as HaqqEthereumAddress,
+      to: transaction.to.toLowerCase() as HaqqEthereumAddress,
       contractAddress: transaction.contractAddress
         ? transaction.contractAddress.toLowerCase()
         : null,

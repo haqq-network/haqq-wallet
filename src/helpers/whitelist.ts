@@ -3,11 +3,10 @@ import {jsonrpcRequest} from '@haqq/shared-react-native';
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {VariablesString} from '@app/models/variables-string';
-import {Cosmos} from '@app/services/cosmos';
 import {RemoteConfig} from '@app/services/remote-config';
 import {VerifyAddressResponse} from '@app/types';
-import {isHaqqAddress} from '@app/utils';
 
+import {AddressUtils} from './address-utils';
 import {getHost} from './web3-browser-utils';
 
 const CACHE_KEY = 'whitelist';
@@ -21,15 +20,11 @@ type CachedVerifyAddressResponse = VerifyAddressResponse & {
 
 const getParsedAddressList = (address: string | string[]) => {
   if (typeof address === 'string') {
-    return isHaqqAddress(address)
-      ? [address]
-      : [Cosmos.addressToBech32(address)];
+    return [AddressUtils.toHaqq(address)];
   }
 
   if (Array.isArray(address)) {
-    return address.map(item =>
-      isHaqqAddress(item) ? item : Cosmos.addressToBech32(item),
-    );
+    return address.map(AddressUtils.toHaqq);
   }
 
   return [];
@@ -64,7 +59,7 @@ export class Whitelist {
   }
 
   static async checkAddress(
-    address: string | string[],
+    address: string,
     provider = app.provider,
   ): Promise<boolean> {
     const result = await Whitelist.verifyAddress(address, provider);

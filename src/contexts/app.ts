@@ -16,6 +16,7 @@ import {DEBUG_VARS} from '@app/debug-vars';
 import {onUpdatesSync} from '@app/event-actions/on-updates-sync';
 import {getEmptyBalances} from '@app/event-actions/on-wallets-balance-check';
 import {Events} from '@app/events';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {AsyncEventEmitter} from '@app/helpers/async-event-emitter';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {checkNeedUpdate} from '@app/helpers/check-app-version';
@@ -524,7 +525,12 @@ class App extends AsyncEventEmitter {
   onWalletsBalance(balances: IndexerBalanceData) {
     let changed = false;
 
-    for (const [address, data] of Object.entries(balances)) {
+    const balancesEntries = Object.entries(balances) as unknown as [
+      HaqqEthereumAddress,
+      BalanceData,
+    ][];
+
+    for (const [address, data] of balancesEntries) {
       const prevBalance = this._balances.get(address);
 
       if (
@@ -546,32 +552,49 @@ class App extends AsyncEventEmitter {
     }
   }
 
-  getBalanceData(address: HaqqEthereumAddress) {
-    return this._balances.get(address) || getEmptyBalances()[address];
+  getBalanceData(address: string) {
+    return (
+      this._balances.get(AddressUtils.toEth(address)) ||
+      getEmptyBalances()[AddressUtils.toEth(address)]
+    );
   }
 
-  getAvailableBalance(address: HaqqEthereumAddress): Balance {
-    return this._balances.get(address)?.available ?? Balance.Empty;
+  getAvailableBalance(address: string): Balance {
+    return (
+      this._balances.get(AddressUtils.toEth(address))?.available ??
+      Balance.Empty
+    );
   }
 
-  getAvailableForStakeBalance(address: HaqqEthereumAddress): Balance {
-    return this._balances.get(address)?.availableForStake ?? Balance.Empty;
+  getAvailableForStakeBalance(address: string): Balance {
+    return (
+      this._balances.get(AddressUtils.toEth(address))?.availableForStake ??
+      Balance.Empty
+    );
   }
 
   getStakingBalance(address: string): Balance {
-    return this._balances.get(address)?.staked ?? Balance.Empty;
+    return (
+      this._balances.get(AddressUtils.toEth(address))?.staked ?? Balance.Empty
+    );
   }
 
   getVestingBalance(address: string): Balance {
-    return this._balances.get(address)?.vested ?? Balance.Empty;
+    return (
+      this._balances.get(AddressUtils.toEth(address))?.vested ?? Balance.Empty
+    );
   }
 
   getTotalBalance(address: string): Balance {
-    return this._balances.get(address)?.total ?? Balance.Empty;
+    return (
+      this._balances.get(AddressUtils.toEth(address))?.total ?? Balance.Empty
+    );
   }
 
   getLockedBalance(address: string): Balance {
-    return this._balances.get(address)?.locked ?? Balance.Empty;
+    return (
+      this._balances.get(AddressUtils.toEth(address))?.locked ?? Balance.Empty
+    );
   }
 
   handleDynamicLink(link: DynamicLink | null) {

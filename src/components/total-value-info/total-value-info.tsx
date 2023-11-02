@@ -17,6 +17,7 @@ import {I18N} from '@app/i18n';
 import {
   BalanceData,
   ContractNameMap,
+  HaqqEthereumAddress,
   IToken,
   TransactionList,
 } from '@app/types';
@@ -44,7 +45,7 @@ export type TotalValueInfoProps = {
   onPressInfo: () => void;
   onPressRow: (hash: string) => void;
   contractNameMap: ContractNameMap;
-  tokens: Record<string, IToken[]>;
+  tokens: Record<HaqqEthereumAddress, IToken[]>;
   initialTab?: TotalValueTabNames;
 };
 

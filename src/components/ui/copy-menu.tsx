@@ -14,10 +14,10 @@ import {Color} from '@app/colors';
 import {Icon, IconsName} from '@app/components/ui/icon';
 import {Text} from '@app/components/ui/text';
 import {createTheme} from '@app/helpers';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {sendNotification} from '@app/services';
-import {Cosmos} from '@app/services/cosmos';
 import {PLACEHOLDER_GRAY} from '@app/variables/common';
 
 export type CopyMenuProps = ViewProps & {
@@ -39,7 +39,7 @@ export const CopyMenu = ({
   }, [value]);
 
   const onBech32CopyPress = useCallback(() => {
-    Clipboard.setString(Cosmos.addressToBech32(value));
+    Clipboard.setString(AddressUtils.toHaqq(value));
     sendNotification(I18N.notificationCopied);
   }, [value]);
 

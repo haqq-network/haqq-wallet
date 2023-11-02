@@ -3,6 +3,7 @@ import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {observer} from 'mobx-react';
 
 import {TransactionAddress} from '@app/components/transaction-address';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {Contact} from '@app/models/contact';
@@ -12,8 +13,6 @@ import {
   TransactionStackRoutes,
 } from '@app/screens/HomeStack/TransactionStack';
 import {Balance} from '@app/services/balance';
-import {Cosmos} from '@app/services/cosmos';
-import {isHaqqAddress} from '@app/utils';
 
 export const TransactionAddressScreen = observer(() => {
   const navigation = useTypedNavigation<TransactionStackParamList>();
@@ -33,26 +32,29 @@ export const TransactionAddressScreen = observer(() => {
   const [address, setAddress] = useState(route.params?.to || '');
   const filteredWallets = useMemo(() => {
     if (!wallets || !wallets.length) {
-      return;
+      return [];
     }
 
     if (!address) {
-      return wallets;
+      return wallets.filter(
+        w => !AddressUtils.equals(w.address, route.params.from),
+      );
     }
 
     const lowerCaseAddress = address.toLowerCase();
+
     return wallets.filter(
       w =>
-        w.address.toLowerCase().includes(lowerCaseAddress) ||
-        w.cosmosAddress.toLowerCase().includes(lowerCaseAddress) ||
-        w.name.toLowerCase().includes(lowerCaseAddress),
+        (w.address.toLowerCase().includes(lowerCaseAddress) ||
+          w.cosmosAddress.toLowerCase().includes(lowerCaseAddress) ||
+          w.name.toLowerCase().includes(lowerCaseAddress)) &&
+        !AddressUtils.equals(w.address, route.params.from),
     );
   }, [address, wallets]);
 
   const onDone = useCallback(
     async (result: string) => {
       const nft = route.params.nft;
-      result = isHaqqAddress(result) ? Cosmos.bech32ToAddress(result) : result;
       if (nft) {
         try {
           setLoading(true);
@@ -67,8 +69,8 @@ export const TransactionAddressScreen = observer(() => {
           navigation.navigate(
             TransactionStackRoutes.TransactionNftConfirmation,
             {
-              from: route.params.from,
-              to: result,
+              from: AddressUtils.toEth(route.params.from),
+              to: AddressUtils.toEth(result),
               nft,
               fee,
             },
@@ -78,8 +80,8 @@ export const TransactionAddressScreen = observer(() => {
         }
       } else {
         navigation.navigate(TransactionStackRoutes.TransactionSelectCrypto, {
-          from: route.params.from,
-          to: result,
+          from: AddressUtils.toEth(route.params.from),
+          to: AddressUtils.toEth(result),
         });
       }
     },

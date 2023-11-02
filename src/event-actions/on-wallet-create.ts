@@ -7,9 +7,9 @@ import {onTransactionsLoad} from '@app/event-actions/on-transactions-load';
 import {onVestingSync} from '@app/event-actions/on-vesting-sync';
 import {Events} from '@app/events';
 import {getProviderInstanceForWallet} from '@app/helpers';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {Wallet} from '@app/models/wallet';
 import {Backend} from '@app/services/backend';
-import {Cosmos} from '@app/services/cosmos';
 import {WalletType} from '@app/types';
 
 import {onWalletsBalanceCheck} from './on-wallets-balance-check';
@@ -20,7 +20,7 @@ export async function onWalletCreate(wallet: Wallet) {
     if (subscription) {
       await Backend.instance.createNotificationSubscription(
         subscription,
-        Cosmos.addressToBech32(wallet.address),
+        AddressUtils.toHaqq(wallet.address),
       );
 
       Wallet.update(wallet.address, {subscription});

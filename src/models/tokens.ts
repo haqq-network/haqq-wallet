@@ -2,11 +2,11 @@ import {makeAutoObservable, runInAction} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
 import {app} from '@app/contexts';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {I18N, getText} from '@app/i18n';
 import {Contracts} from '@app/models/contracts';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
-import {Cosmos} from '@app/services/cosmos';
 import {Indexer, IndexerUpdatesResponse} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
 import {
@@ -43,19 +43,19 @@ class TokensStore implements MobXStore<IToken> {
           // @ts-ignore
           'contracts',
           {
-            // @ts-ignore
             key: 'tokens',
-            // @ts-ignore
             deserialize: (stringObject: string): this['tokens'] => {
               const value = JSON.parse(stringObject) as this['tokens'];
               const keys = Object.keys(value);
               const newValue = keys.reduce((prev, cur) => {
                 return {
                   ...prev,
-                  [cur]: value[cur].map(item => ({
-                    ...item,
-                    value: Balance.fromJsonString(item.value),
-                  })),
+                  [AddressUtils.toEth(cur)]: value[AddressUtils.toEth(cur)].map(
+                    item => ({
+                      ...item,
+                      value: Balance.fromJsonString(item.value),
+                    }),
+                  ),
                 };
               }, {});
 
@@ -67,10 +67,12 @@ class TokensStore implements MobXStore<IToken> {
               const newValue = keys.reduce((prev, cur) => {
                 return {
                   ...prev,
-                  [cur]: value[cur].map(item => ({
-                    ...item,
-                    value: item.value.toJsonString(),
-                  })),
+                  [AddressUtils.toEth(cur)]: value[AddressUtils.toEth(cur)].map(
+                    item => ({
+                      ...item,
+                      value: item.value.toJsonString(),
+                    }),
+                  ),
                 };
               }, {});
 
@@ -194,8 +196,7 @@ class TokensStore implements MobXStore<IToken> {
       const addressTokens: IToken[] = data.tokens
         .filter(
           token =>
-            !!token.contract &&
-            Cosmos.bech32ToAddress(token.address) === w.address,
+            !!token.contract && AddressUtils.toEth(token.address) === w.address,
         )
         .map(token => {
           const hasCache = this.hasContractCache(token.contract);

@@ -1,9 +1,9 @@
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {VariablesDate} from '@app/models/variables-date';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
-import {Cosmos} from '@app/services/cosmos';
 import {Indexer, IndexerUpdatesResponse} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
 import {IndexerBalanceData} from '@app/types';
@@ -32,7 +32,7 @@ const parseIndexerBalances = (
   data: IndexerUpdatesResponse,
 ): IndexerBalanceData => {
   return Wallet.getAll().reduce((acc, w) => {
-    const cosmosAddress = Cosmos.addressToBech32(w.address);
+    const cosmosAddress = AddressUtils.toHaqq(w.address);
     const staked = data?.staked?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
     const vested = data?.vested?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
     const available = data?.available?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
