@@ -1,5 +1,6 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
+import {computed} from 'mobx';
 import {observer} from 'mobx-react';
 
 import {TransactionAccount} from '@app/components/transaction-account';
@@ -21,7 +22,15 @@ export const TransactionAccountScreen = observer(() => {
     TransactionStackParamList,
     TransactionStackRoutes.TransactionAccount
   >();
-  const wallets = Wallet.getAll();
+  const wallets = useMemo(() => {
+    return computed(() =>
+      Wallet.getAllVisible().filter(
+        item =>
+          item.address.toLowerCase() !== route?.params?.to?.toLowerCase?.(),
+      ),
+    );
+  }, [route.params]).get();
+
   const onPressRow = useCallback(
     (address: string) => {
       navigation.navigate(TransactionStackRoutes.TransactionAddress, {

@@ -11,8 +11,9 @@ import {I18N} from '@app/i18n';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
+import {Cosmos} from '@app/services/cosmos';
 import {DeeplinkProtocol, DeeplinkUrlKey, ModalType} from '@app/types';
-import {openInAppBrowser, openWeb3Browser} from '@app/utils';
+import {isHaqqAddress, openInAppBrowser, openWeb3Browser} from '@app/utils';
 
 type ParsedQuery = {
   uri?: string;
@@ -23,6 +24,11 @@ const BROWSERS_FN = {
   [DeeplinkUrlKey.web3browser]: openWeb3Browser,
 };
 
+const logger = Logger.create('on-deep-link', {
+  enabled: __DEV__ || app.isDeveloper || app.isTesterMode,
+  stringifyJson: true,
+});
+
 const handleAddress = async (
   address: string,
   withoutFromAddress: boolean = false,
@@ -31,7 +37,9 @@ const handleAddress = async (
     ? null
     : await awaitForWallet({
         title: I18N.qrModalSendFunds,
-        wallets: Wallet.getAllVisible(),
+        wallets: Wallet.getAllVisible().filter(
+          item => item.address.toLowerCase() !== address?.toLowerCase?.(),
+        ),
       });
 
   app.emit('address', {
@@ -47,79 +55,90 @@ export async function onDeepLink(
   link: string,
   withoutFromAddress: boolean = false,
 ) {
-  if (!link) {
-    return false;
-  }
-
-  if (utils.isAddress(link)) {
-    await handleAddress(link, withoutFromAddress);
-    return true;
-  }
-
-  if (link.startsWith(`${DeeplinkProtocol.etherium}:`)) {
-    const to = link.split(':')[1];
-    if (utils.isAddress(to)) {
-      await handleAddress(to, withoutFromAddress);
-      return true;
+  try {
+    if (!link) {
+      return false;
     }
-  }
 
-  if (link.startsWith(`${DeeplinkProtocol.wc}:`)) {
-    const uri = decodeURIComponent(link.replace(/^wc:\/{0,2}/, ''));
-    VariablesBool.set('isWalletConnectFromDeepLink', true);
-    app.emit(Events.onWalletConnectUri, uri);
-    return true;
-  }
-
-  if (link.startsWith(`${DeeplinkProtocol.haqq}:`)) {
-    const url = new Url<ParsedQuery>(link, true);
-
-    const urlKey = url.host || url.pathname || url.hostname;
-
-    if (utils.isAddress(urlKey)) {
-      navigator.navigate('transaction', {
-        to: urlKey,
-      });
+    if (utils.isAddress(link)) {
+      await handleAddress(link, withoutFromAddress);
       return true;
     }
 
-    switch (urlKey) {
-      case DeeplinkUrlKey.wc:
-        VariablesBool.set('isWalletConnectFromDeepLink', true);
-        app.emit(Events.onWalletConnectUri, url.query.uri);
-        return true;
-      case DeeplinkUrlKey.browser:
-      case DeeplinkUrlKey.web3browser:
-        if (await Whitelist.checkUrl(url.query.uri)) {
-          const openBrowserFn = BROWSERS_FN[urlKey];
-          openBrowserFn(url.query.uri!);
-        } else {
-          showModal(ModalType.domainBlocked, {
-            domain: url.host,
-          });
-        }
-        return true;
-      case DeeplinkUrlKey.back9test:
-        Alert.alert('Referral code', link.split(':')[2]);
-        return true;
-      case DeeplinkUrlKey.enableDeveloperMode:
-        app.isDeveloper = true;
-        return true;
+    if (isHaqqAddress(link)) {
+      await handleAddress(Cosmos.bech32ToAddress(link), withoutFromAddress);
+      return true;
     }
 
-    // TODO: improve legacy code
-    let params = link.split(':');
-    const key = params[1].startsWith('//') ? params[1].slice(2) : params[1];
+    if (link.startsWith(`${DeeplinkProtocol.etherium}:`)) {
+      const to = link.split(':')[1];
+      if (utils.isAddress(to)) {
+        await handleAddress(to, withoutFromAddress);
+        return true;
+      }
+    }
 
-    switch (key) {
-      case DeeplinkUrlKey.provider:
-        navigator.navigate('homeSettings', {
-          screen: 'settingsProviderForm',
-          params: {data: JSON.parse(base64.decode(params[2]))},
+    if (link.startsWith(`${DeeplinkProtocol.wc}:`)) {
+      const uri = decodeURIComponent(link.replace(/^wc:\/{0,2}/, ''));
+      VariablesBool.set('isWalletConnectFromDeepLink', true);
+      app.emit(Events.onWalletConnectUri, uri);
+      return true;
+    }
+
+    if (link.startsWith(`${DeeplinkProtocol.haqq}:`)) {
+      const url = new Url<ParsedQuery>(link, true);
+      logger.log('url', url);
+
+      const [key, ...params] = (url.host || url.pathname || url.hostname).split(
+        ':',
+      );
+
+      if (utils.isAddress(key)) {
+        navigator.navigate('transaction', {
+          to: key,
         });
         return true;
-    }
-  }
+      }
 
+      if (isHaqqAddress(key)) {
+        navigator.navigate('transaction', {
+          to: Cosmos.bech32ToAddress(key),
+        });
+        return true;
+      }
+
+      switch (key) {
+        case DeeplinkUrlKey.wc:
+          VariablesBool.set('isWalletConnectFromDeepLink', true);
+          app.emit(Events.onWalletConnectUri, url.query.uri);
+          return true;
+        case DeeplinkUrlKey.browser:
+        case DeeplinkUrlKey.web3browser:
+          if (await Whitelist.checkUrl(url.query.uri)) {
+            const openBrowserFn = BROWSERS_FN[key];
+            openBrowserFn(url.query.uri!);
+          } else {
+            showModal(ModalType.domainBlocked, {
+              domain: url.query.uri!,
+            });
+          }
+          return true;
+        case DeeplinkUrlKey.back9test:
+          Alert.alert('Referral code', params[0]);
+          return true;
+        case DeeplinkUrlKey.enableDeveloperMode:
+          app.isDeveloper = true;
+          return true;
+        case DeeplinkUrlKey.provider:
+          navigator.navigate('homeSettings', {
+            screen: 'settingsProviderForm',
+            params: {data: JSON.parse(base64.decode(params[0]))},
+          });
+          return true;
+      }
+    }
+  } catch (error) {
+    Logger.captureException(error, 'onDeepLink', {link, withoutFromAddress});
+  }
   return false;
 }

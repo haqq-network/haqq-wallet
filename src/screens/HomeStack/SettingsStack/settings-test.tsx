@@ -8,6 +8,11 @@ import {utils} from 'ethers';
 import {observer} from 'mobx-react';
 import {Alert, Platform, ScrollView} from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import {
+  PlayInstallReferrer,
+  PlayInstallReferrerError,
+  PlayInstallReferrerInfo,
+} from 'react-native-play-install-referrer';
 import shajs from 'sha.js';
 
 import {CaptchaType} from '@app/components/captcha';
@@ -345,6 +350,9 @@ export const SettingsTestScreen = observer(() => {
   const [leadingAccount, setLeadingAccount] = useState(
     VariablesString.get('leadingAccount'),
   );
+  const [refInfo, setRefInfo] = useState<
+    PlayInstallReferrerInfo | PlayInstallReferrerError | null
+  >(null);
 
   useEffect(() => {
     getUid().then(id => {
@@ -353,6 +361,10 @@ export const SettingsTestScreen = observer(() => {
 
     getAdjustAdid().then(id => {
       setAdid(id);
+    });
+
+    PlayInstallReferrer.getInstallReferrerInfo((installReferrerInfo, error) => {
+      setRefInfo(error || installReferrerInfo);
     });
   }, []);
 
@@ -496,6 +508,16 @@ export const SettingsTestScreen = observer(() => {
 
   return (
     <ScrollView style={styles.container}>
+      <Title text="Install Referrer" />
+      <Text
+        t11
+        onPress={() => {
+          Clipboard.setString(JSON.stringify(refInfo));
+          toastMessage('Copied to clipboard');
+        }}>
+        {JSON.stringify(refInfo)}
+      </Text>
+      <Spacer height={8} />
       {uid && (
         <>
           <Title text="uid" />
