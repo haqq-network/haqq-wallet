@@ -19,6 +19,22 @@ type CachedVerifyAddressResponse = VerifyAddressResponse & {
   cachedAt?: number;
 };
 
+const getParsedAddressList = (address: string | string[]) => {
+  if (typeof address === 'string') {
+    return isHaqqAddress(address)
+      ? [address]
+      : [Cosmos.addressToBech32(address)];
+  }
+
+  if (Array.isArray(address)) {
+    return address.map(item =>
+      isHaqqAddress(item) ? item : Cosmos.addressToBech32(item),
+    );
+  }
+
+  return [];
+};
+
 export class Whitelist {
   static async checkUrl(url: string | undefined): Promise<boolean> {
     if (!url) {
@@ -47,17 +63,23 @@ export class Whitelist {
     return false;
   }
 
-  static async checkAddress(address: string): Promise<boolean> {
-    const result = await Whitelist.verifyAddress(address);
+  static async checkAddress(
+    address: string | string[],
+    provider = app.provider,
+  ): Promise<boolean> {
+    const result = await Whitelist.verifyAddress(address, provider);
     return !!result?.isInWhiteList;
   }
 
-  static async verifyAddress(address: string, provider = app.provider) {
+  static async verifyAddress(
+    address: string | string[],
+    provider = app.provider,
+  ) {
     if (!provider.indexer || !address) {
       return null;
     }
 
-    const key = `${CACHE_KEY}:${address}:${provider.id}`;
+    const key = `${CACHE_KEY}:${JSON.stringify(address)}:${provider.id}`;
     let responseFromCache: CachedVerifyAddressResponse | null = null;
 
     try {
@@ -78,14 +100,12 @@ export class Whitelist {
     }
 
     try {
-      const haqqAddress = isHaqqAddress(address)
-        ? address
-        : Cosmos.addressToBech32(address);
+      const haqqAddressList = getParsedAddressList(address);
 
       const response = await jsonrpcRequest<VerifyAddressResponse | null>(
         provider.indexer,
         'address',
-        [haqqAddress],
+        haqqAddressList,
       );
 
       if (response) {
