@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {memo, useCallback, useEffect, useState} from 'react';
 
 import {WelcomeNews} from '@app/components/welcome-news';
 import {onBannerNotificationsTurnOn} from '@app/event-actions/on-banner-notifications-turn-on';
@@ -6,10 +6,14 @@ import {onNewsSync} from '@app/event-actions/on-news-sync';
 import {useTypedNavigation} from '@app/hooks';
 import {News} from '@app/models/news';
 import {VariablesBool} from '@app/models/variables-bool';
+import {
+  WelcomeStackParamList,
+  WelcomeStackRoutes,
+} from '@app/screens/WelcomeStack';
 import {PopupNotificationBannerTypes} from '@app/types';
 
-export const WelcomeNewsScreen = () => {
-  const navigation = useTypedNavigation();
+export const WelcomeNewsScreen = memo(() => {
+  const navigation = useTypedNavigation<WelcomeStackParamList>();
 
   const [news, setNews] = useState(
     News.getAll().filtered('status = "published"').sorted('publishedAt', true),
@@ -29,13 +33,13 @@ export const WelcomeNewsScreen = () => {
     });
   }, []);
 
-  const onPressSignup = () => navigation.navigate('signup', {next: 'create'});
-  const onPressLedger = () => navigation.navigate('ledger');
-  const onPressSignIn = () => navigation.navigate('signin', {next: 'restore'});
+  const onPressSignup = () => navigation.navigate(WelcomeStackRoutes.SignUp);
+  const onPressLedger = () => navigation.navigate(WelcomeStackRoutes.Ledger);
+  const onPressSignIn = () => navigation.navigate(WelcomeStackRoutes.SignIn);
 
   const onPressRow = useCallback(
     (id: string) => {
-      navigation.navigate('newsDetail', {
+      navigation.navigate(WelcomeStackRoutes.NewsDetail, {
         id,
       });
     },
@@ -51,4 +55,4 @@ export const WelcomeNewsScreen = () => {
       onPress={onPressRow}
     />
   );
-};
+});

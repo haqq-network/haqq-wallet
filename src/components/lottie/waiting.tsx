@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 
 import {StyleProp, StyleSheet, ViewStyle} from 'react-native';
 
@@ -8,7 +8,7 @@ type WaitingProps = {
   style?: StyleProp<ViewStyle>;
 };
 
-export const Waiting = ({style}: WaitingProps) => {
+export const Waiting = memo(({style}: WaitingProps) => {
   return (
     <LottieWrap
       style={[page.container, style]}
@@ -17,7 +17,7 @@ export const Waiting = ({style}: WaitingProps) => {
       loop
     />
   );
-};
+});
 
 const page = StyleSheet.create({
   container: {

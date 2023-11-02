@@ -246,6 +246,7 @@ class App extends AsyncEventEmitter {
   }
 
   set onboarded(value) {
+    this.emit(Events.onOnboardedChanged, value);
     VariablesBool.set('onboarded', value);
   }
 

@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {memo, useCallback} from 'react';
 
 import {
   BottomPopupContainer,
@@ -7,10 +7,14 @@ import {
 import {onBannerNotificationsSnooze} from '@app/event-actions/on-banner-notifications-snooze';
 import {onBannerNotificationsTurnOn} from '@app/event-actions/on-banner-notifications-turn-on';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
 
-export const PopupNotificationScreen = () => {
-  const route = useTypedRoute<'popupNotification'>();
-  const {goBack} = useTypedNavigation();
+export const PopupNotificationScreen = memo(() => {
+  const route = useTypedRoute<
+    HomeStackParamList,
+    HomeStackRoutes.PopupNotification
+  >();
+  const {goBack} = useTypedNavigation<HomeStackParamList>();
 
   const onClickTurnOn = useCallback(
     async (close: () => void) => {
@@ -40,4 +44,4 @@ export const PopupNotificationScreen = () => {
       )}
     </BottomPopupContainer>
   );
-};
+});

@@ -7,7 +7,7 @@ import {Coin} from '@evmos/transactions';
 import {AccessListish, BigNumberish} from '@haqq/provider-base';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
-import type {StackNavigationOptions} from '@react-navigation/stack';
+import {NativeStackNavigationOptions} from '@react-navigation/native-stack';
 import {SessionTypes} from '@walletconnect/types';
 import Decimal from 'decimal.js';
 import {
@@ -27,6 +27,8 @@ import {Banner} from '@app/models/banner';
 import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
+import {WelcomeStackRoutes} from '@app/screens/WelcomeStack';
+import {SignUpStackRoutes} from '@app/screens/WelcomeStack/SignUpStack';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {SssProviders} from '@app/services/provider-sss';
@@ -121,12 +123,6 @@ export type WalletInitialData =
       privateKey: string;
     }
   | {
-      type: 'ledger';
-      address: string;
-      deviceId: string;
-      deviceName: string;
-    }
-  | {
       type: 'sss';
       sssPrivateKey: string | null;
       sssCloudShare: string | null;
@@ -134,7 +130,17 @@ export type WalletInitialData =
       verifier: string;
       token: string;
     }
-  | {type: 'empty'};
+  | {type: 'empty'}
+  | LedgerWalletInitialData;
+
+export type LedgerWalletInitialData = {
+  type: 'ledger';
+  address: string;
+  hdPath: string;
+  publicKey: string;
+  deviceId: string;
+  deviceName: string;
+};
 
 export type RootStackParamList = {
   chooseAccount:
@@ -207,8 +213,8 @@ export type RootStackParamList = {
   welcomeNews: undefined;
   create: undefined;
   scanQr: undefined;
-  signin: {next: string};
-  signup: {next: string};
+  signin: {next: WelcomeStackRoutes};
+  signup: {next: SignUpStackRoutes};
   restore: undefined;
   ledger: undefined;
   restorePhrase: {
@@ -679,7 +685,7 @@ export type PresentationNavigation =
   | 'transparentModal'
   | undefined;
 
-export interface ScreenOptionType extends StackNavigationOptions {
+export interface ScreenOptionType extends NativeStackNavigationOptions {
   tab?: boolean;
   headerBackVisible?: boolean;
   headerBackHidden?: boolean | string;

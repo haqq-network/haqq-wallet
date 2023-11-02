@@ -8,9 +8,8 @@ export interface ModalPops {
 }
 
 export const Modal = ({children, visible}: ModalPops) => {
-  return (
-    <>
-      {visible && <View style={StyleSheet.absoluteFillObject}>{children}</View>}
-    </>
-  );
+  if (visible) {
+    return <View style={StyleSheet.absoluteFillObject}>{children}</View>;
+  }
+  return null;
 };

@@ -4,7 +4,7 @@ import {NftCollection} from '@app/types';
 const getRandomWalletAddress = () => {
   const wallets = Wallet.getAllVisible();
   const randomWallet = wallets[Math.floor(Math.random() * wallets.length)];
-  return randomWallet.address;
+  return randomWallet?.address;
 };
 
 export const createNftCollectionSet = () => {

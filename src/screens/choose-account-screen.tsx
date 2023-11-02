@@ -19,6 +19,11 @@ import {getWalletsFromProvider} from '@app/helpers/get-wallets-from-provider';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {Wallet} from '@app/models/wallet';
+import {OnboardingStackRoutes} from '@app/screens/WelcomeStack/OnboardingStack';
+import {
+  SignInStackParamList,
+  SignInStackRoutes,
+} from '@app/screens/WelcomeStack/SignInStack';
 import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
 import {Indexer} from '@app/services/indexer';
@@ -32,8 +37,11 @@ import {
 const PAGE_SIZE = 5;
 
 export const ChooseAccountScreen = memo(() => {
-  const navigation = useTypedNavigation();
-  const params = useTypedRoute<'chooseAccount'>().params;
+  const navigation = useTypedNavigation<SignInStackParamList>();
+  const params = useTypedRoute<
+    SignInStackParamList,
+    SignInStackRoutes.SigninChooseAccount
+  >().params;
 
   const [loading, setLoading] = useState(false);
   const [addresses, setAddresses] = useState<ChooseAccountItem[]>([]);
@@ -200,9 +208,10 @@ export const ChooseAccountScreen = memo(() => {
       const {provider, ...restParams} = params as WalletInitialData & {
         provider: ProviderMnemonicReactNative;
       };
-      navigation.navigate('onboardingSetupPin', restParams);
+      navigation.navigate(SignInStackRoutes.OnboardingSetupPin, restParams);
     } else {
-      navigation.navigate('onboardingFinish');
+      //@ts-ignore
+      navigation.navigate(OnboardingStackRoutes.OnboardingFinish);
     }
   }, [walletsToCreate, params, navigation, walletProvider.current]);
 

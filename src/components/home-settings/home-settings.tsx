@@ -7,6 +7,7 @@ import {createTheme} from '@app/helpers';
 import {useTesterModeEnabled} from '@app/hooks/use-tester-mode-enabled';
 import {useWalletConnectAccounts} from '@app/hooks/use-wallet-connect-accounts';
 import {I18N} from '@app/i18n';
+import {SettingsStackRoutes} from '@app/screens/HomeStack/SettingsStack';
 import {AppTheme} from '@app/types';
 import {capitalize} from '@app/utils';
 
@@ -28,14 +29,14 @@ export const HomeSettings = memo(({theme}: Props) => {
       <SettingsButton
         icon={IconsName.wallet}
         title={I18N.homeSettingsAccounts}
-        next="settingsAccounts"
+        next={SettingsStackRoutes.SettingsAccounts}
         testID="settings_manage_accounts"
       />
 
       <SettingsButton
         icon={IconsName.address_book}
         title={I18N.homeSettingsAddressBook}
-        next="settingsAddressBook"
+        next={SettingsStackRoutes.SettingsAddressBook}
       />
 
       {!!accounts?.length && (
@@ -43,54 +44,40 @@ export const HomeSettings = memo(({theme}: Props) => {
           rightTitle={`${accounts.length}`}
           icon={IconsName.wallet_connect}
           title={I18N.homeSettingsWalletConnect}
-          next="walletConnectWalletList"
+          next={SettingsStackRoutes.WalletConnectWalletList}
         />
       )}
-
-      {/* <SettingsButton
-        icon={IconsName.language}
-        rightTitle="EN"
-        title={getText(I18N.homeSettingsLanguage)}
-        next="settingsLanguage"
-      /> */}
 
       <SettingsButton
         rightTitle={capitalizedTheme}
         icon={IconsName.brush}
         title={I18N.homeSettingsAppearance}
-        next="settingsTheme"
+        next={SettingsStackRoutes.SettingsTheme}
       />
 
       <SettingsButton
         icon={IconsName.shield}
         title={I18N.homeSettingsSecurity}
-        next="settingsSecurity"
+        next={SettingsStackRoutes.SettingsSecurity}
       />
 
       <SettingsButton
         icon={IconsName.bell}
         title={I18N.homeSettingsNotification}
-        next="settingsNotification"
+        next={SettingsStackRoutes.SettingsNotification}
       />
 
       <SettingsButton
         icon={IconsName.providers}
         title={I18N.homeSettingsProviders}
-        next="settingsProviders"
+        next={SettingsStackRoutes.SettingsProviders}
         style={page.button}
       />
-
-      {/*<SettingsButton*/}
-      {/*  icon={<HelpSettingsIcon color={GRAPHIC_BASE_1} />}*/}
-      {/*  title={getText(I18N.homeSettingsFAQ)}*/}
-      {/*  onPress={onClickButton}*/}
-      {/*  next="settingsFaq"*/}
-      {/*/>*/}
 
       <SettingsButton
         icon={IconsName.islm}
         title={I18N.homeSettingsAbout}
-        next="settingsAbout"
+        next={SettingsStackRoutes.SettingsAbout}
         style={page.button}
       />
 
@@ -98,7 +85,7 @@ export const HomeSettings = memo(({theme}: Props) => {
         <SettingsButton
           icon={IconsName.settings}
           title={I18N.homeSettingsDeveloperTools}
-          next="settingsDeveloperTools"
+          next={SettingsStackRoutes.SettingsDeveloperTools}
         />
       )}
 
@@ -106,7 +93,7 @@ export const HomeSettings = memo(({theme}: Props) => {
         <SettingsButton
           icon={IconsName.settings}
           title={I18N.homeSettingsTest}
-          next="settingsTest"
+          next={SettingsStackRoutes.SettingsTest}
           style={page.button}
         />
       )}

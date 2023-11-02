@@ -4,8 +4,8 @@ import {RefreshControl, ScrollView} from 'react-native';
 
 import {createTheme} from '@app/helpers';
 import {BannersWrapper} from '@app/screens/banners';
+import {WalletsWrapper} from '@app/screens/HomeStack/HomeFeedStack/wallets';
 import {LockedTokensWrapper} from '@app/screens/locked-tokens';
-import {WalletsWrapper} from '@app/screens/wallets';
 import {sleep} from '@app/utils';
 import {WidgetRoot} from '@app/widgets';
 

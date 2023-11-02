@@ -1,15 +1,16 @@
 import React, {useCallback, useRef} from 'react';
 
 import {useFocusEffect} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
 import {ValueSelector} from '@app/components/value-selector';
 import {app} from '@app/contexts';
 import {createTheme, popupScreenOptions} from '@app/helpers';
 import {useTypedRoute} from '@app/hooks';
+import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
 
-const ValueSelectorStack = createStackNavigator();
+const ValueSelectorStack = createNativeStackNavigator();
 
 const screenOptions = {
   ...popupScreenOptions,
@@ -18,7 +19,10 @@ const screenOptions = {
 };
 
 export const ValueSelectorScreen = () => {
-  const {params} = useTypedRoute<'valueSelector'>();
+  const {params} = useTypedRoute<
+    HomeStackParamList,
+    HomeStackRoutes.ValueSelector
+  >();
   const {title, values, initialIndex = -1, eventSuffix = ''} = params;
   const selectedIndex = useRef(initialIndex);
 

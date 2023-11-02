@@ -15,6 +15,7 @@ import {
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
+import {Balance} from '@app/services/balance';
 import {NftItem} from '@app/types';
 import {splitAddress} from '@app/utils';
 import {CURRENCY_NAME, WEI} from '@app/variables/common';
@@ -22,7 +23,7 @@ import {CURRENCY_NAME, WEI} from '@app/variables/common';
 interface TransactionConfirmationProps {
   to: string;
   item: NftItem;
-  fee: number;
+  fee: Balance;
   contact: Contact | null;
   error?: string;
 
@@ -84,7 +85,7 @@ export const TransactionNftConfirmation = ({
       )}
       <Spacer />
       <Button
-        disabled={fee === 0 && !disabled}
+        disabled={!fee.isPositive() && !disabled}
         variant={ButtonVariant.contained}
         i18n={I18N.transactionConfirmationSend}
         onPress={onConfirmTransaction}

@@ -1,18 +1,19 @@
 import React, {useEffect, useMemo} from 'react';
 
+import {NativeStackHeaderProps} from '@react-navigation/native-stack';
 import {NavigationAction} from '@react-navigation/routers';
-import {StackHeaderProps} from '@react-navigation/stack';
-import {Image, ImageSourcePropType, StyleSheet, View} from 'react-native';
+import {Image, ImageSourcePropType, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
 import {GoBackPopupButton} from '@app/components/popup/go-back-popup-button';
 import {SpacerPopupButton} from '@app/components/popup/spacer-popup-button';
 import {Text} from '@app/components/ui';
+import {createTheme} from '@app/helpers/create-theme';
 import {ScreenOptionType} from '@app/types';
 import {IS_ANDROID} from '@app/variables/common';
 
-type PopupHeaderProps = StackHeaderProps & {
+type PopupHeaderProps = NativeStackHeaderProps & {
   options: ScreenOptionType & {
     customBackFunction?: () => void;
     titleIcon?: ImageSourcePropType;
@@ -47,11 +48,12 @@ export const PopupHeader = ({options, back, navigation}: PopupHeaderProps) => {
   return (
     <View
       style={[
+        options.headerStyle,
         page.container,
         (options.tab || IS_ANDROID) && {marginTop: insets.top},
       ]}>
       {options.headerLeft ? (
-        options.headerLeft({})
+        options.headerLeft({canGoBack: canGoBack || false})
       ) : canGoBack ? (
         <GoBackPopupButton onBack={options.customBackFunction} />
       ) : (
@@ -71,12 +73,16 @@ export const PopupHeader = ({options, back, navigation}: PopupHeaderProps) => {
           {options.title}
         </Text>
       </View>
-      {options.headerRight ? options.headerRight({}) : <SpacerPopupButton />}
+      {options.headerRight ? (
+        options.headerRight({canGoBack: canGoBack || false})
+      ) : (
+        <SpacerPopupButton />
+      )}
     </View>
   );
 };
 
-const page = StyleSheet.create({
+const page = createTheme({
   container: {
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -84,6 +90,7 @@ const page = StyleSheet.create({
     height: 56,
     flexDirection: 'row',
     zIndex: 1,
+    backgroundColor: Color.bg1,
   },
   text: {
     marginHorizontal: 8,

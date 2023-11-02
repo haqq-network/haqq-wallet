@@ -4,15 +4,14 @@ import {JsonRpcRequest} from 'json-rpc-engine';
 import {Alert, Linking} from 'react-native';
 import {WebViewMessageEvent} from 'react-native-webview';
 
+import {
+  WebViewEventsEnum,
+  WindowInfoEvent,
+} from '@app/components/web3-browser/scripts';
 import {onDynamicLink} from '@app/event-actions/on-dynamic-link';
 import {I18N, getText} from '@app/i18n';
 import {isValidUrl} from '@app/utils';
 import {HAQQ_DYNAMIC_LINKS_HOSTNAME} from '@app/variables/common';
-
-import {
-  WebViewEventsEnum,
-  WindowInfoEvent,
-} from '../components/web3-browser/scripts';
 
 export enum EthereumEventsEnum {
   ACCOUNTS_CHANGED = 'accountsChanged',

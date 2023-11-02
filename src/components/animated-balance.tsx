@@ -18,7 +18,7 @@ type State = {value: number};
 
 const CONFIG = {
   Interval: 100,
-  Steps: 5,
+  Steps: 2,
 };
 
 export class AnimateNumber extends Component<Props, State> {

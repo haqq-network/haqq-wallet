@@ -9,7 +9,7 @@ import DraggableFlatList, {
 
 import {Color} from '@app/colors';
 import {I18N} from '@app/i18n';
-import {STRICT_URLS} from '@app/screens/browser-home-page-screen';
+import {STRICT_URLS} from '@app/screens/HomeStack/BrowserStack/browser-home-page-screen';
 import {Link} from '@app/types';
 
 import {LinkPreview, LinkPreviewVariant} from './link-preview';

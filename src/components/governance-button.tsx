@@ -1,18 +1,19 @@
 import React, {useCallback} from 'react';
 
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-
 import {Color} from '@app/colors';
 import {Icon, IconButton} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {RootStackParamList} from '@app/types';
+import {useTypedNavigation} from '@app/hooks';
+import {
+  HomeFeedStackParamList,
+  HomeFeedStackRoutes,
+} from '@app/screens/HomeStack/HomeFeedStack';
 
 export const GovernanceButton = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const navigation = useTypedNavigation<HomeFeedStackParamList>();
 
   const onPressNews = useCallback(() => {
-    navigation.navigate('governance');
+    navigation.navigate(HomeFeedStackRoutes.Governance);
   }, [navigation]);
 
   return (
@@ -24,16 +25,4 @@ export const GovernanceButton = () => {
 
 const page = createTheme({
   container: {marginLeft: 12, position: 'relative'},
-  // hasNews: {
-  //   top: -2,
-  //   right: -2,
-  //   position: 'absolute',
-  //   padding: 2,
-  //   borderRadius: 5,
-  //   width: 10,
-  //   height: 10,
-  //   borderWidth: 2,
-  //   borderColor: Color.bg1,
-  //   backgroundColor: Color.graphicRed1,
-  // },
 });

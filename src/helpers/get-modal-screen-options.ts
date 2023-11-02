@@ -9,6 +9,7 @@ export const getModalScreenOptions = (title?: I18N): StackNavigationOptions => {
   return {
     title: title ? getText(title) : undefined,
     headerShown: true,
+    //@ts-ignore
     header: PopupHeader,
     headerLeft: SpacerPopupButton,
     headerRight: DismissPopupButton,

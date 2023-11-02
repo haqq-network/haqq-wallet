@@ -1,3 +1,5 @@
+import {NativeStackNavigationOptions} from '@react-navigation/native-stack';
+
 import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
 import {PopupHeader} from '@app/components/popup-header';
 
@@ -10,7 +12,20 @@ export const actionSheet: ActionSheetType = {
   animationEnabled: true,
 };
 
-export const hideBack = {
+export const popupScreenOptions = {
+  header: PopupHeader,
+  gestureEnabled: false,
+};
+
+export const popupScreenOptionsWithMargin: NativeStackNavigationOptions = {
+  header: PopupHeader,
+  gestureEnabled: false,
+  // TODO: hasNotch
+  //@ts-ignore
+  headerStyle: {marginTop: Platform.OS === 'ios' ? 48 : 14},
+};
+
+export const hideBack: NativeStackNavigationOptions = {
   headerLeft: () => null,
   headerRight: DismissPopupButton,
 };
@@ -18,9 +33,4 @@ export const hideBack = {
 export const modalWithoutBack = {
   ...hideBack,
   presentation: 'modal',
-};
-
-export const popupScreenOptions = {
-  header: PopupHeader,
-  gestureEnabled: false,
 };

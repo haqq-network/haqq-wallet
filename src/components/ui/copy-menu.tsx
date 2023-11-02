@@ -44,8 +44,9 @@ export const CopyMenu = ({
   }, [value]);
 
   const onPressSettings = useCallback(() => {
-    navigation.navigate('settingsAccountDetail', {
-      address: value,
+    navigation.navigate('homeSettings', {
+      screen: 'settingsAccounts',
+      params: {screen: 'settingsAccountDetail', params: {address: value}},
     });
   }, [value]);
 

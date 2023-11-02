@@ -1,14 +1,15 @@
-import React, {useCallback, useEffect, useRef} from 'react';
+import React, {memo, useCallback, useEffect, useRef} from 'react';
 
-import {createStackNavigator} from '@react-navigation/stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
 import {WalletSelector} from '@app/components/wallet-selector';
 import {app} from '@app/contexts';
 import {createTheme, popupScreenOptions} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
 
-const WalletSelectorStack = createStackNavigator();
+const Stack = createNativeStackNavigator();
 
 const screenOptions = {
   ...popupScreenOptions,
@@ -16,9 +17,12 @@ const screenOptions = {
   headerRight: DismissPopupButton,
 };
 
-export const WalletSelectorScreen = () => {
-  const navigation = useTypedNavigation();
-  const {params} = useTypedRoute<'walletSelector'>();
+export const WalletSelectorScreen = memo(() => {
+  const navigation = useTypedNavigation<HomeStackParamList>();
+  const {params} = useTypedRoute<
+    HomeStackParamList,
+    HomeStackRoutes.WalletSelector
+  >();
   const {title, wallets, initialAddress, eventSuffix = ''} = params;
   const selectedAddress = useRef(initialAddress);
 
@@ -52,11 +56,11 @@ export const WalletSelectorScreen = () => {
   );
 
   return (
-    <WalletSelectorStack.Navigator screenOptions={{...screenOptions, title}}>
-      <WalletSelectorStack.Screen name={title} component={Component} />
-    </WalletSelectorStack.Navigator>
+    <Stack.Navigator screenOptions={{...screenOptions, title}}>
+      <Stack.Screen name={title} component={Component} />
+    </Stack.Navigator>
   );
-};
+});
 
 const styles = createTheme({
   walletSelector: {

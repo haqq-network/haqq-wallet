@@ -35,7 +35,7 @@ export const WalletSelector = ({
 
   return (
     <PopupContainer style={style}>
-      {wallets?.map?.(wallet => {
+      {wallets.map(wallet => {
         return (
           <View key={wallet.address} style={styles.walletRowContainer}>
             <WalletRow

@@ -1,65 +1,39 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect} from 'react';
+
+import {observer} from 'mobx-react';
 
 import {Modal} from '@app/components/modal';
 import {ModalWrapper} from '@app/components/modals/modal-wrapper';
-import {app} from '@app/contexts';
-import {Events} from '@app/events';
+import {ModalStore, hideModal, showModal} from '@app/helpers';
 import {ModalType, Modals, ModalsListBase} from '@app/types';
-import {makeID} from '@app/utils';
 
 type ModalStates<
   ModalsList extends ModalsListBase,
   ModalName extends keyof ModalsList,
 > = ModalsList[ModalName] & {type: ModalName; uid: string};
 
-type ModalState = ModalStates<Modals, ModalType>;
+export type ModalState = ModalStates<Modals, keyof Modals>;
 
 export type ModalProps = {
-  initialModal?: Partial<ModalState>;
+  initialModal?: {type: 'splash'};
 };
 
-export const ModalsScreen = ({initialModal}: ModalProps) => {
-  const [modals, setModal] = useState<ModalState[]>(
-    ([initialModal].filter(Boolean) as ModalState[]).map(m => ({
-      ...m,
-      uid: makeID(6),
-    })),
-  );
+export const ModalsScreen = observer(({initialModal}: ModalProps) => {
+  useEffect(() => {
+    if (initialModal?.type) {
+      showModal(initialModal.type);
+    }
+  }, [initialModal]);
 
   const onClose = useCallback((event: ModalState) => {
-    app.emit(Events.onCloseModal, event.type);
+    hideModal(event.type);
   }, []);
 
-  useEffect(() => {
-    const showModal = (event: ModalState) => {
-      let exists = modals.some(m => m.type === event.type);
-
-      if (!exists) {
-        setModal(m => m.concat({...event, uid: makeID(6)}));
-      }
-    };
-
-    const hideModal = (event: {type: string}) => {
-      let exists = modals.some(m => m.type === event.type);
-
-      if (exists) {
-        setModal(m => m.filter(r => r.type !== event.type));
-      }
-    };
-
-    app.on('showModal', showModal);
-    app.on('hideModal', hideModal);
-    return () => {
-      app.off('showModal', showModal);
-      app.off('hideModal', hideModal);
-    };
-  }, [modals]);
-
   return (
-    <Modal visible={!!modals.length}>
-      {modals.map(modal => (
+    <Modal visible={!!ModalStore.modals.length}>
+      {ModalStore.modals.map(modal => (
         <ModalWrapper
-          type={modal.type}
+          type={modal.type as ModalType}
           modal={modal}
           onClose={onClose}
           key={modal.uid}
@@ -67,4 +41,4 @@ export const ModalsScreen = ({initialModal}: ModalProps) => {
       ))}
     </Modal>
   );
-};
+});

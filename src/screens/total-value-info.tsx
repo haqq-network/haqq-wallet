@@ -11,6 +11,7 @@ import {useTransactionList} from '@app/hooks/use-transaction-list';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {Token} from '@app/models/tokens';
 import {Wallet} from '@app/models/wallet';
+import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
 import {Indexer} from '@app/services/indexer';
 import {
   ModalType,
@@ -21,8 +22,11 @@ import {
 import {calculateBalances} from '@app/utils';
 
 export const TotalValueInfoScreen = observer(() => {
-  const navigation = useTypedNavigation();
-  const route = useTypedRoute<'totalValueInfo'>();
+  const navigation = useTypedNavigation<HomeStackParamList>();
+  const route = useTypedRoute<
+    HomeStackParamList,
+    HomeStackRoutes.TotalValueInfo
+  >();
   const wallets = Wallet.getAllVisible();
   const addressList = useMemo(() => Wallet.addressList(), []);
   const transactionsList = useTransactionList(addressList);
@@ -50,7 +54,7 @@ export const TotalValueInfoScreen = observer(() => {
   const onPressRow: OnTransactionRowPress = useCallback(
     (hash, params) => {
       const screenParams = params || {};
-      navigation.navigate('transactionDetail', {
+      navigation.navigate(HomeStackRoutes.TransactionDetail, {
         ...screenParams,
         hash,
       });
