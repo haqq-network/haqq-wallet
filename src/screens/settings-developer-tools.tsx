@@ -9,14 +9,14 @@ import {Button, ButtonVariant, Input, Spacer, Text} from '@app/components/ui';
 import {WebViewEventsEnum} from '@app/components/web3-browser';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
-import {createTheme, hideModal, showModal} from '@app/helpers';
+import {awaitForWallet, createTheme, hideModal, showModal} from '@app/helpers';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
 import {awaitForProvider} from '@app/helpers/await-for-provider';
-import {getLeadingAccount} from '@app/helpers/get-leading-account';
 import {Whitelist} from '@app/helpers/whitelist';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {VariablesBool} from '@app/models/variables-bool';
+import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
@@ -206,10 +206,14 @@ export const SettingsDeveloperTools = observer(() => {
         disabled={!isValidRawSignData}
         onPress={async () => {
           try {
+            const address = await awaitForWallet({
+              title: I18N.selectAccount,
+              wallets: Wallet.getAllVisible(),
+            });
             const result = await awaitForJsonRpcSign({
               metadata: HAQQ_METADATA,
               request: signData!,
-              selectedAccount: getLeadingAccount()?.address,
+              selectedAccount: address,
             });
             Alert.alert('Result', result, [
               {text: 'Close'},
