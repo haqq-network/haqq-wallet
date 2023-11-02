@@ -9385,6 +9385,7 @@ __metadata:
     react-native-mmkv: 2.10.2
     react-native-os: "https://github.com/aprock/react-native-os#938676ebd92d58b8928168a7e78cbe216838ed17"
     react-native-permissions: ^3.10.0
+    react-native-play-install-referrer: 1.1.8
     react-native-popup-menu: 0.16.1
     react-native-prompt-android: 1.1.0
     react-native-qr-decode-image-camera: 1.1.3
@@ -14631,6 +14632,13 @@ __metadata:
     react-native-windows:
       optional: true
   checksum: cd3b3fd99212f0d044fd4de1b410b9f7cee0ccc92bd6fd8f4d45bce815ccac36d8744d5440822135c95cd9b821c6972f42142b9c8ae9e950695faed2fcd7779d
+  languageName: node
+  linkType: hard
+
+"react-native-play-install-referrer@npm:1.1.8":
+  version: 1.1.8
+  resolution: "react-native-play-install-referrer@npm:1.1.8"
+  checksum: a8e85da996a65cfefa0288ad12c2cb7b8772787265081fc40dbb1fe96c75b8cd50f012aedbf28f7642a4cebc436da76c8fb981c88cad63a5b85c6de574641820
   languageName: node
   linkType: hard
 
