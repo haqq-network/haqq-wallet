@@ -11,10 +11,10 @@ import {createTheme} from '@app/helpers';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {IToken} from '@app/types';
+import {HaqqEthereumAddress, IToken} from '@app/types';
 
 export interface TokenViewerProps {
-  data: Record<string, IToken[]>;
+  data: Record<HaqqEthereumAddress, IToken[]>;
   style?: StyleProp<ViewStyle>;
 }
 
@@ -72,7 +72,7 @@ export const TokenViewer = observer(({data, style}: TokenViewerProps) => {
   }, []);
 
   const sort = useCallback(
-    (a: string, b: string) => {
+    (a: HaqqEthereumAddress, b: HaqqEthereumAddress) => {
       const aBalance = balances[a];
       const bBalance = balances[b];
 
@@ -102,23 +102,21 @@ export const TokenViewer = observer(({data, style}: TokenViewerProps) => {
           <Text color={Color.graphicBase1} i18n={I18N.tokensZeroBalance} />
         </IconButton>
       </View>
-      {Object.keys(data)
-        .sort(sort)
-        .map(address => {
-          const wallet = Wallet.getById(address);
-          const tokens = data[address].filter(token => {
-            if (showZeroBalance) {
-              return true;
-            }
-            return token.value.isPositive();
-          });
-
-          if (!wallet) {
-            return null;
+      {(Object.keys(data) as HaqqEthereumAddress[]).sort(sort).map(address => {
+        const wallet = Wallet.getById(address);
+        const tokens = data[address].filter(token => {
+          if (showZeroBalance) {
+            return true;
           }
+          return token.value.isPositive();
+        });
 
-          return <WalletCard key={address} wallet={wallet} tokens={tokens} />;
-        })}
+        if (!wallet) {
+          return null;
+        }
+
+        return <WalletCard key={address} wallet={wallet} tokens={tokens} />;
+      })}
     </View>
   );
 });

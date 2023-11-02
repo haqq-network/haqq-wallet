@@ -1,4 +1,5 @@
 import {app} from '@app/contexts';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {
   VestingMetadata,
   VestingMetadataType,
@@ -10,7 +11,7 @@ export async function onVestingSync() {
   Logger.log('onVestingSync');
   const cosmos = new Cosmos(app.provider!);
   const addressList = Wallet.getAllVisible().map(w =>
-    Cosmos.addressToBech32(w.address),
+    AddressUtils.toHaqq(w.address),
   );
   await sync(addressList, cosmos);
   // app.emit(Events.onWalletsVestingBalanceCheck);

@@ -8,7 +8,6 @@ import {
   differenceInMinutes,
 } from 'date-fns';
 import Decimal from 'decimal.js';
-import {utils} from 'ethers';
 import _ from 'lodash';
 import {
   Alert,
@@ -26,6 +25,7 @@ import {RemoteConfig} from '@app/services/remote-config';
 import {Color, getColor} from './colors';
 import {DEBUG_VARS} from './debug-vars';
 import {Events} from './events';
+import {AddressUtils} from './helpers/address-utils';
 import {shortAddress} from './helpers/short-address';
 import {getHost, onUrlSubmit} from './helpers/web3-browser-utils';
 import {WalletBalance} from './hooks/use-wallets-balance';
@@ -34,14 +34,13 @@ import {Banner, BannerButtonEvent, BannerType} from './models/banner';
 import {Wallet} from './models/wallet';
 import {navigator} from './navigator';
 import {Balance} from './services/balance';
-import {Cosmos} from './services/cosmos';
 import {EthSignError} from './services/eth-sign';
 import {
   AdjustTrackingAuthorizationStatus,
   BalanceData,
   EthType,
   EthTypedData,
-  HaqqCosmosAddress,
+  HaqqEthereumAddress,
   JsonRpcTransactionRequest,
   PartialJsonRpcRequest,
   SendTransactionError,
@@ -248,7 +247,7 @@ export function callbackWrapper<T extends Array<any>>(
  *  ]
  */
 export function getSignParamsMessage(params: string[]) {
-  const message = params.filter(p => !utils.isAddress(p))[0];
+  const message = params.filter(p => !AddressUtils.isEthAddress(p))[0];
   const parsedMessage = message?.startsWith('0x') ? message.slice(2) : message;
   return Buffer.from(parsedMessage, 'hex').toString('utf8');
 }
@@ -321,7 +320,7 @@ export function getSignTypedDataParamsData(
   params: string[],
 ): EthTypedData | null {
   try {
-    const data = params.filter(p => !utils.isAddress(p))[0];
+    const data = params.filter(p => !AddressUtils.isEthAddress(p))[0];
     if (typeof data === 'string') {
       return removeUnusedTypes(JSON.parse(data));
     } else {
@@ -365,7 +364,7 @@ export const getWalletConnectAccountsFromSession = (
     });
   });
 
-  return accounts.flat().filter(it => utils.isAddress(it.address));
+  return accounts.flat().filter(it => AddressUtils.isEthAddress(it.address));
 };
 
 export const groupAllSessionsAccouts = (sessions: SessionTypes.Struct[]) => {
@@ -766,9 +765,9 @@ export const getTransactionFromJsonRpcRequest = (
 };
 
 export function isContractTransaction(
-  tx: JsonRpcTransactionRequest | undefined,
+  tx: {to?: HaqqEthereumAddress | string; data?: string} | undefined | null,
 ): boolean {
-  if (!tx || !tx.to) {
+  if (!tx || !tx.to || !AddressUtils.isEthAddress(tx.to)) {
     return false;
   }
 
@@ -868,19 +867,6 @@ export const requestQRScannerPermission = (url: string) =>
       {cancelable: false},
     );
   });
-
-export const isHaqqAddress = (
-  address: string,
-): address is HaqqCosmosAddress => {
-  try {
-    if (typeof address === 'string' && address.startsWith('haqq')) {
-      const hex = Cosmos.bech32ToAddress(address as HaqqCosmosAddress);
-      return utils.isAddress(hex);
-    }
-  } catch (e) {}
-
-  return false;
-};
 
 export const getRandomItemFromArray = <T>(array: T[]): T => {
   return array[Math.floor(Math.random() * array?.length)] as T;

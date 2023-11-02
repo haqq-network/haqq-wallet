@@ -1,9 +1,9 @@
 import React, {memo, useCallback, useEffect, useState} from 'react';
 
 import {CompositeScreenProps} from '@react-navigation/native';
-import {utils} from 'ethers';
 
 import {SettingsAddressBook} from '@app/components/settings-address-book';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForScanQr} from '@app/helpers/await-for-scan-qr';
 import {LinkType} from '@app/helpers/parse-deep-link';
 import {useTypedNavigation} from '@app/hooks';
@@ -26,7 +26,7 @@ export const SettingsAddressBookScreen = memo(
     useEffect(() => {
       const add =
         search.length === 42 &&
-        utils.isAddress(search.trim()) &&
+        AddressUtils.isEthAddress(search.trim()) &&
         Contact.getById(search.trim()) === null;
 
       setCanAdd(add);

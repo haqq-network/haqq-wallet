@@ -1,19 +1,18 @@
-import {utils} from 'ethers';
 import {Alert} from 'react-native';
 import base64 from 'react-native-base64';
 
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {awaitForWallet, showModal} from '@app/helpers';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {Url} from '@app/helpers/url';
 import {Whitelist} from '@app/helpers/whitelist';
 import {I18N} from '@app/i18n';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
-import {Cosmos} from '@app/services/cosmos';
 import {DeeplinkProtocol, DeeplinkUrlKey, ModalType} from '@app/types';
-import {isHaqqAddress, openInAppBrowser, openWeb3Browser} from '@app/utils';
+import {openInAppBrowser, openWeb3Browser} from '@app/utils';
 
 type ParsedQuery = {
   uri?: string;
@@ -60,19 +59,19 @@ export async function onDeepLink(
       return false;
     }
 
-    if (utils.isAddress(link)) {
+    if (AddressUtils.isEthAddress(link)) {
       await handleAddress(link, withoutFromAddress);
       return true;
     }
 
-    if (isHaqqAddress(link)) {
-      await handleAddress(Cosmos.bech32ToAddress(link), withoutFromAddress);
+    if (AddressUtils.isHaqqAddress(link)) {
+      await handleAddress(AddressUtils.toEth(link), withoutFromAddress);
       return true;
     }
 
     if (link.startsWith(`${DeeplinkProtocol.etherium}:`)) {
       const to = link.split(':')[1];
-      if (utils.isAddress(to)) {
+      if (AddressUtils.isEthAddress(to)) {
         await handleAddress(to, withoutFromAddress);
         return true;
       }
@@ -93,16 +92,16 @@ export async function onDeepLink(
         ':',
       );
 
-      if (utils.isAddress(key)) {
+      if (AddressUtils.isEthAddress(key)) {
         navigator.navigate('transaction', {
           to: key,
         });
         return true;
       }
 
-      if (isHaqqAddress(key)) {
+      if (AddressUtils.isHaqqAddress(key)) {
         navigator.navigate('transaction', {
-          to: Cosmos.bech32ToAddress(key),
+          to: AddressUtils.toEth(key),
         });
         return true;
       }

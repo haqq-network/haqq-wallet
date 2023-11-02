@@ -1,8 +1,10 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useMemo} from 'react';
 
+import {computed} from 'mobx';
 import {observer} from 'mobx-react';
 
 import {TransactionSelectCrypto} from '@app/components/transaction-select-crypto';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {Token} from '@app/models/tokens';
@@ -18,6 +20,11 @@ export const TransactionSelectCryptoScreen = observer(() => {
     TransactionStackParamList,
     TransactionStackRoutes.TransactionSelectCrypto
   >();
+
+  const tokens = useMemo(
+    () => computed(() => Token.tokens[AddressUtils.toEth(params.from)]),
+    [params.from],
+  ).get();
 
   useAndroidBackHandler(() => {
     navigation.goBack();
@@ -35,10 +42,5 @@ export const TransactionSelectCryptoScreen = observer(() => {
     });
   };
 
-  return (
-    <TransactionSelectCrypto
-      tokens={Token.tokens[params.from]}
-      onItemPress={onItemPress}
-    />
-  );
+  return <TransactionSelectCrypto tokens={tokens} onItemPress={onItemPress} />;
 });

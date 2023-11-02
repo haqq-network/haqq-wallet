@@ -11,6 +11,8 @@ import {
   MAIN_ACCOUNT_NAME,
 } from '@app/variables/common';
 
+import {AddressUtils} from './address-utils';
+
 const MNEMONIC_ADDRESS_MAXIMUM_COUNT = 1000;
 
 export async function* getWalletsFromProvider(
@@ -51,7 +53,7 @@ export async function* getWalletsFromProvider(
 
     if (canNext) {
       const item = {
-        address: address,
+        address: AddressUtils.toEth(address),
         type: walletType,
         path: hdPath,
         accountId: provider.getIdentifier(),

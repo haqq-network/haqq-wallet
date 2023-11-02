@@ -44,26 +44,21 @@ import {
   base64PublicKey,
   cosmosAddress,
 } from '@haqq/provider-base';
-import converter from 'bech32-converting';
 import Decimal from 'decimal.js';
 import {utils} from 'ethers';
 
+import {AddressUtils} from '@app/helpers/address-utils';
 import {ledgerTransportCbWrapper} from '@app/helpers/ledger-transport-wrapper';
 import {Provider} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
-import {
-  DepositResponse,
-  EIPTypedData,
-  HaqqCosmosAddress,
-  StakingParamsResponse,
-} from '@app/types';
+import {DepositResponse, EIPTypedData, StakingParamsResponse} from '@app/types';
 import {
   CosmosTxV1beta1GetTxResponse,
   CosmosTxV1beta1TxResponse,
   CosmosTxV1betaSimulateResponse,
   EvmosVestingV1BalancesResponse,
 } from '@app/types/cosmos';
-import {getHttpResponse, isHaqqAddress} from '@app/utils';
+import {getHttpResponse} from '@app/utils';
 import {COSMOS_PREFIX, WEI} from '@app/variables/common';
 
 import {EthSign} from './eth-sign';
@@ -103,14 +98,6 @@ export class Cosmos {
       chainId: this._provider.ethChainId,
       cosmosChainId: this._provider.cosmosChainId,
     };
-  }
-
-  static addressToBech32(address: string) {
-    return converter('haqq').toBech32(address) as HaqqCosmosAddress;
-  }
-
-  static bech32ToAddress(address: HaqqCosmosAddress) {
-    return converter('haqq').toHex(address).toLowerCase();
   }
 
   getPath(subPath: string) {
@@ -661,10 +648,7 @@ export class Cosmos {
       );
 
       const {address} = await transport.getAccountInfo(hdPath);
-      let from = sender.accountAddress || address;
-      if (isHaqqAddress(from)) {
-        from = Cosmos.bech32ToAddress(from);
-      }
+      const from = AddressUtils.toEth(sender.accountAddress || address);
       const signature = await EthSign.signTypedData(from, msg.eipToSign);
       await this.sendSignedMsg(signature, sender, msg);
     } catch (err) {
@@ -711,10 +695,7 @@ export class Cosmos {
       const {address} = await ledgerTransportCbWrapper(transport, () =>
         transport.getAccountInfo(hdPath),
       );
-      let from = sender.accountAddress || address;
-      if (isHaqqAddress(from)) {
-        from = Cosmos.bech32ToAddress(from);
-      }
+      const from = AddressUtils.toEth(sender.accountAddress || address);
       const signature = await EthSign.signTypedData(from, msg.eipToSign);
       return await this.sendSignedMsg(signature, sender, msg);
     } catch (err) {

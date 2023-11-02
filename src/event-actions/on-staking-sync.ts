@@ -1,5 +1,6 @@
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {StakingMetadata} from '@app/models/staking-metadata';
 import {Wallet} from '@app/models/wallet';
 import {Cosmos} from '@app/services/cosmos';
@@ -8,7 +9,7 @@ export async function onStakingSync() {
   Logger.log(Events.onStakingSync);
   const cosmos = new Cosmos(app.provider!);
   const addressList = Wallet.getAllVisible().map(w =>
-    Cosmos.addressToBech32(w.address),
+    AddressUtils.toHaqq(w.address),
   );
   await sync(addressList, cosmos);
   // app.emit(Events.onWalletsStakingBalanceCheck);

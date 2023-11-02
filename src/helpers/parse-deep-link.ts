@@ -1,6 +1,6 @@
-import {utils} from 'ethers';
-
 import {DeeplinkProtocol} from '@app/types';
+
+import {AddressUtils} from './address-utils';
 
 export enum LinkType {
   Address = 'address',
@@ -48,22 +48,18 @@ export type LinkParseResult = CommonResultData &
       }
   );
 
-const isAddress = (link: string): boolean => {
-  return utils.isAddress(link);
-};
-
 export const parseDeepLink = (link: string): LinkParseResult => {
   if (!link) {
     return {type: LinkType.Unrecognized, rawData: '', params: {}};
   }
 
-  if (isAddress(link)) {
+  if (AddressUtils.isEthAddress(link)) {
     return {type: LinkType.Address, params: {address: link}, rawData: link};
   }
 
   if (link.startsWith(`${DeeplinkProtocol.etherium}:`)) {
     const to = link.split(':')[1];
-    if (isAddress(to)) {
+    if (AddressUtils.isEthAddress(to)) {
       return {type: LinkType.Etherium, params: {address: to}, rawData: link};
     }
   }

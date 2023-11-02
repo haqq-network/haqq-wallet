@@ -135,7 +135,7 @@ export type WalletInitialData =
 
 export type LedgerWalletInitialData = {
   type: 'ledger';
-  address: string;
+  address: HaqqEthereumAddress;
   hdPath: string;
   publicKey: string;
   deviceId: string;
@@ -725,7 +725,7 @@ export enum AppTheme {
 }
 
 export type AddWalletParams = {
-  address: string;
+  address: HaqqEthereumAddress;
   accountId: string;
   path: string;
   type: WalletType;
@@ -1281,9 +1281,9 @@ export type OnTransactionRowPress = (
 
 export type ContractNameMap = Record<string, string>;
 
-export type HaqqCosmosAddress = `haqq${string}`;
-export type HaqqEthereumAddress = `0x${string}` | string;
-export type HexNumber = `0x${string}`;
+export type HaqqCosmosAddress = `haqq${string}` & string;
+export type HaqqEthereumAddress = `0x${string}` & string;
+export type HexNumber = `0x${string}` & string;
 
 export type IndexerBalance = Record<HaqqCosmosAddress, HexNumber>;
 export type IndexerToken = {

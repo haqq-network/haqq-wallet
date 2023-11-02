@@ -7,6 +7,7 @@ import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 
 import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
@@ -67,7 +68,7 @@ export const SignInStoreWalletScreen = memo(() => {
 
             await Wallet.create(name, {
               path: '',
-              address: address,
+              address: AddressUtils.toEth(address),
               type: WalletType.hot,
               accountId: provider.getIdentifier().toLowerCase(),
             });

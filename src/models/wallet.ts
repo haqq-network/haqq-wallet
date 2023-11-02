@@ -3,9 +3,9 @@ import {isHydrated, makePersistable} from 'mobx-persist-store';
 
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {awaitForRealm} from '@app/helpers/await-for-realm';
-import {Cosmos} from '@app/services/cosmos';
 import {storage} from '@app/services/mmkv';
 import {generateFlatColors, generateGradientColors} from '@app/utils';
 import {
@@ -22,6 +22,8 @@ import {
 import {realm} from './index';
 import {
   AddWalletParams,
+  HaqqCosmosAddress,
+  HaqqEthereumAddress,
   MobXStoreFromRealm,
   WalletCardPattern,
   WalletCardStyle,
@@ -30,7 +32,7 @@ import {
 } from '../types';
 
 export type Wallet = {
-  address: string;
+  address: HaqqEthereumAddress;
   name: string;
   data: string;
   mnemonicSaved: boolean;
@@ -49,7 +51,7 @@ export type Wallet = {
   subscription: string | null;
   version: number;
   accountId: string | null;
-  cosmosAddress: string;
+  cosmosAddress: HaqqCosmosAddress;
   position: number;
 };
 
@@ -186,7 +188,7 @@ class WalletStore implements MobXStoreFromRealm {
     const existingWallet = this.getById(walletParams.address);
     const newWallet = {
       data: '',
-      address: walletParams.address.toLowerCase(),
+      address: walletParams.address.toLowerCase() as HaqqEthereumAddress,
       mnemonicSaved: false,
       socialLinkEnabled: false,
       name: name,
@@ -202,7 +204,7 @@ class WalletStore implements MobXStoreFromRealm {
       isHidden: false,
       isMain: false,
       subscription: null,
-      cosmosAddress: Cosmos.addressToBech32(walletParams.address.toLowerCase()),
+      cosmosAddress: AddressUtils.toHaqq(walletParams.address),
       position: this.getSize(),
       ...existingWallet,
     };
@@ -227,7 +229,9 @@ class WalletStore implements MobXStoreFromRealm {
   }
 
   addressList() {
-    return this.wallets.map(w => w.address);
+    return this.wallets.map(
+      w => w.address.toLowerCase() as HaqqEthereumAddress,
+    );
   }
 
   getAll() {

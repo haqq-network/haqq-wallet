@@ -15,6 +15,7 @@ import {
   ChooseAccountTabNames,
 } from '@app/components/choose-account/choose-account';
 import {showModal} from '@app/helpers';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {getWalletsFromProvider} from '@app/helpers/get-wallets-from-provider';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
@@ -25,7 +26,6 @@ import {
   SignInStackRoutes,
 } from '@app/screens/WelcomeStack/SignInStack';
 import {Balance} from '@app/services/balance';
-import {Cosmos} from '@app/services/cosmos';
 import {Indexer} from '@app/services/indexer';
 import {
   ChooseAccountItem,
@@ -109,13 +109,13 @@ export const ChooseAccountScreen = memo(() => {
       }
       const wallets = result.map(item => item.address);
       const balances = await Indexer.instance.updates(
-        wallets.map(item => Cosmos.addressToBech32(item)),
+        wallets.map(AddressUtils.toHaqq),
         new Date(0),
       );
       const resultWithBalances = result.map(item => ({
         ...item,
         balance: new Balance(
-          balances.total[Cosmos.addressToBech32(item.address)] || item.balance,
+          balances.total[AddressUtils.toHaqq(item.address)] || item.balance,
         ),
       }));
       setAddresses(resultWithBalances);

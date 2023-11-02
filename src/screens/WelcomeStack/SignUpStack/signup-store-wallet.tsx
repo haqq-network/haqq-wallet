@@ -3,6 +3,7 @@ import {useCallback, useEffect} from 'react';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 
 import {hideModal, showModal} from '@app/helpers';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {getProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
@@ -59,7 +60,7 @@ export const SignUpStoreWalletScreen = () => {
             ? WalletType.sss
             : WalletType.mnemonic;
         await Wallet.create(name, {
-          address,
+          address: AddressUtils.toEth(address),
           accountId: provider.getIdentifier(),
           path: hdPath,
           type,

@@ -24,7 +24,6 @@ import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
-import {Cosmos} from '@app/services/cosmos';
 import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
 
 enum TabNames {
@@ -43,10 +42,7 @@ export const AccountDetail = ({wallet, onClose}: DetailsQrModalProps) => {
 
   const [activeTab, setActiveTab] = useState(TabNames.evm);
   const address = useMemo(
-    () =>
-      activeTab === TabNames.evm
-        ? wallet.address
-        : Cosmos.addressToBech32(wallet.address),
+    () => (activeTab === TabNames.evm ? wallet.address : wallet.cosmosAddress),
     [activeTab, wallet.address],
   );
 

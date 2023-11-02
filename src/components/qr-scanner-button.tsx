@@ -2,13 +2,13 @@ import React, {useCallback} from 'react';
 
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {utils} from 'ethers';
 import {StyleSheet} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Icon, IconButton} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {ModalType, RootStackParamList} from '@app/types';
 
 export const QrScannerButton = () => {
@@ -16,7 +16,7 @@ export const QrScannerButton = () => {
 
   const onPressQR = useCallback(() => {
     const subscription = ({from, to}: any) => {
-      if (utils.isAddress(to)) {
+      if (AddressUtils.isEthAddress(to)) {
         app.off('address', subscription);
         hideModal(ModalType.qr);
         navigation.navigate('transaction', {to, from});
