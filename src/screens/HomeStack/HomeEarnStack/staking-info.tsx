@@ -10,7 +10,7 @@ import {
   awaitForWallet,
   getProviderInstanceForWallet,
 } from '@app/helpers';
-import {getMinStakingRewardAmount} from '@app/helpers/get-min-staking-reward-amount';
+import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {reduceAmounts} from '@app/helpers/staking';
 import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useMinAmount} from '@app/hooks/use-min-amount';
@@ -53,7 +53,7 @@ export const StakingInfoScreen = observer(() => {
 
     const totalRewards = reduceAmounts(rewards);
     return new Balance(totalRewards).compare(
-      getMinStakingRewardAmount(),
+      getRemoteBalanceValue('staking_reward_min_amount'),
       'gte',
     );
   }, [rewards]);

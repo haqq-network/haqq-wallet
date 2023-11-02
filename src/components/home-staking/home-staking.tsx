@@ -4,7 +4,7 @@ import {ScrollView, View} from 'react-native';
 
 import {Button, ButtonVariant, Loading, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {getMinStakingRewardAmount} from '@app/helpers/get-min-staking-reward-amount';
+import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {I18N} from '@app/i18n';
 import {Balance} from '@app/services/balance';
 
@@ -34,7 +34,11 @@ export const HomeStaking = ({
   const stakingActiveRef = useRef<StakingActiveInterface>(null);
 
   const canGetRewards = useMemo(
-    () => rewardsSum.compare(getMinStakingRewardAmount(), 'gte'),
+    () =>
+      rewardsSum.compare(
+        getRemoteBalanceValue('staking_reward_min_amount'),
+        'gte',
+      ),
     [rewardsSum],
   );
 
@@ -46,7 +50,11 @@ export const HomeStaking = ({
   };
 
   const hasStaking = useMemo(
-    () => stakingSum.compare(getMinStakingRewardAmount(), 'gte'),
+    () =>
+      stakingSum.compare(
+        getRemoteBalanceValue('staking_reward_min_amount'),
+        'gte',
+      ),
     [stakingSum],
   );
 

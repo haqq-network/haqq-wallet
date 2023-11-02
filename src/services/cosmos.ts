@@ -48,6 +48,7 @@ import Decimal from 'decimal.js';
 import {utils} from 'ethers';
 
 import {AddressUtils} from '@app/helpers/address-utils';
+import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {ledgerTransportCbWrapper} from '@app/helpers/ledger-transport-wrapper';
 import {Provider} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
@@ -81,8 +82,8 @@ export interface ParamsResponse {
 
 export class Cosmos {
   static fee: Fee = {
-    amount: '2000000000',
-    gas: '2000000',
+    amount: getRemoteBalanceValue('cosmos_min_amount').toString(),
+    gas: getRemoteBalanceValue('cosmos_min_gas_limit').toString(),
     denom: 'aISLM',
   };
 
@@ -704,3 +705,6 @@ export class Cosmos {
     }
   }
 }
+
+export const COSMOS_MIN_AMOUNT = new Balance('2000000000');
+export const COSMOS_MIN_GAS_LIMIT = new Balance('2000000');
