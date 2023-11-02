@@ -4,7 +4,7 @@ import {ProviderInterface} from '@haqq/provider-base';
 import {BigNumber, utils} from 'ethers';
 
 import {app} from '@app/contexts';
-import {getEthMinGasLimit} from '@app/helpers/get-eth-min-gas-limit';
+import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
@@ -44,7 +44,7 @@ export class EthNetwork {
     to: string,
     value: Balance,
     data: string = '0x',
-    minGas = getEthMinGasLimit(),
+    minGas = getRemoteBalanceValue('eth_min_gas_limit'),
   ) {
     const rpcProvider = await getRpcProvider(app.provider);
 
@@ -146,7 +146,7 @@ export class EthNetwork {
     to: string,
     value: Balance,
     data = '0x',
-    minGas: Balance = getEthMinGasLimit(),
+    minGas: Balance = getRemoteBalanceValue('eth_min_gas_limit'),
   ): Promise<{
     feeWei: Balance;
     gasPrice: Balance;

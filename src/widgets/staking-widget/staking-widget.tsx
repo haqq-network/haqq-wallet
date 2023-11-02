@@ -7,7 +7,7 @@ import {Button, ButtonSize, ButtonVariant, Text} from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
 import {WidgetHeader} from '@app/components/ui/widget-header';
 import {createTheme} from '@app/helpers';
-import {getMinStakingRewardAmount} from '@app/helpers/get-min-staking-reward-amount';
+import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {I18N, getText} from '@app/i18n';
 import {Balance} from '@app/services/balance';
 
@@ -21,7 +21,11 @@ export const StakingWidget = memo(
   ({onPress, onGetReward, rewardAmount}: Props) => {
     const [loading, setLoading] = useState(false);
     const canGetRewards = useMemo(
-      () => rewardAmount.compare(getMinStakingRewardAmount(), 'gte'),
+      () =>
+        rewardAmount.compare(
+          getRemoteBalanceValue('staking_reward_min_amount'),
+          'gte',
+        ),
       [rewardAmount],
     );
 

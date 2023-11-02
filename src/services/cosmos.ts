@@ -48,8 +48,7 @@ import converter from 'bech32-converting';
 import Decimal from 'decimal.js';
 import {utils} from 'ethers';
 
-import {getCosmosMinAmount} from '@app/helpers/get-cosmos-min-amount';
-import {getCosmosMinGasLimit} from '@app/helpers/get-cosmos-min-gas-limit';
+import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {ledgerTransportCbWrapper} from '@app/helpers/ledger-transport-wrapper';
 import {Provider} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
@@ -88,8 +87,8 @@ export interface ParamsResponse {
 
 export class Cosmos {
   static fee: Fee = {
-    amount: getCosmosMinAmount().toString(),
-    gas: getCosmosMinGasLimit().toString(),
+    amount: getRemoteBalanceValue('cosmos_min_amount').toString(),
+    gas: getRemoteBalanceValue('cosmos_min_gas_limit').toString(),
     denom: 'aISLM',
   };
 
