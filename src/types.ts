@@ -350,7 +350,7 @@ export type RootStackParamList = {
     title?: string;
   };
   transactionAccount: {
-    from: string;
+    to: string;
   };
   transactionSelectCrypto: {from: string; to: string};
   transactionSum: {

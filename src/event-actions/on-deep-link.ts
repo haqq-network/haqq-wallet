@@ -11,8 +11,9 @@ import {I18N} from '@app/i18n';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
+import {Cosmos} from '@app/services/cosmos';
 import {DeeplinkProtocol, DeeplinkUrlKey, ModalType} from '@app/types';
-import {openInAppBrowser, openWeb3Browser} from '@app/utils';
+import {isHaqqAddress, openInAppBrowser, openWeb3Browser} from '@app/utils';
 
 type ParsedQuery = {
   uri?: string;
@@ -36,7 +37,9 @@ const handleAddress = async (
     ? null
     : await awaitForWallet({
         title: I18N.qrModalSendFunds,
-        wallets: Wallet.getAllVisible(),
+        wallets: Wallet.getAllVisible().filter(
+          item => item.address.toLowerCase() !== address?.toLowerCase?.(),
+        ),
       });
 
   app.emit('address', {
@@ -59,6 +62,11 @@ export async function onDeepLink(
 
     if (utils.isAddress(link)) {
       await handleAddress(link, withoutFromAddress);
+      return true;
+    }
+
+    if (isHaqqAddress(link)) {
+      await handleAddress(Cosmos.bech32ToAddress(link), withoutFromAddress);
       return true;
     }
 
@@ -88,6 +96,13 @@ export async function onDeepLink(
       if (utils.isAddress(key)) {
         navigator.navigate('transaction', {
           to: key,
+        });
+        return true;
+      }
+
+      if (isHaqqAddress(key)) {
+        navigator.navigate('transaction', {
+          to: Cosmos.bech32ToAddress(key),
         });
         return true;
       }
