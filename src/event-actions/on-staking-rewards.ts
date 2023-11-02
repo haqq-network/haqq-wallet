@@ -1,7 +1,7 @@
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {getProviderInstanceForWallet} from '@app/helpers';
-import {getMinAmount} from '@app/helpers/get-min-amount';
+import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {
   StakingMetadata,
   StakingMetadataType,
@@ -15,7 +15,7 @@ export async function onStakingRewards() {
   const visible = Wallet.getAllVisible();
   const rewards = StakingMetadata.getAllByType(StakingMetadataType.reward);
   const delegators: any = {};
-  const minAmount = getMinAmount();
+  const minAmount = getRemoteBalanceValue('transfer_min_amount');
 
   for (const row of rewards) {
     if (row.amount > minAmount.toFloat()) {

@@ -2,14 +2,14 @@ import {useEffect, useState} from 'react';
 
 import validate from 'validate.js';
 
-import {getMinAmount} from '@app/helpers/get-min-amount';
+import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {I18N, getText} from '@app/i18n';
 import {Balance} from '@app/services/balance';
 
 export function useSumAmount(
   initialSum = Balance.Empty,
   initialMaxSum = Balance.Empty,
-  minAmount = getMinAmount(),
+  minAmount = getRemoteBalanceValue('transfer_min_amount'),
   customCheck?: (amount: Balance) => string,
 ) {
   const [{amount, amountText, changed}, setAmount] = useState({
@@ -18,7 +18,7 @@ export function useSumAmount(
     changed: false,
   });
   const [maxAmount, setMaxAmount] = useState(initialMaxSum);
-  const minimumAmountConst = getMinAmount();
+  const minimumAmountConst = getRemoteBalanceValue('transfer_min_amount');
 
   useEffect(() => {
     setMaxAmount(initialMaxSum);

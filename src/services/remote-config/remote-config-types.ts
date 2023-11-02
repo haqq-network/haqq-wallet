@@ -7,7 +7,16 @@ export type WalletConnectAllowedNamespaces = Omit<
   'accounts'
 >;
 
-export interface RemoteConfigTypes {
+export interface RemoteConfigBalanceTypes {
+  cosmos_min_amount: string;
+  cosmos_min_gas_limit: string;
+  eth_min_amount: string;
+  eth_min_gas_limit: string;
+  transfer_min_amount: string;
+  staking_reward_min_amount: string;
+}
+
+export interface RemoteConfigTypes extends RemoteConfigBalanceTypes {
   wallet_connect: WalletConnectAllowedNamespaces;
   web3_app_whitelist: string[];
   evm_endpoints: Record<string, string[]>;
@@ -17,8 +26,6 @@ export interface RemoteConfigTypes {
   android_version: string;
   welcome_screen: keyof RootStackParamList;
   version: number;
-  transfer_min_amount: string;
-  staking_reward_min_amount: string;
   sss_apple: string;
   sss_google: string;
   airdrop_url: string;
