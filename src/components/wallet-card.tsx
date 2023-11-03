@@ -73,16 +73,8 @@ export const WalletCard = memo(
     const screenWidth = useWindowDimensions().width;
 
     const protectionStatus = useMemo(() => {
-      // Ledger always has Full Protection
-      if (wallet.type === WalletType.ledgerBt) {
-        return ProtectionStatus.full;
-      }
-
-      // Hot only need socialLinkEnabled
-      if (wallet.type === WalletType.hot) {
-        if (!wallet.socialLinkEnabled) {
-          return ProtectionStatus.partially;
-        }
+      // Ledger and Hot always has Full Protection
+      if ([WalletType.ledgerBt, WalletType.hot].includes(wallet.type)) {
         return ProtectionStatus.full;
       }
 
