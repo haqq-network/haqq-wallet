@@ -54,7 +54,7 @@ import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {SettingsStackParamList} from '@app/screens/HomeStack/SettingsStack';
 import {EthNetwork} from '@app/services';
 import {Airdrop} from '@app/services/airdrop';
-import {Balance, MIN_GAS_LIMIT} from '@app/services/balance';
+import {Balance} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {SssProviders} from '@app/services/provider-sss';
 import {message as toastMessage} from '@app/services/toast';
@@ -68,7 +68,7 @@ import {
   openInAppBrowser,
   openWeb3Browser,
 } from '@app/utils';
-import {HAQQ_METADATA, TEST_URLS} from '@app/variables/common';
+import {HAQQ_METADATA, MIN_GAS_LIMIT, TEST_URLS} from '@app/variables/common';
 
 const logger = Logger.create('SettingsTestScreen', {
   emodjiPrefix: '🔵',
