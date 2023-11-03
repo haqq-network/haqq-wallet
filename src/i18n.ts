@@ -525,6 +525,7 @@ export enum I18N {
   walletCardWithoutProtection,
   walletCardPartiallyProtection,
   walletCardFullProtection,
+  walletCardImported,
   walletProtectionTitle,
   walletProtectionDescription,
   walletProtectionSocialLinkConnect,
@@ -1380,6 +1381,7 @@ const en: Record<I18N, string> = {
   [I18N.walletCardWithoutProtection]: 'No backup',
   [I18N.walletCardPartiallyProtection]: 'Partially',
   [I18N.walletCardFullProtection]: 'Protected',
+  [I18N.walletCardImported]: 'Imported',
   [I18N.restoreWalletScreenTitle]: 'Recover your account',
   [I18N.noInternetPopupTitle]: 'No Internet',
   [I18N.noInternetPopupDescription]:
