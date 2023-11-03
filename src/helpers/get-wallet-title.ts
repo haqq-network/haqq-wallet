@@ -20,5 +20,7 @@ export function getWalletTitle(props: {
     headerLeft: SpacerPopupButton,
     headerRight: DismissPopupButton,
     presentation: 'modal' as StackPresentationTypes,
+    gestureEnabled: true,
+    gestureDirection: 'vertical',
   };
 }
