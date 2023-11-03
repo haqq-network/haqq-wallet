@@ -1,13 +1,13 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
+import _ from 'lodash';
 import {observer} from 'mobx-react';
 
 import {StakingUnDelegateForm} from '@app/components/staking-undelegate-form';
 import {getProviderInstanceForWallet} from '@app/helpers';
 import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useLayoutEffectAsync} from '@app/hooks/use-effect-async';
-import {useThrottle} from '@app/hooks/use-throttle';
 import {StakingMetadata} from '@app/models/staking-metadata';
 import {Wallet} from '@app/models/wallet';
 import {
@@ -35,27 +35,6 @@ export const StakingUnDelegateFormScreen = observer(() => {
     [],
   );
 
-  const setFee = useThrottle(async (amount?: string) => {
-    const instance = await getProviderInstanceForWallet(wallet!, true);
-
-    try {
-      _setFee(null);
-      const f = await cosmos.simulateUndelegate(
-        instance,
-        wallet?.path!,
-        validator.operator_address,
-        amount ? new Balance(amount) : balance,
-      );
-      Logger.log('f.amount', f.amount);
-      _setFee(new Balance(f.amount));
-    } catch (err) {
-      if (instance instanceof ProviderLedgerReactNative) {
-        instance.abort();
-        setDefaultFee();
-      }
-    }
-  }, 500);
-
   const balance = useMemo(() => {
     const delegations =
       StakingMetadata.getDelegationsForValidator(operator_address);
@@ -66,6 +45,30 @@ export const StakingUnDelegateFormScreen = observer(() => {
 
     return delegation?.amount ? new Balance(delegation.amount) : Balance.Empty;
   }, [operator_address, wallet?.cosmosAddress]);
+
+  const setFee = useCallback(
+    _.debounce(async (amount?: string) => {
+      const instance = await getProviderInstanceForWallet(wallet!, true);
+
+      try {
+        _setFee(null);
+        const f = await cosmos.simulateUndelegate(
+          instance,
+          wallet?.path!,
+          validator.operator_address,
+          amount ? new Balance(amount) : balance,
+        );
+        Logger.log('f.amount', f.amount);
+        _setFee(new Balance(f.amount));
+      } catch (err) {
+        if (instance instanceof ProviderLedgerReactNative) {
+          instance.abort();
+          setDefaultFee();
+        }
+      }
+    }, 500),
+    [wallet?.path, validator.operator_address, balance, setDefaultFee],
+  );
 
   useLayoutEffectAsync(async () => {
     const timer = setTimeout(() => setDefaultFee(), FEE_ESTIMATING_TIMEOUT_MS);

@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
 import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
+import _ from 'lodash';
 import {observer} from 'mobx-react';
 
 import {StakingDelegateForm} from '@app/components/staking-delegate-form';
@@ -9,7 +10,6 @@ import {getProviderInstanceForWallet} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useLayoutEffectAsync} from '@app/hooks/use-effect-async';
-import {useThrottle} from '@app/hooks/use-throttle';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {Wallet} from '@app/models/wallet';
 import {
@@ -39,27 +39,35 @@ export const StakingDelegateFormScreen = observer(() => {
     [],
   );
 
-  const setFee = useThrottle(async (amount?: string) => {
-    const cosmos = new Cosmos(app.provider);
-    const instance = await getProviderInstanceForWallet(wallet!, true);
+  const setFee = useCallback(
+    _.debounce(async (amount?: string) => {
+      const cosmos = new Cosmos(app.provider);
+      const instance = await getProviderInstanceForWallet(wallet!, true);
 
-    try {
-      _setFee(null);
-      const f = await cosmos.simulateDelegate(
-        instance,
-        wallet!.path!,
-        validator.operator_address,
-        amount ? new Balance(amount) : currentBalance.availableForStake,
-      );
-      Logger.log('f.amount', f.amount);
-      _setFee(new Balance(f.amount));
-    } catch (err) {
-      if (instance instanceof ProviderLedgerReactNative) {
-        instance.abort();
-        setDefaultFee();
+      try {
+        _setFee(null);
+        const f = await cosmos.simulateDelegate(
+          instance,
+          wallet!.path!,
+          validator.operator_address,
+          amount ? new Balance(amount) : currentBalance.availableForStake,
+        );
+        Logger.log('f.amount', f.amount);
+        _setFee(new Balance(f.amount));
+      } catch (err) {
+        if (instance instanceof ProviderLedgerReactNative) {
+          instance.abort();
+          setDefaultFee();
+        }
       }
-    }
-  }, 500);
+    }, 500),
+    [
+      wallet?.path,
+      validator.operator_address,
+      currentBalance.availableForStake,
+      setDefaultFee,
+    ],
+  );
 
   useLayoutEffectAsync(async () => {
     const timer = setTimeout(() => {
