@@ -6,6 +6,8 @@ const DEFAULT_EXPLORER = new Explorer(
   Provider.getByEthChainId(getDefaultChainId())?.explorer!,
 );
 
+const cache = new Map<string, Explorer>();
+
 export function getExplorerInstanceForChainId(chainId: number) {
   const p = Provider.getByEthChainId(chainId);
 
@@ -13,7 +15,13 @@ export function getExplorerInstanceForChainId(chainId: number) {
     return DEFAULT_EXPLORER;
   }
 
-  return new Explorer(p.explorer);
+  if (cache.has(p.id)) {
+    return cache.get(p.id)!;
+  }
+
+  const explorer = new Explorer(p.explorer);
+  cache.set(p.id, explorer);
+  return explorer;
 }
 
 export function getExplorerInstanceForProvider(providerId: string) {
@@ -23,5 +31,11 @@ export function getExplorerInstanceForProvider(providerId: string) {
     return DEFAULT_EXPLORER;
   }
 
-  return new Explorer(p.explorer);
+  if (cache.has(p.id)) {
+    return cache.get(p.id)!;
+  }
+
+  const explorer = new Explorer(p.explorer);
+  cache.set(p.id, explorer);
+  return explorer;
 }
