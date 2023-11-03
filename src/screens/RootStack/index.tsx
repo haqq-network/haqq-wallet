@@ -1,8 +1,8 @@
 import React, {memo, useMemo} from 'react';
 
 import {StyleSheet, View} from 'react-native';
-import {FullWindowOverlay} from 'react-native-screens';
 
+import {ModalProvider} from '@app/components/modal-provider';
 import {getWelcomeScreen} from '@app/helpers/get-welcome-screen';
 import {HomeStack} from '@app/screens/HomeStack';
 import {ModalsScreen} from '@app/screens/modals-screen';
@@ -30,9 +30,9 @@ const RootStack = memo(({onboarded, isPinReseted, isReady}: Props) => {
   return (
     <View style={styles.container}>
       {CurrentStack}
-      <FullWindowOverlay>
+      <ModalProvider>
         <ModalsScreen initialModal={!isReady ? {type: 'splash'} : undefined} />
-      </FullWindowOverlay>
+      </ModalProvider>
     </View>
   );
 });
