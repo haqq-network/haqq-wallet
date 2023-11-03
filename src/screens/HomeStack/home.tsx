@@ -15,10 +15,7 @@ import {HomeScreenTabBarIcon} from '@app/components/home-screen/tab-bar-icon';
 import {HomeScreenTitle} from '@app/components/home-screen/title';
 import {Spacer} from '@app/components/ui';
 import {useTypedNavigation} from '@app/hooks';
-import {
-  BrowserStack,
-  BrowserStackRoutes,
-} from '@app/screens/HomeStack/BrowserStack';
+import {BrowserStack} from '@app/screens/HomeStack/BrowserStack';
 import {
   HomeFeedStack,
   HomeFeedStackRoutes,
@@ -139,21 +136,10 @@ export const HomeScreen = memo(() => {
       <Tab.Screen
         name="homeBrowser"
         component={BrowserStack}
-        options={({route}) => ({
+        options={{
           ...browserOptions,
-          tabBarStyle: (routeA => {
-            const routeName = (getFocusedRouteNameFromRoute(routeA) ??
-              BrowserStackRoutes.BrowserHomePage) as BrowserStackRoutes;
-            const whitelist = [BrowserStackRoutes.BrowserHomePage];
-            if (!whitelist.includes(routeName)) {
-              return {
-                height: 0,
-                display: 'none',
-              };
-            }
-            return screenOptions.tabBarStyle;
-          })(route),
-        })}
+          tabBarStyle: screenOptions.tabBarStyle,
+        }}
       />
       <Tab.Screen
         name="homeNews"
