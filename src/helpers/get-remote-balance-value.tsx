@@ -1,14 +1,15 @@
-import {
-  Balance,
-  MIN_AMOUNT,
-  MIN_GAS_LIMIT,
-  MIN_STAKING_REWARD,
-} from '@app/services/balance';
-import {COSMOS_MIN_AMOUNT, COSMOS_MIN_GAS_LIMIT} from '@app/services/cosmos';
+import {Balance} from '@app/services/balance';
 import {
   RemoteConfig,
   RemoteConfigBalanceTypes,
 } from '@app/services/remote-config';
+import {
+  COSMOS_MIN_AMOUNT,
+  COSMOS_MIN_GAS_LIMIT,
+  MIN_AMOUNT,
+  MIN_GAS_LIMIT,
+  MIN_STAKING_REWARD,
+} from '@app/variables/common';
 
 const getDefaultBalanceValue = <T extends keyof RemoteConfigBalanceTypes>(
   key: T,
@@ -40,5 +41,10 @@ export const getRemoteBalanceValue = <T extends keyof RemoteConfigBalanceTypes>(
     return new Balance(remoteValue);
   }
 
-  return getDefaultBalanceValue(key);
+  const defaultValue = getDefaultBalanceValue(key);
+
+  if (!defaultValue) {
+    return Balance.Empty;
+  }
+  return defaultValue;
 };

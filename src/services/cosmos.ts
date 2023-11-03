@@ -705,6 +705,3 @@ export class Cosmos {
     }
   }
 }
-
-export const COSMOS_MIN_AMOUNT = new Balance('2000000000');
-export const COSMOS_MIN_GAS_LIMIT = new Balance('2000000');
