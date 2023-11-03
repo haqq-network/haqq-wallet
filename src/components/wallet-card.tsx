@@ -25,7 +25,7 @@ import {useIsBalancesFirstSync} from '@app/hooks/use-is-balances-sync';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
-import {BalanceData} from '@app/types';
+import {BalanceData, WalletType} from '@app/types';
 import {
   CARD_ACTION_CONTAINER_BG,
   IS_IOS,
@@ -73,6 +73,12 @@ export const WalletCard = memo(
     const screenWidth = useWindowDimensions().width;
 
     const protectionStatus = useMemo(() => {
+      // Ledger and Hot always has Full Protection
+      if ([WalletType.ledgerBt, WalletType.hot].includes(wallet.type)) {
+        return ProtectionStatus.full;
+      }
+
+      // Other types
       if (!wallet.mnemonicSaved && !wallet.socialLinkEnabled) {
         return ProtectionStatus.empty;
       }
@@ -209,15 +215,26 @@ export const WalletCard = memo(
           )}
           {protectionStatus === ProtectionStatus.full && (
             <>
-              <IconButton
-                testID="wallet_without_protection_button"
-                onPress={onProtection}
-                style={styles.fullProtection}>
+              <IconButton style={styles.fullProtection}>
                 <Icon name={IconsName.shield} color={Color.textSecond2} i16 />
                 <Spacer width={4} />
                 <Text
                   t15
                   i18n={I18N.walletCardFullProtection}
+                  color={Color.textSecond2}
+                />
+              </IconButton>
+              <Spacer width={8} />
+            </>
+          )}
+          {[WalletType.hot].includes(wallet.type) && (
+            <>
+              <IconButton style={styles.fullProtection}>
+                <Icon name={IconsName.import} color={Color.textSecond2} i16 />
+                <Spacer width={4} />
+                <Text
+                  t15
+                  i18n={I18N.walletCardImported}
                   color={Color.textSecond2}
                 />
               </IconButton>

@@ -4,7 +4,7 @@ import {useCallback, useMemo} from 'react';
 import {StyleSheet, TouchableOpacity, ViewProps} from 'react-native';
 
 export type IconButtonProps = ViewProps & {
-  onPress: () => void | Promise<void>;
+  onPress?: () => void | Promise<void>;
   disabled?: boolean;
 };
 
@@ -21,13 +21,17 @@ export const IconButton = ({
   );
 
   const onPressButton = useCallback(() => {
-    if (!disabled) {
-      onPress?.();
+    if (!disabled && typeof onPress === 'function') {
+      onPress();
     }
   }, [disabled, onPress]);
 
   return (
-    <TouchableOpacity style={containerStyle} {...props} onPress={onPressButton}>
+    <TouchableOpacity
+      style={containerStyle}
+      {...props}
+      disabled={disabled || !onPress}
+      onPress={onPressButton}>
       {children}
     </TouchableOpacity>
   );
