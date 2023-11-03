@@ -17,6 +17,7 @@ import {
   SignUpStackParamList,
   SignUpStackRoutes,
 } from '@app/screens/WelcomeStack/SignUpStack';
+import {AdjustEvents} from '@app/types';
 
 export enum WelcomeStackRoutes {
   Welcome = 'welcome',
@@ -36,7 +37,12 @@ export type WelcomeStackParamList = {
   };
   [WelcomeStackRoutes.Ledger]: undefined;
   [WelcomeStackRoutes.SignIn]: undefined;
-  [WelcomeStackRoutes.NewsDetail]: {id: string};
+  [WelcomeStackRoutes.NewsDetail]: {
+    id: string;
+    openEvent: AdjustEvents;
+    linkEvent: AdjustEvents;
+    scrollEvent: AdjustEvents;
+  };
 };
 
 const Stack = createNativeStackNavigator<WelcomeStackParamList>();
@@ -48,6 +54,7 @@ const modalOptions: NativeStackNavigationOptions = {
 type Props = {
   initialRouteName: WelcomeStackRoutes.Welcome | WelcomeStackRoutes.WelcomeNews;
 };
+
 const WelcomeStack = memo(({initialRouteName}: Props) => {
   return (
     <Stack.Navigator

@@ -10,7 +10,7 @@ import {
   WelcomeStackParamList,
   WelcomeStackRoutes,
 } from '@app/screens/WelcomeStack';
-import {PopupNotificationBannerTypes} from '@app/types';
+import {AdjustEvents, PopupNotificationBannerTypes} from '@app/types';
 
 export const WelcomeNewsScreen = memo(() => {
   const navigation = useTypedNavigation<WelcomeStackParamList>();
@@ -41,6 +41,9 @@ export const WelcomeNewsScreen = memo(() => {
     (id: string) => {
       navigation.navigate(WelcomeStackRoutes.NewsDetail, {
         id,
+        openEvent: AdjustEvents.newsOpenOnboardingItem,
+        linkEvent: AdjustEvents.newsOpenOnboardingLink,
+        scrollEvent: AdjustEvents.newsScrolledOnboardingItem,
       });
     },
     [navigation],

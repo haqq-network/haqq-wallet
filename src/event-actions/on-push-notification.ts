@@ -4,8 +4,9 @@ import {News} from '@app/models/news';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
+import {NewsStackRoutes} from '@app/screens/HomeStack/HomeNewsStack';
 import {Backend} from '@app/services/backend';
-import {RaffleStatus, RemoteMessage} from '@app/types';
+import {AdjustEvents, RaffleStatus, RemoteMessage} from '@app/types';
 import {WEI} from '@app/variables/common';
 
 enum PushNotificationTypes {
@@ -51,7 +52,13 @@ export async function onPushNotification(message: RemoteMessage<Data>) {
         VariablesBool.set('isNewNews', true);
       }
 
-      navigator.navigate('newsDetail', {id: message.data.id});
+      navigator.navigate(NewsStackRoutes.NewsDetail, {
+        id: message.data.id,
+        // @ts-ignore
+        openEvent: AdjustEvents.newsOpenPushItem,
+        linkEvent: AdjustEvents.newsOpenPushLink,
+        scrollEvent: AdjustEvents.newsScrolledPushItem,
+      });
       break;
     case PushNotificationTypes.raffle:
       let uid = await getUid();

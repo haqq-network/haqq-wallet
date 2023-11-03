@@ -42,5 +42,12 @@ export const NewsDetailScreen = memo(() => {
   if (!item) {
     return <Loading />;
   }
-  return <NewsDetail item={item} />;
+  return (
+    <NewsDetail
+      item={item}
+      openEvent={route.params.openEvent}
+      linkEvent={route.params.linkEvent}
+      scrollEvent={route.params.scrollEvent}
+    />
+  );
 });

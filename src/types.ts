@@ -50,6 +50,15 @@ export enum AdjustEvents {
   newsOpenItem = 'gpha6n',
   newsOpenLink = 'yjfbpz',
   newsScrolledItem = 'egpogy',
+
+  newsOpenOnboardingItem = 'g75jnx',
+  newsOpenOnboardingLink = 'ckc36g',
+  newsScrolledOnboardingItem = 'iwcclq',
+
+  newsOpenPushItem = '4v9swk',
+  newsOpenPushLink = 'ytc8qf',
+  newsScrolledPushItem = 'tdlgze',
+
   newsOpen = 'dh3eeu',
   earnOpen = '9tn1b8',
   browserOpen = 'q77dcs',
