@@ -10,6 +10,7 @@ import {FileDownloadEvent} from 'react-native-webview/lib/WebViewTypes';
 
 import {BrowserError} from '@app/components/browser-error';
 import {DEBUG_VARS} from '@app/debug-vars';
+import {WebviewAjustMiddleware} from '@app/helpers/webview-adjust-middleware';
 import {WebViewGeolocation} from '@app/helpers/webview-geolocation';
 import {WebViewLogger} from '@app/helpers/webview-logger';
 import {VariablesString} from '@app/models/variables-string';
@@ -66,13 +67,17 @@ export const useWebViewSharedProps = (
       event?.persist?.();
 
       if (ref.current) {
-        const handled = await WebViewGeolocation.handleGeolocationRequest(
-          ref.current,
-          event,
-          instanceId,
-        );
+        if (
+          await WebViewGeolocation.handleGeolocationRequest(
+            ref.current,
+            event,
+            instanceId,
+          )
+        ) {
+          return;
+        }
 
-        if (handled) {
+        if (await WebviewAjustMiddleware.handleMessage(event)) {
           return;
         }
       }
@@ -118,9 +123,11 @@ export const useWebViewSharedProps = (
       injectedJavaScriptBeforeContentLoaded: `
         // injected properties
         window.platformOS = '${Platform.OS}'
+        window.__HAQQWALLET__ = {}
 
         ${WebViewLogger.script}
         ${WebViewGeolocation.script}
+        ${WebviewAjustMiddleware.script}
         ${propsToMerge.injectedJavaScriptBeforeContentLoaded || ''}
         true;
       `,

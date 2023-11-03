@@ -9,7 +9,7 @@ export function onTrackEvent(
   const adjustEvent = new AdjustEvent(event);
 
   Object.entries(params).forEach(([key, value]) => {
-    adjustEvent.addPartnerParameter(key, value);
+    adjustEvent.addPartnerParameter(key, JSON.stringify(value));
   });
 
   Adjust.trackEvent(adjustEvent);
