@@ -71,14 +71,17 @@ export const WalletRowVariant5 = ({
   );
 };
 
+const OFFSET = 8;
+
 const styles = createTheme({
   info: {
     marginLeft: 12,
     flex: 1,
   },
   address: {
-    left: 8,
-    bottom: 8,
+    left: OFFSET,
+    bottom: OFFSET,
     position: 'absolute',
+    width: CARD_WIDTH - OFFSET * 2,
   },
 });
