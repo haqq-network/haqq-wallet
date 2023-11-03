@@ -7,7 +7,7 @@ import {RemoteConfig} from '@app/services/remote-config';
 import {VerifyAddressResponse} from '@app/types';
 
 import {AddressUtils} from './address-utils';
-import {getHost} from './web3-browser-utils';
+import {Url} from './url';
 
 const CACHE_KEY = 'whitelist';
 const CACHE_LIFE_TIME = 3 * 60 * 60 * 1000; // 3 hours
@@ -44,7 +44,6 @@ export class Whitelist {
       await RemoteConfig.init();
     }
 
-    const host = getHost(url);
     const web3_app_whitelist = RemoteConfig.get('web3_app_whitelist');
 
     if (web3_app_whitelist) {
@@ -52,9 +51,29 @@ export class Whitelist {
         return true;
       }
 
-      return web3_app_whitelist.some(pattern => getHost(pattern) === host);
-    }
+      const parsedUrl = new Url(url);
+      for (let i = 0; i < web3_app_whitelist.length; i++) {
+        const whitelistUrl = web3_app_whitelist[i];
 
+        if (whitelistUrl.startsWith('*.')) {
+          const domain = whitelistUrl.slice(2);
+          if (parsedUrl.hostname.endsWith(domain)) {
+            return true;
+          }
+        } else {
+          const parsedWhitelistUrl = new Url(whitelistUrl);
+
+          if (parsedWhitelistUrl.protocol) {
+            return (
+              parsedUrl.hostname === parsedWhitelistUrl.hostname &&
+              parsedUrl.protocol === parsedWhitelistUrl.protocol
+            );
+          }
+
+          return parsedUrl.hostname === parsedWhitelistUrl.href;
+        }
+      }
+    }
     return false;
   }
 
