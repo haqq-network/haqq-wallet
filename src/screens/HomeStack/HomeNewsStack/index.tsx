@@ -10,6 +10,7 @@ import {HomeStackParamList} from '@app/screens/HomeStack';
 import {HomeNewsScreen} from '@app/screens/HomeStack/HomeNewsStack/home-news';
 import {NewsDetailScreen} from '@app/screens/HomeStack/HomeNewsStack/news-detail';
 import {OurNewsScreen} from '@app/screens/HomeStack/HomeNewsStack/our-news';
+import {AdjustEvents} from '@app/types';
 
 export enum NewsStackRoutes {
   News = 'homeNews_',
@@ -21,6 +22,9 @@ export type NewsStackParamList = HomeStackParamList & {
   [NewsStackRoutes.News]: undefined;
   [NewsStackRoutes.NewsDetail]: {
     id: string;
+    openEvent: AdjustEvents;
+    linkEvent: AdjustEvents;
+    scrollEvent: AdjustEvents;
   };
   [NewsStackRoutes.OurNews]: undefined;
 };

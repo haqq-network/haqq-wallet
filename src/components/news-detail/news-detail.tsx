@@ -55,6 +55,9 @@ type Node = NodeImage | NodeHeading | NodeParagraph | NodeText | NodeList;
 
 export type NewsDetailProps = {
   item: News;
+  openEvent: AdjustEvents;
+  scrollEvent: AdjustEvents;
+  linkEvent: AdjustEvents;
 };
 
 type Output = (
@@ -195,34 +198,42 @@ const rules = {
   },
 };
 
-export const NewsDetail = ({item}: NewsDetailProps) => {
+export const NewsDetail = ({
+  item,
+  openEvent,
+  scrollEvent,
+  linkEvent,
+}: NewsDetailProps) => {
   const scrolled = useRef(false);
 
   useEffect(() => {
-    onTrackEvent(AdjustEvents.newsOpenItem, {
+    onTrackEvent(openEvent, {
       id: item.id,
     });
-  }, [item.id]);
+  }, [item.id, openEvent]);
 
   const onScroll = useCallback(
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
       if (!scrolled.current && e.nativeEvent.contentOffset.y > 50) {
-        onTrackEvent(AdjustEvents.newsScrolledItem, {
+        onTrackEvent(scrollEvent, {
           id: item.id,
         });
         scrolled.current = true;
       }
     },
-    [item.id],
+    [item.id, scrollEvent],
   );
 
-  const onClickLink = useCallback(async (url: string) => {
-    onTrackEvent(AdjustEvents.newsOpenLink, {
-      url,
-    });
+  const onClickLink = useCallback(
+    async (url: string) => {
+      onTrackEvent(linkEvent, {
+        url,
+      });
 
-    await openURL(url);
-  }, []);
+      await openURL(url);
+    },
+    [linkEvent],
+  );
 
   return (
     <PopupContainer style={styles.container} onScroll={onScroll}>

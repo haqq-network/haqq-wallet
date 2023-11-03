@@ -97,6 +97,9 @@ export const HomeNewsScreen = memo(() => {
     (id: string) => {
       navigation.navigate(NewsStackRoutes.NewsDetail, {
         id,
+        openEvent: AdjustEvents.newsOpenItem,
+        linkEvent: AdjustEvents.newsOpenLink,
+        scrollEvent: AdjustEvents.newsScrolledItem,
       });
     },
     [navigation],
