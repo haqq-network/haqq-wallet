@@ -101,7 +101,7 @@ export enum IconsName {
   shield_empty = 'shield_empty',
   shield_partially = 'shield_partially',
   privacy = 'privacy',
-  import = 'import',
+  import = 'import_icon',
 }
 
 export type IconSize =
