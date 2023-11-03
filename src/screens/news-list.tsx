@@ -52,7 +52,7 @@ export const NewsListScreen = () => {
 
   const onPressRow = useCallback(
     (id: string) => {
-      navigation.navigate('newsDetail', {
+      navigation.push('newsDetail', {
         id,
       });
     },

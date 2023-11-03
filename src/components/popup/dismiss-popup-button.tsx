@@ -1,18 +1,26 @@
 import React from 'react';
 
-import {useNavigation} from '@react-navigation/native';
 import {StyleSheet} from 'react-native';
 
 import {Color} from '@app/colors';
+import {useTypedNavigation} from '@app/hooks';
 
 import {Icon, IconButton} from '../ui';
 
 export const DismissPopupButton = () => {
   //TODO: What type should be used here?
   // onPress should be prop
-  const navigation = useNavigation<any>();
+  const navigation = useTypedNavigation();
   return (
-    <IconButton style={page.container} onPress={navigation.pop}>
+    <IconButton
+      style={page.container}
+      onPress={() => {
+        try {
+          navigation.pop();
+        } catch (e) {
+          navigation.goBack();
+        }
+      }}>
       <Icon i24 name="close_circle" color={Color.graphicSecond2} />
     </IconButton>
   );
