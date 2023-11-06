@@ -9,7 +9,7 @@ import {
   MIN_AMOUNT,
   MIN_GAS_LIMIT,
   MIN_STAKING_REWARD,
-} from '@app/variables/common';
+} from '@app/variables/balance';
 
 const getDefaultBalanceValue = <T extends keyof RemoteConfigBalanceTypes>(
   key: T,

@@ -2,7 +2,6 @@ import {APPSTORE_APP_ID, GOOGLE_PLAY_PACKAGE} from '@env';
 import {Platform} from 'react-native';
 import {Easing} from 'react-native-reanimated';
 
-import {Balance} from '@app/services/balance';
 import {PushNotificationTopicsEnum} from '@app/services/push-notifications';
 import {HexNumber, JsonRpcMetadata, Link} from '@app/types';
 
@@ -311,11 +310,3 @@ export const TEST_URLS: Partial<Link>[] = [
 
 export const DEVELOPER_MODE_DOCS =
   'https://github.com/haqq-network/haqq-wallet/blob/main/docs/developer-mode.md';
-
-export const MIN_AMOUNT = new Balance(0.001);
-export const MIN_STAKING_REWARD = new Balance(0.01);
-export const MIN_GAS_LIMIT = new Balance(22_000, 0);
-export const FEE_AMOUNT = new Balance(0.00001);
-export const BALANCE_MULTIPLIER = new Balance(1.2, 0);
-export const COSMOS_MIN_AMOUNT = new Balance('2000000000');
-export const COSMOS_MIN_GAS_LIMIT = new Balance('2000000');
