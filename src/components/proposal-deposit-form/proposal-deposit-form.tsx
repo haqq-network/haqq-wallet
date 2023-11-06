@@ -11,7 +11,8 @@ import {SumBlock} from '@app/components/ui/sum-block';
 import {createTheme} from '@app/helpers';
 import {useSumAmount} from '@app/hooks/use-sum-amount';
 import {I18N} from '@app/i18n';
-import {Balance, FEE_AMOUNT} from '@app/services/balance';
+import {Balance} from '@app/services/balance';
+import {FEE_AMOUNT} from '@app/variables/balance';
 import {CURRENCY_NAME} from '@app/variables/common';
 
 export type ProposalDepositFormProps = {

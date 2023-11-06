@@ -18,9 +18,10 @@ import {shortAddress} from '@app/helpers/short-address';
 import {useSumAmount} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
-import {BALANCE_MULTIPLIER, Balance, FEE_AMOUNT} from '@app/services/balance';
+import {Balance} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {IToken} from '@app/types';
+import {BALANCE_MULTIPLIER, FEE_AMOUNT} from '@app/variables/balance';
 import {CURRENCY_NAME} from '@app/variables/common';
 
 export type TransactionSumProps = {
