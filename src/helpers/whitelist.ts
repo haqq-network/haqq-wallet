@@ -31,12 +31,24 @@ const getParsedAddressList = (address: string | string[]) => {
 };
 
 export class Whitelist {
-  static async checkUrl(url: string | undefined): Promise<boolean> {
+  /**
+   * @param url - url to check
+   * @param enableForceSkip - if true, then whitelist will be ignored if DEBUG_VARS.disableWeb3DomainBlocking or app.isTesterMode is true
+   *
+   * set enableForceSkip to false if you want to check whitelist without force skip
+   */
+  static async checkUrl(
+    url: string | undefined,
+    enableForceSkip = true,
+  ): Promise<boolean> {
     if (!url) {
       return false;
     }
 
-    if (DEBUG_VARS.disableWeb3DomainBlocking || app.isTesterMode) {
+    if (
+      enableForceSkip &&
+      (DEBUG_VARS.disableWeb3DomainBlocking || app.isTesterMode)
+    ) {
       return true;
     }
 

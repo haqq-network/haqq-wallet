@@ -53,7 +53,10 @@ export const WebviewAjustMiddleware = {
       return false;
     }
 
-    const isAllowedDomain = await Whitelist.checkUrl(event.nativeEvent.url);
+    const isAllowedDomain = await Whitelist.checkUrl(
+      event.nativeEvent.url,
+      false,
+    );
 
     if (!isAllowedDomain) {
       Logger.warn('WebviewAjustMiddleware: domain is not allowed');
