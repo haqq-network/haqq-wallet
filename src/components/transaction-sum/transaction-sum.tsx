@@ -21,11 +21,8 @@ import {Contact} from '@app/models/contact';
 import {Balance} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {IToken} from '@app/types';
-import {
-  BALANCE_MULTIPLIER,
-  CURRENCY_NAME,
-  FEE_AMOUNT,
-} from '@app/variables/common';
+import {BALANCE_MULTIPLIER, FEE_AMOUNT} from '@app/variables/balance';
+import {CURRENCY_NAME} from '@app/variables/common';
 
 export type TransactionSumProps = {
   balance: Balance;

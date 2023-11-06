@@ -68,7 +68,8 @@ import {
   openInAppBrowser,
   openWeb3Browser,
 } from '@app/utils';
-import {HAQQ_METADATA, MIN_GAS_LIMIT, TEST_URLS} from '@app/variables/common';
+import {MIN_GAS_LIMIT} from '@app/variables/balance';
+import {HAQQ_METADATA, TEST_URLS} from '@app/variables/common';
 
 const logger = Logger.create('SettingsTestScreen', {
   emodjiPrefix: '🔵',
