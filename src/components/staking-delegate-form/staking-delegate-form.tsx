@@ -20,7 +20,8 @@ import {useSumAmount} from '@app/hooks/use-sum-amount';
 import {I18N} from '@app/i18n';
 import {Balance} from '@app/services/balance';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
-import {CURRENCY_NAME, FEE_AMOUNT} from '@app/variables/common';
+import {FEE_AMOUNT} from '@app/variables/balance';
+import {CURRENCY_NAME} from '@app/variables/common';
 
 export type StakingDelegateFormProps = {
   validator: ValidatorItem;
