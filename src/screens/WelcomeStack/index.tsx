@@ -5,6 +5,7 @@ import {
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
 
+import {popupScreenOptions} from '@app/helpers';
 import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {basicScreenOptions} from '@app/screens';
 import {NewsDetailScreen} from '@app/screens/HomeStack/HomeNewsStack/news-detail';
@@ -49,6 +50,14 @@ const Stack = createNativeStackNavigator<WelcomeStackParamList>();
 
 const modalOptions: NativeStackNavigationOptions = {
   presentation: 'modal',
+  gestureEnabled: true,
+  gestureDirection: 'vertical',
+};
+
+const newsDetailOptions = {
+  ...popupScreenOptions,
+  ...modalOptions,
+  headerShown: true,
 };
 
 type Props = {
@@ -71,6 +80,7 @@ const WelcomeStack = memo(({initialRouteName}: Props) => {
       <Stack.Screen
         component={themeUpdaterHOC(NewsDetailScreen)}
         name={WelcomeStackRoutes.NewsDetail}
+        options={newsDetailOptions}
       />
       <Stack.Screen
         component={themeUpdaterHOC(SignUpStack)}

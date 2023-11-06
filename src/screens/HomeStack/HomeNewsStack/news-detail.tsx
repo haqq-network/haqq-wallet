@@ -3,7 +3,7 @@ import {memo, useEffect, useMemo} from 'react';
 import {NewsDetail} from '@app/components/news-detail';
 import {Loading} from '@app/components/ui';
 import {trackEvent} from '@app/helpers/track-event';
-import {useTypedRoute} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {News} from '@app/models/news';
 import {
   WelcomeStackParamList,
@@ -11,11 +11,18 @@ import {
 } from '@app/screens/WelcomeStack';
 
 export const NewsDetailScreen = memo(() => {
+  const navigation = useTypedNavigation<WelcomeStackParamList>();
   const route = useTypedRoute<
     WelcomeStackParamList,
     WelcomeStackRoutes.NewsDetail
   >();
   const item = useMemo(() => News.getById(route.params.id), [route.params.id]);
+
+  useEffect(() => {
+    if (item?.title) {
+      navigation.setOptions({title: item?.title});
+    }
+  }, []);
 
   useEffect(() => {
     const row = News.getById(route.params.id);
