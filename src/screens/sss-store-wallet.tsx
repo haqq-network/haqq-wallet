@@ -5,7 +5,7 @@ import {GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 
 import {app} from '@app/contexts';
-import {showModal} from '@app/helpers';
+import {hideModal, showModal} from '@app/helpers';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
@@ -99,6 +99,8 @@ export const SssStoreWalletScreen = () => {
               Logger.captureException(e, 'SssStoreWalletScreen');
             }
         }
+      } finally {
+        hideModal(ModalType.loading);
       }
     }, 350);
   }, [navigation, route]);

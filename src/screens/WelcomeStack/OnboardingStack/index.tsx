@@ -1,5 +1,6 @@
 import React, {memo} from 'react';
 
+import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {
   NativeStackNavigationOptions,
   createNativeStackNavigator,
@@ -32,11 +33,13 @@ type AnyRouteFromParent =
 
 export type OnboardingStackParamList = WelcomeStackParamList & {
   [OnboardingStackRoutes.OnboardingSetupPin]: WalletInitialData & {
+    provider?: ProviderMnemonicReactNative;
     currentPin: string;
     nextScreen: AnyRouteFromParent;
     errorText?: string;
   };
   [OnboardingStackRoutes.OnboardingRepeatPin]: WalletInitialData & {
+    provider?: ProviderMnemonicReactNative;
     currentPin: string;
     nextScreen: AnyRouteFromParent;
   };

@@ -25,7 +25,10 @@ export const SigninNotExistsScreen = memo(() => {
       });
       return;
     }
-    navigation.replace(SignInStackRoutes.OnboardingSetupPin, params);
+    navigation.replace(SignInStackRoutes.OnboardingSetupPin, {
+      ...params,
+      provider,
+    });
   }, [navigation, params]);
 
   const onPressChoice = useCallback(() => {
@@ -36,6 +39,7 @@ export const SigninNotExistsScreen = memo(() => {
     <SigninNotExists
       onPressCreate={onPressCreate}
       onPressChoice={onPressChoice}
+      //@ts-ignore
       provider={provider}
       email={email}
     />

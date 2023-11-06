@@ -1,4 +1,6 @@
-import React, {memo, useCallback} from 'react';
+import React, {useCallback} from 'react';
+
+import {observer} from 'mobx-react';
 
 import {SettingsSecurityPin} from '@app/components/settings-security-pin';
 import {CustomHeader} from '@app/components/ui';
@@ -11,7 +13,7 @@ import {SecurityStackParamList} from '@app/screens/HomeStack/SecurityStack';
 import {sendNotification} from '@app/services';
 import {ModalType} from '@app/types';
 
-export const SettingsSecurityPinScreen = memo(() => {
+export const SettingsSecurityPinScreen = observer(() => {
   const {goBack} = useTypedNavigation<SecurityStackParamList>();
 
   const onPinRepeated = useCallback(
