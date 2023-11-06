@@ -824,10 +824,15 @@ export enum I18N {
   browserSecurityAllow,
   browserSecurityAllowOnce,
   browserSecurityDeny,
-  byRandomTitle,
   viewDetailsTitle,
   yourAppVersion,
   remoteAppVersion,
+  showInactive,
+  sortValidatorTitle,
+  sortValidatorOptionRandom,
+  sortValidatorOptionName,
+  sortValidatorOptionPower,
+  sortValidatorOptionCommission,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1795,9 +1800,14 @@ const en: Record<I18N, string> = {
   [I18N.bech32Title]: 'Bech32',
   [I18N.browserPrivacyTitle]: 'Privacy',
   [I18N.browserPrivacy]: 'Privacy',
-  [I18N.byRandomTitle]: 'By random',
+  [I18N.sortValidatorTitle]: 'By {{sortTitle}}',
   [I18N.transactionCrypto]: 'Crypto',
   [I18N.viewDetailsTitle]: 'View details',
   [I18N.yourAppVersion]: 'Your version: {{version}}',
   [I18N.remoteAppVersion]: 'Available version: {{version}}',
+  [I18N.showInactive]: 'Show Inactive',
+  [I18N.sortValidatorOptionRandom]: 'Random',
+  [I18N.sortValidatorOptionName]: 'Name',
+  [I18N.sortValidatorOptionPower]: 'Power',
+  [I18N.sortValidatorOptionCommission]: 'Commission',
 };
