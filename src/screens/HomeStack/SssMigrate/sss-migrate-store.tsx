@@ -7,7 +7,7 @@ import {mnemonicToEntropy} from 'ethers/lib/utils';
 import {observer} from 'mobx-react';
 
 import {app} from '@app/contexts';
-import {showModal} from '@app/helpers';
+import {hideModal, showModal} from '@app/helpers';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
@@ -95,6 +95,8 @@ export const SssMigrateStoreScreen = observer(() => {
           navigation.goBack();
           Logger.captureException(e, 'SssMigrateStoreScreen');
         }
+      } finally {
+        hideModal(ModalType.loading);
       }
     }, 350);
   }, [navigation, route]);
