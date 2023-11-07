@@ -27,7 +27,7 @@ export function validatorsSort(
     case ValidatorSortKey.power:
       return validatorsSortPower(validators);
     default:
-      return validatorsSortPower(validators);
+      return validatorsSortRandom(validators);
   }
 }
 
