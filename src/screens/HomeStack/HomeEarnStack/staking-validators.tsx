@@ -8,13 +8,13 @@ import React, {
 
 import {Validator} from '@evmos/provider/dist/rest/staking';
 
-import {StakingValidators} from '@app/components/staking-validators';
+import {
+  StakingValidators,
+  Validators,
+} from '@app/components/staking-validators';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {setValidatorsPower} from '@app/helpers/validators-power';
-import {
-  randomValidatorsSort,
-  validatorsSort,
-} from '@app/helpers/validators-sort';
+import {validatorsSortPower} from '@app/helpers/validators-sort';
 import {validatorsSplit} from '@app/helpers/validators-split';
 import {useCosmos, useTypedNavigation} from '@app/hooks';
 import {useThrottle} from '@app/hooks/use-throttle';
@@ -30,8 +30,8 @@ import {AdjustEvents, ValidatorItem} from '@app/types';
 
 export const StakingValidatorsScreen = memoHOC(() => {
   const navigation = useTypedNavigation<HomeEarnStackParamList>();
-
   const cosmos = useCosmos();
+
   const [stakingCache, setStakingCache] = useState<
     Record<string, Record<StakingMetadataType, number>>
   >({});
@@ -87,9 +87,23 @@ export const StakingValidatorsScreen = memoHOC(() => {
     [navigation],
   );
 
-  const [stakedValidators, unStakedValidators] = useMemo(() => {
+  const [stakedValidators, unStakedValidators] = useMemo((): [
+    Validators,
+    Validators,
+  ] => {
     if (!Array.isArray(validators)) {
-      return [[], []];
+      return [
+        {
+          active: [],
+          inactive: [],
+          jailed: [],
+        },
+        {
+          active: [],
+          inactive: [],
+          jailed: [],
+        },
+      ];
     }
     const staked = [];
     const unStaked = [];
@@ -133,16 +147,16 @@ export const StakingValidatorsScreen = memoHOC(() => {
     unStakedActive = setValidatorsPower(unStakedActive, totalActiveTokens);
 
     return [
-      [
-        validatorsSort(stakedActive),
-        validatorsSort(stakedInactive),
-        validatorsSort(stackedJailed),
-      ].flat(),
-      [
-        randomValidatorsSort(unStakedActive),
-        randomValidatorsSort(unStakedInactive),
-        randomValidatorsSort(unStackedJailed),
-      ].flat(),
+      {
+        active: validatorsSortPower(stakedActive),
+        inactive: validatorsSortPower(stakedInactive),
+        jailed: validatorsSortPower(stackedJailed),
+      },
+      {
+        active: unStakedActive,
+        inactive: unStakedInactive,
+        jailed: unStackedJailed,
+      },
     ];
   }, [stakingCache, validators]);
 
