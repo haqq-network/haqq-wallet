@@ -30,12 +30,12 @@ export async function getProviderStorage(
     return new AsyncLocalStorage();
   }
 
-  if (cloudEnabled) {
-    return new Cloud();
-  }
-
   if (googleEnabled) {
     return new GoogleDrive();
+  }
+
+  if (cloudEnabled) {
+    return new Cloud();
   }
 
   return new AsyncLocalStorage();
