@@ -46,7 +46,7 @@ export function ValidatorAvatar({identity}: {identity?: string}) {
         }
       }
     })();
-  }, [setAvatarsCache, getAvatarFromKeybase, identity, avatarsCache]);
+  }, [getAvatarFromKeybase, identity, avatarsCache]);
 
   const logo = useMemo(() => {
     if (identity) {
@@ -72,7 +72,7 @@ export function ValidatorAvatar({identity}: {identity?: string}) {
         {showImage && (
           <Image
             source={{uri: logo}}
-            style={styles.image}
+            style={styles.iconWrapper}
             onError={handleLoadError}
           />
         )}
@@ -90,10 +90,5 @@ const styles = createTheme({
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  image: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
   },
 });
