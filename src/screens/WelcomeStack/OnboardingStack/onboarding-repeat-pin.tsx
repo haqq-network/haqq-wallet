@@ -1,4 +1,6 @@
-import React, {memo, useCallback} from 'react';
+import React, {useCallback} from 'react';
+
+import {observer} from 'mobx-react';
 
 import {OnboardingRepeatPin} from '@app/components/onboarding-repeat-pin';
 import {app} from '@app/contexts';
@@ -8,7 +10,7 @@ import {
   OnboardingStackRoutes,
 } from '@app/screens/WelcomeStack/OnboardingStack';
 
-export const OnboardingRepeatPinScreen = memo(() => {
+export const OnboardingRepeatPinScreen = observer(() => {
   const navigation = useTypedNavigation();
   const route = useTypedRoute<
     OnboardingStackParamList,
@@ -18,7 +20,11 @@ export const OnboardingRepeatPinScreen = memo(() => {
   const onSetPin = useCallback(
     (pin: string) => {
       const {nextScreen, ...params} = route.params;
-      app.setPin(pin).then(() => {
+      app.setPin(pin).then(async () => {
+        if (route.params.provider) {
+          await route.params.provider.updatePin(pin);
+        }
+
         if (app.biometryType !== null) {
           navigation.navigate(OnboardingStackRoutes.OnboardingBiometry, {
             ...params,

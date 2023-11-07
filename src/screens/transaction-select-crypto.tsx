@@ -22,7 +22,12 @@ export const TransactionSelectCryptoScreen = observer(() => {
   >();
 
   const tokens = useMemo(
-    () => computed(() => Token.tokens[AddressUtils.toEth(params.from)]),
+    () =>
+      computed(() =>
+        Token.tokens[AddressUtils.toEth(params.from)].filter(
+          item => !!item.is_in_white_list,
+        ),
+      ),
     [params.from],
   ).get();
 

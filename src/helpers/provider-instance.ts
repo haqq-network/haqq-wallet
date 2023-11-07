@@ -51,9 +51,14 @@ export function removeProviderInstanceForWallet(wallet: Wallet) {
 export async function getProviderInstanceForWallet(
   wallet: Wallet,
   skipAwaitForLedgerCall: boolean = false,
+  forceUpdate: boolean = false,
 ): Promise<ProviderInterface> {
   const id = getId(wallet);
-  if (!hasProviderInstanceForWallet(wallet)) {
+  const shouldUpdateCache = forceUpdate
+    ? true
+    : !hasProviderInstanceForWallet(wallet);
+
+  if (shouldUpdateCache) {
     switch (wallet.type) {
       case WalletType.mnemonic:
         cache.set(
