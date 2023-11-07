@@ -82,6 +82,7 @@ export const SssMigrateStoreScreen = memo(() => {
             Wallet.update(wallet.address, {
               type: WalletType.sss,
               accountId: provider.getIdentifier(),
+              socialLinkEnabled: true,
             });
           }
         }
