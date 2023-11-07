@@ -94,7 +94,7 @@ export const StakingValidators = ({
   const renderSectionHeader = useCallback(
     ({section: {title}}: {section: SectionListData<ValidatorItem>}) => {
       return (
-        <View>
+        <>
           {/*When validators array has only one object it means only one unstacked section.
               In this case title should not be shown*/}
           {validators.length > 1 && <SectionHeader title={title} />}
