@@ -65,9 +65,12 @@ export const UnstackedHeader = ({
         <MenuTrigger customStyles={menuTriggerCustomStyles}>
           <View style={styles.row}>
             <Icon name={IconsName.arrow_sort} color={Color.textBase1} />
-            <Text t9 style={styles.sortTitle}>
-              {getText(I18N.sortValidatorTitle, {sortTitle})}
-            </Text>
+            <Text
+              t9
+              i18n={I18N.sortValidatorTitle}
+              i18params={{sortTitle}}
+              style={styles.sortTitle}
+            />
           </View>
         </MenuTrigger>
         <MenuOptions

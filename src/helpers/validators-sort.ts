@@ -76,6 +76,13 @@ export function validatorsSortName(validators: ValidatorItem[]) {
  */
 export function validatorsSortCommission(validators: ValidatorItem[]) {
   return validators.sort((valA: ValidatorItem, valB: ValidatorItem) => {
+    const a = valA.commission.commission_rates.rate;
+    const b = valB.commission.commission_rates.rate;
+
+    if (a === b) {
+      return Math.random() - Math.random();
+    }
+
     return (
       parseFloat(valB.commission.commission_rates.rate) -
       parseFloat(valA.commission.commission_rates.rate)

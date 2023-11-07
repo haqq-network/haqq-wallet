@@ -4,7 +4,6 @@ import {
   SectionList,
   SectionListData,
   SectionListRenderItemInfo,
-  View,
 } from 'react-native';
 
 import {SectionHeader} from '@app/components/staking-validators/headers/section-header';
@@ -76,9 +75,10 @@ export const StakingValidators = ({
           ]
             .flat()
             .filter(
-              v => isShowInactive || v.localStatus === ValidatorStatus.active,
-            )
-            .filter(v => v.searchString?.includes(search)),
+              v =>
+                (v.searchString?.includes(search) && isShowInactive) ||
+                v.localStatus === ValidatorStatus.active,
+            ),
         },
       ].filter(r => !!r.data.length),
     [stakedValidators, unStakedValidators, isShowInactive, search, sortBy],
@@ -107,7 +107,7 @@ export const StakingValidators = ({
               sortBy={sortBy}
             />
           )}
-        </View>
+        </>
       );
     },
     [validators.length, isShowInactive, sortBy],
