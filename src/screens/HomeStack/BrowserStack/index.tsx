@@ -1,10 +1,15 @@
 import React, {memo} from 'react';
 
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {
+  NativeStackNavigationOptions,
+  createNativeStackNavigator,
+} from '@react-navigation/native-stack';
 
 import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
+import {popupScreenOptions} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {BrowserPrivacyPopupStack} from '@app/screens/browser-privacy-popup-stack';
 import {HomeStackParamList} from '@app/screens/HomeStack';
 import {BrowserEditBookmarksScreen} from '@app/screens/HomeStack/BrowserStack/browser-edit-bookmarks-screen';
 import {BrowserHomePageScreen} from '@app/screens/HomeStack/BrowserStack/browser-home-page-screen';
@@ -17,9 +22,11 @@ export enum BrowserStackRoutes {
   Web3browser = 'web3browser',
   BrowserSearchPage = 'browserSearchPage',
   BrowserEditBookmarks = 'browserEditBookmarksScreen',
+  BrowserPrivacyPopupStackScreen = 'browserPrivacyPopupStack',
 }
 
 export type BrowserStackParamList = HomeStackParamList & {
+  [BrowserStackRoutes.BrowserPrivacyPopupStackScreen]: {};
   [BrowserStackRoutes.BrowserHomePage]: undefined;
   [BrowserStackRoutes.Web3browser]: {url: string; popup?: boolean};
   [BrowserStackRoutes.BrowserSearchPage]?: {initialSearchText?: string};
@@ -44,6 +51,13 @@ const browserHomePageScreenOptions = {
   headerLeft: () => <></>,
 };
 
+const browserPrivacyOptions: NativeStackNavigationOptions = {
+  ...popupScreenOptions,
+  presentation: 'modal',
+  gestureEnabled: true,
+  gestureDirection: 'vertical',
+};
+
 export const BrowserStack = memo(() => {
   return (
     <Stack.Navigator
@@ -65,6 +79,11 @@ export const BrowserStack = memo(() => {
       <Stack.Screen
         name={BrowserStackRoutes.BrowserEditBookmarks}
         component={BrowserEditBookmarksScreen}
+      />
+      <Stack.Screen
+        name={BrowserStackRoutes.BrowserPrivacyPopupStackScreen}
+        component={BrowserPrivacyPopupStack}
+        options={browserPrivacyOptions}
       />
     </Stack.Navigator>
   );
