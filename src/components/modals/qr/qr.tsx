@@ -11,7 +11,7 @@ import {Color, getColor} from '@app/colors';
 import {Text} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {onDeepLink} from '@app/event-actions/on-deep-link';
-import {createTheme} from '@app/helpers';
+import {createTheme, hideModal, showModal} from '@app/helpers';
 import {
   AwaitForScanQrError,
   AwaitForScanQrEvents,
@@ -158,6 +158,7 @@ export const QRModal = ({onClose, eventTaskId, pattern}: QRModalProps) => {
   );
 
   const onClickGallery = useCallback(async () => {
+    hideModal(ModalType.qr);
     const response = await launchImageLibrary({mediaType: 'photo'});
     if (response.assets && response.assets.length) {
       const first = response.assets[0];
@@ -170,6 +171,7 @@ export const QRModal = ({onClose, eventTaskId, pattern}: QRModalProps) => {
         }
       }
     }
+    showModal(ModalType.qr);
   }, [handleQRData]);
 
   const onToggleFlashMode = useCallback(() => {
@@ -199,9 +201,19 @@ export const QRModal = ({onClose, eventTaskId, pattern}: QRModalProps) => {
   );
 
   useEffectAsync(async () => {
-    const result = await SystemDialog.requestCameraPermissions();
-    Logger.log('Camera permission is authorized: ', result);
-    setIsAuthorized(result);
+    try {
+      const result = await SystemDialog.requestCameraPermissions();
+      Logger.log('Camera permission is authorized: ', result);
+      setIsAuthorized(result);
+    } catch (err) {
+      setIsAuthorized(false);
+    }
+
+    return () => {
+      if (timeoutId.current) {
+        clearTimeout(timeoutId.current);
+      }
+    };
   }, []);
 
   useAndroidBackHandler(() => {
@@ -219,14 +231,6 @@ export const QRModal = ({onClose, eventTaskId, pattern}: QRModalProps) => {
       StatusBar.setBackgroundColor('transparent');
     };
   }, [theme]);
-
-  useEffect(() => {
-    return () => {
-      if (timeoutId.current) {
-        clearTimeout(timeoutId.current);
-      }
-    };
-  }, []);
 
   if (!isAuthorized) {
     return renserNotAuthorizedView();

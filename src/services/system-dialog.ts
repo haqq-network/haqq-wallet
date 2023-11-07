@@ -4,7 +4,7 @@ import messaging from '@react-native-firebase/messaging';
 import {PermissionsAndroid} from 'react-native';
 
 import {
-  requestCameraPermissions,
+  requestCameraPermissions as requestCameraPermissionsUtil,
   requestTrackingAuthorization,
 } from '@app/utils';
 
@@ -12,14 +12,14 @@ import {AppNativeConfig, BooleanConfigKey} from './app-native-config';
 
 const logger = Logger.create('SystemDialogService');
 
-const SYSTEM_DIALOG_DISABLE_TIMEOUT_MS = 5000;
+const SYSTEM_DIALOG_DISABLE_TIMEOUT_MS = 10_000;
 
 class SystemDialogService {
   private _timeoutId: NodeJS.Timeout;
 
   tryToInitBt = () => this.getResult(tryToInitBt);
 
-  requestCameraPermissions = () => this.getResult(requestCameraPermissions);
+  requestCameraPermissions = () => this.getResult(requestCameraPermissionsUtil);
 
   messagingRequestPermission = () =>
     this.getResult(function requestPermission() {
