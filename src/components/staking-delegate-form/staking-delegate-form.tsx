@@ -71,16 +71,12 @@ export const StakingDelegateForm = ({
 
   useEffect(() => {
     const INPUT_PRECISION = 3;
-    const first = new Balance(+amounts.amount, INPUT_PRECISION)
-      .toEther()
-      .toPrecision(INPUT_PRECISION);
-    const second = new Balance(amounts.maxAmount, INPUT_PRECISION)
-      .toEther()
-      .toPrecision(INPUT_PRECISION);
+    const first = new Balance(+amounts.amount, INPUT_PRECISION).toEther();
+    const second = new Balance(amounts.maxAmount, INPUT_PRECISION).toEther();
     if (first >= second) {
       amounts.setMax();
     }
-  }, [fee, amounts.maxAmount.toHex()]);
+  }, [amounts.maxAmount.toHex()]);
 
   return (
     <KeyboardSafeArea isNumeric style={styles.container}>
