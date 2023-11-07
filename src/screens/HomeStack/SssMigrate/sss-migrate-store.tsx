@@ -1,9 +1,10 @@
-import {memo, useEffect} from 'react';
+import {useEffect} from 'react';
 
 import {GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {mnemonicToEntropy} from 'ethers/lib/utils';
+import {observer} from 'mobx-react';
 
 import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
@@ -19,7 +20,7 @@ import {RemoteConfig} from '@app/services/remote-config';
 import {ModalType} from '@app/types';
 import {WalletType} from '@app/types';
 
-export const SssMigrateStoreScreen = memo(() => {
+export const SssMigrateStoreScreen = observer(() => {
   const route = useTypedRoute<
     SssMigrateStackParamList,
     SssMigrateStackRoutes.SssMigrateStore
@@ -58,7 +59,7 @@ export const SssMigrateStoreScreen = memo(() => {
           entropy,
           route.params.verifier,
           route.params.token,
-          app.getPassword.bind(app),
+          getPassword,
           storage,
           {
             metadataUrl: RemoteConfig.get_env(
@@ -82,6 +83,7 @@ export const SssMigrateStoreScreen = memo(() => {
             Wallet.update(wallet.address, {
               type: WalletType.sss,
               accountId: provider.getIdentifier(),
+              socialLinkEnabled: true,
             });
           }
         }
