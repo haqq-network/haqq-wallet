@@ -36,9 +36,12 @@ export const TokensWidget = ({onPress, tokens}: Props) => {
     <ShadowCard onPress={onPress} style={styles.wrapper}>
       <WidgetHeader title={getText(I18N.tokensWidgetTitle)} />
       <Spacer height={8} />
-      {tokens.slice(0, VISIBLE_ITEM_AMOUNT).map(item => {
-        return <TokenRow key={item.id} item={item} />;
-      })}
+      {tokens
+        .filter(item => !!item.is_in_white_list)
+        .slice(0, VISIBLE_ITEM_AMOUNT)
+        .map(item => {
+          return <TokenRow key={item.id} item={item} />;
+        })}
       {otherTokensAmount !== null && (
         <>
           <Spacer height={4} />

@@ -51,13 +51,14 @@ export type SignInStackParamList = WelcomeStackParamList & {
   [SignInStackRoutes.SigninRestoreWallet]: undefined;
   [SignInStackRoutes.SigninPin]: WalletInitialData;
   [SignInStackRoutes.OnboardingSetupPin]: WalletInitialData & {
+    provider?: ProviderMnemonicReactNative | ProviderSSSReactNative;
     biometryType?: BiometryType;
   };
   [SignInStackRoutes.SigninStoreWallet]: WalletInitialData & {
     nextScreen?: SignInStackRoutes;
   };
   [SignInStackRoutes.SigninNotExists]: WalletInitialData & {
-    provider: SssProviders;
+    provider: ProviderMnemonicReactNative | ProviderSSSReactNative;
     email?: string;
   };
   [SignInStackRoutes.SigninNotRecovery]: WalletInitialData;
@@ -93,10 +94,11 @@ const SignInStack = memo(() => {
   }, []);
 
   const OnboardingStackGenerated = useCallback(
-    () => (
+    //@ts-ignore
+    props => (
       <OnboardingStack
         initialParams={{
-          [OnboardingStackRoutes.OnboardingSetupPin]: {},
+          [OnboardingStackRoutes.OnboardingSetupPin]: {...props.route.params},
           [OnboardingStackRoutes.OnboardingRepeatPin]: {
             nextScreen: SignInStackRoutes.SigninStoreWallet,
           },

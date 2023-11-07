@@ -60,7 +60,7 @@ export class WalletConnect extends EventEmitter {
       }
 
       if (this._client) {
-        return logger.warn('WalletConnect:init already initialized');
+        logger.warn('WalletConnect:init already initialized');
       }
 
       this._core = new Core({

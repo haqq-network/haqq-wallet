@@ -27,12 +27,7 @@ import {
 } from '@app/screens/WelcomeStack/SignInStack';
 import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
-import {
-  ChooseAccountItem,
-  ModalType,
-  WalletInitialData,
-  WalletType,
-} from '@app/types';
+import {ChooseAccountItem, ModalType, WalletType} from '@app/types';
 
 const PAGE_SIZE = 5;
 
@@ -197,18 +192,10 @@ export const ChooseAccountScreen = memo(() => {
         Wallet.update(item.address, {socialLinkEnabled: true});
       }
     });
-    try {
-      if (walletProvider.current) {
-        await walletProvider.current.clean();
-      }
-    } catch (err) {}
 
     if (isMnemonicProvider) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const {provider, ...restParams} = params as WalletInitialData & {
-        provider: ProviderMnemonicReactNative;
-      };
-      navigation.navigate(SignInStackRoutes.OnboardingSetupPin, restParams);
+      //@ts-ignore
+      navigation.navigate(SignInStackRoutes.OnboardingSetupPin, params);
     } else {
       //@ts-ignore
       navigation.navigate(OnboardingStackRoutes.OnboardingFinish);

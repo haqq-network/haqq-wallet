@@ -115,7 +115,13 @@ export const TokenViewer = observer(({data, style}: TokenViewerProps) => {
           return null;
         }
 
-        return <WalletCard key={address} wallet={wallet} tokens={tokens} />;
+        return (
+          <WalletCard
+            key={address}
+            wallet={wallet}
+            tokens={tokens.filter(item => !!item.is_in_white_list)}
+          />
+        );
       })}
     </View>
   );
