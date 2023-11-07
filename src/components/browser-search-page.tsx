@@ -4,7 +4,7 @@ import {PhishingController} from '@metamask/phishing-controller';
 import {FlatList, ListRenderItem, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
-import {Color, getColor} from '@app/colors';
+import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {useTesterModeEnabled} from '@app/hooks/use-tester-mode-enabled';
 import {I18N, getText} from '@app/i18n';
@@ -198,7 +198,7 @@ const styles = createTheme({
   container: {
     flex: 1,
     marginHorizontal: 20,
-    backgroundColor: getColor(Color.bg1),
+    backgroundColor: Color.bg1,
   },
   input: {
     height: '100%',
