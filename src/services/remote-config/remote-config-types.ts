@@ -2,9 +2,11 @@ import {SessionTypes} from '@walletconnect/types';
 
 import {RootStackParamList} from '@app/types';
 
-export type WalletConnectAllowedNamespaces = Omit<
-  SessionTypes.Namespaces,
-  'accounts'
+export type WalletConnectNamespace = Omit<SessionTypes.Namespace, 'accounts'>;
+
+export type WalletConnectAllowedNamespaces = Record<
+  string,
+  WalletConnectNamespace
 >;
 
 export interface RemoteConfigBalanceTypes {
@@ -24,6 +26,7 @@ export interface RemoteConfigTypes extends RemoteConfigBalanceTypes {
   indexer_endpoints: Record<string, string>;
   ios_version: string;
   android_version: string;
+  app_version: string;
   welcome_screen: keyof RootStackParamList;
   version: number;
   sss_apple: string;

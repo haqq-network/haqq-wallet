@@ -11,7 +11,9 @@ import {
   MIN_STAKING_REWARD,
 } from '@app/variables/balance';
 
-const getDefaultBalanceValue = <T extends keyof RemoteConfigBalanceTypes>(
+export const getDefaultBalanceValue = <
+  T extends keyof RemoteConfigBalanceTypes,
+>(
   key: T,
 ): Balance => {
   switch (key) {

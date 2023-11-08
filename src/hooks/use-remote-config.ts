@@ -6,14 +6,7 @@ export function useRemoteConfigVar<K extends keyof RemoteConfigTypes>(key: K) {
   const [variable, setVariable] = useState(RemoteConfig.get(key));
 
   useEffect(() => {
-    const asyncTask = async () => {
-      if (!RemoteConfig.isInited) {
-        await RemoteConfig.init();
-        setVariable(RemoteConfig.get(key));
-      }
-    };
-
-    asyncTask();
+    setVariable(RemoteConfig.get(key));
   }, [key]);
 
   return variable as RemoteConfigTypes[K] | undefined;
