@@ -51,15 +51,13 @@ export const SignupPinScreen = memo(() => {
             throw new SssError('signinNotExists');
           }
 
-          await decryptShare(JSON.parse(securityQuestion), password);
+          await decryptShare(securityQuestion, password);
 
           const nextScreen = app.onboarded
             ? SignUpStackRoutes.SignupStoreWallet
             : SignUpStackRoutes.OnboardingSetupPin;
 
-          navigation.navigate(nextScreen, {
-            ...route.params,
-          });
+          navigation.navigate(nextScreen, route.params);
         } catch (e) {
           vibrate(HapticEffects.error);
 

@@ -54,10 +54,11 @@ const screenOptionsBiometry: ScreenOptionType = {title, headerBackHidden: true};
 
 const LedgerStack = memo(() => {
   const OnboardingStackGenerated = useCallback(
-    () => (
+    //@ts-ignore
+    props => (
       <OnboardingStack
         initialParams={{
-          [OnboardingStackRoutes.OnboardingSetupPin]: {},
+          [OnboardingStackRoutes.OnboardingSetupPin]: {...props.route.params},
           [OnboardingStackRoutes.OnboardingRepeatPin]: {
             nextScreen: LedgerStackRoutes.LedgerStoreWallet,
           },

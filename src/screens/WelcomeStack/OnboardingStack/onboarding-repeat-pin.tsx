@@ -21,7 +21,7 @@ export const OnboardingRepeatPinScreen = observer(() => {
     (pin: string) => {
       const {nextScreen, ...params} = route.params;
       app.setPin(pin).then(async () => {
-        if (route.params.provider) {
+        if (route.params.provider?.updatePin) {
           await route.params.provider.updatePin(pin);
         }
 

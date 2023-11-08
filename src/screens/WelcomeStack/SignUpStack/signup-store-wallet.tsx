@@ -1,7 +1,5 @@
 import {useCallback, useEffect} from 'react';
 
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
-
 import {hideModal, showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {getProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet';
@@ -55,15 +53,17 @@ export const SignUpStoreWalletScreen = () => {
                 number: `${Wallet.getSize() + 1}`,
               });
         const {address} = await provider.getAccountInfo(hdPath);
-        const type =
-          provider instanceof ProviderSSSReactNative
-            ? WalletType.sss
-            : WalletType.mnemonic;
+        //@ts-ignore
+        const type = route.params.sssPrivateKey
+          ? WalletType.sss
+          : WalletType.mnemonic;
+
         await Wallet.create(name, {
           address: AddressUtils.toEth(address),
           accountId: provider.getIdentifier(),
           path: hdPath,
           type,
+          socialLinkEnabled: type === WalletType.sss,
         });
 
         //@ts-ignore

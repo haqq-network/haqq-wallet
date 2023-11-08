@@ -190,7 +190,7 @@ class WalletStore implements MobXStoreFromRealm {
       data: '',
       address: walletParams.address.toLowerCase() as HaqqEthereumAddress,
       mnemonicSaved: false,
-      socialLinkEnabled: false,
+      socialLinkEnabled: walletParams.socialLinkEnabled || false,
       name: name,
       pattern,
       cardStyle,
