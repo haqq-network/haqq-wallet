@@ -1,5 +1,7 @@
 import {useCallback, useEffect} from 'react';
 
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+
 import {hideModal, showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {getProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet';
@@ -36,7 +38,10 @@ export const SignUpStoreWalletScreen = () => {
   useEffect(() => {
     setTimeout(async () => {
       try {
-        const provider = await getProviderForNewWallet(route.params);
+        const provider =
+          //@ts-ignore
+          route.params.provider ||
+          (await getProviderForNewWallet(route.params));
         const accountWallets = Wallet.getForAccount(provider.getIdentifier());
         const nextHdPathIndex = accountWallets.reduce((memo, wallet) => {
           const segments = wallet.path?.split('/') ?? ['0'];
@@ -53,10 +58,13 @@ export const SignUpStoreWalletScreen = () => {
                 number: `${Wallet.getSize() + 1}`,
               });
         const {address} = await provider.getAccountInfo(hdPath);
-        //@ts-ignore
-        const type = route.params.sssPrivateKey
-          ? WalletType.sss
-          : WalletType.mnemonic;
+        const type =
+          //@ts-ignore
+          route.params.sssPrivateKey ||
+          //@ts-ignore
+          route.params.provider instanceof ProviderSSSReactNative
+            ? WalletType.sss
+            : WalletType.mnemonic;
 
         await Wallet.create(name, {
           address: AddressUtils.toEth(address),

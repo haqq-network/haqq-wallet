@@ -13,7 +13,8 @@ export async function getProviderForNewWallet(params: WalletInitialData) {
   if (params && params.type === 'sss') {
     const storage = await getProviderStorage('', 'cloud');
     return await ProviderSSSReactNative.initialize(
-      params.sssPrivateKey || null,
+      //@ts-ignore
+      params.action === 'restore' ? params.sssPrivateKey || null : null,
       params.sssCloudShare || null,
       params.sssLocalShare || null,
       null,

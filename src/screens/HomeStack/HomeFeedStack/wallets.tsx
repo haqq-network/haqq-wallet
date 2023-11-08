@@ -4,6 +4,7 @@ import {observer} from 'mobx-react';
 
 import {Wallets} from '@app/components/wallets';
 import {app} from '@app/contexts';
+import {getProviderInstanceForWallet} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {Wallet} from '@app/models/wallet';
@@ -103,8 +104,20 @@ export const WalletsWrapper = observer(() => {
     [navigation],
   );
 
-  const onPressCreate = useCallback(() => {
-    navigation.navigate(HomeStackRoutes.Create);
+  const onPressCreate = useCallback(async () => {
+    const rootWalletProvider = await getProviderInstanceForWallet(
+      visible[0],
+      false,
+      true,
+    );
+
+    if (rootWalletProvider) {
+      //@ts-ignore
+      navigation.navigate(HomeStackRoutes.Create, {
+        type: visible[0].type,
+        provider: rootWalletProvider,
+      });
+    }
   }, [navigation]);
 
   const onPressLedger = useCallback(() => {

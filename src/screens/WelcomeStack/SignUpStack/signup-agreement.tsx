@@ -9,15 +9,19 @@ import {
 
 export const SignUpAgreementScreen = memo(() => {
   const navigation = useTypedNavigation<SignUpStackParamList>();
-  const {nextScreen} = useTypedRoute<
+  const params = useTypedRoute<
     SignUpStackParamList,
     SignUpStackRoutes.SignUpAgreement
   >().params;
   const onPressAgree = useCallback(() => {
-    return navigation.navigate(nextScreen, {
-      type: 'empty',
+    //@ts-ignore
+    return navigation.navigate(params.nextScreen, {
+      //@ts-ignore
+      type: params.type || 'empty',
+      //@ts-ignore
+      provider: params.provider || undefined,
     });
-  }, [navigation, nextScreen]);
+  }, [navigation, params.nextScreen]);
 
   return <CreateAgreement testID="signup_agreement" onDone={onPressAgree} />;
 });
