@@ -20,13 +20,14 @@ const screenOptionsTitle: ScreenOptionType = {
   headerShown: true,
 };
 
-export const CreateStack = memo(() => {
+export const CreateStack = memo(props => {
   return (
     <SignUpStack.Navigator screenOptions={basicScreenOptions}>
       <SignUpStack.Screen
         name="createAgreement"
         component={SignUpAgreementScreen}
-        initialParams={{nextScreen: 'createStoreWallet'}}
+        //@ts-ignore
+        initialParams={{nextScreen: 'createStoreWallet', ...props.route.params}}
         options={screenOptionsTitle}
       />
       <SignUpStack.Screen

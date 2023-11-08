@@ -51,7 +51,11 @@ export const SignupNetworkExistsScreen = memo(() => {
     }
 
     //@ts-ignore
-    navigation.navigate(nextScreen, nextParams);
+    navigation.navigate(nextScreen, {
+      ...nextParams,
+      type: 'sss',
+      action: 'restore',
+    });
   }, [navigation, route.params]);
   const onRewrite = useCallback(() => {
     Alert.alert(
@@ -73,7 +77,8 @@ export const SignupNetworkExistsScreen = memo(() => {
             // @ts-ignore
             navigation.navigate(nextScreen, {
               ...route.params,
-              sssPrivateKey: null,
+              type: 'sss',
+              action: 'replace',
             });
           },
         },

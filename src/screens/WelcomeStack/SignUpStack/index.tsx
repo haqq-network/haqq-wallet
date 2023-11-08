@@ -73,10 +73,11 @@ const SignUpStack = memo(() => {
   }, []);
 
   const OnboardingStackGenerated = useCallback(
-    () => (
+    //@ts-ignore
+    props => (
       <OnboardingStack
         initialParams={{
-          [OnboardingStackRoutes.OnboardingSetupPin]: {},
+          [OnboardingStackRoutes.OnboardingSetupPin]: {...props.route.params},
           [OnboardingStackRoutes.OnboardingRepeatPin]: {
             nextScreen: SignUpStackRoutes.SignupStoreWallet,
           },

@@ -77,6 +77,7 @@ export const SssStoreWalletScreen = () => {
                 type: WalletType.sss,
                 path: hdPath,
                 accountId: provider.getIdentifier(),
+                socialLinkEnabled: true,
               });
             }
           }

@@ -38,7 +38,10 @@ export const SignUpStoreWalletScreen = () => {
   useEffect(() => {
     setTimeout(async () => {
       try {
-        const provider = await getProviderForNewWallet(route.params);
+        const provider =
+          //@ts-ignore
+          route.params.provider ||
+          (await getProviderForNewWallet(route.params));
         const accountWallets = Wallet.getForAccount(provider.getIdentifier());
         const nextHdPathIndex = accountWallets.reduce((memo, wallet) => {
           const segments = wallet.path?.split('/') ?? ['0'];
@@ -56,14 +59,19 @@ export const SignUpStoreWalletScreen = () => {
               });
         const {address} = await provider.getAccountInfo(hdPath);
         const type =
-          provider instanceof ProviderSSSReactNative
+          //@ts-ignore
+          route.params.sssPrivateKey ||
+          //@ts-ignore
+          route.params.provider instanceof ProviderSSSReactNative
             ? WalletType.sss
             : WalletType.mnemonic;
+
         await Wallet.create(name, {
           address: AddressUtils.toEth(address),
           accountId: provider.getIdentifier(),
           path: hdPath,
           type,
+          socialLinkEnabled: type === WalletType.sss,
         });
 
         //@ts-ignore

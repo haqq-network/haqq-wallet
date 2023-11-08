@@ -189,7 +189,10 @@ export const ChooseAccountScreen = memo(() => {
     walletsToCreate.forEach(item => {
       Wallet.create(item.name, item);
       if (isSSSProvider) {
-        Wallet.update(item.address, {socialLinkEnabled: true});
+        Wallet.update(item.address, {
+          socialLinkEnabled: true,
+          type: WalletType.sss,
+        });
       }
     });
 
