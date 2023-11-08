@@ -4,12 +4,23 @@ import {Backend} from '@app/services/backend';
 import {RemoteConfigTypes} from '@app/services/remote-config/remote-config-types';
 import {isValidJSON} from '@app/utils';
 
+import {REMOTE_CONFIG_DEFAULT_VALUES} from './remote-config-default-values';
+
 const KEY = 'remote-config-cache';
+const CONFIG_REINIT_TIMEOUT = 5 * 60 * 1000; // 5 minutes
 
 const logger = Logger.create('RemoteConfig', {
   emodjiPrefix: '🔴',
   stringifyJson: true,
 });
+
+function getCachedConfig() {
+  const cacheString = VariablesString.get(KEY);
+  if (isValidJSON(cacheString)) {
+    return JSON.parse(cacheString) as RemoteConfigTypes;
+  }
+  return REMOTE_CONFIG_DEFAULT_VALUES;
+}
 
 export class RemoteConfig {
   public static isInited = false;
@@ -23,28 +34,24 @@ export class RemoteConfig {
       if (RemoteConfig.isInited) {
         return RemoteConfig.getAll();
       }
+
       const appInfo = await getAppInfo();
       const config = await Backend.instance.getRemoteConfig(appInfo);
-      Logger.log('config', config);
+
+      logger.log('config', config);
+
       if (Object.keys(config).length) {
         VariablesString.set(KEY, JSON.stringify(config));
         RemoteConfig.isInited = true;
         return config;
       } else {
         logger.error('remote config is empty', config);
-        return undefined;
+        return getCachedConfig();
       }
     } catch (err) {
       logger.error('failed to fetch remote config', err);
-      return undefined;
-    }
-  }
-
-  public static set(config: RemoteConfigTypes) {
-    if (Object.keys(config).length) {
-      VariablesString.set(KEY, JSON.stringify(config));
-    } else {
-      logger.error('remote config is empty', config);
+      setTimeout(RemoteConfig.init, CONFIG_REINIT_TIMEOUT);
+      return getCachedConfig();
     }
   }
 
@@ -70,13 +77,6 @@ export class RemoteConfig {
   }
 
   public static getAll(): RemoteConfigTypes | undefined {
-    const cacheString = VariablesString.get(KEY);
-
-    if (isValidJSON(cacheString)) {
-      return JSON.parse(cacheString);
-    }
-
-    logger.error('not valid JSON', cacheString);
-    return undefined;
+    return getCachedConfig();
   }
 }
