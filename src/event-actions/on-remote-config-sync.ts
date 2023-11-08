@@ -7,11 +7,7 @@ const logger = Logger.create('onRemoteConfigSync', {
 
 export async function onRemoteConfigSync() {
   try {
-    if (RemoteConfig.isInited) {
-      return;
-    }
-
-    const config = await RemoteConfig.init();
+    const config = RemoteConfig.getAll();
 
     if (config) {
       if (config.evm_endpoints) {

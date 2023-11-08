@@ -52,10 +52,6 @@ export class Whitelist {
       return true;
     }
 
-    if (!RemoteConfig.isInited) {
-      await RemoteConfig.init();
-    }
-
     const web3_app_whitelist = RemoteConfig.get('web3_app_whitelist');
 
     if (web3_app_whitelist) {
