@@ -27,13 +27,11 @@ export async function onWalletSssSaved(accountId: string) {
     }),
   );
 
-  const mnemonicSaved = isShareSaved.some(t => t);
+  const socialLinkEnabled = isShareSaved.some(t => t);
 
   for (const wallet of wallets) {
     if (wallet.accountId === accountId && wallet.type === WalletType.sss) {
-      Wallet.update(wallet.address, {mnemonicSaved});
-      // TODO: socialLinkEnabled
-      // wallet.update({socialLinkEnabled: true});
+      Wallet.update(wallet.address, {socialLinkEnabled});
     }
   }
 }

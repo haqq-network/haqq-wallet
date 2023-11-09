@@ -1,5 +1,4 @@
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 
 import {app} from '@app/contexts';
 import {onStakingSync} from '@app/event-actions/on-staking-sync';
@@ -39,10 +38,7 @@ export async function onWalletCreate(wallet: Wallet) {
 
       switch (wallet.type) {
         case WalletType.sss:
-          const providerSss = (await getProviderInstanceForWallet(
-            wallet,
-          )) as ProviderSSSReactNative;
-          mnemonicSaved = await providerSss.isShareSaved();
+          mnemonicSaved = wallet.mnemonicSaved;
           break;
         case WalletType.mnemonic:
           const providerMnemonic = (await getProviderInstanceForWallet(
