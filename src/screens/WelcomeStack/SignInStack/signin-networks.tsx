@@ -76,6 +76,7 @@ export const SignInNetworksScreen = memo(() => {
         );
 
         if (!share) {
+          // Check for local share and show error screen
           throw new SssError('signinNotRecovery');
         }
 
