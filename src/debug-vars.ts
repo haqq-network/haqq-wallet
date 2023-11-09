@@ -10,6 +10,8 @@ interface DebugVars {
   enableWeb3BrowserLogger: boolean;
   allowAnySourcesForWalletConnectLogin: boolean;
   disableWeb3DomainBlocking: boolean;
+  enableMockWallets: boolean;
+  mockWalletsAddresses: string[];
 }
 
 const production: DebugVars = {
@@ -24,6 +26,8 @@ const production: DebugVars = {
   enableHttpErrorDetails: false,
   enableAwaitJsonRpcSignLogger: false,
   enableAsyncEventEmitterLogs: true,
+  enableMockWallets: false,
+  mockWalletsAddresses: [],
 };
 
 const debug: DebugVars = {
@@ -38,6 +42,11 @@ const debug: DebugVars = {
   enableHttpErrorDetails: true,
   enableAsyncEventEmitterLogs: false,
   enableAwaitJsonRpcSignLogger: true,
+  enableMockWallets: true,
+  mockWalletsAddresses: [
+    '0x65221cede3abdd03e377e3a4ce84e14fcd497919',
+    '0x98ed1f5d1e0ca514c390b7e08cbb8d769fc87ac5',
+  ],
 };
 
 export const DEBUG_VARS = __DEV__ ? debug : production;

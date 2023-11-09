@@ -2,12 +2,13 @@ import {makeAutoObservable, when} from 'mobx';
 import {isHydrated, makePersistable} from 'mobx-persist-store';
 
 import {app} from '@app/contexts';
+import {DEBUG_VARS} from '@app/debug-vars';
 import {Events} from '@app/events';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {awaitForRealm} from '@app/helpers/await-for-realm';
 import {storage} from '@app/services/mmkv';
-import {generateFlatColors, generateGradientColors} from '@app/utils';
+import {generateFlatColors, generateGradientColors, makeID} from '@app/utils';
 import {
   CARD_CIRCLE_TOTAL,
   CARD_DEFAULT_STYLE,
@@ -55,6 +56,30 @@ export type Wallet = {
   position: number;
 };
 
+function getMockWallets(): Wallet[] {
+  return DEBUG_VARS.mockWalletsAddresses.map((address, index) => ({
+    address: AddressUtils.toEth(address),
+    cosmosAddress: AddressUtils.toHaqq(address),
+    accountId: makeID(6),
+    data: '',
+    mnemonicSaved: false,
+    socialLinkEnabled: false,
+    name: `🔴 DEBUG #${index}`,
+    pattern: `card-rhombus-${index + 1}`,
+    cardStyle: WalletCardStyle.gradient,
+    colorFrom: '#2ebf41',
+    colorTo: '#552ebf',
+    colorPattern: '#A6A628',
+    type: WalletType.hot,
+    path: "44'/60'/0'/0/0",
+    version: 2,
+    isHidden: false,
+    isMain: index === 0,
+    position: index,
+    subscription: null,
+  }));
+}
+
 export class WalletRealmObject extends Realm.Object {
   static schema = {
     name: 'Wallet',
@@ -89,14 +114,27 @@ class WalletStore implements MobXStoreFromRealm {
 
   constructor(shouldSkipPersisting: boolean = false) {
     makeAutoObservable(this);
+
     if (!shouldSkipPersisting) {
       makePersistable(this, {
         name: this.constructor.name,
         properties: [
           {
             key: 'wallets',
-            deserialize: value =>
-              value.sort((a: Wallet, b: Wallet) => a.position - b.position),
+            deserialize: value => {
+              const isMockEnabled =
+                __DEV__ &&
+                DEBUG_VARS.enableMockWallets &&
+                DEBUG_VARS.mockWalletsAddresses.length;
+
+              if (isMockEnabled) {
+                return getMockWallets();
+              }
+
+              return value.sort(
+                (a: Wallet, b: Wallet) => a.position - b.position,
+              );
+            },
             serialize: value => value,
           },
         ],
@@ -187,7 +225,9 @@ class WalletStore implements MobXStoreFromRealm {
 
     const existingWallet = this.getById(walletParams.address);
     const newWallet = {
+      ...existingWallet,
       data: '',
+      subscription: existingWallet?.subscription ?? null,
       address: walletParams.address.toLowerCase() as HaqqEthereumAddress,
       mnemonicSaved: false,
       socialLinkEnabled: walletParams.socialLinkEnabled || false,
@@ -203,10 +243,8 @@ class WalletStore implements MobXStoreFromRealm {
       version: 2,
       isHidden: false,
       isMain: false,
-      subscription: null,
       cosmosAddress: AddressUtils.toHaqq(walletParams.address),
       position: this.getSize(),
-      ...existingWallet,
     };
 
     if (existingWallet) {
@@ -275,7 +313,7 @@ class WalletStore implements MobXStoreFromRealm {
 
     if (wallet) {
       const otherWallets = this.wallets.filter(
-        w => w.address.toLowerCase() !== address.toLowerCase(),
+        w => !AddressUtils.equals(w.address, address),
       );
       this.wallets = [...otherWallets, {...wallet, ...params}].sort(
         (a, b) => a.position - b.position,

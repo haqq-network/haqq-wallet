@@ -1,8 +1,8 @@
 import messaging from '@react-native-firebase/messaging';
 
 import {app} from '@app/contexts';
-import {onCheckAvailability} from '@app/event-actions/on-check-availability';
 import {Events} from '@app/events';
+import {EthRpcEndpointAvailability} from '@app/helpers/eth-rpc-endpoint-availability';
 
 export async function onAppActive() {
   messaging()
@@ -13,5 +13,5 @@ export async function onAppActive() {
       }
     });
 
-  await onCheckAvailability();
+  await EthRpcEndpointAvailability.checkEthRpcEndpointAvailability();
 }

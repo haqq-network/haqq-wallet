@@ -7,6 +7,7 @@ import {SignupNetworkExists} from '@app/components/signup-network-exists';
 import {app} from '@app/contexts';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {SignInStackRoutes} from '@app/screens/WelcomeStack/SignInStack';
 import {
   SignUpStackParamList,
   SignUpStackRoutes,
@@ -48,6 +49,19 @@ export const SignupNetworkExistsScreen = memo(() => {
         : SignUpStackRoutes.OnboardingSetupPin;
 
       nextParams.sssCloudShare = share;
+    }
+
+    if (nextScreen === SignUpStackRoutes.SignupStoreWallet) {
+      //@ts-ignore
+      navigation.navigate(SignInStackRoutes.SigninStoreWallet, {
+        type: 'sss',
+        sssPrivateKey: nextParams.sssPrivateKey,
+        token: nextParams.token,
+        verifier: nextParams.verifier,
+        sssCloudShare: share,
+        sssLocalShare: null,
+      });
+      return;
     }
 
     //@ts-ignore

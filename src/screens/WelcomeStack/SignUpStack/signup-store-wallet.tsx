@@ -35,13 +35,20 @@ export const SignUpStoreWalletScreen = () => {
     });
   }, []);
 
+  const getCurrentProvider = useCallback(async () => {
+    //@ts-ignore
+    const {provider} = route.params;
+    if (!provider || typeof provider === 'string') {
+      return await getProviderForNewWallet(route.params);
+    }
+    return provider;
+  }, [route.params]);
+
   useEffect(() => {
     setTimeout(async () => {
       try {
-        const provider =
-          //@ts-ignore
-          route.params.provider ||
-          (await getProviderForNewWallet(route.params));
+        const provider = await getCurrentProvider();
+
         const accountWallets = Wallet.getForAccount(provider.getIdentifier());
         const nextHdPathIndex = accountWallets.reduce((memo, wallet) => {
           const segments = wallet.path?.split('/') ?? ['0'];
@@ -84,9 +91,9 @@ export const SignUpStoreWalletScreen = () => {
             break;
           default:
             if (error instanceof Error) {
+              Logger.captureException(error, 'createStoreWallet');
               showModal(ModalType.errorCreateAccount);
               goBack();
-              Logger.captureException(error, 'createStoreWallet');
             }
         }
       }
