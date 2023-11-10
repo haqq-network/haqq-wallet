@@ -67,7 +67,7 @@ export const App = () => {
           await app.init();
           await migrationWallets();
           // MobX stores migration
-          await Promise.all([
+          await Promise.allSettled([
             Contact.migrate(),
             Wallet.migrate(),
             Transaction.migrate(),

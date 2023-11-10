@@ -1,5 +1,4 @@
-import {onCheckAvailability} from '@app/event-actions/on-check-availability';
-import {onRemoteConfigSync} from '@app/event-actions/on-remote-config-sync';
+import {EthRpcEndpointAvailability} from '@app/helpers/eth-rpc-endpoint-availability';
 import {RemoteConfig} from '@app/services/remote-config';
 
 /**
@@ -7,6 +6,5 @@ import {RemoteConfig} from '@app/services/remote-config';
  */
 export async function onAppInitialized() {
   RemoteConfig.init();
-  await onRemoteConfigSync();
-  await onCheckAvailability();
+  EthRpcEndpointAvailability.checkEthRpcEndpointAvailability();
 }

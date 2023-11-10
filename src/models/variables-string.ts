@@ -1,5 +1,6 @@
 import {GEO_WATCH_ID_KEY} from '@app/helpers/webview-geolocation';
 import {realm} from '@app/models';
+import {isValidJSON} from '@app/utils';
 
 export class VariablesString extends Realm.Object {
   static schema = {
@@ -89,5 +90,21 @@ export class VariablesString extends Realm.Object {
       VariablesString.schema.name,
       id,
     );
+  }
+
+  static setObject(id: string, value: any) {
+    if (isValidJSON(value)) {
+      VariablesString.set(id, JSON.stringify(value));
+      return true;
+    }
+    return false;
+  }
+
+  static getObject<T = {}>(id: string) {
+    const value = VariablesString.get(id);
+    if (isValidJSON(value)) {
+      return JSON.parse(value) as T;
+    }
+    return null;
   }
 }

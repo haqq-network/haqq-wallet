@@ -14,8 +14,10 @@ import {IWeb3Wallet, Web3Wallet} from '@walletconnect/web3wallet';
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {Events, WalletConnectEvents} from '@app/events';
+import {Initializable} from '@app/helpers/initializable';
 import {I18N} from '@app/i18n';
 import {VariablesBool} from '@app/models/variables-bool';
+import {VariablesString} from '@app/models/variables-string';
 import {WalletConnectSessionMetadata} from '@app/models/wallet-connect-session-metadata';
 import {message as sendMessage, sendNotification} from '@app/services/toast';
 import {filterWalletConnectSessionsByAddress, isError, sleep} from '@app/utils';
@@ -30,12 +32,18 @@ const EMPTY_NAMESPACE = {
   chains: [],
 };
 
-const logger = Logger.create('WalletConnect');
+const logger = Logger.create('WalletConnect', {
+  enabled: DEBUG_VARS.enableWalletConnectLogger,
+});
 
-export class WalletConnect extends EventEmitter {
+const PAIRING_URLS_KEY = 'wallet_connect_pairing_urls';
+
+export class WalletConnect extends Initializable {
   static instance = new WalletConnect();
   private _client: IWeb3Wallet | null = null;
   private _core: ICore | null = null;
+  private _initAttempts = 0;
+  private _initStartTime = 0;
 
   public getActiveSessions() {
     return this._client?.engine?.signClient?.session?.getAll?.() || [];
@@ -51,13 +59,16 @@ export class WalletConnect extends EventEmitter {
 
   public async init(): Promise<void> {
     try {
-      if (DEBUG_VARS.enableWalletConnectLogger) {
-        logger.log(
-          'WalletConnect:init',
-          WALLET_CONNECT_PROJECT_ID,
-          WALLET_CONNECT_RELAY_URL,
-        );
+      this.startInitialization();
+      if (!this._initStartTime) {
+        this._initStartTime = Date.now();
       }
+      this._initAttempts++;
+      logger.log(
+        'WalletConnect:init',
+        WALLET_CONNECT_PROJECT_ID,
+        WALLET_CONNECT_RELAY_URL,
+      );
 
       if (this._client) {
         logger.warn('WalletConnect:init already initialized');
@@ -74,7 +85,7 @@ export class WalletConnect extends EventEmitter {
         metadata: {
           name: 'HAQQ Wallet',
           description: 'HAQQ Wallet for WalletConnect',
-          url: 'https://walletconnect.com/',
+          url: 'https://islamiccoin.net/',
           icons: ['https://islamiccoin.net/favicon.ico'],
         },
       });
@@ -84,26 +95,17 @@ export class WalletConnect extends EventEmitter {
       this
         // https://docs.walletconnect.com/2.0/javascript/web3wallet/wallet-usage#responding-to-session-requests
         ._walletConnectOnEvent('session_proposal', proposal => {
-          if (DEBUG_VARS.enableWalletConnectLogger) {
-            logger.log(
-              '🟢 session_proposal',
-              JSON.stringify(proposal, null, 2),
-            );
-          }
+          logger.log('🟢 session_proposal', JSON.stringify(proposal, null, 2));
           app.emit(Events.onWalletConnectApproveConnection, proposal);
         })
         // https://docs.walletconnect.com/2.0/javascript/web3wallet/wallet-usage#responding-to-session-requests
         .on('session_request', async event => {
-          if (DEBUG_VARS.enableWalletConnectLogger) {
-            logger.log('🟢 session_request', JSON.stringify(event, null, 2));
-          }
+          logger.log('🟢 session_request', JSON.stringify(event, null, 2));
           app.emit(Events.onWalletConnectSignTransaction, event);
         })
         // https://docs.walletconnect.com/2.0/javascript/web3wallet/wallet-usage#extend-a-session
         .on('session_update', async event => {
-          if (DEBUG_VARS.enableWalletConnectLogger) {
-            logger.log('🟢 session_update', JSON.stringify(event, null, 2));
-          }
+          logger.log('🟢 session_update', JSON.stringify(event, null, 2));
           await this._client?.extendSession?.({topic: event?.topic});
           this._emitActiveSessions();
         })
@@ -115,6 +117,18 @@ export class WalletConnect extends EventEmitter {
         'expirer_deleted',
         this._emitActiveSessions.bind(this),
       );
+      const end = Date.now();
+      const initDuration = end - this._initStartTime;
+      logger.log(
+        `WalletConnect:init duration in ${initDuration}ms, attempts: ${this._initAttempts}`,
+      );
+
+      if (app.isTesterMode || app.isDeveloper) {
+        sendMessage(
+          `WC init: ${initDuration}ms, , attempts: ${this._initAttempts}`,
+        );
+      }
+      this.stopInitialization();
     } catch (err) {
       if (err instanceof Error) {
         logger.error('[WalletConnect] init error', err);
@@ -125,7 +139,32 @@ export class WalletConnect extends EventEmitter {
     }
   }
 
+  /**
+   * @description Get all paired urls
+   * @returns {Record<string, boolean>} - paired urls, key - url, value - paired or not paired
+   */
+  public getPairedUrls() {
+    return (
+      VariablesString.getObject<Record<string, boolean>>(PAIRING_URLS_KEY) || {}
+    );
+  }
+
   public async pair(uri: string) {
+    const pairedUrls = this.getPairedUrls();
+
+    const exists = !!pairedUrls[uri];
+
+    if (exists) {
+      return sendNotification(I18N.walletConnectPairAlreadyExists);
+    }
+
+    VariablesString.setObject(PAIRING_URLS_KEY, {
+      ...pairedUrls,
+      [uri]: false,
+    });
+
+    await this.awaitForInitialization();
+
     if (!this._client || !this._core) {
       return sendNotification(I18N.walletConnectPairInitError);
     }
@@ -141,11 +180,13 @@ export class WalletConnect extends EventEmitter {
 
       if (!resp) {
         sendNotification(I18N.walletConnectPairError);
+      } else {
+        VariablesString.setObject(PAIRING_URLS_KEY, {
+          ...pairedUrls,
+          [uri]: true,
+        });
       }
-
-      if (DEBUG_VARS.enableWalletConnectLogger) {
-        logger.log('WalletConnect:pair ', resp);
-      }
+      logger.log('WalletConnect:pair ', resp);
     } catch (err) {
       if (isError(err)) {
         sendMessage(`[WC]: ${err.message}`);
@@ -273,9 +314,7 @@ export class WalletConnect extends EventEmitter {
       );
     }
 
-    if (DEBUG_VARS.enableWalletConnectLogger) {
-      logger.log('✅ approveSessionRequest result:', result);
-    }
+    logger.log('✅ approveSessionRequest result:', result);
 
     const isDisconnected = !this.getSessionByTopic(event?.topic);
     if (isDisconnected) {
