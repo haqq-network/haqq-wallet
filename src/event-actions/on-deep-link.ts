@@ -14,7 +14,7 @@ import {navigator} from '@app/navigator';
 import {DeeplinkProtocol, DeeplinkUrlKey, ModalType} from '@app/types';
 import {openInAppBrowser, openWeb3Browser} from '@app/utils';
 
-type ParsedQuery = {
+export type ParsedQuery = {
   uri?: string;
 };
 
