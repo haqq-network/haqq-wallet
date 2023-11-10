@@ -41,7 +41,7 @@ export class RemoteConfigService extends Initializable {
       const appInfo = await getAppInfo();
       const config = await Backend.instance.getRemoteConfig(appInfo);
 
-      // logger.log('config', config);
+      logger.log('config', config);
 
       if (Object.keys(config).length) {
         VariablesString.set(KEY, JSON.stringify(config));

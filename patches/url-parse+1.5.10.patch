@@ -1,0 +1,48 @@
+diff --git a/node_modules/url-parse/index.js b/node_modules/url-parse/index.js
+index b86c29f..1d4878f 100644
+--- a/node_modules/url-parse/index.js
++++ b/node_modules/url-parse/index.js
+@@ -31,7 +31,6 @@ function trimLeft(str) {
+  * 2. Indication if it's backwards or forward parsing, when set as number it's
+  *    the value of extra chars that should be split off.
+  * 3. Inherit from location if non existing in the parser.
+- * 4. `toLowerCase` the resulting value.
+  */
+ var rules = [
+   ['#', 'hash'],                        // Extract from the back.
+@@ -142,7 +141,7 @@ function extractProtocol(address, location) {
+   location = location || {};
+ 
+   var match = protocolre.exec(address);
+-  var protocol = match[1] ? match[1].toLowerCase() : '';
++  var protocol = match[1] ? match[1] : '';
+   var forwardSlashes = !!match[2];
+   var otherSlashes = !!match[3];
+   var slashesCount = 0;
+@@ -335,7 +334,7 @@ function Url(address, location, parser) {
+     // Hostname, host and protocol should be lowercased so they can be used to
+     // create a proper `origin`.
+     //
+-    if (instruction[4]) url[key] = url[key].toLowerCase();
++    if (instruction[4]) url[key] = url[key];
+   }
+ 
+   //
+@@ -465,7 +464,7 @@ function set(part, value, fn) {
+       break;
+ 
+     case 'protocol':
+-      url.protocol = value.toLowerCase();
++      url.protocol = value;
+       url.slashes = !fn;
+       break;
+ 
+@@ -501,7 +500,7 @@ function set(part, value, fn) {
+   for (var i = 0; i < rules.length; i++) {
+     var ins = rules[i];
+ 
+-    if (ins[4]) url[ins[1]] = url[ins[1]].toLowerCase();
++    if (ins[4]) url[ins[1]] = url[ins[1]];
+   }
+ 
+   url.auth = url.password ? url.username +':'+ url.password : url.username;

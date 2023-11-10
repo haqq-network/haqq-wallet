@@ -42,7 +42,7 @@ const debug: DebugVars = {
   enableHttpErrorDetails: true,
   enableAsyncEventEmitterLogs: false,
   enableAwaitJsonRpcSignLogger: true,
-  enableMockWallets: true,
+  enableMockWallets: false,
   mockWalletsAddresses: [
     '0x65221cede3abdd03e377e3a4ce84e14fcd497919',
     '0x98ed1f5d1e0ca514c390b7e08cbb8d769fc87ac5',

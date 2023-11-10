@@ -66,7 +66,7 @@ export const App = () => {
         if (app.onboarded) {
           await app.init();
           await migrationWallets();
-          // MobX stores migratio
+          // MobX stores migration
           await Promise.allSettled([
             Contact.migrate(),
             Wallet.migrate(),
