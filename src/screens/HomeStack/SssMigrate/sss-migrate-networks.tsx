@@ -14,6 +14,7 @@ import {
   Creds,
   SssProviders,
   onLoginApple,
+  onLoginCustom,
   onLoginGoogle,
 } from '@app/services/provider-sss';
 import {RemoteConfig} from '@app/services/remote-config';
@@ -35,6 +36,9 @@ export const SssMigrateNetworksScreen = memo(() => {
             break;
           case SssProviders.google:
             creds = await onLoginGoogle();
+            break;
+          case SssProviders.custom:
+            creds = await onLoginCustom();
             break;
         }
       } catch (err) {
@@ -86,5 +90,12 @@ export const SssMigrateNetworksScreen = memo(() => {
     [navigation, route.params.accountId],
   );
 
-  return <SssMigrateNetworks onLogin={onLogin} />;
+  return (
+    <SssMigrateNetworks
+      onLogin={onLogin}
+      isAppleSupported={app.isAppleSigninSupported}
+      isGoogleSupported={app.isGoogleSigninSupported}
+      isCustomSupported={app.isCustomSigninSupported}
+    />
+  );
 });

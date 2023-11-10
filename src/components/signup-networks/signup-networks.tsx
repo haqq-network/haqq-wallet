@@ -18,6 +18,7 @@ import {SocialButton, SocialButtonVariant} from '../social-button';
 export type SssNetworksProps = {
   isGoogleSupported: boolean;
   isAppleSupported: boolean;
+  isCustomSupported: boolean;
   onLogin: (provider: SssProviders) => Promise<void>;
   onLoginLaterPress(): void;
 };
@@ -25,13 +26,28 @@ export type SssNetworksProps = {
 export const SignupNetworks = ({
   isGoogleSupported,
   isAppleSupported,
+  isCustomSupported,
   onLogin,
   onLoginLaterPress,
 }: SssNetworksProps) => {
   const [isApple, setIsApple] = useState(false);
   const [isGoogle, setIsGoogle] = useState(false);
+  const [isCustom, setIsCustom] = useState(false);
 
-  const isLoading = useMemo(() => isApple || isGoogle, [isApple, isGoogle]);
+  const isLoading = useMemo(
+    () => isApple || isGoogle || isCustom,
+    [isApple, isGoogle, isCustom],
+  );
+
+  const onPressLoginCustom = useCallback(async () => {
+    try {
+      setIsCustom(true);
+
+      await onLogin(SssProviders.custom);
+    } finally {
+      setIsCustom(false);
+    }
+  }, [onLogin]);
 
   const onPressLoginGoogle = useCallback(async () => {
     try {
@@ -88,6 +104,18 @@ export const SignupNetworks = ({
             disabled={isLoading && !isGoogle}
             onPress={onPressLoginGoogle}
             variant={SocialButtonVariant.google}
+          />
+        </>
+      )}
+      {isCustomSupported && (
+        <>
+          <Spacer height={10} />
+          <Button
+            loading={isCustom}
+            disabled={isLoading && !isCustom}
+            onPress={onPressLoginCustom}
+            i18n={I18N.customNetwork}
+            variant={ButtonVariant.contained}
           />
         </>
       )}

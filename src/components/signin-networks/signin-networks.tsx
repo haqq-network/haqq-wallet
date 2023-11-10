@@ -22,16 +22,38 @@ import {WalletType} from '@app/types';
 import {SocialButton, SocialButtonVariant} from '../social-button';
 
 export type SssNetworksProps = {
+  isAppleSupported: boolean;
+  isGoogleSupported: boolean;
+  isCustomSupported: boolean;
   onLogin: (provider: SssProviders) => Promise<void>;
   onSkip: () => void;
 };
 
 export const SigninNetworks = observer(
-  ({onLogin, onSkip}: SssNetworksProps) => {
-    const [isApple, setIsApple] = useState(false);
-    const [isGoogle, setIsGoogle] = useState(false);
+  ({
+  onLogin,
+  onSkip,
+  isAppleSupported,
+  isGoogleSupported,
+  isCustomSupported,
+}: SssNetworksProps) => {
+  const [isApple, setIsApple] = useState(false);
+  const [isGoogle, setIsGoogle] = useState(false);
+  const [isCustom, setIsCustom] = useState(false);
+  const isLoading = useMemo(
+    () => isApple || isGoogle || isCustom,
+    [isApple, isGoogle, isCustom],
+  );
 
-    const isLoading = useMemo(() => isApple || isGoogle, [isApple, isGoogle]);
+  const onPressLoginCustom = useCallback(async () => {
+    try {
+      setIsCustom(true);
+
+      await onLogin(SssProviders.custom);
+    } finally {
+      setIsCustom(false);
+    }
+  }, [onLogin]);
 
     const onPressLoginGoogle = useCallback(async () => {
       try {
@@ -80,47 +102,57 @@ export const SigninNetworks = observer(
         <Spacer height={10} />
         <SocialButton variant={SocialButtonVariant.facebook} /> */}
 
-        {appleAuth.isSupported && !isSSSDisabled && (
-          <>
-            <Spacer height={10} />
-            <SocialButton
-              loading={isApple}
-              disabled={isLoading && !isApple}
-              onPress={onPressLoginApple}
-              variant={SocialButtonVariant.apple}
-            />
-          </>
-        )}
-
-        <Spacer height={10} />
-        {!isSSSDisabled && (
+      {isAppleSupported && !isSSSDisabled && (
+        <>
+          <Spacer height={10} />
+          <SocialButton
+            loading={isApple}
+            disabled={isLoading && !isApple}
+            onPress={onPressLoginApple}
+            variant={SocialButtonVariant.apple}
+          />
+        </>
+      )}
+      {isGoogleSupported && !isSSSDisabled && (
+        <>
+          <Spacer height={10} />
           <SocialButton
             loading={isGoogle}
             disabled={isLoading && !isGoogle}
             onPress={onPressLoginGoogle}
             variant={SocialButtonVariant.google}
           />
-        )}
-        <Spacer height={10} />
-        {!isSSSDisabled && (
-          <Text
-            t15
-            center
-            i18n={I18N.sssNetworkWeb3AuthDescription}
-            color={Color.textBase2}
+        </>
+      )}
+      {isCustomSupported && !isSSSDisabled && (
+        <>
+          <Spacer height={10} />
+          <Button
+            loading={isCustom}
+            disabled={isLoading && !isCustom}
+            onPress={onPressLoginCustom}
+            i18n={I18N.customNetwork}
+            variant={ButtonVariant.contained}
           />
-        )}
-        <Spacer height={28} />
-        <Button
-          onPress={onSkip}
-          i18n={I18N.signinNetworksSkip}
-          variant={ButtonVariant.contained}
-          testID="signin_network_skip"
-        />
-      </PopupContainer>
-    );
-  },
-);
+        </>
+      )}
+      <Spacer height={10} />
+      <Text
+        t15
+        center
+        i18n={I18N.sssNetworkWeb3AuthDescription}
+        color={Color.textBase2}
+      />
+      <Spacer height={28} />
+      <Button
+        onPress={onSkip}
+        i18n={I18N.signinNetworksSkip}
+        variant={ButtonVariant.contained}
+        testID="signin_network_skip"
+      />
+    </PopupContainer>
+  );
+};
 
 const styles = createTheme({
   logo: {

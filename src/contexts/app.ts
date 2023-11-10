@@ -1,4 +1,9 @@
-import {ENVIRONMENT, HAQQ_BACKEND, IS_DEVELOPMENT} from '@env';
+import {
+  ENVIRONMENT,
+  HAQQ_BACKEND,
+  HAQQ_BACKEND_DEFAULT,
+  IS_DEVELOPMENT,
+} from '@env';
 import {decryptPassworder, encryptPassworder} from '@haqq/shared-react-native';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
@@ -156,17 +161,26 @@ class App extends AsyncEventEmitter {
   }
 
   get isGoogleSigninSupported() {
-    return this._googleSigninSupported;
+    return (
+      Boolean(VariablesString.get('sss_google')) && this._googleSigninSupported
+    );
   }
 
   get isAppleSigninSupported() {
-    return this._appleSigninSupported;
+    return (
+      Boolean(VariablesString.get('sss_apple')) && this._appleSigninSupported
+    );
+  }
+
+  get isCustomSigninSupported() {
+    return Boolean(VariablesString.get('sss_custom'));
   }
 
   get isOathSigninSupported() {
     return (
-      this._googleSigninSupported ||
-      this._appleSigninSupported ||
+      this.isGoogleSigninSupported ||
+      this.isCustomSigninSupported ||
+      this.isAppleSigninSupported ||
       this.isDeveloper
     );
   }
@@ -204,10 +218,12 @@ class App extends AsyncEventEmitter {
 
   get backend() {
     if (!VariablesString.exists('backend')) {
-      return HAQQ_BACKEND;
+      return HAQQ_BACKEND_DEFAULT || HAQQ_BACKEND;
     }
 
-    return VariablesString.get('backend') || HAQQ_BACKEND;
+    return (
+      VariablesString.get('backend') || HAQQ_BACKEND_DEFAULT || HAQQ_BACKEND
+    );
   }
 
   set backend(value) {

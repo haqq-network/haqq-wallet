@@ -1,9 +1,14 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
-import {appleAuth} from '@invertase/react-native-apple-authentication';
-
 import {Color} from '@app/colors';
-import {LottieWrap, PopupContainer, Spacer, Text} from '@app/components/ui';
+import {
+  Button,
+  ButtonVariant,
+  LottieWrap,
+  PopupContainer,
+  Spacer,
+  Text,
+} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {SssProviders} from '@app/services/provider-sss';
@@ -11,14 +16,36 @@ import {SssProviders} from '@app/services/provider-sss';
 import {SocialButton, SocialButtonVariant} from '../social-button';
 
 export type SssMigrateNetworksProps = {
+  isAppleSupported: boolean;
+  isGoogleSupported: boolean;
+  isCustomSupported: boolean;
   onLogin: (provider: SssProviders) => Promise<void>;
 };
 
-export const SssMigrateNetworks = ({onLogin}: SssMigrateNetworksProps) => {
+export const SssMigrateNetworks = ({
+  onLogin,
+  isAppleSupported,
+  isCustomSupported,
+  isGoogleSupported,
+}: SssMigrateNetworksProps) => {
   const [isApple, setIsApple] = useState(false);
   const [isGoogle, setIsGoogle] = useState(false);
+  const [isCustom, setIsCustom] = useState(false);
 
-  const isLoading = useMemo(() => isApple || isGoogle, [isApple, isGoogle]);
+  const isLoading = useMemo(
+    () => isApple || isGoogle || isCustom,
+    [isApple, isGoogle, isCustom],
+  );
+
+  const onPressLoginCustom = useCallback(async () => {
+    try {
+      setIsCustom(true);
+
+      await onLogin(SssProviders.custom);
+    } finally {
+      setIsCustom(false);
+    }
+  }, [onLogin]);
 
   const onPressLoginGoogle = useCallback(async () => {
     try {
@@ -51,7 +78,7 @@ export const SssMigrateNetworks = ({onLogin}: SssMigrateNetworksProps) => {
         />
       </Spacer>
 
-      {appleAuth.isSupported && (
+      {isAppleSupported && (
         <>
           <Spacer height={10} />
           <SocialButton
@@ -62,14 +89,30 @@ export const SssMigrateNetworks = ({onLogin}: SssMigrateNetworksProps) => {
           />
         </>
       )}
+      {isGoogleSupported && (
+        <>
+          <Spacer height={10} />
+          <SocialButton
+            loading={isGoogle}
+            disabled={isLoading && !isGoogle}
+            onPress={onPressLoginGoogle}
+            variant={SocialButtonVariant.google}
+          />
+        </>
+      )}
+      {isCustomSupported && (
+        <>
+          <Spacer height={10} />
+          <Button
+            loading={isCustom}
+            disabled={isLoading && !isCustom}
+            onPress={onPressLoginCustom}
+            i18n={I18N.customNetwork}
+            variant={ButtonVariant.contained}
+          />
+        </>
+      )}
 
-      <Spacer height={10} />
-      <SocialButton
-        loading={isGoogle}
-        disabled={isLoading && !isGoogle}
-        onPress={onPressLoginGoogle}
-        variant={SocialButtonVariant.google}
-      />
       <Spacer height={10} />
       <Text
         t15
