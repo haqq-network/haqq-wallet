@@ -116,18 +116,21 @@ class WalletStore implements MobXStoreFromRealm {
     makeAutoObservable(this);
 
     if (!shouldSkipPersisting) {
+      const isMockEnabled =
+        __DEV__ &&
+        DEBUG_VARS.enableMockWallets &&
+        DEBUG_VARS.mockWalletsAddresses.length;
+
+      let originalWallets: Wallet[] = [];
+
       makePersistable(this, {
         name: this.constructor.name,
         properties: [
           {
             key: 'wallets',
             deserialize: value => {
-              const isMockEnabled =
-                __DEV__ &&
-                DEBUG_VARS.enableMockWallets &&
-                DEBUG_VARS.mockWalletsAddresses.length;
-
               if (isMockEnabled) {
+                originalWallets = value;
                 return getMockWallets();
               }
 
@@ -135,7 +138,12 @@ class WalletStore implements MobXStoreFromRealm {
                 (a: Wallet, b: Wallet) => a.position - b.position,
               );
             },
-            serialize: value => value,
+            serialize: value => {
+              if (isMockEnabled) {
+                return originalWallets;
+              }
+              return value;
+            },
           },
         ],
         storage: storage,
