@@ -1,10 +1,4 @@
-import React, {
-  memo as memoHOC,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {Validator} from '@evmos/provider/dist/rest/staking';
 
@@ -17,7 +11,6 @@ import {setValidatorsPower} from '@app/helpers/validators-power';
 import {validatorsSortPower} from '@app/helpers/validators-sort';
 import {validatorsSplit} from '@app/helpers/validators-split';
 import {useCosmos, useTypedNavigation} from '@app/hooks';
-import {useThrottle} from '@app/hooks/use-throttle';
 import {
   StakingMetadata,
   StakingMetadataType,
@@ -28,7 +21,7 @@ import {
 } from '@app/screens/HomeStack/HomeEarnStack';
 import {AdjustEvents, ValidatorItem} from '@app/types';
 
-export const StakingValidatorsScreen = memoHOC(() => {
+export const StakingValidatorsScreen = () => {
   const navigation = useTypedNavigation<HomeEarnStackParamList>();
   const cosmos = useCosmos();
 
@@ -41,7 +34,7 @@ export const StakingValidatorsScreen = memoHOC(() => {
     onTrackEvent(AdjustEvents.stakingValidators);
   }, []);
 
-  const onCache = useThrottle(() => {
+  const onCache = useCallback(() => {
     const cache = StakingMetadata.getAll().reduce<Record<string, any>>(
       (memo, row) => {
         const value = memo[row.validator] || {
@@ -59,8 +52,14 @@ export const StakingValidatorsScreen = memoHOC(() => {
       },
       {},
     );
-    setStakingCache(cache);
-  }, 1000);
+    const keys = Object.keys(cache);
+    if (
+      keys.length !== Object.keys(stakingCache).length ||
+      keys.find(key => !stakingCache[key])
+    ) {
+      setStakingCache(cache);
+    }
+  }, [stakingCache]);
 
   useEffect(() => {
     const rows = StakingMetadata.getAll();
@@ -168,4 +167,4 @@ export const StakingValidatorsScreen = memoHOC(() => {
       onPress={onPressValidator}
     />
   );
-});
+};
