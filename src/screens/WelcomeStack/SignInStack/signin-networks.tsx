@@ -36,6 +36,9 @@ export const SignInNetworksScreen = memo(() => {
         case SssProviders.google:
           creds = await onLoginGoogle();
           break;
+        case SssProviders.custom:
+          creds = await onLoginGoogle();
+          break;
       }
 
       try {
@@ -123,5 +126,13 @@ export const SignInNetworksScreen = memo(() => {
     navigation.navigate(SignInStackRoutes.SigninAgreement);
   }, [navigation]);
 
-  return <SigninNetworks onLogin={onLogin} onSkip={onSkip} />;
+  return (
+    <SigninNetworks
+      onLogin={onLogin}
+      onSkip={onSkip}
+      isAppleSupported={app.isAppleSigninSupported}
+      isGoogleSupported={app.isGoogleSigninSupported}
+      isCustomSupported={app.isCustomSigninSupported}
+    />
+  );
 });

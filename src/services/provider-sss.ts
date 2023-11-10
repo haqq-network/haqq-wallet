@@ -4,14 +4,62 @@ import {generateEntropy} from '@haqq/provider-web3-utils';
 import {jsonrpcRequest} from '@haqq/shared-react-native';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
 import BN from 'bn.js';
+import prompt from 'react-native-prompt-android';
 
 import {getGoogleTokens} from '@app/helpers/get-google-tokens';
 import {parseJwt} from '@app/helpers/parse-jwt';
 import {RemoteConfig} from '@app/services/remote-config';
+import {getHttpResponse} from '@app/utils';
 
 export enum SssProviders {
   google = 'google',
   apple = 'apple',
+  custom = 'custom',
+}
+
+export async function onLoginCustom() {
+  const email = await new Promise((resolve, reject) => {
+    prompt(
+      'Enter email',
+      'some name@haqq',
+      [
+        {text: 'Cancel', onPress: () => reject(), style: 'cancel'},
+        {text: 'OK', onPress: e => resolve(e)},
+      ],
+      {
+        type: 'plain-text',
+        cancelable: false,
+      },
+    );
+  });
+
+  const verifier_url = RemoteConfig.get('sss_custom_url');
+
+  if (!verifier_url) {
+    throw new Error('sss_custom_url is not set');
+  }
+
+  const token = await fetch(verifier_url, {
+    method: 'POST',
+    headers: {
+      accept: 'application/json, text/plain, */*',
+      'content-type': 'application/json;charset=UTF-8',
+    },
+    body: JSON.stringify({
+      email,
+    }),
+  });
+
+  const authState = await getHttpResponse(token);
+
+  const authInfo = parseJwt(authState.idToken);
+  const verifier = RemoteConfig.get('sss_custom');
+
+  if (!verifier) {
+    throw new Error('sss_custom is not set');
+  }
+
+  return await onAuthorized(verifier, authInfo.sub, authState.idToken);
 }
 
 export async function onLoginGoogle() {

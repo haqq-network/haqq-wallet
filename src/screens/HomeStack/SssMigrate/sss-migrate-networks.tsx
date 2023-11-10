@@ -4,6 +4,7 @@ import {METADATA_URL} from '@env';
 import {getMetadataValue} from '@haqq/shared-react-native';
 
 import {SssMigrateNetworks} from '@app/components/sss-migrate-networks';
+import {app} from '@app/contexts';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {
   SssMigrateStackParamList,
@@ -12,6 +13,7 @@ import {
 import {
   SssProviders,
   onLoginApple,
+  onLoginCustom,
   onLoginGoogle,
 } from '@app/services/provider-sss';
 import {RemoteConfig} from '@app/services/remote-config';
@@ -32,6 +34,9 @@ export const SssMigrateNetworksScreen = memo(() => {
           break;
         case SssProviders.google:
           creds = await onLoginGoogle();
+          break;
+        case SssProviders.custom:
+          creds = await onLoginCustom();
           break;
       }
       if (creds.privateKey) {
@@ -65,5 +70,12 @@ export const SssMigrateNetworksScreen = memo(() => {
     [navigation, route.params.accountId],
   );
 
-  return <SssMigrateNetworks onLogin={onLogin} />;
+  return (
+    <SssMigrateNetworks
+      onLogin={onLogin}
+      isAppleSupported={app.isAppleSigninSupported}
+      isGoogleSupported={app.isGoogleSigninSupported}
+      isCustomSupported={app.isCustomSigninSupported}
+    />
+  );
 });

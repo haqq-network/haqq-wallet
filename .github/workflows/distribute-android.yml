@@ -17,6 +17,13 @@ on:
           - true
           - false
 
+      DEFAULT_BACKEND:
+        type: choice
+        description: HAQQ_BACKEND_DEFAULT
+        options:
+          - ${{secrets.HAQQ_BACKEND}}
+          - ${{secrets.HAQQ_BACKEND_DEV}}
+
   workflow_call:
     inputs:
       IS_DEVELOPMENT:
@@ -25,7 +32,9 @@ on:
       IS_SSS_ENABLED:
         required: true
         type: string
-
+      DEFAULT_BACKEND:
+        required: true
+        type: string
 jobs:
   build:
     name: Build and distribute Android app
@@ -68,6 +77,7 @@ jobs:
           echo "GOOGLE_SIGNIN_WEB_CLIENT_ID=${{secrets.GOOGLE_SIGNIN_WEB_CLIENT_ID}}" >> .env
           echo "HAQQ_BACKEND=${{secrets.HAQQ_BACKEND}}" >> .env
           echo "HAQQ_BACKEND_DEV=${{secrets.HAQQ_BACKEND_DEV}}" >> .env
+          echo "HAQQ_BACKEND_DEFAULT=${{github.event.inputs.DEFAULT_BACKEND}}" >> .env
           echo "ADJUST_TOKEN=${{secrets.ADJUST_TOKEN}}" >> .env
           echo "ADJUST_ENVIRONMENT=${{secrets.ADJUST_ENVIRONMENT}}" >> .env
           echo "IS_SSS_ENABLED=${{github.event.inputs.IS_SSS_ENABLED}}" >> .env
