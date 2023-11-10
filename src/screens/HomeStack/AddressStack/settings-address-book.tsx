@@ -41,8 +41,7 @@ export const SettingsAddressBookScreen = memo(
         case LinkType.Etherium:
           setSearch(params.address ?? '');
           break;
-        case LinkType.WalletConnect:
-        case LinkType.Unrecognized:
+        default:
           showUnrecognizedDataAttention();
           break;
       }

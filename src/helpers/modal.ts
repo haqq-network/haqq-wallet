@@ -37,10 +37,29 @@ class ModalStore {
       this.removeByType(type);
     }
   };
+
+  setCollapsed = (type: ModalName, collapsed: boolean) => {
+    const modal = this.findByType(type);
+
+    if (modal) {
+      const newModals = this.modals.map(m => {
+        if (m.uid === modal.uid) {
+          return {
+            ...m,
+            collapsed,
+          };
+        }
+        return m;
+      });
+
+      this.modals = [...newModals];
+    }
+  };
 }
 
 const instance = new ModalStore();
 
 export const showModal = instance.showModal;
 export const hideModal = instance.hideModal;
+export const setCollapsedModal = instance.setCollapsed;
 export {instance as ModalStore};

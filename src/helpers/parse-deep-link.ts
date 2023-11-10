@@ -1,4 +1,9 @@
-import {DeeplinkProtocol} from '@app/types';
+import base64 from 'react-native-base64';
+import Url from 'url-parse';
+
+import {ParsedQuery} from '@app/event-actions/on-deep-link';
+import {Provider as ChainProvider} from '@app/models/provider';
+import {DeeplinkProtocol, DeeplinkUrlKey} from '@app/types';
 
 import {AddressUtils} from './address-utils';
 
@@ -8,6 +13,10 @@ export enum LinkType {
   WalletConnect = 'wallet_connect',
   Haqq = 'haqq',
   Unrecognized = 'unrecognized',
+  Browser = 'browser',
+  Provider = 'provider',
+  EnableDeveloperMode = 'enableDeveloperMode',
+  Back9test = 'back9test',
 }
 
 type CommonResultData = {
@@ -46,6 +55,29 @@ export type LinkParseResult = CommonResultData &
         type: LinkType.Unrecognized;
         params: {};
       }
+    | {
+        type: LinkType.Browser;
+        params: {
+          url: string;
+          key: DeeplinkUrlKey.browser | DeeplinkUrlKey.web3browser;
+        };
+      }
+    | {
+        type: LinkType.Provider;
+        params: {
+          provider: Partial<ChainProvider>;
+        };
+      }
+    | {
+        type: LinkType.Back9test;
+        params: {
+          code: string;
+        };
+      }
+    | {
+        type: LinkType.EnableDeveloperMode;
+        params: {};
+      }
   );
 
 export const parseDeepLink = (link: string): LinkParseResult => {
@@ -70,23 +102,64 @@ export const parseDeepLink = (link: string): LinkParseResult => {
   }
 
   if (link.startsWith(`${DeeplinkProtocol.haqq}:`)) {
-    let params = link.split(':');
+    const url = new Url<ParsedQuery>(link, true);
 
-    if (link.startsWith('haqq://wc')) {
-      const uri = decodeURIComponent(link.replace('haqq://wc?uri=', ''));
-      return {type: LinkType.WalletConnect, params: {uri}, rawData: link};
+    const [key, ...params] = (url.host || url.pathname || url.hostname).split(
+      ':',
+    );
+
+    if (AddressUtils.isEthAddress(key) || AddressUtils.isHaqqAddress(key)) {
+      return {
+        type: LinkType.Address,
+        params: {address: key},
+        rawData: link,
+      };
     }
 
-    if (params[1].startsWith('0x')) {
-      return {type: LinkType.Haqq, params: {address: params[1]}, rawData: link};
+    switch (key) {
+      case DeeplinkUrlKey.wc:
+        return {
+          type: LinkType.WalletConnect,
+          params: {uri: url.query.uri!},
+          rawData: link,
+        };
+      case DeeplinkUrlKey.browser:
+      case DeeplinkUrlKey.web3browser:
+        return {
+          type: LinkType.Browser,
+          params: {
+            key,
+            url: url.query.uri!,
+          },
+          rawData: link,
+        };
+      case DeeplinkUrlKey.back9test:
+        return {
+          type: LinkType.Back9test,
+          params: {
+            code: params[0],
+          },
+          rawData: link,
+        };
+      case DeeplinkUrlKey.enableDeveloperMode:
+        return {
+          type: LinkType.EnableDeveloperMode,
+          params: {},
+          rawData: link,
+        };
+      case DeeplinkUrlKey.provider:
+        return {
+          type: LinkType.Provider,
+          params: {
+            provider: JSON.parse(base64.decode(params[0])),
+          },
+          rawData: link,
+        };
     }
-
-    const key = params[1].startsWith('//') ? params[1].slice(2) : params[1];
-    const data = JSON.parse(atob(params[2]));
 
     return {
       type: LinkType.Haqq,
-      params: {key, data},
+      params: {key, ...params},
       rawData: link,
     };
   }

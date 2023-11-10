@@ -11,7 +11,7 @@ import {Color, getColor} from '@app/colors';
 import {Text} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {onDeepLink} from '@app/event-actions/on-deep-link';
-import {createTheme, hideModal, showModal} from '@app/helpers';
+import {createTheme, setCollapsedModal} from '@app/helpers';
 import {
   AwaitForScanQrError,
   AwaitForScanQrEvents,
@@ -158,7 +158,7 @@ export const QRModal = ({onClose, eventTaskId, pattern}: QRModalProps) => {
   );
 
   const onClickGallery = useCallback(async () => {
-    hideModal(ModalType.qr);
+    setCollapsedModal(ModalType.qr, true);
     const response = await launchImageLibrary({mediaType: 'photo'});
     if (response.assets && response.assets.length) {
       const first = response.assets[0];
@@ -171,7 +171,7 @@ export const QRModal = ({onClose, eventTaskId, pattern}: QRModalProps) => {
         }
       }
     }
-    showModal(ModalType.qr);
+    setCollapsedModal(ModalType.qr, false);
   }, [handleQRData]);
 
   const onToggleFlashMode = useCallback(() => {
