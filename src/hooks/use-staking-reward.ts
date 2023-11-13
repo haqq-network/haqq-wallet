@@ -2,6 +2,8 @@ import {useEffect, useState} from 'react';
 
 import {autorun} from 'mobx';
 
+import {app} from '@app/contexts';
+import {Events} from '@app/events';
 import {reduceAmounts} from '@app/helpers/staking';
 import {
   StakingMetadata,
@@ -18,13 +20,17 @@ export function useStakingReward() {
   useEffect(() => {
     const rewards = StakingMetadata.getAllByType(StakingMetadataType.reward);
 
-    const disposer = autorun(() => {
+    const listener = () => {
       const rewardsSum = new Balance(reduceAmounts(rewards));
       setRewardAmount(rewardsSum);
-    });
+    };
+
+    const disposer = autorun(listener);
+    app.addListener(Events.onBalanceSync, listener);
 
     return () => {
       disposer();
+      app.removeListener(Events.onBalanceSync, listener);
     };
   }, []);
 

@@ -66,7 +66,7 @@ export const HomeEarnScreen = observer(() => {
       StakingMetadataType.undelegation,
     );
 
-    const disposer = autorun(() => {
+    const listener = () => {
       const rewardsSum = reduceAmounts(rewards);
       const stakingSum = reduceAmounts(delegations);
       const unDelegationSum = reduceAmounts(unDelegations);
@@ -82,10 +82,14 @@ export const HomeEarnScreen = observer(() => {
         availableSum,
         loading: false,
       });
-    });
+    };
+
+    const disposer = autorun(listener);
+    app.addListener(Events.onBalanceSync, listener);
 
     return () => {
       disposer();
+      app.removeListener(Events.onBalanceSync, listener);
     };
   }, [visible]);
 
