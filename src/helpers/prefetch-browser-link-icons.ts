@@ -7,7 +7,7 @@ import {Link} from '@app/types';
 
 export async function prefetchBrowserLinkIcons() {
   try {
-    return await Promise.all(
+    return await Promise.allSettled(
       [
         ...Web3BrowserBookmark.getAll(),
         ...Web3BrowserSearchHistory.getAll(),

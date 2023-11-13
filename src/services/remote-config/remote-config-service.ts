@@ -1,4 +1,6 @@
+import {onRemoteConfigSync} from '@app/event-actions/on-remote-config-sync';
 import {getAppInfo} from '@app/helpers/get-app-info';
+import {Initializable} from '@app/helpers/initializable';
 import {VariablesString} from '@app/models/variables-string';
 import {Backend} from '@app/services/backend';
 import {RemoteConfigTypes} from '@app/services/remote-config/remote-config-types';
@@ -22,19 +24,20 @@ function getCachedConfig() {
   return REMOTE_CONFIG_DEFAULT_VALUES;
 }
 
-export class RemoteConfig {
-  public static isInited = false;
-  public static KEY = KEY;
+export class RemoteConfigService extends Initializable {
+  public isInited = false;
+  public KEY = KEY;
+  static instance = new RemoteConfigService();
 
   /**
    * @return `true` if remote config is successfully initialized
    */
-  public static async init(): Promise<RemoteConfigTypes | undefined> {
+  public async init(): Promise<RemoteConfigTypes | undefined> {
     try {
-      if (RemoteConfig.isInited) {
-        return RemoteConfig.getAll();
+      if (RemoteConfigService.instance.isInited) {
+        return RemoteConfigService.instance.getAll();
       }
-
+      this.startInitialization();
       const appInfo = await getAppInfo();
       const config = await Backend.instance.getRemoteConfig(appInfo);
 
@@ -42,7 +45,7 @@ export class RemoteConfig {
 
       if (Object.keys(config).length) {
         VariablesString.set(KEY, JSON.stringify(config));
-        RemoteConfig.isInited = true;
+        RemoteConfigService.instance.isInited = true;
         return config;
       } else {
         logger.error('remote config is empty', config);
@@ -50,12 +53,15 @@ export class RemoteConfig {
       }
     } catch (err) {
       logger.error('failed to fetch remote config', err);
-      setTimeout(RemoteConfig.init, CONFIG_REINIT_TIMEOUT);
+      setTimeout(RemoteConfigService.instance.init, CONFIG_REINIT_TIMEOUT);
       return getCachedConfig();
+    } finally {
+      await onRemoteConfigSync();
+      this.stopInitialization();
     }
   }
 
-  public static get_env<K extends keyof RemoteConfigTypes>(
+  public get_env<K extends keyof RemoteConfigTypes>(
     key: K,
     env: string | undefined,
   ) {
@@ -63,20 +69,22 @@ export class RemoteConfig {
       return env;
     }
 
-    return RemoteConfig.get(key);
+    return RemoteConfigService.instance.get(key);
   }
 
-  public static get<K extends keyof RemoteConfigTypes>(
+  public get<K extends keyof RemoteConfigTypes>(
     key: K,
   ): RemoteConfigTypes[K] | undefined {
-    const config = RemoteConfig.getAll();
+    const config = RemoteConfigService.instance.getAll();
     if (config) {
       return config[key];
     }
     return undefined;
   }
 
-  public static getAll(): RemoteConfigTypes | undefined {
+  public getAll(): RemoteConfigTypes | undefined {
     return getCachedConfig();
   }
 }
+
+export const RemoteConfig = RemoteConfigService.instance;

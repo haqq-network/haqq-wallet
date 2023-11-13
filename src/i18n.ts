@@ -837,6 +837,7 @@ export enum I18N {
   cloudShareNotFoundDescription,
   cloudShareNotFoundPrimaryButton,
   cloudShareNotFoundSecondaryButton,
+  walletConnectPairAlreadyExists,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1600,6 +1601,7 @@ const en: Record<I18N, string> = {
   [I18N.walletConnectPairPending]: 'Connection may take some time',
   [I18N.walletConnectNotSupported]: 'WalletConnect v1 is not supported',
   [I18N.walletConnectPairInitError]: 'WalletConnect is not initialized',
+  [I18N.walletConnectPairAlreadyExists]: 'Session already exists',
   [I18N.backupNotificationNewsAlertTitle]: 'Proceed without subscription?',
   [I18N.backupNotificationNewsAlertDescription]:
     'If you would like to subscribe to news at a later time, you can do so in the notification settings section.',

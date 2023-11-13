@@ -71,8 +71,7 @@ export const TransactionAddress = ({
       case LinkType.Etherium:
         setAddress(params.address ?? '');
         break;
-      case LinkType.WalletConnect:
-      case LinkType.Unrecognized:
+      default:
         setError(true);
         showUnrecognizedDataAttention();
         break;

@@ -10,7 +10,7 @@ import {ModalType, Modals, ModalsListBase} from '@app/types';
 type ModalStates<
   ModalsList extends ModalsListBase,
   ModalName extends keyof ModalsList,
-> = ModalsList[ModalName] & {type: ModalName; uid: string};
+> = ModalsList[ModalName] & {type: ModalName; uid: string; collapsed?: boolean};
 
 export type ModalState = ModalStates<Modals, keyof Modals>;
 

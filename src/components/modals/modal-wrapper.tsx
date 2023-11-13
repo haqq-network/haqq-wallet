@@ -28,7 +28,7 @@ import {RaffleAgreement} from '@app/components/modals/raffle-agreement';
 import {TransactionError} from '@app/components/modals/transaction-error';
 import {ViewErrorDetails} from '@app/components/modals/view-error-details';
 import {WalletsBottomSheet} from '@app/components/modals/wallets-bottom-sheet';
-import {hideModal} from '@app/helpers';
+import {createTheme, hideModal} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {ModalType, Modals, ModalsListBase} from '@app/types';
 
@@ -134,8 +134,18 @@ export const ModalWrapper = ({
   }, [modal, onCloseModalPress, type]);
 
   return (
-    <View key={key} style={StyleSheet.absoluteFill}>
+    <View
+      key={key}
+      style={[StyleSheet.absoluteFill, modal.collapsed && styles.collapsed]}>
       {entry}
     </View>
   );
 };
+
+const styles = createTheme({
+  collapsed: {
+    opacity: 0,
+    height: 0,
+    width: 0,
+  },
+});
