@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {useFocusEffect} from '@react-navigation/native';
+import {autorun} from 'mobx';
 import {observer} from 'mobx-react';
 
 import {HomeEarn} from '@app/components/home-earn';
@@ -12,7 +13,7 @@ import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
 import {getUid} from '@app/helpers/get-uid';
 import {prepareRaffles} from '@app/helpers/prepare-raffles';
-import {sumReduce} from '@app/helpers/staking';
+import {reduceAmounts} from '@app/helpers/staking';
 import {useTypedNavigation} from '@app/hooks';
 import {
   StakingMetadata,
@@ -57,22 +58,18 @@ export const HomeEarnScreen = observer(() => {
   );
 
   useEffect(() => {
-    const rows = StakingMetadata.getAll();
+    const rewards = StakingMetadata.getAllByType(StakingMetadataType.reward);
+    const delegations = StakingMetadata.getAllByType(
+      StakingMetadataType.delegation,
+    );
+    const unDelegations = StakingMetadata.getAllByType(
+      StakingMetadataType.undelegation,
+    );
 
-    const listener = () => {
-      const rewards = rows.filter(
-        val => val.type === StakingMetadataType.reward,
-      );
-      const delegations = rows.filter(
-        val => val.type === StakingMetadataType.delegation,
-      );
-      const unDelegations = rows.filter(
-        val => val.type === StakingMetadataType.undelegation,
-      );
-
-      const rewardsSum = sumReduce(rewards);
-      const stakingSum = sumReduce(delegations);
-      const unDelegationSum = sumReduce(unDelegations);
+    const disposer = autorun(() => {
+      const rewardsSum = reduceAmounts(rewards);
+      const stakingSum = reduceAmounts(delegations);
+      const unDelegationSum = reduceAmounts(unDelegations);
       const availableSum = visible.reduce(
         (acc, w) => acc.operate(app.getAvailableBalance(w.address), 'add'),
         Balance.Empty,
@@ -85,13 +82,10 @@ export const HomeEarnScreen = observer(() => {
         availableSum,
         loading: false,
       });
-    };
+    });
 
-    rows.addListener(listener);
-    app.addListener(Events.onBalanceSync, listener);
     return () => {
-      rows.removeListener(listener);
-      app.removeListener(Events.onBalanceSync, listener);
+      disposer();
     };
   }, [visible]);
 
