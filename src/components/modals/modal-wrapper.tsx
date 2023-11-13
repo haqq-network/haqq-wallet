@@ -21,6 +21,7 @@ import {BluetoothPoweredOff} from '@app/components/modals/bluetooth-powered-off'
 import {BluetoothUnauthorized} from '@app/components/modals/bluetooth-unauthorized';
 import {CaptchaModal} from '@app/components/modals/capthca-modal';
 import {CloudVerification} from '@app/components/modals/cloud-verification';
+import {CloudShareNotFound} from '@app/components/modals/cloudShareNotFound';
 import {LocationUnauthorized} from '@app/components/modals/location-unauthorized';
 import {ProvidersBottomSheet} from '@app/components/modals/providers-bottom-sheet';
 import {RaffleAgreement} from '@app/components/modals/raffle-agreement';
@@ -39,7 +40,7 @@ export type ModalWrapperProps<
   ModalsList extends ModalsListBase,
   ModalName extends keyof ModalsList,
 > = {
-  type: ModalType;
+  type: ModalName;
   modal: ModalsList[ModalName];
   onClose: (modal: Extract<ModalName, string>) => void;
 };
@@ -125,6 +126,8 @@ export const ModalWrapper = ({
         return <CloudVerification {...modal} />;
       case ModalType.viewErrorDetails:
         return <ViewErrorDetails {...modal} onClose={onCloseModalPress} />;
+      case ModalType.cloudShareNotFound:
+        return <CloudShareNotFound {...modal} onClose={onCloseModalPress} />;
       default:
         return null;
     }

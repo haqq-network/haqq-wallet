@@ -1,4 +1,4 @@
-import React, {memo, useEffect} from 'react';
+import React, {memo} from 'react';
 
 import {
   BottomTabNavigationOptions,
@@ -14,7 +14,10 @@ import {HomeScreenLabel} from '@app/components/home-screen/label';
 import {HomeScreenTabBarIcon} from '@app/components/home-screen/tab-bar-icon';
 import {HomeScreenTitle} from '@app/components/home-screen/title';
 import {Spacer} from '@app/components/ui';
+import {showModal} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
+import {useEffectAsync} from '@app/hooks/use-effect-async';
+import {Wallet} from '@app/models/wallet';
 import {BrowserStack} from '@app/screens/HomeStack/BrowserStack';
 import {
   HomeFeedStack,
@@ -28,6 +31,8 @@ import {
   SettingsStack,
   SettingsStackRoutes,
 } from '@app/screens/HomeStack/SettingsStack';
+import {Cloud} from '@app/services/cloud';
+import {ModalType, WalletType} from '@app/types';
 import {IS_IOS} from '@app/variables/common';
 
 const Tab = createBottomTabNavigator();
@@ -97,7 +102,21 @@ const navigationOptions = {
 
 export const HomeScreen = memo(() => {
   const navigation = useTypedNavigation();
-  useEffect(() => {
+  useEffectAsync(async () => {
+    const cloud = new Cloud();
+    const walletToCheck = Wallet.getAllVisible().find(
+      item => item.type === WalletType.sss,
+    );
+    if (walletToCheck) {
+      const cloudShare = await cloud.getItem(
+        `haqq_${walletToCheck.address.toLowerCase()}`,
+      );
+      if (!cloudShare) {
+        Wallet.update(walletToCheck.address, {socialLinkEnabled: false});
+        showModal(ModalType.cloudShareNotFound, {wallet: walletToCheck});
+      }
+    }
+
     const subscription = (e: {
       preventDefault: () => void;
       data: {action: NavigationAction};

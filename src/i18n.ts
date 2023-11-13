@@ -833,6 +833,10 @@ export enum I18N {
   sortValidatorOptionName,
   sortValidatorOptionPower,
   sortValidatorOptionCommission,
+  cloudShareNotFoundTitle,
+  cloudShareNotFoundDescription,
+  cloudShareNotFoundPrimaryButton,
+  cloudShareNotFoundSecondaryButton,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1810,4 +1814,10 @@ const en: Record<I18N, string> = {
   [I18N.sortValidatorOptionName]: 'Name',
   [I18N.sortValidatorOptionPower]: 'Power',
   [I18N.sortValidatorOptionCommission]: 'Commission',
+  [I18N.cloudShareNotFoundTitle]:
+    "We couldn't find your backup file in cloud storage",
+  [I18N.cloudShareNotFoundDescription]:
+    "It's possible the file was deleted from your cloud storage or there were synchronization issues. We recommend saving the backup file again",
+  [I18N.cloudShareNotFoundPrimaryButton]: 'Save on your cloud storage',
+  [I18N.cloudShareNotFoundSecondaryButton]: 'Skip',
 };
