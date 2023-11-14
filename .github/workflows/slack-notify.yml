@@ -25,9 +25,8 @@ jobs:
           node-version: 16
       - name: Install Fastlane
         run: |
-          bundle install
+          bundler install bundle && bundle install
       - name: Create Changelog
-        shell: bash
         id: changelog
         run: |
           log="$(bundle exec fastlane ios slack)"
