@@ -37,6 +37,7 @@ import {PopupNotificationNewsScreen} from '@app/screens/popup-notification-news'
 import {PopupTrackActivityScreen} from '@app/screens/popup-track-activity';
 import {TotalValueInfoScreen} from '@app/screens/total-value-info';
 import {ValueSelectorScreen} from '@app/screens/value-selector-screen';
+import {WalletSelectorScreen} from '@app/screens/wallet-selector-screen';
 import {Web3BrowserPopup as Web3BrowserPopupScreen} from '@app/screens/web3-browser-popup';
 import {LedgerStack} from '@app/screens/WelcomeStack/LedgerStack';
 import {SignInStack} from '@app/screens/WelcomeStack/SignInStack';
@@ -333,6 +334,12 @@ const HomeStack = memo(() => {
         name={HomeStackRoutes.TotalValueInfo}
         component={TotalValueInfoScreen}
         options={totalInfoOptions}
+      />
+
+      <Stack.Screen
+        name={HomeStackRoutes.WalletSelector}
+        component={WalletSelectorScreen}
+        options={modalOptions}
       />
     </Stack.Navigator>
   );
