@@ -45,7 +45,7 @@ export class Provider extends Realm.Object {
   }
 
   static create(params: Partial<Provider>) {
-    let id = generateUUID();
+    let id = params.id || generateUUID();
     realm.write(() => {
       realm.create(Provider.schema.name, {
         ...params,

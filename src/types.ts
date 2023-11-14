@@ -1308,6 +1308,15 @@ export type IndexerToken = {
   updated_at: string;
   value: string;
 };
+
+export type IndexerNft = {
+  address: HaqqCosmosAddress;
+  contract: HaqqCosmosAddress;
+  created_at: string;
+  updated_at: string;
+  value: string;
+};
+
 export type IndexerTime = Record<HaqqCosmosAddress, number>;
 export interface BalanceData {
   vested: Balance;
@@ -1482,6 +1491,31 @@ export type IToken = {
   image: ImageSourcePropType;
 };
 
+export type INft = {
+  /**
+   * Token contract address
+   */
+  id: HaqqCosmosAddress;
+  contract_created_at: IContract['created_at'];
+  contract_updated_at: IContract['updated_at'];
+  value: Balance;
+
+  decimals: IContract['decimals'];
+  is_erc20: IContract['is_erc20'];
+  is_erc721: IContract['is_erc721'];
+  is_erc1155: IContract['is_erc1155'];
+  /**
+   * Should be visible or not
+   */
+  is_in_white_list: IContract['is_in_white_list'];
+  name: IContract['name'];
+  symbol: IContract['symbol'];
+  created_at: string;
+  updated_at: string;
+
+  image: ImageSourcePropType;
+};
+
 export type IContract = {
   address_type: 'contract';
   created_at: string;
@@ -1498,6 +1532,7 @@ export type IContract = {
 };
 
 export type IndexerTokensData = Record<HaqqEthereumAddress, IToken[]>;
+export type IndexerNftData = Record<HaqqEthereumAddress, INft[]>;
 
 export enum BrowserPermissionStatus {
   allow = 'allow',

@@ -8,6 +8,7 @@ import {
   ContractNameMap,
   IContract,
   IndexerBalance,
+  IndexerNft,
   IndexerTime,
   IndexerToken,
 } from '@app/types';
@@ -24,8 +25,7 @@ export type IndexerUpdatesResponse = {
   // next time for unlock vested tokens
   unlock: IndexerTime;
   last_update: string;
-  // TODO: add types
-  nfts: unknown[];
+  nfts: IndexerNft[];
   tokens: IndexerToken[];
   transactions: unknown[];
 };

@@ -11,7 +11,7 @@ import {ModalType, Modals} from '@app/types';
 import {BottomPopupContainer} from '../bottom-popups';
 
 export const NoInternet = ({
-  showClose = false,
+  showClose = __DEV__,
 }: Modals[ModalType.noInternet]) => {
   return (
     <BottomPopupContainer>

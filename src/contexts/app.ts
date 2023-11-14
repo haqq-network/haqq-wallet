@@ -22,6 +22,7 @@ import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {checkNeedUpdate} from '@app/helpers/check-app-version';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {getUid} from '@app/helpers/get-uid';
+import {Nft} from '@app/models/nft';
 import {seedData} from '@app/models/seed-data';
 import {Token} from '@app/models/tokens';
 import {VariablesBool} from '@app/models/variables-bool';
@@ -548,6 +549,7 @@ class App extends AsyncEventEmitter {
 
     if (changed) {
       Token.fetchTokens();
+      Nft.fetchNft();
       this.emit(Events.onBalanceSync);
     }
   }
