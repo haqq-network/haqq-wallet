@@ -7,11 +7,13 @@ import {
 import {SessionTypes} from '@walletconnect/types';
 import {StatusBar} from 'react-native';
 
+import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
 import {TotalValueTabNames} from '@app/components/total-value-info';
 import {Spacer} from '@app/components/ui';
 import {popupScreenOptions} from '@app/helpers';
 import {AwaitValue} from '@app/helpers/await-for-value';
 import {getWalletTitle} from '@app/helpers/get-wallet-title';
+import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {basicScreenOptions} from '@app/screens';
 import {AccountDetailScreen} from '@app/screens/HomeStack/account-detail';
@@ -33,6 +35,7 @@ import {BackupSssNotificationScreen} from '@app/screens/popup-backup-sss-notific
 import {PopupNotificationScreen} from '@app/screens/popup-notification';
 import {PopupNotificationNewsScreen} from '@app/screens/popup-notification-news';
 import {PopupTrackActivityScreen} from '@app/screens/popup-track-activity';
+import {TotalValueInfoScreen} from '@app/screens/total-value-info';
 import {ValueSelectorScreen} from '@app/screens/value-selector-screen';
 import {Web3BrowserPopup as Web3BrowserPopupScreen} from '@app/screens/web3-browser-popup';
 import {LedgerStack} from '@app/screens/WelcomeStack/LedgerStack';
@@ -175,6 +178,15 @@ const inAppBrowserOptions: NativeStackNavigationOptions = {
   header: () => <Spacer height={StatusBar.currentHeight} />,
   headerBackground: () => <Spacer height={StatusBar.currentHeight} />,
 };
+
+const totalInfoOptions: NativeStackNavigationOptions = {
+  ...modalOptions,
+  headerShown: true,
+  headerLeft: () => null,
+  headerRight: DismissPopupButton,
+  title: getText(I18N.lockedTokensTotalValue),
+};
+
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 
 const HomeStack = memo(() => {
@@ -315,6 +327,12 @@ const HomeStack = memo(() => {
         name={HomeStackRoutes.ValueSelector}
         component={ValueSelectorScreen}
         options={modalOptions}
+      />
+
+      <Stack.Screen
+        name={HomeStackRoutes.TotalValueInfo}
+        component={TotalValueInfoScreen}
+        options={totalInfoOptions}
       />
     </Stack.Navigator>
   );
