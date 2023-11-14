@@ -1,5 +1,6 @@
 import React, {useCallback} from 'react';
 
+import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
 import {observer} from 'mobx-react';
 
 import {Wallets} from '@app/components/wallets';
@@ -110,6 +111,11 @@ export const WalletsWrapper = observer(() => {
       false,
       true,
     );
+
+    if (rootWalletProvider instanceof ProviderLedgerReactNative) {
+      onPressLedger();
+      return;
+    }
 
     if (rootWalletProvider) {
       //@ts-ignore
