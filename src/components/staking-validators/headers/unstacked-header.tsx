@@ -91,7 +91,7 @@ export const UnstackedHeader = ({
         </MenuOptions>
       </Menu>
       <View style={styles.row}>
-        <Text i18n={I18N.showInactive} />
+        <Text i18n={I18N.showInactive} color={Color.textBase1} />
         <Switch value={isSwitchOn} onChange={toggleSwitch} />
       </View>
     </View>
