@@ -44,7 +44,11 @@ export async function onWalletCreate(wallet: Wallet) {
           const providerMnemonic = (await getProviderInstanceForWallet(
             wallet,
           )) as ProviderMnemonicReactNative;
-          mnemonicSaved = await providerMnemonic.isMnemonicSaved();
+          if (typeof providerMnemonic.isMnemonicSaved === 'function') {
+            mnemonicSaved = await providerMnemonic.isMnemonicSaved();
+          } else {
+            mnemonicSaved = false;
+          }
           break;
         default:
           mnemonicSaved = true;

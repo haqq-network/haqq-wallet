@@ -7,6 +7,8 @@ import {getUid} from '@app/helpers/get-uid';
 import {prepareRaffles} from '@app/helpers/prepare-raffles';
 import {useTypedNavigation} from '@app/hooks';
 import {Wallet} from '@app/models/wallet';
+import {HomeEarnStackRoutes} from '@app/screens/HomeStack/HomeEarnStack';
+import {HomeFeedStackRoutes} from '@app/screens/HomeStack/HomeFeedStack';
 import {Backend} from '@app/services/backend';
 import {Raffle, RaffleStatus} from '@app/types';
 import {sleep} from '@app/utils';
@@ -66,7 +68,10 @@ export const RafflesWidgetWrapper = memo(() => {
   const onPressRaffle = useCallback(
     (raffle: Raffle) => {
       if (raffle.status === 'closed') {
-        navigation.navigate('raffleReward', {item: raffle});
+        navigation.navigate(HomeFeedStackRoutes.HomeEarn, {
+          screen: HomeEarnStackRoutes.RaffleReward,
+          params: {item: raffle},
+        });
         return;
       }
 
@@ -86,10 +91,9 @@ export const RafflesWidgetWrapper = memo(() => {
           ?.filter?.(it => it.status === RaffleStatus.closed)
           .reduce((prev, curr) => prev + curr.winner_tickets, 0) || 0;
 
-      navigation.navigate('raffleDetails', {
-        item: raffle,
-        prevIslmCount,
-        prevTicketsCount,
+      navigation.navigate(HomeFeedStackRoutes.HomeEarn, {
+        screen: HomeEarnStackRoutes.RaffleDetails,
+        params: {item: raffle, prevIslmCount, prevTicketsCount},
       });
     },
     [navigation, raffles],

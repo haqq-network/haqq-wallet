@@ -1,6 +1,8 @@
 import {useCallback, useEffect} from 'react';
 
+import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {observer} from 'mobx-react';
 
 import {hideModal, showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
@@ -17,7 +19,7 @@ import {ModalType} from '@app/types';
 import {WalletType} from '@app/types';
 import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
-export const SignUpStoreWalletScreen = () => {
+export const SignUpStoreWalletScreen = observer(() => {
   const navigation = useTypedNavigation<SignUpStackParamList>();
   const route = useTypedRoute<
     SignUpStackParamList,
@@ -44,6 +46,22 @@ export const SignUpStoreWalletScreen = () => {
     return provider;
   }, [route.params]);
 
+  const getWalletType = useCallback(() => {
+    //@ts-ignore
+    if (route.params.sssPrivateKey) {
+      return WalletType.sss;
+    }
+    //@ts-ignore
+    if (route.params.provider instanceof ProviderSSSReactNative) {
+      return WalletType.sss;
+    }
+    //@ts-ignore
+    if (route.params.provider instanceof ProviderHotReactNative) {
+      return WalletType.hot;
+    }
+    return WalletType.mnemonic;
+  }, [route.params]);
+
   useEffect(() => {
     setTimeout(async () => {
       try {
@@ -57,6 +75,11 @@ export const SignUpStoreWalletScreen = () => {
             parseInt(segments[segments.length - 1], 10) + 1,
           );
         }, 0);
+        if (isNaN(nextHdPathIndex)) {
+          //@ts-ignore
+          navigation.navigate(route.params.nextScreen ?? 'onboardingFinish');
+          return;
+        }
         const hdPath = `${ETH_HD_SHORT_PATH}/${nextHdPathIndex}`;
         const name =
           Wallet.getSize() === 0
@@ -65,13 +88,7 @@ export const SignUpStoreWalletScreen = () => {
                 number: `${Wallet.getSize() + 1}`,
               });
         const {address} = await provider.getAccountInfo(hdPath);
-        const type =
-          //@ts-ignore
-          route.params.sssPrivateKey ||
-          //@ts-ignore
-          route.params.provider instanceof ProviderSSSReactNative
-            ? WalletType.sss
-            : WalletType.mnemonic;
+        const type = getWalletType();
 
         await Wallet.create(name, {
           address: AddressUtils.toEth(address),
@@ -101,4 +118,4 @@ export const SignUpStoreWalletScreen = () => {
   }, [goBack, navigation, route.params]);
 
   return null;
-};
+});
