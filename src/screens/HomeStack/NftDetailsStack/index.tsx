@@ -3,7 +3,7 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
-import {popupScreenOptions} from '@app/helpers';
+import {popupScreenOptionsWithMargin} from '@app/helpers';
 import {useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {
@@ -26,7 +26,7 @@ export type NftDetailsStackParamList = HomeFeedStackParamList & {
 
 const Stack = createNativeStackNavigator<NftDetailsStackParamList>();
 
-const screenOptions: ScreenOptionType = popupScreenOptions;
+const screenOptions: ScreenOptionType = popupScreenOptionsWithMargin;
 
 const nftCollectionDetailsOptions: ScreenOptionType = {
   title: getText(I18N.nftCollectionDetailsTitle),
