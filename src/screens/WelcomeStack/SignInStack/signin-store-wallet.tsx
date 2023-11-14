@@ -18,8 +18,7 @@ import {
   SignInStackRoutes,
 } from '@app/screens/WelcomeStack/SignInStack';
 import {RemoteConfig} from '@app/services/remote-config';
-import {ModalType} from '@app/types';
-import {WalletType} from '@app/types';
+import {ModalType, WalletType} from '@app/types';
 import {MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
 export const SignInStoreWalletScreen = memo(() => {

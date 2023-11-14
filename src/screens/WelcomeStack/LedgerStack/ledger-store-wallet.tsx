@@ -10,8 +10,7 @@ import {
   LedgerStackParamList,
   LedgerStackRoutes,
 } from '@app/screens/WelcomeStack/LedgerStack';
-import {ModalType} from '@app/types';
-import {WalletType} from '@app/types';
+import {ModalType, WalletType} from '@app/types';
 import {sleep} from '@app/utils';
 
 export const LedgerStoreWalletScreen = memo(() => {

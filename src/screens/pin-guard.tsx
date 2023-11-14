@@ -33,19 +33,12 @@ export const PinGuardScreen = memo(
     const onPin = async (pin: string) => {
       showModal(ModalType.loading);
       try {
-        console.log('1');
         await app.comparePin(pin);
-        console.log('2');
         app.successEnter();
-        console.log('3');
         await onEnter?.();
-        console.log('4');
         pinRef.current?.reset();
-        console.log('5');
         setLoggedIn(true);
-        console.log('6');
       } catch (error) {
-        console.log('error', error);
         app.failureEnter();
         if (app.canEnter) {
           pinRef.current?.reset(

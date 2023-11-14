@@ -8,19 +8,10 @@ export type ModalName = Extract<keyof Modals, string>;
 
 class ModalStore {
   modals: ModalState[] = [];
+
   constructor() {
     makeAutoObservable(this);
   }
-
-  private isExist = (type: ModalName) => !!this.findByType(type);
-
-  private findByType = (type: ModalName) =>
-    this.modals.find(modal => modal.type === type);
-
-  private removeByType = (type: ModalName) => {
-    const filtered = this.modals.filter(modal => modal.type !== type);
-    this.modals = filtered;
-  };
 
   showModal = (type: ModalName, params: Modals[ModalName] = {}) => {
     const newModal: ModalState = {type, ...params, uid: makeID(6)};
@@ -54,6 +45,16 @@ class ModalStore {
 
       this.modals = [...newModals];
     }
+  };
+
+  private isExist = (type: ModalName) => !!this.findByType(type);
+
+  private findByType = (type: ModalName) =>
+    this.modals.find(modal => modal.type === type);
+
+  private removeByType = (type: ModalName) => {
+    const filtered = this.modals.filter(modal => modal.type !== type);
+    this.modals = filtered;
   };
 }
 

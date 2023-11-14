@@ -19,8 +19,7 @@ import {
 import {SettingsStackRoutes} from '@app/screens/HomeStack/SettingsStack';
 import {sendNotification} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {ModalType} from '@app/types';
-import {AdjustEvents} from '@app/types';
+import {AdjustEvents, ModalType} from '@app/types';
 
 export const SettingsAccountDetailScreen = observer(() => {
   const navigation = useTypedNavigation<ManageAccountsStackParamList>();

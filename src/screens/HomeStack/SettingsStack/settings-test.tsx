@@ -59,8 +59,7 @@ import {HapticEffects, vibrate} from '@app/services/haptic';
 import {SssProviders} from '@app/services/provider-sss';
 import {message as toastMessage} from '@app/services/toast';
 import {getUserAgent} from '@app/services/version';
-import {ModalType} from '@app/types';
-import {Modals, PartialJsonRpcRequest} from '@app/types';
+import {ModalType, Modals, PartialJsonRpcRequest} from '@app/types';
 import {
   generateMockBanner,
   isError,
@@ -155,6 +154,11 @@ const getTestModals = (): TestModals => {
       onClose: () => logger.log('claimOnMainnet closed'),
       onChange: () => logger.log('claimOnMainnet onChange'),
       network: 'MainMet',
+    },
+    customProviderEmail: {
+      onClose: () => logger.log('customProviderEmail closed'),
+      onChange: (value: string) =>
+        logger.log('customProviderEmail onChange', value),
     },
     transactionError: {
       onClose: () => logger.log('transactionError closed'),

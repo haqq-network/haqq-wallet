@@ -25,9 +25,9 @@ function getCachedConfig() {
 }
 
 export class RemoteConfigService extends Initializable {
+  static instance = new RemoteConfigService();
   public isInited = false;
   public KEY = KEY;
-  static instance = new RemoteConfigService();
 
   /**
    * @return `true` if remote config is successfully initialized

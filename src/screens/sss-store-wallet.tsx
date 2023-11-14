@@ -12,8 +12,7 @@ import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 import {RemoteConfig} from '@app/services/remote-config';
-import {ModalType} from '@app/types';
-import {WalletType} from '@app/types';
+import {ModalType, WalletType} from '@app/types';
 import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
 export const SssStoreWalletScreen = () => {

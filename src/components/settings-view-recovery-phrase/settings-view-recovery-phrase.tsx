@@ -27,7 +27,10 @@ export const SettingsViewRecoveryPhrase = ({
       />
       <Spacer height={20} />
 
-      <MnemonicTable mnemonic={mnemonic} testID="settings_view_recovery_phrase" />
+      <MnemonicTable
+        mnemonic={mnemonic}
+        testID="settings_view_recovery_phrase"
+      />
     </View>
   );
 };

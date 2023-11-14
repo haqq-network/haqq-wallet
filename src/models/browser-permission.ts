@@ -24,16 +24,6 @@ export const PERMISSION_EXPIRATION_TIME = 5 * 60 * 1000; // 5 min
 export type BrowserPermissionTuple = [Hostname, PermissionMap];
 
 class BrowserPermissionStore {
-  /**
-   * @example
-   * {
-   *   [Hostname]: {
-   *      [BrowserPermissionType]: BrowserPermissionItem,
-   *   }
-   * }
-   */
-  private _data: Record<Hostname, PermissionMap> = {};
-
   constructor(shouldSkipPersisting: boolean = false) {
     makeAutoObservable(this);
     if (!shouldSkipPersisting) {
@@ -45,6 +35,16 @@ class BrowserPermissionStore {
       });
     }
   }
+
+  /**
+   * @example
+   * {
+   *   [Hostname]: {
+   *      [BrowserPermissionType]: BrowserPermissionItem,
+   *   }
+   * }
+   */
+  private _data: Record<Hostname, PermissionMap> = {};
 
   get data() {
     return toJS(this._data);

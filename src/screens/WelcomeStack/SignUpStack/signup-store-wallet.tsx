@@ -15,8 +15,7 @@ import {
   SignUpStackParamList,
   SignUpStackRoutes,
 } from '@app/screens/WelcomeStack/SignUpStack';
-import {ModalType} from '@app/types';
-import {WalletType} from '@app/types';
+import {ModalType, WalletType} from '@app/types';
 import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
 export const SignUpStoreWalletScreen = observer(() => {

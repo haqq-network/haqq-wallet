@@ -5,8 +5,6 @@ import {storage} from '@app/services/mmkv';
 import {MobXStore, Raffle} from '@app/types';
 
 class RafflesStore implements MobXStore<Raffle> {
-  private _data: Record<string, Raffle> = {};
-
   constructor(shouldSkipPersisting: boolean = false) {
     makeAutoObservable(this);
     if (!shouldSkipPersisting) {
@@ -18,6 +16,8 @@ class RafflesStore implements MobXStore<Raffle> {
       });
     }
   }
+
+  private _data: Record<string, Raffle> = {};
 
   get data() {
     return toJS(this._data);
