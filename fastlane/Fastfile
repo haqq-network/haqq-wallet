@@ -80,6 +80,21 @@ platform :ios do
     create_temp_keychain(name, password)
   end
 
+  lane :slack do
+    current_build_number_android = google_play_track_version_codes(
+      package_name: 'com.haqq.wallet',
+      track: "internal",
+      json_key: './android/app/google-account.json',
+    )[0] + 1
+
+    current_build_number_ios = latest_testflight_build_number(
+      app_identifier: app_identifier,
+      api_key: api_key,
+    ) + 1
+
+    sh("IOS=%{ios} ANDROID=%{android} node ./utils/changelog.js $(cat .last-build)" % {ios: current_build_number_ios, android: current_build_number_android, desc: })
+  end
+
   lane :version do
     increment_version_number(
       xcodeproj: './ios/haqq.xcodeproj',
@@ -209,7 +224,8 @@ platform :ios do
       app_identifier: app_identifier,
       ipa: "haqq.ipa",
       skip_submission: true,
-      skip_waiting_for_build_processing: true
+      skip_waiting_for_build_processing: true,
+      changelog: ENV["BUILD_DESCRIPTION"]
     )
 
     delete_temp_keychain(keychain_name)

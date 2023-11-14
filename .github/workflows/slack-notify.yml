@@ -3,6 +3,9 @@ name: Slack notify
 on:
   workflow_dispatch:
   workflow_call:
+    BUILD_DESCRIPTION:
+      required: true
+      type: string
     secrets:
       SLACK_WEBHOOK_URL:
         required: true
@@ -22,7 +25,7 @@ jobs:
         shell: bash
         id: changelog
         run: |
-          log="$(node ./utils/changelog.js $(cat .last-build))"
+          log="$(bundle exec fastlane ios slack)"
           echo "log=$log" >> $GITHUB_OUTPUT
 
       - name: Send GitHub Action trigger data to Slack workflow
@@ -33,3 +36,4 @@ jobs:
         env:
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION}}

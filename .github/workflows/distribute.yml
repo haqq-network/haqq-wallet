@@ -9,6 +9,9 @@ on:
         options:
           - true
           - false
+      BUILD_DESCRIPTION:
+        required: true
+        description: Please add a short note for a new build
 
 jobs:
   test:
@@ -33,6 +36,7 @@ jobs:
     with:
       IS_DEVELOPMENT: false
       IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
+      BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION}}
     needs:
       - test
 
@@ -43,6 +47,7 @@ jobs:
     with:
       IS_DEVELOPMENT: false
       IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
+      BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION}}
     needs:
       - test
 
@@ -54,6 +59,8 @@ jobs:
     uses: ./.github/workflows/slack-notify.yml
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    with:
+      BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION}}
 
   patch_build:
     name: Patch build versions
