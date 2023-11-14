@@ -14,6 +14,10 @@ import {App} from './src/app';
 import './src/event-actions';
 import {Jailbreak} from './src/jailbreak';
 import messaging from '@react-native-firebase/messaging';
+import {IS_IOS} from '@app/variables/common';
+import {DEBUG_VARS} from '@app/debug-vars';
+import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
+import {enableFreeze, enableScreens} from 'react-native-screens';
 
 if (!global.BigInt) {
   const BigInt = require('big-integer');
@@ -33,13 +37,16 @@ enableScreens();
 enableFreeze(true);
 
 LogBox.ignoreLogs(["The 'navigation' object hasn't been initialized"]);
+LogBox.ignoreLogs(['Warning: ...']);
+LogBox.ignoreAllLogs();
 
 try {
   const isRTLEnabled = isFeatureEnabled(Feature.rtl);
   I18nManager.allowRTL(isRTLEnabled);
   I18nManager.forceRTL(isRTLEnabled);
   I18nManager.swapLeftAndRightInRTL(isRTLEnabled);
-} catch (e) {}
+} catch (e) {
+}
 
 if (__DEV__ && IS_IOS) {
   messaging().setAPNSToken('dev-apns-token', 'sandbox');

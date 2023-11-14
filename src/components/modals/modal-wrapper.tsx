@@ -22,6 +22,7 @@ import {BluetoothUnauthorized} from '@app/components/modals/bluetooth-unauthoriz
 import {CaptchaModal} from '@app/components/modals/capthca-modal';
 import {CloudShareNotFound} from '@app/components/modals/cloud-share-not-found';
 import {CloudVerification} from '@app/components/modals/cloud-verification';
+import {CustomProviderEmail} from '@app/components/modals/custom-provider-email';
 import {LocationUnauthorized} from '@app/components/modals/location-unauthorized';
 import {ProvidersBottomSheet} from '@app/components/modals/providers-bottom-sheet';
 import {RaffleAgreement} from '@app/components/modals/raffle-agreement';
@@ -127,6 +128,8 @@ export const ModalWrapper = ({
         return <CloudVerification {...modal} />;
       case ModalType.viewErrorDetails:
         return <ViewErrorDetails {...modal} onClose={onCloseModalPress} />;
+      case ModalType.customProviderEmail:
+        return <CustomProviderEmail {...modal} onClose={onCloseModalPress} />;
       case ModalType.cloudShareNotFound:
         return <CloudShareNotFound {...modal} onClose={onCloseModalPress} />;
       case ModalType.sssLimitReached:

@@ -619,6 +619,10 @@ export enum I18N {
   claimOnMainnetTitle,
   claimOnMainnetDescription,
   claimOnMainnetChange,
+  customProviderEmail,
+  customProviderEmailPlaceholder,
+  customProviderEmailSubmit,
+  customProviderEmailCancel,
   claimOnMainnetStay,
   newsTitle,
   homeSettingsNotification,
@@ -1892,5 +1896,9 @@ const en: Record<I18N, string> = {
   [I18N.signupImportantInfoDesc5]:
     "It's important to keep your Google or Apple login details safe. If you lose them and if your phone is lost, you won't be able to get your wallet back using your social media login.",
   [I18N.erase]: 'Erase',
+  [I18N.customProviderEmail]: 'Enter email',
+  [I18N.customProviderEmailPlaceholder]: 'some name@haqq',
+  [I18N.customProviderEmailSubmit]: 'Submit',
+  [I18N.customProviderEmailCancel]: 'Cancel',
   [I18N.createOrImportWallet]: 'You must have at least one wallet!',
 };

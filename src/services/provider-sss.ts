@@ -4,11 +4,12 @@ import {generateEntropy} from '@haqq/provider-web3-utils';
 import {jsonrpcRequest} from '@haqq/shared-react-native';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
 import BN from 'bn.js';
-import prompt from 'react-native-prompt-android';
 
+import {awaitForPopupClosed} from '@app/helpers';
 import {getGoogleTokens} from '@app/helpers/get-google-tokens';
 import {parseJwt} from '@app/helpers/parse-jwt';
 import {RemoteConfig} from '@app/services/remote-config';
+import {ModalType} from '@app/types';
 import {getHttpResponse} from '@app/utils';
 
 export enum SssProviders {
@@ -18,22 +19,17 @@ export enum SssProviders {
 }
 
 export async function onLoginCustom() {
-  const email = await new Promise((resolve, reject) => {
-    prompt(
-      'Enter email',
-      'some name@haqq',
-      [
-        {text: 'Cancel', onPress: () => reject(), style: 'cancel'},
-        {text: 'OK', onPress: e => resolve(e)},
-      ],
-      {
-        type: 'plain-text',
-        cancelable: false,
+  const email = await new Promise(resolve => {
+    awaitForPopupClosed(ModalType.customProviderEmail, {
+      onChange: (e: string) => {
+        resolve(e);
       },
-    );
+    });
   });
 
   const verifier_url = RemoteConfig.get('sss_custom_url');
+
+  console.log('verifier_url', verifier_url);
 
   if (!verifier_url) {
     throw new Error('sss_custom_url is not set');
@@ -129,6 +125,20 @@ export async function onAuthorized(
     privateKey: null,
   };
 
+  console.log(
+    'onAuthorized',
+    RemoteConfig.get('sss_generate_shares_url'),
+    RemoteConfig.get_env(
+      'sss_generate_shares_url',
+      GENERATE_SHARES_URL,
+    ) as string,
+    JSON.stringify({
+      verifier,
+      verifierId,
+      token,
+    }),
+  );
+
   const nodeDetailsRequest = await jsonrpcRequest<{
     isNew: boolean;
     shares: [string, string][];
@@ -144,7 +154,7 @@ export async function onAuthorized(
   const tmpPk = await generateEntropy(32);
   const shares = await Promise.all(
     nodeDetailsRequest.shares.map(s =>
-      jsonrpcRequest<{key: string; hex_share: string}>(s[0], 'shareRequest', [
+      jsonrpcRequest<{ key: string; hex_share: string }>(s[0], 'shareRequest', [
         verifier,
         token,
         tmpPk.toString('hex'),
