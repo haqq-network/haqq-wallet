@@ -1073,6 +1073,7 @@ export type Modals = {
     onClose?: () => void;
   };
   cloudShareNotFound: {onClose?: () => void; wallet: Wallet};
+  chainShareNotFound: {onClose?: () => void; wallet: Wallet};
 };
 
 export enum ModalType {
@@ -1103,6 +1104,7 @@ export enum ModalType {
   cloudVerification = 'cloudVerification',
   viewErrorDetails = 'viewErrorDetails',
   cloudShareNotFound = 'cloudShareNotFound',
+  chainShareNotFound = 'chainShareNotFound',
 }
 
 export interface NftAttribute {

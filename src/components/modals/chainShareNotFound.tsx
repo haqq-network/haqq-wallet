@@ -1,0 +1,145 @@
+import React, {useCallback, useEffect} from 'react';
+
+import {GENERATE_SHARES_URL, METADATA_URL} from '@env';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {getMetadataValue} from '@haqq/shared-react-native';
+import {observer} from 'mobx-react';
+import {Image, Platform, View} from 'react-native';
+
+import {Color} from '@app/colors';
+import {BottomPopupContainer} from '@app/components/bottom-popups';
+import {
+  Button,
+  ButtonSize,
+  ButtonVariant,
+  Spacer,
+  Text,
+} from '@app/components/ui';
+import {app} from '@app/contexts';
+import {createTheme, hideModal} from '@app/helpers';
+import {decryptLocalShare} from '@app/helpers/decrypt-local-share';
+import {getProviderStorage} from '@app/helpers/get-provider-storage';
+import {I18N} from '@app/i18n';
+import {Wallet} from '@app/models/wallet';
+import {HapticEffects, vibrate} from '@app/services/haptic';
+import {onLoginApple, onLoginGoogle} from '@app/services/provider-sss';
+import {RemoteConfig} from '@app/services/remote-config';
+import {ModalType, Modals} from '@app/types';
+
+export const ChainShareNotFound = observer(
+  ({onClose, wallet}: Modals[ModalType.chainShareNotFound]) => {
+    useEffect(() => {
+      vibrate(HapticEffects.error);
+    }, []);
+
+    const generateNewShares = useCallback(async () => {
+      try {
+        const getPasswordPromise = app.getPassword.bind(app);
+        const password = await getPasswordPromise();
+
+        const provider =
+          Platform.OS === 'android' ? onLoginGoogle : onLoginApple;
+
+        const creds = await provider();
+
+        if (!creds.privateKey) {
+          throw new Error('No Private Key Detected');
+        }
+
+        const walletInfo = await await getMetadataValue(
+          RemoteConfig.get_env('sss_metadata_url', METADATA_URL) as string,
+          creds.privateKey,
+          'socialShareIndex',
+        );
+
+        if (!walletInfo) {
+          throw new Error('No Wallet Info Detected');
+        }
+
+        const localShare = await decryptLocalShare(creds.privateKey, password);
+        const storage = await getProviderStorage('', 'cloud');
+
+        await ProviderSSSReactNative.initialize(
+          creds.privateKey,
+          null,
+          localShare,
+          null,
+          creds.verifier,
+          creds.token,
+          getPasswordPromise,
+          storage,
+          {
+            metadataUrl: RemoteConfig.get_env(
+              'sss_metadata_url',
+              METADATA_URL,
+            ) as string,
+            generateSharesUrl: RemoteConfig.get_env(
+              'sss_generate_shares_url',
+              GENERATE_SHARES_URL,
+            ) as string,
+          },
+        );
+
+        Wallet.update(wallet.address, {socialLinkEnabled: true});
+
+        hideModal(ModalType.cloudShareNotFound);
+      } catch (err) {
+        if (err instanceof Error) {
+          Logger.log('CloudShareNotFound Error: ', err.message);
+        }
+      }
+    }, []);
+
+    return (
+      <BottomPopupContainer>
+        {onCloseModal => (
+          <View style={page.modalView}>
+            <Text t5 center i18n={I18N.cloudShareNotFoundTitle} />
+            <Spacer height={8} />
+            <Text t14 center i18n={I18N.cloudShareNotFoundDescription} />
+            <Spacer height={32} />
+            <Image
+              source={require('@assets/images/share-replaced.png')}
+              style={page.image}
+            />
+            <Spacer height={32} />
+            <Button
+              i18n={I18N.cloudShareNotFoundPrimaryButton}
+              onPress={generateNewShares}
+              variant={ButtonVariant.contained}
+              style={page.button}
+              size={ButtonSize.middle}
+            />
+            <Spacer height={16} />
+            <Button
+              i18n={I18N.cloudShareNotFoundSecondaryButton}
+              onPress={() => onCloseModal(onClose)}
+              variant={ButtonVariant.third}
+              style={page.button}
+              error
+              size={ButtonSize.middle}
+            />
+          </View>
+        )}
+      </BottomPopupContainer>
+    );
+  },
+);
+
+const page = createTheme({
+  modalView: {
+    alignItems: 'center',
+    backgroundColor: Color.bg1,
+    borderRadius: 16,
+    marginHorizontal: 16,
+    marginBottom: 40,
+    padding: 24,
+  },
+  button: {
+    width: '100%',
+  },
+  image: {
+    width: 295,
+    height: 164,
+  },
+});

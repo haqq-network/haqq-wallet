@@ -193,6 +193,10 @@ const getTestModals = (): TestModals => {
       onClose: () => logger.log('cloudShareNotFound closed'),
       wallet: wallets[0],
     },
+    chainShareNotFound: {
+      onClose: () => logger.log('chainShareNotFound closed'),
+      wallet: wallets[0],
+    },
   };
 
   if (wallets.length) {
