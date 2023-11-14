@@ -23,6 +23,9 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
+      - name: Install Fastlane
+        run: |
+          bundle install
       - name: Create Changelog
         shell: bash
         id: changelog
