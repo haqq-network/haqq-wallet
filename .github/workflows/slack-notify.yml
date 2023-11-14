@@ -30,8 +30,8 @@ jobs:
         id: changelog
         run: |
           echo ${{secrets.GOOGLE_SERVICE_ACCOUNT}} | base64 -d > android/app/google-account.json
-          log="$(bundle exec fastlane ios slack)"
-          echo "log=$log" >> $GITHUB_OUTPUT
+          bundle exec fastlane ios slack >> log.txt
+          echo "log=$(cat log.txt)" >> $GITHUB_OUTPUT
 
       - name: Send GitHub Action trigger data to Slack workflow
         uses: slackapi/slack-github-action@v1
