@@ -23,6 +23,7 @@ import {SigninNotExistsScreen} from '@app/screens/WelcomeStack/SignInStack/signi
 import {SigninNotRecoveryScreen} from '@app/screens/WelcomeStack/SignInStack/signin-not-recovery';
 import {SignInPinScreen} from '@app/screens/WelcomeStack/SignInStack/signin-pin';
 import {SignInRestoreScreen} from '@app/screens/WelcomeStack/SignInStack/signin-restore-wallet';
+import {SigninSharesNotFoundScreen} from '@app/screens/WelcomeStack/SignInStack/signin-shares-not-found';
 import {SignInStoreWalletScreen} from '@app/screens/WelcomeStack/SignInStack/signin-store-wallet';
 import {SssProviders} from '@app/services/provider-sss';
 import {
@@ -43,6 +44,7 @@ export enum SignInStackRoutes {
   SigninNotRecovery = 'signinNotRecovery',
   SigninCloudProblems = 'cloudProblems',
   SigninChooseAccount = 'chooseAccount',
+  SigninSharesNotFound = 'signinSharesNotFound',
 }
 
 export type SignInStackParamList = WelcomeStackParamList & {
@@ -50,6 +52,7 @@ export type SignInStackParamList = WelcomeStackParamList & {
   [SignInStackRoutes.SigninAgreement]?: WelcomeStackParamList[WelcomeStackRoutes.SignIn];
   [SignInStackRoutes.SigninRestoreWallet]: undefined;
   [SignInStackRoutes.SigninPin]: WalletInitialData;
+  [SignInStackRoutes.SigninSharesNotFound]: undefined;
   [SignInStackRoutes.OnboardingSetupPin]: WalletInitialData & {
     provider?: ProviderMnemonicReactNative | ProviderSSSReactNative;
     biometryType?: BiometryType;
@@ -61,7 +64,6 @@ export type SignInStackParamList = WelcomeStackParamList & {
     provider: ProviderMnemonicReactNative | ProviderSSSReactNative;
     email?: string;
   };
-  [SignInStackRoutes.SigninNotRecovery]: WalletInitialData;
   [SignInStackRoutes.SigninNotRecovery]: WalletInitialData;
   [SignInStackRoutes.SigninCloudProblems]: {
     sssProvider: SssProviders;
@@ -144,6 +146,12 @@ const SignInStack = memo(() => {
       <Stack.Screen
         name={SignInStackRoutes.SigninNotRecovery}
         component={SigninNotRecoveryScreen}
+        options={{...hideBack, ...screenOptions}}
+      />
+
+      <Stack.Screen
+        name={SignInStackRoutes.SigninSharesNotFound}
+        component={SigninSharesNotFoundScreen}
         options={{...hideBack, ...screenOptions}}
       />
 
