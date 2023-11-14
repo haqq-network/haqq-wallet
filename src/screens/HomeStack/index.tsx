@@ -13,6 +13,7 @@ import {Spacer} from '@app/components/ui';
 import {popupScreenOptions} from '@app/helpers';
 import {AwaitValue} from '@app/helpers/await-for-value';
 import {getWalletTitle} from '@app/helpers/get-wallet-title';
+import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {basicScreenOptions} from '@app/screens';
@@ -196,7 +197,7 @@ const HomeStack = memo(() => {
       screenOptions={navigatorOptions}
       initialRouteName={HomeStackRoutes.Home}>
       <Stack.Screen
-        component={HomeScreen}
+        component={themeUpdaterHOC(HomeScreen)}
         name={HomeStackRoutes.Home}
         options={basicScreenOptions}
       />
