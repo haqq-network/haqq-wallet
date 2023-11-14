@@ -14,6 +14,7 @@ import {I18N} from '@app/i18n';
 
 interface SignNotExistsProps {
   onPrimaryPress(): void;
+
   onSecondaryPress(): void;
 }
 

@@ -95,7 +95,6 @@ class App extends AsyncEventEmitter {
       ios: appleAuth.isSupported,
     }) || false;
   private _systemTheme: AppTheme = Appearance.getColorScheme() as AppTheme;
-  private _startUpTime: number;
 
   constructor() {
     super();
@@ -151,14 +150,16 @@ class App extends AsyncEventEmitter {
     this.setEnabledLoggersForTestMode(this.isTesterMode);
   }
 
+  private _startUpTime: number;
+
+  get startUpTime() {
+    return this._startUpTime;
+  }
+
   private _biometryType: BiometryType | null = null;
 
   get biometryType() {
     return this._biometryType;
-  }
-
-  get startUpTime() {
-    return this._startUpTime;
   }
 
   get isGoogleSigninSupported() {
@@ -199,10 +200,6 @@ class App extends AsyncEventEmitter {
     );
   }
 
-  get cosmos() {
-    return new Cosmos(app.provider);
-  }
-
   set providerId(value) {
     const p = Provider.getById(value);
     if (p) {
@@ -215,8 +212,11 @@ class App extends AsyncEventEmitter {
     }
   }
 
+  get cosmos() {
+    return new Cosmos(app.provider);
+  }
+
   get backend() {
-    console.log('HAQQ_BACKEND_DEFAULT', HAQQ_BACKEND_DEFAULT);
     if (!VariablesString.exists('backend')) {
       return HAQQ_BACKEND_DEFAULT || HAQQ_BACKEND;
     }

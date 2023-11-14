@@ -218,7 +218,6 @@ export class Backend {
   }
 
   async getRemoteConfig(appInfo: AppInfo): Promise<RemoteConfigTypes> {
-    console.log('getRemoteConfig', this.getRemoteUrl());
     const response = await fetch(`${this.getRemoteUrl()}config`, {
       method: 'POST',
       headers: Backend.headers,

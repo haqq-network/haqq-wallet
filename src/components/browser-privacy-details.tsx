@@ -15,6 +15,7 @@ import {MenuNavigationButton, Spacer, Text} from './ui';
 
 export interface BrowserPrivacyDetailsProps {
   permissions: PermissionMap;
+
   onPermissionPress?(type: BrowserPermissionType): void;
 }
 

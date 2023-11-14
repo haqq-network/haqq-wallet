@@ -18,8 +18,7 @@ import {
   SssMigrateStackRoutes,
 } from '@app/route-types';
 import {RemoteConfig} from '@app/services/remote-config';
-import {ModalType} from '@app/types';
-import {WalletType} from '@app/types';
+import {ModalType, WalletType} from '@app/types';
 
 export const SssMigrateStoreScreen = observer(() => {
   const route = useTypedRoute<

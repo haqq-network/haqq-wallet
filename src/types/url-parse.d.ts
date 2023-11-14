@@ -17,10 +17,15 @@ declare module 'url-parse' {
     constructor(address: string, parser?: boolean | Function);
 
     extractProtocol(url: string): any;
+
     trimLeft(str: string): string;
+
     authenticity(rest: string): void;
+
     extractPathname(): string;
+
     extractHash(): string;
+
     toString(): string;
   }
 }
