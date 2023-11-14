@@ -88,7 +88,7 @@ platform :ios do
     )[0] + 1
 
     current_build_number_ios = latest_testflight_build_number(
-      app_identifier: app_identifier,
+      app_identifier: ENV["IOS_IDENTIFIER"],
       api_key: api_key,
     ) + 1
 
