@@ -15,7 +15,7 @@ on:
 jobs:
   slack_notify:
     name: Slack notify
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
         with:
@@ -25,7 +25,7 @@ jobs:
           node-version: 16
       - name: Install Fastlane
         run: |
-          bundler install bundle && bundle install
+          bundle install
       - name: Create Changelog
         id: changelog
         run: |
