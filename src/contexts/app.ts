@@ -36,6 +36,7 @@ import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {RemoteConfig} from '@app/services/remote-config';
 import {SystemDialog} from '@app/services/system-dialog';
 
 import {showModal} from '../helpers';
@@ -162,18 +163,16 @@ class App extends AsyncEventEmitter {
 
   get isGoogleSigninSupported() {
     return (
-      Boolean(VariablesString.get('sss_google')) && this._googleSigninSupported
+      Boolean(RemoteConfig.get('sss_google')) && this._googleSigninSupported
     );
   }
 
   get isAppleSigninSupported() {
-    return (
-      Boolean(VariablesString.get('sss_apple')) && this._appleSigninSupported
-    );
+    return Boolean(RemoteConfig.get('sss_apple')) && this._appleSigninSupported;
   }
 
   get isCustomSigninSupported() {
-    return Boolean(VariablesString.get('sss_custom'));
+    return Boolean(RemoteConfig.get('sss_custom'));
   }
 
   get isOathSigninSupported() {
@@ -217,6 +216,7 @@ class App extends AsyncEventEmitter {
   }
 
   get backend() {
+    console.log('HAQQ_BACKEND_DEFAULT', HAQQ_BACKEND_DEFAULT);
     if (!VariablesString.exists('backend')) {
       return HAQQ_BACKEND_DEFAULT || HAQQ_BACKEND;
     }

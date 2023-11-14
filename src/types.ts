@@ -10,12 +10,7 @@ import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {NativeStackNavigationOptions} from '@react-navigation/native-stack';
 import {SessionTypes} from '@walletconnect/types';
 import Decimal from 'decimal.js';
-import {
-  ImageSourcePropType,
-  ImageStyle,
-  TextStyle,
-  ViewStyle,
-} from 'react-native';
+import {ImageSourcePropType, ImageStyle, TextStyle, ViewStyle,} from 'react-native';
 import {Results} from 'realm';
 
 import {Color} from '@app/colors';
@@ -124,22 +119,22 @@ export type SendTransactionRequest = Awaited<
 
 export type WalletInitialData =
   | {
-      type: 'mnemonic';
-      mnemonic: string;
-    }
+  type: 'mnemonic';
+  mnemonic: string;
+}
   | {
-      type: 'privateKey';
-      privateKey: string;
-    }
+  type: 'privateKey';
+  privateKey: string;
+}
   | {
-      type: 'sss';
-      sssPrivateKey: string | null;
-      sssCloudShare: string | null;
-      sssLocalShare: string | null;
-      verifier: string;
-      token: string;
-    }
-  | {type: 'empty'}
+  type: 'sss';
+  sssPrivateKey: string | null;
+  sssCloudShare: string | null;
+  sssLocalShare: string | null;
+  verifier: string;
+  token: string;
+}
+  | { type: 'empty' }
   | LedgerWalletInitialData;
 
 export type LedgerWalletInitialData = {
@@ -153,11 +148,11 @@ export type LedgerWalletInitialData = {
 
 export type RootStackParamList = {
   chooseAccount:
-    | (WalletInitialData & {provider: ProviderMnemonicReactNative})
+    | (WalletInitialData & { provider: ProviderMnemonicReactNative })
     | {
-        provider: ProviderSSSReactNative;
-      };
-  cloudProblems: {sssProvider: SssProviders; onNext: () => void};
+    provider: ProviderSSSReactNative;
+  };
+  cloudProblems: { sssProvider: SssProviders; onNext: () => void };
   home: undefined;
   homeFeed: undefined;
   homeStaking: undefined;
@@ -168,7 +163,7 @@ export type RootStackParamList = {
   };
   web3BrowserPopup: RootStackParamList['web3browser'];
   browserHomePage: undefined;
-  browserSearchPage: undefined | {initialSearchText?: string};
+  browserSearchPage: undefined | { initialSearchText?: string };
   browserEditBookmarksScreen: undefined;
   browserPrivacy: undefined;
   browserPrivacyDetails: {
@@ -181,27 +176,27 @@ export type RootStackParamList = {
   homeBrowser:
     | undefined
     | {
-        screen: 'web3browser';
-        params: {
-          url: string;
-        };
-      }
+    screen: 'web3browser';
+    params: {
+      url: string;
+    };
+  }
     | {
-        screen: 'browserSearchPage';
-        params: undefined | {initialSearchText?: string};
-      }
+    screen: 'browserSearchPage';
+    params: undefined | { initialSearchText?: string };
+  }
     | {
-        screen:
-          | 'browserSearchPage'
-          | 'browserEditBookmarksScreen'
-          | 'browserHomePage';
-      };
+    screen:
+      | 'browserSearchPage'
+      | 'browserEditBookmarksScreen'
+      | 'browserHomePage';
+  };
   homeSettings:
     | undefined
     | {
-        screen: 'settingsProviderForm';
-        params: RootStackParamList['settingsProviderForm'];
-      };
+    screen: 'settingsProviderForm';
+    params: RootStackParamList['settingsProviderForm'];
+  };
   homeGovernance: undefined;
   homeEarn: undefined;
   raffleDetails: {
@@ -222,8 +217,8 @@ export type RootStackParamList = {
   welcomeNews: undefined;
   create: undefined;
   scanQr: undefined;
-  signin: {next: WelcomeStackRoutes};
-  signup: {next: SignUpStackRoutes};
+  signin: { next: WelcomeStackRoutes };
+  signup: { next: SignUpStackRoutes };
   restore: undefined;
   ledger: undefined;
   restorePhrase: {
@@ -262,14 +257,14 @@ export type RootStackParamList = {
     verifier: string;
     token: string;
   };
-  detailsQr: {address: string};
+  detailsQr: { address: string };
   settingsTheme: undefined;
   settingsTest: undefined;
   settingsDeveloperTools: undefined;
   settingsAccounts: undefined;
   ourNews: undefined;
-  settingsAccountDetail: {address: string};
-  settingsAccountStyle: {address: string};
+  settingsAccountDetail: { address: string };
+  settingsAccountStyle: { address: string };
   settingsAddressBook: undefined;
   settingsLanguage: undefined;
   settingsSecurityPin: undefined;
@@ -332,14 +327,14 @@ export type RootStackParamList = {
       | 'signinStoreWallet'
       | 'ledgerStoreWallet';
   } & WalletInitialData;
-  onboardingSetupPin: WalletInitialData & {errorText?: string};
+  onboardingSetupPin: WalletInitialData & { errorText?: string };
   onboardingFinish: undefined;
   signupStoreWallet: WalletInitialData;
   signinStoreWallet: WalletInitialData;
   signupNetworks: undefined;
   signinPin: WalletInitialData;
   signupPin: WalletInitialData;
-  signinNotExists: {provider: SssProviders; email?: string} & WalletInitialData;
+  signinNotExists: { provider: SssProviders; email?: string } & WalletInitialData;
   signinNotRecovery: WalletInitialData;
   signupNetworkExists: {
     provider: SssProviders;
@@ -367,7 +362,7 @@ export type RootStackParamList = {
   transactionAccount: {
     to: string;
   };
-  transactionSelectCrypto: {from: string; to: string};
+  transactionSelectCrypto: { from: string; to: string };
   transactionSum: {
     from: string;
     to: string;
@@ -458,7 +453,7 @@ export type RootStackParamList = {
     proposal: Proposal;
     account: string;
   };
-  settingsAccountEdit: {address: string};
+  settingsAccountEdit: { address: string };
   transactionContactEdit: {
     name: string;
     address: string;
@@ -602,11 +597,11 @@ export type RootStackParamList = {
   governance: undefined;
   nftDetails:
     | ({
-        type: 'nft';
-      } & RootStackParamList['nftItemDetails'])
+    type: 'nft';
+  } & RootStackParamList['nftItemDetails'])
     | ({
-        type: 'collection';
-      } & RootStackParamList['nftCollectionDetails']);
+    type: 'collection';
+  } & RootStackParamList['nftCollectionDetails']);
   nftCollectionDetails: {
     item: NftCollection;
   };
@@ -638,7 +633,7 @@ export type Mnemonic = {
 
 export type NextScreenT = {
   key: string;
-  params?: {currentPin: string; biometryType: BiometryType} | undefined;
+  params?: { currentPin: string; biometryType: BiometryType } | undefined;
   merge?: boolean | undefined;
   name: string | undefined;
 };
@@ -782,7 +777,7 @@ export type DepositResponse = {
     depositor: string;
     amount: Coin[];
   }[];
-  pagination: {next_key: any; total: string};
+  pagination: { next_key: any; total: string };
 };
 
 export type StakingParamsResponse = {
@@ -871,7 +866,7 @@ export interface RemoteMessage<TData = Record<string, any>> {
   data: TData;
   from: string;
   messageId: string;
-  notification: {body: string; title: string};
+  notification: { body: string; title: string };
 }
 
 export interface NewsUpdatesResponse {
@@ -956,12 +951,12 @@ export type ModalsListBase = Record<string, object | undefined>;
 
 export type ErrorModalImage =
   | {
-      icon: IconProps['name'];
-      color: IconProps['color'];
-    }
+  icon: IconProps['name'];
+  color: IconProps['color'];
+}
   | {
-      image: string;
-    }
+  image: string;
+}
   | {};
 
 /**
@@ -980,7 +975,7 @@ export type Modals = {
   raffleAgreement: {
     onClose?: () => void;
   };
-  noInternet: {showClose?: boolean};
+  noInternet: { showClose?: boolean };
   loading: {
     text?: string;
   };
@@ -1032,6 +1027,10 @@ export type Modals = {
     onClose?: () => void;
     onChange: () => void;
     network: string;
+  };
+  customProviderEmail: {
+    onClose?: () => void;
+    onChange: (email: string) => void;
   };
   walletsBottomSheet: {
     onClose?: () => void;
@@ -1086,6 +1085,7 @@ export enum ModalType {
   cardDetailsQr = 'cardDetailsQr',
   error = 'error',
   claimOnMainnet = 'claimOnMainnet',
+  customProviderEmail = 'customProviderEmail',
   ledgerNoApp = 'ledgerNoApp',
   ledgerAttention = 'ledgerAttention',
   ledgerLocked = 'ledgerLocked',
@@ -1191,7 +1191,9 @@ export interface IBalance {
 
 export abstract class ISerializable {
   static fromJsonString: (obj: string | ISerializable) => ISerializable;
+
   abstract toJsonString(): string;
+
   /**
    * Custom console.log for an object
    */
@@ -1248,6 +1250,7 @@ export enum NftWidgetSize {
   medium = 'medium',
   large = 'large',
 }
+
 export interface INftWidget extends IWidgetBase {
   component: 'Nft';
   size: NftWidgetSize;
@@ -1306,6 +1309,7 @@ export type IndexerToken = {
   value: string;
 };
 export type IndexerTime = Record<HaqqCosmosAddress, number>;
+
 export interface BalanceData {
   vested: Balance;
   staked: Balance;
@@ -1374,11 +1378,17 @@ type MobXStoreData =
 
 export interface MobXStore<TData extends MobXStoreData> {
   data: Record<string, TData>;
+
   getById(id: string): TData | undefined;
+
   getAll(): TData[];
+
   create(id: string, item: TData): string;
+
   update(id: string | undefined, item: Omit<Partial<TData>, 'id'>): boolean;
+
   remove(id: string): boolean;
+
   removeAll(): void;
 }
 

@@ -81,3 +81,5 @@ google-account.json
 /index.ios.bundle
 /index.android.bundle
 .vscode/
+
+artifacts/
