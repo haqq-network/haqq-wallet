@@ -3,9 +3,11 @@ name: Slack notify
 on:
   workflow_dispatch:
   workflow_call:
-    BUILD_DESCRIPTION:
-      required: true
-      type: string
+    inputs:
+      BUILD_DESCRIPTION:
+        required: true
+        type: string
+
     secrets:
       SLACK_WEBHOOK_URL:
         required: true
