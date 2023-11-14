@@ -16,6 +16,7 @@ on:
         options:
           - true
           - false
+
       BUILD_DESCRIPTION:
         required: true
         description: Please add a short note for a new build
@@ -110,7 +111,7 @@ jobs:
         run: |
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${MATCH_DEPLOY_KEY}"
-          bundle exec fastlane ios distribute
+          echo ios
         env:
           DEVELOPER_APP_IDENTIFIER: ${{ secrets.IOS_IDENTIFIER }}
           GIT_AUTHORIZATION: ${{ secrets.GIT_AUTHORIZATION }}

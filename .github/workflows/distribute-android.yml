@@ -16,6 +16,7 @@ on:
         options:
           - true
           - false
+
       BUILD_DESCRIPTION:
         required: true
         description: Please add a short note for a new build
@@ -96,7 +97,7 @@ jobs:
       - name: Install packages
         run: yarn install --frozen-lockfile
       - name: Execute Fastlane command
-        run: bundle exec fastlane android distribute
+        run: echo android
         env:
           HAQQ_UPLOAD_STORE_FILE: ${{ secrets.HAQQ_UPLOAD_STORE_FILE }}
           HAQQ_UPLOAD_STORE_PASSWORD: ${{ secrets.HAQQ_UPLOAD_STORE_PASSWORD }}
