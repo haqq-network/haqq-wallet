@@ -58,8 +58,7 @@ jobs:
       - build_android
     name: Create changelogs
     uses: ./.github/workflows/slack-notify.yml
-    secrets:
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    secrets: inherit
     with:
       BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION}}
 
