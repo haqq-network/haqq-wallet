@@ -29,6 +29,7 @@ jobs:
       - name: Create Changelog
         id: changelog
         run: |
+          echo ${{secrets.GOOGLE_SERVICE_ACCOUNT}} | base64 -d > android/app/google-account.json
           log="$(bundle exec fastlane ios slack)"
           echo "log=$log" >> $GITHUB_OUTPUT
 
