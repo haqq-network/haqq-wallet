@@ -1,8 +1,10 @@
 import React, {memo, useCallback} from 'react';
 
 import {METADATA_URL} from '@env';
+import {ITEM_KEY} from '@haqq/provider-sss-react-native/dist/constants';
 import {accountInfo} from '@haqq/provider-web3-utils';
 import {getMetadataValue} from '@haqq/shared-react-native';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 import {SigninNetworks} from '@app/components/signin-networks';
 import {app} from '@app/contexts';
@@ -71,12 +73,18 @@ export const SignInNetworksScreen = memo(() => {
           }
         }
 
-        const share = await cloud.getItem(
+        const cloudShare = await cloud.getItem(
           `haqq_${account.address.toLowerCase()}`,
         );
 
-        if (!share) {
-          // Check for local share and show error screen
+        const localShare = await EncryptedStorage.getItem(
+          `${ITEM_KEY}_${account.address.toLowerCase()}`,
+        );
+
+        if (!cloudShare) {
+          if (!localShare) {
+            throw new SssError('signinSharesNotFound');
+          }
           throw new SssError('signinNotRecovery');
         }
 
@@ -89,7 +97,7 @@ export const SignInNetworksScreen = memo(() => {
           sssPrivateKey: creds.privateKey,
           token: creds.token,
           verifier: creds.verifier,
-          sssCloudShare: share,
+          sssCloudShare: cloudShare,
           sssLocalShare: null,
         });
       } catch (e) {

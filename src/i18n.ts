@@ -555,6 +555,10 @@ export enum I18N {
   signNotRecoveryDescription,
   signNotRecoveryOldPin,
   signNotRecoveryChangeSocial,
+  signSharesNotFoundTitle,
+  signSharesNotFoundDescription,
+  signSharesNotFoundPrimaryButton,
+  signSharesNotFoundSecondaryButton,
   backupSssSuggestionTitle,
   backupSssSuggestionDescription,
   sssMigrateAgrementTitle,
@@ -1812,4 +1816,10 @@ const en: Record<I18N, string> = {
   [I18N.sortValidatorOptionName]: 'Name',
   [I18N.sortValidatorOptionPower]: 'Power',
   [I18N.sortValidatorOptionCommission]: 'Commission',
+  [I18N.signSharesNotFoundTitle]:
+    "Unfortunately we didn't find the saved recovery file",
+  [I18N.signSharesNotFoundDescription]:
+    "Unfortunately, we couldn't find the backup file in your cloud storage or on your phone. Please ensure that the backup file is in place and try the operation again or restore your account from the recovery phrase",
+  [I18N.signSharesNotFoundPrimaryButton]: 'Check again',
+  [I18N.signSharesNotFoundSecondaryButton]: 'Restore with mnemonic phrase',
 };
