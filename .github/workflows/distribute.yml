@@ -63,9 +63,9 @@ jobs:
     with:
       BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION}}
 
-  patch_build:
-    name: Patch build versions
-    uses: ./.github/workflows/patch-build-versions.yml
-    secrets: inherit
-    needs:
-      - slack_notify
+  # patch_build:
+  #   name: Patch build versions
+  #   uses: ./.github/workflows/patch-build-versions.yml
+  #   secrets: inherit
+  #   needs:
+  #     - slack_notify
