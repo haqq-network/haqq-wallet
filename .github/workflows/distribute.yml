@@ -15,56 +15,56 @@ on:
         description: Please add a short note for a new build
 
 jobs:
-  # test:
-  #   name: Tests
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 16
-  #     - uses: actions/cache@v3
-  #       with:
-  #         path: '**/node_modules'
-  #         key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-  #     - name: Install packages
-  #       run: yarn install --frozen-lockfile
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - name: Install packages
+        run: yarn install --frozen-lockfile
 
-  # build_android:
-  #   name: Build and distribute Android app
-  #   uses: ./.github/workflows/distribute-android.yml
-  #   secrets: inherit
-  #   with:
-  #     IS_DEVELOPMENT: false
-  #     IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
-  #     BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION}}
-  #   needs:
-  #     - test
+  build_android:
+    name: Build and distribute Android app
+    uses: ./.github/workflows/distribute-android.yml
+    secrets: inherit
+    with:
+      IS_DEVELOPMENT: false
+      IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
+      BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION}}
+    needs:
+      - test
 
-  # build_ios:
-  #   name: Build and distribute iOS app
-  #   uses: ./.github/workflows/distribute-ios.yml
-  #   secrets: inherit
-  #   with:
-  #     IS_DEVELOPMENT: false
-  #     IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
-  #     BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION}}
-  #   needs:
-  #     - test
+  build_ios:
+    name: Build and distribute iOS app
+    uses: ./.github/workflows/distribute-ios.yml
+    secrets: inherit
+    with:
+      IS_DEVELOPMENT: false
+      IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
+      BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION}}
+    needs:
+      - test
 
   slack_notify:
-    # needs:
-    #   - build_ios
-    #   - build_android
+    needs:
+      - build_ios
+      - build_android
     name: Create changelogs
     uses: ./.github/workflows/slack-notify.yml
     secrets: inherit
     with:
       BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION}}
 
-  # patch_build:
-  #   name: Patch build versions
-  #   uses: ./.github/workflows/patch-build-versions.yml
-  #   secrets: inherit
-  #   needs:
-  #     - slack_notify
+  patch_build:
+    name: Patch build versions
+    uses: ./.github/workflows/patch-build-versions.yml
+    secrets: inherit
+    needs:
+      - slack_notify
