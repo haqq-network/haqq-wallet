@@ -30,11 +30,7 @@ jobs:
         id: changelog
         run: |
           echo ${{secrets.GOOGLE_SERVICE_ACCOUNT}} | base64 -d > android/app/google-account.json
-          {
-            echo 'log<<EOF'
-            bundle exec fastlane ios slack_notification
-            echo EOF
-          } >> $GITHUB_OUTPUT
+          bundle exec fastlane ios slack_notification
         env:
           BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION}}
           DEVELOPER_APP_IDENTIFIER: ${{ secrets.IOS_IDENTIFIER }}
