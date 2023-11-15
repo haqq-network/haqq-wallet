@@ -56,6 +56,7 @@ export const SettingsAccountDetailScreen = observer(() => {
   }, [wallet]);
 
   const onViewingRecoveryPhrase = useCallback(() => {
+    Logger.log('onViewingRecoveryPhrase', wallet?.accountId, wallet?.type);
     if (wallet?.accountId) {
       navigation.navigate(
         ManageAccountsStackRoutes.SettingsViewRecoveryPhrase,
