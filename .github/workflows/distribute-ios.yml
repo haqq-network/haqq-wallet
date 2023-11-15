@@ -17,12 +17,19 @@ on:
           - true
           - false
 
+      BUILD_DESCRIPTION:
+        required: true
+        description: Please add a short note for a new build
+
   workflow_call:
     inputs:
       IS_DEVELOPMENT:
         required: true
         type: string
       IS_SSS_ENABLED:
+        required: true
+        type: string
+      BUILD_DESCRIPTION:
         required: true
         type: string
 
@@ -120,3 +127,4 @@ jobs:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           DEVELOPER_APP_ID: ${{ secrets.DEVELOPER_APP_ID }}
           PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}
+          BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION}}

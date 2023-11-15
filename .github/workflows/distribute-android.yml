@@ -17,12 +17,19 @@ on:
           - true
           - false
 
+      BUILD_DESCRIPTION:
+        required: true
+        description: Please add a short note for a new build
+
   workflow_call:
     inputs:
       IS_DEVELOPMENT:
         required: true
         type: string
       IS_SSS_ENABLED:
+        required: true
+        type: string
+      BUILD_DESCRIPTION:
         required: true
         type: string
 
@@ -98,3 +105,4 @@ jobs:
           HAQQ_UPLOAD_KEY_PASSWORD: ${{ secrets.HAQQ_UPLOAD_KEY_PASSWORD }}
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           FIREBASE_TESTERS: ${{ secrets.FIREBASE_TESTERS }}
+          BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION}}

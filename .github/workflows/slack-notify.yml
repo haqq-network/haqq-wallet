@@ -3,6 +3,11 @@ name: Slack notify
 on:
   workflow_dispatch:
   workflow_call:
+    inputs:
+      BUILD_DESCRIPTION:
+        required: true
+        type: string
+
     secrets:
       SLACK_WEBHOOK_URL:
         required: true
@@ -10,7 +15,7 @@ on:
 jobs:
   slack_notify:
     name: Slack notify
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
         with:
@@ -18,18 +23,39 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
+      - name: Install Fastlane
+        run: |
+          bundle install
       - name: Create Changelog
-        shell: bash
         id: changelog
         run: |
-          log="$(node ./utils/changelog.js $(cat .last-build))"
-          echo "log=$log" >> $GITHUB_OUTPUT
+          echo ${{secrets.GOOGLE_SERVICE_ACCOUNT}} | base64 -d > android/app/google-account.json
+          bundle exec fastlane ios slack_notification
+          echo "changelog=$(cat fastlane/changelog.txt)" >> $GITHUB_OUTPUT
+        env:
+          BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION}}
+          DEVELOPER_APP_IDENTIFIER: ${{ secrets.IOS_IDENTIFIER }}
+          GIT_AUTHORIZATION: ${{ secrets.GIT_AUTHORIZATION }}
+          APP_STORE_CONNECT_TEAM_ID: ${{ secrets.APP_STORE_CONNECT_TEAM_ID }}
+          DEVELOPER_PORTAL_TEAM_ID: ${{ secrets.DEVELOPER_PORTAL_TEAM_ID }}
+          MATCH_DEPLOY_KEY: ${{ secrets.MATCH_DEPLOY_KEY }}
+          TEMP_KEYCHAIN_USER: ${{ secrets.TEMP_KEYCHAIN_USER }}
+          TEMP_KEYCHAIN_PASSWORD: ${{ secrets.TEMP_KEYCHAIN_PASSWORD }}
+          APPLE_KEY_ID: ${{ secrets.APPLE_KEY_ID }}
+          APPLE_ISSUER_ID: ${{ secrets.APPLE_ISSUER_ID }}
+          APPLE_KEY_CONTENT: ${{ secrets.APPLE_KEY_CONTENT }}
+          FASTLANE_PASSWORD: ${{ secrets.APPLE_FASTLANE_PASSWORD }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          DEVELOPER_APP_ID: ${{ secrets.DEVELOPER_APP_ID }}
+          PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          FIREBASE_TESTERS: ${{ secrets.FIREBASE_TESTERS }}
 
       - name: Send GitHub Action trigger data to Slack workflow
         uses: slackapi/slack-github-action@v1
         with:
           payload: |
-            ${{ steps.changelog.outputs.log }}
+            ${{ steps.changelog.outputs.changelog }}
         env:
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

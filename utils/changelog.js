@@ -66,7 +66,7 @@ new Promise(resolve => {
         }
       }
 
-      let blocks = [];
+      let blocks = formatBlock('title', {value: process.env.BUILD_DESCRIPTION, ios: process.env.IOS, android: process.env.ANDROID});
 
       const viewed = [];
 
@@ -126,6 +126,18 @@ const blockNames = {
 function formatBlock(type, variants = {}) {
   const block = [];
 
+  if (type === 'title') {
+    return [
+      {
+        type: 'header',
+        text: {
+          type: 'plain_text',
+          text: `${process.env.BUILD_DESCRIPTION}\niOS: ${process.env.IOS}, Android: ${process.env.ANDROID}`,
+        },
+      },
+    ]
+  }
+
   for (const variant of Object.entries(variants)) {
     if (variant[1].length) {
       const title =
@@ -153,18 +165,6 @@ function formatBlock(type, variants = {}) {
         },
       });
     }
-  }
-
-  if (block.length && blockNames[type]) {
-    return [
-      {
-        type: 'header',
-        text: {
-          type: 'plain_text',
-          text: blockNames[type],
-        },
-      },
-    ].concat(block);
   }
 
   return block;
