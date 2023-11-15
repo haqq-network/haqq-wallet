@@ -100,8 +100,8 @@ platform :ios do
       api_key: api_key,
     ) + 1
 
-    sh("IOS=#{current_build_number_ios} ANDROID=#{current_build_number_android} BUILD_DESCRIPTION=\"#{ENV['BUILD_DESCRIPTION']}\" node ../utils/changelog.js $(cat ../.last-build) >> log.txt")
-    sh("cat log.txt")
+    sh("IOS=#{current_build_number_ios} ANDROID=#{current_build_number_android} BUILD_DESCRIPTION=\"#{ENV['BUILD_DESCRIPTION']}\" node ../utils/changelog.js $(cat ../.last-build) >> changelog.txt")
+    sh("echo Generated Changelog: $(cat changelog.txt)")
   end
 
   lane :version do

@@ -31,7 +31,7 @@ jobs:
         run: |
           echo ${{secrets.GOOGLE_SERVICE_ACCOUNT}} | base64 -d > android/app/google-account.json
           bundle exec fastlane ios slack_notification
-          cat fastlane/log.txt
+          echo "changelog=$(cat fastlane/changelog.txt)" >> $GITHUB_OUTPUT
         env:
           BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION}}
           DEVELOPER_APP_IDENTIFIER: ${{ secrets.IOS_IDENTIFIER }}
@@ -55,7 +55,7 @@ jobs:
         uses: slackapi/slack-github-action@v1
         with:
           payload: |
-            ${{ steps.changelog.outputs.log }}
+            ${{ steps.changelog.outputs.changelog }}
         env:
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
