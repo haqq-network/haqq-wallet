@@ -13,6 +13,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {WelcomeStackRoutes} from '@app/screens/WelcomeStack';
+import {OnboardingStackRoutes} from '@app/screens/WelcomeStack/OnboardingStack';
 import {
   SignInStackParamList,
   SignInStackRoutes,
@@ -109,7 +110,6 @@ export const SignInStoreWalletScreen = memo(() => {
               },
             );
 
-            hideModal('loading');
             navigation.navigate(SignInStackRoutes.SigninChooseAccount, {
               provider: sssProvider,
             });
@@ -117,6 +117,16 @@ export const SignInStoreWalletScreen = memo(() => {
         }
 
         if (params.type !== 'sss') {
+          if (app.onboarded) {
+            //@ts-ignore
+            navigation.navigate(SignInStackRoutes.OnboardingSetupPin, {
+              //@ts-ignore
+              screen: OnboardingStackRoutes.OnboardingFinish,
+              params,
+            });
+            return;
+          }
+
           //@ts-ignore
           navigation.navigate(nextScreen ?? 'onboardingFinish', params);
         }
@@ -134,6 +144,8 @@ export const SignInStoreWalletScreen = memo(() => {
               goBack();
             }
         }
+      } finally {
+        hideModal('loading');
       }
     }, 350);
   }, [navigation, nextScreen, params]);
