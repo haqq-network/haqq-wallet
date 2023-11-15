@@ -27,6 +27,7 @@ import {trackEvent} from '@app/helpers/track-event';
 import {useTheme} from '@app/hooks';
 import {Contact} from '@app/models/contact';
 import {Transaction} from '@app/models/transaction';
+import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 import {RootStack} from '@app/screens/RootStack';
@@ -72,6 +73,10 @@ export const App = () => {
             Wallet.migrate(),
             Transaction.migrate(),
           ]);
+
+          // We need reopen app for start SSS check
+          // because we are working with cloud snapshots
+          VariablesBool.set('isReadyForSSSVerification', true);
         }
       })
       .then(() => {
