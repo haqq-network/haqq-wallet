@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useRef} from 'react';
 
 import {format} from 'date-fns';
-import {head, includes} from 'lodash';
 import {Dimensions, Image, TextStyle, View} from 'react-native';
 import {NativeScrollEvent} from 'react-native/Libraries/Components/ScrollView/ScrollView';
 import {NativeSyntheticEvent} from 'react-native/Libraries/Types/CoreEventTypes';
@@ -88,12 +87,12 @@ const rules = {
     },
   },
   image: {
-    react: (node: NodeImage) => {
+    react: (node: NodeImage, output: Output, {...state}) => {
       return (
-        <View key={makeID(10)} style={styles.imageWrapper}>
+        <View key={makeID(10)} style={!state.withinList && styles.imageWrapper}>
           <Image
             source={{uri: node.target}}
-            style={styles.image}
+            style={[styles.image, state.withinList && styles.inListImage]}
             resizeMode="center"
           />
         </View>
@@ -102,17 +101,59 @@ const rules = {
   },
   paragraph: {
     react: (node: NodeParagraph, output: Output, {...state}) => {
-      return (
-        <Text
-          t11
-          style={styles.paragraph}
-          color={Color.textBase1}
-          key={makeID(10)}>
-          {output(node.content, {
-            ...state,
-          })}
-        </Text>
-      );
+      // If paragraph DOESN'T CONTAIN images than show it as plain text paragraph
+      if (!node.content.find(c => c.type === 'image')) {
+        const content = output(node.content, {
+          ...state,
+        });
+
+        return (
+          <Text
+            t11
+            style={!state.withinList && styles.paragraph}
+            color={Color.textBase1}
+            key={makeID(10)}>
+            {content}
+          </Text>
+        );
+      }
+
+      // if paragraph CONTAIN images than split it to array of plain text and images
+      let startSearchIndex = 0;
+      const content = [];
+      while (
+        !(startSearchIndex === -1 || startSearchIndex === node.content.length)
+      ) {
+        const nodeImageIndex = node.content.findIndex(
+          c => c.type === 'image',
+          startSearchIndex,
+        );
+
+        if (nodeImageIndex !== -1) {
+          content.push(
+            <Text t11 color={Color.textBase1} key={makeID(10)}>
+              {output(node.content.slice(startSearchIndex, nodeImageIndex), {
+                ...state,
+              })}
+            </Text>,
+            output(node.content[nodeImageIndex], {
+              ...state,
+            }),
+          );
+          startSearchIndex = nodeImageIndex + 1;
+        } else {
+          content.push(
+            <Text t11 color={Color.textBase1} key={makeID(10)}>
+              {output(node.content.slice(startSearchIndex), {
+                ...state,
+              })}
+            </Text>,
+          );
+          startSearchIndex = nodeImageIndex;
+        }
+      }
+
+      return content;
     },
   },
   text: {
@@ -122,7 +163,12 @@ const rules = {
       };
 
       return (
-        <Text clean key={makeID(10)} style={textStyle} color={Color.textBase1}>
+        <Text
+          t11
+          clean
+          key={makeID(10)}
+          style={textStyle}
+          color={Color.textBase1}>
           {node.content}
         </Text>
       );
@@ -132,38 +178,14 @@ const rules = {
     react: function (node: NodeList, output: Output, {...state}) {
       let numberIndex = 1;
       const items = node.items.map(item => {
-        state.withinList = false;
-
-        if (item.length > 1) {
-          if (item[1].type === 'list') {
-            state.withinList = true;
-          }
-        }
-
-        const content = output(item, state);
-        let listItem;
-        if (
-          includes(['text', 'paragraph', 'strong'], (head(item) || {}).type) &&
-          !state.withinList
-        ) {
-          state.withinList = true;
-
-          listItem = (
-            <Text t11 key={makeID(10)}>
-              {content}
-            </Text>
-          );
-        } else {
-          listItem = <View key={makeID(10)}>{content}</View>;
-        }
-        state.withinList = false;
+        state.withinList = true;
 
         return (
           <View key={makeID(10)} style={styles.listRow}>
             <Text key={makeID(10)} t11>
               {node.ordered ? numberIndex++ + '. ' : '\u2022 '}
             </Text>
-            {listItem}
+            <View key={makeID(10)}>{output(item, state)}</View>
           </View>
         );
       });
@@ -277,6 +299,9 @@ const styles = createTheme({
     borderWidth: 1,
     borderColor: Color.graphicSecond1,
     justifyContent: 'center',
+  },
+  inListImage: {
+    width: Dimensions.get('window').width - HORIZONTAL_PADDING * 3,
   },
   heading: {marginBottom: 8, marginTop: 28},
   paragraph: {marginVertical: 8},

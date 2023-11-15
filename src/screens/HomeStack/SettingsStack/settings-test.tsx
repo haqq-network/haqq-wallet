@@ -189,6 +189,10 @@ const getTestModals = (): TestModals => {
       errorDetails: 'viewErrorDetails',
       onClose: () => logger.log('viewErrorDetails closed'),
     },
+    cloudShareNotFound: {
+      onClose: () => logger.log('cloudShareNotFound closed'),
+      wallet: wallets[0],
+    },
   };
 
   if (wallets.length) {
