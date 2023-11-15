@@ -44,13 +44,21 @@ Android Production App
 
 ## iOS
 
+### ios slack_notification
+
+```sh
+[bundle exec] fastlane ios slack_notification
+```
+
+IOS Production App
+
 ### ios version
 
 ```sh
 [bundle exec] fastlane ios version
 ```
 
-IOS Production App
+
 
 ### ios test
 
