@@ -66,7 +66,7 @@ new Promise(resolve => {
         }
       }
 
-      let blocks = [formatBlock('title', {value: process.env.BUILD_DESCRIPTION, ios: process.env.IOS, android: process.env.ANDROID})];
+      let blocks = formatBlock('title', {value: process.env.BUILD_DESCRIPTION, ios: process.env.IOS, android: process.env.ANDROID});
 
       const viewed = [];
 
