@@ -17,6 +17,7 @@ import {Spacer} from '@app/components/ui';
 import {showModal} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
+import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {BrowserStack} from '@app/screens/HomeStack/BrowserStack';
 import {
@@ -102,6 +103,7 @@ const navigationOptions = {
 
 export const HomeScreen = memo(() => {
   const navigation = useTypedNavigation();
+
   useEffectAsync(async () => {
     const cloud = new Cloud();
     const walletToCheck = Wallet.getAllVisible().find(
@@ -111,7 +113,8 @@ export const HomeScreen = memo(() => {
       const cloudShare = await cloud.getItem(
         `haqq_${walletToCheck.address.toLowerCase()}`,
       );
-      if (!cloudShare) {
+      const isReady = VariablesBool.get('isReadyForSSSVerification');
+      if (!cloudShare && isReady) {
         Wallet.update(walletToCheck.address, {socialLinkEnabled: false});
         showModal(ModalType.cloudShareNotFound, {wallet: walletToCheck});
       }
