@@ -135,8 +135,6 @@ export async function onAuthorized(
     [verifier, token, false],
   );
 
-  Logger.log('nodeDetailsRequest', nodeDetailsRequest);
-
   const tmpPk = await generateEntropy(32);
   const shares = await Promise.all(
     nodeDetailsRequest.shares.map(s =>
@@ -149,8 +147,6 @@ export async function onAuthorized(
         .catch(() => [null, s[1]]),
     ),
   );
-
-  Logger.log('shares', shares);
 
   const shares2 = shares.filter(s => s[0] !== null && s[0] !== '') as [
     string,
