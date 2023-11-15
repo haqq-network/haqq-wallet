@@ -15,6 +15,7 @@ import {
   SignUpStackParamList,
   SignUpStackRoutes,
 } from '@app/screens/WelcomeStack/SignUpStack';
+import {SssProviders} from '@app/services/provider-sss';
 import {ModalType} from '@app/types';
 import {WalletType} from '@app/types';
 import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables/common';
@@ -47,12 +48,14 @@ export const SignUpStoreWalletScreen = observer(() => {
   }, [route.params]);
 
   const getWalletType = useCallback(() => {
-    //@ts-ignore
-    if (route.params.sssPrivateKey) {
-      return WalletType.sss;
-    }
-    //@ts-ignore
-    if (route.params.provider instanceof ProviderSSSReactNative) {
+    if (
+      //@ts-ignore
+      route.params.sssPrivateKey ||
+      //@ts-ignore
+      route.params.provider instanceof ProviderSSSReactNative ||
+      //@ts-ignore
+      Object.values(SssProviders).includes(route.params.provider)
+    ) {
       return WalletType.sss;
     }
     //@ts-ignore
