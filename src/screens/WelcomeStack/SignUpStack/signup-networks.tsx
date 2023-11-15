@@ -39,6 +39,8 @@ export const SignupNetworksScreen = memo(() => {
           break;
       }
 
+      Logger.log('onLogin', creds);
+
       let nextScreen = app.onboarded
         ? SignUpStackRoutes.SignupStoreWallet
         : SignUpStackRoutes.OnboardingSetupPin;

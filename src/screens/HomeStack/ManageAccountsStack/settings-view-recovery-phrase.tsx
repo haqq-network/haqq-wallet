@@ -26,6 +26,8 @@ export const SettingsViewRecoveryPhraseScreen = memo(() => {
 
   const [mnemonic, setMnemonic] = useState<string>('');
 
+  Logger.log('SettingsViewRecoveryPhraseScreen', accountId, type);
+
   const onEnter = useCallback(async () => {
     switch (type) {
       case WalletType.mnemonic:
