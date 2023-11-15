@@ -53,9 +53,9 @@ jobs:
   #     - test
 
   slack_notify:
-    needs:
-      - build_ios
-      - build_android
+    # needs:
+    #   - build_ios
+    #   - build_android
     name: Create changelogs
     uses: ./.github/workflows/slack-notify.yml
     secrets: inherit
