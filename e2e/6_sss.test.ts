@@ -85,19 +85,19 @@ describe('SSS Wallet', () => {
 
     await waitFor(element(by.text('Your recovery phrase'))).toBeVisible();
 
-    const mnemonic_words = [];
-
-    for (let i = 1; i <= 24; i++) {
-      // @ts-ignore
-      const {text} = await element(
-        by.id(`settings_view_recovery_phrase_word_${i}`),
-      ).getAttributes();
-
-      if (text) {
-        mnemonic_words.push(text);
-      }
-    }
-
-    console.log(mnemonic_words.join(' '));
+    // const mnemonic_words = [];
+    //
+    // for (let i = 1; i <= 24; i++) {
+    //   // @ts-ignore
+    //   const {text} = await element(
+    //     by.id(`settings_view_recovery_phrase_word_${i}`),
+    //   ).getAttributes();
+    //
+    //   if (text) {
+    //     mnemonic_words.push(text);
+    //   }
+    // }
+    //
+    // console.log(mnemonic_words.join(' '));
   });
 });

@@ -11,8 +11,11 @@ import {WalletInitialData} from '@app/types';
 export async function getProviderForNewWallet(params?: WalletInitialData) {
   const getPassword = app.getPassword.bind(app);
 
+  Logger.log('params', params);
+
   if (params && params.type === 'sss') {
     const storage = await getProviderStorage('', 'cloud');
+    Logger.log('sss', storage);
     return await ProviderSSSReactNative.initialize(
       //@ts-ignore
       params.action === 'restore' ? params.sssPrivateKey || null : null,
@@ -56,6 +59,8 @@ export async function getProviderForNewWallet(params?: WalletInitialData) {
       getPassword,
     });
   }
+
+  Logger.log('create new mnemonic wallet');
 
   return await ProviderMnemonicReactNative.initialize(null, getPassword, {});
 }

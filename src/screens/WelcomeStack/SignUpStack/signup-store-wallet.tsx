@@ -27,6 +27,8 @@ export const SignUpStoreWalletScreen = observer(() => {
     SignUpStackRoutes.SignupStoreWallet
   >();
 
+  Logger.log('SignUpStoreWalletScreen', route.params);
+
   const goBack = useCallback(() => {
     hideModal(ModalType.loading);
     navigation.replace(WelcomeStackRoutes.SignUp);
