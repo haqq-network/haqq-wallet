@@ -84,8 +84,8 @@ export function validatorsSortCommission(validators: ValidatorItem[]) {
     }
 
     return (
-      parseFloat(valB.commission.commission_rates.rate) -
-      parseFloat(valA.commission.commission_rates.rate)
+      parseFloat(valA.commission.commission_rates.rate) -
+      parseFloat(valB.commission.commission_rates.rate)
     );
   });
 }
