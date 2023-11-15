@@ -7,6 +7,7 @@ import {Events} from '@app/events';
 import {hideModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {HomeStackRoutes} from '@app/screens/HomeStack';
 import {
   OnboardingStackParamList,
   OnboardingStackRoutes,
@@ -32,6 +33,12 @@ export const OnboardingFinishScreen = memo(() => {
 
   const onEnd = useCallback(() => {
     if (route.params.onboarding) {
+      if (app.onboarded) {
+        //@ts-ignore
+        navigation.navigate(HomeStackRoutes.Home);
+        return;
+      }
+
       WalletConnect.instance.init();
       app.onboarded = true;
 
