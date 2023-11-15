@@ -110,6 +110,7 @@ export const SigninNetworks = observer(
             disabled={isLoading && !isApple}
             onPress={onPressLoginApple}
             variant={SocialButtonVariant.apple}
+            testID="sss_login_apple"
           />
         </>
       )}
@@ -121,6 +122,7 @@ export const SigninNetworks = observer(
             disabled={isLoading && !isGoogle}
             onPress={onPressLoginGoogle}
             variant={SocialButtonVariant.google}
+            testID="sss_login_google"
           />
         </>
       )}
@@ -133,6 +135,7 @@ export const SigninNetworks = observer(
             onPress={onPressLoginCustom}
             i18n={I18N.customNetwork}
             variant={ButtonVariant.contained}
+            testID="sss_login_custom"
           />
         </>
       )}

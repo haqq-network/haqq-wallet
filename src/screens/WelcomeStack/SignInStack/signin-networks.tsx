@@ -16,6 +16,7 @@ import {Cloud} from '@app/services/cloud';
 import {
   SssProviders,
   onLoginApple,
+  onLoginCustom,
   onLoginGoogle,
 } from '@app/services/provider-sss';
 import {RemoteConfig} from '@app/services/remote-config';
@@ -34,7 +35,7 @@ export const SignInNetworksScreen = memo(() => {
           creds = await onLoginGoogle();
           break;
         case SssProviders.custom:
-          creds = await onLoginGoogle();
+          creds = await onLoginCustom();
           break;
       }
 

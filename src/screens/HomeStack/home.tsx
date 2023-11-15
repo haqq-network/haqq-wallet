@@ -14,7 +14,6 @@ import {HomeScreenLabel} from '@app/components/home-screen/label';
 import {HomeScreenTabBarIcon} from '@app/components/home-screen/tab-bar-icon';
 import {HomeScreenTitle} from '@app/components/home-screen/title';
 import {Spacer} from '@app/components/ui';
-import {showModal} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {VariablesBool} from '@app/models/variables-bool';
@@ -29,7 +28,7 @@ import {HomeFeedStack} from '@app/screens/HomeStack/HomeFeedStack';
 import {HomeNewsStack} from '@app/screens/HomeStack/HomeNewsStack';
 import {SettingsStack} from '@app/screens/HomeStack/SettingsStack';
 import {Cloud} from '@app/services/cloud';
-import {ModalType, WalletType} from '@app/types';
+import {WalletType} from '@app/types';
 import {IS_IOS} from '@app/variables/common';
 
 const Tab = createBottomTabNavigator();
