@@ -77,16 +77,32 @@ export const UnstackedHeader = ({
           optionsContainerStyle={styles.menuOptionsContainer}
           customStyles={optionCustomStyles}>
           <MenuOption value={ValidatorSortKey.random}>
-            <Text t11 i18n={I18N.sortValidatorOptionRandom} />
+            <Text
+              t11
+              i18n={I18N.sortValidatorOptionRandom}
+              color={Color.textBase1}
+            />
           </MenuOption>
           <MenuOption value={ValidatorSortKey.name}>
-            <Text t11 i18n={I18N.sortValidatorOptionName} />
+            <Text
+              t11
+              i18n={I18N.sortValidatorOptionName}
+              color={Color.textBase1}
+            />
           </MenuOption>
           <MenuOption value={ValidatorSortKey.power}>
-            <Text t11 i18n={I18N.sortValidatorOptionPower} />
+            <Text
+              t11
+              i18n={I18N.sortValidatorOptionPower}
+              color={Color.textBase1}
+            />
           </MenuOption>
           <MenuOption value={ValidatorSortKey.commission}>
-            <Text t11 i18n={I18N.sortValidatorOptionCommission} />
+            <Text
+              t11
+              i18n={I18N.sortValidatorOptionCommission}
+              color={Color.textBase1}
+            />
           </MenuOption>
         </MenuOptions>
       </Menu>
@@ -116,5 +132,7 @@ const styles = createTheme({
   },
   menuOptionsContainer: {
     padding: 8,
+    backgroundColor: Color.bg1,
+    shadowColor: Color.shadowColor3,
   },
 });
