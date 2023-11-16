@@ -7,13 +7,10 @@ import {PIN} from './test-variables';
 describe('SSS Wallet', () => {
   let uid = '';
   let mnemonic = '';
-  let isAndroid = device.getPlatform() === 'android';
+  const isAndroid = device.getPlatform() === 'android';
 
   beforeAll(() => {
-    if (!uid) {
-      uid = `test${getTimeStamp()}@haqq`;
-    }
-    isAndroid = device.getPlatform() === 'android';
+    uid = `test${getTimeStamp()}@haqq`;
   });
 
   beforeEach(async () => {

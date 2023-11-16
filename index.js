@@ -37,8 +37,8 @@ enableScreens();
 enableFreeze(true);
 
 LogBox.ignoreLogs(["The 'navigation' object hasn't been initialized"]);
-LogBox.ignoreLogs(['Warning: ...']);
-LogBox.ignoreAllLogs();
+// LogBox.ignoreLogs(['Warning: ...']);
+// LogBox.ignoreAllLogs();
 
 try {
   const isRTLEnabled = isFeatureEnabled(Feature.rtl);
