@@ -14,12 +14,14 @@ import {
   ChooseAccount,
   ChooseAccountTabNames,
 } from '@app/components/choose-account/choose-account';
+import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {getWalletsFromProvider} from '@app/helpers/get-wallets-from-provider';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {Wallet} from '@app/models/wallet';
+import {HomeStackRoutes} from '@app/screens/HomeStack';
 import {OnboardingStackRoutes} from '@app/screens/WelcomeStack/OnboardingStack';
 import {
   SignInStackParamList,
@@ -200,6 +202,12 @@ export const ChooseAccountScreen = memo(() => {
       //@ts-ignore
       navigation.navigate(SignInStackRoutes.OnboardingSetupPin, params);
     } else {
+      if (app.onboarded) {
+        //@ts-ignore
+        navigation.navigate(HomeStackRoutes.Home);
+        return;
+      }
+
       //@ts-ignore
       navigation.navigate(OnboardingStackRoutes.OnboardingFinish);
     }

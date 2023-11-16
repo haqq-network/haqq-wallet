@@ -1,12 +1,15 @@
 import React, {memo, useCallback} from 'react';
 
+import {ITEM_KEY} from '@haqq/provider-sss-react-native/dist/constants';
 import {accountInfo} from '@haqq/provider-web3-utils';
 import {Alert} from 'react-native';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 import {SignupNetworkExists} from '@app/components/signup-network-exists';
 import {app} from '@app/contexts';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {WelcomeStackRoutes} from '@app/screens/WelcomeStack';
 import {SignInStackRoutes} from '@app/screens/WelcomeStack/SignInStack';
 import {
   SignUpStackParamList,
@@ -39,16 +42,30 @@ export const SignupNetworkExistsScreen = memo(() => {
 
     const account = await accountInfo(nextParams.sssPrivateKey);
 
-    const share = await cloud.getItem(`haqq_${account.address.toLowerCase()}`);
+    const cloudShare = await cloud.getItem(
+      `haqq_${account.address.toLowerCase()}`,
+    );
 
-    if (!share) {
+    const localShare = await EncryptedStorage.getItem(
+      `${ITEM_KEY}_${account.address.toLowerCase()}`,
+    );
+
+    if (!cloudShare && !localShare) {
+      //@ts-ignore
+      navigation.navigate(WelcomeStackRoutes.SignIn, {
+        screen: SignInStackRoutes.SigninSharesNotFound,
+      });
+      return;
+    }
+
+    if (!cloudShare) {
       nextScreen = SignUpStackRoutes.SignUpPin;
     } else {
       nextScreen = app.onboarded
         ? SignUpStackRoutes.SignupStoreWallet
         : SignUpStackRoutes.OnboardingSetupPin;
 
-      nextParams.sssCloudShare = share;
+      nextParams.sssCloudShare = cloudShare;
     }
 
     if (nextScreen === SignUpStackRoutes.SignupStoreWallet) {
@@ -58,7 +75,7 @@ export const SignupNetworkExistsScreen = memo(() => {
         sssPrivateKey: nextParams.sssPrivateKey,
         token: nextParams.token,
         verifier: nextParams.verifier,
-        sssCloudShare: share,
+        sssCloudShare: cloudShare,
         sssLocalShare: null,
       });
       return;
