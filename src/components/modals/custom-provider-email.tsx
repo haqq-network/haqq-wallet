@@ -30,14 +30,12 @@ export const CustomProviderEmail = ({
 
   useEffect(() => {
     const showSubscription = Keyboard.addListener('keyboardDidShow', e => {
-      console.log(e);
       setSpacerHeight(
         (e.startCoordinates?.screenY ?? Dimensions.get('window').height) -
           e.endCoordinates.screenY,
       );
     });
-    const hideSubscription = Keyboard.addListener('keyboardDidHide', e => {
-      console.log(e);
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
       setSpacerHeight(0);
     });
 
@@ -46,8 +44,6 @@ export const CustomProviderEmail = ({
       hideSubscription.remove();
     };
   }, []);
-
-  console.log('spacerHeight', spacerHeight);
 
   return (
     <BottomPopupContainer>
