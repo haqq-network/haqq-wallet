@@ -17,6 +17,7 @@ import {createTheme} from '@app/helpers';
 import {useWalletConnectSessions} from '@app/hooks/use-wallet-connect-sessions';
 import {WalletBalance} from '@app/hooks/use-wallets-balance';
 import {Wallet} from '@app/models/wallet';
+import {WalletType} from '@app/types';
 import {filterWalletConnectSessionsByAddress} from '@app/utils';
 
 export type WalletsProps = {
@@ -60,6 +61,7 @@ export const Wallets = ({
   const [walletConnectSessions, setWalletConnectSessions] = useState<
     SessionTypes.Struct[][]
   >([]);
+  const mnemonicCache: string[] = [];
 
   useEffect(() => {
     setWalletConnectSessions(
@@ -81,22 +83,35 @@ export const Wallets = ({
         scrollEventThrottle={16}
         onScroll={scrollHandler}
         style={styles.scroll}>
-        {wallets.map((w, i) => (
-          <CarouselItem index={i} pan={pan} key={w.address}>
-            <WalletCard
-              testID={`${testID}_${w.address}`}
-              wallet={w}
-              balance={balance[w.address]}
-              walletConnectSessions={walletConnectSessions[i]}
-              showLockedTokens={showLockedTokens}
-              onPressSend={onPressSend}
-              onPressQR={onPressQR}
-              onPressProtection={onPressProtection}
-              onPressWalletConnect={onPressWalletConnect}
-              onPressAccountInfo={onPressAccountInfo}
-            />
-          </CarouselItem>
-        ))}
+        {wallets.map((w, i) => {
+          let isSecondMnemonic = false;
+
+          if (
+            w.type === WalletType.mnemonic &&
+            w.accountId &&
+            !mnemonicCache.includes(w.accountId)
+          ) {
+            isSecondMnemonic = mnemonicCache.length > 0;
+            mnemonicCache.push(w.accountId);
+          }
+          return (
+            <CarouselItem index={i} pan={pan} key={w.address}>
+              <WalletCard
+                testID={`${testID}_${w.address}`}
+                wallet={w}
+                balance={balance[w.address]}
+                walletConnectSessions={walletConnectSessions[i]}
+                showLockedTokens={showLockedTokens}
+                onPressSend={onPressSend}
+                onPressQR={onPressQR}
+                onPressProtection={onPressProtection}
+                onPressWalletConnect={onPressWalletConnect}
+                onPressAccountInfo={onPressAccountInfo}
+                isSecondMnemonic={isSecondMnemonic}
+              />
+            </CarouselItem>
+          );
+        })}
         <CarouselItem index={wallets.length} pan={pan}>
           <WalletCreate
             testID={`${testID}_create`}
