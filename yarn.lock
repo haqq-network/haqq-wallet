@@ -9400,6 +9400,7 @@ __metadata:
     react-native-markdown-display: 7.0.0-alpha.2
     react-native-markdown-package: 1.8.2
     react-native-mmkv: 2.10.2
+    react-native-network-info: 5.2.1
     react-native-os: "https://github.com/aprock/react-native-os#938676ebd92d58b8928168a7e78cbe216838ed17"
     react-native-permissions: ^3.10.0
     react-native-play-install-referrer: 1.1.8
@@ -14628,6 +14629,15 @@ __metadata:
     react: "*"
     react-native: ">=0.71.0"
   checksum: ba1759c6898293db9db2ab1b9bb239840f4902d5a8f53672e02eeb23a81e15cb7f6b32d716bc46747868d8c241d3daad6b15af60a5d5cc7716af1d2c1597c17e
+  languageName: node
+  linkType: hard
+
+"react-native-network-info@npm:5.2.1":
+  version: 5.2.1
+  resolution: "react-native-network-info@npm:5.2.1"
+  peerDependencies:
+    react-native: ">=0.47"
+  checksum: eb5ff3f19777f278c95cbc80c22ae6b8703d145ce463e51fd7f09e51da3e2f20b27048432b24ad1671f8a1b01b2c939a4d9097e8c4b13ae182230e1bb848242d
   languageName: node
   linkType: hard
 
