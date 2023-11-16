@@ -119,7 +119,7 @@ export const WalletsWrapper = observer(() => {
 
     let rootWalletProvider = await getProviderInstanceForWallet(
       visible[0],
-      false,
+      true,
       true,
     );
 
