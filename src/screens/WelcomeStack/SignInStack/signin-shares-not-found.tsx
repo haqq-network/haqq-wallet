@@ -11,7 +11,7 @@ export const SigninSharesNotFoundScreen = memo(() => {
   const navigation = useTypedNavigation<SignInStackParamList>();
 
   const onPrimaryPress = useCallback(() => {
-    navigation.goBack();
+    navigation.pop(2);
   }, [navigation]);
 
   const onSecondaryPress = useCallback(() => {
