@@ -1,17 +1,19 @@
 import React, {useCallback} from 'react';
 
-import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
+import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {observer} from 'mobx-react';
 
 import {Wallets} from '@app/components/wallets';
 import {app} from '@app/contexts';
 import {getProviderInstanceForWallet} from '@app/helpers';
+import {getProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet';
 import {useTypedNavigation} from '@app/hooks';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {Wallet} from '@app/models/wallet';
 import {HomeStackRoutes} from '@app/screens/HomeStack';
 import {HomeFeedStackParamList} from '@app/screens/HomeStack/HomeFeedStack';
 import {WalletConnect} from '@app/services/wallet-connect';
+import {WalletType} from '@app/types';
 import {filterWalletConnectSessionsByAddress} from '@app/utils';
 
 export const WalletsWrapper = observer(() => {
@@ -106,24 +108,32 @@ export const WalletsWrapper = observer(() => {
   );
 
   const onPressCreate = useCallback(async () => {
-    const rootWalletProvider = await getProviderInstanceForWallet(
+    const rootWallet = visible[0];
+
+    const getType = () => {
+      if ([WalletType.hot, WalletType.ledgerBt].includes(rootWallet.type)) {
+        return WalletType.mnemonic;
+      }
+      return rootWallet.type;
+    };
+
+    let rootWalletProvider = await getProviderInstanceForWallet(
       visible[0],
       false,
       true,
     );
 
-    if (rootWalletProvider instanceof ProviderLedgerReactNative) {
-      onPressLedger();
-      return;
+    if (rootWalletProvider instanceof ProviderMnemonicReactNative) {
+      //
+    } else {
+      rootWalletProvider = await getProviderForNewWallet();
     }
 
-    if (rootWalletProvider) {
-      //@ts-ignore
-      navigation.navigate(HomeStackRoutes.Create, {
-        type: visible[0].type,
-        provider: rootWalletProvider,
-      });
-    }
+    //@ts-ignore
+    navigation.navigate(HomeStackRoutes.Create, {
+      type: getType(),
+      provider: rootWalletProvider,
+    });
   }, [navigation]);
 
   const onPressLedger = useCallback(() => {

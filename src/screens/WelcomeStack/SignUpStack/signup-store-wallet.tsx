@@ -1,6 +1,5 @@
 import {useCallback, useEffect} from 'react';
 
-import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {observer} from 'mobx-react';
 
@@ -58,12 +57,19 @@ export const SignUpStoreWalletScreen = observer(() => {
     ) {
       return WalletType.sss;
     }
-    //@ts-ignore
-    if (route.params.provider instanceof ProviderHotReactNative) {
-      return WalletType.hot;
-    }
+
     return WalletType.mnemonic;
   }, [route.params]);
+
+  const getWalletIndex = (nextIndex: number) => {
+    if (Wallet.getSize() > 0 && isNaN(nextIndex)) {
+      return 1;
+    }
+    if (!nextIndex) {
+      return 0;
+    }
+    return nextIndex;
+  };
 
   useEffect(() => {
     setTimeout(async () => {
@@ -78,12 +84,9 @@ export const SignUpStoreWalletScreen = observer(() => {
             parseInt(segments[segments.length - 1], 10) + 1,
           );
         }, 0);
-        if (isNaN(nextHdPathIndex)) {
-          //@ts-ignore
-          navigation.navigate(route.params.nextScreen ?? 'onboardingFinish');
-          return;
-        }
-        const hdPath = `${ETH_HD_SHORT_PATH}/${nextHdPathIndex}`;
+        const hdPath = `${ETH_HD_SHORT_PATH}/${getWalletIndex(
+          nextHdPathIndex,
+        )}`;
         const name =
           Wallet.getSize() === 0
             ? MAIN_ACCOUNT_NAME
