@@ -7,7 +7,7 @@ import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {RemoteConfig} from '@app/services/remote-config';
 import {WalletInitialData} from '@app/types';
 
-export async function getProviderForNewWallet(params: WalletInitialData) {
+export async function getProviderForNewWallet(params?: WalletInitialData) {
   const getPassword = app.getPassword.bind(app);
 
   if (params && params.type === 'sss') {

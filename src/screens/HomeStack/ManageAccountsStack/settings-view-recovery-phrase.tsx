@@ -6,6 +6,7 @@ import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {SettingsViewRecoveryPhrase} from '@app/components/settings-view-recovery-phrase';
 import {CustomHeader, Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
+import {showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {
@@ -13,7 +14,7 @@ import {
   ManageAccountsStackRoutes,
 } from '@app/screens/HomeStack/ManageAccountsStack';
 import {Cloud} from '@app/services/cloud';
-import {WalletType} from '@app/types';
+import {ModalType, WalletType} from '@app/types';
 
 import {PinGuardScreen} from '../../pin-guard';
 
@@ -43,8 +44,13 @@ export const SettingsViewRecoveryPhraseScreen = memo(() => {
           account: accountId,
           getPassword: app.getPassword.bind(app),
         });
-        const phraseSss = await providerSss.getMnemonicPhrase();
-        setMnemonic(phraseSss ?? '');
+        try {
+          const phraseSss = await providerSss.getMnemonicPhrase();
+          setMnemonic(phraseSss ?? '');
+        } catch (err) {
+          showModal(ModalType.cloudShareNotFound);
+          navigation.goBack();
+        }
         break;
     }
   }, [accountId, type]);
