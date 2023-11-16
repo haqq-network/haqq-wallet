@@ -1,5 +1,6 @@
 import {Platform} from 'react-native';
 import {PlatformOSType} from 'react-native/Libraries/Utilities/Platform';
+import {NetworkInfo} from 'react-native-network-info';
 
 import {app} from '@app/contexts';
 import {getUid} from '@app/helpers/get-uid';
@@ -22,6 +23,7 @@ export type AppInfo = {
   platform: PlatformOSType;
   version: string;
   adid: string | null;
+  ip_address: string | null;
   notifications: {
     id: string | undefined | null;
     token: string | null;
@@ -35,6 +37,7 @@ export async function getAppInfo(): Promise<AppInfo> {
   const wallets = Wallet.getAll().map(wallet => wallet.address.toLowerCase());
   const uid = await getUid();
   const adid = await getAdjustAdid();
+  const ipAddress = await NetworkInfo.getIPAddress();
 
   const token = await PushNotifications.instance.getToken();
   return {
@@ -44,6 +47,7 @@ export async function getAppInfo(): Promise<AppInfo> {
     platform: Platform.OS,
     version: getAppVersion(),
     adid,
+    ip_address: ipAddress,
     notifications: {
       id: VariablesString.get('notificationToken'),
       token,
