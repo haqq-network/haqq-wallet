@@ -59,7 +59,12 @@ export const WalletsWrapper = observer(() => {
 
       await app.auth();
 
-      if (isNoBackup) {
+      const userHaveSSSProtectedWallets = !!Wallet.getAll().find(
+        w =>
+          w.type === WalletType.sss && w.mnemonicSaved && w.socialLinkEnabled,
+      )?.accountId;
+
+      if (isNoBackup && !userHaveSSSProtectedWallets) {
         navigation.navigate(HomeStackRoutes.WalletProtectionPopup, {accountId});
         return;
       }
@@ -67,7 +72,7 @@ export const WalletsWrapper = observer(() => {
       if (!wallet.mnemonicSaved) {
         onPressPharse(accountId);
       }
-      if (!wallet.socialLinkEnabled) {
+      if (!wallet.socialLinkEnabled && !userHaveSSSProtectedWallets) {
         onPressSocial(accountId);
       }
     },

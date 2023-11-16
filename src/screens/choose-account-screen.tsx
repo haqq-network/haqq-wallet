@@ -198,7 +198,7 @@ export const ChooseAccountScreen = memo(() => {
       }
     });
 
-    if (isMnemonicProvider) {
+    if (isMnemonicProvider && !app.onboarded) {
       //@ts-ignore
       navigation.navigate(SignInStackRoutes.OnboardingSetupPin, params);
     } else {

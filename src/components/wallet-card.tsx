@@ -46,6 +46,7 @@ export type BalanceProps = {
   onPressQR: (address: string) => void;
   onPressProtection: (wallet: Wallet) => void;
   onPressWalletConnect?: (address: string) => void;
+  isSecondMnemonic: boolean;
 };
 
 enum ProtectionStatus {
@@ -66,6 +67,7 @@ export const WalletCard = memo(
     onPressProtection,
     onPressAccountInfo,
     balance,
+    isSecondMnemonic,
   }: BalanceProps) => {
     const {locked, total} = balance ?? {};
     const [cardState, setCardState] = useState('loading');
@@ -73,6 +75,11 @@ export const WalletCard = memo(
     const screenWidth = useWindowDimensions().width;
 
     const protectionStatus = useMemo(() => {
+      // Wallet is 2nd mnemonic (imported)
+      if (isSecondMnemonic) {
+        return ProtectionStatus.full;
+      }
+
       // Ledger and Hot always has Full Protection
       if ([WalletType.ledgerBt, WalletType.hot].includes(wallet.type)) {
         return ProtectionStatus.full;
@@ -86,7 +93,7 @@ export const WalletCard = memo(
         return ProtectionStatus.partially;
       }
       return ProtectionStatus.full;
-    }, [wallet.mnemonicSaved, wallet.socialLinkEnabled]);
+    }, [wallet.mnemonicSaved, wallet.socialLinkEnabled, isSecondMnemonic]);
     const formattedAddress = useMemo(
       () => shortAddress(wallet?.address ?? '', '•'),
       [wallet?.address],
@@ -227,7 +234,7 @@ export const WalletCard = memo(
               <Spacer width={8} />
             </>
           )}
-          {[WalletType.hot].includes(wallet.type) && (
+          {([WalletType.hot].includes(wallet.type) || isSecondMnemonic) && (
             <>
               <IconButton style={styles.fullProtection}>
                 <Icon name={IconsName.import} color={Color.textSecond2} i16 />
