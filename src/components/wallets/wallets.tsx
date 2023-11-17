@@ -84,14 +84,13 @@ export const Wallets = ({
         onScroll={scrollHandler}
         style={styles.scroll}>
         {wallets.map((w, i) => {
-          let isSecondMnemonic = false;
+          const isSecondMnemonic = mnemonicCache.length > 0;
 
           if (
             w.type === WalletType.mnemonic &&
             w.accountId &&
             !mnemonicCache.includes(w.accountId)
           ) {
-            isSecondMnemonic = mnemonicCache.length > 0;
             mnemonicCache.push(w.accountId);
           }
           return (
