@@ -107,15 +107,14 @@ export const HomeScreen = memo(() => {
   useEffectAsync(async () => {
     const cloud = new Cloud();
     const walletToCheck = Wallet.getAllVisible().find(
-      item => item.type === WalletType.sss,
+      item => item.type === WalletType.sss && !!item.socialLinkEnabled,
     );
-    if (walletToCheck) {
+    if (walletToCheck && walletToCheck.accountId) {
       const cloudShare = await cloud.getItem(
-        `haqq_${walletToCheck.address.toLowerCase()}`,
+        `haqq_${walletToCheck.accountId.toLowerCase()}`,
       );
       const isReady = VariablesBool.get('isReadyForSSSVerification');
       if (!cloudShare && isReady) {
-        Wallet.update(walletToCheck.address, {socialLinkEnabled: false});
         showModal(ModalType.cloudShareNotFound, {wallet: walletToCheck});
       }
     }

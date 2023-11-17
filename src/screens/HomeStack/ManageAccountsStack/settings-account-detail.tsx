@@ -96,9 +96,11 @@ export const SettingsAccountDetailScreen = observer(() => {
   }, [navigation, address]);
 
   const onPressPharse = useCallback(() => {
-    navigation.navigate(HomeStackRoutes.Backup, {
-      accountId: wallet?.accountId!,
-    });
+    if (wallet) {
+      navigation.navigate(HomeStackRoutes.Backup, {
+        wallet,
+      });
+    }
   }, [navigation, wallet?.accountId]);
 
   const onPressSocial = useCallback(() => {

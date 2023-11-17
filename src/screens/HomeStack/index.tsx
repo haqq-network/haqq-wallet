@@ -92,8 +92,8 @@ export type HomeStackParamList = {
     nft?: NftItem;
   };
   [HomeStackRoutes.AccountDetail]: {address: string};
-  [HomeStackRoutes.Backup]: {accountId: string};
-  [HomeStackRoutes.WalletProtectionPopup]: {accountId: string};
+  [HomeStackRoutes.Backup]: {wallet: Wallet};
+  [HomeStackRoutes.WalletProtectionPopup]: {wallet: Wallet};
   [HomeStackRoutes.WalletConnectApplicationDetailsPopup]: {
     session: SessionTypes.Struct;
     isPopup?: boolean;
@@ -114,7 +114,7 @@ export type HomeStackParamList = {
     };
   };
   [HomeStackRoutes.SssMigrate]: {accountId: string};
-  [HomeStackRoutes.BackupNotification]: {accountId: string};
+  [HomeStackRoutes.BackupNotification]: {wallet: Wallet};
   [HomeStackRoutes.JsonRpcSign]: {
     request: PartialJsonRpcRequest;
     metadata: JsonRpcMetadata;

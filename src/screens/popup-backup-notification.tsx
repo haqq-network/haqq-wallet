@@ -13,19 +13,19 @@ import {SNOOZE_WALLET_BACKUP_MINUTES} from '@app/variables/common';
 
 export const BackupNotificationScreen = memo(() => {
   const {goBack, navigate} = useTypedNavigation<HomeStackParamList>();
-  const {accountId} = useTypedRoute<
+  const {wallet} = useTypedRoute<
     HomeStackParamList,
     HomeStackRoutes.BackupNotification
   >().params;
 
   const onClickBackup = useCallback(() => {
-    if (accountId) {
+    if (wallet) {
       goBack();
       navigate(HomeStackRoutes.Backup, {
-        accountId,
+        wallet,
       });
     }
-  }, [goBack, navigate, accountId]);
+  }, [goBack, navigate, wallet]);
 
   const onClickSkip = useCallback(() => {
     VariablesDate.set(

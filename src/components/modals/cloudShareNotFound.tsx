@@ -113,7 +113,10 @@ export const CloudShareNotFound = observer(
             <Spacer height={16} />
             <Button
               i18n={I18N.cloudShareNotFoundSecondaryButton}
-              onPress={() => onCloseModal(onClose)}
+              onPress={() => {
+                Wallet.update(wallet.address, {socialLinkEnabled: false});
+                onCloseModal(onClose);
+              }}
               variant={ButtonVariant.third}
               style={page.button}
               error
