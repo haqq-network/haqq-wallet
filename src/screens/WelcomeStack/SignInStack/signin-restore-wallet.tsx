@@ -41,7 +41,7 @@ export const SignInRestoreScreen = memo(() => {
 
         const provider = await ProviderMnemonicReactNative.initialize(
           seed.trim().toLowerCase(),
-          passwordPromise,
+          app.onboarded ? app.getPassword.bind(app) : passwordPromise,
           {},
         );
 

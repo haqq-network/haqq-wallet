@@ -234,7 +234,8 @@ export const WalletCard = memo(
               <Spacer width={8} />
             </>
           )}
-          {([WalletType.hot].includes(wallet.type) || isSecondMnemonic) && (
+          {([WalletType.hot, WalletType.ledgerBt].includes(wallet.type) ||
+            isSecondMnemonic) && (
             <>
               <IconButton style={styles.fullProtection}>
                 <Icon name={IconsName.import} color={Color.textSecond2} i16 />

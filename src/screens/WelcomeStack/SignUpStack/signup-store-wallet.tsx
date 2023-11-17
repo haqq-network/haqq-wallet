@@ -84,14 +84,16 @@ export const SignUpStoreWalletScreen = observer(() => {
             parseInt(segments[segments.length - 1], 10) + 1,
           );
         }, 0);
-        const hdPath = `${ETH_HD_SHORT_PATH}/${getWalletIndex(
-          nextHdPathIndex,
-        )}`;
+
+        const walletIndex = getWalletIndex(nextHdPathIndex);
+        const walletsTotalCount = Wallet.getSize();
+
+        const hdPath = `${ETH_HD_SHORT_PATH}/${walletIndex}`;
         const name =
-          Wallet.getSize() === 0
+          walletsTotalCount === 0
             ? MAIN_ACCOUNT_NAME
             : getText(I18N.signupStoreWalletAccountNumber, {
-                number: `${Wallet.getSize() + 1}`,
+                number: `${walletIndex + 1}`,
               });
         const {address} = await provider.getAccountInfo(hdPath);
         const type = getWalletType();
