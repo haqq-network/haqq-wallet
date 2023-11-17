@@ -84,7 +84,7 @@ export const Wallets = ({
         onScroll={scrollHandler}
         style={styles.scroll}>
         {wallets.map((w, i) => {
-          const isSecondMnemonic = mnemonicCache.length > 0;
+          let isSecondMnemonic = mnemonicCache.length > 1;
 
           if (
             w.type === WalletType.mnemonic &&
@@ -92,6 +92,7 @@ export const Wallets = ({
             !mnemonicCache.includes(w.accountId)
           ) {
             mnemonicCache.push(w.accountId);
+            isSecondMnemonic = mnemonicCache.length > 1;
           }
           return (
             <CarouselItem index={i} pan={pan} key={w.address}>
