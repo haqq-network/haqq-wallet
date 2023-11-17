@@ -20,7 +20,7 @@ import {SNOOZE_WALLET_BACKUP_MINUTES} from '@app/variables/common';
 
 export const BackupSssNotificationScreen = memo(() => {
   const {goBack} = useTypedNavigation<HomeStackParamList>();
-  const {accountId} = useTypedRoute<
+  const {wallet} = useTypedRoute<
     HomeStackParamList,
     HomeStackRoutes.BackupNotification
   >().params;
@@ -28,12 +28,12 @@ export const BackupSssNotificationScreen = memo(() => {
   const onPressBackupGoogle = useCallback(
     async (onDone: () => void) => {
       try {
-        if (accountId) {
+        if (wallet.accountId) {
           const storage = new Cloud();
 
           const provider = new ProviderSSSReactNative({
             storage,
-            account: accountId,
+            account: wallet.accountId,
             getPassword: app.getPassword.bind(app),
           });
 
@@ -51,7 +51,7 @@ export const BackupSssNotificationScreen = memo(() => {
         });
       }
     },
-    [accountId, goBack],
+    [wallet, goBack],
   );
 
   const onClickSkip = useCallback(

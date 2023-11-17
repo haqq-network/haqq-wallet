@@ -1,13 +1,15 @@
 import React, {memo, useEffect, useState} from 'react';
 
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {Alert} from 'react-native';
 import {addScreenshotListener} from 'react-native-detector';
 
 import {BackupCreate} from '@app/components/backup-create';
 import {Loading} from '@app/components/ui';
-import {app} from '@app/contexts';
+import {getProviderInstanceForWallet} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N, getText} from '@app/i18n';
 import {
   BackupStackParamList,
@@ -16,25 +18,27 @@ import {
 
 export const BackupCreateScreen = memo(() => {
   const navigation = useTypedNavigation<BackupStackParamList>();
-  const {accountId} = useTypedRoute<
+  const {wallet} = useTypedRoute<
     BackupStackParamList,
     BackupStackRoutes.BackupCreate
   >().params;
 
   const [mnemonic, setMnemonic] = useState<string | null>(null);
 
-  useEffect(() => {
-    const provider = new ProviderMnemonicReactNative({
-      account: accountId,
-      getPassword: app.getPassword.bind(app),
-    });
+  useEffectAsync(async () => {
+    const provider = await getProviderInstanceForWallet(wallet, true, false);
 
-    provider.getMnemonicPhrase().then(phrase => setMnemonic(phrase));
-  }, [accountId]);
+    if (
+      provider instanceof ProviderMnemonicReactNative ||
+      provider instanceof ProviderSSSReactNative
+    ) {
+      provider.getMnemonicPhrase().then(phrase => setMnemonic(phrase));
+    }
+  }, [wallet]);
 
   const onSubmit = () => {
     navigation.navigate(BackupStackRoutes.BackupVerify, {
-      accountId,
+      wallet,
     });
   };
 

@@ -16,7 +16,7 @@ export const BackupWarningScreen = memo(() => {
 
   const onPressBackup = async () => {
     navigation.navigate(BackupStackRoutes.BackupCreate, {
-      accountId: route.params.accountId,
+      wallet: route.params.wallet,
     });
   };
 

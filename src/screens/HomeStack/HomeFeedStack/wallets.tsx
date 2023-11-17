@@ -36,8 +36,8 @@ export const WalletsWrapper = observer(() => {
   );
 
   const onPressPharse = useCallback(
-    (accountId: string) => {
-      navigation.navigate(HomeStackRoutes.Backup, {accountId});
+    (wallet: Wallet) => {
+      navigation.navigate(HomeStackRoutes.Backup, {wallet});
     },
     [navigation],
   );
@@ -57,22 +57,23 @@ export const WalletsWrapper = observer(() => {
       const {accountId} = wallet;
       const isNoBackup = !wallet.mnemonicSaved && !wallet.socialLinkEnabled;
 
-      await app.auth();
-
       const userHaveSSSProtectedWallets = !!Wallet.getAll().find(
         w =>
           w.type === WalletType.sss && w.mnemonicSaved && w.socialLinkEnabled,
       )?.accountId;
 
       if (isNoBackup && !userHaveSSSProtectedWallets) {
-        navigation.navigate(HomeStackRoutes.WalletProtectionPopup, {accountId});
+        await app.auth();
+        navigation.navigate(HomeStackRoutes.WalletProtectionPopup, {wallet});
         return;
       }
 
       if (!wallet.mnemonicSaved) {
-        onPressPharse(accountId);
+        await app.auth();
+        onPressPharse(wallet);
       }
       if (!wallet.socialLinkEnabled && !userHaveSSSProtectedWallets) {
+        await app.auth();
         onPressSocial(accountId);
       }
     },

@@ -10,14 +10,17 @@ export const WalletProtectionScreen = memo(() => {
     HomeStackParamList,
     HomeStackRoutes.WalletProtectionPopup
   >();
-  const accountId = route.params?.accountId;
+  const wallet = route.params.wallet;
+  const accountId = wallet?.accountId;
 
   const onPressPharse = useCallback(() => {
-    navigation.navigate(HomeStackRoutes.Backup, {accountId});
+    navigation.navigate(HomeStackRoutes.Backup, {wallet});
   }, [accountId, navigation]);
 
   const onPressSocial = useCallback(() => {
-    navigation.navigate(HomeStackRoutes.SssMigrate, {accountId});
+    if (accountId) {
+      navigation.navigate(HomeStackRoutes.SssMigrate, {accountId});
+    }
   }, [accountId, navigation]);
 
   return (

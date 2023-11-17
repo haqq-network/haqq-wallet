@@ -5,6 +5,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {hideBack, popupScreenOptions} from '@app/helpers';
 import {useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {Wallet} from '@app/models/wallet';
 import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
 import {BackupCreateScreen} from '@app/screens/HomeStack/BackupStack/backup-create';
 import {BackupFinishScreen} from '@app/screens/HomeStack/BackupStack/backup-finish';
@@ -21,13 +22,13 @@ export enum BackupStackRoutes {
 
 export type BackupStackParamList = HomeStackParamList & {
   [BackupStackRoutes.BackupWarning]: {
-    accountId: string;
+    wallet: Wallet;
   };
   [BackupStackRoutes.BackupCreate]: {
-    accountId: string;
+    wallet: Wallet;
   };
   [BackupStackRoutes.BackupVerify]: {
-    accountId: string;
+    wallet: Wallet;
   };
   [BackupStackRoutes.BackupFinish]: undefined;
 };
@@ -45,16 +46,14 @@ const stackScreenOptions = {
 };
 
 export const BackupStack = memo(() => {
-  const {accountId} = useTypedRoute<
-    HomeStackParamList,
-    HomeStackRoutes.Backup
-  >().params;
+  const {wallet} = useTypedRoute<HomeStackParamList, HomeStackRoutes.Backup>()
+    .params;
   return (
     <Stack.Navigator screenOptions={stackScreenOptions}>
       <Stack.Screen
         name={BackupStackRoutes.BackupWarning}
         component={BackupWarningScreen}
-        initialParams={{accountId: accountId}}
+        initialParams={{wallet}}
         options={screenOptions}
       />
       <Stack.Screen
