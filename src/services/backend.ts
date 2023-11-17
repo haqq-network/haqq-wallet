@@ -339,17 +339,12 @@ export class Backend {
     return await getHttpResponse<T>(req);
   }
 
-  async markup(
-    screen: string,
-    appInfo: AppInfo,
-    address?: String,
-  ): Promise<MarkupResponse> {
+  async markup(screen: string, appInfo: AppInfo): Promise<MarkupResponse> {
     const response = await fetch(`${this.getRemoteUrl()}markups`, {
       method: 'POST',
       headers: Backend.headers,
       body: JSON.stringify({
         screen,
-        address,
         ...appInfo,
       }),
     });

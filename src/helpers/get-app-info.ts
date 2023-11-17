@@ -3,6 +3,7 @@ import {PlatformOSType} from 'react-native/Libraries/Utilities/Platform';
 import {NetworkInfo} from 'react-native-network-info';
 
 import {app} from '@app/contexts';
+import {getLeadingAccount} from '@app/helpers/get-leading-account';
 import {getUid} from '@app/helpers/get-uid';
 import {getAdjustAdid} from '@app/helpers/get_adjust_adid';
 import {VariablesBool} from '@app/models/variables-bool';
@@ -24,6 +25,7 @@ export type AppInfo = {
   version: string;
   adid: string | null;
   ip_address: string | null;
+  leading_address: string | null;
   notifications: {
     id: string | undefined | null;
     token: string | null;
@@ -38,6 +40,7 @@ export async function getAppInfo(): Promise<AppInfo> {
   const uid = await getUid();
   const adid = await getAdjustAdid();
   const ipAddress = await NetworkInfo.getIPAddress();
+  const leadingAccount = getLeadingAccount();
 
   const token = await PushNotifications.instance.getToken();
   return {
@@ -48,6 +51,7 @@ export async function getAppInfo(): Promise<AppInfo> {
     version: getAppVersion(),
     adid,
     ip_address: ipAddress,
+    leading_address: leadingAccount?.address ?? null,
     notifications: {
       id: VariablesString.get('notificationToken'),
       token,
