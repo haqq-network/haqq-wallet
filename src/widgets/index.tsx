@@ -10,6 +10,7 @@ import React, {
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {getAppInfo} from '@app/helpers/get-app-info';
+import {getLeadingAccount} from '@app/helpers/get-leading-account';
 import {VariablesString} from '@app/models/variables-string';
 import {Backend} from '@app/services/backend';
 import {IWidget} from '@app/types';
@@ -68,7 +69,12 @@ export const WidgetRoot = memo(({lastUpdate}: {lastUpdate: number}) => {
     async (blockRequest?: string) => {
       Logger.log('widget requestMarkup', {blockRequest});
       const appInfo = await getAppInfo();
-      const response = await Backend.instance.markup('home', appInfo);
+      const leadingAccount = getLeadingAccount();
+      const response = await Backend.instance.markup(
+        'home',
+        appInfo,
+        leadingAccount?.address,
+      );
 
       if (!response.blocks) {
         return Logger.error('widget request: not found blocks', response);
