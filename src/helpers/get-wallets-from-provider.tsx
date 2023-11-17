@@ -39,10 +39,10 @@ export async function* getWalletsFromProvider(
     const total = Wallet.getAll().length;
 
     const name =
-      total === 0
+      total + index === 0
         ? MAIN_ACCOUNT_NAME
         : getText(I18N.signinStoreWalletAccountNumber, {
-            number: `${total + 1}`,
+            number: `${total + index + 1}`,
           });
 
     const hdPath = genHdPath(index);
