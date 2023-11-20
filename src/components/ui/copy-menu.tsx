@@ -7,11 +7,11 @@ import {
   MenuOption,
   MenuOptions,
   MenuTrigger,
-  renderers,
 } from 'react-native-popup-menu';
 
 import {Color} from '@app/colors';
 import {Icon, IconsName} from '@app/components/ui/icon';
+import Popover from '@app/components/ui/popover';
 import {Text} from '@app/components/ui/text';
 import {createTheme} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
@@ -65,7 +65,7 @@ export const CopyMenu = ({
   );
 
   return (
-    <Menu renderer={renderers.Popover} rendererProps={rendererProps}>
+    <Menu renderer={Popover} rendererProps={rendererProps}>
       <MenuTrigger customStyles={menuTriggerCustomStyles}>
         <View style={containerStyle}>{children}</View>
       </MenuTrigger>
