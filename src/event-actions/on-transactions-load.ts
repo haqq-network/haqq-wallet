@@ -47,7 +47,10 @@ async function loadTransactionsFromExplorerWithProvider(
     return rows.result
       .filter(row => {
         const tx = Transaction.getById(row.hash);
-        return tx && tx.status !== getTransactionStatus(row);
+        if (!tx) {
+          return true;
+        }
+        return tx.status !== getTransactionStatus(row);
       })
       .map(row => ({
         row: {
