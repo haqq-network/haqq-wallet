@@ -3,7 +3,7 @@ import {calcFee} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {getExplorerInstanceForProvider} from '@app/helpers/explorer-instance';
 import {Provider} from '@app/models/provider';
-import {TransactionStatus} from '@app/models/transaction';
+import {Transaction, TransactionStatus} from '@app/models/transaction';
 import {Balance} from '@app/services/balance';
 import {ExplorerTransaction} from '@app/types';
 
@@ -44,16 +44,24 @@ async function loadTransactionsFromExplorerWithProvider(
       return [];
     }
 
-    return rows.result.map(row => ({
-      row: {
-        ...row,
-        chainId: String(p?.ethChainId),
-        status: getTransactionStatus(row),
-      },
-      providerId,
-      fee: calcFee(row.gasPrice, row.gasUsed),
-      timeStamp: Number(row.timeStamp),
-    }));
+    return rows.result
+      .filter(row => {
+        const tx = Transaction.getById(row.hash);
+        if (!tx) {
+          return true;
+        }
+        return tx.status !== getTransactionStatus(row);
+      })
+      .map(row => ({
+        row: {
+          ...row,
+          chainId: String(p?.ethChainId),
+          status: getTransactionStatus(row),
+        },
+        providerId,
+        fee: calcFee(row.gasPrice, row.gasUsed),
+        timeStamp: Number(row.timeStamp),
+      }));
   } catch (e) {
     Logger.captureException(e, 'loadTransactionsFromExplorer');
     return [];
