@@ -3,10 +3,10 @@ import React, {memo, useCallback, useState} from 'react';
 import {RefreshControl, ScrollView} from 'react-native';
 
 import {createTheme} from '@app/helpers';
+import {loadAllTransactions} from '@app/helpers/load-transactions';
 import {BannersWrapper} from '@app/screens/banners';
 import {WalletsWrapper} from '@app/screens/HomeStack/HomeFeedStack/wallets';
 import {LockedTokensWrapper} from '@app/screens/locked-tokens';
-import {sleep} from '@app/utils';
 import {WidgetRoot} from '@app/widgets';
 
 export const HomeFeed = memo(() => {
@@ -16,7 +16,7 @@ export const HomeFeed = memo(() => {
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     setLastUpdate(Date.now());
-    await sleep(500);
+    await loadAllTransactions();
     setRefreshing(false);
   }, []);
 

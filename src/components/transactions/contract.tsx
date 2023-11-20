@@ -5,7 +5,7 @@ import {TouchableWithoutFeedback, View} from 'react-native';
 import {Color} from '@app/colors';
 import {DataContent, Icon, Text} from '@app/components/ui';
 import {cleanNumber, createTheme} from '@app/helpers';
-import {I18N} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {OnTransactionRowPress, TransactionListContract} from '@app/types';
 
@@ -41,7 +41,7 @@ export const TransactionContract = ({
           titleI18n={I18N.transactionContractTitle}
           subtitleI18n={I18N.transactionContractNamePrefix}
           subtitleI18nParams={{
-            value: contractName,
+            value: contractName || getText(I18N.transactionContractDefaultName),
           }}
           short
         />
