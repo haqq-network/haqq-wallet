@@ -85,13 +85,7 @@ export const AdWidget = ({banner, style}: HomeBannerProps) => {
       <View
         onLayout={onLayout}
         style={[styles.container, borderStyle, style, isSmall && styles.small]}>
-        {banner.backgroundImage ? (
-          <Image
-            resizeMode="cover"
-            style={styles.inner}
-            source={{uri: banner.backgroundImage}}
-          />
-        ) : (
+        {banner.backgroundColorFrom && banner.backgroundColorTo && (
           <LinearGradient
             colors={[
               getColor(banner.backgroundColorFrom || Color.bg1),
@@ -100,6 +94,13 @@ export const AdWidget = ({banner, style}: HomeBannerProps) => {
             start={GRADIENT_START}
             end={GRADIENT_END}
             style={styles.inner}
+          />
+        )}
+        {banner.backgroundImage && (
+          <Image
+            resizeMode="cover"
+            style={styles.inner}
+            source={{uri: banner.backgroundImage}}
           />
         )}
         <Text color={getColor(banner.titleColor ?? Color.textBase1)} t8>
