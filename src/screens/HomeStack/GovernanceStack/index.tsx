@@ -1,32 +1,19 @@
 import React, {memo} from 'react';
 
-import {Proposal as ProposalProvider} from '@evmos/provider';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {PopupHeader} from '@app/components';
 import {GoBackPopupButton} from '@app/components/popup/go-back-popup-button';
 import {SpacerPopupButton} from '@app/components/popup/spacer-popup-button';
 import {I18N, getText} from '@app/i18n';
+import {
+  GovernanceStackParamList,
+  GovernanceStackRoutes,
+} from '@app/route-types';
 import {GovernanceListScreen} from '@app/screens/HomeStack/GovernanceStack/governance-list';
 import {ProposalScreen} from '@app/screens/HomeStack/GovernanceStack/proposal';
 import {ProposalDepositStack} from '@app/screens/HomeStack/GovernanceStack/ProposalDepositStack';
-import {HomeFeedStackParamList} from '@app/screens/HomeStack/HomeFeedStack';
 import {StackPresentationTypes} from '@app/types';
-
-export enum GovernanceStackRoutes {
-  GovernanceList = 'governaneList',
-  Proposal = 'proposal',
-  ProposalDeposit = 'proposalDeposit',
-}
-
-export type GovernanceStackParamList = HomeFeedStackParamList & {
-  [GovernanceStackRoutes.GovernanceList]: undefined;
-  [GovernanceStackRoutes.Proposal]: {proposal: ProposalProvider};
-  [GovernanceStackRoutes.ProposalDeposit]: {
-    proposal: ProposalProvider;
-    account: string;
-  };
-};
 
 const Stack = createNativeStackNavigator<GovernanceStackParamList>();
 

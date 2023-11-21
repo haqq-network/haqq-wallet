@@ -5,10 +5,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import {RaffleDetails} from '@app/components/raffle-details';
 import {onEarnGetTicket} from '@app/event-actions/on-earn-get-ticket';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {
-  HomeEarnStackParamList,
-  HomeEarnStackRoutes,
-} from '@app/screens/HomeStack/HomeEarnStack';
+import {HomeEarnStackParamList, HomeEarnStackRoutes} from '@app/route-types';
 
 export const RaffleDetailsScreen = memo(() => {
   const navigation = useTypedNavigation<HomeEarnStackParamList>();

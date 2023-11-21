@@ -5,29 +5,11 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {popupScreenOptions} from '@app/helpers';
 import {getNewsDetailAppTitle} from '@app/helpers/get-news-detail-title';
 import {I18N, getText} from '@app/i18n';
+import {NewsStackParamList, NewsStackRoutes} from '@app/route-types';
 import {basicScreenOptions} from '@app/screens';
-import {HomeStackParamList} from '@app/screens/HomeStack';
 import {HomeNewsScreen} from '@app/screens/HomeStack/HomeNewsStack/home-news';
 import {NewsDetailScreen} from '@app/screens/HomeStack/HomeNewsStack/news-detail';
 import {OurNewsScreen} from '@app/screens/HomeStack/HomeNewsStack/our-news';
-import {AdjustEvents} from '@app/types';
-
-export enum NewsStackRoutes {
-  News = 'homeNews_',
-  NewsDetail = 'newsDetail',
-  OurNews = 'ourNews',
-}
-
-export type NewsStackParamList = HomeStackParamList & {
-  [NewsStackRoutes.News]: undefined;
-  [NewsStackRoutes.NewsDetail]: {
-    id: string;
-    openEvent: AdjustEvents;
-    linkEvent: AdjustEvents;
-    scrollEvent: AdjustEvents;
-  };
-  [NewsStackRoutes.OurNews]: undefined;
-};
 
 const Stack = createNativeStackNavigator<NewsStackParamList>();
 

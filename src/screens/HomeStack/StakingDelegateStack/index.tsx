@@ -7,11 +7,11 @@ import {hideBack, popupScreenOptions} from '@app/helpers';
 import {validatorStatus} from '@app/helpers/validator-status';
 import {useCosmos, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
-import {HomeStackParamList} from '@app/screens/HomeStack';
 import {
   HomeEarnStackParamList,
   HomeEarnStackRoutes,
-} from '@app/screens/HomeStack/HomeEarnStack';
+  HomeStackParamList,
+} from '@app/route-types';
 import {StakingDelegateFinishScreen} from '@app/screens/HomeStack/StakingDelegateStack/staking-delegate-finish';
 import {StakingDelegateFormScreen} from '@app/screens/HomeStack/StakingDelegateStack/staking-delegate-form';
 import {StakingDelegatePreviewScreen} from '@app/screens/HomeStack/StakingDelegateStack/staking-delegate-preview';

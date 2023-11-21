@@ -5,7 +5,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {
   OnboardingStackParamList,
   OnboardingStackRoutes,
-} from '@app/screens/WelcomeStack/OnboardingStack';
+} from '@app/route-types';
 import {vibrate} from '@app/services/haptic';
 
 export const OnboardingSetupPinScreen = memo(() => {

@@ -7,44 +7,14 @@ import {
 
 import {popupScreenOptions} from '@app/helpers';
 import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
+import {WelcomeStackParamList, WelcomeStackRoutes} from '@app/route-types';
 import {basicScreenOptions} from '@app/screens';
 import {NewsDetailScreen} from '@app/screens/HomeStack/HomeNewsStack/news-detail';
 import {WelcomeScreen} from '@app/screens/welcome';
 import {WelcomeNewsScreen} from '@app/screens/welcome-news';
 import {LedgerStack} from '@app/screens/WelcomeStack/LedgerStack';
 import {SignInStack} from '@app/screens/WelcomeStack/SignInStack';
-import {
-  SignUpStack,
-  SignUpStackParamList,
-  SignUpStackRoutes,
-} from '@app/screens/WelcomeStack/SignUpStack';
-import {AdjustEvents} from '@app/types';
-
-export enum WelcomeStackRoutes {
-  Welcome = 'welcome',
-  WelcomeNews = 'welcomeNews',
-  SignUp = 'signup',
-  Ledger = 'ledger',
-  SignIn = 'signin',
-  NewsDetail = 'newsDetail',
-}
-
-export type WelcomeStackParamList = {
-  [WelcomeStackRoutes.Welcome]: undefined;
-  [WelcomeStackRoutes.WelcomeNews]: undefined;
-  [WelcomeStackRoutes.SignUp]?: {
-    screen: SignUpStackRoutes.SignupStoreWallet;
-    params: SignUpStackParamList[SignUpStackRoutes.SignupStoreWallet];
-  };
-  [WelcomeStackRoutes.Ledger]: undefined;
-  [WelcomeStackRoutes.SignIn]: undefined;
-  [WelcomeStackRoutes.NewsDetail]: {
-    id: string;
-    openEvent: AdjustEvents;
-    linkEvent: AdjustEvents;
-    scrollEvent: AdjustEvents;
-  };
-};
+import {SignUpStack} from '@app/screens/WelcomeStack/SignUpStack';
 
 const Stack = createNativeStackNavigator<WelcomeStackParamList>();
 

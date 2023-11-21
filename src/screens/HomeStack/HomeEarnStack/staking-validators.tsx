@@ -15,10 +15,7 @@ import {
   StakingMetadata,
   StakingMetadataType,
 } from '@app/models/staking-metadata';
-import {
-  HomeEarnStackParamList,
-  HomeEarnStackRoutes,
-} from '@app/screens/HomeStack/HomeEarnStack';
+import {HomeEarnStackParamList, HomeEarnStackRoutes} from '@app/route-types';
 import {AdjustEvents, ValidatorItem} from '@app/types';
 
 export const StakingValidatorsScreen = () => {

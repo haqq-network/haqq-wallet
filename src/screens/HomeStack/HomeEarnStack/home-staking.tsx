@@ -15,10 +15,7 @@ import {
   StakingMetadataType,
 } from '@app/models/staking-metadata';
 import {Wallet} from '@app/models/wallet';
-import {
-  HomeEarnStackParamList,
-  HomeEarnStackRoutes,
-} from '@app/screens/HomeStack/HomeEarnStack';
+import {HomeEarnStackParamList, HomeEarnStackRoutes} from '@app/route-types';
 import {Balance} from '@app/services/balance';
 import {AdjustEvents} from '@app/types';
 

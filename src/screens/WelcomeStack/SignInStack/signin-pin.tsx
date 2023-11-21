@@ -8,10 +8,7 @@ import {SssError} from '@app/helpers/sss-error';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N, getText} from '@app/i18n';
-import {
-  SignInStackParamList,
-  SignInStackRoutes,
-} from '@app/screens/WelcomeStack/SignInStack';
+import {SignInStackParamList, SignInStackRoutes} from '@app/route-types';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {PIN_BANNED_ATTEMPTS} from '@app/variables/common';
 

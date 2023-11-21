@@ -4,10 +4,7 @@ import {CloudProblems} from '@app/components/cloud-problems';
 import {cleanGoogle, getGoogleTokens} from '@app/helpers/get-google-tokens';
 import {verifyCloud} from '@app/helpers/verify-cloud';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {
-  SignInStackParamList,
-  SignInStackRoutes,
-} from '@app/screens/WelcomeStack/SignInStack';
+import {SignInStackParamList, SignInStackRoutes} from '@app/route-types';
 import {SssProviders} from '@app/services/provider-sss';
 
 export const CloudProblemsScreen = memo(() => {

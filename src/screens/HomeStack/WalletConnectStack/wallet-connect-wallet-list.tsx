@@ -7,7 +7,7 @@ import {Wallet} from '@app/models/wallet';
 import {
   WalletConnectStackParamList,
   WalletConnectStackRoutes,
-} from '@app/screens/HomeStack/WalletConnectStack';
+} from '@app/route-types';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {filterWalletConnectSessionsByAddress} from '@app/utils';
 

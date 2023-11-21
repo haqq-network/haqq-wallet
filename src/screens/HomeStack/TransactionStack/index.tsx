@@ -7,8 +7,12 @@ import {hideBack, popupScreenOptions} from '@app/helpers';
 import {useTypedRoute} from '@app/hooks/use-typed-route';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
-import {HomeFeedStackParamList} from '@app/screens/HomeStack/HomeFeedStack';
+import {
+  HomeStackParamList,
+  HomeStackRoutes,
+  TransactionStackParamList,
+  TransactionStackRoutes,
+} from '@app/route-types';
 import {TransactionAccountScreen} from '@app/screens/HomeStack/TransactionStack/transaction-account';
 import {TransactionAddressScreen} from '@app/screens/HomeStack/TransactionStack/transaction-address';
 import {TransactionConfirmationScreen} from '@app/screens/HomeStack/TransactionStack/transaction-confirmation';
@@ -20,85 +24,7 @@ import {TransactionNftFinishScreen} from '@app/screens/HomeStack/TransactionStac
 import {TransactionSumScreen} from '@app/screens/HomeStack/TransactionStack/transaction-sum';
 import {TransactionSumAddressScreen} from '@app/screens/HomeStack/TransactionStack/transaction-sum-address';
 import {TransactionSelectCryptoScreen} from '@app/screens/transaction-select-crypto';
-import {Balance} from '@app/services/balance';
-import {
-  IToken,
-  NftItem,
-  ScreenOptionType,
-  TransactionResponse,
-} from '@app/types';
-
-export enum TransactionStackRoutes {
-  TransactionAddress = 'transactionAddress',
-  TransactionSum = 'transactionSum',
-  TransactionConfirmation = 'transactionConfirmation',
-  TransactionNftConfirmation = 'transactionNftConfirmation',
-  TransactionFinish = 'transactionFinish',
-  TransactionNftFinish = 'transactionNftFinish',
-  TransactionAccount = 'transactionAccount',
-  TransactionLedger = 'transactionLedger',
-  TransactionSumAddress = 'transactionSumAddress',
-  TransactionContactEdit = 'transactionContactEdit',
-  TransactionSelectCrypto = 'transactionSelectCrypto',
-}
-
-export type TransactionStackParamList = HomeFeedStackParamList & {
-  [TransactionStackRoutes.TransactionAddress]: {
-    from: string;
-    to?: string;
-    nft?: NftItem;
-  };
-  [TransactionStackRoutes.TransactionSum]: {
-    from: string;
-    to: string;
-    token: IToken;
-  };
-  [TransactionStackRoutes.TransactionConfirmation]: {
-    from: string;
-    to: string;
-    amount: Balance;
-    fee?: Balance;
-    token: IToken;
-  };
-  [TransactionStackRoutes.TransactionNftConfirmation]: {
-    from: string;
-    to: string;
-    nft: NftItem;
-    fee?: Balance;
-  };
-  [TransactionStackRoutes.TransactionFinish]: {
-    transaction: TransactionResponse;
-    hash: string;
-    token: IToken;
-    amount?: Balance;
-  };
-  [TransactionStackRoutes.TransactionNftFinish]: {
-    hash: string;
-    nft: NftItem;
-  };
-  [TransactionStackRoutes.TransactionAccount]: {
-    from: string;
-    to: string;
-  };
-  [TransactionStackRoutes.TransactionLedger]: {
-    from: string;
-    to: string;
-    amount: number;
-    fee?: Balance;
-  };
-  [TransactionStackRoutes.TransactionSumAddress]: {
-    to: string;
-    event: string;
-  };
-  [TransactionStackRoutes.TransactionContactEdit]: {
-    name: string;
-    address: string;
-  };
-  [TransactionStackRoutes.TransactionSelectCrypto]: {
-    from: string;
-    to: string;
-  };
-};
+import {ScreenOptionType} from '@app/types';
 
 const Stack = createNativeStackNavigator<TransactionStackParamList>();
 

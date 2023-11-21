@@ -10,10 +10,7 @@ import {getMetadataValueWrapped} from '@app/helpers/wrappers/get-metadata-value'
 import {useTypedNavigation} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {ErrorHandler} from '@app/models/error-handler';
-import {
-  SignUpStackParamList,
-  SignUpStackRoutes,
-} from '@app/screens/WelcomeStack/SignUpStack';
+import {SignUpStackParamList, SignUpStackRoutes} from '@app/route-types';
 import {
   Creds,
   SssProviders,

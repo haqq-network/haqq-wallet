@@ -6,7 +6,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {
   OnboardingStackParamList,
   OnboardingStackRoutes,
-} from '@app/screens/WelcomeStack/OnboardingStack';
+} from '@app/route-types';
 import {AdjustTrackingAuthorizationStatus} from '@app/types';
 import {getAppTrackingAuthorizationStatus} from '@app/utils';
 

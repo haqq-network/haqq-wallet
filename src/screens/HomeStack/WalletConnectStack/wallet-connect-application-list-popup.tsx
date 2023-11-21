@@ -5,7 +5,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
 import {popupScreenOptions} from '@app/helpers';
 import {useTypedRoute} from '@app/hooks';
-import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
+import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {ScreenOptionType} from '@app/types';
 
 import {WalletConnectApplicationListScreen} from './wallet-connect-application-list';

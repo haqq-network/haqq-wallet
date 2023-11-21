@@ -7,10 +7,7 @@ import {CustomHeader} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {
-  SecurityStackParamList,
-  SecurityStackRoutes,
-} from '@app/screens/HomeStack/SecurityStack';
+import {SecurityStackParamList, SecurityStackRoutes} from '@app/route-types';
 import {PinGuardScreen} from '@app/screens/pin-guard';
 
 export const SettingsSecurityScreen = memo(() => {

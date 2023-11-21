@@ -13,7 +13,7 @@ import {Contact, ContactType} from '@app/models/contact';
 import {
   TransactionStackParamList,
   TransactionStackRoutes,
-} from '@app/screens/HomeStack/TransactionStack';
+} from '@app/route-types';
 import {sendNotification} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 

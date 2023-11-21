@@ -6,10 +6,7 @@ import {onNewsSync} from '@app/event-actions/on-news-sync';
 import {useTypedNavigation} from '@app/hooks';
 import {News} from '@app/models/news';
 import {VariablesBool} from '@app/models/variables-bool';
-import {
-  WelcomeStackParamList,
-  WelcomeStackRoutes,
-} from '@app/screens/WelcomeStack';
+import {WelcomeStackParamList, WelcomeStackRoutes} from '@app/route-types';
 import {AdjustEvents, PopupNotificationBannerTypes} from '@app/types';
 
 export const WelcomeNewsScreen = memo(() => {

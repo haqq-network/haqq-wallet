@@ -9,7 +9,7 @@ import {ErrorHandler} from '@app/models/error-handler';
 import {
   SssMigrateStackParamList,
   SssMigrateStackRoutes,
-} from '@app/screens/HomeStack/SssMigrate';
+} from '@app/route-types';
 import {
   Creds,
   SssProviders,

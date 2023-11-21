@@ -9,10 +9,7 @@ import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {Wallet} from '@app/models/wallet';
-import {
-  LedgerStackParamList,
-  LedgerStackRoutes,
-} from '@app/screens/WelcomeStack/LedgerStack';
+import {LedgerStackParamList, LedgerStackRoutes} from '@app/route-types';
 import {EthNetwork} from '@app/services';
 import {LedgerAccountItem} from '@app/types';
 import {

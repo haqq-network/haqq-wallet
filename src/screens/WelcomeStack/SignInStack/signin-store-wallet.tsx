@@ -14,12 +14,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {ErrorHandler} from '@app/models/error-handler';
 import {Wallet} from '@app/models/wallet';
-import {WelcomeStackRoutes} from '@app/screens/WelcomeStack';
-import {OnboardingStackRoutes} from '@app/screens/WelcomeStack/OnboardingStack';
-import {
-  SignInStackParamList,
-  SignInStackRoutes,
-} from '@app/screens/WelcomeStack/SignInStack';
+import {SignInStackParamList, SignInStackRoutes} from '@app/route-types';
 import {RemoteConfig} from '@app/services/remote-config';
 import {ModalType} from '@app/types';
 import {WalletType} from '@app/types';

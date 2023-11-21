@@ -10,12 +10,12 @@ import {getProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet'
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {WelcomeStackRoutes} from '@app/screens/WelcomeStack';
-import {SignInStackRoutes} from '@app/screens/WelcomeStack/SignInStack';
 import {
   SignUpStackParamList,
   SignUpStackRoutes,
-} from '@app/screens/WelcomeStack/SignUpStack';
+  SignInStackRoutes,
+  WelcomeStackRoutes,
+} from '@app/route-types';
 import {SssProviders} from '@app/services/provider-sss';
 import {ModalType} from '@app/types';
 import {WalletType} from '@app/types';

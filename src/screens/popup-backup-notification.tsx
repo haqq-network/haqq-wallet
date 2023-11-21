@@ -8,7 +8,7 @@ import {
 } from '@app/components/bottom-popups';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {VariablesDate} from '@app/models/variables-date';
-import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
+import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {SNOOZE_WALLET_BACKUP_MINUTES} from '@app/variables/common';
 
 export const BackupNotificationScreen = memo(() => {

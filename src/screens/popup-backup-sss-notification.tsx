@@ -12,7 +12,7 @@ import {Events} from '@app/events';
 import {showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {VariablesDate} from '@app/models/variables-date';
-import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
+import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {Cloud} from '@app/services/cloud';
 import {GoogleDrive} from '@app/services/google-drive';
 import {ModalType} from '@app/types';

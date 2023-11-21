@@ -12,10 +12,7 @@ import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {useTypedNavigation} from '@app/hooks';
-import {
-  LedgerStackParamList,
-  LedgerStackRoutes,
-} from '@app/screens/WelcomeStack/LedgerStack';
+import {LedgerStackParamList, LedgerStackRoutes} from '@app/route-types';
 import {ModalType} from '@app/types';
 import {generateUUID} from '@app/utils';
 import {LEDGER_APP} from '@app/variables/common';

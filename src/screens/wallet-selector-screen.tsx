@@ -8,7 +8,7 @@ import {WalletSelector} from '@app/components/wallet-selector';
 import {app} from '@app/contexts';
 import {createTheme, popupScreenOptions} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
+import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 
 const Stack = createNativeStackNavigator();
 

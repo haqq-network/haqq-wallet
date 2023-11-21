@@ -2,7 +2,7 @@ import React, {memo, useCallback} from 'react';
 
 import {WalletProtection} from '@app/components/wallet-protection';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
+import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 
 export const WalletProtectionScreen = memo(() => {
   const navigation = useTypedNavigation<HomeStackParamList>();

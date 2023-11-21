@@ -1,6 +1,5 @@
 import React, {memo, useMemo} from 'react';
 
-import {Proposal} from '@evmos/provider';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
@@ -9,38 +8,13 @@ import {I18N, getText} from '@app/i18n';
 import {
   GovernanceStackParamList,
   GovernanceStackRoutes,
-} from '@app/screens/HomeStack/GovernanceStack';
+  ProposalDepositStackRoutes,
+} from '@app/route-types';
 import {ProposalDepositFinishScreen} from '@app/screens/HomeStack/GovernanceStack/ProposalDepositStack/proposal-deposit-finish';
 import {ProposalDepositFormScreen} from '@app/screens/HomeStack/GovernanceStack/ProposalDepositStack/proposal-deposit-form';
 import {ProposalDepositPreviewScreen} from '@app/screens/HomeStack/GovernanceStack/ProposalDepositStack/proposal-deposit-preview';
-import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
 import {ScreenOptionType} from '@app/types';
-
-export enum ProposalDepositStackRoutes {
-  ProposalDepositForm = 'proposalDepositForm',
-  ProposalDepositPreview = 'proposalDepositPreview',
-  ProposalDepositFinish = 'proposalDepositFinish',
-}
-
-export type ProposalDepositStackParamList = GovernanceStackParamList & {
-  [ProposalDepositStackRoutes.ProposalDepositForm]: {
-    account: string;
-    proposal: Proposal;
-  };
-  [ProposalDepositStackRoutes.ProposalDepositPreview]: {
-    fee: Balance;
-    account: string;
-    amount: number;
-    proposal: Proposal;
-  };
-  [ProposalDepositStackRoutes.ProposalDepositFinish]: {
-    proposal: Proposal;
-    fee: Balance;
-    txhash: string;
-    amount: number;
-  };
-};
 
 const Stack = createNativeStackNavigator();
 

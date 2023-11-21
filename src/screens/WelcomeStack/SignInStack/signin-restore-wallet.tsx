@@ -6,10 +6,7 @@ import {utils} from 'ethers';
 import {SignInRestore} from '@app/components/singin-restore-wallet';
 import {app} from '@app/contexts';
 import {useTypedNavigation} from '@app/hooks';
-import {
-  SignInStackParamList,
-  SignInStackRoutes,
-} from '@app/screens/WelcomeStack/SignInStack';
+import {SignInStackParamList, SignInStackRoutes} from '@app/route-types';
 import {makeID} from '@app/utils';
 
 export const SignInRestoreScreen = memo(() => {

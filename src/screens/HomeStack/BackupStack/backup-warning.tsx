@@ -2,10 +2,7 @@ import React, {memo} from 'react';
 
 import {BackupWarning} from '@app/components/backup-warning';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {
-  BackupStackParamList,
-  BackupStackRoutes,
-} from '@app/screens/HomeStack/BackupStack';
+import {BackupStackParamList, BackupStackRoutes} from '@app/route-types';
 
 export const BackupWarningScreen = memo(() => {
   const navigation = useTypedNavigation<BackupStackParamList>();

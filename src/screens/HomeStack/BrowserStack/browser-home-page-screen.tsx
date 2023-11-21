@@ -9,10 +9,7 @@ import {useWeb3BrowserBookmark} from '@app/hooks/use-web3-browser-bookmark';
 import {useWeb3BrowserSearchHistory} from '@app/hooks/use-web3-browser-search-history';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
-import {
-  BrowserStackParamList,
-  BrowserStackRoutes,
-} from '@app/screens/HomeStack/BrowserStack';
+import {BrowserStackParamList, BrowserStackRoutes} from '@app/route-types';
 import {RemoteConfig} from '@app/services/remote-config';
 import {AdjustEvents, Link} from '@app/types';
 

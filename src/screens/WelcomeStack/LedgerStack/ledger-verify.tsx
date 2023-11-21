@@ -6,10 +6,7 @@ import {LedgerVerify} from '@app/components/ledger-verify';
 import {app} from '@app/contexts';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {
-  LedgerStackParamList,
-  LedgerStackRoutes,
-} from '@app/screens/WelcomeStack/LedgerStack';
+import {LedgerStackParamList, LedgerStackRoutes} from '@app/route-types';
 import {LEDGER_APP} from '@app/variables/common';
 
 export const LedgerVerifyScreen = memo(() => {
