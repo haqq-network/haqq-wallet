@@ -266,7 +266,7 @@ class TokensStore implements MobXStore<IToken> {
 
   fetchTokens = async () => {
     const wallets = Wallet.getAll();
-    const accounts = wallets.map(w => w.cosmosAddress);
+    const accounts = wallets.map(w => AddressUtils.toEth(w.cosmosAddress));
     const updates = await Indexer.instance.updates(accounts, this.lastUpdate);
     const result = this.parseIndexerTokens(updates);
     // this.lastUpdate = new Date();
