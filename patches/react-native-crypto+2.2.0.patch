@@ -1,0 +1,49 @@
+diff --git a/node_modules/react-native-crypto/package.json b/node_modules/react-native-crypto/package.json
+index cbe3ed8..68d8efc 100644
+--- a/node_modules/react-native-crypto/package.json
++++ b/node_modules/react-native-crypto/package.json
+@@ -17,8 +17,8 @@
+     "node": "*"
+   },
+   "dependencies": {
+-    "browserify-cipher": "^1.0.0",
+-    "browserify-sign": "^4.0.4",
++    "browserify-cipher": "^1.0.1",
++    "browserify-sign": "^4.2.2",
+     "create-ecdh": "^4.0.0",
+     "create-hash": "^1.1.0",
+     "create-hmac": "^1.1.0",
+@@ -44,5 +44,31 @@
+     "react-component",
+     "ios"
+   ],
+-  "license": "MIT"
++  "license": "MIT",
++  "react-native": {
++    "crypto": "react-native-crypto",
++    "http": "@tradle/react-native-http",
++    "https": "https-browserify",
++    "os": "react-native-os",
++    "_stream_transform": "readable-stream/transform",
++    "_stream_readable": "readable-stream/readable",
++    "_stream_writable": "readable-stream/writable",
++    "_stream_duplex": "readable-stream/duplex",
++    "_stream_passthrough": "readable-stream/passthrough",
++    "stream": "stream-browserify",
++    "vm": "vm-browserify"
++  },
++  "browser": {
++    "crypto": "react-native-crypto",
++    "http": "@tradle/react-native-http",
++    "https": "https-browserify",
++    "os": "react-native-os",
++    "_stream_transform": "readable-stream/transform",
++    "_stream_readable": "readable-stream/readable",
++    "_stream_writable": "readable-stream/writable",
++    "_stream_duplex": "readable-stream/duplex",
++    "_stream_passthrough": "readable-stream/passthrough",
++    "stream": "stream-browserify",
++    "vm": "vm-browserify"
++  }
+ }
+\ No newline at end of file
