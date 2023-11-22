@@ -66,7 +66,6 @@ export const App = () => {
       .then(async () => {
         if (app.onboarded) {
           await app.init();
-          await migrationWallets();
           // MobX stores migration
           await Promise.allSettled([
             Contact.migrate(),
@@ -74,6 +73,7 @@ export const App = () => {
             Transaction.migrate(),
           ]);
 
+          await migrationWallets();
           // We need reopen app for start SSS check
           // because we are working with cloud snapshots
           VariablesBool.set('isReadyForSSSVerification', true);
