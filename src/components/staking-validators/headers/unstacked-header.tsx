@@ -45,12 +45,30 @@ export const UnstackedHeader = ({
     switch (sortBy) {
       case ValidatorSortKey.random:
         return getText(I18N.sortValidatorOptionRandom);
-      case ValidatorSortKey.name:
-        return getText(I18N.sortValidatorOptionName);
-      case ValidatorSortKey.commission:
-        return getText(I18N.sortValidatorOptionCommission);
-      case ValidatorSortKey.power:
-        return getText(I18N.sortValidatorOptionPower);
+      case ValidatorSortKey.nameAsc:
+        return getText(I18N.sortValidatorOptionName, {
+          key: getText(I18N.sortAsc),
+        });
+      case ValidatorSortKey.nameDesc:
+        return getText(I18N.sortValidatorOptionName, {
+          key: getText(I18N.sortDesc),
+        });
+      case ValidatorSortKey.commissionAsc:
+        return getText(I18N.sortValidatorOptionCommission, {
+          key: getText(I18N.sortAsc),
+        });
+      case ValidatorSortKey.commissionDesc:
+        return getText(I18N.sortValidatorOptionCommission, {
+          key: getText(I18N.sortDesc),
+        });
+      case ValidatorSortKey.powerAsc:
+        return getText(I18N.sortValidatorOptionPower, {
+          key: getText(I18N.sortAsc),
+        });
+      case ValidatorSortKey.powerDesc:
+        return getText(I18N.sortValidatorOptionPower, {
+          key: getText(I18N.sortDesc),
+        });
       default:
         return getText(I18N.sortValidatorOptionRandom);
     }
@@ -83,24 +101,51 @@ export const UnstackedHeader = ({
               color={Color.textBase1}
             />
           </MenuOption>
-          <MenuOption value={ValidatorSortKey.name}>
+          <MenuOption value={ValidatorSortKey.nameAsc}>
             <Text
               t11
               i18n={I18N.sortValidatorOptionName}
+              i18params={{key: getText(I18N.sortAsc)}}
               color={Color.textBase1}
             />
           </MenuOption>
-          <MenuOption value={ValidatorSortKey.power}>
+          <MenuOption value={ValidatorSortKey.nameDesc}>
+            <Text
+              t11
+              i18n={I18N.sortValidatorOptionName}
+              i18params={{key: getText(I18N.sortDesc)}}
+              color={Color.textBase1}
+            />
+          </MenuOption>
+          <MenuOption value={ValidatorSortKey.powerAsc}>
             <Text
               t11
               i18n={I18N.sortValidatorOptionPower}
+              i18params={{key: getText(I18N.sortAsc)}}
               color={Color.textBase1}
             />
           </MenuOption>
-          <MenuOption value={ValidatorSortKey.commission}>
+          <MenuOption value={ValidatorSortKey.powerDesc}>
+            <Text
+              t11
+              i18n={I18N.sortValidatorOptionPower}
+              i18params={{key: getText(I18N.sortDesc)}}
+              color={Color.textBase1}
+            />
+          </MenuOption>
+          <MenuOption value={ValidatorSortKey.commissionAsc}>
             <Text
               t11
               i18n={I18N.sortValidatorOptionCommission}
+              i18params={{key: getText(I18N.sortAsc)}}
+              color={Color.textBase1}
+            />
+          </MenuOption>
+          <MenuOption value={ValidatorSortKey.commissionDesc}>
+            <Text
+              t11
+              i18n={I18N.sortValidatorOptionCommission}
+              i18params={{key: getText(I18N.sortDesc)}}
               color={Color.textBase1}
             />
           </MenuOption>

@@ -2,9 +2,12 @@ import {ValidatorItem} from '@app/types';
 
 export enum ValidatorSortKey {
   random, // default
-  name, // description.moniker
-  power, // power || tokens
-  commission, // localStatus
+  nameAsc, // description.moniker
+  nameDesc, // description.moniker
+  powerAsc, // power || tokens
+  powerDesc, // power || tokens
+  commissionAsc, // localStatus
+  commissionDesc, // localStatus
 }
 
 /**
@@ -20,12 +23,18 @@ export function validatorsSort(
   switch (key) {
     case ValidatorSortKey.random:
       return validatorsSortRandom(validators);
-    case ValidatorSortKey.name:
+    case ValidatorSortKey.nameAsc:
       return validatorsSortName(validators);
-    case ValidatorSortKey.commission:
+    case ValidatorSortKey.nameDesc:
+      return validatorsSortName(validators, -1);
+    case ValidatorSortKey.commissionAsc:
       return validatorsSortCommission(validators);
-    case ValidatorSortKey.power:
+    case ValidatorSortKey.commissionDesc:
+      return validatorsSortCommission(validators, -1);
+    case ValidatorSortKey.powerAsc:
       return validatorsSortPower(validators);
+    case ValidatorSortKey.powerDesc:
+      return validatorsSortPower(validators, -1);
     default:
       return validatorsSortRandom(validators);
   }
@@ -35,10 +44,17 @@ export function validatorsSort(
  * @name validatorsSortPower
  * @description Sorting for validators based on total power
  * @param validators
+ * @param desc {-1 | 1} 1 means asc sorting and -1 means desc sorting
  */
-export function validatorsSortPower(validators: ValidatorItem[]) {
+export function validatorsSortPower(
+  validators: ValidatorItem[],
+  desc: -1 | 1 = 1,
+) {
   return validators.sort((valA: ValidatorItem, valB: ValidatorItem) => {
-    return Number.parseInt(valB.tokens, 10) - Number.parseInt(valA.tokens, 10);
+    return (
+      (Number.parseInt(valA.tokens, 10) - Number.parseInt(valB.tokens, 10)) *
+      desc
+    );
   });
 }
 
@@ -59,13 +75,17 @@ export function validatorsSortRandom(validators: ValidatorItem[]) {
  * @name validatorsSortName
  * @description Sorting for validators based on name
  * @param validators
+ * @param desc {-1 | 1} 1 means asc sorting and -1 means desc sorting
  */
-export function validatorsSortName(validators: ValidatorItem[]) {
+export function validatorsSortName(
+  validators: ValidatorItem[],
+  desc: -1 | 1 = 1,
+) {
   return validators.sort((valA: ValidatorItem, valB: ValidatorItem) => {
     return valB.description.moniker.toLowerCase() >
       valA.description.moniker.toLowerCase()
-      ? -1
-      : 1;
+      ? -1 * desc
+      : 1 * desc;
   });
 }
 
@@ -73,8 +93,12 @@ export function validatorsSortName(validators: ValidatorItem[]) {
  * @name validatorsSortCommission
  * @description Sorting for validators based on commission
  * @param validators
+ * @param desc {-1 | 1} 1 means asc sorting and -1 means desc sorting
  */
-export function validatorsSortCommission(validators: ValidatorItem[]) {
+export function validatorsSortCommission(
+  validators: ValidatorItem[],
+  desc: -1 | 1 = 1,
+) {
   return validators.sort((valA: ValidatorItem, valB: ValidatorItem) => {
     const a = valA.commission.commission_rates.rate;
     const b = valB.commission.commission_rates.rate;
@@ -84,8 +108,9 @@ export function validatorsSortCommission(validators: ValidatorItem[]) {
     }
 
     return (
-      parseFloat(valA.commission.commission_rates.rate) -
-      parseFloat(valB.commission.commission_rates.rate)
+      (parseFloat(valA.commission.commission_rates.rate) -
+        parseFloat(valB.commission.commission_rates.rate)) *
+      desc
     );
   });
 }
