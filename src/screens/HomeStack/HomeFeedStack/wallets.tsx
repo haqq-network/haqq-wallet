@@ -114,7 +114,7 @@ export const WalletsWrapper = observer(() => {
   );
 
   const onPressCreate = useCallback(async () => {
-    const rootWallet = visible[0];
+    const rootWallet = Wallet.getAllVisible()[0];
 
     const getType = () => {
       if ([WalletType.hot, WalletType.ledgerBt].includes(rootWallet.type)) {
@@ -124,7 +124,7 @@ export const WalletsWrapper = observer(() => {
     };
 
     let rootWalletProvider = await getProviderInstanceForWallet(
-      visible[0],
+      rootWallet,
       true,
       true,
     );
