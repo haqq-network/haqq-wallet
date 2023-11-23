@@ -58,8 +58,7 @@ export const WalletsWrapper = observer(() => {
       const isNoBackup = !wallet.mnemonicSaved && !wallet.socialLinkEnabled;
 
       const userHaveSSSProtectedWallets = !!Wallet.getAll().find(
-        w =>
-          w.type === WalletType.sss && w.mnemonicSaved && w.socialLinkEnabled,
+        w => w.type === WalletType.sss && w.socialLinkEnabled,
       )?.accountId;
 
       if (isNoBackup && !userHaveSSSProtectedWallets) {
