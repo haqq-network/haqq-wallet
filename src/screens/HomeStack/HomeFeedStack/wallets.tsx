@@ -1,11 +1,11 @@
 import React, {useCallback} from 'react';
 
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {observer} from 'mobx-react';
 
 import {Wallets} from '@app/components/wallets';
 import {app} from '@app/contexts';
-import {getProviderInstanceForWallet} from '@app/helpers';
 import {getProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet';
 import {useTypedNavigation} from '@app/hooks';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
@@ -114,31 +114,22 @@ export const WalletsWrapper = observer(() => {
   );
 
   const onPressCreate = useCallback(async () => {
-    const rootWallet = Wallet.getAllVisible()[0];
-
-    const getType = () => {
-      if ([WalletType.hot, WalletType.ledgerBt].includes(rootWallet.type)) {
-        return WalletType.mnemonic;
+    const getType = (
+      provider: ProviderMnemonicReactNative | ProviderSSSReactNative,
+    ) => {
+      if (provider instanceof ProviderSSSReactNative) {
+        return WalletType.sss;
       }
-      return rootWallet.type;
+      return WalletType.mnemonic;
     };
 
-    let rootWalletProvider = await getProviderInstanceForWallet(
-      rootWallet,
-      true,
-      true,
-    );
-
-    if (rootWalletProvider instanceof ProviderMnemonicReactNative) {
-      //
-    } else {
-      rootWalletProvider = await getProviderForNewWallet();
-    }
+    const provider = await getProviderForNewWallet();
+    const type = getType(provider);
 
     //@ts-ignore
     navigation.navigate(HomeStackRoutes.Create, {
-      type: getType(),
-      provider: rootWalletProvider,
+      type,
+      provider,
     });
   }, [navigation]);
 
