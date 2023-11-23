@@ -59,8 +59,9 @@ export const SigninNetworks = observer(
     const sssWalletsCount = Wallet.getAll().filter(
       wallet => wallet.type === WalletType.sss,
     ).length;
+
     const isSSSDisabled = app.onboarded
-      ? mnemonicWalletsCount >= 1 && sssWalletsCount === 0
+      ? mnemonicWalletsCount >= 1 || sssWalletsCount >= 1
       : false;
 
     return (
