@@ -1,5 +1,6 @@
-import React, {memo, useEffect} from 'react';
+import React, {useEffect} from 'react';
 
+import {observer} from 'mobx-react';
 import {View} from 'react-native';
 
 import {showModal} from '@app/helpers';
@@ -14,7 +15,7 @@ import {ModalType} from '@app/types';
 import {WalletType} from '@app/types';
 import {sleep} from '@app/utils';
 
-export const LedgerStoreWalletScreen = memo(() => {
+export const LedgerStoreWalletScreen = observer(() => {
   const navigation = useTypedNavigation<LedgerStackParamList>();
   const route = useTypedRoute<
     LedgerStackParamList,
@@ -29,7 +30,11 @@ export const LedgerStoreWalletScreen = memo(() => {
     setTimeout(() => {
       const actions = [sleep(1000)];
 
-      const lastIndex = route.params.hdPath.split('/').pop() ?? '0';
+      const lastIndex = Wallet.getAll().filter(
+        wallet =>
+          wallet.type === WalletType.ledgerBt &&
+          wallet.name.includes(route.params.deviceName),
+      ).length;
 
       actions.push(
         Wallet.create(`${route?.params?.deviceName} #${lastIndex}`, {
