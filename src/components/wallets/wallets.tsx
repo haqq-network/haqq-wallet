@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 
 import {SessionTypes} from '@walletconnect/types';
 import {View, useWindowDimensions} from 'react-native';
@@ -61,7 +61,6 @@ export const Wallets = ({
   const [walletConnectSessions, setWalletConnectSessions] = useState<
     SessionTypes.Struct[][]
   >([]);
-  const mnemonicCache: string[] = [];
 
   useEffect(() => {
     setWalletConnectSessions(
@@ -70,6 +69,13 @@ export const Wallets = ({
       ),
     );
   }, [wallets, activeSessions]);
+
+  const userHaveSSSProtectedWallets = useMemo(
+    () =>
+      !!wallets.find(_w => _w.type === WalletType.sss && _w.socialLinkEnabled)
+        ?.accountId,
+    [wallets],
+  );
 
   return (
     <>
@@ -84,16 +90,9 @@ export const Wallets = ({
         onScroll={scrollHandler}
         style={styles.scroll}>
         {wallets.map((w, i) => {
-          let isSecondMnemonic = mnemonicCache.length > 1;
+          const isSecondMnemonic =
+            w.type === WalletType.mnemonic && userHaveSSSProtectedWallets;
 
-          if (
-            w.type === WalletType.mnemonic &&
-            w.accountId &&
-            !mnemonicCache.includes(w.accountId)
-          ) {
-            mnemonicCache.push(w.accountId);
-            isSecondMnemonic = mnemonicCache.length > 1;
-          }
           return (
             <CarouselItem index={i} pan={pan} key={w.address}>
               <WalletCard
