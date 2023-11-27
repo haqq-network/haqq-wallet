@@ -53,6 +53,7 @@ enum ProtectionStatus {
   empty,
   partially,
   full,
+  hidden,
 }
 
 export const WalletCard = memo(
@@ -75,9 +76,9 @@ export const WalletCard = memo(
     const screenWidth = useWindowDimensions().width;
 
     const protectionStatus = useMemo(() => {
-      // Wallet is 2nd mnemonic (imported)
+      // Wallet is 2nd mnemonic (imported) or user have imported this wallet after SSS
       if (isSecondMnemonic) {
-        return ProtectionStatus.full;
+        return ProtectionStatus.hidden;
       }
 
       // Ledger and Hot always has Full Protection
