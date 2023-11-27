@@ -2,7 +2,7 @@ import React, {memo} from 'react';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import {popupScreenOptions} from '@app/helpers';
+import {popupScreenOptionsWithMargin} from '@app/helpers';
 import {useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
@@ -29,7 +29,7 @@ export type JsonRpcSignPopupStackParamList = HomeStackParamList & {
 const Stack = createNativeStackNavigator();
 
 const screenOptions: ScreenOptionType = {
-  ...popupScreenOptions,
+  ...popupScreenOptionsWithMargin,
   title: getText(I18N.walletConnectSignTitle),
   headerBackHidden: true,
 };
