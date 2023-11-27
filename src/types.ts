@@ -744,6 +744,7 @@ export type AddWalletParams = {
   colorTo?: string;
   colorPattern?: string;
   socialLinkEnabled?: boolean;
+  mnemonicSaved?: boolean;
 };
 
 export enum ValidatorStatus {
