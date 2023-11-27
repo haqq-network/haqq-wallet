@@ -77,13 +77,12 @@ export const WalletCard = memo(
 
     const protectionStatus = useMemo(() => {
       // Wallet is 2nd mnemonic (imported) or user have imported this wallet after SSS
-      if (isSecondMnemonic) {
+      // or Ledger / Hot
+      if (
+        isSecondMnemonic ||
+        [WalletType.ledgerBt, WalletType.hot].includes(wallet.type)
+      ) {
         return ProtectionStatus.hidden;
-      }
-
-      // Ledger and Hot always has Full Protection
-      if ([WalletType.ledgerBt, WalletType.hot].includes(wallet.type)) {
-        return ProtectionStatus.full;
       }
 
       // Other types
