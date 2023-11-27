@@ -104,6 +104,9 @@ export const SignUpStoreWalletScreen = observer(() => {
           path: hdPath,
           type,
           socialLinkEnabled: type === WalletType.sss,
+          mnemonicSaved: !!accountWallets.find(
+            wallet => !!wallet.mnemonicSaved,
+          ),
         });
 
         //@ts-ignore

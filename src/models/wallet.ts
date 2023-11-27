@@ -237,7 +237,7 @@ class WalletStore implements MobXStoreFromRealm {
       data: '',
       subscription: existingWallet?.subscription ?? null,
       address: walletParams.address.toLowerCase() as HaqqEthereumAddress,
-      mnemonicSaved: false,
+      mnemonicSaved: walletParams.mnemonicSaved || false,
       socialLinkEnabled: walletParams.socialLinkEnabled || false,
       name: name,
       pattern,
