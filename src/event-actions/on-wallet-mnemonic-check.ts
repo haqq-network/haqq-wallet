@@ -26,10 +26,11 @@ export async function onWalletMnemonicCheck(snoozeBackup: Date) {
       });
 
       const isMnemonicSaved = await provider.isMnemonicSaved();
+      const wallet = Wallet.getForAccount(accountId)[0];
 
       if (!isMnemonicSaved) {
         await sleep(1000);
-        app.emit(Events.onAppMnemonicBackup, accountId);
+        app.emit(Events.onAppMnemonicBackup, wallet);
         return;
       }
     }
