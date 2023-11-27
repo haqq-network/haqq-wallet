@@ -149,7 +149,7 @@ export const InAppBrowser = ({
 
   const onShouldStartLoadWithRequest = useCallback(
     ({url: nextUrl}: ShouldStartLoadRequest) => {
-      if (nextUrl.startsWith('about:')) {
+      if (nextUrl.startsWith('about:') || nextUrl.startsWith('blob:')) {
         return true;
       }
 
