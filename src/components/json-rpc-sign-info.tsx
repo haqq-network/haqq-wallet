@@ -12,6 +12,7 @@ import {
   getHostnameFromUrl,
   getSignParamsMessage,
   getSignTypedDataParamsData,
+  isValidJSON,
 } from '@app/utils';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
@@ -28,18 +29,16 @@ interface WalletConnectSignInfoProps {
 const getMessageByRequest = (request: PartialJsonRpcRequest) => {
   switch (request?.method) {
     case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
-      const personalSignMessage: string =
-        getSignParamsMessage(request.params) || '';
-      if (personalSignMessage?.startsWith?.('0x')) {
-        return {
-          text: Buffer.from(personalSignMessage?.slice(2), 'hex').toString(
-            'utf8',
-          ),
-        };
-      }
-      return {text: personalSignMessage};
     case EIP155_SIGNING_METHODS.ETH_SIGN:
       const ethSignMessage: string = getSignParamsMessage(request.params) || '';
+
+      if (isValidJSON(ethSignMessage)) {
+        return {
+          text: JSON.parse(ethSignMessage),
+          json: true,
+        };
+      }
+
       if (ethSignMessage?.startsWith?.('0x')) {
         return {
           text: Buffer.from(ethSignMessage?.slice(2), 'hex').toString('utf8'),

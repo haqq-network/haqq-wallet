@@ -180,6 +180,9 @@ export const Web3Browser = ({
     () =>
       `
       document.addEventListener("DOMContentLoaded", function(event) {
+        if(window?.ethereum?.isHaqqWallet){
+          return;
+        }
         ${inpageBridgeWeb3}
         console.log('ethereum loaded:', !!window.ethereum);
         if(window.ethereum) {

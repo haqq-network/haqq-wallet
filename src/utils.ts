@@ -247,9 +247,15 @@ export function callbackWrapper<T extends Array<any>>(
  *  ]
  */
 export function getSignParamsMessage(params: string[]) {
-  const message = params.filter(p => !AddressUtils.isEthAddress(p))[0];
+  const message = params.filter(p => !AddressUtils.isEthAddress(p) && !!p)[0];
   const parsedMessage = message?.startsWith('0x') ? message.slice(2) : message;
-  return Buffer.from(parsedMessage, 'hex').toString('utf8');
+
+  if (isValidJSON(parsedMessage)) {
+    return parsedMessage;
+  }
+
+  const utf8 = Buffer.from(parsedMessage, 'hex').toString('utf8');
+  return utf8 || parsedMessage;
 }
 
 function removeUnusedTypes(typedData: EthTypedData): EthTypedData {
@@ -609,9 +615,13 @@ export function arraySortUtil<T>(
 
 export function isValidJSON(
   jsonString: string | undefined,
-): jsonString is string {
+): jsonString is string & object {
   try {
-    if (!jsonString) {
+    if (
+      !jsonString ||
+      typeof jsonString !== 'string' ||
+      !jsonString.startsWith('{')
+    ) {
       return false;
     }
     JSON.parse(jsonString);
