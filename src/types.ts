@@ -288,7 +288,7 @@ export type RootStackParamList = {
     accountId: string;
   };
   backupNotification: {
-    accountId: string;
+    wallet: Wallet;
   };
   backupSssNotification: {
     accountId: string;

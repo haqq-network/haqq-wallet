@@ -5,6 +5,7 @@ import {observer} from 'mobx-react';
 import {Modal} from '@app/components/modal';
 import {ModalWrapper} from '@app/components/modals/modal-wrapper';
 import {ModalStore, hideModal, showModal} from '@app/helpers';
+import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {ModalType, Modals, ModalsListBase} from '@app/types';
 
 type ModalStates<
@@ -18,27 +19,29 @@ export type ModalProps = {
   initialModal?: {type: 'splash'};
 };
 
-export const ModalsScreen = observer(({initialModal}: ModalProps) => {
-  useEffect(() => {
-    if (initialModal?.type) {
-      showModal(initialModal.type);
-    }
-  }, [initialModal]);
+export const ModalsScreen = observer(
+  themeUpdaterHOC(({initialModal}: ModalProps) => {
+    useEffect(() => {
+      if (initialModal?.type) {
+        showModal(initialModal.type);
+      }
+    }, [initialModal]);
 
-  const onClose = useCallback((event: ModalState) => {
-    hideModal(event.type);
-  }, []);
+    const onClose = useCallback((event: ModalState) => {
+      hideModal(event.type);
+    }, []);
 
-  return (
-    <Modal visible={!!ModalStore.modals.length}>
-      {ModalStore.modals.map(modal => (
-        <ModalWrapper
-          type={modal.type as ModalType}
-          modal={modal}
-          onClose={onClose}
-          key={modal.uid}
-        />
-      ))}
-    </Modal>
-  );
-});
+    return (
+      <Modal visible={!!ModalStore.modals.length}>
+        {ModalStore.modals.map(modal => (
+          <ModalWrapper
+            type={modal.type as ModalType}
+            modal={modal}
+            onClose={onClose}
+            key={modal.uid}
+          />
+        ))}
+      </Modal>
+    );
+  }),
+);

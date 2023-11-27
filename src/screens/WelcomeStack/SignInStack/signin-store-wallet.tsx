@@ -88,6 +88,7 @@ export const SignInStoreWalletScreen = memo(() => {
             break;
           case 'sss':
             const storage = await getProviderStorage();
+            const password = await getPassword();
 
             const sssProvider = await ProviderSSSReactNative.initialize(
               params.sssPrivateKey,
@@ -109,6 +110,8 @@ export const SignInStoreWalletScreen = memo(() => {
                 ) as string,
               },
             );
+
+            await sssProvider.updatePin(password);
 
             navigation.navigate(SignInStackRoutes.SigninChooseAccount, {
               provider: sssProvider,
