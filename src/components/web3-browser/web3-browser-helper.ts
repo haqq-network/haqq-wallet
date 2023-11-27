@@ -148,7 +148,7 @@ export class Web3BrowserHelper extends EventEmitter implements JsonRpcHelper {
   };
 
   public onShouldStartLoadWithRequest = ({url}: ShouldStartLoadRequest) => {
-    if (url.startsWith('about:')) {
+    if (url.startsWith('about:') || url.startsWith('blob:')) {
       return true;
     }
 
