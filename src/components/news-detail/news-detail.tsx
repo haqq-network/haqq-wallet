@@ -89,7 +89,11 @@ const rules = {
   image: {
     react: (node: NodeImage, output: Output, {...state}) => {
       return (
-        <View key={makeID(10)} style={!state.withinList && styles.imageWrapper}>
+        <View
+          key={makeID(10)}
+          style={
+            !state.withinList ? styles.imageWrapper : styles.inListImageWrapper
+          }>
           <Image
             source={{uri: node.target}}
             style={[styles.image, state.withinList && styles.inListImage]}
@@ -306,6 +310,7 @@ const styles = createTheme({
   },
   inListImage: {
     width: Dimensions.get('window').width - HORIZONTAL_PADDING * 3,
+    paddingBottom: 40,
   },
   heading: {marginBottom: 8, marginTop: 28},
   paragraph: {marginVertical: 8},
@@ -313,7 +318,8 @@ const styles = createTheme({
     flexDirection: 'row',
     marginBottom: 6,
   },
-  imageWrapper: {paddingTop: 28},
+  imageWrapper: {paddingTop: 16, paddingBottom: 8},
+  inListImageWrapper: {paddingBottom: 8},
 });
 
 const markdownStyle = createTheme({
