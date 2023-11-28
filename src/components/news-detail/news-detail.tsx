@@ -124,18 +124,22 @@ const rules = {
       while (
         !(startSearchIndex === -1 || startSearchIndex === node.content.length)
       ) {
-        const nodeImageIndex = node.content.findIndex(
-          c => c.type === 'image',
-          startSearchIndex,
-        );
+        const nodeImageIndex = node.content
+          .slice(startSearchIndex)
+          .findIndex(c => c.type === 'image');
 
         if (nodeImageIndex !== -1) {
+          // Don't push text if previous node were image
+          if (startSearchIndex !== nodeImageIndex) {
+            content.push(
+              <Text t11 color={Color.textBase1} key={makeID(10)}>
+                {output(node.content.slice(startSearchIndex, nodeImageIndex), {
+                  ...state,
+                })}
+              </Text>,
+            );
+          }
           content.push(
-            <Text t11 color={Color.textBase1} key={makeID(10)}>
-              {output(node.content.slice(startSearchIndex, nodeImageIndex), {
-                ...state,
-              })}
-            </Text>,
             output(node.content[nodeImageIndex], {
               ...state,
             }),
