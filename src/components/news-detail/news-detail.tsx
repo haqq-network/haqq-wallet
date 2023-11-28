@@ -89,7 +89,11 @@ const rules = {
   image: {
     react: (node: NodeImage, output: Output, {...state}) => {
       return (
-        <View key={makeID(10)} style={!state.withinList && styles.imageWrapper}>
+        <View
+          key={makeID(10)}
+          style={
+            !state.withinList ? styles.imageWrapper : styles.inListImageWrapper
+          }>
           <Image
             source={{uri: node.target}}
             style={[styles.image, state.withinList && styles.inListImage]}
@@ -124,18 +128,22 @@ const rules = {
       while (
         !(startSearchIndex === -1 || startSearchIndex === node.content.length)
       ) {
-        const nodeImageIndex = node.content.findIndex(
-          c => c.type === 'image',
-          startSearchIndex,
-        );
+        const nodeImageIndex = node.content
+          .slice(startSearchIndex)
+          .findIndex(c => c.type === 'image');
 
         if (nodeImageIndex !== -1) {
+          // Don't push text if previous node were image
+          if (startSearchIndex !== nodeImageIndex) {
+            content.push(
+              <Text t11 color={Color.textBase1} key={makeID(10)}>
+                {output(node.content.slice(startSearchIndex, nodeImageIndex), {
+                  ...state,
+                })}
+              </Text>,
+            );
+          }
           content.push(
-            <Text t11 color={Color.textBase1} key={makeID(10)}>
-              {output(node.content.slice(startSearchIndex, nodeImageIndex), {
-                ...state,
-              })}
-            </Text>,
             output(node.content[nodeImageIndex], {
               ...state,
             }),
@@ -302,6 +310,7 @@ const styles = createTheme({
   },
   inListImage: {
     width: Dimensions.get('window').width - HORIZONTAL_PADDING * 3,
+    paddingBottom: 40,
   },
   heading: {marginBottom: 8, marginTop: 28},
   paragraph: {marginVertical: 8},
@@ -309,7 +318,8 @@ const styles = createTheme({
     flexDirection: 'row',
     marginBottom: 6,
   },
-  imageWrapper: {paddingTop: 28},
+  imageWrapper: {paddingTop: 16, paddingBottom: 8},
+  inListImageWrapper: {paddingBottom: 8},
 });
 
 const markdownStyle = createTheme({
