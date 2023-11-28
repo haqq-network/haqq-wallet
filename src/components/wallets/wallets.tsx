@@ -61,6 +61,7 @@ export const Wallets = ({
   const [walletConnectSessions, setWalletConnectSessions] = useState<
     SessionTypes.Struct[][]
   >([]);
+  const mnemonicCache: string[] = [];
 
   useEffect(() => {
     setWalletConnectSessions(
@@ -90,8 +91,20 @@ export const Wallets = ({
         onScroll={scrollHandler}
         style={styles.scroll}>
         {wallets.map((w, i) => {
-          const isSecondMnemonic =
-            w.type === WalletType.mnemonic && userHaveSSSProtectedWallets;
+          let isSecondMnemonic =
+            mnemonicCache.length > 1 ||
+            (w.type === WalletType.mnemonic && userHaveSSSProtectedWallets);
+
+          if (
+            w.type === WalletType.mnemonic &&
+            w.accountId &&
+            !mnemonicCache.includes(w.accountId)
+          ) {
+            mnemonicCache.push(w.accountId);
+            isSecondMnemonic =
+              mnemonicCache.length > 1 ||
+              (w.type === WalletType.mnemonic && userHaveSSSProtectedWallets);
+          }
 
           return (
             <CarouselItem index={i} pan={pan} key={w.address}>

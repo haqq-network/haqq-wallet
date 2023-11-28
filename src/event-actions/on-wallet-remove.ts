@@ -1,10 +1,9 @@
+import {app} from '@app/contexts';
 import {Events} from '@app/events';
-import {getWelcomeScreen} from '@app/helpers/get-welcome-screen';
 import {Transaction} from '@app/models/transaction';
 import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
-import {navigator} from '@app/navigator';
 import {Backend} from '@app/services/backend';
 import {WalletConnect} from '@app/services/wallet-connect';
 
@@ -20,9 +19,7 @@ export async function onWalletRemove(address: string) {
     if (wallets.length === 0) {
       await onAppReset();
       await onWalletReset();
-      navigator.reset({
-        routes: [{name: getWelcomeScreen()}],
-      });
+      app.onboarded = false;
     }
 
     const transactions = Transaction.getAll();
