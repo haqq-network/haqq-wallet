@@ -38,7 +38,6 @@ import {
 } from '@app/helpers/await-for-value';
 import {getUid} from '@app/helpers/get-uid';
 import {getAdjustAdid} from '@app/helpers/get_adjust_adid';
-import {shortAddress} from '@app/helpers/short-address';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Banner} from '@app/models/banner';
@@ -59,8 +58,7 @@ import {HapticEffects, vibrate} from '@app/services/haptic';
 import {SssProviders} from '@app/services/provider-sss';
 import {message as toastMessage} from '@app/services/toast';
 import {getUserAgent} from '@app/services/version';
-import {ModalType} from '@app/types';
-import {Modals, PartialJsonRpcRequest} from '@app/types';
+import {ModalType, Modals, PartialJsonRpcRequest} from '@app/types';
 import {
   generateMockBanner,
   isError,
@@ -498,17 +496,18 @@ export const SettingsTestScreen = observer(() => {
     });
   }, [showActionSheetWithOptions]);
 
-  const onSetLeadingAccount = useCallback(() => {
+  const onSetLeadingAccount = useCallback(async () => {
     const wallets = Wallet.getAll();
-    const walletsKeys = wallets.map(
-      wallet => `${wallet.name} ${shortAddress(wallet.address ?? '', '•')}`,
-    );
-    showActionSheetWithOptions({options: walletsKeys}, index => {
-      if (typeof index === 'number' && wallets[index]) {
-        VariablesString.set('leadingAccount', wallets[index].address);
-        setLeadingAccount(VariablesString.get('leadingAccount'));
-      }
+    const initialAddress = VariablesString.get('leadingAccount');
+
+    const selectedAccount = await awaitForWallet({
+      wallets,
+      title: I18N.selectAccount,
+      autoSelectWallet: false,
+      initialAddress,
     });
+    VariablesString.set('leadingAccount', selectedAccount);
+    setLeadingAccount(VariablesString.get('leadingAccount'));
   }, [showActionSheetWithOptions]);
 
   return (
