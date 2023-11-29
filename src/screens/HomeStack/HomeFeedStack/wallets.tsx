@@ -35,7 +35,7 @@ export const WalletsWrapper = observer(() => {
     [navigation],
   );
 
-  const onPressPharse = useCallback(
+  const onPressPhrase = useCallback(
     (wallet: Wallet) => {
       navigation.navigate(HomeStackRoutes.Backup, {wallet});
     },
@@ -69,7 +69,7 @@ export const WalletsWrapper = observer(() => {
 
       if (!wallet.mnemonicSaved) {
         await app.auth();
-        onPressPharse(wallet);
+        onPressPhrase(wallet);
       }
       if (!wallet.socialLinkEnabled && !userHaveSSSProtectedWallets) {
         await app.auth();

@@ -532,12 +532,12 @@ export enum I18N {
   walletProtectionSocialLinkConnectDescription,
   walletProtectionRecoveryPhrase,
   walletProtectionRecoveryPhraseDescription,
-  walletProtectionPharse,
+  walletProtectionPhrase,
   walletProtectionSocial,
   settingsAccountDetailRecoveryWarning,
-  settingsAccountDetailRecoveryPharseWarning,
+  settingsAccountDetailRecoveryPhraseWarning,
   settingsAccountDetailRecoverySocialWarning,
-  settingsAccountDetailPharse,
+  settingsAccountDetailPhrase,
   settingsAccountDetailSocial,
   settingsAccountDetailConnectSocialLogin,
   settingsAccountDetailCreateBackupPhrase,
@@ -1487,18 +1487,18 @@ const en: Record<I18N, string> = {
     'You can choose another social login your account or replace it.',
   [I18N.sssMigrateRewriteWarning]:
     'In case of replacement, all account data will be lost',
-  [I18N.settingsAccountDetailPharse]: 'Pharse',
+  [I18N.settingsAccountDetailPhrase]: 'Phrase',
   [I18N.settingsAccountDetailSocial]: 'Social',
   [I18N.settingsAccountDetailCreateBackupPhrase]: 'Create Backup Phrase',
   [I18N.settingsAccountDetailConnectSocialLogin]: 'Connect Social login',
   [I18N.settingsAccountDetailRecoveryWarning]:
     'This account is not protected. Create a recovery phrase for him or connect a social network',
-  [I18N.settingsAccountDetailRecoveryPharseWarning]:
+  [I18N.settingsAccountDetailRecoveryPhraseWarning]:
     'A backup phrase has not been created for the account. It can serve as an additional measure of protection in case of loss of access to the account',
   [I18N.settingsAccountDetailRecoverySocialWarning]:
     'If you lose access to your account, you can always restore it using your social network',
   [I18N.walletProtectionTitle]: 'Protect your account',
-  [I18N.walletProtectionPharse]: 'Pharse',
+  [I18N.walletProtectionPhrase]: 'Phrase',
   [I18N.walletProtectionSocial]: 'Social',
   [I18N.walletProtectionRecoveryPhrase]: 'Recovery phrase',
   [I18N.walletProtectionRecoveryPhraseDescription]:
