@@ -139,7 +139,7 @@ class TokensStore implements MobXStore<IToken> {
     return this.data[id];
   }
 
-  update(id: string | undefined, item: Omit<IToken, 'id'>) {
+  update(id: string | undefined, item: Omit<Partial<IToken>, 'id'>) {
     if (!id) {
       return false;
     }

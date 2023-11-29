@@ -63,7 +63,7 @@ class RafflesStore implements MobXStore<Raffle> {
     this._data = {};
   }
 
-  update(id: string, params: Partial<Raffle>) {
+  update(id: string | undefined, params: Partial<Raffle>) {
     if (!id) {
       return false;
     }

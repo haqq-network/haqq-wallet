@@ -1,29 +1,18 @@
 import {makeAutoObservable, runInAction} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
-import {AddressUtils} from '@app/helpers/address-utils';
-import {Contracts} from '@app/models/contracts';
 import {Wallet} from '@app/models/wallet';
-import {Balance} from '@app/services/balance';
 import {Indexer, IndexerUpdatesResponse} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
-import {
-  HaqqCosmosAddress,
-  IContract,
-  INft,
-  IToken,
-  IndexerNftData,
-  MobXStore,
-} from '@app/types';
-import {CURRENCY_NAME, WEI_PRECISION} from '@app/variables/common';
+import {INft, IndexerNftData, MobXStore} from '@app/types';
 
-class NftStore implements MobXStore<IToken> {
+class NftStore implements MobXStore<INft> {
   /**
    * All Nft available for all wallets with commulative value
    * @key Token contract address
-   * @value IToken
+   * @value INft
    */
-  data: Record<string, IToken> = {};
+  data: Record<string, INft> = {};
   /**
    * Indexer response with token info
    * @key Wallet address
@@ -40,63 +29,26 @@ class NftStore implements MobXStore<IToken> {
         properties: [
           // https://github.com/quarrant/mobx-persist-store/issues/97
           // @ts-ignore
-          'contracts',
-          {
-            key: 'Nft',
-            deserialize: (stringObject: string): this['Nft'] => {
-              const value = JSON.parse(stringObject) as this['Nft'];
-              const keys = Object.keys(value);
-              const newValue = keys.reduce((prev, cur) => {
-                return {
-                  ...prev,
-                  [AddressUtils.toEth(cur)]: value[AddressUtils.toEth(cur)].map(
-                    item => ({
-                      ...item,
-                      value: Balance.fromJsonString(item.value),
-                    }),
-                  ),
-                };
-              }, {});
-
-              return newValue;
-            },
-            // @ts-ignore
-            serialize: (value: this['Nft']) => {
-              const keys = Object.keys(value);
-              const newValue = keys.reduce((prev, cur) => {
-                return {
-                  ...prev,
-                  [AddressUtils.toEth(cur)]: value[AddressUtils.toEth(cur)].map(
-                    item => ({
-                      ...item,
-                      value: item.value.toJsonString(),
-                    }),
-                  ),
-                };
-              }, {});
-
-              return JSON.stringify(newValue);
-            },
-          },
+          'nfts',
         ],
         storage: storage,
       });
     }
   }
 
-  create(id: string, params: IToken) {
-    const existingItem = this.getById(params.id);
+  create(nft: INft) {
+    const existingItem = this.getById(nft.id);
 
     if (existingItem) {
-      this.update(existingItem.id, params);
+      this.update(nft);
     } else {
       this.data = {
         ...this.data,
-        [id]: params,
+        [nft.id]: nft,
       };
     }
 
-    return id;
+    return nft.id;
   }
 
   remove(id: string | undefined) {
@@ -124,135 +76,52 @@ class NftStore implements MobXStore<IToken> {
     return Object.values(this.data);
   }
 
-  getAllVisible() {
-    return this.getAll().filter(item => !!item.is_in_white_list);
-  }
-
-  getAllPositive() {
-    return this.getAll().filter(
-      item => !!item.is_in_white_list && item.value.isPositive(),
-    );
-  }
-
   getById(id: string) {
     return this.data[id];
   }
 
-  update(id: string | undefined, item: Omit<IToken, 'id'>) {
-    if (!id) {
-      return false;
-    }
-    const itemToUpdate = this.getById(id);
+  update(nft: INft) {
+    const itemToUpdate = this.getById(nft.id);
     if (!itemToUpdate) {
       return false;
     }
 
-    const updatedValue = itemToUpdate.value.operate(item.value, 'add');
-
     this.data = {
       ...this.data,
-      [id]: {
+      [nft.id]: {
         ...itemToUpdate,
-        ...item,
-        value: updatedValue,
+        ...nft,
       },
     };
     return true;
   }
 
-  private parseIndexerNft = (data: IndexerUpdatesResponse): IndexerNftData => {
-    return Wallet.getAll().reduce((acc, w) => {
-      if (!Array.isArray(data.nfts)) {
-        return {
-          ...acc,
-          [w.address]: [],
-        };
-      }
-
-      Logger.log('data.nfts', JSON.stringify(data.nfts, null, 2));
-
-      const addressNft: INft[] = data.nfts
-        .filter(
-          token =>
-            !!token.contract && AddressUtils.toEth(token.address) === w.address,
-        )
-        .map(token => {
-          const hasCache = this.hasContractCache(token.contract);
-          if (!hasCache) {
-            const contract = data.addresses.find(
-              item => item.id === token.contract,
-            );
-            this.saveContract(contract);
-          }
-
-          // We saved contract in cache on previous step
-          const contract = this.getContract(token.contract);
-          const result: IToken = {
-            id: contract.id,
-            contract_created_at: contract.created_at,
-            contract_updated_at: contract.updated_at,
-            value: new Balance(
-              token.value,
-              contract.decimals || WEI_PRECISION,
-              contract.symbol || CURRENCY_NAME,
-            ),
-            decimals: contract.decimals,
-            is_erc20: contract.is_erc20,
-            is_erc721: contract.is_erc721,
-            is_erc1155: contract.is_erc1155,
-            is_in_white_list: contract.is_in_white_list,
-            name: contract.name,
-            symbol: contract.symbol,
-            created_at: token.created_at,
-            updated_at: token.updated_at,
-            image: contract.icon
-              ? {uri: contract.icon}
-              : require('@assets/images/empty-icon.png'),
-          };
-
-          return result;
-        });
-
-      return {
-        ...acc,
-        [w.address]: [...addressNft],
-      };
-    }, {});
-  };
-
-  private hasContractCache = (id: HaqqCosmosAddress) => {
-    return !!Contracts.getById(id);
-  };
-
-  private saveContract = (contract: IContract | undefined) => {
-    if (!contract) {
-      return;
-    }
-
-    Contracts.create(contract.id, contract);
-  };
-
-  private getContract = (id: HaqqCosmosAddress) => {
-    return Contracts.getById(id);
-  };
-
-  private recalculateCommulativeSum = (Nft: NftStore['Nft']) => {
-    const walletsNft = Object.values(Nft).flat(2);
-    this.removeAll();
-    walletsNft.forEach(token => this.create(token.id, token));
-  };
-
   fetchNft = async () => {
     const wallets = Wallet.getAll();
     const accounts = wallets.map(w => w.cosmosAddress);
     const updates = await Indexer.instance.updates(accounts, this.lastUpdate);
-    const result = this.parseIndexerNft(updates);
-    // this.lastUpdate = new Date();
-    this.recalculateCommulativeSum(result);
+    const result = this.parseIndexerNft(wallets, updates);
 
     runInAction(() => {
       this.Nft = result;
+      Logger.log('nfts', JSON.stringify(this.data, null, 2));
+      Logger.log('NftIndexer', JSON.stringify(this.Nft, null, 2));
     });
+  };
+
+  private parseIndexerNft = (
+    wallets: Wallet[],
+    data: IndexerUpdatesResponse,
+  ): IndexerNftData => {
+    return wallets.reduce((acc, w) => {
+      if (!Array.isArray(data.nfts)) {
+        return {...acc, [w.address]: []};
+      }
+
+      const nfts = data.nfts.map(nft => ({id: nft.token_id, ...nft}));
+
+      return {...acc, [w.address]: [...nfts]};
+    }, {});
   };
 }
 

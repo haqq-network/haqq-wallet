@@ -1192,7 +1192,9 @@ export interface IBalance {
 
 export abstract class ISerializable {
   static fromJsonString: (obj: string | ISerializable) => ISerializable;
+
   abstract toJsonString(): string;
+
   /**
    * Custom console.log for an object
    */
@@ -1251,6 +1253,7 @@ export enum NftWidgetSize {
   medium = 'medium',
   large = 'large',
 }
+
 export interface INftWidget extends IWidgetBase {
   component: 'Nft';
   size: NftWidgetSize;
@@ -1311,13 +1314,19 @@ export type IndexerToken = {
 
 export type IndexerNft = {
   address: HaqqCosmosAddress;
+  block: number;
+  cached_url: string | null;
   contract: HaqqCosmosAddress;
   created_at: string;
   updated_at: string;
-  value: string;
+  file_type: string | null;
+  hash: string | null;
+  original_url: string | null;
+  token_id: string;
 };
 
 export type IndexerTime = Record<HaqqCosmosAddress, number>;
+
 export interface BalanceData {
   vested: Balance;
   staked: Balance;
@@ -1388,8 +1397,10 @@ export interface MobXStore<TData extends MobXStoreData> {
   data: Record<string, TData>;
   getById(id: string): TData | undefined;
   getAll(): TData[];
-  create(id: string, item: TData): string;
-  update(id: string | undefined, item: Omit<Partial<TData>, 'id'>): boolean;
+  create: ((id: string, item: TData) => string) | ((item: TData) => string);
+  update:
+    | ((id: string | undefined, item: Omit<Partial<TData>, 'id'>) => boolean)
+    | ((item: TData) => boolean);
   remove(id: string): boolean;
   removeAll(): void;
 }
@@ -1492,28 +1503,16 @@ export type IToken = {
 };
 
 export type INft = {
-  /**
-   * Token contract address
-   */
-  id: HaqqCosmosAddress;
-  contract_created_at: IContract['created_at'];
-  contract_updated_at: IContract['updated_at'];
-  value: Balance;
-
-  decimals: IContract['decimals'];
-  is_erc20: IContract['is_erc20'];
-  is_erc721: IContract['is_erc721'];
-  is_erc1155: IContract['is_erc1155'];
-  /**
-   * Should be visible or not
-   */
-  is_in_white_list: IContract['is_in_white_list'];
-  name: IContract['name'];
-  symbol: IContract['symbol'];
+  id: string;
+  address: HaqqCosmosAddress;
+  block: number;
+  cached_url: string;
+  contract: HaqqCosmosAddress;
   created_at: string;
-  updated_at: string;
-
-  image: ImageSourcePropType;
+  file_type: string;
+  hash: string;
+  original_url: string;
+  token_id: string;
 };
 
 export type IContract = {
