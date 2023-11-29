@@ -17,7 +17,7 @@ describe('Signup', () => {
 
     await element(by.id('wallet_without_protection_button')).tap();
 
-    await element(by.id('protect_pharse_button')).tap();
+    await element(by.id('protect_phrase_button')).tap();
     await element(by.id('backup_warning_next')).tap();
 
     const mnemonic_words = [];

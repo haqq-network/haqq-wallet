@@ -16,13 +16,13 @@ import {useThemeSelector} from '@app/hooks';
 import {I18N} from '@app/i18n';
 
 export interface WalletProtectionProps {
-  onPressPharse(): void;
+  onPressPhrase(): void;
 
   onPressSocial(): void;
 }
 
 export const WalletProtection = ({
-  onPressPharse,
+  onPressPhrase,
   onPressSocial,
 }: WalletProtectionProps) => {
   const animation = useThemeSelector({
@@ -71,7 +71,7 @@ export const WalletProtection = ({
         <Spacer height={20} />
 
         <View style={styles.subtitle}>
-          <Icon color={Color.graphicBase1} name={'pharse'} />
+          <Icon color={Color.graphicBase1} name={'phrase'} />
           <Spacer width={10} />
           <Text t9 i18n={I18N.walletProtectionRecoveryPhrase} />
         </View>
@@ -88,11 +88,11 @@ export const WalletProtection = ({
 
       <View style={styles.buttonContainer}>
         <Button
-          onPress={onPressPharse}
+          onPress={onPressPhrase}
           style={styles.button}
           variant={ButtonVariant.contained}
-          i18n={I18N.walletProtectionPharse}
-          testID="protect_pharse_button"
+          i18n={I18N.walletProtectionPhrase}
+          testID="protect_phrase_button"
         />
         <Spacer width={10} />
         <Button

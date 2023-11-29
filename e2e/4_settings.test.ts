@@ -22,7 +22,7 @@ describe('Routine', () => {
     await element(by.text('Main account')).tap();
 
     await expect(element(by.id('recovery_warning'))).toBeVisible();
-    await element(by.id('recovery_pharse')).tap();
+    await element(by.id('recovery_phrase')).tap();
 
     await element(by.id('backup_warning_next')).tap();
 

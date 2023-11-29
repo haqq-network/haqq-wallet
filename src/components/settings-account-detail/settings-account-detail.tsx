@@ -33,7 +33,7 @@ type SettingsAccountDetailProps = {
   onPressStyle: () => void;
   onToggleIsHidden: () => void;
   onViewingRecoveryPhrase: () => void;
-  onPressPharse(): void;
+  onPressPhrase(): void;
   onPressSocial(): void;
 };
 const CONTAINER_MARGIN = 20;
@@ -48,7 +48,7 @@ export const SettingsAccountDetail = ({
   onPressStyle,
   onToggleIsHidden,
   onViewingRecoveryPhrase,
-  onPressPharse,
+  onPressPhrase,
   onPressSocial,
 }: SettingsAccountDetailProps) => {
   const cardWidth = useCalculatedDimensionsValue(
@@ -111,10 +111,10 @@ export const SettingsAccountDetail = ({
                   <Button
                     style={styles.button}
                     size={ButtonSize.small}
-                    i18n={I18N.settingsAccountDetailPharse}
+                    i18n={I18N.settingsAccountDetailPhrase}
                     variant={ButtonVariant.second}
-                    onPress={onPressPharse}
-                    testID="recovery_pharse"
+                    onPress={onPressPhrase}
+                    testID="recovery_phrase"
                     disabled={wallet.mnemonicSaved}
                   />
                   <Spacer width={10} />
@@ -153,7 +153,7 @@ export const SettingsAccountDetail = ({
             <InfoBlock
               border
               icon={<Icon name={'warning'} color={Color.graphicBase1} />}
-              i18n={I18N.settingsAccountDetailRecoveryPharseWarning}
+              i18n={I18N.settingsAccountDetailRecoveryPhraseWarning}
               bottomContainerStyle={styles.row}
               bottom={
                 <>
@@ -162,7 +162,7 @@ export const SettingsAccountDetail = ({
                     size={ButtonSize.small}
                     i18n={I18N.settingsAccountDetailCreateBackupPhrase}
                     variant={ButtonVariant.second}
-                    onPress={onPressPharse}
+                    onPress={onPressPhrase}
                     disabled={wallet.mnemonicSaved}
                   />
                 </>

@@ -13,7 +13,7 @@ export const WalletProtectionScreen = memo(() => {
   const wallet = route.params.wallet;
   const accountId = wallet?.accountId;
 
-  const onPressPharse = useCallback(() => {
+  const onPressPhrase = useCallback(() => {
     navigation.navigate(HomeStackRoutes.Backup, {wallet});
   }, [accountId, navigation]);
 
@@ -25,7 +25,7 @@ export const WalletProtectionScreen = memo(() => {
 
   return (
     <WalletProtection
-      onPressPharse={onPressPharse}
+      onPressPhrase={onPressPhrase}
       onPressSocial={onPressSocial}
     />
   );

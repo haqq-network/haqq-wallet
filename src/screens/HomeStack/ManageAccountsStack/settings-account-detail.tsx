@@ -95,7 +95,7 @@ export const SettingsAccountDetailScreen = observer(() => {
     );
   }, [navigation, address]);
 
-  const onPressPharse = useCallback(() => {
+  const onPressPhrase = useCallback(() => {
     if (wallet) {
       navigation.navigate(HomeStackRoutes.Backup, {
         wallet,
@@ -129,7 +129,7 @@ export const SettingsAccountDetailScreen = observer(() => {
         onPressStyle={onPressStyle}
         onToggleIsHidden={onToggleIsHidden}
         onViewingRecoveryPhrase={onViewingRecoveryPhrase}
-        onPressPharse={onPressPharse}
+        onPressPhrase={onPressPhrase}
         onPressSocial={onPressSocial}
       />
     </>
