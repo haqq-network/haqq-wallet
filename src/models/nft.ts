@@ -4,15 +4,15 @@ import {makePersistable} from 'mobx-persist-store';
 import {Wallet} from '@app/models/wallet';
 import {Indexer, IndexerUpdatesResponse} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
-import {INft, IndexerNftData, MobXStore} from '@app/types';
+import {IndexerNftData, MobXStore, NftItem} from '@app/types';
 
-class NftStore implements MobXStore<INft> {
+class NftStore implements MobXStore<NftItem> {
   /**
    * All Nft available for all wallets with commulative value
    * @key Token contract address
    * @value INft
    */
-  data: Record<string, INft> = {};
+  data: Record<string, NftItem> = {};
   /**
    * Indexer response with token info
    * @key Wallet address
@@ -36,19 +36,18 @@ class NftStore implements MobXStore<INft> {
     }
   }
 
-  create(nft: INft) {
-    const existingItem = this.getById(nft.id);
-
+  create(item: NftItem) {
+    const existingItem = this.getById(item.id);
     if (existingItem) {
-      this.update(nft);
+      this.update(item);
     } else {
       this.data = {
         ...this.data,
-        [nft.id]: nft,
+        [item.id]: item,
       };
     }
 
-    return nft.id;
+    return item.id;
   }
 
   remove(id: string | undefined) {
@@ -80,17 +79,17 @@ class NftStore implements MobXStore<INft> {
     return this.data[id];
   }
 
-  update(nft: INft) {
-    const itemToUpdate = this.getById(nft.id);
+  update(item: NftItem) {
+    const itemToUpdate = this.getById(item.id);
     if (!itemToUpdate) {
       return false;
     }
 
     this.data = {
       ...this.data,
-      [nft.id]: {
+      [item.id]: {
         ...itemToUpdate,
-        ...nft,
+        ...item,
       },
     };
     return true;
@@ -118,7 +117,21 @@ class NftStore implements MobXStore<INft> {
         return {...acc, [w.address]: []};
       }
 
-      const nfts = data.nfts.map(nft => ({id: nft.token_id, ...nft}));
+      const nfts = data.nfts.map(item => {
+        const nftItem: NftItem = {
+          id: item.token_id,
+          address: item.address,
+          name: 'Mocked NFT',
+          description: 'Mocked NFT description',
+          created_at: item.created_at,
+          price: '100',
+          image: item.cached_url
+            ? {uri: item.cached_url}
+            : {uri: 'https://i.ibb.co/9VGgYqf/10.jpg'},
+        };
+        this.create(nftItem);
+        return nftItem;
+      });
 
       return {...acc, [w.address]: [...nfts]};
     }, {});

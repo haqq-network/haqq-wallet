@@ -18,7 +18,7 @@ export const NftViewerItemPreviewSmall = ({
       disabled={!onPress}
       onPress={handlePress}
       style={styles.container}>
-      <Image style={styles.image} source={{uri: item.image}} />
+      <Image style={styles.image} source={item.image} />
     </TouchableOpacity>
   );
 };

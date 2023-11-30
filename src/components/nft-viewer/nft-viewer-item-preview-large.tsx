@@ -19,7 +19,7 @@ export const NftViewerItemPreviewLarge = ({
   const handlePress = useCallback(() => onPress?.(item), [onPress, item]);
   const [layout, onLayout] = useLayout();
   const lastSalePrice = useMemo(
-    () => cleanNumber(parseInt(item.last_sale_price, 16) / WEI),
+    () => cleanNumber(parseInt(item.price, 16) / WEI),
     [item],
   );
 
@@ -39,7 +39,7 @@ export const NftViewerItemPreviewLarge = ({
       <ImageBackground
         imageStyle={styles.imageContainer}
         style={layout}
-        source={{uri: item.image}}>
+        source={item.image}>
         <View style={[styles.itemText, itemTextStyle]}>
           <Text numberOfLines={1} t13 color={Color.textBase3}>
             {item.name}

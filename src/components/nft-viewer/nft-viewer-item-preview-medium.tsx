@@ -16,7 +16,7 @@ export const NftViewerItemPreviewMedium = ({
   onPress,
 }: NftViewerItemPreviewExtendedProps) => {
   const lastSalePrice = useMemo(
-    () => cleanNumber(parseInt(item.last_sale_price, 16) / WEI),
+    () => cleanNumber(parseInt(item.price, 16) / WEI),
     [item],
   );
   const handlePress = useCallback(() => onPress?.(item), [onPress, item]);
@@ -29,7 +29,7 @@ export const NftViewerItemPreviewMedium = ({
       <ImageBackground
         imageStyle={styles.imageContainer}
         style={styles.image}
-        source={{uri: item.image}}>
+        source={item.image}>
         <View style={styles.itemText}>
           <Text numberOfLines={1} t8 color={Color.textBase3}>
             {item.name}

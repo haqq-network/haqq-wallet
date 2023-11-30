@@ -44,7 +44,7 @@ export const TransactionNftConfirmation = ({
 
   return (
     <PopupContainer style={styles.container}>
-      <Image source={{uri: item.image}} style={styles.icon} borderRadius={12} />
+      <Image source={item.image} style={styles.icon} borderRadius={12} />
       <Text t5 center>
         {item.name}
       </Text>

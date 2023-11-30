@@ -26,7 +26,7 @@ export const NftCollectionInfoBanner = ({data, onPress}: Props) => {
   );
 
   const lastSalePrice = useMemo(
-    () => cleanNumber(parseInt(item.last_sale_price, 16) / WEI),
+    () => cleanNumber(parseInt(item.price, 16) / WEI),
     [item],
   );
 
@@ -41,7 +41,7 @@ export const NftCollectionInfoBanner = ({data, onPress}: Props) => {
       <ImageBackground
         imageStyle={styles.imageContainer}
         style={layout}
-        source={{uri: item.image}}>
+        source={item.image}>
         <View style={styles.itemHeaderText}>
           <Text t8 color={Color.textBase3} i18n={I18N.nftWidgetTitle} />
           <Spacer width={8} />

@@ -1,9 +1,8 @@
-import React, {useCallback, useEffect, useMemo} from 'react';
+import React, {useCallback} from 'react';
 
 import {observer} from 'mobx-react';
 import {StyleSheet} from 'react-native';
 
-import {NftCollectionInfoBanner} from '@app/components/nft-viewer/nft-collection-info-banner';
 import {NftViewerItemPreviewVariant} from '@app/components/nft-viewer/nft-viewer-item-preview';
 import {NftViewerItemPreviewList} from '@app/components/nft-viewer/nft-viewer-item-preview-list';
 import {TotalValueTabNames} from '@app/components/total-value-info';
@@ -12,38 +11,23 @@ import {ShadowCard} from '@app/components/ui/shadow-card';
 import {WidgetHeader} from '@app/components/ui/widget-header';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useTypedNavigation} from '@app/hooks';
-import {useNftCollections} from '@app/hooks/use-nft-collections';
 import {I18N, getText} from '@app/i18n';
 import {Nft} from '@app/models/nft';
-import {INftWidget, NftItem, NftWidgetSize} from '@app/types';
+import {INftWidget, NftWidgetSize} from '@app/types';
 
 export const NftWidgetWrapper = observer(({size}: INftWidget) => {
   const navigation = useTypedNavigation();
-  const nftCollections = useNftCollections();
+  // TODO NFT Collections support
+  // const nftCollections = useNftCollections();
   const onPress = useCallback(() => {
     navigation.navigate('totalValueInfo', {
       tab: TotalValueTabNames.nft,
     });
   }, []);
 
-  const allNft = useMemo(
-    () =>
-      nftCollections.reduce(
-        (prev, curr) => [...prev, ...curr?.items],
-        [] as NftItem[],
-      ),
-    [nftCollections],
-  );
+  const allNft = Nft.getAll();
 
-  useEffect(() => {
-    Nft.fetchNft();
-  }, []);
-
-  if (
-    !isFeatureEnabled(Feature.nft) ||
-    !nftCollections?.length ||
-    !allNft?.length
-  ) {
+  if (!isFeatureEnabled(Feature.nft) || !allNft.length) {
     return null;
   }
 
@@ -71,7 +55,8 @@ export const NftWidgetWrapper = observer(({size}: INftWidget) => {
     case NftWidgetSize.large:
       return (
         <ShadowCard disablePadding onPress={onPress} style={styles.wrapper}>
-          <NftCollectionInfoBanner data={nftCollections} />
+          {/*TODO NFT Collections support*/}
+          {/*<NftCollectionInfoBanner data={allNft} />*/}
         </ShadowCard>
       );
     default:

@@ -1113,14 +1113,13 @@ export interface NftAttribute {
 }
 
 export interface NftItem {
-  address: string;
+  id: string;
+  address: HaqqCosmosAddress;
   name: string;
   description: string;
-  image: string;
-  external_link: string;
-  attributes: NftAttribute[];
-  last_sale_price: string;
-  owner_address: string;
+  image: ImageSourcePropType;
+  price: string;
+  created_at: string;
 }
 
 export interface NftCollection {
@@ -1502,19 +1501,6 @@ export type IToken = {
   image: ImageSourcePropType;
 };
 
-export type INft = {
-  id: string;
-  address: HaqqCosmosAddress;
-  block: number;
-  cached_url: string;
-  contract: HaqqCosmosAddress;
-  created_at: string;
-  file_type: string;
-  hash: string;
-  original_url: string;
-  token_id: string;
-};
-
 export type IContract = {
   address_type: 'contract';
   created_at: string;
@@ -1531,7 +1517,7 @@ export type IContract = {
 };
 
 export type IndexerTokensData = Record<HaqqEthereumAddress, IToken[]>;
-export type IndexerNftData = Record<HaqqEthereumAddress, INft[]>;
+export type IndexerNftData = Record<HaqqEthereumAddress, IndexerNft[]>;
 
 export enum BrowserPermissionStatus {
   allow = 'allow',

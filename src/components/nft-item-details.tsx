@@ -21,7 +21,7 @@ export interface NftItemDetailsProps {
 export const NftItemDetails = ({item, onPressSend}: NftItemDetailsProps) => {
   const [imageLayout, onImageLayout] = useLayout();
   const lastSalePrice = useMemo(
-    () => cleanNumber(parseInt(item.last_sale_price, 16) / WEI),
+    () => cleanNumber(parseInt(item.price, 16) / WEI),
     [item],
   );
 
@@ -31,7 +31,7 @@ export const NftItemDetails = ({item, onPressSend}: NftItemDetailsProps) => {
         <View style={styles.imageContainer} onLayout={onImageLayout}>
           <Image
             resizeMode="cover"
-            source={{uri: item.image}}
+            source={item.image}
             style={{
               width: imageLayout.width,
               height: imageLayout.width,
@@ -57,19 +57,20 @@ export const NftItemDetails = ({item, onPressSend}: NftItemDetailsProps) => {
         <Text t12 i18n={I18N.nftDetailsAttributes} />
         <Spacer height={8} />
         <View style={styles.attributeListContainer}>
-          {item.attributes?.map?.(attr => {
-            return (
-              <View key={attr.trait_type} style={styles.attributeContainer}>
-                <View style={styles.attributeValueContainer}>
-                  <Text t13>{attr.value}</Text>
-                  <Text t13>{attr.frequency * 100}%</Text>
-                </View>
-                <Text t15 color={Color.textBase2}>
-                  {attr.trait_type}
-                </Text>
-              </View>
-            );
-          })}
+          {/*TODO Check attributes for NFT*/}
+          {/*{item.attributes?.map?.(attr => {*/}
+          {/*  return (*/}
+          {/*    <View key={attr.trait_type} style={styles.attributeContainer}>*/}
+          {/*      <View style={styles.attributeValueContainer}>*/}
+          {/*        <Text t13>{attr.value}</Text>*/}
+          {/*        <Text t13>{attr.frequency * 100}%</Text>*/}
+          {/*      </View>*/}
+          {/*      <Text t15 color={Color.textBase2}>*/}
+          {/*        {attr.trait_type}*/}
+          {/*      </Text>*/}
+          {/*    </View>*/}
+          {/*  );*/}
+          {/*})}*/}
         </View>
       </ScrollView>
       <View>
@@ -102,16 +103,16 @@ const styles = createTheme({
     flexWrap: 'wrap',
     columnGap: 12,
   },
-  attributeContainer: {
-    borderRadius: 10,
-    width: '48%',
-    padding: 8,
-    backgroundColor: Color.bg3,
-    marginBottom: 12,
-  },
-  attributeValueContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
+  // attributeContainer: {
+  //   borderRadius: 10,
+  //   width: '48%',
+  //   padding: 8,
+  //   backgroundColor: Color.bg3,
+  //   marginBottom: 12,
+  // },
+  // attributeValueContainer: {
+  //   flexDirection: 'row',
+  //   justifyContent: 'space-between',
+  //   alignItems: 'center',
+  // },
 });
