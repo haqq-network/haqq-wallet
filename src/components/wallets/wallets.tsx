@@ -92,6 +92,7 @@ export const Wallets = ({
         style={styles.scroll}>
         {wallets.map((w, i) => {
           let isSecondMnemonic =
+            w.isImported ||
             mnemonicCache.length > 1 ||
             (w.type === WalletType.mnemonic && userHaveSSSProtectedWallets);
 
@@ -102,6 +103,7 @@ export const Wallets = ({
           ) {
             mnemonicCache.push(w.accountId);
             isSecondMnemonic =
+              w.isImported ||
               mnemonicCache.length > 1 ||
               (w.type === WalletType.mnemonic && userHaveSSSProtectedWallets);
           }
@@ -112,6 +114,10 @@ export const Wallets = ({
 
           if (w.type === WalletType.sss) {
             isSecondMnemonic = false;
+          }
+
+          if (isSecondMnemonic && !w.isImported) {
+            Wallet.update(w.address, {isImported: true});
           }
 
           return (
