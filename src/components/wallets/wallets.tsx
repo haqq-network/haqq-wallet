@@ -106,7 +106,11 @@ export const Wallets = ({
               (w.type === WalletType.mnemonic && userHaveSSSProtectedWallets);
           }
 
-          if (w.accountId === mnemonicCache[0]) {
+          if (w.accountId === mnemonicCache[0] && mnemonicCache.length > 1) {
+            isSecondMnemonic = false;
+          }
+
+          if (w.type === WalletType.sss) {
             isSecondMnemonic = false;
           }
 
