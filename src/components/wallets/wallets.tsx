@@ -106,6 +106,10 @@ export const Wallets = ({
               (w.type === WalletType.mnemonic && userHaveSSSProtectedWallets);
           }
 
+          if (w.accountId === mnemonicCache[0]) {
+            isSecondMnemonic = false;
+          }
+
           return (
             <CarouselItem index={i} pan={pan} key={w.address}>
               <WalletCard
