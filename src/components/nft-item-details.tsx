@@ -31,7 +31,7 @@ export const NftItemDetails = ({item, onPressSend}: NftItemDetailsProps) => {
         <View style={styles.imageContainer} onLayout={onImageLayout}>
           <Image
             resizeMode="cover"
-            source={item.image}
+            source={{uri: item.image}}
             style={{
               width: imageLayout.width,
               height: imageLayout.width,

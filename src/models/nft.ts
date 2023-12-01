@@ -125,9 +125,7 @@ class NftStore implements MobXStore<NftItem> {
           description: 'Mocked NFT description',
           created_at: item.created_at,
           price: '100',
-          image: item.cached_url
-            ? {uri: item.cached_url}
-            : {uri: 'https://i.ibb.co/9VGgYqf/10.jpg'},
+          image: item.cached_url ?? 'https://i.ibb.co/9VGgYqf/10.jpg',
         };
         this.create(nftItem);
         return nftItem;

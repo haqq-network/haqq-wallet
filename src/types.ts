@@ -1106,18 +1106,12 @@ export enum ModalType {
   sssLimitReached = 'sssLimitReached',
 }
 
-export interface NftAttribute {
-  trait_type: string;
-  value: string;
-  frequency: number;
-}
-
 export interface NftItem {
   id: string;
   address: HaqqCosmosAddress;
   name: string;
   description: string;
-  image: ImageSourcePropType;
+  image: string;
   price: string;
   created_at: string;
 }

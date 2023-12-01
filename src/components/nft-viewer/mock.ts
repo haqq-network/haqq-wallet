@@ -24,7 +24,7 @@ export const createNftCollectionSet = () => {
         address: AddressUtils.toHaqq(getRandomWalletAddress()),
         name: 'Item 1',
         description: 'The first item in the collection',
-        image: {uri: 'https://i.ibb.co/ckN9nKJ/9.jpg'},
+        image: 'https://i.ibb.co/ckN9nKJ/9.jpg',
         price: 'de0b6b3a7640000',
         // attributes: [
         //   {
@@ -51,7 +51,7 @@ export const createNftCollectionSet = () => {
         name: 'Item 2',
         description:
           'The second item in the collection. lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint occaecat cupidatat non proident, sunt in culpa',
-        image: {uri: 'https://i.ibb.co/9VGgYqf/10.jpg'},
+        image: 'https://i.ibb.co/9VGgYqf/10.jpg',
         price: '1b4c9f8f0a0000',
         // attributes: [
         //   {
@@ -89,7 +89,7 @@ export const createNftCollectionSet = () => {
         address: AddressUtils.toHaqq(getRandomWalletAddress()),
         name: 'Item 1',
         description: 'The first item in the collection',
-        image: {uri: 'https://i.ibb.co/YfCJncn/13.jpg'},
+        image: 'https://i.ibb.co/YfCJncn/13.jpg',
         price: 'de0b6b3a7640000',
         // attributes: [
         //   {
@@ -116,7 +116,7 @@ export const createNftCollectionSet = () => {
         name: 'Item 2',
         description:
           'The second item in the collection. lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint occaecat cupidatat non proident, sunt in culpa',
-        image: {uri: 'https://i.ibb.co/wz6Pvsx/14.jpg'},
+        image: 'https://i.ibb.co/wz6Pvsx/14.jpg',
         price: '1b4c9f8f0a0000',
         // attributes: [
         //   {
@@ -142,7 +142,7 @@ export const createNftCollectionSet = () => {
         address: AddressUtils.toHaqq(getRandomWalletAddress()),
         name: 'Item 3',
         description: 'The first item in the collection',
-        image: {uri: 'https://i.ibb.co/QpDGWdv/15.jpg'},
+        image: 'https://i.ibb.co/QpDGWdv/15.jpg',
         price: 'de0b6b3a7640000',
         // attributes: [
         //   {
@@ -168,7 +168,7 @@ export const createNftCollectionSet = () => {
         address: AddressUtils.toHaqq(getRandomWalletAddress()),
         name: 'Item 4',
         description: 'The first item in the collection',
-        image: {uri: 'https://i.ibb.co/mTXCy1Z/16.jpg'},
+        image: 'https://i.ibb.co/mTXCy1Z/16.jpg',
         price: 'de0b6b3a7640000',
         // attributes: [
         //   {
@@ -194,7 +194,7 @@ export const createNftCollectionSet = () => {
         address: AddressUtils.toHaqq(getRandomWalletAddress()),
         name: 'Item 5',
         description: 'The first item in the collection',
-        image: {uri: 'https://i.ibb.co/8ggZmh8/17.jpg'},
+        image: 'https://i.ibb.co/8ggZmh8/17.jpg',
         price: 'de0b6b3a7640000',
         // attributes: [
         //   {
@@ -232,7 +232,7 @@ export const createNftCollectionSet = () => {
         address: AddressUtils.toHaqq(getRandomWalletAddress()),
         name: 'Item 1',
         description: 'The first item in the collection',
-        image: {uri: 'https://i.ibb.co/3Bq50Q8/21.jpg'},
+        image: 'https://i.ibb.co/3Bq50Q8/21.jpg',
         price: 'de0b6b3a7640000',
         // attributes: [
         //   {

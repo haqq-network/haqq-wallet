@@ -39,7 +39,7 @@ export const NftViewerItemPreviewLarge = ({
       <ImageBackground
         imageStyle={styles.imageContainer}
         style={layout}
-        source={item.image}>
+        source={{uri: item.image}}>
         <View style={[styles.itemText, itemTextStyle]}>
           <Text numberOfLines={1} t13 color={Color.textBase3}>
             {item.name}
