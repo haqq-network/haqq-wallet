@@ -41,6 +41,8 @@ export enum I18N {
   backupVerifyTitle,
   backupVerifyError,
   backupVerifyDescription,
+  backupVerifyPage1Description,
+  backupVerifyPage2Description,
   backupVerifyCheck,
   createAgreementText,
   createAgreementTitle,
@@ -945,6 +947,8 @@ const en: Record<I18N, string> = {
   [I18N.backupVerifyError]: 'Ooops, mistake in one of the words',
   [I18N.backupVerifyDescription]:
     'Please choose the correct  according to the serial number',
+  [I18N.backupVerifyPage1Description]: 'From 1 to 12',
+  [I18N.backupVerifyPage2Description]: 'From 13 to 24',
   [I18N.backupVerifyCheck]: 'Check',
   [I18N.modalQRTitle]: 'Scan QR Code',
   [I18N.modalQRNoAccessTitle]: 'No access to the camera',
