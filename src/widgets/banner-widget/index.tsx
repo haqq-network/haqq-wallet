@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import {Image, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -30,17 +30,15 @@ export const BannerWidget = ({banner, style}: HomeBannerProps) => {
   const [loading, setLoading] = useState(false);
   const [isVisible, setVisible] = useState(true);
 
-  useEffect(() => {
-    if (banner.event) {
-      onTrackEvent(banner.event);
-    }
-  }, []);
-
   const onPressClose = useCallback(async () => {
     setVisible(false);
   }, []);
 
   const onPressBanner = useCallback(async () => {
+    if (banner.event) {
+      onTrackEvent(banner.event);
+    }
+
     setLoading(true);
     const link = banner.target;
     if (!link) {

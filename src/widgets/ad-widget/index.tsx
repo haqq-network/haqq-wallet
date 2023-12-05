@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 
 import {
   Image,
@@ -41,17 +41,15 @@ export const AdWidget = ({banner, style}: HomeBannerProps) => {
   const [isSmall, setIsSmall] = useState(false);
   const window = getWindowDimensions();
 
-  useEffect(() => {
-    if (banner.event) {
-      onTrackEvent(banner.event);
-    }
-  }, []);
-
   const onPressClose = useCallback(async () => {
     setVisible(false);
   }, []);
 
   const onPressBanner = useCallback(async () => {
+    if (banner.event) {
+      onTrackEvent(banner.event);
+    }
+
     setLoading(true);
     const link = banner.target;
     if (!link) {
