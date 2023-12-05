@@ -74,12 +74,13 @@ export const WalletCard = memo(
     const [cardState, setCardState] = useState('loading');
     const isBalancesFirstSync = useIsBalancesFirstSync();
     const screenWidth = useWindowDimensions().width;
+    const isImported = wallet.isImported || isSecondMnemonic;
 
     const protectionStatus = useMemo(() => {
       // Wallet is 2nd mnemonic (imported) or user have imported this wallet after SSS
       // or Ledger / Hot
       if (
-        isSecondMnemonic ||
+        isImported ||
         [WalletType.ledgerBt, WalletType.hot].includes(wallet.type)
       ) {
         return ProtectionStatus.hidden;
@@ -93,7 +94,7 @@ export const WalletCard = memo(
         return ProtectionStatus.partially;
       }
       return ProtectionStatus.full;
-    }, [wallet.mnemonicSaved, wallet.socialLinkEnabled, isSecondMnemonic]);
+    }, [wallet.mnemonicSaved, wallet.socialLinkEnabled, isImported]);
     const formattedAddress = useMemo(
       () => shortAddress(wallet?.address ?? '', '•'),
       [wallet?.address],
@@ -235,7 +236,7 @@ export const WalletCard = memo(
             </>
           )}
           {([WalletType.hot, WalletType.ledgerBt].includes(wallet.type) ||
-            isSecondMnemonic) && (
+            isImported) && (
             <>
               <IconButton style={styles.fullProtection}>
                 <Icon name={IconsName.import} color={Color.textSecond2} i16 />

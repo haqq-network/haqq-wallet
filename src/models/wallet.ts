@@ -54,6 +54,7 @@ export type Wallet = {
   accountId: string | null;
   cosmosAddress: HaqqCosmosAddress;
   position: number;
+  isImported?: boolean;
 };
 
 function getMockWallets(): Wallet[] {

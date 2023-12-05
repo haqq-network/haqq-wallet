@@ -12,10 +12,30 @@ export type CarouselItemProps = {
   index: number;
   pan: SharedValue<number>;
   children: React.ReactNode;
+  noScale?: boolean;
 };
 
-export const CarouselItem = ({children, pan, index}: CarouselItemProps) => {
+export const CarouselItem = ({
+  children,
+  pan,
+  index,
+  noScale,
+}: CarouselItemProps) => {
   const animatedStyles = useAnimatedStyle(() => {
+    if (noScale) {
+      return {
+        transform: [
+          {
+            translateX: interpolate(
+              pan.value,
+              [index - 1, index, index + 1],
+              [0, 0, 0],
+            ),
+          },
+        ],
+      };
+    }
+
     return {
       transform: [
         {
@@ -37,7 +57,7 @@ export const CarouselItem = ({children, pan, index}: CarouselItemProps) => {
   });
 
   return (
-    <Animated.View style={[styles.container, animatedStyles]}>
+    <Animated.View style={[!noScale && styles.container, animatedStyles]}>
       {children}
     </Animated.View>
   );
