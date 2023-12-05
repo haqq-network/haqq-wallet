@@ -1074,6 +1074,14 @@ export type Modals = {
     onClose?: () => void;
   };
   cloudShareNotFound: {onClose?: () => void; wallet: Wallet};
+  keystoneScanner: {
+    purpose?: 'sign' | 'sync';
+    eventTaskId: string;
+    onClose?: () => void;
+  };
+  keystoneQR: {
+    signRequestHex: string;
+  };
 };
 
 export enum ModalType {
@@ -1104,6 +1112,8 @@ export enum ModalType {
   cloudVerification = 'cloudVerification',
   viewErrorDetails = 'viewErrorDetails',
   cloudShareNotFound = 'cloudShareNotFound',
+  keystoneScanner = 'keystoneScanner',
+  keystoneQR = 'keystoneQR',
 }
 
 export interface NftAttribute {

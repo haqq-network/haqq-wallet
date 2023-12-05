@@ -844,6 +844,10 @@ export enum I18N {
   cloudShareNotFoundPrimaryButton,
   cloudShareNotFoundSecondaryButton,
   walletConnectPairAlreadyExists,
+  unknownQrCode,
+  invalidQrCodeSync,
+  invalidQrCodeSign,
+  keystoneScannerScanning,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1836,4 +1840,10 @@ const en: Record<I18N, string> = {
     "It's possible the file was deleted from your cloud storage or there were synchronization issues. We recommend saving the backup file again",
   [I18N.cloudShareNotFoundPrimaryButton]: 'Save on your cloud storage',
   [I18N.cloudShareNotFoundSecondaryButton]: 'Skip',
+  [I18N.invalidQrCodeSync]:
+    'Invalid QR code. Please scan the sync QR code of the hardware wallet.',
+  [I18N.invalidQrCodeSign]:
+    'Invalid QR code. Please check your hardware and retry.',
+  [I18N.unknownQrCode]: 'Invalid QR code. Please retry.',
+  [I18N.keystoneScannerScanning]: 'Scanning...',
 };

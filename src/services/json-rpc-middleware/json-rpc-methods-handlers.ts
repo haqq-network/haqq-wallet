@@ -11,6 +11,7 @@ import {
 } from '@app/helpers/await-for-provider';
 import {
   AwaitForScanQrError,
+  QRScannerTypeEnum,
   awaitForScanQr,
 } from '@app/helpers/await-for-scan-qr';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
@@ -353,7 +354,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
         );
       }
 
-      return (await awaitForScanQr({pattern})).rawData;
+      return await awaitForScanQr({pattern, type: QRScannerTypeEnum.qr});
     } catch (err) {
       if (err instanceof Error) {
         rejectJsonRpcRequest(err.message);

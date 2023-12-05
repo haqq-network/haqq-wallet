@@ -30,7 +30,10 @@ import {
 } from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
-import {awaitForScanQr} from '@app/helpers/await-for-scan-qr';
+import {
+  QRScannerTypeEnum,
+  awaitForScanQr,
+} from '@app/helpers/await-for-scan-qr';
 import {
   awaitForValue,
   objectsToValues,
@@ -38,6 +41,7 @@ import {
 } from '@app/helpers/await-for-value';
 import {getUid} from '@app/helpers/get-uid';
 import {getAdjustAdid} from '@app/helpers/get_adjust_adid';
+import {parseDeepLink} from '@app/helpers/parse-deep-link';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Banner} from '@app/models/banner';
@@ -190,6 +194,14 @@ const getTestModals = (): TestModals => {
     cloudShareNotFound: {
       onClose: () => logger.log('cloudShareNotFound closed'),
       wallet: wallets[0],
+    },
+    keystoneQR: {
+      signRequestHex: '',
+    },
+    keystoneScanner: {
+      eventTaskId: 'test-modal',
+      onClose: () => logger.log('keystoneScanner closed'),
+      purpose: 'sign',
     },
   };
 
@@ -569,6 +581,22 @@ export const SettingsTestScreen = observer(() => {
         variant={ButtonVariant.contained}
       />
 
+      <Button
+        title="test tx"
+        onPress={() => {
+          EthNetwork.sendTransaction(
+            '0x02f87682d3c30285066720b30085066720b3008252089437f61e7d9ce7dc6648ecbd3ba27972fb90d69cf1880de0b6b3a764000080c080a02010f0da222db8a027f14c646db37da5e0afcd3eb31a0f4b20f075afe402af09a01ad507ef09d94f3c41574cc549bcf3dfd30a5a91bf6cab718ff8a26797998bac',
+          )
+            .then(data => {
+              Logger.log('sendTransaction', JSON.stringify(data, null, 2));
+            })
+            .catch(error => {
+              Logger.error('sendTransaction', error);
+            });
+        }}
+        variant={ButtonVariant.contained}
+      />
+
       <Title text="Leading account" />
       <Text t11>{leadingAccount}</Text>
       <Spacer height={8} />
@@ -648,8 +676,12 @@ export const SettingsTestScreen = observer(() => {
         title="QR scanner"
         onPress={async () => {
           try {
-            const result = await awaitForScanQr({pattern: regexp});
-            Alert.alert('result', JSON.stringify(result, null, 2));
+            const result = await awaitForScanQr({
+              pattern: regexp,
+              type: QRScannerTypeEnum.qr,
+            });
+            const parsed = await parseDeepLink(result);
+            Alert.alert('result', JSON.stringify(parsed, null, 2));
           } catch (err) {
             Alert.alert('error', JSON.stringify(err, null, 2));
           }
