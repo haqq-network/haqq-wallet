@@ -179,7 +179,7 @@ export const Web3Browser = ({
   const injectedJSBeforeContentLoaded = useMemo(
     () =>
       `
-      document.addEventListener("DOMContentLoaded", function(event) {
+     function init() {
         if(window?.ethereum?.isHaqqWallet){
           return;
         }
@@ -189,7 +189,12 @@ export const Web3Browser = ({
           window.ethereum.isMetaMask = false;
           window.ethereum.isHaqqWallet = true;
         }
-      });
+      };
+      ${
+        IS_IOS
+          ? 'init();'
+          : 'document.addEventListener("DOMContentLoaded", init);'
+      }
       ${WebViewEventsJS.getWindowInformation}
       true;`,
     [inpageBridgeWeb3],
