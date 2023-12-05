@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {Image, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -16,6 +16,7 @@ import {
 } from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
 import {onDeepLink} from '@app/event-actions/on-deep-link';
+import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {IBannerWidget} from '@app/types';
 import {openWeb3Browser} from '@app/utils';
 import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
@@ -28,6 +29,12 @@ export interface HomeBannerProps {
 export const BannerWidget = ({banner, style}: HomeBannerProps) => {
   const [loading, setLoading] = useState(false);
   const [isVisible, setVisible] = useState(true);
+
+  useEffect(() => {
+    if (banner.event) {
+      onTrackEvent(banner.event);
+    }
+  }, []);
 
   const onPressClose = useCallback(async () => {
     setVisible(false);
