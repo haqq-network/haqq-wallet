@@ -53,7 +53,12 @@ export const BackupVerifyScreen = memo(() => {
           await provider.current.setMnemonicSaved();
         }
 
-        Wallet.update(wallet.address, {mnemonicSaved: true});
+        const accountId = wallet.accountId;
+        if (accountId) {
+          Wallet.getForAccount(accountId).map(item => {
+            Wallet.update(item.address, {mnemonicSaved: true});
+          });
+        }
 
         app.emit(
           Events.onWalletMnemonicSaved,
