@@ -4,6 +4,7 @@ import {makeID} from '@haqq/shared-react-native';
 import Geolocation from '@react-native-community/geolocation';
 import {useFocusEffect} from '@react-navigation/native';
 import {Linking, NativeSyntheticEvent, Platform} from 'react-native';
+import fs from 'react-native-fs';
 import WebView, {WebViewProps} from 'react-native-webview';
 import {WebViewMessageEvent} from 'react-native-webview/lib/RNCWebViewNativeComponent';
 import {FileDownloadEvent} from 'react-native-webview/lib/WebViewTypes';
@@ -106,6 +107,10 @@ export const useWebViewSharedProps = (
       domStorageEnabled: true,
       allowsBackForwardNavigationGestures: true,
       thirdPartyCookiesEnabled: true,
+      allowFileAccess: true,
+      allowFileAccessFromFileURLs: true,
+      allowingReadAccessToURL: 'file://' + root(),
+      allowUniversalAccessFromFileURLs: true,
       allowsInlineMediaPlayback: true,
       allowsFullscreenVideo: true,
       allowsLinkPreview: true,
@@ -140,3 +145,9 @@ export const useWebViewSharedProps = (
 
   return props;
 };
+
+function root(dir = '/www/') {
+  var path =
+    Platform.OS === 'android' ? fs.DocumentDirectoryPath : fs.MainBundlePath;
+  return path + dir;
+}
