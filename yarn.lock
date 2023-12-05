@@ -3852,7 +3852,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-cookies/cookies@npm:^6.2.1":
+"@react-native-cookies/cookies@npm:6.2.1":
   version: 6.2.1
   resolution: "@react-native-cookies/cookies@npm:6.2.1"
   dependencies:
@@ -9831,7 +9831,7 @@ __metadata:
     "@react-native-community/eslint-config": 3.2.0
     "@react-native-community/geolocation": ^3.1.0
     "@react-native-community/netinfo": 9.4.1
-    "@react-native-cookies/cookies": ^6.2.1
+    "@react-native-cookies/cookies": 6.2.1
     "@react-native-firebase/analytics": 18.2.0
     "@react-native-firebase/app": 18.2.0
     "@react-native-firebase/dynamic-links": 18.2.0
