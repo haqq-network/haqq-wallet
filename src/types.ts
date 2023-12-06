@@ -1243,11 +1243,13 @@ export interface ILayoutWidget extends IWidgetBase {
 export interface IAdWidget extends IWidgetBase, Banner {
   component: 'Ad';
   target?: string;
+  event?: AdjustEvents;
 }
 
 export interface IBannerWidget extends IWidgetBase, Banner {
   component: 'Banner';
   target?: string;
+  event?: AdjustEvents;
 }
 
 export interface ITokensWidget extends IWidgetBase {

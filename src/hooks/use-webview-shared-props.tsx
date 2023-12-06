@@ -3,17 +3,18 @@ import React, {DependencyList, useCallback, useMemo, useRef} from 'react';
 import {makeID} from '@haqq/shared-react-native';
 import Geolocation from '@react-native-community/geolocation';
 import {useFocusEffect} from '@react-navigation/native';
-import {Linking, NativeSyntheticEvent, Platform} from 'react-native';
+import {Linking, Platform} from 'react-native';
 import fs from 'react-native-fs';
 import WebView, {WebViewProps} from 'react-native-webview';
-import {WebViewMessageEvent} from 'react-native-webview/lib/RNCWebViewNativeComponent';
-import {FileDownloadEvent} from 'react-native-webview/lib/WebViewTypes';
+import {
+  FileDownloadEvent,
+  WebViewMessageEvent,
+} from 'react-native-webview/lib/WebViewTypes';
 
 import {BrowserError} from '@app/components/browser-error';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {WebviewAjustMiddleware} from '@app/helpers/webview-adjust-middleware';
 import {WebViewGeolocation} from '@app/helpers/webview-geolocation';
-import {WebViewLogger} from '@app/helpers/webview-logger';
 import {VariablesString} from '@app/models/variables-string';
 import {getUserAgent} from '@app/services/version';
 
@@ -60,7 +61,7 @@ export const useWebViewSharedProps = (
   );
 
   const onMessage = useCallback(
-    async (event: NativeSyntheticEvent<WebViewMessageEvent>) => {
+    async (event: WebViewMessageEvent) => {
       if (!event?.nativeEvent?.data) {
         return;
       }
@@ -90,8 +91,7 @@ export const useWebViewSharedProps = (
     [propsToMerge, ref],
   );
 
-  // @ts-ignore
-  const props: WebViewProps = useMemo(
+  const props = useMemo<WebViewProps>(
     () => ({
       contentMode: 'mobile',
       webviewDebuggingEnabled: __DEV__ || isTesterMode,
@@ -125,15 +125,17 @@ export const useWebViewSharedProps = (
       mediaCapturePermissionGrantType: 'prompt',
       injectedJavaScriptForMainFrameOnly: true,
       injectedJavaScriptBeforeContentLoadedForMainFrameOnly: true,
+      useWebkit: true,
+      sendCookies: true,
+      javascriptEnabled: true,
       injectedJavaScriptBeforeContentLoaded: `
+        ${propsToMerge.injectedJavaScriptBeforeContentLoaded || ''}
         // injected properties
         window.platformOS = '${Platform.OS}'
         window.__HAQQWALLET__ = {}
 
-        ${WebViewLogger.script}
         ${WebViewGeolocation.script}
         ${WebviewAjustMiddleware.script}
-        ${propsToMerge.injectedJavaScriptBeforeContentLoaded || ''}
         true;
       `,
       onMessage: onMessage,

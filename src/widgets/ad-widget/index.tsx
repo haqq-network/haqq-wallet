@@ -23,6 +23,7 @@ import {
 } from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
 import {onDeepLink} from '@app/event-actions/on-deep-link';
+import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {getWindowDimensions} from '@app/helpers';
 import {IAdWidget} from '@app/types';
 import {openWeb3Browser} from '@app/utils';
@@ -45,6 +46,10 @@ export const AdWidget = ({banner, style}: HomeBannerProps) => {
   }, []);
 
   const onPressBanner = useCallback(async () => {
+    if (banner.event) {
+      onTrackEvent(banner.event);
+    }
+
     setLoading(true);
     const link = banner.target;
     if (!link) {

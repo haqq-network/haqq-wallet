@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
+import CookieManager from '@react-native-cookies/cookies';
 import {observer} from 'mobx-react';
 import {Alert, ScrollView} from 'react-native';
 
@@ -91,6 +92,13 @@ export const SettingsDeveloperTools = observer(() => {
     VariablesBool.set(WebViewEventsEnum.CLEAR_CACHE, true);
     await Web3BrowserSession.removeAll();
     toastMessage('Cache cleared');
+  };
+
+  const clearCookie = async () => {
+    VariablesBool.set(WebViewEventsEnum.CLEAR_CACHE, true);
+    await Web3BrowserSession.removeAll();
+    await CookieManager.clearAll(true);
+    toastMessage('Cookie cleared');
   };
 
   return (
@@ -271,6 +279,13 @@ export const SettingsDeveloperTools = observer(() => {
           toastMessage('bookmarks loaded');
         }}
         variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Button
+        title="Clear cookie"
+        onPress={clearCookie}
+        error
+        variant={ButtonVariant.second}
       />
       <Spacer height={8} />
       <Button
