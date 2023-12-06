@@ -1,33 +1,21 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
 import {useActionSheet} from '@expo/react-native-action-sheet';
-import {
-  Image,
-  SectionList,
-  SectionListData,
-  SectionListRenderItem,
-  StyleProp,
-  View,
-  ViewStyle,
-} from 'react-native';
+import {Image, StyleProp, View, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
+import {NftViewerCollectionPreviewList} from '@app/components/nft-viewer/nft-viewer-collection-preview/nft-viewer-collection-preview-list';
 import {createTheme} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
 import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {I18N, getText} from '@app/i18n';
+import {Nft} from '@app/models/nft';
 import {NftCollection, NftItem} from '@app/types';
 import {SortDirectionEnum, arraySortUtil} from '@app/utils';
-
-import {NftViewerCollectionPreviewList} from './nft-viewer-collection-preview-list';
-import {NftViewerItemPreviewVariant} from './nft-viewer-item-preview';
-import {NftViewerItemPreviewList} from './nft-viewer-item-preview-list';
-import {NftViewerSectionHeader} from './nft-viewer-section-header';
 
 import {First, Icon, IconButton, IconsName, Spacer, Text} from '../ui';
 
 export interface NftViewerProps {
-  data: NftCollection[];
   scrollEnabled?: boolean;
   style?: StyleProp<ViewStyle>;
 }
@@ -36,11 +24,6 @@ export enum NftViewerViewMode {
   collectionGrid,
   collectionListWithItems,
 }
-
-type SectionElement = {data: [NftCollection]} & NftCollection;
-type RenderSectionProps = {
-  section: SectionListData<NftCollection, SectionElement>;
-};
 
 const NftSortingNamesMap = {
   created_at: getText(I18N.sortByAdding),
@@ -57,14 +40,11 @@ const ViewModeIconsMap = {
   [NftViewerViewMode.collectionListWithItems]: IconsName.list_squares,
 };
 
-export const NftViewer = ({
-  data,
-  style,
-  scrollEnabled = true,
-}: NftViewerProps) => {
+export const NftViewer = ({style, scrollEnabled = true}: NftViewerProps) => {
   const navigation = useTypedNavigation();
   const {showActionSheetWithOptions} = useActionSheet();
   const {animate} = useLayoutAnimation();
+  const data = Nft.getAllCollections();
 
   const [viewMode, setViewMode] = useState(NftViewerViewMode.collectionGrid);
   const viewModeIconName = useMemo(() => {
@@ -79,10 +59,7 @@ export const NftViewer = ({
     useState<keyof NftCollection>('created_at');
 
   const sections = useMemo(
-    () =>
-      data
-        ?.map?.(it => ({...it, data: [it]}) as SectionElement)
-        ?.sort?.(arraySortUtil(sortDirection, sortFieldName)),
+    () => data.sort(arraySortUtil(sortDirection, sortFieldName)),
     [data, sortDirection, sortFieldName],
   );
 
@@ -136,34 +113,6 @@ export const NftViewer = ({
     [navigation],
   );
 
-  const keyExtractor = useCallback((item: NftCollection) => item.address, []);
-
-  const renderItem: SectionListRenderItem<NftCollection, SectionElement> =
-    useCallback(
-      ({item: section}) => (
-        <NftViewerItemPreviewList
-          variant={NftViewerItemPreviewVariant.medium}
-          onPress={onNftItemPress}
-          data={section.items}
-        />
-      ),
-      [onNftItemPress],
-    );
-
-  const renderSectionHeader = useCallback(
-    ({section}: RenderSectionProps) => {
-      return (
-        <NftViewerSectionHeader item={section} onPress={onNftCollectionPress} />
-      );
-    },
-    [onNftCollectionPress],
-  );
-
-  const renderSectionSeparatorComponent = useCallback(
-    () => <Spacer height={28} />,
-    [],
-  );
-
   if (!data?.length) {
     return (
       <View style={styles.empty}>
@@ -189,23 +138,21 @@ export const NftViewer = ({
       </View>
       <Spacer height={19} />
       <First>
-        {viewMode === NftViewerViewMode.collectionListWithItems && (
-          <SectionList
-            scrollEnabled={scrollEnabled}
-            sections={sections}
-            keyExtractor={keyExtractor}
-            renderItem={renderItem}
-            renderSectionHeader={renderSectionHeader}
-            SectionSeparatorComponent={renderSectionSeparatorComponent}
-          />
-        )}
-        {viewMode === NftViewerViewMode.collectionGrid && (
-          <NftViewerCollectionPreviewList
-            data={sections}
-            onPress={onNftCollectionPress}
-            scrollEnabled={false}
-          />
-        )}
+        {/*{viewMode === NftViewerViewMode.collectionListWithItems && (*/}
+        <NftViewerCollectionPreviewList
+          data={sections}
+          onItemPress={onNftItemPress}
+          onCollectionPress={onNftCollectionPress}
+          scrollEnabled={scrollEnabled}
+        />
+        {/*)}*/}
+        {/*{viewMode === NftViewerViewMode.collectionGrid && (*/}
+        {/*  <NftViewerCollectionPreviewGrid*/}
+        {/*    data={sections}*/}
+        {/*    onPress={onNftCollectionPress}*/}
+        {/*    scrollEnabled={false}*/}
+        {/*  />*/}
+        {/*)}*/}
       </First>
     </View>
   );

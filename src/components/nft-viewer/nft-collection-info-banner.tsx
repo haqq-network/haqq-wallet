@@ -6,30 +6,29 @@ import {Color} from '@app/colors';
 import {cleanNumber, createTheme} from '@app/helpers';
 import {useLayout} from '@app/hooks/use-layout';
 import {I18N} from '@app/i18n';
-import {NftCollection, NftItem} from '@app/types';
+import {NftItem} from '@app/types';
 import {addOpacityToColor, getRandomItemFromArray} from '@app/utils';
 import {WEI} from '@app/variables/common';
 
 import {Spacer, Text} from '../ui';
 
 type Props = {
-  data: NftCollection[];
+  data: NftItem[];
   onPress?(item: NftItem): void;
 };
 
 export const NftCollectionInfoBanner = ({data, onPress}: Props) => {
   const [layout, onLayout] = useLayout();
   const collection = useMemo(() => getRandomItemFromArray(data), [data]);
-  const item = useMemo(
-    () => getRandomItemFromArray(collection.items),
-    [collection],
-  );
+  //@ts-ignore
+  const item = useMemo(() => getRandomItemFromArray(collection), [collection]);
 
   const lastSalePrice = useMemo(
+    //@ts-ignore
     () => cleanNumber(parseInt(item.price, 16) / WEI),
     [item],
   );
-
+  //@ts-ignore
   const handlePress = useCallback(() => onPress?.(item), [onPress, item]);
 
   return (
@@ -41,6 +40,7 @@ export const NftCollectionInfoBanner = ({data, onPress}: Props) => {
       <ImageBackground
         imageStyle={styles.imageContainer}
         style={layout}
+        //@ts-ignore
         source={{uri: item.image}}>
         <View style={styles.itemHeaderText}>
           <Text t8 color={Color.textBase3} i18n={I18N.nftWidgetTitle} />
@@ -50,6 +50,7 @@ export const NftCollectionInfoBanner = ({data, onPress}: Props) => {
             color={Color.textBase3}
             i18n={I18N.nftWidgetItems}
             i18params={{
+              //@ts-ignore
               count: String(collection?.items?.length || 0),
             }}
           />
@@ -57,6 +58,7 @@ export const NftCollectionInfoBanner = ({data, onPress}: Props) => {
         <Spacer />
         <View style={styles.itemInfoText}>
           <Text numberOfLines={1} t15 color={Color.textBase3}>
+            {/*@ts-ignore*/}
             {item.name}
           </Text>
           <Spacer width={6} />

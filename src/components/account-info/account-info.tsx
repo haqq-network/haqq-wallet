@@ -7,7 +7,6 @@ import {TransactionRow} from '@app/components/transaction-row';
 import {First, PopupContainer, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
-import {useNftCollections} from '@app/hooks/use-nft-collections';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
@@ -56,7 +55,6 @@ export const AccountInfo = ({
   onPressRow,
   contractNameMap,
 }: AccountInfoProps) => {
-  const nftCollections = useNftCollections();
   const [page, setPage] = useState(1);
   const transactionListData = useMemo(
     () => transactionsList.slice(0, PAGE_ITEMS_COUNT * page),
@@ -144,15 +142,11 @@ export const AccountInfo = ({
         {activeTab === TabNames.transactions && <TransactionEmpty />}
         <>
           <Spacer height={24} />
-          <NftViewer
-            data={nftCollections}
-            scrollEnabled={false}
-            style={styles.nftViewerContainer}
-          />
+          <NftViewer scrollEnabled={false} style={styles.nftViewerContainer} />
         </>
       </First>
     ),
-    [activeTab, nftCollections],
+    [activeTab],
   );
 
   const keyExtractor = useCallback((item: TransactionList) => item.hash, []);

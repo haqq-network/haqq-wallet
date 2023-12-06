@@ -25,6 +25,7 @@ export const NftViewerSectionHeader = ({
       <Image
         resizeMode="cover"
         style={styles.headerImage}
+        //@ts-ignore
         source={{uri: item.image}}
       />
       <Spacer width={12} />
@@ -33,6 +34,7 @@ export const NftViewerSectionHeader = ({
           {item.name}
         </Text>
         <Text t14 color={Color.textBase2}>
+          {/*@ts-ignore*/}
           {item.items.length} items
         </Text>
       </View>

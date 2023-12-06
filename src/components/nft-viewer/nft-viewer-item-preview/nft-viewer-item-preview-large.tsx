@@ -4,34 +4,44 @@ import {ImageBackground, TouchableOpacity, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {cleanNumber, createTheme} from '@app/helpers';
+import {useLayout} from '@app/hooks/use-layout';
 import {addOpacityToColor} from '@app/utils';
 import {WEI} from '@app/variables/common';
 
 import {NftViewerItemPreviewExtendedProps} from './nft-viewer-item-preview';
 
-import {Text} from '../ui';
+import {Text} from '../../ui';
 
-export const NftViewerItemPreviewMedium = ({
+export const NftViewerItemPreviewLarge = ({
   item,
   onPress,
 }: NftViewerItemPreviewExtendedProps) => {
+  const handlePress = useCallback(() => onPress?.(item), [onPress, item]);
+  const [layout, onLayout] = useLayout();
   const lastSalePrice = useMemo(
     () => cleanNumber(parseInt(item.price, 16) / WEI),
     [item],
   );
-  const handlePress = useCallback(() => onPress?.(item), [onPress, item]);
+
+  const itemTextStyle = useMemo(
+    () => ({
+      width: layout.width - ITEM_TEXT_POSSITION_OFFSET * 2,
+    }),
+    [layout.width],
+  );
 
   return (
     <TouchableOpacity
       disabled={!onPress}
       onPress={handlePress}
-      style={styles.container}>
+      style={styles.container}
+      onLayout={onLayout}>
       <ImageBackground
         imageStyle={styles.imageContainer}
-        style={styles.image}
+        style={layout}
         source={{uri: item.image}}>
-        <View style={styles.itemText}>
-          <Text numberOfLines={1} t8 color={Color.textBase3}>
+        <View style={[styles.itemText, itemTextStyle]}>
+          <Text numberOfLines={1} t13 color={Color.textBase3}>
             {item.name}
           </Text>
           <Text t17 color={Color.textSecond2}>
@@ -43,23 +53,18 @@ export const NftViewerItemPreviewMedium = ({
   );
 };
 
-const IMAGE_WIDTH = 120;
 const ITEM_TEXT_POSSITION_OFFSET = 8;
 
 const styles = createTheme({
   imageContainer: {
     borderRadius: 12,
   },
-  image: {
-    width: IMAGE_WIDTH,
-    height: 110,
-  },
   container: {
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 12,
-    width: IMAGE_WIDTH,
-    height: 110,
+    width: '48.5%',
+    height: 160,
     backgroundColor: Color.bg9,
   },
   itemText: {
@@ -69,7 +74,7 @@ const styles = createTheme({
     paddingHorizontal: 6,
     paddingVertical: 2,
     bottom: ITEM_TEXT_POSSITION_OFFSET,
-    left: ITEM_TEXT_POSSITION_OFFSET,
-    maxWidth: IMAGE_WIDTH - ITEM_TEXT_POSSITION_OFFSET,
+    alignSelf: 'flex-start',
+    marginHorizontal: ITEM_TEXT_POSSITION_OFFSET,
   },
 });

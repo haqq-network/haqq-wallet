@@ -7,20 +7,21 @@ import {NftCollection} from '@app/types';
 
 import {NftViewerCollectionPreview} from './nft-viewer-collection-preview';
 
-import {Spacer} from '../ui';
+import {Spacer} from '../../ui';
 
-export interface NftViewerCollectionPreviewListProps {
+export interface NftViewerCollectionPreviewGridProps {
   data: NftCollection[];
   scrollEnabled?: boolean;
 
   onPress(item: NftCollection): void;
 }
 
-export const NftViewerCollectionPreviewList = ({
+export const NftViewerCollectionPreviewGrid = ({
   data,
   onPress,
   scrollEnabled = true,
-}: NftViewerCollectionPreviewListProps) => {
+}: NftViewerCollectionPreviewGridProps) => {
+  //@ts-ignore
   const keyExtractor = useCallback((item: NftCollection) => item.address, []);
 
   const renderItemSeparatorComponent = useCallback(

@@ -8,8 +8,8 @@ import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {NftCollection, NftItem} from '@app/types';
 
-import {NftViewerItemPreviewVariant} from './nft-viewer/nft-viewer-item-preview';
-import {NftViewerItemPreviewList} from './nft-viewer/nft-viewer-item-preview-list';
+import {NftViewerItemPreviewVariant} from './nft-viewer/nft-viewer-item-preview/nft-viewer-item-preview';
+import {NftViewerItemPreviewList} from './nft-viewer/nft-viewer-item-preview/nft-viewer-item-preview-list';
 import {Spacer, Text} from './ui';
 import {TrimmedText} from './ui/trimmed-text';
 
@@ -28,6 +28,7 @@ export const NftCollectionDetails = ({
         <View>
           <Image
             resizeMode="cover"
+            //@ts-ignore
             source={{uri: item.image}}
             style={styles.image}
             borderRadius={12}
@@ -39,6 +40,7 @@ export const NftCollectionDetails = ({
         <Text t12 i18n={I18N.nftDetailsDescription} />
         <Spacer height={8} />
         <TrimmedText limit={100} t14 color={Color.textBase2}>
+          {/*@ts-ignore*/}
           {item.description}
         </TrimmedText>
         <Spacer height={16} />
@@ -48,6 +50,7 @@ export const NftCollectionDetails = ({
           <NftViewerItemPreviewList
             scrollEnabled={false}
             variant={NftViewerItemPreviewVariant.large}
+            //@ts-ignore
             data={item.items}
             onPress={onPressNftItem}
           />

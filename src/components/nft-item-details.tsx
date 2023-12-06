@@ -45,6 +45,7 @@ export const NftItemDetails = ({item, onPressSend}: NftItemDetailsProps) => {
         <Text t12 i18n={I18N.nftDetailsDescription} />
         <Spacer height={8} />
         <TrimmedText limit={100} t14 color={Color.textBase2}>
+          {/*@ts-ignore*/}
           {item.description}
         </TrimmedText>
         <Spacer height={20} />

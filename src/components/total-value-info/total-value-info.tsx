@@ -12,7 +12,6 @@ import {
   isFeatureEnabled,
   isSomeFeaturesEnabled,
 } from '@app/helpers/is-feature-enabled';
-import {useNftCollections} from '@app/hooks/use-nft-collections';
 import {I18N} from '@app/i18n';
 import {
   BalanceData,
@@ -60,7 +59,6 @@ export const TotalValueInfo = ({
   tokens,
   initialTab,
 }: TotalValueInfoProps) => {
-  const nftCollections = useNftCollections();
   const initialTabName = useMemo(() => {
     if (
       initialTab === TotalValueTabNames.tokens &&
@@ -163,7 +161,6 @@ export const TotalValueInfo = ({
           <>
             <Spacer height={24} />
             <NftViewer
-              data={nftCollections}
               scrollEnabled={false}
               style={styles.nftViewerContainer}
             />
@@ -177,7 +174,7 @@ export const TotalValueInfo = ({
         )}
       </First>
     ),
-    [activeTab, nftCollections, tokens],
+    [activeTab, tokens],
   );
 
   const keyExtractor = useCallback((item: TransactionList) => item.hash, []);

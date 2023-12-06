@@ -9,7 +9,7 @@ import {I18N} from '@app/i18n';
 import {NftCollection} from '@app/types';
 import {addOpacityToColor} from '@app/utils';
 
-import {Text} from '../ui';
+import {Text} from '../../ui';
 
 export interface NftViewerCollectionPreviewProps {
   item: NftCollection;
@@ -39,6 +39,7 @@ export const NftViewerCollectionPreview = ({
       <ImageBackground
         imageStyle={styles.imageContainer}
         style={layout}
+        //@ts-ignore
         source={{uri: item.image}}>
         <View style={[styles.itemText, itemTextStyle]}>
           <Text numberOfLines={1} t13 color={Color.textBase3}>
@@ -48,6 +49,7 @@ export const NftViewerCollectionPreview = ({
             t17
             color={Color.textSecond2}
             i18n={I18N.nftCollectionPreviewItemsCount}
+            //@ts-ignore
             i18params={{count: `${item?.items?.length}`}}
           />
         </View>

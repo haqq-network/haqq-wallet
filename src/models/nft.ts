@@ -1,10 +1,18 @@
 import {makeAutoObservable, runInAction} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
+import {Contracts} from '@app/models/contracts';
 import {Wallet} from '@app/models/wallet';
 import {Indexer, IndexerUpdatesResponse} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
-import {IndexerNftData, MobXStore, NftItem} from '@app/types';
+import {
+  HaqqCosmosAddress,
+  IContract,
+  IndexerNftData,
+  MobXStore,
+  NftCollection,
+  NftItem,
+} from '@app/types';
 
 class NftStore implements MobXStore<NftItem> {
   /**
@@ -75,6 +83,23 @@ class NftStore implements MobXStore<NftItem> {
     return Object.values(this.data);
   }
 
+  getAllCollections(): NftCollection[] {
+    return Object.values(this.data).reduce((acc, item) => {
+      let collection = acc.find(col => col.id === item.id);
+
+      if (collection) {
+        collection.data.push(item);
+      } else {
+        collection = {
+          ...this.getContract(item.id),
+          data: [item],
+        };
+      }
+
+      return acc;
+    }, [] as NftCollection[]);
+  }
+
   getById(id: string) {
     return this.data[id];
   }
@@ -118,11 +143,21 @@ class NftStore implements MobXStore<NftItem> {
       }
 
       const nfts = data.nfts.map(item => {
+        const hasCache = this.hasContractCache(item.contract);
+        if (!hasCache) {
+          const contract = data.addresses.find(({id}) => id === item.contract);
+          this.saveContract(contract);
+        }
+
+        // We saved contract in cache on previous step
+        const contract = this.getContract(item.contract);
+
         const nftItem: NftItem = {
-          id: item.token_id,
+          id: contract.id,
+          contract: item.contract,
           address: item.address,
-          name: 'Mocked NFT',
-          description: 'Mocked NFT description',
+          name: item.name,
+          description: item.description,
           created_at: item.created_at,
           price: '100',
           image: item.cached_url ?? 'https://i.ibb.co/9VGgYqf/10.jpg',
@@ -133,6 +168,22 @@ class NftStore implements MobXStore<NftItem> {
 
       return {...acc, [w.address]: [...nfts]};
     }, {});
+  };
+
+  private hasContractCache = (id: HaqqCosmosAddress) => {
+    return !!Contracts.getById(id);
+  };
+
+  private saveContract = (contract: IContract | undefined) => {
+    if (!contract) {
+      return;
+    }
+
+    Contracts.create(contract.id, contract);
+  };
+
+  private getContract = (id: HaqqCosmosAddress) => {
+    return Contracts.getById(id);
   };
 }
 

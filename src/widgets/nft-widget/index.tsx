@@ -3,8 +3,9 @@ import React, {useCallback} from 'react';
 import {observer} from 'mobx-react';
 import {StyleSheet} from 'react-native';
 
-import {NftViewerItemPreviewVariant} from '@app/components/nft-viewer/nft-viewer-item-preview';
-import {NftViewerItemPreviewList} from '@app/components/nft-viewer/nft-viewer-item-preview-list';
+import {NftCollectionInfoBanner} from '@app/components/nft-viewer/nft-collection-info-banner';
+import {NftViewerItemPreviewVariant} from '@app/components/nft-viewer/nft-viewer-item-preview/nft-viewer-item-preview';
+import {NftViewerItemPreviewList} from '@app/components/nft-viewer/nft-viewer-item-preview/nft-viewer-item-preview-list';
 import {TotalValueTabNames} from '@app/components/total-value-info';
 import {Spacer} from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
@@ -17,8 +18,6 @@ import {INftWidget, NftWidgetSize} from '@app/types';
 
 export const NftWidgetWrapper = observer(({size}: INftWidget) => {
   const navigation = useTypedNavigation();
-  // TODO NFT Collections support
-  // const nftCollections = useNftCollections();
   const onPress = useCallback(() => {
     navigation.navigate('totalValueInfo', {
       tab: TotalValueTabNames.nft,
@@ -55,8 +54,7 @@ export const NftWidgetWrapper = observer(({size}: INftWidget) => {
     case NftWidgetSize.large:
       return (
         <ShadowCard disablePadding onPress={onPress} style={styles.wrapper}>
-          {/*TODO NFT Collections support*/}
-          {/*<NftCollectionInfoBanner data={allNft} />*/}
+          <NftCollectionInfoBanner data={allNft} />
         </ShadowCard>
       );
     default:

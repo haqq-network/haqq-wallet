@@ -1107,23 +1107,18 @@ export enum ModalType {
 }
 
 export interface NftItem {
-  id: string;
+  id: HaqqCosmosAddress;
   address: HaqqCosmosAddress;
-  name: string;
-  description: string;
+  contract: string;
+  name: string | null;
+  description: string | null;
   image: string;
   price: string;
   created_at: string;
 }
 
-export interface NftCollection {
-  address: string;
-  name: string;
-  description: string;
-  image: string;
-  external_link: string;
-  items: NftItem[];
-  created_at: number;
+export interface NftCollection extends IContract {
+  data: NftItem[];
 }
 
 export interface BaseNewsItem {
@@ -1310,6 +1305,8 @@ export type IndexerNft = {
   block: number;
   cached_url: string | null;
   contract: HaqqCosmosAddress;
+  name: string | null;
+  description: string | null;
   created_at: string;
   updated_at: string;
   file_type: string | null;

@@ -10,7 +10,7 @@ import {
   NftViewerItemPreviewVariant,
 } from './nft-viewer-item-preview';
 
-import {Spacer} from '../ui';
+import {Spacer} from '../../ui';
 
 export interface NftViewerItemPreviewListProps {
   data: NftItem[];

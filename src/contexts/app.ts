@@ -289,7 +289,8 @@ class App extends AsyncEventEmitter {
   }
 
   get isDeveloper() {
-    return VariablesBool.get('isDeveloper') ?? false;
+    return true;
+    // return VariablesBool.get('isDeveloper') ?? false;
   }
 
   set isDeveloper(value) {
