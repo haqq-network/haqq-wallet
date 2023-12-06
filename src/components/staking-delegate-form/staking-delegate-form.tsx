@@ -27,7 +27,7 @@ export type StakingDelegateFormProps = {
   validator: ValidatorItem;
   account: string;
   onAmount: (amount: number) => void;
-  fee: Balance | null;
+  fee?: Balance | null;
   setFee: (amount?: string) => void;
   balance: Balance;
 };
@@ -43,7 +43,7 @@ export const StakingDelegateForm = ({
   balance,
 }: StakingDelegateFormProps) => {
   const transactionFee = useMemo(
-    () => (fee !== null ? fee.max(FEE_AMOUNT) : Balance.Empty),
+    () => (fee ? fee.max(FEE_AMOUNT) : Balance.Empty),
     [fee],
   );
 
@@ -66,7 +66,7 @@ export const StakingDelegateForm = ({
   }, [amounts]);
 
   useEffect(() => {
-    setFee(amounts.amount);
+    Boolean(+amounts.amount) && setFee(amounts.amount);
   }, [setFee, amounts.amount]);
 
   useEffect(() => {

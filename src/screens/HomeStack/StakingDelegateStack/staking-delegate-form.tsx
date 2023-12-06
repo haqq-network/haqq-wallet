@@ -32,7 +32,7 @@ export const StakingDelegateFormScreen = observer(() => {
     () => balances[AddressUtils.toEth(account)],
     [balances, account],
   );
-  const [fee, _setFee] = useState<Balance | null>(null);
+  const [fee, _setFee] = useState<Balance | null | undefined>();
 
   const setDefaultFee = useCallback(
     () => _setFee(new Balance(Cosmos.fee.amount)),
@@ -74,7 +74,6 @@ export const StakingDelegateFormScreen = observer(() => {
       setDefaultFee();
     }, FEE_ESTIMATING_TIMEOUT_MS);
 
-    await setFee();
     clearTimeout(timer);
 
     return () => {
@@ -84,7 +83,7 @@ export const StakingDelegateFormScreen = observer(() => {
 
   const onAmount = useCallback(
     (amount: number) => {
-      if (fee !== null) {
+      if (fee) {
         navigation.navigate(StakingDelegateStackRoutes.StakingDelegatePreview, {
           validator,
           account,
