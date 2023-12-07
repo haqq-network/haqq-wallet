@@ -2822,9 +2822,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@haqq/provider-ledger-react-native@npm:0.0.20":
-  version: 0.0.20
-  resolution: "@haqq/provider-ledger-react-native@npm:0.0.20"
+"@haqq/provider-ledger-react-native@npm:0.0.24":
+  version: 0.0.24
+  resolution: "@haqq/provider-ledger-react-native@npm:0.0.24"
   dependencies:
     "@ethersproject/abstract-provider": ^5.7.0
     "@ledgerhq/hw-app-eth": 6.30.0
@@ -2838,7 +2838,7 @@ __metadata:
     react: "*"
     react-native: "*"
     react-native-ble-plx: "*"
-  checksum: dde057d9e6be68601910f7f9f924b041de3b541822ecfc655c93598f4889289d80a93c3bc64a9276c124af21b0129bddcd6f89cc7debd237247113ecd4f97602
+  checksum: 855673801168b445b7b8d8da51bfd3fc0eddc5bed885ab688ea481aad8c55faa805a7aba45ddfcd068b7fef5e41e7143fa7f06d1122f686426077719f40bb518
   languageName: node
   linkType: hard
 
@@ -10043,7 +10043,7 @@ __metadata:
     "@haqq/provider-base": 0.0.18
     "@haqq/provider-hot-react-native": 0.0.6
     "@haqq/provider-keystone-react-native": "file:../haqq-wallet-provider-keystone-react-native"
-    "@haqq/provider-ledger-react-native": 0.0.20
+    "@haqq/provider-ledger-react-native": 0.0.24
     "@haqq/provider-mnemonic-react-native": 0.0.11
     "@haqq/provider-sss-react-native": 0.0.11
     "@haqq/provider-web3-utils": 0.0.14
