@@ -36,7 +36,7 @@
     "@haqq/encryption-react-native": "0.0.4",
     "@haqq/provider-base": "0.0.18",
     "@haqq/provider-hot-react-native": "0.0.6",
-    "@haqq/provider-ledger-react-native": "0.0.20",
+    "@haqq/provider-ledger-react-native": "0.0.24",
     "@haqq/provider-mnemonic-react-native": "0.0.11",
     "@haqq/provider-sss-react-native": "0.0.11",
     "@haqq/provider-web3-utils": "0.0.14",
