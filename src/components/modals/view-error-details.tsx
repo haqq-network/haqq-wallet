@@ -47,14 +47,14 @@ export const ViewErrorDetails = memo(
         onPressOutContent={() => hideModal(ModalType.viewErrorDetails)}>
         {() => (
           <View style={styles.modalView}>
-            <Text>{errorDetails}</Text>
+            <Text t14>{errorDetails}</Text>
             <Spacer height={12} />
             <View style={styles.versionContainer}>
               <View>
-                <Text>{appVersion}</Text>
+                <Text t14>{appVersion}</Text>
               </View>
               <View>
-                <Text>{remoteAppVersion}</Text>
+                <Text t14>{remoteAppVersion}</Text>
               </View>
             </View>
             <Spacer height={16} />
