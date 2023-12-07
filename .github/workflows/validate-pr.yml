@@ -8,7 +8,7 @@ on:
 
 jobs:
   lint:
-    runs-on: [self-hosted, ubuntu-cpu16-ram64]
+    runs-on: ubuntu-latest
     steps:
       - uses: aslafy-z/conventional-pr-title-action@v3
         env:
