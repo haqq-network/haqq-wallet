@@ -41,24 +41,23 @@ export class RemoteConfigService extends Initializable {
       const appInfo = await getAppInfo();
       const config = await Backend.instance.getRemoteConfig(appInfo);
 
-      logger.log('config', config);
-
       if (Object.keys(config).length) {
         VariablesString.set(KEY, JSON.stringify(config));
         RemoteConfigService.instance.isInited = true;
-        return config;
       } else {
         logger.error('remote config is empty', config);
-        return getCachedConfig();
       }
     } catch (err) {
       logger.error('failed to fetch remote config', err);
-      setTimeout(RemoteConfigService.instance.init, CONFIG_REINIT_TIMEOUT);
-      return getCachedConfig();
-    } finally {
-      await onRemoteConfigSync();
-      this.stopInitialization();
+      setTimeout(
+        RemoteConfigService.instance.init.bind(this),
+        CONFIG_REINIT_TIMEOUT,
+      );
     }
+
+    await onRemoteConfigSync();
+    this.stopInitialization();
+    return getCachedConfig();
   }
 
   public get_env<K extends keyof RemoteConfigTypes>(

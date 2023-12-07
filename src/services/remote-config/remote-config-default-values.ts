@@ -4,7 +4,7 @@ import {RemoteConfigTypes} from './remote-config-types';
 
 import {getAppVersion} from '../version';
 
-export const REMOTE_CONFIG_DEFAULT_VALUES: RemoteConfigTypes = {
+export const REMOTE_CONFIG_DEFAULT_VALUES: Required<RemoteConfigTypes> = {
   wallet_connect: {
     eip155: {
       methods: [

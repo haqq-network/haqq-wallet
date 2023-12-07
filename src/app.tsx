@@ -96,6 +96,7 @@ export const App = () => {
       .finally(async () => {
         await awaitForEventDone(Events.onAppStarted);
         setInitialized(true);
+        hideModal(ModalType.splash);
       });
 
     return () => {
