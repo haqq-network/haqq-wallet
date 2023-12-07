@@ -22,7 +22,7 @@ import {CURRENCY_NAME} from '@app/variables/common';
 export type StakingDelegateFormProps = {
   balance: Balance;
   onAmount: (amount: number) => void;
-  fee: Balance | null;
+  fee?: Balance | null;
   setFee: (amount?: string) => void;
   unboundingTime: number;
 };
@@ -50,7 +50,7 @@ export const StakingUnDelegateForm = ({
   }, [amounts]);
 
   useEffect(() => {
-    setFee(amounts.amount);
+    Boolean(+amounts.amount) && setFee(amounts.amount);
   }, [setFee, amounts.amount]);
 
   useEffect(() => {

@@ -28,7 +28,7 @@ export const StakingUnDelegateFormScreen = observer(() => {
   const cosmos = useCosmos();
   const wallet = Wallet.getById(account);
   const [unboundingTime, setUnboundingTime] = useState(604800000);
-  const [fee, _setFee] = useState<Balance | null>(null);
+  const [fee, _setFee] = useState<Balance | null | undefined>();
 
   const setDefaultFee = useCallback(
     () => _setFee(new Balance(Cosmos.fee.amount)),
@@ -73,7 +73,6 @@ export const StakingUnDelegateFormScreen = observer(() => {
   useLayoutEffectAsync(async () => {
     const timer = setTimeout(() => setDefaultFee(), FEE_ESTIMATING_TIMEOUT_MS);
 
-    await setFee();
     clearTimeout(timer);
 
     return () => {
@@ -93,7 +92,7 @@ export const StakingUnDelegateFormScreen = observer(() => {
 
   const onAmount = useCallback(
     (amount: number) => {
-      if (fee !== null) {
+      if (fee) {
         navigation.navigate(
           StakingUnDelegateStackRoutes.StakingUnDelegatePreview,
           {

@@ -7,11 +7,14 @@ import {Balance} from '@app/services/balance';
 import {LONG_NUM_PRECISION} from '@app/variables/common';
 
 export type NetworkFeeProps = {
-  fee: Balance | null;
+  fee?: Balance | null;
   currency?: 'aISLM' | 'ISLM';
 };
 export const NetworkFee = ({fee, currency = 'aISLM'}: NetworkFeeProps) => {
   const value = useMemo(() => {
+    if (fee === undefined) {
+      return '';
+    }
     if (fee === null) {
       return getText(I18N.estimatingGas);
     }
