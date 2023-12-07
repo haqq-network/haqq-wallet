@@ -5,14 +5,15 @@ import {SectionList, SectionListRenderItem} from 'react-native';
 import {NftViewerItemPreviewVariant} from '@app/components/nft-viewer/nft-viewer-item-preview/nft-viewer-item-preview';
 import {NftViewerItemPreviewList} from '@app/components/nft-viewer/nft-viewer-item-preview/nft-viewer-item-preview-list';
 import {NftViewerSectionHeader} from '@app/components/nft-viewer/nft-viewer-section-header';
+import {NftSection, NftSectionData} from '@app/components/nft-viewer/types';
 import {Spacer} from '@app/components/ui';
-import {NftCollection, NftItem} from '@app/types';
+import {HaqqCosmosAddress, NftItem} from '@app/types';
 
 type NftViewerCollectionPreviewListProps = {
-  data: NftCollection[];
+  data: NftSection[];
   scrollEnabled: boolean;
   onItemPress: (item: NftItem) => void;
-  onCollectionPress: (item: NftCollection) => void;
+  onCollectionPress: (id: HaqqCosmosAddress) => void;
 };
 
 export const NftViewerCollectionPreviewList = ({
@@ -21,22 +22,21 @@ export const NftViewerCollectionPreviewList = ({
   onItemPress,
   onCollectionPress,
 }: NftViewerCollectionPreviewListProps) => {
-  const keyExtractor = useCallback((item: NftCollection) => item.id, []);
-
-  const renderItem: SectionListRenderItem<NftCollection> = useCallback(
-    ({item: section}) => (
-      <NftViewerItemPreviewList
-        variant={NftViewerItemPreviewVariant.medium}
-        onPress={onItemPress}
-        data={section.data}
-      />
-    ),
+  const renderItem: SectionListRenderItem<NftSectionData> = useCallback(
+    ({item: section}) => {
+      return (
+        <NftViewerItemPreviewList
+          variant={NftViewerItemPreviewVariant.medium}
+          onPress={onItemPress}
+          data={section.data}
+        />
+      );
+    },
     [onItemPress],
   );
 
   const renderSectionHeader = useCallback(
     ({section}: any) => {
-      // console.log('=====>', section);
       return (
         <NftViewerSectionHeader item={section} onPress={onCollectionPress} />
       );
@@ -52,9 +52,7 @@ export const NftViewerCollectionPreviewList = ({
   return (
     <SectionList
       scrollEnabled={scrollEnabled}
-      //@ts-ignore
       sections={data}
-      keyExtractor={keyExtractor}
       renderItem={renderItem}
       renderSectionHeader={renderSectionHeader}
       SectionSeparatorComponent={renderSectionSeparatorComponent}

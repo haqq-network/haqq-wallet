@@ -23,6 +23,9 @@ export const NftCollectionDetailsScreen = memo(() => {
   );
 
   return (
-    <NftCollectionDetails item={params.item} onPressNftItem={onPressNftItem} />
+    <NftCollectionDetails
+      collectionId={params.collectionId}
+      onPressNftItem={onPressNftItem}
+    />
   );
 });

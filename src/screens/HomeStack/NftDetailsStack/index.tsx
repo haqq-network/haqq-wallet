@@ -12,7 +12,7 @@ import {
 } from '@app/screens/HomeStack/HomeFeedStack';
 import {NftCollectionDetailsScreen} from '@app/screens/HomeStack/NftDetailsStack/nft-collection-details';
 import {NftItemDetailsScreen} from '@app/screens/HomeStack/NftDetailsStack/nft-item-details';
-import {NftCollection, NftItem, ScreenOptionType} from '@app/types';
+import {HaqqCosmosAddress, NftItem, ScreenOptionType} from '@app/types';
 
 export enum NftDetailsStackRoutes {
   NftItemDetails = 'nftItemDetails',
@@ -21,7 +21,9 @@ export enum NftDetailsStackRoutes {
 
 export type NftDetailsStackParamList = HomeFeedStackParamList & {
   [NftDetailsStackRoutes.NftItemDetails]: {item: NftItem};
-  [NftDetailsStackRoutes.NftCollectionDetails]: {item: NftCollection};
+  [NftDetailsStackRoutes.NftCollectionDetails]: {
+    collectionId: HaqqCosmosAddress;
+  };
 };
 
 const Stack = createNativeStackNavigator<NftDetailsStackParamList>();

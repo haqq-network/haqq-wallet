@@ -1109,7 +1109,7 @@ export enum ModalType {
 export interface NftItem {
   id: HaqqCosmosAddress;
   address: HaqqCosmosAddress;
-  contract: string;
+  contract: HaqqCosmosAddress;
   name: string | null;
   description: string | null;
   image: string;

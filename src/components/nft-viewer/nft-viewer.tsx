@@ -5,12 +5,13 @@ import {Image, StyleProp, View, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
 import {NftViewerCollectionPreviewList} from '@app/components/nft-viewer/nft-viewer-collection-preview/nft-viewer-collection-preview-list';
+import {NftSection} from '@app/components/nft-viewer/types';
 import {createTheme} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
 import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {I18N, getText} from '@app/i18n';
 import {Nft} from '@app/models/nft';
-import {NftCollection, NftItem} from '@app/types';
+import {HaqqCosmosAddress, NftCollection, NftItem} from '@app/types';
 import {SortDirectionEnum, arraySortUtil} from '@app/utils';
 
 import {First, Icon, IconButton, IconsName, Spacer, Text} from '../ui';
@@ -58,8 +59,11 @@ export const NftViewer = ({style, scrollEnabled = true}: NftViewerProps) => {
   const [sortFieldName, setSortFieldName] =
     useState<keyof NftCollection>('created_at');
 
-  const sections = useMemo(
-    () => data.sort(arraySortUtil(sortDirection, sortFieldName)),
+  const sections: NftSection[] = useMemo(
+    () =>
+      data
+        .map(item => ({...item, data: [{data: item.data}]}) as NftSection)
+        .sort(arraySortUtil(sortDirection, sortFieldName)),
     [data, sortDirection, sortFieldName],
   );
 
@@ -100,8 +104,8 @@ export const NftViewer = ({style, scrollEnabled = true}: NftViewerProps) => {
   }, [animate, viewMode]);
 
   const onNftCollectionPress = useCallback(
-    (item: NftCollection) => {
-      navigation.navigate('nftDetails', {type: 'collection', item});
+    (collectionId: HaqqCosmosAddress) => {
+      navigation.navigate('nftDetails', {type: 'collection', collectionId});
     },
     [navigation],
   );

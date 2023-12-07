@@ -3,30 +3,30 @@ import React, {useCallback} from 'react';
 import {Image, View} from 'react-native';
 
 import {Color} from '@app/colors';
+import {NftSection} from '@app/components/nft-viewer/types';
 import {createTheme} from '@app/helpers';
-import {NftCollection} from '@app/types';
+import {HaqqCosmosAddress} from '@app/types';
 
 import {MenuNavigationButton, Spacer, Text} from '../ui';
 
 export interface NftViewerSectionHeaderProps {
-  item: NftCollection;
+  item: NftSection;
 
-  onPress(item: NftCollection): void;
+  onPress(id: HaqqCosmosAddress): void;
 }
 
 export const NftViewerSectionHeader = ({
   item,
   onPress,
 }: NftViewerSectionHeaderProps) => {
-  const handlePress = useCallback(() => onPress?.(item), [onPress, item]);
+  const handlePress = useCallback(() => onPress?.(item.id), [onPress, item]);
 
   return (
     <MenuNavigationButton onPress={handlePress} style={styles.headerContainer}>
       <Image
         resizeMode="cover"
         style={styles.headerImage}
-        //@ts-ignore
-        source={{uri: item.image}}
+        source={{uri: item.icon || item.data[0]?.data[0]?.image}}
       />
       <Spacer width={12} />
       <View>
@@ -34,8 +34,7 @@ export const NftViewerSectionHeader = ({
           {item.name}
         </Text>
         <Text t14 color={Color.textBase2}>
-          {/*@ts-ignore*/}
-          {item.items.length} items
+          {item.data.length} items
         </Text>
       </View>
     </MenuNavigationButton>

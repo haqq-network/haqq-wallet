@@ -85,19 +85,36 @@ class NftStore implements MobXStore<NftItem> {
 
   getAllCollections(): NftCollection[] {
     return Object.values(this.data).reduce((acc, item) => {
-      let collection = acc.find(col => col.id === item.id);
+      let collectionIndex = acc.findIndex(col => col.id === item.contract);
 
-      if (collection) {
-        collection.data.push(item);
+      if (collectionIndex !== -1) {
+        acc[collectionIndex].data.push(item);
       } else {
-        collection = {
-          ...this.getContract(item.id),
+        acc.push({
+          ...this.getContract(item.contract),
           data: [item],
-        };
+        });
       }
 
       return acc;
     }, [] as NftCollection[]);
+  }
+
+  getCollectionById(id: HaqqCosmosAddress): NftCollection {
+    return Object.values(this.data).reduce((acc, item) => {
+      if (!acc.id) {
+        acc = {
+          ...this.getContract(item.contract),
+          data: [],
+        };
+      }
+
+      if (item.contract === id) {
+        acc.data.push(item);
+      }
+
+      return acc;
+    }, {} as NftCollection);
   }
 
   getById(id: string) {
@@ -153,7 +170,7 @@ class NftStore implements MobXStore<NftItem> {
         const contract = this.getContract(item.contract);
 
         const nftItem: NftItem = {
-          id: contract.id,
+          id: `${contract.id}_${item.token_id}`,
           contract: item.contract,
           address: item.address,
           name: item.name,
