@@ -23,6 +23,7 @@ export const verifyCloud = async (sssProvider: SssProviders) => {
       hasWritePermissions && hasReadPermissions && testFileWasRemoved,
     );
   } catch (err) {
+    Logger.log('VerifyCloud', err);
     return false;
   } finally {
     hideModal('cloudVerification');

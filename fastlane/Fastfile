@@ -49,7 +49,6 @@ platform :android do
         skip_upload_images: true,
         skip_upload_apk: true,
         track: 'internal',
-        release_status: 'draft',
         aab: 'android/app/build/outputs/bundle/release/app-release.aab'
       )
   end

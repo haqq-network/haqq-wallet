@@ -19,10 +19,15 @@ export async function getGoogleTokens() {
   });
 
   try {
-    await GoogleSignin.signInSilently();
+    Promise.all([GoogleSignin.revokeAccess(), GoogleSignin.signOut()]);
+  } catch (err) {
+    Logger.log('GoogleSignin', err);
+  }
+
+  try {
+    await GoogleSignin.signIn();
   } catch (e) {
     Logger.log('SSS_GOOGLE_ERROR', 'getGoogleTokens ' + JSON.stringify(e));
-    await GoogleSignin.signIn();
   }
 
   const tokens = await GoogleSignin.getTokens();
