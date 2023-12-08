@@ -18,8 +18,11 @@ export const CloudProblemsScreen = memo(() => {
   >();
   const {sssProvider, onNext} = route.params;
   const onPrimaryPress = async () => {
-    await GoogleSignin.revokeAccess();
-    await GoogleSignin.signOut();
+    try {
+      Promise.all([GoogleSignin.revokeAccess(), GoogleSignin.signOut()]);
+    } catch (err) {
+      Logger.log('GoogleSignin', err);
+    }
     const hasPermissions = await verifyCloud(sssProvider);
     if (hasPermissions) {
       onNext();
