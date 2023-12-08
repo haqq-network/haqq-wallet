@@ -25,10 +25,9 @@ export async function getGoogleTokens() {
   }
 
   try {
-    await GoogleSignin.signInSilently();
+    await GoogleSignin.signIn();
   } catch (e) {
     Logger.log('SSS_GOOGLE_ERROR', 'getGoogleTokens ' + JSON.stringify(e));
-    await GoogleSignin.signIn();
   }
 
   const tokens = await GoogleSignin.getTokens();
