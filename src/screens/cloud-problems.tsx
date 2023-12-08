@@ -1,5 +1,7 @@
 import React, {memo} from 'react';
 
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+
 import {CloudProblems} from '@app/components/cloud-problems';
 import {verifyCloud} from '@app/helpers/verify-cloud';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
@@ -16,6 +18,8 @@ export const CloudProblemsScreen = memo(() => {
   >();
   const {sssProvider, onNext} = route.params;
   const onPrimaryPress = async () => {
+    await GoogleSignin.revokeAccess();
+    await GoogleSignin.signOut();
     const hasPermissions = await verifyCloud(sssProvider);
     if (hasPermissions) {
       onNext();
