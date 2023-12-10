@@ -6,7 +6,7 @@ import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {useLayout} from '@app/hooks/use-layout';
 import {I18N} from '@app/i18n';
-import {NftCollection} from '@app/types';
+import {HaqqCosmosAddress, NftCollection} from '@app/types';
 import {addOpacityToColor} from '@app/utils';
 
 import {Text} from '../../ui';
@@ -14,14 +14,14 @@ import {Text} from '../../ui';
 export interface NftViewerCollectionPreviewProps {
   item: NftCollection;
 
-  onPress(item: NftCollection): void;
+  onPress(collectionId: HaqqCosmosAddress): void;
 }
 
 export const NftViewerCollectionPreview = ({
   item,
   onPress,
 }: NftViewerCollectionPreviewProps) => {
-  const handlePress = useCallback(() => onPress?.(item), [onPress, item]);
+  const handlePress = useCallback(() => onPress?.(item.id), [onPress, item]);
   const [layout, onLayout] = useLayout();
 
   const itemTextStyle = useMemo(
@@ -39,8 +39,7 @@ export const NftViewerCollectionPreview = ({
       <ImageBackground
         imageStyle={styles.imageContainer}
         style={layout}
-        //@ts-ignore
-        source={{uri: item.image}}>
+        source={{uri: item.icon || item.data[0]?.image || ''}}>
         <View style={[styles.itemText, itemTextStyle]}>
           <Text numberOfLines={1} t13 color={Color.textBase3}>
             {item.name}
@@ -49,8 +48,7 @@ export const NftViewerCollectionPreview = ({
             t17
             color={Color.textSecond2}
             i18n={I18N.nftCollectionPreviewItemsCount}
-            //@ts-ignore
-            i18params={{count: `${item?.items?.length}`}}
+            i18params={{count: `${item?.data?.length}`}}
           />
         </View>
       </ImageBackground>

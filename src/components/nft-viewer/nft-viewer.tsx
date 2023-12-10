@@ -4,6 +4,7 @@ import {useActionSheet} from '@expo/react-native-action-sheet';
 import {Image, StyleProp, View, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
+import {NftViewerCollectionPreviewGrid} from '@app/components/nft-viewer/nft-viewer-collection-preview/nft-viewer-collection-preview-grid';
 import {NftViewerCollectionPreviewList} from '@app/components/nft-viewer/nft-viewer-collection-preview/nft-viewer-collection-preview-list';
 import {NftSection} from '@app/components/nft-viewer/types';
 import {createTheme} from '@app/helpers';
@@ -142,21 +143,21 @@ export const NftViewer = ({style, scrollEnabled = true}: NftViewerProps) => {
       </View>
       <Spacer height={19} />
       <First>
-        {/*{viewMode === NftViewerViewMode.collectionListWithItems && (*/}
-        <NftViewerCollectionPreviewList
-          data={sections}
-          onItemPress={onNftItemPress}
-          onCollectionPress={onNftCollectionPress}
-          scrollEnabled={scrollEnabled}
-        />
-        {/*)}*/}
-        {/*{viewMode === NftViewerViewMode.collectionGrid && (*/}
-        {/*  <NftViewerCollectionPreviewGrid*/}
-        {/*    data={sections}*/}
-        {/*    onPress={onNftCollectionPress}*/}
-        {/*    scrollEnabled={false}*/}
-        {/*  />*/}
-        {/*)}*/}
+        {viewMode === NftViewerViewMode.collectionListWithItems && (
+          <NftViewerCollectionPreviewList
+            data={sections}
+            onItemPress={onNftItemPress}
+            onCollectionPress={onNftCollectionPress}
+            scrollEnabled={scrollEnabled}
+          />
+        )}
+        {viewMode === NftViewerViewMode.collectionGrid && (
+          <NftViewerCollectionPreviewGrid
+            data={data}
+            onPress={onNftCollectionPress}
+            scrollEnabled={false}
+          />
+        )}
       </First>
     </View>
   );

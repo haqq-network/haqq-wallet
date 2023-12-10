@@ -34,7 +34,7 @@ export const NftViewerSectionHeader = ({
           {item.name}
         </Text>
         <Text t14 color={Color.textBase2}>
-          {item.data.length} items
+          {item.data[0].data.length} items
         </Text>
       </View>
     </MenuNavigationButton>

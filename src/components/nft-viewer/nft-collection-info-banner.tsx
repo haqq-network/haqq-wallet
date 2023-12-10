@@ -6,6 +6,7 @@ import {Color} from '@app/colors';
 import {cleanNumber, createTheme} from '@app/helpers';
 import {useLayout} from '@app/hooks/use-layout';
 import {I18N} from '@app/i18n';
+import {Nft} from '@app/models/nft';
 import {NftItem} from '@app/types';
 import {addOpacityToColor, getRandomItemFromArray} from '@app/utils';
 import {WEI} from '@app/variables/common';
@@ -19,16 +20,13 @@ type Props = {
 
 export const NftCollectionInfoBanner = ({data, onPress}: Props) => {
   const [layout, onLayout] = useLayout();
-  const collection = useMemo(() => getRandomItemFromArray(data), [data]);
-  //@ts-ignore
-  const item = useMemo(() => getRandomItemFromArray(collection), [collection]);
+  const item = useMemo(() => getRandomItemFromArray(data), [data]);
+  const collection = Nft.getCollectionById(item.id);
 
   const lastSalePrice = useMemo(
-    //@ts-ignore
     () => cleanNumber(parseInt(item.price, 16) / WEI),
     [item],
   );
-  //@ts-ignore
   const handlePress = useCallback(() => onPress?.(item), [onPress, item]);
 
   return (
@@ -40,7 +38,6 @@ export const NftCollectionInfoBanner = ({data, onPress}: Props) => {
       <ImageBackground
         imageStyle={styles.imageContainer}
         style={layout}
-        //@ts-ignore
         source={{uri: item.image}}>
         <View style={styles.itemHeaderText}>
           <Text t8 color={Color.textBase3} i18n={I18N.nftWidgetTitle} />
@@ -50,15 +47,13 @@ export const NftCollectionInfoBanner = ({data, onPress}: Props) => {
             color={Color.textBase3}
             i18n={I18N.nftWidgetItems}
             i18params={{
-              //@ts-ignore
-              count: String(collection?.items?.length || 0),
+              count: String(collection?.data?.length || 0),
             }}
           />
         </View>
         <Spacer />
         <View style={styles.itemInfoText}>
           <Text numberOfLines={1} t15 color={Color.textBase3}>
-            {/*@ts-ignore*/}
             {item.name}
           </Text>
           <Spacer width={6} />
