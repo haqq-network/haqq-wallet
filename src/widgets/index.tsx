@@ -12,7 +12,7 @@ import {Events} from '@app/events';
 import {getAppInfo} from '@app/helpers/get-app-info';
 import {VariablesString} from '@app/models/variables-string';
 import {Backend} from '@app/services/backend';
-import {IWidget, NftWidgetSize} from '@app/types';
+import {IWidget} from '@app/types';
 import {generateUUID} from '@app/utils';
 import {AdWidget} from '@app/widgets/ad-widget';
 import {BannerWidget} from '@app/widgets/banner-widget';
@@ -120,11 +120,5 @@ export const WidgetRoot = memo(({lastUpdate}: {lastUpdate: number}) => {
   };
 
   //@ts-ignore
-  return renderWidgetsList([
-    {
-      component: 'Nft',
-      size: NftWidgetSize.small,
-    },
-    ...data,
-  ]);
+  return renderWidgetsList(data);
 });
