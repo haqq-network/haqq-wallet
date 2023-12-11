@@ -56,7 +56,7 @@ export const SignInRestoreScreen = memo(() => {
 
       throw new Error('unknown key');
     },
-    [navigation],
+    [navigation, app.getPassword, app.onboarded],
   );
 
   return <SignInRestore onDoneTry={onDoneTry} testID="signin_restore" />;
