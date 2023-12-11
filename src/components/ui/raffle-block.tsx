@@ -53,7 +53,7 @@ const GRADIENT_COLORS_MAP = {
   [RaffleBlockGradientVariant.blue]: ['#08A2D2', '#0993BE'],
 };
 
-const isSmallScreen = getWindowWidth() < 400;
+const checkIsSmallWidth = () => getWindowWidth() < 400;
 
 export const RaffleBlock = ({
   gradient,
@@ -252,7 +252,7 @@ const styles = createTheme({
     width: '100%',
     minHeight: 68,
     borderRadius: 12,
-    paddingHorizontal: isSmallScreen ? 8 : 16,
+    paddingHorizontal: () => (checkIsSmallWidth() ? 8 : 16),
     paddingVertical: 12,
     marginVertical: 6,
   },
@@ -270,7 +270,7 @@ const styles = createTheme({
   },
   resultButton: {
     width: 131,
-    marginLeft: isSmallScreen ? 4 : 8,
+    marginLeft: () => (checkIsSmallWidth() ? 4 : 8),
   },
   wrapper: {
     flex: 1,
