@@ -332,7 +332,7 @@ export const Web3Browser = ({
       <KeyboardAvoidingView
         style={styles.webviewContainer}
         enabled={focused}
-        behavior={IS_IOS ? 'height' : 'position'}>
+        behavior={IS_IOS ? 'height' : 'padding'}>
         <CustomHeaderWebView
           {...webViewDefaultProps}
           browserType="web3"

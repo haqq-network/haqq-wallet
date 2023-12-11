@@ -26,7 +26,7 @@ export interface JsonRpcSignProps {
   verifyAddressResponse: VerifyAddressResponse | null;
   chainId?: number;
   hideContractAttention?: boolean;
-
+  isAllowedDomain: boolean;
   onPressSign(): void;
 
   onPressReject(): void;
@@ -42,6 +42,7 @@ export const JsonRpcSign = ({
   verifyAddressResponse,
   hideContractAttention,
   chainId,
+  isAllowedDomain,
   onPressReject,
   onPressSign,
 }: JsonRpcSignProps) => {
@@ -79,7 +80,7 @@ export const JsonRpcSign = ({
         <Spacer height={4} />
         <Button
           loading={signLoading}
-          disabled={rejectLoading}
+          disabled={rejectLoading || !isAllowedDomain}
           variant={ButtonVariant.contained}
           onPress={onPressSign}
           i18n={I18N.walletConnectSignApproveButton}

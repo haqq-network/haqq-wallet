@@ -12,7 +12,7 @@ import {Url} from './url';
 const CACHE_KEY = 'whitelist';
 const CACHE_LIFE_TIME = 3 * 60 * 60 * 1000; // 3 hours
 
-const logger = Logger.create('Whitelist', {});
+const logger = Logger.create('Whitelist', {stringifyJson: true});
 
 type CachedVerifyAddressResponse = VerifyAddressResponse & {
   cachedAt?: number;
@@ -45,6 +45,8 @@ export class Whitelist {
       return false;
     }
 
+    logger.log('checkUrl', {url, enableForceSkip});
+
     if (
       enableForceSkip &&
       (DEBUG_VARS.disableWeb3DomainBlocking || app.isTesterMode)
@@ -52,6 +54,7 @@ export class Whitelist {
       return true;
     }
 
+    await RemoteConfig.awaitForInitialization();
     const web3_app_whitelist = RemoteConfig.get('web3_app_whitelist');
 
     if (web3_app_whitelist) {
@@ -60,6 +63,7 @@ export class Whitelist {
       }
 
       const parsedUrl = new Url(url);
+
       for (let i = 0; i < web3_app_whitelist.length; i++) {
         const whitelistUrl = web3_app_whitelist[i];
 
@@ -70,18 +74,21 @@ export class Whitelist {
           }
         } else {
           const parsedWhitelistUrl = new Url(whitelistUrl);
-
-          if (parsedWhitelistUrl.protocol) {
-            return (
-              parsedUrl.hostname === parsedWhitelistUrl.hostname &&
-              parsedUrl.protocol === parsedWhitelistUrl.protocol
-            );
+          if (
+            parsedWhitelistUrl.protocol &&
+            parsedUrl.hostname === parsedWhitelistUrl.hostname &&
+            parsedUrl.protocol === parsedWhitelistUrl.protocol
+          ) {
+            return true;
           }
 
-          return parsedUrl.hostname === parsedWhitelistUrl.href;
+          if (parsedUrl.hostname === parsedWhitelistUrl.href) {
+            return true;
+          }
         }
       }
     }
+
     return false;
   }
 

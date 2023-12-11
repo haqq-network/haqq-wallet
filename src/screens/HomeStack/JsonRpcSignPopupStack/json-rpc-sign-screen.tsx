@@ -4,7 +4,7 @@ import {JsonRpcSign} from '@app/components/json-rpc-sign';
 import {Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
-import {showModal} from '@app/helpers';
+import {ModalStore, showModal} from '@app/helpers';
 import {getHost} from '@app/helpers/web3-browser-utils';
 import {Whitelist} from '@app/helpers/whitelist';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
@@ -133,7 +133,7 @@ export const JsonRpcSignScreen = memo(() => {
   useEffectAsync(async () => {
     const isAllowedDomain = await Whitelist.checkUrl(metadata.url);
     setIsAllowed(isAllowedDomain);
-    if (!isAllowedDomain) {
+    if (!isAllowedDomain && !ModalStore.isExist(ModalType.domainBlocked)) {
       showModal(ModalType.domainBlocked, {
         domain: getHost(metadata.url),
         onClose: () => onPressReject('domain is blocked'),
@@ -172,6 +172,7 @@ export const JsonRpcSignScreen = memo(() => {
       chainId={chainId}
       verifyAddressResponse={verifyAddressResponse}
       hideContractAttention={hideContractAttention}
+      isAllowedDomain={isAllowed}
       onPressReject={onPressReject}
       onPressSign={onPressSign}
     />
