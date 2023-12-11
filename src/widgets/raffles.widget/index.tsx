@@ -60,7 +60,10 @@ export const RafflesWidgetWrapper = memo(() => {
 
   const onPressShowResult = useCallback(
     (raffle: Raffle) => {
-      navigation.navigate('raffleReward', {item: raffle});
+      navigation.navigate(HomeFeedStackRoutes.HomeEarn, {
+        screen: HomeEarnStackRoutes.RaffleReward,
+        params: {item: raffle},
+      });
     },
     [navigation],
   );
