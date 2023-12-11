@@ -12,7 +12,7 @@ class ModalStore {
     makeAutoObservable(this);
   }
 
-  private isExist = (type: ModalName) => !!this.findByType(type);
+  isExist = (type: ModalName) => !!this.findByType(type);
 
   private findByType = (type: ModalName) =>
     this.modals.find(modal => modal.type === type);

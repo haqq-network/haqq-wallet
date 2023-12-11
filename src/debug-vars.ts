@@ -38,7 +38,7 @@ const debug: DebugVars = {
   enableSkipPinOnLogin: false,
   enableWeb3BrowserLogger: true,
   allowAnySourcesForWalletConnectLogin: true,
-  disableWeb3DomainBlocking: true,
+  disableWeb3DomainBlocking: false,
   enableHttpErrorDetails: true,
   enableAsyncEventEmitterLogs: false,
   enableAwaitJsonRpcSignLogger: true,

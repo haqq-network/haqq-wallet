@@ -290,6 +290,11 @@ export const TEST_URLS: Partial<Link>[] = [
     url: 'https://vesting.haqq.network',
     icon: 'https://vesting.haqq.network/assets/favicon.svg',
   },
+  {
+    title: 'SushiSwap',
+    url: 'https://www.sushi.com/swap?chainId=11235&token0=NATIVE&token1=0x80b5a32E4F032B2a058b4F29EC95EEfEEB87aDcd',
+    icon: 'https://www.sushi.com/favicon.ico?v=1',
+  },
   {title: 'MuslimGocci', url: 'https://muslimgocci.app'},
   {
     title: 'metamask test dapp',

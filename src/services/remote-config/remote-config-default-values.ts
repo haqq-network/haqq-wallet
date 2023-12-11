@@ -52,7 +52,8 @@ export const REMOTE_CONFIG_DEFAULT_VALUES: Required<RemoteConfigTypes> = {
   },
   web3_app_whitelist: [
     '*.haqq.network',
-    'https://tfm.com',
+    '*.muslimgocci.app',
+    '*.sushi.com',
     'https://satellite.money',
     'https://taskon.xyz',
     'https://app.haqq.network',
@@ -60,8 +61,6 @@ export const REMOTE_CONFIG_DEFAULT_VALUES: Required<RemoteConfigTypes> = {
     'https://shell.haqq.network',
     'https://vesting.haqq.network',
     'https://vorobevsa.com',
-    'https://muslimgocci.app',
-    'https://muslimgocci.app',
     'https://metamask.github.io/test-dapp/',
     'https://testedge2.haqq.network',
     'https://app.uniswap.org',
