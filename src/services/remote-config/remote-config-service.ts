@@ -39,7 +39,7 @@ export class RemoteConfigService extends Initializable {
       }
       this.startInitialization();
       const appInfo = await getAppInfo();
-      logger.error('SSS_REMOTE_CONFIG', appInfo);
+      logger.log('SSS_REMOTE_CONFIG', appInfo);
       const config = await Backend.instance.getRemoteConfig(appInfo);
 
       if (Object.keys(config).length) {

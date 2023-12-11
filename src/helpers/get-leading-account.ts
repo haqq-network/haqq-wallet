@@ -39,7 +39,7 @@ export function getLeadingAccount() {
   }
 
   if (!leadingAccount) {
-    throw new Error('no_wallets');
+    return null;
   }
 
   VariablesString.set('leadingAccount', leadingAccount);
