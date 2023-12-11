@@ -51,19 +51,26 @@ export const TransactionStatus = ({
   }
 
   return (
-    <View style={styles.wrapper}>
+    <View style={[styles.wrapper, style, hasTitle && styles.removeLeftPadding]}>
       <Icon
         i16
         name={transactionData.icon}
         color={transactionData.color}
-        style={style}
+        style={styles.icon}
       />
-      {hasTitle && <Text i18n={transactionData.title} style={styles.title} />}
+      {hasTitle && (
+        <Text t11 color={Color.textBase1} i18n={transactionData.title} />
+      )}
     </View>
   );
 };
 
 const styles = createTheme({
-  wrapper: {flexDirection: 'row', alignItems: 'center'},
-  title: {marginLeft: 6},
+  removeLeftPadding: {paddingLeft: 0, marginTop: 0},
+  wrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 4,
+  },
+  icon: {marginRight: 4},
 });

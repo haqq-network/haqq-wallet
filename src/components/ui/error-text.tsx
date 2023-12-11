@@ -40,11 +40,11 @@ export const ErrorText = ({
         <Button
           variant={ButtonVariant.text}
           title={getText(I18N.viewDetailsTitle)}
-          onPress={() =>
+          onPress={() => {
             showModal(ModalType.viewErrorDetails, {
               errorDetails: errorDetails!,
-            })
-          }
+            });
+          }}
         />
       )}
     </View>

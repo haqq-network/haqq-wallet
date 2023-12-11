@@ -33,6 +33,7 @@ export const TotalValueInfoHeader = ({
           vestedBalance={balance?.vested}
           stakingBalance={balance?.staked}
           onPressInfo={onPressInfo}
+          unlock={balance?.unlock}
         />
       </First>
     </View>

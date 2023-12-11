@@ -396,6 +396,13 @@ export class Cosmos {
 
       Logger.log('resp', resp);
 
+      // TODO Unhandled exception. Types issue.
+      //@ts-ignore
+      if (resp.code === 2) {
+        //@ts-ignore
+        throw new Error(resp.message.split('[')[0]);
+      }
+
       if (!resp.gas_info) {
         const amount = baseFee.operate(baseGas, 'mul');
         return {
@@ -405,7 +412,7 @@ export class Cosmos {
       }
 
       const gas = new Balance(
-        parseInt(resp.gas_info.gas_used, 10) * 1.2,
+        parseInt(resp.gas_info.gas_used, 10) * 1.35,
         0,
       ).max(baseGas);
 

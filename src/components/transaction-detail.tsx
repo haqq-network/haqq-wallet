@@ -126,16 +126,11 @@ export const TransactionDetail = ({
           short
         />
         <DataContent
-          titleI18n={
+          reversed
+          subtitleI18n={
             isSent ? I18N.transactionSendTitle : I18N.transactionReceiveTitle
           }
-          subtitle={
-            <TransactionStatus
-              status={transaction.status}
-              style={styles.transactionIcon}
-              hasTitle
-            />
-          }
+          title={<TransactionStatus status={transaction.status} hasTitle />}
         />
         {!isContract && (
           <DataContent
@@ -250,5 +245,4 @@ const styles = createTheme({
   iconView: {top: IS_IOS ? -1.7 : 0},
   iconButton: {flexDirection: 'row', marginBottom: 50},
   textStyle: {marginLeft: 8},
-  transactionIcon: {marginRight: 8},
 });

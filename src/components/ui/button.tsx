@@ -16,6 +16,7 @@ import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {ColorType} from '@app/types';
+import {sleep} from '@app/utils';
 
 import {First} from './first';
 import {Icon, IconProps} from './icon';
@@ -52,7 +53,7 @@ export type ButtonLeftIconProps =
 export type ButtonProps = Omit<ViewProps, 'children'> & {
   variant?: ButtonVariant;
   size?: ButtonSize;
-  onPress?: () => void;
+  onPress?: () => void | Promise<void>;
   error?: boolean;
   loading?: boolean;
   disabled?: boolean;
@@ -63,6 +64,7 @@ export type ButtonProps = Omit<ViewProps, 'children'> & {
   iconRightStyle?: StyleProp<TextStyle>;
   color?: ColorType;
   circleBorders?: boolean;
+  trackLoading?: boolean;
 } & ButtonValue &
   ButtonRightIconProps &
   ButtonLeftIconProps;
@@ -104,13 +106,29 @@ export const Button = ({
   iconLeftStyle,
   iconRightStyle,
   children,
+  trackLoading = false,
   ...props
 }: ButtonProps) => {
-  const onPressButton = useCallback(() => {
+  const [loadFlag, setLoading] = React.useState(loading);
+
+  const onPressButton = useCallback(async () => {
+    if (trackLoading) {
+      setLoading(true);
+      try {
+        if (onPress) {
+          await sleep(100);
+          await onPress();
+        }
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+
     if (!(disabled || loading)) {
       onPress?.();
     }
-  }, [disabled, loading, onPress]);
+  }, [disabled, loading, onPress, trackLoading]);
 
   const containerStyle = useMemo(
     () =>
@@ -166,9 +184,9 @@ export const Button = ({
       style={containerStyle as ViewStyle}
       onPress={onPressButton}
       activeOpacity={0.7}
-      disabled={disabled || loading}
+      disabled={disabled || loadFlag}
       {...props}>
-      {loading ? (
+      {loadFlag ? (
         <ActivityIndicator
           size="small"
           color={getColor(loadingColor || Color.textBase3)}

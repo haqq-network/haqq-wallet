@@ -19,7 +19,7 @@ import {SystemDialog} from '@app/services/system-dialog';
 import {ModalType} from '@app/types';
 
 interface SinginRestoreWalletProps {
-  onDoneTry: (seed: string) => void;
+  onDoneTry: (seed: string) => Promise<void>;
   testID?: string;
 }
 
@@ -27,7 +27,6 @@ export const SignInRestore = ({
   onDoneTry,
   testID,
 }: SinginRestoreWalletProps) => {
-  const [disabled, setDisabled] = useState(false);
   const [seed, setSeed] = useState('');
 
   const checked = useMemo(() => {
@@ -44,14 +43,12 @@ export const SignInRestore = ({
     return utils.isHexString(s, 32);
   }, [seed]);
 
-  const onDone = useCallback(() => {
-    setDisabled(true);
+  const onDone = useCallback(async () => {
     try {
-      onDoneTry(seed);
+      await onDoneTry(seed);
     } catch (e) {
       Logger.captureException(e);
     } finally {
-      setDisabled(false);
       hideModal(ModalType.loading);
     }
   }, [seed, onDoneTry]);
@@ -100,12 +97,13 @@ export const SignInRestore = ({
         </IconButton>
         <Spacer />
         <Button
-          disabled={!checked || disabled}
+          disabled={!checked}
           i18n={I18N.signinRestoreWalletRecovery}
           onPress={onDone}
           variant={ButtonVariant.contained}
           style={page.submit}
           testID={`${testID}_submit`}
+          trackLoading
         />
       </KeyboardSafeArea>
     </ScrollView>
