@@ -7,6 +7,7 @@ import {
 import {SessionTypes} from '@walletconnect/types';
 import {StatusBar} from 'react-native';
 
+import {Color} from '@app/colors';
 import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
 import {TotalValueTabNames} from '@app/components/total-value-info';
 import {Spacer} from '@app/components/ui';
@@ -177,8 +178,7 @@ const inAppBrowserOptions: NativeStackNavigationOptions = {
   headerBackHidden: true,
   headerShown: true,
   gestureEnabled: false,
-  header: () => <Spacer height={StatusBar.currentHeight} />,
-  headerBackground: () => <Spacer height={StatusBar.currentHeight} />,
+  header: () => <Spacer height={StatusBar.currentHeight} bg={Color.bg1} />,
 };
 
 const totalInfoOptions: NativeStackNavigationOptions = {

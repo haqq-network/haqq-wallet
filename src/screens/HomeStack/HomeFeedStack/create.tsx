@@ -2,7 +2,7 @@ import React, {memo} from 'react';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import {hideBack, popupScreenOptions} from '@app/helpers';
+import {hideBack, popupScreenOptionsWithMargin} from '@app/helpers';
 import {basicScreenOptions} from '@app/screens';
 import {OnboardingFinishScreen} from '@app/screens/WelcomeStack/OnboardingStack/onboarding-finish';
 import {SignUpAgreementScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-agreement';
@@ -13,7 +13,7 @@ const SignUpStack = createNativeStackNavigator();
 
 const title = 'Create a wallet';
 const screenOptionsTitle: ScreenOptionType = {
-  ...popupScreenOptions,
+  ...popupScreenOptionsWithMargin,
   title,
   ...hideBack,
   presentation: 'modal',
