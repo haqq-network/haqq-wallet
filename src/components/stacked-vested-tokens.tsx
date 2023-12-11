@@ -1,5 +1,6 @@
 import React, {useMemo} from 'react';
 
+import {isFuture} from 'date-fns';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -17,9 +18,17 @@ export interface StackedVestedTokensProps {
   vestedBalance?: Balance;
   stakingBalance?: Balance;
   availableBalance?: Balance;
-
+  unlock: Date;
   onPressInfo(): void;
 }
+
+const calculateDistanceToNow = (endDate: Date) => {
+  const diff = Math.abs(endDate.getTime() - new Date().getTime());
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+  return `${hours}h ${minutes}min`;
+};
 
 export function StackedVestedTokens({
   availableBalance = Balance.Empty,
@@ -27,17 +36,34 @@ export function StackedVestedTokens({
   stakingBalance = Balance.Empty,
   vestedBalance = Balance.Empty,
   onPressInfo,
+  unlock,
 }: StackedVestedTokensProps) {
+  const vestedUnlockDescription = useMemo(() => {
+    if (!unlock) {
+      return '';
+    }
+    const isValid = isFuture(unlock);
+    if (!isValid) {
+      return '';
+    }
+
+    return getText(I18N.lockedTokensVestedAvailableIn, {
+      value: calculateDistanceToNow(unlock),
+    });
+  }, [unlock]);
+
   const barChartData = useMemo(() => {
     const onePercent = lockedBalance.operate(100, 'div');
+
     return [
       {
         id: 'vested',
         percentage: vestedBalance.operate(onePercent, 'div').toFloat(),
         color: Color.textYellow1,
-        title: getText(I18N.lockedTokensVested, {
-          count: vestedBalance.toFloatString(),
-        }),
+        title:
+          getText(I18N.lockedTokensVested, {
+            count: vestedBalance.toFloatString(),
+          }) + vestedUnlockDescription,
       },
       {
         id: 'staking',

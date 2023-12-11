@@ -42,10 +42,7 @@ export const TransactionReceive = ({
                 i18n={I18N.transactionReceiveTitle}
                 color={Color.textBase1}
               />
-              <TransactionStatus
-                status={item.status}
-                style={styles.transactionIcon}
-              />
+              <TransactionStatus status={item.status} />
             </View>
           }
           subtitle={subtitle}
@@ -85,5 +82,4 @@ const styles = createTheme({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  transactionIcon: {marginLeft: 4},
 });

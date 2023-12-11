@@ -4,7 +4,7 @@ import {ActivityIndicator, Image, TouchableOpacity, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import {Color, getColor} from '@app/colors';
-import {cleanNumber, createTheme} from '@app/helpers';
+import {cleanNumber, createTheme, getWindowWidth} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks';
 import {useTimer} from '@app/hooks/use-timer';
 import {I18N} from '@app/i18n';
@@ -52,6 +52,8 @@ const GRADIENT_COLORS_MAP = {
   [RaffleBlockGradientVariant.green]: ['#08D296', '#09B29E'],
   [RaffleBlockGradientVariant.blue]: ['#08A2D2', '#0993BE'],
 };
+
+const checkIsSmallWidth = () => getWindowWidth() < 400;
 
 export const RaffleBlock = ({
   gradient,
@@ -250,7 +252,7 @@ const styles = createTheme({
     width: '100%',
     minHeight: 68,
     borderRadius: 12,
-    paddingHorizontal: 16,
+    paddingHorizontal: () => (checkIsSmallWidth() ? 8 : 16),
     paddingVertical: 12,
     marginVertical: 6,
   },
@@ -268,7 +270,7 @@ const styles = createTheme({
   },
   resultButton: {
     width: 131,
-    marginLeft: 8,
+    marginLeft: () => (checkIsSmallWidth() ? 4 : 8),
   },
   wrapper: {
     flex: 1,

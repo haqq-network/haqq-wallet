@@ -36,10 +36,7 @@ export const TransactionSend = ({item, onPress}: TransactionPreviewProps) => {
           title={
             <View style={styles.titleWrapper}>
               <Text i18n={I18N.transactionSendTitle} color={Color.textBase1} />
-              <TransactionStatus
-                status={item.status}
-                style={styles.transactionIcon}
-              />
+              <TransactionStatus status={item.status} />
             </View>
           }
           subtitleI18nParams={{
@@ -82,5 +79,4 @@ const styles = createTheme({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  transactionIcon: {marginLeft: 4},
 });
