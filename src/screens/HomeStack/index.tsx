@@ -275,7 +275,7 @@ const HomeStack = memo(() => {
 
       <Stack.Screen
         name={HomeStackRoutes.JsonRpcSign}
-        component={JsonRpcSignPopupStack}
+        component={themeUpdaterHOC(JsonRpcSignPopupStack)}
         options={fullScreenModalOptions}
       />
 
