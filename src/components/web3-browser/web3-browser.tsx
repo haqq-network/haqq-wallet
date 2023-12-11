@@ -46,6 +46,7 @@ export interface Web3BrowserProps {
   showActionMenu: boolean;
   popup?: boolean;
   userProvider: Provider;
+  focused: boolean;
 
   onPressHeaderUrl(event: Web3BrowserPressHeaderEvent): void;
 
@@ -91,6 +92,7 @@ export const Web3Browser = ({
   bookmarks,
   showActionMenu,
   userProvider,
+  focused,
   onPressClose,
   toggleActionMenu,
   onPressHeaderWallet,
@@ -329,7 +331,8 @@ export const Web3Browser = ({
 
       <KeyboardAvoidingView
         style={styles.webviewContainer}
-        behavior={IS_IOS ? 'height' : 'padding'}>
+        enabled={focused}
+        behavior={IS_IOS ? 'height' : 'position'}>
         <CustomHeaderWebView
           {...webViewDefaultProps}
           browserType="web3"

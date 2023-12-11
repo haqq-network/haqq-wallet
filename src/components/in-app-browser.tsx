@@ -231,7 +231,7 @@ export const InAppBrowser = ({
       </View>
       <KeyboardAvoidingView
         style={styles.webviewContainer}
-        behavior={IS_IOS ? 'height' : 'padding'}>
+        behavior={IS_IOS ? 'height' : 'position'}>
         <CustomHeaderWebView
           {...webViewDefaultProps}
           browserType="inapp"
