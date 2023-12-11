@@ -34,6 +34,7 @@ import {
 import {sendNotification} from '@app/services';
 
 export const Web3BrowserScreen = memo(() => {
+  const [focused, setFocused] = useState(false);
   const {url, popup} = useTypedRoute<
     BrowserStackParamList,
     BrowserStackRoutes.Web3browser
@@ -222,6 +223,15 @@ export const Web3BrowserScreen = memo(() => {
     }, [helper, webviewRef]),
   );
 
+  useFocusEffect(
+    useCallback(() => {
+      setFocused(true);
+      return () => {
+        setFocused(false);
+      };
+    }, [setFocused]),
+  );
+
   if (isLoading) {
     return <Loading />;
   }
@@ -236,6 +246,7 @@ export const Web3BrowserScreen = memo(() => {
       bookmarks={bookmarks}
       showActionMenu={showActionMenu}
       userProvider={userProvider!}
+      focused={focused}
       onPressClose={onPressClose}
       onPressHeaderUrl={onPressHeaderUrl}
       onPressHeaderWallet={onPressHeaderWallet}
