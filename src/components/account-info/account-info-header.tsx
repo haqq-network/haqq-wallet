@@ -47,6 +47,7 @@ export const AccountInfoHeader = ({
   onPressInfo,
   onSend,
   onReceive,
+  unlock,
 }: AccountInfoProps) => {
   const formattedAddress = useMemo(
     () => shortAddress(wallet.address, '•'),
@@ -89,6 +90,7 @@ export const AccountInfoHeader = ({
           vestedBalance={vested}
           stakingBalance={staked}
           onPressInfo={onPressInfo}
+          unlock={unlock}
         />
         <Spacer height={24} />
       </First>
