@@ -6,7 +6,7 @@ import {
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
 
-import {popupScreenOptions, popupScreenOptionsWithMargin} from '@app/helpers';
+import {popupScreenOptions} from '@app/helpers';
 import {WelcomeStackParamList} from '@app/screens/WelcomeStack';
 import {LedgerStackRoutes} from '@app/screens/WelcomeStack/LedgerStack';
 import {OnboardingBiometryScreen} from '@app/screens/WelcomeStack/OnboardingStack/onboarding-biometry';
@@ -83,7 +83,6 @@ const OnboardingStack = memo(({initialParams, title}: Props) => {
     headerBackHidden: true,
   };
   const screenOptionsTitleOnly: NativeStackNavigationOptions = {
-    ...popupScreenOptionsWithMargin,
     title,
   };
 

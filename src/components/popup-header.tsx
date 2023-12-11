@@ -11,6 +11,7 @@ import {SpacerPopupButton} from '@app/components/popup/spacer-popup-button';
 import {Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers/create-theme';
 import {ScreenOptionType} from '@app/types';
+import {IS_ANDROID} from '@app/variables/common';
 
 type PopupHeaderProps = NativeStackHeaderProps & {
   options: ScreenOptionType & {
@@ -49,7 +50,7 @@ export const PopupHeader = ({options, back, navigation}: PopupHeaderProps) => {
       style={[
         options.headerStyle,
         page.container,
-        options.tab && {marginTop: insets.top},
+        (options.tab || IS_ANDROID) && {marginTop: insets.top},
       ]}>
       {options.headerLeft ? (
         options.headerLeft({canGoBack: canGoBack || false})
