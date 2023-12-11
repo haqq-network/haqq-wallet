@@ -133,6 +133,10 @@ export const Wallets = ({
             isSecondMnemonic = false;
           }
 
+          if (w.type === WalletType.mnemonic && userHaveSSSProtectedWallets) {
+            isSecondMnemonic = true;
+          }
+
           if (isSecondMnemonic && !w.isImported) {
             Wallet.update(w.address, {isImported: true});
           }
