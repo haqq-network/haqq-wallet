@@ -11,7 +11,7 @@ import {Color} from '@app/colors';
 import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
 import {TotalValueTabNames} from '@app/components/total-value-info';
 import {Spacer} from '@app/components/ui';
-import {popupScreenOptions} from '@app/helpers';
+import {popupScreenOptionsWithMargin} from '@app/helpers';
 import {AwaitValue} from '@app/helpers/await-for-value';
 import {getWalletTitle} from '@app/helpers/get-wallet-title';
 import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
@@ -159,7 +159,7 @@ const navigatorOptions = {
 };
 
 const modalOptions: NativeStackNavigationOptions = {
-  ...popupScreenOptions,
+  ...popupScreenOptionsWithMargin,
   presentation: 'modal',
   headerShown: false,
   gestureEnabled: true,
