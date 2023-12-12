@@ -21,13 +21,13 @@ export async function getGoogleTokens() {
   try {
     await GoogleSignin.signInSilently();
   } catch (e) {
-    Logger.log('SSS_GOOGLE_ERROR', 'getGoogleTokens ' + JSON.stringify(e));
+    // Logger.log('SSS_GOOGLE_ERROR', 'getGoogleTokens ' + JSON.stringify(e));
     await GoogleSignin.signIn();
   }
 
   const tokens = await GoogleSignin.getTokens();
 
-  Logger.log('SSS_GOOGLE_TOKENS', JSON.stringify(tokens));
+  // Logger.log('SSS_GOOGLE_TOKENS', JSON.stringify(tokens));
 
   return {
     accessToken: tokens.accessToken,

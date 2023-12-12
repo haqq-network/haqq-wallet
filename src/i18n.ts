@@ -850,6 +850,7 @@ export enum I18N {
   verifyCloudProblemsTitle,
   verifyCloudProblemsNoReadError,
   verifyCloudProblemsNoWriteError,
+  verifyCloudProblemsRestartPhone,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1848,4 +1849,6 @@ const en: Record<I18N, string> = {
   [I18N.verifyCloudProblemsTitle]: 'You cloud storage has an error:',
   [I18N.verifyCloudProblemsNoReadError]: "Can't read data",
   [I18N.verifyCloudProblemsNoWriteError]: "Can't write data",
+  [I18N.verifyCloudProblemsRestartPhone]:
+    "Can't create account on your phone. Please repeat after restart your phone",
 };
