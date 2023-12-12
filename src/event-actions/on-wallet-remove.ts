@@ -17,9 +17,9 @@ export async function onWalletRemove(address: string) {
 
     // last wallet removed
     if (wallets.length === 0) {
+      app.onboarded = false;
       await onAppReset();
       await onWalletReset();
-      app.onboarded = false;
     }
 
     const transactions = Transaction.getAll();
