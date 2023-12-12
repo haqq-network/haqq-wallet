@@ -1,5 +1,8 @@
 import {RouteProp} from '@react-navigation/core/lib/typescript/src/types';
-import {NativeStackNavigationOptions} from '@react-navigation/native-stack';
+import {
+  NativeStackHeaderProps,
+  NativeStackNavigationOptions,
+} from '@react-navigation/native-stack';
 
 import {PopupHeader} from '@app/components';
 import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
@@ -33,9 +36,16 @@ export function getNewsDetailAppTitle(props: {
   return {
     title: news?.title || '',
     headerShown: true,
-    header: PopupHeader,
+    header: getNewsHeader,
     headerLeft: SpacerPopupButton,
     headerRight: DismissPopupButton,
     presentation: 'modal' as StackPresentationTypes,
   };
 }
+
+export const getNewsHeader = (navProps: NativeStackHeaderProps) => (
+  <PopupHeader
+    {...navProps}
+    options={{...navProps.options, disableMargin: true}}
+  />
+);

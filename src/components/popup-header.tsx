@@ -17,6 +17,7 @@ type PopupHeaderProps = NativeStackHeaderProps & {
   options: ScreenOptionType & {
     customBackFunction?: () => void;
     titleIcon?: ImageSourcePropType;
+    disableMargin?: boolean;
   };
 };
 
@@ -50,7 +51,8 @@ export const PopupHeader = ({options, back, navigation}: PopupHeaderProps) => {
       style={[
         options.headerStyle,
         page.container,
-        (options.tab || IS_ANDROID) && {marginTop: insets.top},
+        !options.disableMargin &&
+          (options.tab || IS_ANDROID) && {marginTop: insets.top},
       ]}>
       {options.headerLeft ? (
         options.headerLeft({canGoBack: canGoBack || false})
