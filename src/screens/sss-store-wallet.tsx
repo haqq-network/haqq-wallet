@@ -60,7 +60,7 @@ export const SssStoreWalletScreen = () => {
             total === 0
               ? MAIN_ACCOUNT_NAME
               : getText(I18N.signinStoreWalletAccountNumber, {
-                  number: `${total + 1}`,
+                  number: `${total + index + 1}`,
                 });
 
           const hdPath = `${ETH_HD_SHORT_PATH}/${index}`;
