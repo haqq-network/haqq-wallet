@@ -31,6 +31,7 @@ import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 import {RootStack} from '@app/screens/RootStack';
+import {OnboardingStackRoutes} from '@app/screens/WelcomeStack/OnboardingStack';
 import {AppTheme, ModalType} from '@app/types';
 import {getAppTrackingAuthorizationStatus, sleep} from '@app/utils';
 import {SPLASH_TIMEOUT_MS} from '@app/variables/common';
@@ -172,6 +173,11 @@ export const App = () => {
     await trackEvent('navigation', {
       path: navigator.getCurrentRoute()?.name,
     });
+
+    const currentRouteName = navigator?.getCurrentRoute?.()?.name;
+    if (currentRouteName === OnboardingStackRoutes.OnboardingFinish) {
+      setPinReseted(false);
+    }
   }, []);
 
   const onUnhandledAction = useCallback((action: NavigationAction) => {
