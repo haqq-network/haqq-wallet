@@ -1846,9 +1846,9 @@ const en: Record<I18N, string> = {
     "It's possible the file was deleted from your cloud storage or there were synchronization issues. We recommend saving the backup file again",
   [I18N.cloudShareNotFoundPrimaryButton]: 'Save on your cloud storage',
   [I18N.cloudShareNotFoundSecondaryButton]: 'Skip',
-  [I18N.verifyCloudProblemsTitle]: 'You cloud storage has an error:',
+  [I18N.verifyCloudProblemsTitle]: 'You cloud storage has an error',
   [I18N.verifyCloudProblemsNoReadError]: "Can't read data",
   [I18N.verifyCloudProblemsNoWriteError]: "Can't write data",
   [I18N.verifyCloudProblemsRestartPhone]:
-    "Can't create account on your phone. Please repeat after restart your phone",
+    "Oops! There's a little problem with Google Services. Please turn off your phone and then turn it back on. After that, check if there are any updates for your system.",
 };
