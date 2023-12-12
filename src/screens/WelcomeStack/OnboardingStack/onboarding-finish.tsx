@@ -50,7 +50,7 @@ export const OnboardingFinishScreen = memo(() => {
     } else {
       navigation.getParent()?.goBack();
     }
-  }, [route, navigation]);
+  }, [route, navigation, app.onboarded]);
 
   useEffect(() => {
     onTrackEvent(route.params.event);
