@@ -847,6 +847,9 @@ export enum I18N {
   cloudShareNotFoundPrimaryButton,
   cloudShareNotFoundSecondaryButton,
   walletConnectPairAlreadyExists,
+  verifyCloudProblemsTitle,
+  verifyCloudProblemsNoReadError,
+  verifyCloudProblemsNoWriteError,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1842,4 +1845,7 @@ const en: Record<I18N, string> = {
     "It's possible the file was deleted from your cloud storage or there were synchronization issues. We recommend saving the backup file again",
   [I18N.cloudShareNotFoundPrimaryButton]: 'Save on your cloud storage',
   [I18N.cloudShareNotFoundSecondaryButton]: 'Skip',
+  [I18N.verifyCloudProblemsTitle]: 'You cloud storage has an error:',
+  [I18N.verifyCloudProblemsNoReadError]: "Can't read data",
+  [I18N.verifyCloudProblemsNoWriteError]: "Can't write data",
 };
