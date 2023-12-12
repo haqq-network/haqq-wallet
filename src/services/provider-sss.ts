@@ -21,14 +21,14 @@ export async function onLoginGoogle() {
   try {
     authState = await getGoogleTokens();
   } catch (err) {
-    Logger.log('SSS_GOOGLE_ERROR', err);
+    // Logger.log('SSS_GOOGLE_ERROR', err);
   }
   const authInfo = parseJwt(authState.idToken);
 
   const verifier = RemoteConfig.get('sss_google');
 
   if (!verifier) {
-    Logger.log('SSS_GOOGLE_ERROR', 'sss_google is not set');
+    // Logger.log('SSS_GOOGLE_ERROR', 'sss_google is not set');
     throw new Error('sss_google is not set');
   }
 

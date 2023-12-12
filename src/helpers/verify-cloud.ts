@@ -19,7 +19,6 @@ export const verifyCloud = async (sssProvider: SssProviders) => {
       '0'.repeat(TEST_FILE_SIZE_BYTES),
     );
     if (!hasWritePermissions) {
-      Logger.log('SSS_VERIFY_CLOUD', '!hasWritePermissions');
       Alert.alert(
         getText(I18N.verifyCloudProblemsTitle),
         getText(I18N.verifyCloudProblemsNoWriteError),
@@ -28,7 +27,6 @@ export const verifyCloud = async (sssProvider: SssProviders) => {
     const hasReadPermissions =
       ((await cloud.getItem('haqq_test'))?.length || 0) > 0;
     if (!hasReadPermissions) {
-      Logger.log('SSS_VERIFY_CLOUD', '!hasReadPermissions');
       Alert.alert(
         getText(I18N.verifyCloudProblemsTitle),
         getText(I18N.verifyCloudProblemsNoReadError),
@@ -36,7 +34,7 @@ export const verifyCloud = async (sssProvider: SssProviders) => {
     }
     const testFileWasRemoved = await cloud.removeItem('haqq_test');
     if (!testFileWasRemoved) {
-      Logger.log('SSS_VERIFY_CLOUD', 'test file was not removed');
+      // Logger.log('SSS_VERIFY_CLOUD', 'test file was not removed');
     }
 
     return Boolean(hasWritePermissions && hasReadPermissions);

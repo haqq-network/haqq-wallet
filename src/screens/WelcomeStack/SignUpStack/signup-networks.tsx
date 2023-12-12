@@ -60,9 +60,9 @@ export const SignupNetworksScreen = memo(() => {
 
           if (walletInfo) {
             nextScreen = SignUpStackRoutes.SignUpNetworkExists;
+          } else {
+            // Logger.log('SSS_PRIVATE_KEY_NOT_FOUND', creds);
           }
-        } else {
-          Logger.log('SSS_PRIVATE_KEY_NOT_FOUND', creds);
         }
 
         //@ts-ignore
@@ -76,7 +76,11 @@ export const SignupNetworksScreen = memo(() => {
           sssLocalShare: null,
         });
       } catch (err) {
-        Logger.log('SSS_ON_LOGIN', err);
+        // Logger.log('SSS_ON_LOGIN', err);
+        Alert.alert(
+          getText(I18N.verifyCloudProblemsTitle),
+          getText(I18N.verifyCloudProblemsRestartPhone),
+        );
       }
     },
     [navigation],
