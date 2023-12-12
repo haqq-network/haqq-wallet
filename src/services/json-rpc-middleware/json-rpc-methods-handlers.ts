@@ -354,7 +354,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
         );
       }
 
-      return await awaitForScanQr({pattern, type: QRScannerTypeEnum.qr});
+      return await awaitForScanQr({pattern, variant: QRScannerTypeEnum.qr});
     } catch (err) {
       if (err instanceof Error) {
         rejectJsonRpcRequest(err.message);

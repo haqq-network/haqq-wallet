@@ -8,13 +8,14 @@ export const WelcomeScreen = memo(() => {
   const navigation = useTypedNavigation();
 
   const onPressSignup = () => navigation.navigate(WelcomeStackRoutes.SignUp);
-  const onPressLedger = () => navigation.navigate(WelcomeStackRoutes.Ledger);
+  const onPressHardwareWallet = () =>
+    navigation.navigate(WelcomeStackRoutes.Device);
   const onPressSignIn = () => navigation.navigate(WelcomeStackRoutes.SignIn);
 
   return (
     <Welcome
       onPressSignup={onPressSignup}
-      onPressLedger={onPressLedger}
+      onPressHardwareWallet={onPressHardwareWallet}
       onPressSignIn={onPressSignIn}
     />
   );

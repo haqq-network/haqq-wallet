@@ -10,7 +10,7 @@ import {Wallet} from '@app/models/wallet';
 import {
   LedgerStackParamList,
   LedgerStackRoutes,
-} from '@app/screens/WelcomeStack/LedgerStack';
+} from '@app/screens/DeviceStack/LedgerStack';
 import {ModalType} from '@app/types';
 import {WalletType} from '@app/types';
 import {sleep} from '@app/utils';

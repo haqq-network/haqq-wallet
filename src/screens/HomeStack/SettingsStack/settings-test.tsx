@@ -678,7 +678,7 @@ export const SettingsTestScreen = observer(() => {
           try {
             const result = await awaitForScanQr({
               pattern: regexp,
-              type: QRScannerTypeEnum.qr,
+              variant: QRScannerTypeEnum.qr,
             });
             const parsed = await parseDeepLink(result);
             Alert.alert('result', JSON.stringify(parsed, null, 2));

@@ -321,3 +321,5 @@ export const SUPPORTED_UR_TYPE = {
   CRYPTO_ACCOUNT: 'crypto-account',
   ETH_SIGNATURE: 'eth-signature',
 };
+
+export const KEYSTONE_NAME = 'QR Hardware';

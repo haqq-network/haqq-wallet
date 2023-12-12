@@ -151,6 +151,14 @@ export type LedgerWalletInitialData = {
   deviceName: string;
 };
 
+export type KeystoneWalletInitialData = {
+  type: 'keystone';
+  address: HaqqEthereumAddress;
+  hdPath: string;
+  publicKey: string;
+  cryptoHDKeyCBORHex: string;
+};
+
 export type RootStackParamList = {
   chooseAccount:
     | (WalletInitialData & {provider: ProviderMnemonicReactNative})
@@ -674,6 +682,7 @@ export enum WalletType {
   hot = 'hot',
   ledgerBt = 'ledger-bt',
   sss = 'sss',
+  keystone = 'keystone',
 }
 
 export enum WalletCardPattern {
@@ -1076,7 +1085,7 @@ export type Modals = {
   cloudShareNotFound: {onClose?: () => void; wallet: Wallet};
   keystoneScanner: {
     purpose?: 'sign' | 'sync';
-    eventTaskId: string;
+    eventTaskId?: string;
     onClose?: () => void;
   };
   keystoneQR: {

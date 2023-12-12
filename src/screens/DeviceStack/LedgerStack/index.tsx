@@ -2,19 +2,19 @@ import React, {memo, useCallback} from 'react';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import {hideBack, popupScreenOptions} from '@app/helpers';
+import {hideBack, hideHeader, popupScreenOptions} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
+import {LedgerAccountsScreen} from '@app/screens/DeviceStack/LedgerStack/ledger-accounts';
+import {LedgerAgreementScreen} from '@app/screens/DeviceStack/LedgerStack/ledger-agreement';
+import {LedgerBluetoothScreen} from '@app/screens/DeviceStack/LedgerStack/ledger-bluetooth';
+import {LedgerFinishScreen} from '@app/screens/DeviceStack/LedgerStack/ledger-finish';
+import {LedgerScanScreen} from '@app/screens/DeviceStack/LedgerStack/ledger-scan';
+import {LedgerStoreWalletScreen} from '@app/screens/DeviceStack/LedgerStack/ledger-store-wallet';
+import {LedgerVerifyScreen} from '@app/screens/DeviceStack/LedgerStack/ledger-verify';
 import {
   WelcomeStackParamList,
   WelcomeStackRoutes,
 } from '@app/screens/WelcomeStack';
-import {LedgerAccountsScreen} from '@app/screens/WelcomeStack/LedgerStack/ledger-accounts';
-import {LedgerAgreementScreen} from '@app/screens/WelcomeStack/LedgerStack/ledger-agreement';
-import {LedgerBluetoothScreen} from '@app/screens/WelcomeStack/LedgerStack/ledger-bluetooth';
-import {LedgerFinishScreen} from '@app/screens/WelcomeStack/LedgerStack/ledger-finish';
-import {LedgerScanScreen} from '@app/screens/WelcomeStack/LedgerStack/ledger-scan';
-import {LedgerStoreWalletScreen} from '@app/screens/WelcomeStack/LedgerStack/ledger-store-wallet';
-import {LedgerVerifyScreen} from '@app/screens/WelcomeStack/LedgerStack/ledger-verify';
 import {
   OnboardingStack,
   OnboardingStackRoutes,
@@ -33,7 +33,7 @@ export enum LedgerStackRoutes {
 }
 
 export type LedgerStackParamList = WelcomeStackParamList & {
-  [LedgerStackRoutes.LedgerAgreement]: WelcomeStackParamList[WelcomeStackRoutes.Ledger];
+  [LedgerStackRoutes.LedgerAgreement]: WelcomeStackParamList[WelcomeStackRoutes.Device];
   [LedgerStackRoutes.LedgerBluetooth]: undefined;
   [LedgerStackRoutes.LedgerScan]: undefined;
   [LedgerStackRoutes.LedgerAccounts]: {deviceId: string; deviceName: string};
@@ -120,7 +120,7 @@ const LedgerStack = memo(() => {
       <Stack.Screen
         name={LedgerStackRoutes.OnboardingSetupPin}
         component={OnboardingStackGenerated}
-        options={{headerShown: false}}
+        options={hideHeader}
       />
     </Stack.Navigator>
   );

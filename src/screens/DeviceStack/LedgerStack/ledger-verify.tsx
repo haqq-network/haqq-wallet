@@ -9,7 +9,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {
   LedgerStackParamList,
   LedgerStackRoutes,
-} from '@app/screens/WelcomeStack/LedgerStack';
+} from '@app/screens/DeviceStack/LedgerStack';
 import {LEDGER_APP} from '@app/variables/common';
 
 export const LedgerVerifyScreen = memo(() => {

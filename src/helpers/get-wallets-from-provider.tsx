@@ -38,12 +38,17 @@ export async function* getWalletsFromProvider(
   while (canNext) {
     const total = Wallet.getAll().length;
 
-    const name =
+    const defaultName =
       total + index === 0
         ? MAIN_ACCOUNT_NAME
         : getText(I18N.signinStoreWalletAccountNumber, {
             number: `${total + index + 1}`,
           });
+    const keystoneName = getText(I18N.keystoneWalletAccountNumber, {
+      number: `${index + 1}`,
+    });
+    const name =
+      walletType === WalletType.keystone ? keystoneName : defaultName;
 
     const hdPath = genHdPath(index);
 

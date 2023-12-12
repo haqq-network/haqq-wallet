@@ -12,7 +12,7 @@ import {Wallet} from '@app/models/wallet';
 import {
   LedgerStackParamList,
   LedgerStackRoutes,
-} from '@app/screens/WelcomeStack/LedgerStack';
+} from '@app/screens/DeviceStack/LedgerStack';
 import {EthNetwork} from '@app/services';
 import {LedgerAccountItem} from '@app/types';
 import {

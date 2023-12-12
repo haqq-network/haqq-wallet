@@ -33,6 +33,7 @@ import {useTheme} from '@app/hooks';
 import {ModalType, Modals, ModalsListBase} from '@app/types';
 
 import {DomainBlocked} from './domain-blocked';
+import {KeystoneScannerModal} from './keystone/keystone-scanner';
 import {LockedTokensInfo} from './locked-tokens-info';
 import {NotEnoughGas} from './not-enough-gas';
 
@@ -88,6 +89,8 @@ export const ModalWrapper = ({
         return <BluetoothUnauthorized onClose={onCloseModalPress} />;
       case ModalType.qr:
         return <QRModal {...modal} onClose={onCloseModalPress} />;
+      case ModalType.keystoneScanner:
+        return <KeystoneScannerModal {...modal} onClose={onCloseModalPress} />;
       case ModalType.cardDetailsQr:
         return <DetailsQrModal {...modal} onClose={onCloseModalPress} />;
       case ModalType.error:

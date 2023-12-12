@@ -14,11 +14,11 @@ export enum QRScannerTypeEnum {
 }
 
 type QRScannerParams = {
-  type: QRScannerTypeEnum.qr;
+  variant: QRScannerTypeEnum.qr;
 } & Omit<Modals[ModalType.qr], 'taskId'>;
 
 type KeystoneScannerParams = {
-  type: QRScannerTypeEnum.keystone;
+  variant: QRScannerTypeEnum.keystone;
 } & Omit<Modals[ModalType.keystoneScanner], 'taskId'>;
 
 export type AwaitForScanQrParams = QRScannerParams | KeystoneScannerParams;
@@ -58,7 +58,7 @@ export const SCAN_QR_TASK_ID_LENGTH = 10;
 
 export async function awaitForScanQr(
   params: AwaitForScanQrParams = {
-    type: QRScannerTypeEnum.qr,
+    variant: QRScannerTypeEnum.qr,
   },
 ): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -90,9 +90,19 @@ export async function awaitForScanQr(
     app.addListener(succesEventName, onAction);
     app.addListener(errorEventName, onReject);
 
-    return showModal('qr', {
+    return showModal(getModalNameByVariant(params.variant), {
       ...params,
       eventTaskId,
     });
   });
 }
+
+const getModalNameByVariant = (variant: QRScannerTypeEnum) => {
+  switch (variant) {
+    case QRScannerTypeEnum.keystone:
+      return ModalType.keystoneScanner;
+    case QRScannerTypeEnum.qr:
+    default:
+      return ModalType.qr;
+  }
+};

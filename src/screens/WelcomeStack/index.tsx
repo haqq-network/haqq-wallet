@@ -11,7 +11,6 @@ import {basicScreenOptions} from '@app/screens';
 import {NewsDetailScreen} from '@app/screens/HomeStack/HomeNewsStack/news-detail';
 import {WelcomeScreen} from '@app/screens/welcome';
 import {WelcomeNewsScreen} from '@app/screens/welcome-news';
-import {LedgerStack} from '@app/screens/WelcomeStack/LedgerStack';
 import {SignInStack} from '@app/screens/WelcomeStack/SignInStack';
 import {
   SignUpStack,
@@ -20,13 +19,22 @@ import {
 } from '@app/screens/WelcomeStack/SignUpStack';
 import {AdjustEvents} from '@app/types';
 
+import {DeviceStack} from '../DeviceStack';
+import {
+  HomeStackParamList,
+  HomeStackRoutes,
+  inAppBrowserOptions,
+} from '../HomeStack';
+import {InAppBrowserScreen} from '../HomeStack/in-app-browser';
+
 export enum WelcomeStackRoutes {
   Welcome = 'welcome',
   WelcomeNews = 'welcomeNews',
   SignUp = 'signup',
-  Ledger = 'ledger',
+  Device = 'device',
   SignIn = 'signin',
   NewsDetail = 'newsDetail',
+  InAppBrowser = 'inAppBrowser',
 }
 
 export type WelcomeStackParamList = {
@@ -36,7 +44,7 @@ export type WelcomeStackParamList = {
     screen: SignUpStackRoutes.SignupStoreWallet;
     params: SignUpStackParamList[SignUpStackRoutes.SignupStoreWallet];
   };
-  [WelcomeStackRoutes.Ledger]: undefined;
+  [WelcomeStackRoutes.Device]: undefined;
   [WelcomeStackRoutes.SignIn]: undefined;
   [WelcomeStackRoutes.NewsDetail]: {
     id: string;
@@ -44,6 +52,7 @@ export type WelcomeStackParamList = {
     linkEvent: AdjustEvents;
     scrollEvent: AdjustEvents;
   };
+  [WelcomeStackRoutes.InAppBrowser]: HomeStackParamList[HomeStackRoutes.InAppBrowser];
 };
 
 const Stack = createNativeStackNavigator<WelcomeStackParamList>();
@@ -88,14 +97,22 @@ const WelcomeStack = memo(({initialRouteName}: Props) => {
         options={modalOptions}
       />
       <Stack.Screen
-        component={themeUpdaterHOC(LedgerStack)}
-        name={WelcomeStackRoutes.Ledger}
+        component={themeUpdaterHOC(DeviceStack)}
+        name={WelcomeStackRoutes.Device}
         options={modalOptions}
       />
       <Stack.Screen
         component={themeUpdaterHOC(SignInStack)}
         name={WelcomeStackRoutes.SignIn}
         options={modalOptions}
+      />
+      <Stack.Screen
+        name={WelcomeStackRoutes.InAppBrowser}
+        component={themeUpdaterHOC(InAppBrowserScreen)}
+        options={{
+          ...inAppBrowserOptions,
+          presentation: 'fullScreenModal',
+        }}
       />
     </Stack.Navigator>
   );

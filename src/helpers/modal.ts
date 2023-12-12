@@ -29,6 +29,7 @@ class ModalStore {
     }
     this.modals = [...this.modals, newModal];
 
+    Logger.log('modals', this.modals);
     return () => this.hideModal(type);
   };
 

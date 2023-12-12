@@ -7,6 +7,8 @@ import {
   Button,
   ButtonSize,
   ButtonVariant,
+  Icon,
+  IconsName,
   Inline,
   Spacer,
   Text,
@@ -54,11 +56,15 @@ export const WalletCreate = ({
         <Button
           variant={ButtonVariant.second}
           size={ButtonSize.middle}
-          i18n={I18N.walletCreateConnect}
-          iconRight="ledger"
-          iconRightColor={Color.graphicGreen1}
-          onPress={onPressLedger}
-        />
+          onPress={onPressLedger}>
+          <View style={styles.createButtonChildren}>
+            <Text t9 i18n={I18N.walletCreateConnect} color={Color.textGreen1} />
+            <Spacer width={8} />
+            <Icon i22 name={IconsName.keystone} color={Color.graphicGreen1} />
+            <Spacer width={8} />
+            <Icon i22 name={IconsName.ledger} color={Color.graphicGreen1} />
+          </View>
+        </Button>
         <Button
           size={ButtonSize.middle}
           i18n={I18N.walletCreateImport}
@@ -99,5 +105,10 @@ const styles = createTheme({
     paddingVertical: 12,
     lineHeight: 22,
     marginBottom: 8,
+  },
+  createButtonChildren: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

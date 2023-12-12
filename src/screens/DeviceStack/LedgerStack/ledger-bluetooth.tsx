@@ -11,7 +11,7 @@ import {useTypedNavigation} from '@app/hooks';
 import {
   LedgerStackParamList,
   LedgerStackRoutes,
-} from '@app/screens/WelcomeStack/LedgerStack';
+} from '@app/screens/DeviceStack/LedgerStack';
 import {SystemDialog} from '@app/services/system-dialog';
 import {ModalType} from '@app/types';
 

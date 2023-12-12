@@ -1,5 +1,6 @@
 import {ProviderInterface} from '@haqq/provider-base';
 import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
+import {ProviderKeystoneReactNative} from '@haqq/provider-keystone-react-native';
 import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
@@ -98,6 +99,18 @@ export async function getProviderInstanceForWallet(
             storage,
             getPassword: app.getPassword.bind(app),
             account: wallet.accountId!,
+          }),
+        );
+        break;
+      case WalletType.keystone:
+        cache.set(
+          id,
+          new ProviderKeystoneReactNative({
+            cryptoHDKeyCBORHex: wallet.accountId!,
+            awaitForSign: async ({requestID, signRequest}) => {
+              Logger.log({requestID, signRequest});
+              return Buffer.from('');
+            },
           }),
         );
         break;

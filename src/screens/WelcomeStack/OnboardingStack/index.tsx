@@ -7,8 +7,9 @@ import {
 } from '@react-navigation/native-stack';
 
 import {popupScreenOptions} from '@app/helpers';
+import {KeystoneStackRoutes} from '@app/screens/DeviceStack/KeystoneStack';
+import {LedgerStackRoutes} from '@app/screens/DeviceStack/LedgerStack';
 import {WelcomeStackParamList} from '@app/screens/WelcomeStack';
-import {LedgerStackRoutes} from '@app/screens/WelcomeStack/LedgerStack';
 import {OnboardingBiometryScreen} from '@app/screens/WelcomeStack/OnboardingStack/onboarding-biometry';
 import {OnboardingFinishScreen} from '@app/screens/WelcomeStack/OnboardingStack/onboarding-finish';
 import {OnboardingRepeatPinScreen} from '@app/screens/WelcomeStack/OnboardingStack/onboarding-repeat-pin';
@@ -29,7 +30,8 @@ export enum OnboardingStackRoutes {
 type AnyRouteFromParent =
   | SignInStackRoutes
   | SignUpStackRoutes
-  | LedgerStackRoutes;
+  | LedgerStackRoutes
+  | KeystoneStackRoutes;
 
 export type OnboardingStackParamList = WelcomeStackParamList & {
   [OnboardingStackRoutes.OnboardingSetupPin]: WalletInitialData & {

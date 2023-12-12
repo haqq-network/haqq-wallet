@@ -8,7 +8,7 @@ import {useTypedNavigation} from '@app/hooks';
 import {
   LedgerStackParamList,
   LedgerStackRoutes,
-} from '@app/screens/WelcomeStack/LedgerStack';
+} from '@app/screens/DeviceStack/LedgerStack';
 import {ModalType} from '@app/types';
 
 export const LedgerAgreementScreen = memo(() => {

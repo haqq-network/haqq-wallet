@@ -37,4 +37,5 @@ export interface RemoteConfigTypes extends RemoteConfigBalanceTypes {
   pattern_source: string;
   sss_generate_shares_url: string;
   sss_metadata_url: string;
+  keystone_tutorial_url: string;
 }

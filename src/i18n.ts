@@ -1,6 +1,7 @@
 import {getAppVersion, getBuildNumber} from '@app/services/version';
 import {
   CURRENCY_NAME,
+  KEYSTONE_NAME,
   LEDGER_APP,
   PLATFORM_COMPANY,
 } from '@app/variables/common';
@@ -851,6 +852,28 @@ export enum I18N {
   invalidQrCodeSync,
   invalidQrCodeSign,
   keystoneScannerScanning,
+  keystoneConnect,
+  welcomeConnectHardwareWallet,
+  deviceSelectTitle,
+  deviceSelectDescription,
+  deviceSelectLedgerTitle,
+  deviceSelectLedgerDescription,
+  deviceSelectKeystoneDescription,
+  deviceSelectKeystoneTitle,
+  keystoneStoreWalletSaving,
+  keystoneConnectionStepsTitle,
+  keystoneConnectionStepNumber,
+  keystoneConnectionStepDescription1,
+  keystoneConnectionStepDescription2,
+  keystoneConnectionStepDescription3,
+  keystoneConnectionStepSync,
+  keystoneConnectionStepTutorial,
+  keystoneCameraPermissionRequestTitle,
+  keystoneCameraPermissionRequestDescription,
+  keystoneCameraPermissionDeniedTitle,
+  keystoneCameraPermissionDeniedDescription,
+  keystoneCameraPermissionOpenSettings,
+  keystoneWalletAccountNumber,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1073,6 +1096,7 @@ const en: Record<I18N, string> = {
   [I18N.homeEarn]: 'Earn',
   [I18N.homeStaking]: 'Staking',
   [I18N.ledgerConnect]: 'Connect ledger',
+  [I18N.keystoneConnect]: 'Connect keystone',
   [I18N.ledgerChooseAccount]: 'Choose account',
   [I18N.ledgerVerify]: 'Verify',
   [I18N.homeStakingEmpty]:
@@ -1142,6 +1166,7 @@ const en: Record<I18N, string> = {
     'Type or paste your recovery phrase',
   [I18N.signinStoreWalletText]: 'Account recovery in progress',
   [I18N.signinStoreWalletAccountNumber]: 'Account #{{number}}',
+  [I18N.keystoneWalletAccountNumber]: `${KEYSTONE_NAME} #{{number}}`,
   [I18N.settingsAccountRemoveTitle]:
     'Attention. You may lose all your funds! Are you sure you want to delete your account?',
   [I18N.settingsAccountRemoveMessage]:
@@ -1376,6 +1401,7 @@ const en: Record<I18N, string> = {
   [I18N.proposalNoVoting]: 'No {{votingCategory}} proposals',
 
   [I18N.ledgerStoreWalletSaving]: 'Account saving in progress',
+  [I18N.keystoneStoreWalletSaving]: 'Account saving in progress',
   [I18N.ledgerVerifyAddress]:
     'Verify address {{address}} on your Ledger Nano X by pressing both buttons together',
   [I18N.finishProceed]: 'Proceed',
@@ -1852,4 +1878,30 @@ const en: Record<I18N, string> = {
     'Invalid QR code. Please check your hardware and retry.',
   [I18N.unknownQrCode]: 'Invalid QR code. Please retry.',
   [I18N.keystoneScannerScanning]: 'Scanning...',
+  [I18N.welcomeConnectHardwareWallet]: 'Connect Hardware wallet',
+  [I18N.deviceSelectTitle]: 'Choose type of hardware wallet',
+  [I18N.deviceSelectDescription]:
+    'You will be able to manage funds from Ledger or Keystone using HAQQ wallet',
+  [I18N.deviceSelectKeystoneTitle]: 'Keystone',
+  [I18N.deviceSelectKeystoneDescription]:
+    'Scan the QR code with your camera to link your HAQQ wallet to an existing Keystone device',
+  [I18N.deviceSelectLedgerTitle]: 'Ledger',
+  [I18N.deviceSelectLedgerDescription]:
+    'Connect your HAQQ wallet to an existing Ledger device via Bluetooth',
+  [I18N.keystoneConnectionStepsTitle]: 'Keystone Connection Steps',
+  [I18N.keystoneConnectionStepNumber]: 'Step {{idx}}',
+  [I18N.keystoneConnectionStepTutorial]: 'View detailed tutorial',
+  [I18N.keystoneConnectionStepSync]: 'Sync Keystone',
+  [I18N.keystoneConnectionStepDescription1]:
+    'Tap “Software Wallet” at the bottom left corner on the Keystone device.',
+  [I18N.keystoneConnectionStepDescription2]: 'Select “Haqq Wallet”.',
+  [I18N.keystoneConnectionStepDescription3]:
+    'Click on the three-dot button, then click “Connect software wallet” to scan the QR code displayed on the Keystone device.',
+  [I18N.keystoneCameraPermissionOpenSettings]: 'Open settings',
+  [I18N.keystoneCameraPermissionDeniedTitle]: 'No access to Camera',
+  [I18N.keystoneCameraPermissionDeniedDescription]:
+    'The app does not have access to your Camera. Please go to your phone settings and allow the app to use Camera. Without this, we will not be able to scan QR code on your Keystone',
+  [I18N.keystoneCameraPermissionRequestTitle]: 'Allow using Camera',
+  [I18N.keystoneCameraPermissionRequestDescription]:
+    'The application uses the camera to scan the QR code on your Keystone',
 };

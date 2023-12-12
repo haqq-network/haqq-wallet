@@ -133,7 +133,7 @@ export const WalletsWrapper = observer(() => {
   }, [navigation]);
 
   const onPressLedger = useCallback(() => {
-    navigation.navigate(HomeStackRoutes.Ledger);
+    navigation.navigate(HomeStackRoutes.Device);
   }, [navigation]);
 
   const onPressRestore = useCallback(() => {

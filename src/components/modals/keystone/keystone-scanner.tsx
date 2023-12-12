@@ -32,6 +32,8 @@ export type KeystoneScannerModalProps = Modals[ModalType.keystoneScanner];
 const debbouncedVibrate = _.debounce(vibrate, 1000);
 const ERROR_RESET_TIMEOUT = 5000;
 
+const logger = Logger.create('KeystoneScannerModal');
+
 export const KeystoneScannerModal = ({
   purpose = 'sign',
   eventTaskId,
@@ -43,6 +45,11 @@ export const KeystoneScannerModal = ({
   const [isAuthorized, setIsAuthorized] = useState(false);
   const timeoutId = useRef<NodeJS.Timeout | null>(null);
   const theme = useTheme();
+
+  const resetUrDecoder = useCallback(() => {
+    setProgress(0);
+    setURDecoder(new URRegistryDecoder());
+  }, []);
 
   const expectedURTypes = useMemo(() => {
     if (purpose === 'sync') {
@@ -116,21 +123,28 @@ export const KeystoneScannerModal = ({
       if (urDecoder.isError()) {
         Logger.error(urDecoder.resultError());
         handleError(I18N.unknownQrCode);
-      } else if (urDecoder.isSuccess()) {
+        resetUrDecoder();
+      } else if (urDecoder.isComplete() && urDecoder.isSuccess()) {
         const ur = urDecoder.resultUR();
         if (expectedURTypes.includes(ur.type)) {
           const urCborHex = ur.cbor.toString('hex');
           emmitSucces(urCborHex);
-          setProgress(0);
-          setURDecoder(new URRegistryDecoder());
+          resetUrDecoder();
+          onCloseWrapper();
         } else if (purpose === 'sync') {
+          logger.error('Invalid sync QR code');
           handleError(I18N.invalidQrCodeSync);
+          resetUrDecoder();
         } else {
+          logger.error('Invalid sign QR code');
           handleError(I18N.invalidQrCodeSign);
+          resetUrDecoder();
         }
       }
     } catch (err) {
+      logger.error('unknown: ', err);
       handleError(I18N.unknownQrCode);
+      resetUrDecoder();
     }
   }, []);
 

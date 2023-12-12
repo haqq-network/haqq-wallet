@@ -15,7 +15,7 @@ import {useTypedNavigation} from '@app/hooks';
 import {
   LedgerStackParamList,
   LedgerStackRoutes,
-} from '@app/screens/WelcomeStack/LedgerStack';
+} from '@app/screens/DeviceStack/LedgerStack';
 import {ModalType} from '@app/types';
 import {generateUUID} from '@app/utils';
 import {LEDGER_APP} from '@app/variables/common';
