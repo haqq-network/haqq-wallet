@@ -3,10 +3,7 @@ import React, {memo} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {popupScreenOptions} from '@app/helpers';
-import {
-  getNewsDetailAppTitle,
-  getNewsHeader,
-} from '@app/helpers/get-news-detail-title';
+import {getNewsDetailAppTitle} from '@app/helpers/get-news-detail-title';
 import {I18N, getText} from '@app/i18n';
 import {basicScreenOptions} from '@app/screens';
 import {HomeStackParamList} from '@app/screens/HomeStack';
@@ -51,7 +48,8 @@ const HomeNewsStack = memo(() => {
         options={{
           ...popupScreenOptions,
           headerShown: true,
-          header: getNewsHeader,
+          //@ts-ignore
+          disableMargin: true,
           title: getText(I18N.ourNewsTitle),
         }}
       />
