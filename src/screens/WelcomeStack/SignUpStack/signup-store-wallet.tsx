@@ -89,12 +89,11 @@ export const SignUpStoreWalletScreen = observer(() => {
         const walletsTotalCount = Wallet.getSize();
 
         const hdPath = `${ETH_HD_SHORT_PATH}/${walletIndex}`;
-        const total = Wallet.getAll().length;
         const name =
           walletsTotalCount === 0
             ? MAIN_ACCOUNT_NAME
             : getText(I18N.signupStoreWalletAccountNumber, {
-                number: `${total + 1}`,
+                number: `${walletIndex + 1}`,
               });
         const {address} = await provider.getAccountInfo(hdPath);
         const type = getWalletType();
