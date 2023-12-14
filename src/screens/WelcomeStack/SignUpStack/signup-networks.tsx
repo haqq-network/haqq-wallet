@@ -14,6 +14,7 @@ import {
   SignUpStackRoutes,
 } from '@app/screens/WelcomeStack/SignUpStack';
 import {
+  Creds,
   SssProviders,
   onLoginApple,
   onLoginGoogle,
@@ -26,7 +27,7 @@ export const SignupNetworksScreen = memo(() => {
   const onLogin = useCallback(
     async (provider: SssProviders, skipCheck: boolean = false) => {
       try {
-        let creds;
+        let creds: Creds;
         switch (provider) {
           case SssProviders.apple:
             creds = await onLoginApple();
@@ -65,16 +66,29 @@ export const SignupNetworksScreen = memo(() => {
           }
         }
 
-        //@ts-ignore
-        navigation.navigate(nextScreen, {
-          type: 'sss',
-          sssPrivateKey: creds.privateKey,
-          token: creds.token,
-          verifier: creds.verifier,
-          sssCloudShare: null,
-          provider: provider,
-          sssLocalShare: null,
-        });
+        const onNext = () => {
+          //@ts-ignore
+          navigation.navigate(nextScreen, {
+            type: 'sss',
+            sssPrivateKey: creds.privateKey,
+            token: creds.token,
+            verifier: creds.verifier,
+            sssCloudShare: null,
+            provider: provider,
+            sssLocalShare: null,
+          });
+        };
+
+        if (
+          [
+            SignUpStackRoutes.SignupStoreWallet,
+            SignUpStackRoutes.OnboardingSetupPin,
+          ].includes(nextScreen)
+        ) {
+          navigation.navigate(SignUpStackRoutes.SignupImportantInfo, {onNext});
+        } else {
+          onNext();
+        }
       } catch (err) {
         // Logger.log('SSS_ON_LOGIN', err);
         Alert.alert(
