@@ -6,20 +6,14 @@ import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
 import {popupScreenOptions} from '@app/helpers';
 import {useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
-import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
+import {
+  HomeStackParamList,
+  HomeStackRoutes,
+  WalletConnectApprovalStackParamList,
+  WalletConnectApprovalStackRoutes,
+} from '@app/route-types';
 import {WalletConnectApprovalScreen} from '@app/screens/HomeStack/WalletConnectApprovalStack/wallet-connect-approval';
 import {ScreenOptionType} from '@app/types';
-import {WalletConnectApproveConnectionEvent} from '@app/types/wallet-connect';
-
-export enum WalletConnectApprovalStackRoutes {
-  WalletConnectApproval = 'walletConnectApproval',
-}
-
-export type WalletConnectApprovalStackParamList = {
-  [WalletConnectApprovalStackRoutes.WalletConnectApproval]: {
-    event: WalletConnectApproveConnectionEvent;
-  };
-};
 
 const Stack = createNativeStackNavigator<WalletConnectApprovalStackParamList>();
 

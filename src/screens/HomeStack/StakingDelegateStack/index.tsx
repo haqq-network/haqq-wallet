@@ -10,38 +10,13 @@ import {I18N, getText} from '@app/i18n';
 import {
   HomeEarnStackParamList,
   HomeEarnStackRoutes,
-  HomeStackParamList,
+  StakingDelegateStackParamList,
+  StakingDelegateStackRoutes,
 } from '@app/route-types';
 import {StakingDelegateFinishScreen} from '@app/screens/HomeStack/StakingDelegateStack/staking-delegate-finish';
 import {StakingDelegateFormScreen} from '@app/screens/HomeStack/StakingDelegateStack/staking-delegate-form';
 import {StakingDelegatePreviewScreen} from '@app/screens/HomeStack/StakingDelegateStack/staking-delegate-preview';
-import {Balance} from '@app/services/balance';
 import {ScreenOptionType, ValidatorItem} from '@app/types';
-
-export enum StakingDelegateStackRoutes {
-  StakingDelegateForm = 'stakingDelegateForm',
-  StakingDelegatePreview = 'stakingDelegatePreview',
-  StakingDelegateFinish = 'stakingDelegateFinish',
-}
-
-export type StakingDelegateStackParamList = HomeStackParamList & {
-  [StakingDelegateStackRoutes.StakingDelegateForm]: {
-    account: string;
-    validator: ValidatorItem;
-  };
-  [StakingDelegateStackRoutes.StakingDelegatePreview]: {
-    account: string;
-    amount: number;
-    fee: Balance;
-    validator: ValidatorItem;
-  };
-  [StakingDelegateStackRoutes.StakingDelegateFinish]: {
-    txhash: string;
-    validator: ValidatorItem;
-    amount: number;
-    fee: Balance;
-  };
-};
 
 const Stack = createNativeStackNavigator<StakingDelegateStackParamList>();
 

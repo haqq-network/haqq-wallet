@@ -15,7 +15,7 @@ import {Wallet} from '@app/models/wallet';
 import {
   StakingDelegateStackParamList,
   StakingDelegateStackRoutes,
-} from '@app/screens/HomeStack/StakingDelegateStack';
+} from '@app/route-types';
 import {AdjustEvents, WalletType} from '@app/types';
 import {makeID} from '@app/utils';
 

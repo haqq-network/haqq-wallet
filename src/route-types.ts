@@ -694,3 +694,64 @@ export type SignInStackParamList = WelcomeStackParamList & {
         nextScreen?: SignInStackRoutes;
       };
 };
+
+export enum StakingDelegateStackRoutes {
+  StakingDelegateForm = 'stakingDelegateForm',
+  StakingDelegatePreview = 'stakingDelegatePreview',
+  StakingDelegateFinish = 'stakingDelegateFinish',
+}
+
+export type StakingDelegateStackParamList = HomeStackParamList & {
+  [StakingDelegateStackRoutes.StakingDelegateForm]: {
+    account: string;
+    validator: ValidatorItem;
+  };
+  [StakingDelegateStackRoutes.StakingDelegatePreview]: {
+    account: string;
+    amount: number;
+    fee: Balance;
+    validator: ValidatorItem;
+  };
+  [StakingDelegateStackRoutes.StakingDelegateFinish]: {
+    txhash: string;
+    validator: ValidatorItem;
+    amount: number;
+    fee: Balance;
+  };
+};
+
+export enum StakingUnDelegateStackRoutes {
+  StakingUnDelegateForm = 'stakingUnDelegateForm',
+  StakingUnDelegatePreview = 'stakingUnDelegatePreview',
+  StakingUnDelegateFinish = 'stakingUnDelegateFinish',
+}
+
+export type StakingUnDelegateStackParamList = HomeStackParamList & {
+  [StakingUnDelegateStackRoutes.StakingUnDelegateForm]: {
+    account: string;
+    validator: ValidatorItem;
+    maxAmount: number;
+  };
+  [StakingUnDelegateStackRoutes.StakingUnDelegatePreview]: {
+    account: string;
+    amount: number;
+    fee: Balance;
+    validator: ValidatorItem;
+  };
+  [StakingUnDelegateStackRoutes.StakingUnDelegateFinish]: {
+    txhash: string;
+    validator: ValidatorItem;
+    amount: number;
+    fee: Balance;
+  };
+};
+
+export enum WalletConnectApprovalStackRoutes {
+  WalletConnectApproval = 'walletConnectApproval',
+}
+
+export type WalletConnectApprovalStackParamList = {
+  [WalletConnectApprovalStackRoutes.WalletConnectApproval]: {
+    event: WalletConnectApproveConnectionEvent;
+  };
+};
