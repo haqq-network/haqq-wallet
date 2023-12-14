@@ -147,6 +147,7 @@
     "text-encoding": "0.7.0",
     "url": "0.11.1",
     "url-parse": "^1.5.10",
+    "use-timer": "2.0.1",
     "validate.js": "0.13.1",
     "vm-browserify": "1.1.2"
   },

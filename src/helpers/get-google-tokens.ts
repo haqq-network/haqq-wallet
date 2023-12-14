@@ -42,9 +42,13 @@ export async function getGoogleTokens() {
     await GoogleSignin.signIn();
   }
 
-  await GoogleSignin.addScopes({
-    scopes: ['https://www.googleapis.com/auth/drive.file'],
-  });
+  try {
+    await GoogleSignin.addScopes({
+      scopes: ['https://www.googleapis.com/auth/drive.file'],
+    });
+  } catch (err) {
+    //
+  }
   const tokens = await GoogleSignin.getTokens();
 
   // Logger.log('SSS_GOOGLE_TOKENS', JSON.stringify(tokens));

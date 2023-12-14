@@ -105,11 +105,17 @@ export const SignupNetworkExistsScreen = memo(() => {
               ? SignUpStackRoutes.SignupStoreWallet
               : SignUpStackRoutes.OnboardingSetupPin;
 
-            // @ts-ignore
-            navigation.navigate(nextScreen, {
-              ...route.params,
-              type: 'sss',
-              action: 'replace',
+            const onNext = () => {
+              // @ts-ignore
+              navigation.navigate(nextScreen, {
+                ...route.params,
+                type: 'sss',
+                action: 'replace',
+              });
+            };
+
+            navigation.navigate(SignUpStackRoutes.SignupImportantInfo, {
+              onNext,
             });
           },
         },

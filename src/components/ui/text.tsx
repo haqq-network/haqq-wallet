@@ -17,7 +17,11 @@ import {ColorType, FontT} from '@app/types';
 
 export type TextValue =
   | {children: React.ReactNode; i18n?: undefined; i18params?: undefined}
-  | {i18n: I18N; i18params?: Record<string, string>; children?: undefined};
+  | {
+      i18n: I18N;
+      i18params?: Record<string, string>;
+      children?: React.ReactNode;
+    };
 
 export type TextProps = Omit<RNTextProps, 'style' | 'children'> & {
   t0?: boolean;
@@ -46,6 +50,7 @@ export type TextProps = Omit<RNTextProps, 'style' | 'children'> & {
   right?: boolean;
   color?: ColorType;
   style?: StyleProp<TextStyle>;
+  showChildren?: boolean;
 } & TextValue;
 
 export const Text = ({
@@ -78,6 +83,7 @@ export const Text = ({
   center,
   right,
   color,
+  showChildren,
   ...props
 }: TextProps) => {
   const value = useMemo(
@@ -120,6 +126,7 @@ export const Text = ({
       ]}
       {...props}>
       {value}
+      {!!showChildren && children}
     </RNText>
   );
 };
@@ -185,6 +192,7 @@ const sfProTextBold700: FontT = Platform.select({
 });
 
 const page = createTheme({
+  bold: {fontWeight: 'bold'},
   center: {
     textAlign: 'center',
   },

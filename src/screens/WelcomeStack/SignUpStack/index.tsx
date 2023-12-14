@@ -15,6 +15,7 @@ import {
   OnboardingStackRoutes,
 } from '@app/screens/WelcomeStack/OnboardingStack';
 import {SignUpAgreementScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-agreement';
+import {SignUpImportantInfoScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-important-info';
 import {SignupNetworkExistsScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-network-exists';
 import {SignupNetworksScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-networks';
 import {SignupPinScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-pin';
@@ -30,6 +31,7 @@ export enum SignUpStackRoutes {
   OnboardingSetupPin = 'onboardingSetupPin',
   SignupStoreWallet = 'signupStoreWallet',
   SignupCloudProblems = 'cloudProblems',
+  SignupImportantInfo = 'signupImportantInfo',
 }
 
 export type SignUpStackParamList = WelcomeStackParamList & {
@@ -50,6 +52,9 @@ export type SignUpStackParamList = WelcomeStackParamList & {
   };
   [SignUpStackRoutes.SignupCloudProblems]: {
     sssProvider: SssProviders;
+    onNext: () => void;
+  };
+  [SignUpStackRoutes.SignupImportantInfo]: {
     onNext: () => void;
   };
 };
@@ -132,6 +137,10 @@ const SignUpStack = memo(() => {
         name={SignUpStackRoutes.SignupCloudProblems}
         component={CloudProblemsScreen}
         options={hideBack}
+      />
+      <Stack.Screen
+        name={SignUpStackRoutes.SignupImportantInfo}
+        component={SignUpImportantInfoScreen}
       />
 
       <Stack.Screen

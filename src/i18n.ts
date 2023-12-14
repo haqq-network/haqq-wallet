@@ -851,6 +851,21 @@ export enum I18N {
   verifyCloudProblemsNoReadError,
   verifyCloudProblemsNoWriteError,
   verifyCloudProblemsRestartPhone,
+  sssReplaceAccountTitle,
+  sssReplaceAccountDescription1,
+  sssReplaceAccountDescription2,
+  sssReplaceAccountButton,
+  signupImportantInfoTitle,
+  signupImportantInfoSecondaryButton,
+  signupImportantInfoPrimaryButton,
+
+  signupImportantInfoDesc1_1,
+  signupImportantInfoDesc1_2,
+  signupImportantInfoDesc2_1,
+  signupImportantInfoDesc2_2,
+  signupImportantInfoDesc3_1,
+  signupImportantInfoDesc3_2,
+  signupImportantInfoDesc4,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1851,4 +1866,25 @@ const en: Record<I18N, string> = {
   [I18N.verifyCloudProblemsNoWriteError]: "Can't write data",
   [I18N.verifyCloudProblemsRestartPhone]:
     "Oops! There's a little problem with Google Services. Please turn off your phone and then turn it back on. After that, check if there are any updates for your system.",
+  [I18N.sssReplaceAccountTitle]: 'Replace your account?',
+  [I18N.sssReplaceAccountDescription1]:
+    'Account linked to your {{provider}} id',
+  [I18N.sssReplaceAccountDescription2]:
+    ' will be lost and you will not be able to access assets on this account',
+  [I18N.sssReplaceAccountButton]: 'Confirm Erase',
+  [I18N.signupImportantInfoTitle]: 'Important information',
+  [I18N.signupImportantInfoSecondaryButton]: 'Read more',
+  [I18N.signupImportantInfoPrimaryButton]: 'Continue',
+  [I18N.signupImportantInfoDesc1_1]:
+    'Your mnemonic phrase will be split into three shares for safety.',
+  [I18N.signupImportantInfoDesc1_2]:
+    ' To use the phrase again, you need two of these three parts. Only you can reach these parts, making it very safe. Nobody else can get into your wallet.\n',
+  [I18N.signupImportantInfoDesc2_1]: 'If you lose your phone',
+  [I18N.signupImportantInfoDesc2_2]:
+    ", delete the app, or forget your PIN, don't worry! You can get your phrase back using your cloud storage and social media login.\n",
+  [I18N.signupImportantInfoDesc3_1]: 'If you remove part of the phrase',
+  [I18N.signupImportantInfoDesc3_2]:
+    ' from the cloud, the app will let you know and help fix it.\n',
+  [I18N.signupImportantInfoDesc4]:
+    "It's important to keep your Google or Apple login details safe. If you lose them, or if your phone is stolen, you won't be able to get your wallet back using your social media login.",
 };
