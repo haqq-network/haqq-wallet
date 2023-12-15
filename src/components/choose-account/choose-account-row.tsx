@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {View} from 'react-native';
 
@@ -8,6 +8,7 @@ import {
   ButtonSize,
   ButtonVariant,
   DataContent,
+  First,
   Icon,
   IconsName,
   Spacer,
@@ -16,6 +17,7 @@ import {
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
+import {Wallet} from '@app/models/wallet';
 import {ChooseAccountItem} from '@app/types';
 
 export type LedgerAccountsRowProps = {
@@ -32,11 +34,12 @@ export const ChooseAccountRow = ({
   const onPressButton = useCallback(() => {
     onPress(item);
   }, [onPress, item]);
+  const isWalletCreated = useMemo(() => !!Wallet.getById(item.address), [item]);
 
   return (
     <View style={styles.container}>
       <View style={styles.index}>
-        {!!item.exists && (
+        {(!!item.exists || isWalletCreated) && (
           <Icon
             i16
             name={IconsName.check}
@@ -54,15 +57,26 @@ export const ChooseAccountRow = ({
         style={item.exists ? styles.selectedButton : {}}
       />
       <Spacer />
-      {item.exists ? (
-        <Button
-          variant={ButtonVariant.warning}
-          size={ButtonSize.small}
-          i18n={I18N.cancel}
-          onPress={onPressButton}
-          testID={`wallet_remove_${index}`}
-        />
-      ) : (
+      <First>
+        {isWalletCreated && (
+          <Button
+            disabled
+            variant={ButtonVariant.second}
+            size={ButtonSize.small}
+            i18n={I18N.cancel}
+          />
+        )}
+
+        {item.exists && (
+          <Button
+            variant={ButtonVariant.warning}
+            size={ButtonSize.small}
+            i18n={I18N.cancel}
+            onPress={onPressButton}
+            testID={`wallet_remove_${index}`}
+          />
+        )}
+
         <Button
           variant={ButtonVariant.second}
           size={ButtonSize.small}
@@ -70,7 +84,7 @@ export const ChooseAccountRow = ({
           onPress={onPressButton}
           testID={`wallet_add_${index}`}
         />
-      )}
+      </First>
     </View>
   );
 };
