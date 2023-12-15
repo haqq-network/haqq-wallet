@@ -104,7 +104,7 @@ export const QRModal = ({onClose, eventTaskId, pattern}: QRModalProps) => {
   const handleQRData = useCallback(
     async (data: string) => {
       vibrate(HapticEffects.selection);
-      Logger.log('qr raw string: ', data);
+      // Logger.log('qr raw string: ', data);
 
       if (typeof pattern === 'string') {
         try {

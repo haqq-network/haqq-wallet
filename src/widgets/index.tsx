@@ -64,27 +64,24 @@ export const WidgetRoot = memo(({lastUpdate}: {lastUpdate: number}) => {
 
   const [data, setData] = useState<IWidget[]>(JSON.parse(dataCached));
 
-  const requestMarkup = useCallback(
-    async (blockRequest?: string) => {
-      Logger.log('widget requestMarkup', {blockRequest});
-      const appInfo = await getAppInfo();
-      const response = await Backend.instance.markup('home', appInfo);
+  const requestMarkup = useCallback(async () => {
+    // Logger.log('widget requestMarkup', {blockRequest});
+    const appInfo = await getAppInfo();
+    const response = await Backend.instance.markup('home', appInfo);
 
-      if (!response.blocks) {
-        return Logger.error('widget request: not found blocks', response);
-      }
+    if (!response.blocks) {
+      return Logger.error('widget request: not found blocks', response);
+    }
 
-      const blocks = [response.blocks];
+    const blocks = [response.blocks];
 
-      const blocksAreEqual = JSON.stringify(blocks) === JSON.stringify(data);
+    const blocksAreEqual = JSON.stringify(blocks) === JSON.stringify(data);
 
-      if (!blocksAreEqual) {
-        setData(blocks);
-        VariablesString.set('widget_blocks', JSON.stringify(blocks));
-      }
-    },
-    [data],
-  );
+    if (!blocksAreEqual) {
+      setData(blocks);
+      VariablesString.set('widget_blocks', JSON.stringify(blocks));
+    }
+  }, [data]);
 
   useEffect(() => {
     requestMarkup();

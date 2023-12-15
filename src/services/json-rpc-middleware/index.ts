@@ -29,10 +29,10 @@ export const createJsonRpcMiddleware = ({
           code: -32601,
           message: 'Method not implemented',
         };
-        logger.log(
-          `${req.method} not implemented, params:`,
-          JSON.stringify(req.params, null, 2),
-        );
+        // logger.log(
+        //   `${req.method} not implemented, params:`,
+        //   JSON.stringify(req.params, null, 2),
+        // );
         Logger.captureException(res.error, 'createJsonRpcMiddleware', {
           req,
           res,
@@ -64,14 +64,14 @@ export const createJsonRpcMiddleware = ({
 };
 
 export const createJsonRpcLoggerMiddleWare = () => {
-  return createAsyncMiddleware(async (req, res) => {
-    logger.log(
-      `${req.id} ${req.method} \nPARAMS:  ${JSON.stringify(
-        req.params || '{}',
-        null,
-        2,
-      )}\nRESULT: ${JSON.stringify(res.result || res.error || '{}', null, 2)}
-          `,
-    );
+  return createAsyncMiddleware(async () => {
+    // logger.log(
+    //   `${req.id} ${req.method} \nPARAMS:  ${JSON.stringify(
+    //     req.params || '{}',
+    //     null,
+    //     2,
+    //   )}\nRESULT: ${JSON.stringify(res.result || res.error || '{}', null, 2)}
+    //       `,
+    // );
   });
 };

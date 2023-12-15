@@ -161,7 +161,7 @@ const handleGeolocationRequest = async (
     return true;
   };
 
-  Logger.log('data', JSON.stringify(data, null, 2));
+  // Logger.log('data', JSON.stringify(data, null, 2));
 
   Logger.log(
     'BrowserPermission.getAll()',
