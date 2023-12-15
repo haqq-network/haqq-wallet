@@ -3,6 +3,7 @@ import React, {memo, useCallback} from 'react';
 import {METADATA_URL} from '@env';
 
 import {SssMigrateNetworks} from '@app/components/sss-migrate-networks';
+import {app} from '@app/contexts';
 import {getMetadataValueWrapped} from '@app/helpers/wrappers/get-metadata-value';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {ErrorHandler} from '@app/models/error-handler';
