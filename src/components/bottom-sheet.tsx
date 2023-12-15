@@ -324,7 +324,8 @@ const page = createTheme({
   space: {flex: 1},
   background: {
     backgroundColor: Color.bg9,
-    bottom: -200,
+    bottom: -150,
+    right: -150,
   },
   animateView: {
     justifyContent: 'flex-end',

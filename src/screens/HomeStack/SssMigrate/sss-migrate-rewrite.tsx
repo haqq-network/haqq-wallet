@@ -55,7 +55,7 @@ export const SssMigrateRewriteScreen = memo(() => {
   ]);
 
   const onCancel = useCallback(() => {
-    navigation.goBack();
+    navigation.pop(2);
   }, [navigation]);
 
   return (
