@@ -191,6 +191,9 @@ const getTestModals = (): TestModals => {
       onClose: () => logger.log('cloudShareNotFound closed'),
       wallet: wallets[0],
     },
+    sssLimitReached: {
+      onClose: () => logger.log('sssLimitReached closed'),
+    },
   };
 
   if (wallets.length) {

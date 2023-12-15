@@ -1074,6 +1074,7 @@ export type Modals = {
     onClose?: () => void;
   };
   cloudShareNotFound: {onClose?: () => void; wallet: Wallet};
+  sssLimitReached: {onClose?: () => void};
 };
 
 export enum ModalType {
@@ -1104,6 +1105,7 @@ export enum ModalType {
   cloudVerification = 'cloudVerification',
   viewErrorDetails = 'viewErrorDetails',
   cloudShareNotFound = 'cloudShareNotFound',
+  sssLimitReached = 'sssLimitReached',
 }
 
 export interface NftAttribute {

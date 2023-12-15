@@ -76,6 +76,11 @@ export const SignUpStoreWalletScreen = observer(() => {
       try {
         const provider = await getCurrentProvider();
 
+        // sssLimitReached
+        if (!provider.getIdentifier) {
+          return;
+        }
+
         const accountWallets = Wallet.getForAccount(provider.getIdentifier());
         const nextHdPathIndex = accountWallets.reduce((memo, wallet) => {
           const segments = wallet.path?.split('/') ?? ['0'];
