@@ -94,10 +94,6 @@ export const SignupNetworkExistsScreen = memo(() => {
       getText(I18N.signupNetworkExitsAlertDescription),
       [
         {
-          text: getText(I18N.cancel),
-          style: 'cancel',
-        },
-        {
           text: getText(I18N.erase),
           style: 'destructive',
           onPress: () => {
@@ -118,6 +114,10 @@ export const SignupNetworkExistsScreen = memo(() => {
               onNext,
             });
           },
+        },
+        {
+          text: getText(I18N.cancel),
+          style: 'cancel',
         },
       ],
     );
