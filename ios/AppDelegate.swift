@@ -44,69 +44,15 @@ func clearKeychainIfNecessary() {
   }
 }
 
-let OVERVIEW_TAG = 10000;
-let OVERVIEW_FADE_DURATION = 0.5;
-
 @UIApplicationMain
 class AppDelegate: RCTAppDelegate {
-  var overview: RCTRootView!;
-
   override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-    self.moduleName = getModuleName()
+    moduleName = getModuleName()
     clearKeychainIfNecessary();
     FirebaseApp.configure()
     let app = super.application(application, didFinishLaunchingWithOptions: launchOptions);
-    initOverview();
-    startObservingAppState();
     RNSplashScreen.show();
     return app;
-  }
-
-  // call after `super.application`
-  func initOverview(){
-    overview = RCTRootView.init(frame: self.window.frame, bridge: self.bridge, moduleName: "overview", initialProperties: self.initialProps);
-    overview.tag = OVERVIEW_TAG;
-    overview.alpha = 0;
-  }
-
-  private func startObservingAppState() {
-    NotificationCenter.default.addObserver(self, selector: #selector(onAppBackground), name: UIApplication.willResignActiveNotification, object: nil)
-    NotificationCenter.default.addObserver(self, selector: #selector(onAppActive), name: UIApplication.didBecomeActiveNotification, object: nil)
-  }
-
-  private func stopObservingAppState() {
-    NotificationCenter.default.removeObserver(self)
-  }
-
-  @objc private func onAppBackground(notification: NSNotification) {
-    showOverview();
-  }
-
-  @objc private func onAppActive(notification: NSNotification) {
-    hideOverview();
-  }
-
-  func showOverview() {
-    let systemDialogEnabled = BooleanConfig.shared.storage[.systemDialogEnabled];
-    if(systemDialogEnabled == true){
-      return;
-    }
-    self.window?.addSubview(overview)
-    UIView.animate(withDuration: OVERVIEW_FADE_DURATION, animations: {
-      self.overview.alpha = 1
-    })
-  }
-
-  func hideOverview() {
-    guard let view = self.window.viewWithTag(OVERVIEW_TAG) else {
-      return
-    }
-
-    UIView.animate(withDuration: OVERVIEW_FADE_DURATION, animations: {
-      view.alpha = 0
-    }) { _ in
-      view.removeFromSuperview()
-    }
   }
 
   override func sourceURL(for bridge: RCTBridge!) -> URL! {

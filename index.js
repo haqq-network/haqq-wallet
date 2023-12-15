@@ -3,7 +3,7 @@
  */
 import './global';
 import '@ethersproject/shims';
-import '@walletconnect/react-native-compat'
+import '@walletconnect/react-native-compat';
 import {AppRegistry, I18nManager, LogBox} from 'react-native';
 
 import {ENVIRONMENT, SENTRY_DSN} from '@env';
@@ -12,7 +12,6 @@ import * as Sentry from '@sentry/react-native';
 import {name as appName} from './app.json';
 import {App} from './src/app';
 import './src/event-actions';
-import {Overview} from './src/overview';
 import {Jailbreak} from './src/jailbreak';
 import messaging from '@react-native-firebase/messaging';
 
@@ -27,8 +26,8 @@ if (!global.BigInt) {
 import './src/event-actions';
 import {IS_IOS} from '@app/variables/common';
 import {DEBUG_VARS} from '@app/debug-vars';
-import { Feature, isFeatureEnabled } from '@app/helpers/is-feature-enabled';
-import { enableScreens,enableFreeze } from 'react-native-screens';
+import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
+import {enableScreens, enableFreeze} from 'react-native-screens';
 
 enableScreens();
 enableFreeze(true);
@@ -108,5 +107,4 @@ const Wrapped = Sentry.wrap(App);
 
 AppRegistry.registerComponent(appName, () => Wrapped);
 
-AppRegistry.registerComponent('overview', () => Overview);
 AppRegistry.registerComponent('jailbreak', () => Jailbreak);

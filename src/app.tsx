@@ -19,6 +19,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
 import {Color} from '@app/colors';
+import {AppScreenSecurityOverview} from '@app/components/app-screen-security-overview';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {createTheme, hideModal, showModal} from '@app/helpers';
@@ -201,6 +202,7 @@ export const App = () => {
                 isPinReseted={isPinReseted}
                 isReady={initialized}
               />
+              <AppScreenSecurityOverview />
             </NavigationContainer>
           </MenuProvider>
         </SafeAreaProvider>
