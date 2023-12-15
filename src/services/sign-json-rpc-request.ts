@@ -2,6 +2,7 @@ import {TransactionRequest} from '@haqq/provider-base';
 import {getSdkError} from '@walletconnect/utils';
 
 import {app} from '@app/contexts';
+import {DEBUG_VARS} from '@app/debug-vars';
 import {getProviderInstanceForWallet, hideModal} from '@app/helpers';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {I18N, getText} from '@app/i18n';
@@ -17,12 +18,12 @@ import {
 } from '@app/utils';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
-// const logger = Logger.create('SignJsonRpcRequest', {
-//   enabled:
-//     DEBUG_VARS.enableWalletConnectLogger ||
-//     DEBUG_VARS.enableAwaitJsonRpcSignLogger ||
-//     DEBUG_VARS.enableWeb3BrowserLogger,
-// });
+const logger = Logger.create('SignJsonRpcRequest', {
+  enabled:
+    DEBUG_VARS.enableWalletConnectLogger ||
+    DEBUG_VARS.enableAwaitJsonRpcSignLogger ||
+    DEBUG_VARS.enableWeb3BrowserLogger,
+});
 
 export class SignJsonRpcRequest {
   /**
@@ -212,7 +213,7 @@ export class SignJsonRpcRequest {
       throw new Error('sign result is undefined');
     }
 
-    // logger.log('✅ signEIP155Request result:', result, result.length);
+    logger.log('✅ signEIP155Request result:', result, result.length);
 
     return result;
   }

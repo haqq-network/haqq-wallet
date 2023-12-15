@@ -23,10 +23,10 @@ const BROWSERS_FN = {
   [DeeplinkUrlKey.web3browser]: openWeb3Browser,
 };
 
-// const logger = Logger.create('on-deep-link', {
-//   enabled: __DEV__ || app.isDeveloper || app.isTesterMode,
-//   stringifyJson: true,
-// });
+const logger = Logger.create('on-deep-link', {
+  enabled: __DEV__ || app.isDeveloper || app.isTesterMode,
+  stringifyJson: true,
+});
 
 const handleAddress = async (
   address: string,
@@ -86,7 +86,7 @@ export async function onDeepLink(
 
     if (link.startsWith(`${DeeplinkProtocol.haqq}:`)) {
       const url = new Url<ParsedQuery>(link, true);
-      // logger.log('url', url);
+      logger.log('url', url);
 
       const [key, ...params] = (url.host || url.pathname || url.hostname).split(
         ':',
