@@ -9967,6 +9967,7 @@ __metadata:
     typescript-coverage-report: 0.8.0
     url: 0.11.1
     url-parse: ^1.5.10
+    use-timer: 2.0.1
     validate.js: 0.13.1
     vm-browserify: 1.1.2
   languageName: unknown
@@ -17726,6 +17727,16 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
   checksum: 5c639e0f8da3521d605f59ce5be9e094ca772bd44a4ce7322b055a6f58eeed8dda3c94cabd90c7a41fb6fa852210092008afe48f7038792fd47501f33299116a
+  languageName: node
+  linkType: hard
+
+"use-timer@npm:2.0.1":
+  version: 2.0.1
+  resolution: "use-timer@npm:2.0.1"
+  peerDependencies:
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: cf936902bee00f612d9db5b73af3cd87893dcabe69c92bae7afb44d6700abe17db8737f46f51213d1f6ce6ad58f3a3fa57a4615d34434b887e30413e4bf865f9
   languageName: node
   linkType: hard
 
