@@ -11,6 +11,7 @@ import {
   ViewProps,
   ViewStyle,
 } from 'react-native';
+import {useTimer} from 'use-timer';
 
 import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
@@ -65,6 +66,7 @@ export type ButtonProps = Omit<ViewProps, 'children'> & {
   color?: ColorType;
   circleBorders?: boolean;
   trackLoading?: boolean;
+  timer?: number;
 } & ButtonValue &
   ButtonRightIconProps &
   ButtonLeftIconProps;
@@ -107,9 +109,25 @@ export const Button = ({
   iconRightStyle,
   children,
   trackLoading = false,
+  timer = 0,
   ...props
 }: ButtonProps) => {
   const [loadFlag, setLoading] = React.useState(loading);
+  const {time, start, status} = useTimer({
+    initialTime: timer,
+    timerType: 'DECREMENTAL',
+    endTime: 0,
+  });
+
+  React.useEffect(() => {
+    if (timer > 0) {
+      start();
+    }
+  }, []);
+
+  const isTimerActive = useMemo(() => {
+    return status === 'RUNNING';
+  }, [status]);
 
   const onPressButton = useCallback(async () => {
     if (trackLoading) {
@@ -155,8 +173,18 @@ export const Button = ({
           styles.containedDisabledContainer,
         color && {backgroundColor: getColor(color)},
         style,
+        isTimerActive && {opacity: 0.5},
       ]),
-    [variant, size, circleBorders, error, disabled, color, style],
+    [
+      variant,
+      size,
+      circleBorders,
+      error,
+      disabled,
+      color,
+      style,
+      isTimerActive,
+    ],
   );
 
   const textStyleFlatten = useMemo(
@@ -206,9 +234,9 @@ export const Button = ({
               t12={size === ButtonSize.small}
               style={textStyleFlatten}
               color={textColor}
-              i18n={i18n}
+              i18n={isTimerActive ? undefined : i18n}
               i18params={i18params}>
-              {title}
+              {isTimerActive ? time : title}
             </Text>
           </First>
           {iconRight && (

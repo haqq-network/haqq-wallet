@@ -3,13 +3,13 @@ import React, {memo, useCallback} from 'react';
 import {METADATA_URL} from '@env';
 import {ITEM_KEY} from '@haqq/provider-sss-react-native/dist/constants';
 import {accountInfo} from '@haqq/provider-web3-utils';
-import {getMetadataValue} from '@haqq/shared-react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
 import {SigninNetworks} from '@app/components/signin-networks';
 import {app} from '@app/contexts';
 import {SssError} from '@app/helpers/sss-error';
 import {verifyCloud} from '@app/helpers/verify-cloud';
+import {getMetadataValueWrapped} from '@app/helpers/wrappers/get-metadata-value';
 import {useTypedNavigation} from '@app/hooks';
 import {
   SignInStackParamList,
@@ -43,7 +43,7 @@ export const SignInNetworksScreen = memo(() => {
           throw new SssError('signinNotExists');
         }
 
-        const walletInfo = await getMetadataValue(
+        const walletInfo = await getMetadataValueWrapped(
           RemoteConfig.get_env('sss_metadata_url', METADATA_URL) as string,
           creds.privateKey,
           'socialShareIndex',

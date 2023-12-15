@@ -1092,6 +1092,7 @@ export type Modals = {
   keystoneQR: {
     signRequestHex: string;
   };
+  sssLimitReached: {onClose?: () => void};
 };
 
 export enum ModalType {
@@ -1124,6 +1125,7 @@ export enum ModalType {
   cloudShareNotFound = 'cloudShareNotFound',
   keystoneScanner = 'keystoneScanner',
   keystoneQR = 'keystoneQR',
+  sssLimitReached = 'sssLimitReached',
 }
 
 export interface NftAttribute {

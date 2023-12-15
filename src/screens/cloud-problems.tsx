@@ -1,14 +1,14 @@
 import React, {memo} from 'react';
 
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
-
 import {CloudProblems} from '@app/components/cloud-problems';
+import {cleanGoogle, getGoogleTokens} from '@app/helpers/get-google-tokens';
 import {verifyCloud} from '@app/helpers/verify-cloud';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {
   SignInStackParamList,
   SignInStackRoutes,
 } from '@app/screens/WelcomeStack/SignInStack';
+import {SssProviders} from '@app/services/provider-sss';
 
 export const CloudProblemsScreen = memo(() => {
   const navigation = useTypedNavigation<SignInStackParamList>();
@@ -18,10 +18,9 @@ export const CloudProblemsScreen = memo(() => {
   >();
   const {sssProvider, onNext} = route.params;
   const onPrimaryPress = async () => {
-    try {
-      Promise.all([GoogleSignin.revokeAccess(), GoogleSignin.signOut()]);
-    } catch (err) {
-      Logger.log('GoogleSignin', err);
+    if (route.params.sssProvider === SssProviders.google) {
+      await cleanGoogle();
+      await getGoogleTokens();
     }
     const hasPermissions = await verifyCloud(sssProvider);
     if (hasPermissions) {

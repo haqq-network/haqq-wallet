@@ -48,6 +48,8 @@ const HomeNewsStack = memo(() => {
         options={{
           ...popupScreenOptions,
           headerShown: true,
+          //@ts-ignore
+          disableMargin: true,
           title: getText(I18N.ourNewsTitle),
         }}
       />

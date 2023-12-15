@@ -1,12 +1,13 @@
 import React, {memo, useCallback, useRef} from 'react';
 
 import {METADATA_URL} from '@env';
-import {decryptShare, getMetadataValue} from '@haqq/shared-react-native';
+import {decryptShare} from '@haqq/shared-react-native';
 
 import {PinInterface} from '@app/components/pin';
 import {SssPin} from '@app/components/sss-pin';
 import {app} from '@app/contexts';
 import {SssError} from '@app/helpers/sss-error';
+import {getMetadataValueWrapped} from '@app/helpers/wrappers/get-metadata-value';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N, getText} from '@app/i18n';
@@ -41,7 +42,7 @@ export const SignupPinScreen = memo(() => {
             throw new SssError('signinNotExists');
           }
 
-          const securityQuestion = await getMetadataValue(
+          const securityQuestion = await getMetadataValueWrapped(
             RemoteConfig.get_env('sss_metadata_url', METADATA_URL) as string,
             route.params.sssPrivateKey,
             'socialShareIndex',

@@ -7,27 +7,51 @@ export async function hasGoogleToken() {
   return !!exists;
 }
 
-export async function getGoogleTokens() {
+export const setupGoogle = async () => {
   GoogleSignin.configure({
     webClientId: `${GOOGLE_SIGNIN_WEB_CLIENT_ID}.apps.googleusercontent.com`,
     scopes: [
       'openid',
       'profile',
-      'https://www.googleapis.com/auth/drive.file',
       'https://www.googleapis.com/auth/userinfo.email',
     ],
   });
+};
+
+export const cleanGoogle = async () => {
+  await setupGoogle();
+  try {
+    await GoogleSignin.revokeAccess();
+  } catch (err) {
+    Logger.log('GoogleSignin.revokeAccess', err);
+  }
+  try {
+    await GoogleSignin.signOut();
+  } catch (err) {
+    Logger.log('GoogleSignin.signOut', err);
+  }
+};
+
+export async function getGoogleTokens() {
+  await setupGoogle();
 
   try {
     await GoogleSignin.signInSilently();
   } catch (e) {
-    Logger.log('SSS_GOOGLE_ERROR', 'getGoogleTokens ' + JSON.stringify(e));
+    // Logger.log('SSS_GOOGLE_ERROR', 'getGoogleTokens ' + JSON.stringify(e));
     await GoogleSignin.signIn();
   }
 
+  try {
+    await GoogleSignin.addScopes({
+      scopes: ['https://www.googleapis.com/auth/drive.file'],
+    });
+  } catch (err) {
+    //
+  }
   const tokens = await GoogleSignin.getTokens();
 
-  Logger.log('SSS_GOOGLE_TOKENS', JSON.stringify(tokens));
+  // Logger.log('SSS_GOOGLE_TOKENS', JSON.stringify(tokens));
 
   return {
     accessToken: tokens.accessToken,

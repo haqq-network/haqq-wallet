@@ -9,12 +9,13 @@ import {ITEM_KEY} from '@haqq/provider-sss-react-native/dist/constants';
 import {accountInfo, generateEntropy} from '@haqq/provider-web3-utils';
 import {
   encryptShare,
-  getMetadataValue,
   jsonrpcRequest,
   setMetadataValue,
 } from '@haqq/shared-react-native';
 import BN from 'bn.js';
 import EncryptedStorage from 'react-native-encrypted-storage';
+
+import {getMetadataValueWrapped} from '@app/helpers/wrappers/get-metadata-value';
 
 export type SharesResponse = {
   isNew: boolean;
@@ -47,7 +48,7 @@ export async function providerSssInitialize(
 
   if (socialPrivateKey) {
     Logger.log('socialPrivateKey', socialPrivateKey);
-    const socialShareIndex = await getMetadataValue(
+    const socialShareIndex = await getMetadataValueWrapped(
       options.metadataUrl,
       socialPrivateKey,
       'socialShareIndex',

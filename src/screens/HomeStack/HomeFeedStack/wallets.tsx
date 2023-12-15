@@ -123,6 +123,9 @@ export const WalletsWrapper = observer(() => {
     };
 
     const provider = await getProviderForNewWallet();
+    if (!provider) {
+      return;
+    }
     const type = getType(provider);
 
     //@ts-ignore

@@ -203,6 +203,9 @@ const getTestModals = (): TestModals => {
       onClose: () => logger.log('keystoneScanner closed'),
       purpose: 'sign',
     },
+    sssLimitReached: {
+      onClose: () => logger.log('sssLimitReached closed'),
+    },
   };
 
   if (wallets.length) {

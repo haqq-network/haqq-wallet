@@ -9,6 +9,7 @@ import {hideModal, showModal} from '@app/helpers';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {ErrorHandler} from '@app/models/error-handler';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 import {RemoteConfig} from '@app/services/remote-config';
@@ -48,7 +49,7 @@ export const SssStoreWalletScreen = () => {
               GENERATE_SHARES_URL,
             ) as string,
           },
-        );
+        ).catch(() => ErrorHandler.handle('sssLimitReached'));
 
         let canNext = true;
         let index = 0;

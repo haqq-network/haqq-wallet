@@ -4,6 +4,7 @@ import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 
 import {app} from '@app/contexts';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
+import {ErrorHandler} from '@app/models/error-handler';
 import {RemoteConfig} from '@app/services/remote-config';
 import {WalletInitialData} from '@app/types';
 
@@ -32,7 +33,7 @@ export async function getProviderForNewWallet(params?: WalletInitialData) {
           GENERATE_SHARES_URL,
         ) as string,
       },
-    );
+    ).catch(() => ErrorHandler.handle('sssLimitReached'));
   }
 
   const keysSss = await ProviderSSSReactNative.getAccounts();

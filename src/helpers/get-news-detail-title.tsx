@@ -33,6 +33,8 @@ export function getNewsDetailAppTitle(props: {
   return {
     title: news?.title || '',
     headerShown: true,
+    //@ts-ignore
+    disableMargin: true,
     header: PopupHeader,
     headerLeft: SpacerPopupButton,
     headerRight: DismissPopupButton,
