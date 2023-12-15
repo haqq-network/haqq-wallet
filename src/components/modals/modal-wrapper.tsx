@@ -25,6 +25,7 @@ import {CloudShareNotFound} from '@app/components/modals/cloudShareNotFound';
 import {LocationUnauthorized} from '@app/components/modals/location-unauthorized';
 import {ProvidersBottomSheet} from '@app/components/modals/providers-bottom-sheet';
 import {RaffleAgreement} from '@app/components/modals/raffle-agreement';
+import {SSSLimitReached} from '@app/components/modals/sss-limit-reached';
 import {TransactionError} from '@app/components/modals/transaction-error';
 import {ViewErrorDetails} from '@app/components/modals/view-error-details';
 import {WalletsBottomSheet} from '@app/components/modals/wallets-bottom-sheet';
@@ -128,6 +129,8 @@ export const ModalWrapper = ({
         return <ViewErrorDetails {...modal} onClose={onCloseModalPress} />;
       case ModalType.cloudShareNotFound:
         return <CloudShareNotFound {...modal} onClose={onCloseModalPress} />;
+      case ModalType.sssLimitReached:
+        return <SSSLimitReached {...modal} onClose={onCloseModalPress} />;
       default:
         return null;
     }

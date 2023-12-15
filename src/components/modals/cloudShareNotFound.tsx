@@ -2,7 +2,6 @@ import React, {useCallback, useEffect} from 'react';
 
 import {GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
-import {getMetadataValue} from '@haqq/shared-react-native';
 import {observer} from 'mobx-react';
 import {Image, Platform, View} from 'react-native';
 
@@ -19,7 +18,9 @@ import {app} from '@app/contexts';
 import {createTheme, hideModal} from '@app/helpers';
 import {decryptLocalShare} from '@app/helpers/decrypt-local-share';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
+import {getMetadataValueWrapped} from '@app/helpers/wrappers/getMetadataValue';
 import {I18N} from '@app/i18n';
+import {ErrorHandler} from '@app/models/errorHandler';
 import {Wallet} from '@app/models/wallet';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {onLoginApple, onLoginGoogle} from '@app/services/provider-sss';
@@ -46,7 +47,7 @@ export const CloudShareNotFound = observer(
           throw new Error('No Private Key Detected');
         }
 
-        const walletInfo = await await getMetadataValue(
+        const walletInfo = await await getMetadataValueWrapped(
           RemoteConfig.get_env('sss_metadata_url', METADATA_URL) as string,
           creds.privateKey,
           'socialShareIndex',
@@ -78,7 +79,7 @@ export const CloudShareNotFound = observer(
               GENERATE_SHARES_URL,
             ) as string,
           },
-        );
+        ).catch(() => ErrorHandler.handle('sssLimitReached'));
 
         Wallet.update(wallet.address, {socialLinkEnabled: true});
 

@@ -851,6 +851,9 @@ export enum I18N {
   verifyCloudProblemsNoReadError,
   verifyCloudProblemsNoWriteError,
   verifyCloudProblemsRestartPhone,
+  sssLimitReachedTitle,
+  sssLimitReachedDescription,
+  sssLimitReachedButton,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1851,4 +1854,8 @@ const en: Record<I18N, string> = {
   [I18N.verifyCloudProblemsNoWriteError]: "Can't write data",
   [I18N.verifyCloudProblemsRestartPhone]:
     "Oops! There's a little problem with Google Services. Please turn off your phone and then turn it back on. After that, check if there are any updates for your system.",
+  [I18N.sssLimitReachedTitle]: 'Maximum number of\nrequests',
+  [I18N.sssLimitReachedDescription]:
+    "Sorry, but it seems like there's been an issue with your Apple/Google account. You've reached the maximum number of requests, so kindly wait for a minute and redo the request",
+  [I18N.sssLimitReachedButton]: 'Close',
 };
