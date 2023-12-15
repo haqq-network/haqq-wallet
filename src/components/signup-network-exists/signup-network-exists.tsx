@@ -87,7 +87,7 @@ export const SignupNetworkExists = ({
           i18nTitle={I18N.sssReplaceAccountTitle}>
           <Text
             i18n={I18N.sssReplaceAccountDescription1}
-            i18params={{provider: 'Apple'}}
+            i18params={{provider: provider.toLocaleUpperCase()}}
             color={Color.textBase2}
             t14
             showChildren>

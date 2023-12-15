@@ -98,7 +98,7 @@ export const SignupNetworkExistsScreen = memo(() => {
           style: 'cancel',
         },
         {
-          text: getText(I18N.accept),
+          text: getText(I18N.erase),
           style: 'destructive',
           onPress: () => {
             const nextScreen = app.onboarded

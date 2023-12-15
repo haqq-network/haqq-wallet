@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 
 import {
+  Platform,
   StyleProp,
   StyleSheet,
   TouchableWithoutFeedback,
@@ -97,7 +98,8 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
     const {bottom: bottomInsets, top: topInsets} = useSafeAreaInsets();
 
     const bottomSheetHeight = height - (topInsets + 12);
-    const snapPointFromTop: pointsT = [bottomInsets + 95, bottomSheetHeight];
+    const zero = Platform.OS === 'ios' ? bottomInsets + 95 : bottomInsets;
+    const snapPointFromTop: pointsT = [zero, bottomSheetHeight];
 
     const fullyOpenSnapPoint = snapPointFromTop[0];
     const closedSnapPoint = snapPointFromTop[snapPointFromTop.length - 1];

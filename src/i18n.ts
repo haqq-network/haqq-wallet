@@ -125,6 +125,7 @@ export enum I18N {
   save,
   share,
   edit,
+  erase,
   continue,
   modalQRTitle,
   modalQRNoAccessTitle,
@@ -1893,4 +1894,5 @@ const en: Record<I18N, string> = {
     ' from the cloud, the app will let you know and help fix it.\n',
   [I18N.signupImportantInfoDesc4]:
     "It's important to keep your Google or Apple login details safe. If you lose them, or if your phone is stolen, you won't be able to get your wallet back using your social media login.",
+  [I18N.erase]: 'Erase',
 };
