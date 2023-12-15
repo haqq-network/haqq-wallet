@@ -1,7 +1,7 @@
 import {getMetadataValue} from '@haqq/shared-react-native';
 import BN from 'bn.js';
 
-import {ErrorHandler} from '@app/models/errorHandler';
+import {ErrorHandler} from '@app/models/error-handler';
 
 export const getMetadataValueWrapped = async (
   host: string,

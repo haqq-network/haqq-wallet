@@ -11,7 +11,7 @@ import {AddressUtils} from '@app/helpers/address-utils';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
-import {ErrorHandler} from '@app/models/errorHandler';
+import {ErrorHandler} from '@app/models/error-handler';
 import {Wallet} from '@app/models/wallet';
 import {WelcomeStackRoutes} from '@app/screens/WelcomeStack';
 import {OnboardingStackRoutes} from '@app/screens/WelcomeStack/OnboardingStack';

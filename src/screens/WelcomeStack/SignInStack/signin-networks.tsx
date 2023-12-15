@@ -9,7 +9,7 @@ import {SigninNetworks} from '@app/components/signin-networks';
 import {app} from '@app/contexts';
 import {SssError} from '@app/helpers/sss-error';
 import {verifyCloud} from '@app/helpers/verify-cloud';
-import {getMetadataValueWrapped} from '@app/helpers/wrappers/getMetadataValue';
+import {getMetadataValueWrapped} from '@app/helpers/wrappers/get-metadata-value';
 import {useTypedNavigation} from '@app/hooks';
 import {
   SignInStackParamList,

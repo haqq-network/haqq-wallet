@@ -4,7 +4,7 @@ import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 
 import {app} from '@app/contexts';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
-import {ErrorHandler} from '@app/models/errorHandler';
+import {ErrorHandler} from '@app/models/error-handler';
 import {RemoteConfig} from '@app/services/remote-config';
 import {WalletInitialData} from '@app/types';
 

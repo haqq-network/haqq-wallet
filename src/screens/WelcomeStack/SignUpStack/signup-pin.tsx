@@ -7,7 +7,7 @@ import {PinInterface} from '@app/components/pin';
 import {SssPin} from '@app/components/sss-pin';
 import {app} from '@app/contexts';
 import {SssError} from '@app/helpers/sss-error';
-import {getMetadataValueWrapped} from '@app/helpers/wrappers/getMetadataValue';
+import {getMetadataValueWrapped} from '@app/helpers/wrappers/get-metadata-value';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N, getText} from '@app/i18n';
