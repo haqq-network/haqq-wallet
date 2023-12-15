@@ -1,14 +1,15 @@
 import React, {memo, useCallback} from 'react';
 
 import {METADATA_URL} from '@env';
-import {getMetadataValue} from '@haqq/shared-react-native';
 import {Alert} from 'react-native';
 
 import {SignupNetworks} from '@app/components/signup-networks';
 import {app} from '@app/contexts';
 import {verifyCloud} from '@app/helpers/verify-cloud';
+import {getMetadataValueWrapped} from '@app/helpers/wrappers/get-metadata-value';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {ErrorHandler} from '@app/models/error-handler';
 import {
   SignUpStackParamList,
   SignUpStackRoutes,
@@ -28,13 +29,18 @@ export const SignupNetworksScreen = memo(() => {
     async (provider: SssProviders, skipCheck: boolean = false) => {
       try {
         let creds: Creds;
-        switch (provider) {
-          case SssProviders.apple:
-            creds = await onLoginApple();
-            break;
-          case SssProviders.google:
-            creds = await onLoginGoogle();
-            break;
+        try {
+          switch (provider) {
+            case SssProviders.apple:
+              creds = await onLoginApple();
+              break;
+            case SssProviders.google:
+              creds = await onLoginGoogle();
+              break;
+          }
+        } catch (err) {
+          ErrorHandler.handle('sssLimitReached');
+          return;
         }
 
         let nextScreen = app.onboarded
@@ -53,7 +59,7 @@ export const SignupNetworksScreen = memo(() => {
         }
 
         if (creds.privateKey) {
-          const walletInfo = await getMetadataValue(
+          const walletInfo = await getMetadataValueWrapped(
             RemoteConfig.get_env('sss_metadata_url', METADATA_URL) as string,
             creds.privateKey,
             'socialShareIndex',
