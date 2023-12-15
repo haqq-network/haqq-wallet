@@ -29,12 +29,12 @@ export const KeystoneCameraPermissionScreen = () => {
       const result = await SystemDialog.requestCameraPermissions();
 
       if (result) {
-        const cryptoHDKeyCBORHex = await awaitForScanQr({
+        const qrCBORHex = await awaitForScanQr({
           variant: QRScannerTypeEnum.keystone,
           purpose: 'sync',
         });
         navigation.navigate(KeystoneStackRoutes.KeystoneAccounts, {
-          cryptoHDKeyCBORHex,
+          qrCBORHex,
         });
       } else {
         setIsPermissionDenied(true);

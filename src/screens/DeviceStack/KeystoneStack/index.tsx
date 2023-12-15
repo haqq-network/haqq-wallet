@@ -12,18 +12,15 @@ import {
   OnboardingStack,
   OnboardingStackRoutes,
 } from '@app/screens/WelcomeStack/OnboardingStack';
-import {KeystoneWalletInitialData, ScreenOptionType} from '@app/types';
 
 import {KeystoneAccountsScreen} from './keystone-accounts';
 import {KeystoneCameraPermissionScreen} from './keystone-camera-permission';
 import {KeystoneConnectionStepsScreen} from './keystone-connection-steps';
 import {KeystoneFinishScreen} from './keystone-finish';
-import {KeystoneStoreWalletScreen} from './keystone-store-wallet';
 
 export enum KeystoneStackRoutes {
   KeystoneAccounts = 'KeystoneAccounts',
   KeystoneConnectionSteps = 'KeystoneConnectionSteps',
-  KeystoneStoreWallet = 'KeystoneStoreWallet',
   KeystoneFinish = 'KeystoneFinish',
   KeystoneCameraPermission = 'KeystoneCameraPermission',
   OnboardingSetupPin = 'OnboardingSetupPin',
@@ -33,17 +30,14 @@ export type KeystoneStackParamList = WelcomeStackParamList & {
   [KeystoneStackRoutes.KeystoneConnectionSteps]: WelcomeStackParamList[WelcomeStackRoutes.Device];
   [KeystoneStackRoutes.KeystoneCameraPermission]: undefined;
   [KeystoneStackRoutes.KeystoneAccounts]: {
-    cryptoHDKeyCBORHex: string;
+    qrCBORHex: string;
   };
-  [KeystoneStackRoutes.KeystoneStoreWallet]: KeystoneWalletInitialData;
   [KeystoneStackRoutes.KeystoneFinish]: undefined;
   [KeystoneStackRoutes.OnboardingSetupPin]: undefined;
 };
 
 const Stack = createNativeStackNavigator<KeystoneStackParamList>();
 const title = getText(I18N.keystoneConnect);
-
-const screenOptionsBiometry: ScreenOptionType = {title, headerBackHidden: true};
 
 const KeystoneStack = memo(() => {
   const OnboardingStackGenerated = useCallback(
@@ -85,11 +79,6 @@ const KeystoneStack = memo(() => {
         name={KeystoneStackRoutes.KeystoneAccounts}
         component={KeystoneAccountsScreen}
         options={hideBack}
-      />
-      <Stack.Screen
-        name={KeystoneStackRoutes.KeystoneStoreWallet}
-        component={KeystoneStoreWalletScreen}
-        options={screenOptionsBiometry}
       />
       <Stack.Screen
         name={KeystoneStackRoutes.KeystoneFinish}

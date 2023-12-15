@@ -17,7 +17,7 @@ export const KeystoneFinishScreen = memo(() => {
     } else {
       app.onboarded = true;
     }
-  }, [navigation]);
+  }, [navigation, app.onboarded]);
 
   useEffect(() => {
     hideModal(ModalType.loading);

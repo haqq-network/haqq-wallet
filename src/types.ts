@@ -156,7 +156,7 @@ export type KeystoneWalletInitialData = {
   address: HaqqEthereumAddress;
   hdPath: string;
   publicKey: string;
-  cryptoHDKeyCBORHex: string;
+  qrCBORHex: string;
 };
 
 export type RootStackParamList = {
@@ -754,6 +754,7 @@ export type AddWalletParams = {
   colorPattern?: string;
   socialLinkEnabled?: boolean;
   mnemonicSaved?: boolean;
+  isImported?: boolean;
 };
 
 export enum ValidatorStatus {

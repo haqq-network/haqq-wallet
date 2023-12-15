@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import {
   Image,
@@ -35,8 +35,13 @@ export const ImageDescriptionBlock = ({
   descriptionParams,
   onPress,
 }: ImageDescriptionBlockProps) => {
+  const flattenStyle = useMemo(
+    () => StyleSheet.flatten([styles.container, style]),
+    [style],
+  );
+
   return (
-    <View style={StyleSheet.flatten([styles.container, style])}>
+    <View style={flattenStyle}>
       <TouchableOpacity onPress={onPress} style={styles.touchable}>
         <View style={styles.imageContainer}>
           <Image source={source} />

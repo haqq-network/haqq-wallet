@@ -34,12 +34,12 @@ export const KeystoneConnectionStepsScreen = () => {
       );
 
       if (status === RESULTS.GRANTED || status === RESULTS.LIMITED) {
-        const cryptoHDKeyCBORHex = await awaitForScanQr({
+        const qrCBORHex = await awaitForScanQr({
           variant: QRScannerTypeEnum.keystone,
           purpose: 'sync',
         });
         navigation.navigate(KeystoneStackRoutes.KeystoneAccounts, {
-          cryptoHDKeyCBORHex,
+          qrCBORHex,
         });
       } else {
         navigation.navigate(KeystoneStackRoutes.KeystoneCameraPermission);

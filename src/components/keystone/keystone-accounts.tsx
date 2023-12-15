@@ -1,6 +1,6 @@
-import React, {memo, useEffect, useRef} from 'react';
+import React, {memo, useCallback, useEffect, useRef} from 'react';
 
-import {FlatList, StyleSheet} from 'react-native';
+import {FlatList, ListRenderItem, StyleSheet} from 'react-native';
 
 import {ChooseAccountFooter} from '@app/components/choose-account/choose-account-footer';
 import {ChooseAccountRow} from '@app/components/choose-account/choose-account-row';
@@ -39,6 +39,22 @@ export const KeystoneAccounts = memo(
       });
     }, [addresses]);
 
+    const keyExtractor = useCallback(
+      (item: ChooseAccountItem) => item.address,
+      [],
+    );
+
+    const renderItem: ListRenderItem<ChooseAccountItem> = useCallback(
+      ({item, index}) => (
+        <ChooseAccountRow
+          item={item}
+          onPress={() => onItemPress(item)}
+          index={index + 1}
+        />
+      ),
+      [],
+    );
+
     return (
       <PopupContainer plain>
         <FlatList
@@ -46,13 +62,8 @@ export const KeystoneAccounts = memo(
           style={styles.container}
           contentContainerStyle={styles.grow}
           data={addresses}
-          renderItem={({item, index}) => (
-            <ChooseAccountRow
-              item={item}
-              onPress={() => onItemPress(item)}
-              index={index + 1}
-            />
-          )}
+          keyExtractor={keyExtractor}
+          renderItem={renderItem}
         />
         <ChooseAccountFooter
           loading={loading}

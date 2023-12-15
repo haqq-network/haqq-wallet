@@ -106,7 +106,7 @@ export async function getProviderInstanceForWallet(
         cache.set(
           id,
           new ProviderKeystoneReactNative({
-            cryptoHDKeyCBORHex: wallet.accountId!,
+            qrCBORHex: wallet.accountId!,
             awaitForSign: async ({requestID, signRequest}) => {
               Logger.log({requestID, signRequest});
               return Buffer.from('');

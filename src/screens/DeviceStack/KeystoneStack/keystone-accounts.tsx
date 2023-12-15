@@ -22,13 +22,13 @@ const PAGE_SIZE = 5;
 
 export const KeystoneAccountsScreen = memo(() => {
   const navigation = useTypedNavigation<SignInStackParamList>();
-  const {cryptoHDKeyCBORHex, ...params} = useTypedRoute<
+  const {qrCBORHex, ...params} = useTypedRoute<
     KeystoneStackParamList,
     KeystoneStackRoutes.KeystoneAccounts
   >().params;
   const provider = useRef(
     new ProviderKeystoneReactNative({
-      cryptoHDKeyCBORHex,
+      qrCBORHex,
       awaitForSign: Promise.resolve,
     }),
   );
@@ -95,7 +95,7 @@ export const KeystoneAccountsScreen = memo(() => {
     try {
       await loadMore();
     } catch (error) {
-      Logger.captureException(error, 'chooseAccount');
+      Logger.captureException(error, 'keystone chooseAccount');
       switch (error) {
         case 'wallet_already_exists':
           showModal(ModalType.errorAccountAdded);
@@ -148,7 +148,7 @@ export const KeystoneAccountsScreen = memo(() => {
 
   const onAdd = useCallback(async () => {
     walletsToCreate.forEach(item => {
-      Wallet.create(item.name, item);
+      Wallet.create(item.name, {...item, isImported: true});
     });
 
     if (!app.onboarded) {
@@ -163,7 +163,8 @@ export const KeystoneAccountsScreen = memo(() => {
     params,
     navigation,
     provider.current,
-    cryptoHDKeyCBORHex,
+    qrCBORHex,
+    app.onboarded,
   ]);
 
   return (
