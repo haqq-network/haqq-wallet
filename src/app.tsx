@@ -155,9 +155,9 @@ export const App = () => {
         Logger.log('Authorization status = ' + status);
       });
 
-      Adjust.getAdid(adid => {
-        Logger.log('Adid = ' + adid);
-      });
+      // Adjust.getAdid((adid) => {
+      // Logger.log('Adid = ' + adid);
+      // });
     }
     return () => {
       Adjust.componentWillUnmount();

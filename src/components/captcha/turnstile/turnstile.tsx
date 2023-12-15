@@ -81,7 +81,7 @@ export const Turnstile = (props: TurnstileProps) => {
     [props],
   );
 
-  Logger.log(generateTheWebViewContent);
+  // Logger.log(generateTheWebViewContent);
 
   return (
     <WebView

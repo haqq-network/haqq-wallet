@@ -31,7 +31,7 @@ export function Ocaptcha({onData}: OcaptchaProps) {
         throw new Error('token is empty');
       }
 
-      Logger.log(token);
+      // Logger.log(token);
 
       onData(token as CaptchaDataTypes);
     } catch (e) {

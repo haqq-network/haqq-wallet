@@ -239,7 +239,7 @@ export class Cosmos {
   generatePostSimulate(message: object, account: Sender) {
     const messages = Array.isArray(message) ? message : [message];
 
-    Logger.log('account-> pubkey', account.pubkey);
+    // Logger.log('account-> pubkey', account.pubkey);
 
     return JSON.stringify({
       tx: {
@@ -371,13 +371,13 @@ export class Cosmos {
       extension,
     );
 
-    Logger.log(
-      'rawTx',
-      msg.legacyAmino.body.toObject(),
-      msg.legacyAmino.authInfo.toObject(),
-      extension,
-      signature,
-    );
+    // Logger.log(
+    //   'rawTx',
+    //   msg.legacyAmino.body.toObject(),
+    //   msg.legacyAmino.authInfo.toObject(),
+    //   extension,
+    //   signature,
+    // );
 
     return await this.broadcastTransaction(rawTx);
   }
@@ -394,7 +394,7 @@ export class Cosmos {
 
       const resp = await this.postSimulate(data, account);
 
-      Logger.log('resp', resp);
+      // Logger.log('resp', resp);
 
       // TODO Unhandled exception. Types issue.
       //@ts-ignore
@@ -688,7 +688,7 @@ export class Cosmos {
         sender,
       );
 
-      Logger.log('fee', fee);
+      // Logger.log('fee', fee);
 
       const memo = '';
 
