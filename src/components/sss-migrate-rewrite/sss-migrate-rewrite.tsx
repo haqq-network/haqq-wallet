@@ -77,7 +77,7 @@ export const SssMigrateRewrite = ({
           variant={ButtonVariant.text}
           textColor={Color.textRed1}
           i18n={I18N.sssMigrateRewriteRewrite}
-          onPress={onDone}
+          onPress={() => setShowWarning(true)}
         />
       </View>
 
