@@ -10,6 +10,7 @@ import {SssMigrateFinishScreen} from '@app/screens/HomeStack/SssMigrate/sss-migr
 import {SssMigrateNetworksScreen} from '@app/screens/HomeStack/SssMigrate/sss-migrate-networks';
 import {SssMigrateRewriteScreen} from '@app/screens/HomeStack/SssMigrate/sss-migrate-rewrite';
 import {SssMigrateStoreScreen} from '@app/screens/HomeStack/SssMigrate/sss-migrate-store';
+import {SignUpImportantInfoScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-important-info';
 import {SssProviders} from '@app/services/provider-sss';
 
 export enum SssMigrateStackRoutes {
@@ -18,6 +19,7 @@ export enum SssMigrateStackRoutes {
   SssMigrateRewrite = 'sssMigrateRewrite',
   SssMigrateStore = 'sssMigrateStore',
   SssMigrateFinish = 'sssMigrateFinish',
+  SSSMigrateSignupImportantInfo = 'sssSignupImportantInfo',
 }
 
 export type SssMigrateStackParamList = HomeStackParamList & {
@@ -40,6 +42,7 @@ export type SssMigrateStackParamList = HomeStackParamList & {
     token: string;
   };
   [SssMigrateStackRoutes.SssMigrateFinish]: undefined;
+  [SssMigrateStackRoutes.SSSMigrateSignupImportantInfo]: {onNext: () => void};
 };
 
 const Stack = createNativeStackNavigator<SssMigrateStackParamList>();
@@ -74,6 +77,11 @@ export const SssMigrateStack = memo(() => {
       <Stack.Screen
         name={SssMigrateStackRoutes.SssMigrateFinish}
         component={SssMigrateFinishScreen}
+        options={hideBack}
+      />
+      <Stack.Screen
+        name={SssMigrateStackRoutes.SSSMigrateSignupImportantInfo}
+        component={SignUpImportantInfoScreen}
         options={hideBack}
       />
     </Stack.Navigator>
