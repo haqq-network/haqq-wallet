@@ -47,7 +47,7 @@ export async function providerSssInitialize(
   }
 
   if (socialPrivateKey) {
-    Logger.log('socialPrivateKey', socialPrivateKey);
+    // Logger.log('socialPrivateKey', socialPrivateKey);
     const socialShareIndex = await getMetadataValueWrapped(
       options.metadataUrl,
       socialPrivateKey,

@@ -78,15 +78,15 @@ const logger = Logger.create('SettingsTestScreen', {
   stringifyJson: true,
 });
 
-messaging().setBackgroundMessageHandler(async remoteMessage => {
-  logger.log('setBackgroundMessageHandler', remoteMessage);
+messaging().setBackgroundMessageHandler(async () => {
+  // logger.log('setBackgroundMessageHandler', remoteMessage);
 });
 
 messaging()
   .getInitialNotification()
   .then(remoteMessage => {
     if (remoteMessage) {
-      logger.log('getInitialNotification', remoteMessage);
+      // logger.log('getInitialNotification', remoteMessage);
     }
   });
 

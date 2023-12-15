@@ -9,7 +9,7 @@ import {Backend} from '@app/services/backend';
 
 export async function onBlockRequestCheck() {
   const blockRequest = VariablesString.get('block_code');
-  Logger.log('onBlockRequestCheck', {blockRequest});
+  // Logger.log('onBlockRequestCheck', {blockRequest});
 
   try {
     if (blockRequest) {

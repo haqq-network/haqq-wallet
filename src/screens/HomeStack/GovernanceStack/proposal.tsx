@@ -114,8 +114,6 @@ export const ProposalScreen = observer(() => {
     }
   }, [item]);
 
-  Logger.log('item', item);
-
   return (
     <Proposal
       cardRef={cardRef}
