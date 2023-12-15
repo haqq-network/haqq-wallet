@@ -33,7 +33,7 @@ export const SSSLimitReached = ({
           <Spacer height={20} />
           <Image
             style={page.image}
-            source={require('@assets/images/sssLimitReached.png')}
+            source={require('@assets/images/sss-limit-reached.png')}
             height={295}
             width={124}
           />
