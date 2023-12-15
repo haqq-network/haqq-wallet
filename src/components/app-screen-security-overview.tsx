@@ -1,14 +1,9 @@
 import React, {useEffect, useState} from 'react';
 
 import {BlurView} from '@react-native-community/blur';
-import {
-  AppState,
-  NativeEventSubscription,
-  Platform,
-  StyleSheet,
-} from 'react-native';
-import {FullWindowOverlay} from 'react-native-screens';
+import {AppState, NativeEventSubscription, StyleSheet} from 'react-native';
 
+import {ModalProvider} from '@app/components/modal-provider';
 import {IS_ANDROID, IS_IOS} from '@app/variables/common';
 
 export const AppScreenSecurityOverview = () => {
@@ -47,25 +42,14 @@ export const AppScreenSecurityOverview = () => {
     return null;
   }
 
-  if (Platform.OS === 'ios') {
-    return (
-      <FullWindowOverlay>
-        <BlurView
-          style={StyleSheet.absoluteFillObject}
-          blurType="light"
-          blurAmount={10}
-          reducedTransparencyFallbackColor="white"
-        />
-      </FullWindowOverlay>
-    );
-  }
-
   return (
-    <BlurView
-      style={StyleSheet.absoluteFillObject}
-      blurType="light"
-      blurAmount={10}
-      reducedTransparencyFallbackColor="white"
-    />
+    <ModalProvider>
+      <BlurView
+        style={StyleSheet.absoluteFillObject}
+        blurType="light"
+        blurAmount={10}
+        reducedTransparencyFallbackColor="white"
+      />
+    </ModalProvider>
   );
 };
