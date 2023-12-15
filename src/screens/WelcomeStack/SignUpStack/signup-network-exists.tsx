@@ -94,11 +94,7 @@ export const SignupNetworkExistsScreen = memo(() => {
       getText(I18N.signupNetworkExitsAlertDescription),
       [
         {
-          text: getText(I18N.cancel),
-          style: 'cancel',
-        },
-        {
-          text: getText(I18N.accept),
+          text: getText(I18N.erase),
           style: 'destructive',
           onPress: () => {
             const nextScreen = app.onboarded
@@ -118,6 +114,10 @@ export const SignupNetworkExistsScreen = memo(() => {
               onNext,
             });
           },
+        },
+        {
+          text: getText(I18N.cancel),
+          style: 'cancel',
         },
       ],
     );
