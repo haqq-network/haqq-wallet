@@ -59,16 +59,6 @@ class ModalStore {
       this.modals = [...newModals];
     }
   };
-
-  private isExist = (type: ModalName) => !!this.findByType(type);
-
-  private findByType = (type: ModalName) =>
-    this.modals.find(modal => modal.type === type);
-
-  private removeByType = (type: ModalName) => {
-    const filtered = this.modals.filter(modal => modal.type !== type);
-    this.modals = filtered;
-  };
 }
 
 const instance = new ModalStore();
