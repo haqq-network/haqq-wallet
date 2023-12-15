@@ -70,6 +70,7 @@ export type BottomSheetProps = {
   scrollable?: boolean;
   contentContainerStyle?: StyleProp<ViewStyle>;
   titleContainerStyle?: StyleProp<ViewStyle>;
+  fullscreen?: boolean;
 } & TitleProp;
 
 export type BottomSheetRef = {
@@ -91,6 +92,7 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
       scrollable,
       contentContainerStyle,
       titleContainerStyle,
+      fullscreen,
     },
     ref,
   ) => {
@@ -99,7 +101,10 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
 
     const bottomSheetHeight = height - (topInsets + 12);
     const zero = Platform.OS === 'ios' ? bottomInsets + 95 : bottomInsets;
-    const snapPointFromTop: pointsT = [zero, bottomSheetHeight];
+    const snapPointFromTop: pointsT = [
+      fullscreen ? zero : 0,
+      bottomSheetHeight,
+    ];
 
     const fullyOpenSnapPoint = snapPointFromTop[0];
     const closedSnapPoint = snapPointFromTop[snapPointFromTop.length - 1];
@@ -240,10 +245,12 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
       open: onOpenPopup,
     }));
 
+    const FullscreenWrapper = fullscreen ? ModalProvider : React.Fragment;
+
     return (
       <View style={[StyleSheet.absoluteFillObject, page.container]}>
         <View style={page.wrap}>
-          <ModalProvider>
+          <FullscreenWrapper>
             <Animated.View
               style={[
                 StyleSheet.absoluteFillObject,
@@ -309,7 +316,7 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
                 </Animated.ScrollView>
               </GestureDetector>
             </Animated.View>
-          </ModalProvider>
+          </FullscreenWrapper>
         </View>
       </View>
     );

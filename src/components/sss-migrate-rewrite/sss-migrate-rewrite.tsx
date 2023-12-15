@@ -83,6 +83,7 @@ export const SssMigrateRewrite = ({
 
       {!!showWarning && (
         <BottomSheet
+          fullscreen
           onClose={hideWarningModal}
           i18nTitle={I18N.sssReplaceAccountTitle}>
           <Text
