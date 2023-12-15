@@ -73,8 +73,8 @@ export const SssMigrateStoreScreen = observer(() => {
             ) as string,
           },
         ).catch(() => ErrorHandler.handle('sssLimitReached'));
-        if (!provider) {
-          hideModal(ModalType.loading);
+
+        if (!provider || typeof provider.getIdentifier !== 'function') {
           navigation.goBack();
           return;
         }

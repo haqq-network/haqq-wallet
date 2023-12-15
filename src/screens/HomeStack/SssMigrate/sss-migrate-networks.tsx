@@ -64,12 +64,16 @@ export const SssMigrateNetworksScreen = memo(() => {
           });
         };
 
-        navigation.navigate(
-          SssMigrateStackRoutes.SSSMigrateSignupImportantInfo,
-          {
-            onNext,
-          },
-        );
+        if (walletInfo) {
+          onNext();
+        } else {
+          navigation.navigate(
+            SssMigrateStackRoutes.SSSMigrateSignupImportantInfo,
+            {
+              onNext,
+            },
+          );
+        }
       } else {
         navigation.navigate(SssMigrateStackRoutes.SssMigrateStore, {
           accountId: route.params.accountId,
