@@ -52,7 +52,7 @@ export const KeystoneAccounts = memo(
           index={index + 1}
         />
       ),
-      [],
+      [onItemPress],
     );
 
     return (

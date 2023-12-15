@@ -1,4 +1,5 @@
 import {ProviderInterface} from '@haqq/provider-base';
+import {ProviderKeystoneReactNative} from '@haqq/provider-keystone-react-native';
 
 import {ChooseAccountTabNames} from '@app/components/choose-account/choose-account';
 import {I18N, getText} from '@app/i18n';
@@ -29,6 +30,9 @@ export async function* getWalletsFromProvider(
   })[] = [];
 
   const genHdPath = (_index: number) => {
+    if (provider instanceof ProviderKeystoneReactNative) {
+      return provider.buildPath(_index);
+    }
     if (mnemonicType === ChooseAccountTabNames.Basic) {
       return `${ETH_HD_SHORT_PATH}/${_index}`;
     }
@@ -44,13 +48,18 @@ export async function* getWalletsFromProvider(
         : getText(I18N.signinStoreWalletAccountNumber, {
             number: `${total + index + 1}`,
           });
+
+    const keystoneWalletsCount =
+      Wallet.getAll().filter(w => w.type === WalletType.keystone)?.length || 0;
     const keystoneName = getText(I18N.keystoneWalletAccountNumber, {
-      number: `${index + 1}`,
+      number: `${keystoneWalletsCount + index + 1}`,
     });
     const name =
       walletType === WalletType.keystone ? keystoneName : defaultName;
 
     const hdPath = genHdPath(index);
+
+    Logger.log({hdPath});
 
     const {address} = await provider.getAccountInfo(hdPath);
 

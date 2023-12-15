@@ -1,6 +1,6 @@
 import React, {memo, useCallback, useMemo, useRef, useState} from 'react';
 
-import {ProviderKeystoneReactNative} from '@haqq/provider-keystone-react-native/src';
+import {ProviderKeystoneReactNative} from '@haqq/provider-keystone-react-native';
 
 import {KeystoneAccounts} from '@app/components/keystone/keystone-accounts';
 import {app} from '@app/contexts';
@@ -91,6 +91,7 @@ export const KeystoneAccountsScreen = memo(() => {
   );
 
   useEffectAsync(async () => {
+    Logger.log('🔵 useEffectAsync');
     setLoading(true);
     try {
       await loadMore();
@@ -118,12 +119,9 @@ export const KeystoneAccountsScreen = memo(() => {
       addresses.map(item => ({
         ...item,
         hdPath: item.path,
-        // publicKey: '',
         exists:
-          walletsToCreate.find(wallet => wallet.address === item.address)
-            ?.exists ||
-          item.exists ||
-          false,
+          !!walletsToCreate.find(w => w.address === item.address)?.exists ||
+          !!item.exists,
       })),
     [addresses, walletsToCreate],
   );
@@ -143,7 +141,7 @@ export const KeystoneAccountsScreen = memo(() => {
       setAddresses([...newAddresses]);
       updateWalletsToCreate(newAddresses.filter(address => !!address.exists));
     },
-    [addresses],
+    [addresses, setAddresses],
   );
 
   const onAdd = useCallback(async () => {
