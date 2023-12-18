@@ -93,6 +93,8 @@ const page = createTheme({
     flexDirection: 'row',
     zIndex: 1,
     backgroundColor: Color.bg1,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
   },
   text: {
     marginHorizontal: 8,
