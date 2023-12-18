@@ -2838,7 +2838,7 @@ __metadata:
 
 "@haqq/provider-keystone-react-native@file:../haqq-wallet-provider-keystone-react-native::locator=haqq%40workspace%3A.":
   version: 0.0.1
-  resolution: "@haqq/provider-keystone-react-native@file:../haqq-wallet-provider-keystone-react-native#../haqq-wallet-provider-keystone-react-native::hash=b9023c&locator=haqq%40workspace%3A."
+  resolution: "@haqq/provider-keystone-react-native@file:../haqq-wallet-provider-keystone-react-native#../haqq-wallet-provider-keystone-react-native::hash=c40954&locator=haqq%40workspace%3A."
   dependencies:
     "@ethereumjs/tx": ^5.1.0
     "@ethersproject/abstract-provider": ^5.7.0
@@ -2850,7 +2850,7 @@ __metadata:
     "@haqq/provider-base": "*"
     react: "*"
     react-native: "*"
-  checksum: 7610ab785673d40c4221014c6c0bffee72b17f6be95bbfb613b417719c87dd17b6d4a1aacb645a69a094513aed34a152a3f38899c93f0b09db53d71c3efb1009
+  checksum: 86a164bacb4fd4e3e0ee42ca78f8e046695c532655e4e4fb411b76678a1f51825d284e585235e65cfaa1b1ac66a3ee0270620b9c32d67b62378566ba9951987d
   languageName: node
   linkType: hard
 

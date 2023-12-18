@@ -1,6 +1,6 @@
 import {ProviderInterface} from '@haqq/provider-base';
 import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
-import {ProviderKeystoneReactNative} from '@haqq/provider-keystone-react-native';
+import {ProviderKeystoneReactNative} from '@haqq/provider-keystone-react-native/src';
 import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
@@ -11,6 +11,8 @@ import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {Wallet} from '@app/models/wallet';
 import {WalletType} from '@app/types';
 import {LEDGER_APP} from '@app/variables/common';
+
+import {showModal} from './modal';
 
 const cache = new Map();
 
@@ -107,8 +109,12 @@ export async function getProviderInstanceForWallet(
           id,
           new ProviderKeystoneReactNative({
             qrCBORHex: wallet.accountId!,
-            awaitForSign: async ({requestID, signRequest}) => {
-              Logger.log({requestID, signRequest});
+            awaitForSign: async ({requestID, cborHex, urType}) => {
+              Logger.log({requestID, urType, cborHex});
+              showModal('keystoneQR', {
+                cborHex,
+                urType,
+              });
               return Buffer.from('');
             },
           }),

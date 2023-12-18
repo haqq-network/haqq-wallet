@@ -1090,7 +1090,8 @@ export type Modals = {
     onClose?: () => void;
   };
   keystoneQR: {
-    signRequestHex: string;
+    cborHex: string;
+    urType: string;
   };
   sssLimitReached: {onClose?: () => void};
 };
