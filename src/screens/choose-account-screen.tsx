@@ -188,15 +188,17 @@ export const ChooseAccountScreen = memo(() => {
   );
 
   const onAdd = useCallback(async () => {
-    walletsToCreate.forEach(item => {
-      Wallet.create(item.name, item);
-      if (isSSSProvider) {
-        Wallet.update(item.address, {
-          socialLinkEnabled: true,
-          type: WalletType.sss,
-        });
-      }
-    });
+    walletsToCreate
+      .filter(_w => !Wallet.getById(_w.address))
+      .forEach(item => {
+        Wallet.create(item.name, item);
+        if (isSSSProvider) {
+          Wallet.update(item.address, {
+            socialLinkEnabled: true,
+            type: WalletType.sss,
+          });
+        }
+      });
 
     if (isMnemonicProvider && !app.onboarded) {
       //@ts-ignore
@@ -221,7 +223,9 @@ export const ChooseAccountScreen = memo(() => {
       onTabChanged={onTabChanged}
       onItemPress={onItemPress}
       onAdd={onAdd}
-      walletsToCreate={walletsToCreate}
+      walletsToCreate={walletsToCreate.filter(
+        _w => !Wallet.getById(_w.address),
+      )}
     />
   );
 });

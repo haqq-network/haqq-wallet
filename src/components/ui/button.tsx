@@ -125,6 +125,10 @@ export const Button = ({
     }
   }, []);
 
+  React.useEffect(() => {
+    setLoading(loading);
+  }, [loading]);
+
   const isTimerActive = useMemo(() => {
     return status === 'RUNNING';
   }, [status]);
