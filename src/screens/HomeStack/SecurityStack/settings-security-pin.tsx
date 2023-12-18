@@ -27,7 +27,11 @@ export const SettingsSecurityPinScreen = observer(() => {
 
       for (const wallet of wallets) {
         if (!viewed.has(wallet.accountId)) {
-          const provider = await getProviderInstanceForWallet(wallet);
+          const provider = await getProviderInstanceForWallet(
+            wallet,
+            true,
+            true,
+          );
           await provider.updatePin(pin);
           viewed.add(wallet.accountId);
         }

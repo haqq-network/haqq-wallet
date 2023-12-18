@@ -1,4 +1,5 @@
 import RNAsyncStorage from '@react-native-async-storage/async-storage';
+import {Platform} from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {resetGenericPassword} from 'react-native-keychain';
 
@@ -33,13 +34,22 @@ export async function onAppReset() {
   }
   WalletConnectSessionMetadata.removeAll();
 
-  await RNAsyncStorage.clear();
+  const asyncStorageKeys = await RNAsyncStorage.getAllKeys();
+  if (asyncStorageKeys.length > 0) {
+    if (Platform.OS === 'android') {
+      await RNAsyncStorage.clear();
+    }
+    if (Platform.OS === 'ios') {
+      await RNAsyncStorage.multiRemove(asyncStorageKeys);
+    }
+  }
+
   app.getUser().resetUserData();
   VariablesString.set('rootMnemonicAccountId', '');
-  app.onboarded = false;
   await resetGenericPassword();
 
   if (uid) {
     await EncryptedStorage.setItem('uid', uid);
   }
+  app.onboarded = false;
 }
