@@ -1,5 +1,7 @@
 import {makeAutoObservable} from 'mobx';
 
+import {app} from '@app/contexts';
+import {Events} from '@app/events';
 import {ModalState} from '@app/screens/modals-screen';
 import {Modals} from '@app/types';
 import {makeID} from '@app/utils';
@@ -35,6 +37,7 @@ class ModalStore {
   hideModal = (type: ModalName) => {
     if (this.isExist(type)) {
       this.removeByType(type);
+      app.emit(Events.onCloseModal, type);
     }
   };
 
