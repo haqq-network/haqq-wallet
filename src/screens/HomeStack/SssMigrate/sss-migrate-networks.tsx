@@ -5,11 +5,13 @@ import {METADATA_URL} from '@env';
 import {SssMigrateNetworks} from '@app/components/sss-migrate-networks';
 import {getMetadataValueWrapped} from '@app/helpers/wrappers/get-metadata-value';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {ErrorHandler} from '@app/models/error-handler';
 import {
   SssMigrateStackParamList,
   SssMigrateStackRoutes,
 } from '@app/screens/HomeStack/SssMigrate';
 import {
+  Creds,
   SssProviders,
   onLoginApple,
   onLoginGoogle,
@@ -25,14 +27,19 @@ export const SssMigrateNetworksScreen = memo(() => {
 
   const onLogin = useCallback(
     async (provider: SssProviders) => {
-      let creds;
-      switch (provider) {
-        case SssProviders.apple:
-          creds = await onLoginApple();
-          break;
-        case SssProviders.google:
-          creds = await onLoginGoogle();
-          break;
+      let creds: Creds;
+      try {
+        switch (provider) {
+          case SssProviders.apple:
+            creds = await onLoginApple();
+            break;
+          case SssProviders.google:
+            creds = await onLoginGoogle();
+            break;
+        }
+      } catch (err) {
+        ErrorHandler.handle('sssLimitReached');
+        return;
       }
       if (creds.privateKey) {
         const walletInfo = await getMetadataValueWrapped(
@@ -41,18 +48,32 @@ export const SssMigrateNetworksScreen = memo(() => {
           'socialShareIndex',
         );
 
-        const nextScreen = walletInfo
-          ? SssMigrateStackRoutes.SssMigrateRewrite
-          : SssMigrateStackRoutes.SssMigrateStore;
+        const onNext = () => {
+          const nextScreen = walletInfo
+            ? SssMigrateStackRoutes.SssMigrateRewrite
+            : SssMigrateStackRoutes.SssMigrateStore;
 
-        navigation.navigate(nextScreen, {
-          accountId: route.params.accountId,
-          privateKey: creds.privateKey,
-          token: creds.token,
-          verifier: creds.verifier,
-          provider,
-          email: '',
-        });
+          //@ts-ignore
+          navigation.navigate(nextScreen, {
+            accountId: route.params.accountId,
+            privateKey: creds.privateKey,
+            token: creds.token,
+            verifier: creds.verifier,
+            provider,
+            email: '',
+          });
+        };
+
+        if (walletInfo) {
+          onNext();
+        } else {
+          navigation.navigate(
+            SssMigrateStackRoutes.SSSMigrateSignupImportantInfo,
+            {
+              onNext,
+            },
+          );
+        }
       } else {
         navigation.navigate(SssMigrateStackRoutes.SssMigrateStore, {
           accountId: route.params.accountId,

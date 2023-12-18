@@ -77,7 +77,7 @@ export const SignUpStoreWalletScreen = observer(() => {
         const provider = await getCurrentProvider();
 
         // sssLimitReached
-        if (!provider.getIdentifier) {
+        if (typeof provider.getIdentifier !== 'function') {
           return;
         }
 
@@ -101,19 +101,31 @@ export const SignUpStoreWalletScreen = observer(() => {
             : getText(I18N.signupStoreWalletAccountNumber, {
                 number: `${total + 1}`,
               });
-        const {address} = await provider.getAccountInfo(hdPath);
-        const type = getWalletType();
 
-        await Wallet.create(name, {
-          address: AddressUtils.toEth(address),
-          accountId: provider.getIdentifier(),
-          path: hdPath,
-          type,
-          socialLinkEnabled: type === WalletType.sss,
-          mnemonicSaved: !!accountWallets.find(
-            wallet => !!wallet.mnemonicSaved,
-          ),
-        });
+        try {
+          const {address} = await provider.getAccountInfo(hdPath);
+          const type = getWalletType();
+
+          await Wallet.create(name, {
+            address: AddressUtils.toEth(address),
+            accountId: provider.getIdentifier(),
+            path: hdPath,
+            type,
+            socialLinkEnabled: type === WalletType.sss,
+            mnemonicSaved: !!accountWallets.find(
+              wallet => !!wallet.mnemonicSaved,
+            ),
+          });
+        } catch (err) {
+          if (getWalletType() === WalletType.sss) {
+            hideModal('loading');
+            showModal('sssLimitReached');
+            goBack();
+            return;
+          } else {
+            throw err;
+          }
+        }
 
         //@ts-ignore
         navigation.navigate(route.params.nextScreen ?? 'onboardingFinish');

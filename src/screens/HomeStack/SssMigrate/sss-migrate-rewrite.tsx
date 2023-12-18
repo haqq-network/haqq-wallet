@@ -22,19 +22,28 @@ export const SssMigrateRewriteScreen = memo(() => {
       getText(I18N.sssMigrateRewriteAlertTitle),
       getText(I18N.sssMigrateRewriteAlertDescription),
       [
-        {text: 'Cancel'},
         {
-          text: 'Accept',
+          text: getText(I18N.erase),
           style: 'destructive',
-          onPress() {
-            navigation.navigate(SssMigrateStackRoutes.SssMigrateStore, {
-              accountId: route.params.accountId,
-              privateKey: route.params.privateKey,
-              token: route.params.token,
-              verifier: route.params.verifier,
-            });
+          onPress: () => {
+            const onNext = () => {
+              navigation.navigate(SssMigrateStackRoutes.SssMigrateStore, {
+                accountId: route.params.accountId,
+                privateKey: route.params.privateKey,
+                token: route.params.token,
+                verifier: route.params.verifier,
+              });
+            };
+
+            navigation.navigate(
+              SssMigrateStackRoutes.SSSMigrateSignupImportantInfo,
+              {
+                onNext,
+              },
+            );
           },
         },
+        {text: 'Cancel'},
       ],
     );
   }, [
@@ -46,7 +55,7 @@ export const SssMigrateRewriteScreen = memo(() => {
   ]);
 
   const onCancel = useCallback(() => {
-    navigation.goBack();
+    navigation.pop(2);
   }, [navigation]);
 
   return (

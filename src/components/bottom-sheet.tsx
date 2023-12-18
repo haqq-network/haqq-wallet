@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 
 import {
+  Platform,
   StyleProp,
   StyleSheet,
   TouchableWithoutFeedback,
@@ -69,6 +70,7 @@ export type BottomSheetProps = {
   scrollable?: boolean;
   contentContainerStyle?: StyleProp<ViewStyle>;
   titleContainerStyle?: StyleProp<ViewStyle>;
+  fullscreen?: boolean;
 } & TitleProp;
 
 export type BottomSheetRef = {
@@ -90,6 +92,7 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
       scrollable,
       contentContainerStyle,
       titleContainerStyle,
+      fullscreen,
     },
     ref,
   ) => {
@@ -97,7 +100,11 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
     const {bottom: bottomInsets, top: topInsets} = useSafeAreaInsets();
 
     const bottomSheetHeight = height - (topInsets + 12);
-    const snapPointFromTop: pointsT = [bottomInsets + 95, bottomSheetHeight];
+    const zero = Platform.OS === 'ios' ? bottomInsets + 95 : bottomInsets;
+    const snapPointFromTop: pointsT = [
+      fullscreen ? zero : 0,
+      bottomSheetHeight,
+    ];
 
     const fullyOpenSnapPoint = snapPointFromTop[0];
     const closedSnapPoint = snapPointFromTop[snapPointFromTop.length - 1];
@@ -238,10 +245,12 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
       open: onOpenPopup,
     }));
 
+    const FullscreenWrapper = fullscreen ? ModalProvider : React.Fragment;
+
     return (
       <View style={[StyleSheet.absoluteFillObject, page.container]}>
         <View style={page.wrap}>
-          <ModalProvider>
+          <FullscreenWrapper>
             <Animated.View
               style={[
                 StyleSheet.absoluteFillObject,
@@ -307,7 +316,7 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
                 </Animated.ScrollView>
               </GestureDetector>
             </Animated.View>
-          </ModalProvider>
+          </FullscreenWrapper>
         </View>
       </View>
     );
@@ -322,7 +331,8 @@ const page = createTheme({
   space: {flex: 1},
   background: {
     backgroundColor: Color.bg9,
-    bottom: -200,
+    bottom: -150,
+    right: -150,
   },
   animateView: {
     justifyContent: 'flex-end',

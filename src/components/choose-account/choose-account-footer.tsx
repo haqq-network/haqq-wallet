@@ -55,6 +55,7 @@ export const ChooseAccountFooter = ({
             i18params={{value: String(count)}}
             variant={ButtonVariant.contained}
             size={ButtonSize.middle}
+            loading={loading}
             testID="choose_account_next"
           />
         </>

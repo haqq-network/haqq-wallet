@@ -1,8 +1,9 @@
-import React from 'react';
+import React, {useCallback, useState} from 'react';
 
 import {Image, StyleSheet, View} from 'react-native';
 
 import {Color} from '@app/colors';
+import {BottomSheet} from '@app/components/bottom-sheet';
 import {
   Button,
   ButtonVariant,
@@ -26,6 +27,14 @@ export const SssMigrateRewrite = ({
   onDone,
   onCancel,
 }: SssMigrateAgreementProps) => {
+  const [showWarning, setShowWarning] = useState(false);
+  const hideWarningModal = useCallback(() => {
+    setShowWarning(false);
+  }, []);
+  const onPress = useCallback(() => {
+    hideWarningModal();
+    onDone();
+  }, []);
   return (
     <PopupContainer style={styles.container}>
       <View>
@@ -68,9 +77,37 @@ export const SssMigrateRewrite = ({
           variant={ButtonVariant.text}
           textColor={Color.textRed1}
           i18n={I18N.sssMigrateRewriteRewrite}
-          onPress={onDone}
+          onPress={() => setShowWarning(true)}
         />
       </View>
+
+      {!!showWarning && (
+        <BottomSheet
+          fullscreen
+          onClose={hideWarningModal}
+          i18nTitle={I18N.sssReplaceAccountTitle}>
+          <Text
+            i18n={I18N.sssReplaceAccountDescription1}
+            i18params={{provider: provider.toLocaleUpperCase()}}
+            color={Color.textBase2}
+            t14
+            showChildren>
+            <Text
+              t12
+              i18n={I18N.sssReplaceAccountDescription2}
+              color={Color.textBase2}
+            />
+          </Text>
+          <Button
+            i18n={I18N.sssReplaceAccountButton}
+            onPress={onPress}
+            variant={ButtonVariant.text}
+            textColor={Color.textRed1}
+            style={styles.button}
+            timer={3}
+          />
+        </BottomSheet>
+      )}
     </PopupContainer>
   );
 };
