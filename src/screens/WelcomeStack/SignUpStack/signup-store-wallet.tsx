@@ -77,7 +77,7 @@ export const SignUpStoreWalletScreen = observer(() => {
         const provider = await getCurrentProvider();
 
         // sssLimitReached
-        if (typeof provider.getIdentifier !== 'function') {
+        if (!provider || typeof provider?.getIdentifier !== 'function') {
           return;
         }
 
