@@ -2,6 +2,7 @@ import React, {useCallback, useState} from 'react';
 
 import {ListRenderItem, View} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
 import {ListContact} from '@app/components/list-contact';
@@ -57,7 +58,7 @@ export const TransactionAddress = ({
   testID,
 }: TransactionAddressProps) => {
   const [error, setError] = useState(false);
-
+  const insets = useSafeAreaInsets();
   const onDone = useCallback(async () => {
     onAddress(address.trim());
   }, [onAddress, address]);
@@ -125,7 +126,7 @@ export const TransactionAddress = ({
 
   return (
     <PopupContainer testID={testID}>
-      <KeyboardSafeArea>
+      <KeyboardSafeArea style={styles.keyboardSafeArea}>
         <TextField
           label={I18N.transactionAddressLabel}
           style={styles.input}
@@ -183,6 +184,7 @@ export const TransactionAddress = ({
             <ListOfContacts onPressAddress={onPressAddress} />
           </>
         )}
+        <Spacer flex={1} />
         <Button
           disabled={error}
           variant={ButtonVariant.contained}
@@ -192,7 +194,7 @@ export const TransactionAddress = ({
           loading={loading}
           testID={`${testID}_next`}
         />
-        <Spacer height={32} />
+        <Spacer height={insets.bottom} />
       </KeyboardSafeArea>
     </PopupContainer>
   );
@@ -211,5 +213,8 @@ const styles = createTheme({
   },
   marginHorizontal: {
     marginHorizontal: 20,
+  },
+  keyboardSafeArea: {
+    flex: 1,
   },
 });
