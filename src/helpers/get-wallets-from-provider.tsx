@@ -1,14 +1,12 @@
 import {ProviderInterface} from '@haqq/provider-base';
 
 import {ChooseAccountTabNames} from '@app/components/choose-account/choose-account';
-import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {AddWalletParams, ChooseAccountItem, WalletType} from '@app/types';
 import {
   ETH_HD_SHORT_PATH,
   LEDGER_HD_PATH_TEMPLATE,
-  MAIN_ACCOUNT_NAME,
 } from '@app/variables/common';
 
 import {AddressUtils} from './address-utils';
@@ -36,15 +34,6 @@ export async function* getWalletsFromProvider(
   };
 
   while (canNext) {
-    const total = Wallet.getAll().length;
-
-    const name =
-      total + index === 0
-        ? MAIN_ACCOUNT_NAME
-        : getText(I18N.signinStoreWalletAccountNumber, {
-            number: `${total + index + 1}`,
-          });
-
     const hdPath = genHdPath(index);
 
     const {address} = await provider.getAccountInfo(hdPath);
@@ -57,7 +46,7 @@ export async function* getWalletsFromProvider(
         type: walletType,
         path: hdPath,
         accountId: provider.getIdentifier(),
-        name,
+        name: '',
         balance: Balance.Empty,
         exists: !!Wallet.getById(address),
       };

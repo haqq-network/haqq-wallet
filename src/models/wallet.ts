@@ -240,7 +240,7 @@ class WalletStore implements MobXStoreFromRealm {
       address: walletParams.address.toLowerCase() as HaqqEthereumAddress,
       mnemonicSaved: walletParams.mnemonicSaved || false,
       socialLinkEnabled: walletParams.socialLinkEnabled || false,
-      name: name,
+      name: existingWallet?.name ?? name,
       pattern,
       cardStyle,
       colorFrom: colors[0],
@@ -250,14 +250,17 @@ class WalletStore implements MobXStoreFromRealm {
       path: walletParams.path,
       accountId: walletParams.accountId,
       version: 2,
-      isHidden: false,
-      isMain: false,
+      isHidden: existingWallet?.isHidden ?? false,
+      isMain: existingWallet?.isMain ?? false,
       cosmosAddress: AddressUtils.toHaqq(walletParams.address),
       position: this.getSize(),
     };
 
     if (existingWallet) {
-      this.update(existingWallet.address, walletParams);
+      this.update(existingWallet.address, {
+        ...walletParams,
+        name: existingWallet.name,
+      });
     } else {
       this.wallets.push(newWallet);
     }
