@@ -38,7 +38,7 @@ export const SssMigrateNetworksScreen = memo(() => {
             break;
         }
       } catch (err) {
-        ErrorHandler.handle('sssLimitReached');
+        ErrorHandler.handle('sssLimitReached', err);
         return;
       }
       if (creds.privateKey) {

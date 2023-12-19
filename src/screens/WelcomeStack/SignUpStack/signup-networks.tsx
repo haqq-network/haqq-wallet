@@ -39,7 +39,7 @@ export const SignupNetworksScreen = memo(() => {
               break;
           }
         } catch (err) {
-          ErrorHandler.handle('sssLimitReached');
+          ErrorHandler.handle('sssLimitReached', err);
           return;
         }
 

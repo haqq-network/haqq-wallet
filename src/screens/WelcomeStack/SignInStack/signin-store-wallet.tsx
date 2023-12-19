@@ -111,7 +111,7 @@ export const SignInStoreWalletScreen = observer(() => {
                   GENERATE_SHARES_URL,
                 ) as string,
               },
-            ).catch(() => ErrorHandler.handle('sssLimitReached'));
+            ).catch(err => ErrorHandler.handle('sssLimitReached', err));
 
             if (!sssProvider) {
               hideModal('loading');

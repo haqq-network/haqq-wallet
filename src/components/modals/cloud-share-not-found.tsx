@@ -79,7 +79,7 @@ export const CloudShareNotFound = observer(
               GENERATE_SHARES_URL,
             ) as string,
           },
-        ).catch(() => ErrorHandler.handle('sssLimitReached'));
+        ).catch(err => ErrorHandler.handle('sssLimitReached', err));
 
         Wallet.update(wallet.address, {socialLinkEnabled: true});
 
