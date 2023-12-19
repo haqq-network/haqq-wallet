@@ -78,6 +78,8 @@ export const SignUpStoreWalletScreen = observer(() => {
 
         // sssLimitReached
         if (!provider || typeof provider?.getIdentifier !== 'function') {
+          hideModal('loading');
+          goBack();
           return;
         }
 
