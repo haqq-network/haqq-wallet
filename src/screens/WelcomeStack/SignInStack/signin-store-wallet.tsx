@@ -1,9 +1,10 @@
-import {memo, useEffect} from 'react';
+import {useEffect} from 'react';
 
 import {GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {observer} from 'mobx-react';
 
 import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
@@ -24,7 +25,7 @@ import {ModalType} from '@app/types';
 import {WalletType} from '@app/types';
 import {MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
-export const SignInStoreWalletScreen = memo(() => {
+export const SignInStoreWalletScreen = observer(() => {
   const navigation = useTypedNavigation<SignInStackParamList>();
   const {nextScreen, ...params} = useTypedRoute<
     SignInStackParamList,

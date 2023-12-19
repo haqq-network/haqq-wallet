@@ -1,14 +1,8 @@
-import React, {
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {observer} from 'mobx-react';
 
 import {
   ChooseAccount,
@@ -20,6 +14,7 @@ import {AddressUtils} from '@app/helpers/address-utils';
 import {getWalletsFromProvider} from '@app/helpers/get-wallets-from-provider';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
+import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {HomeStackRoutes} from '@app/screens/HomeStack';
 import {OnboardingStackRoutes} from '@app/screens/WelcomeStack/OnboardingStack';
@@ -30,10 +25,11 @@ import {
 import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
 import {ChooseAccountItem, ModalType, WalletType} from '@app/types';
+import {MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
 const PAGE_SIZE = 5;
 
-export const ChooseAccountScreen = memo(() => {
+export const ChooseAccountScreen = observer(() => {
   const navigation = useTypedNavigation<SignInStackParamList>();
   const params = useTypedRoute<
     SignInStackParamList,
@@ -191,7 +187,15 @@ export const ChooseAccountScreen = memo(() => {
     walletsToCreate
       .filter(_w => !Wallet.getById(_w.address))
       .forEach(item => {
-        Wallet.create(item.name, item);
+        const total = Wallet.getAll().length;
+        const name =
+          total === 0
+            ? MAIN_ACCOUNT_NAME
+            : getText(I18N.signinStoreWalletAccountNumber, {
+                number: `${total + 1}`,
+              });
+
+        Wallet.create(name, item);
         if (isSSSProvider) {
           Wallet.update(item.address, {
             socialLinkEnabled: true,
@@ -213,7 +217,13 @@ export const ChooseAccountScreen = memo(() => {
       //@ts-ignore
       navigation.navigate(OnboardingStackRoutes.OnboardingFinish);
     }
-  }, [walletsToCreate, params, navigation, walletProvider.current]);
+  }, [
+    walletsToCreate,
+    params,
+    navigation,
+    walletProvider.current,
+    Wallet.getAll().length,
+  ]);
 
   return (
     <ChooseAccount
