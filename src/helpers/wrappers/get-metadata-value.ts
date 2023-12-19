@@ -12,7 +12,7 @@ export const getMetadataValueWrapped = async (
   try {
     result = await getMetadataValue(host, privateKey, key);
   } catch (err) {
-    ErrorHandler.handle('sssLimitReached');
+    ErrorHandler.handle('sssLimitReached', err);
   }
   return result;
 };

@@ -72,7 +72,7 @@ export const SssMigrateStoreScreen = observer(() => {
               GENERATE_SHARES_URL,
             ) as string,
           },
-        ).catch(() => ErrorHandler.handle('sssLimitReached'));
+        ).catch(err => ErrorHandler.handle('sssLimitReached', err));
 
         if (!provider || typeof provider.getIdentifier !== 'function') {
           navigation.goBack();
