@@ -52,6 +52,14 @@ export const LottieWrap = React.forwardRef<LottieWrapRef, AnimatedLottie>(
       }
     }, [props.autoPlay]);
 
-    return <Lottie {...props} autoPlay={false} ref={lottieRef} />;
+    return (
+      <Lottie
+        {...props}
+        autoPlay={false}
+        ref={lottieRef}
+        renderMode={'HARDWARE'}
+        cacheComposition
+      />
+    );
   },
 );
