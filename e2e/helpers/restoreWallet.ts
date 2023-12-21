@@ -1,10 +1,6 @@
 import {by, element, expect, waitFor} from 'detox';
 
-export const restoreWallet = async (
-  mnemonic: string,
-  PIN: string,
-  attempt: number = 1,
-) => {
+export const restoreWallet = async (mnemonic: string, PIN: string) => {
   const isAndroid = device.getPlatform() === 'android';
 
   await expect(element(by.id('welcome'))).toBeVisible();
@@ -66,14 +62,4 @@ export const restoreWallet = async (
   }
 
   await element(by.id('onboarding_finish_finish')).tap();
-
-  // Skip BackupSssSuggestion modal
-  if (attempt < 2) {
-    await waitFor(element(by.id('backup_sss_suggestion')))
-      .toBeVisible()
-      .withTimeout(15000);
-
-    await element(by.id('backup_sss_suggestion_skip_button')).tap();
-    await element(by.label('Accept')).atIndex(0).tap();
-  }
 };
