@@ -17,6 +17,7 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {MenuProvider} from 'react-native-popup-menu';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
+import Toast from 'react-native-toast-message';
 
 import {Color} from '@app/colors';
 import {AppScreenSecurityOverview} from '@app/components/app-screen-security-overview';
@@ -203,6 +204,7 @@ export const App = () => {
                 isReady={initialized}
               />
               <AppScreenSecurityOverview />
+              <Toast />
             </NavigationContainer>
           </MenuProvider>
         </SafeAreaProvider>

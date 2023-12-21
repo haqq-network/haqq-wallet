@@ -46,7 +46,7 @@ export const TransactionConfirmationScreen = observer(() => {
     () => Contact.getById(route.params.to),
     [route.params.to],
   );
-  const {error, errorDetails, setError} = useError();
+  const showError = useError();
   const [disabled, setDisabled] = useState(false);
   const [fee, setFee] = useState<Balance | null>(null);
 
@@ -126,7 +126,7 @@ export const TransactionConfirmationScreen = observer(() => {
         });
 
         if (e instanceof Error) {
-          setError(errorId, e.message);
+          showError(errorId, e.message);
         }
       } finally {
         setDisabled(false);
@@ -156,8 +156,6 @@ export const TransactionConfirmationScreen = observer(() => {
       amount={route.params.amount}
       fee={fee}
       onConfirmTransaction={onConfirmTransaction}
-      error={error}
-      errorDetails={errorDetails}
       testID="transaction_confirmation"
       token={route.params.token}
     />

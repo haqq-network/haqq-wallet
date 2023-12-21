@@ -6,6 +6,7 @@ import {TransactionNftConfirmation} from '@app/components/transaction-nft-confir
 import {abortProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
+import {useError} from '@app/hooks/use-error';
 import {Contact} from '@app/models/contact';
 import {Wallet} from '@app/models/wallet';
 import {
@@ -31,7 +32,7 @@ export const TransactionNftConfirmationScreen = observer(() => {
     [route.params.to],
   );
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [error, setError] = useState('');
+  const showError = useError();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [disabled, setDisabled] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -98,11 +99,7 @@ export const TransactionNftConfirmationScreen = observer(() => {
     //       walletType: wallet.type,
     //     });
     //     if (e instanceof Error) {
-    //       setError(
-    //         getText(I18N.transactionFailed, {
-    //           id: errorId,
-    //         }),
-    //       );
+    //       showError(errorId);
     //     }
     //   } finally {
     //     setDisabled(false);
@@ -124,7 +121,6 @@ export const TransactionNftConfirmationScreen = observer(() => {
       item={route.params.nft}
       fee={fee}
       onConfirmTransaction={onConfirmTransaction}
-      error={error}
     />
   );
 });

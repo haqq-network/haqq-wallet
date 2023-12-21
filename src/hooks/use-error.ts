@@ -1,20 +1,20 @@
-import {useState} from 'react';
+import Toast from 'react-native-toast-message';
 
+import {showModal} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
+import {ModalType} from '@app/types';
 
 export const useError = () => {
-  const [{error, errorDetails}, _setError] = useState({
-    error: '',
-    errorDetails: '',
-  });
-
-  const setError = (errorId: string, details: string) =>
-    _setError({
-      error: getText(I18N.transactionFailed, {
-        id: errorId,
-      }),
-      errorDetails: details,
+  return (errorId: string, errorDetails: string) => {
+    Toast.show({
+      type: 'error',
+      text1: getText(I18N.errorText),
+      text2: getText(I18N.errorCode, {id: errorId}),
+      onPress: () => {
+        showModal(ModalType.viewErrorDetails, {
+          errorDetails,
+        });
+      },
     });
-
-  return {error, errorDetails, setError};
+  };
 };
