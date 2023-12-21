@@ -56,6 +56,8 @@ describe('Routine', () => {
       .toBeVisible()
       .withTimeout(3000);
     await element(by.id('backup_finish_finish')).tap();
+    await element(by.id('go_back')).tap();
+    await element(by.id('go_back')).tap();
     await element(by.text('Main')).tap();
 
     await ensureWalletIsVisible(mnemonic_words.join(' '));

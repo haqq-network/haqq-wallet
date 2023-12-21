@@ -26,7 +26,7 @@ describe('Reset Wallet', () => {
     await element(by.id('forgot_the_code')).tap();
     await element(by.id('reset_wallet')).tap();
     await element(by.label('Reset')).atIndex(0).tap();
-    await restoreWallet(mnemonic, PIN, 2);
+    await restoreWallet(mnemonic, PIN);
     await ensureWalletIsVisible(mnemonic);
   });
 
@@ -36,6 +36,6 @@ describe('Reset Wallet', () => {
     await element(by.id('forgot_the_code')).tap();
     await element(by.id('reset_wallet')).tap();
     await element(by.label('Reset')).atIndex(0).tap();
-    await createWallet(PIN, 2);
+    await createWallet(PIN);
   });
 });
