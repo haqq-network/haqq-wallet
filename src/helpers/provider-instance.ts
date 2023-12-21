@@ -12,7 +12,7 @@ import {Wallet} from '@app/models/wallet';
 import {WalletType} from '@app/types';
 import {LEDGER_APP} from '@app/variables/common';
 
-import {showModal} from './modal';
+import {awaitForQRSign} from './await-for-qr-sign';
 
 const cache = new Map();
 
@@ -109,13 +109,9 @@ export async function getProviderInstanceForWallet(
           id,
           new ProviderKeystoneReactNative({
             qrCBORHex: wallet.accountId!,
-            awaitForSign: async ({requestID, cborHex, urType}) => {
-              Logger.log({requestID, urType, cborHex});
-              showModal('keystoneQR', {
-                cborHex,
-                urType,
-              });
-              return Buffer.from('');
+            awaitForSign: async params => {
+              const signatureHex = await awaitForQRSign(params);
+              return {signatureHex};
             },
           }),
         );

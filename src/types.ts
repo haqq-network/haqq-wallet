@@ -5,6 +5,7 @@ import {Validator} from '@evmos/provider';
 import {Proposal} from '@evmos/provider/dist/rest/gov';
 import {Coin} from '@evmos/transactions';
 import {AccessListish, BigNumberish} from '@haqq/provider-base';
+import {KeystoneAwaitForSignParams} from '@haqq/provider-keystone-react-native/src';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {NativeStackNavigationOptions} from '@react-navigation/native-stack';
@@ -1089,9 +1090,10 @@ export type Modals = {
     eventTaskId?: string;
     onClose?: () => void;
   };
-  keystoneQR: {
-    cborHex: string;
-    urType: string;
+  keystoneQR: KeystoneAwaitForSignParams & {
+    succesEventName: string;
+    errorEventName: string;
+    onClose?: () => void;
   };
   sssLimitReached: {onClose?: () => void};
 };

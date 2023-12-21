@@ -896,6 +896,10 @@ export enum I18N {
   signupImportantInfoDesc3_1,
   signupImportantInfoDesc3_2,
   signupImportantInfoDesc4,
+  keystoneQrStep1,
+  keystoneQrStep2,
+  keystoneQrGetSignature,
+  keystoneQrClose,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1957,4 +1961,9 @@ const en: Record<I18N, string> = {
   [I18N.signupImportantInfoDesc4]:
     "It's important to keep your Google or Apple login details safe. If you lose them, or if your phone is stolen, you won't be able to get your wallet back using your social media login.",
   [I18N.erase]: 'Erase',
+  [I18N.keystoneQrStep1]: 'Scan QR with your Keystone',
+  [I18N.keystoneQrStep2]:
+    'After you have signed with Keystone tap on Get Signature',
+  [I18N.keystoneQrGetSignature]: 'Get Signature',
+  [I18N.keystoneQrClose]: 'Close',
 };

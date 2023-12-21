@@ -1,5 +1,5 @@
 import {ProviderInterface} from '@haqq/provider-base';
-import {ProviderKeystoneReactNative} from '@haqq/provider-keystone-react-native';
+import {ProviderKeystoneReactNative} from '@haqq/provider-keystone-react-native/src';
 
 import {ChooseAccountTabNames} from '@app/components/choose-account/choose-account';
 import {I18N, getText} from '@app/i18n';
