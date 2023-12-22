@@ -84,7 +84,9 @@ describe('Routine', () => {
     }
 
     for (const word of mnemonic_words) {
-      await expect(element(by.text(word))).toBeVisible();
+      await waitFor(element(by.text(word)))
+        .toBeVisible()
+        .withTimeout(3000);
     }
 
     await element(by.id('go_back')).tap();
