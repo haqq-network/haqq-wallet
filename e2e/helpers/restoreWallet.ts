@@ -1,6 +1,10 @@
 import {by, element, expect, waitFor} from 'detox';
 
-export const restoreWallet = async (mnemonic: string, PIN: string) => {
+export const restoreWallet = async (
+  mnemonic: string,
+  PIN: string,
+  attempt: number = 1,
+) => {
   const isAndroid = device.getPlatform() === 'android';
 
   await expect(element(by.id('welcome'))).toBeVisible();
@@ -47,19 +51,22 @@ export const restoreWallet = async (mnemonic: string, PIN: string) => {
     await expect(element(by.id('onboarding_biometry_title'))).toBeVisible();
 
     await element(by.id('onboarding_biometry_skip')).tap();
-    if (device.getPlatform() === 'ios') {
-      await waitFor(element(by.id('onboarding_track_user_activity')))
-        .toBeVisible()
-        .withTimeout(5000);
-
-      await element(by.id('onboarding_tracking_skip')).tap();
-    }
-    await waitFor(element(by.id('onboarding_finish_title')))
+    await waitFor(element(by.id('onboarding_track_user_activity')))
       .toBeVisible()
-      .withTimeout(15000);
+      .withTimeout(5000);
 
-    await expect(element(by.id('onboarding_finish_title'))).toBeVisible();
+    await element(by.id('onboarding_tracking_skip')).tap();
+
+    if (attempt === 1) {
+      await waitFor(element(by.id('onboarding_finish_title')))
+        .toBeVisible()
+        .withTimeout(15000);
+
+      await expect(element(by.id('onboarding_finish_title'))).toBeVisible();
+    }
   }
 
-  await element(by.id('onboarding_finish_finish')).tap();
+  if (attempt === 1) {
+    await element(by.id('onboarding_finish_finish')).tap();
+  }
 };
