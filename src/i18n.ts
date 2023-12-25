@@ -1557,7 +1557,7 @@ const en: Record<I18N, string> = {
     "Сongratulations! You've successfully connected your social network.",
   [I18N.sssMigrateAgrementTitle]: 'Important Social login Info',
   [I18N.sssMigrateAgrementDescription]:
-    'We use Web3Auth technology. HAQQ Wallet does not store any data related to your social logins.',
+    'HAQQ Wallet does not store any data related to your social logins.',
   [I18N.sssMigrateAgrementWarning1]:
     'The wallet account is permanently linked to the social account that you choose. If you lose access to your social account, you will be able to restore your wallet account using the backup phrase (if you previously created it)',
   [I18N.sssMigrateAgrementWarning2]:
@@ -1893,6 +1893,6 @@ const en: Record<I18N, string> = {
   [I18N.signupImportantInfoDesc3_2]:
     ' from the cloud, the app will let you know and help fix it.\n',
   [I18N.signupImportantInfoDesc4]:
-    "It's important to keep your Google or Apple login details safe. If you lose them, or if your phone is stolen, you won't be able to get your wallet back using your social media login.",
+    "It's important to keep your Google or Apple login details safe. If you lose them and if your phone is lost, you won't be able to get your wallet back using your social media login.",
   [I18N.erase]: 'Erase',
 };

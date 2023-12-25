@@ -26,6 +26,11 @@ export const STRICT_URLS: Partial<Link>[] = [
     url: 'https://vesting.haqq.network',
     icon: 'https://vesting.haqq.network/assets/favicon.svg',
   },
+  {
+    title: 'SushiSwap',
+    url: 'https://www.sushi.com/swap',
+    icon: 'https://www.sushi.com/favicon.ico?v=1',
+  },
 ];
 
 export const BrowserHomePageScreen = memo(() => {
