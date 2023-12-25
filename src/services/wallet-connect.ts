@@ -49,7 +49,8 @@ export class WalletConnect extends Initializable {
     return this._client?.engine?.signClient?.session?.getAll?.() || [];
   }
 
-  public disconnectSession(topic: string) {
+  public async disconnectSession(topic: string) {
+    await this.awaitForInitialization();
     WalletConnectSessionMetadata.remove(topic);
     return this._client?.disconnectSession?.({
       reason: getSdkError('USER_DISCONNECTED'),
@@ -197,7 +198,8 @@ export class WalletConnect extends Initializable {
     }
   }
 
-  public rejectSession(eventId: number, message?: string) {
+  public async rejectSession(eventId: number, message?: string) {
+    await this.awaitForInitialization();
     return this._client?.rejectSession?.({
       id: eventId,
       reason: getSdkError('USER_REJECTED', message),
@@ -209,6 +211,7 @@ export class WalletConnect extends Initializable {
     topic: string,
     message?: string,
   ) {
+    await this.awaitForInitialization();
     await this._client?.respondSessionRequest({
       topic,
       response: {
@@ -225,6 +228,8 @@ export class WalletConnect extends Initializable {
     currentETHAddress: string,
     params: SignClientTypes.EventArguments['session_proposal']['params'],
   ) {
+    await this.awaitForInitialization();
+
     if (!this._client) {
       return;
     }
@@ -234,9 +239,13 @@ export class WalletConnect extends Initializable {
     const useDebugNamespaces =
       app.isTesterMode || DEBUG_VARS.allowAnySourcesForWalletConnectLogin;
 
+    const walletConnectConfig = RemoteConfig.get('wallet_connect');
+
     const allowedNamespaces = useDebugNamespaces
-      ? requiredNamespaces
-      : RemoteConfig.get('wallet_connect');
+      ? Object.keys(requiredNamespaces).length
+        ? requiredNamespaces
+        : walletConnectConfig
+      : walletConnectConfig;
 
     if (!allowedNamespaces) {
       throw Error('[WalletConnect]: allowedNamespaces not found');
@@ -308,6 +317,7 @@ export class WalletConnect extends Initializable {
     result: any,
     event: SignClientTypes.EventArguments['session_request'],
   ) {
+    await this.awaitForInitialization();
     if (!result) {
       throw new Error(
         '[WalletConnect:approveEIP155Request]: result is undefined',

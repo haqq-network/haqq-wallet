@@ -1,11 +1,11 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 import {observer} from 'mobx-react';
 
 import {Proposal} from '@app/components/proposal';
 import {VotingCardDetailRefInterface} from '@app/components/proposal/voting-card-detail';
 import {app} from '@app/contexts';
-import {getWindowHeight, showModal} from '@app/helpers';
+import {awaitForWallet, showModal} from '@app/helpers';
 import {depositSum} from '@app/helpers/governance';
 import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
@@ -45,8 +45,8 @@ export const ProposalScreen = observer(() => {
     app.off('wallet-selected-proposal-deposit', onDepositSubmit);
   };
 
-  useEffect(() => {
-    const onVotedSubmit = async (address: string) => {
+  const onVotedSubmit = useCallback(
+    async (address: string) => {
       const opinion = VOTES.find(v => v.name === voteSelectedRef.current);
       const wallet = Wallet.getById(address);
       if (!(wallet && item)) {
@@ -74,16 +74,11 @@ export const ProposalScreen = observer(() => {
       }
 
       setModalIsLoading(false);
-    };
-    const onCloseWallets = () => setModalIsLoading(false);
+    },
+    [item, cosmos],
+  );
 
-    app.on('wallet-selected-proposal', onVotedSubmit);
-    app.on('wallet-selected-reject-proposal', onCloseWallets);
-    return () => {
-      app.off('wallet-selected-proposal', onVotedSubmit);
-      app.off('wallet-selected-reject-proposal', onCloseWallets);
-    };
-  }, [item, cosmos]);
+  const onCloseWallets = useCallback(() => setModalIsLoading(false), []);
 
   useEffect(() => {
     cosmos.getProposalDeposits(item.proposal_id).then(voter => {
@@ -91,16 +86,22 @@ export const ProposalScreen = observer(() => {
     });
   }, [item, cosmos]);
 
-  const onVote = (decision: VoteNamesType) => {
+  const onVote = async (decision: VoteNamesType) => {
     setModalIsLoading(true);
     voteSelectedRef.current = decision;
     cardRef.current?.setSelected(decision);
-    showModal(ModalType.walletsBottomSheet, {
-      wallets: visible,
-      closeDistance: () => getWindowHeight() / 6,
-      title: I18N.proposalAccountTitle,
-      eventSuffix: '-proposal',
-    });
+    showModal(ModalType.walletsBottomSheet);
+
+    try {
+      const address = await awaitForWallet({
+        wallets: visible,
+        title: I18N.proposalAccountTitle,
+        eventSuffix: '-proposal',
+      });
+      onVotedSubmit(address);
+    } catch (e) {
+      onCloseWallets();
+    }
   };
 
   const onVoteChange = (decision: VoteNamesType) => {

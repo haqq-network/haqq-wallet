@@ -71,6 +71,7 @@ export const WalletConnectApprovalScreen = observer(() => {
       title: I18N.selectAccount,
       type: WalletSelectType.screen,
       initialAddress: selectedWallet?.address,
+      eventSuffix: event?.id,
     });
     setSelectedWallet(Wallet.getById(address)!);
   };

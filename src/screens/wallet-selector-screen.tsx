@@ -1,5 +1,6 @@
-import React, {memo, useCallback, useEffect, useRef} from 'react';
+import React, {memo, useCallback, useRef} from 'react';
 
+import {useFocusEffect} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
@@ -23,21 +24,21 @@ export const WalletSelectorScreen = memo(() => {
     HomeStackParamList,
     HomeStackRoutes.WalletSelector
   >();
-  const {title, wallets, initialAddress, eventSuffix = ''} = params;
+  const {title, wallets, initialAddress, errorEventName, successEventName} =
+    params;
   const selectedAddress = useRef(initialAddress);
 
-  useEffect(() => {
-    const onBlur = () => {
-      if (selectedAddress.current) {
-        app.emit(`wallet-selected${eventSuffix}`, selectedAddress.current);
-      } else {
-        app.emit(`wallet-selected-reject${eventSuffix}`);
-      }
-    };
-
-    navigation.addListener('blur', onBlur);
-    return () => navigation.removeListener('blur', onBlur);
-  }, [eventSuffix, navigation]);
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        if (selectedAddress.current) {
+          app.emit(successEventName, selectedAddress.current);
+        } else {
+          app.emit(errorEventName);
+        }
+      };
+    }, [navigation, errorEventName, successEventName]),
+  );
 
   const onWalletSelected = useCallback((address: string) => {
     selectedAddress.current = address;

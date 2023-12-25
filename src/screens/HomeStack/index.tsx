@@ -44,6 +44,7 @@ import {Web3BrowserPopup as Web3BrowserPopupScreen} from '@app/screens/web3-brow
 import {LedgerStack} from '@app/screens/WelcomeStack/LedgerStack';
 import {SignInStack} from '@app/screens/WelcomeStack/SignInStack';
 import {
+  Eventable,
   JsonRpcMetadata,
   NftItem,
   PartialJsonRpcRequest,
@@ -132,11 +133,10 @@ export type HomeStackParamList = {
   };
   [HomeStackRoutes.PopupTrackActivity]: {bannerId: string};
   [HomeStackRoutes.Web3BrowserPopup]: {url: string; popup?: boolean};
-  [HomeStackRoutes.WalletSelector]: {
+  [HomeStackRoutes.WalletSelector]: Eventable & {
     wallets: Wallet[];
     title: string;
     initialAddress?: string;
-    eventSuffix?: string;
   };
   [HomeStackRoutes.TotalValueInfo]?: {
     tab?: TotalValueTabNames;
