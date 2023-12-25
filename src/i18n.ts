@@ -1875,7 +1875,7 @@ const en: Record<I18N, string> = {
   [I18N.sssLimitReachedButton]: 'Close',
   [I18N.sssReplaceAccountTitle]: 'Replace your account?',
   [I18N.sssReplaceAccountDescription1]:
-    'Account linked to your {{provider}} id',
+    'Account currently linked to your {{provider}} id',
   [I18N.sssReplaceAccountDescription2]:
     ' will be lost and you will not be able to access assets on this account.',
   [I18N.sssReplaceAccountButton]: 'Confirm Erase',
