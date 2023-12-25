@@ -1,5 +1,5 @@
 import {ProviderInterface} from '@haqq/provider-base';
-import {ProviderKeystoneReactNative} from '@haqq/provider-keystone-react-native/src';
+import {ProviderKeystoneReactNative} from '@haqq/provider-keystone-react-native';
 
 import {ChooseAccountTabNames} from '@app/components/choose-account/choose-account';
 import {I18N, getText} from '@app/i18n';
@@ -9,7 +9,6 @@ import {AddWalletParams, ChooseAccountItem, WalletType} from '@app/types';
 import {
   ETH_HD_SHORT_PATH,
   LEDGER_HD_PATH_TEMPLATE,
-  MAIN_ACCOUNT_NAME,
 } from '@app/variables/common';
 
 import {AddressUtils} from './address-utils';
@@ -40,22 +39,13 @@ export async function* getWalletsFromProvider(
   };
 
   while (canNext) {
-    const total = Wallet.getAll().length;
-
-    const defaultName =
-      total + index === 0
-        ? MAIN_ACCOUNT_NAME
-        : getText(I18N.signinStoreWalletAccountNumber, {
-            number: `${total + index + 1}`,
-          });
-
     const keystoneWalletsCount =
       Wallet.getAll().filter(w => w.type === WalletType.keystone)?.length || 0;
     const keystoneName = getText(I18N.keystoneWalletAccountNumber, {
       number: `${keystoneWalletsCount + index + 1}`,
     });
-    const name =
-      walletType === WalletType.keystone ? keystoneName : defaultName;
+
+    const name = walletType === WalletType.keystone ? keystoneName : '';
 
     const hdPath = genHdPath(index);
 

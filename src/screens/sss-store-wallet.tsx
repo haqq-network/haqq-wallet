@@ -49,7 +49,7 @@ export const SssStoreWalletScreen = () => {
               GENERATE_SHARES_URL,
             ) as string,
           },
-        ).catch(() => ErrorHandler.handle('sssLimitReached'));
+        ).catch(err => ErrorHandler.handle('sssLimitReached', err));
 
         let canNext = true;
         let index = 0;
@@ -61,7 +61,7 @@ export const SssStoreWalletScreen = () => {
             total === 0
               ? MAIN_ACCOUNT_NAME
               : getText(I18N.signinStoreWalletAccountNumber, {
-                  number: `${total + index + 1}`,
+                  number: `${total + 1}`,
                 });
 
           const hdPath = `${ETH_HD_SHORT_PATH}/${index}`;

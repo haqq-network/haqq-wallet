@@ -13,6 +13,7 @@ import {
 } from '@app/components/ui';
 import {I18N} from '@app/i18n';
 import {SssProviders} from '@app/services/provider-sss';
+import {capitalize} from '@app/utils';
 
 export type SssMigrateAgreementProps = {
   provider: SssProviders;
@@ -88,7 +89,7 @@ export const SssMigrateRewrite = ({
           i18nTitle={I18N.sssReplaceAccountTitle}>
           <Text
             i18n={I18N.sssReplaceAccountDescription1}
-            i18params={{provider: provider.toLocaleUpperCase()}}
+            i18params={{provider: capitalize(provider)}}
             color={Color.textBase2}
             t14
             showChildren>

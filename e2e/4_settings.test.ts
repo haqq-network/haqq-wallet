@@ -56,6 +56,8 @@ describe('Routine', () => {
       .toBeVisible()
       .withTimeout(3000);
     await element(by.id('backup_finish_finish')).tap();
+    await element(by.id('go_back')).tap();
+    await element(by.id('go_back')).tap();
     await element(by.text('Main')).tap();
 
     await ensureWalletIsVisible(mnemonic_words.join(' '));
@@ -82,7 +84,9 @@ describe('Routine', () => {
     }
 
     for (const word of mnemonic_words) {
-      await expect(element(by.text(word))).toBeVisible();
+      await waitFor(element(by.text(word)))
+        .toBeVisible()
+        .withTimeout(3000);
     }
 
     await element(by.id('go_back')).tap();

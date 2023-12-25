@@ -51,29 +51,22 @@ export const restoreWallet = async (
     await expect(element(by.id('onboarding_biometry_title'))).toBeVisible();
 
     await element(by.id('onboarding_biometry_skip')).tap();
-    if (device.getPlatform() === 'ios') {
-      await waitFor(element(by.id('onboarding_track_user_activity')))
-        .toBeVisible()
-        .withTimeout(5000);
-
-      await element(by.id('onboarding_tracking_skip')).tap();
-    }
-    await waitFor(element(by.id('onboarding_finish_title')))
+    await waitFor(element(by.id('onboarding_track_user_activity')))
       .toBeVisible()
-      .withTimeout(15000);
+      .withTimeout(5000);
 
-    await expect(element(by.id('onboarding_finish_title'))).toBeVisible();
+    await element(by.id('onboarding_tracking_skip')).tap();
+
+    if (attempt === 1) {
+      await waitFor(element(by.id('onboarding_finish_title')))
+        .toBeVisible()
+        .withTimeout(15000);
+
+      await expect(element(by.id('onboarding_finish_title'))).toBeVisible();
+    }
   }
 
-  await element(by.id('onboarding_finish_finish')).tap();
-
-  // Skip BackupSssSuggestion modal
-  if (attempt < 2) {
-    await waitFor(element(by.id('backup_sss_suggestion')))
-      .toBeVisible()
-      .withTimeout(15000);
-
-    await element(by.id('backup_sss_suggestion_skip_button')).tap();
-    await element(by.label('Accept')).atIndex(0).tap();
+  if (attempt === 1) {
+    await element(by.id('onboarding_finish_finish')).tap();
   }
 };

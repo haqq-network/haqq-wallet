@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 
 import type AnimatedLottieView from 'lottie-react-native';
 import Lottie, {AnimatedLottieViewProps} from 'lottie-react-native';
@@ -24,14 +24,9 @@ type AnimatedLottie = AnimatedLottieViewProps & {
 export const LottieWrap = React.forwardRef<LottieWrapRef, AnimatedLottie>(
   (props, ref) => {
     const lottieRef = useRef<AnimatedLottieView>(null);
-    const [trigger, triggerAnimation] = useState({});
 
     React.useImperativeHandle(ref, () => ({
-      play: async () => {
-        //FIXME: https://github.com/lottie-react-native/lottie-react-native/issues/1092
-        await sleep(50);
-        triggerAnimation({});
-      },
+      play: async () => lottieRef.current?.play?.(),
       reset: () => lottieRef?.current?.reset?.(),
       pause: () => lottieRef?.current?.pause?.(),
       resume: () => lottieRef?.current?.resume?.(),
@@ -49,16 +44,20 @@ export const LottieWrap = React.forwardRef<LottieWrapRef, AnimatedLottie>(
     }, []);
 
     useLayoutEffectAsync(async () => {
-      await sleep(50);
-      lottieRef.current?.play();
-    }, [trigger]);
+      // FIXME: Please upgrade lottie-react-native after new release
+      // https://github.com/lottie-react-native/lottie-react-native/issues/1092
+      await sleep(333);
+      if (props.autoPlay) {
+        lottieRef.current?.play();
+      }
+    }, [props.autoPlay]);
 
     return (
       <Lottie
         {...props}
+        autoPlay={false}
         ref={lottieRef}
-        renderMode="HARDWARE"
-        useNativeLooping
+        renderMode={'HARDWARE'}
         cacheComposition
       />
     );

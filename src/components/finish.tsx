@@ -48,7 +48,7 @@ export const Finish = ({onFinish, testID, title}: FinishProps) => {
           ref={lottie}
           source={animation}
           autoPlay={true}
-          loop={true}
+          loop={false}
         />
       </Spacer>
       <Text t4 i18n={title} style={styles.title} testID={`${testID}_title`} />

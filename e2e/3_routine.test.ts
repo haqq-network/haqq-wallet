@@ -47,7 +47,7 @@ describe('Routine', () => {
 
     const wallet = Wallet.fromMnemonic(mnemonic);
 
-    const amountInEther = '0.0017';
+    const amountInEther = '0.002';
     const tx = {
       to: wallet.address,
       value: utils.parseEther(amountInEther),
@@ -55,7 +55,7 @@ describe('Routine', () => {
 
     await milkWallet.sendTransaction(tx);
 
-    await sleep(30_000);
+    await sleep(10_000);
 
     await element(by.id(`wallets_${wallet.address.toLowerCase()}_send`)).tap();
 
@@ -68,6 +68,8 @@ describe('Routine', () => {
       // Previous step was for keyboard hide
       await element(by.id('transaction_address_next')).tap();
     }
+
+    await element(by.text('Islamic coin')).tap();
 
     await waitFor(element(by.id('transaction_sum')))
       .toBeVisible()

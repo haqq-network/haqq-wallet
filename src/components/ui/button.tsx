@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {useCallback, useMemo} from 'react';
 
+import _ from 'lodash';
 import {
   ActivityIndicator,
   StyleProp,
@@ -85,6 +86,9 @@ export enum ButtonSize {
   large = 'large',
 }
 
+const defaultOnPress = async () => Promise.resolve();
+const DEBOUNCE_MS = 1000;
+
 export const Button = ({
   title,
   i18n,
@@ -133,24 +137,35 @@ export const Button = ({
     return status === 'RUNNING';
   }, [status]);
 
+  const onPressDebounced = useCallback(
+    _.debounce(onPress ?? defaultOnPress, DEBOUNCE_MS, {
+      leading: true,
+      trailing: false,
+      maxWait: DEBOUNCE_MS,
+    }),
+    [onPress],
+  );
+
   const onPressButton = useCallback(async () => {
+    if (loading) {
+      return;
+    }
+
     if (trackLoading) {
       setLoading(true);
       try {
-        if (onPress) {
-          await sleep(100);
-          await onPress();
-        }
+        await sleep(100);
+        await onPressDebounced();
       } finally {
         setLoading(false);
       }
       return;
     }
 
-    if (!(disabled || loading)) {
-      onPress?.();
+    if (!disabled) {
+      onPressDebounced();
     }
-  }, [disabled, loading, onPress, trackLoading]);
+  }, [disabled, loading, onPressDebounced, trackLoading]);
 
   const containerStyle = useMemo(
     () =>
