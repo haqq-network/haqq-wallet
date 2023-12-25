@@ -3,6 +3,7 @@ import {showModal} from '@app/helpers/modal';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
+import {Eventable} from '@app/types';
 
 import {getWindowHeight} from './scaling-utils';
 
@@ -18,6 +19,7 @@ export interface AwaitForWalletParams {
   initialAddress?: string;
   autoSelectWallet?: boolean;
   suggestedAddress?: string;
+  eventSuffix?: string | number;
 }
 
 export class AwaitForWalletError {
@@ -28,6 +30,11 @@ export class AwaitForWalletError {
   }
 }
 
+export enum AwaitForWalletEvents {
+  success = 'wallet-selected',
+  error = 'wallet-selected-reject',
+}
+
 export async function awaitForWallet({
   title,
   wallets,
@@ -35,6 +42,7 @@ export async function awaitForWallet({
   type,
   suggestedAddress,
   autoSelectWallet = true,
+  eventSuffix = '',
 }: AwaitForWalletParams): Promise<string> {
   if (autoSelectWallet && wallets.length === 1) {
     return Promise.resolve(wallets[0].address);
@@ -48,10 +56,15 @@ export async function awaitForWallet({
     }
   }
 
+  const event: Eventable = {
+    successEventName: AwaitForWalletEvents.success + eventSuffix,
+    errorEventName: AwaitForWalletEvents.error + eventSuffix,
+  };
+
   return new Promise((resolve, reject) => {
     const removeAllListeners = () => {
-      app.removeListener('wallet-selected', onAction);
-      app.removeListener('wallet-selected-reject', onReject);
+      app.removeListener(event.successEventName, onAction);
+      app.removeListener(event.errorEventName, onReject);
     };
 
     const onAction = (address: string) => {
@@ -64,8 +77,8 @@ export async function awaitForWallet({
       reject(new AwaitForWalletError('rejected by user'));
     };
 
-    app.addListener('wallet-selected', onAction);
-    app.addListener('wallet-selected-reject', onReject);
+    app.addListener(event.successEventName, onAction);
+    app.addListener(event.errorEventName, onReject);
 
     switch (type) {
       case WalletSelectType.screen: {
@@ -73,6 +86,7 @@ export async function awaitForWallet({
           wallets,
           title: getText(title),
           initialAddress,
+          ...event,
         });
       }
       case WalletSelectType.bottomSheet:
@@ -83,6 +97,7 @@ export async function awaitForWallet({
           title,
           autoSelectWallet,
           initialAddress,
+          ...event,
         });
     }
   });

@@ -12,8 +12,9 @@ export function WalletsBottomSheet({
   wallets,
   title,
   autoSelectWallet = true,
-  eventSuffix = '',
   initialAddress,
+  errorEventName,
+  successEventName,
   onClose,
 }: Modals[ModalType.walletsBottomSheet]) {
   const closeDistanceCalculated = useCalculatedDimensionsValue(
@@ -23,12 +24,12 @@ export function WalletsBottomSheet({
   const onPressWallet = useCallback(
     (address: string) => {
       onClose?.();
-      app.emit(`wallet-selected${eventSuffix}`, address);
+      app.emit(successEventName, address);
     },
-    [eventSuffix, onClose],
+    [successEventName, onClose],
   );
   const onCloseSheet = () => {
-    app.emit(`wallet-selected-reject${eventSuffix}`);
+    app.emit(errorEventName);
     onClose?.();
   };
 
@@ -39,9 +40,9 @@ export function WalletsBottomSheet({
     }
 
     return () => {
-      app.emit(`wallet-selected-reject${eventSuffix}`);
+      app.emit(errorEventName);
     };
-  }, [wallets, onPressWallet, eventSuffix, autoSelectWallet, onClose]);
+  }, [wallets, onPressWallet, errorEventName, autoSelectWallet, onClose]);
 
   return (
     <BottomSheet
