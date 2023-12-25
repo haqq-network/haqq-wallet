@@ -91,21 +91,22 @@ export const SssMigrateRewrite = ({
             i18n={I18N.sssReplaceAccountDescription1}
             i18params={{provider: capitalize(provider)}}
             color={Color.textBase2}
-            t14
+            t11
             showChildren>
             <Text
-              t12
+              t9
               i18n={I18N.sssReplaceAccountDescription2}
               color={Color.textBase2}
             />
           </Text>
           <Button
+            error
             i18n={I18N.sssReplaceAccountButton}
             onPress={onPress}
-            variant={ButtonVariant.text}
+            variant={ButtonVariant.second}
             textColor={Color.textRed1}
-            style={styles.button}
-            timer={3}
+            style={styles.timerButton}
+            timer={10}
           />
         </BottomSheet>
       )}
@@ -127,6 +128,10 @@ const styles = StyleSheet.create({
   },
   button: {
     marginBottom: 16,
+  },
+  timerButton: {
+    marginTop: 16,
+    marginBottom: 40,
   },
   buttonContainer: {
     width: '100%',

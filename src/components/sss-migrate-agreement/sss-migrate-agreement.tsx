@@ -33,8 +33,6 @@ export const SssMigrateAgreement = ({onDone}: SssMigrateAgreementProps) => {
       </Spacer>
       <View style={page.content}>
         <Text center t4 i18n={I18N.sssMigrateAgrementTitle} />
-        <Spacer height={4} />
-        <Text center t11 i18n={I18N.sssMigrateAgrementDescription} />
         <Spacer height={20} />
         <InfoBlock
           icon={<Icon name="warning" color={Color.textYellow1} />}
