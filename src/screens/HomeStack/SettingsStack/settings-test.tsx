@@ -213,7 +213,8 @@ const getTestModals = (): TestModals => {
       wallets,
       title: I18N.welcomeTitle,
       autoSelectWallet: false,
-      eventSuffix: '-test',
+      successEventName: 'test-succes-event',
+      errorEventName: 'test-error-event',
       closeDistance: () => getWindowHeight() / 6,
       onClose: () => logger.log('walletsBottomSheet closed'),
     };

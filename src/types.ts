@@ -551,11 +551,10 @@ export type RootStackParamList = {
     type: WalletType;
   };
   settingsSecurity: undefined;
-  walletSelector: {
+  walletSelector: Eventable & {
     wallets: Wallet[];
     title: string;
     initialAddress?: string;
-    eventSuffix?: string;
   };
   valueSelector: {
     title: string;
@@ -1045,12 +1044,11 @@ export type Modals = {
     onChange: () => void;
     network: string;
   };
-  walletsBottomSheet: {
+  walletsBottomSheet: Eventable & {
     onClose?: () => void;
     wallets: Wallet[];
     closeDistance?: () => number;
     title: I18N;
-    eventSuffix?: string;
     autoSelectWallet?: boolean;
     initialAddress?: string;
   };
@@ -1563,3 +1561,8 @@ export enum DeeplinkUrlKey {
   provider = 'provider',
   enableDeveloperMode = 'enableDeveloperMode',
 }
+
+export type Eventable = Required<{
+  successEventName: string;
+  errorEventName: string;
+}>;
