@@ -1877,7 +1877,7 @@ const en: Record<I18N, string> = {
   [I18N.sssReplaceAccountDescription1]:
     'Account linked to your {{provider}} id',
   [I18N.sssReplaceAccountDescription2]:
-    ' will be lost and you will not be able to access assets on this account',
+    ' will be lost and you will not be able to access assets on this account.',
   [I18N.sssReplaceAccountButton]: 'Confirm Erase',
   [I18N.signupImportantInfoTitle]: 'Important information',
   [I18N.signupImportantInfoSecondaryButton]: 'Read more',
