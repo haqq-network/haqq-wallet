@@ -42,15 +42,15 @@ platform :android do
         "HAQQ_UPLOAD_KEY_PASSWORD" => ENV["HAQQ_UPLOAD_KEY_PASSWORD"]
       })
 
-      upload_to_play_store(
-        skip_upload_metadata: true,
-        skip_upload_changelogs: true,
-        skip_upload_screenshots: true,
-        skip_upload_images: true,
-        skip_upload_apk: true,
-        track: 'internal',
-        aab: 'android/app/build/outputs/bundle/release/app-release.aab'
-      )
+      # upload_to_play_store(
+      #   skip_upload_metadata: true,
+      #   skip_upload_changelogs: true,
+      #   skip_upload_screenshots: true,
+      #   skip_upload_images: true,
+      #   skip_upload_apk: true,
+      #   track: 'internal',
+      #   aab: 'android/app/build/outputs/bundle/release/app-release.aab'
+      # )
   end
 end
 
@@ -226,15 +226,15 @@ platform :ios do
       use_system_scm: true
     )
 
-    pilot(
-      api_key: api_key,
-      apple_id: developer_apple_id,
-      app_identifier: app_identifier,
-      ipa: "haqq.ipa",
-      skip_submission: true,
-      skip_waiting_for_build_processing: true,
-      changelog: ENV["BUILD_DESCRIPTION"]
-    )
+    # pilot(
+    #   api_key: api_key,
+    #   apple_id: developer_apple_id,
+    #   app_identifier: app_identifier,
+    #   ipa: "haqq.ipa",
+    #   skip_submission: true,
+    #   skip_waiting_for_build_processing: true,
+    #   changelog: ENV["BUILD_DESCRIPTION"]
+    # )
 
     delete_temp_keychain(keychain_name)
   end

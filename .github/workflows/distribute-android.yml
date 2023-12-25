@@ -36,7 +36,7 @@ on:
 jobs:
   build:
     name: Build and distribute Android app
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-cpu16-ram64
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -96,6 +96,18 @@ jobs:
           bundle install
       - name: Install packages
         run: yarn install --frozen-lockfile
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
       - name: Execute Fastlane command
         run: bundle exec fastlane android distribute
         env:
