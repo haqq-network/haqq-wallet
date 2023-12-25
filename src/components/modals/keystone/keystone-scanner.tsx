@@ -55,7 +55,10 @@ export const KeystoneScannerModal = ({
     if (purpose === 'sync') {
       return [SUPPORTED_UR_TYPE.CRYPTO_HDKEY, SUPPORTED_UR_TYPE.CRYPTO_ACCOUNT];
     }
-    return [SUPPORTED_UR_TYPE.ETH_SIGNATURE];
+    return [
+      SUPPORTED_UR_TYPE.ETH_SIGNATURE,
+      SUPPORTED_UR_TYPE.COSMOS_SIGNATURE,
+    ];
   }, [purpose]);
 
   const isRequestFromEvent = useMemo(
@@ -132,11 +135,11 @@ export const KeystoneScannerModal = ({
           resetUrDecoder();
           onCloseWrapper();
         } else if (purpose === 'sync') {
-          logger.error('Invalid sync QR code');
+          logger.error('Invalid sync QR code', ur.type);
           handleError(I18N.invalidQrCodeSync);
           resetUrDecoder();
         } else {
-          logger.error('Invalid sign QR code');
+          logger.error('Invalid sign QR code', ur.type);
           handleError(I18N.invalidQrCodeSign);
           resetUrDecoder();
         }
