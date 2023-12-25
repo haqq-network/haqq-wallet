@@ -862,13 +862,11 @@ export enum I18N {
   signupImportantInfoTitle,
   signupImportantInfoSecondaryButton,
   signupImportantInfoPrimaryButton,
-  signupImportantInfoDesc1_1,
-  signupImportantInfoDesc1_2,
-  signupImportantInfoDesc2_1,
-  signupImportantInfoDesc2_2,
-  signupImportantInfoDesc3_1,
-  signupImportantInfoDesc3_2,
+  signupImportantInfoDesc1,
+  signupImportantInfoDesc2,
+  signupImportantInfoDesc3,
   signupImportantInfoDesc4,
+  signupImportantInfoDesc5,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1882,17 +1880,15 @@ const en: Record<I18N, string> = {
   [I18N.signupImportantInfoTitle]: 'Important information',
   [I18N.signupImportantInfoSecondaryButton]: 'Read more',
   [I18N.signupImportantInfoPrimaryButton]: 'Continue',
-  [I18N.signupImportantInfoDesc1_1]:
-    'Your mnemonic phrase will be split into three shares for safety.',
-  [I18N.signupImportantInfoDesc1_2]:
-    ' To use the phrase again, you need two of these three parts. Only you can reach these parts, making it very safe. Nobody else can get into your wallet.\n',
-  [I18N.signupImportantInfoDesc2_1]: 'If you lose your phone',
-  [I18N.signupImportantInfoDesc2_2]:
-    ", delete the app, or forget your PIN, don't worry! You can get your phrase back using your cloud storage and social media login.\n",
-  [I18N.signupImportantInfoDesc3_1]: 'If you remove part of the phrase',
-  [I18N.signupImportantInfoDesc3_2]:
-    ' from the cloud, the app will let you know and help fix it.\n',
+  [I18N.signupImportantInfoDesc1]:
+    '**Your mnemonic phrase will be split into three parts,** stored on your local device, in a cloud storage of your choice, and on-chain. Only you have access to these parts, making it very safe.',
+  [I18N.signupImportantInfoDesc2]:
+    'To use your mnemonic phrase, you need only two of these three parts. **No one else has access to these parts of your mnemonic phrase.**',
+  [I18N.signupImportantInfoDesc3]:
+    '**Should you lose your phone,** mistakenly **delete your HAQQ wallet,** or **forget your PIN.** No need to worry! You can retrieve your wallet through your security phrase using your cloud storage and social login.',
   [I18N.signupImportantInfoDesc4]:
+    '**If you ever remove any part of your mnemonic phrase** stored on your cloud storage, the app will notify you and ensure you fix it.',
+  [I18N.signupImportantInfoDesc5]:
     "It's important to keep your Google or Apple login details safe. If you lose them and if your phone is lost, you won't be able to get your wallet back using your social media login.",
   [I18N.erase]: 'Erase',
 };
