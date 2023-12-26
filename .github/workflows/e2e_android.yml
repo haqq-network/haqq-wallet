@@ -55,8 +55,8 @@ jobs:
         with:
           node-version: 16
 
-      - name: Install packages
-        run: yarn install --frozen-lockfile
+      # - name: Install packages
+      #   run: yarn install --frozen-lockfile
 
       - uses: actions/setup-java@v3
         with:
@@ -76,13 +76,13 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-$API_LEVEL
+          key: avd-33
 
       - name: create AVD and generate snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: $API_LEVEL
+          api-level: 33
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
@@ -91,7 +91,7 @@ jobs:
       - name: run tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: $API_LEVEL
+          api-level: 33
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
