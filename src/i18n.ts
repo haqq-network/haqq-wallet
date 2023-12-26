@@ -867,6 +867,7 @@ export enum I18N {
   signupImportantInfoDesc3,
   signupImportantInfoDesc4,
   signupImportantInfoDesc5,
+  createOrImportWallet,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1891,4 +1892,5 @@ const en: Record<I18N, string> = {
   [I18N.signupImportantInfoDesc5]:
     "It's important to keep your Google or Apple login details safe. If you lose them and if your phone is lost, you won't be able to get your wallet back using your social media login.",
   [I18N.erase]: 'Erase',
+  [I18N.createOrImportWallet]: 'You must have at least one wallet!',
 };

@@ -19,7 +19,7 @@ export const KeyboardSafeArea = ({
 
   return (
     <KeyboardAvoidingView
-      behavior={'height'}
+      behavior={'padding'}
       keyboardVerticalOffset={top + header}
       style={[styles.flexOne, {marginBottom: bottom}, style]}
       {...props}>
