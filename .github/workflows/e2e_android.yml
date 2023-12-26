@@ -152,6 +152,12 @@ jobs:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           DEVELOPER_APP_ID: ${{ secrets.DEVELOPER_APP_ID }}
           PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}
+          HAQQ_UPLOAD_STORE_FILE: ${{ secrets.HAQQ_UPLOAD_STORE_FILE }}
+          HAQQ_UPLOAD_STORE_PASSWORD: ${{ secrets.HAQQ_UPLOAD_STORE_PASSWORD }}
+          HAQQ_UPLOAD_KEY_ALIAS: ${{ secrets.HAQQ_UPLOAD_KEY_ALIAS }}
+          HAQQ_UPLOAD_KEY_PASSWORD: ${{ secrets.HAQQ_UPLOAD_KEY_PASSWORD }}
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          FIREBASE_TESTERS: ${{ secrets.FIREBASE_TESTERS }}
 
       - name: Android Emulator
         timeout-minutes: 10
