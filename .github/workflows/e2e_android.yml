@@ -151,7 +151,7 @@ jobs:
         with:
           api-level: 29
           force-avd-creation: false
-          emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          emulator-options: -no-snapshot -no-boot-anim
           disable-animations: true
           avd-name: HAQQ_e2e
           cores: 4
