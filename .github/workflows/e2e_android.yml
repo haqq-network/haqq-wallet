@@ -83,6 +83,10 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git config --global user.name "Github actions"
 
+      - name: Install PulseAudio
+        run: |
+          sudo apt -y install pulseaudio
+
       - name: Decode secrets
         run: |
           echo ${{secrets.HAQQ_KEYSTORE}} | base64 -d > android/app/haqq-upload-key.keystore
@@ -163,6 +167,7 @@ jobs:
           cores: 4
           ram-size: 4096M
           heap-size: 1024M
+          target: google_apis
           script: echo "Generated AVD snapshot for caching."
 
       - name: Run e2e tests
@@ -176,6 +181,7 @@ jobs:
           cores: 4
           ram-size: 4096M
           heap-size: 1024M
+          target: google_apis
           script: yarn detox:android:test
 
       - name: Upload artifacts
