@@ -164,6 +164,7 @@ jobs:
           arch: $ANDROID_ARCH
           script: ./.github/workflows/emulator_script.sh
           avd-name: $EMULATOR_NAME
+          target: google_apis
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
