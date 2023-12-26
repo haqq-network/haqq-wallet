@@ -120,7 +120,7 @@ jobs:
           echo "DETOX_CHAIN_ID=${{secrets.DETOX_CHAIN_ID}}" >> .env
           echo "MMKV_KEY=${{secrets.MMKV_KEY}}" >> .env
 
-      - name: Build apps
+      - name: Build android app
         run: |
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${MATCH_DEPLOY_KEY}"
@@ -147,7 +147,11 @@ jobs:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           FIREBASE_TESTERS: ${{ secrets.FIREBASE_TESTERS }}
 
-      - name: create AVD and generate snapshot for caching
+      - name: Add avdmanager and sdkmanager to system PATH
+        run: |
+            echo "$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/${{ env.ANDROID_BUILD_TOOLS_VERSION }}" >> $GITHUB_PATH
+
+      - name: Create AVD and generate snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -158,7 +162,7 @@ jobs:
           avd-name: HAQQ_e2e
           script: echo "Generated AVD snapshot for caching."
 
-      - name: run tests
+      - name: Run e2e tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
