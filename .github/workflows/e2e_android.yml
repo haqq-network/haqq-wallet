@@ -49,6 +49,12 @@ jobs:
       - name: Install packages
         run: yarn install --frozen-lockfile
 
+      - name: Use specific Java version for sdkmanager to work
+        uses: joschi/setup-jdk@v1
+        with:
+          java-version: 'openjdk8'
+          architecture: 'x64'
+
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
 
