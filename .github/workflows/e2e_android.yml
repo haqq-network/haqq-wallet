@@ -64,6 +64,30 @@ jobs:
           java-version: '11'
           architecture: 'x64'
 
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Add avdmanager and sdkmanager to system PATH
+        run: |
+            echo "$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/${{ env.ANDROID_BUILD_TOOLS_VERSION }}" >> $GITHUB_PATH
+
+      - name: Install Sdk
+        run: |
+           yes Y | sdkmanager --licenses
+           sdkmanager --install ${ANDROID_SDK_PACKAGES}
+
       - name: Git init
         run: |
           git config --global user.email "github-actions@github.com"
@@ -136,11 +160,10 @@ jobs:
       - name: Run tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 33
-          arch: x86_64
-          script: cd ../ && yarn detox:android:test
-          avd-name: HAQQ_e2e
-          working-directory: ./android
+          api-level: $API_LEVEL
+          arch: $ANDROID_ARCH
+          script: ./.github/workflows/emulator_script.sh
+          avd-name: $EMULATOR_NAME
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
