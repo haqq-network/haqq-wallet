@@ -39,7 +39,7 @@ on:
 env:
   ANDROID_ARCH: x86_64
   ANDROID_TARGET: google_apis_playstore
-  API_LEVEL: 33
+  API_LEVEL: 29
   ANDROID_BUILD_TOOLS_VERSION: 33.0.2
   ANDROID_SDK_PACKAGES: system-images;android-33;google_apis_playstore;x86_64 platforms;android-33 build-tools;33.0.2 platform-tools emulator
   EMULATOR_TIMEOUT: 350
@@ -76,22 +76,13 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-33
-
-      - name: Add avdmanager and sdkmanager to system PATH
-        run: |
-            echo "$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/${{ env.ANDROID_BUILD_TOOLS_VERSION }}" >> $GITHUB_PATH
-
-      - name: Install Sdk
-        run: |
-           yes Y | sdkmanager --licenses
-           sdkmanager --install ${ANDROID_SDK_PACKAGES}
+          key: avd-29
 
       - name: create AVD and generate snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 33
+          api-level: 29
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
@@ -100,7 +91,7 @@ jobs:
       - name: run tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 33
+          api-level: 29
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
