@@ -41,6 +41,8 @@ jobs:
     name: Run e2e test for iOS platform
     runs-on: self-hosted
     steps:
+      - name: Show self-hosted machine infomation
+        run: uname -a
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
