@@ -94,7 +94,7 @@ jobs:
         run: |
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${MATCH_DEPLOY_KEY}"
-          yarn detox:ios:build && killall node
+          yarn detox:ios:build
         env:
           DEVELOPER_APP_IDENTIFIER: ${{ secrets.IOS_IDENTIFIER }}
           GIT_AUTHORIZATION: ${{ secrets.GIT_AUTHORIZATION }}
