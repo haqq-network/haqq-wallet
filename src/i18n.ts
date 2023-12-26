@@ -1553,13 +1553,13 @@ const en: Record<I18N, string> = {
     'All data on the account will be lost and will not be recoverable',
   [I18N.sssMigrateFinishText]:
     "Сongratulations! You've successfully connected your social network.",
-  [I18N.sssMigrateAgrementTitle]: 'Important Social login Info',
+  [I18N.sssMigrateAgrementTitle]: 'Important Information',
   [I18N.sssMigrateAgrementDescription]:
     'To enable Social Login HAQQ wallet collects user’s email but only store the email hash.',
   [I18N.sssMigrateAgrementWarning1]:
-    'The wallet account is permanently linked to the social account that you choose. If you lose access to your social account, you will be able to restore your wallet account using the backup phrase (if you previously created it)',
+    "By enabling Social Account, your wallet account will be linked to the chosen Social Login. If you lose access to your Social Login, you can restore your wallet account using the backup phrase, provided you have saved one before.\n\nFor the Social Account functionality, we collect users' email addresses but store only the hashed versions of them.",
   [I18N.sssMigrateAgrementWarning2]:
-    'Account recovery using a social network account will work only in our application',
+    'Please note that restoring a wallet account using a Social Account only works with our wallet application.',
   [I18N.backupSssSuggestionTitle]:
     'Make your account safer - connect it to the social network',
   [I18N.backupSssSuggestionDescription]:
