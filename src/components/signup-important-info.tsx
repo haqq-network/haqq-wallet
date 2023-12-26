@@ -1,8 +1,9 @@
 import React, {memo} from 'react';
 
-import {View} from 'react-native';
+import {Platform, View} from 'react-native';
+import Markdown from 'react-native-markdown-display';
 
-import {Color} from '@app/colors';
+import {Color, getColor} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -11,12 +12,43 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {I18N} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
 
 type Props = {
   onNext: () => void;
   readMoreLink?: string;
 };
+
+const source = `
+${getText(I18N.signupImportantInfoDesc1)}
+
+${getText(I18N.signupImportantInfoDesc2)}
+
+${getText(I18N.signupImportantInfoDesc3)}
+
+${getText(I18N.signupImportantInfoDesc4)}
+`;
+
+// Extracted from Text component
+const sfProDisplaySemibold600 = Platform.select({
+  ios: {
+    fontFamily: 'SF Pro Display',
+    fontWeight: '600' as '600',
+  },
+  android: {
+    fontFamily: 'SF-Pro-Display-Semibold',
+  },
+});
+
+const sfProTextRegular400 = Platform.select({
+  ios: {
+    fontFamily: 'SF Pro Display',
+    fontWeight: '400' as '400',
+  },
+  android: {
+    fontFamily: 'SF-Pro-Display-Regular',
+  },
+});
 
 export const SignupImportantInfo = memo(({onNext, readMoreLink}: Props) => {
   return (
@@ -29,42 +61,27 @@ export const SignupImportantInfo = memo(({onNext, readMoreLink}: Props) => {
         color={Color.textRed1}
       />
       <View style={styles.textWrapper}>
-        <Text
-          t11
-          i18n={I18N.signupImportantInfoDesc1_1}
-          color={Color.textBase1}
-          showChildren>
-          <Text
-            t10
-            i18n={I18N.signupImportantInfoDesc1_2}
-            color={Color.textBase2}
-          />
-        </Text>
-        <Text
-          t10
-          i18n={I18N.signupImportantInfoDesc2_1}
-          color={Color.textBase1}
-          showChildren>
-          <Text
-            t10
-            i18n={I18N.signupImportantInfoDesc2_2}
-            color={Color.textBase2}
-          />
-        </Text>
-        <Text
-          t10
-          i18n={I18N.signupImportantInfoDesc3_1}
-          color={Color.textBase1}
-          showChildren>
-          <Text
-            t10
-            i18n={I18N.signupImportantInfoDesc3_2}
-            color={Color.textBase2}
-          />
-        </Text>
+        <Markdown
+          mergeStyle
+          style={{
+            strong: {
+              ...sfProDisplaySemibold600,
+              fontSize: 14,
+              lineHeight: 18,
+              color: getColor(Color.textBase1),
+            },
+            paragraph: {
+              ...sfProTextRegular400,
+              fontSize: 14,
+              lineHeight: 18,
+              color: getColor(Color.textBase2),
+            },
+          }}>
+          {source}
+        </Markdown>
         <Text
           t8
-          i18n={I18N.signupImportantInfoDesc4}
+          i18n={I18N.signupImportantInfoDesc5}
           color={Color.textYellow1}
         />
       </View>

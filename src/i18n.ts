@@ -889,17 +889,16 @@ export enum I18N {
   signupImportantInfoTitle,
   signupImportantInfoSecondaryButton,
   signupImportantInfoPrimaryButton,
-  signupImportantInfoDesc1_1,
-  signupImportantInfoDesc1_2,
-  signupImportantInfoDesc2_1,
-  signupImportantInfoDesc2_2,
-  signupImportantInfoDesc3_1,
-  signupImportantInfoDesc3_2,
+  signupImportantInfoDesc1,
+  signupImportantInfoDesc2,
+  signupImportantInfoDesc3,
   signupImportantInfoDesc4,
   keystoneQrStep1,
   keystoneQrStep2,
   keystoneQrGetSignature,
   keystoneQrClose,
+  signupImportantInfoDesc5,
+  createOrImportWallet,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -956,7 +955,7 @@ const en: Record<I18N, string> = {
   [I18N.transactionLedgerBluetoothConfirmation]: `Open ${LEDGER_APP} app on your Ledger and Confirm the transaction by pressing both buttons together`,
   [I18N.createAgreementTitle]: 'HAQQ - DeFi Wallet',
   [I18N.createAgreementText]:
-    'HAQQ Wallet does not store, transfer, transmit, convert, hold, or otherwise interact with any of the Virtual Currencies you may use with the Islm Wallet App. Any transfer or transaction occurs on the HAQQ Network(s). Islm Wallet cannot block, freeze or take any kind of control over your Virtual Currency.',
+    'HAQQ Wallet does not store, transfer, transmit, convert, hold, or otherwise interact with any of the Virtual Currencies you may use with the HAQQ Wallet App. Any transfer or transaction occurs on the HAQQ Network(s). HAQQ Wallet cannot block, freeze or take any kind of control over your Virtual Currency.',
   [I18N.createAgreementAgree]: 'Agree',
   [I18N.termsAgreementFirst]: 'By clicking Agree you agree to ',
   [I18N.termsOfService]: 'Terms of Service',
@@ -1534,9 +1533,9 @@ const en: Record<I18N, string> = {
   [I18N.sssLoginLaterTitle]:
     "Are you sure you don't want to enable social login?",
   [I18N.sssNetworkWeb3AuthDescription]:
-    'HAQQ Wallet does not store any data related to your social logins.',
+    'To enable Social Login HAQQ wallet collects user’s email but only store the email hash.',
   [I18N.signinNetworkDisclaimer]:
-    'HAQQ Wallet does not store any data related to your social logins.',
+    'To enable Social Login HAQQ wallet collects user’s email but only store the email hash.',
   [I18N.locationUnauthorizedDescription]:
     'HAQQ Wallet requires the precise location\npermission to pair your device through Bluetooth.\n\nHAQQ Wallet does not access your location information.',
   [I18N.sssMigrateAgreementAgree]: 'Understood',
@@ -1564,9 +1563,9 @@ const en: Record<I18N, string> = {
   [I18N.walletProtectionRecoveryPhrase]: 'Recovery phrase',
   [I18N.walletProtectionRecoveryPhraseDescription]:
     'With the help of a 12-word phrase, you can restore your account',
-  [I18N.walletProtectionSocialLinkConnect]: 'Social link connect',
+  [I18N.walletProtectionSocialLinkConnect]: 'Social Account',
   [I18N.walletProtectionSocialLinkConnectDescription]:
-    'Your account will be linked to your social network. You can use it to restore your account',
+    'Your HAQQ wallet account will be linked to the Social Login that you chose. You can use it to restore your account',
   [I18N.walletProtectionDescription]:
     'We offer two methods to protect your account. You can combine both of them',
   [I18N.signupNetworkExistsRestore]: 'Restore Account',
@@ -1589,13 +1588,13 @@ const en: Record<I18N, string> = {
     'All data on the account will be lost and will not be recoverable',
   [I18N.sssMigrateFinishText]:
     "Сongratulations! You've successfully connected your social network.",
-  [I18N.sssMigrateAgrementTitle]: 'Important Social login Info',
+  [I18N.sssMigrateAgrementTitle]: 'Important Information',
   [I18N.sssMigrateAgrementDescription]:
-    'We use Web3Auth technology. HAQQ Wallet does not store any data related to your social logins.',
+    'To enable Social Login HAQQ wallet collects user’s email but only store the email hash.',
   [I18N.sssMigrateAgrementWarning1]:
-    'The wallet account is permanently linked to the social account that you choose. If you lose access to your social account, you will be able to restore your wallet account using the backup phrase (if you previously created it)',
+    "By enabling Social Account, your wallet account will be linked to the chosen Social Login. If you lose access to your Social Login, you can restore your wallet account using the backup phrase, provided you have saved one before.\n\nFor the Social Account functionality, we collect users' email addresses but store only the hashed versions of them.",
   [I18N.sssMigrateAgrementWarning2]:
-    'Account recovery using a social network account will work only in our application',
+    'Please note that restoring a wallet account using a Social Account only works with our wallet application.',
   [I18N.backupSssSuggestionTitle]:
     'Make your account safer - connect it to the social network',
   [I18N.backupSssSuggestionDescription]:
@@ -1941,29 +1940,28 @@ const en: Record<I18N, string> = {
   [I18N.sssLimitReachedButton]: 'Close',
   [I18N.sssReplaceAccountTitle]: 'Replace your account?',
   [I18N.sssReplaceAccountDescription1]:
-    'Account linked to your {{provider}} id',
+    'Account currently linked to your {{provider}} id',
   [I18N.sssReplaceAccountDescription2]:
-    ' will be lost and you will not be able to access assets on this account',
+    ' will be lost and you will not be able to access assets on this account.',
   [I18N.sssReplaceAccountButton]: 'Confirm Erase',
   [I18N.signupImportantInfoTitle]: 'Important information',
   [I18N.signupImportantInfoSecondaryButton]: 'Read more',
   [I18N.signupImportantInfoPrimaryButton]: 'Continue',
-  [I18N.signupImportantInfoDesc1_1]:
-    'Your mnemonic phrase will be split into three shares for safety.',
-  [I18N.signupImportantInfoDesc1_2]:
-    ' To use the phrase again, you need two of these three parts. Only you can reach these parts, making it very safe. Nobody else can get into your wallet.\n',
-  [I18N.signupImportantInfoDesc2_1]: 'If you lose your phone',
-  [I18N.signupImportantInfoDesc2_2]:
-    ", delete the app, or forget your PIN, don't worry! You can get your phrase back using your cloud storage and social media login.\n",
-  [I18N.signupImportantInfoDesc3_1]: 'If you remove part of the phrase',
-  [I18N.signupImportantInfoDesc3_2]:
-    ' from the cloud, the app will let you know and help fix it.\n',
+  [I18N.signupImportantInfoDesc1]:
+    '**Your mnemonic phrase will be split into three parts,** stored on your local device, in a cloud storage of your choice, and on-chain. Only you have access to these parts, making it very safe.',
+  [I18N.signupImportantInfoDesc2]:
+    'To use your mnemonic phrase, you need only two of these three parts. **No one else has access to these parts of your mnemonic phrase.**',
+  [I18N.signupImportantInfoDesc3]:
+    '**Should you lose your phone,** mistakenly **delete your HAQQ wallet,** or **forget your PIN.** No need to worry! You can retrieve your wallet through your security phrase using your cloud storage and social login.',
   [I18N.signupImportantInfoDesc4]:
-    "It's important to keep your Google or Apple login details safe. If you lose them, or if your phone is stolen, you won't be able to get your wallet back using your social media login.",
+    '**If you ever remove any part of your mnemonic phrase** stored on your cloud storage, the app will notify you and ensure you fix it.',
+  [I18N.signupImportantInfoDesc5]:
+    "It's important to keep your Google or Apple login details safe. If you lose them and if your phone is lost, you won't be able to get your wallet back using your social media login.",
   [I18N.erase]: 'Erase',
   [I18N.keystoneQrStep1]: 'Scan QR with your Keystone',
   [I18N.keystoneQrStep2]:
     'After you have signed with Keystone tap on Get Signature',
   [I18N.keystoneQrGetSignature]: 'Get Signature',
   [I18N.keystoneQrClose]: 'Close',
+  [I18N.createOrImportWallet]: 'You must have at least one wallet!',
 };

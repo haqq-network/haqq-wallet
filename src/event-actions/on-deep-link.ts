@@ -11,6 +11,7 @@ import {I18N} from '@app/i18n';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
+import {sendNotification} from '@app/services/toast';
 import {DeeplinkProtocol, DeeplinkUrlKey, ModalType} from '@app/types';
 import {openInAppBrowser, openWeb3Browser} from '@app/utils';
 
@@ -32,13 +33,19 @@ const handleAddress = async (
   address: string,
   withoutFromAddress: boolean = false,
 ) => {
+  const wallets = Wallet.getAllVisible().filter(
+    item => item.address.toLowerCase() !== address?.toLowerCase?.(),
+  );
+
+  if (!withoutFromAddress && wallets.length === 0) {
+    return sendNotification(I18N.createOrImportWallet);
+  }
+
   const from = withoutFromAddress
     ? null
     : await awaitForWallet({
         title: I18N.qrModalSendFunds,
-        wallets: Wallet.getAllVisible().filter(
-          item => item.address.toLowerCase() !== address?.toLowerCase?.(),
-        ),
+        wallets,
       });
 
   app.emit('address', {
@@ -93,16 +100,12 @@ export async function onDeepLink(
       );
 
       if (AddressUtils.isEthAddress(key)) {
-        navigator.navigate('transaction', {
-          to: key,
-        });
+        await handleAddress(key, withoutFromAddress);
         return true;
       }
 
       if (AddressUtils.isHaqqAddress(key)) {
-        navigator.navigate('transaction', {
-          to: AddressUtils.toEth(key),
-        });
+        await handleAddress(AddressUtils.toEth(key), withoutFromAddress);
         return true;
       }
 
