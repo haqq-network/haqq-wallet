@@ -14,6 +14,8 @@ import {
 } from '@app/screens/HomeStack/TransactionStack';
 import {Balance} from '@app/services/balance';
 
+const logger = Logger.create('TransactionAddressScreen');
+
 export const TransactionAddressScreen = observer(() => {
   const navigation = useTypedNavigation<TransactionStackParamList>();
   useAndroidBackHandler(() => {
@@ -54,17 +56,10 @@ export const TransactionAddressScreen = observer(() => {
 
   const onDone = useCallback(
     async (result: string) => {
-      const nft = route.params.nft;
-      if (nft) {
-        try {
-          setLoading(true);
-          //TODO:
-          // const balance = await EthNetwork.getBalance(route.params.from);
-          // const fee = await EthNetwork.estimateTransaction(
-          //   route.params.from,
-          //   address,
-          //   balance,
-          // );
+      try {
+        setLoading(true);
+        const nft = route.params.nft;
+        if (nft) {
           const fee = new Balance(1);
           navigation.navigate(
             TransactionStackRoutes.TransactionNftConfirmation,
@@ -75,14 +70,16 @@ export const TransactionAddressScreen = observer(() => {
               fee,
             },
           );
-        } catch (e) {
-          setLoading(false);
+        } else {
+          navigation.navigate(TransactionStackRoutes.TransactionSelectCrypto, {
+            from: AddressUtils.toEth(route.params.from),
+            to: AddressUtils.toEth(result),
+          });
         }
-      } else {
-        navigation.navigate(TransactionStackRoutes.TransactionSelectCrypto, {
-          from: AddressUtils.toEth(route.params.from),
-          to: AddressUtils.toEth(result),
-        });
+      } catch (e) {
+        logger.error('onDone', e);
+      } finally {
+        setLoading(false);
       }
     },
     [navigation, route],
