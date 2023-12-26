@@ -36,6 +36,15 @@ on:
         required: true
         type: string
 
+env:
+  ANDROID_ARCH: x86_64
+  ANDROID_TARGET: google_apis_playstore
+  API_LEVEL: 33
+  ANDROID_BUILD_TOOLS_VERSION: 33.0.2
+  ANDROID_SDK_PACKAGES: system-images;android-33;google_apis_playstore;x86_64 platforms;android-33 build-tools;33.0.2 platform-tools emulator
+  EMULATOR_TIMEOUT: 350
+  EMULATOR_NAME: HAQQ_e2e
+
 jobs:
   build:
     name: Run e2e test for Android platform
@@ -70,11 +79,18 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
-      - name: Download Android Emulator Image
+      - name: Add avdmanager and sdkmanager to system PATH
         run: |
-          echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install "system-images;android-29;google_apis;x86"
-          echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd --force --name emu --device "HAQQ_e2e" -k 'system-images;android-29;google_apis;x86'
-          $ANDROID_HOME/emulator/emulator -list-avds
+            echo "$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/${{ env.ANDROID_BUILD_TOOLS_VERSION }}" >> $GITHUB_PATH
+
+      - name: Install Sdk
+        run: |
+           yes Y | sdkmanager --licenses
+           sdkmanager --install ${ANDROID_SDK_PACKAGES}
+  
+      - name: Build emulator
+        run: |
+            echo "no" | avdmanager --verbose create avd --force -n $EMULATOR_NAME --abi "${ANDROID_TARGET}/${ANDROID_ARCH}" -k "system-images;android-${API_LEVEL};${ANDROID_TARGET};${ANDROID_ARCH}"
 
       - name: Git init
         run: |
