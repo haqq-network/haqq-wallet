@@ -137,8 +137,10 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 33
-          script: yarn detox:android:test
+          arch: x86_64
+          script: cd ../ && yarn detox:android:test
           avd-name: HAQQ_e2e
+          working-directory: ./android
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
