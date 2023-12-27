@@ -47,12 +47,17 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - name: Install packages
-        run: yarn install --frozen-lockfile
-      - name: Setup Cocoapods
-        uses: maxim-lobanov/setup-cocoapods@v1
+      - name: Cache Node Modules
+        uses: actions/cache@v2
+        id: yarn-cache
         with:
-          podfile-path: ios/Podfile.lock
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Install packages
+        run: yarn install 
       - name: Install pods
         run: cd ios && pod install
       - name: Git init

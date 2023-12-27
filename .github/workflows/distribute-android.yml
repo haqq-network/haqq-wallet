@@ -95,7 +95,7 @@ jobs:
         run: |
           bundle install
       - name: Install packages
-        run: yarn install --frozen-lockfile
+        run: yarn install 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
       - uses: actions/cache@v3

@@ -68,7 +68,7 @@ jobs:
         run: |
           bundle install
       - name: Install packages
-        run: yarn install --frozen-lockfile
+        run: yarn install 
       - name: Install pods
         run: cd ios && pod install
       - name: Git init

@@ -71,7 +71,7 @@ jobs:
             ${{ runner.os }}-gradle-caches-
 
       - name: Install packages
-        run: yarn install --frozen-lockfile
+        run: yarn install 
 
       - uses: actions/setup-java@v3
         with:
