@@ -46,6 +46,30 @@ jobs:
         with:
           node-version: 16
 
+      - name: Cache Node Modules
+        uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Cache Gradle Wrapper
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+
+      - name: Cache Gradle Dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-caches-
+
       - name: Install packages
         run: yarn install --frozen-lockfile
 
@@ -57,17 +81,10 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
 
-      - name: Gradle cache
-        uses: gradle/gradle-build-action@v2
-
       - name: Git init
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "Github actions"
-
-      # - name: Install PulseAudio
-      #   run: |
-      #     sudo apt -y install pulseaudio
 
       - name: Decode secrets
         run: |
@@ -147,6 +164,36 @@ jobs:
         run: |
           echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install "system-images;android-29;google_apis;x86"
 
+      - name: AVD cache
+        uses: actions/cache@v3
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-${{ matrix.api-level }}
+
+      - name: Create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          ndk: 21.4.7075529
+          target: google_apis
+          emulator-build: 7425822
+          arch: x86
+          cores: 2
+          avd-name: HAQQ_e2e
+          force-avd-creation: true
+          disable-animations: true
+          disable-spellchecker: false
+          disable-linux-hw-accel: auto
+          enable-hw-keyboard: false
+          profile: Nexus 6
+          channel: stable
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: echo "Generated AVD snapshot for caching."
+
       - name: Run e2e tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -159,7 +206,7 @@ jobs:
           cores: 2
           avd-name: HAQQ_e2e
           force-avd-creation: true
-          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
           disable-animations: true
           disable-spellchecker: false
           disable-linux-hw-accel: auto

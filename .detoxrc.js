@@ -54,6 +54,8 @@ module.exports = {
       device: {
         avdName: 'HAQQ_e2e',
       },
+      forceAdbInstall: true,
+      headless: true
     },
   },
   configurations: {
