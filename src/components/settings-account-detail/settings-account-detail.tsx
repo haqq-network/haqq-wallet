@@ -65,7 +65,7 @@ export const SettingsAccountDetail = ({
   );
 
   return (
-    <PopupContainer style={styles.container}>
+    <PopupContainer style={styles.container} testID="account_details">
       <View style={[styles.header, wallet.isHidden && styles.opacity]}>
         <Card
           width={cardWidth}

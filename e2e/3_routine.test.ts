@@ -55,7 +55,7 @@ describe('Routine', () => {
 
     await milkWallet.sendTransaction(tx);
 
-    await sleep(15_000);
+    await sleep(10_000);
 
     await element(by.id(`wallets_${wallet.address.toLowerCase()}_send`)).tap();
 
@@ -85,12 +85,14 @@ describe('Routine', () => {
       .toBeVisible()
       .withTimeout(15000);
 
+    await element(by.id('transaction_confirmation')).scrollTo('bottom');
     await element(by.id('transaction_confirmation_submit')).tap();
 
     await waitFor(element(by.id('transaction_finish')))
       .toBeVisible()
       .withTimeout(15000);
 
+    await element(by.id('transaction_finish')).scrollTo('bottom');
     await element(by.id('transaction_finish_finish')).tap();
   });
 });

@@ -42,7 +42,7 @@ export const Finish = ({onFinish, testID, title}: FinishProps) => {
   useFocusEffect(startAnimation);
 
   return (
-    <PopupContainer>
+    <PopupContainer testID={testID}>
       <Spacer>
         <LottieWrap
           ref={lottie}

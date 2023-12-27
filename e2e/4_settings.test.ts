@@ -24,6 +24,7 @@ describe('Routine', () => {
     await expect(element(by.id('recovery_warning'))).toBeVisible();
     await element(by.id('recovery_phrase')).tap();
 
+    await element(by.id('backup_warning')).scrollTo('bottom');
     await element(by.id('backup_warning_next')).tap();
 
     for (let i = 1; i <= 12; i++) {
@@ -35,6 +36,7 @@ describe('Routine', () => {
       mnemonic_words.push(text);
     }
 
+    await element(by.id('backup_create')).scrollTo('bottom');
     await element(by.id('backup_create_checkbox')).tap();
     await element(by.id('backup_create_next')).tap();
 
@@ -50,6 +52,7 @@ describe('Routine', () => {
       await el.tap();
     }
 
+    await element(by.id('backup_verify')).scrollTo('bottom');
     await element(by.id('backup_verify_check')).tap();
 
     await waitFor(element(by.id('backup_finish')))
@@ -66,6 +69,7 @@ describe('Routine', () => {
     await element(by.id('settings_manage_accounts')).tap();
     await element(by.text('Main account')).tap();
 
+    await element(by.id('account_details')).scroll(50, 'down');
     await expect(element(by.id('recovery_warning'))).not.toBeVisible();
     await element(by.id('go_back')).tap();
     await element(by.id('go_back')).tap();
@@ -77,6 +81,7 @@ describe('Routine', () => {
     await element(by.id('settings_manage_accounts')).tap();
     await element(by.text('Main account')).tap();
 
+    await element(by.id('account_details')).scroll(300, 'down');
     await element(by.id('view_recovery_phrase')).tap();
 
     for (const num of PIN.split('')) {
