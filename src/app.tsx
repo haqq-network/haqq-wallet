@@ -17,7 +17,6 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {MenuProvider} from 'react-native-popup-menu';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
-import Toast from 'react-native-toast-message';
 
 import {Color} from '@app/colors';
 import {AppScreenSecurityOverview} from '@app/components/app-screen-security-overview';
@@ -27,6 +26,7 @@ import {createTheme, hideModal, showModal} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {trackEvent} from '@app/helpers/track-event';
 import {useTheme} from '@app/hooks';
+import {useToast} from '@app/hooks/use-toast';
 import {Contact} from '@app/models/contact';
 import {Transaction} from '@app/models/transaction';
 import {VariablesBool} from '@app/models/variables-bool';
@@ -53,6 +53,7 @@ export const App = () => {
   const [isPinReseted, setPinReseted] = useState(false);
   const [onboarded, setOnboarded] = useState(app.onboarded);
   const theme = useTheme();
+  const toast = useToast();
 
   const navTheme = useMemo(
     () => ({dark: theme === AppTheme.dark, colors: appTheme.colors}) as Theme,
@@ -204,7 +205,7 @@ export const App = () => {
                 isReady={initialized}
               />
               <AppScreenSecurityOverview />
-              <Toast />
+              {toast}
             </NavigationContainer>
           </MenuProvider>
         </SafeAreaProvider>

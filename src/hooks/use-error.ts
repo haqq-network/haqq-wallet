@@ -8,8 +8,9 @@ export const useError = () => {
   return (errorId: string, errorDetails: string) => {
     Toast.show({
       type: 'error',
-      text1: getText(I18N.errorText),
-      text2: getText(I18N.errorCode, {id: errorId}),
+      position: 'bottom',
+      text1: getText(I18N.errorCode, {id: errorId}),
+      text2: getText(I18N.errorText),
       onPress: () => {
         showModal(ModalType.viewErrorDetails, {
           errorDetails,
