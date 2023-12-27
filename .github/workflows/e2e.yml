@@ -26,7 +26,7 @@ on:
 
 jobs:
   # build_android:
-  #   name: Run e2e tests for Android platform
+  #   name: Android
   #   uses: ./.github/workflows/e2e_android.yml
   #   secrets: inherit
   #   with:
@@ -35,7 +35,7 @@ jobs:
   #     IS_STAKED_VESTED_ENABLED: ${{github.event.inputs.IS_STAKED_VESTED_ENABLED}}
 
   build_ios:
-    name: Run e2e tests for iOS platform
+    name: iOS
     uses: ./.github/workflows/e2e_ios.yml
     secrets: inherit
     with:

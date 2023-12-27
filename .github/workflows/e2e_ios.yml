@@ -57,20 +57,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: Cache RBENV_ROOT
-        uses: actions/cache@v1
-        id: cache_rbenv
-        with:
-          path: /home/runner/.rbenv
-          key: ${{ runner.os }}-rbenv-${{ hashFiles('**/.ruby-version') }}
-          restore-keys: |
-            {{ runner.os }}-rbenv-
-
       - name: Install Ruby
-        run: |
-          eval "$(rbenv init -)"
-          rbenv install -s `cat .ruby-version`
-          gem install bundler
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2.0'
+          bundler-cache: true
 
       - name: setup-cocoapods
         uses: maxim-lobanov/setup-cocoapods@v1
