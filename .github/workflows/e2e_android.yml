@@ -152,7 +152,9 @@ jobs:
           emulator-options: -no-window -use-system-libs -no-snapshot-load -noaudio -no-boot-anim
           disable-animations: true
           avd-name: HAQQ_e2e
-          target: google_apis
+          target: google_atd
+          arch: x86
+          channel: canary
           script: adb kill-server && adb start-server && nc -z localhost 5037 && yarn detox:android:test
 
       - name: Upload artifacts
