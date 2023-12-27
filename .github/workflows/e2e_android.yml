@@ -36,15 +36,6 @@ on:
         required: true
         type: string
 
-env:
-  ANDROID_ARCH: x86_64
-  ANDROID_TARGET: google_apis_playstore
-  API_LEVEL: 27
-  ANDROID_BUILD_TOOLS_VERSION: 33.0.2
-  ANDROID_SDK_PACKAGES: system-images;android-33;google_apis_playstore;x86_64 platforms;android-33 build-tools;33.0.2 platform-tools emulator
-  EMULATOR_TIMEOUT: 350
-  EMULATOR_NAME: HAQQ_e2e
-
 jobs:
   build:
     name: Run e2e test for Android platform
@@ -68,15 +59,6 @@ jobs:
 
       - name: Gradle cache
         uses: gradle/gradle-build-action@v2
-        
-      - name: AVD cache
-        uses: actions/cache@v3
-        id: avd-cache
-        with:
-          path: |
-            ~/.android/avd/*
-            ~/.android/adb*
-          key: avd-27
 
       - name: Git init
         run: |
@@ -153,34 +135,16 @@ jobs:
 
       - name: Add avdmanager and sdkmanager to system PATH
         run: |
-            echo "$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/${{ env.ANDROID_BUILD_TOOLS_VERSION }}" >> $GITHUB_PATH
-
-      - name: Create AVD and generate snapshot for caching
-        if: steps.avd-cache.outputs.cache-hit != 'true'
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 27
-          force-avd-creation: false
-          emulator-options: -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: true
-          avd-name: HAQQ_e2e
-          cores: 4
-          ram-size: 4096M
-          heap-size: 1024M
-          target: google_apis
-          script: echo "Generated AVD snapshot for caching."
+            echo "$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools" >> $GITHUB_PATH
 
       - name: Run e2e tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 27
           force-avd-creation: false
-          emulator-options: -no-snapshot-save -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          emulator-options: -no-snapshot-save -gpu off -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           avd-name: HAQQ_e2e
-          cores: 4
-          ram-size: 4096M
-          heap-size: 1024M
           target: google_apis
           script: yarn detox:android:test
 
