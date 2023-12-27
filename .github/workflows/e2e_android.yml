@@ -142,7 +142,7 @@ jobs:
         with:
           api-level: 27
           force-avd-creation: false
-          emulator-options: -no-snapshot-save -gpu off -noaudio -no-boot-anim -camera-back none
+          emulator-options: -no-window -no-snapshot-save -gpu off -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           avd-name: HAQQ_e2e
           target: google_apis
