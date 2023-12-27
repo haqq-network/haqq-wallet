@@ -164,7 +164,7 @@ jobs:
           disable-spellchecker: false
           disable-linux-hw-accel: auto
           enable-hw-keyboard: false
-          profile: Pixel 3XL
+          profile: Nexus 6
           channel: stable
 
       - name: Upload artifacts
