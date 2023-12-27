@@ -34,11 +34,11 @@ jobs:
       IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
       IS_STAKED_VESTED_ENABLED: ${{github.event.inputs.IS_STAKED_VESTED_ENABLED}}
 
-  # build_ios:
-  #   name: Run e2e tests for iOS platform
-  #   uses: ./.github/workflows/e2e_ios.yml
-  #   secrets: inherit
-  #   with:
-  #     IS_DEVELOPMENT: ${{github.event.inputs.IS_DEVELOPMENT}}
-  #     IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
-  #     IS_STAKED_VESTED_ENABLED: ${{github.event.inputs.IS_STAKED_VESTED_ENABLED}}
+  build_ios:
+    name: Run e2e tests for iOS platform
+    uses: ./.github/workflows/e2e_ios.yml
+    secrets: inherit
+    with:
+      IS_DEVELOPMENT: ${{github.event.inputs.IS_DEVELOPMENT}}
+      IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
+      IS_STAKED_VESTED_ENABLED: ${{github.event.inputs.IS_STAKED_VESTED_ENABLED}}

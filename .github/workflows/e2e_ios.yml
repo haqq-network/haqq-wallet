@@ -49,6 +49,10 @@ jobs:
           node-version: 16
       - name: Install packages
         run: yarn install --frozen-lockfile
+      - name: Setup Cocoapods
+        uses: maxim-lobanov/setup-cocoapods@v1
+        with:
+          podfile-path: myApp/Podfile.lock
       - name: Install pods
         run: cd ios && pod install
       - name: Git init
