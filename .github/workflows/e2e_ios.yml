@@ -58,6 +58,12 @@ jobs:
             ${{ runner.os }}-yarn-
       - name: Install packages
         run: yarn install 
+
+      - name: setup-cocoapods
+        uses: maxim-lobanov/setup-cocoapods@v1
+        with:
+          version: latest
+
       - name: Install pods
         run: cd ios && pod install
       - name: Git init
