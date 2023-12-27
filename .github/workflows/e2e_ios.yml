@@ -59,7 +59,7 @@ jobs:
 
       - name: Install Ruby
         run: |
-           rbenv install 3.2.0 && gem install bundler
+           rbenv install 3.2.0 --skip-existing && gem install bundler
 
       - name: setup-cocoapods
         uses: maxim-lobanov/setup-cocoapods@v1
