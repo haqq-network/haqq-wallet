@@ -191,7 +191,7 @@ jobs:
           enable-hw-keyboard: false
           profile: Nexus 6
           channel: stable
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -dpi-device 560
           script: echo "Generated AVD snapshot for caching."
 
       - name: Run e2e tests
@@ -206,7 +206,7 @@ jobs:
           cores: 2
           avd-name: HAQQ_e2e
           force-avd-creation: true
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -dpi-device 560
           disable-animations: true
           disable-spellchecker: false
           disable-linux-hw-accel: auto
