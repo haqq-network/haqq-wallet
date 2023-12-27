@@ -65,7 +65,19 @@ jobs:
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
+
+      - name: Gradle cache
+        uses: gradle/gradle-build-action@v2
         
+      - name: AVD cache
+        uses: actions/cache@v3
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-29
+
       - name: Git init
         run: |
           git config --global user.email "github-actions@github.com"
@@ -112,9 +124,6 @@ jobs:
           echo "DETOX_CHAIN_ID=${{secrets.DETOX_CHAIN_ID}}" >> .env
           echo "MMKV_KEY=${{secrets.MMKV_KEY}}" >> .env
 
-      - name: Gradle cache
-        uses: gradle/gradle-build-action@v2
-
       - name: Build android app
         run: |
           eval "$(ssh-agent -s)"
@@ -146,12 +155,27 @@ jobs:
         run: |
             echo "$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/${{ env.ANDROID_BUILD_TOOLS_VERSION }}" >> $GITHUB_PATH
 
+      - name: Create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          force-avd-creation: false
+          emulator-options: -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          avd-name: HAQQ_e2e
+          cores: 4
+          ram-size: 4096M
+          heap-size: 1024M
+          target: google_apis
+          script: echo "Generated AVD snapshot for caching."
+
       - name: Run e2e tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
-          force-avd-creation: true
-          emulator-options: -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           avd-name: HAQQ_e2e
           cores: 4
