@@ -39,7 +39,7 @@ on:
 env:
   ANDROID_ARCH: x86_64
   ANDROID_TARGET: google_apis_playstore
-  API_LEVEL: 29
+  API_LEVEL: 27
   ANDROID_BUILD_TOOLS_VERSION: 33.0.2
   ANDROID_SDK_PACKAGES: system-images;android-33;google_apis_playstore;x86_64 platforms;android-33 build-tools;33.0.2 platform-tools emulator
   EMULATOR_TIMEOUT: 350
@@ -76,7 +76,7 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-29
+          key: avd-27
 
       - name: Git init
         run: |
@@ -159,7 +159,7 @@ jobs:
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
+          api-level: 27
           force-avd-creation: false
           emulator-options: -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
@@ -173,7 +173,7 @@ jobs:
       - name: Run e2e tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
+          api-level: 27
           force-avd-creation: false
           emulator-options: -no-snapshot-save -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
