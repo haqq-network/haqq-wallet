@@ -153,7 +153,7 @@ jobs:
           disable-animations: true
           avd-name: HAQQ_e2e
           target: google_apis
-          script: adb kill-server && adb start-server && && nc -z localhost 5037 && yarn detox:android:test
+          script: adb kill-server && adb start-server && nc -z localhost 5037 && yarn detox:android:test
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
