@@ -31,7 +31,7 @@ jobs:
         run: yarn install 
 
   build_android:
-    name: Build and distribute Android app
+    name: Android
     uses: ./.github/workflows/distribute-android.yml
     secrets: inherit
     with:
@@ -42,7 +42,7 @@ jobs:
       - test
 
   build_ios:
-    name: Build and distribute iOS app
+    name: iOS
     uses: ./.github/workflows/distribute-ios.yml
     secrets: inherit
     with:

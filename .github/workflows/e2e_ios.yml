@@ -1,4 +1,4 @@
-name: Run e2e for iOS
+name: Run e2e tests
 
 on:
   workflow_dispatch:
@@ -17,13 +17,6 @@ on:
           - true
           - false
 
-      IS_STAKED_VESTED_ENABLED:
-        type: choice
-        description: IS_STAKED_VESTED_ENABLED
-        options:
-          - true
-          - false
-
   workflow_call:
     inputs:
       IS_DEVELOPMENT:
@@ -32,13 +25,10 @@ on:
       IS_SSS_ENABLED:
         required: true
         type: string
-      IS_STAKED_VESTED_ENABLED:
-        required: true
-        type: string
 
 jobs:
   build:
-    name: Run e2e test for iOS platform
+    name: Run e2e tests
     runs-on: self-hosted
     steps:
       - name: Show self-hosted machine infomation
@@ -56,6 +46,9 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
+
+      - name: Cache XCode build
+        uses: mikehardy/buildcache-action@v2
 
       - name: Install packages
         run: yarn install 
@@ -87,7 +80,6 @@ jobs:
           echo "ADJUST_TOKEN=${{secrets.ADJUST_TOKEN}}" >> .env
           echo "ADJUST_ENVIRONMENT=${{secrets.ADJUST_ENVIRONMENT}}" >> .env
           echo "IS_SSS_ENABLED=${{github.event.inputs.IS_SSS_ENABLED}}" >> .env
-          echo "IS_STAKED_VESTED_ENABLED=${{github.event.inputs.IS_STAKED_VESTED_ENABLED}}" >> .env
           echo "GOOGLE_PLAY_PACKAGE=${{secrets.GOOGLE_PLAY_PACKAGE}}" >> .env
           echo "APPSTORE_APP_ID=${{secrets.APPSTORE_APP_ID}}" >> .env
           echo "TURNSTILE_URL=${{secrets.TURNSTILE_URL}}" >> .env

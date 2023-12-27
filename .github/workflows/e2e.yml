@@ -1,4 +1,4 @@
-name: Run e2e tests for both platforms
+name: Run e2e tests
 
 on:
   workflow_dispatch:
@@ -17,13 +17,6 @@ on:
           - true
           - false
 
-      IS_STAKED_VESTED_ENABLED:
-        type: choice
-        description: IS_STAKED_VESTED_ENABLED
-        options:
-          - true
-          - false
-
 jobs:
   build_android:
     name: Android
@@ -32,7 +25,6 @@ jobs:
     with:
       IS_DEVELOPMENT: ${{github.event.inputs.IS_DEVELOPMENT}}
       IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
-      IS_STAKED_VESTED_ENABLED: ${{github.event.inputs.IS_STAKED_VESTED_ENABLED}}
 
   build_ios:
     name: iOS
@@ -41,4 +33,3 @@ jobs:
     with:
       IS_DEVELOPMENT: ${{github.event.inputs.IS_DEVELOPMENT}}
       IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
-      IS_STAKED_VESTED_ENABLED: ${{github.event.inputs.IS_STAKED_VESTED_ENABLED}}

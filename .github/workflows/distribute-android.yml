@@ -35,7 +35,7 @@ on:
 
 jobs:
   build:
-    name: Build and distribute Android app
+    name: Distribute Android app
     runs-on: ubuntu-cpu16-ram64
     steps:
       - uses: actions/checkout@v3
