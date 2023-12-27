@@ -56,13 +56,18 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-      - name: Install packages
-        run: yarn install 
+
+      - name: Install Ruby
+        run: |
+           rbenv install 3.2.0 && gem install bundler
 
       - name: setup-cocoapods
         uses: maxim-lobanov/setup-cocoapods@v1
         with:
           version: latest
+
+      - name: Install packages
+        run: yarn install 
 
       - name: Install pods
         run: cd ios && pod install
