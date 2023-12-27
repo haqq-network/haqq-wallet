@@ -140,13 +140,14 @@ jobs:
       - name: Run e2e tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 27
+          api-level: 31
+          profile: Nexus 6
           force-avd-creation: false
-          emulator-options: -no-window -use-system-libs -no-snapshot-save -no-snapshot-load -gpu off -noaudio -no-boot-anim
+          emulator-options: -no-window -use-system-libs -no-snapshot-load -noaudio -no-boot-anim
           disable-animations: true
           avd-name: HAQQ_e2e
           target: google_apis
-          script: adb kill-server && adb start-server && yarn detox:android:test
+          script: adb kill-server && adb start-server && && nc -z localhost 5037 && yarn detox:android:test
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3

@@ -173,7 +173,10 @@ android {
 }
 
 dependencies {
-  androidTestImplementation('com.wix:detox:+')
+  androidTestImplementation('com.wix:detox:+') {
+      exclude module: "protobuf-lite"
+  }
+  implementation 'com.facebook.soloader:soloader:0.10.4+'
   implementation 'androidx.appcompat:appcompat:1.1.0'
   implementation "com.facebook.react:react-android"
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
