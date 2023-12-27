@@ -164,6 +164,7 @@ jobs:
           disable-spellchecker: false
           disable-linux-hw-accel: auto
           enable-hw-keyboard: false
+          profile: Pixel 3XL
           channel: stable
 
       - name: Upload artifacts

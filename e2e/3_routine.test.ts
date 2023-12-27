@@ -55,7 +55,7 @@ describe('Routine', () => {
 
     await milkWallet.sendTransaction(tx);
 
-    await sleep(30_000);
+    await sleep(15_000);
 
     await element(by.id(`wallets_${wallet.address.toLowerCase()}_send`)).tap();
 
