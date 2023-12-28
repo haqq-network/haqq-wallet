@@ -13,25 +13,10 @@ import {
   BrowserStackParamList,
   BrowserStackRoutes,
 } from '@app/screens/HomeStack/BrowserStack';
+import {RemoteConfig} from '@app/services/remote-config';
 import {AdjustEvents, Link} from '@app/types';
 
-export const STRICT_URLS: Partial<Link>[] = [
-  {
-    title: 'HAQQ Dashboard',
-    url: 'https://shell.haqq.network',
-    icon: 'https://haqq.network/assets/media-kit/haqq-sign.svg',
-  },
-  {
-    title: 'HAQQ Vesting',
-    url: 'https://vesting.haqq.network',
-    icon: 'https://vesting.haqq.network/assets/favicon.svg',
-  },
-  {
-    title: 'SushiSwap',
-    url: 'https://www.sushi.com/swap',
-    icon: 'https://raw.githubusercontent.com/sushiswap/sushiswap/master/apps/evm/public/icon-512x512.svg',
-  },
-];
+export const STRICT_URLS: Partial<Link>[] = [];
 
 export const BrowserHomePageScreen = memo(() => {
   const navigation = useTypedNavigation<BrowserStackParamList>();
@@ -71,10 +56,13 @@ export const BrowserHomePageScreen = memo(() => {
   }, [navigation]);
 
   useEffect(() => {
-    STRICT_URLS.forEach(link => {
-      if (!Web3BrowserBookmark.getByUrl(link?.url || '')) {
-        Web3BrowserBookmark.create(link);
-      }
+    RemoteConfig.awaitForInitialization().then(() => {
+      const web3BrowserBookmarks = RemoteConfig.get('web3_browser_bookmarks')!;
+      web3BrowserBookmarks.forEach(link => {
+        if (!Web3BrowserBookmark.getByUrl(link?.url || '')) {
+          Web3BrowserBookmark.create(link);
+        }
+      });
     });
   }, []);
 
