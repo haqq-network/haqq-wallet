@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import {useActionSheet} from '@expo/react-native-action-sheet';
 import {View} from 'react-native';
@@ -35,8 +35,10 @@ export const NftViewer = ({style}: NftViewerProps) => {
   const [sortFieldName, setSortFieldName] =
     useState<keyof NftCollection>('created_at');
 
-  const data = Nft.getAllCollections().sort(
-    arraySortUtil(sortDirection, sortFieldName),
+  const data = Nft.getAllCollections();
+  const sortedData = useMemo(
+    () => data.sort(arraySortUtil(sortDirection, sortFieldName)),
+    [],
   );
 
   const onPressSort = useCallback(() => {
@@ -92,7 +94,7 @@ export const NftViewer = ({style}: NftViewerProps) => {
     [navigation],
   );
 
-  if (!data?.length) {
+  if (!sortedData?.length) {
     return <NoNft />;
   }
 
@@ -108,14 +110,14 @@ export const NftViewer = ({style}: NftViewerProps) => {
       <First>
         {viewMode === NftViewerViewMode.collectionListWithItems && (
           <NftViewerCollectionPreviewList
-            data={data}
+            data={sortedData}
             onItemPress={onNftItemPress}
             onCollectionPress={onNftCollectionPress}
           />
         )}
         {viewMode === NftViewerViewMode.collectionGrid && (
           <NftViewerCollectionPreviewGrid
-            data={data}
+            data={sortedData}
             onPress={onNftCollectionPress}
           />
         )}
