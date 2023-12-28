@@ -29,9 +29,9 @@ on:
 jobs:
   build:
     name: Run e2e tests
-    runs-on: self-hosted
+    runs-on: macOS
     steps:
-      - name: Show self-hosted machine infomation
+      - name: Show macOS machine infomation
         run: uname -a
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3

@@ -29,7 +29,7 @@ export const STRICT_URLS: Partial<Link>[] = [
   {
     title: 'SushiSwap',
     url: 'https://www.sushi.com/swap',
-    icon: 'https://www.sushi.com/favicon.ico?v=1',
+    icon: 'https://raw.githubusercontent.com/sushiswap/sushiswap/master/apps/evm/public/icon-512x512.svg',
   },
 ];
 

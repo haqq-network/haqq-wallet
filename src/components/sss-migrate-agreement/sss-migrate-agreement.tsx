@@ -60,7 +60,7 @@ export const SssMigrateAgreement = ({onDone}: SssMigrateAgreementProps) => {
 
 const page = StyleSheet.create({
   animation: {
-    height: 224,
+    height: 184,
     width: '100%',
   },
   container: {
