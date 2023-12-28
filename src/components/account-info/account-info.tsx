@@ -2,6 +2,7 @@ import React, {useCallback, useMemo, useState} from 'react';
 
 import {FlatList, ListRenderItem} from 'react-native';
 
+import {NftViewer} from '@app/components/nft-viewer/nft-viewer';
 import {TransactionEmpty} from '@app/components/transaction-empty';
 import {TransactionRow} from '@app/components/transaction-row';
 import {First, PopupContainer, Spacer} from '@app/components/ui';
@@ -14,7 +15,6 @@ import {ContractNameMap, TransactionList} from '@app/types';
 
 import {AccountInfoHeader} from './account-info-header';
 
-import {NftViewer} from '../nft-viewer';
 import {TopTabNavigator, TopTabNavigatorVariant} from '../top-tab-navigator';
 
 enum TabNames {
@@ -142,7 +142,7 @@ export const AccountInfo = ({
         {activeTab === TabNames.transactions && <TransactionEmpty />}
         <>
           <Spacer height={24} />
-          <NftViewer scrollEnabled={false} style={styles.nftViewerContainer} />
+          <NftViewer style={styles.nftViewerContainer} />
         </>
       </First>
     ),

@@ -1,58 +1,33 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 
 import {useActionSheet} from '@expo/react-native-action-sheet';
-import {Image, StyleProp, View, ViewStyle} from 'react-native';
+import {View} from 'react-native';
 
-import {Color} from '@app/colors';
+import {NftViewerHeader} from '@app/components/nft-viewer/components/nft-viewer-header';
+import {NoNft} from '@app/components/nft-viewer/components/no-nft';
 import {NftViewerCollectionPreviewGrid} from '@app/components/nft-viewer/nft-viewer-collection-preview/nft-viewer-collection-preview-grid';
 import {NftViewerCollectionPreviewList} from '@app/components/nft-viewer/nft-viewer-collection-preview/nft-viewer-collection-preview-list';
-import {NftSection} from '@app/components/nft-viewer/types';
-import {createTheme} from '@app/helpers';
+import {
+  NftSortingNamesMap,
+  NftViewerProps,
+  NftViewerViewMode,
+  ViewModeChangeStateMap,
+} from '@app/components/nft-viewer/types';
+import {First, Spacer} from '@app/components/ui';
 import {useTypedNavigation} from '@app/hooks';
 import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {I18N, getText} from '@app/i18n';
 import {Nft} from '@app/models/nft';
+import {HomeFeedStackRoutes} from '@app/screens/HomeStack/HomeFeedStack';
 import {HaqqCosmosAddress, NftCollection, NftItem} from '@app/types';
 import {SortDirectionEnum, arraySortUtil} from '@app/utils';
 
-import {First, Icon, IconButton, IconsName, Spacer, Text} from '../ui';
-
-export interface NftViewerProps {
-  scrollEnabled?: boolean;
-  style?: StyleProp<ViewStyle>;
-}
-
-export enum NftViewerViewMode {
-  collectionGrid,
-  collectionListWithItems,
-}
-
-const NftSortingNamesMap = {
-  created_at: getText(I18N.sortByAdding),
-  name: getText(I18N.sortByName),
-} as Record<keyof NftCollection, string>;
-
-const ViewModeChangeStateMap = {
-  [NftViewerViewMode.collectionGrid]: NftViewerViewMode.collectionListWithItems,
-  [NftViewerViewMode.collectionListWithItems]: NftViewerViewMode.collectionGrid,
-};
-
-const ViewModeIconsMap = {
-  [NftViewerViewMode.collectionGrid]: IconsName.squares,
-  [NftViewerViewMode.collectionListWithItems]: IconsName.list_squares,
-};
-
-export const NftViewer = ({style, scrollEnabled = true}: NftViewerProps) => {
+export const NftViewer = ({style}: NftViewerProps) => {
   const navigation = useTypedNavigation();
   const {showActionSheetWithOptions} = useActionSheet();
   const {animate} = useLayoutAnimation();
-  const data = Nft.getAllCollections();
 
   const [viewMode, setViewMode] = useState(NftViewerViewMode.collectionGrid);
-  const viewModeIconName = useMemo(() => {
-    const nextViewMode = ViewModeChangeStateMap[viewMode];
-    return ViewModeIconsMap[nextViewMode];
-  }, [viewMode]);
 
   const [sortDirection, setSortDirection] = useState(
     SortDirectionEnum.descending,
@@ -60,12 +35,8 @@ export const NftViewer = ({style, scrollEnabled = true}: NftViewerProps) => {
   const [sortFieldName, setSortFieldName] =
     useState<keyof NftCollection>('created_at');
 
-  const sections: NftSection[] = useMemo(
-    () =>
-      data
-        .map(item => ({...item, data: [{data: item.data}]}) as NftSection)
-        .sort(arraySortUtil(sortDirection, sortFieldName)),
-    [data, sortDirection, sortFieldName],
+  const data = Nft.getAllCollections().sort(
+    arraySortUtil(sortDirection, sortFieldName),
   );
 
   const onPressSort = useCallback(() => {
@@ -106,76 +77,49 @@ export const NftViewer = ({style, scrollEnabled = true}: NftViewerProps) => {
 
   const onNftCollectionPress = useCallback(
     (collectionId: HaqqCosmosAddress) => {
-      navigation.navigate('nftDetails', {type: 'collection', collectionId});
+      navigation.navigate(HomeFeedStackRoutes.NftDetails, {
+        type: 'collection',
+        collectionId,
+      });
     },
     [navigation],
   );
 
   const onNftItemPress = useCallback(
     (item: NftItem) => {
-      navigation.navigate('nftDetails', {type: 'nft', item});
+      navigation.navigate(HomeFeedStackRoutes.NftDetails, {type: 'nft', item});
     },
     [navigation],
   );
 
   if (!data?.length) {
-    return (
-      <View style={styles.empty}>
-        <Image
-          style={styles.emptyImage}
-          source={require('@assets/images/none-nft.png')}
-        />
-        <Spacer height={12} />
-        <Text t13 color={Color.textSecond1} i18n={I18N.nftViewerNoNFTs} />
-      </View>
-    );
+    return <NoNft />;
   }
 
   return (
     <View style={style}>
-      <View style={styles.row}>
-        <Text t13 onPress={onPressSort}>
-          {NftSortingNamesMap[sortFieldName]}
-        </Text>
-        <IconButton onPress={onChangeViewModePress}>
-          <Icon color={Color.graphicBase1} name={viewModeIconName} />
-        </IconButton>
-      </View>
+      <NftViewerHeader
+        onChangeViewModePress={onChangeViewModePress}
+        onPressSort={onPressSort}
+        sortFieldName={sortFieldName}
+        viewMode={viewMode}
+      />
       <Spacer height={19} />
       <First>
         {viewMode === NftViewerViewMode.collectionListWithItems && (
           <NftViewerCollectionPreviewList
-            data={sections}
+            data={data}
             onItemPress={onNftItemPress}
             onCollectionPress={onNftCollectionPress}
-            scrollEnabled={scrollEnabled}
           />
         )}
         {viewMode === NftViewerViewMode.collectionGrid && (
           <NftViewerCollectionPreviewGrid
             data={data}
             onPress={onNftCollectionPress}
-            scrollEnabled={false}
           />
         )}
       </First>
     </View>
   );
 };
-
-const styles = createTheme({
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  empty: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  emptyImage: {
-    height: 80,
-    width: 80,
-    tintColor: Color.graphicSecond3,
-  },
-});

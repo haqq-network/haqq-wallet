@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {SectionList, SectionListRenderItem} from 'react-native';
 
@@ -7,21 +7,25 @@ import {NftViewerItemPreviewList} from '@app/components/nft-viewer/nft-viewer-it
 import {NftViewerSectionHeader} from '@app/components/nft-viewer/nft-viewer-section-header';
 import {NftSection, NftSectionData} from '@app/components/nft-viewer/types';
 import {Spacer} from '@app/components/ui';
-import {HaqqCosmosAddress, NftItem} from '@app/types';
+import {HaqqCosmosAddress, NftCollection, NftItem} from '@app/types';
 
 type NftViewerCollectionPreviewListProps = {
-  data: NftSection[];
-  scrollEnabled: boolean;
+  data: NftCollection[];
   onItemPress: (item: NftItem) => void;
   onCollectionPress: (id: HaqqCosmosAddress) => void;
 };
 
 export const NftViewerCollectionPreviewList = ({
   data,
-  scrollEnabled,
   onItemPress,
   onCollectionPress,
 }: NftViewerCollectionPreviewListProps) => {
+  const sections: NftSection[] = useMemo(
+    () =>
+      data.map(item => ({...item, data: [{data: item.data}]}) as NftSection),
+    [data],
+  );
+
   const renderItem: SectionListRenderItem<NftSectionData> = useCallback(
     ({item: section}) => {
       return (
@@ -51,8 +55,8 @@ export const NftViewerCollectionPreviewList = ({
 
   return (
     <SectionList
-      scrollEnabled={scrollEnabled}
-      sections={data}
+      scrollEnabled={false}
+      sections={sections}
       renderItem={renderItem}
       renderSectionHeader={renderSectionHeader}
       SectionSeparatorComponent={renderSectionSeparatorComponent}

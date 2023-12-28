@@ -2,6 +2,7 @@ import React, {useCallback, useMemo, useState} from 'react';
 
 import {FlatList, ListRenderItem} from 'react-native';
 
+import {NftViewer} from '@app/components/nft-viewer/nft-viewer';
 import {TokenViewer} from '@app/components/token-viewer';
 import {TransactionEmpty} from '@app/components/transaction-empty';
 import {TransactionRow} from '@app/components/transaction-row';
@@ -23,7 +24,6 @@ import {
 
 import {TotalValueInfoHeader} from './total-value-info-header';
 
-import {NftViewer} from '../nft-viewer';
 import {TopTabNavigator, TopTabNavigatorVariant} from '../top-tab-navigator';
 
 export enum TotalValueTabNames {
@@ -160,10 +160,7 @@ export const TotalValueInfo = ({
         {activeTab === TotalValueTabNames.nft && (
           <>
             <Spacer height={24} />
-            <NftViewer
-              scrollEnabled={false}
-              style={styles.nftViewerContainer}
-            />
+            <NftViewer style={styles.nftViewerContainer} />
           </>
         )}
         {activeTab === TotalValueTabNames.tokens && (

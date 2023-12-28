@@ -11,7 +11,6 @@ import {Spacer} from '../../ui';
 
 export interface NftViewerCollectionPreviewGridProps {
   data: NftCollection[];
-  scrollEnabled?: boolean;
 
   onPress(collectionId: HaqqCosmosAddress): void;
 }
@@ -19,7 +18,6 @@ export interface NftViewerCollectionPreviewGridProps {
 export const NftViewerCollectionPreviewGrid = ({
   data,
   onPress,
-  scrollEnabled = true,
 }: NftViewerCollectionPreviewGridProps) => {
   const renderItemSeparatorComponent = useCallback(
     () => <Spacer width={12} height={12} />,
@@ -39,7 +37,7 @@ export const NftViewerCollectionPreviewGrid = ({
       showsVerticalScrollIndicator={false}
       ItemSeparatorComponent={renderItemSeparatorComponent}
       renderItem={renderItem}
-      scrollEnabled={scrollEnabled}
+      scrollEnabled={false}
       columnWrapperStyle={styles.columnWrapperStyle}
     />
   );
