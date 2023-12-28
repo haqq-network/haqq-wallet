@@ -4,10 +4,9 @@ import {Image, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {NftSection} from '@app/components/nft-viewer/types';
+import {MenuNavigationButton, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {HaqqCosmosAddress} from '@app/types';
-
-import {MenuNavigationButton, Spacer, Text} from '../ui';
 
 export interface NftViewerSectionHeaderProps {
   item: NftSection;

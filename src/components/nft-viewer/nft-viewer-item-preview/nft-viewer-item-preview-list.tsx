@@ -3,14 +3,13 @@ import React, {useCallback} from 'react';
 import {ListRenderItem, StyleSheet} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 
+import {Spacer} from '@app/components/ui';
 import {NftItem} from '@app/types';
 
 import {
   NftViewerItemPreview,
   NftViewerItemPreviewVariant,
 } from './nft-viewer-item-preview';
-
-import {Spacer} from '../../ui';
 
 export interface NftViewerItemPreviewListProps {
   data: NftItem[];

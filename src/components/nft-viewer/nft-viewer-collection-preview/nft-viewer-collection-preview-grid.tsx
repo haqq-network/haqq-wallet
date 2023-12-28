@@ -3,11 +3,10 @@ import React, {useCallback} from 'react';
 import {ListRenderItem, StyleSheet} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 
+import {Spacer} from '@app/components/ui';
 import {HaqqCosmosAddress, NftCollection} from '@app/types';
 
 import {NftViewerCollectionPreview} from './nft-viewer-collection-preview';
-
-import {Spacer} from '../../ui';
 
 export interface NftViewerCollectionPreviewGridProps {
   data: NftCollection[];

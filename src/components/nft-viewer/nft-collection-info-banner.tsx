@@ -3,6 +3,7 @@ import React, {useCallback, useMemo} from 'react';
 import {ImageBackground, TouchableOpacity, View} from 'react-native';
 
 import {Color} from '@app/colors';
+import {Spacer, Text} from '@app/components/ui';
 import {cleanNumber, createTheme} from '@app/helpers';
 import {useLayout} from '@app/hooks/use-layout';
 import {I18N} from '@app/i18n';
@@ -10,8 +11,6 @@ import {Nft} from '@app/models/nft';
 import {NftItem} from '@app/types';
 import {addOpacityToColor, getRandomItemFromArray} from '@app/utils';
 import {WEI} from '@app/variables/common';
-
-import {Spacer, Text} from '../ui';
 
 type Props = {
   data: NftItem[];

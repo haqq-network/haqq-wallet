@@ -3,13 +3,12 @@ import React, {useCallback, useMemo} from 'react';
 import {ImageBackground, TouchableOpacity, View} from 'react-native';
 
 import {Color} from '@app/colors';
+import {Text} from '@app/components/ui';
 import {cleanNumber, createTheme} from '@app/helpers';
 import {addOpacityToColor} from '@app/utils';
 import {WEI} from '@app/variables/common';
 
 import {NftViewerItemPreviewExtendedProps} from './nft-viewer-item-preview';
-
-import {Text} from '../../ui';
 
 export const NftViewerItemPreviewMedium = ({
   item,
