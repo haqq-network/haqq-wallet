@@ -2,9 +2,9 @@ import React, {useCallback, useMemo} from 'react';
 
 import {SectionList, SectionListRenderItem} from 'react-native';
 
+import {NftViewerSectionHeader} from '@app/components/nft-viewer/nft-viewer-collection-preview/list/nft-viewer-section-header';
 import {NftViewerItemPreviewVariant} from '@app/components/nft-viewer/nft-viewer-item-preview/nft-viewer-item-preview';
 import {NftViewerItemPreviewList} from '@app/components/nft-viewer/nft-viewer-item-preview/nft-viewer-item-preview-list';
-import {NftViewerSectionHeader} from '@app/components/nft-viewer/nft-viewer-section-header';
 import {NftSection, NftSectionData} from '@app/components/nft-viewer/types';
 import {Spacer} from '@app/components/ui';
 import {HaqqCosmosAddress, NftCollection, NftItem} from '@app/types';
@@ -53,9 +53,15 @@ export const NftViewerCollectionPreviewList = ({
     [],
   );
 
+  const keyExtractor = useCallback(
+    (item: NftSectionData) => item.toString(),
+    [],
+  );
+
   return (
     <SectionList
       scrollEnabled={false}
+      keyExtractor={keyExtractor}
       sections={sections}
       renderItem={renderItem}
       renderSectionHeader={renderSectionHeader}

@@ -3,7 +3,6 @@ import React, {useCallback} from 'react';
 import {observer} from 'mobx-react';
 import {StyleSheet} from 'react-native';
 
-import {NftCollectionInfoBanner} from '@app/components/nft-viewer/nft-collection-info-banner';
 import {NftViewerItemPreviewVariant} from '@app/components/nft-viewer/nft-viewer-item-preview/nft-viewer-item-preview';
 import {NftViewerItemPreviewList} from '@app/components/nft-viewer/nft-viewer-item-preview/nft-viewer-item-preview-list';
 import {TotalValueTabNames} from '@app/components/total-value-info';
@@ -15,6 +14,7 @@ import {useTypedNavigation} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Nft} from '@app/models/nft';
 import {INftWidget, NftWidgetSize} from '@app/types';
+import {NftCollectionInfoBanner} from '@app/widgets/nft-widget/nft-collection-info-banner';
 
 export const NftWidgetWrapper = observer(({size}: INftWidget) => {
   const navigation = useTypedNavigation();

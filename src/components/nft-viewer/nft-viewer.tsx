@@ -5,8 +5,8 @@ import {View} from 'react-native';
 
 import {NftViewerHeader} from '@app/components/nft-viewer/components/nft-viewer-header';
 import {NoNft} from '@app/components/nft-viewer/components/no-nft';
-import {NftViewerCollectionPreviewGrid} from '@app/components/nft-viewer/nft-viewer-collection-preview/nft-viewer-collection-preview-grid';
-import {NftViewerCollectionPreviewList} from '@app/components/nft-viewer/nft-viewer-collection-preview/nft-viewer-collection-preview-list';
+import {NftViewerCollectionPreviewGrid} from '@app/components/nft-viewer/nft-viewer-collection-preview/grid/nft-viewer-collection-preview-grid';
+import {NftViewerCollectionPreviewList} from '@app/components/nft-viewer/nft-viewer-collection-preview/list/nft-viewer-collection-preview-list';
 import {
   NftSortingNamesMap,
   NftViewerProps,

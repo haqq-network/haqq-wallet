@@ -6,7 +6,7 @@ import {FlatList} from 'react-native-gesture-handler';
 import {Spacer} from '@app/components/ui';
 import {HaqqCosmosAddress, NftCollection} from '@app/types';
 
-import {NftViewerCollectionPreview} from './nft-viewer-collection-preview';
+import {NftViewerCollectionPreview} from '../nft-viewer-collection-preview';
 
 export interface NftViewerCollectionPreviewGridProps {
   data: NftCollection[];
