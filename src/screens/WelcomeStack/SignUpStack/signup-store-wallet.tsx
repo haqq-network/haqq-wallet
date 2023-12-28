@@ -3,6 +3,7 @@ import {useCallback, useEffect} from 'react';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {observer} from 'mobx-react';
 
+import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {getProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet';
@@ -10,6 +11,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {WelcomeStackRoutes} from '@app/screens/WelcomeStack';
+import {SignInStackRoutes} from '@app/screens/WelcomeStack/SignInStack';
 import {
   SignUpStackParamList,
   SignUpStackRoutes,
@@ -80,6 +82,16 @@ export const SignUpStoreWalletScreen = observer(() => {
         if (!provider || typeof provider?.getIdentifier !== 'function') {
           hideModal('loading');
           goBack();
+          return;
+        }
+
+        if (getWalletType() === WalletType.sss && app.onboarded === false) {
+          hideModal('loading');
+          //@ts-ignore
+          navigation.navigate(WelcomeStackRoutes.SignIn, {
+            screen: SignInStackRoutes.SigninChooseAccount,
+            params: {provider},
+          });
           return;
         }
 
