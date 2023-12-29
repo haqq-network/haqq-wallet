@@ -59,7 +59,10 @@ export class PushNotifications extends EventEmitter {
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
     if (enabled) {
-      const token = await messaging().getToken();
+      const token = await this.getToken(true);
+      if (!token) {
+        return;
+      }
       const uid = await getUid();
       const subscription = await Backend.instance.createNotificationToken(
         token,
@@ -78,9 +81,15 @@ export class PushNotifications extends EventEmitter {
     return enabled;
   }
 
-  async getToken() {
-    if (VariablesBool.get('notifications')) {
-      return await messaging().getToken();
+  async getToken(force: boolean = false) {
+    if (VariablesBool.get('notifications') || force) {
+      try {
+        const token = await messaging().getToken();
+        return token;
+      } catch (err) {
+        Logger.log('PushNotifications:getToken', err);
+        return null;
+      }
     }
 
     return null;
