@@ -37,6 +37,9 @@ export const BrowserHomePageScreen = memo(() => {
 
   const onFavouritePress = useCallback(
     (link: Link) => {
+      if (link.eventName) {
+        onTrackEvent(link.eventName as AdjustEvents);
+      }
       navigation.navigate(BrowserStackRoutes.Web3browser, {url: link.url});
     },
     [navigation],

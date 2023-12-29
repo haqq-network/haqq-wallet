@@ -123,7 +123,7 @@ export const REMOTE_CONFIG_DEFAULT_VALUES: Required<RemoteConfigTypes> = {
       icon: 'https://vesting.haqq.network/assets/favicon.svg',
     },
     {
-      title: 'SushiSwap',
+      title: 'Sushi',
       url: 'https://www.sushi.com/swap',
       icon: 'https://raw.githubusercontent.com/sushiswap/sushiswap/master/apps/evm/public/icon-512x512.svg',
     },
