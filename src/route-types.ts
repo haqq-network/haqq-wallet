@@ -13,6 +13,7 @@ import {SssProviders} from '@app/services/provider-sss';
 import {
   AdjustEvents,
   BiometryType,
+  Eventable,
   IToken,
   JsonRpcMetadata,
   LedgerWalletInitialData,
@@ -68,6 +69,7 @@ export enum SignUpStackRoutes {
   OnboardingSetupPin = 'onboardingSetupPin',
   SignupStoreWallet = 'signupStoreWallet',
   SignupCloudProblems = 'cloudProblems',
+  SignupImportantInfo = 'signupImportantInfo',
 }
 
 export type SignUpStackParamList = WelcomeStackParamList & {
@@ -88,6 +90,9 @@ export type SignUpStackParamList = WelcomeStackParamList & {
   };
   [SignUpStackRoutes.SignupCloudProblems]: {
     sssProvider: SssProviders;
+    onNext: () => void;
+  };
+  [SignUpStackRoutes.SignupImportantInfo]: {
     onNext: () => void;
   };
 };
@@ -146,6 +151,7 @@ export enum SssMigrateStackRoutes {
   SssMigrateRewrite = 'sssMigrateRewrite',
   SssMigrateStore = 'sssMigrateStore',
   SssMigrateFinish = 'sssMigrateFinish',
+  SssMigrateSignupImportantInfo = 'sssMigrateSignupImportantInfo',
 }
 
 export type SssMigrateStackParamList = HomeStackParamList & {
@@ -168,6 +174,9 @@ export type SssMigrateStackParamList = HomeStackParamList & {
     token: string;
   };
   [SssMigrateStackRoutes.SssMigrateFinish]: undefined;
+  [SssMigrateStackRoutes.SssMigrateSignupImportantInfo]: {
+    onNext: () => void;
+  };
 };
 
 export enum BrowserStackRoutes {
@@ -400,11 +409,10 @@ export type HomeStackParamList = {
   };
   [HomeStackRoutes.PopupTrackActivity]: {bannerId: string};
   [HomeStackRoutes.Web3BrowserPopup]: {url: string; popup?: boolean};
-  [HomeStackRoutes.WalletSelector]: {
+  [HomeStackRoutes.WalletSelector]: Eventable & {
     wallets: Wallet[];
     title: string;
     initialAddress?: string;
-    eventSuffix?: string;
   };
   [HomeStackRoutes.TotalValueInfo]?: {
     tab?: TotalValueTabNames;

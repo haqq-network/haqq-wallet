@@ -68,7 +68,7 @@ export const SssMigrateNetworksScreen = memo(() => {
           onNext();
         } else {
           navigation.navigate(
-            SssMigrateStackRoutes.SSSMigrateSignupImportantInfo,
+            SssMigrateStackRoutes.SssMigrateSignupImportantInfo,
             {
               onNext,
             },

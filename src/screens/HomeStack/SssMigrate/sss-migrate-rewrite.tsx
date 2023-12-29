@@ -36,7 +36,7 @@ export const SssMigrateRewriteScreen = memo(() => {
             };
 
             navigation.navigate(
-              SssMigrateStackRoutes.SSSMigrateSignupImportantInfo,
+              SssMigrateStackRoutes.SssMigrateSignupImportantInfo,
               {
                 onNext,
               },

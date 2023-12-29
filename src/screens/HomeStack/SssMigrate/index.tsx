@@ -52,7 +52,7 @@ export const SssMigrateStack = memo(() => {
         options={hideBack}
       />
       <Stack.Screen
-        name={SssMigrateStackRoutes.SSSMigrateSignupImportantInfo}
+        name={SssMigrateStackRoutes.SssMigrateSignupImportantInfo}
         component={SignUpImportantInfoScreen}
       />
     </Stack.Navigator>
