@@ -111,4 +111,21 @@ export const REMOTE_CONFIG_DEFAULT_VALUES: Required<RemoteConfigTypes> = {
   staking_reward_min_amount: getDefaultBalanceValue(
     'staking_reward_min_amount',
   ).toHex(),
+  web3_browser_bookmarks: [
+    {
+      title: 'HAQQ Dashboard',
+      url: 'https://shell.haqq.network',
+      icon: 'https://haqq.network/assets/media-kit/haqq-sign.png',
+    },
+    {
+      title: 'HAQQ Vesting',
+      url: 'https://vesting.haqq.network',
+      icon: 'https://vesting.haqq.network/assets/favicon.svg',
+    },
+    {
+      title: 'SushiSwap',
+      url: 'https://www.sushi.com/swap',
+      icon: 'https://raw.githubusercontent.com/sushiswap/sushiswap/master/apps/evm/public/icon-512x512.svg',
+    },
+  ],
 };

@@ -8,8 +8,8 @@ import DraggableFlatList, {
 } from 'react-native-draggable-flatlist';
 
 import {Color} from '@app/colors';
+import {useRemoteConfigVar} from '@app/hooks/use-remote-config';
 import {I18N} from '@app/i18n';
-import {STRICT_URLS} from '@app/screens/HomeStack/BrowserStack/browser-home-page-screen';
 import {Link} from '@app/types';
 
 import {LinkPreview, LinkPreviewVariant} from './link-preview';
@@ -34,6 +34,8 @@ export const BrowserEditBookmarks = ({
   onPressBack,
   onPressSubmit,
 }: BrowserEditBookmarksProps) => {
+  const web3BrowserBookmarks = useRemoteConfigVar('web3_browser_bookmarks');
+
   const renderItem = useCallback(
     ({item, drag, isActive}: RenderItemParams<Link>) => {
       if (!item?.id) {
@@ -44,7 +46,9 @@ export const BrowserEditBookmarks = ({
         onPressRemove?.(item);
       };
 
-      const isStrictUrl = !!STRICT_URLS.find(link => item.url === link.url);
+      const isStrictUrl = !!web3BrowserBookmarks.find(
+        link => item.url === link.url,
+      );
 
       return (
         <ScaleDecorator activeScale={1.05}>
@@ -76,7 +80,7 @@ export const BrowserEditBookmarks = ({
         </ScaleDecorator>
       );
     },
-    [onPressRemove],
+    [onPressRemove, web3BrowserBookmarks],
   );
 
   const keyExtractor = useCallback((item: Link) => item.id, []);

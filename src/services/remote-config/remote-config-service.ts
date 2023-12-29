@@ -19,7 +19,10 @@ const logger = Logger.create('RemoteConfig', {
 function getCachedConfig() {
   const cacheString = VariablesString.get(KEY);
   if (isValidJSON(cacheString)) {
-    return JSON.parse(cacheString) as RemoteConfigTypes;
+    return {
+      ...REMOTE_CONFIG_DEFAULT_VALUES,
+      ...JSON.parse(cacheString),
+    } as RemoteConfigTypes;
   }
   return REMOTE_CONFIG_DEFAULT_VALUES;
 }
