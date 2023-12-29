@@ -50,7 +50,7 @@ export const realm = new Realm({
     RssNews,
     VestingMetadata,
   ],
-  schemaVersion: 71,
+  schemaVersion: 72,
   onMigration: (oldRealm, newRealm) => {
     logger.log('onMigration', {
       oldRealmVersion: oldRealm.schemaVersion,
@@ -559,6 +559,23 @@ export const realm = new Realm({
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
         newObject.input = '0x';
+      }
+    }
+    if (oldRealm.schemaVersion < 72) {
+      logger.log('migration step #23');
+      const oldObjects = oldRealm.objects('Web3BrowserBookmark');
+      const newObjects = newRealm.objects<{eventName: string}>(
+        'Web3BrowserBookmark',
+      );
+
+      logger.log({
+        oldObjects: oldObjects.toJSON(),
+        newObjects: newObjects.toJSON(),
+      });
+
+      for (const objectIndex in oldObjects) {
+        const newObject = newObjects[objectIndex];
+        newObject.eventName = '';
       }
     }
     logger.log('realm migration finished');
