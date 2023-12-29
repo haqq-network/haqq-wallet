@@ -832,6 +832,7 @@ export interface Link {
   title: string;
   subtitle?: string;
   icon?: string;
+  eventName?: string;
 }
 
 export interface DynamicLink {
