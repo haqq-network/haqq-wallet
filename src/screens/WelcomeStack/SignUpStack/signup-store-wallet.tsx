@@ -11,9 +11,9 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {
+  SignInStackRoutes,
   SignUpStackParamList,
   SignUpStackRoutes,
-  SignInStackRoutes,
   WelcomeStackRoutes,
 } from '@app/route-types';
 import {SssProviders} from '@app/services/provider-sss';
