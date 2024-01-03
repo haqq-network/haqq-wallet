@@ -11,14 +11,14 @@ export type WalletBalance = {
   [key: HaqqEthereumAddress]: BalanceData;
 };
 
-const getBalance = (wallets: Wallet[]) => {
+const getBalance = (wallets: Wallet[]): WalletBalance => {
   return Object.fromEntries(
     wallets.map(w => [w.address, app.getBalanceData(w.address)]),
-  );
+  ) as WalletBalance;
 };
 
 export function useWalletsBalance(wallets: Wallet[]): WalletBalance {
-  const [balance, setBalance] = useState(getBalance(wallets));
+  const [balance, setBalance] = useState<WalletBalance>(getBalance(wallets));
   const prevWalletsLength = usePrevious(wallets.length);
 
   useEffect(() => {

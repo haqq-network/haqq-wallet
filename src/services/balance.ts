@@ -2,8 +2,11 @@ import Decimal from 'decimal.js';
 import {BigNumber, BigNumberish} from 'ethers';
 
 import {cleanNumber} from '@app/helpers/clean-number';
+import {Wallet} from '@app/models/wallet';
 import {
   BalanceConstructor,
+  BalanceData,
+  HaqqEthereumAddress,
   HexNumber,
   IBalance,
   ISerializable,
@@ -262,5 +265,22 @@ export class Balance implements IBalance, ISerializable {
    */
   get isIslamic() {
     return this.symbol === CURRENCY_NAME;
+  }
+
+  static get emptyBalances(): Record<HaqqEthereumAddress, BalanceData> {
+    return Wallet.getAll().reduce((acc, w) => {
+      return {
+        ...acc,
+        [w.address]: {
+          staked: Balance.Empty,
+          vested: Balance.Empty,
+          available: Balance.Empty,
+          total: Balance.Empty,
+          locked: Balance.Empty,
+          availableForStake: Balance.Empty,
+          unlock: new Date(0),
+        },
+      };
+    }, {});
   }
 }
