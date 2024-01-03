@@ -7,7 +7,7 @@ import {
 import {onBannerAnalyticsEnable} from '@app/event-actions/on-banner-analytics-enable';
 import {onBannerAnalyticsSnooze} from '@app/event-actions/on-banner-analytics-snooze';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
+import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 
 export const PopupTrackActivityScreen = memo(() => {
   const route = useTypedRoute<

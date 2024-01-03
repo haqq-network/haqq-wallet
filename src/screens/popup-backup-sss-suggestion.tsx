@@ -7,11 +7,11 @@ import {BackupSssSuggestion} from '@app/components/bottom-popups/popup-backup-ss
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {VariablesDate} from '@app/models/variables-date';
 import {navigator} from '@app/navigator';
-import {HomeStackRoutes} from '@app/screens/HomeStack';
 import {
+  HomeStackRoutes,
   SettingsStackParamList,
   SettingsStackRoutes,
-} from '@app/screens/HomeStack/SettingsStack';
+} from '@app/route-types';
 import {SNOOZE_WALLET_BACKUP_MINUTES} from '@app/variables/common';
 
 export const BackupSssSuggestionScreen = memo(() => {

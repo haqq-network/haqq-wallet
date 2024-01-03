@@ -6,7 +6,7 @@ import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
 import {SpacerPopupButton} from '@app/components/popup/spacer-popup-button';
 import {popupScreenOptions} from '@app/helpers';
 import {useTypedRoute} from '@app/hooks';
-import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
+import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 
 import {WalletProtectionScreen} from '../wallet-protection';
 

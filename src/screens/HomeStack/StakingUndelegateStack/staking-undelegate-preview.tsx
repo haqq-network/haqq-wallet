@@ -14,7 +14,7 @@ import {Wallet} from '@app/models/wallet';
 import {
   StakingUnDelegateStackParamList,
   StakingUnDelegateStackRoutes,
-} from '@app/screens/HomeStack/StakingUndelegateStack';
+} from '@app/route-types';
 import {WalletType} from '@app/types';
 import {makeID} from '@app/utils';
 

@@ -6,6 +6,7 @@ import {isHydrated, makePersistable} from 'mobx-persist-store';
 import {calcFee} from '@app/helpers';
 import {awaitForRealm} from '@app/helpers/await-for-realm';
 import {realm} from '@app/models/index';
+import {TransactionRealmObject} from '@app/models/realm-object-for-migration';
 import {Balance} from '@app/services/balance';
 import {storage} from '@app/services/mmkv';
 import {HaqqEthereumAddress, MobXStoreFromRealm} from '@app/types';
@@ -37,30 +38,6 @@ export type Transaction = {
   input: string;
   status: TransactionStatus;
 };
-
-export class TransactionRealmObject extends Realm.Object {
-  static schema = {
-    name: 'Transaction',
-    properties: {
-      hash: 'string',
-      block: 'string?',
-      account: 'string',
-      raw: 'string',
-      from: 'string',
-      to: 'string?',
-      contractAddress: 'string?',
-      value: 'double',
-      fee: 'double',
-      createdAt: {type: 'date', default: () => new Date()},
-      confirmed: {type: 'bool', default: false},
-      providerId: 'string',
-      chainId: 'string',
-      feeHex: 'string',
-      input: 'string',
-    },
-    primaryKey: 'hash',
-  };
-}
 
 class TransactionStore implements MobXStoreFromRealm {
   realmSchemaName = TransactionRealmObject.schema.name;

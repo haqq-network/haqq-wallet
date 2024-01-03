@@ -8,10 +8,7 @@ import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
 import {requestLocationPermission} from '@app/helpers/request-location-permission';
 import {useTypedNavigation} from '@app/hooks';
-import {
-  LedgerStackParamList,
-  LedgerStackRoutes,
-} from '@app/screens/WelcomeStack/LedgerStack';
+import {LedgerStackParamList, LedgerStackRoutes} from '@app/route-types';
 import {SystemDialog} from '@app/services/system-dialog';
 import {ModalType} from '@app/types';
 

@@ -4,9 +4,8 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {popupScreenOptionsWithMargin} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
-import {Provider} from '@app/models/provider';
+import {SettingsStackParamList, SettingsStackRoutes} from '@app/route-types';
 import {basicScreenOptions} from '@app/screens';
-import {HomeStackParamList} from '@app/screens/HomeStack';
 import {AddressBookStack} from '@app/screens/HomeStack/AddressStack';
 import {ManageAccountsStack} from '@app/screens/HomeStack/ManageAccountsStack';
 import {ProvidersStack} from '@app/screens/HomeStack/ProvidersStack';
@@ -20,44 +19,6 @@ import {SettingsThemeScreen} from '@app/screens/HomeStack/SettingsStack/settings
 import {WalletConnectStack} from '@app/screens/HomeStack/WalletConnectStack';
 import {BackupSssSuggestionScreen} from '@app/screens/popup-backup-sss-suggestion';
 import {SettingsDeveloperTools as SettingsDeveloperToolsScreen} from '@app/screens/settings-developer-tools';
-
-export enum SettingsStackRoutes {
-  Home = 'homeSettings_',
-  SettingsAccounts = 'settingsAccounts',
-  SettingsAddressBook = 'settingsAddressBook',
-  SettingsTheme = 'settingsTheme',
-  SettingsNotification = 'settingsNotification',
-  SettingsProviders = 'settingsProviders',
-  SettingsAbout = 'settingsAbout',
-  SettingsTest = 'settingsTest',
-  SettingsSecurity = 'settingsSecurity',
-  SettingsProviderForm = 'settingsProviderForm',
-  WalletConnectWalletList = 'walletConnectWalletList',
-  BackupSssSuggestion = 'backupSssSuggestion',
-  SettingsDeveloperTools = 'settingsDeveloperTools',
-}
-
-export type SettingsStackParamList = HomeStackParamList & {
-  [SettingsStackRoutes.Home]?: {
-    screen: SettingsStackRoutes.SettingsProviderForm;
-    params: {
-      id?: string;
-      data?: Partial<Provider>;
-    };
-  };
-  [SettingsStackRoutes.SettingsAccounts]: undefined;
-  [SettingsStackRoutes.SettingsAddressBook]: undefined;
-  [SettingsStackRoutes.SettingsTheme]: undefined;
-  [SettingsStackRoutes.SettingsNotification]: undefined;
-  [SettingsStackRoutes.SettingsProviders]: undefined;
-  [SettingsStackRoutes.SettingsAbout]: undefined;
-  [SettingsStackRoutes.SettingsTest]: undefined;
-  [SettingsStackRoutes.SettingsSecurity]: undefined;
-  [SettingsStackRoutes.SettingsProviderForm]: undefined;
-  [SettingsStackRoutes.WalletConnectWalletList]: undefined;
-  [SettingsStackRoutes.BackupSssSuggestion]: {accountId: string};
-  [SettingsStackRoutes.SettingsDeveloperTools]: undefined;
-};
 
 const Stack = createNativeStackNavigator<SettingsStackParamList>();
 

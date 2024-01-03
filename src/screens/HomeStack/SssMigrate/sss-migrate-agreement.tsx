@@ -5,7 +5,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {
   SssMigrateStackParamList,
   SssMigrateStackRoutes,
-} from '@app/screens/HomeStack/SssMigrate';
+} from '@app/route-types';
 
 export const SssMigrateAgreementScreen = memo(() => {
   const navigation = useTypedNavigation<SssMigrateStackParamList>();

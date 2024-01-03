@@ -13,7 +13,7 @@ import {Wallet} from '@app/models/wallet';
 import {
   StakingUnDelegateStackParamList,
   StakingUnDelegateStackRoutes,
-} from '@app/screens/HomeStack/StakingUndelegateStack';
+} from '@app/route-types';
 import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
 import {FEE_ESTIMATING_TIMEOUT_MS} from '@app/variables/common';

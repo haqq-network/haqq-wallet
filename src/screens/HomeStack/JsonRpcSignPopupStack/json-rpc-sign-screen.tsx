@@ -11,7 +11,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useRemoteConfigVar} from '@app/hooks/use-remote-config';
 import {Wallet} from '@app/models/wallet';
-import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
+import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {Balance} from '@app/services/balance';
 import {EthSignErrorDataDetails} from '@app/services/eth-sign';
 import {SignJsonRpcRequest} from '@app/services/sign-json-rpc-request';

@@ -1,18 +1,20 @@
 import Realm from 'realm';
 
-import {ContactRealmObject} from '@app/models/contact';
 import {News} from '@app/models/news';
 import {NftCollection} from '@app/models/nft-collection';
 import {Provider} from '@app/models/provider';
+import {
+  ContactRealmObject,
+  TransactionRealmObject,
+  WalletRealmObject,
+} from '@app/models/realm-object-for-migration';
 import {Refferal} from '@app/models/refferal';
 import {StakingMetadata} from '@app/models/staking-metadata';
-import {TransactionRealmObject} from '@app/models/transaction';
 import {UserSchema, UserType} from '@app/models/user';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesDate} from '@app/models/variables-date';
 import {VariablesString} from '@app/models/variables-string';
 import {VestingMetadata} from '@app/models/vesting-metadata';
-import {WalletRealmObject} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {AppTheme, WalletType} from '@app/types';
 import {

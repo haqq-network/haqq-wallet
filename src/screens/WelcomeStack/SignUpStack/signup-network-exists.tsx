@@ -9,12 +9,12 @@ import {SignupNetworkExists} from '@app/components/signup-network-exists';
 import {app} from '@app/contexts';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
-import {WelcomeStackRoutes} from '@app/screens/WelcomeStack';
-import {SignInStackRoutes} from '@app/screens/WelcomeStack/SignInStack';
 import {
+  SignInStackRoutes,
   SignUpStackParamList,
   SignUpStackRoutes,
-} from '@app/screens/WelcomeStack/SignUpStack';
+  WelcomeStackRoutes,
+} from '@app/route-types';
 import {Cloud} from '@app/services/cloud';
 import {WalletInitialData} from '@app/types';
 

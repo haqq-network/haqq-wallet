@@ -4,46 +4,18 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
 import {useTypedRoute} from '@app/hooks';
-import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
+import {
+  HomeStackParamList,
+  HomeStackRoutes,
+  SssMigrateStackParamList,
+  SssMigrateStackRoutes,
+} from '@app/route-types';
 import {SssMigrateAgreementScreen} from '@app/screens/HomeStack/SssMigrate/sss-migrate-agreement';
 import {SssMigrateFinishScreen} from '@app/screens/HomeStack/SssMigrate/sss-migrate-finish';
 import {SssMigrateNetworksScreen} from '@app/screens/HomeStack/SssMigrate/sss-migrate-networks';
 import {SssMigrateRewriteScreen} from '@app/screens/HomeStack/SssMigrate/sss-migrate-rewrite';
 import {SssMigrateStoreScreen} from '@app/screens/HomeStack/SssMigrate/sss-migrate-store';
 import {SignUpImportantInfoScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-important-info';
-import {SssProviders} from '@app/services/provider-sss';
-
-export enum SssMigrateStackRoutes {
-  SssMigrateAgreement = 'sssMigrateAgreement',
-  SssMigrateNetworks = 'sssMigrateNetworks',
-  SssMigrateRewrite = 'sssMigrateRewrite',
-  SssMigrateStore = 'sssMigrateStore',
-  SssMigrateFinish = 'sssMigrateFinish',
-  SSSMigrateSignupImportantInfo = 'sssSignupImportantInfo',
-}
-
-export type SssMigrateStackParamList = HomeStackParamList & {
-  [SssMigrateStackRoutes.SssMigrateAgreement]: {accountId: string};
-  [SssMigrateStackRoutes.SssMigrateNetworks]: {accountId: string};
-  [SssMigrateStackRoutes.SssMigrateRewrite]: {
-    accountId: string;
-    privateKey: string;
-    provider: SssProviders;
-    email?: string;
-    verifier: string;
-    token: string;
-  };
-  [SssMigrateStackRoutes.SssMigrateStore]: {
-    accountId: string;
-    privateKey: string | null;
-    provider?: SssProviders;
-    email?: string;
-    verifier: string;
-    token: string;
-  };
-  [SssMigrateStackRoutes.SssMigrateFinish]: undefined;
-  [SssMigrateStackRoutes.SSSMigrateSignupImportantInfo]: {onNext: () => void};
-};
 
 const Stack = createNativeStackNavigator<SssMigrateStackParamList>();
 
@@ -80,7 +52,7 @@ export const SssMigrateStack = memo(() => {
         options={hideBack}
       />
       <Stack.Screen
-        name={SssMigrateStackRoutes.SSSMigrateSignupImportantInfo}
+        name={SssMigrateStackRoutes.SssMigrateSignupImportantInfo}
         component={SignUpImportantInfoScreen}
       />
     </Stack.Navigator>

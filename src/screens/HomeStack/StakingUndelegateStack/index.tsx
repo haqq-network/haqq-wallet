@@ -7,42 +7,16 @@ import {hideBack, popupScreenOptions} from '@app/helpers';
 import {validatorStatus} from '@app/helpers/validator-status';
 import {useCosmos, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
-import {HomeStackParamList} from '@app/screens/HomeStack';
 import {
   HomeEarnStackParamList,
   HomeEarnStackRoutes,
-} from '@app/screens/HomeStack/HomeEarnStack';
+  StakingUnDelegateStackParamList,
+  StakingUnDelegateStackRoutes,
+} from '@app/route-types';
 import {StakingUnDelegateFinishScreen} from '@app/screens/HomeStack/StakingUndelegateStack/staking-undelegate-finish';
 import {StakingUnDelegateFormScreen} from '@app/screens/HomeStack/StakingUndelegateStack/staking-undelegate-form';
 import {StakingUnDelegatePreviewScreen} from '@app/screens/HomeStack/StakingUndelegateStack/staking-undelegate-preview';
-import {Balance} from '@app/services/balance';
 import {ScreenOptionType, ValidatorItem} from '@app/types';
-
-export enum StakingUnDelegateStackRoutes {
-  StakingUnDelegateForm = 'stakingUnDelegateForm',
-  StakingUnDelegatePreview = 'stakingUnDelegatePreview',
-  StakingUnDelegateFinish = 'stakingUnDelegateFinish',
-}
-
-export type StakingUnDelegateStackParamList = HomeStackParamList & {
-  [StakingUnDelegateStackRoutes.StakingUnDelegateForm]: {
-    account: string;
-    validator: ValidatorItem;
-    maxAmount: number;
-  };
-  [StakingUnDelegateStackRoutes.StakingUnDelegatePreview]: {
-    account: string;
-    amount: number;
-    fee: Balance;
-    validator: ValidatorItem;
-  };
-  [StakingUnDelegateStackRoutes.StakingUnDelegateFinish]: {
-    txhash: string;
-    validator: ValidatorItem;
-    amount: number;
-    fee: Balance;
-  };
-};
 
 const Stack = createNativeStackNavigator<StakingUnDelegateStackParamList>();
 

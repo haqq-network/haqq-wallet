@@ -7,7 +7,7 @@ import {
 import {onBannerNotificationsTopicSnooze} from '@app/event-actions/on-banner-notifications-topic-snooze';
 import {onBannerNotificationsTopicSubscribe} from '@app/event-actions/on-banner-notifications-topic-subscribe';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
+import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {PushNotificationTopicsEnum} from '@app/services/push-notifications';
 
 export const PopupNotificationNewsScreen = memo(() => {

@@ -5,10 +5,7 @@ import {app} from '@app/contexts';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {
-  SettingsStackParamList,
-  SettingsStackRoutes,
-} from '@app/screens/HomeStack/SettingsStack';
+import {SettingsStackParamList, SettingsStackRoutes} from '@app/route-types';
 import {AdjustEvents} from '@app/types';
 
 export const HomeSettingsScreen = memo(() => {

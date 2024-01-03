@@ -4,7 +4,7 @@ import {News} from '@app/models/news';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
-import {NewsStackRoutes} from '@app/screens/HomeStack/HomeNewsStack';
+import {NewsStackRoutes} from '@app/route-types';
 import {Backend} from '@app/services/backend';
 import {AdjustEvents, RaffleStatus, RemoteMessage} from '@app/types';
 import {WEI} from '@app/variables/common';

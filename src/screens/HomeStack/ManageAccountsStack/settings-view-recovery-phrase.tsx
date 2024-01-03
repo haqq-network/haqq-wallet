@@ -12,7 +12,7 @@ import {I18N} from '@app/i18n';
 import {
   ManageAccountsStackParamList,
   ManageAccountsStackRoutes,
-} from '@app/screens/HomeStack/ManageAccountsStack';
+} from '@app/route-types';
 import {Cloud} from '@app/services/cloud';
 import {ModalType, WalletType} from '@app/types';
 

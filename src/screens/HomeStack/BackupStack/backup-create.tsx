@@ -11,10 +11,7 @@ import {getProviderInstanceForWallet} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N, getText} from '@app/i18n';
-import {
-  BackupStackParamList,
-  BackupStackRoutes,
-} from '@app/screens/HomeStack/BackupStack';
+import {BackupStackParamList, BackupStackRoutes} from '@app/route-types';
 
 export const BackupCreateScreen = memo(() => {
   const navigation = useTypedNavigation<BackupStackParamList>();

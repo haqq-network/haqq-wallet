@@ -2,10 +2,7 @@ import React, {memo, useMemo} from 'react';
 
 import {SignupImportantInfo} from '@app/components/signup-important-info';
 import {useTypedRoute} from '@app/hooks';
-import {
-  SignUpStackParamList,
-  SignUpStackRoutes,
-} from '@app/screens/WelcomeStack/SignUpStack';
+import {SignUpStackParamList, SignUpStackRoutes} from '@app/route-types';
 
 export const SignUpImportantInfoScreen = memo(() => {
   const params = useTypedRoute<

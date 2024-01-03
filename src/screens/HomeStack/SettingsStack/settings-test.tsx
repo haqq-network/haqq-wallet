@@ -50,7 +50,7 @@ import {VariablesDate} from '@app/models/variables-date';
 import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
-import {SettingsStackParamList} from '@app/screens/HomeStack/SettingsStack';
+import {SettingsStackParamList} from '@app/route-types';
 import {EthNetwork} from '@app/services';
 import {Airdrop} from '@app/services/airdrop';
 import {Balance} from '@app/services/balance';

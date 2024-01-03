@@ -2,10 +2,7 @@ import React, {memo, useCallback} from 'react';
 
 import {CreateAgreement} from '@app/components/create-agreement';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {
-  SignUpStackParamList,
-  SignUpStackRoutes,
-} from '@app/screens/WelcomeStack/SignUpStack';
+import {SignUpStackParamList, SignUpStackRoutes} from '@app/route-types';
 
 export const SignUpAgreementScreen = memo(() => {
   const navigation = useTypedNavigation<SignUpStackParamList>();

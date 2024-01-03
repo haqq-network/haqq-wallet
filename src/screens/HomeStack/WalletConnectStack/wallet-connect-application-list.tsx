@@ -7,11 +7,11 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useWalletConnectFilteredSessionsByAddress} from '@app/hooks/use-wallet-connect-filtered-sessions-by-address';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {HomeStackRoutes} from '@app/screens/HomeStack';
 import {
+  HomeStackRoutes,
   WalletConnectStackParamList,
   WalletConnectStackRoutes,
-} from '@app/screens/HomeStack/WalletConnectStack';
+} from '@app/route-types';
 
 export const WalletConnectApplicationListScreen = memo(() => {
   const navivation = useTypedNavigation<WalletConnectStackParamList>();

@@ -4,7 +4,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {Spacer} from '@app/components/ui';
 import {useTypedRoute} from '@app/hooks';
-import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
+import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {ScreenOptionType} from '@app/types';
 
 import {Web3BrowserScreen} from './HomeStack/BrowserStack/web3-browser';

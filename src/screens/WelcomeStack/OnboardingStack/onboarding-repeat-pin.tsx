@@ -8,7 +8,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {
   OnboardingStackParamList,
   OnboardingStackRoutes,
-} from '@app/screens/WelcomeStack/OnboardingStack';
+} from '@app/route-types';
 
 export const OnboardingRepeatPinScreen = observer(() => {
   const navigation = useTypedNavigation();

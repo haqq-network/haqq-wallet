@@ -11,10 +11,7 @@ import {getProviderInstanceForWallet} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {Wallet} from '@app/models/wallet';
-import {
-  BackupStackParamList,
-  BackupStackRoutes,
-} from '@app/screens/HomeStack/BackupStack';
+import {BackupStackParamList, BackupStackRoutes} from '@app/route-types';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
 export const BackupVerifyScreen = memo(() => {

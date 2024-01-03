@@ -1,4 +1,4 @@
-import {WelcomeStackRoutes} from '@app/screens/WelcomeStack';
+import {WelcomeStackRoutes} from '@app/route-types';
 import {RemoteConfig} from '@app/services/remote-config';
 
 export function getWelcomeScreen() {

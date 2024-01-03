@@ -16,7 +16,7 @@ import {Wallet} from '@app/models/wallet';
 import {
   SssMigrateStackParamList,
   SssMigrateStackRoutes,
-} from '@app/screens/HomeStack/SssMigrate';
+} from '@app/route-types';
 import {RemoteConfig} from '@app/services/remote-config';
 import {ModalType} from '@app/types';
 import {WalletType} from '@app/types';

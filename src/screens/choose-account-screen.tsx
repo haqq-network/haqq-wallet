@@ -16,12 +16,12 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {HomeStackRoutes} from '@app/screens/HomeStack';
-import {OnboardingStackRoutes} from '@app/screens/WelcomeStack/OnboardingStack';
 import {
+  HomeStackRoutes,
+  OnboardingStackRoutes,
   SignInStackParamList,
   SignInStackRoutes,
-} from '@app/screens/WelcomeStack/SignInStack';
+} from '@app/route-types';
 import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
 import {ChooseAccountItem, ModalType, WalletType} from '@app/types';

@@ -11,10 +11,7 @@ import {SssError} from '@app/helpers/sss-error';
 import {verifyCloud} from '@app/helpers/verify-cloud';
 import {getMetadataValueWrapped} from '@app/helpers/wrappers/get-metadata-value';
 import {useTypedNavigation} from '@app/hooks';
-import {
-  SignInStackParamList,
-  SignInStackRoutes,
-} from '@app/screens/WelcomeStack/SignInStack';
+import {SignInStackParamList, SignInStackRoutes} from '@app/route-types';
 import {Cloud} from '@app/services/cloud';
 import {
   SssProviders,
