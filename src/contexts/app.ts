@@ -30,6 +30,7 @@ import {VestingMetadataType} from '@app/models/vesting-metadata';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
+import {ExchangeRates} from '@app/services/exchange-rates';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {SystemDialog} from '@app/services/system-dialog';
 
@@ -549,6 +550,7 @@ class App extends AsyncEventEmitter {
     if (changed) {
       Token.fetchTokens();
       this.emit(Events.onBalanceSync);
+      ExchangeRates.fetchRates();
     }
   }
 

@@ -1543,3 +1543,5 @@ export type Eventable = Required<{
   successEventName: string;
   errorEventName: string;
 }>;
+
+export type Fiat = 'USD' | 'RUB';

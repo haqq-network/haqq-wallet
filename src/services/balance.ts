@@ -1,9 +1,12 @@
 import Decimal from 'decimal.js';
 import {BigNumber, BigNumberish} from 'ethers';
+import {makeAutoObservable} from 'mobx';
 
 import {cleanNumber} from '@app/helpers/clean-number';
+import {ExchangeRates} from '@app/services/exchange-rates';
 import {
   BalanceConstructor,
+  Fiat,
   HexNumber,
   IBalance,
   ISerializable,
@@ -28,6 +31,7 @@ export class Balance implements IBalance, ISerializable {
     precission = WEI_PRECISION,
     symbol = CURRENCY_NAME,
   ) {
+    makeAutoObservable(this);
     this.originalValue = balance;
     this.precission = precission;
     this.symbol = symbol;
@@ -263,4 +267,25 @@ export class Balance implements IBalance, ISerializable {
   get isIslamic() {
     return this.symbol === CURRENCY_NAME;
   }
+
+  /**
+   * Get current symbol
+   */
+  get currency() {
+    return this.symbol;
+  }
+
+  /**
+   * Convert balance to fiat currency
+   */
+  toFiat = (type: Fiat) => {
+    switch (type) {
+      case 'USD': {
+        return ExchangeRates.convert(this, type);
+      }
+      default: {
+        return Balance.Empty;
+      }
+    }
+  };
 }
