@@ -1033,6 +1033,10 @@ export type Modals = {
     onChange: () => void;
     network: string;
   };
+  customProviderEmail: {
+    onClose?: () => void;
+    onChange: (email: string) => void;
+  };
   walletsBottomSheet: Eventable & {
     onClose?: () => void;
     wallets: Wallet[];
@@ -1086,6 +1090,7 @@ export enum ModalType {
   cardDetailsQr = 'cardDetailsQr',
   error = 'error',
   claimOnMainnet = 'claimOnMainnet',
+  customProviderEmail = 'customProviderEmail',
   ledgerNoApp = 'ledgerNoApp',
   ledgerAttention = 'ledgerAttention',
   ledgerLocked = 'ledgerLocked',
@@ -1192,7 +1197,9 @@ export interface IBalance {
 
 export abstract class ISerializable {
   static fromJsonString: (obj: string | ISerializable) => ISerializable;
+
   abstract toJsonString(): string;
+
   /**
    * Custom console.log for an object
    */
@@ -1251,6 +1258,7 @@ export enum NftWidgetSize {
   medium = 'medium',
   large = 'large',
 }
+
 export interface INftWidget extends IWidgetBase {
   component: 'Nft';
   size: NftWidgetSize;
@@ -1309,6 +1317,7 @@ export type IndexerToken = {
   value: string;
 };
 export type IndexerTime = Record<HaqqCosmosAddress, number>;
+
 export interface BalanceData {
   vested: Balance;
   staked: Balance;
@@ -1377,11 +1386,17 @@ type MobXStoreData =
 
 export interface MobXStore<TData extends MobXStoreData> {
   data: Record<string, TData>;
+
   getById(id: string): TData | undefined;
+
   getAll(): TData[];
+
   create(id: string, item: TData): string;
+
   update(id: string | undefined, item: Omit<Partial<TData>, 'id'>): boolean;
+
   remove(id: string): boolean;
+
   removeAll(): void;
 }
 

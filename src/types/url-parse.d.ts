@@ -18,9 +18,13 @@ declare module 'url-parse' {
 
     extractProtocol(url: string): any;
     trimLeft(str: string): string;
+
     authenticity(rest: string): void;
+
     extractPathname(): string;
+
     extractHash(): string;
+
     toString(): string;
   }
 }

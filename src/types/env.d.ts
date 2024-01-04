@@ -16,6 +16,7 @@ declare module '@env' {
   export const AIRDROP_MAINNET_URL: string;
   export const HAQQ_BACKEND: string;
   export const HAQQ_BACKEND_DEV: string;
+  export const HAQQ_BACKEND_DEFAULT: string;
 
   export const ADJUST_TOKEN: string;
   export const ADJUST_ENVIRONMENT: 'sandbox' | 'production';

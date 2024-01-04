@@ -2,6 +2,7 @@ import {by, device, element, waitFor} from 'detox';
 import {Wallet, utils} from 'ethers';
 
 import {ensureWalletIsVisible} from './helpers/ensureWalletIsVisible';
+import {getCoins} from './helpers/getCoins';
 import {restoreWallet} from './helpers/restoreWallet';
 import {sleep} from './helpers/sleep';
 import {PIN, PROVIDER, SOURCE_WALLET} from './test-variables';
@@ -47,13 +48,7 @@ describe('Routine', () => {
 
     const wallet = Wallet.fromMnemonic(mnemonic);
 
-    const amountInEther = '0.002';
-    const tx = {
-      to: wallet.address,
-      value: utils.parseEther(amountInEther),
-    };
-
-    await milkWallet.sendTransaction(tx);
+    await getCoins(mnemonic, '0.002');
 
     await sleep(10_000);
 

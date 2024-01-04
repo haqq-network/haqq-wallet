@@ -97,7 +97,11 @@ export async function awaitForValue<Value extends AwaitValue>({
   title,
   values,
   initialIndex,
-}: AwaitForValueParams<Value>): Promise<Value & {index: number}> {
+}: AwaitForValueParams<Value>): Promise<
+  Value & {
+    index: number;
+  }
+> {
   return new Promise((resolve, reject) => {
     const removeAllListeners = () => {
       app.removeListener('value-selected', onAction);

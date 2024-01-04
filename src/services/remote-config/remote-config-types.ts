@@ -37,5 +37,7 @@ export interface RemoteConfigTypes extends RemoteConfigBalanceTypes {
   pattern_source: string;
   sss_generate_shares_url: string;
   sss_metadata_url: string;
+  sss_custom: string | undefined;
+  sss_custom_url: string | undefined;
   web3_browser_bookmarks: Omit<Link, 'subtitle' | 'id'>[];
 }
