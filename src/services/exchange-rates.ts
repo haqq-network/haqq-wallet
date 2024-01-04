@@ -1,9 +1,8 @@
 import {makeAutoObservable} from 'mobx';
 
 import {Balance} from '@app/services/balance';
-import {Fiat} from '@app/types';
+import {Fiat, RatesResponse} from '@app/types';
 
-type RatesResponce = {rates: Record<string, {denom: Fiat; amount: number}[]>};
 type Rates = Record<string, Partial<Record<Fiat, number>>>;
 
 class ExchangeRates {
@@ -12,17 +11,11 @@ class ExchangeRates {
     makeAutoObservable(this);
   }
 
-  fetchRates = () => {
-    const remoteRates: RatesResponce = {
-      rates: {
-        ISLM: [
-          {denom: 'USD', amount: 0.5},
-          {denom: 'RUB', amount: 0.5},
-        ],
-      },
-    };
-
-    const rates = remoteRates.rates;
+  update = (response: RatesResponse) => {
+    if (!response || !response?.rates) {
+      return;
+    }
+    const rates = response.rates;
     const tokens = Object.keys(rates);
 
     const result: Rates = tokens.reduce((prev, token) => {
