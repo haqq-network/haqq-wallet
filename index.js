@@ -27,18 +27,10 @@ if (!global.BigInt) {
   });
 }
 
-import './src/event-actions';
-import {IS_IOS} from '@app/variables/common';
-import {DEBUG_VARS} from '@app/debug-vars';
-import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
-import {enableScreens, enableFreeze} from 'react-native-screens';
-
 enableScreens();
 enableFreeze(true);
 
 LogBox.ignoreLogs(["The 'navigation' object hasn't been initialized"]);
-// LogBox.ignoreLogs(['Warning: ...']);
-// LogBox.ignoreAllLogs();
 
 try {
   const isRTLEnabled = isFeatureEnabled(Feature.rtl);
