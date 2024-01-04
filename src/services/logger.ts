@@ -16,6 +16,8 @@ const RESET = __DEV__ ? '\x1b[0m' : '';
 export class LoggerService {
   private _enabled?: boolean;
   private _stringifyJson?: boolean;
+  private _tag?: string = '';
+  private _emodji?: string;
 
   constructor(tag?: string, options?: LoggerOptions) {
     this._tag = tag;
@@ -24,19 +26,15 @@ export class LoggerService {
     this._enabled = options?.enabled ?? true;
   }
 
-  private _tag?: string = '';
+  public get emodji() {
+    return this._emodji || '';
+  }
 
   public get tag() {
     if (this._tag) {
       return `${this.emodji} ${BG_GREEN_TEXT_WHITE_BOLD}[ ${this._tag} ]${RESET}`;
     }
     return `${this.emodji}`;
-  }
-
-  private _emodji?: string;
-
-  public get emodji() {
-    return this._emodji || '';
   }
 
   create(tag: string, options?: LoggerOptions) {
