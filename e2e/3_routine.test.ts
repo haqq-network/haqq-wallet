@@ -1,11 +1,11 @@
 import {by, device, element, waitFor} from 'detox';
-import {utils, Wallet} from 'ethers';
+import {Wallet, utils} from 'ethers';
 
 import {ensureWalletIsVisible} from './helpers/ensureWalletIsVisible';
+import {getCoins} from './helpers/getCoins';
 import {restoreWallet} from './helpers/restoreWallet';
 import {sleep} from './helpers/sleep';
 import {PIN, PROVIDER, SOURCE_WALLET} from './test-variables';
-import {getCoins} from "./helpers/getCoins";
 
 describe('Routine', () => {
   const isAndroid = device.getPlatform() === 'android';
