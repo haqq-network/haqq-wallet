@@ -9,18 +9,13 @@ import {IToken} from '@app/types';
 
 export interface TokenRowProps {
   item: IToken;
-  usdPrice?: number;
   onPress?: () => void;
 }
 
-export const TokenRow = ({item, usdPrice = 0, onPress}: TokenRowProps) => {
+export const TokenRow = ({item, onPress}: TokenRowProps) => {
   const priceInUSD = useMemo(() => {
-    const price = item.value.toEther() * usdPrice;
-    if (price > 0) {
-      return `$${price}`;
-    }
-    return '';
-  }, [item, usdPrice]);
+    return item.value.toFiat('USD').toBalanceString();
+  }, [item]);
   return (
     <TouchableOpacity
       disabled={!onPress}

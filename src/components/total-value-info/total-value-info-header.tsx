@@ -25,6 +25,13 @@ export const TotalValueInfoHeader = ({
         <Text t12 i18n={I18N.totalValueAccount} color={Color.textBase2} />
         <Spacer height={4} />
         <Text t3 children={balance.total.toBalanceString()} />
+        <View style={styles.usdWrapper}>
+          <Text
+            style={styles.usdText}
+            t13
+            children={balance.total.toFiat('USD').toBalanceString()}
+          />
+        </View>
       </View>
       <First>
         <StackedVestedTokens
@@ -41,6 +48,16 @@ export const TotalValueInfoHeader = ({
 };
 
 const styles = createTheme({
+  usdText: {
+    alignSelf: 'flex-start',
+  },
+  usdWrapper: {
+    backgroundColor: Color.graphicSecond1,
+    alignSelf: 'flex-start',
+    paddingHorizontal: 4,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
   header: {
     marginHorizontal: 20,
   },

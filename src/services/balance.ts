@@ -134,6 +134,14 @@ export class Balance implements IBalance, ISerializable {
     fixed = NUM_PRECISION,
     precission: number = this.precission,
   ) => {
+    if (this.symbol === '$') {
+      const floatString = this.toFloatString(fixed, precission);
+      const isNegative = floatString.startsWith('-');
+      if (isNegative) {
+        return `- ${this.symbol}${floatString.replace('-', '')}`;
+      }
+      return `${this.symbol}` + this.toFloatString(fixed, precission);
+    }
     return this.toFloatString(fixed, precission) + ` ${this.symbol}`;
   };
 
