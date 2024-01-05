@@ -134,6 +134,7 @@
     "react-native-splash-screen": "3.3.0",
     "react-native-svg": "13.10.0",
     "react-native-system-navigation-bar": "2.6.1",
+    "react-native-toast-message": "2.2.0",
     "react-native-touch-id": "4.4.1",
     "react-native-webview": "13.6.0",
     "react-timer-mixin": "0.13.4",

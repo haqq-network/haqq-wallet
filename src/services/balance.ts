@@ -17,14 +17,15 @@ import {
   NUM_PRECISION,
   WEI_PRECISION,
 } from '@app/variables/common';
+
 const zeroBN = new Decimal(0);
 
 export class Balance implements IBalance, ISerializable {
   static readonly Empty = new Balance(zeroBN);
+  public originalValue: BalanceConstructor;
   private bnRaw = zeroBN;
   private precission: number;
   private symbol: string;
-  public originalValue: BalanceConstructor;
 
   constructor(
     balance: BalanceConstructor,
@@ -78,6 +79,26 @@ export class Balance implements IBalance, ISerializable {
   get raw() {
     return this.bnRaw;
   }
+
+  /**
+   * Is current Balance instance is Islamic Coin
+   */
+  get isIslamic() {
+    return this.symbol === CURRENCY_NAME;
+  }
+
+  static fromJsonString = (obj: string | Balance) => {
+    const serializedValue: {
+      value: HexNumber;
+      precision: number;
+      symbol: string;
+    } = JSON.parse(String(obj));
+    return new Balance(
+      serializedValue.value,
+      serializedValue.precision,
+      serializedValue.symbol,
+    );
+  };
 
   /**
    * Convert balance to a long integer
@@ -202,26 +223,16 @@ export class Balance implements IBalance, ISerializable {
     return new Balance(result, this.precission, this.symbol);
   };
 
-  private getBnRaw = (
-    value: BalanceConstructor | undefined | null,
-  ): Decimal | null => {
-    if (!value) {
-      return null;
-    }
-
-    if (value instanceof Balance) {
-      return value.bnRaw;
-    } else {
-      return new Balance(value, this.precission, this.symbol).bnRaw;
-    }
-  };
-
   toEther = () => this.toFloat();
+
   toEtherString = () => this.toBalanceString();
+
   toWei = () => this.toNumber();
+
   toWeiString = () => {
     return this.toWei() + ` a${this.symbol}`;
   };
+
   toBigNumberish = (): BigNumberish => {
     return BigNumber.from(this.toHex());
   };
@@ -233,19 +244,6 @@ export class Balance implements IBalance, ISerializable {
       symbol: this.symbol,
     };
     return JSON.stringify(serializedValue);
-  };
-
-  static fromJsonString = (obj: string | Balance) => {
-    const serializedValue: {
-      value: HexNumber;
-      precision: number;
-      symbol: string;
-    } = JSON.parse(String(obj));
-    return new Balance(
-      serializedValue.value,
-      serializedValue.precision,
-      serializedValue.symbol,
-    );
   };
 
   /**
@@ -260,13 +258,6 @@ export class Balance implements IBalance, ISerializable {
     const symbol = this.symbol;
     return `Hex: ${hex}, Ether: ${ether}, Wei: ${wei}, Precision: ${precision}, Symbol: ${symbol}`;
   };
-
-  /**
-   * Is current Balance instance is Islamic Coin
-   */
-  get isIslamic() {
-    return this.symbol === CURRENCY_NAME;
-  }
 
   /**
    * Get current symbol
@@ -286,6 +277,20 @@ export class Balance implements IBalance, ISerializable {
       default: {
         return Balance.Empty;
       }
+    }
+  };
+
+  private getBnRaw = (
+    value: BalanceConstructor | undefined | null,
+  ): Decimal | null => {
+    if (!value) {
+      return null;
+    }
+
+    if (value instanceof Balance) {
+      return value.bnRaw;
+    } else {
+      return new Balance(value, this.precission, this.symbol).bnRaw;
     }
   };
 }

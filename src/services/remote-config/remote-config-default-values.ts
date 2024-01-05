@@ -95,6 +95,8 @@ export const REMOTE_CONFIG_DEFAULT_VALUES: Required<RemoteConfigTypes> = {
   welcome_screen: 'welcomeNews',
   sss_google: 'haqq-google-ios',
   sss_apple: 'haqq-apple',
+  sss_custom: undefined,
+  sss_custom_url: undefined,
   sss_metadata_url: 'https://metadata.social.production.haqq.network',
   sss_generate_shares_url:
     'https://generator-shares.social.production.haqq.network',

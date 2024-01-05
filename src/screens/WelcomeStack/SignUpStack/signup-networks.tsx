@@ -15,6 +15,7 @@ import {
   Creds,
   SssProviders,
   onLoginApple,
+  onLoginCustom,
   onLoginGoogle,
 } from '@app/services/provider-sss';
 import {RemoteConfig} from '@app/services/remote-config';
@@ -33,6 +34,9 @@ export const SignupNetworksScreen = memo(() => {
               break;
             case SssProviders.google:
               creds = await onLoginGoogle();
+              break;
+            case SssProviders.custom:
+              creds = await onLoginCustom();
               break;
           }
         } catch (err) {
@@ -130,6 +134,7 @@ export const SignupNetworksScreen = memo(() => {
       onLoginLaterPress={onLoginLaterPress}
       isAppleSupported={app.isAppleSigninSupported}
       isGoogleSupported={app.isGoogleSigninSupported}
+      isCustomSupported={app.isCustomSigninSupported}
     />
   );
 });

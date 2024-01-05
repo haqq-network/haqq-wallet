@@ -27,10 +27,10 @@ const ExplorerAction = {
  * The Explorer class handles blockchain-related queries
  */
 export class Explorer {
-  private _remoteUrl: string;
   static headers = {
     accept: 'application/json',
   };
+  private _remoteUrl: string;
 
   /**
    * Create a new Explorer instance

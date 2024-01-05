@@ -154,6 +154,11 @@ const getTestModals = (): TestModals => {
       onChange: () => logger.log('claimOnMainnet onChange'),
       network: 'MainMet',
     },
+    customProviderEmail: {
+      onClose: () => logger.log('customProviderEmail closed'),
+      onChange: (value: string) =>
+        logger.log('customProviderEmail onChange', value),
+    },
     transactionError: {
       onClose: () => logger.log('transactionError closed'),
       message: 'Something went wrong',

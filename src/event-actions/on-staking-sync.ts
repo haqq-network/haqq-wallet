@@ -1,7 +1,10 @@
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {AddressUtils} from '@app/helpers/address-utils';
-import {StakingMetadata} from '@app/models/staking-metadata';
+import {
+  StakingMetadata,
+  StakingMetadataType,
+} from '@app/models/staking-metadata';
 import {Wallet} from '@app/models/wallet';
 import {Cosmos} from '@app/services/cosmos';
 
@@ -16,7 +19,7 @@ export async function onStakingSync() {
 }
 
 async function sync(addressList: string[], cosmos: Cosmos) {
-  const rows = StakingMetadata.getAll().snapshot();
+  const rows = StakingMetadata.getAll();
 
   return Promise.all(
     addressList.reduce<Promise<string[]>[]>((memo, curr) => {
@@ -29,7 +32,7 @@ async function sync(addressList: string[], cosmos: Cosmos) {
   ).then(results => {
     const hashes = new Set(results.flat());
     for (const e of rows) {
-      if (e && e.isValid() && !hashes.has(e.hash)) {
+      if (e && !hashes.has(e.hash)) {
         StakingMetadata.remove(e.hash);
       }
     }
@@ -44,7 +47,8 @@ async function syncStakingDelegations(
     .getAccountDelegations(address)
     .then(resp =>
       resp.delegation_responses.map(d =>
-        StakingMetadata.createDelegation(
+        StakingMetadata.create(
+          StakingMetadataType.delegation,
           d.delegation.delegator_address,
           d.delegation.validator_address,
           d.balance.amount,
@@ -65,7 +69,8 @@ async function syncStakingUnDelegations(
       return resp.unbonding_responses
         .map(ur => {
           return ur.entries.map(ure =>
-            StakingMetadata.createUnDelegation(
+            StakingMetadata.create(
+              StakingMetadataType.undelegation,
               ur.delegator_address,
               ur.validator_address,
               ure.balance,
@@ -89,7 +94,8 @@ async function syncStakingRewards(
       return resp.rewards
         .map(r =>
           r.reward.map(rr =>
-            StakingMetadata.createReward(
+            StakingMetadata.create(
+              StakingMetadataType.reward,
               address,
               r.validator_address,
               rr.amount,

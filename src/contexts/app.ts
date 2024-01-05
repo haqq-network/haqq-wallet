@@ -1,4 +1,9 @@
-import {ENVIRONMENT, HAQQ_BACKEND, IS_DEVELOPMENT} from '@env';
+import {
+  ENVIRONMENT,
+  HAQQ_BACKEND,
+  HAQQ_BACKEND_DEFAULT,
+  IS_DEVELOPMENT,
+} from '@env';
 import {decryptPassworder, encryptPassworder} from '@haqq/shared-react-native';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
@@ -31,6 +36,7 @@ import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {RemoteConfig} from '@app/services/remote-config';
 import {SystemDialog} from '@app/services/system-dialog';
 
 import {showModal} from '../helpers';
@@ -89,7 +95,6 @@ class App extends AsyncEventEmitter {
       ios: appleAuth.isSupported,
     }) || false;
   private _systemTheme: AppTheme = Appearance.getColorScheme() as AppTheme;
-  private _startUpTime: number;
 
   constructor() {
     super();
@@ -145,28 +150,37 @@ class App extends AsyncEventEmitter {
     this.setEnabledLoggersForTestMode(this.isTesterMode);
   }
 
+  private _startUpTime: number;
+
+  get startUpTime() {
+    return this._startUpTime;
+  }
+
   private _biometryType: BiometryType | null = null;
 
   get biometryType() {
     return this._biometryType;
   }
 
-  get startUpTime() {
-    return this._startUpTime;
-  }
-
   get isGoogleSigninSupported() {
-    return this._googleSigninSupported;
+    return (
+      Boolean(RemoteConfig.get('sss_google')) && this._googleSigninSupported
+    );
   }
 
   get isAppleSigninSupported() {
-    return this._appleSigninSupported;
+    return Boolean(RemoteConfig.get('sss_apple')) && this._appleSigninSupported;
+  }
+
+  get isCustomSigninSupported() {
+    return Boolean(RemoteConfig.get('sss_custom'));
   }
 
   get isOathSigninSupported() {
     return (
-      this._googleSigninSupported ||
-      this._appleSigninSupported ||
+      this.isGoogleSigninSupported ||
+      this.isCustomSigninSupported ||
+      this.isAppleSigninSupported ||
       this.isDeveloper
     );
   }
@@ -186,10 +200,6 @@ class App extends AsyncEventEmitter {
     );
   }
 
-  get cosmos() {
-    return new Cosmos(app.provider);
-  }
-
   set providerId(value) {
     const p = Provider.getById(value);
     if (p) {
@@ -202,12 +212,18 @@ class App extends AsyncEventEmitter {
     }
   }
 
+  get cosmos() {
+    return new Cosmos(app.provider);
+  }
+
   get backend() {
     if (!VariablesString.exists('backend')) {
-      return HAQQ_BACKEND;
+      return HAQQ_BACKEND_DEFAULT || HAQQ_BACKEND;
     }
 
-    return VariablesString.get('backend') || HAQQ_BACKEND;
+    return (
+      VariablesString.get('backend') || HAQQ_BACKEND_DEFAULT || HAQQ_BACKEND
+    );
   }
 
   set backend(value) {

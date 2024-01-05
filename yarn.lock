@@ -9948,6 +9948,7 @@ __metadata:
     react-native-splash-screen: 3.3.0
     react-native-svg: 13.10.0
     react-native-system-navigation-bar: 2.6.1
+    react-native-toast-message: 2.2.0
     react-native-touch-id: 4.4.1
     react-native-webview: 13.6.0
     react-test-renderer: 18.2.0
@@ -15373,6 +15374,16 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 1f9e96e7d849f1836b721820a26095dcf21bd9ce08a1439cf7793fd27549c66ff77788f6ab7429f21df07e166985228de54d9eea755243e7389c0d8d29cd92bb
+  languageName: node
+  linkType: hard
+
+"react-native-toast-message@npm:2.2.0":
+  version: 2.2.0
+  resolution: "react-native-toast-message@npm:2.2.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: b286b8d5ca0f21737c2e0a8e9c2d6dab2c06a3895335aa541c69eeb42d526cc6f3951069e59d8d346d3e6cafb8feaa450c35b0efe7c3d51ff81351d1477e71eb
   languageName: node
   linkType: hard
 
