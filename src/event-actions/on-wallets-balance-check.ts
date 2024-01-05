@@ -4,6 +4,7 @@ import {AddressUtils} from '@app/helpers/address-utils';
 import {VariablesDate} from '@app/models/variables-date';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
+import {ExchangeRates} from '@app/services/exchange-rates';
 import {Indexer, IndexerUpdatesResponse} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
 import {IndexerBalanceData} from '@app/types';
@@ -86,6 +87,8 @@ export async function onWalletsBalanceCheck() {
     storage.setItem(BALANCE_CACHE_KEY, value);
 
     app.onWalletsBalance(result);
+
+    ExchangeRates.update(updates.rates);
   } catch (e) {
     Logger.error(Events.onWalletsBalanceCheck, e);
 

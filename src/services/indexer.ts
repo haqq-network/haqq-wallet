@@ -10,6 +10,7 @@ import {
   IndexerBalance,
   IndexerTime,
   IndexerToken,
+  RatesResponse,
 } from '@app/types';
 
 export type IndexerUpdatesResponse = {
@@ -28,6 +29,7 @@ export type IndexerUpdatesResponse = {
   nfts: unknown[];
   tokens: IndexerToken[];
   transactions: unknown[];
+  rates: RatesResponse;
 };
 
 export class Indexer {

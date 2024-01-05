@@ -1558,3 +1558,6 @@ export type Eventable = Required<{
   successEventName: string;
   errorEventName: string;
 }>;
+
+export type Fiat = 'USD' | 'RUB';
+export type RatesResponse = Record<string, {denom: Fiat; amount: number}[]>;
