@@ -45,9 +45,11 @@ on:
 
 jobs:
   build:
-    name: Build and distribute iOS app
+    name: Distribute iOS app
     runs-on: macOS
     steps:
+      - name: Show macOS machine infomation
+        run: uname -a
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
@@ -72,11 +74,13 @@ jobs:
       #          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
       #          restore-keys: |
       #            ${{ runner.os }}-gems-
+      - name: Cache XCode build
+        uses: mikehardy/buildcache-action@v2
       - name: Install Fastlane
         run: |
           bundle install
       - name: Install packages
-        run: yarn install --frozen-lockfile
+        run: yarn install 
       - name: Install pods
         run: cd ios && pod install
       - name: Git init

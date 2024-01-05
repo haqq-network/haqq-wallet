@@ -6,7 +6,7 @@ import '@ethersproject/shims';
 import '@walletconnect/react-native-compat';
 import {AppRegistry, I18nManager, LogBox} from 'react-native';
 
-import {ENVIRONMENT, SENTRY_DSN} from '@env';
+import {ENVIRONMENT, SENTRY_DSN, FOR_DETOX} from '@env';
 import {JsonRpcProvider} from '@ethersproject/providers';
 import * as Sentry from '@sentry/react-native';
 import {name as appName} from './app.json';
@@ -106,4 +106,4 @@ const Wrapped = Sentry.wrap(App);
 
 AppRegistry.registerComponent(appName, () => Wrapped);
 
-AppRegistry.registerComponent('jailbreak', () => Jailbreak);
+AppRegistry.registerComponent('jailbreak', () => FOR_DETOX ? Wrapped : Jailbreak);

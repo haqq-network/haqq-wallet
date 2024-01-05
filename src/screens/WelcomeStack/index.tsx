@@ -1,5 +1,6 @@
 import React, {memo} from 'react';
 
+import {FOR_DETOX} from '@env';
 import {
   NativeStackNavigationOptions,
   createNativeStackNavigator,
@@ -38,7 +39,10 @@ const WelcomeStack = memo(({initialRouteName}: Props) => {
   return (
     <Stack.Navigator
       initialRouteName={initialRouteName}
-      screenOptions={basicScreenOptions}>
+      screenOptions={{
+        ...basicScreenOptions,
+        animation: FOR_DETOX ? 'none' : 'default',
+      }}>
       <Stack.Screen
         component={themeUpdaterHOC(WelcomeScreen)}
         name={WelcomeStackRoutes.Welcome}

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {useCallback, useMemo} from 'react';
 
+import {FOR_DETOX} from '@env';
 import _ from 'lodash';
 import {
   ActivityIndicator,
@@ -230,7 +231,7 @@ export const Button = ({
     <TouchableOpacity
       style={containerStyle as ViewStyle}
       onPress={onPressButton}
-      activeOpacity={0.7}
+      activeOpacity={FOR_DETOX ? 1 : 0.7}
       disabled={disabled || loadFlag}
       {...props}>
       {loadFlag ? (

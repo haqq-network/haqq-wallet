@@ -25,7 +25,7 @@ export const HomeSettings = memo(({theme}: Props) => {
   const isTesterMode = useTesterModeEnabled();
 
   return (
-    <ScrollView contentContainerStyle={page.container}>
+    <ScrollView contentContainerStyle={page.container} testID="settings_home">
       <SettingsButton
         icon={IconsName.wallet}
         title={I18N.homeSettingsAccounts}

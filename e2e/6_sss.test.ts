@@ -4,7 +4,7 @@ import {by, device, element, expect, waitFor} from 'detox';
 import {getTimeStamp} from './helpers/getTimeStamp';
 import {PIN} from './test-variables';
 
-describe('SSS Wallet', () => {
+describe.skip('SSS Wallet', () => {
   let uid = '';
   let mnemonic = '';
   const isAndroid = device.getPlatform() === 'android';

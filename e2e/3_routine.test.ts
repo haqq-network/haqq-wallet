@@ -66,10 +66,6 @@ describe('Routine', () => {
 
     await element(by.text('Islamic coin')).tap();
 
-    await waitFor(element(by.id('transaction_sum')))
-      .toBeVisible()
-      .withTimeout(15000);
-
     const input_form = element(by.id('transaction_sum_form_input'));
     await input_form.tap();
     await input_form.replaceText('0.001');
@@ -80,12 +76,14 @@ describe('Routine', () => {
       .toBeVisible()
       .withTimeout(15000);
 
+    await element(by.id('transaction_confirmation')).scrollTo('bottom');
     await element(by.id('transaction_confirmation_submit')).tap();
 
     await waitFor(element(by.id('transaction_finish')))
       .toBeVisible()
       .withTimeout(15000);
 
+    await element(by.id('transaction_finish')).scrollTo('bottom');
     await element(by.id('transaction_finish_finish')).tap();
   });
 });
