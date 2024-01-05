@@ -1,5 +1,6 @@
 import React, {memo} from 'react';
 
+import {FOR_DETOX} from '@env';
 import {
   NativeStackNavigationOptions,
   createNativeStackNavigator,
@@ -41,9 +42,10 @@ import {Web3BrowserPopup as Web3BrowserPopupScreen} from '@app/screens/web3-brow
 import {LedgerStack} from '@app/screens/WelcomeStack/LedgerStack';
 import {SignInStack} from '@app/screens/WelcomeStack/SignInStack';
 
-const navigatorOptions = {
+const navigatorOptions: NativeStackNavigationOptions = {
   gestureEnabled: false,
   freezeOnBlur: true,
+  animation: FOR_DETOX ? 'none' : 'default',
 };
 
 const modalOptions: NativeStackNavigationOptions = {

@@ -69,7 +69,6 @@ describe('Routine', () => {
     await element(by.id('settings_manage_accounts')).tap();
     await element(by.text('Main account')).tap();
 
-    await element(by.id('account_details')).scroll(50, 'down');
     await expect(element(by.id('recovery_warning'))).not.toBeVisible();
     await element(by.id('go_back')).tap();
     await element(by.id('go_back')).tap();
@@ -81,7 +80,11 @@ describe('Routine', () => {
     await element(by.id('settings_manage_accounts')).tap();
     await element(by.text('Main account')).tap();
 
-    await element(by.id('account_details')).scroll(300, 'down');
+    await waitFor(element(by.id('view_recovery_phrase')))
+      .toBeVisible()
+      .whileElement(by.id('account_details'))
+      .scroll(300, 'down');
+
     await element(by.id('view_recovery_phrase')).tap();
 
     for (const num of PIN.split('')) {
