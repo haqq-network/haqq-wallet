@@ -9,7 +9,6 @@ import {
   WalletRealmObject,
 } from '@app/models/realm-object-for-migration';
 import {Refferal} from '@app/models/refferal';
-import {StakingMetadata} from '@app/models/staking-metadata';
 import {UserSchema, UserType} from '@app/models/user';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesDate} from '@app/models/variables-date';
@@ -42,7 +41,6 @@ export const realm = new Realm({
     TransactionRealmObject,
     ContactRealmObject,
     Provider,
-    StakingMetadata,
     Refferal,
     NftCollection,
     News,
