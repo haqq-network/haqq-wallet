@@ -1545,6 +1545,4 @@ export type Eventable = Required<{
 }>;
 
 export type Fiat = 'USD' | 'RUB';
-export type RatesResponse = {
-  rates: Record<string, {denom: Fiat; amount: number}[]>;
-};
+export type RatesResponse = Record<string, {denom: Fiat; amount: number}[]>;
