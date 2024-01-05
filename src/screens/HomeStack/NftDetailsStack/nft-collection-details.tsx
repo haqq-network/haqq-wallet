@@ -5,7 +5,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {
   NftDetailsStackParamList,
   NftDetailsStackRoutes,
-} from '@app/screens/HomeStack/NftDetailsStack';
+} from '@app/route-types';
 import {NftItem} from '@app/types';
 
 export const NftCollectionDetailsScreen = memo(() => {

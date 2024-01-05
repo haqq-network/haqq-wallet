@@ -161,6 +161,19 @@ class TokensStore implements MobXStore<IToken> {
     return true;
   }
 
+  fetchTokens = async () => {
+    const wallets = Wallet.getAll();
+    const accounts = wallets.map(w => w.cosmosAddress);
+    const updates = await Indexer.instance.updates(accounts, this.lastUpdate);
+    const result = this.parseIndexerTokens(updates);
+    // this.lastUpdate = new Date();
+    this.recalculateCommulativeSum(result);
+
+    runInAction(() => {
+      this.tokens = result;
+    });
+  };
+
   private generateIslamicToken = (wallet: Wallet): IToken => {
     const balance = app.getAvailableBalance(wallet.address);
 
@@ -262,19 +275,6 @@ class TokensStore implements MobXStore<IToken> {
     const walletsTokens = Object.values(tokens).flat(2);
     this.removeAll();
     walletsTokens.forEach(token => this.create(token.id, token));
-  };
-
-  fetchTokens = async () => {
-    const wallets = Wallet.getAll();
-    const accounts = wallets.map(w => w.cosmosAddress);
-    const updates = await Indexer.instance.updates(accounts, this.lastUpdate);
-    const result = this.parseIndexerTokens(updates);
-    // this.lastUpdate = new Date();
-    this.recalculateCommulativeSum(result);
-
-    runInAction(() => {
-      this.tokens = result;
-    });
   };
 }
 

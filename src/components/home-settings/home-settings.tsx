@@ -7,7 +7,7 @@ import {createTheme} from '@app/helpers';
 import {useTesterModeEnabled} from '@app/hooks/use-tester-mode-enabled';
 import {useWalletConnectAccounts} from '@app/hooks/use-wallet-connect-accounts';
 import {I18N} from '@app/i18n';
-import {SettingsStackRoutes} from '@app/screens/HomeStack/SettingsStack';
+import {SettingsStackRoutes} from '@app/route-types';
 import {AppTheme} from '@app/types';
 import {capitalize} from '@app/utils';
 

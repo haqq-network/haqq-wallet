@@ -6,7 +6,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {
   ProposalDepositStackParamList,
   ProposalDepositStackRoutes,
-} from '@app/screens/HomeStack/GovernanceStack/ProposalDepositStack';
+} from '@app/route-types';
 import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
 

@@ -4,19 +4,16 @@ import {
   NativeStackNavigationOptions,
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
-import {SessionTypes} from '@walletconnect/types';
 import {StatusBar} from 'react-native';
 
 import {Color} from '@app/colors';
 import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
-import {TotalValueTabNames} from '@app/components/total-value-info';
 import {Spacer} from '@app/components/ui';
 import {popupScreenOptionsWithMargin} from '@app/helpers';
-import {AwaitValue} from '@app/helpers/await-for-value';
 import {getWalletTitle} from '@app/helpers/get-wallet-title';
 import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {I18N, getText} from '@app/i18n';
-import {Wallet} from '@app/models/wallet';
+import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {basicScreenOptions} from '@app/screens';
 import {AccountDetailScreen} from '@app/screens/HomeStack/account-detail';
 import {BackupStack} from '@app/screens/HomeStack/BackupStack';
@@ -43,115 +40,6 @@ import {WalletSelectorScreen} from '@app/screens/wallet-selector-screen';
 import {Web3BrowserPopup as Web3BrowserPopupScreen} from '@app/screens/web3-browser-popup';
 import {LedgerStack} from '@app/screens/WelcomeStack/LedgerStack';
 import {SignInStack} from '@app/screens/WelcomeStack/SignInStack';
-import {
-  Eventable,
-  JsonRpcMetadata,
-  NftItem,
-  PartialJsonRpcRequest,
-  PopupNotificationBannerId,
-  RootStackParamList,
-} from '@app/types';
-import {WalletConnectApproveConnectionEvent} from '@app/types/wallet-connect';
-
-export enum HomeStackRoutes {
-  Home = 'home',
-  Create = '_create',
-  Ledger = '_ledger',
-  SignIn = '_signin',
-  AccountInfo = 'accountInfo',
-  Transaction = 'transaction',
-  AccountDetail = 'accountDetail',
-  Backup = 'backup',
-  WalletProtectionPopup = 'walletProtectionPopup',
-  WalletConnectApplicationDetailsPopup = 'walletConnectApplicationDetailsPopup',
-  WalletConnectApplicationListPopup = 'walletConnectApplicationListPopup',
-  TransactionDetail = 'transactionDetail',
-  InAppBrowser = 'inAppBrowser',
-  WalletConnect = 'walletConnect',
-  SssMigrate = 'sssMigrate',
-  BackupNotification = 'backupNotification',
-  JsonRpcSign = 'jsonRpcSign',
-  BackupSssNotification = 'backupSssNotification',
-  PopupNotificationNews = 'popupNotificationNews',
-  PopupNotification = 'popupNotification',
-  PopupTrackActivity = 'popupTrackActivity',
-  Web3BrowserPopup = 'web3BrowserPopup',
-  WalletSelector = 'walletSelector',
-  TotalValueInfo = 'totalValueInfo',
-  ValueSelector = 'valueSelector',
-  BrowserPrivacyPopupStack = 'browserPrivacyPopupStack',
-}
-
-export type HomeStackParamList = {
-  [HomeStackRoutes.Home]: undefined;
-  [HomeStackRoutes.Create]: undefined;
-  [HomeStackRoutes.Ledger]: undefined;
-  [HomeStackRoutes.SignIn]: undefined;
-  [HomeStackRoutes.AccountInfo]: {accountId: string};
-  [HomeStackRoutes.Transaction]: {
-    from?: string;
-    to?: string;
-    nft?: NftItem;
-  };
-  [HomeStackRoutes.AccountDetail]: {address: string};
-  [HomeStackRoutes.Backup]: {wallet: Wallet};
-  [HomeStackRoutes.WalletProtectionPopup]: {wallet: Wallet};
-  [HomeStackRoutes.WalletConnectApplicationDetailsPopup]: {
-    session: SessionTypes.Struct;
-    isPopup?: boolean;
-  };
-  [HomeStackRoutes.WalletConnectApplicationListPopup]: {
-    address: string;
-    isPopup?: boolean;
-  };
-  [HomeStackRoutes.TransactionDetail]: {hash: string; contractName?: string};
-  [HomeStackRoutes.InAppBrowser]: {
-    url: string;
-    title?: string;
-  };
-  [HomeStackRoutes.WalletConnect]: {
-    screen: 'walletConnectApproval';
-    params: {
-      event: WalletConnectApproveConnectionEvent;
-    };
-  };
-  [HomeStackRoutes.SssMigrate]: {accountId: string};
-  [HomeStackRoutes.BackupNotification]: {wallet: Wallet};
-  [HomeStackRoutes.JsonRpcSign]: {
-    request: PartialJsonRpcRequest;
-    metadata: JsonRpcMetadata;
-    chainId?: number;
-    selectedAccount?: string;
-    hideContractAttention?: boolean;
-  };
-  [HomeStackRoutes.BackupSssNotification]: {accountId: string};
-  [HomeStackRoutes.PopupNotificationNews]: {
-    bannerId: PopupNotificationBannerId;
-  };
-  [HomeStackRoutes.PopupNotification]: {
-    bannerId: PopupNotificationBannerId;
-  };
-  [HomeStackRoutes.PopupTrackActivity]: {bannerId: string};
-  [HomeStackRoutes.Web3BrowserPopup]: {url: string; popup?: boolean};
-  [HomeStackRoutes.WalletSelector]: Eventable & {
-    wallets: Wallet[];
-    title: string;
-    initialAddress?: string;
-  };
-  [HomeStackRoutes.TotalValueInfo]?: {
-    tab?: TotalValueTabNames;
-  };
-  [HomeStackRoutes.ValueSelector]: {
-    title: string;
-    values: AwaitValue[];
-    initialIndex?: number;
-    eventSuffix?: string;
-  };
-  [HomeStackRoutes.BrowserPrivacyPopupStack]: {
-    screen: 'browserPrivacyDetails' | 'browserPrivacy';
-    params?: RootStackParamList[RootStackParamList['browserPrivacyPopupStack']['screen']];
-  };
-};
 
 const navigatorOptions = {
   gestureEnabled: false,

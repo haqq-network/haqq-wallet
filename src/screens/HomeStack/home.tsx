@@ -19,19 +19,15 @@ import {useTypedNavigation} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
-import {BrowserStack} from '@app/screens/HomeStack/BrowserStack';
 import {
-  HomeFeedStack,
   HomeFeedStackRoutes,
-} from '@app/screens/HomeStack/HomeFeedStack';
-import {
-  HomeNewsStack,
   NewsStackRoutes,
-} from '@app/screens/HomeStack/HomeNewsStack';
-import {
-  SettingsStack,
   SettingsStackRoutes,
-} from '@app/screens/HomeStack/SettingsStack';
+} from '@app/route-types';
+import {BrowserStack} from '@app/screens/HomeStack/BrowserStack';
+import {HomeFeedStack} from '@app/screens/HomeStack/HomeFeedStack';
+import {HomeNewsStack} from '@app/screens/HomeStack/HomeNewsStack';
+import {SettingsStack} from '@app/screens/HomeStack/SettingsStack';
 import {Cloud} from '@app/services/cloud';
 import {ModalType, WalletType} from '@app/types';
 import {IS_IOS} from '@app/variables/common';

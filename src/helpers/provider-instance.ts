@@ -54,56 +54,53 @@ export async function getProviderInstanceForWallet(
   forceUpdate: boolean = false,
 ): Promise<ProviderInterface> {
   const id = getId(wallet);
-  const shouldUpdateCache = forceUpdate
-    ? true
-    : !hasProviderInstanceForWallet(wallet);
+  if (forceUpdate) {
+  }
 
-  if (shouldUpdateCache) {
-    switch (wallet.type) {
-      case WalletType.mnemonic:
-        cache.set(
-          id,
-          new ProviderMnemonicReactNative({
-            account: wallet.accountId!,
-            getPassword: app.getPassword.bind(app),
-          }),
-        );
-        break;
-      case WalletType.hot:
-        cache.set(
-          id,
-          new ProviderHotReactNative({
-            getPassword: app.getPassword.bind(app),
-            account: wallet.accountId!,
-          }),
-        );
-        break;
-      case WalletType.ledgerBt: {
-        const provider = new ProviderLedgerReactNative({
+  switch (wallet.type) {
+    case WalletType.mnemonic:
+      cache.set(
+        id,
+        new ProviderMnemonicReactNative({
+          account: wallet.accountId!,
           getPassword: app.getPassword.bind(app),
-          deviceId: wallet.accountId!,
-          appName: LEDGER_APP,
-        });
-        if (!skipAwaitForLedgerCall) {
-          awaitForLedger(provider);
-          cache.set(id, provider);
-        }
-        return provider;
+        }),
+      );
+      break;
+    case WalletType.hot:
+      cache.set(
+        id,
+        new ProviderHotReactNative({
+          getPassword: app.getPassword.bind(app),
+          account: wallet.accountId!,
+        }),
+      );
+      break;
+    case WalletType.ledgerBt: {
+      const provider = new ProviderLedgerReactNative({
+        getPassword: app.getPassword.bind(app),
+        deviceId: wallet.accountId!,
+        appName: LEDGER_APP,
+      });
+      if (!skipAwaitForLedgerCall) {
+        awaitForLedger(provider);
+        cache.set(id, provider);
       }
-      case WalletType.sss:
-        const storage = await getProviderStorage(wallet.accountId as string);
-        cache.set(
-          id,
-          new ProviderSSSReactNative({
-            storage,
-            getPassword: app.getPassword.bind(app),
-            account: wallet.accountId!,
-          }),
-        );
-        break;
-      default:
-        throw new Error('transport_not_implemented');
+      return provider;
     }
+    case WalletType.sss:
+      const storage = await getProviderStorage(wallet.accountId as string);
+      cache.set(
+        id,
+        new ProviderSSSReactNative({
+          storage,
+          getPassword: app.getPassword.bind(app),
+          account: wallet.accountId!,
+        }),
+      );
+      break;
+    default:
+      throw new Error('transport_not_implemented');
   }
 
   return cache.get(id);

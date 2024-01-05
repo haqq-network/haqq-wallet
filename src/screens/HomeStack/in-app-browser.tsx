@@ -6,7 +6,7 @@ import WebView from 'react-native-webview';
 import {InAppBrowser} from '@app/components/in-app-browser';
 import {openURL} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
+import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 
 export const InAppBrowserScreen = memo(() => {
   const navigation = useTypedNavigation<HomeStackParamList>();

@@ -3,17 +3,19 @@ import React, {memo, useCallback} from 'react';
 import {METADATA_URL} from '@env';
 
 import {SssMigrateNetworks} from '@app/components/sss-migrate-networks';
+import {app} from '@app/contexts';
 import {getMetadataValueWrapped} from '@app/helpers/wrappers/get-metadata-value';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {ErrorHandler} from '@app/models/error-handler';
 import {
   SssMigrateStackParamList,
   SssMigrateStackRoutes,
-} from '@app/screens/HomeStack/SssMigrate';
+} from '@app/route-types';
 import {
   Creds,
   SssProviders,
   onLoginApple,
+  onLoginCustom,
   onLoginGoogle,
 } from '@app/services/provider-sss';
 import {RemoteConfig} from '@app/services/remote-config';
@@ -35,6 +37,9 @@ export const SssMigrateNetworksScreen = memo(() => {
             break;
           case SssProviders.google:
             creds = await onLoginGoogle();
+            break;
+          case SssProviders.custom:
+            creds = await onLoginCustom();
             break;
         }
       } catch (err) {
@@ -68,7 +73,7 @@ export const SssMigrateNetworksScreen = memo(() => {
           onNext();
         } else {
           navigation.navigate(
-            SssMigrateStackRoutes.SSSMigrateSignupImportantInfo,
+            SssMigrateStackRoutes.SssMigrateSignupImportantInfo,
             {
               onNext,
             },
@@ -86,5 +91,12 @@ export const SssMigrateNetworksScreen = memo(() => {
     [navigation, route.params.accountId],
   );
 
-  return <SssMigrateNetworks onLogin={onLogin} />;
+  return (
+    <SssMigrateNetworks
+      onLogin={onLogin}
+      isAppleSupported={app.isAppleSigninSupported}
+      isGoogleSupported={app.isGoogleSigninSupported}
+      isCustomSupported={app.isCustomSigninSupported}
+    />
+  );
 });

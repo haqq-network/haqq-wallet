@@ -10,8 +10,7 @@ import {getProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet'
 import {useTypedNavigation} from '@app/hooks';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {Wallet} from '@app/models/wallet';
-import {HomeStackRoutes} from '@app/screens/HomeStack';
-import {HomeFeedStackParamList} from '@app/screens/HomeStack/HomeFeedStack';
+import {HomeFeedStackParamList, HomeStackRoutes} from '@app/route-types';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {WalletType} from '@app/types';
 import {filterWalletConnectSessionsByAddress} from '@app/utils';

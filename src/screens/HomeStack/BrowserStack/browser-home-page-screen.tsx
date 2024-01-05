@@ -9,29 +9,11 @@ import {useWeb3BrowserBookmark} from '@app/hooks/use-web3-browser-bookmark';
 import {useWeb3BrowserSearchHistory} from '@app/hooks/use-web3-browser-search-history';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
-import {
-  BrowserStackParamList,
-  BrowserStackRoutes,
-} from '@app/screens/HomeStack/BrowserStack';
+import {BrowserStackParamList, BrowserStackRoutes} from '@app/route-types';
+import {RemoteConfig} from '@app/services/remote-config';
 import {AdjustEvents, Link} from '@app/types';
 
-export const STRICT_URLS: Partial<Link>[] = [
-  {
-    title: 'HAQQ Dashboard',
-    url: 'https://shell.haqq.network',
-    icon: 'https://shell.haqq.network/assets/favicon.png',
-  },
-  {
-    title: 'HAQQ Vesting',
-    url: 'https://vesting.haqq.network',
-    icon: 'https://vesting.haqq.network/assets/favicon.svg',
-  },
-  {
-    title: 'SushiSwap',
-    url: 'https://www.sushi.com/swap',
-    icon: 'https://raw.githubusercontent.com/sushiswap/sushiswap/master/apps/evm/public/icon-512x512.svg',
-  },
-];
+export const STRICT_URLS: Partial<Link>[] = [];
 
 export const BrowserHomePageScreen = memo(() => {
   const navigation = useTypedNavigation<BrowserStackParamList>();
@@ -52,6 +34,9 @@ export const BrowserHomePageScreen = memo(() => {
 
   const onFavouritePress = useCallback(
     (link: Link) => {
+      if (link.eventName) {
+        onTrackEvent(link.eventName as AdjustEvents);
+      }
       navigation.navigate(BrowserStackRoutes.Web3browser, {url: link.url});
     },
     [navigation],
@@ -71,10 +56,13 @@ export const BrowserHomePageScreen = memo(() => {
   }, [navigation]);
 
   useEffect(() => {
-    STRICT_URLS.forEach(link => {
-      if (!Web3BrowserBookmark.getByUrl(link?.url || '')) {
-        Web3BrowserBookmark.create(link);
-      }
+    RemoteConfig.awaitForInitialization().then(() => {
+      const web3BrowserBookmarks = RemoteConfig.get('web3_browser_bookmarks')!;
+      web3BrowserBookmarks.forEach(link => {
+        if (!Web3BrowserBookmark.getByUrl(link?.url || '')) {
+          Web3BrowserBookmark.create(link);
+        }
+      });
     });
   }, []);
 

@@ -7,10 +7,7 @@ import {showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {
-  LedgerStackParamList,
-  LedgerStackRoutes,
-} from '@app/screens/WelcomeStack/LedgerStack';
+import {LedgerStackParamList, LedgerStackRoutes} from '@app/route-types';
 import {ModalType} from '@app/types';
 import {WalletType} from '@app/types';
 import {sleep} from '@app/utils';

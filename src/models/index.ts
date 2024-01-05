@@ -1,18 +1,19 @@
 import Realm from 'realm';
 
-import {ContactRealmObject} from '@app/models/contact';
 import {News} from '@app/models/news';
 import {NftCollection} from '@app/models/nft-collection';
 import {Provider} from '@app/models/provider';
+import {
+  ContactRealmObject,
+  TransactionRealmObject,
+  WalletRealmObject,
+} from '@app/models/realm-object-for-migration';
 import {Refferal} from '@app/models/refferal';
-import {StakingMetadata} from '@app/models/staking-metadata';
-import {TransactionRealmObject} from '@app/models/transaction';
 import {UserSchema, UserType} from '@app/models/user';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesDate} from '@app/models/variables-date';
 import {VariablesString} from '@app/models/variables-string';
 import {VestingMetadata} from '@app/models/vesting-metadata';
-import {WalletRealmObject} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {AppTheme, WalletType} from '@app/types';
 import {
@@ -40,7 +41,6 @@ export const realm = new Realm({
     TransactionRealmObject,
     ContactRealmObject,
     Provider,
-    StakingMetadata,
     Refferal,
     NftCollection,
     News,
@@ -50,7 +50,7 @@ export const realm = new Realm({
     RssNews,
     VestingMetadata,
   ],
-  schemaVersion: 71,
+  schemaVersion: 72,
   onMigration: (oldRealm, newRealm) => {
     logger.log('onMigration', {
       oldRealmVersion: oldRealm.schemaVersion,
@@ -559,6 +559,23 @@ export const realm = new Realm({
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
         newObject.input = '0x';
+      }
+    }
+    if (oldRealm.schemaVersion < 72) {
+      logger.log('migration step #23');
+      const oldObjects = oldRealm.objects('Web3BrowserBookmark');
+      const newObjects = newRealm.objects<{eventName: string}>(
+        'Web3BrowserBookmark',
+      );
+
+      logger.log({
+        oldObjects: oldObjects.toJSON(),
+        newObjects: newObjects.toJSON(),
+      });
+
+      for (const objectIndex in oldObjects) {
+        const newObject = newObjects[objectIndex];
+        newObject.eventName = '';
       }
     }
     logger.log('realm migration finished');

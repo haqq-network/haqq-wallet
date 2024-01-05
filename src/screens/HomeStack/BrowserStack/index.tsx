@@ -9,29 +9,13 @@ import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
 import {popupScreenOptions} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {BrowserStackParamList, BrowserStackRoutes} from '@app/route-types';
 import {BrowserPrivacyPopupStack} from '@app/screens/browser-privacy-popup-stack';
-import {HomeStackParamList} from '@app/screens/HomeStack';
 import {BrowserEditBookmarksScreen} from '@app/screens/HomeStack/BrowserStack/browser-edit-bookmarks-screen';
 import {BrowserHomePageScreen} from '@app/screens/HomeStack/BrowserStack/browser-home-page-screen';
 import {BrowserSearchPageScreen} from '@app/screens/HomeStack/BrowserStack/browser-search-page-screen';
 import {Web3BrowserScreen} from '@app/screens/HomeStack/BrowserStack/web3-browser';
 import {IS_IOS} from '@app/variables/common';
-
-export enum BrowserStackRoutes {
-  BrowserHomePage = 'browserHomePage',
-  Web3browser = 'web3browser',
-  BrowserSearchPage = 'browserSearchPage',
-  BrowserEditBookmarks = 'browserEditBookmarksScreen',
-  BrowserPrivacyPopupStackScreen = 'browserPrivacyPopupStack',
-}
-
-export type BrowserStackParamList = HomeStackParamList & {
-  [BrowserStackRoutes.BrowserPrivacyPopupStackScreen]: {};
-  [BrowserStackRoutes.BrowserHomePage]: undefined;
-  [BrowserStackRoutes.Web3browser]: {url: string; popup?: boolean};
-  [BrowserStackRoutes.BrowserSearchPage]?: {initialSearchText?: string};
-  [BrowserStackRoutes.BrowserEditBookmarks]: undefined;
-};
 
 const Stack = createNativeStackNavigator<BrowserStackParamList>();
 

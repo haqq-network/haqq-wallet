@@ -81,7 +81,9 @@ export const CloudShareNotFound = observer(
           },
         ).catch(err => ErrorHandler.handle('sssLimitReached', err));
 
-        Wallet.update(wallet.address, {socialLinkEnabled: true});
+        if (wallet?.address) {
+          Wallet.update(wallet.address, {socialLinkEnabled: true});
+        }
 
         hideModal(ModalType.cloudShareNotFound);
       } catch (err) {
@@ -115,7 +117,9 @@ export const CloudShareNotFound = observer(
             <Button
               i18n={I18N.cloudShareNotFoundSecondaryButton}
               onPress={() => {
-                Wallet.update(wallet.address, {socialLinkEnabled: false});
+                if (wallet?.address) {
+                  Wallet.update(wallet.address, {socialLinkEnabled: false});
+                }
                 onCloseModal(onClose);
               }}
               variant={ButtonVariant.third}

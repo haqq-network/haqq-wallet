@@ -10,7 +10,7 @@ import {Wallet} from '@app/models/wallet';
 import {
   TransactionStackParamList,
   TransactionStackRoutes,
-} from '@app/screens/HomeStack/TransactionStack';
+} from '@app/route-types';
 
 export const TransactionAccountScreen = observer(() => {
   const navigation = useTypedNavigation<TransactionStackParamList>();

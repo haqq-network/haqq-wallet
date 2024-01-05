@@ -1,33 +1,17 @@
 import React, {memo} from 'react';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {SessionTypes} from '@walletconnect/types';
 
 import {popupScreenOptionsWithMargin} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
+import {
+  WalletConnectStackParamList,
+  WalletConnectStackRoutes,
+} from '@app/route-types';
 import {basicScreenOptions} from '@app/screens';
-import {HomeStackParamList} from '@app/screens/HomeStack';
 import {WalletConnectApplicationDetailsScreen} from '@app/screens/HomeStack/WalletConnectStack/wallet-connect-application-details';
 import {WalletConnectApplicationListScreen} from '@app/screens/HomeStack/WalletConnectStack/wallet-connect-application-list';
 import {WalletConnectWalletListScreen} from '@app/screens/HomeStack/WalletConnectStack/wallet-connect-wallet-list';
-
-export enum WalletConnectStackRoutes {
-  WalletConnectWalletList = 'walletConnectWalletList_',
-  WalletConnectApplicationDetails = 'walletConnectApplicationDetails',
-  WalletConnectApplicationList = 'walletConnectApplicationList',
-}
-
-export type WalletConnectStackParamList = HomeStackParamList & {
-  [WalletConnectStackRoutes.WalletConnectWalletList]: undefined;
-  [WalletConnectStackRoutes.WalletConnectApplicationDetails]: {
-    session: SessionTypes.Struct;
-    isPopup?: boolean;
-  };
-  [WalletConnectStackRoutes.WalletConnectApplicationList]: {
-    address: string;
-    isPopup?: boolean;
-  };
-};
 
 const Stack = createNativeStackNavigator<WalletConnectStackParamList>();
 

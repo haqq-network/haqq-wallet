@@ -3,6 +3,7 @@ import {isHydrated, makePersistable} from 'mobx-persist-store';
 
 import {awaitForRealm} from '@app/helpers/await-for-realm';
 import {realm} from '@app/models';
+import {ContactRealmObject} from '@app/models/realm-object-for-migration';
 import {storage} from '@app/services/mmkv';
 import {MobXStoreFromRealm} from '@app/types';
 import {STORE_REHYDRATION_TIMEOUT_MS} from '@app/variables/common';
@@ -18,19 +19,6 @@ export type Contact = {
   type?: ContactType;
   visible?: boolean;
 };
-
-export class ContactRealmObject extends Realm.Object {
-  static schema = {
-    name: 'Contact',
-    properties: {
-      account: 'string',
-      name: 'string',
-      type: 'string',
-      visible: 'bool',
-    },
-    primaryKey: 'account',
-  };
-}
 
 class ContactStore implements MobXStoreFromRealm {
   realmSchemaName = ContactRealmObject.schema.name;

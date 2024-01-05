@@ -15,6 +15,7 @@ import {Icon, IconsName, Input, Spacer} from './ui';
 
 export interface BrowserPrivacyProps {
   permissionMap: BrowserPermissionTuple[];
+
   onLinkPress?(link: Link): void;
 }
 

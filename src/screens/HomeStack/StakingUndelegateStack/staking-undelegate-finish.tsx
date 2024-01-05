@@ -7,7 +7,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {
   StakingUnDelegateStackParamList,
   StakingUnDelegateStackRoutes,
-} from '@app/screens/HomeStack/StakingUndelegateStack';
+} from '@app/route-types';
 
 export const StakingUnDelegateFinishScreen = memo(() => {
   const navigation = useTypedNavigation<StakingUnDelegateStackParamList>();

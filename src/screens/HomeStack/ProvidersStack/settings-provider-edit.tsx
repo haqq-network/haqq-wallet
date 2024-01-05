@@ -4,10 +4,7 @@ import {SettingsProviderEdit} from '@app/components/settings-providers/settings-
 import {app} from '@app/contexts';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {Provider} from '@app/models/provider';
-import {
-  ProvidersStackParamList,
-  ProvidersStackRoutes,
-} from '@app/screens/HomeStack/ProvidersStack';
+import {ProvidersStackParamList, ProvidersStackRoutes} from '@app/route-types';
 
 export const SettingsProviderEditScreen = memo(() => {
   const {goBack, setParams} = useTypedNavigation<ProvidersStackParamList>();

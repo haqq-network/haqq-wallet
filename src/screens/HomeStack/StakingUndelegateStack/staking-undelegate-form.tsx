@@ -8,12 +8,15 @@ import {StakingUnDelegateForm} from '@app/components/staking-undelegate-form';
 import {getProviderInstanceForWallet} from '@app/helpers';
 import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useLayoutEffectAsync} from '@app/hooks/use-effect-async';
-import {StakingMetadata} from '@app/models/staking-metadata';
+import {
+  StakingMetadata,
+  StakingMetadataType,
+} from '@app/models/staking-metadata';
 import {Wallet} from '@app/models/wallet';
 import {
   StakingUnDelegateStackParamList,
   StakingUnDelegateStackRoutes,
-} from '@app/screens/HomeStack/StakingUndelegateStack';
+} from '@app/route-types';
 import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
 import {FEE_ESTIMATING_TIMEOUT_MS} from '@app/variables/common';
@@ -36,8 +39,10 @@ export const StakingUnDelegateFormScreen = observer(() => {
   );
 
   const balance = useMemo(() => {
-    const delegations =
-      StakingMetadata.getDelegationsForValidator(operator_address);
+    const delegations = StakingMetadata.getAllByTypeForValidator(
+      operator_address,
+      StakingMetadataType.delegation,
+    );
 
     const delegation = delegations.find(
       d => d.delegator === wallet?.cosmosAddress,

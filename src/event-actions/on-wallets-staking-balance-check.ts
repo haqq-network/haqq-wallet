@@ -11,7 +11,7 @@ export async function onWalletsStakingBalanceCheck() {
     const balances = Wallet.getAllVisible().map(w => {
       const metadata = StakingMetadata.getAllByDelegator(
         w.cosmosAddress,
-      ).filtered('type != $0', StakingMetadataType.reward);
+      ).filter(({type}) => type !== StakingMetadataType.reward);
       const total = metadata.reduce(
         (prev, curr) => prev.operate(curr.amountHex, 'add'),
         Balance.Empty,

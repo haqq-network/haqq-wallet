@@ -26,13 +26,14 @@ import {createTheme, hideModal, showModal} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {trackEvent} from '@app/helpers/track-event';
 import {useTheme} from '@app/hooks';
+import {useToast} from '@app/hooks/use-toast';
 import {Contact} from '@app/models/contact';
 import {Transaction} from '@app/models/transaction';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
+import {OnboardingStackRoutes} from '@app/route-types';
 import {RootStack} from '@app/screens/RootStack';
-import {OnboardingStackRoutes} from '@app/screens/WelcomeStack/OnboardingStack';
 import {AppTheme, ModalType} from '@app/types';
 import {getAppTrackingAuthorizationStatus, sleep} from '@app/utils';
 import {SPLASH_TIMEOUT_MS} from '@app/variables/common';
@@ -52,6 +53,7 @@ export const App = () => {
   const [isPinReseted, setPinReseted] = useState(false);
   const [onboarded, setOnboarded] = useState(app.onboarded);
   const theme = useTheme();
+  const toast = useToast();
 
   const navTheme = useMemo(
     () => ({dark: theme === AppTheme.dark, colors: appTheme.colors}) as Theme,
@@ -203,6 +205,7 @@ export const App = () => {
                 isReady={initialized}
               />
               <AppScreenSecurityOverview />
+              {toast}
             </NavigationContainer>
           </MenuProvider>
         </SafeAreaProvider>

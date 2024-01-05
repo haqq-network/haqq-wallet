@@ -8,7 +8,7 @@ import {Spacer} from '@app/components/ui';
 import {popupScreenOptions} from '@app/helpers';
 import {useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
-import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
+import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 
 import {BrowserPrivacyDetailsScreen} from './browser-privacy-details-screen';
 import {BrowserPrivacyScreen} from './browser-privacy-screen';

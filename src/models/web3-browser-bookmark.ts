@@ -12,6 +12,7 @@ export class Web3BrowserBookmark extends Realm.Object implements Link {
       icon: 'string?',
       order: 'int',
       createdAt: 'int',
+      eventName: 'string?',
     },
     primaryKey: 'id',
   };
@@ -20,6 +21,7 @@ export class Web3BrowserBookmark extends Realm.Object implements Link {
   title!: string;
   order!: number;
   icon!: string | undefined;
+  eventName!: string | undefined;
   createdAt!: number;
 
   static create(params: Partial<Web3BrowserBookmark>) {

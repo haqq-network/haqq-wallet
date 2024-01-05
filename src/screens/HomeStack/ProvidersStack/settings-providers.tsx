@@ -8,10 +8,7 @@ import {Events} from '@app/events';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
-import {
-  ProvidersStackParamList,
-  ProvidersStackRoutes,
-} from '@app/screens/HomeStack/ProvidersStack';
+import {ProvidersStackParamList, ProvidersStackRoutes} from '@app/route-types';
 
 export const SettingsProvidersScreen = memo(() => {
   const navigation = useTypedNavigation<ProvidersStackParamList>();

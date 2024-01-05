@@ -2,7 +2,7 @@ import React, {memo} from 'react';
 
 import {Welcome} from '@app/components/welcome';
 import {useTypedNavigation} from '@app/hooks';
-import {WelcomeStackRoutes} from '@app/screens/WelcomeStack';
+import {WelcomeStackRoutes} from '@app/route-types';
 
 export const WelcomeScreen = memo(() => {
   const navigation = useTypedNavigation();

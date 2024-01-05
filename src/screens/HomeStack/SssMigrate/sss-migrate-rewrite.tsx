@@ -8,7 +8,7 @@ import {I18N, getText} from '@app/i18n';
 import {
   SssMigrateStackParamList,
   SssMigrateStackRoutes,
-} from '@app/screens/HomeStack/SssMigrate';
+} from '@app/route-types';
 
 export const SssMigrateRewriteScreen = memo(() => {
   const navigation = useTypedNavigation<SssMigrateStackParamList>();
@@ -36,7 +36,7 @@ export const SssMigrateRewriteScreen = memo(() => {
             };
 
             navigation.navigate(
-              SssMigrateStackRoutes.SSSMigrateSignupImportantInfo,
+              SssMigrateStackRoutes.SssMigrateSignupImportantInfo,
               {
                 onNext,
               },
