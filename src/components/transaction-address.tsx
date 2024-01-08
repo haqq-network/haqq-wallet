@@ -114,12 +114,25 @@ export const TransactionAddress = ({
     [onPressAddress],
   );
 
-  const handleChangeAddress = useCallback((value: string) => {
-    const nextValue = value.trim();
-    setAddress(nextValue);
-    const isValidAddress = AddressUtils.isValidAddress(nextValue);
-    setError(!isValidAddress);
-  }, []);
+  const handleChangeAddress = useCallback(
+    async (value: string) => {
+      const nextValue = value.trim();
+      // If nextValue longer than previous value more than 1 symbol that it is paste action
+      if (nextValue.length && nextValue.length > address.length + 1) {
+        await onPressPaste();
+      } else if (
+        // If nextValue increased by 1 or decreased by 1 than this is input action
+        nextValue.length === address.length + 1 ||
+        nextValue.length + 1 === address.length
+      ) {
+        setAddress(nextValue);
+      }
+
+      const isValidAddress = AddressUtils.isValidAddress(nextValue);
+      setError(!isValidAddress);
+    },
+    [onPressPaste, address],
+  );
 
   return (
     <PopupContainer testID={testID}>
