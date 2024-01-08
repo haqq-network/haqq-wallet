@@ -10,6 +10,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useTransactionList} from '@app/hooks/use-transaction-list';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
+import {Token} from '@app/models/tokens';
 import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
@@ -40,6 +41,7 @@ export const AccountInfoScreen = observer(() => {
   const [contractNameMap, setContractNameMap] = useState({});
 
   useEffectAsync(async () => {
+    Token.fetchTokens();
     const names = transactions
       .filter(({input}) => input.includes('0x') && input.length > 2)
       .map(item => item.to);
@@ -93,6 +95,7 @@ export const AccountInfoScreen = observer(() => {
       total={total}
       unlock={unlock}
       vested={vested}
+      tokens={Token.tokens}
     />
   );
 });
