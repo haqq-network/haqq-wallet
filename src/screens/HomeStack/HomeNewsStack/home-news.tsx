@@ -39,6 +39,7 @@ export const HomeNewsScreen = memo(() => {
   );
 
   useEffect(() => {
+    onUpdatesSync();
     onTrackEvent(AdjustEvents.newsOpen);
   }, []);
 

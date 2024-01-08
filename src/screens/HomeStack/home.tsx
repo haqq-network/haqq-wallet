@@ -77,6 +77,7 @@ const newsOptions: BottomTabNavigationOptions = {
   headerStyle: {
     height: StatusBar.currentHeight,
   },
+  unmountOnBlur: true,
 };
 
 const browserOptions = {
