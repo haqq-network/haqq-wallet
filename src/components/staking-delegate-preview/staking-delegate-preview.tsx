@@ -120,6 +120,7 @@ export const StakingDelegatePreview = ({
         onPress={onSend}
         style={styles.submit}
         loading={disabled}
+        testID="staking-preview"
       />
     </PopupContainer>
   );
