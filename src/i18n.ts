@@ -1,9 +1,5 @@
 import {getAppVersion, getBuildNumber} from '@app/services/version';
-import {
-  CURRENCY_NAME,
-  LEDGER_APP,
-  PLATFORM_COMPANY,
-} from '@app/variables/common';
+import {LEDGER_APP, PLATFORM_COMPANY} from '@app/variables/common';
 
 export enum I18N {
   empty,
@@ -1212,10 +1208,10 @@ const en: Record<I18N, string> = {
   [I18N.transactionContractTitle]: 'Contract interaction',
   [I18N.transactionContractNamePrefix]: 'name: {{value}}',
   [I18N.transactionContractDefaultName]: 'HAQQ Network Contract',
-  [I18N.transactionPositiveAmountText]: `+ {{value}} ${CURRENCY_NAME}`,
-  [I18N.transactionNegativeAmountText]: `- {{value}} ${CURRENCY_NAME}`,
-  [I18N.transactionWidgetReceiveTitle]: `Received {{value}} ${CURRENCY_NAME}`,
-  [I18N.transactionWidgetSpendTitle]: `Spend {{value}} ${CURRENCY_NAME}`,
+  [I18N.transactionPositiveAmountText]: '+ {{value}}',
+  [I18N.transactionNegativeAmountText]: '- {{value}}',
+  [I18N.transactionWidgetReceiveTitle]: 'Received {{value}}',
+  [I18N.transactionWidgetSpendTitle]: 'Spend {{value}}',
   [I18N.transactionWidgetTitle]: 'Transactions',
   [I18N.transactionWidgetShortTitle]: 'Last transactions',
   [I18N.stakingInfoDelegationNoAvailableWallets]:

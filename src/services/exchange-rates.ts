@@ -54,7 +54,7 @@ class ExchangeRates {
   convert = (balance: Balance, fiat: Fiat): Balance => {
     const rate = this.rates?.[balance.currency]?.[fiat];
     if (!rate) {
-      return Balance.Empty;
+      return new Balance(0, undefined, this.getSymbol(fiat));
     }
     //FIXME: Temporary solution. Need to fix Balance tests first
     const result = new Balance(rate).toFloat() * balance.toFloat();

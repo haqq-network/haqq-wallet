@@ -31,7 +31,7 @@ export function LockedTokens({balance, onForwardPress}: LockedTokensProps) {
           </Placeholder>
         )}
         <View style={styles.row}>
-          <Text t7>{total?.toBalanceString() ?? '0'}</Text>
+          <Text t7>{total?.toFiat('USD')?.toBalanceString() ?? '0'}</Text>
           <Spacer width={4} />
           <IconButton onPress={onForwardPress} style={styles.iconButton}>
             <Icon

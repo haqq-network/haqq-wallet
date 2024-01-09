@@ -19,7 +19,7 @@ import {
   Text,
 } from '@app/components/ui';
 import {CopyMenu} from '@app/components/ui/copy-menu';
-import {cleanNumber, createTheme} from '@app/helpers';
+import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {useIsBalancesFirstSync} from '@app/hooks/use-is-balances-sync';
 import {I18N} from '@app/i18n';
@@ -100,11 +100,13 @@ export const WalletCard = memo(
       [wallet?.address],
     );
     const parsedTotal = useMemo(() => {
-      if (!total) {
-        return Balance.Empty.toEther();
+      let result = total;
+
+      if (!result) {
+        result = Balance.Empty;
       }
 
-      return total.toEther();
+      return result.toFiat('USD').toBalanceString();
     }, [total]);
 
     const onQr = () => {
@@ -263,11 +265,10 @@ export const WalletCard = memo(
               color={Color.textBase3}
               numberOfLines={1}
               adjustsFontSizeToFit
-              i18n={I18N.amountISLM}
-              i18params={{amount: cleanNumber(parsedTotal)}}
               onPress={onAccountInfo}
-              suppressHighlighting={true}
-            />
+              suppressHighlighting={true}>
+              {parsedTotal}
+            </Text>
             <TouchableWithoutFeedback onPress={onAccountInfo}>
               <View style={styles.openDetailsIconContainer}>
                 <Icon
