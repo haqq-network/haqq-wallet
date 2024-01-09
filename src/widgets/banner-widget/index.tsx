@@ -132,7 +132,10 @@ export const BannerWidget = ({banner, style}: HomeBannerProps) => {
   }
 
   return (
-    <ShadowCard onPress={onPressBanner} style={styles.removePaddingVertical}>
+    <ShadowCard
+      testID={'banner-' + banner.id}
+      onPress={onPressBanner}
+      style={styles.removePaddingVertical}>
       {elem}
     </ShadowCard>
   );
