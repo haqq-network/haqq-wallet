@@ -1,66 +1,21 @@
 import React, {memo} from 'react';
 
-import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {
   NativeStackNavigationOptions,
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
 
 import {popupScreenOptions} from '@app/helpers';
-import {KeystoneStackRoutes} from '@app/screens/DeviceStack/KeystoneStack';
-import {LedgerStackRoutes} from '@app/screens/DeviceStack/LedgerStack';
-import {WelcomeStackParamList} from '@app/screens/WelcomeStack';
+import {
+  AnyRouteFromParent,
+  OnboardingStackParamList,
+  OnboardingStackRoutes,
+} from '@app/route-types';
 import {OnboardingBiometryScreen} from '@app/screens/WelcomeStack/OnboardingStack/onboarding-biometry';
 import {OnboardingFinishScreen} from '@app/screens/WelcomeStack/OnboardingStack/onboarding-finish';
 import {OnboardingRepeatPinScreen} from '@app/screens/WelcomeStack/OnboardingStack/onboarding-repeat-pin';
 import {OnboardingSetupPinScreen} from '@app/screens/WelcomeStack/OnboardingStack/onboarding-setup-pin';
 import {OnboardingTrackUserActivityScreen} from '@app/screens/WelcomeStack/OnboardingStack/onboarding-track-user-activity';
-import {SignInStackRoutes} from '@app/screens/WelcomeStack/SignInStack';
-import {SignUpStackRoutes} from '@app/screens/WelcomeStack/SignUpStack';
-import {AdjustEvents, BiometryType, WalletInitialData} from '@app/types';
-
-export enum OnboardingStackRoutes {
-  OnboardingSetupPin = 'onboardingSetupPin_',
-  OnboardingRepeatPin = 'onboardingRepeatPin',
-  OnboardingBiometry = 'onboardingBiometry',
-  OnboardingTrackUserActivity = 'onboardingTrackUserActivity',
-  OnboardingFinish = 'onboardingFinish',
-}
-
-type AnyRouteFromParent =
-  | SignInStackRoutes
-  | SignUpStackRoutes
-  | LedgerStackRoutes
-  | KeystoneStackRoutes;
-
-export type OnboardingStackParamList = WelcomeStackParamList & {
-  [OnboardingStackRoutes.OnboardingSetupPin]: WalletInitialData & {
-    provider?: ProviderMnemonicReactNative;
-    currentPin: string;
-    nextScreen: AnyRouteFromParent;
-    errorText?: string;
-  };
-  [OnboardingStackRoutes.OnboardingRepeatPin]: WalletInitialData & {
-    provider?: ProviderMnemonicReactNative;
-    currentPin: string;
-    nextScreen: AnyRouteFromParent;
-  };
-  [OnboardingStackRoutes.OnboardingBiometry]: {
-    biometryType: BiometryType;
-    nextScreen: AnyRouteFromParent;
-  };
-  [OnboardingStackRoutes.OnboardingTrackUserActivity]: {
-    biometryType: BiometryType;
-    nextScreen: AnyRouteFromParent;
-  };
-  [OnboardingStackRoutes.OnboardingFinish]: {
-    nextScreen?: AnyRouteFromParent;
-    action: 'create' | 'restore';
-    hide?: boolean;
-    event: AdjustEvents;
-    onboarding?: boolean;
-  };
-};
 
 const Stack = createNativeStackNavigator<OnboardingStackParamList>();
 

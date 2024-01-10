@@ -5,10 +5,7 @@ import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
 import {requestLocationPermission} from '@app/helpers/request-location-permission';
 import {useTypedNavigation} from '@app/hooks';
-import {
-  LedgerStackParamList,
-  LedgerStackRoutes,
-} from '@app/screens/DeviceStack/LedgerStack';
+import {LedgerStackParamList, LedgerStackRoutes} from '@app/route-types';
 import {ModalType} from '@app/types';
 
 export const LedgerAgreementScreen = memo(() => {

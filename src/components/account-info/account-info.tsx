@@ -2,6 +2,7 @@ import React, {useCallback, useMemo, useState} from 'react';
 
 import {FlatList, ListRenderItem} from 'react-native';
 
+import {TokenViewer} from '@app/components/token-viewer';
 import {TransactionEmpty} from '@app/components/transaction-empty';
 import {TransactionRow} from '@app/components/transaction-row';
 import {First, PopupContainer, Spacer} from '@app/components/ui';
@@ -11,7 +12,12 @@ import {useNftCollections} from '@app/hooks/use-nft-collections';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
-import {ContractNameMap, TransactionList} from '@app/types';
+import {
+  ContractNameMap,
+  HaqqEthereumAddress,
+  IToken,
+  TransactionList,
+} from '@app/types';
 
 import {AccountInfoHeader} from './account-info-header';
 
@@ -21,6 +27,7 @@ import {TopTabNavigator, TopTabNavigatorVariant} from '../top-tab-navigator';
 enum TabNames {
   transactions = 'transactions',
   nft = 'nft',
+  tokens = 'tokens',
 }
 
 export type AccountInfoProps = {
@@ -37,6 +44,7 @@ export type AccountInfoProps = {
   total: Balance;
   vested: Balance;
   unlock: Date;
+  tokens: Record<HaqqEthereumAddress, IToken[]>;
 };
 
 const PAGE_ITEMS_COUNT = 15;
@@ -55,6 +63,7 @@ export const AccountInfo = ({
   onReceive,
   onPressRow,
   contractNameMap,
+  tokens,
 }: AccountInfoProps) => {
   const nftCollections = useNftCollections();
   const [page, setPage] = useState(1);
@@ -94,24 +103,32 @@ export const AccountInfo = ({
           onSend={onSend}
           onReceive={onReceive}
         />
-        {isFeatureEnabled(Feature.nft) && (
-          <TopTabNavigator
-            contentContainerStyle={styles.tabsContentContainerStyle}
-            tabHeaderStyle={styles.tabHeaderStyle}
-            variant={TopTabNavigatorVariant.large}
-            onTabChange={onTabChange}>
+        <TopTabNavigator
+          contentContainerStyle={styles.tabsContentContainerStyle}
+          tabHeaderStyle={styles.tabHeaderStyle}
+          variant={TopTabNavigatorVariant.large}
+          onTabChange={onTabChange}
+          initialTabIndex={0}>
+          <TopTabNavigator.Tab
+            name={TabNames.transactions}
+            title={I18N.accountInfoTransactionTabTitle}
+            component={null}
+          />
+          {isFeatureEnabled(Feature.tokens) && (
             <TopTabNavigator.Tab
-              name={TabNames.transactions}
-              title={I18N.accountInfoTransactionTabTitle}
+              name={TabNames.tokens}
+              title={I18N.accountInfoTokensTabTitle}
               component={null}
             />
+          )}
+          {isFeatureEnabled(Feature.nft) && (
             <TopTabNavigator.Tab
               name={TabNames.nft}
               title={I18N.accountInfoNftTabTitle}
               component={null}
             />
-          </TopTabNavigator>
-        )}
+          )}
+        </TopTabNavigator>
       </>
     ),
     [
@@ -142,14 +159,26 @@ export const AccountInfo = ({
     () => (
       <First>
         {activeTab === TabNames.transactions && <TransactionEmpty />}
-        <>
-          <Spacer height={24} />
-          <NftViewer
-            data={nftCollections}
-            scrollEnabled={false}
-            style={styles.nftViewerContainer}
-          />
-        </>
+        {activeTab === TabNames.tokens && (
+          <>
+            <Spacer height={24} />
+            <TokenViewer
+              wallet={wallet}
+              data={tokens}
+              style={styles.nftViewerContainer}
+            />
+          </>
+        )}
+        {activeTab === TabNames.nft && (
+          <>
+            <Spacer height={24} />
+            <NftViewer
+              data={nftCollections}
+              scrollEnabled={false}
+              style={styles.nftViewerContainer}
+            />
+          </>
+        )}
       </First>
     ),
     [activeTab, nftCollections],

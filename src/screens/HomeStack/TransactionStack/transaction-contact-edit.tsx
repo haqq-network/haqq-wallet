@@ -7,7 +7,7 @@ import {Contact} from '@app/models/contact';
 import {
   TransactionStackParamList,
   TransactionStackRoutes,
-} from '@app/screens/HomeStack/TransactionStack';
+} from '@app/route-types';
 
 export const TransactionContactEditScreen = memo(() => {
   const {name, address} = useTypedRoute<

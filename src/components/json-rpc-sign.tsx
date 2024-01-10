@@ -84,6 +84,7 @@ export const JsonRpcSign = ({
           variant={ButtonVariant.contained}
           onPress={onPressSign}
           i18n={I18N.walletConnectSignApproveButton}
+          testID={'wc-sign'}
         />
         <Button
           loading={rejectLoading}
@@ -91,6 +92,7 @@ export const JsonRpcSign = ({
           textColor={Color.textRed1}
           onPress={onPressReject}
           i18n={I18N.walletConnectSignRejectButton}
+          testID={'wc-reject'}
         />
       </View>
     </View>

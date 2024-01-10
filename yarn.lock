@@ -10198,7 +10198,7 @@ __metadata:
     react-native-linear-gradient: 2.7.3
     react-native-markdown-display: 7.0.0-alpha.2
     react-native-markdown-package: 1.8.2
-    react-native-mmkv: 2.10.2
+    react-native-mmkv: 2.11.0
     react-native-network-info: 5.2.1
     react-native-os: "https://github.com/aprock/react-native-os#938676ebd92d58b8928168a7e78cbe216838ed17"
     react-native-permissions: ^3.10.0
@@ -10216,6 +10216,7 @@ __metadata:
     react-native-splash-screen: 3.3.0
     react-native-svg: 13.10.0
     react-native-system-navigation-bar: 2.6.1
+    react-native-toast-message: 2.2.0
     react-native-touch-id: 4.4.1
     react-native-webview: 13.6.0
     react-test-renderer: 18.2.0
@@ -15454,13 +15455,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-mmkv@npm:2.10.2":
-  version: 2.10.2
-  resolution: "react-native-mmkv@npm:2.10.2"
+"react-native-mmkv@npm:2.11.0":
+  version: 2.11.0
+  resolution: "react-native-mmkv@npm:2.11.0"
   peerDependencies:
     react: "*"
     react-native: ">=0.71.0"
-  checksum: ba1759c6898293db9db2ab1b9bb239840f4902d5a8f53672e02eeb23a81e15cb7f6b32d716bc46747868d8c241d3daad6b15af60a5d5cc7716af1d2c1597c17e
+  checksum: 23ba624db8a4c530532aaab78705b58d1c9eefc3173dae3b1f86c8cb4d0e5abe3d175079c263251bfed406dc9f6ccda3657f138177916866ea0c0dc8fa3d2389
   languageName: node
   linkType: hard
 
@@ -15660,6 +15661,16 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 1f9e96e7d849f1836b721820a26095dcf21bd9ce08a1439cf7793fd27549c66ff77788f6ab7429f21df07e166985228de54d9eea755243e7389c0d8d29cd92bb
+  languageName: node
+  linkType: hard
+
+"react-native-toast-message@npm:2.2.0":
+  version: 2.2.0
+  resolution: "react-native-toast-message@npm:2.2.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: b286b8d5ca0f21737c2e0a8e9c2d6dab2c06a3895335aa541c69eeb42d526cc6f3951069e59d8d346d3e6cafb8feaa450c35b0efe7c3d51ff81351d1477e71eb
   languageName: node
   linkType: hard
 

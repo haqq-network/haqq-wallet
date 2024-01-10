@@ -8,3 +8,6 @@
 #   http://developer.android.com/guide/developing/tools/proguard.html
 
 # Add any project specific keep options here:
+-dontwarn com.google.android.gms.**
+-keep class com.google.android.gms.**{ *; }
+-keep interface com.google.android.gms.** { *; }

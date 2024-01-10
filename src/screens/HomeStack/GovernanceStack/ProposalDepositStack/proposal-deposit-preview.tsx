@@ -13,7 +13,7 @@ import {Wallet} from '@app/models/wallet';
 import {
   ProposalDepositStackParamList,
   ProposalDepositStackRoutes,
-} from '@app/screens/HomeStack/GovernanceStack/ProposalDepositStack';
+} from '@app/route-types';
 import {Cosmos} from '@app/services/cosmos';
 
 export const ProposalDepositPreviewScreen = observer(() => {

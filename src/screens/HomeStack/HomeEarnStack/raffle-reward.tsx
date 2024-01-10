@@ -4,10 +4,7 @@ import {RaffleReward} from '@app/components/raffle-reward';
 import {Events} from '@app/events';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {
-  HomeEarnStackParamList,
-  HomeEarnStackRoutes,
-} from '@app/screens/HomeStack/HomeEarnStack';
+import {HomeEarnStackParamList, HomeEarnStackRoutes} from '@app/route-types';
 
 export const RaffleRewardScreen = memo(() => {
   const navigation = useTypedNavigation<HomeEarnStackParamList>();

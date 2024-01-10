@@ -23,6 +23,7 @@ describe('Signup', () => {
 
     await element(by.id('protect_phrase_button')).tap();
 
+    await element(by.id('backup_warning')).scrollTo('bottom');
     await element(by.id('backup_warning_next')).tap();
 
     const mnemonic_words = [];
@@ -36,6 +37,7 @@ describe('Signup', () => {
       mnemonic_words.push(text);
     }
 
+    await element(by.id('backup_create')).scrollTo('bottom');
     await element(by.id('backup_create_checkbox')).tap();
     await element(by.id('backup_create_next')).tap();
 
@@ -51,6 +53,7 @@ describe('Signup', () => {
       await el.tap();
     }
 
+    await element(by.id('backup_verify')).scrollTo('bottom');
     await element(by.id('backup_verify_check')).tap();
 
     await waitFor(element(by.id('backup_finish')))

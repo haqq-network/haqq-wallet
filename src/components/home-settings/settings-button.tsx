@@ -6,10 +6,7 @@ import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {
-  SettingsStackParamList,
-  SettingsStackRoutes,
-} from '@app/screens/HomeStack/SettingsStack';
+import {SettingsStackParamList, SettingsStackRoutes} from '@app/route-types';
 
 import {DataContent, Icon, IconsName, MenuNavigationButton, Text} from '../ui';
 

@@ -3,8 +3,7 @@ import React, {memo, useCallback, useEffect} from 'react';
 import {SssMigrateFinish} from '@app/components/sss-migrate-finish';
 import {hideModal} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
-import {HomeStackRoutes} from '@app/screens/HomeStack';
-import {SssMigrateStackParamList} from '@app/screens/HomeStack/SssMigrate';
+import {HomeStackRoutes, SssMigrateStackParamList} from '@app/route-types';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {ModalType} from '@app/types';
 

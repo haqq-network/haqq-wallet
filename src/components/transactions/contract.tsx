@@ -3,10 +3,11 @@ import React, {useCallback, useMemo} from 'react';
 import {TouchableWithoutFeedback, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {DataContent, Icon, Text} from '@app/components/ui';
-import {cleanNumber, createTheme} from '@app/helpers';
+import {DataContent, Icon, Spacer, Text} from '@app/components/ui';
+import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {Balance} from '@app/services/balance';
 import {OnTransactionRowPress, TransactionListContract} from '@app/types';
 
 export type TransactionPreviewProps = {
@@ -45,17 +46,29 @@ export const TransactionContract = ({
           }}
           short
         />
+
         {!!item.value && (
-          <Text
-            t11
-            color={isSend ? Color.textRed1 : Color.textGreen1}
-            i18n={
-              isSend
-                ? I18N.transactionNegativeAmountText
-                : I18N.transactionPositiveAmountText
-            }
-            i18params={{value: cleanNumber(item.value)}}
-          />
+          <View style={styles.amountWrapper}>
+            <Text
+              t11
+              color={isSend ? Color.textRed1 : Color.textGreen1}
+              i18n={
+                isSend
+                  ? I18N.transactionNegativeAmountText
+                  : I18N.transactionPositiveAmountText
+              }
+              i18params={{value: new Balance(item.value).toBalanceString()}}
+            />
+            <Spacer height={2} />
+            <Text
+              t14
+              color={Color.textBase2}
+              i18n={I18N.transactionNegativeAmountText}
+              i18params={{
+                value: new Balance(item.value).toFiat('USD').toBalanceString(),
+              }}
+            />
+          </View>
         )}
       </View>
     </TouchableWithoutFeedback>
@@ -63,6 +76,7 @@ export const TransactionContract = ({
 };
 
 const styles = createTheme({
+  amountWrapper: {flexDirection: 'column', alignItems: 'flex-end'},
   container: {
     paddingVertical: 8,
     flexDirection: 'row',

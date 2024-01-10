@@ -7,11 +7,11 @@ import {Events} from '@app/events';
 import {hideModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {HomeStackRoutes} from '@app/screens/HomeStack';
 import {
+  HomeStackRoutes,
   OnboardingStackParamList,
   OnboardingStackRoutes,
-} from '@app/screens/WelcomeStack/OnboardingStack';
+} from '@app/route-types';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {ModalType} from '@app/types';

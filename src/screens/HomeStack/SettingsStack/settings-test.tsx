@@ -54,7 +54,7 @@ import {VariablesDate} from '@app/models/variables-date';
 import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
-import {SettingsStackParamList} from '@app/screens/HomeStack/SettingsStack';
+import {SettingsStackParamList} from '@app/route-types';
 import {EthNetwork} from '@app/services';
 import {Airdrop} from '@app/services/airdrop';
 import {Balance} from '@app/services/balance';
@@ -157,6 +157,11 @@ const getTestModals = (): TestModals => {
       onClose: () => logger.log('claimOnMainnet closed'),
       onChange: () => logger.log('claimOnMainnet onChange'),
       network: 'MainMet',
+    },
+    customProviderEmail: {
+      onClose: () => logger.log('customProviderEmail closed'),
+      onChange: (value: string) =>
+        logger.log('customProviderEmail onChange', value),
     },
     transactionError: {
       onClose: () => logger.log('transactionError closed'),

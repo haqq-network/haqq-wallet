@@ -17,7 +17,7 @@ env:
 
 jobs:
   test:
-    runs-on: [self-hosted, Linux]
+    runs-on: ubuntu-cpu16-ram64
     steps:
       - name: Checkout
         uses: actions/checkout@v3.0.2
@@ -31,7 +31,7 @@ jobs:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install 
       - name: Run linters
         run: |
           yarn lint
@@ -39,10 +39,12 @@ jobs:
           yarn prettier:check
 
   build:
-    runs-on: [self-hosted, Linux]
+    runs-on: self-hosted
     needs:
       - test
     steps:
+      - name: Show self-hosted machine infomation
+        run: uname -a
       - name: Checkout
         uses: actions/checkout@v3.0.2
       - name: Setup node
@@ -55,6 +57,6 @@ jobs:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install 
       - name: Build ios bundle
         run: yarn react-native bundle --platform ios --dev false --entry-file index.js --bundle-output ./index.ios.bundle

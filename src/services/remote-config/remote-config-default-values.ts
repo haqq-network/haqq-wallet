@@ -95,6 +95,8 @@ export const REMOTE_CONFIG_DEFAULT_VALUES: Required<RemoteConfigTypes> = {
   welcome_screen: 'welcomeNews',
   sss_google: 'haqq-google-ios',
   sss_apple: 'haqq-apple',
+  sss_custom: undefined,
+  sss_custom_url: undefined,
   sss_metadata_url: 'https://metadata.social.production.haqq.network',
   sss_generate_shares_url:
     'https://generator-shares.social.production.haqq.network',
@@ -112,4 +114,21 @@ export const REMOTE_CONFIG_DEFAULT_VALUES: Required<RemoteConfigTypes> = {
     'staking_reward_min_amount',
   ).toHex(),
   keystone_tutorial_url: 'https://keyst.one/mmm',
+  web3_browser_bookmarks: [
+    {
+      title: 'HAQQ Dashboard',
+      url: 'https://shell.haqq.network',
+      icon: 'https://haqq.network/assets/media-kit/haqq-sign.png',
+    },
+    {
+      title: 'HAQQ Vesting',
+      url: 'https://vesting.haqq.network',
+      icon: 'https://vesting.haqq.network/assets/favicon.svg',
+    },
+    {
+      title: 'Sushi',
+      url: 'https://www.sushi.com/swap',
+      icon: 'https://raw.githubusercontent.com/sushiswap/sushiswap/master/apps/evm/public/icon-512x512.svg',
+    },
+  ],
 };

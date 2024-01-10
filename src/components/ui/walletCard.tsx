@@ -24,16 +24,28 @@ import {calculateBalances, generateUUID} from '@app/utils';
 export type Props = {
   wallet: Wallet;
   tokens: IToken[];
+  tokensOnly?: boolean;
 };
 const CARD_WIDTH = 57.78;
 const CARD_RADIUS = 8;
 
-export const WalletCard = ({wallet, tokens}: Props) => {
+export const WalletCard = ({wallet, tokens, tokensOnly}: Props) => {
   const balances = useWalletsBalance([wallet]);
   const {available, locked} = useMemo(
     () => calculateBalances(balances, [wallet]),
     [balances, wallet],
   );
+
+  if (tokensOnly) {
+    return (
+      <>
+        <Spacer height={10} />
+        {tokens.map(token => {
+          return <TokenRow key={generateUUID()} item={token} />;
+        })}
+      </>
+    );
+  }
 
   return (
     <View style={styles.column}>

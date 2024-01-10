@@ -8,10 +8,7 @@ import {awaitForScanQr} from '@app/helpers/await-for-scan-qr';
 import {LinkType, parseDeepLink} from '@app/helpers/parse-deep-link';
 import {useTypedNavigation} from '@app/hooks';
 import {Contact} from '@app/models/contact';
-import {
-  AddressBookParamList,
-  AddressBookStackRoutes,
-} from '@app/screens/HomeStack/AddressStack';
+import {AddressBookParamList, AddressBookStackRoutes} from '@app/route-types';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {showUnrecognizedDataAttention} from '@app/utils';
 

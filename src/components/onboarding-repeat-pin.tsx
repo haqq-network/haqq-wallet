@@ -11,7 +11,7 @@ import {I18N, getText} from '@app/i18n';
 import {
   OnboardingStackParamList,
   OnboardingStackRoutes,
-} from '@app/screens/WelcomeStack/OnboardingStack';
+} from '@app/route-types';
 import {vibrate} from '@app/services/haptic';
 
 type OnboardingRepeatPinProps = {

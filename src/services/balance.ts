@@ -1,9 +1,12 @@
 import Decimal from 'decimal.js';
 import {BigNumber, BigNumberish} from 'ethers';
+import {makeAutoObservable} from 'mobx';
 
 import {cleanNumber} from '@app/helpers/clean-number';
+import {ExchangeRates} from '@app/services/exchange-rates';
 import {
   BalanceConstructor,
+  Fiat,
   HexNumber,
   IBalance,
   ISerializable,
@@ -14,20 +17,22 @@ import {
   NUM_PRECISION,
   WEI_PRECISION,
 } from '@app/variables/common';
+
 const zeroBN = new Decimal(0);
 
 export class Balance implements IBalance, ISerializable {
   static readonly Empty = new Balance(zeroBN);
+  public originalValue: BalanceConstructor;
   private bnRaw = zeroBN;
   private precission: number;
   private symbol: string;
-  public originalValue: BalanceConstructor;
 
   constructor(
     balance: BalanceConstructor,
     precission = WEI_PRECISION,
     symbol = CURRENCY_NAME,
   ) {
+    makeAutoObservable(this);
     this.originalValue = balance;
     this.precission = precission;
     this.symbol = symbol;
@@ -76,6 +81,26 @@ export class Balance implements IBalance, ISerializable {
   }
 
   /**
+   * Is current Balance instance is Islamic Coin
+   */
+  get isIslamic() {
+    return this.symbol === CURRENCY_NAME;
+  }
+
+  static fromJsonString = (obj: string | Balance) => {
+    const serializedValue: {
+      value: HexNumber;
+      precision: number;
+      symbol: string;
+    } = JSON.parse(String(obj));
+    return new Balance(
+      serializedValue.value,
+      serializedValue.precision,
+      serializedValue.symbol,
+    );
+  };
+
+  /**
    * Convert balance to a long integer
    */
   toNumber = () => {
@@ -109,6 +134,14 @@ export class Balance implements IBalance, ISerializable {
     fixed = NUM_PRECISION,
     precission: number = this.precission,
   ) => {
+    if (this.symbol === '$') {
+      const floatString = this.toFloatString(fixed, precission);
+      const isNegative = floatString.startsWith('-');
+      if (isNegative) {
+        return `- ${this.symbol}${floatString.replace('-', '')}`;
+      }
+      return `${this.symbol}` + this.toFloatString(fixed, precission);
+    }
     return this.toFloatString(fixed, precission) + ` ${this.symbol}`;
   };
 
@@ -198,26 +231,16 @@ export class Balance implements IBalance, ISerializable {
     return new Balance(result, this.precission, this.symbol);
   };
 
-  private getBnRaw = (
-    value: BalanceConstructor | undefined | null,
-  ): Decimal | null => {
-    if (!value) {
-      return null;
-    }
-
-    if (value instanceof Balance) {
-      return value.bnRaw;
-    } else {
-      return new Balance(value, this.precission, this.symbol).bnRaw;
-    }
-  };
-
   toEther = () => this.toFloat();
+
   toEtherString = () => this.toBalanceString();
+
   toWei = () => this.toNumber();
+
   toWeiString = () => {
     return this.toWei() + ` a${this.symbol}`;
   };
+
   toBigNumberish = (): BigNumberish => {
     return BigNumber.from(this.toHex());
   };
@@ -229,19 +252,6 @@ export class Balance implements IBalance, ISerializable {
       symbol: this.symbol,
     };
     return JSON.stringify(serializedValue);
-  };
-
-  static fromJsonString = (obj: string | Balance) => {
-    const serializedValue: {
-      value: HexNumber;
-      precision: number;
-      symbol: string;
-    } = JSON.parse(String(obj));
-    return new Balance(
-      serializedValue.value,
-      serializedValue.precision,
-      serializedValue.symbol,
-    );
   };
 
   /**
@@ -258,9 +268,37 @@ export class Balance implements IBalance, ISerializable {
   };
 
   /**
-   * Is current Balance instance is Islamic Coin
+   * Get current symbol
    */
-  get isIslamic() {
-    return this.symbol === CURRENCY_NAME;
+  get currency() {
+    return this.symbol;
   }
+
+  /**
+   * Convert balance to fiat currency
+   */
+  toFiat = (type: Fiat) => {
+    switch (type) {
+      case 'USD': {
+        return ExchangeRates.convert(this, type);
+      }
+      default: {
+        return Balance.Empty;
+      }
+    }
+  };
+
+  private getBnRaw = (
+    value: BalanceConstructor | undefined | null,
+  ): Decimal | null => {
+    if (!value) {
+      return null;
+    }
+
+    if (value instanceof Balance) {
+      return value.bnRaw;
+    } else {
+      return new Balance(value, this.precission, this.symbol).bnRaw;
+    }
+  };
 }

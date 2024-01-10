@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
+import {autorun} from 'mobx';
 import {observer} from 'mobx-react';
 
 import {StakingInfo} from '@app/components/staking-info';
@@ -20,10 +21,7 @@ import {
   StakingMetadataType,
 } from '@app/models/staking-metadata';
 import {Wallet} from '@app/models/wallet';
-import {
-  HomeEarnStackParamList,
-  HomeEarnStackRoutes,
-} from '@app/screens/HomeStack/HomeEarnStack';
+import {HomeEarnStackParamList, HomeEarnStackRoutes} from '@app/route-types';
 import {sendNotification} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {ModalType, WalletType} from '@app/types';
@@ -59,11 +57,9 @@ export const StakingInfoScreen = observer(() => {
   }, [rewards]);
 
   useEffect(() => {
-    const r = StakingMetadata.getAllByValidator(operator_address);
+    const data = StakingMetadata.getAllByValidator(operator_address);
 
-    const subscription = () => {
-      const data = r.snapshot();
-
+    const disposer = autorun(() => {
       setRewards(data.filter(row => row.type === StakingMetadataType.reward));
       setDelegated(
         data.filter(row => row.type === StakingMetadataType.delegation),
@@ -71,11 +67,10 @@ export const StakingInfoScreen = observer(() => {
       setUndelegated(
         data.filter(row => row.type === StakingMetadataType.undelegation),
       );
-    };
+    });
 
-    r.addListener(subscription);
     return () => {
-      r.removeListener(subscription);
+      disposer();
     };
   }, [operator_address]);
 
@@ -189,7 +184,10 @@ export const StakingInfoScreen = observer(() => {
 
   const onUnDelegate = useCallback(async () => {
     const delegations = new Set(
-      StakingMetadata.getDelegationsForValidator(operator_address)
+      StakingMetadata.getAllByTypeForValidator(
+        operator_address,
+        StakingMetadataType.delegation,
+      )
         .filter(v => v.amount >= minAmount.toFloat())
         .map(v => v.delegator),
     );

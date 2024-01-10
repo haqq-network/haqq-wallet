@@ -8,10 +8,7 @@ import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {useTypedNavigation} from '@app/hooks';
 import {News} from '@app/models/news';
 import {VariablesBool} from '@app/models/variables-bool';
-import {
-  NewsStackParamList,
-  NewsStackRoutes,
-} from '@app/screens/HomeStack/HomeNewsStack';
+import {NewsStackParamList, NewsStackRoutes} from '@app/route-types';
 import {AdjustEvents} from '@app/types';
 
 const NEWS_ITEMS_PAGE_LIMIT = 15;

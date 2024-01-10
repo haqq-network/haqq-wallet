@@ -1,5 +1,6 @@
 import React, {memo} from 'react';
 
+import {FOR_DETOX} from '@env';
 import {
   NativeStackNavigationOptions,
   createNativeStackNavigator,
@@ -7,53 +8,16 @@ import {
 
 import {popupScreenOptions} from '@app/helpers';
 import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
+import {WelcomeStackParamList, WelcomeStackRoutes} from '@app/route-types';
 import {basicScreenOptions} from '@app/screens';
+import {DeviceStack} from '@app/screens/DeviceStack';
+import {inAppBrowserOptions} from '@app/screens/HomeStack';
 import {NewsDetailScreen} from '@app/screens/HomeStack/HomeNewsStack/news-detail';
+import {InAppBrowserScreen} from '@app/screens/HomeStack/in-app-browser';
 import {WelcomeScreen} from '@app/screens/welcome';
 import {WelcomeNewsScreen} from '@app/screens/welcome-news';
 import {SignInStack} from '@app/screens/WelcomeStack/SignInStack';
-import {
-  SignUpStack,
-  SignUpStackParamList,
-  SignUpStackRoutes,
-} from '@app/screens/WelcomeStack/SignUpStack';
-import {AdjustEvents} from '@app/types';
-
-import {DeviceStack} from '../DeviceStack';
-import {
-  HomeStackParamList,
-  HomeStackRoutes,
-  inAppBrowserOptions,
-} from '../HomeStack';
-import {InAppBrowserScreen} from '../HomeStack/in-app-browser';
-
-export enum WelcomeStackRoutes {
-  Welcome = 'welcome',
-  WelcomeNews = 'welcomeNews',
-  SignUp = 'signup',
-  Device = 'device',
-  SignIn = 'signin',
-  NewsDetail = 'newsDetail',
-  InAppBrowser = 'inAppBrowser',
-}
-
-export type WelcomeStackParamList = {
-  [WelcomeStackRoutes.Welcome]: undefined;
-  [WelcomeStackRoutes.WelcomeNews]: undefined;
-  [WelcomeStackRoutes.SignUp]?: {
-    screen: SignUpStackRoutes.SignupStoreWallet;
-    params: SignUpStackParamList[SignUpStackRoutes.SignupStoreWallet];
-  };
-  [WelcomeStackRoutes.Device]: undefined;
-  [WelcomeStackRoutes.SignIn]: undefined;
-  [WelcomeStackRoutes.NewsDetail]: {
-    id: string;
-    openEvent: AdjustEvents;
-    linkEvent: AdjustEvents;
-    scrollEvent: AdjustEvents;
-  };
-  [WelcomeStackRoutes.InAppBrowser]: HomeStackParamList[HomeStackRoutes.InAppBrowser];
-};
+import {SignUpStack} from '@app/screens/WelcomeStack/SignUpStack';
 
 const Stack = createNativeStackNavigator<WelcomeStackParamList>();
 
@@ -77,7 +41,10 @@ const WelcomeStack = memo(({initialRouteName}: Props) => {
   return (
     <Stack.Navigator
       initialRouteName={initialRouteName}
-      screenOptions={basicScreenOptions}>
+      screenOptions={{
+        ...basicScreenOptions,
+        animation: FOR_DETOX ? 'none' : 'default',
+      }}>
       <Stack.Screen
         component={themeUpdaterHOC(WelcomeScreen)}
         name={WelcomeStackRoutes.Welcome}

@@ -6,7 +6,7 @@ module.exports = {
       config: 'e2e/jest.config.js',
     },
     jest: {
-      setupTimeout: 120000,
+      setupTimeout: 600000,
     },
   },
   apps: {
@@ -33,7 +33,7 @@ module.exports = {
       type: 'android.apk',
       binaryPath: 'android/app/build/outputs/apk/release/app-release.apk',
       build:
-        'cd android && FOR_DETOX=true ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release',
+        'cd android && FOR_DETOX=true ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release -PHAQQ_UPLOAD_STORE_FILE="$HAQQ_UPLOAD_STORE_FILE" -PHAQQ_UPLOAD_STORE_PASSWORD="$HAQQ_UPLOAD_STORE_PASSWORD" -PHAQQ_UPLOAD_KEY_ALIAS="$HAQQ_UPLOAD_KEY_ALIAS" -PHAQQ_UPLOAD_KEY_PASSWORD="$HAQQ_UPLOAD_KEY_PASSWORD"',
     },
   },
   devices: {
@@ -54,6 +54,8 @@ module.exports = {
       device: {
         avdName: 'HAQQ_e2e',
       },
+      forceAdbInstall: true,
+      headless: true
     },
   },
   configurations: {

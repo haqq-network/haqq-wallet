@@ -1,6 +1,6 @@
 import {SessionTypes} from '@walletconnect/types';
 
-import {RootStackParamList} from '@app/types';
+import {Link, RootStackParamList} from '@app/types';
 
 export type WalletConnectNamespace = Omit<SessionTypes.Namespace, 'accounts'>;
 
@@ -38,4 +38,7 @@ export interface RemoteConfigTypes extends RemoteConfigBalanceTypes {
   sss_generate_shares_url: string;
   sss_metadata_url: string;
   keystone_tutorial_url: string;
+  sss_custom: string | undefined;
+  sss_custom_url: string | undefined;
+  web3_browser_bookmarks: Omit<Link, 'subtitle' | 'id'>[];
 }

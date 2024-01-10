@@ -10,14 +10,12 @@ import {getMetadataValueWrapped} from '@app/helpers/wrappers/get-metadata-value'
 import {useTypedNavigation} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {ErrorHandler} from '@app/models/error-handler';
-import {
-  SignUpStackParamList,
-  SignUpStackRoutes,
-} from '@app/screens/WelcomeStack/SignUpStack';
+import {SignUpStackParamList, SignUpStackRoutes} from '@app/route-types';
 import {
   Creds,
   SssProviders,
   onLoginApple,
+  onLoginCustom,
   onLoginGoogle,
 } from '@app/services/provider-sss';
 import {RemoteConfig} from '@app/services/remote-config';
@@ -36,6 +34,9 @@ export const SignupNetworksScreen = memo(() => {
               break;
             case SssProviders.google:
               creds = await onLoginGoogle();
+              break;
+            case SssProviders.custom:
+              creds = await onLoginCustom();
               break;
           }
         } catch (err) {
@@ -133,6 +134,7 @@ export const SignupNetworksScreen = memo(() => {
       onLoginLaterPress={onLoginLaterPress}
       isAppleSupported={app.isAppleSigninSupported}
       isGoogleSupported={app.isGoogleSigninSupported}
+      isCustomSupported={app.isCustomSigninSupported}
     />
   );
 });

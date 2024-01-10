@@ -10,6 +10,7 @@ export type ModalName = Extract<keyof Modals, string>;
 
 class ModalStore {
   modals: ModalState[] = [];
+
   constructor() {
     makeAutoObservable(this);
   }

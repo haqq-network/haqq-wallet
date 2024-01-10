@@ -4,6 +4,11 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {hideBack, hideHeader, popupScreenOptions} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
+import {
+  LedgerStackParamList,
+  LedgerStackRoutes,
+  OnboardingStackRoutes,
+} from '@app/route-types';
 import {LedgerAccountsScreen} from '@app/screens/DeviceStack/LedgerStack/ledger-accounts';
 import {LedgerAgreementScreen} from '@app/screens/DeviceStack/LedgerStack/ledger-agreement';
 import {LedgerBluetoothScreen} from '@app/screens/DeviceStack/LedgerStack/ledger-bluetooth';
@@ -11,41 +16,8 @@ import {LedgerFinishScreen} from '@app/screens/DeviceStack/LedgerStack/ledger-fi
 import {LedgerScanScreen} from '@app/screens/DeviceStack/LedgerStack/ledger-scan';
 import {LedgerStoreWalletScreen} from '@app/screens/DeviceStack/LedgerStack/ledger-store-wallet';
 import {LedgerVerifyScreen} from '@app/screens/DeviceStack/LedgerStack/ledger-verify';
-import {
-  WelcomeStackParamList,
-  WelcomeStackRoutes,
-} from '@app/screens/WelcomeStack';
-import {
-  OnboardingStack,
-  OnboardingStackRoutes,
-} from '@app/screens/WelcomeStack/OnboardingStack';
-import {LedgerWalletInitialData, ScreenOptionType} from '@app/types';
-
-export enum LedgerStackRoutes {
-  LedgerAgreement = 'ledgerAgreement',
-  LedgerBluetooth = 'ledgerBluetooth',
-  LedgerScan = 'ledgerScan',
-  LedgerAccounts = 'ledgerAccounts',
-  LedgerVerify = 'ledgerVerify',
-  OnboardingSetupPin = 'onboardingSetupPin',
-  LedgerStoreWallet = 'ledgerStoreWallet',
-  LedgerFinish = 'ledgerFinish',
-}
-
-export type LedgerStackParamList = WelcomeStackParamList & {
-  [LedgerStackRoutes.LedgerAgreement]: WelcomeStackParamList[WelcomeStackRoutes.Device];
-  [LedgerStackRoutes.LedgerBluetooth]: undefined;
-  [LedgerStackRoutes.LedgerScan]: undefined;
-  [LedgerStackRoutes.LedgerAccounts]: {deviceId: string; deviceName: string};
-  [LedgerStackRoutes.LedgerVerify]: LedgerWalletInitialData & {
-    nextScreen:
-      | LedgerStackRoutes.LedgerStoreWallet
-      | LedgerStackRoutes.OnboardingSetupPin;
-  };
-  [LedgerStackRoutes.OnboardingSetupPin]: LedgerWalletInitialData;
-  [LedgerStackRoutes.LedgerStoreWallet]: LedgerWalletInitialData;
-  [LedgerStackRoutes.LedgerFinish]: undefined;
-};
+import {OnboardingStack} from '@app/screens/WelcomeStack/OnboardingStack';
+import {ScreenOptionType} from '@app/types';
 
 const Stack = createNativeStackNavigator<LedgerStackParamList>();
 const title = getText(I18N.ledgerConnect);

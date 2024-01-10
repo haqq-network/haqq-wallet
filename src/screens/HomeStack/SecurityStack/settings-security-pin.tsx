@@ -9,7 +9,7 @@ import {getProviderInstanceForWallet, showModal} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {SecurityStackParamList} from '@app/screens/HomeStack/SecurityStack';
+import {SecurityStackParamList} from '@app/route-types';
 import {sendNotification} from '@app/services';
 import {ModalType} from '@app/types';
 

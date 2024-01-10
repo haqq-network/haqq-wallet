@@ -7,14 +7,12 @@ import {Events} from '@app/events';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {awaitForRealm} from '@app/helpers/await-for-realm';
+import {WalletRealmObject} from '@app/models/realm-object-for-migration';
 import {storage} from '@app/services/mmkv';
 import {generateFlatColors, generateGradientColors, makeID} from '@app/utils';
 import {
   CARD_CIRCLE_TOTAL,
-  CARD_DEFAULT_STYLE,
   CARD_RHOMBUS_TOTAL,
-  DEFAULT_CARD_BACKGROUND,
-  DEFAULT_CARD_PATTERN,
   FLAT_PRESETS,
   GRADIENT_PRESETS,
   STORE_REHYDRATION_TIMEOUT_MS,
@@ -79,34 +77,6 @@ function getMockWallets(): Wallet[] {
     position: index,
     subscription: null,
   }));
-}
-
-export class WalletRealmObject extends Realm.Object {
-  static schema = {
-    name: 'Wallet',
-    properties: {
-      address: 'string',
-      name: {type: 'string', default: ''},
-      data: {type: 'string', default: ''},
-      mnemonicSaved: {type: 'bool', default: false},
-      socialLinkEnabled: {type: 'bool', default: false},
-      cardStyle: {type: 'string', default: WalletCardStyle.flat},
-      isHidden: {type: 'bool', default: false},
-      isMain: {type: 'bool', default: false},
-      colorFrom: {type: 'string', default: DEFAULT_CARD_BACKGROUND},
-      colorTo: {type: 'string', default: DEFAULT_CARD_BACKGROUND},
-      colorPattern: {type: 'string', default: DEFAULT_CARD_PATTERN},
-      pattern: {type: 'string', default: CARD_DEFAULT_STYLE},
-      type: {type: 'string', default: WalletType.hot},
-      path: 'string?',
-      deviceId: 'string?',
-      rootAddress: 'string?',
-      subscription: 'string?',
-      version: 'int',
-      accountId: 'string?',
-    },
-    primaryKey: 'address',
-  };
 }
 
 class WalletStore implements MobXStoreFromRealm {

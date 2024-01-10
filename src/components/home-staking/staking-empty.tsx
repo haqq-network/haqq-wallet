@@ -24,7 +24,7 @@ export const StakingEmpty = ({availableSum}: StakingEmptyProps) => {
         </View>
         <Spacer height={20} />
         <Text t8 center i18n={I18N.sumBlockAvailable} />
-        <Text t3 center color={Color.textGreen1}>
+        <Text testID="staking-availableSum" t3 center color={Color.textGreen1}>
           {availableSum.toBalanceString()}
         </Text>
       </View>

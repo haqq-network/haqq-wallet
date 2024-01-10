@@ -10,10 +10,7 @@ import {useTypedNavigation} from '@app/hooks';
 import {News} from '@app/models/news';
 import {RssNews} from '@app/models/rss-news';
 import {VariablesBool} from '@app/models/variables-bool';
-import {
-  NewsStackParamList,
-  NewsStackRoutes,
-} from '@app/screens/HomeStack/HomeNewsStack';
+import {NewsStackParamList, NewsStackRoutes} from '@app/route-types';
 import {AdjustEvents, NewsStatus} from '@app/types';
 import {openInAppBrowser} from '@app/utils';
 
@@ -42,6 +39,7 @@ export const HomeNewsScreen = memo(() => {
   );
 
   useEffect(() => {
+    onUpdatesSync();
     onTrackEvent(AdjustEvents.newsOpen);
   }, []);
 

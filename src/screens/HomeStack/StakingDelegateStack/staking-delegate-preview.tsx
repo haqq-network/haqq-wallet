@@ -15,7 +15,7 @@ import {Wallet} from '@app/models/wallet';
 import {
   StakingDelegateStackParamList,
   StakingDelegateStackRoutes,
-} from '@app/screens/HomeStack/StakingDelegateStack';
+} from '@app/route-types';
 import {AdjustEvents, WalletType} from '@app/types';
 import {makeID} from '@app/utils';
 
@@ -31,7 +31,7 @@ export const StakingDelegatePreviewScreen = observer(() => {
 
   const [unboundingTime, setUnboundingTime] = useState(604800000);
   const [disabled, setDisabled] = useState(false);
-  const {error, errorDetails, setError} = useError();
+  const showError = useError();
 
   useEffect(() => {
     cosmos.getStakingParams().then(resp => {
@@ -90,12 +90,13 @@ export const StakingDelegatePreviewScreen = observer(() => {
             case 'ledger_locked':
               break;
             default:
+              const errorDetails = errMessage || e.message;
               Logger.captureException(e, 'staking-delegate', {
                 id: errorId,
-                message: errMessage || e.message,
+                message: errorDetails,
               });
 
-              setError(errorId, errMessage || e.message);
+              showError(errorId, errorDetails);
           }
         }
       } finally {
@@ -118,8 +119,6 @@ export const StakingDelegatePreviewScreen = observer(() => {
       validator={validator}
       disabled={disabled}
       onSend={onDone}
-      error={error}
-      errorDetails={errorDetails}
     />
   );
 });

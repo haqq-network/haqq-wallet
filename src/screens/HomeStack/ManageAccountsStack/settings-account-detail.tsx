@@ -11,16 +11,15 @@ import {useTypedNavigation} from '@app/hooks/use-typed-navigation';
 import {useTypedRoute} from '@app/hooks/use-typed-route';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {HomeStackRoutes} from '@app/screens/HomeStack';
 import {
+  HomeStackRoutes,
   ManageAccountsStackParamList,
   ManageAccountsStackRoutes,
-} from '@app/screens/HomeStack/ManageAccountsStack';
-import {SettingsStackRoutes} from '@app/screens/HomeStack/SettingsStack';
+  SettingsStackRoutes,
+} from '@app/route-types';
 import {sendNotification} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {ModalType} from '@app/types';
-import {AdjustEvents} from '@app/types';
+import {AdjustEvents, ModalType} from '@app/types';
 
 export const SettingsAccountDetailScreen = observer(() => {
   const navigation = useTypedNavigation<ManageAccountsStackParamList>();

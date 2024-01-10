@@ -11,10 +11,7 @@ import {getMetadataValueWrapped} from '@app/helpers/wrappers/get-metadata-value'
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N, getText} from '@app/i18n';
-import {
-  SignUpStackParamList,
-  SignUpStackRoutes,
-} from '@app/screens/WelcomeStack/SignUpStack';
+import {SignUpStackParamList, SignUpStackRoutes} from '@app/route-types';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {RemoteConfig} from '@app/services/remote-config';
 import {PIN_BANNED_ATTEMPTS} from '@app/variables/common';

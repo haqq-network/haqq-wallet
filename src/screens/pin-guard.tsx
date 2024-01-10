@@ -39,6 +39,7 @@ export const PinGuardScreen = memo(
         pinRef.current?.reset();
         setLoggedIn(true);
       } catch (error) {
+        Logger.error(error);
         app.failureEnter();
         if (app.canEnter) {
           pinRef.current?.reset(

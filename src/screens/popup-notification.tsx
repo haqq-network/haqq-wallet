@@ -7,7 +7,7 @@ import {
 import {onBannerNotificationsSnooze} from '@app/event-actions/on-banner-notifications-snooze';
 import {onBannerNotificationsTurnOn} from '@app/event-actions/on-banner-notifications-turn-on';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
+import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 
 export const PopupNotificationScreen = memo(() => {
   const route = useTypedRoute<

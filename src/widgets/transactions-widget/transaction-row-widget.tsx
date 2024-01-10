@@ -13,9 +13,9 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {Balance} from '@app/services/balance';
 import {
   ContractNameMap,
   OnTransactionRowPress,
@@ -147,12 +147,22 @@ export const TransactionRowWidget = ({
           short
         />
         {!!item.value && (
-          <Text
-            t11
-            color={DisplayMapItem.sumTextColor}
-            i18n={DisplayMapItem.amountText}
-            i18params={{value: cleanNumber(item.value)}}
-          />
+          <View style={styles.amountWrapper}>
+            <Text
+              t14
+              color={DisplayMapItem.sumTextColor}
+              i18n={DisplayMapItem.amountText}
+              i18params={{value: new Balance(item.value).toBalanceString()}}
+            />
+            <Text
+              t14
+              color={Color.textBase2}
+              i18n={DisplayMapItem.amountText}
+              i18params={{
+                value: new Balance(item.value).toFiat('USD').toBalanceString(),
+              }}
+            />
+          </View>
         )}
       </View>
     </TouchableWithoutFeedback>
@@ -160,6 +170,7 @@ export const TransactionRowWidget = ({
 };
 
 const styles = createTheme({
+  amountWrapper: {flexDirection: 'column', alignItems: 'flex-end'},
   walletWrapper: {flexDirection: 'row', alignItems: 'center', marginTop: 4},
   removePadding: {padding: 0},
   logoIcon: {

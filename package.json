@@ -1,6 +1,6 @@
 {
   "name": "haqq",
-  "version": "1.5.2",
+  "version": "1.6.0",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -19,7 +19,7 @@
     "detox:ios:test": "detox test --configuration ios.sim.release --loglevel warn --cleanup --record-videos failing --take-screenshots failing --retries 2",
     "detox:ios": "yarn detox:ios:build && yarn detox:ios:test",
     "detox:android:build": "detox build --configuration android.sim.release",
-    "detox:android:test": "detox test --configuration android.sim.release --loglevel warn --cleanup --record-videos failing --take-screenshots failing --retries 2",
+    "detox:android:test": "detox test --configuration android.sim.release --loglevel warn --cleanup --record-videos failing --take-screenshots failing --retries 2 --headless",
     "detox:android": "yarn detox:android:build && yarn detox:android:test",
     "clean-ios-app": "sh ./scripts/clean-ios-app.sh",
     "clean-android-app": "sh ./scripts/clean-android-app.sh",
@@ -119,7 +119,7 @@
     "react-native-linear-gradient": "2.7.3",
     "react-native-markdown-display": "7.0.0-alpha.2",
     "react-native-markdown-package": "1.8.2",
-    "react-native-mmkv": "2.10.2",
+    "react-native-mmkv": "2.11.0",
     "react-native-network-info": "5.2.1",
     "react-native-os": "https://github.com/aprock/react-native-os#938676ebd92d58b8928168a7e78cbe216838ed17",
     "react-native-permissions": "^3.10.0",
@@ -137,6 +137,7 @@
     "react-native-splash-screen": "3.3.0",
     "react-native-svg": "13.10.0",
     "react-native-system-navigation-bar": "2.6.1",
+    "react-native-toast-message": "2.2.0",
     "react-native-touch-id": "4.4.1",
     "react-native-webview": "13.6.0",
     "react-timer-mixin": "0.13.4",

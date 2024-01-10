@@ -73,6 +73,7 @@ export const StakingDelegateFinish = ({
         variant={ButtonVariant.contained}
         i18n={I18N.stakingDelegateFinishDone}
         onPress={onDone}
+        testID="staking-finish"
       />
     </PopupContainer>
   );

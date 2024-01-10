@@ -36,9 +36,6 @@ export class EthNetwork {
   static chainId: number = getDefaultChainId();
   static explorer: string | undefined;
 
-  private static getBalanceCacheKey = (address: string) =>
-    BALANCE_CACHE_KEY + address.toLowerCase();
-
   static async populateTransaction(
     from: string,
     to: string,
@@ -179,6 +176,9 @@ export class EthNetwork {
       estimateGas,
     };
   }
+
+  private static getBalanceCacheKey = (address: string) =>
+    BALANCE_CACHE_KEY + address.toLowerCase();
 
   async transferTransaction(
     transport: ProviderInterface,

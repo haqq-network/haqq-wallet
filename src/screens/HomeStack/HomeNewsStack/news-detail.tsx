@@ -5,10 +5,7 @@ import {Loading} from '@app/components/ui';
 import {trackEvent} from '@app/helpers/track-event';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {News} from '@app/models/news';
-import {
-  WelcomeStackParamList,
-  WelcomeStackRoutes,
-} from '@app/screens/WelcomeStack';
+import {WelcomeStackParamList, WelcomeStackRoutes} from '@app/route-types';
 
 export const NewsDetailScreen = memo(() => {
   const navigation = useTypedNavigation<WelcomeStackParamList>();

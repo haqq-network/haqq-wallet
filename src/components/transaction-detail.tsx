@@ -7,7 +7,7 @@ import {View} from 'react-native';
 import {Color} from '@app/colors';
 import {BottomSheet} from '@app/components/bottom-sheet';
 import {TransactionStatus} from '@app/components/transaction-status/transaction-status';
-import {DataContent, Icon, IconButton, Text} from '@app/components/ui';
+import {DataContent, Icon, IconButton, Spacer, Text} from '@app/components/ui';
 import {cleanNumber, createTheme} from '@app/helpers';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N} from '@app/i18n';
@@ -102,7 +102,7 @@ export const TransactionDetail = ({
       onClose={onCloseBottomSheet}
       i18nTitle={title}
       closeDistance={closeDistance}>
-      {!total && (
+      {total.length > 1 && (
         <>
           <Text
             i18n={I18N.transactionDetailTotalAmount}
@@ -116,6 +116,15 @@ export const TransactionDetail = ({
             i18n={I18N.transactionConfirmationAmount}
             i18params={{amount: total}}
           />
+          <Spacer height={2} />
+          <Text
+            t13
+            color={Color.textBase2}
+            children={new Balance(total.replaceAll(' ', ''))
+              .toFiat('USD')
+              .toBalanceString()}
+          />
+          <Spacer height={20} />
         </>
       )}
       <View style={styles.infoContainer}>
@@ -226,7 +235,6 @@ export const TransactionDetail = ({
 
 const styles = createTheme({
   sum: {
-    marginBottom: 20,
     fontWeight: '700',
     color: Color.textRed1,
   },
