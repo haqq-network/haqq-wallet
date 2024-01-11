@@ -40,6 +40,10 @@ export interface HomeBannerProps {
 export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
   const [loading, setLoading] = useState(false);
   const [isVisible, setVisible] = useState(true);
+  const showCloseButton = useMemo(
+    () => banner.closeEvent && banner.closeEvent !== BannerButtonEvent.none,
+    [banner],
+  );
 
   const onPressClose = useCallback(async () => {
     setVisible(false);
@@ -128,7 +132,7 @@ export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
             ))}
           </Inline>
         )}
-        {banner.closeEvent && (
+        {showCloseButton && (
           <IconButton style={styles.closeButton} onPress={onPressClose}>
             <Icon
               name="close_circle"
