@@ -3,6 +3,7 @@ import {isAfter} from 'date-fns';
 
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
+import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {Wallet} from '@app/models/wallet';
 import {Cloud} from '@app/services/cloud';
 import {WalletType} from '@app/types';
@@ -20,9 +21,9 @@ export async function onWalletSssCheck(snoozeBackup: Date) {
         .map(w => w.accountId) as string[],
     );
 
-    const storage = new Cloud();
     for (const accountId of accounts) {
       if (cloudAvailable) {
+        const storage = await getProviderStorage(accountId);
         const provider = new ProviderSSSReactNative({
           storage,
           account: accountId,
