@@ -1,6 +1,6 @@
 import React, {memo, useCallback, useMemo, useRef, useState} from 'react';
 
-import {ProviderKeystoneReactNative} from '@haqq/provider-keystone-react-native/src';
+import {ProviderKeystoneReactNative} from '@haqq/provider-keystone-react-native';
 
 import {KeystoneAccounts} from '@app/components/keystone/keystone-accounts';
 import {app} from '@app/contexts';
