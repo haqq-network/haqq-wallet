@@ -44,7 +44,7 @@ export const AccountInfoScreen = observer(() => {
     Token.fetchTokens();
     const names = transactions
       .filter(({input}) => input.includes('0x') && input.length > 2)
-      .map(item => item.to);
+      .map(item => item.contractAddress as string);
     const uniqueNames = [...new Set(names)];
     if (uniqueNames.length > 0) {
       const info = await Indexer.instance.getContractNames(uniqueNames);

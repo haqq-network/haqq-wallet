@@ -67,7 +67,7 @@ export const TransactionRowWidget = ({
   contractNameMap,
 }: Props) => {
   const adressList = Wallet.addressList();
-  const contractName = useMemo(
+  const contract = useMemo(
     () => contractNameMap[item.to],
     [contractNameMap, item.to],
   );
@@ -90,8 +90,8 @@ export const TransactionRowWidget = ({
     return DisplayMap[item.source];
   }, [item.source, isSend]);
   const handlePress = useCallback(() => {
-    onPress(item.hash, {contractName});
-  }, [item.hash, onPress, contractName]);
+    onPress(item.hash, {contractName: contract.name});
+  }, [item.hash, onPress, contract]);
   const currentWallet = useMemo(() => {
     return wallets.find(
       wallet =>
