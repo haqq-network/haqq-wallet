@@ -8,9 +8,8 @@ import {
   awaitForScanQr,
 } from '@app/helpers/await-for-scan-qr';
 import {useTypedNavigation} from '@app/hooks';
+import {KeystoneStackRoutes} from '@app/route-types';
 import {SystemDialog} from '@app/services/system-dialog';
-
-import {KeystoneStackRoutes} from '.';
 
 const logger = Logger.create('KeystoneCameraPermissionScreen');
 

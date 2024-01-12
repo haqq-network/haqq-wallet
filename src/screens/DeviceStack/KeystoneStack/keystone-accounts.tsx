@@ -11,12 +11,14 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
-import {SignInStackParamList} from '@app/screens/WelcomeStack/SignInStack';
+import {
+  KeystoneStackParamList,
+  KeystoneStackRoutes,
+  SignInStackParamList,
+} from '@app/route-types';
 import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
 import {ChooseAccountItem, ModalType, WalletType} from '@app/types';
-
-import {KeystoneStackParamList, KeystoneStackRoutes} from '.';
 
 const PAGE_SIZE = 5;
 

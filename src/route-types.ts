@@ -30,8 +30,6 @@ import {
 } from '@app/types';
 import {WalletConnectApproveConnectionEvent} from '@app/types/wallet-connect';
 
-import {KeystoneStackRoutes} from './screens/DeviceStack/KeystoneStack';
-
 export type AnyRouteFromParent =
   | SignInStackRoutes
   | SignUpStackRoutes
@@ -363,7 +361,7 @@ export enum HomeStackRoutes {
   TotalValueInfo = 'totalValueInfo',
   ValueSelector = 'valueSelector',
   BrowserPrivacyPopupStack = 'browserPrivacyPopupStack',
-  Device = 'device',
+  Device = '_device',
 }
 
 export type HomeStackParamList = {
@@ -771,4 +769,34 @@ export type WalletConnectApprovalStackParamList = {
   [WalletConnectApprovalStackRoutes.WalletConnectApproval]: {
     event: WalletConnectApproveConnectionEvent;
   };
+};
+
+export enum KeystoneStackRoutes {
+  KeystoneAccounts = 'KeystoneAccounts',
+  KeystoneConnectionSteps = 'KeystoneConnectionSteps',
+  KeystoneFinish = 'KeystoneFinish',
+  KeystoneCameraPermission = 'KeystoneCameraPermission',
+  OnboardingSetupPin = 'OnboardingSetupPin',
+}
+
+export type KeystoneStackParamList = WelcomeStackParamList & {
+  [KeystoneStackRoutes.KeystoneConnectionSteps]: WelcomeStackParamList[WelcomeStackRoutes.Device];
+  [KeystoneStackRoutes.KeystoneCameraPermission]: undefined;
+  [KeystoneStackRoutes.KeystoneAccounts]: {
+    qrCBORHex: string;
+  };
+  [KeystoneStackRoutes.KeystoneFinish]: undefined;
+  [KeystoneStackRoutes.OnboardingSetupPin]: undefined;
+};
+
+export enum DeviceStackRoutes {
+  DeviceSelect = 'DeviceSelect',
+  DeviceKeystone = 'DeviceKeystone',
+  DeviceLedger = 'DeviceLedger',
+}
+
+export type DeviceStackParamList = {
+  DeviceSelect: undefined;
+  DeviceKeystone: undefined;
+  DeviceLedger: undefined;
 };

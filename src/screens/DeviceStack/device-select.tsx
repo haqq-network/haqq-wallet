@@ -2,8 +2,7 @@ import React, {useCallback} from 'react';
 
 import {DeviceSelect} from '@app/components/device-select';
 import {useTypedNavigation} from '@app/hooks';
-
-import {DeviceStackRoutes} from '.';
+import {DeviceStackRoutes} from '@app/route-types';
 
 export const DeviceSelectScreen = () => {
   const navigation = useTypedNavigation();

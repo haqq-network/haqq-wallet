@@ -61,6 +61,17 @@ export const App = () => {
   );
 
   useEffect(() => {
+    const sub = (value: boolean) => {
+      setOnboarded(value);
+    };
+
+    app.addListener(Events.onOnboardedChanged, sub);
+    return () => {
+      app.removeListener(Events.onOnboardedChanged, sub);
+    };
+  }, []);
+
+  useEffect(() => {
     const splashTimer = setTimeout(() => {
       hideModal(ModalType.splash);
     }, SPLASH_TIMEOUT_MS);
@@ -85,9 +96,6 @@ export const App = () => {
       })
       .then(() => {
         setOnboarded(app.onboarded);
-        app.addListener(Events.onOnboardedChanged, value =>
-          setOnboarded(value),
-        );
         awaitForEventDone(Events.onAppLoggedId);
       })
       .then(() => {

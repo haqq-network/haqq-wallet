@@ -9,10 +9,9 @@ import {
   awaitForScanQr,
 } from '@app/helpers/await-for-scan-qr';
 import {useTypedNavigation} from '@app/hooks';
+import {KeystoneStackRoutes} from '@app/route-types';
 import {RemoteConfig} from '@app/services/remote-config';
 import {openInAppBrowser} from '@app/utils';
-
-import {KeystoneStackRoutes} from '.';
 
 const logger = Logger.create('KeystoneConnectionStepsScreen');
 

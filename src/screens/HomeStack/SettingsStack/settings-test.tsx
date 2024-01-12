@@ -201,7 +201,11 @@ const getTestModals = (): TestModals => {
       wallet: wallets[0],
     },
     keystoneQR: {
-      signRequestHex: '',
+      cborHex: '',
+      errorEventName: '',
+      requestID: '',
+      succesEventName: '',
+      urType: '',
     },
     keystoneScanner: {
       eventTaskId: 'test-modal',

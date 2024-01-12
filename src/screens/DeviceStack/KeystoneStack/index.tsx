@@ -5,36 +5,15 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {hideBack, hideHeader, popupScreenOptions} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {
-  WelcomeStackParamList,
-  WelcomeStackRoutes,
-} from '@app/screens/WelcomeStack';
-import {
-  OnboardingStack,
+  KeystoneStackParamList,
+  KeystoneStackRoutes,
   OnboardingStackRoutes,
-} from '@app/screens/WelcomeStack/OnboardingStack';
-
-import {KeystoneAccountsScreen} from './keystone-accounts';
-import {KeystoneCameraPermissionScreen} from './keystone-camera-permission';
-import {KeystoneConnectionStepsScreen} from './keystone-connection-steps';
-import {KeystoneFinishScreen} from './keystone-finish';
-
-export enum KeystoneStackRoutes {
-  KeystoneAccounts = 'KeystoneAccounts',
-  KeystoneConnectionSteps = 'KeystoneConnectionSteps',
-  KeystoneFinish = 'KeystoneFinish',
-  KeystoneCameraPermission = 'KeystoneCameraPermission',
-  OnboardingSetupPin = 'OnboardingSetupPin',
-}
-
-export type KeystoneStackParamList = WelcomeStackParamList & {
-  [KeystoneStackRoutes.KeystoneConnectionSteps]: WelcomeStackParamList[WelcomeStackRoutes.Device];
-  [KeystoneStackRoutes.KeystoneCameraPermission]: undefined;
-  [KeystoneStackRoutes.KeystoneAccounts]: {
-    qrCBORHex: string;
-  };
-  [KeystoneStackRoutes.KeystoneFinish]: undefined;
-  [KeystoneStackRoutes.OnboardingSetupPin]: undefined;
-};
+} from '@app/route-types';
+import {KeystoneAccountsScreen} from '@app/screens/DeviceStack/KeystoneStack/keystone-accounts';
+import {KeystoneCameraPermissionScreen} from '@app/screens/DeviceStack/KeystoneStack/keystone-camera-permission';
+import {KeystoneConnectionStepsScreen} from '@app/screens/DeviceStack/KeystoneStack/keystone-connection-steps';
+import {KeystoneFinishScreen} from '@app/screens/DeviceStack/KeystoneStack/keystone-finish';
+import {OnboardingStack} from '@app/screens/WelcomeStack/OnboardingStack';
 
 const Stack = createNativeStackNavigator<KeystoneStackParamList>();
 const title = getText(I18N.keystoneConnect);

@@ -3,22 +3,10 @@ import React, {memo} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {hideBack, hideHeader, popupScreenOptions} from '@app/helpers';
-
-import {DeviceSelectScreen} from './device-select';
-import {KeystoneStack} from './KeystoneStack';
-import {LedgerStack} from './LedgerStack';
-
-export enum DeviceStackRoutes {
-  DeviceSelect = 'DeviceSelect',
-  DeviceKeystone = 'DeviceKeystone',
-  DeviceLedger = 'DeviceLedger',
-}
-
-export type DeviceStackParamList = {
-  DeviceSelect: undefined;
-  DeviceKeystone: undefined;
-  DeviceLedger: undefined;
-};
+import {DeviceStackParamList, DeviceStackRoutes} from '@app/route-types';
+import {DeviceSelectScreen} from '@app/screens/DeviceStack/device-select';
+import {KeystoneStack} from '@app/screens/DeviceStack/KeystoneStack';
+import {LedgerStack} from '@app/screens/DeviceStack/LedgerStack';
 
 const Stack = createNativeStackNavigator<DeviceStackParamList>();
 
