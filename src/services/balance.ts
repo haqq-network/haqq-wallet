@@ -1,6 +1,5 @@
 import Decimal from 'decimal.js';
 import {BigNumber, BigNumberish} from 'ethers';
-import {makeAutoObservable} from 'mobx';
 
 import {cleanNumber} from '@app/helpers/clean-number';
 import {ExchangeRates} from '@app/services/exchange-rates';
@@ -32,7 +31,6 @@ export class Balance implements IBalance, ISerializable {
     precission = WEI_PRECISION,
     symbol = CURRENCY_NAME,
   ) {
-    makeAutoObservable(this);
     this.originalValue = balance;
     this.precission = precission;
     this.symbol = symbol;
