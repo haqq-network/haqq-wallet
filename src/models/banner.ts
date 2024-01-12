@@ -18,6 +18,7 @@ export enum BannerButtonEvent {
   trackActivityClose = 'trackActivityClose',
   test = 'test',
   empty = '',
+  none = 'none',
 }
 
 export enum BannerType {

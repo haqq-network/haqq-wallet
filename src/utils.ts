@@ -849,7 +849,8 @@ export const generateMockBanner = (): Banner => {
     snoozedUntil: new Date(),
     defaultEvent: BannerButtonEvent.test,
     defaultParams: {banner_id: id, type: 'default event'},
-    closeEvent: BannerButtonEvent.test,
+    closeEvent:
+      Math.random() > 0.5 ? BannerButtonEvent.none : BannerButtonEvent.test,
     closeParams: {banner_id: id, type: 'close event'},
     priority: 1,
   };

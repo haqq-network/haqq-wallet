@@ -45,7 +45,6 @@ import {
   cosmosAddress,
 } from '@haqq/provider-base';
 import Decimal from 'decimal.js';
-import {utils} from 'ethers';
 
 import {AddressUtils} from '@app/helpers/address-utils';
 import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
@@ -312,17 +311,7 @@ export class Cosmos {
     types: Record<string, Array<TypedDataField>>,
     message: Record<string, any>,
   ): Promise<string | undefined> {
-    // @ts-ignore
-    const {EIP712Domain, ...othTypes} = types;
-
-    const domainHash = utils._TypedDataEncoder.hashStruct(
-      'EIP712Domain',
-      {EIP712Domain},
-      domain,
-    );
-    const valuesHash = utils._TypedDataEncoder.from(othTypes).hash(message);
-
-    return await transport.signTypedData(hdPath, domainHash, valuesHash);
+    return await transport.signTypedData(hdPath, {domain, message, types});
   }
 
   async sendMsg(
