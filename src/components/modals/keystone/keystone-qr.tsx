@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {UR, UREncoder} from '@ngraveio/bc-ur';
-import {View, useWindowDimensions} from 'react-native';
+import {View} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 
 import {Color} from '@app/colors';
@@ -14,14 +14,16 @@ import {
   QRScannerTypeEnum,
   awaitForScanQr,
 } from '@app/helpers/await-for-scan-qr';
+import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
+import {useLayout} from '@app/hooks/use-layout';
 import {I18N} from '@app/i18n';
 import {ModalType, Modals} from '@app/types';
 
 type Props = Modals[ModalType.keystoneQR];
 
-const QR_CODE_SIZE = 250;
+const QR_CODE_SIZE_DECREASE_PX = 40;
 const MAX_FRAGMENT_LENGTH_BYTES = 500;
-const QR_CHANGE_INTERVAL_MS = 100;
+const QR_CHANGE_INTERVAL_MS = 250;
 const QR_FILL_COLOR = '#000000';
 const QR_BG_COLOR = '#ffffff';
 
@@ -33,7 +35,8 @@ export const KeystoneQRModal = ({
   succesEventName,
   onClose,
 }: Props) => {
-  const {width} = useWindowDimensions();
+  const [layout, onLayout] = useLayout();
+  const logoSize = useCalculatedDimensionsValue(({width}) => width / 5.86);
 
   const urEncoder = useMemo(
     () =>
@@ -63,12 +66,14 @@ export const KeystoneQRModal = ({
   );
 
   useEffect(() => {
-    const id = setInterval(() => {
-      setCurrentQRCode(urEncoder.nextPart()?.toUpperCase?.());
-    }, QR_CHANGE_INTERVAL_MS);
-    return () => {
-      clearInterval(id);
-    };
+    if (urEncoder?.fragments?.length > 1) {
+      const id = setInterval(() => {
+        setCurrentQRCode(urEncoder.nextPart()?.toUpperCase?.());
+      }, QR_CHANGE_INTERVAL_MS);
+      return () => {
+        clearInterval(id);
+      };
+    }
   }, [urEncoder]);
 
   const onPressGetSignature = useCallback(
@@ -100,7 +105,7 @@ export const KeystoneQRModal = ({
   return (
     <BottomPopupContainer>
       {onCloseModal => (
-        <View style={styles.wrapper}>
+        <View style={styles.wrapper} onLayout={onLayout}>
           <Text
             t9
             center
@@ -111,12 +116,12 @@ export const KeystoneQRModal = ({
           <Spacer height={12} />
           <View style={styles.qrWrapper}>
             <QRCode
-              ecl={'H'}
+              ecl={'L'}
               logo={require('@assets/images/qr-logo.png')}
-              logoSize={width / 5.86}
+              logoSize={logoSize}
               logoBorderRadius={8}
-              value={currentQRCode.toUpperCase()}
-              size={QR_CODE_SIZE}
+              value={currentQRCode}
+              size={layout.width - QR_CODE_SIZE_DECREASE_PX}
               color={QR_FILL_COLOR}
               backgroundColor={QR_BG_COLOR}
             />
@@ -166,5 +171,6 @@ const styles = createTheme({
     backgroundColor: QR_BG_COLOR,
     padding: 6,
     borderRadius: 8,
+    alignSelf: 'center',
   },
 });
