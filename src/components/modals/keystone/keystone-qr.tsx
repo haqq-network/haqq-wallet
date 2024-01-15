@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
-import {UR, UREncoder} from '@ngraveio/bc-ur';
 import {View} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 
@@ -14,6 +13,7 @@ import {
   QRScannerTypeEnum,
   awaitForScanQr,
 } from '@app/helpers/await-for-scan-qr';
+import {KeystoneUrHelper} from '@app/helpers/keystone-ur-helper';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {useLayout} from '@app/hooks/use-layout';
 import {I18N} from '@app/i18n';
@@ -22,7 +22,6 @@ import {ModalType, Modals} from '@app/types';
 type Props = Modals[ModalType.keystoneQR];
 
 const QR_CODE_SIZE_DECREASE_PX = 40;
-const MAX_FRAGMENT_LENGTH_BYTES = 500;
 const QR_CHANGE_INTERVAL_MS = 250;
 const QR_FILL_COLOR = '#000000';
 const QR_BG_COLOR = '#ffffff';
@@ -39,11 +38,7 @@ export const KeystoneQRModal = ({
   const logoSize = useCalculatedDimensionsValue(({width}) => width / 5.86);
 
   const urEncoder = useMemo(
-    () =>
-      new UREncoder(
-        new UR(Buffer.from(cborHex, 'hex'), urType),
-        MAX_FRAGMENT_LENGTH_BYTES,
-      ),
+    () => KeystoneUrHelper.createUrEncoder(cborHex, urType),
     [cborHex, urType],
   );
 

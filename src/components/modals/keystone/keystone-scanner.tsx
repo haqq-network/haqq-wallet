@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
-import {URRegistryDecoder} from '@keystonehq/ur-decoder';
 import _ from 'lodash';
 import {Dimensions, StatusBar, View} from 'react-native';
 import {BarCodeReadEvent} from 'react-native-camera';
@@ -16,6 +15,7 @@ import {
   AwaitForScanQrEvents,
   SCAN_QR_TASK_ID_LENGTH,
 } from '@app/helpers/await-for-scan-qr';
+import {KeystoneUrHelper} from '@app/helpers/keystone-ur-helper';
 import {useTheme} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
@@ -39,7 +39,9 @@ export const KeystoneScannerModal = ({
   eventTaskId,
   onClose,
 }: KeystoneScannerModalProps) => {
-  const [urDecoder, setURDecoder] = useState(new URRegistryDecoder());
+  const [urDecoder, setURDecoder] = useState(
+    KeystoneUrHelper.createUrDecoder(),
+  );
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState('');
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -48,7 +50,7 @@ export const KeystoneScannerModal = ({
 
   const resetUrDecoder = useCallback(() => {
     setProgress(0);
-    setURDecoder(new URRegistryDecoder());
+    setURDecoder(KeystoneUrHelper.createUrDecoder());
   }, []);
 
   const expectedURTypes = useMemo(() => {
