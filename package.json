@@ -36,7 +36,7 @@
     "@haqq/encryption-react-native": "0.0.4",
     "@haqq/provider-base": "0.0.20",
     "@haqq/provider-hot-react-native": "0.0.7",
-    "@haqq/provider-keystone-react-native": "0.0.1",
+    "@haqq/provider-keystone-react-native": "0.0.2",
     "@haqq/provider-ledger-react-native": "0.0.25",
     "@haqq/provider-mnemonic-react-native": "0.0.12",
     "@haqq/provider-sss-react-native": "0.0.12",
