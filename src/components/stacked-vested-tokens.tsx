@@ -20,6 +20,7 @@ export interface StackedVestedTokensProps {
   availableBalance?: Balance;
   unlock: Date;
   onPressInfo(): void;
+  totalBalance?: Balance;
 }
 
 const calculateDistanceToNow = (endDate: Date) => {
@@ -37,6 +38,7 @@ export function StackedVestedTokens({
   vestedBalance = Balance.Empty,
   onPressInfo,
   unlock,
+  totalBalance,
 }: StackedVestedTokensProps) {
   const vestedUnlockDescription = useMemo(() => {
     if (!unlock) {
@@ -78,43 +80,75 @@ export function StackedVestedTokens({
 
   return (
     <View style={styles.container}>
-      <View>
-        <View style={styles.row}>
-          <Icon i20 color={Color.graphicBase1} name={IconsName.coin} />
-          <Spacer width={4} />
-          <Text
-            t10
-            color={Color.textBase1}
-            i18n={I18N.lockedTokensAvailable}
-            i18params={{count: availableBalance?.toFloatString() ?? '0'}}
-          />
-        </View>
-        {lockedBalance?.isPositive() && (
-          <>
-            <DashedLine
-              style={styles.separator}
-              width={2}
-              color={Color.graphicSecond2}
+      {!!totalBalance && (
+        <>
+          <View style={styles.row}>
+            <Icon i20 color={Color.graphicBase1} name={IconsName.islm} />
+            <Spacer width={4} />
+            <Text
+              t10
+              color={Color.textBase1}
+              i18n={I18N.totalAvailable}
+              i18params={{count: totalBalance?.toFloatString() ?? '0'}}
             />
-            <View style={styles.row}>
-              <Icon i20 color={Color.graphicBase1} name={IconsName.lock} />
-              <Spacer width={4} />
-              <Text
-                t10
-                color={Color.textBase1}
-                i18n={I18N.lockedTokensLocked}
-                i18params={{count: lockedBalance.toFloatString()}}
-              />
-              <Spacer width={4} />
-              <IconButton onPress={onPressInfo}>
-                <Icon i20 color={Color.graphicBase2} name={IconsName.info} />
-              </IconButton>
-            </View>
-            <Spacer height={8} />
-            <BarChart data={barChartData} />
-          </>
-        )}
+            <Text
+              t10
+              color={Color.textBase2}
+              children={' ' + totalBalance?.currency}
+            />
+          </View>
+          <DashedLine
+            style={styles.separator}
+            width={2}
+            color={Color.graphicSecond2}
+          />
+        </>
+      )}
+      <View style={styles.row}>
+        <Icon i20 color={Color.graphicBase1} name={IconsName.coin} />
+        <Spacer width={4} />
+        <Text
+          t10
+          color={Color.textBase1}
+          i18n={I18N.lockedTokensAvailable}
+          i18params={{count: availableBalance?.toFloatString() ?? '0'}}
+        />
+        <Text
+          t10
+          color={Color.textBase2}
+          children={' ' + availableBalance.currency}
+        />
       </View>
+      {lockedBalance?.isPositive() && (
+        <>
+          <DashedLine
+            style={styles.separator}
+            width={2}
+            color={Color.graphicSecond2}
+          />
+          <View style={styles.row}>
+            <Icon i20 color={Color.graphicBase1} name={IconsName.lock} />
+            <Spacer width={4} />
+            <Text
+              t10
+              color={Color.textBase1}
+              i18n={I18N.lockedTokensLocked}
+              i18params={{count: lockedBalance.toFloatString()}}
+            />
+            <Text
+              t10
+              color={Color.textBase2}
+              children={' ' + lockedBalance.currency}
+            />
+            <Spacer width={4} />
+            <IconButton onPress={onPressInfo}>
+              <Icon i20 color={Color.graphicBase2} name={IconsName.info} />
+            </IconButton>
+          </View>
+          <Spacer height={8} />
+          <BarChart data={barChartData} />
+        </>
+      )}
     </View>
   );
 }
