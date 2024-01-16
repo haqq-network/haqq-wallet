@@ -101,7 +101,7 @@ export type TransactionListContract = Transaction & {
 };
 
 export type TransactionListDate = {
-  hash: string;
+  id: string;
   date: Date;
   source: TransactionSource.date;
   providerId: string;
@@ -1302,7 +1302,7 @@ export type OnTransactionRowPress = (
   params?: Omit<RootStackParamList['transactionDetail'], 'hash'>,
 ) => void;
 
-export type ContractNameMap = Record<string, string>;
+export type ContractNameMap = Record<string, {name: string; symbol: string}>;
 
 export type HaqqCosmosAddress = `haqq${string}` & string;
 export type HaqqEthereumAddress = `0x${string}` & string;
@@ -1561,3 +1561,28 @@ export type Eventable = Required<{
 
 export type Fiat = 'USD' | 'RUB';
 export type RatesResponse = Record<string, {denom: Fiat; amount: number}[]>;
+
+export type IndexerTransaction = {
+  block: number;
+  chain_id: string;
+  code: 0 | 1 | -1;
+  fee: number;
+  gas_limit: number;
+  hash: string;
+  input: string;
+  msg: {
+    amount: string;
+    from_address: string;
+    to_address: string;
+    type: 'msgEthereumTx' | 'msgEthereumErc20TransferTx' | 'msgDelegate';
+    contract_address?: string;
+  };
+  msg_type: 'msgEthereumTx' | 'msgEthereumErc20TransferTx' | 'msgDelegate';
+  ts: string;
+  id: string;
+  confirmations: number;
+};
+export type IndexerTransactionResponse = {
+  hash: string;
+  txs: IndexerTransaction[];
+};
