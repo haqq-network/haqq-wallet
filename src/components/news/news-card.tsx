@@ -35,7 +35,8 @@ export const NewsCard = ({item, onPress}: NewsRowProps) => {
 
   return (
     <View
-      style={[styles.flexOne, styles.container, item.viewed && styles.viewed]}>
+      style={[styles.flexOne, styles.container, item.viewed && styles.viewed]}
+      testID="newsCard">
       <ImageBackground
         key={item.id}
         source={preview}
