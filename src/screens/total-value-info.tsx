@@ -43,7 +43,7 @@ export const TotalValueInfoScreen = observer(() => {
 
     const names = transactionsList
       .filter(({source}) => source === TransactionSource.contract)
-      .map(item => (item as TransactionListContract).to);
+      .map(item => (item as TransactionListContract).contractAddress as string);
     const uniqueNames = [...new Set(names)];
     if (uniqueNames.length > 0) {
       const info = await Indexer.instance.getContractNames(uniqueNames);

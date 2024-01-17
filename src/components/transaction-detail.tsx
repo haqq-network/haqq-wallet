@@ -86,11 +86,8 @@ export const TransactionDetail = ({
   }, [transaction, source, isSent]);
 
   const fee = useMemo(
-    () =>
-      new Balance(transaction.feeHex || transaction.fee).toBalanceString(
-        LONG_NUM_PRECISION,
-      ),
-    [transaction],
+    () => new Balance(transaction.fee).toBalanceString(LONG_NUM_PRECISION),
+    [transaction.fee],
   );
 
   if (!transaction) {

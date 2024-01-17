@@ -1,9 +1,5 @@
 import {getAppVersion, getBuildNumber} from '@app/services/version';
-import {
-  KEYSTONE_NAME,
-  LEDGER_APP,
-  PLATFORM_COMPANY,
-} from '@app/variables/common';
+import {LEDGER_APP, PLATFORM_COMPANY} from '@app/variables/common';
 
 export enum I18N {
   empty,
@@ -736,6 +732,7 @@ export enum I18N {
   lockedTokensTotalValue,
   lockedTokensLocked,
   lockedTokensAvailable,
+  totalAvailable,
   earnHint,
   raffleAgreementDescriptionPlatform,
   lockedTokensInfoTitle,
@@ -904,6 +901,8 @@ export enum I18N {
   keystoneQrClose,
   signupImportantInfoDesc5,
   createOrImportWallet,
+  keystoneWalletEnterDeviceNameMessage,
+  keystoneWalletEnterDeviceNameTitle,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1196,7 +1195,10 @@ const en: Record<I18N, string> = {
     'Type or paste your recovery phrase',
   [I18N.signinStoreWalletText]: 'Account recovery in progress',
   [I18N.signinStoreWalletAccountNumber]: 'Account #{{number}}',
-  [I18N.keystoneWalletAccountNumber]: `${KEYSTONE_NAME} #{{number}}`,
+  [I18N.keystoneWalletAccountNumber]: '{{deviceName}} #{{walletCount}}',
+  [I18N.keystoneWalletEnterDeviceNameTitle]: 'Create device name',
+  [I18N.keystoneWalletEnterDeviceNameMessage]:
+    'Enter device name for new Keystone',
   [I18N.settingsAccountRemoveTitle]:
     'Attention. You may lose all your funds! Are you sure you want to delete your account?',
   [I18N.settingsAccountRemoveMessage]:
@@ -1783,6 +1785,7 @@ const en: Record<I18N, string> = {
   [I18N.walletCardLocked]: 'Locked: {{count}}',
   [I18N.lockedTokensLocked]: 'Locked: {{count}}',
   [I18N.lockedTokensAvailable]: 'Available: {{count}}',
+  [I18N.totalAvailable]: 'Total: {{count}}',
   [I18N.lockedTokensTotalValue]: 'Total value',
   [I18N.earnHint]: `${PLATFORM_COMPANY} is not a sponsor of any promotions or prizes mentioned in this application`,
   [I18N.raffleAgreementDescriptionPlatform]: `${PLATFORM_COMPANY} is not a sponsor of any promotions or prizes mentioned in this application.`,

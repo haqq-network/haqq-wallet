@@ -8,6 +8,7 @@ import {
   differenceInMinutes,
 } from 'date-fns';
 import Decimal from 'decimal.js';
+import {utils} from 'ethers';
 import _ from 'lodash';
 import {
   Alert,
@@ -18,8 +19,10 @@ import {
   Platform,
 } from 'react-native';
 import {Adjust} from 'react-native-adjust';
+import prompt, {PromptOptions} from 'react-native-prompt-android';
 
 import {app} from '@app/contexts';
+import {Transaction, TransactionStatus} from '@app/models/transaction';
 import {RemoteConfig} from '@app/services/remote-config';
 
 import {Color, getColor} from './colors';
@@ -41,6 +44,7 @@ import {
   EthType,
   EthTypedData,
   HaqqEthereumAddress,
+  IndexerTransaction,
   JsonRpcTransactionRequest,
   PartialJsonRpcRequest,
   SendTransactionError,
@@ -888,3 +892,44 @@ export const uppercaseFirtsLetter = (str: string) =>
     .toLowerCase()
     // uppercase first letter
     .replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
+
+export const migrateTransaction = (tx: IndexerTransaction): Transaction => {
+  const statusMap = {
+    ['0']: TransactionStatus.success,
+    ['1']: TransactionStatus.failed,
+    ['-1']: TransactionStatus.inProgress,
+  };
+
+  return {
+    account: tx.msg.from_address,
+    raw: '',
+    fee: parseFloat(utils.formatEther(tx.fee ?? 0)),
+    feeHex: new Balance(tx.fee).toHex(),
+    providerId: app.providerId,
+    hash: tx.hash,
+    block: String(tx.block),
+    from: AddressUtils.toEth(tx.msg.from_address),
+    to: AddressUtils.toEth(tx.msg.to_address),
+    value: parseFloat(utils.formatEther(tx.msg.amount ?? 0)),
+    chainId: tx.chain_id,
+    timeStamp: tx.ts,
+    createdAt: +new Date(tx.ts),
+    confirmations: tx.confirmations,
+    contractAddress: tx.msg.contract_address || '',
+    confirmed: tx.confirmations > 10,
+    input: tx.input,
+    status: statusMap[tx.code],
+    type: tx.msg_type,
+    id: tx.id,
+  };
+};
+
+export function promtAsync(
+  title?: string,
+  message?: string,
+  options?: PromptOptions,
+): Promise<string> {
+  return new Promise(resolve => {
+    prompt(title, message, resolve, options);
+  });
+}

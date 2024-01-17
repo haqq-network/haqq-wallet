@@ -60,7 +60,7 @@ export const useTransaction = (txHash: string) => {
       clearTimeout(txUpdateTimeout.current);
       txUpdateTimeout.current = undefined;
     };
-  }, [loadTransactionInfo, checkTransactionReceipt]);
+  }, []);
 
   return tx;
 };

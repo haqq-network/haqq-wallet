@@ -6,9 +6,12 @@ import {observer} from 'mobx-react';
 
 import {Wallets} from '@app/components/wallets';
 import {app} from '@app/contexts';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {getProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet';
 import {useTypedNavigation} from '@app/hooks';
+import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
+import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
 import {HomeFeedStackParamList, HomeStackRoutes} from '@app/route-types';
 import {WalletConnect} from '@app/services/wallet-connect';
@@ -19,6 +22,12 @@ export const WalletsWrapper = observer(() => {
   const navigation = useTypedNavigation<HomeFeedStackParamList>();
   const visible = Wallet.getAllVisible();
   const balance = useWalletsBalance(visible);
+
+  useEffectAsync(async () => {
+    await Transaction.fetchTransactions(
+      visible.map(item => AddressUtils.toHaqq(item.address)),
+    );
+  }, [visible]);
 
   const onPressSend = useCallback(
     (address: string) => {

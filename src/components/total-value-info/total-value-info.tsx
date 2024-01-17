@@ -180,7 +180,7 @@ export const TotalValueInfo = ({
     [activeTab, nftCollections, tokens],
   );
 
-  const keyExtractor = useCallback((item: TransactionList) => item.hash, []);
+  const keyExtractor = useCallback((item: TransactionList) => item.id, []);
 
   return (
     <PopupContainer plain>

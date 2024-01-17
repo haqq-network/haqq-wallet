@@ -3,9 +3,11 @@ import {ProviderKeystoneReactNative} from '@haqq/provider-keystone-react-native'
 
 import {ChooseAccountTabNames} from '@app/components/choose-account/choose-account';
 import {I18N, getText} from '@app/i18n';
+import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {AddWalletParams, ChooseAccountItem, WalletType} from '@app/types';
+import {promtAsync} from '@app/utils';
 import {
   ETH_HD_SHORT_PATH,
   LEDGER_HD_PATH_TEMPLATE,
@@ -39,17 +41,14 @@ export async function* getWalletsFromProvider(
   };
 
   while (canNext) {
-    const keystoneWalletsCount =
-      Wallet.getAll().filter(w => w.type === WalletType.keystone)?.length || 0;
-    const keystoneName = getText(I18N.keystoneWalletAccountNumber, {
-      number: `${keystoneWalletsCount + index + 1}`,
-    });
-
-    const name = walletType === WalletType.keystone ? keystoneName : '';
-
+    const name = await getWalletNameForWalletProvider(
+      provider,
+      walletType,
+      index,
+    );
     const hdPath = genHdPath(index);
 
-    Logger.log({hdPath});
+    Logger.log('✅', {hdPath, index, name});
 
     const {address} = await provider.getAccountInfo(hdPath);
 
@@ -73,4 +72,37 @@ export async function* getWalletsFromProvider(
     index += 1;
   }
   return result;
+}
+
+export async function getWalletNameForWalletProvider(
+  provider: ProviderInterface,
+  walletType: WalletType,
+  index: number = 0,
+) {
+  switch (walletType) {
+    case WalletType.keystone: {
+      const deviceNameKey = `deviceName-${provider.getIdentifier()}`;
+      let deviceName = VariablesString.get(deviceNameKey);
+
+      if (!deviceName) {
+        deviceName = await promtAsync(
+          getText(I18N.keystoneWalletEnterDeviceNameTitle),
+          getText(I18N.keystoneWalletEnterDeviceNameMessage),
+        );
+        VariablesString.set(deviceNameKey, deviceName);
+      }
+
+      return getText(I18N.keystoneWalletAccountNumber, {
+        walletCount: `${index + 1}`,
+        deviceName,
+      });
+    }
+    case WalletType.mnemonic:
+    case WalletType.hot:
+    case WalletType.ledgerBt:
+    case WalletType.sss:
+    default: {
+      return '';
+    }
+  }
 }

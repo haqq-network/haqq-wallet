@@ -13,7 +13,7 @@ import {OnTransactionRowPress, TransactionListContract} from '@app/types';
 export type TransactionPreviewProps = {
   item: TransactionListContract;
   onPress: OnTransactionRowPress;
-  contractName: string;
+  contractName: {name: string; symbol: string};
 };
 
 export const TransactionContract = ({
@@ -28,8 +28,12 @@ export const TransactionContract = ({
   }, [adressList, item.from]);
 
   const handlePress = useCallback(() => {
-    onPress(item.hash, {contractName});
+    onPress(item.hash, {contractName: contractName.name});
   }, [item.hash, onPress, contractName]);
+
+  if (!contractName?.name) {
+    return null;
+  }
 
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
@@ -42,7 +46,8 @@ export const TransactionContract = ({
           titleI18n={I18N.transactionContractTitle}
           subtitleI18n={I18N.transactionContractNamePrefix}
           subtitleI18nParams={{
-            value: contractName || getText(I18N.transactionContractDefaultName),
+            value:
+              contractName.name || getText(I18N.transactionContractDefaultName),
           }}
           short
         />
@@ -57,7 +62,13 @@ export const TransactionContract = ({
                   ? I18N.transactionNegativeAmountText
                   : I18N.transactionPositiveAmountText
               }
-              i18params={{value: new Balance(item.value).toBalanceString()}}
+              i18params={{
+                value: new Balance(
+                  item.value,
+                  undefined,
+                  contractName.symbol,
+                ).toBalanceString(),
+              }}
             />
             <Spacer height={2} />
             <Text
@@ -65,7 +76,9 @@ export const TransactionContract = ({
               color={Color.textBase2}
               i18n={I18N.transactionNegativeAmountText}
               i18params={{
-                value: new Balance(item.value).toFiat('USD').toBalanceString(),
+                value: new Balance(item.value, undefined, contractName.symbol)
+                  .toFiat('USD')
+                  .toBalanceString(),
               }}
             />
           </View>

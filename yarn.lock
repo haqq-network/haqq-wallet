@@ -2361,9 +2361,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@haqq/provider-keystone-react-native@npm:0.0.3":
-  version: 0.0.3
-  resolution: "@haqq/provider-keystone-react-native@npm:0.0.3"
+"@haqq/provider-keystone-react-native@npm:0.0.5":
+  version: 0.0.5
+  resolution: "@haqq/provider-keystone-react-native@npm:0.0.5"
   dependencies:
     "@ethersproject/abstract-provider": ^5.7.0
     "@keystonehq/bc-ur-registry-eth": ^0.7.7
@@ -2374,7 +2374,7 @@ __metadata:
     "@haqq/provider-base": "*"
     react: "*"
     react-native: "*"
-  checksum: d534d0004c1affa0c2dd093dd0cf100f0b5fce27cd5eb6d6839ef79246aca079dad8073627dc3a4e9c59c84b89eb177d8bcb9ffd072a5e173941193fa8650c26
+  checksum: cb645043bca69c45c42d394094fa7b45ce71dccbbfc2ee8b029708fbbc6693bf2b317fe35e9dc6dd0d79b6596695a908e8ce71729846b9c8301cc42155b91062
   languageName: node
   linkType: hard
 
@@ -9625,7 +9625,7 @@ __metadata:
     "@haqq/encryption-react-native": 0.0.4
     "@haqq/provider-base": 0.0.20
     "@haqq/provider-hot-react-native": 0.0.7
-    "@haqq/provider-keystone-react-native": 0.0.3
+    "@haqq/provider-keystone-react-native": 0.0.5
     "@haqq/provider-ledger-react-native": 0.0.25
     "@haqq/provider-mnemonic-react-native": 0.0.12
     "@haqq/provider-sss-react-native": 0.0.12
