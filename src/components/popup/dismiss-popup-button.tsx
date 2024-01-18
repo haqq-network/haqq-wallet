@@ -14,6 +14,7 @@ export const DismissPopupButton = () => {
   return (
     <IconButton
       style={page.container}
+      testID="dismissPopupButton"
       onPress={() => {
         try {
           navigation.pop();
