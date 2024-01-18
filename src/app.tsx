@@ -32,7 +32,11 @@ import {Transaction} from '@app/models/transaction';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
-import {OnboardingStackRoutes} from '@app/route-types';
+import {
+  LedgerStackRoutes,
+  OnboardingStackRoutes,
+  SssMigrateStackRoutes,
+} from '@app/route-types';
 import {RootStack} from '@app/screens/RootStack';
 import {AppTheme, ModalType} from '@app/types';
 import {getAppTrackingAuthorizationStatus, sleep} from '@app/utils';
@@ -48,6 +52,12 @@ const appTheme = createTheme({
   },
 });
 
+const CREATE_WALLET_FINISH_SCREENS: string[] = [
+  OnboardingStackRoutes.OnboardingFinish,
+  LedgerStackRoutes.LedgerFinish,
+  SssMigrateStackRoutes.SssMigrateFinish,
+];
+
 export const App = () => {
   const [initialized, setInitialized] = useState(false);
   const [isPinReseted, setPinReseted] = useState(false);
@@ -59,6 +69,17 @@ export const App = () => {
     () => ({dark: theme === AppTheme.dark, colors: appTheme.colors}) as Theme,
     [theme],
   );
+
+  useEffect(() => {
+    const sub = (value: boolean) => {
+      setOnboarded(value);
+    };
+
+    app.addListener(Events.onOnboardedChanged, sub);
+    return () => {
+      app.removeListener(Events.onOnboardedChanged, sub);
+    };
+  }, []);
 
   useEffect(() => {
     const splashTimer = setTimeout(() => {
@@ -85,9 +106,6 @@ export const App = () => {
       })
       .then(() => {
         setOnboarded(app.onboarded);
-        app.addListener(Events.onOnboardedChanged, value =>
-          setOnboarded(value),
-        );
         awaitForEventDone(Events.onAppLoggedId);
       })
       .then(() => {
@@ -105,7 +123,6 @@ export const App = () => {
 
     return () => {
       clearTimeout(splashTimer);
-      app.removeAllListeners(Events.onOnboardedChanged);
     };
   }, []);
 
@@ -178,7 +195,10 @@ export const App = () => {
     });
 
     const currentRouteName = navigator?.getCurrentRoute?.()?.name;
-    if (currentRouteName === OnboardingStackRoutes.OnboardingFinish) {
+    if (
+      !!currentRouteName &&
+      CREATE_WALLET_FINISH_SCREENS.includes(currentRouteName)
+    ) {
       setPinReseted(false);
     }
   }, []);
