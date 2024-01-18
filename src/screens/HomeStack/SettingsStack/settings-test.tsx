@@ -594,22 +594,6 @@ export const SettingsTestScreen = observer(() => {
         variant={ButtonVariant.contained}
       />
 
-      <Button
-        title="test tx"
-        onPress={() => {
-          EthNetwork.sendTransaction(
-            '0x02f87682d3c30285066720b30085066720b3008252089437f61e7d9ce7dc6648ecbd3ba27972fb90d69cf1880de0b6b3a764000080c080a02010f0da222db8a027f14c646db37da5e0afcd3eb31a0f4b20f075afe402af09a01ad507ef09d94f3c41574cc549bcf3dfd30a5a91bf6cab718ff8a26797998bac',
-          )
-            .then(data => {
-              Logger.log('sendTransaction', JSON.stringify(data, null, 2));
-            })
-            .catch(error => {
-              Logger.error('sendTransaction', error);
-            });
-        }}
-        variant={ButtonVariant.contained}
-      />
-
       <Title text="Leading account" />
       <Text t11>{leadingAccount}</Text>
       <Spacer height={8} />

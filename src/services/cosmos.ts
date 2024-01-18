@@ -118,6 +118,7 @@ export class Cosmos {
   }
 
   async postQuery<T>(path: string, data: string): Promise<T> {
+    Logger.log('cosmos postQuery', path, {data});
     const resp = await fetch(this.getPath(path), {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
