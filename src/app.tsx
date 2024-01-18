@@ -33,6 +33,7 @@ import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 import {
+  KeystoneStackRoutes,
   LedgerStackRoutes,
   OnboardingStackRoutes,
   SssMigrateStackRoutes,
@@ -56,6 +57,7 @@ const CREATE_WALLET_FINISH_SCREENS: string[] = [
   OnboardingStackRoutes.OnboardingFinish,
   LedgerStackRoutes.LedgerFinish,
   SssMigrateStackRoutes.SssMigrateFinish,
+  KeystoneStackRoutes.KeystoneFinish,
 ];
 
 export const App = () => {
