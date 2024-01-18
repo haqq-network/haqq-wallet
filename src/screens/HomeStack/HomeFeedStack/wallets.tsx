@@ -143,7 +143,7 @@ export const WalletsWrapper = observer(() => {
     });
   }, [navigation]);
 
-  const onPressLedger = useCallback(() => {
+  const onPressHardwareWallet = useCallback(() => {
     navigation.navigate(HomeStackRoutes.Device);
   }, [navigation]);
 
@@ -165,7 +165,7 @@ export const WalletsWrapper = observer(() => {
       showLockedTokens
       onPressWalletConnect={onPressWalletConnect}
       onPressSend={onPressSend}
-      onPressLedger={onPressLedger}
+      onPressHardwareWallet={onPressHardwareWallet}
       onPressCreate={onPressCreate}
       onPressRestore={onPressRestore}
       onPressQR={onPressQR}

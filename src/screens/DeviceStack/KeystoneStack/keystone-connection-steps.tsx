@@ -51,7 +51,7 @@ export const KeystoneConnectionStepsScreen = () => {
   }, []);
 
   const onPressTutorial = useCallback(() => {
-    openInAppBrowser(RemoteConfig.get('keystone_tutorial_url')!);
+    openInAppBrowser(RemoteConfig.safeGet('keystone_tutorial_url'));
   }, []);
 
   return (

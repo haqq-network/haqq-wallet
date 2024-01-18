@@ -17,6 +17,8 @@ export interface KeystoneConnectionSteps {
   onPressTutorial(): void;
 }
 
+const KEYSTONE_CONNECTION_STEPS_COUNT = 3;
+
 export const KeystoneConnectionSteps = ({
   syncInProgress,
   onPressSync,
@@ -35,41 +37,33 @@ export const KeystoneConnectionSteps = ({
       <Spacer height={32} />
       <Image source={keystoneConnectFrameImg} />
       <View style={styles.textContainer}>
-        <View style={styles.stepContainer}>
-          <Text
-            t9
-            i18n={I18N.keystoneConnectionStepNumber}
-            i18params={{idx: '1'}}
-          />
-          <Spacer width={16} />
-          <View style={styles.desctiptionText}>
-            <Text t11 i18n={I18N.keystoneConnectionStepDescription1} />
-          </View>
-        </View>
-        <View style={styles.divider} />
-        <View style={styles.stepContainer}>
-          <Text
-            t9
-            i18n={I18N.keystoneConnectionStepNumber}
-            i18params={{idx: '2'}}
-          />
-          <Spacer width={16} />
-          <View style={styles.stepContainer}>
-            <Text t11 i18n={I18N.keystoneConnectionStepDescription2} />
-          </View>
-        </View>
-        <View style={styles.divider} />
-        <View style={styles.stepContainer}>
-          <Text
-            t9
-            i18n={I18N.keystoneConnectionStepNumber}
-            i18params={{idx: '3'}}
-          />
-          <Spacer width={16} />
-          <View style={styles.desctiptionText}>
-            <Text t11 i18n={I18N.keystoneConnectionStepDescription3} />
-          </View>
-        </View>
+        {[...Array(KEYSTONE_CONNECTION_STEPS_COUNT)].map(
+          (_, index, {length}) => {
+            const isLast = index === length - 1;
+            return (
+              <>
+                <View style={styles.stepContainer}>
+                  <Text
+                    t9
+                    i18n={I18N.keystoneConnectionStepNumber}
+                    i18params={{idx: `${index + 1}`}}
+                  />
+                  <Spacer width={16} />
+                  <View style={styles.desctiptionText}>
+                    <Text
+                      t11
+                      i18n={
+                        // @ts-ignore
+                        I18N[`keystoneConnectionStepDescription${index + 1}`]
+                      }
+                    />
+                  </View>
+                </View>
+                {!isLast && <View style={styles.divider} />}
+              </>
+            );
+          },
+        )}
       </View>
       <Spacer flex={1} />
       <View style={styles.buttonContainer}>

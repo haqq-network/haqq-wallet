@@ -1,5 +1,5 @@
 import {getAppVersion, getBuildNumber} from '@app/services/version';
-import {LEDGER_APP, PLATFORM_COMPANY} from '@app/variables/common';
+import {LEDGER_APP, PLATFORM_COMPANY, STRINGS} from '@app/variables/common';
 
 export enum I18N {
   empty,
@@ -903,6 +903,8 @@ export enum I18N {
   createOrImportWallet,
   keystoneWalletEnterDeviceNameMessage,
   keystoneWalletEnterDeviceNameTitle,
+  keystoneWalletSyncPathError,
+  keystoneUnknownError,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1195,7 +1197,10 @@ const en: Record<I18N, string> = {
     'Type or paste your recovery phrase',
   [I18N.signinStoreWalletText]: 'Account recovery in progress',
   [I18N.signinStoreWalletAccountNumber]: 'Account #{{number}}',
-  [I18N.keystoneWalletAccountNumber]: '{{deviceName}} #{{walletCount}}',
+  [I18N.keystoneWalletAccountNumber]: `{{deviceName}}${STRINGS.NBSP}#{{walletCount}}`,
+  [I18N.keystoneUnknownError]: 'Unknown error\n{{error}}',
+  [I18N.keystoneWalletSyncPathError]:
+    'Keystone will only support the syncronization of the first 10 addresses for Ledger Live derivation path.',
   [I18N.keystoneWalletEnterDeviceNameTitle]: 'Create device name',
   [I18N.keystoneWalletEnterDeviceNameMessage]:
     'Enter device name for new Keystone',

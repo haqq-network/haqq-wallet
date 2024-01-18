@@ -20,13 +20,13 @@ import {MAGIC_CARD_HEIGHT, SHADOW_COLOR_1} from '@app/variables/common';
 export type BalanceProps = {
   testID?: string;
   onPressCreate: () => void;
-  onPressLedger: () => void;
+  onPressHardwareWallet: () => void;
   onPressRestore: () => void;
 };
 export const WalletCreate = ({
   testID,
   onPressCreate,
-  onPressLedger,
+  onPressHardwareWallet,
   onPressRestore,
 }: BalanceProps) => {
   return (
@@ -56,7 +56,7 @@ export const WalletCreate = ({
         <Button
           variant={ButtonVariant.second}
           size={ButtonSize.middle}
-          onPress={onPressLedger}>
+          onPress={onPressHardwareWallet}>
           <View style={styles.createButtonChildren}>
             <Text t9 i18n={I18N.walletCreateConnect} color={Color.textGreen1} />
             <Spacer width={8} />

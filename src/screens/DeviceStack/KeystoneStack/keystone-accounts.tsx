@@ -1,6 +1,10 @@
 import React, {memo, useCallback, useMemo, useRef, useState} from 'react';
 
-import {ProviderKeystoneReactNative} from '@haqq/provider-keystone-react-native';
+import {
+  KeyringAccountEnum,
+  ProviderKeystoneReactNative,
+} from '@haqq/provider-keystone-react-native';
+import {makeID} from '@haqq/shared-react-native';
 
 import {KeystoneAccounts} from '@app/components/keystone/keystone-accounts';
 import {app} from '@app/contexts';
@@ -9,6 +13,8 @@ import {AddressUtils} from '@app/helpers/address-utils';
 import {getWalletsFromProvider} from '@app/helpers/get-wallets-from-provider';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
+import {useError} from '@app/hooks/use-error';
+import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 import {
@@ -19,11 +25,14 @@ import {
 import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
 import {ChooseAccountItem, ModalType, WalletType} from '@app/types';
+import {promtAsync} from '@app/utils';
+import {KEYSTONE_NAME, STRINGS} from '@app/variables/common';
 
 const PAGE_SIZE = 5;
 
 export const KeystoneAccountsScreen = memo(() => {
   const navigation = useTypedNavigation<SignInStackParamList>();
+  const showError = useError();
   const {qrCBORHex, ...params} = useTypedRoute<
     KeystoneStackParamList,
     KeystoneStackRoutes.KeystoneAccounts
@@ -59,35 +68,58 @@ export const KeystoneAccountsScreen = memo(() => {
 
   const loadMore = useCallback(
     async (reset: boolean = false) => {
-      if (loading) {
-        return;
-      }
-      if (reset || generator.current === null) {
-        createWalletGenerator();
-      }
-      setLoading(true);
-      let index = 0;
-      let result = reset ? [] : addresses;
-      while (index < PAGE_SIZE) {
-        if (generator.current) {
-          const item = (await generator.current.next()).value;
-          result.push(item);
+      try {
+        if (loading) {
+          return;
         }
-        index += 1;
+        if (reset || generator.current === null) {
+          createWalletGenerator();
+        }
+        setLoading(true);
+        let index = 0;
+        let result = reset ? [] : addresses;
+        while (index < PAGE_SIZE) {
+          if (generator.current) {
+            const item = (await generator.current.next()).value;
+            result.push(item);
+          }
+          index += 1;
+        }
+        const wallets = result.map(item => item.address);
+        const balances = await Indexer.instance.updates(
+          wallets.map(AddressUtils.toHaqq),
+          new Date(0),
+        );
+        const resultWithBalances = result.map(item => ({
+          ...item,
+          balance: new Balance(
+            balances.total[AddressUtils.toHaqq(item.address)] || item.balance,
+          ),
+        }));
+        setAddresses(resultWithBalances);
+      } catch (error) {
+        const errorId = makeID(4);
+
+        if (
+          provider.current.getKeyringAccount() ===
+          KeyringAccountEnum.ledger_live
+        ) {
+          showError(errorId, getText(I18N.keystoneWalletSyncPathError));
+        } else {
+          const errMsg = (error as Error)?.message || '';
+          showError(
+            errorId,
+            getText(I18N.keystoneUnknownError, {error: errMsg}),
+          );
+          Logger.captureException(error, 'keystone chooseAccount', {
+            keyringAccount: provider.current.getKeyringAccount(),
+            pathPattern: provider.current.getPathPattern(),
+            errorId,
+          });
+        }
+      } finally {
+        setLoading(false);
       }
-      const wallets = result.map(item => item.address);
-      const balances = await Indexer.instance.updates(
-        wallets.map(AddressUtils.toHaqq),
-        new Date(0),
-      );
-      const resultWithBalances = result.map(item => ({
-        ...item,
-        balance: new Balance(
-          balances.total[AddressUtils.toHaqq(item.address)] || item.balance,
-        ),
-      }));
-      setAddresses(resultWithBalances);
-      setLoading(false);
     },
     [addresses, loading],
   );
@@ -147,9 +179,44 @@ export const KeystoneAccountsScreen = memo(() => {
   );
 
   const onAdd = useCallback(async () => {
-    walletsToCreate.forEach(item => {
-      Wallet.create(item.name, {...item, isImported: true});
-    });
+    const wallets = Wallet.getAll().filter(it => it.accountId === qrCBORHex);
+    const lastIndex = wallets.length || 0;
+
+    let deviceName = '';
+
+    if (lastIndex > 0) {
+      deviceName = wallets[0]?.name?.split?.(STRINGS.NBSP)?.[0]?.trim?.() || '';
+    }
+
+    if (!deviceName) {
+      const keystoneDevicesCount =
+        Wallet.getAll().filter(
+          (wallet, index, self) =>
+            wallet.type === WalletType.keystone &&
+            self.findIndex(item => item.accountId === wallet.accountId) ===
+              index,
+        )?.length || 0;
+
+      deviceName = await promtAsync(
+        getText(I18N.keystoneWalletEnterDeviceNameTitle),
+        getText(I18N.keystoneWalletEnterDeviceNameMessage),
+        {
+          defaultValue: `${KEYSTONE_NAME} ${keystoneDevicesCount + 1}`,
+        },
+      );
+    }
+
+    walletsToCreate
+      .filter(wallet => {
+        return !Wallet.getById(wallet.address);
+      })
+      .forEach((item, index) => {
+        const name = getText(I18N.keystoneWalletAccountNumber, {
+          walletCount: `${index + lastIndex}`,
+          deviceName,
+        });
+        Wallet.create(name, {...item, isImported: true});
+      });
 
     if (!app.onboarded) {
       //@ts-ignore

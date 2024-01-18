@@ -822,7 +822,6 @@ export type LedgerAccountItem = {
 };
 
 export type ChooseAccountItem = AddWalletParams & {
-  name: string;
   balance: Balance;
   exists?: boolean;
 };

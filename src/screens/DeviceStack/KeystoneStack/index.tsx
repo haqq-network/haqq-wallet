@@ -43,26 +43,22 @@ const KeystoneStack = memo(() => {
   );
 
   return (
-    <Stack.Navigator screenOptions={popupScreenOptions}>
+    <Stack.Navigator screenOptions={{...popupScreenOptions, ...hideBack}}>
       <Stack.Screen
         name={KeystoneStackRoutes.KeystoneConnectionSteps}
         component={KeystoneConnectionStepsScreen}
-        options={hideBack}
       />
       <Stack.Screen
         name={KeystoneStackRoutes.KeystoneCameraPermission}
         component={KeystoneCameraPermissionScreen}
-        options={hideBack}
       />
       <Stack.Screen
         name={KeystoneStackRoutes.KeystoneAccounts}
         component={KeystoneAccountsScreen}
-        options={hideBack}
       />
       <Stack.Screen
         name={KeystoneStackRoutes.KeystoneFinish}
         component={KeystoneFinishScreen}
-        options={hideBack}
       />
       <Stack.Screen
         name={KeystoneStackRoutes.OnboardingSetupPin}

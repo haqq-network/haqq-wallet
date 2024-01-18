@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 
 import {View} from 'react-native';
 
@@ -14,36 +14,35 @@ interface DeviceSelectProps {
   onPressKeystone(): void;
 }
 
-export const DeviceSelect = ({
-  onPressKeystone,
-  onPressLedger,
-}: DeviceSelectProps) => {
-  return (
-    <View style={styles.container}>
-      <Text center t4 i18n={I18N.deviceSelectTitle} />
-      <Text
-        center
-        t11
-        i18n={I18N.deviceSelectDescription}
-        color={Color.textBase2}
-      />
-      <Spacer height={40} />
-      <ImageDescriptionBlock
-        title={I18N.deviceSelectKeystoneTitle}
-        description={I18N.deviceSelectKeystoneDescription}
-        onPress={onPressKeystone}
-        source={require('@assets/images/device-keystone.png')}
-      />
-      <Spacer height={24} />
-      <ImageDescriptionBlock
-        title={I18N.deviceSelectLedgerTitle}
-        description={I18N.deviceSelectLedgerDescription}
-        onPress={onPressLedger}
-        source={require('@assets/images/device-ledger.png')}
-      />
-    </View>
-  );
-};
+export const DeviceSelect = memo(
+  ({onPressKeystone, onPressLedger}: DeviceSelectProps) => {
+    return (
+      <View style={styles.container}>
+        <Text center t4 i18n={I18N.deviceSelectTitle} />
+        <Text
+          center
+          t11
+          i18n={I18N.deviceSelectDescription}
+          color={Color.textBase2}
+        />
+        <Spacer height={40} />
+        <ImageDescriptionBlock
+          title={I18N.deviceSelectKeystoneTitle}
+          description={I18N.deviceSelectKeystoneDescription}
+          onPress={onPressKeystone}
+          source={require('@assets/images/device-keystone.png')}
+        />
+        <Spacer height={24} />
+        <ImageDescriptionBlock
+          title={I18N.deviceSelectLedgerTitle}
+          description={I18N.deviceSelectLedgerDescription}
+          onPress={onPressLedger}
+          source={require('@assets/images/device-ledger.png')}
+        />
+      </View>
+    );
+  },
+);
 
 const styles = createTheme({
   container: {

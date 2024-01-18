@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {memo, useMemo} from 'react';
 
 import {
   Image,
@@ -26,40 +26,42 @@ export interface ImageDescriptionBlockProps {
   onPress?(): void;
 }
 
-export const ImageDescriptionBlock = ({
-  source,
-  style,
-  title,
-  description,
-  titleParams,
-  descriptionParams,
-  onPress,
-}: ImageDescriptionBlockProps) => {
-  const flattenStyle = useMemo(
-    () => StyleSheet.flatten([styles.container, style]),
-    [style],
-  );
+export const ImageDescriptionBlock = memo(
+  ({
+    source,
+    style,
+    title,
+    description,
+    titleParams,
+    descriptionParams,
+    onPress,
+  }: ImageDescriptionBlockProps) => {
+    const flattenStyle = useMemo(
+      () => StyleSheet.flatten([styles.container, style]),
+      [style],
+    );
 
-  return (
-    <View style={flattenStyle}>
-      <TouchableOpacity onPress={onPress} style={styles.touchable}>
-        <View style={styles.imageContainer}>
-          <Image source={source} />
-        </View>
-        <View style={styles.textContainer}>
-          <Text t7 i18n={title} i18params={titleParams} />
-          <Spacer height={8} />
-          <Text
-            t14
-            color={Color.textBase2}
-            i18n={description}
-            i18params={descriptionParams}
-          />
-        </View>
-      </TouchableOpacity>
-    </View>
-  );
-};
+    return (
+      <View style={flattenStyle}>
+        <TouchableOpacity onPress={onPress} style={styles.touchable}>
+          <View style={styles.imageContainer}>
+            <Image source={source} />
+          </View>
+          <View style={styles.textContainer}>
+            <Text t7 i18n={title} i18params={titleParams} />
+            <Spacer height={8} />
+            <Text
+              t14
+              color={Color.textBase2}
+              i18n={description}
+              i18params={descriptionParams}
+            />
+          </View>
+        </TouchableOpacity>
+      </View>
+    );
+  },
+);
 
 const styles = createTheme({
   container: {

@@ -30,7 +30,7 @@ export type WalletsProps = {
   onPressWalletConnect: (address: string) => void;
   onPressProtection: (wallet: Wallet) => void;
   onPressCreate: () => void;
-  onPressLedger: () => void;
+  onPressHardwareWallet: () => void;
   onPressRestore: () => void;
   onPressAccountInfo: (address: string) => void;
   testID?: string;
@@ -43,7 +43,7 @@ export const Wallets = ({
   onPressSend,
   onPressQR,
   onPressCreate,
-  onPressLedger,
+  onPressHardwareWallet,
   onPressProtection,
   onPressRestore,
   onPressWalletConnect,
@@ -163,7 +163,7 @@ export const Wallets = ({
           <WalletCreate
             testID={`${testID}_create`}
             onPressCreate={onPressCreate}
-            onPressLedger={onPressLedger}
+            onPressHardwareWallet={onPressHardwareWallet}
             onPressRestore={onPressRestore}
           />
         </CarouselItem>

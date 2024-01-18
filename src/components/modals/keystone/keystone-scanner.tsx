@@ -23,7 +23,12 @@ import {I18N, getText} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {SystemDialog} from '@app/services/system-dialog';
 import {ModalType, Modals} from '@app/types';
-import {IS_IOS, QR_STATUS_BAR, SUPPORTED_UR_TYPE} from '@app/variables/common';
+import {
+  IS_IOS,
+  QR_STATUS_BAR,
+  STRINGS,
+  SUPPORTED_UR_TYPE,
+} from '@app/variables/common';
 
 import {QrNoAccess} from '../qr/qr-no-access';
 import {QrTopView} from '../qr/qr-top-view';
@@ -52,6 +57,10 @@ export const KeystoneScannerModal = ({
     setProgress(0);
     setURDecoder(KeystoneUrHelper.createUrDecoder());
   }, []);
+
+  const progressFormattedString = useMemo(() => {
+    return progress > 0 ? `${STRINGS.NBSP}${progress}%` : '';
+  }, [progress]);
 
   const expectedURTypes = useMemo(() => {
     if (purpose === 'sync') {
@@ -227,7 +236,7 @@ export const KeystoneScannerModal = ({
             <First>
               <Text t8 color={Color.textBase3}>
                 {getText(I18N.keystoneScannerScanning)}
-                {progress > 0 ? ` ${progress}%` : ''}
+                {progressFormattedString}
               </Text>
             </First>
           </View>
