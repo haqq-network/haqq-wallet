@@ -20,7 +20,7 @@ import {
 import {createTheme} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForScanQr} from '@app/helpers/await-for-scan-qr';
-import {LinkType} from '@app/helpers/parse-deep-link';
+import {LinkType, parseDeepLink} from '@app/helpers/parse-deep-link';
 import {withActionsContactItem} from '@app/hocs';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
@@ -62,7 +62,8 @@ export const TransactionAddress = ({
   }, [onAddress, address]);
 
   const onPressQR = useCallback(async () => {
-    const {type, params} = await awaitForScanQr();
+    const data = await awaitForScanQr();
+    const {type, params} = await parseDeepLink(data);
 
     switch (type) {
       case LinkType.Haqq:

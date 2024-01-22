@@ -5,6 +5,7 @@ import {Validator} from '@evmos/provider';
 import {Proposal} from '@evmos/provider/dist/rest/gov';
 import {Coin} from '@evmos/transactions';
 import {AccessListish, BigNumberish} from '@haqq/provider-base';
+import {KeystoneAwaitForSignParams} from '@haqq/provider-keystone-react-native';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {NativeStackNavigationOptions} from '@react-navigation/native-stack';
@@ -148,6 +149,14 @@ export type LedgerWalletInitialData = {
   publicKey: string;
   deviceId: string;
   deviceName: string;
+};
+
+export type KeystoneWalletInitialData = {
+  type: 'keystone';
+  address: HaqqEthereumAddress;
+  hdPath: string;
+  publicKey: string;
+  qrCBORHex: string;
 };
 
 export type RootStackParamList = {
@@ -672,6 +681,7 @@ export enum WalletType {
   hot = 'hot',
   ledgerBt = 'ledger-bt',
   sss = 'sss',
+  keystone = 'keystone',
 }
 
 export enum WalletCardPattern {
@@ -743,6 +753,7 @@ export type AddWalletParams = {
   colorPattern?: string;
   socialLinkEnabled?: boolean;
   mnemonicSaved?: boolean;
+  isImported?: boolean;
 };
 
 export enum ValidatorStatus {
@@ -811,7 +822,6 @@ export type LedgerAccountItem = {
 };
 
 export type ChooseAccountItem = AddWalletParams & {
-  name: string;
   balance: Balance;
   exists?: boolean;
 };
@@ -1076,6 +1086,16 @@ export type Modals = {
     onClose?: () => void;
   };
   cloudShareNotFound: {onClose?: () => void; wallet: Wallet};
+  keystoneScanner: {
+    purpose?: 'sign' | 'sync';
+    eventTaskId?: string;
+    onClose?: () => void;
+  };
+  keystoneQR: KeystoneAwaitForSignParams & {
+    succesEventName: string;
+    errorEventName: string;
+    onClose?: () => void;
+  };
   sssLimitReached: {onClose?: () => void};
 };
 
@@ -1108,6 +1128,8 @@ export enum ModalType {
   cloudVerification = 'cloudVerification',
   viewErrorDetails = 'viewErrorDetails',
   cloudShareNotFound = 'cloudShareNotFound',
+  keystoneScanner = 'keystoneScanner',
+  keystoneQR = 'keystoneQR',
   sssLimitReached = 'sssLimitReached',
 }
 

@@ -16,6 +16,7 @@ import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {I18N, getText} from '@app/i18n';
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {basicScreenOptions} from '@app/screens';
+import {DeviceStack} from '@app/screens/DeviceStack';
 import {AccountDetailScreen} from '@app/screens/HomeStack/account-detail';
 import {BackupStack} from '@app/screens/HomeStack/BackupStack';
 import {HomeScreen} from '@app/screens/HomeStack/home';
@@ -39,7 +40,6 @@ import {TotalValueInfoScreen} from '@app/screens/total-value-info';
 import {ValueSelectorScreen} from '@app/screens/value-selector-screen';
 import {WalletSelectorScreen} from '@app/screens/wallet-selector-screen';
 import {Web3BrowserPopup as Web3BrowserPopupScreen} from '@app/screens/web3-browser-popup';
-import {LedgerStack} from '@app/screens/WelcomeStack/LedgerStack';
 import {SignInStack} from '@app/screens/WelcomeStack/SignInStack';
 
 const navigatorOptions: NativeStackNavigationOptions = {
@@ -63,7 +63,7 @@ const fullScreenModalOptions: NativeStackNavigationOptions = {
   animationDuration: 0,
 };
 
-const inAppBrowserOptions: NativeStackNavigationOptions = {
+export const inAppBrowserOptions: NativeStackNavigationOptions = {
   //@ts-ignore
   headerBackHidden: true,
   headerShown: true,
@@ -205,8 +205,8 @@ const HomeStack = memo(() => {
         options={modalOptions}
       />
       <Stack.Screen
-        name={HomeStackRoutes.Ledger}
-        component={LedgerStack}
+        name={HomeStackRoutes.Device}
+        component={DeviceStack}
         options={modalOptions}
       />
       <Stack.Screen

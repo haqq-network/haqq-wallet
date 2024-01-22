@@ -19,6 +19,7 @@ import {
   Platform,
 } from 'react-native';
 import {Adjust} from 'react-native-adjust';
+import prompt, {PromptOptions} from 'react-native-prompt-android';
 
 import {app} from '@app/contexts';
 import {Transaction, TransactionStatus} from '@app/models/transaction';
@@ -922,3 +923,13 @@ export const migrateTransaction = (tx: IndexerTransaction): Transaction => {
     id: tx.id,
   };
 };
+
+export function promtAsync(
+  title?: string,
+  message?: string,
+  options?: PromptOptions,
+): Promise<string> {
+  return new Promise(resolve => {
+    prompt(title, message, resolve, options);
+  });
+}

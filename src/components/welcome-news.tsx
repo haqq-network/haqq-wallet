@@ -4,7 +4,6 @@ import {FlatList, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Results} from 'realm';
 
-import {Color} from '@app/colors';
 import {NewsRow} from '@app/components/news/news-row';
 import {Button, ButtonSize, ButtonVariant, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
@@ -15,13 +14,13 @@ type WelcomeProps = {
   news: Results<NewsModel>;
   onPress: (id: string) => void;
   onPressSignup: () => void;
-  onPressLedger: () => void;
+  onPressHardwareWallet: () => void;
   onPressSignIn: () => void;
 };
 
 export const WelcomeNews = ({
   onPressSignup,
-  onPressLedger,
+  onPressHardwareWallet,
   onPressSignIn,
   news,
   onPress,
@@ -49,12 +48,10 @@ export const WelcomeNews = ({
         />
         <Spacer height={16} />
         <Button
-          testID="welcome_ledger"
-          i18n={I18N.welcomeLedgerWallet}
-          iconRight="ledger"
-          iconRightColor={Color.graphicGreen1}
+          testID="welcome_connect_hardware_wallet"
+          i18n={I18N.welcomeConnectHardwareWallet}
           variant={ButtonVariant.second}
-          onPress={onPressLedger}
+          onPress={onPressHardwareWallet}
           size={ButtonSize.large}
         />
         <Spacer height={16} />

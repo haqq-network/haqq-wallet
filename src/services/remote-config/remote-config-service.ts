@@ -84,6 +84,18 @@ export class RemoteConfigService extends Initializable {
     return undefined;
   }
 
+  public safeGet<K extends keyof RemoteConfigTypes>(
+    key: K,
+  ): RemoteConfigTypes[K] {
+    const result = RemoteConfigService.instance.get(key);
+
+    if (result) {
+      return result;
+    }
+
+    return REMOTE_CONFIG_DEFAULT_VALUES[key];
+  }
+
   public getAll(): RemoteConfigTypes | undefined {
     return getCachedConfig();
   }

@@ -2,20 +2,20 @@ import React, {memo, useCallback} from 'react';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import {hideBack, popupScreenOptions} from '@app/helpers';
+import {hideBack, hideHeader, popupScreenOptions} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {
   LedgerStackParamList,
   LedgerStackRoutes,
   OnboardingStackRoutes,
 } from '@app/route-types';
-import {LedgerAccountsScreen} from '@app/screens/WelcomeStack/LedgerStack/ledger-accounts';
-import {LedgerAgreementScreen} from '@app/screens/WelcomeStack/LedgerStack/ledger-agreement';
-import {LedgerBluetoothScreen} from '@app/screens/WelcomeStack/LedgerStack/ledger-bluetooth';
-import {LedgerFinishScreen} from '@app/screens/WelcomeStack/LedgerStack/ledger-finish';
-import {LedgerScanScreen} from '@app/screens/WelcomeStack/LedgerStack/ledger-scan';
-import {LedgerStoreWalletScreen} from '@app/screens/WelcomeStack/LedgerStack/ledger-store-wallet';
-import {LedgerVerifyScreen} from '@app/screens/WelcomeStack/LedgerStack/ledger-verify';
+import {LedgerAccountsScreen} from '@app/screens/DeviceStack/LedgerStack/ledger-accounts';
+import {LedgerAgreementScreen} from '@app/screens/DeviceStack/LedgerStack/ledger-agreement';
+import {LedgerBluetoothScreen} from '@app/screens/DeviceStack/LedgerStack/ledger-bluetooth';
+import {LedgerFinishScreen} from '@app/screens/DeviceStack/LedgerStack/ledger-finish';
+import {LedgerScanScreen} from '@app/screens/DeviceStack/LedgerStack/ledger-scan';
+import {LedgerStoreWalletScreen} from '@app/screens/DeviceStack/LedgerStack/ledger-store-wallet';
+import {LedgerVerifyScreen} from '@app/screens/DeviceStack/LedgerStack/ledger-verify';
 import {OnboardingStack} from '@app/screens/WelcomeStack/OnboardingStack';
 import {ScreenOptionType} from '@app/types';
 
@@ -92,7 +92,7 @@ const LedgerStack = memo(() => {
       <Stack.Screen
         name={LedgerStackRoutes.OnboardingSetupPin}
         component={OnboardingStackGenerated}
-        options={{headerShown: false}}
+        options={hideHeader}
       />
     </Stack.Navigator>
   );

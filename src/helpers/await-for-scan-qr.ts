@@ -3,13 +3,25 @@ import {Keyboard} from 'react-native';
 
 import {app} from '@app/contexts';
 import {I18N, getText} from '@app/i18n';
-import {Modals} from '@app/types';
+import {ModalType, Modals} from '@app/types';
 import {makeID} from '@app/utils';
 
 import {hideModal, showModal} from './modal';
-import {LinkParseResult, LinkType, parseDeepLink} from './parse-deep-link';
 
-export type AwaitForScanQrParams = Omit<Modals['qr'], 'taskId'>;
+export enum QRScannerTypeEnum {
+  qr,
+  keystone,
+}
+
+type QRScannerParams = {
+  variant: QRScannerTypeEnum.qr;
+} & Omit<Modals[ModalType.qr], 'taskId'>;
+
+type KeystoneScannerParams = {
+  variant: QRScannerTypeEnum.keystone;
+} & Omit<Modals[ModalType.keystoneScanner], 'taskId'>;
+
+export type AwaitForScanQrParams = QRScannerParams | KeystoneScannerParams;
 
 export class AwaitForScanQrError {
   name = 'AwaitForScanQrError';
@@ -45,8 +57,10 @@ export enum AwaitForScanQrEvents {
 export const SCAN_QR_TASK_ID_LENGTH = 10;
 
 export async function awaitForScanQr(
-  params: AwaitForScanQrParams = {},
-): Promise<LinkParseResult> {
+  params: AwaitForScanQrParams = {
+    variant: QRScannerTypeEnum.qr,
+  },
+): Promise<string> {
   return new Promise((resolve, reject) => {
     Keyboard.dismiss();
     const eventTaskId = makeID(SCAN_QR_TASK_ID_LENGTH);
@@ -61,17 +75,7 @@ export async function awaitForScanQr(
     const onAction = async (data: string) => {
       removeAllListeners();
       hideModal('qr');
-      try {
-        const result = await parseDeepLink(data);
-        resolve(result);
-      } catch (err) {
-        Logger.captureException(err, 'awaitForScanQr:parse', {data});
-        resolve({
-          type: LinkType.Unrecognized,
-          rawData: data,
-          params: {},
-        });
-      }
+      resolve(data);
     };
 
     const onReject = (error: Error | string) => {
@@ -86,9 +90,19 @@ export async function awaitForScanQr(
     app.addListener(succesEventName, onAction);
     app.addListener(errorEventName, onReject);
 
-    return showModal('qr', {
+    return showModal(getModalNameByVariant(params.variant), {
       ...params,
       eventTaskId,
     });
   });
 }
+
+const getModalNameByVariant = (variant: QRScannerTypeEnum) => {
+  switch (variant) {
+    case QRScannerTypeEnum.keystone:
+      return ModalType.keystoneScanner;
+    case QRScannerTypeEnum.qr:
+    default:
+      return ModalType.qr;
+  }
+};

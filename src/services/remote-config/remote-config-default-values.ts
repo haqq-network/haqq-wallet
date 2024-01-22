@@ -113,6 +113,7 @@ export const REMOTE_CONFIG_DEFAULT_VALUES: Required<RemoteConfigTypes> = {
   staking_reward_min_amount: getDefaultBalanceValue(
     'staking_reward_min_amount',
   ).toHex(),
+  keystone_tutorial_url: 'https://keyst.one/mmm',
   web3_browser_bookmarks: [
     {
       title: 'HAQQ Dashboard',

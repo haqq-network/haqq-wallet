@@ -241,7 +241,9 @@ class WalletStore implements MobXStoreFromRealm {
   }
 
   getById(id: string = '') {
-    return this.wallets.find(wallet => wallet.address === id) ?? null;
+    return (
+      this.wallets.find(wallet => wallet.address === id.toLowerCase()) ?? null
+    );
   }
 
   getSize() {
