@@ -64,7 +64,7 @@ describe('Routine', () => {
       await element(by.id('transaction_address_next')).tap();
     }
 
-    await element(by.text('Islamic coin')).tap();
+    await element(by.text('ISLM')).tap();
 
     const input_form = element(by.id('transaction_sum_form_input'));
     await input_form.tap();
