@@ -119,6 +119,7 @@ export const StakingValidators = ({
         onSearchChange={onSearchChange}
         title={I18N.stakingValidators}
         iconRight="search"
+        testIdRight="staking-validators-search"
         iconLeft="arrow_back"
         onPressLeft={onGoBack}
       />
