@@ -36,6 +36,7 @@ import {I18N, getText} from './i18n';
 import {Banner, BannerButtonEvent, BannerType} from './models/banner';
 import {Wallet} from './models/wallet';
 import {navigator} from './navigator';
+import {HomeStackRoutes, WelcomeStackRoutes} from './route-types';
 import {Balance} from './services/balance';
 import {EthSignError} from './services/eth-sign';
 import {
@@ -654,22 +655,47 @@ export function isEthSignError(err: any): err is EthSignError {
 
 export interface InAppBrowserOptions {
   title?: string;
-  onPageLoaded?: () => void;
+  onPageLoaded?: (isError: boolean | undefined) => void;
 }
 
 export const openInAppBrowser = (
   url: string,
   options?: InAppBrowserOptions,
 ) => {
-  const {title, onPageLoaded} = options || {};
+  const {screenName, formattedUrl, title} = prepareDataForInAppBrowser(
+    url,
+    options,
+  );
+
+  navigator.navigate(screenName, {
+    url: formattedUrl,
+    title,
+  });
+};
+
+export const prepareDataForInAppBrowser = (
+  url: string,
+  options?: InAppBrowserOptions,
+) => {
+  const {onPageLoaded} = options || {};
   const eventId = `${Events.openInAppBrowserPageLoaded}-${url}`;
+
   if (onPageLoaded) {
     app.once(eventId, onPageLoaded);
   }
-  navigator.navigate('inAppBrowser', {
-    url: onUrlSubmit(url),
-    title,
-  });
+
+  const screenName:
+    | HomeStackRoutes.InAppBrowser
+    | WelcomeStackRoutes.InAppBrowser = app.onboarded
+    ? HomeStackRoutes.InAppBrowser
+    : WelcomeStackRoutes.InAppBrowser;
+
+  return {
+    ...options,
+    formattedUrl: onUrlSubmit(url),
+    eventId,
+    screenName,
+  };
 };
 
 export const openWeb3Browser = (url: string) => {

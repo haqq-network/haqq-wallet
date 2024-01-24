@@ -1934,7 +1934,8 @@ const en: Record<I18N, string> = {
   [I18N.keystoneConnectionStepSync]: 'Sync Keystone',
   [I18N.keystoneConnectionStepDescription1]:
     'Tap “Software Wallet” at the bottom left corner on the Keystone device.',
-  [I18N.keystoneConnectionStepDescription2]: 'Select “Haqq Wallet”.',
+  [I18N.keystoneConnectionStepDescription2]:
+    'Select “Haqq Wallet” or "Metamask".',
   [I18N.keystoneConnectionStepDescription3]:
     'Click on the three-dot button, then click “Connect software wallet” to scan the QR code displayed on the Keystone device.',
   [I18N.keystoneCameraPermissionOpenSettings]: 'Open settings',

@@ -323,4 +323,4 @@ export const SUPPORTED_UR_TYPE = {
   COSMOS_SIGNATURE: 'cosmos-signature',
 };
 
-export const KEYSTONE_NAME = 'QR Hardware';
+export const KEYSTONE_NAME = 'Keystone';
