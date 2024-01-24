@@ -59,27 +59,24 @@ const WelcomeStack = memo(({initialRouteName}: Props) => {
         options={newsDetailOptions}
       />
       <Stack.Screen
-        component={themeUpdaterHOC(SignUpStack)}
+        component={SignUpStack}
         name={WelcomeStackRoutes.SignUp}
         options={modalOptions}
       />
       <Stack.Screen
-        component={themeUpdaterHOC(DeviceStack)}
+        component={DeviceStack}
         name={WelcomeStackRoutes.Device}
         options={modalOptions}
       />
       <Stack.Screen
-        component={themeUpdaterHOC(SignInStack)}
+        component={SignInStack}
         name={WelcomeStackRoutes.SignIn}
         options={modalOptions}
       />
       <Stack.Screen
         name={WelcomeStackRoutes.InAppBrowser}
         component={themeUpdaterHOC(InAppBrowserScreen)}
-        options={{
-          ...inAppBrowserOptions,
-          presentation: 'fullScreenModal',
-        }}
+        options={inAppBrowserOptions}
       />
     </Stack.Navigator>
   );

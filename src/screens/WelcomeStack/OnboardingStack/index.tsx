@@ -6,6 +6,7 @@ import {
 } from '@react-navigation/native-stack';
 
 import {popupScreenOptions} from '@app/helpers';
+import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {
   AnyRouteFromParent,
   OnboardingStackParamList,
@@ -47,25 +48,25 @@ const OnboardingStack = memo(({initialParams, title}: Props) => {
     <Stack.Navigator screenOptions={popupScreenOptions}>
       <Stack.Screen
         name={OnboardingStackRoutes.OnboardingSetupPin}
-        component={OnboardingSetupPinScreen}
+        component={themeUpdaterHOC(OnboardingSetupPinScreen)}
         options={screenOptionsTitleOnly}
         initialParams={initialParams[OnboardingStackRoutes.OnboardingSetupPin]}
       />
       <Stack.Screen
         name={OnboardingStackRoutes.OnboardingRepeatPin}
-        component={OnboardingRepeatPinScreen}
+        component={themeUpdaterHOC(OnboardingRepeatPinScreen)}
         options={screenOptionsTitleOnly}
         initialParams={initialParams[OnboardingStackRoutes.OnboardingRepeatPin]}
       />
       <Stack.Screen
         name={OnboardingStackRoutes.OnboardingBiometry}
-        component={OnboardingBiometryScreen}
+        component={themeUpdaterHOC(OnboardingBiometryScreen)}
         options={screenOptionsWithTitle}
         initialParams={initialParams[OnboardingStackRoutes.OnboardingBiometry]}
       />
       <Stack.Screen
         name={OnboardingStackRoutes.OnboardingTrackUserActivity}
-        component={OnboardingTrackUserActivityScreen}
+        component={themeUpdaterHOC(OnboardingTrackUserActivityScreen)}
         options={screenOptionsWithTitle}
         initialParams={
           initialParams[OnboardingStackRoutes.OnboardingTrackUserActivity]
@@ -75,7 +76,7 @@ const OnboardingStack = memo(({initialParams, title}: Props) => {
         .length > 0 && (
         <Stack.Screen
           name={OnboardingStackRoutes.OnboardingFinish}
-          component={OnboardingFinishScreen}
+          component={themeUpdaterHOC(OnboardingFinishScreen)}
           initialParams={initialParams[OnboardingStackRoutes.OnboardingFinish]}
           options={{...screenOptionsWithoutTitle, animation: 'fade'}}
         />

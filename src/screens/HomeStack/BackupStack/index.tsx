@@ -3,6 +3,7 @@ import React, {memo} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
+import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {
@@ -36,13 +37,13 @@ export const BackupStack = memo(() => {
     <Stack.Navigator screenOptions={stackScreenOptions}>
       <Stack.Screen
         name={BackupStackRoutes.BackupWarning}
-        component={BackupWarningScreen}
+        component={themeUpdaterHOC(BackupWarningScreen)}
         initialParams={{wallet}}
         options={screenOptions}
       />
       <Stack.Screen
         name={BackupStackRoutes.BackupCreate}
-        component={BackupCreateScreen}
+        component={themeUpdaterHOC(BackupCreateScreen)}
       />
       <Stack.Screen
         name={BackupStackRoutes.BackupVerify}
@@ -50,7 +51,7 @@ export const BackupStack = memo(() => {
       />
       <Stack.Screen
         name={BackupStackRoutes.BackupFinish}
-        component={BackupFinishScreen}
+        component={themeUpdaterHOC(BackupFinishScreen)}
         options={screenOptions}
       />
     </Stack.Navigator>

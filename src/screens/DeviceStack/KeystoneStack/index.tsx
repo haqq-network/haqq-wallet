@@ -1,8 +1,10 @@
-import React, {memo, useCallback} from 'react';
+import React, {useCallback} from 'react';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {observer} from 'mobx-react-lite';
 
 import {hideBack, hideHeader, popupScreenOptions} from '@app/helpers';
+import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {I18N, getText} from '@app/i18n';
 import {
   KeystoneStackParamList,
@@ -18,7 +20,7 @@ import {OnboardingStack} from '@app/screens/WelcomeStack/OnboardingStack';
 const Stack = createNativeStackNavigator<KeystoneStackParamList>();
 const title = getText(I18N.keystoneConnect);
 
-const KeystoneStack = memo(() => {
+const KeystoneStack = observer(() => {
   const OnboardingStackGenerated = useCallback(
     //@ts-ignore
     props => (
@@ -46,23 +48,23 @@ const KeystoneStack = memo(() => {
     <Stack.Navigator screenOptions={{...popupScreenOptions, ...hideBack}}>
       <Stack.Screen
         name={KeystoneStackRoutes.KeystoneConnectionSteps}
-        component={KeystoneConnectionStepsScreen}
+        component={themeUpdaterHOC(KeystoneConnectionStepsScreen)}
       />
       <Stack.Screen
         name={KeystoneStackRoutes.KeystoneCameraPermission}
-        component={KeystoneCameraPermissionScreen}
+        component={themeUpdaterHOC(KeystoneCameraPermissionScreen)}
       />
       <Stack.Screen
         name={KeystoneStackRoutes.KeystoneAccounts}
-        component={KeystoneAccountsScreen}
+        component={themeUpdaterHOC(KeystoneAccountsScreen)}
       />
       <Stack.Screen
         name={KeystoneStackRoutes.KeystoneFinish}
-        component={KeystoneFinishScreen}
+        component={themeUpdaterHOC(KeystoneFinishScreen)}
       />
       <Stack.Screen
         name={KeystoneStackRoutes.OnboardingSetupPin}
-        component={OnboardingStackGenerated}
+        component={themeUpdaterHOC(OnboardingStackGenerated)}
         options={hideHeader}
       />
     </Stack.Navigator>

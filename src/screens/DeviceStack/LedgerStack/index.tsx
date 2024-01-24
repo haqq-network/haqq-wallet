@@ -3,6 +3,7 @@ import React, {memo, useCallback} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {hideBack, hideHeader, popupScreenOptions} from '@app/helpers';
+import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {I18N, getText} from '@app/i18n';
 import {
   LedgerStackParamList,
@@ -52,17 +53,17 @@ const LedgerStack = memo(() => {
     <Stack.Navigator screenOptions={popupScreenOptions}>
       <Stack.Screen
         name={LedgerStackRoutes.LedgerAgreement}
-        component={LedgerAgreementScreen}
+        component={themeUpdaterHOC(LedgerAgreementScreen)}
         options={hideBack}
       />
       <Stack.Screen
         name={LedgerStackRoutes.LedgerBluetooth}
-        component={LedgerBluetoothScreen}
+        component={themeUpdaterHOC(LedgerBluetoothScreen)}
         options={hideBack}
       />
       <Stack.Screen
         name={LedgerStackRoutes.LedgerScan}
-        component={LedgerScanScreen}
+        component={themeUpdaterHOC(LedgerScanScreen)}
         options={{
           title,
           ...hideBack,
@@ -70,7 +71,7 @@ const LedgerStack = memo(() => {
       />
       <Stack.Screen
         name={LedgerStackRoutes.LedgerAccounts}
-        component={LedgerAccountsScreen}
+        component={themeUpdaterHOC(LedgerAccountsScreen)}
         options={{title: getText(I18N.ledgerChooseAccount)}}
       />
       <Stack.Screen
@@ -85,13 +86,13 @@ const LedgerStack = memo(() => {
       />
       <Stack.Screen
         name={LedgerStackRoutes.LedgerFinish}
-        component={LedgerFinishScreen}
+        component={themeUpdaterHOC(LedgerFinishScreen)}
         options={hideBack}
       />
 
       <Stack.Screen
         name={LedgerStackRoutes.OnboardingSetupPin}
-        component={OnboardingStackGenerated}
+        component={themeUpdaterHOC(OnboardingStackGenerated)}
         options={hideHeader}
       />
     </Stack.Navigator>
