@@ -22,9 +22,11 @@ interface CustomHeaderProps {
   i18nTextLeft?: HeaderButtonProps['i18n'];
   onPressLeft?: HeaderButtonProps['onPress'];
   disabledLeft?: HeaderButtonProps['disabled'];
+  testIdLeft?: HeaderButtonProps['testID'];
   colorLeft?: ColorType;
   iconRight?: HeaderButtonProps['icon'];
   textRight?: HeaderButtonProps['text'];
+  testIdRight?: HeaderButtonProps['testID'];
   i18nTextRight?: HeaderButtonProps['i18n'];
   colorRight?: ColorType;
   onPressRight?: HeaderButtonProps['onPress'];
@@ -59,6 +61,8 @@ export const CustomHeader = forwardRef<
       i18nTextRight,
       i18nTextLeft,
       onSearchChange,
+      testIdLeft,
+      testIdRight,
     },
     ref,
   ) => {
@@ -95,7 +99,7 @@ export const CustomHeader = forwardRef<
               text={textLeft}
               icon={iconLeft}
               i18n={i18nTextLeft}
-              testID={'go_back'}
+              testID={testIdLeft || 'go_back'}
             />
             <Text t8 i18n={title} center />
             <HeaderButton
@@ -105,6 +109,7 @@ export const CustomHeader = forwardRef<
               text={textRight}
               icon={iconRight}
               i18n={i18nTextRight}
+              testID={testIdRight}
             />
           </>
         )}
