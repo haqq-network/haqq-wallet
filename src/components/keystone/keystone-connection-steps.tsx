@@ -41,7 +41,7 @@ export const KeystoneConnectionSteps = ({
           (_, index, {length}) => {
             const isLast = index === length - 1;
             return (
-              <>
+              <React.Fragment key={`keystone-connection-step-info-${index}`}>
                 <View style={styles.stepContainer}>
                   <Text
                     t9
@@ -60,7 +60,7 @@ export const KeystoneConnectionSteps = ({
                   </View>
                 </View>
                 {!isLast && <View style={styles.divider} />}
-              </>
+              </React.Fragment>
             );
           },
         )}

@@ -9,15 +9,16 @@ import {
   awaitForScanQr,
 } from '@app/helpers/await-for-scan-qr';
 import {useTypedNavigation} from '@app/hooks';
+import {useOpenInAppBrowser} from '@app/hooks/use-open-in-app-browser';
 import {KeystoneStackRoutes} from '@app/route-types';
 import {RemoteConfig} from '@app/services/remote-config';
-import {openInAppBrowser} from '@app/utils';
 
 const logger = Logger.create('KeystoneConnectionStepsScreen');
 
 export const KeystoneConnectionStepsScreen = () => {
   const navigation = useTypedNavigation();
   const [syncInProgress, setSyncInProgress] = useState(false);
+  const {openInAppBrowser} = useOpenInAppBrowser();
 
   const onPressSync = useCallback(async () => {
     try {
