@@ -6,13 +6,13 @@ import {Provider} from '@app/models/provider';
 import {
   ContactRealmObject,
   TransactionRealmObject,
+  VariablesStringRealmObject,
   WalletRealmObject,
 } from '@app/models/realm-object-for-migration';
 import {Refferal} from '@app/models/refferal';
 import {UserSchema, UserType} from '@app/models/user';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesDate} from '@app/models/variables-date';
-import {VariablesString} from '@app/models/variables-string';
 import {VestingMetadata} from '@app/models/vesting-metadata';
 import {Balance} from '@app/services/balance';
 import {AppTheme, WalletType} from '@app/types';
@@ -46,7 +46,7 @@ export const realm = new Realm({
     News,
     VariablesDate,
     VariablesBool,
-    VariablesString,
+    VariablesStringRealmObject,
     RssNews,
     VestingMetadata,
   ],
@@ -481,7 +481,7 @@ export const realm = new Realm({
 
         newRealm.create('VariablesBool', {
           id: 'biometry',
-          value: !!user.biometry,
+          value: user.biometry,
         });
 
         newRealm.create('VariablesBool', {

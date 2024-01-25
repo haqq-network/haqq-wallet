@@ -3,7 +3,7 @@ import url from 'url';
 import {onBannerAddClaimCode} from '@app/event-actions/on-banner-add-claim-code';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Refferal} from '@app/models/refferal';
-import {VariablesString} from '@app/models/variables-string';
+import {VariableString} from '@app/models/variables-string';
 import {Airdrop} from '@app/services/airdrop';
 import {AdjustEvents, DynamicLink} from '@app/types';
 
@@ -12,7 +12,7 @@ export async function onDynamicLink(link: Partial<DynamicLink> | null) {
     const parsedUrl = url.parse(link.url!, true);
 
     if (typeof parsedUrl?.query?.block_code === 'string') {
-      VariablesString.set('block_code', parsedUrl.query.block_code);
+      VariableString.set('block_code', parsedUrl.query.block_code);
     }
 
     if (parsedUrl.query.claim_code) {

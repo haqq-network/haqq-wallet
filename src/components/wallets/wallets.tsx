@@ -16,7 +16,7 @@ import {Plus} from '@app/components/wallets/plus';
 import {createTheme} from '@app/helpers';
 import {useWalletConnectSessions} from '@app/hooks/use-wallet-connect-sessions';
 import {WalletBalance} from '@app/hooks/use-wallets-balance';
-import {VariablesString} from '@app/models/variables-string';
+import {VariableString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
 import {WalletType} from '@app/types';
 import {filterWalletConnectSessionsByAddress} from '@app/utils';
@@ -120,15 +120,15 @@ export const Wallets = ({
           if (
             w.type === WalletType.mnemonic &&
             w.accountId &&
-            !VariablesString.get('rootMnemonicAccountId')
+            !VariableString.get('rootMnemonicAccountId')
           ) {
-            VariablesString.set('rootMnemonicAccountId', w.accountId);
+            VariableString.set('rootMnemonicAccountId', w.accountId);
             isSecondMnemonic = false;
           }
 
           if (
             w.type === WalletType.mnemonic &&
-            VariablesString.get('rootMnemonicAccountId') === w.accountId
+            VariableString.get('rootMnemonicAccountId') === w.accountId
           ) {
             isSecondMnemonic = false;
           }
