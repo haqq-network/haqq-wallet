@@ -5,7 +5,7 @@ import WebView, {WebViewMessageEvent} from 'react-native-webview';
 
 import {I18N} from '@app/i18n';
 import {BrowserPermission} from '@app/models/browser-permission';
-import {VariablesString} from '@app/models/variables-string';
+import {VariableString} from '@app/models/variables-string';
 import {sendNotification} from '@app/services/toast';
 import {BrowserPermissionStatus, BrowserPermissionType} from '@app/types';
 
@@ -170,7 +170,7 @@ const handleGeolocationRequest = async (
 
   // no need request permission for clearWatch
   if (data.event === BrowserGeolocationEvents.clearWatch) {
-    const geolocationWatchID = VariablesString.getGeoWatchId(
+    const geolocationWatchID = VariableString.getGeoWatchId(
       instanceId,
       data.watchID,
     );
@@ -231,7 +231,7 @@ const handleGeolocationRequest = async (
         rejectResponse,
         options,
       );
-      VariablesString.setGeoWatchId(instanceId, watchID, geolocationWatchID);
+      VariableString.setGeoWatchId(instanceId, watchID, geolocationWatchID);
       return true;
     default:
       return false;

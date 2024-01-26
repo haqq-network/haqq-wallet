@@ -1,110 +1,120 @@
+import {makeAutoObservable, when} from 'mobx';
+import {isHydrated, makePersistable} from 'mobx-persist-store';
+
+import {awaitForRealm} from '@app/helpers/await-for-realm';
 import {GEO_WATCH_ID_KEY} from '@app/helpers/webview-geolocation';
 import {realm} from '@app/models';
+import {VariablesStringRealmObject} from '@app/models/realm-object-for-migration';
+import {storage} from '@app/services/mmkv';
+import {MobXStoreFromRealm} from '@app/types';
 import {isValidJSON} from '@app/utils';
+import {STORE_REHYDRATION_TIMEOUT_MS} from '@app/variables/common';
 
-export class VariablesString extends Realm.Object {
-  static schema = {
-    name: 'VariablesString',
-    properties: {
-      id: 'string',
-      value: 'string',
-    },
-    primaryKey: 'id',
-  };
-  id!: string;
-  value!: string;
+export type VariableString = {
+  id: string;
+  value: string;
+};
 
-  static set(id: string, value: string) {
-    realm.write(() => {
-      realm.create<VariablesString>(
-        VariablesString.schema.name,
-        {
-          id,
-          value,
-        },
-        Realm.UpdateMode.Modified,
-      );
-    });
+export class VariableStringStore implements MobXStoreFromRealm {
+  realmSchemaName = VariablesStringRealmObject.schema.name;
+  variables: Map<string, string> = new Map();
 
-    return id;
-  }
+  constructor(shouldSkipPersisting: boolean = false) {
+    makeAutoObservable(this);
 
-  static exists(id: string): boolean {
-    return !!realm.objectForPrimaryKey<VariablesString>(
-      VariablesString.schema.name,
-      id,
-    );
-  }
-
-  static get(id: string) {
-    return realm.objectForPrimaryKey<VariablesString>(
-      VariablesString.schema.name,
-      id,
-    )?.value;
-  }
-
-  static getAll() {
-    return realm.objects<VariablesString>(VariablesString.schema.name);
-  }
-
-  static setGeoWatchId(
-    browserInstanceId: string,
-    watchID: number,
-    geolocationWatchID: number,
-  ) {
-    VariablesString.set(
-      `${browserInstanceId}:${GEO_WATCH_ID_KEY}:${watchID}`,
-      String(geolocationWatchID),
-    );
-  }
-
-  static getGeoWatchId(browserInstanceId: string, watchID: number) {
-    return VariablesString.get(
-      `${browserInstanceId}:${GEO_WATCH_ID_KEY}:${watchID}`,
-    );
-  }
-
-  static getAllGeoWatchIds(browserInstanceId: string) {
-    return VariablesString.getAll().filtered(
-      'id CONTAINS[c] $0 and id CONTAINS[c] $1',
-      GEO_WATCH_ID_KEY,
-      browserInstanceId,
-    );
-  }
-
-  static remove(id: string) {
-    const obj = realm.objectForPrimaryKey<VariablesString>(
-      VariablesString.schema.name,
-      id,
-    );
-
-    if (obj) {
-      realm.write(() => {
-        realm.delete(obj);
+    if (!shouldSkipPersisting) {
+      makePersistable(this, {
+        name: this.constructor.name,
+        properties: ['variables'],
+        storage: storage,
       });
     }
   }
 
-  static getById(id: string) {
-    return realm.objectForPrimaryKey<VariablesString>(
-      VariablesString.schema.name,
-      id,
-    );
+  get isHydrated() {
+    return isHydrated(this);
   }
 
-  static setObject(id: string, value: any) {
+  migrate = async () => {
+    await awaitForRealm();
+    await when(() => this.isHydrated, {
+      timeout: STORE_REHYDRATION_TIMEOUT_MS,
+    });
+
+    const realmData = realm.objects<VariableString>(this.realmSchemaName);
+    if (realmData.length > 0) {
+      realmData.forEach(item => {
+        this.set(item.id, item.value);
+        realm.write(() => {
+          realm.delete(item);
+        });
+      });
+    }
+  };
+
+  set(id: string, value: string) {
+    this.variables.set(id, value);
+  }
+
+  setObject(id: string, value: any) {
     if (isValidJSON(value)) {
-      VariablesString.set(id, JSON.stringify(value));
+      this.variables.set(id, JSON.stringify(value));
       return true;
     }
     return false;
   }
 
-  static getObject<T = {}>(id: string) {
-    const value = VariablesString.get(id);
+  get(id: string) {
+    return this.variables.get(id);
+  }
+
+  getObject<T = {}>(id: string) {
+    const value = this.variables.get(id);
     if (isValidJSON(value)) {
       return JSON.parse(value) as T;
     }
     return null;
   }
+
+  getAll() {
+    return Array.from(this.variables.entries());
+  }
+
+  exists(id: string) {
+    return this.variables.has(id);
+  }
+
+  remove(id: string) {
+    this.variables.delete(id);
+  }
+
+  setGeoWatchId(
+    browserInstanceId: string,
+    watchID: number,
+    geolocationWatchID: number,
+  ) {
+    this.variables.set(
+      `${browserInstanceId}:${GEO_WATCH_ID_KEY}:${watchID}`,
+      String(geolocationWatchID),
+    );
+  }
+
+  getGeoWatchId(browserInstanceId: string, watchID: number) {
+    return this.variables.get(
+      `${browserInstanceId}:${GEO_WATCH_ID_KEY}:${watchID}`,
+    );
+  }
+
+  getAllGeoWatchIds(browserInstanceId: string) {
+    return this.getAll().filter(item => {
+      const id = item[0].split(':');
+      return (
+        id[0].toLowerCase() === browserInstanceId.toLowerCase() &&
+        id[1].toLowerCase() === GEO_WATCH_ID_KEY.toLowerCase()
+      );
+    });
+  }
 }
+
+const instance = new VariableStringStore(Boolean(process.env.JEST_WORKER_ID));
+export {instance as VariableString};
