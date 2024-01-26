@@ -24,7 +24,7 @@ export const WalletsWrapper = observer(() => {
   const balance = useWalletsBalance(visible);
 
   useEffectAsync(async () => {
-    await Transaction.fetchTransactions(
+    await Transaction.fetchLatestTransactions(
       visible.map(item => AddressUtils.toHaqq(item.address)),
     );
   }, [visible]);

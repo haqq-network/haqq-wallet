@@ -14,20 +14,14 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
-import {
-  ContractNameMap,
-  OnTransactionRowPress,
-  TransactionListContract,
-  TransactionListReceive,
-  TransactionListSend,
-  TransactionSource,
-} from '@app/types';
+import {ContractNameMap} from '@app/types';
 
 export type Props = {
-  item: TransactionListSend | TransactionListReceive | TransactionListContract;
-  onPress: OnTransactionRowPress;
+  item: Transaction;
+  onPress(tx: Transaction): void;
   wallets: Wallet[];
   contractNameMap: ContractNameMap;
 };
@@ -40,24 +34,24 @@ type IMapItem = {
 };
 
 const DisplayMap: {[key: string]: IMapItem} = {
-  [TransactionSource.send]: {
-    iconName: IconsName.arrow_send,
-    title: I18N.transactionSendTitle,
-    sumTextColor: Color.textRed1,
-    amountText: I18N.transactionNegativeAmountText,
-  },
-  [TransactionSource.receive]: {
-    iconName: IconsName.arrow_receive,
-    title: I18N.transactionReceiveTitle,
-    sumTextColor: Color.textGreen1,
-    amountText: I18N.transactionPositiveAmountText,
-  },
-  [TransactionSource.contract]: {
-    iconName: IconsName.contract,
-    title: I18N.transactionContractTitle,
-    sumTextColor: Color.textGreen1,
-    amountText: I18N.transactionPositiveAmountText,
-  },
+  // [TransactionSource.send]: {
+  //   iconName: IconsName.arrow_send,
+  //   title: I18N.transactionSendTitle,
+  //   sumTextColor: Color.textRed1,
+  //   amountText: I18N.transactionNegativeAmountText,
+  // },
+  // [TransactionSource.receive]: {
+  //   iconName: IconsName.arrow_receive,
+  //   title: I18N.transactionReceiveTitle,
+  //   sumTextColor: Color.textGreen1,
+  //   amountText: I18N.transactionPositiveAmountText,
+  // },
+  // [TransactionSource.contract]: {
+  //   iconName: IconsName.contract,
+  //   title: I18N.transactionContractTitle,
+  //   sumTextColor: Color.textGreen1,
+  //   amountText: I18N.transactionPositiveAmountText,
+  // },
 };
 
 export const TransactionRowWidget = ({
@@ -66,6 +60,7 @@ export const TransactionRowWidget = ({
   wallets,
   contractNameMap,
 }: Props) => {
+  return null;
   const adressList = Wallet.addressList();
   const contract = useMemo(
     () => contractNameMap[item.to],

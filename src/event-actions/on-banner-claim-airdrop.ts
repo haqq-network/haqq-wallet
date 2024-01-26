@@ -18,6 +18,7 @@ import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {Airdrop, AirdropError, AirdropErrorCode} from '@app/services/airdrop';
 import {AdjustEvents} from '@app/types';
+import {MAIN_NETWORK_ID} from '@app/variables/common';
 
 export async function onBannerClaimAirdrop(claimCode: string) {
   const banner = Banner.getById(claimCode);
@@ -89,14 +90,11 @@ export async function onBannerClaimAirdrop(claimCode: string) {
 
       const info = await Airdrop.instance.campaign_code(claimCode);
 
-      if (
-        provider?.id !== '6d83b352-6da6-4a71-a250-ba222080e21f' &&
-        info.code_type !== 'raffle'
-      ) {
+      if (provider?.id !== MAIN_NETWORK_ID && info.code_type !== 'raffle') {
         showModal('claimOnMainnet', {
           network: provider?.name ?? '',
           onChange: () => {
-            app.providerId = '6d83b352-6da6-4a71-a250-ba222080e21f';
+            app.providerId = MAIN_NETWORK_ID;
           },
         });
       }

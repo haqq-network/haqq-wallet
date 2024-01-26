@@ -3,6 +3,7 @@ import {makePersistable} from 'mobx-persist-store';
 
 import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
+import {Whitelist} from '@app/helpers/whitelist';
 import {I18N, getText} from '@app/i18n';
 import {Contracts} from '@app/models/contracts';
 import {Wallet} from '@app/models/wallet';
@@ -81,6 +82,8 @@ class TokensStore implements MobXStore<IToken> {
           },
         ],
         storage: storage,
+      }).then(() => {
+        Logger.log('TokensStore data', JSON.stringify(this.data, null, 2));
       });
     }
   }
@@ -165,7 +168,7 @@ class TokensStore implements MobXStore<IToken> {
     const wallets = Wallet.getAll();
     const accounts = wallets.map(w => w.cosmosAddress);
     const updates = await Indexer.instance.updates(accounts, this.lastUpdate);
-    const result = this.parseIndexerTokens(updates);
+    const result = await this.parseIndexerTokens(updates);
     // this.lastUpdate = new Date();
     this.recalculateCommulativeSum(result);
 
@@ -195,9 +198,26 @@ class TokensStore implements MobXStore<IToken> {
     };
   };
 
-  private parseIndexerTokens = (
+  private parseIndexerTokens = async (
     data: IndexerUpdatesResponse,
-  ): IndexerTokensData => {
+  ): Promise<IndexerTokensData> => {
+    const tokensAndContracts = await Promise.all(
+      data.tokens.map(async token => {
+        try {
+          const contract = await Whitelist.verifyAddress(token.contract);
+          return {
+            token,
+            contract: (contract || {}) as IContract,
+          };
+        } catch (e) {
+          return {
+            token,
+            contract: {} as IContract,
+          };
+        }
+      }),
+    );
+
     return Wallet.getAll().reduce((acc, w) => {
       if (!Array.isArray(data.tokens)) {
         return {
@@ -206,42 +226,44 @@ class TokensStore implements MobXStore<IToken> {
         };
       }
 
-      const addressTokens: IToken[] = data.tokens
+      const addressTokens: IToken[] = tokensAndContracts
         .filter(
-          token =>
+          ({token}) =>
             !!token.contract && AddressUtils.toEth(token.address) === w.address,
         )
-        .map(token => {
+        .map(({token, contract}) => {
           const hasCache = this.hasContractCache(token.contract);
           if (!hasCache) {
-            const contract = data.addresses.find(
+            const contractFromAdresses = data.addresses.find(
               item => item.id === token.contract,
             );
+            this.saveContract(contractFromAdresses);
+          } else {
             this.saveContract(contract);
           }
 
-          // We saved contract in cache on previous step
-          const contract = this.getContract(token.contract);
+          const contractFromCache = this.getContract(token.contract);
+
           const result: IToken = {
-            id: contract.id,
-            contract_created_at: contract.created_at,
-            contract_updated_at: contract.updated_at,
+            id: contractFromCache.id,
+            contract_created_at: contractFromCache.created_at,
+            contract_updated_at: contractFromCache.updated_at,
             value: new Balance(
               token.value,
-              contract.decimals || WEI_PRECISION,
-              contract.symbol || CURRENCY_NAME,
+              contractFromCache.decimals || WEI_PRECISION,
+              contractFromCache.symbol || CURRENCY_NAME,
             ),
-            decimals: contract.decimals,
-            is_erc20: contract.is_erc20,
-            is_erc721: contract.is_erc721,
-            is_erc1155: contract.is_erc1155,
-            is_in_white_list: contract.is_in_white_list,
-            name: contract.name,
-            symbol: contract.symbol,
+            decimals: contractFromCache.decimals,
+            is_erc20: contractFromCache.is_erc20,
+            is_erc721: contractFromCache.is_erc721,
+            is_erc1155: contractFromCache.is_erc1155,
+            is_in_white_list: contractFromCache.is_in_white_list,
+            name: contractFromCache.name,
+            symbol: contractFromCache.symbol,
             created_at: token.created_at,
             updated_at: token.updated_at,
-            image: contract.icon
-              ? {uri: contract.icon}
+            image: contractFromCache.icon
+              ? {uri: contractFromCache.icon}
               : require('@assets/images/empty-icon.png'),
           };
 

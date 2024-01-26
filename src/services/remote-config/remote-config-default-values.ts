@@ -131,4 +131,12 @@ export const REMOTE_CONFIG_DEFAULT_VALUES: Required<RemoteConfigTypes> = {
       icon: 'https://raw.githubusercontent.com/sushiswap/sushiswap/master/apps/evm/public/icon-512x512.svg',
     },
   ],
+  cosmos_explorer: {
+    'haqq_11235-1': 'https://ping.pub/haqq/tx/{{tx_hash}}',
+    'haqq_54211-3': 'https://testnet.ping.pub/haqq/tx/{{tx_hash}}',
+  },
+  eth_explorer: {
+    'haqq_11235-1': 'https://explorer.haqq.network/tx/{{tx_hash}}',
+    'haqq_54211-3': 'https://explorer.testedge2.haqq.network/tx/{{tx_hash}}',
+  },
 };

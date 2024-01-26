@@ -1,6 +1,6 @@
 import {SessionTypes} from '@walletconnect/types';
 
-import {Link, RootStackParamList} from '@app/types';
+import {ChainId, Link, RootStackParamList} from '@app/types';
 
 export type WalletConnectNamespace = Omit<SessionTypes.Namespace, 'accounts'>;
 
@@ -18,7 +18,11 @@ export interface RemoteConfigBalanceTypes {
   staking_reward_min_amount: string;
 }
 
+export type ExplorerUrlsMap = Record<ChainId, string>;
+
 export interface RemoteConfigTypes extends RemoteConfigBalanceTypes {
+  eth_explorer: ExplorerUrlsMap;
+  cosmos_explorer: ExplorerUrlsMap;
   wallet_connect: WalletConnectAllowedNamespaces;
   web3_app_whitelist: string[];
   evm_endpoints: Record<string, string[]>;

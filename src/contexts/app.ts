@@ -54,8 +54,8 @@ import {
 import {
   LIGHT_GRAPHIC_GREEN_1,
   MAINNET_ETH_CHAIN_ID,
-  MAIN_NETWORK,
-  TEST_NETWORK,
+  MAIN_NETWORK_ID,
+  TEST_NETWORK_ID,
 } from '../variables/common';
 
 const optionalConfigObject = {
@@ -195,8 +195,8 @@ class App extends AsyncEventEmitter {
     return (
       VariablesString.get('providerId') ??
       (ENVIRONMENT === 'production' || ENVIRONMENT === 'distribution'
-        ? MAIN_NETWORK
-        : TEST_NETWORK)
+        ? MAIN_NETWORK_ID
+        : TEST_NETWORK_ID)
     );
   }
 

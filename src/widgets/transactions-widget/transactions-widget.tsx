@@ -6,24 +6,15 @@ import {Spacer} from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
 import {WidgetHeader} from '@app/components/ui/widget-header';
 import {I18N, getText} from '@app/i18n';
+import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
-import {
-  ContractNameMap,
-  OnTransactionRowPress,
-  TransactionListContract,
-  TransactionListReceive,
-  TransactionListSend,
-} from '@app/types';
+import {ContractNameMap} from '@app/types';
 import {TransactionRowWidget} from '@app/widgets/transactions-widget/transaction-row-widget';
 
 type Props = {
   onPress: () => void;
-  lastTransactions: (
-    | TransactionListSend
-    | TransactionListReceive
-    | TransactionListContract
-  )[];
-  onRowPress: OnTransactionRowPress;
+  lastTransactions: Transaction[];
+  onRowPress(tx: Transaction): void;
   wallets: Wallet[];
   contractNameMap: ContractNameMap;
 };

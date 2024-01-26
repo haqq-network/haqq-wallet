@@ -1,94 +1,59 @@
-import React, {useCallback, useMemo} from 'react';
+import React from 'react';
 
-import Clipboard from '@react-native-clipboard/clipboard';
-import {format} from 'date-fns';
-import {View} from 'react-native';
+import {Image, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {BottomSheet} from '@app/components/bottom-sheet';
 import {TransactionStatus} from '@app/components/transaction-status/transaction-status';
 import {DataContent, Icon, IconButton, Spacer, Text} from '@app/components/ui';
-import {cleanNumber, createTheme} from '@app/helpers';
+import {createTheme} from '@app/helpers';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
-import {Wallet} from '@app/models/wallet';
-import {sendNotification} from '@app/services';
 import {Balance} from '@app/services/balance';
-import {TransactionSource} from '@app/types';
-import {splitAddress} from '@app/utils';
-import {IS_IOS, LONG_NUM_PRECISION} from '@app/variables/common';
+import {IndexerTxParsedTokenInfo} from '@app/types';
+import {IS_IOS, LONG_NUM_PRECISION, STRINGS} from '@app/variables/common';
 
 type TransactionDetailProps = {
-  source: TransactionSource;
-  onCloseBottomSheet: () => void;
   transaction: Transaction;
   provider: (Provider & Realm.Object<unknown, never>) | null;
-  onPressInfo: () => void;
   contractName?: string;
+  isSent: boolean;
+  isContract: boolean;
+  title: string;
+  timestamp: string;
+  splitted: string[];
+  amount: Balance;
+  fee: Balance;
+  total: Balance;
+  isCosmosTx: boolean;
+  isEthereumTx: boolean;
+  tokenInfo: IndexerTxParsedTokenInfo;
+  onPressAddress: () => void;
+  onCloseBottomSheet: () => void;
+  onPressInfo: () => void;
 };
 
 export const TransactionDetail = ({
-  source,
-  onCloseBottomSheet,
   transaction,
   provider,
-  onPressInfo,
   contractName,
+  isSent,
+  isContract,
+  title,
+  timestamp,
+  splitted,
+  amount,
+  fee,
+  total,
+  tokenInfo,
+  isEthereumTx,
+  onPressAddress,
+  onPressInfo,
+  onCloseBottomSheet,
 }: TransactionDetailProps) => {
-  const adressList = Wallet.addressList();
-  const isSent =
-    source === TransactionSource.send || adressList.includes(transaction.from);
-  const isContract = source === TransactionSource.contract;
-  const to = isSent ? transaction.to : ' ';
-  const from = transaction?.from ? transaction.from : ' ';
-
-  const title = useMemo(() => {
-    const titleMap = {
-      [TransactionSource.send]: I18N.transactionDetailSent,
-      [TransactionSource.receive]: I18N.transactionDetailRecive,
-      [TransactionSource.contract]: I18N.transactionContractTitle,
-      // Only for ts check. Possible values is: send, receive, contract
-      [TransactionSource.date]: I18N.empty,
-      [TransactionSource.unknown]: I18N.empty,
-    };
-
-    return titleMap[source];
-  }, [source]);
-
-  const splitted = useMemo(
-    () => splitAddress(isSent ? to : from),
-    [from, isSent, to],
-  );
   const closeDistance = useCalculatedDimensionsValue(({height}) => height / 4);
-  const onPressAddress = useCallback(() => {
-    Clipboard.setString(isSent ? to : from);
-    sendNotification(I18N.notificationCopied);
-  }, [from, isSent, to]);
-
-  const total = useMemo(() => {
-    if (!transaction) {
-      return '';
-    }
-
-    if (source === TransactionSource.contract) {
-      return `${isSent ? '-' : '+'} ${cleanNumber(
-        transaction.value + (isSent ? transaction.fee : 0),
-      )}`;
-    }
-
-    if (source === TransactionSource.send) {
-      return `- ${cleanNumber(transaction.value + transaction.fee)}`;
-    }
-
-    return `+ ${cleanNumber(transaction.value)}`;
-  }, [transaction, source, isSent]);
-
-  const fee = useMemo(
-    () => new Balance(transaction.fee).toBalanceString(LONG_NUM_PRECISION),
-    [transaction.fee],
-  );
 
   if (!transaction) {
     return null;
@@ -97,9 +62,9 @@ export const TransactionDetail = ({
   return (
     <BottomSheet
       onClose={onCloseBottomSheet}
-      i18nTitle={title}
+      title={title}
       closeDistance={closeDistance}>
-      {total.length > 1 && (
+      {total.isPositive() && (
         <>
           <Text
             i18n={I18N.transactionDetailTotalAmount}
@@ -110,23 +75,20 @@ export const TransactionDetail = ({
             t6
             color={isSent ? Color.textRed1 : Color.textGreen1}
             style={styles.sum}
-            i18n={I18N.transactionConfirmationAmount}
-            i18params={{amount: total}}
+            children={total.toBalanceString(LONG_NUM_PRECISION)}
           />
           <Spacer height={2} />
           <Text
             t13
             color={Color.textBase2}
-            children={new Balance(total.replaceAll(' ', ''))
-              .toFiat('USD')
-              .toBalanceString()}
+            children={total.toFiat('USD').toBalanceString()}
           />
           <Spacer height={20} />
         </>
       )}
       <View style={styles.infoContainer}>
         <DataContent
-          title={format(transaction.createdAt, 'dd MMMM yyyy, HH:mm')}
+          title={timestamp}
           subtitleI18n={I18N.transactionDetailDate}
           reversed
           short
@@ -136,7 +98,7 @@ export const TransactionDetail = ({
           subtitleI18n={
             isSent ? I18N.transactionSendTitle : I18N.transactionReceiveTitle
           }
-          title={<TransactionStatus status={transaction.status} hasTitle />}
+          title={<TransactionStatus status={transaction.code} hasTitle />}
         />
         {!isContract && (
           <DataContent
@@ -158,7 +120,7 @@ export const TransactionDetail = ({
             onPress={onPressAddress}
           />
         )}
-        {isContract && contractName && (
+        {isContract && !!contractName && (
           <DataContent
             subtitleI18n={I18N.transactionDetailContractName}
             title={contractName}
@@ -166,26 +128,25 @@ export const TransactionDetail = ({
             reversed
           />
         )}
-        <DataContent
-          title={
-            <>
-              <View style={styles.iconView}>
-                <Icon
-                  name="islm"
-                  style={styles.icon}
-                  i16
-                  color={Color.graphicGreen1}
-                />
-              </View>
-              <Text t11>
-                Islamic Coin <Text color={Color.textBase2}>(ISLM)</Text>
-              </Text>
-            </>
-          }
-          subtitleI18n={I18N.transactionDetailCryptocurrency}
-          reversed
-          short
-        />
+        {isEthereumTx && (
+          <DataContent
+            title={
+              <>
+                <View style={styles.iconView}>
+                  <Image source={tokenInfo.icon} style={styles.icon} />
+                </View>
+                <Text t11>
+                  {tokenInfo.name}
+                  {STRINGS.NBSP}
+                  <Text color={Color.textBase2}>({tokenInfo.symbol})</Text>
+                </Text>
+              </>
+            }
+            subtitleI18n={I18N.transactionDetailCryptocurrency}
+            reversed
+            short
+          />
+        )}
         {provider && (
           <DataContent
             title={provider.name}
@@ -196,15 +157,14 @@ export const TransactionDetail = ({
         )}
         {!isContract && (
           <DataContent
-            titleI18n={I18N.transactionConfirmationAmount}
-            titleI18nParams={{amount: cleanNumber(transaction.value)}}
+            title={amount.toBalanceString()}
             subtitleI18n={I18N.transactionDetailAmount}
             reversed
             short
           />
         )}
         <DataContent
-          title={fee}
+          title={fee.toBalanceString(LONG_NUM_PRECISION)}
           subtitleI18n={I18N.transactionDetailNetworkFee}
           reversed
           short
@@ -246,6 +206,8 @@ const styles = createTheme({
   icon: {
     marginRight: IS_IOS ? 4 : 2,
     top: IS_IOS ? 1 : 2,
+    width: 16,
+    height: 16,
   },
   iconView: {top: IS_IOS ? -1.7 : 0},
   iconButton: {flexDirection: 'row', marginBottom: 50},

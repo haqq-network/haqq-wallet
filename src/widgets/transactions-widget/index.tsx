@@ -5,16 +5,10 @@ import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useTransactionList} from '@app/hooks/use-transaction-list';
 import {Wallet} from '@app/models/wallet';
 import {Indexer} from '@app/services/indexer';
-import {
-  OnTransactionRowPress,
-  TransactionListContract,
-  TransactionListReceive,
-  TransactionListSend,
-  TransactionSource,
-} from '@app/types';
 import {TransactionsWidget} from '@app/widgets/transactions-widget/transactions-widget';
 
 export const TransactionsWidgetWrapper = memo(() => {
+  return null;
   const navigation = useTypedNavigation();
   const wallets = useMemo(() => Wallet.getAll(), []);
   const addressList = Wallet.addressList();
@@ -56,7 +50,7 @@ export const TransactionsWidgetWrapper = memo(() => {
     }
   }, []);
 
-  const onRowPress: OnTransactionRowPress = useCallback(
+  const onRowPress = useCallback(
     (hash, params) => {
       const screenParams = params || {};
       navigation.navigate('transactionDetail', {

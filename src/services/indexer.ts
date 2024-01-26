@@ -4,6 +4,7 @@ import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {Whitelist} from '@app/helpers/whitelist';
 import {I18N, getText} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {
   ContractNameMap,
   IContract,
@@ -113,13 +114,16 @@ export class Indexer {
   async getTransactions(
     accounts: string[],
     latestBlock: string = 'latest',
+    providerId = app.providerId,
   ): Promise<IndexerTransaction[]> {
-    if (!app.provider.indexer) {
+    const provider = Provider.getById(providerId);
+
+    if (!provider?.indexer) {
       throw new Error('Indexer is not configured');
     }
 
     const response = await jsonrpcRequest<IndexerTransactionResponse>(
-      app.provider.indexer,
+      provider.indexer,
       'transactions',
       [accounts, latestBlock],
     );

@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 
-import {ListRenderItem, StyleSheet} from 'react-native';
+import {FlatListProps, ListRenderItem, StyleSheet} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 
 import {NftCollection} from '@app/types';
@@ -9,17 +9,18 @@ import {NftViewerCollectionPreview} from './nft-viewer-collection-preview';
 
 import {Spacer} from '../ui';
 
-export interface NftViewerCollectionPreviewListProps {
+export type NftViewerCollectionPreviewListProps = {
   data: NftCollection[];
   scrollEnabled?: boolean;
 
   onPress(item: NftCollection): void;
-}
+} & Pick<FlatListProps<any>, 'ListHeaderComponent'>;
 
 export const NftViewerCollectionPreviewList = ({
   data,
   onPress,
   scrollEnabled = true,
+  ListHeaderComponent,
 }: NftViewerCollectionPreviewListProps) => {
   const keyExtractor = useCallback((item: NftCollection) => item.address, []);
 
@@ -44,6 +45,7 @@ export const NftViewerCollectionPreviewList = ({
       renderItem={renderItem}
       scrollEnabled={scrollEnabled}
       columnWrapperStyle={styles.columnWrapperStyle}
+      ListHeaderComponent={ListHeaderComponent}
     />
   );
 };

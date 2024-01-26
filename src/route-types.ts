@@ -387,7 +387,7 @@ export type HomeStackParamList = {
     address: string;
     isPopup?: boolean;
   };
-  [HomeStackRoutes.TransactionDetail]: {hash: string; contractName?: string};
+  [HomeStackRoutes.TransactionDetail]: {txId: string; addresses: string[]};
   [HomeStackRoutes.InAppBrowser]: {
     url: string;
     title?: string;

@@ -19,6 +19,8 @@ class ContractsStore implements MobXStore<IContract> {
         name: this.constructor.name,
         properties: ['data'],
         storage: storage,
+      }).then(() => {
+        Logger.log('ContractsStore data', JSON.stringify(this.data, null, 2));
       });
     }
   }

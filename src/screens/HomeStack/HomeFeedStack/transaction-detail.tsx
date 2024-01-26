@@ -1,18 +1,22 @@
 import React, {useCallback, useMemo} from 'react';
 
+import Clipboard from '@react-native-clipboard/clipboard';
+import {format} from 'date-fns';
 import {observer} from 'mobx-react';
+import {Linking} from 'react-native';
 
 import {TransactionDetail} from '@app/components/transaction-detail';
-import {openURL} from '@app/helpers';
-import {AddressUtils} from '@app/helpers/address-utils';
+import {Loading} from '@app/components/ui';
+import {app} from '@app/contexts';
+import {getExplorerUrlForTxHash} from '@app/helpers/get-explorer-url-for-tx-hash';
+import {IndexerTransactionUtils} from '@app/helpers/indexer-transaction-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useTransaction} from '@app/hooks/use-transaction';
-import {Provider} from '@app/models/provider';
-import {Wallet} from '@app/models/wallet';
+import {I18N} from '@app/i18n';
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
-import {EthNetwork} from '@app/services';
-import {TransactionSource} from '@app/types';
-import {isContractTransaction} from '@app/utils';
+import {sendNotification} from '@app/services';
+import {Balance} from '@app/services/balance';
+import {splitAddress} from '@app/utils';
 
 export const TransactionDetailScreen = observer(() => {
   const navigation = useTypedNavigation<HomeStackParamList>();
@@ -20,51 +24,102 @@ export const TransactionDetailScreen = observer(() => {
     HomeStackParamList,
     HomeStackRoutes.TransactionDetail
   >();
+  const addressList = route.params.addresses;
+  const tx = useTransaction(route.params.txId);
+  const provider = useMemo(() => app.provider, []);
 
-  const transaction = useTransaction(route.params.hash);
-
-  const source = useMemo(() => {
-    const visibleAddressList = Wallet.getAllVisible().map(w => w.address);
-
-    if (isContractTransaction(transaction)) {
-      return TransactionSource.contract;
-    }
-
-    return visibleAddressList.includes(
-      AddressUtils.toEth(transaction?.from ?? ''),
-    )
-      ? TransactionSource.send
-      : TransactionSource.receive;
-  }, [transaction]);
-
-  const provider = useMemo(
-    () => (transaction ? Provider.getById(transaction.providerId) : null),
-    [transaction],
+  const contractName = useMemo(
+    () => IndexerTransactionUtils.getContractName(tx),
+    [tx],
   );
 
-  const onPressInfo = useCallback(async () => {
-    try {
-      const url = `${EthNetwork.explorer}tx/${transaction?.hash}`;
-      await openURL(url);
-    } catch (_e) {}
-  }, [transaction?.hash]);
+  const isSent = useMemo(
+    () => IndexerTransactionUtils.isOutcomingTx(tx, addressList),
+    [tx, addressList],
+  );
 
-  if (!transaction) {
-    return null;
+  const isContract = useMemo(
+    () => IndexerTransactionUtils.isContractInteraction(tx),
+    [tx],
+  );
+
+  const tokenInfo = useMemo(
+    () => IndexerTransactionUtils.getTokenInfo(tx),
+    [tx],
+  );
+
+  const {from, to} = useMemo(
+    () => IndexerTransactionUtils.getFromAndTo(tx, addressList),
+    [tx, addressList],
+  );
+
+  const {title} = useMemo(
+    () => IndexerTransactionUtils.getDescription(tx, addressList),
+    [tx, addressList],
+  );
+
+  const timestamp = useMemo(
+    () => format(new Date(tx.ts), 'dd MMMM yyyy, HH:mm'),
+    [tx.ts],
+  );
+
+  const splitted = useMemo(
+    () => splitAddress(isSent ? to : from),
+    [from, isSent, to],
+  );
+
+  const amount = useMemo(() => IndexerTransactionUtils.getAmount(tx), []);
+  const isCosmosTx = useMemo(() => IndexerTransactionUtils.isCosmosTx(tx), []);
+  const isEthereumTx = useMemo(
+    () => IndexerTransactionUtils.isEthereumTx(tx),
+    [],
+  );
+
+  const fee = useMemo(() => new Balance(`${tx.fee}`), [tx.fee]);
+
+  const total = useMemo(() => fee.operate(amount, 'add'), [fee, amount]);
+
+  const onPressInfo = useCallback(async () => {
+    const url = getExplorerUrlForTxHash(tx?.hash);
+    if (url) {
+      Linking.openURL(url);
+    }
+  }, [tx]);
+
+  const onPressAddress = useCallback(() => {
+    Clipboard.setString(isSent ? to : from);
+    sendNotification(I18N.notificationCopied);
+  }, [from, isSent, to]);
+
+  const onCloseBottomSheet = useCallback(() => {
+    navigation.canGoBack() && navigation.goBack();
+  }, [navigation]);
+
+  if (!tx) {
+    return <Loading />;
   }
 
-  const onCloseBottomSheet = () => {
-    navigation.canGoBack() && navigation.goBack();
-  };
+  Logger.log('tx', JSON.stringify(tx, null, 2));
 
   return (
     <TransactionDetail
-      source={source}
       provider={provider}
-      transaction={transaction}
+      transaction={tx}
+      contractName={contractName}
+      isSent={isSent}
+      isContract={isContract}
+      title={title}
+      timestamp={timestamp}
+      splitted={splitted}
+      amount={amount}
+      fee={fee}
+      total={total}
+      isCosmosTx={isCosmosTx}
+      isEthereumTx={isEthereumTx}
+      tokenInfo={tokenInfo}
+      onPressAddress={onPressAddress}
       onCloseBottomSheet={onCloseBottomSheet}
       onPressInfo={onPressInfo}
-      contractName={route.params?.contractName}
     />
   );
 });

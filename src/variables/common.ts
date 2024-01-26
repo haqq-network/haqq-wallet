@@ -1,3 +1,4 @@
+import DefaultProvidersJson from '@assets/migrations/providers.json';
 import {APPSTORE_APP_ID, GOOGLE_PLAY_PACKAGE} from '@env';
 import {Platform} from 'react-native';
 import {Easing} from 'react-native-reanimated';
@@ -178,8 +179,9 @@ export const ETH_HD_SHORT_PATH = "44'/60'/0'/0"; // HD derivation path
 export const LEDGER_HD_PATH_TEMPLATE = "44'/60'/index'/0/0"; // HD derivation path
 export const ETH_HD_PATH = `${ETH_HD_SHORT_PATH}/0`; // HD derivation path
 
-export const MAIN_NETWORK = '6d83b352-6da6-4a71-a250-ba222080e21f';
-export const TEST_NETWORK = '75a6778b-0a79-4a06-96c9-daddc8d2c013';
+export const DEFAULT_PROVIDERS = DefaultProvidersJson;
+export const MAIN_NETWORK_ID = DEFAULT_PROVIDERS[1].id;
+export const TEST_NETWORK_ID = DEFAULT_PROVIDERS[0].id;
 
 export const PRIVACY_POLICY = 'https://www.boredgen.net/wallet/privacy-policy';
 export const TERMS_OF_CONDITIONS =
