@@ -44,6 +44,7 @@ export const TopTabNavigatorSmall = ({
             return (
               <TouchableOpacity
                 key={`${tab.props.title}_${index}`}
+                testID={tab.props.testID}
                 onPress={() => onTabPress(tab, index)}>
                 <Text
                   color={textColor}

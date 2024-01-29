@@ -13,12 +13,14 @@ import {OnTransactionRowPress, TransactionListContract} from '@app/types';
 export type TransactionPreviewProps = {
   item: TransactionListContract;
   onPress: OnTransactionRowPress;
+  testID?: string;
   contractName: {name: string; symbol: string};
 };
 
 export const TransactionContract = ({
   item,
   onPress,
+  testID,
   contractName,
 }: TransactionPreviewProps) => {
   const adressList = Wallet.addressList();
@@ -36,7 +38,7 @@ export const TransactionContract = ({
   }
 
   return (
-    <TouchableWithoutFeedback onPress={handlePress}>
+    <TouchableWithoutFeedback testID={testID} onPress={handlePress}>
       <View style={styles.container}>
         <View style={styles.iconWrapper}>
           <Icon name="contract" color={Color.graphicBase1} />
