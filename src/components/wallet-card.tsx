@@ -270,7 +270,9 @@ export const WalletCard = memo(
               suppressHighlighting={true}>
               {parsedTotal}
             </Text>
-            <TouchableWithoutFeedback onPress={onAccountInfo}>
+            <TouchableWithoutFeedback
+              testID="accountInfoButton"
+              onPress={onAccountInfo}>
               <View style={styles.openDetailsIconContainer}>
                 <Icon
                   i16

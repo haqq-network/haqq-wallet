@@ -111,12 +111,14 @@ export const AccountInfo = ({
           initialTabIndex={0}>
           <TopTabNavigator.Tab
             name={TabNames.transactions}
+            testID="accountInfoTabTransactions"
             title={I18N.accountInfoTransactionTabTitle}
             component={null}
           />
           {isFeatureEnabled(Feature.tokens) && (
             <TopTabNavigator.Tab
               name={TabNames.tokens}
+              testID="accountInfoTabTokens"
               title={I18N.accountInfoTokensTabTitle}
               component={null}
             />
@@ -124,6 +126,7 @@ export const AccountInfo = ({
           {isFeatureEnabled(Feature.nft) && (
             <TopTabNavigator.Tab
               name={TabNames.nft}
+              testID="accountInfoTabNfts"
               title={I18N.accountInfoNftTabTitle}
               component={null}
             />
@@ -150,6 +153,7 @@ export const AccountInfo = ({
       <TransactionRow
         contractNameMap={contractNameMap}
         item={item}
+        testID="accountInfoTransactionRow"
         onPress={onPressRow}
       />
     ),

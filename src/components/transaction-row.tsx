@@ -15,6 +15,7 @@ import {
 
 export type TransactionPreviewProps = {
   item: TransactionList;
+  testID?: string;
   onPress: OnTransactionRowPress;
   contractNameMap: ContractNameMap;
 };
@@ -23,6 +24,7 @@ export const TransactionRow = ({
   item,
   onPress,
   contractNameMap,
+  testID,
 }: TransactionPreviewProps) => {
   const element = useMemo(() => {
     switch (item.source) {
@@ -37,6 +39,7 @@ export const TransactionRow = ({
           <TransactionContract
             contractName={contractNameMap[item.contractAddress || '']}
             item={item}
+            testID={testID}
             onPress={onPress}
           />
         );
