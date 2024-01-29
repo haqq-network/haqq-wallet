@@ -30,8 +30,7 @@ import {getUid} from '@app/helpers/get-uid';
 import {seedData} from '@app/models/seed-data';
 import {Token} from '@app/models/tokens';
 import {VariablesBool} from '@app/models/variables-bool';
-import {VariablesString} from '@app/models/variables-string';
-import {VestingMetadataType} from '@app/models/vesting-metadata';
+import {VariableString} from '@app/models/variables-string';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
@@ -84,10 +83,6 @@ class App extends AsyncEventEmitter {
   private authenticated: boolean = DEBUG_VARS.enableSkipPinOnLogin;
   private appStatus: AppStatus = AppStatus.inactive;
   private _balances: Map<HaqqEthereumAddress, BalanceData> = new Map();
-  private _balance: Map<string, Balance> = new Map();
-  private _stakingBalance: Map<string, Balance> = new Map();
-  private _vestingBalance: Map<string, Record<VestingMetadataType, Balance>> =
-    new Map();
   private _googleSigninSupported: boolean = false;
   private _appleSigninSupported: boolean =
     Platform.select({
@@ -193,7 +188,7 @@ class App extends AsyncEventEmitter {
 
   get providerId() {
     return (
-      VariablesString.get('providerId') ??
+      VariableString.get('providerId') ??
       (ENVIRONMENT === 'production' || ENVIRONMENT === 'distribution'
         ? MAIN_NETWORK_ID
         : TEST_NETWORK_ID)
@@ -203,7 +198,7 @@ class App extends AsyncEventEmitter {
   set providerId(value) {
     const p = Provider.getById(value);
     if (p) {
-      VariablesString.set('providerId', value);
+      VariableString.set('providerId', value);
       this._provider = p;
       EthNetwork.init(p);
       app.emit(Events.onProviderChanged);
@@ -217,17 +212,13 @@ class App extends AsyncEventEmitter {
   }
 
   get backend() {
-    if (!VariablesString.exists('backend')) {
-      return HAQQ_BACKEND_DEFAULT || HAQQ_BACKEND;
-    }
-
     return (
-      VariablesString.get('backend') || HAQQ_BACKEND_DEFAULT || HAQQ_BACKEND
+      VariableString.get('backend') || HAQQ_BACKEND_DEFAULT || HAQQ_BACKEND
     );
   }
 
   set backend(value) {
-    VariablesString.set('backend', value);
+    VariableString.set('backend', value);
   }
 
   get biometry() {
@@ -239,11 +230,11 @@ class App extends AsyncEventEmitter {
   }
 
   get language() {
-    return (VariablesString.get('language') as AppLanguage) || AppLanguage.en;
+    return (VariableString.get('language') as AppLanguage) || AppLanguage.en;
   }
 
   set language(value) {
-    VariablesString.set('language', value);
+    VariableString.set('language', value);
   }
 
   get isUnlocked() {
@@ -280,11 +271,11 @@ class App extends AsyncEventEmitter {
   }
 
   get notificationToken() {
-    return VariablesString.get('notificationToken') ?? '';
+    return VariableString.get('notificationToken') ?? '';
   }
 
   set notificationToken(value: string) {
-    VariablesString.set('notificationToken', value);
+    VariableString.set('notificationToken', value);
   }
 
   get snoozeBackup(): Date {
@@ -330,11 +321,11 @@ class App extends AsyncEventEmitter {
   }
 
   get theme() {
-    return (VariablesString.get('theme') as AppTheme) || AppTheme.system;
+    return (VariableString.get('theme') as AppTheme) || AppTheme.system;
   }
 
   set theme(value) {
-    VariablesString.set('theme', value);
+    VariableString.set('theme', value);
 
     this.emit(Events.onThemeChanged, value);
 

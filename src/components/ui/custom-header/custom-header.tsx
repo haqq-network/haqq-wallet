@@ -8,7 +8,7 @@ import {I18N} from '@app/i18n';
 import {ColorType} from '@app/types';
 
 import {HeaderButton, HeaderButtonProps} from './header-button';
-import {SearchLine} from './search-line';
+import {SearchLine, SearchLineProps} from './search-line';
 
 import {Text} from '../index';
 
@@ -31,7 +31,8 @@ interface CustomHeaderProps {
   colorRight?: ColorType;
   onPressRight?: HeaderButtonProps['onPress'];
   disabledRight?: HeaderButtonProps['disabled'];
-  onSearchChange?: (text: string) => void;
+  onChangeSearch?: SearchLineProps['onChange'];
+  testIdSearch?: SearchLineProps['testId'];
 }
 
 export type VotingCardDetailRefInterface =
@@ -60,9 +61,10 @@ export const CustomHeader = forwardRef<
       title = I18N.empty,
       i18nTextRight,
       i18nTextLeft,
-      onSearchChange,
+      onChangeSearch,
       testIdLeft,
       testIdRight,
+      testIdSearch,
     },
     ref,
   ) => {
@@ -89,7 +91,11 @@ export const CustomHeader = forwardRef<
     return (
       <View style={[styles.container, {marginTop: top}]}>
         {isSearching ? (
-          <SearchLine onChange={onSearchChange} onCancel={stopSearch} />
+          <SearchLine
+            onChange={onChangeSearch}
+            onCancel={stopSearch}
+            testId={testIdSearch}
+          />
         ) : (
           <>
             <HeaderButton

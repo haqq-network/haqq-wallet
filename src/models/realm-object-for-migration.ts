@@ -69,3 +69,14 @@ export class WalletRealmObject extends Realm.Object {
     primaryKey: 'address',
   };
 }
+
+export class VariablesStringRealmObject extends Realm.Object {
+  static schema = {
+    name: 'VariablesString',
+    properties: {
+      id: 'string',
+      value: 'string',
+    },
+    primaryKey: 'id',
+  };
+}

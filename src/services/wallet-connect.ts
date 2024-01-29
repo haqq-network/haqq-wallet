@@ -17,7 +17,7 @@ import {Events, WalletConnectEvents} from '@app/events';
 import {Initializable} from '@app/helpers/initializable';
 import {I18N} from '@app/i18n';
 import {VariablesBool} from '@app/models/variables-bool';
-import {VariablesString} from '@app/models/variables-string';
+import {VariableString} from '@app/models/variables-string';
 import {WalletConnectSessionMetadata} from '@app/models/wallet-connect-session-metadata';
 import {message as sendMessage, sendNotification} from '@app/services/toast';
 import {filterWalletConnectSessionsByAddress, isError, sleep} from '@app/utils';
@@ -146,7 +146,7 @@ export class WalletConnect extends Initializable {
    */
   public getPairedUrls() {
     return (
-      VariablesString.getObject<Record<string, boolean>>(PAIRING_URLS_KEY) || {}
+      VariableString.getObject<Record<string, boolean>>(PAIRING_URLS_KEY) || {}
     );
   }
 
@@ -159,7 +159,7 @@ export class WalletConnect extends Initializable {
       return sendNotification(I18N.walletConnectPairAlreadyExists);
     }
 
-    VariablesString.setObject(PAIRING_URLS_KEY, {
+    VariableString.setObject(PAIRING_URLS_KEY, {
       ...pairedUrls,
       [uri]: false,
     });
@@ -182,7 +182,7 @@ export class WalletConnect extends Initializable {
       if (!resp) {
         sendNotification(I18N.walletConnectPairError);
       } else {
-        VariablesString.setObject(PAIRING_URLS_KEY, {
+        VariableString.setObject(PAIRING_URLS_KEY, {
           ...pairedUrls,
           [uri]: true,
         });

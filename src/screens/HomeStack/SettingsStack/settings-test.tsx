@@ -51,7 +51,7 @@ import {Refferal} from '@app/models/refferal';
 import {RssNews} from '@app/models/rss-news';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesDate} from '@app/models/variables-date';
-import {VariablesString} from '@app/models/variables-string';
+import {VariableString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {SettingsStackParamList} from '@app/route-types';
@@ -382,7 +382,7 @@ export const SettingsTestScreen = observer(() => {
   const [uid, setUid] = useState<null | string>(null);
   const [adid, setAdid] = useState<null | string>(null);
   const [leadingAccount, setLeadingAccount] = useState(
-    VariablesString.get('leadingAccount'),
+    VariableString.get('leadingAccount'),
   );
   const [refInfo, setRefInfo] = useState<
     PlayInstallReferrerInfo | PlayInstallReferrerError | null
@@ -529,7 +529,7 @@ export const SettingsTestScreen = observer(() => {
 
   const onSetLeadingAccount = useCallback(async () => {
     const wallets = Wallet.getAll();
-    const initialAddress = VariablesString.get('leadingAccount');
+    const initialAddress = VariableString.get('leadingAccount');
 
     const selectedAccount = await awaitForWallet({
       wallets,
@@ -537,8 +537,8 @@ export const SettingsTestScreen = observer(() => {
       autoSelectWallet: false,
       initialAddress,
     });
-    VariablesString.set('leadingAccount', selectedAccount);
-    setLeadingAccount(VariablesString.get('leadingAccount'));
+    VariableString.set('leadingAccount', selectedAccount);
+    setLeadingAccount(VariableString.get('leadingAccount'));
   }, [showActionSheetWithOptions]);
 
   const [txList, setTxList] = useState<IndexerTransaction[]>([]);

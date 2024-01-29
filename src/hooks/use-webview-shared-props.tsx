@@ -15,7 +15,7 @@ import {BrowserError} from '@app/components/browser-error';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {WebviewAjustMiddleware} from '@app/helpers/webview-adjust-middleware';
 import {WebViewGeolocation} from '@app/helpers/webview-geolocation';
-import {VariablesString} from '@app/models/variables-string';
+import {VariableString} from '@app/models/variables-string';
 import {getUserAgent} from '@app/services/version';
 
 import {useTesterModeEnabled} from './use-tester-mode-enabled';
@@ -51,10 +51,10 @@ export const useWebViewSharedProps = (
   useFocusEffect(
     useCallback(() => {
       return () => {
-        VariablesString.getAllGeoWatchIds(instanceId).forEach(({id, value}) => {
+        VariableString.getAllGeoWatchIds(instanceId).forEach(([id, value]) => {
           Logger.log('clear watch', {id, value});
           Geolocation.clearWatch(Number(value));
-          VariablesString.remove(id);
+          VariableString.remove(id);
         });
       };
     }, []),
@@ -91,7 +91,7 @@ export const useWebViewSharedProps = (
     [propsToMerge, ref],
   );
 
-  const props = useMemo<WebViewProps>(
+  return useMemo<WebViewProps>(
     () => ({
       contentMode: 'mobile',
       webviewDebuggingEnabled: __DEV__ || isTesterMode,
@@ -144,8 +144,6 @@ export const useWebViewSharedProps = (
     }),
     [isTesterMode, onFileDownload, onMessage, renderError, userAgent, ...deps],
   );
-
-  return props;
 };
 
 function root(dir = '/www/') {

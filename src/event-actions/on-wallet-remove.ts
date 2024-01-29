@@ -1,7 +1,7 @@
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {Transaction} from '@app/models/transaction';
-import {VariablesString} from '@app/models/variables-string';
+import {VariableString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {Backend} from '@app/services/backend';
@@ -42,7 +42,7 @@ export async function onWalletRemove(address: string) {
       }
     }
 
-    const subscription = VariablesString.get('notificationToken');
+    const subscription = VariableString.get('notificationToken');
     if (subscription) {
       await Backend.instance.unsubscribeByTokenAndAddress(
         subscription,

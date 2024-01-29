@@ -17,12 +17,13 @@ import {HeaderButton} from './header-button';
 import {Icon} from '../icon';
 import {Spacer} from '../spacer';
 
-type SearchLineProps = {
+export type SearchLineProps = {
   onChange?: (text: string) => void;
   onCancel?: () => void;
+  testId?: string;
 };
 
-export function SearchLine({onChange, onCancel}: SearchLineProps) {
+export function SearchLine({onChange, onCancel, testId}: SearchLineProps) {
   const inputWidth = useSharedValue(0.9);
   const inputRef = useRef<TextInput>(null);
 
@@ -48,7 +49,7 @@ export function SearchLine({onChange, onCancel}: SearchLineProps) {
   }));
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID={testId}>
       <Animated.View style={[styles.inputContainer, inputAnimation]}>
         <View style={styles.iconContainer}>
           <Icon color={Color.graphicBase2} name="search" i18 />
@@ -61,6 +62,7 @@ export function SearchLine({onChange, onCancel}: SearchLineProps) {
           placeholder={' ' + getText(I18N.headerPlaceholderSearch)}
           placeholderTextColor={getColor(Color.graphicBase2)}
           onChangeText={onChange}
+          testID={`${testId}-input`}
         />
       </Animated.View>
       <Spacer width={14} />
@@ -68,6 +70,7 @@ export function SearchLine({onChange, onCancel}: SearchLineProps) {
         onPress={onPressCancel}
         color={Color.textGreen1}
         i18n={I18N.cancel}
+        testID={`${testId}-cancel`}
       />
     </View>
   );
