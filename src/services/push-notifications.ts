@@ -10,7 +10,7 @@ import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
 import {getUid} from '@app/helpers/get-uid';
 import {VariablesBool} from '@app/models/variables-bool';
-import {VariableString} from '@app/models/variables-string';
+import {VariablesString} from '@app/models/variables-string';
 import {Backend} from '@app/services/backend';
 import {AdjustEvents} from '@app/types';
 import {IS_ANDROID} from '@app/variables/common';
@@ -70,7 +70,7 @@ export class PushNotifications extends EventEmitter {
       );
 
       if (subscription) {
-        VariableString.set('notificationToken', subscription.id);
+        VariablesString.set('notificationToken', subscription.id);
         VariablesBool.set('notifications', true);
       }
 
@@ -84,7 +84,8 @@ export class PushNotifications extends EventEmitter {
   async getToken(force: boolean = false) {
     if (VariablesBool.get('notifications') || force) {
       try {
-        return await messaging().getToken();
+        const token = await messaging().getToken();
+        return token;
       } catch (err) {
         Logger.log('PushNotifications:getToken', err);
         return null;

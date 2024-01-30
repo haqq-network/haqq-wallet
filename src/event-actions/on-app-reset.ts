@@ -6,7 +6,7 @@ import {resetGenericPassword} from 'react-native-keychain';
 import {app} from '@app/contexts';
 import {Contact} from '@app/models/contact';
 import {Transaction} from '@app/models/transaction';
-import {VariableString} from '@app/models/variables-string';
+import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
 import {WalletConnectSessionMetadata} from '@app/models/wallet-connect-session-metadata';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
@@ -45,7 +45,7 @@ export async function onAppReset() {
   }
 
   app.getUser().resetUserData();
-  VariableString.set('rootMnemonicAccountId', '');
+  VariablesString.set('rootMnemonicAccountId', '');
   await resetGenericPassword();
 
   if (uid) {

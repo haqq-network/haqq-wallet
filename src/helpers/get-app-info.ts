@@ -7,7 +7,7 @@ import {getLeadingAccount} from '@app/helpers/get-leading-account';
 import {getUid} from '@app/helpers/get-uid';
 import {getAdjustAdid} from '@app/helpers/get_adjust_adid';
 import {VariablesBool} from '@app/models/variables-bool';
-import {VariableString} from '@app/models/variables-string';
+import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
 import {PushNotifications} from '@app/services/push-notifications';
 import {getAppVersion} from '@app/services/version';
@@ -53,7 +53,7 @@ export async function getAppInfo(): Promise<AppInfo> {
     ip_address: ipAddress,
     leading_address: leadingAccount?.address ?? null,
     notifications: {
-      id: VariableString.get('notificationToken'),
+      id: VariablesString.get('notificationToken'),
       token,
       transaction: VariablesBool.get(TRANSACTION_TOPIC_VARIABLE_NAME),
       news: VariablesBool.get(NEWS_TOPIC_VARIABLE_NAME),

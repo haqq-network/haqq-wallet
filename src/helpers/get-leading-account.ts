@@ -1,4 +1,4 @@
-import {VariableString} from '@app/models/variables-string';
+import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
 import {WalletType} from '@app/types';
 
@@ -10,12 +10,12 @@ const walletTypes = [
 ];
 
 export function getLeadingAccount() {
-  let leadingAccount = VariableString.get('leadingAccount');
+  let leadingAccount = VariablesString.get('leadingAccount');
 
   if (leadingAccount) {
     const wallet = Wallet.getById(leadingAccount);
 
-    if (!wallet || wallet?.isHidden) {
+    if (!wallet || wallet?.isHidden === true) {
       leadingAccount = undefined;
     } else {
       return wallet;
@@ -42,7 +42,7 @@ export function getLeadingAccount() {
     return null;
   }
 
-  VariableString.set('leadingAccount', leadingAccount);
+  VariablesString.set('leadingAccount', leadingAccount);
 
   return Wallet.getById(leadingAccount);
 }

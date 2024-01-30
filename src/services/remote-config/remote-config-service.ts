@@ -1,7 +1,7 @@
 import {onRemoteConfigSync} from '@app/event-actions/on-remote-config-sync';
 import {getAppInfo} from '@app/helpers/get-app-info';
 import {Initializable} from '@app/helpers/initializable';
-import {VariableString} from '@app/models/variables-string';
+import {VariablesString} from '@app/models/variables-string';
 import {Backend} from '@app/services/backend';
 import {RemoteConfigTypes} from '@app/services/remote-config/remote-config-types';
 import {isValidJSON} from '@app/utils';
@@ -17,7 +17,7 @@ const logger = Logger.create('RemoteConfig', {
 });
 
 function getCachedConfig() {
-  const cacheString = VariableString.get(KEY);
+  const cacheString = VariablesString.get(KEY);
   if (isValidJSON(cacheString)) {
     return {
       ...REMOTE_CONFIG_DEFAULT_VALUES,
@@ -45,7 +45,7 @@ export class RemoteConfigService extends Initializable {
       const config = await Backend.instance.getRemoteConfig(appInfo);
 
       if (Object.keys(config).length) {
-        VariableString.set(KEY, JSON.stringify(config));
+        VariablesString.set(KEY, JSON.stringify(config));
         RemoteConfigService.instance.isInited = true;
       } else {
         logger.error('remote config is empty', config);

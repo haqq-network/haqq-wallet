@@ -3,12 +3,12 @@ import {Events} from '@app/events';
 import {showModal} from '@app/helpers';
 import {getUid} from '@app/helpers/get-uid';
 import {I18N, getText} from '@app/i18n';
-import {VariableString} from '@app/models/variables-string';
+import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
 import {Backend} from '@app/services/backend';
 
 export async function onBlockRequestCheck() {
-  const blockRequest = VariableString.get('block_code');
+  const blockRequest = VariablesString.get('block_code');
   // Logger.log('onBlockRequestCheck', {blockRequest});
 
   try {
@@ -21,7 +21,7 @@ export async function onBlockRequestCheck() {
       );
 
       if (response.result) {
-        VariableString.remove('block_code');
+        VariablesString.remove('block_code');
         app.emit(Events.onRequestMarkup, blockRequest);
       } else if (response.error) {
         Logger.error('onBlockRequest request error', response);

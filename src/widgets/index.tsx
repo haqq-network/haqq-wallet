@@ -10,7 +10,7 @@ import React, {
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {getAppInfo} from '@app/helpers/get-app-info';
-import {VariableString} from '@app/models/variables-string';
+import {VariablesString} from '@app/models/variables-string';
 import {Backend} from '@app/services/backend';
 import {IWidget} from '@app/types';
 import {generateUUID} from '@app/utils';
@@ -59,7 +59,7 @@ const WidgetMap: IWidgetMap = {
 
 export const WidgetRoot = memo(({lastUpdate}: {lastUpdate: number}) => {
   const dataCached = useRef(
-    VariableString.get('widget_blocks') || '[]',
+    VariablesString.get('widget_blocks') || '[]',
   ).current;
 
   const [data, setData] = useState<IWidget[]>(JSON.parse(dataCached));
@@ -79,7 +79,7 @@ export const WidgetRoot = memo(({lastUpdate}: {lastUpdate: number}) => {
 
     if (!blocksAreEqual) {
       setData(blocks);
-      VariableString.set('widget_blocks', JSON.stringify(blocks));
+      VariablesString.set('widget_blocks', JSON.stringify(blocks));
     }
   }, [data]);
 

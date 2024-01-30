@@ -1,7 +1,7 @@
 import {cosmosAddress} from '@haqq/provider-base';
 
 import {VariablesBool} from '@app/models/variables-bool';
-import {VariableString} from '@app/models/variables-string';
+import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
 import {Backend} from '@app/services/backend';
 import {PushNotificationTopicsEnum} from '@app/services/push-notifications';
@@ -13,7 +13,7 @@ export async function onPushSubscriptionTransactionsSubscribe() {
     true,
   );
 
-  const subscription = VariableString.get('notificationToken');
+  const subscription = VariablesString.get('notificationToken');
 
   if (subscription) {
     const wallets = Wallet.getAll();
