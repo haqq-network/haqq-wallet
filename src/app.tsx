@@ -100,7 +100,7 @@ export const App = () => {
             Wallet.migrate(),
             Transaction.migrate(),
           ]);
-
+          app.initProvider();
           // We need reopen app for start SSS check
           // because we are working with cloud snapshots
           VariablesBool.set('isReadyForSSSVerification', true);

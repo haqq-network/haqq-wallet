@@ -60,35 +60,37 @@ const parseIndexerBalances = (
 
 export async function onWalletsBalanceCheck() {
   try {
-    const wallets = Wallet.getAllVisible();
-    const lastBalanceUpdates = VariablesDate.get(
-      `indexer_${app.provider.cosmosChainId}`,
-    );
+    if (app.provider?.cosmosChainId) {
+      const wallets = Wallet.getAllVisible();
+      const lastBalanceUpdates = VariablesDate.get(
+        `indexer_${app.provider.cosmosChainId}`,
+      );
 
-    if (!app.provider.indexer) {
-      throw new Error('Indexer is not available');
+      if (!app.provider.indexer) {
+        throw new Error('Indexer is not available');
+      }
+
+      let accounts = wallets.map(w => w.cosmosAddress);
+      const updates = await Indexer.instance.updates(
+        accounts,
+        lastBalanceUpdates,
+      );
+
+      VariablesDate.set(
+        `indexer_${app.provider.cosmosChainId}`,
+        new Date(updates.last_update),
+      );
+
+      const result = parseIndexerBalances(updates);
+
+      //Caching balances
+      const value = JSON.stringify(updates);
+      storage.setItem(BALANCE_CACHE_KEY, value);
+
+      app.onWalletsBalance(result);
+
+      ExchangeRates.update(updates.rates);
     }
-
-    let accounts = wallets.map(w => w.cosmosAddress);
-    const updates = await Indexer.instance.updates(
-      accounts,
-      lastBalanceUpdates,
-    );
-
-    VariablesDate.set(
-      `indexer_${app.provider.cosmosChainId}`,
-      new Date(updates.last_update),
-    );
-
-    const result = parseIndexerBalances(updates);
-
-    //Caching balances
-    const value = JSON.stringify(updates);
-    storage.setItem(BALANCE_CACHE_KEY, value);
-
-    app.onWalletsBalance(result);
-
-    ExchangeRates.update(updates.rates);
   } catch (e) {
     Logger.error(Events.onWalletsBalanceCheck, e);
 

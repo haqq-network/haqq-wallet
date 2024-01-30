@@ -117,16 +117,6 @@ class App extends AsyncEventEmitter {
 
     this.user = User.getOrCreate();
 
-    this._provider = Provider.getById(this.providerId);
-
-    if (this._provider) {
-      EthNetwork.init(this._provider);
-    }
-
-    this.checkBalance = this.checkBalance.bind(this);
-    this.checkBalance();
-    setInterval(this.checkBalance, 6000);
-
     this.handleDynamicLink = this.handleDynamicLink.bind(this);
 
     dynamicLinks().onLink(this.handleDynamicLink);
@@ -390,6 +380,27 @@ class App extends AsyncEventEmitter {
     return Promise.resolve();
   }
 
+  initProvider = (): void => {
+    this._provider = Provider.getById(this.providerId);
+
+    if (this._provider) {
+      EthNetwork.init(this._provider);
+    }
+
+    this.runBalanceChecker();
+  };
+
+  runBalanceChecker = () => {
+    this.checkBalance();
+    setInterval(this.checkBalance, 6000);
+  };
+
+  checkBalance = () => {
+    if (AppState.currentState === 'active') {
+      this.emit(Events.onWalletsBalanceCheck);
+    }
+  };
+
   async getPassword() {
     const creds = await getGenericPassword();
     if (!creds || !creds.password || creds.username !== this.user.uuid) {
@@ -520,12 +531,6 @@ class App extends AsyncEventEmitter {
       }
 
       this.appStatus = appStatus;
-    }
-  }
-
-  checkBalance() {
-    if (AppState.currentState === 'active') {
-      this.emit(Events.onWalletsBalanceCheck);
     }
   }
 
