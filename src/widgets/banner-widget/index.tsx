@@ -17,6 +17,7 @@ import {
 import {ShadowCard} from '@app/components/ui/shadow-card';
 import {onDeepLink} from '@app/event-actions/on-deep-link';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
+import {BannerButtonEvent} from '@app/models/banner';
 import {IBannerWidget} from '@app/types';
 import {openWeb3Browser} from '@app/utils';
 import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
@@ -29,6 +30,11 @@ export interface HomeBannerProps {
 export const BannerWidget = ({banner, style}: HomeBannerProps) => {
   const [loading, setLoading] = useState(false);
   const [isVisible, setVisible] = useState(true);
+
+  const showCloseButton = useMemo(
+    () => banner.closeEvent && banner.closeEvent !== BannerButtonEvent.none,
+    [banner],
+  );
 
   const onPressClose = useCallback(async () => {
     setVisible(false);
@@ -114,7 +120,7 @@ export const BannerWidget = ({banner, style}: HomeBannerProps) => {
             ))}
           </Inline>
         )}
-        {banner.closeEvent && (
+        {showCloseButton && (
           <IconButton style={styles.closeButton} onPress={onPressClose}>
             <Icon
               name="close_circle"
