@@ -6,7 +6,7 @@ import '@ethersproject/shims';
 import '@walletconnect/react-native-compat';
 import {AppRegistry, I18nManager, LogBox} from 'react-native';
 
-import {ENVIRONMENT, SENTRY_DSN} from '@env';
+import {ENVIRONMENT, SENTRY_DSN, FOR_DETOX} from '@env';
 import {JsonRpcProvider} from '@ethersproject/providers';
 import * as Sentry from '@sentry/react-native';
 import {name as appName} from './app.json';
@@ -14,6 +14,10 @@ import {App} from './src/app';
 import './src/event-actions';
 import {Jailbreak} from './src/jailbreak';
 import messaging from '@react-native-firebase/messaging';
+import {IS_IOS} from '@app/variables/common';
+import {DEBUG_VARS} from '@app/debug-vars';
+import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
+import {enableFreeze, enableScreens} from 'react-native-screens';
 
 if (!global.BigInt) {
   const BigInt = require('big-integer');
@@ -22,12 +26,6 @@ if (!global.BigInt) {
     BigInt: BigInt,
   });
 }
-
-import './src/event-actions';
-import {IS_IOS} from '@app/variables/common';
-import {DEBUG_VARS} from '@app/debug-vars';
-import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
-import {enableScreens, enableFreeze} from 'react-native-screens';
 
 enableScreens();
 enableFreeze(true);
@@ -39,7 +37,8 @@ try {
   I18nManager.allowRTL(isRTLEnabled);
   I18nManager.forceRTL(isRTLEnabled);
   I18nManager.swapLeftAndRightInRTL(isRTLEnabled);
-} catch (e) {}
+} catch (e) {
+}
 
 if (__DEV__ && IS_IOS) {
   messaging().setAPNSToken('dev-apns-token', 'sandbox');
@@ -107,4 +106,4 @@ const Wrapped = Sentry.wrap(App);
 
 AppRegistry.registerComponent(appName, () => Wrapped);
 
-AppRegistry.registerComponent('jailbreak', () => Jailbreak);
+AppRegistry.registerComponent('jailbreak', () => FOR_DETOX ? Wrapped : Jailbreak);

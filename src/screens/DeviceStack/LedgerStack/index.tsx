@@ -2,50 +2,23 @@ import React, {memo, useCallback} from 'react';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import {hideBack, popupScreenOptions} from '@app/helpers';
+import {hideBack, hideHeader, popupScreenOptions} from '@app/helpers';
+import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {I18N, getText} from '@app/i18n';
 import {
-  WelcomeStackParamList,
-  WelcomeStackRoutes,
-} from '@app/screens/WelcomeStack';
-import {LedgerAccountsScreen} from '@app/screens/WelcomeStack/LedgerStack/ledger-accounts';
-import {LedgerAgreementScreen} from '@app/screens/WelcomeStack/LedgerStack/ledger-agreement';
-import {LedgerBluetoothScreen} from '@app/screens/WelcomeStack/LedgerStack/ledger-bluetooth';
-import {LedgerFinishScreen} from '@app/screens/WelcomeStack/LedgerStack/ledger-finish';
-import {LedgerScanScreen} from '@app/screens/WelcomeStack/LedgerStack/ledger-scan';
-import {LedgerStoreWalletScreen} from '@app/screens/WelcomeStack/LedgerStack/ledger-store-wallet';
-import {LedgerVerifyScreen} from '@app/screens/WelcomeStack/LedgerStack/ledger-verify';
-import {
-  OnboardingStack,
+  LedgerStackParamList,
+  LedgerStackRoutes,
   OnboardingStackRoutes,
-} from '@app/screens/WelcomeStack/OnboardingStack';
-import {LedgerWalletInitialData, ScreenOptionType} from '@app/types';
-
-export enum LedgerStackRoutes {
-  LedgerAgreement = 'ledgerAgreement',
-  LedgerBluetooth = 'ledgerBluetooth',
-  LedgerScan = 'ledgerScan',
-  LedgerAccounts = 'ledgerAccounts',
-  LedgerVerify = 'ledgerVerify',
-  OnboardingSetupPin = 'onboardingSetupPin',
-  LedgerStoreWallet = 'ledgerStoreWallet',
-  LedgerFinish = 'ledgerFinish',
-}
-
-export type LedgerStackParamList = WelcomeStackParamList & {
-  [LedgerStackRoutes.LedgerAgreement]: WelcomeStackParamList[WelcomeStackRoutes.Ledger];
-  [LedgerStackRoutes.LedgerBluetooth]: undefined;
-  [LedgerStackRoutes.LedgerScan]: undefined;
-  [LedgerStackRoutes.LedgerAccounts]: {deviceId: string; deviceName: string};
-  [LedgerStackRoutes.LedgerVerify]: LedgerWalletInitialData & {
-    nextScreen:
-      | LedgerStackRoutes.LedgerStoreWallet
-      | LedgerStackRoutes.OnboardingSetupPin;
-  };
-  [LedgerStackRoutes.OnboardingSetupPin]: LedgerWalletInitialData;
-  [LedgerStackRoutes.LedgerStoreWallet]: LedgerWalletInitialData;
-  [LedgerStackRoutes.LedgerFinish]: undefined;
-};
+} from '@app/route-types';
+import {LedgerAccountsScreen} from '@app/screens/DeviceStack/LedgerStack/ledger-accounts';
+import {LedgerAgreementScreen} from '@app/screens/DeviceStack/LedgerStack/ledger-agreement';
+import {LedgerBluetoothScreen} from '@app/screens/DeviceStack/LedgerStack/ledger-bluetooth';
+import {LedgerFinishScreen} from '@app/screens/DeviceStack/LedgerStack/ledger-finish';
+import {LedgerScanScreen} from '@app/screens/DeviceStack/LedgerStack/ledger-scan';
+import {LedgerStoreWalletScreen} from '@app/screens/DeviceStack/LedgerStack/ledger-store-wallet';
+import {LedgerVerifyScreen} from '@app/screens/DeviceStack/LedgerStack/ledger-verify';
+import {OnboardingStack} from '@app/screens/WelcomeStack/OnboardingStack';
+import {ScreenOptionType} from '@app/types';
 
 const Stack = createNativeStackNavigator<LedgerStackParamList>();
 const title = getText(I18N.ledgerConnect);
@@ -80,17 +53,17 @@ const LedgerStack = memo(() => {
     <Stack.Navigator screenOptions={popupScreenOptions}>
       <Stack.Screen
         name={LedgerStackRoutes.LedgerAgreement}
-        component={LedgerAgreementScreen}
+        component={themeUpdaterHOC(LedgerAgreementScreen)}
         options={hideBack}
       />
       <Stack.Screen
         name={LedgerStackRoutes.LedgerBluetooth}
-        component={LedgerBluetoothScreen}
+        component={themeUpdaterHOC(LedgerBluetoothScreen)}
         options={hideBack}
       />
       <Stack.Screen
         name={LedgerStackRoutes.LedgerScan}
-        component={LedgerScanScreen}
+        component={themeUpdaterHOC(LedgerScanScreen)}
         options={{
           title,
           ...hideBack,
@@ -98,7 +71,7 @@ const LedgerStack = memo(() => {
       />
       <Stack.Screen
         name={LedgerStackRoutes.LedgerAccounts}
-        component={LedgerAccountsScreen}
+        component={themeUpdaterHOC(LedgerAccountsScreen)}
         options={{title: getText(I18N.ledgerChooseAccount)}}
       />
       <Stack.Screen
@@ -113,14 +86,14 @@ const LedgerStack = memo(() => {
       />
       <Stack.Screen
         name={LedgerStackRoutes.LedgerFinish}
-        component={LedgerFinishScreen}
+        component={themeUpdaterHOC(LedgerFinishScreen)}
         options={hideBack}
       />
 
       <Stack.Screen
         name={LedgerStackRoutes.OnboardingSetupPin}
-        component={OnboardingStackGenerated}
-        options={{headerShown: false}}
+        component={themeUpdaterHOC(OnboardingStackGenerated)}
+        options={hideHeader}
       />
     </Stack.Navigator>
   );

@@ -75,6 +75,7 @@ export const TopTabNavigatorLarge = ({
                 onLayout={onTabLayout}
                 containerStyle={styles.tab}
                 style={styles.tabTouchable}
+                testID={tab.props.testID}
                 onPress={() => {
                   onTabPress(tab, index);
                 }}>

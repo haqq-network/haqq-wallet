@@ -18,7 +18,7 @@ import {useTypedNavigation} from '@app/hooks';
 import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {I18N, getText} from '@app/i18n';
 import {Nft} from '@app/models/nft';
-import {HomeFeedStackRoutes} from '@app/screens/HomeStack/HomeFeedStack';
+import {HomeFeedStackRoutes} from '@app/route-types';
 import {HaqqCosmosAddress, NftCollection, NftItem} from '@app/types';
 import {SortDirectionEnum, arraySortUtil} from '@app/utils';
 

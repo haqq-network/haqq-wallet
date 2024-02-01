@@ -19,19 +19,15 @@ import {useTypedNavigation} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
-import {BrowserStack} from '@app/screens/HomeStack/BrowserStack';
 import {
-  HomeFeedStack,
   HomeFeedStackRoutes,
-} from '@app/screens/HomeStack/HomeFeedStack';
-import {
-  HomeNewsStack,
   NewsStackRoutes,
-} from '@app/screens/HomeStack/HomeNewsStack';
-import {
-  SettingsStack,
   SettingsStackRoutes,
-} from '@app/screens/HomeStack/SettingsStack';
+} from '@app/route-types';
+import {BrowserStack} from '@app/screens/HomeStack/BrowserStack';
+import {HomeFeedStack} from '@app/screens/HomeStack/HomeFeedStack';
+import {HomeNewsStack} from '@app/screens/HomeStack/HomeNewsStack';
+import {SettingsStack} from '@app/screens/HomeStack/SettingsStack';
 import {Cloud} from '@app/services/cloud';
 import {ModalType, WalletType} from '@app/types';
 import {IS_IOS} from '@app/variables/common';
@@ -81,6 +77,7 @@ const newsOptions: BottomTabNavigationOptions = {
   headerStyle: {
     height: StatusBar.currentHeight,
   },
+  unmountOnBlur: true,
 };
 
 const browserOptions = {
@@ -140,6 +137,7 @@ export const HomeScreen = memo(() => {
         component={HomeFeedStack}
         options={({route}) => ({
           ...feedOptions,
+          tabBarTestID: 'homeFeed',
           tabBarStyle: (routeA => {
             const routeName = (getFocusedRouteNameFromRoute(routeA) ??
               HomeFeedStackRoutes.HomeFeed) as HomeFeedStackRoutes;
@@ -159,6 +157,7 @@ export const HomeScreen = memo(() => {
         component={BrowserStack}
         options={{
           ...browserOptions,
+          tabBarTestID: 'homeBrowser',
           tabBarStyle: screenOptions.tabBarStyle,
         }}
       />
@@ -167,6 +166,7 @@ export const HomeScreen = memo(() => {
         component={HomeNewsStack}
         options={({route}) => ({
           ...newsOptions,
+          tabBarTestID: 'homeNews',
           tabBarStyle: (routeA => {
             const routeName = (getFocusedRouteNameFromRoute(routeA) ??
               NewsStackRoutes.News) as NewsStackRoutes;
@@ -186,6 +186,7 @@ export const HomeScreen = memo(() => {
         component={SettingsStack}
         options={({route}) => ({
           ...settingsOptions,
+          tabBarTestID: 'homeSettings',
           tabBarStyle: (routeA => {
             const routeName = (getFocusedRouteNameFromRoute(routeA) ??
               SettingsStackRoutes.Home) as SettingsStackRoutes;

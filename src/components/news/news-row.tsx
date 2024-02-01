@@ -30,7 +30,9 @@ export const NewsRow = ({item, onPress}: NewsRowProps) => {
   );
 
   return (
-    <TouchableWithoutFeedback onPress={() => onPress(item.id)}>
+    <TouchableWithoutFeedback
+      onPress={() => onPress(item.id)}
+      testID="newsFeedRow">
       <View style={containerStyle}>
         <View style={styles.imageWrapper}>
           <Image

@@ -7,57 +7,22 @@ import {
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
+import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {I18N, getText} from '@app/i18n';
-import {CloudProblemsScreen} from '@app/screens/cloud-problems';
-import {WelcomeStackParamList} from '@app/screens/WelcomeStack';
 import {
-  OnboardingStack,
   OnboardingStackRoutes,
-} from '@app/screens/WelcomeStack/OnboardingStack';
+  SignUpStackParamList,
+  SignUpStackRoutes,
+} from '@app/route-types';
+import {CloudProblemsScreen} from '@app/screens/cloud-problems';
+import {OnboardingStack} from '@app/screens/WelcomeStack/OnboardingStack';
 import {SignUpAgreementScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-agreement';
 import {SignUpImportantInfoScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-important-info';
 import {SignupNetworkExistsScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-network-exists';
 import {SignupNetworksScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-networks';
 import {SignupPinScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-pin';
 import {SignUpStoreWalletScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-store-wallet';
-import {SssProviders} from '@app/services/provider-sss';
-import {AdjustEvents, WalletInitialData} from '@app/types';
-
-export enum SignUpStackRoutes {
-  SignUpAgreement = 'signupAgreement',
-  SignUpNetworks = 'signupNetworks',
-  SignUpNetworkExists = 'signupNetworkExists',
-  SignUpPin = 'signupPin',
-  OnboardingSetupPin = 'onboardingSetupPin',
-  SignupStoreWallet = 'signupStoreWallet',
-  SignupCloudProblems = 'cloudProblems',
-  SignupImportantInfo = 'signupImportantInfo',
-}
-
-export type SignUpStackParamList = WelcomeStackParamList & {
-  [SignUpStackRoutes.SignUpAgreement]: {
-    nextScreen:
-      | SignUpStackRoutes.OnboardingSetupPin
-      | SignUpStackRoutes.SignUpNetworks;
-  };
-  [SignUpStackRoutes.SignUpNetworks]: WalletInitialData;
-  [SignUpStackRoutes.SignUpNetworkExists]: {
-    provider: SssProviders;
-    email?: string;
-  } & WalletInitialData;
-  [SignUpStackRoutes.SignUpPin]: WalletInitialData;
-  [SignUpStackRoutes.OnboardingSetupPin]: WalletInitialData;
-  [SignUpStackRoutes.SignupStoreWallet]: WalletInitialData & {
-    nextScreen?: SignUpStackRoutes;
-  };
-  [SignUpStackRoutes.SignupCloudProblems]: {
-    sssProvider: SssProviders;
-    onNext: () => void;
-  };
-  [SignUpStackRoutes.SignupImportantInfo]: {
-    onNext: () => void;
-  };
-};
+import {AdjustEvents} from '@app/types';
 
 const Stack = createNativeStackNavigator<SignUpStackParamList>();
 
@@ -109,23 +74,23 @@ const SignUpStack = memo(() => {
     <Stack.Navigator screenOptions={popupScreenOptions}>
       <Stack.Screen
         name={SignUpStackRoutes.SignUpAgreement}
-        component={SignUpAgreementScreen}
+        component={themeUpdaterHOC(SignUpAgreementScreen)}
         options={hideBack}
         initialParams={{nextScreen: nextScreen}}
       />
       <Stack.Screen
         name={SignUpStackRoutes.SignUpNetworks}
-        component={SignupNetworksScreen}
+        component={themeUpdaterHOC(SignupNetworksScreen)}
         options={hideBack}
       />
       <Stack.Screen
         name={SignUpStackRoutes.SignUpNetworkExists}
-        component={SignupNetworkExistsScreen}
+        component={themeUpdaterHOC(SignupNetworkExistsScreen)}
         options={hideBack}
       />
       <Stack.Screen
         name={SignUpStackRoutes.SignUpPin}
-        component={SignupPinScreen}
+        component={themeUpdaterHOC(SignupPinScreen)}
         options={screenOptionsTitleOnly}
       />
       <Stack.Screen
@@ -135,12 +100,12 @@ const SignUpStack = memo(() => {
       />
       <Stack.Screen
         name={SignUpStackRoutes.SignupCloudProblems}
-        component={CloudProblemsScreen}
+        component={themeUpdaterHOC(CloudProblemsScreen)}
         options={hideBack}
       />
       <Stack.Screen
         name={SignUpStackRoutes.SignupImportantInfo}
-        component={SignUpImportantInfoScreen}
+        component={themeUpdaterHOC(SignUpImportantInfoScreen)}
       />
 
       <Stack.Screen

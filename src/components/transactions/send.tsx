@@ -4,11 +4,11 @@ import {TouchableWithoutFeedback, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {TransactionStatus} from '@app/components/transaction-status/transaction-status';
-import {DataContent, Icon, IconsName, Text} from '@app/components/ui';
+import {DataContent, Icon, IconsName, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {cleanNumber} from '@app/helpers/clean-number';
 import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
+import {Balance} from '@app/services/balance';
 import {TransactionListSend} from '@app/types';
 
 export type TransactionPreviewProps = {
@@ -45,18 +45,30 @@ export const TransactionSend = ({item, onPress}: TransactionPreviewProps) => {
           subtitleI18n={I18N.transactionSendTo}
           short
         />
-        <Text
-          t11
-          color={Color.textRed1}
-          i18n={I18N.transactionNegativeAmountText}
-          i18params={{value: cleanNumber(item.value)}}
-        />
+        <View style={styles.amountWrapper}>
+          <Text
+            t11
+            color={Color.textRed1}
+            i18n={I18N.transactionNegativeAmountText}
+            i18params={{value: new Balance(item.value).toBalanceString()}}
+          />
+          <Spacer height={2} />
+          <Text
+            t14
+            color={Color.textBase2}
+            i18n={I18N.transactionNegativeAmountText}
+            i18params={{
+              value: new Balance(item.value).toFiat('USD').toBalanceString(),
+            }}
+          />
+        </View>
       </View>
     </TouchableWithoutFeedback>
   );
 };
 
 const styles = createTheme({
+  amountWrapper: {flexDirection: 'column', alignItems: 'flex-end'},
   container: {
     paddingVertical: 8,
     flexDirection: 'row',

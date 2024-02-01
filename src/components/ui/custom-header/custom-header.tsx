@@ -8,7 +8,7 @@ import {I18N} from '@app/i18n';
 import {ColorType} from '@app/types';
 
 import {HeaderButton, HeaderButtonProps} from './header-button';
-import {SearchLine} from './search-line';
+import {SearchLine, SearchLineProps} from './search-line';
 
 import {Text} from '../index';
 
@@ -22,14 +22,17 @@ interface CustomHeaderProps {
   i18nTextLeft?: HeaderButtonProps['i18n'];
   onPressLeft?: HeaderButtonProps['onPress'];
   disabledLeft?: HeaderButtonProps['disabled'];
+  testIdLeft?: HeaderButtonProps['testID'];
   colorLeft?: ColorType;
   iconRight?: HeaderButtonProps['icon'];
   textRight?: HeaderButtonProps['text'];
+  testIdRight?: HeaderButtonProps['testID'];
   i18nTextRight?: HeaderButtonProps['i18n'];
   colorRight?: ColorType;
   onPressRight?: HeaderButtonProps['onPress'];
   disabledRight?: HeaderButtonProps['disabled'];
-  onSearchChange?: (text: string) => void;
+  onChangeSearch?: SearchLineProps['onChange'];
+  testIdSearch?: SearchLineProps['testId'];
 }
 
 export type VotingCardDetailRefInterface =
@@ -58,7 +61,10 @@ export const CustomHeader = forwardRef<
       title = I18N.empty,
       i18nTextRight,
       i18nTextLeft,
-      onSearchChange,
+      onChangeSearch,
+      testIdLeft,
+      testIdRight,
+      testIdSearch,
     },
     ref,
   ) => {
@@ -85,7 +91,11 @@ export const CustomHeader = forwardRef<
     return (
       <View style={[styles.container, {marginTop: top}]}>
         {isSearching ? (
-          <SearchLine onChange={onSearchChange} onCancel={stopSearch} />
+          <SearchLine
+            onChange={onChangeSearch}
+            onCancel={stopSearch}
+            testId={testIdSearch}
+          />
         ) : (
           <>
             <HeaderButton
@@ -95,7 +105,7 @@ export const CustomHeader = forwardRef<
               text={textLeft}
               icon={iconLeft}
               i18n={i18nTextLeft}
-              testID={'go_back'}
+              testID={testIdLeft || 'go_back'}
             />
             <Text t8 i18n={title} center />
             <HeaderButton
@@ -105,6 +115,7 @@ export const CustomHeader = forwardRef<
               text={textRight}
               icon={iconRight}
               i18n={i18nTextRight}
+              testID={testIdRight}
             />
           </>
         )}

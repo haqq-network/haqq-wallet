@@ -52,7 +52,9 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
   }, [item.localStatus]);
 
   return (
-    <TouchableWithoutFeedback onPress={onPressRow}>
+    <TouchableWithoutFeedback
+      testID={'validator-' + item.description.moniker}
+      onPress={onPressRow}>
       <View>
         <View style={styles.container}>
           <ValidatorAvatar identity={item.description.identity} />

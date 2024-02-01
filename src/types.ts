@@ -5,6 +5,7 @@ import {Validator} from '@evmos/provider';
 import {Proposal} from '@evmos/provider/dist/rest/gov';
 import {Coin} from '@evmos/transactions';
 import {AccessListish, BigNumberish} from '@haqq/provider-base';
+import {KeystoneAwaitForSignParams} from '@haqq/provider-keystone-react-native';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {NativeStackNavigationOptions} from '@react-navigation/native-stack';
@@ -27,8 +28,7 @@ import {Banner} from '@app/models/banner';
 import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
-import {WelcomeStackRoutes} from '@app/screens/WelcomeStack';
-import {SignUpStackRoutes} from '@app/screens/WelcomeStack/SignUpStack';
+import {SignUpStackRoutes, WelcomeStackRoutes} from '@app/route-types';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {SssProviders} from '@app/services/provider-sss';
@@ -102,7 +102,7 @@ export type TransactionListContract = Transaction & {
 };
 
 export type TransactionListDate = {
-  hash: string;
+  id: string;
   date: Date;
   source: TransactionSource.date;
   providerId: string;
@@ -149,6 +149,14 @@ export type LedgerWalletInitialData = {
   publicKey: string;
   deviceId: string;
   deviceName: string;
+};
+
+export type KeystoneWalletInitialData = {
+  type: 'keystone';
+  address: HaqqEthereumAddress;
+  hdPath: string;
+  publicKey: string;
+  qrCBORHex: string;
 };
 
 export type RootStackParamList = {
@@ -673,6 +681,7 @@ export enum WalletType {
   hot = 'hot',
   ledgerBt = 'ledger-bt',
   sss = 'sss',
+  keystone = 'keystone',
 }
 
 export enum WalletCardPattern {
@@ -744,6 +753,7 @@ export type AddWalletParams = {
   colorPattern?: string;
   socialLinkEnabled?: boolean;
   mnemonicSaved?: boolean;
+  isImported?: boolean;
 };
 
 export enum ValidatorStatus {
@@ -812,7 +822,6 @@ export type LedgerAccountItem = {
 };
 
 export type ChooseAccountItem = AddWalletParams & {
-  name: string;
   balance: Balance;
   exists?: boolean;
 };
@@ -832,6 +841,7 @@ export interface Link {
   title: string;
   subtitle?: string;
   icon?: string;
+  eventName?: string;
 }
 
 export interface DynamicLink {
@@ -1033,6 +1043,10 @@ export type Modals = {
     onChange: () => void;
     network: string;
   };
+  customProviderEmail: {
+    onClose?: () => void;
+    onChange: (email: string) => void;
+  };
   walletsBottomSheet: Eventable & {
     onClose?: () => void;
     wallets: Wallet[];
@@ -1072,6 +1086,16 @@ export type Modals = {
     onClose?: () => void;
   };
   cloudShareNotFound: {onClose?: () => void; wallet: Wallet};
+  keystoneScanner: {
+    purpose?: 'sign' | 'sync';
+    eventTaskId?: string;
+    onClose?: () => void;
+  };
+  keystoneQR: KeystoneAwaitForSignParams & {
+    succesEventName: string;
+    errorEventName: string;
+    onClose?: () => void;
+  };
   sssLimitReached: {onClose?: () => void};
 };
 
@@ -1086,6 +1110,7 @@ export enum ModalType {
   cardDetailsQr = 'cardDetailsQr',
   error = 'error',
   claimOnMainnet = 'claimOnMainnet',
+  customProviderEmail = 'customProviderEmail',
   ledgerNoApp = 'ledgerNoApp',
   ledgerAttention = 'ledgerAttention',
   ledgerLocked = 'ledgerLocked',
@@ -1103,6 +1128,8 @@ export enum ModalType {
   cloudVerification = 'cloudVerification',
   viewErrorDetails = 'viewErrorDetails',
   cloudShareNotFound = 'cloudShareNotFound',
+  keystoneScanner = 'keystoneScanner',
+  keystoneQR = 'keystoneQR',
   sssLimitReached = 'sssLimitReached',
 }
 
@@ -1285,7 +1312,7 @@ export type OnTransactionRowPress = (
   params?: Omit<RootStackParamList['transactionDetail'], 'hash'>,
 ) => void;
 
-export type ContractNameMap = Record<string, string>;
+export type ContractNameMap = Record<string, {name: string; symbol: string}>;
 
 export type HaqqCosmosAddress = `haqq${string}` & string;
 export type HaqqEthereumAddress = `0x${string}` & string;
@@ -1385,13 +1412,16 @@ type MobXStoreData =
 
 export interface MobXStore<TData extends MobXStoreData> {
   data: Record<string, TData>;
+
   getById(id: string): TData | undefined;
+
   getAll(): TData[];
   create: ((id: string, item: TData) => string) | ((item: TData) => string);
   update:
     | ((id: string | undefined, item: Omit<Partial<TData>, 'id'>) => boolean)
     | ((item: TData) => boolean);
   remove(id: string): boolean;
+
   removeAll(): void;
 }
 
@@ -1554,3 +1584,31 @@ export type Eventable = Required<{
   successEventName: string;
   errorEventName: string;
 }>;
+
+export type Fiat = 'USD' | 'RUB';
+export type RatesResponse = Record<string, {denom: Fiat; amount: number}[]>;
+
+export type IndexerTransaction = {
+  block: number;
+  chain_id: string;
+  code: 0 | 1 | -1;
+  fee: number;
+  gas_limit: number;
+  hash: string;
+  input: string;
+  msg: {
+    amount: string;
+    from_address: string;
+    to_address: string;
+    type: 'msgEthereumTx' | 'msgEthereumErc20TransferTx' | 'msgDelegate';
+    contract_address?: string;
+  };
+  msg_type: 'msgEthereumTx' | 'msgEthereumErc20TransferTx' | 'msgDelegate';
+  ts: string;
+  id: string;
+  confirmations: number;
+};
+export type IndexerTransactionResponse = {
+  hash: string;
+  txs: IndexerTransaction[];
+};

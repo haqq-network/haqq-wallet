@@ -30,7 +30,10 @@ import {
 } from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
-import {awaitForScanQr} from '@app/helpers/await-for-scan-qr';
+import {
+  QRScannerTypeEnum,
+  awaitForScanQr,
+} from '@app/helpers/await-for-scan-qr';
 import {
   awaitForValue,
   objectsToValues,
@@ -38,6 +41,7 @@ import {
 } from '@app/helpers/await-for-value';
 import {getUid} from '@app/helpers/get-uid';
 import {getAdjustAdid} from '@app/helpers/get_adjust_adid';
+import {parseDeepLink} from '@app/helpers/parse-deep-link';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Banner} from '@app/models/banner';
@@ -50,7 +54,7 @@ import {VariablesDate} from '@app/models/variables-date';
 import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
-import {SettingsStackParamList} from '@app/screens/HomeStack/SettingsStack';
+import {SettingsStackParamList} from '@app/route-types';
 import {EthNetwork} from '@app/services';
 import {Airdrop} from '@app/services/airdrop';
 import {Balance} from '@app/services/balance';
@@ -154,6 +158,11 @@ const getTestModals = (): TestModals => {
       onChange: () => logger.log('claimOnMainnet onChange'),
       network: 'MainMet',
     },
+    customProviderEmail: {
+      onClose: () => logger.log('customProviderEmail closed'),
+      onChange: (value: string) =>
+        logger.log('customProviderEmail onChange', value),
+    },
     transactionError: {
       onClose: () => logger.log('transactionError closed'),
       message: 'Something went wrong',
@@ -190,6 +199,18 @@ const getTestModals = (): TestModals => {
     cloudShareNotFound: {
       onClose: () => logger.log('cloudShareNotFound closed'),
       wallet: wallets[0],
+    },
+    keystoneQR: {
+      cborHex: '',
+      errorEventName: '',
+      requestID: '',
+      succesEventName: '',
+      urType: '',
+    },
+    keystoneScanner: {
+      eventTaskId: 'test-modal',
+      onClose: () => logger.log('keystoneScanner closed'),
+      purpose: 'sign',
     },
     sssLimitReached: {
       onClose: () => logger.log('sssLimitReached closed'),
@@ -652,8 +673,12 @@ export const SettingsTestScreen = observer(() => {
         title="QR scanner"
         onPress={async () => {
           try {
-            const result = await awaitForScanQr({pattern: regexp});
-            Alert.alert('result', JSON.stringify(result, null, 2));
+            const result = await awaitForScanQr({
+              pattern: regexp,
+              variant: QRScannerTypeEnum.qr,
+            });
+            const parsed = await parseDeepLink(result);
+            Alert.alert('result', JSON.stringify(parsed, null, 2));
           } catch (err) {
             Alert.alert('error', JSON.stringify(err, null, 2));
           }

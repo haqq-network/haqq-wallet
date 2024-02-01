@@ -47,6 +47,7 @@ export type TopTabNavigatorComponent = {
 export interface TabProps {
   name: string;
   title: string | I18N;
+  testID?: string;
   component: React.ComponentType<{}> | JSX.Element | null;
   /**
    * @description only for `TopTabNavigatorVariant.small`

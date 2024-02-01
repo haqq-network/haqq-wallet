@@ -14,7 +14,7 @@ import {Wallet} from '@app/models/wallet';
 import {
   GovernanceStackParamList,
   GovernanceStackRoutes,
-} from '@app/screens/HomeStack/GovernanceStack';
+} from '@app/route-types';
 import {sendNotification} from '@app/services';
 import {ModalType, VoteNamesType} from '@app/types';
 import {VOTES} from '@app/variables/votes';

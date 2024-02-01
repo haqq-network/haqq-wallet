@@ -10,9 +10,10 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useTransactionList} from '@app/hooks/use-transaction-list';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
+import {Token} from '@app/models/tokens';
 import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
-import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
+import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {Indexer} from '@app/services/indexer';
 import {ModalType} from '@app/types';
 
@@ -40,9 +41,10 @@ export const AccountInfoScreen = observer(() => {
   const [contractNameMap, setContractNameMap] = useState({});
 
   useEffectAsync(async () => {
+    Token.fetchTokens();
     const names = transactions
       .filter(({input}) => input.includes('0x') && input.length > 2)
-      .map(item => item.to);
+      .map(item => item.contractAddress as string);
     const uniqueNames = [...new Set(names)];
     if (uniqueNames.length > 0) {
       const info = await Indexer.instance.getContractNames(uniqueNames);
@@ -93,6 +95,7 @@ export const AccountInfoScreen = observer(() => {
       total={total}
       unlock={unlock}
       vested={vested}
+      tokens={Token.tokens}
     />
   );
 });

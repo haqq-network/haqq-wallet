@@ -4,8 +4,8 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {popupScreenOptionsWithMargin} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
+import {HomeEarnStackParamList, HomeEarnStackRoutes} from '@app/route-types';
 import {basicScreenOptions} from '@app/screens';
-import {HomeStackParamList} from '@app/screens/HomeStack';
 import {HomeEarnScreen} from '@app/screens/HomeStack/HomeEarnStack/home-earn';
 import {HomeStakingScreen} from '@app/screens/HomeStack/HomeEarnStack/home-staking';
 import {RaffleDetailsScreen} from '@app/screens/HomeStack/HomeEarnStack/raffle-details';
@@ -14,41 +14,6 @@ import {StakingInfoScreen} from '@app/screens/HomeStack/HomeEarnStack/staking-in
 import {StakingValidatorsScreen} from '@app/screens/HomeStack/HomeEarnStack/staking-validators';
 import {StakingDelegateStack} from '@app/screens/HomeStack/StakingDelegateStack';
 import {StakingUnDelegateStack} from '@app/screens/HomeStack/StakingUndelegateStack';
-import {Raffle, ValidatorItem} from '@app/types';
-
-export enum HomeEarnStackRoutes {
-  HomeEarn = 'homeEarn_',
-  StakingValidators = 'stakingValidators',
-  StakingInfo = 'stakingInfo',
-  Staking = 'staking',
-  StakingDelegate = 'stakingDelegate',
-  StakingUnDelegate = 'stakingUnDelegate',
-  RaffleDetails = 'raffleDetails',
-  RaffleReward = 'raffleReward',
-}
-
-export type HomeEarnStackParamList = HomeStackParamList & {
-  [HomeEarnStackRoutes.HomeEarn]: undefined;
-  [HomeEarnStackRoutes.StakingValidators]: undefined;
-  [HomeEarnStackRoutes.StakingInfo]: {validator: ValidatorItem};
-  [HomeEarnStackRoutes.Staking]: undefined;
-  [HomeEarnStackRoutes.StakingDelegate]: {
-    validator: string;
-    selectedWalletAddress: string;
-  };
-  [HomeEarnStackRoutes.StakingUnDelegate]: {
-    validator: string;
-    selectedWalletAddress: string;
-  };
-  [HomeEarnStackRoutes.RaffleDetails]: {
-    item: Raffle;
-    prevIslmCount: number;
-    prevTicketsCount: number;
-  };
-  [HomeEarnStackRoutes.RaffleReward]: {
-    item: Raffle;
-  };
-};
 
 const Stack = createNativeStackNavigator<HomeEarnStackParamList>();
 

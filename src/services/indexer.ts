@@ -11,6 +11,9 @@ import {
   IndexerNft,
   IndexerTime,
   IndexerToken,
+  IndexerTransaction,
+  IndexerTransactionResponse,
+  RatesResponse,
 } from '@app/types';
 
 export type IndexerUpdatesResponse = {
@@ -28,6 +31,7 @@ export type IndexerUpdatesResponse = {
   nfts: IndexerNft[];
   tokens: IndexerToken[];
   transactions: unknown[];
+  rates: RatesResponse;
 };
 
 export class Indexer {
@@ -73,20 +77,20 @@ export class Indexer {
       return Promise.reject('Empty addresses');
     }
 
-    const response = await jsonrpcRequest<{name: string; id: string}[]>(
-      app.provider.indexer,
-      'addresses',
-      [addresses.map(AddressUtils.toHaqq)],
-    );
+    const response = await jsonrpcRequest<
+      {name: string; id: string; symbol: string}[]
+    >(app.provider.indexer, 'addresses', [addresses.map(AddressUtils.toHaqq)]);
 
     const map = addresses.reduce((acc, item) => {
       const responseExist = Array.isArray(response) && response.length > 0;
       const newValue = responseExist
         ? response.find(infoItem => infoItem.id === AddressUtils.toHaqq(item))
-            ?.name
         : null;
 
-      acc[item] = newValue ?? getText(I18N.transactionContractDefaultName);
+      acc[item] = {
+        name: newValue?.name ?? getText(I18N.transactionContractDefaultName),
+        symbol: newValue?.symbol || '',
+      };
       return acc;
     }, {} as ContractNameMap);
 
@@ -104,5 +108,21 @@ export class Indexer {
       [accounts],
     );
     return response.balance || {};
+  }
+
+  async getTransactions(
+    accounts: string[],
+    latestBlock: string = 'latest',
+  ): Promise<IndexerTransaction[]> {
+    if (!app.provider.indexer) {
+      throw new Error('Indexer is not configured');
+    }
+
+    const response = await jsonrpcRequest<IndexerTransactionResponse>(
+      app.provider.indexer,
+      'transactions',
+      [accounts, latestBlock],
+    );
+    return response?.txs || {};
   }
 }

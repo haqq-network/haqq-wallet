@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {useCallback, useMemo} from 'react';
 
+import {FOR_DETOX} from '@env';
 import {StyleSheet, TouchableOpacity, ViewProps} from 'react-native';
 
 export type IconButtonProps = ViewProps & {
@@ -29,6 +30,7 @@ export const IconButton = ({
   return (
     <TouchableOpacity
       style={containerStyle}
+      activeOpacity={FOR_DETOX ? 1 : 0.2}
       {...props}
       disabled={disabled || !onPress}
       onPress={onPressButton}>

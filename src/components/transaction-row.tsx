@@ -15,6 +15,7 @@ import {
 
 export type TransactionPreviewProps = {
   item: TransactionList;
+  testID?: string;
   onPress: OnTransactionRowPress;
   contractNameMap: ContractNameMap;
 };
@@ -23,6 +24,7 @@ export const TransactionRow = ({
   item,
   onPress,
   contractNameMap,
+  testID,
 }: TransactionPreviewProps) => {
   const element = useMemo(() => {
     switch (item.source) {
@@ -32,18 +34,20 @@ export const TransactionRow = ({
         return <TransactionSend item={item} onPress={onPress} />;
       case TransactionSource.receive:
         return <TransactionReceive item={item} onPress={onPress} />;
-      case TransactionSource.contract:
+      case TransactionSource.contract: {
         return (
           <TransactionContract
-            contractName={contractNameMap[item.to]}
+            contractName={contractNameMap[item.contractAddress || '']}
             item={item}
+            testID={testID}
             onPress={onPress}
           />
         );
+      }
       default:
         return null;
     }
   }, [item, onPress, contractNameMap]);
 
-  return <View key={`TransactionRow_${item.hash}`}>{element}</View>;
+  return <View key={`TransactionRow_${item.id}`}>{element}</View>;
 };

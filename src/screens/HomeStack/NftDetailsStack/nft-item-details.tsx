@@ -3,11 +3,11 @@ import React, {memo, useCallback} from 'react';
 import {NftItemDetails} from '@app/components/nft-item-details';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {Wallet} from '@app/models/wallet';
-import {HomeStackRoutes} from '@app/screens/HomeStack';
 import {
+  HomeStackRoutes,
   NftDetailsStackParamList,
   NftDetailsStackRoutes,
-} from '@app/screens/HomeStack/NftDetailsStack';
+} from '@app/route-types';
 
 export const NftItemDetailsScreen = memo(() => {
   const navigation = useTypedNavigation<NftDetailsStackParamList>();

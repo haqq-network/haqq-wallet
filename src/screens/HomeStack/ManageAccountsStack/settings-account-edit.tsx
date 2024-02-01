@@ -9,7 +9,7 @@ import {Wallet} from '@app/models/wallet';
 import {
   ManageAccountsStackParamList,
   ManageAccountsStackRoutes,
-} from '@app/screens/HomeStack/ManageAccountsStack';
+} from '@app/route-types';
 
 export const SettingsAccountEditScreen = observer(() => {
   const navigation = useTypedNavigation<ManageAccountsStackParamList>();

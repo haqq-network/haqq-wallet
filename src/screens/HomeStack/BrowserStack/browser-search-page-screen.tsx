@@ -4,10 +4,7 @@ import {BrowserSearchPage} from '@app/components/browser-search-page';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useWeb3BrowserSearchHistory} from '@app/hooks/use-web3-browser-search-history';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
-import {
-  BrowserStackParamList,
-  BrowserStackRoutes,
-} from '@app/screens/HomeStack/BrowserStack';
+import {BrowserStackParamList, BrowserStackRoutes} from '@app/route-types';
 import {Link} from '@app/types';
 
 export const BrowserSearchPageScreen = memo(() => {

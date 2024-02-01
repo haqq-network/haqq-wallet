@@ -7,7 +7,6 @@ import {
   Button,
   ButtonVariant,
   DataView,
-  ErrorText,
   PopupContainer,
   Spacer,
   Text,
@@ -26,9 +25,6 @@ interface TransactionConfirmationProps {
   amount: Balance;
   fee: Balance | null;
   contact: Contact | null;
-  error: string;
-  errorDetails: string;
-
   disabled?: boolean;
   onConfirmTransaction: () => void;
   token: IToken;
@@ -36,8 +32,6 @@ interface TransactionConfirmationProps {
 
 export const TransactionConfirmation = ({
   testID,
-  error,
-  errorDetails,
   disabled,
   contact,
   to,
@@ -48,17 +42,33 @@ export const TransactionConfirmation = ({
 }: TransactionConfirmationProps) => {
   const splittedTo = useMemo(() => splitAddress(to), [to]);
 
-  const sumText = useMemo(() => {
+  const transactionSum = useMemo(() => {
     if (fee === null) {
-      return getText(I18N.estimatingGas);
+      return null;
     }
 
     if (amount.isIslamic) {
-      return fee.operate(amount, 'add').toBalanceString(LONG_NUM_PRECISION);
+      return fee.operate(amount, 'add');
     }
 
-    return amount.toBalanceString(LONG_NUM_PRECISION);
+    return amount;
   }, [fee, amount]);
+
+  const sumText = useMemo(() => {
+    if (transactionSum === null) {
+      return getText(I18N.estimatingGas);
+    }
+
+    return transactionSum.toBalanceString(LONG_NUM_PRECISION);
+  }, [transactionSum]);
+
+  const usdText = useMemo(() => {
+    if (transactionSum === null) {
+      return '';
+    }
+
+    return transactionSum.toFiat('USD').toBalanceString();
+  }, [transactionSum]);
 
   return (
     <PopupContainer style={styles.container} testID={testID}>
@@ -73,6 +83,10 @@ export const TransactionConfirmation = ({
       <Text t11 color={Color.textBase1} center style={styles.sum}>
         {sumText}
       </Text>
+      <Text t15 color={Color.textBase2} center>
+        {usdText}
+      </Text>
+      <Spacer height={16} />
       <Text
         t11
         color={Color.textBase2}
@@ -127,11 +141,6 @@ export const TransactionConfirmation = ({
             </Text>
           </DataView>
         </View>
-        {error && (
-          <ErrorText center e0 errorDetails={errorDetails}>
-            {error}
-          </ErrorText>
-        )}
       </Spacer>
       <Button
         disabled={!fee?.isPositive() && !disabled}
@@ -174,7 +183,6 @@ const styles = createTheme({
     backgroundColor: Color.bg3,
   },
   sum: {
-    marginBottom: 16,
     fontWeight: '700',
     fontSize: 28,
     lineHeight: 38,

@@ -6,10 +6,7 @@ import {onNewsSync} from '@app/event-actions/on-news-sync';
 import {useTypedNavigation} from '@app/hooks';
 import {News} from '@app/models/news';
 import {VariablesBool} from '@app/models/variables-bool';
-import {
-  WelcomeStackParamList,
-  WelcomeStackRoutes,
-} from '@app/screens/WelcomeStack';
+import {WelcomeStackParamList, WelcomeStackRoutes} from '@app/route-types';
 import {AdjustEvents, PopupNotificationBannerTypes} from '@app/types';
 
 export const WelcomeNewsScreen = memo(() => {
@@ -34,7 +31,8 @@ export const WelcomeNewsScreen = memo(() => {
   }, []);
 
   const onPressSignup = () => navigation.navigate(WelcomeStackRoutes.SignUp);
-  const onPressLedger = () => navigation.navigate(WelcomeStackRoutes.Ledger);
+  const onPressHardwareWallet = () =>
+    navigation.navigate(WelcomeStackRoutes.Device);
   const onPressSignIn = () => navigation.navigate(WelcomeStackRoutes.SignIn);
 
   const onPressRow = useCallback(
@@ -52,7 +50,7 @@ export const WelcomeNewsScreen = memo(() => {
   return (
     <WelcomeNews
       onPressSignup={onPressSignup}
-      onPressLedger={onPressLedger}
+      onPressHardwareWallet={onPressHardwareWallet}
       onPressSignIn={onPressSignIn}
       news={news}
       onPress={onPressRow}

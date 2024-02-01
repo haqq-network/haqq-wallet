@@ -11,7 +11,7 @@ import {Token} from '@app/models/tokens';
 import {
   TransactionStackParamList,
   TransactionStackRoutes,
-} from '@app/screens/HomeStack/TransactionStack';
+} from '@app/route-types';
 import {IToken} from '@app/types';
 
 export const TransactionSelectCryptoScreen = observer(() => {

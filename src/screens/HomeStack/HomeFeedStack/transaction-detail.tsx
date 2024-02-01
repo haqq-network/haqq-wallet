@@ -9,7 +9,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useTransaction} from '@app/hooks/use-transaction';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
-import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
+import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {EthNetwork} from '@app/services';
 import {TransactionSource} from '@app/types';
 import {isContractTransaction} from '@app/utils';

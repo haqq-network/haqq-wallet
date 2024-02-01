@@ -10,7 +10,7 @@ import {Wallet} from '@app/models/wallet';
 import {
   WalletConnectApprovalStackParamList,
   WalletConnectApprovalStackRoutes,
-} from '@app/screens/HomeStack/WalletConnectApprovalStack';
+} from '@app/route-types';
 import {WalletConnect} from '@app/services/wallet-connect';
 
 export const WalletConnectApprovalScreen = observer(() => {

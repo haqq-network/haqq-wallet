@@ -1,11 +1,10 @@
 import EventEmitter from 'events';
 
 export class Initializable<InitResult = null> extends EventEmitter {
-  private _initialized: boolean = false;
   private _started = false;
   private _handler: Promise<InitResult> | null = null;
-  private _resolve = (_: InitResult) => {};
-  private _reject = () => {};
+
+  private _initialized: boolean = false;
 
   get initialized(): boolean {
     return this._initialized;
@@ -38,4 +37,8 @@ export class Initializable<InitResult = null> extends EventEmitter {
     this._started = false;
     this._handler = null;
   }
+
+  private _resolve = (_: InitResult) => {};
+
+  private _reject = () => {};
 }

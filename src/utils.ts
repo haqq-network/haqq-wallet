@@ -8,6 +8,7 @@ import {
   differenceInMinutes,
 } from 'date-fns';
 import Decimal from 'decimal.js';
+import {utils} from 'ethers';
 import _ from 'lodash';
 import {
   Alert,
@@ -18,8 +19,10 @@ import {
   Platform,
 } from 'react-native';
 import {Adjust} from 'react-native-adjust';
+import prompt, {PromptOptions} from 'react-native-prompt-android';
 
 import {app} from '@app/contexts';
+import {Transaction, TransactionStatus} from '@app/models/transaction';
 import {RemoteConfig} from '@app/services/remote-config';
 
 import {Color, getColor} from './colors';
@@ -33,6 +36,7 @@ import {I18N, getText} from './i18n';
 import {Banner, BannerButtonEvent, BannerType} from './models/banner';
 import {Wallet} from './models/wallet';
 import {navigator} from './navigator';
+import {HomeStackRoutes, WelcomeStackRoutes} from './route-types';
 import {Balance} from './services/balance';
 import {EthSignError} from './services/eth-sign';
 import {
@@ -41,6 +45,7 @@ import {
   EthType,
   EthTypedData,
   HaqqEthereumAddress,
+  IndexerTransaction,
   JsonRpcTransactionRequest,
   PartialJsonRpcRequest,
   SendTransactionError,
@@ -650,22 +655,47 @@ export function isEthSignError(err: any): err is EthSignError {
 
 export interface InAppBrowserOptions {
   title?: string;
-  onPageLoaded?: () => void;
+  onPageLoaded?: (isError: boolean | undefined) => void;
 }
 
 export const openInAppBrowser = (
   url: string,
   options?: InAppBrowserOptions,
 ) => {
-  const {title, onPageLoaded} = options || {};
+  const {screenName, formattedUrl, title} = prepareDataForInAppBrowser(
+    url,
+    options,
+  );
+
+  navigator.navigate(screenName, {
+    url: formattedUrl,
+    title,
+  });
+};
+
+export const prepareDataForInAppBrowser = (
+  url: string,
+  options?: InAppBrowserOptions,
+) => {
+  const {onPageLoaded} = options || {};
   const eventId = `${Events.openInAppBrowserPageLoaded}-${url}`;
+
   if (onPageLoaded) {
     app.once(eventId, onPageLoaded);
   }
-  navigator.navigate('inAppBrowser', {
-    url: onUrlSubmit(url),
-    title,
-  });
+
+  const screenName:
+    | HomeStackRoutes.InAppBrowser
+    | WelcomeStackRoutes.InAppBrowser = app.onboarded
+    ? HomeStackRoutes.InAppBrowser
+    : WelcomeStackRoutes.InAppBrowser;
+
+  return {
+    ...options,
+    formattedUrl: onUrlSubmit(url),
+    eventId,
+    screenName,
+  };
 };
 
 export const openWeb3Browser = (url: string) => {
@@ -849,7 +879,8 @@ export const generateMockBanner = (): Banner => {
     snoozedUntil: new Date(),
     defaultEvent: BannerButtonEvent.test,
     defaultParams: {banner_id: id, type: 'default event'},
-    closeEvent: BannerButtonEvent.test,
+    closeEvent:
+      Math.random() > 0.5 ? BannerButtonEvent.none : BannerButtonEvent.test,
     closeParams: {banner_id: id, type: 'close event'},
     priority: 1,
   };
@@ -887,3 +918,44 @@ export const uppercaseFirtsLetter = (str: string) =>
     .toLowerCase()
     // uppercase first letter
     .replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
+
+export const migrateTransaction = (tx: IndexerTransaction): Transaction => {
+  const statusMap = {
+    ['0']: TransactionStatus.success,
+    ['1']: TransactionStatus.failed,
+    ['-1']: TransactionStatus.inProgress,
+  };
+
+  return {
+    account: tx.msg.from_address,
+    raw: '',
+    fee: parseFloat(utils.formatEther(tx.fee ?? 0)),
+    feeHex: new Balance(tx.fee).toHex(),
+    providerId: app.providerId,
+    hash: tx.hash,
+    block: String(tx.block),
+    from: AddressUtils.toEth(tx.msg.from_address),
+    to: AddressUtils.toEth(tx.msg.to_address),
+    value: parseFloat(utils.formatEther(tx.msg.amount ?? 0)),
+    chainId: tx.chain_id,
+    timeStamp: tx.ts,
+    createdAt: +new Date(tx.ts),
+    confirmations: tx.confirmations,
+    contractAddress: tx.msg.contract_address || '',
+    confirmed: tx.confirmations > 10,
+    input: tx.input,
+    status: statusMap[tx.code],
+    type: tx.msg_type,
+    id: tx.id,
+  };
+};
+
+export function promtAsync(
+  title?: string,
+  message?: string,
+  options?: PromptOptions,
+): Promise<string> {
+  return new Promise(resolve => {
+    prompt(title, message, resolve, options);
+  });
+}

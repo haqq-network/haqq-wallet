@@ -1,6 +1,8 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {Validator} from '@evmos/provider/dist/rest/staking';
+import {autorun} from 'mobx';
+import {observer} from 'mobx-react';
 
 import {
   StakingValidators,
@@ -15,13 +17,10 @@ import {
   StakingMetadata,
   StakingMetadataType,
 } from '@app/models/staking-metadata';
-import {
-  HomeEarnStackParamList,
-  HomeEarnStackRoutes,
-} from '@app/screens/HomeStack/HomeEarnStack';
+import {HomeEarnStackParamList, HomeEarnStackRoutes} from '@app/route-types';
 import {AdjustEvents, ValidatorItem} from '@app/types';
 
-export const StakingValidatorsScreen = () => {
+export const StakingValidatorsScreen = observer(() => {
   const navigation = useTypedNavigation<HomeEarnStackParamList>();
   const cosmos = useCosmos();
 
@@ -34,9 +33,10 @@ export const StakingValidatorsScreen = () => {
     onTrackEvent(AdjustEvents.stakingValidators);
   }, []);
 
-  const onCache = useCallback(() => {
-    const cache = StakingMetadata.getAll().reduce<Record<string, any>>(
-      (memo, row) => {
+  useEffect(() => {
+    const rows = StakingMetadata.getAll();
+    const disposer = autorun(() => {
+      const cache = rows.reduce<Record<string, any>>((memo, row) => {
         const value = memo[row.validator] || {
           [StakingMetadataType.delegation]: 0,
           [StakingMetadataType.undelegation]: 0,
@@ -49,27 +49,20 @@ export const StakingValidatorsScreen = () => {
         };
 
         return memo;
-      },
-      {},
-    );
-    const keys = Object.keys(cache);
-    if (
-      keys.length !== Object.keys(stakingCache).length ||
-      keys.find(key => !stakingCache[key])
-    ) {
-      setStakingCache(cache);
-    }
-  }, [stakingCache]);
+      }, {});
+      const keys = Object.keys(cache);
+      if (
+        keys.length !== Object.keys(stakingCache).length ||
+        keys.find(key => !stakingCache[key])
+      ) {
+        setStakingCache(cache);
+      }
+    });
 
-  useEffect(() => {
-    const rows = StakingMetadata.getAll();
-    rows.addListener(onCache);
-
-    onCache();
     return () => {
-      rows.removeListener(onCache);
+      disposer();
     };
-  }, [onCache]);
+  }, [stakingCache]);
 
   useEffect(() => {
     cosmos.getAllValidators(1000).then(validatorsList => {
@@ -167,4 +160,4 @@ export const StakingValidatorsScreen = () => {
       onPress={onPressValidator}
     />
   );
-};
+});

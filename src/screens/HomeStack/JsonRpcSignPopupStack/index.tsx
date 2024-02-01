@@ -3,28 +3,16 @@ import React, {memo} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {popupScreenOptionsWithMargin} from '@app/helpers';
+import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
-import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
-import {JsonRpcSignScreen} from '@app/screens/HomeStack/JsonRpcSignPopupStack/json-rpc-sign-screen';
 import {
-  JsonRpcMetadata,
-  PartialJsonRpcRequest,
-  ScreenOptionType,
-} from '@app/types';
-
-export enum JsonRpcSignPopupStackRoutes {
-  JsonRpcSign = 'jsonRpcSignScreen',
-}
-
-export type JsonRpcSignPopupStackParamList = HomeStackParamList & {
-  [JsonRpcSignPopupStackRoutes.JsonRpcSign]: {
-    request: PartialJsonRpcRequest;
-    metadata: JsonRpcMetadata;
-    chainId?: number;
-    selectedAccount?: string;
-  };
-};
+  HomeStackParamList,
+  HomeStackRoutes,
+  JsonRpcSignPopupStackRoutes,
+} from '@app/route-types';
+import {JsonRpcSignScreen} from '@app/screens/HomeStack/JsonRpcSignPopupStack/json-rpc-sign-screen';
+import {ScreenOptionType} from '@app/types';
 
 const Stack = createNativeStackNavigator();
 
@@ -43,7 +31,7 @@ export const JsonRpcSignPopupStack = memo(() => {
     <Stack.Navigator screenOptions={screenOptions}>
       <Stack.Screen
         name={JsonRpcSignPopupStackRoutes.JsonRpcSign}
-        component={JsonRpcSignScreen}
+        component={themeUpdaterHOC(JsonRpcSignScreen)}
         initialParams={route.params}
       />
     </Stack.Navigator>

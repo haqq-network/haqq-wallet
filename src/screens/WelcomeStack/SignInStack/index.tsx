@@ -1,22 +1,19 @@
 import React, {memo, useCallback, useMemo} from 'react';
 
-import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
+import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {I18N, getText} from '@app/i18n';
+import {
+  OnboardingStackRoutes,
+  SignInStackParamList,
+  SignInStackRoutes,
+} from '@app/route-types';
 import {ChooseAccountScreen} from '@app/screens/choose-account-screen';
 import {CloudProblemsScreen} from '@app/screens/cloud-problems';
-import {
-  WelcomeStackParamList,
-  WelcomeStackRoutes,
-} from '@app/screens/WelcomeStack';
-import {
-  OnboardingStack,
-  OnboardingStackRoutes,
-} from '@app/screens/WelcomeStack/OnboardingStack';
+import {OnboardingStack} from '@app/screens/WelcomeStack/OnboardingStack';
 import {SignInAgreementScreen} from '@app/screens/WelcomeStack/SignInStack/signin-agreement';
 import {SignInNetworksScreen} from '@app/screens/WelcomeStack/SignInStack/signin-networks';
 import {SigninNotExistsScreen} from '@app/screens/WelcomeStack/SignInStack/signin-not-exists';
@@ -25,60 +22,7 @@ import {SignInPinScreen} from '@app/screens/WelcomeStack/SignInStack/signin-pin'
 import {SignInRestoreScreen} from '@app/screens/WelcomeStack/SignInStack/signin-restore-wallet';
 import {SigninSharesNotFoundScreen} from '@app/screens/WelcomeStack/SignInStack/signin-shares-not-found';
 import {SignInStoreWalletScreen} from '@app/screens/WelcomeStack/SignInStack/signin-store-wallet';
-import {SssProviders} from '@app/services/provider-sss';
-import {
-  AdjustEvents,
-  BiometryType,
-  ScreenOptionType,
-  WalletInitialData,
-} from '@app/types';
-
-export enum SignInStackRoutes {
-  SigninNetworks = 'signinNetworks',
-  SigninAgreement = 'signinAgreement',
-  SigninRestoreWallet = 'signinRestoreWallet',
-  SigninPin = 'signinPin',
-  OnboardingSetupPin = 'onboardingSetupPin',
-  SigninStoreWallet = 'signinStoreWallet',
-  SigninNotExists = 'signinNotExists',
-  SigninNotRecovery = 'signinNotRecovery',
-  SigninCloudProblems = 'cloudProblems',
-  SigninChooseAccount = 'chooseAccount',
-  SigninSharesNotFound = 'signinSharesNotFound',
-}
-
-export type SignInStackParamList = WelcomeStackParamList & {
-  [SignInStackRoutes.SigninNetworks]?: WelcomeStackParamList[WelcomeStackRoutes.SignIn];
-  [SignInStackRoutes.SigninAgreement]?: WelcomeStackParamList[WelcomeStackRoutes.SignIn];
-  [SignInStackRoutes.SigninRestoreWallet]: undefined;
-  [SignInStackRoutes.SigninPin]: WalletInitialData;
-  [SignInStackRoutes.SigninSharesNotFound]: undefined;
-  [SignInStackRoutes.OnboardingSetupPin]: WalletInitialData & {
-    provider?: ProviderMnemonicReactNative | ProviderSSSReactNative;
-    biometryType?: BiometryType;
-  };
-  [SignInStackRoutes.SigninStoreWallet]: WalletInitialData & {
-    nextScreen?: SignInStackRoutes;
-  };
-  [SignInStackRoutes.SigninNotExists]: WalletInitialData & {
-    provider: ProviderMnemonicReactNative | ProviderSSSReactNative;
-    email?: string;
-  };
-  [SignInStackRoutes.SigninNotRecovery]: WalletInitialData;
-  [SignInStackRoutes.SigninCloudProblems]: {
-    sssProvider: SssProviders;
-    onNext: () => void;
-  };
-  [SignInStackRoutes.SigninChooseAccount]:
-    | (WalletInitialData & {
-        provider: ProviderMnemonicReactNative;
-        nextScreen?: SignInStackRoutes;
-      })
-    | {
-        provider: ProviderSSSReactNative;
-        nextScreen?: SignInStackRoutes;
-      };
-};
+import {AdjustEvents, ScreenOptionType} from '@app/types';
 
 const Stack = createNativeStackNavigator<SignInStackParamList>();
 
@@ -128,41 +72,41 @@ const SignInStack = memo(() => {
       initialRouteName={inittialRouteName}>
       <Stack.Screen
         name={SignInStackRoutes.SigninNetworks}
-        component={SignInNetworksScreen}
+        component={themeUpdaterHOC(SignInNetworksScreen)}
         options={{...hideBack, ...screenOptions}}
       />
       <Stack.Screen
         name={SignInStackRoutes.SigninAgreement}
-        component={SignInAgreementScreen}
+        component={themeUpdaterHOC(SignInAgreementScreen)}
         options={{...hideBack, ...screenOptions}}
       />
 
       <Stack.Screen
         name={SignInStackRoutes.SigninNotExists}
-        component={SigninNotExistsScreen}
+        component={themeUpdaterHOC(SigninNotExistsScreen)}
         options={{...hideBack, ...screenOptions}}
       />
 
       <Stack.Screen
         name={SignInStackRoutes.SigninNotRecovery}
-        component={SigninNotRecoveryScreen}
+        component={themeUpdaterHOC(SigninNotRecoveryScreen)}
         options={{...hideBack, ...screenOptions}}
       />
 
       <Stack.Screen
         name={SignInStackRoutes.SigninSharesNotFound}
-        component={SigninSharesNotFoundScreen}
+        component={themeUpdaterHOC(SigninSharesNotFoundScreen)}
         options={{...hideBack, ...screenOptions}}
       />
 
       <Stack.Screen
         name={SignInStackRoutes.SigninRestoreWallet}
-        component={SignInRestoreScreen}
+        component={themeUpdaterHOC(SignInRestoreScreen)}
         options={{title}}
       />
       <Stack.Screen
         name={SignInStackRoutes.SigninPin}
-        component={SignInPinScreen}
+        component={themeUpdaterHOC(SignInPinScreen)}
         options={{title}}
       />
       <Stack.Screen
@@ -179,14 +123,14 @@ const SignInStack = memo(() => {
 
       <Stack.Screen
         name={SignInStackRoutes.SigninChooseAccount}
-        component={ChooseAccountScreen}
+        component={themeUpdaterHOC(ChooseAccountScreen)}
         options={{title: getText(I18N.ledgerChooseAccount)}}
         initialParams={{nextScreen: SignInStackRoutes.SigninStoreWallet}}
       />
 
       <Stack.Screen
         name={SignInStackRoutes.SigninCloudProblems}
-        component={CloudProblemsScreen}
+        component={themeUpdaterHOC(CloudProblemsScreen)}
         options={{...hideBack, ...screenOptions}}
       />
     </Stack.Navigator>

@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {useFocusEffect} from '@react-navigation/native';
+import {autorun} from 'mobx';
 import {observer} from 'mobx-react';
 
 import {HomeEarn} from '@app/components/home-earn';
@@ -12,17 +13,14 @@ import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
 import {getUid} from '@app/helpers/get-uid';
 import {prepareRaffles} from '@app/helpers/prepare-raffles';
-import {sumReduce} from '@app/helpers/staking';
+import {reduceAmounts} from '@app/helpers/staking';
 import {useTypedNavigation} from '@app/hooks';
 import {
   StakingMetadata,
   StakingMetadataType,
 } from '@app/models/staking-metadata';
 import {Wallet} from '@app/models/wallet';
-import {
-  HomeEarnStackParamList,
-  HomeEarnStackRoutes,
-} from '@app/screens/HomeStack/HomeEarnStack';
+import {HomeEarnStackParamList, HomeEarnStackRoutes} from '@app/route-types';
 import {Backend} from '@app/services/backend';
 import {Balance} from '@app/services/balance';
 import {AdjustEvents, Raffle, RaffleStatus} from '@app/types';
@@ -60,22 +58,18 @@ export const HomeEarnScreen = observer(() => {
   );
 
   useEffect(() => {
-    const rows = StakingMetadata.getAll();
+    const rewards = StakingMetadata.getAllByType(StakingMetadataType.reward);
+    const delegations = StakingMetadata.getAllByType(
+      StakingMetadataType.delegation,
+    );
+    const unDelegations = StakingMetadata.getAllByType(
+      StakingMetadataType.undelegation,
+    );
 
     const listener = () => {
-      const rewards = rows.filter(
-        val => val.type === StakingMetadataType.reward,
-      );
-      const delegations = rows.filter(
-        val => val.type === StakingMetadataType.delegation,
-      );
-      const unDelegations = rows.filter(
-        val => val.type === StakingMetadataType.undelegation,
-      );
-
-      const rewardsSum = sumReduce(rewards);
-      const stakingSum = sumReduce(delegations);
-      const unDelegationSum = sumReduce(unDelegations);
+      const rewardsSum = reduceAmounts(rewards);
+      const stakingSum = reduceAmounts(delegations);
+      const unDelegationSum = reduceAmounts(unDelegations);
       const availableSum = visible.reduce(
         (acc, w) => acc.operate(app.getAvailableBalance(w.address), 'add'),
         Balance.Empty,
@@ -90,10 +84,11 @@ export const HomeEarnScreen = observer(() => {
       });
     };
 
-    rows.addListener(listener);
+    const disposer = autorun(listener);
     app.addListener(Events.onBalanceSync, listener);
+
     return () => {
-      rows.removeListener(listener);
+      disposer();
       app.removeListener(Events.onBalanceSync, listener);
     };
   }, [visible]);

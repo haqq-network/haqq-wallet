@@ -11,14 +11,12 @@ import {SssError} from '@app/helpers/sss-error';
 import {verifyCloud} from '@app/helpers/verify-cloud';
 import {getMetadataValueWrapped} from '@app/helpers/wrappers/get-metadata-value';
 import {useTypedNavigation} from '@app/hooks';
-import {
-  SignInStackParamList,
-  SignInStackRoutes,
-} from '@app/screens/WelcomeStack/SignInStack';
+import {SignInStackParamList, SignInStackRoutes} from '@app/route-types';
 import {Cloud} from '@app/services/cloud';
 import {
   SssProviders,
   onLoginApple,
+  onLoginCustom,
   onLoginGoogle,
 } from '@app/services/provider-sss';
 import {RemoteConfig} from '@app/services/remote-config';
@@ -35,6 +33,9 @@ export const SignInNetworksScreen = memo(() => {
           break;
         case SssProviders.google:
           creds = await onLoginGoogle();
+          break;
+        case SssProviders.custom:
+          creds = await onLoginCustom();
           break;
       }
 
@@ -123,5 +124,13 @@ export const SignInNetworksScreen = memo(() => {
     navigation.navigate(SignInStackRoutes.SigninAgreement);
   }, [navigation]);
 
-  return <SigninNetworks onLogin={onLogin} onSkip={onSkip} />;
+  return (
+    <SigninNetworks
+      onLogin={onLogin}
+      onSkip={onSkip}
+      isAppleSupported={app.isAppleSigninSupported}
+      isGoogleSupported={app.isGoogleSigninSupported}
+      isCustomSupported={app.isCustomSigninSupported}
+    />
+  );
 });

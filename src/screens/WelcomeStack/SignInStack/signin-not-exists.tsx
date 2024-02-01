@@ -3,12 +3,12 @@ import React, {memo, useCallback} from 'react';
 import {SigninNotExists} from '@app/components/signin-not-exists';
 import {app} from '@app/contexts';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {WelcomeStackRoutes} from '@app/screens/WelcomeStack';
 import {
   SignInStackParamList,
   SignInStackRoutes,
-} from '@app/screens/WelcomeStack/SignInStack';
-import {SignUpStackRoutes} from '@app/screens/WelcomeStack/SignUpStack';
+  SignUpStackRoutes,
+  WelcomeStackRoutes,
+} from '@app/route-types';
 
 export const SigninNotExistsScreen = memo(() => {
   const navigation = useTypedNavigation<SignInStackParamList>();

@@ -1,0 +1,127 @@
+name: Run e2e tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      IS_DEVELOPMENT:
+        type: choice
+        description: IS_DEVELOPMENT
+        options:
+          - false
+          - true
+
+      IS_SSS_ENABLED:
+        type: choice
+        description: IS_SSS_ENABLED
+        options:
+          - true
+          - false
+
+  workflow_call:
+    inputs:
+      IS_DEVELOPMENT:
+        required: true
+        type: string
+      IS_SSS_ENABLED:
+        required: true
+        type: string
+
+jobs:
+  build:
+    name: Run e2e tests
+    runs-on: macOS
+    steps:
+      - name: Show macOS machine infomation
+        run: uname -a
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Cache Node Modules
+        uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Cache XCode build
+        uses: mikehardy/buildcache-action@v2
+
+      - name: Install packages
+        run: yarn install 
+
+      - name: Install pods
+        run: cd ios && pod install
+      - name: Git init
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "Github actions"
+      - name: Decode secrets
+        run: |
+          echo ${{secrets.GOOGLE_SERVICE_IOS}} | base64 -d > ios/GoogleService-Info.plist
+
+          echo "PROVIDER_NETWORK=${{secrets.PROVIDER_NETWORK}}" >> .env
+          echo "PROVIDER_WS_NETWORK=${{secrets.PROVIDER_WS_NETWORK}}" >> .env
+          echo "PROVIDER_CHAIN_ID=${{secrets.PROVIDER_CHAIN_ID}}" >> .env
+          echo "SENTRY_DSN=${{secrets.SENTRY_DSN}}" >> .env
+          echo "NETWORK_EXPLORER=${{secrets.NETWORK_EXPLORER}}" >> .env
+          echo "ENVIRONMENT=test" >> .env
+          echo "IS_DEVELOPMENT=${{github.event.inputs.IS_DEVELOPMENT}}" >> .env
+          echo "WALLET_CONNECT_PROJECT_ID=${{secrets.WALLET_CONNECT_PROJECT_ID}}" >> .env
+          echo "WALLET_CONNECT_RELAY_URL=${{secrets.WALLET_CONNECT_RELAY_URL}}" >> .env
+          echo "WEB3AUTH_CLIENT_ID=${{secrets.WEB3AUTH_CLIENT_ID}}" >> .env
+          echo "HCAPTCHA_SITE_KEY=${{secrets.HCAPTCHA_SITE_KEY}}" >> .env
+          echo "GOOGLE_SIGNIN_WEB_CLIENT_ID=${{secrets.GOOGLE_SIGNIN_WEB_CLIENT_ID}}" >> .env
+          echo "HAQQ_BACKEND=${{secrets.HAQQ_BACKEND}}" >> .env
+          echo "HAQQ_BACKEND_DEV=${{secrets.HAQQ_BACKEND_DEV}}" >> .env
+          echo "ADJUST_TOKEN=${{secrets.ADJUST_TOKEN}}" >> .env
+          echo "ADJUST_ENVIRONMENT=${{secrets.ADJUST_ENVIRONMENT}}" >> .env
+          echo "IS_SSS_ENABLED=${{github.event.inputs.IS_SSS_ENABLED}}" >> .env
+          echo "GOOGLE_PLAY_PACKAGE=${{secrets.GOOGLE_PLAY_PACKAGE}}" >> .env
+          echo "APPSTORE_APP_ID=${{secrets.APPSTORE_APP_ID}}" >> .env
+          echo "TURNSTILE_URL=${{secrets.TURNSTILE_URL}}" >> .env
+          echo "TURNSTILE_SITEKEY=${{secrets.TURNSTILE_SITEKEY}}" >> .env
+          echo "RECAPTCHA_V2_URL=${{secrets.RECAPTCHA_V2_URL}}" >> .env
+          echo "RECAPTCHA_V2_SITEKEY=${{secrets.RECAPTCHA_V2_SITEKEY}}" >> .env
+          echo "HCAPTCHA_URL=${{secrets.HCAPTCHA_URL}}" >> .env
+
+          echo "DETOX_MILK_PRIVATE_KEY=${{secrets.DETOX_MILK_PRIVATE_KEY}}" >> .env
+          echo "DETOX_PROVIDER=${{secrets.DETOX_PROVIDER}}" >> .env
+          echo "DETOX_CHAIN_ID=${{secrets.DETOX_CHAIN_ID}}" >> .env
+          echo "MMKV_KEY=${{secrets.MMKV_KEY}}" >> .env
+          echo "FOR_DETOX=true" >> .env
+
+      - name: Build apps
+        run: |
+          eval "$(ssh-agent -s)"
+          ssh-add - <<< "${MATCH_DEPLOY_KEY}"
+          yarn detox:ios:build
+        env:
+          DEVELOPER_APP_IDENTIFIER: ${{ secrets.IOS_IDENTIFIER }}
+          GIT_AUTHORIZATION: ${{ secrets.GIT_AUTHORIZATION }}
+          APP_STORE_CONNECT_TEAM_ID: ${{ secrets.APP_STORE_CONNECT_TEAM_ID }}
+          DEVELOPER_PORTAL_TEAM_ID: ${{ secrets.DEVELOPER_PORTAL_TEAM_ID }}
+          MATCH_DEPLOY_KEY: ${{ secrets.MATCH_DEPLOY_KEY }}
+          TEMP_KEYCHAIN_USER: ${{ secrets.TEMP_KEYCHAIN_USER }}
+          TEMP_KEYCHAIN_PASSWORD: ${{ secrets.TEMP_KEYCHAIN_PASSWORD }}
+          APPLE_KEY_ID: ${{ secrets.APPLE_KEY_ID }}
+          APPLE_ISSUER_ID: ${{ secrets.APPLE_ISSUER_ID }}
+          APPLE_KEY_CONTENT: ${{ secrets.APPLE_KEY_CONTENT }}
+          FASTLANE_PASSWORD: ${{ secrets.APPLE_FASTLANE_PASSWORD }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          DEVELOPER_APP_ID: ${{ secrets.DEVELOPER_APP_ID }}
+          PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}
+
+      - name: Run tests
+        run: yarn detox:ios:test
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        if: ${{ failure() }}
+        with:
+          name: Detox Artifacts
+          path: artifacts
+          retention-days: 3

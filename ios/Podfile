@@ -18,7 +18,7 @@ setup_permissions([
   # 'AppTrackingTransparency',
   # 'BluetoothPeripheral',
   # 'Calendars',
-  # 'Camera',
+  'Camera',
   # 'Contacts',
   # 'FaceID',
   'LocationAccuracy',

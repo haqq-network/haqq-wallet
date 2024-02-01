@@ -7,13 +7,13 @@ import {SettingsViewRecoveryPhrase} from '@app/components/settings-view-recovery
 import {CustomHeader, Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
+import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {
   ManageAccountsStackParamList,
   ManageAccountsStackRoutes,
-} from '@app/screens/HomeStack/ManageAccountsStack';
-import {Cloud} from '@app/services/cloud';
+} from '@app/route-types';
 import {ModalType, WalletType} from '@app/types';
 
 import {PinGuardScreen} from '../../pin-guard';
@@ -38,11 +38,11 @@ export const SettingsViewRecoveryPhraseScreen = memo(() => {
         setMnemonic(phraseMnemonic ?? '');
         break;
       case WalletType.sss:
-        const storage = new Cloud();
+        const storage = await getProviderStorage(accountId);
         const providerSss = new ProviderSSSReactNative({
           storage,
-          account: accountId,
           getPassword: app.getPassword.bind(app),
+          account: accountId,
         });
         try {
           const phraseSss = await providerSss.getMnemonicPhrase();

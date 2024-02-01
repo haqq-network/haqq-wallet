@@ -27,10 +27,7 @@ import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
-import {
-  BrowserStackParamList,
-  BrowserStackRoutes,
-} from '@app/screens/HomeStack/BrowserStack';
+import {BrowserStackParamList, BrowserStackRoutes} from '@app/route-types';
 import {sendNotification} from '@app/services';
 
 export const Web3BrowserScreen = memo(() => {

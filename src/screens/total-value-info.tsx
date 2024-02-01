@@ -11,7 +11,7 @@ import {useTransactionList} from '@app/hooks/use-transaction-list';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {Token} from '@app/models/tokens';
 import {Wallet} from '@app/models/wallet';
-import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
+import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {Indexer} from '@app/services/indexer';
 import {
   ModalType,
@@ -43,7 +43,7 @@ export const TotalValueInfoScreen = observer(() => {
 
     const names = transactionsList
       .filter(({source}) => source === TransactionSource.contract)
-      .map(item => (item as TransactionListContract).to);
+      .map(item => (item as TransactionListContract).contractAddress as string);
     const uniqueNames = [...new Set(names)];
     if (uniqueNames.length > 0) {
       const info = await Indexer.instance.getContractNames(uniqueNames);

@@ -56,6 +56,7 @@ export function HomeNews({
             i18n={I18N.homeNewsViewAll}
             onPress={onPressViewAll}
             textColor={Color.textGreen1}
+            testID="newsViewAll"
           />
         </View>
         <NewsCardCarousel data={ourNews} onPress={onPressOurNews} />

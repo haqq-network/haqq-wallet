@@ -1,5 +1,6 @@
 import {ProviderInterface} from '@haqq/provider-base';
 import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
+import {ProviderKeystoneReactNative} from '@haqq/provider-keystone-react-native';
 import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
@@ -10,6 +11,8 @@ import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {Wallet} from '@app/models/wallet';
 import {WalletType} from '@app/types';
 import {LEDGER_APP} from '@app/variables/common';
+
+import {awaitForQRSign} from './await-for-qr-sign';
 
 const cache = new Map();
 
@@ -54,56 +57,65 @@ export async function getProviderInstanceForWallet(
   forceUpdate: boolean = false,
 ): Promise<ProviderInterface> {
   const id = getId(wallet);
-  const shouldUpdateCache = forceUpdate
-    ? true
-    : !hasProviderInstanceForWallet(wallet);
+  if (forceUpdate) {
+  }
 
-  if (shouldUpdateCache) {
-    switch (wallet.type) {
-      case WalletType.mnemonic:
-        cache.set(
-          id,
-          new ProviderMnemonicReactNative({
-            account: wallet.accountId!,
-            getPassword: app.getPassword.bind(app),
-          }),
-        );
-        break;
-      case WalletType.hot:
-        cache.set(
-          id,
-          new ProviderHotReactNative({
-            getPassword: app.getPassword.bind(app),
-            account: wallet.accountId!,
-          }),
-        );
-        break;
-      case WalletType.ledgerBt: {
-        const provider = new ProviderLedgerReactNative({
+  switch (wallet.type) {
+    case WalletType.mnemonic:
+      cache.set(
+        id,
+        new ProviderMnemonicReactNative({
+          account: wallet.accountId!,
           getPassword: app.getPassword.bind(app),
-          deviceId: wallet.accountId!,
-          appName: LEDGER_APP,
-        });
-        if (!skipAwaitForLedgerCall) {
-          awaitForLedger(provider);
-          cache.set(id, provider);
-        }
-        return provider;
+        }),
+      );
+      break;
+    case WalletType.hot:
+      cache.set(
+        id,
+        new ProviderHotReactNative({
+          getPassword: app.getPassword.bind(app),
+          account: wallet.accountId!,
+        }),
+      );
+      break;
+    case WalletType.ledgerBt: {
+      const provider = new ProviderLedgerReactNative({
+        getPassword: app.getPassword.bind(app),
+        deviceId: wallet.accountId!,
+        appName: LEDGER_APP,
+      });
+      if (!skipAwaitForLedgerCall) {
+        awaitForLedger(provider);
+        cache.set(id, provider);
       }
-      case WalletType.sss:
-        const storage = await getProviderStorage(wallet.accountId as string);
-        cache.set(
-          id,
-          new ProviderSSSReactNative({
-            storage,
-            getPassword: app.getPassword.bind(app),
-            account: wallet.accountId!,
-          }),
-        );
-        break;
-      default:
-        throw new Error('transport_not_implemented');
+      return provider;
     }
+    case WalletType.sss:
+      const storage = await getProviderStorage(wallet.accountId as string);
+      cache.set(
+        id,
+        new ProviderSSSReactNative({
+          storage,
+          getPassword: app.getPassword.bind(app),
+          account: wallet.accountId!,
+        }),
+      );
+      break;
+    case WalletType.keystone:
+      cache.set(
+        id,
+        new ProviderKeystoneReactNative({
+          qrCBORHex: wallet.accountId!,
+          awaitForSign: async params => {
+            const signatureHex = await awaitForQRSign(params);
+            return {signatureHex};
+          },
+        }),
+      );
+      break;
+    default:
+      throw new Error('transport_not_implemented');
   }
 
   return cache.get(id);

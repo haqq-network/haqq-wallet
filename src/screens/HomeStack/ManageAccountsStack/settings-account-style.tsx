@@ -10,7 +10,7 @@ import {Wallet} from '@app/models/wallet';
 import {
   ManageAccountsStackParamList,
   ManageAccountsStackRoutes,
-} from '@app/screens/HomeStack/ManageAccountsStack';
+} from '@app/route-types';
 import {WalletCardPattern, WalletCardStyle} from '@app/types';
 
 export const SettingsAccountStyleScreen = observer(() => {

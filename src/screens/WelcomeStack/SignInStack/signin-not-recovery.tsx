@@ -2,10 +2,7 @@ import React, {memo, useCallback} from 'react';
 
 import {SigninNotRecovery} from '@app/components/signin-not-recovery';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {
-  SignInStackParamList,
-  SignInStackRoutes,
-} from '@app/screens/WelcomeStack/SignInStack';
+import {SignInStackParamList, SignInStackRoutes} from '@app/route-types';
 
 export const SigninNotRecoveryScreen = memo(() => {
   const navigation = useTypedNavigation<SignInStackParamList>();

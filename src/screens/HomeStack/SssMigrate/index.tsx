@@ -3,47 +3,20 @@ import React, {memo} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
+import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {useTypedRoute} from '@app/hooks';
-import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
+import {
+  HomeStackParamList,
+  HomeStackRoutes,
+  SssMigrateStackParamList,
+  SssMigrateStackRoutes,
+} from '@app/route-types';
 import {SssMigrateAgreementScreen} from '@app/screens/HomeStack/SssMigrate/sss-migrate-agreement';
 import {SssMigrateFinishScreen} from '@app/screens/HomeStack/SssMigrate/sss-migrate-finish';
 import {SssMigrateNetworksScreen} from '@app/screens/HomeStack/SssMigrate/sss-migrate-networks';
 import {SssMigrateRewriteScreen} from '@app/screens/HomeStack/SssMigrate/sss-migrate-rewrite';
 import {SssMigrateStoreScreen} from '@app/screens/HomeStack/SssMigrate/sss-migrate-store';
 import {SignUpImportantInfoScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-important-info';
-import {SssProviders} from '@app/services/provider-sss';
-
-export enum SssMigrateStackRoutes {
-  SssMigrateAgreement = 'sssMigrateAgreement',
-  SssMigrateNetworks = 'sssMigrateNetworks',
-  SssMigrateRewrite = 'sssMigrateRewrite',
-  SssMigrateStore = 'sssMigrateStore',
-  SssMigrateFinish = 'sssMigrateFinish',
-  SSSMigrateSignupImportantInfo = 'sssSignupImportantInfo',
-}
-
-export type SssMigrateStackParamList = HomeStackParamList & {
-  [SssMigrateStackRoutes.SssMigrateAgreement]: {accountId: string};
-  [SssMigrateStackRoutes.SssMigrateNetworks]: {accountId: string};
-  [SssMigrateStackRoutes.SssMigrateRewrite]: {
-    accountId: string;
-    privateKey: string;
-    provider: SssProviders;
-    email?: string;
-    verifier: string;
-    token: string;
-  };
-  [SssMigrateStackRoutes.SssMigrateStore]: {
-    accountId: string;
-    privateKey: string | null;
-    provider?: SssProviders;
-    email?: string;
-    verifier: string;
-    token: string;
-  };
-  [SssMigrateStackRoutes.SssMigrateFinish]: undefined;
-  [SssMigrateStackRoutes.SSSMigrateSignupImportantInfo]: {onNext: () => void};
-};
 
 const Stack = createNativeStackNavigator<SssMigrateStackParamList>();
 
@@ -53,7 +26,7 @@ export const SssMigrateStack = memo(() => {
     <Stack.Navigator screenOptions={popupScreenOptions}>
       <Stack.Screen
         name={SssMigrateStackRoutes.SssMigrateAgreement}
-        component={SssMigrateAgreementScreen}
+        component={themeUpdaterHOC(SssMigrateAgreementScreen)}
         options={hideBack}
         initialParams={{
           accountId: route.params.accountId,
@@ -61,27 +34,27 @@ export const SssMigrateStack = memo(() => {
       />
       <Stack.Screen
         name={SssMigrateStackRoutes.SssMigrateNetworks}
-        component={SssMigrateNetworksScreen}
+        component={themeUpdaterHOC(SssMigrateNetworksScreen)}
         options={hideBack}
       />
       <Stack.Screen
         name={SssMigrateStackRoutes.SssMigrateRewrite}
-        component={SssMigrateRewriteScreen}
+        component={themeUpdaterHOC(SssMigrateRewriteScreen)}
         options={hideBack}
       />
       <Stack.Screen
         name={SssMigrateStackRoutes.SssMigrateStore}
-        component={SssMigrateStoreScreen}
+        component={themeUpdaterHOC(SssMigrateStoreScreen)}
         options={hideBack}
       />
       <Stack.Screen
         name={SssMigrateStackRoutes.SssMigrateFinish}
-        component={SssMigrateFinishScreen}
+        component={themeUpdaterHOC(SssMigrateFinishScreen)}
         options={hideBack}
       />
       <Stack.Screen
-        name={SssMigrateStackRoutes.SSSMigrateSignupImportantInfo}
-        component={SignUpImportantInfoScreen}
+        name={SssMigrateStackRoutes.SssMigrateSignupImportantInfo}
+        component={themeUpdaterHOC(SignUpImportantInfoScreen)}
       />
     </Stack.Navigator>
   );

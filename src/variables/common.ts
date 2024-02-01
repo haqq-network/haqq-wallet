@@ -315,3 +315,12 @@ export const TEST_URLS: Partial<Link>[] = [
 
 export const DEVELOPER_MODE_DOCS =
   'https://github.com/haqq-network/haqq-wallet/blob/main/docs/developer-mode.md';
+
+export const SUPPORTED_UR_TYPE = {
+  CRYPTO_HDKEY: 'crypto-hdkey',
+  CRYPTO_ACCOUNT: 'crypto-account',
+  ETH_SIGNATURE: 'eth-signature',
+  COSMOS_SIGNATURE: 'cosmos-signature',
+};
+
+export const KEYSTONE_NAME = 'Keystone';

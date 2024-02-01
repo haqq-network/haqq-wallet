@@ -6,10 +6,7 @@ import {SettingsContactEdit} from '@app/components/settings-contact-edit';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Contact, ContactType} from '@app/models/contact';
-import {
-  AddressBookParamList,
-  AddressBookStackRoutes,
-} from '@app/screens/HomeStack/AddressStack';
+import {AddressBookParamList, AddressBookStackRoutes} from '@app/route-types';
 
 export const SettingsContactEditScreen = memo(() => {
   const {name, address, isCreate} = useTypedRoute<

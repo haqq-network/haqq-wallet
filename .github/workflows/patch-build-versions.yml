@@ -8,6 +8,8 @@ jobs:
   patch_build:
     runs-on: self-hosted
     steps:
+      - name: Show self-hosted machine infomation
+        run: uname -a
       - uses: actions/checkout@v3
         with:
           token: ${{ secrets.SERVICE_TOKEN }}

@@ -7,7 +7,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {
   ProposalDepositStackParamList,
   ProposalDepositStackRoutes,
-} from '@app/screens/HomeStack/GovernanceStack/ProposalDepositStack';
+} from '@app/route-types';
 
 export const ProposalDepositFinishScreen = memo(() => {
   const navigation = useTypedNavigation<ProposalDepositStackParamList>();

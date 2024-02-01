@@ -8,7 +8,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {
   StakingDelegateStackParamList,
   StakingDelegateStackRoutes,
-} from '@app/screens/HomeStack/StakingDelegateStack';
+} from '@app/route-types';
 import {AWAIT_NEW_BLOCK_MS} from '@app/variables/common';
 
 export const StakingDelegateFinishScreen = memo(() => {

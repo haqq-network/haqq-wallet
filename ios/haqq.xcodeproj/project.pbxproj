@@ -24,6 +24,7 @@
 		191A5E34914F492BA629B950 /* bluetooth-unauthorized@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F1EE6BE8E784394961095EA /* bluetooth-unauthorized@3x.png */; };
 		19A622B92AA87A3200808B26 /* cloud_verification_dark.riv in Resources */ = {isa = PBXBuildFile; fileRef = 19A622B72AA87A3200808B26 /* cloud_verification_dark.riv */; };
 		19A622BA2AA87A3200808B26 /* cloud_verification_light.riv in Resources */ = {isa = PBXBuildFile; fileRef = 19A622B82AA87A3200808B26 /* cloud_verification_light.riv */; };
+		1A10FA9F2B21B6FF005408F2 /* animated_camera.riv in Resources */ = {isa = PBXBuildFile; fileRef = 1A10FA9E2B21B6FF005408F2 /* animated_camera.riv */; };
 		1A2F92BB2A7B8EF000569DFF /* AppNativeConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2F92BA2A7B8EF000569DFF /* AppNativeConfig.swift */; };
 		1A2F92BD2A7B943500569DFF /* BooleanConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2F92BC2A7B943500569DFF /* BooleanConfig.swift */; };
 		1A2F92BF2A7B94F400569DFF /* AppNativeConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2F92BE2A7B94F400569DFF /* AppNativeConfig.m */; };
@@ -183,6 +184,7 @@
 		189C4904319D4B4B92D30F92 /* question-circle@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "question-circle@3x.png"; path = "../assets/images/question-circle@3x.png"; sourceTree = "<group>"; };
 		19A622B72AA87A3200808B26 /* cloud_verification_dark.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = cloud_verification_dark.riv; sourceTree = "<group>"; };
 		19A622B82AA87A3200808B26 /* cloud_verification_light.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = cloud_verification_light.riv; sourceTree = "<group>"; };
+		1A10FA9E2B21B6FF005408F2 /* animated_camera.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = animated_camera.riv; sourceTree = "<group>"; };
 		1A2F92BA2A7B8EF000569DFF /* AppNativeConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNativeConfig.swift; sourceTree = "<group>"; };
 		1A2F92BC2A7B943500569DFF /* BooleanConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BooleanConfig.swift; sourceTree = "<group>"; };
 		1A2F92BE2A7B94F400569DFF /* AppNativeConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppNativeConfig.m; sourceTree = "<group>"; };
@@ -470,6 +472,7 @@
 		21AB3DC02A0E4539002D9727 /* animations */ = {
 			isa = PBXGroup;
 			children = (
+				1A10FA9E2B21B6FF005408F2 /* animated_camera.riv */,
 				19A622B72AA87A3200808B26 /* cloud_verification_dark.riv */,
 				19A622B82AA87A3200808B26 /* cloud_verification_light.riv */,
 				1AFE837F2A39B181001CFE73 /* moving_arrow_captcha.riv */,
@@ -806,6 +809,7 @@
 				5329141EC5AD434EB723C177 /* ledger-no-app@2x.png in Resources */,
 				942EE8D6E62E4C45BB5CDEDB /* ledger-no-app@3x.png in Resources */,
 				C47B976A9C714DE8B2272371 /* logo-empty.png in Resources */,
+				1A10FA9F2B21B6FF005408F2 /* animated_camera.riv in Resources */,
 				D2EF8B9028754ED2AA9994E5 /* logo-empty@2x.png in Resources */,
 				C5CD28FF5C4744869B14B5F5 /* logo-empty@3x.png in Resources */,
 				9DE809D9B28540F7A50DA67C /* mnemonic-notify.png in Resources */,
@@ -1167,7 +1171,7 @@
 				CODE_SIGN_ENTITLEMENTS = haqq/haqq.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 373;
+				CURRENT_PROJECT_VERSION = 387;
 				DEVELOPMENT_TEAM = XL66G6TJJL;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = haqq/Info.plist;
@@ -1205,7 +1209,7 @@
 				CODE_SIGN_ENTITLEMENTS = haqq/haqq.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 373;
+				CURRENT_PROJECT_VERSION = 387;
 				DEVELOPMENT_TEAM = XL66G6TJJL;
 				INFOPLIST_FILE = haqq/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Haqq Wallet";
@@ -1305,7 +1309,6 @@
 					"$(inherited)",
 					"-Wl",
 					"-ld_classic",
-					" ",
 				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
@@ -1381,7 +1384,6 @@
 					"$(inherited)",
 					"-Wl",
 					"-ld_classic",
-					" ",
 				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;

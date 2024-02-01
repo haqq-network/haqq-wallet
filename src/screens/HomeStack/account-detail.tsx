@@ -5,7 +5,7 @@ import {observer} from 'mobx-react';
 import {AccountDetail} from '@app/components/account-detail';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {Wallet} from '@app/models/wallet';
-import {HomeStackParamList, HomeStackRoutes} from '@app/screens/HomeStack';
+import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 
 export const AccountDetailScreen = observer(() => {
   const navigation = useTypedNavigation<HomeStackParamList>();

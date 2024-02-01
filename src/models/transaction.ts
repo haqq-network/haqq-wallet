@@ -1,14 +1,17 @@
 import {TransactionReceipt} from '@ethersproject/abstract-provider';
 import {utils} from 'ethers';
-import {makeAutoObservable, when} from 'mobx';
+import {makeAutoObservable, runInAction, when} from 'mobx';
 import {isHydrated, makePersistable} from 'mobx-persist-store';
 
 import {calcFee} from '@app/helpers';
 import {awaitForRealm} from '@app/helpers/await-for-realm';
 import {realm} from '@app/models/index';
+import {TransactionRealmObject} from '@app/models/realm-object-for-migration';
 import {Balance} from '@app/services/balance';
+import {Indexer} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
 import {HaqqEthereumAddress, MobXStoreFromRealm} from '@app/types';
+import {migrateTransaction} from '@app/utils';
 import {DEFAULT_FEE, STORE_REHYDRATION_TIMEOUT_MS} from '@app/variables/common';
 
 export enum TransactionStatus {
@@ -36,31 +39,9 @@ export type Transaction = {
   confirmed: boolean;
   input: string;
   status: TransactionStatus;
+  type?: string;
+  id: string;
 };
-
-export class TransactionRealmObject extends Realm.Object {
-  static schema = {
-    name: 'Transaction',
-    properties: {
-      hash: 'string',
-      block: 'string?',
-      account: 'string',
-      raw: 'string',
-      from: 'string',
-      to: 'string?',
-      contractAddress: 'string?',
-      value: 'double',
-      fee: 'double',
-      createdAt: {type: 'date', default: () => new Date()},
-      confirmed: {type: 'bool', default: false},
-      providerId: 'string',
-      chainId: 'string',
-      feeHex: 'string',
-      input: 'string',
-    },
-    primaryKey: 'hash',
-  };
-}
 
 class TransactionStore implements MobXStoreFromRealm {
   realmSchemaName = TransactionRealmObject.schema.name;
@@ -130,6 +111,7 @@ class TransactionStore implements MobXStoreFromRealm {
         transaction.status ||
         existingTransaction?.status ||
         TransactionStatus.inProgress,
+      id: transaction.hash,
     };
 
     if (existingTransaction) {
@@ -207,6 +189,16 @@ class TransactionStore implements MobXStoreFromRealm {
       this.transactions.splice(txIndex, 1, tx);
     }
   }
+
+  fetchTransactions = async (accounts: string[]) => {
+    const result = await Indexer.instance.getTransactions(accounts);
+    const newTxs = result.map(tx => migrateTransaction(tx));
+
+    runInAction(() => {
+      this.transactions = newTxs;
+    });
+    return newTxs;
+  };
 }
 
 const instance = new TransactionStore(Boolean(process.env.JEST_WORKER_ID));

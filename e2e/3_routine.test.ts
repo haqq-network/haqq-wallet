@@ -2,6 +2,7 @@ import {by, device, element, waitFor} from 'detox';
 import {Wallet, utils} from 'ethers';
 
 import {ensureWalletIsVisible} from './helpers/ensureWalletIsVisible';
+import {getCoins} from './helpers/getCoins';
 import {restoreWallet} from './helpers/restoreWallet';
 import {sleep} from './helpers/sleep';
 import {PIN, PROVIDER, SOURCE_WALLET} from './test-variables';
@@ -47,13 +48,7 @@ describe('Routine', () => {
 
     const wallet = Wallet.fromMnemonic(mnemonic);
 
-    const amountInEther = '0.002';
-    const tx = {
-      to: wallet.address,
-      value: utils.parseEther(amountInEther),
-    };
-
-    await milkWallet.sendTransaction(tx);
+    await getCoins(mnemonic, '0.002');
 
     await sleep(10_000);
 
@@ -69,11 +64,7 @@ describe('Routine', () => {
       await element(by.id('transaction_address_next')).tap();
     }
 
-    await element(by.text('Islamic coin')).tap();
-
-    await waitFor(element(by.id('transaction_sum')))
-      .toBeVisible()
-      .withTimeout(15000);
+    await element(by.text('ISLM')).tap();
 
     const input_form = element(by.id('transaction_sum_form_input'));
     await input_form.tap();
@@ -85,12 +76,14 @@ describe('Routine', () => {
       .toBeVisible()
       .withTimeout(15000);
 
+    await element(by.id('transaction_confirmation')).scrollTo('bottom');
     await element(by.id('transaction_confirmation_submit')).tap();
 
     await waitFor(element(by.id('transaction_finish')))
       .toBeVisible()
       .withTimeout(15000);
 
+    await element(by.id('transaction_finish')).scrollTo('bottom');
     await element(by.id('transaction_finish_finish')).tap();
   });
 });

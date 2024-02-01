@@ -10,13 +10,13 @@ import {I18N} from '@app/i18n';
 
 type WelcomeProps = {
   onPressSignup: () => void;
-  onPressLedger: () => void;
+  onPressHardwareWallet: () => void;
   onPressSignIn: () => void;
 };
 
 export const Welcome = ({
   onPressSignup,
-  onPressLedger,
+  onPressHardwareWallet,
   onPressSignIn,
 }: WelcomeProps) => {
   const insets = useSafeAreaInsets();
@@ -51,13 +51,10 @@ export const Welcome = ({
         size={ButtonSize.large}
       />
       <Button
-        testID="welcome_ledger"
-        i18n={I18N.welcomeLedgerWallet}
-        iconRight="ledger"
-        iconRightColor={Color.graphicGreen1}
-        style={styles.button}
+        testID="welcome_connect_hardware_wallet"
+        i18n={I18N.welcomeConnectHardwareWallet}
         variant={ButtonVariant.second}
-        onPress={onPressLedger}
+        onPress={onPressHardwareWallet}
         size={ButtonSize.large}
       />
       <Button
