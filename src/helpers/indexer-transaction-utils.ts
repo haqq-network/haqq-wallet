@@ -107,25 +107,7 @@ function isIncomingTx(tx: IndexerTransaction, addresses: string[]): boolean {
 }
 
 function isOutcomingTx(tx: IndexerTransaction, addresses: string[]): boolean {
-  if (!tx?.msg?.type) {
-    return false;
-  }
-
-  const msg = tx.msg;
-  const haqqAddresses = addresses.map(AddressUtils.toHaqq);
-
-  if ('from_address' in msg) {
-    return haqqAddresses.includes(AddressUtils.toHaqq(msg.from_address));
-  }
-
-  if (
-    'delegator_address' in msg &&
-    haqqAddresses.includes(msg.delegator_address)
-  ) {
-    return msg.type === IndexerTxMsgType.msgDelegate;
-  }
-
-  return false;
+  return !isIncomingTx(tx, addresses);
 }
 
 function isContractInteraction(
@@ -304,9 +286,10 @@ function getFromAndTo(tx: IndexerTransaction, addresses: string[]) {
 
   if (isOutcomingTx(tx, addresses)) {
     // @ts-ignore
-    const to = tx.msg.from_address || tx.msg.validator_address;
-    // @ts-ignore
-    const from = tx.msg.to_address || tx.msg.winner || tx.msg.delegator_address;
+    const to = tx.msg.to_address || tx.msg.validator_address;
+    const from =
+      // @ts-ignore
+      tx.msg.from_address || tx.msg.winner || tx.msg.delegator_address;
 
     return {
       from: from ? AddressUtils.toEth(from) : '',

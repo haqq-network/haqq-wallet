@@ -143,7 +143,7 @@ export const TokenViewer = observer(
                 tokens={tokens.filter(
                   item =>
                     item.is_in_white_list &&
-                    // only erc20 tokens or native currency (ISLM)
+                    // FIXME: only erc20 tokens or native currency (ISLM)
                     (item.is_erc20 || item.symbol === CURRENCY_NAME),
                 )}
                 tokensOnly={!!wallet}

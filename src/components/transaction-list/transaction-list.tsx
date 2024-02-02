@@ -106,7 +106,10 @@ export const TransactionList = observer(
       }
       await Transaction.fetchNextTransactions(addresses);
     }, [isTransactionsLoading]);
-    const keyExtractor = useCallback((item: Transaction) => item.id, []);
+    const keyExtractor = useCallback(
+      (item: Transaction) => `${item.id}:${item.hash}`,
+      [],
+    );
 
     /*  RENDERER FUNCTIONS */
     const renderHeader = useCallback((data: SectionHeaderData) => {

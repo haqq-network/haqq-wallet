@@ -140,27 +140,26 @@ export const TransactionDetail = ({
           const balance = amount[i];
           return (
             <>
-              {isErc20TransferTx ||
-                (isEthereumTx && (
-                  <DataContent
-                    title={
-                      <>
-                        <View style={styles.iconView}>
-                          <Image source={token.icon} style={styles.icon} />
-                        </View>
-                        <Spacer width={4} />
-                        <Text t11>
-                          {token.name}
-                          {STRINGS.NBSP}
-                          <Text color={Color.textBase2}>({token.symbol})</Text>
-                        </Text>
-                      </>
-                    }
-                    subtitleI18n={I18N.transactionDetailCryptocurrency}
-                    reversed
-                    short
-                  />
-                ))}
+              {(isErc20TransferTx || isEthereumTx) && (
+                <DataContent
+                  title={
+                    <>
+                      <View style={styles.iconView}>
+                        <Image source={token.icon} style={styles.icon} />
+                      </View>
+                      <Spacer width={4} />
+                      <Text t11>
+                        {token.name}
+                        {STRINGS.NBSP}
+                        <Text color={Color.textBase2}>({token.symbol})</Text>
+                      </Text>
+                    </>
+                  }
+                  subtitleI18n={I18N.transactionDetailCryptocurrency}
+                  reversed
+                  short
+                />
+              )}
 
               <>
                 {balance.isPositive() && (

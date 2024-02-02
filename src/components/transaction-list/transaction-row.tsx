@@ -3,10 +3,12 @@ import React, {useCallback, useMemo} from 'react';
 import {Image, TouchableWithoutFeedback, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {DataContent, Icon, Spacer, Text} from '@app/components/ui';
+import {CardSmall, DataContent, Icon, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {IndexerTransactionUtils} from '@app/helpers/indexer-transaction-utils';
 import {Transaction} from '@app/models/transaction';
+import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {IndexerTransaction} from '@app/types';
 import {STRINGS} from '@app/variables/common';
@@ -86,6 +88,22 @@ export const TransactionRow = ({
     return '';
   }, [item, addresses]);
 
+  const wallet = useMemo(() => {
+    let address = '';
+
+    if (IndexerTransactionUtils.isIncomingTx(item, addresses)) {
+      address = IndexerTransactionUtils.getFromAndTo(item, addresses).to;
+    }
+
+    if (IndexerTransactionUtils.isOutcomingTx(item, addresses)) {
+      address = IndexerTransactionUtils.getFromAndTo(item, addresses).from;
+    }
+
+    if (address.length) {
+      return Wallet.getById(AddressUtils.toEth(address));
+    }
+  }, []);
+
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
       <View style={[styles.container, withPadding && styles.containerPadding]}>
@@ -105,19 +123,50 @@ export const TransactionRow = ({
               <TransactionStatus status={item.code} />
             </View>
           }
-          subtitle={subtitle}
+          subtitle={
+            <View style={styles.subtitleContainer}>
+              {!!wallet && (
+                <>
+                  <CardSmall
+                    width={23}
+                    height={16}
+                    borderRadius={4}
+                    withPadding={false}
+                    pattern={wallet.pattern}
+                    colorFrom={wallet.colorFrom}
+                    colorTo={wallet.colorTo}
+                    colorPattern={wallet.colorPattern}
+                  />
+                  <Spacer width={4} />
+                </>
+              )}
+              <View>
+                <Text t14 color={Color.textBase2}>
+                  {subtitle}
+                </Text>
+              </View>
+            </View>
+          }
           short
         />
 
         {amount.isPositive() && (
           <View style={styles.amountWrapper}>
-            <Text t11 color={amoutColor}>
+            <Text
+              t11
+              color={amoutColor}
+              ellipsizeMode="middle"
+              numberOfLines={1}>
               {amoutPrefix}
               {STRINGS.NBSP}
               {amount.toBalanceString()}
             </Text>
             <Spacer height={2} />
-            <Text t14 color={Color.textBase2}>
+            <Text
+              t14
+              color={Color.textBase2}
+              ellipsizeMode="middle"
+              numberOfLines={1}>
               {amoutPrefix}
               {STRINGS.NBSP}
               {amount.toFiat('USD').toBalanceString()}
@@ -130,7 +179,11 @@ export const TransactionRow = ({
 };
 
 const styles = createTheme({
-  amountWrapper: {flexDirection: 'column', alignItems: 'flex-end'},
+  amountWrapper: {
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    flex: 1,
+  },
   containerPadding: {
     paddingVertical: 4,
     paddingHorizontal: 20,
@@ -168,5 +221,8 @@ const styles = createTheme({
     width: 16,
     height: 16,
     borderRadius: 20,
+  },
+  subtitleContainer: {
+    flexDirection: 'row',
   },
 });

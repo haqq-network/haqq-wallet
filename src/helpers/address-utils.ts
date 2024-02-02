@@ -9,6 +9,9 @@ export const HAQQ_VALIDATOR_PREFIX = 'haqqvaloper';
 export class AddressUtils {
   static toHaqq(address: string) {
     try {
+      if (!address) {
+        return '' as HaqqCosmosAddress;
+      }
       if (AddressUtils.isHaqqValidatorAddress(address)) {
         return (address || '').toLowerCase() as HaqqCosmosAddress;
       }
@@ -26,6 +29,9 @@ export class AddressUtils {
 
   static toEth(address: string) {
     try {
+      if (!address) {
+        return '' as HaqqEthereumAddress;
+      }
       if (AddressUtils.isHaqqValidatorAddress(address)) {
         return (address || '').toLowerCase() as HaqqEthereumAddress;
       }
@@ -43,6 +49,9 @@ export class AddressUtils {
 
   static isEthAddress(address: string): address is HaqqEthereumAddress {
     try {
+      if (!address) {
+        return false;
+      }
       return utils.isAddress(address);
     } catch (e) {
       Logger.captureException(e, 'AddressUtils.isEthAddress', {address});
@@ -58,6 +67,9 @@ export class AddressUtils {
 
   static isHaqqAddress = (address: string): address is HaqqCosmosAddress => {
     try {
+      if (!address) {
+        return false;
+      }
       if (typeof address === 'string' && address.startsWith('haqq')) {
         if (AddressUtils.isHaqqValidatorAddress(address)) {
           return true;
@@ -79,6 +91,9 @@ export class AddressUtils {
 
   static isContractAddress = async (address: string) => {
     try {
+      if (!address) {
+        return false;
+      }
       const response = await Whitelist.verifyAddress(address);
 
       if (!response) {

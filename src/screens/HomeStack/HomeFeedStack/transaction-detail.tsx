@@ -17,7 +17,6 @@ import {I18N} from '@app/i18n';
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {sendNotification} from '@app/services';
 import {Balance} from '@app/services/balance';
-import {IndexerTxMsgType} from '@app/types';
 import {splitAddress} from '@app/utils';
 
 export const TransactionDetailScreen = observer(() => {
@@ -36,7 +35,7 @@ export const TransactionDetailScreen = observer(() => {
   );
 
   const isSent = useMemo(
-    () => IndexerTransactionUtils.isOutcomingTx(tx, addressList),
+    () => !IndexerTransactionUtils.isIncomingTx(tx, addressList),
     [tx, addressList],
   );
 
@@ -84,7 +83,7 @@ export const TransactionDetailScreen = observer(() => {
   const total = useMemo(() => Balance.Empty, []);
 
   const isErc20TransferTx = useMemo(
-    () => tx.msg.type === IndexerTxMsgType.msgEthereumErc20TransferTx,
+    () => IndexerTransactionUtils.isErc20TransferTx(tx),
     [tx],
   );
 
@@ -110,39 +109,41 @@ export const TransactionDetailScreen = observer(() => {
   );
 
   useEffect(() => {
-    Logger.log(
-      '===================== [ TRANSACTION DETAILS ] =====================',
-    );
-    Logger.log(
-      '🟢 tx',
-      shortAddress(tx.hash, '*'),
-      JSON.stringify(tx, null, 2),
-    );
-    Logger.log(
-      '🟢 tx parsed props',
-      JSON.stringify(
-        {
-          contractName,
-          isSent,
-          isContract,
-          title,
-          timestamp,
-          splitted,
-          amount,
-          fee,
-          total,
-          isCosmosTx,
-          isEthereumTx,
-          tokensInfo,
-          isErc20TransferTx,
-          erc20InputDataJson,
-          from,
-          to,
-        },
-        null,
-        2,
-      ),
-    );
+    if (app.isTesterMode || app.isDeveloper) {
+      Logger.log(
+        '===================== [ TRANSACTION DETAILS ] =====================',
+      );
+      Logger.log(
+        '🟢 tx',
+        shortAddress(tx.hash, '*'),
+        JSON.stringify(tx, null, 2),
+      );
+      Logger.log(
+        '🟢 tx parsed props',
+        JSON.stringify(
+          {
+            contractName,
+            isSent,
+            isContract,
+            title,
+            timestamp,
+            splitted,
+            amount,
+            fee,
+            total,
+            isCosmosTx,
+            isEthereumTx,
+            tokensInfo,
+            isErc20TransferTx,
+            erc20InputDataJson,
+            from,
+            to,
+          },
+          null,
+          2,
+        ),
+      );
+    }
   }, [tx]);
 
   if (!tx) {
