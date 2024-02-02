@@ -2,7 +2,7 @@ import {jsonrpcRequest} from '@haqq/shared-react-native';
 
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
-import {VariableString} from '@app/models/variables-string';
+import {VariablesString} from '@app/models/variables-string';
 import {RemoteConfig} from '@app/services/remote-config';
 import {VerifyAddressResponse} from '@app/types';
 
@@ -112,7 +112,7 @@ export class Whitelist {
     let responseFromCache: CachedVerifyAddressResponse | null = null;
 
     try {
-      const cache = VariableString.get(key);
+      const cache = VariablesString.get(key);
       if (cache) {
         responseFromCache = JSON.parse(cache);
 
@@ -142,7 +142,7 @@ export class Whitelist {
           ...response,
           cachedAt: Date.now(),
         });
-        VariableString.set(key, responseForCache);
+        VariablesString.set(key, responseForCache);
       }
 
       return response;
