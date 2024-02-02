@@ -212,6 +212,8 @@ export const PLATFORM_COMPANY = Platform.select({
 
 export const COSMOS_PREFIX = 'haqq';
 export const CURRENCY_NAME = 'ISLM';
+export const ISLM_DENOMS = ['aISLM', 'ISLM'];
+export const MULTICOIN_DENOM = 'multicoin';
 
 export const STRINGS = {
   /** non-breaking space  */

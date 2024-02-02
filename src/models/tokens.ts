@@ -173,6 +173,7 @@ class TokensStore implements MobXStore<IToken> {
     this.recalculateCommulativeSum(result);
 
     runInAction(() => {
+      Logger.log('TokensStore fetchTokens', JSON.stringify(result, null, 2));
       this.tokens = result;
     });
   };

@@ -1592,7 +1592,7 @@ export type IndexerTxMsgUndelegateTx = {
 export type IndexerTxMsgEthereumTx = {
   from_address: HaqqCosmosAddress;
   to_address: HaqqCosmosAddress;
-  amount: string;
+  amount: IndexerCoin;
   type: IndexerTxMsgType.msgEthereumTx;
 };
 
@@ -1600,7 +1600,7 @@ export type IndexerTxMsgEthereumErc20TransferTx = {
   contract_address: HaqqCosmosAddress;
   from_address: HaqqCosmosAddress;
   to_address: HaqqCosmosAddress;
-  amount: string;
+  amount: IndexerCoin;
   type: IndexerTxMsgType.msgEthereumErc20TransferTx;
 };
 
@@ -1622,7 +1622,7 @@ export type IndexerTxMsgEthereumNftMintTx = {
 export type IndexerTxMsgEthereumRaffleTx = {
   contract_address: HaqqCosmosAddress;
   winner: HaqqCosmosAddress;
-  amount: string;
+  amount: IndexerCoin;
   ticket: number;
   type: IndexerTxMsgType.msgEthereumRaffleTx;
 };
@@ -1692,6 +1692,7 @@ export type IndexerPeriod = {
 export type IndexerCoin = {
   denom: string;
   amount: string;
+  contract_address?: HaqqCosmosAddress;
 };
 
 export enum IndexerTxMsgType {
@@ -1714,7 +1715,7 @@ export enum IndexerTxMsgType {
   msgEditValidator = 'msgEditValidator',
 }
 
-export type IndexerTxMsg =
+export type IndexerTxMsgUnion =
   | {msg: IndexerTxMsgUnknown}
   | {msg: IndexerTxMsgVote}
   | {msg: IndexerTxMsgWithdrawDelegatorReward}
@@ -1751,7 +1752,7 @@ export type IndexerTransaction = {
   id: string;
   confirmations: number;
   msg_type: string;
-} & IndexerTxMsg;
+} & IndexerTxMsgUnion;
 
 export type IndexerTransactionWithType<T extends IndexerTxMsgType> = Extract<
   IndexerTransaction,
@@ -1770,4 +1771,6 @@ export type IndexerTxParsedTokenInfo = {
   symbol: string;
   icon: ImageSourcePropType;
   decimals: number;
+  contract_address?: string;
+  denom?: string;
 };

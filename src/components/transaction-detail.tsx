@@ -7,6 +7,7 @@ import {BottomSheet} from '@app/components/bottom-sheet';
 import {TransactionStatus} from '@app/components/transaction-status/transaction-status';
 import {DataContent, Icon, IconButton, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {TransactionDescription} from '@app/helpers/indexer-transaction-utils';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
@@ -16,7 +17,7 @@ import {IndexerTxParsedTokenInfo} from '@app/types';
 import {IS_IOS, LONG_NUM_PRECISION, STRINGS} from '@app/variables/common';
 
 type TransactionDetailProps = {
-  transaction: Transaction;
+  tx: Transaction;
   provider: (Provider & Realm.Object<unknown, never>) | null;
   contractName?: string;
   isSent: boolean;
@@ -24,19 +25,21 @@ type TransactionDetailProps = {
   title: string;
   timestamp: string;
   splitted: string[];
-  amount: Balance;
+  amount: Balance[];
   fee: Balance;
   total: Balance;
   isCosmosTx: boolean;
   isEthereumTx: boolean;
-  tokenInfo: IndexerTxParsedTokenInfo;
+  isErc20TransferTx: boolean;
+  tokensInfo: IndexerTxParsedTokenInfo[];
+  erc20InputDataJson: TransactionDescription | undefined;
   onPressAddress: () => void;
   onCloseBottomSheet: () => void;
   onPressInfo: () => void;
 };
 
 export const TransactionDetail = ({
-  transaction,
+  tx,
   provider,
   contractName,
   isSent,
@@ -47,17 +50,14 @@ export const TransactionDetail = ({
   amount,
   fee,
   total,
-  tokenInfo,
+  tokensInfo,
+  isErc20TransferTx,
   isEthereumTx,
   onPressAddress,
   onPressInfo,
   onCloseBottomSheet,
 }: TransactionDetailProps) => {
   const closeDistance = useCalculatedDimensionsValue(({height}) => height / 4);
-
-  if (!transaction) {
-    return null;
-  }
 
   return (
     <BottomSheet
@@ -98,7 +98,7 @@ export const TransactionDetail = ({
           subtitleI18n={
             isSent ? I18N.transactionSendTitle : I18N.transactionReceiveTitle
           }
-          title={<TransactionStatus status={transaction.code} hasTitle />}
+          title={<TransactionStatus status={tx.code} hasTitle />}
         />
         {!isContract && (
           <DataContent
@@ -128,26 +128,7 @@ export const TransactionDetail = ({
             reversed
           />
         )}
-        {isEthereumTx && (
-          <DataContent
-            title={
-              <>
-                <View style={styles.iconView}>
-                  <Image source={tokenInfo.icon} style={styles.icon} />
-                </View>
-                <Text t11>
-                  {tokenInfo.name}
-                  {STRINGS.NBSP}
-                  <Text color={Color.textBase2}>({tokenInfo.symbol})</Text>
-                </Text>
-              </>
-            }
-            subtitleI18n={I18N.transactionDetailCryptocurrency}
-            reversed
-            short
-          />
-        )}
-        {provider && (
+        {!!provider?.id && (
           <DataContent
             title={provider.name}
             subtitleI18n={I18N.transactionDetailNetwork}
@@ -155,21 +136,55 @@ export const TransactionDetail = ({
             short
           />
         )}
-        {!isContract && (
+        {tokensInfo.map((token, i) => {
+          const balance = amount[i];
+          return (
+            <>
+              {isErc20TransferTx ||
+                (isEthereumTx && (
+                  <DataContent
+                    title={
+                      <>
+                        <View style={styles.iconView}>
+                          <Image source={token.icon} style={styles.icon} />
+                        </View>
+                        <Spacer width={4} />
+                        <Text t11>
+                          {token.name}
+                          {STRINGS.NBSP}
+                          <Text color={Color.textBase2}>({token.symbol})</Text>
+                        </Text>
+                      </>
+                    }
+                    subtitleI18n={I18N.transactionDetailCryptocurrency}
+                    reversed
+                    short
+                  />
+                ))}
+
+              <>
+                {balance.isPositive() && (
+                  <DataContent
+                    title={balance.toBalanceString()}
+                    subtitleI18n={I18N.transactionDetailAmount}
+                    reversed
+                    short
+                  />
+                )}
+              </>
+            </>
+          );
+        })}
+
+        {fee.isPositive() && (
           <DataContent
-            title={amount.toBalanceString()}
-            subtitleI18n={I18N.transactionDetailAmount}
+            title={fee.toBalanceString(LONG_NUM_PRECISION)}
+            subtitleI18n={I18N.transactionDetailNetworkFee}
             reversed
             short
           />
         )}
-        <DataContent
-          title={fee.toBalanceString(LONG_NUM_PRECISION)}
-          subtitleI18n={I18N.transactionDetailNetworkFee}
-          reversed
-          short
-        />
-        {isContract && (
+        {isContract && !amount?.[0]?.isPositive?.() && (
           <DataContent
             subtitleI18n={I18N.transactionDetailTransactionType}
             titleI18n={I18N.transactionDetailTransactionTypeDescription}

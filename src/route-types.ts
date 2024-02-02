@@ -516,8 +516,8 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
     amount?: Balance;
   };
   [TransactionStackRoutes.TransactionNftFinish]: {
-    hash: string;
     nft: NftItem;
+    transaction: TransactionResponse;
   };
   [TransactionStackRoutes.TransactionAccount]: {
     from: string;

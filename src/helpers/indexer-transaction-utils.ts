@@ -1,53 +1,80 @@
+import {TransactionDescription as ITransactionDescription} from '@ethersproject/abi';
+import {ethers} from 'ethers';
+
 import {IconsName} from '@app/components/ui';
 import {I18N, getText} from '@app/i18n';
 import {Contracts} from '@app/models/contracts';
 import {Balance} from '@app/services/balance';
 import {
+  IContract,
   IndexerTransaction,
+  IndexerTransactionWithType,
   IndexerTxMsgEthereumTx,
   IndexerTxMsgType,
   IndexerTxParsedTokenInfo,
 } from '@app/types';
+import {ERC20_TOKEN_ABI} from '@app/variables/abi';
 import {CURRENCY_NAME, WEI_PRECISION} from '@app/variables/common';
 
 import {AddressUtils} from './address-utils';
 import {shortAddress} from './short-address';
 
-function getAmount(tx: IndexerTransaction): Balance {
+export type TransactionDescription = ITransactionDescription;
+
+/**
+ *  @returns {Balance[]} - array of balances, if array length greater than 1, it's a multi token cosmos IBC tx
+ */
+function getAmount(tx: IndexerTransaction): Balance[] {
   if (!tx?.msg?.type) {
-    return Balance.Empty;
+    return [Balance.Empty];
   }
 
   const msg = tx.msg;
 
-  switch (msg.type) {
-    // amount is IndexerCoin[]
-    case IndexerTxMsgType.msgSend:
-      return msg?.amount?.reduce((prev, curr) => {
-        return prev.operate(new Balance(curr.amount), 'add');
-      }, Balance.Empty);
-    // amount is IndexerCoin
-    case IndexerTxMsgType.msgBeginRedelegate:
-    case IndexerTxMsgType.msgDelegate:
-    case IndexerTxMsgType.msgUndelegate:
+  const tokensInfo = getTokensInfo(tx);
+
+  if (
+    tokensInfo.length === 1 &&
+    'amount' in msg &&
+    !Array.isArray(msg.amount)
+  ) {
+    const token = tokensInfo[0];
+    if (isErc20TransferTx(tx)) {
+      const erc20InputDataJson = getErc20InputDataJson(tx);
+      return [
+        new Balance(
+          // BigNumber
+          erc20InputDataJson?.args?.[1] || tx.msg.amount,
+          token.decimals,
+          token.symbol,
+        ),
+      ];
+    }
+
+    if (msg && 'amount' in msg) {
       if (typeof msg.amount === 'string') {
-        return new Balance(msg.amount);
+        return [new Balance(msg.amount, token.decimals, token.symbol)];
       }
-      return new Balance(msg.amount?.amount || '0');
-    // amount is string
-    case IndexerTxMsgType.msgEthereumTx:
-    case IndexerTxMsgType.msgEthereumRaffleTx:
-      return new Balance(msg.amount);
-    case IndexerTxMsgType.msgEthereumErc20TransferTx:
-      const contractInfo = Contracts.getById(msg.contract_address);
-      return new Balance(
-        msg.amount,
-        contractInfo?.decimals || WEI_PRECISION,
-        contractInfo?.symbol || CURRENCY_NAME,
-      );
-    default:
-      return Balance.Empty;
+
+      if (typeof msg.amount === 'object') {
+        return [new Balance(msg.amount.amount, token.decimals, token.symbol)];
+      }
+    }
+  } else if ('amount' in msg && Array.isArray(msg.amount)) {
+    return msg.amount.map(amount => {
+      const contract = Contracts.getById(amount.contract_address!);
+      if (contract && contract.is_erc20) {
+        return new Balance(
+          amount.amount,
+          contract.decimals || 0,
+          contract.symbol || 'ibc',
+        );
+      }
+      return new Balance(amount.amount, 0, 'ibc');
+    });
   }
+
+  return [Balance.Empty];
 }
 
 function isIncomingTx(tx: IndexerTransaction, addresses: string[]): boolean {
@@ -113,6 +140,12 @@ function isContractInteraction(
     tx.input !== '0x' &&
     !/^0x0+$/.test(tx.input)
   ) {
+    const erc20InputDataJson = getErc20InputDataJson(tx);
+
+    if (erc20InputDataJson?.name === 'transfer') {
+      return false;
+    }
+
     return true;
   }
 
@@ -120,11 +153,27 @@ function isContractInteraction(
 }
 
 function getIconName(tx: IndexerTransaction, addresses: string[]): IconsName {
-  if (tx?.msg?.type === IndexerTxMsgType.msgEthereumRaffleTx) {
-    return IconsName.star_fill;
+  if (!tx?.msg?.type) {
+    return IconsName.question;
   }
 
-  if (isContractInteraction(tx)) {
+  if (tx.msg.type === IndexerTxMsgType.msgUndelegate) {
+    return IconsName.staking_undelegation;
+  }
+  if (tx.msg.type === IndexerTxMsgType.msgDelegate) {
+    return IconsName.staking_delegation;
+  }
+  if (tx.msg.type === IndexerTxMsgType.msgBeginRedelegate) {
+    return IconsName.staking_redelegation;
+  }
+  if (tx.msg.type === IndexerTxMsgType.msgEthereumRaffleTx) {
+    return IconsName.raffle_reward;
+  }
+  if (tx.msg.type === IndexerTxMsgType.msgWithdrawDelegatorReward) {
+    return IconsName.staking_reword;
+  }
+
+  if (isContractInteraction(tx) && !isErc20TransferTx(tx)) {
     return IconsName.contract;
   }
 
@@ -136,7 +185,7 @@ function getIconName(tx: IndexerTransaction, addresses: string[]): IconsName {
     return IconsName.arrow_send;
   }
 
-  return IconsName.color_flat;
+  return IconsName.question;
 }
 
 function getContractName(tx: IndexerTransaction): string {
@@ -237,8 +286,13 @@ function getDescription(
 
 function getFromAndTo(tx: IndexerTransaction, addresses: string[]) {
   if (isIncomingTx(tx, addresses)) {
-    // @ts-ignore
-    const from = tx.msg.from_address || tx.msg.validator_address;
+    const from =
+      // @ts-ignore
+      tx.msg.from_address ||
+      // @ts-ignore
+      tx.msg.validator_address ||
+      // @ts-ignore
+      tx.msg.contract_address;
     // @ts-ignore
     const to = tx.msg.to_address || tx.msg.winner || tx.msg.delegator_address;
 
@@ -283,46 +337,122 @@ function isCosmosTx(tx: IndexerTransaction) {
   return !isEthereumTx(tx);
 }
 
-function getTokenInfo(tx: IndexerTransaction): IndexerTxParsedTokenInfo {
+function getTokensInfo(tx: IndexerTransaction): IndexerTxParsedTokenInfo[] {
   const defaultTokenInfo = {
     name: getText(I18N.transactionConfirmationIslamicCoin),
     symbol: CURRENCY_NAME,
     icon: require('@assets/images/islm_icon.png'),
     decimals: WEI_PRECISION,
+    contract_address: '',
+    denom: CURRENCY_NAME,
   };
   if (!tx?.msg?.type) {
-    return defaultTokenInfo;
+    return [defaultTokenInfo];
   }
 
-  if (tx.msg.type === IndexerTxMsgType.msgEthereumErc20TransferTx) {
-    const contractInfo =
-      Contracts.getById(tx.msg.contract_address) ||
-      Contracts.getById(tx.msg.to_address) ||
-      Contracts.getById(tx.msg.from_address);
+  if ('amount' in tx.msg && Array.isArray(tx.msg.amount)) {
+    const result = tx.msg.amount
+      .map(amount => {
+        if (amount.contract_address) {
+          const contract = Contracts.getById(amount.contract_address);
+          if (contract && contract.is_erc20) {
+            return {
+              name: contract.name,
+              symbol: contract.symbol,
+              icon: contract.icon
+                ? {uri: contract.icon}
+                : require('@assets/images/empty-icon.png'),
+              decimals: contract.decimals || WEI_PRECISION,
+              contract_address:
+                // @ts-ignore
+                amount.contract_address || tx.msg.contract_address,
+              denom: amount.denom,
+            };
+          }
+        }
+        return undefined;
+      })
+      .filter(t => !!t?.name) as IndexerTxParsedTokenInfo[];
 
-    if (contractInfo) {
-      return {
-        name: contractInfo?.name || '-',
-        symbol: contractInfo?.symbol || '-',
-        icon: contractInfo?.icon
-          ? {uri: addRawToGithubUrl(contractInfo.icon)}
-          : require('@assets/images/empty-icon.png'),
-        decimals: contractInfo?.decimals || WEI_PRECISION,
-      };
+    if (result.length) {
+      return result;
     }
   }
 
-  return defaultTokenInfo;
+  let contractInfo: IContract | undefined;
+
+  if (
+    'amount' in tx.msg &&
+    tx?.msg?.amount &&
+    'amount' in tx?.msg?.amount &&
+    tx.msg.amount.contract_address
+  ) {
+    contractInfo = Contracts.getById(tx.msg.amount.contract_address);
+  }
+
+  if ('contract_address' in tx.msg && !contractInfo) {
+    contractInfo = Contracts.getById(tx.msg.contract_address);
+  }
+
+  if ('to_address' in tx.msg && !contractInfo) {
+    contractInfo = Contracts.getById(tx.msg.to_address);
+  }
+
+  if ('from_address' in tx.msg && !contractInfo) {
+    contractInfo = Contracts.getById(tx.msg.from_address);
+  }
+
+  if (
+    contractInfo &&
+    contractInfo.is_erc20 &&
+    contractInfo.symbol &&
+    contractInfo.name
+  ) {
+    return [
+      {
+        name: contractInfo.name,
+        symbol: contractInfo.symbol,
+        icon: contractInfo.icon
+          ? {uri: contractInfo.icon}
+          : require('@assets/images/empty-icon.png'),
+        decimals: contractInfo?.decimals || WEI_PRECISION,
+        // @ts-ignore
+        denom: tx?.msg?.amount?.denom,
+        contract_address: contractInfo.id,
+      },
+    ];
+  }
+
+  return [defaultTokenInfo];
 }
 
-// TODO: REMOVE THIS FUNCTION
-function addRawToGithubUrl(url: string): string {
-  const githubDomain = 'github.com';
-  const rawSuffix = '?raw=true';
-  if (url.includes(githubDomain) && !url.includes(rawSuffix)) {
-    return url + rawSuffix;
-  }
-  return url;
+function getErc20InputDataJson(
+  tx: IndexerTransaction,
+): TransactionDescription | undefined {
+  try {
+    if (tx.input) {
+      const erc20Interface = new ethers.utils.Interface(ERC20_TOKEN_ABI);
+      return erc20Interface.parseTransaction({data: tx.input});
+    }
+  } catch (e) {}
+  return undefined;
+}
+
+function isErc20TransferTx(
+  tx: IndexerTransaction,
+): tx is IndexerTransactionWithType<IndexerTxMsgType.msgEthereumErc20TransferTx> {
+  try {
+    if (tx.msg.type === IndexerTxMsgType.msgEthereumErc20TransferTx) {
+      return true;
+    }
+
+    const erc20InputDataJson = getErc20InputDataJson(tx);
+    if (erc20InputDataJson) {
+      const amountBn = erc20InputDataJson.args?.[1];
+      return erc20InputDataJson.name === 'transfer' && amountBn;
+    }
+  } catch (e) {}
+  return false;
 }
 
 export const IndexerTransactionUtils = {
@@ -336,5 +466,7 @@ export const IndexerTransactionUtils = {
   getFromAndTo,
   isCosmosTx,
   isEthereumTx,
-  getTokenInfo,
+  getTokensInfo,
+  getErc20InputDataJson,
+  isErc20TransferTx,
 };

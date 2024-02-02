@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
 import {format} from 'date-fns';
@@ -10,12 +10,14 @@ import {Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {getExplorerUrlForTxHash} from '@app/helpers/get-explorer-url-for-tx-hash';
 import {IndexerTransactionUtils} from '@app/helpers/indexer-transaction-utils';
+import {shortAddress} from '@app/helpers/short-address';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useTransaction} from '@app/hooks/use-transaction';
 import {I18N} from '@app/i18n';
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {sendNotification} from '@app/services';
 import {Balance} from '@app/services/balance';
+import {IndexerTxMsgType} from '@app/types';
 import {splitAddress} from '@app/utils';
 
 export const TransactionDetailScreen = observer(() => {
@@ -43,8 +45,8 @@ export const TransactionDetailScreen = observer(() => {
     [tx],
   );
 
-  const tokenInfo = useMemo(
-    () => IndexerTransactionUtils.getTokenInfo(tx),
+  const tokensInfo = useMemo(
+    () => IndexerTransactionUtils.getTokensInfo(tx),
     [tx],
   );
 
@@ -77,7 +79,14 @@ export const TransactionDetailScreen = observer(() => {
 
   const fee = useMemo(() => new Balance(`${tx.fee}`), [tx.fee]);
 
-  const total = useMemo(() => fee.operate(amount, 'add'), [fee, amount]);
+  // TODO: fix calculation of total amount
+  // const total = useMemo(() => fee.operate(amount, 'add'), [fee, amount]);
+  const total = useMemo(() => Balance.Empty, []);
+
+  const isErc20TransferTx = useMemo(
+    () => tx.msg.type === IndexerTxMsgType.msgEthereumErc20TransferTx,
+    [tx],
+  );
 
   const onPressInfo = useCallback(async () => {
     const url = getExplorerUrlForTxHash(tx?.hash);
@@ -95,16 +104,55 @@ export const TransactionDetailScreen = observer(() => {
     navigation.canGoBack() && navigation.goBack();
   }, [navigation]);
 
+  const erc20InputDataJson = useMemo(
+    () => IndexerTransactionUtils.getErc20InputDataJson(tx),
+    [tx],
+  );
+
+  useEffect(() => {
+    Logger.log(
+      '===================== [ TRANSACTION DETAILS ] =====================',
+    );
+    Logger.log(
+      '🟢 tx',
+      shortAddress(tx.hash, '*'),
+      JSON.stringify(tx, null, 2),
+    );
+    Logger.log(
+      '🟢 tx parsed props',
+      JSON.stringify(
+        {
+          contractName,
+          isSent,
+          isContract,
+          title,
+          timestamp,
+          splitted,
+          amount,
+          fee,
+          total,
+          isCosmosTx,
+          isEthereumTx,
+          tokensInfo,
+          isErc20TransferTx,
+          erc20InputDataJson,
+          from,
+          to,
+        },
+        null,
+        2,
+      ),
+    );
+  }, [tx]);
+
   if (!tx) {
     return <Loading />;
   }
 
-  Logger.log('tx', JSON.stringify(tx, null, 2));
-
   return (
     <TransactionDetail
       provider={provider}
-      transaction={tx}
+      tx={tx}
       contractName={contractName}
       isSent={isSent}
       isContract={isContract}
@@ -116,7 +164,9 @@ export const TransactionDetailScreen = observer(() => {
       total={total}
       isCosmosTx={isCosmosTx}
       isEthereumTx={isEthereumTx}
-      tokenInfo={tokenInfo}
+      tokensInfo={tokensInfo}
+      isErc20TransferTx={isErc20TransferTx}
+      erc20InputDataJson={erc20InputDataJson}
       onPressAddress={onPressAddress}
       onCloseBottomSheet={onCloseBottomSheet}
       onPressInfo={onPressInfo}

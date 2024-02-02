@@ -299,4 +299,8 @@ export class Balance implements IBalance, ISerializable {
       return new Balance(value, this.precission, this.symbol).bnRaw;
     }
   };
+
+  getSymbol = () => {
+    return this.symbol;
+  };
 }

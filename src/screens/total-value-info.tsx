@@ -6,6 +6,7 @@ import {TotalValueInfo} from '@app/components/total-value-info';
 import {Loading} from '@app/components/ui';
 import {showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useWalletsAddressList} from '@app/hooks/use-wallets-address-list';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {Token} from '@app/models/tokens';
 import {Transaction} from '@app/models/transaction';
@@ -21,7 +22,7 @@ export const TotalValueInfoScreen = observer(() => {
     HomeStackRoutes.TotalValueInfo
   >();
   const wallets = Wallet.getAllVisible();
-  const addressList = useMemo(() => Wallet.addressList(), []);
+  const addressList = useWalletsAddressList();
   const balances = useWalletsBalance(wallets);
   const calculatedBalance = useMemo(
     () => calculateBalances(balances, wallets),

@@ -1,72 +1,66 @@
-import React, {memo, useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
+import {observer} from 'mobx-react';
+
+import {IndexerTransactionUtils} from '@app/helpers/indexer-transaction-utils';
 import {useTypedNavigation} from '@app/hooks';
 import {useTransactionList} from '@app/hooks/use-transaction-list';
-import {Wallet} from '@app/models/wallet';
-import {
-  HaqqEthereumAddress,
-  TransactionListReceive,
-  TransactionListSend,
-  TransactionSource,
-} from '@app/types';
+import {useWalletsAddressList} from '@app/hooks/use-wallets-address-list';
+import {HomeStackRoutes} from '@app/route-types';
+import {Balance} from '@app/services/balance';
 import {TransactionsShortWidget} from '@app/widgets/transactions-short-widget/transactions-short-widget';
 
-export const TransactionsShortWidgetWrapper = memo(() => {
-  const addressList = Wallet.addressList();
-  const transactions = useTransactionList(addressList);
-  // We should filter transactions between our local wallets
-  const filteredTransactions = transactions.filter(transaction => {
-    const sourceWhiteList = [TransactionSource.send, TransactionSource.receive];
-    const isInWhiteList = sourceWhiteList.includes(transaction.source);
-    if (!isInWhiteList) {
-      return false;
-    }
-
-    const item = transaction as TransactionListSend | TransactionListReceive;
-    const isFromMyWallet = item.from && addressList.includes(item.from);
-    const isToMyWallet = item.to && addressList.includes(item.to);
-    return !(isFromMyWallet && isToMyWallet);
-  }) as (TransactionListSend | TransactionListReceive)[];
+/**
+ * Shows total spend and received amounts for all wallets
+ *
+ * TODO: requst "spend" and "received" from indexer
+ */
+export const TransactionsShortWidgetWrapper = observer(() => {
+  const addressList = useWalletsAddressList();
+  const {transactions, isTransactionsLoading} = useTransactionList(addressList);
   const navigation = useTypedNavigation();
 
-  const [received, setReceived] = useState(0);
-  const [spend, setSpend] = useState(0);
-
-  const calculateInfo = () => {
-    const info = filteredTransactions.reduce(
-      (acc, current) => {
-        if (
-          addressList.includes(
-            current.from?.toLowerCase() as HaqqEthereumAddress,
-          )
-        ) {
-          return {
-            ...acc,
-            send: acc.send + (current.value ?? 0) + (current.fee ?? 0),
-          };
-        } else {
-          return {...acc, receive: acc.receive + (current.value ?? 0)};
+  // FIXME:
+  const received = useMemo(
+    () =>
+      transactions.reduce((prev, curr) => {
+        if (IndexerTransactionUtils.isIncomingTx(curr, addressList)) {
+          const amounts = IndexerTransactionUtils.getAmount(curr);
+          // if greater than 1, it's a multi coin IBC transaction, ignore it
+          if (amounts.length === 1 && amounts[0].isIslamic) {
+            return prev.operate(amounts[0], 'add');
+          }
         }
-      },
-      {send: 0, receive: 0},
-    );
+        return prev;
+      }, Balance.Empty),
+    [transactions, addressList],
+  );
 
-    setReceived(info.receive);
-    setSpend(info.send);
-  };
+  // FIXME:
+  const spend = useMemo(
+    () =>
+      transactions.reduce((prev, curr) => {
+        if (IndexerTransactionUtils.isOutcomingTx(curr, addressList)) {
+          const amounts = IndexerTransactionUtils.getAmount(curr);
+          // if greater than 1, it's a multi coin IBC transaction, ignore it
+          if (amounts.length === 1 && amounts[0].isIslamic) {
+            return prev.operate(amounts[0], 'add');
+          }
+        }
+        return prev;
+      }, Balance.Empty),
+    [transactions, addressList],
+  );
 
   const openTotalInfo = useCallback(() => {
-    navigation.navigate('totalValueInfo');
-  }, []);
-
-  useEffect(() => {
-    calculateInfo();
+    navigation.navigate(HomeStackRoutes.TotalValueInfo);
   }, []);
 
   return (
     <TransactionsShortWidget
-      received={received}
       spend={spend}
+      received={received}
+      isTransactionsLoading={isTransactionsLoading}
       onPress={openTotalInfo}
     />
   );

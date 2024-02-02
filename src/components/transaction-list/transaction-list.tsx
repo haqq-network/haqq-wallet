@@ -1,8 +1,14 @@
 import React, {useCallback, useEffect, useMemo} from 'react';
 
 import {observer} from 'mobx-react';
-import {SectionList, SectionListProps, StyleSheet} from 'react-native';
+import {
+  ActivityIndicator,
+  SectionList,
+  SectionListProps,
+  StyleSheet,
+} from 'react-native';
 
+import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {useTransactionList} from '@app/hooks/use-transaction-list';
 import {Transaction} from '@app/models/transaction';
@@ -12,6 +18,7 @@ import {TransactionSectionHeader} from './transaction-section-header';
 import {ItemData, SectionHeaderData, TransactionSection} from './types';
 
 import {TransactionEmpty} from '../transaction-empty';
+import {Spacer} from '../ui';
 
 type OmitedSectionListProps = Omit<
   SectionListProps<Transaction, TransactionSection>,
@@ -73,7 +80,7 @@ export const TransactionList = observer(
     ...sectionListProps
   }: TransactionListProps) => {
     /* HOOKS */
-    const {transactions} = useTransactionList(addresses);
+    const {transactions, isTransactionsLoading} = useTransactionList(addresses);
     const sections = useMemo(
       () => (hideContent ? [] : prepareDataForSectionList(transactions)),
       [transactions, hideContent],
@@ -94,11 +101,11 @@ export const TransactionList = observer(
 
     /* CALLBACKS */
     const onEndReached = useCallback(async () => {
-      if (Transaction.isLoading) {
+      if (isTransactionsLoading) {
         return;
       }
       await Transaction.fetchNextTransactions(addresses);
-    }, []);
+    }, [isTransactionsLoading]);
     const keyExtractor = useCallback((item: Transaction) => item.id, []);
 
     /*  RENDERER FUNCTIONS */
@@ -109,9 +116,10 @@ export const TransactionList = observer(
       (data: ItemData) => {
         return (
           <TransactionRow
-            data={data}
-            onPress={onTransactionPress}
+            withPadding
+            item={data.item}
             addresses={addresses}
+            onPress={onTransactionPress}
           />
         );
       },
@@ -121,6 +129,21 @@ export const TransactionList = observer(
       () => <TransactionEmpty />,
       [],
     );
+    const renderListFooterComponent = useCallback(
+      () => (
+        <>
+          <ActivityIndicator
+            size="small"
+            color={
+              isTransactionsLoading ? getColor(Color.textBase2) : 'transparent'
+            }
+          />
+          <Spacer height={12} />
+        </>
+      ),
+      [isTransactionsLoading],
+    );
+    Logger.log({isTransactionsLoading});
 
     return (
       <>
@@ -129,6 +152,7 @@ export const TransactionList = observer(
           bounces={false}
           scrollEnabled={scrollEnabled}
           ListEmptyComponent={renderListEmptyComponent}
+          ListFooterComponent={renderListFooterComponent}
           contentContainerStyle={styles.grow}
           {...sectionListProps}
           /* CAN'NOT OVERRIDE */

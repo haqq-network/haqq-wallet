@@ -122,10 +122,15 @@ export class Indexer {
       throw new Error('Indexer is not configured');
     }
 
+    if (!accounts.length) {
+      return [];
+    }
+
+    const haqqAddresses = accounts.filter(a => !!a).map(AddressUtils.toHaqq);
     const response = await jsonrpcRequest<IndexerTransactionResponse>(
       provider.indexer,
       'transactions',
-      [accounts, latestBlock],
+      [haqqAddresses, latestBlock],
     );
     return response?.txs || {};
   }

@@ -75,6 +75,10 @@ const haqqAddressRegex = /(haqq)(.*)(\w{4})$/gm;
 const haqqValidatorAddressRegex = /(haqqvaloper)(.*)(\w{4})$/gm;
 
 export function splitAddress(address: string) {
+  if (!address) {
+    return [];
+  }
+
   let regex = ethAddressRegex;
 
   if (AddressUtils.isHaqqAddress(address)) {

@@ -1,10 +1,8 @@
-import {useMemo} from 'react';
+import {useEffect, useMemo} from 'react';
 
 import {computed} from 'mobx';
 
 import {Transaction} from '@app/models/transaction';
-
-import {useEffectAsync} from './use-effect-async';
 
 /**
  * @example
@@ -12,13 +10,19 @@ import {useEffectAsync} from './use-effect-async';
  *  const transactionsList = useTransactionList(addressList);
  */
 export function useTransactionList(addressList: string[]) {
-  const transactions = useMemo(() => {
-    return computed(() => Transaction.getAll());
-  }, []).get();
+  const transactions = useMemo(
+    () => computed(() => Transaction.getAll()),
+    [],
+  ).get();
 
-  useEffectAsync(async () => {
-    await Transaction.fetchLatestTransactions(addressList);
-  }, []);
+  const isTransactionsLoading = useMemo(
+    () => computed(() => Transaction.isLoading),
+    [],
+  ).get();
 
-  return {transactions};
+  useEffect(() => {
+    Transaction.fetchLatestTransactions(addressList);
+  }, [addressList]);
+
+  return {transactions, isTransactionsLoading};
 }

@@ -12,6 +12,7 @@ import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {HaqqEthereumAddress, IToken} from '@app/types';
+import {CURRENCY_NAME} from '@app/variables/common';
 
 export interface TokenViewerProps {
   data: Record<HaqqEthereumAddress, IToken[]>;
@@ -139,7 +140,12 @@ export const TokenViewer = observer(
               <WalletCard
                 key={address}
                 wallet={_wallet}
-                tokens={tokens.filter(item => !!item.is_in_white_list)}
+                tokens={tokens.filter(
+                  item =>
+                    item.is_in_white_list &&
+                    // only erc20 tokens or native currency (ISLM)
+                    (item.is_erc20 || item.symbol === CURRENCY_NAME),
+                )}
                 tokensOnly={!!wallet}
               />
             );

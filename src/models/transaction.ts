@@ -1,5 +1,5 @@
 import {hashMessage} from '@walletconnect/utils';
-import {computed, makeAutoObservable, runInAction, when} from 'mobx';
+import {makeAutoObservable, runInAction, when} from 'mobx';
 import {isHydrated} from 'mobx-persist-store';
 
 import {app} from '@app/contexts';
@@ -40,7 +40,7 @@ class TransactionStore implements MobXStoreFromRealm {
   }
 
   get isLoading() {
-    return computed(() => this._isLoading).get();
+    return this._isLoading;
   }
 
   migrate = async () => {
@@ -122,28 +122,10 @@ class TransactionStore implements MobXStoreFromRealm {
     this._transactions = [];
   }
 
-  // setConfirmed(
-  //   id: string,
-  //   receipt: TransactionReceipt,
-  //   ,
-  // ) {
-  //   const tx = this.getById(id);
-  //   const txIndex = this.transactions.findIndex(
-  //     ({hash}) => hash === id,
-  //   );
-
-  //   if (tx) {
-  //     tx.confirmed = true;
-  //     tx.fee = calcFee(
-  //       receipt.effectiveGasPrice ?? DEFAULT_FEE,
-  //       receipt.cumulativeGasUsed,
-  //     );
-
-  //     this.transactions.splice(txIndex, 1, tx);
-  //   }
-  // }
-
   fetchNextTransactions = async (accounts: string[]) => {
+    if (this.isLoading) {
+      return;
+    }
     const accountHash = hashMessage(accounts.join(''));
     const isHashEquals = this._lastSyncedAccountsHash === accountHash;
 
@@ -159,16 +141,21 @@ class TransactionStore implements MobXStoreFromRealm {
 
     runInAction(() => {
       this._transactions = [...prevTxList, ...nextTxList];
+      this._isLoading = false;
     });
 
     return nextTxList;
   };
 
   fetchLatestTransactions = async (accounts: string[]) => {
+    if (this.isLoading) {
+      return;
+    }
     const newTxs = await this._fetch(accounts, 'latest');
 
     runInAction(() => {
       this._transactions = newTxs;
+      this._isLoading = false;
     });
     return newTxs;
   };
@@ -201,10 +188,6 @@ class TransactionStore implements MobXStoreFromRealm {
         blockNumber,
       });
       return [];
-    } finally {
-      runInAction(() => {
-        this._isLoading = false;
-      });
     }
   };
 }

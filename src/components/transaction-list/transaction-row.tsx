@@ -7,27 +7,28 @@ import {DataContent, Icon, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {IndexerTransactionUtils} from '@app/helpers/indexer-transaction-utils';
 import {Transaction} from '@app/models/transaction';
+import {Balance} from '@app/services/balance';
+import {IndexerTransaction} from '@app/types';
 import {STRINGS} from '@app/variables/common';
 
 import {TransactionStatus} from './transaction-status';
-import {ItemData} from './types';
 
 export interface TransactionRowProps {
-  data: ItemData;
+  item: IndexerTransaction;
   addresses: string[];
+  withPadding?: boolean;
   onPress(tx: Transaction): void;
 }
 
 export const TransactionRow = ({
-  data,
+  item,
   addresses,
+  withPadding = false,
   onPress,
 }: TransactionRowProps) => {
-  const item = data.item;
-
   const handlePress = useCallback(() => {
-    onPress?.(data.item);
-  }, []);
+    onPress?.(item);
+  }, [item]);
 
   const {title, subtitle} = useMemo(
     () => IndexerTransactionUtils.getDescription(item, addresses),
@@ -39,11 +40,27 @@ export const TransactionRow = ({
     [item, addresses],
   );
 
-  const amount = useMemo(() => IndexerTransactionUtils.getAmount(item), [item]);
-  const tokenInfo = useMemo(
-    () => IndexerTransactionUtils.getTokenInfo(item),
+  const amount = useMemo(() => {
+    // if array length greater than 1, it's a multi token cosmos IBC tx
+    const balances = IndexerTransactionUtils.getAmount(item);
+    if (balances.length === 1) {
+      return balances[0];
+    }
+
+    return Balance.Empty;
+  }, [item]);
+
+  const tokensInfo = useMemo(
+    () => IndexerTransactionUtils.getTokensInfo(item),
     [item],
   );
+
+  const token = useMemo(() => {
+    if (tokensInfo.length === 1) {
+      return tokensInfo[0];
+    }
+    return undefined;
+  }, [tokensInfo]);
 
   const amoutColor = useMemo(() => {
     if (IndexerTransactionUtils.isIncomingTx(item, addresses)) {
@@ -71,12 +88,14 @@ export const TransactionRow = ({
 
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
-      <View style={styles.container}>
+      <View style={[styles.container, withPadding && styles.containerPadding]}>
         <View style={styles.iconWrapper}>
           <Icon name={iconName} color={Color.graphicBase1} />
-          <View style={styles.tokenIconWrapper}>
-            <Image source={tokenInfo.icon} style={styles.tokenIcon} />
-          </View>
+          {token && (
+            <View style={styles.tokenIconWrapper}>
+              <Image source={token.icon} style={styles.tokenIcon} />
+            </View>
+          )}
         </View>
         <DataContent
           style={styles.infoContainer}
@@ -112,11 +131,13 @@ export const TransactionRow = ({
 
 const styles = createTheme({
   amountWrapper: {flexDirection: 'column', alignItems: 'flex-end'},
+  containerPadding: {
+    paddingVertical: 4,
+    paddingHorizontal: 20,
+  },
   container: {
-    paddingVertical: 8,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 20,
   },
   infoContainer: {
     marginLeft: 12,
