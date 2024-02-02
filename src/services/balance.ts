@@ -85,6 +85,18 @@ export class Balance implements IBalance, ISerializable {
     return this.symbol === CURRENCY_NAME;
   }
 
+  getPrecission() {
+    return this.precission;
+  }
+
+  getSymbol() {
+    return this.symbol;
+  }
+
+  static getEmpty = (precision = WEI_PRECISION, symbol = CURRENCY_NAME) => {
+    return new Balance(zeroBN, precision, symbol);
+  };
+
   static fromJsonString = (obj: string | Balance) => {
     const serializedValue: {
       value: HexNumber;
@@ -298,9 +310,5 @@ export class Balance implements IBalance, ISerializable {
     } else {
       return new Balance(value, this.precission, this.symbol).bnRaw;
     }
-  };
-
-  getSymbol = () => {
-    return this.symbol;
   };
 }

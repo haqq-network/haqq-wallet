@@ -1342,6 +1342,7 @@ export interface VerifyAddressResponse {
   address_type: AddressType;
   name?: string | null;
   symbol?: string | null;
+  icon?: string | null;
   decimals?: number | null;
   is_erc20?: boolean | null;
   is_erc721?: boolean | null;

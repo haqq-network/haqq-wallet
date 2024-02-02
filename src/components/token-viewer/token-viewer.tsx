@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
 import {useActionSheet} from '@expo/react-native-action-sheet';
+import {computed} from 'mobx';
 import {observer} from 'mobx-react';
 import {StyleProp, View, ViewStyle} from 'react-native';
 
@@ -26,7 +27,8 @@ const SortingNamesMap = {
 };
 
 export const TokenViewer = observer(
-  ({data, style, wallet}: TokenViewerProps) => {
+  ({data: _data, style, wallet}: TokenViewerProps) => {
+    const data = useMemo(() => computed(() => _data), [_data]).get();
     const wallets = useMemo(
       () =>
         Object.keys(data)

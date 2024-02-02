@@ -228,6 +228,8 @@ export class EthNetwork {
       contractAddress,
       Balance.Empty,
       data,
+      // TODO: REMOVE
+      new Balance(22000, 0),
     );
 
     const signedTx = await transport.signTransaction(from.path!, unsignedTx);

@@ -1,5 +1,6 @@
 import React, {useCallback} from 'react';
 
+import {toJS} from 'mobx';
 import {FlatList, StyleSheet} from 'react-native';
 
 import {TokenRow} from '@app/components/token-row';
@@ -18,7 +19,7 @@ export const TransactionSelectCrypto = ({tokens, onItemPress}: Props) => {
       return null;
     }
 
-    const onPress = () => onItemPress(item);
+    const onPress = () => onItemPress(toJS(item));
 
     return <TokenRow item={item} onPress={onPress} />;
   }, []);
