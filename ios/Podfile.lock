@@ -734,7 +734,7 @@ PODS:
     - React-Core
   - RNOS (1.2.7):
     - React
-  - RNPermissions (3.10.0):
+  - RNPermissions (3.10.1):
     - React-Core
   - RNReanimated (3.3.0):
     - DoubleConversion
@@ -1237,7 +1237,7 @@ SPEC CHECKSUMS:
   RNGoogleSignin: ccaa4a81582cf713eea562c5dd9dc1961a715fd0
   RNKeychain: ff836453cba46938e0e9e4c22e43d43fa2c90333
   RNOS: bba50dcae32026943877b163e93d4e1e0eca48eb
-  RNPermissions: 81b4a5e0f9fdb3b145e9622c199df8f629c51f51
+  RNPermissions: a1138972aa0b659398f997e69282ca1a9c056558
   RNReanimated: 9f7068e43b9358a46a688d94a5a3adb258139457
   RNScreens: 50ffe2fa2342eabb2d0afbe19f7c1af286bc7fb3
   RNSentry: 4e4fc87b53002c015f644cb7207d4b598bc3703f
@@ -1254,4 +1254,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 47e53b72709a00bb405eabdba170afb65dd87bdb
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.15.0
