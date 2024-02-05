@@ -43,7 +43,8 @@
     android:icon="@mipmap/ic_launcher"
     android:allowBackup="false"
     android:theme="@style/AppTheme"
-    android:networkSecurityConfig="@xml/network_security_config">
+    android:networkSecurityConfig="@xml/network_security_config"
+    android:largeHeap="true">
 
     <activity
       android:name=".MainActivity"
