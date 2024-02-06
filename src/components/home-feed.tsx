@@ -1,8 +1,10 @@
 import React, {memo, useCallback, useState} from 'react';
 
+import {STORIES_ENABLED} from '@env';
 import {useFocusEffect} from '@react-navigation/native';
 import {RefreshControl, ScrollView} from 'react-native';
 
+import {StoriesWrapper} from '@app/components/stories';
 import {createTheme} from '@app/helpers';
 import {loadAllTransactions} from '@app/helpers/load-transactions';
 import {Stories} from '@app/models/stories';
@@ -35,6 +37,7 @@ export const HomeFeed = memo(() => {
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }>
+      {!!STORIES_ENABLED && <StoriesWrapper />}
       <LockedTokensWrapper />
       <WalletsWrapper />
       <BannersWrapper />

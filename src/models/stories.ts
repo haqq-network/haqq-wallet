@@ -21,10 +21,12 @@ class StoriesStore {
     }
   }
 
-  fetch = async () => {
-    runInAction(() => {
-      this.isLoading = true;
-    });
+  fetch = async (skipLoadingFlag = false) => {
+    if (!skipLoadingFlag) {
+      runInAction(() => {
+        this.isLoading = true;
+      });
+    }
     const stories = await Backend.instance.stories();
     if (Array.isArray(stories)) {
       const normalizedStories = stories.reduce(
