@@ -2,7 +2,6 @@ import React, {useCallback, useMemo} from 'react';
 
 import {observer} from 'mobx-react';
 
-import {IndexerTransactionUtils} from '@app/helpers/indexer-transaction-utils';
 import {useTypedNavigation} from '@app/hooks';
 import {useTransactionList} from '@app/hooks/use-transaction-list';
 import {useWalletsAddressList} from '@app/hooks/use-wallets-address-list';
@@ -24,8 +23,8 @@ export const TransactionsShortWidgetWrapper = observer(() => {
   const received = useMemo(
     () =>
       transactions.reduce((prev, curr) => {
-        if (IndexerTransactionUtils.isIncomingTx(curr, addressList)) {
-          const amounts = IndexerTransactionUtils.getAmount(curr);
+        if (curr.parsed.isIncoming) {
+          const amounts = curr.parsed.amount;
           // if greater than 1, it's a multi coin IBC transaction, ignore it
           if (amounts.length === 1 && amounts[0].isIslamic) {
             return prev.operate(amounts[0], 'add');
@@ -40,8 +39,8 @@ export const TransactionsShortWidgetWrapper = observer(() => {
   const spend = useMemo(
     () =>
       transactions.reduce((prev, curr) => {
-        if (IndexerTransactionUtils.isOutcomingTx(curr, addressList)) {
-          const amounts = IndexerTransactionUtils.getAmount(curr);
+        if (curr.parsed.isOutcoming) {
+          const amounts = curr.parsed.amount;
           // if greater than 1, it's a multi coin IBC transaction, ignore it
           if (amounts.length === 1 && amounts[0].isIslamic) {
             return prev.operate(amounts[0], 'add');

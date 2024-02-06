@@ -1579,14 +1579,14 @@ export type IndexerTxMsgSend = {
 export type IndexerTxMsgDelegateTx = {
   delegator_address: HaqqCosmosAddress;
   validator_address: HaqqCosmosAddress;
-  amount?: IndexerCoin;
+  amount: IndexerCoin;
   type: IndexerTxMsgType.msgDelegate;
 };
 
 export type IndexerTxMsgUndelegateTx = {
   delegator_address: HaqqCosmosAddress;
   validator_address: HaqqCosmosAddress;
-  amount?: IndexerCoin;
+  amount: IndexerCoin;
   type: IndexerTxMsgType.msgUndelegate;
 };
 
@@ -1773,5 +1773,4 @@ export type IndexerTxParsedTokenInfo = {
   icon: ImageSourcePropType;
   decimals: number;
   contract_address?: string;
-  denom?: string;
 };

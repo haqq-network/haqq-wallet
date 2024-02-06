@@ -1,182 +1,171 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {memo, useCallback, useMemo} from 'react';
 
+import {toJS} from 'mobx';
 import {Image, TouchableWithoutFeedback, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {CardSmall, DataContent, Icon, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
-import {IndexerTransactionUtils} from '@app/helpers/indexer-transaction-utils';
 import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
-import {IndexerTransaction} from '@app/types';
 import {STRINGS} from '@app/variables/common';
 
 import {TransactionStatus} from './transaction-status';
 
 export interface TransactionRowProps {
-  item: IndexerTransaction;
+  item: Transaction;
   addresses: string[];
   withPadding?: boolean;
   onPress(tx: Transaction): void;
 }
 
-export const TransactionRow = ({
-  item,
-  addresses,
-  withPadding = false,
-  onPress,
-}: TransactionRowProps) => {
-  const handlePress = useCallback(() => {
-    onPress?.(item);
-  }, [item]);
+export const TransactionRow = memo(
+  ({
+    item: _item,
+    addresses,
+    withPadding = false,
+    onPress,
+  }: TransactionRowProps) => {
+    const item = useMemo(() => toJS(_item), [_item]);
+    const handlePress = useCallback(() => {
+      onPress?.(item);
+    }, [item]);
 
-  const {title, subtitle} = useMemo(
-    () => IndexerTransactionUtils.getDescription(item, addresses),
-    [item, addresses],
-  );
+    const amount = useMemo(() => {
+      // if array length greater than 1, it's a multi token cosmos IBC tx
+      const balances = item.parsed.amount;
+      if (balances.length === 1) {
+        return balances[0];
+      }
 
-  const iconName = useMemo(
-    () => IndexerTransactionUtils.getIconName(item, addresses),
-    [item, addresses],
-  );
+      return Balance.Empty;
+    }, [item]);
 
-  const amount = useMemo(() => {
-    // if array length greater than 1, it's a multi token cosmos IBC tx
-    const balances = IndexerTransactionUtils.getAmount(item);
-    if (balances.length === 1) {
-      return balances[0];
-    }
+    const token = useMemo(() => {
+      const tokensInfo = item.parsed.tokens;
+      if (tokensInfo.length === 1) {
+        return tokensInfo[0];
+      }
+      return undefined;
+    }, [item]);
 
-    return Balance.Empty;
-  }, [item]);
+    const amoutColor = useMemo(() => {
+      if (item.parsed.isIncoming) {
+        return Color.textGreen1;
+      }
 
-  const tokensInfo = useMemo(
-    () => IndexerTransactionUtils.getTokensInfo(item),
-    [item],
-  );
+      if (item.parsed.isOutcoming) {
+        return Color.textRed1;
+      }
 
-  const token = useMemo(() => {
-    if (tokensInfo.length === 1) {
-      return tokensInfo[0];
-    }
-    return undefined;
-  }, [tokensInfo]);
+      return Color.textBase1;
+    }, [item, addresses]);
 
-  const amoutColor = useMemo(() => {
-    if (IndexerTransactionUtils.isIncomingTx(item, addresses)) {
-      return Color.textGreen1;
-    }
+    const amoutPrefix = useMemo(() => {
+      if (item.parsed.isIncoming) {
+        return '+';
+      }
 
-    if (IndexerTransactionUtils.isOutcomingTx(item, addresses)) {
-      return Color.textRed1;
-    }
+      if (item.parsed.isOutcoming) {
+        return '-';
+      }
 
-    return Color.textBase1;
-  }, [item, addresses]);
+      return '';
+    }, [item, addresses]);
 
-  const amoutPrefix = useMemo(() => {
-    if (IndexerTransactionUtils.isIncomingTx(item, addresses)) {
-      return '+';
-    }
+    const wallet = useMemo(() => {
+      let address = '';
 
-    if (IndexerTransactionUtils.isOutcomingTx(item, addresses)) {
-      return '-';
-    }
+      if (item.parsed.isIncoming) {
+        address = item.parsed.to;
+      }
 
-    return '';
-  }, [item, addresses]);
+      if (item.parsed.isOutcoming) {
+        address = item.parsed.from;
+      }
 
-  const wallet = useMemo(() => {
-    let address = '';
+      if (address.length) {
+        return Wallet.getById(AddressUtils.toEth(address));
+      }
+    }, []);
 
-    if (IndexerTransactionUtils.isIncomingTx(item, addresses)) {
-      address = IndexerTransactionUtils.getFromAndTo(item, addresses).to;
-    }
+    return (
+      <TouchableWithoutFeedback onPress={handlePress}>
+        <View
+          style={[styles.container, withPadding && styles.containerPadding]}>
+          <View style={styles.iconWrapper}>
+            <Icon name={item.parsed.icon} color={Color.graphicBase1} />
+            {token && (
+              <View style={styles.tokenIconWrapper}>
+                <Image source={token.icon} style={styles.tokenIcon} />
+              </View>
+            )}
+          </View>
+          <DataContent
+            style={styles.infoContainer}
+            title={
+              <View style={styles.titleWrapper}>
+                <Text children={item.parsed.title} color={Color.textBase1} />
+                <TransactionStatus status={item.code} />
+              </View>
+            }
+            subtitle={
+              <View style={styles.subtitleContainer}>
+                {!!wallet && (
+                  <>
+                    <CardSmall
+                      width={23}
+                      height={16}
+                      borderRadius={4}
+                      withPadding={false}
+                      pattern={wallet.pattern}
+                      colorFrom={wallet.colorFrom}
+                      colorTo={wallet.colorTo}
+                      colorPattern={wallet.colorPattern}
+                    />
+                    <Spacer width={4} />
+                  </>
+                )}
+                <View>
+                  <Text t14 color={Color.textBase2}>
+                    {item.parsed.subtitle}
+                  </Text>
+                </View>
+              </View>
+            }
+            short
+          />
 
-    if (IndexerTransactionUtils.isOutcomingTx(item, addresses)) {
-      address = IndexerTransactionUtils.getFromAndTo(item, addresses).from;
-    }
-
-    if (address.length) {
-      return Wallet.getById(AddressUtils.toEth(address));
-    }
-  }, []);
-
-  return (
-    <TouchableWithoutFeedback onPress={handlePress}>
-      <View style={[styles.container, withPadding && styles.containerPadding]}>
-        <View style={styles.iconWrapper}>
-          <Icon name={iconName} color={Color.graphicBase1} />
-          {token && (
-            <View style={styles.tokenIconWrapper}>
-              <Image source={token.icon} style={styles.tokenIcon} />
+          {amount.isPositive() && (
+            <View style={styles.amountWrapper}>
+              <Text
+                t11
+                color={amoutColor}
+                ellipsizeMode="middle"
+                numberOfLines={1}>
+                {amoutPrefix}
+                {STRINGS.NBSP}
+                {amount.toBalanceString(4)}
+              </Text>
+              <Spacer height={2} />
+              <Text
+                t14
+                color={Color.textBase2}
+                ellipsizeMode="middle"
+                numberOfLines={1}>
+                {amoutPrefix}
+                {STRINGS.NBSP}
+                {amount.toFiat('USD').toBalanceString(4)}
+              </Text>
             </View>
           )}
         </View>
-        <DataContent
-          style={styles.infoContainer}
-          title={
-            <View style={styles.titleWrapper}>
-              <Text children={title} color={Color.textBase1} />
-              <TransactionStatus status={item.code} />
-            </View>
-          }
-          subtitle={
-            <View style={styles.subtitleContainer}>
-              {!!wallet && (
-                <>
-                  <CardSmall
-                    width={23}
-                    height={16}
-                    borderRadius={4}
-                    withPadding={false}
-                    pattern={wallet.pattern}
-                    colorFrom={wallet.colorFrom}
-                    colorTo={wallet.colorTo}
-                    colorPattern={wallet.colorPattern}
-                  />
-                  <Spacer width={4} />
-                </>
-              )}
-              <View>
-                <Text t14 color={Color.textBase2}>
-                  {subtitle}
-                </Text>
-              </View>
-            </View>
-          }
-          short
-        />
-
-        {amount.isPositive() && (
-          <View style={styles.amountWrapper}>
-            <Text
-              t11
-              color={amoutColor}
-              ellipsizeMode="middle"
-              numberOfLines={1}>
-              {amoutPrefix}
-              {STRINGS.NBSP}
-              {amount.toBalanceString()}
-            </Text>
-            <Spacer height={2} />
-            <Text
-              t14
-              color={Color.textBase2}
-              ellipsizeMode="middle"
-              numberOfLines={1}>
-              {amoutPrefix}
-              {STRINGS.NBSP}
-              {amount.toFiat('USD').toBalanceString()}
-            </Text>
-          </View>
-        )}
-      </View>
-    </TouchableWithoutFeedback>
-  );
-};
+      </TouchableWithoutFeedback>
+    );
+  },
+);
 
 const styles = createTheme({
   amountWrapper: {

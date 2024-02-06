@@ -1,16 +1,16 @@
 import {hashMessage} from '@walletconnect/utils';
-import {makeAutoObservable, runInAction, when} from 'mobx';
+import {makeAutoObservable, runInAction, toJS} from 'mobx';
 import {isHydrated} from 'mobx-persist-store';
 
+import {IconProps} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
-import {awaitForRealm} from '@app/helpers/await-for-realm';
-import {realm} from '@app/models/index';
+import {parseTransaction} from '@app/helpers/indexer-transaction-utils';
 import {TransactionRealmObject} from '@app/models/realm-object-for-migration';
 import {Wallet} from '@app/models/wallet';
+import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
-import {IndexerTransaction, MobXStoreFromRealm} from '@app/types';
-import {STORE_REHYDRATION_TIMEOUT_MS} from '@app/variables/common';
+import {IndexerTransaction, IndexerTxParsedTokenInfo} from '@app/types';
 
 export enum TransactionStatus {
   failed,
@@ -18,9 +18,26 @@ export enum TransactionStatus {
   inProgress,
 }
 
-export type Transaction = IndexerTransaction;
+export interface ParsedTransactionData {
+  from: string;
+  to: string;
+  title: string;
+  subtitle: string;
+  icon: IconProps['name'];
+  isCosmosTx: boolean;
+  isEthereumTx: boolean;
+  isContractInteraction: boolean;
+  isIncoming: boolean;
+  isOutcoming: boolean;
+  amount: Balance[];
+  tokens: IndexerTxParsedTokenInfo[];
+}
 
-class TransactionStore implements MobXStoreFromRealm {
+export type Transaction = IndexerTransaction & {
+  parsed: ParsedTransactionData;
+};
+
+class TransactionStore {
   realmSchemaName = TransactionRealmObject.schema.name;
   private _transactions: Array<Transaction> = [];
   private _lastSyncedAccountsHash = '';
@@ -42,20 +59,6 @@ class TransactionStore implements MobXStoreFromRealm {
   get isLoading() {
     return this._isLoading;
   }
-
-  migrate = async () => {
-    await awaitForRealm();
-    await when(() => this.isHydrated, {
-      timeout: STORE_REHYDRATION_TIMEOUT_MS,
-    });
-
-    const realmData = realm.objects<Transaction>(this.realmSchemaName);
-    if (realmData.length > 0) {
-      realmData.forEach(item => {
-        realm.write(() => realm.delete(item));
-      });
-    }
-  };
 
   create(transaction: Transaction) {
     const existingTransaction = this.getById(transaction.id);
@@ -90,7 +93,7 @@ class TransactionStore implements MobXStoreFromRealm {
   getById(id: string) {
     const transactionLowerCaseId = id.toLowerCase();
     return (
-      this._transactions.find(
+      this.getAll().find(
         transaction => transaction.id.toLowerCase() === transactionLowerCaseId,
       ) || null
     );
@@ -99,7 +102,7 @@ class TransactionStore implements MobXStoreFromRealm {
   getByHash(hash: string) {
     const transactionLowerCaseHash = hash.toLowerCase();
     return (
-      this._transactions.find(
+      this.getAll().find(
         transaction =>
           transaction.hash.toLowerCase() === transactionLowerCaseHash,
       ) || null
@@ -107,7 +110,7 @@ class TransactionStore implements MobXStoreFromRealm {
   }
 
   getAll() {
-    return this._transactions;
+    return toJS(this._transactions);
   }
 
   remove(id: string) {
@@ -137,7 +140,9 @@ class TransactionStore implements MobXStoreFromRealm {
       return this._transactions;
     }
 
-    const nextTxList = await this._fetch(accounts, blockNumber);
+    const nextTxList = (await this._fetch(accounts, blockNumber))
+      .map(tx => parseTransaction(tx, accounts))
+      .filter(tx => !!tx.parsed);
 
     runInAction(() => {
       this._transactions = [...prevTxList, ...nextTxList];
@@ -151,10 +156,13 @@ class TransactionStore implements MobXStoreFromRealm {
     if (this.isLoading) {
       return;
     }
-    const newTxs = await this._fetch(accounts, 'latest');
+    const newTxs = (await this._fetch(accounts, 'latest'))
+      .map(tx => parseTransaction(tx, accounts))
+      .filter(tx => !!tx.parsed);
 
     runInAction(() => {
       this._transactions = newTxs;
+
       this._isLoading = false;
     });
     return newTxs;

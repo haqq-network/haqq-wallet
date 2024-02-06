@@ -14,7 +14,6 @@ import {useTransactionList} from '@app/hooks/use-transaction-list';
 import {Transaction} from '@app/models/transaction';
 
 import {TransactionRow} from './transaction-row';
-import {TransactionSectionHeader} from './transaction-section-header';
 import {ItemData, SectionHeaderData, TransactionSection} from './types';
 
 import {TransactionEmpty} from '../transaction-empty';
@@ -41,34 +40,39 @@ export type TransactionListProps = {
 const prepareDataForSectionList = (
   data: Transaction[],
 ): TransactionSection[] => {
-  const groupedData: Record<string, Transaction[]> = data.reduce(
-    (acc, item) => {
-      const createdAt = new Date(item.ts);
-      const dateKey = new Date(
-        createdAt.getUTCFullYear(),
-        createdAt.getUTCMonth(),
-        createdAt.getUTCDate(),
-        0,
-        0,
-        0,
-        0,
-      ).toISOString();
-
-      if (!acc[dateKey]) {
-        acc[dateKey] = [];
-      }
-      acc[dateKey].push(item);
-      return acc;
+  // TODO: uncomment when backend will be ready
+  // const groupedData: Record<string, Transaction[]> = data.reduce(
+  //   (acc, item) => {
+  //     const createdAt = new Date(item.ts);
+  //     const dateKey = new Date(
+  //       createdAt.getUTCFullYear(),
+  //       createdAt.getUTCMonth(),
+  //       createdAt.getUTCDate(),
+  //       0,
+  //       0,
+  //       0,
+  //       0,
+  //     ).toISOString();
+  //     if (!acc[dateKey]) {
+  //       acc[dateKey] = [];
+  //     }
+  //     acc[dateKey].push(item);
+  //     return acc;
+  //   },
+  //   {} as Record<string, Transaction[]>,
+  // );
+  // return Object.entries(groupedData).map(([date, items]) => ({
+  //   timestamp: date,
+  //   data: items.sort(
+  //     (a, b) => new Date(b.ts).getTime() - new Date(a.ts).getTime(),
+  //   ),
+  // }));
+  return [
+    {
+      timestamp: '',
+      data,
     },
-    {} as Record<string, Transaction[]>,
-  );
-
-  return Object.entries(groupedData).map(([date, items]) => ({
-    timestamp: date,
-    data: items.sort(
-      (a, b) => new Date(b.ts).getTime() - new Date(a.ts).getTime(),
-    ),
-  }));
+  ];
 };
 
 export const TransactionList = observer(
@@ -112,8 +116,11 @@ export const TransactionList = observer(
     );
 
     /*  RENDERER FUNCTIONS */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const renderHeader = useCallback((data: SectionHeaderData) => {
-      return <TransactionSectionHeader data={data} />;
+      // TODO: uncomment when backend will be ready
+      // return <TransactionSectionHeader data={data} />;
+      return null;
     }, []);
     const renderItem = useCallback(
       (data: ItemData) => {

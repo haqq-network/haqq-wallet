@@ -90,12 +90,14 @@ export const AccountInfo = observer(
             onTabChange={onTabChange}
             initialTabIndex={0}>
             <TopTabNavigator.Tab
+              testID="accountInfoTabTransactions"
               name={TabNames.transactions}
               title={I18N.accountInfoTransactionTabTitle}
               component={null}
             />
             {isFeatureEnabled(Feature.tokens) && (
               <TopTabNavigator.Tab
+                testID="accountInfoTabTokens"
                 name={TabNames.tokens}
                 title={I18N.accountInfoTokensTabTitle}
                 component={null}
@@ -103,6 +105,7 @@ export const AccountInfo = observer(
             )}
             {isFeatureEnabled(Feature.nft) && (
               <TopTabNavigator.Tab
+                testID="accountInfoTabNft"
                 name={TabNames.nft}
                 title={I18N.accountInfoNftTabTitle}
                 component={null}

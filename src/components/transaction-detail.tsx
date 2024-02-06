@@ -7,32 +7,20 @@ import {BottomSheet} from '@app/components/bottom-sheet';
 import {TransactionStatus} from '@app/components/transaction-status/transaction-status';
 import {DataContent, Icon, IconButton, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {TransactionDescription} from '@app/helpers/indexer-transaction-utils';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
 import {Balance} from '@app/services/balance';
-import {IndexerTxParsedTokenInfo} from '@app/types';
 import {IS_IOS, LONG_NUM_PRECISION, STRINGS} from '@app/variables/common';
 
 type TransactionDetailProps = {
   tx: Transaction;
   provider: (Provider & Realm.Object<unknown, never>) | null;
-  contractName?: string;
-  isSent: boolean;
-  isContract: boolean;
-  title: string;
-  timestamp: string;
   splitted: string[];
-  amount: Balance[];
+  timestamp: string;
   fee: Balance;
   total: Balance;
-  isCosmosTx: boolean;
-  isEthereumTx: boolean;
-  isErc20TransferTx: boolean;
-  tokensInfo: IndexerTxParsedTokenInfo[];
-  erc20InputDataJson: TransactionDescription | undefined;
   onPressAddress: () => void;
   onCloseBottomSheet: () => void;
   onPressInfo: () => void;
@@ -41,18 +29,10 @@ type TransactionDetailProps = {
 export const TransactionDetail = ({
   tx,
   provider,
-  contractName,
-  isSent,
-  isContract,
-  title,
-  timestamp,
   splitted,
-  amount,
+  timestamp,
   fee,
   total,
-  tokensInfo,
-  isErc20TransferTx,
-  isEthereumTx,
   onPressAddress,
   onPressInfo,
   onCloseBottomSheet,
@@ -62,7 +42,7 @@ export const TransactionDetail = ({
   return (
     <BottomSheet
       onClose={onCloseBottomSheet}
-      title={title}
+      title={tx.parsed.title}
       closeDistance={closeDistance}>
       {total.isPositive() && (
         <>
@@ -73,7 +53,7 @@ export const TransactionDetail = ({
           />
           <Text
             t6
-            color={isSent ? Color.textRed1 : Color.textGreen1}
+            color={tx.parsed.isOutcoming ? Color.textRed1 : Color.textGreen1}
             style={styles.sum}
             children={total.toBalanceString(LONG_NUM_PRECISION)}
           />
@@ -81,7 +61,7 @@ export const TransactionDetail = ({
           <Text
             t13
             color={Color.textBase2}
-            children={total.toFiat('USD').toBalanceString()}
+            children={total.toFiat('USD').toBalanceString(LONG_NUM_PRECISION)}
           />
           <Spacer height={20} />
         </>
@@ -96,11 +76,13 @@ export const TransactionDetail = ({
         <DataContent
           reversed
           subtitleI18n={
-            isSent ? I18N.transactionSendTitle : I18N.transactionReceiveTitle
+            tx.parsed.isOutcoming
+              ? I18N.transactionSendTitle
+              : I18N.transactionReceiveTitle
           }
           title={<TransactionStatus status={tx.code} hasTitle />}
         />
-        {!isContract && (
+        {!tx.parsed.isContractInteraction && (
           <DataContent
             title={
               <>
@@ -111,7 +93,7 @@ export const TransactionDetail = ({
             }
             numberOfLines={2}
             subtitleI18n={
-              isSent
+              tx.parsed.isOutcoming
                 ? I18N.transactionDetailSentTo
                 : I18N.transactionDetailReciveFrom
             }
@@ -120,10 +102,10 @@ export const TransactionDetail = ({
             onPress={onPressAddress}
           />
         )}
-        {isContract && !!contractName && (
+        {tx.parsed.isContractInteraction && (
           <DataContent
             subtitleI18n={I18N.transactionDetailContractName}
-            title={contractName}
+            title={tx.parsed.subtitle}
             numberOfLines={2}
             reversed
           />
@@ -136,42 +118,38 @@ export const TransactionDetail = ({
             short
           />
         )}
-        {tokensInfo.map((token, i) => {
-          const balance = amount[i];
+        {tx.parsed.tokens.map((token, i) => {
+          const balance = tx.parsed.amount[i];
           return (
-            <>
-              {(isErc20TransferTx || isEthereumTx) && (
+            <React.Fragment key={`${token.contract_address}-${i}`}>
+              <DataContent
+                title={
+                  <>
+                    <View style={styles.iconView}>
+                      <Image source={token.icon} style={styles.icon} />
+                    </View>
+                    <Spacer width={4} />
+                    <Text t11>
+                      {token.name}
+                      {STRINGS.NBSP}
+                      <Text color={Color.textBase2}>({token.symbol})</Text>
+                    </Text>
+                  </>
+                }
+                subtitleI18n={I18N.transactionDetailCryptocurrency}
+                reversed
+                short
+              />
+
+              {balance.isPositive() && (
                 <DataContent
-                  title={
-                    <>
-                      <View style={styles.iconView}>
-                        <Image source={token.icon} style={styles.icon} />
-                      </View>
-                      <Spacer width={4} />
-                      <Text t11>
-                        {token.name}
-                        {STRINGS.NBSP}
-                        <Text color={Color.textBase2}>({token.symbol})</Text>
-                      </Text>
-                    </>
-                  }
-                  subtitleI18n={I18N.transactionDetailCryptocurrency}
+                  title={balance.toBalanceString(LONG_NUM_PRECISION)}
+                  subtitleI18n={I18N.transactionDetailAmount}
                   reversed
                   short
                 />
               )}
-
-              <>
-                {balance.isPositive() && (
-                  <DataContent
-                    title={balance.toBalanceString()}
-                    subtitleI18n={I18N.transactionDetailAmount}
-                    reversed
-                    short
-                  />
-                )}
-              </>
-            </>
+            </React.Fragment>
           );
         })}
 
@@ -183,14 +161,15 @@ export const TransactionDetail = ({
             short
           />
         )}
-        {isContract && !amount?.[0]?.isPositive?.() && (
-          <DataContent
-            subtitleI18n={I18N.transactionDetailTransactionType}
-            titleI18n={I18N.transactionDetailTransactionTypeDescription}
-            numberOfLines={2}
-            reversed
-          />
-        )}
+        {tx.parsed.isContractInteraction &&
+          !tx.parsed.amount?.[0]?.isPositive?.() && (
+            <DataContent
+              subtitleI18n={I18N.transactionDetailTransactionType}
+              titleI18n={I18N.transactionDetailTransactionTypeDescription}
+              numberOfLines={2}
+              reversed
+            />
+          )}
       </View>
       <IconButton onPress={onPressInfo} style={styles.iconButton}>
         <Icon name="block" color={Color.graphicBase1} />

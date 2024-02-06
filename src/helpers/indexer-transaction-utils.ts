@@ -1,9 +1,7 @@
-import {TransactionDescription as ITransactionDescription} from '@ethersproject/abi';
-import {ethers} from 'ethers';
-
 import {IconsName} from '@app/components/ui';
 import {I18N, getText} from '@app/i18n';
 import {Contracts} from '@app/models/contracts';
+import {ParsedTransactionData, Transaction} from '@app/models/transaction';
 import {Balance} from '@app/services/balance';
 import {
   IContract,
@@ -13,69 +11,293 @@ import {
   IndexerTxMsgType,
   IndexerTxParsedTokenInfo,
 } from '@app/types';
-import {ERC20_TOKEN_ABI} from '@app/variables/abi';
 import {CURRENCY_NAME, WEI_PRECISION} from '@app/variables/common';
 
 import {AddressUtils} from './address-utils';
 import {shortAddress} from './short-address';
 
-export type TransactionDescription = ITransactionDescription;
+const ISLM_TOKEN: IndexerTxParsedTokenInfo = {
+  name: getText(I18N.transactionConfirmationIslamicCoin),
+  symbol: CURRENCY_NAME,
+  icon: require('@assets/images/islm_icon.png'),
+  decimals: WEI_PRECISION,
+  contract_address: '',
+};
+
+const UNKNOW_NTOKEN = {
+  name: 'UNKNOWN',
+  symbol: '?',
+  icon: require('@assets/images/empty-icon.png'),
+  decimals: 0,
+  contract_address: '',
+};
+
+export function parseTransaction(
+  tx: IndexerTransaction,
+  addresses: string[],
+): Transaction {
+  const parse = () => {
+    switch (tx.msg.type) {
+      case IndexerTxMsgType.msgEthereumRaffleTx:
+        return parseMsgEthereumRaffleTx(tx as any, addresses);
+      case IndexerTxMsgType.msgWithdrawDelegatorReward:
+        return parseMsgWithdrawDelegatorReward(tx as any, addresses);
+      case IndexerTxMsgType.msgDelegate:
+        return parseMsgDelegate(tx as any, addresses);
+      case IndexerTxMsgType.msgUndelegate:
+        return parseMsgUndelegate(tx as any, addresses);
+      case IndexerTxMsgType.msgEthereumTx:
+        return parseMsgEthereumTx(tx as any, addresses);
+      case IndexerTxMsgType.msgEthereumErc20TransferTx:
+        return parseMsgEthereumErc20TransferTx(tx as any, addresses);
+      case IndexerTxMsgType.msgSend:
+        return parseMsgSend(tx as any, addresses);
+      // TODO: implement other tx types
+      case IndexerTxMsgType.unknown:
+      case IndexerTxMsgType.msgVote:
+      case IndexerTxMsgType.msgWithdrawValidatorCommission:
+      case IndexerTxMsgType.msgEthereumNftTransferTx:
+      case IndexerTxMsgType.msgEthereumNftMintTx:
+      case IndexerTxMsgType.msgConvertIntoVestingAccount:
+      case IndexerTxMsgType.msgBeginRedelegate:
+      case IndexerTxMsgType.msgUnjail:
+      case IndexerTxMsgType.msgCreateValidator:
+      case IndexerTxMsgType.msgEditValidator:
+      default:
+        return undefined;
+    }
+  };
+
+  return {
+    ...tx,
+    parsed: parse(),
+  } as Transaction;
+}
+
+function parseMsgEthereumRaffleTx(
+  tx: IndexerTransactionWithType<IndexerTxMsgType.msgEthereumRaffleTx>,
+  addresses: string[],
+): ParsedTransactionData {
+  const isIncoming = isIncomingTx(tx, addresses);
+  const {from, to} = getFromAndTo(tx, isIncoming);
+  const amount = [new Balance(tx.msg.amount.amount)];
+
+  return {
+    from,
+    to,
+    amount,
+    isContractInteraction: false,
+    isIncoming,
+    isOutcoming: !isIncoming,
+    tokens: [ISLM_TOKEN],
+    isCosmosTx: false,
+    isEthereumTx: true,
+    icon: IconsName.raffle_reward,
+    title: getText(I18N.transactionRaffleRewardTitle),
+    subtitle: formatAddressForSubtitle(from, 'toEth', true),
+  };
+}
+
+function parseMsgWithdrawDelegatorReward(
+  tx: IndexerTransactionWithType<IndexerTxMsgType.msgWithdrawDelegatorReward>,
+  addresses: string[],
+): ParsedTransactionData {
+  const isIncoming = isIncomingTx(tx, addresses);
+  const {from, to} = getFromAndTo(tx, isIncoming);
+  // for delegation reward tx amount is empty
+  const amount = [Balance.Empty];
+
+  return {
+    from,
+    to,
+    amount,
+    isContractInteraction: false,
+    isIncoming,
+    isOutcoming: !isIncoming,
+    tokens: [ISLM_TOKEN],
+    isCosmosTx: false,
+    isEthereumTx: true,
+    icon: IconsName.staking_reword,
+    title: getText(I18N.transactioStakingRewardTitle),
+    subtitle: formatAddressForSubtitle(from, 'toHaqq', true),
+  };
+}
+
+function parseMsgDelegate(
+  tx: IndexerTransactionWithType<IndexerTxMsgType.msgDelegate>,
+  _: string[],
+): ParsedTransactionData {
+  const isIncoming = false;
+  const {from, to} = getFromAndTo(tx, isIncoming);
+  const amount = [new Balance(tx.msg.amount.amount)];
+
+  return {
+    from,
+    to,
+    amount,
+    isContractInteraction: false,
+    isIncoming,
+    isOutcoming: !isIncoming,
+    tokens: [ISLM_TOKEN],
+    isCosmosTx: false,
+    isEthereumTx: true,
+    icon: IconsName.staking_delegation,
+    title: getText(I18N.transactionDelegationTitle),
+    subtitle: formatAddressForSubtitle(from, 'toHaqq', true),
+  };
+}
+
+function parseMsgUndelegate(
+  tx: IndexerTransactionWithType<IndexerTxMsgType.msgUndelegate>,
+  _: string[],
+): ParsedTransactionData {
+  const isIncoming = true;
+  const {from, to} = getFromAndTo(tx, isIncoming);
+  const amount = [new Balance(tx.msg.amount.amount)];
+
+  return {
+    from,
+    to,
+    amount,
+    isContractInteraction: false,
+    isIncoming,
+    isOutcoming: !isIncoming,
+    tokens: [ISLM_TOKEN],
+    isCosmosTx: false,
+    isEthereumTx: true,
+    icon: IconsName.staking_undelegation,
+    title: getText(I18N.transactionUndelegationTitle),
+    subtitle: formatAddressForSubtitle(to, 'toHaqq', false),
+  };
+}
+
+function parseMsgEthereumTx(
+  tx: IndexerTransactionWithType<IndexerTxMsgType.msgEthereumTx>,
+  addresses: string[],
+): ParsedTransactionData {
+  const isIncoming = isIncomingTx(tx, addresses);
+  const {from, to} = getFromAndTo(tx, isIncoming);
+  const amount = [new Balance(tx.msg.amount.amount)];
+
+  const title = isIncoming
+    ? getText(I18N.transactionReceiveTitle)
+    : getText(I18N.transactionSendTitle);
+
+  const subtitle = isIncoming
+    ? formatAddressForSubtitle(from, 'toEth', true)
+    : formatAddressForSubtitle(to, 'toEth', false);
+  const icon = isIncoming ? IconsName.arrow_receive : IconsName.arrow_send;
+
+  const isContractInteraction = isContractInteractionTx(tx);
+
+  return {
+    from,
+    to,
+    amount,
+    isContractInteraction,
+    isIncoming,
+    isOutcoming: !isIncoming,
+    tokens: [ISLM_TOKEN],
+    isCosmosTx: false,
+    isEthereumTx: true,
+    icon: isContractInteraction ? IconsName.contract : icon,
+    title: isContractInteraction
+      ? getText(I18N.transactionContractTitle)
+      : title,
+    subtitle: isContractInteraction ? getContractName(tx) : subtitle,
+  };
+}
+
+function parseMsgEthereumErc20TransferTx(
+  tx: IndexerTransactionWithType<IndexerTxMsgType.msgEthereumErc20TransferTx>,
+  addresses: string[],
+): ParsedTransactionData {
+  const isIncoming = isIncomingTx(tx, addresses);
+  const {from, to} = getFromAndTo(tx, isIncoming);
+  const [token] = getTokensInfo(tx);
+  const amount = [
+    new Balance(tx.msg.amount.amount, token.decimals, token.symbol),
+  ];
+
+  const title = isIncoming
+    ? getText(I18N.transactionReceiveTitle)
+    : getText(I18N.transactionSendTitle);
+  const subtitle = isIncoming
+    ? formatAddressForSubtitle(from, 'toEth', true)
+    : formatAddressForSubtitle(to, 'toEth', false);
+  const icon = isIncoming ? IconsName.arrow_receive : IconsName.arrow_send;
+
+  return {
+    from,
+    to,
+    amount,
+    isContractInteraction: false,
+    isIncoming,
+    isOutcoming: !isIncoming,
+    tokens: [token],
+    isCosmosTx: false,
+    isEthereumTx: true,
+    icon,
+    title,
+    subtitle,
+  };
+}
+
+// IBC transfer
+function parseMsgSend(
+  tx: IndexerTransactionWithType<IndexerTxMsgType.msgSend>,
+  addresses: string[],
+): ParsedTransactionData {
+  const isIncoming = isIncomingTx(tx, addresses);
+  const {from, to} = getFromAndTo(tx, isIncoming);
+
+  const title = isIncoming
+    ? getText(I18N.transactionReceiveTitle)
+    : getText(I18N.transactionSendTitle);
+  const subtitle = isIncoming
+    ? formatAddressForSubtitle(from, 'toEth', true)
+    : formatAddressForSubtitle(to, 'toEth', false);
+  const icon = isIncoming ? IconsName.arrow_receive : IconsName.arrow_send;
+
+  const tokens = getTokensInfo(tx);
+  const amount = tx?.msg?.amount?.map(a => {
+    const contract = Contracts.getById(a.contract_address!);
+    if (contract && contract.is_erc20) {
+      return new Balance(
+        a.amount,
+        contract.decimals || 0,
+        contract.symbol || 'ibc',
+      );
+    }
+    return new Balance(a.amount, 0, 'ibc');
+  });
+
+  return {
+    from,
+    to,
+    amount,
+    isContractInteraction: false,
+    isIncoming,
+    isOutcoming: !isIncoming,
+    tokens,
+    isCosmosTx: false,
+    isEthereumTx: true,
+    icon,
+    title,
+    subtitle,
+  };
+}
 
 /**
- *  @returns {Balance[]} - array of balances, if array length greater than 1, it's a multi token cosmos IBC tx
- */
-function getAmount(tx: IndexerTransaction): Balance[] {
-  if (!tx?.msg?.type) {
-    return [Balance.Empty];
-  }
+ *  UTILS FUNCTIONS
+ **/
 
-  const msg = tx.msg;
-
-  const tokensInfo = getTokensInfo(tx);
-
-  if (
-    tokensInfo.length === 1 &&
-    'amount' in msg &&
-    !Array.isArray(msg.amount)
-  ) {
-    const token = tokensInfo[0];
-    if (isErc20TransferTx(tx)) {
-      const erc20InputDataJson = getErc20InputDataJson(tx);
-      return [
-        new Balance(
-          // BigNumber
-          erc20InputDataJson?.args?.[1] || tx.msg.amount,
-          token.decimals,
-          token.symbol,
-        ),
-      ];
-    }
-
-    if (msg && 'amount' in msg) {
-      if (typeof msg.amount === 'string') {
-        return [new Balance(msg.amount, token.decimals, token.symbol)];
-      }
-
-      if (typeof msg.amount === 'object') {
-        return [new Balance(msg.amount.amount, token.decimals, token.symbol)];
-      }
-    }
-  } else if ('amount' in msg && Array.isArray(msg.amount)) {
-    return msg.amount.map(amount => {
-      const contract = Contracts.getById(amount.contract_address!);
-      if (contract && contract.is_erc20) {
-        return new Balance(
-          amount.amount,
-          contract.decimals || 0,
-          contract.symbol || 'ibc',
-        );
-      }
-      return new Balance(amount.amount, 0, 'ibc');
-    });
-  }
-
-  return [Balance.Empty];
-}
+const formatAddressForSubtitle = (
+  address: string,
+  format: 'toEth' | 'toHaqq' = 'toEth',
+  from = false,
+) =>
+  `${from ? 'from' : 'to'} ${shortAddress(AddressUtils[format](address), '•')}`;
 
 function isIncomingTx(tx: IndexerTransaction, addresses: string[]): boolean {
   if (!tx?.msg?.type) {
@@ -106,11 +328,7 @@ function isIncomingTx(tx: IndexerTransaction, addresses: string[]): boolean {
   return false;
 }
 
-function isOutcomingTx(tx: IndexerTransaction, addresses: string[]): boolean {
-  return !isIncomingTx(tx, addresses);
-}
-
-function isContractInteraction(
+function isContractInteractionTx(
   tx: IndexerTransaction,
 ): tx is Omit<IndexerTransaction, 'msg'> & {msg: IndexerTxMsgEthereumTx} {
   if (!tx?.msg?.type) {
@@ -122,240 +340,49 @@ function isContractInteraction(
     tx.input !== '0x' &&
     !/^0x0+$/.test(tx.input)
   ) {
-    const erc20InputDataJson = getErc20InputDataJson(tx);
-
-    if (erc20InputDataJson?.name === 'transfer') {
-      return false;
-    }
-
     return true;
   }
 
   return false;
 }
 
-function getIconName(tx: IndexerTransaction, addresses: string[]): IconsName {
-  if (!tx?.msg?.type) {
-    return IconsName.question;
-  }
-
-  if (tx.msg.type === IndexerTxMsgType.msgUndelegate) {
-    return IconsName.staking_undelegation;
-  }
-  if (tx.msg.type === IndexerTxMsgType.msgDelegate) {
-    return IconsName.staking_delegation;
-  }
-  if (tx.msg.type === IndexerTxMsgType.msgBeginRedelegate) {
-    return IconsName.staking_redelegation;
-  }
-  if (tx.msg.type === IndexerTxMsgType.msgEthereumRaffleTx) {
-    return IconsName.raffle_reward;
-  }
-  if (tx.msg.type === IndexerTxMsgType.msgWithdrawDelegatorReward) {
-    return IconsName.staking_reword;
-  }
-
-  if (isContractInteraction(tx) && !isErc20TransferTx(tx)) {
-    return IconsName.contract;
-  }
-
-  if (isIncomingTx(tx, addresses)) {
-    return IconsName.arrow_receive;
-  }
-
-  if (isOutcomingTx(tx, addresses)) {
-    return IconsName.arrow_send;
-  }
-
-  return IconsName.question;
-}
-
 function getContractName(tx: IndexerTransaction): string {
+  const defaultContractName = getText(I18N.transactionContractDefaultName);
   if (!tx?.msg?.type) {
-    return '';
+    return defaultContractName;
   }
 
   const msg = tx.msg;
+  let name = '';
+
   if ('contract_address' in msg) {
     const contract = Contracts.getById(msg.contract_address);
-    return contract?.name || '';
+    name = contract?.name!;
   }
 
-  if ('to_address' in msg) {
+  if ('to_address' in msg && !name) {
     const contract = Contracts.getById(msg.to_address);
-    return contract?.name || '';
+    name = contract?.name!;
   }
 
-  if ('from_address' in msg) {
+  if ('from_address' in msg && !name) {
     const contract = Contracts.getById(msg.from_address as string);
-    return contract?.name || '';
+    name = contract?.name!;
   }
 
-  return '';
-}
-
-function getDescription(
-  tx: IndexerTransaction,
-  addresses: string[],
-): {
-  title: string;
-  subtitle: string;
-} {
-  if (!tx?.msg?.type) {
-    return {title: '', subtitle: ''};
-  }
-
-  const msg = tx.msg;
-
-  if (msg?.type === IndexerTxMsgType.msgEthereumRaffleTx) {
-    return {
-      title: 'Raffle reward',
-      subtitle: `from ${shortAddress(
-        AddressUtils.toEth(msg.contract_address),
-        '•',
-      )}`,
-    };
-  }
-
-  if (msg.type === IndexerTxMsgType.msgUndelegate) {
-    const {from} = getFromAndTo(tx, addresses);
-    return {
-      title: 'Undelegation',
-      subtitle: `from ${shortAddress(AddressUtils.toEth(from), '•')}`,
-    };
-  }
-  if (msg.type === IndexerTxMsgType.msgDelegate) {
-    const {to} = getFromAndTo(tx, addresses);
-    return {
-      title: 'Delegation',
-      subtitle: `to ${shortAddress(AddressUtils.toEth(to), '•')}`,
-    };
-  }
-  if (msg.type === IndexerTxMsgType.msgWithdrawDelegatorReward) {
-    const {to} = getFromAndTo(tx, addresses);
-    return {
-      title: 'Staking reward',
-      subtitle: `to ${shortAddress(AddressUtils.toEth(to), '•')}`,
-    };
-  }
-
-  if (isContractInteraction(tx)) {
-    return {
-      title: getText(I18N.transactionContractTitle),
-      subtitle:
-        getContractName(tx) || getText(I18N.transactionContractDefaultName),
-    };
-  }
-
-  if (isIncomingTx(tx, addresses)) {
-    const {from} = getFromAndTo(tx, addresses);
-    return {
-      title: getText(I18N.transactionReceiveTitle),
-      subtitle: `from ${shortAddress(AddressUtils.toEth(from), '•')}`,
-    };
-  }
-
-  if (isOutcomingTx(tx, addresses)) {
-    const {to} = getFromAndTo(tx, addresses);
-    return {
-      title: getText(I18N.transactionSendTitle),
-      subtitle: `to ${shortAddress(AddressUtils.toEth(to), '•')}`,
-    };
-  }
-
-  return {title: 'Unknown', subtitle: msg.type};
-}
-
-function getFromAndTo(tx: IndexerTransaction, addresses: string[]) {
-  if (isIncomingTx(tx, addresses)) {
-    const from =
-      // @ts-ignore
-      tx.msg.from_address ||
-      // @ts-ignore
-      tx.msg.validator_address ||
-      // @ts-ignore
-      tx.msg.contract_address;
-    // @ts-ignore
-    const to = tx.msg.to_address || tx.msg.winner || tx.msg.delegator_address;
-
-    return {
-      from: from ? AddressUtils.toEth(from) : '',
-      to: to ? AddressUtils.toEth(to) : '',
-    };
-  }
-
-  if (isOutcomingTx(tx, addresses)) {
-    // @ts-ignore
-    const to = tx.msg.to_address || tx.msg.validator_address;
-    const from =
-      // @ts-ignore
-      tx.msg.from_address || tx.msg.winner || tx.msg.delegator_address;
-
-    return {
-      from: from ? AddressUtils.toEth(from) : '',
-      to: to ? AddressUtils.toEth(to) : '',
-    };
-  }
-
-  return {
-    from: '',
-    to: '',
-  };
-}
-
-function isEthereumTx(tx: IndexerTransaction) {
-  const txHash = tx?.hash;
-  if (!txHash) {
-    return false;
-  }
-
-  return txHash.startsWith('0x') || txHash.startsWith('0X');
-}
-
-function isCosmosTx(tx: IndexerTransaction) {
-  const txHash = tx?.hash;
-  if (!txHash) {
-    return false;
-  }
-  return !isEthereumTx(tx);
+  return name || defaultContractName;
 }
 
 function getTokensInfo(tx: IndexerTransaction): IndexerTxParsedTokenInfo[] {
-  const defaultTokenInfo = {
-    name: getText(I18N.transactionConfirmationIslamicCoin),
-    symbol: CURRENCY_NAME,
-    icon: require('@assets/images/islm_icon.png'),
-    decimals: WEI_PRECISION,
-    contract_address: '',
-    denom: CURRENCY_NAME,
-  };
   if (!tx?.msg?.type) {
-    return [defaultTokenInfo];
+    return [UNKNOW_NTOKEN];
   }
 
   if ('amount' in tx.msg && Array.isArray(tx.msg.amount)) {
     const result = tx.msg.amount
-      .map(amount => {
-        if (amount.contract_address) {
-          const contract = Contracts.getById(amount.contract_address);
-          if (contract && contract.is_erc20) {
-            return {
-              name: contract.name,
-              symbol: contract.symbol,
-              icon: contract.icon
-                ? {uri: contract.icon}
-                : require('@assets/images/empty-icon.png'),
-              decimals: contract.decimals || WEI_PRECISION,
-              contract_address:
-                // @ts-ignore
-                amount.contract_address || tx.msg.contract_address,
-              denom: amount.denom,
-            };
-          }
-        }
-        return undefined;
-      })
-      .filter(t => !!t?.name) as IndexerTxParsedTokenInfo[];
+      // @ts-ignore
+      .map(amount => getTokensInfo({...tx, msg: {...tx.msg, amount}}))
+      .flat();
 
     if (result.length) {
       return result;
@@ -373,15 +400,15 @@ function getTokensInfo(tx: IndexerTransaction): IndexerTxParsedTokenInfo[] {
     contractInfo = Contracts.getById(tx.msg.amount.contract_address);
   }
 
-  if ('contract_address' in tx.msg && !contractInfo) {
+  if ('contract_address' in tx.msg && !contractInfo?.is_erc20) {
     contractInfo = Contracts.getById(tx.msg.contract_address);
   }
 
-  if ('to_address' in tx.msg && !contractInfo) {
+  if ('to_address' in tx.msg && !contractInfo?.is_erc20) {
     contractInfo = Contracts.getById(tx.msg.to_address);
   }
 
-  if ('from_address' in tx.msg && !contractInfo) {
+  if ('from_address' in tx.msg && !contractInfo?.is_erc20) {
     contractInfo = Contracts.getById(tx.msg.from_address);
   }
 
@@ -394,62 +421,46 @@ function getTokensInfo(tx: IndexerTransaction): IndexerTxParsedTokenInfo[] {
     return [
       {
         name: contractInfo.name,
-        symbol: contractInfo.symbol,
+        // @ts-ignore
+        symbol: tx?.msg?.amount?.denom || contractInfo.symbol,
         icon: contractInfo.icon
           ? {uri: contractInfo.icon}
           : require('@assets/images/empty-icon.png'),
         decimals: contractInfo?.decimals || WEI_PRECISION,
-        // @ts-ignore
-        denom: tx?.msg?.amount?.denom,
         contract_address: contractInfo.id,
       },
     ];
   }
 
-  return [defaultTokenInfo];
+  return [UNKNOW_NTOKEN];
 }
 
-function getErc20InputDataJson(
-  tx: IndexerTransaction,
-): TransactionDescription | undefined {
-  try {
-    if (tx.input) {
-      const erc20Interface = new ethers.utils.Interface(ERC20_TOKEN_ABI);
-      return erc20Interface.parseTransaction({data: tx.input});
-    }
-  } catch (e) {}
-  return undefined;
+function getFromAndTo(tx: IndexerTransaction, isIncoming: boolean) {
+  if (isIncoming) {
+    const from =
+      // @ts-ignore
+      tx.msg.from_address ||
+      // @ts-ignore
+      tx.msg.validator_address ||
+      // @ts-ignore
+      tx.msg.contract_address;
+    // @ts-ignore
+    const to = tx.msg.to_address || tx.msg.winner || tx.msg.delegator_address;
+
+    return {
+      from: from ? AddressUtils.toEth(from) : '',
+      to: to ? AddressUtils.toEth(to) : '',
+    };
+  }
+
+  // @ts-ignore
+  const to = tx.msg.to_address || tx.msg.validator_address;
+  const from =
+    // @ts-ignore
+    tx.msg.from_address || tx.msg.winner || tx.msg.delegator_address;
+
+  return {
+    from: from ? AddressUtils.toEth(from) : '',
+    to: to ? AddressUtils.toEth(to) : '',
+  };
 }
-
-function isErc20TransferTx(
-  tx: IndexerTransaction,
-): tx is IndexerTransactionWithType<IndexerTxMsgType.msgEthereumErc20TransferTx> {
-  try {
-    if (tx.msg.type === IndexerTxMsgType.msgEthereumErc20TransferTx) {
-      return true;
-    }
-
-    const erc20InputDataJson = getErc20InputDataJson(tx);
-    if (erc20InputDataJson) {
-      const amountBn = erc20InputDataJson.args?.[1];
-      return erc20InputDataJson.name === 'transfer' && amountBn;
-    }
-  } catch (e) {}
-  return false;
-}
-
-export const IndexerTransactionUtils = {
-  getAmount,
-  isIncomingTx,
-  isOutcomingTx,
-  isContractInteraction,
-  getIconName,
-  getDescription,
-  getContractName,
-  getFromAndTo,
-  isCosmosTx,
-  isEthereumTx,
-  getTokensInfo,
-  getErc20InputDataJson,
-  isErc20TransferTx,
-};
