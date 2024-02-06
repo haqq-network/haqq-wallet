@@ -401,10 +401,12 @@ export class Cosmos {
         };
       }
 
-      const gas = new Balance(
-        parseInt(resp.gas_info.gas_used, 10) * 1.35,
-        0,
-      ).max(baseGas);
+      const gas = new Balance(parseInt(resp.gas_info.gas_used, 10))
+        .operate(
+          getRemoteBalanceValue('cosmos_commission_multiplier').toNumber(),
+          'mul',
+        )
+        .max(baseGas);
 
       const amount = baseFee.operate(gas, 'mul').max(totalAmount);
       return {
