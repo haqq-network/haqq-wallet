@@ -165,10 +165,9 @@ export class EthNetwork {
         maxPriorityFeePerGas: gasPrice.toHex(),
       } as Deferrable<TransactionRequest>);
 
-      estimateGas = new Balance(
-        estGas.toNumber() *
-          getRemoteBalanceValue('eth_commission_multiplier').toNumber(),
-      ).max(minGas);
+      estimateGas = new Balance(estGas.toNumber())
+        .operate(getRemoteBalanceValue('eth_commission_multiplier'), 'mul')
+        .max(minGas);
     } catch {
       //
     }
