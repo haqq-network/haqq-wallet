@@ -4,6 +4,7 @@ import {
   RemoteConfigBalanceTypes,
 } from '@app/services/remote-config';
 import {
+  BALANCE_MULTIPLIER,
   COSMOS_MIN_AMOUNT,
   COSMOS_MIN_GAS_LIMIT,
   MIN_AMOUNT,
@@ -25,12 +26,16 @@ export const getDefaultBalanceValue = <
       return COSMOS_MIN_AMOUNT;
     case 'cosmos_min_gas_limit':
       return COSMOS_MIN_GAS_LIMIT;
+    case 'cosmos_commission_multiplier':
+      return BALANCE_MULTIPLIER;
     case 'eth_min_amount':
       return MIN_AMOUNT;
     case 'eth_min_gas_limit':
       return MIN_GAS_LIMIT;
+    case 'eth_commission_multiplier':
+      return BALANCE_MULTIPLIER;
     default:
-      return MIN_AMOUNT;
+      return Balance.Empty;
   }
 };
 
@@ -43,10 +48,5 @@ export const getRemoteBalanceValue = <T extends keyof RemoteConfigBalanceTypes>(
     return new Balance(remoteValue);
   }
 
-  const defaultValue = getDefaultBalanceValue(key);
-
-  if (!defaultValue) {
-    return Balance.Empty;
-  }
-  return defaultValue;
+  return getDefaultBalanceValue(key);
 };

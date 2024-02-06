@@ -52,6 +52,8 @@ export function parseTransaction(
         return parseMsgEthereumErc20TransferTx(tx as any, addresses);
       case IndexerTxMsgType.msgSend:
         return parseMsgSend(tx as any, addresses);
+      case IndexerTxMsgType.msgBeginRedelegate:
+        return parseMsgBeginRedelegate(tx as any, addresses);
       // TODO: implement other tx types
       case IndexerTxMsgType.unknown:
       case IndexerTxMsgType.msgVote:
@@ -59,7 +61,6 @@ export function parseTransaction(
       case IndexerTxMsgType.msgEthereumNftTransferTx:
       case IndexerTxMsgType.msgEthereumNftMintTx:
       case IndexerTxMsgType.msgConvertIntoVestingAccount:
-      case IndexerTxMsgType.msgBeginRedelegate:
       case IndexerTxMsgType.msgUnjail:
       case IndexerTxMsgType.msgCreateValidator:
       case IndexerTxMsgType.msgEditValidator:
@@ -72,6 +73,33 @@ export function parseTransaction(
     ...tx,
     parsed: parse(),
   } as Transaction;
+}
+
+function parseMsgBeginRedelegate(
+  tx: IndexerTransactionWithType<IndexerTxMsgType.msgBeginRedelegate>,
+  _: string[],
+): ParsedTransactionData {
+  const isIncoming = true;
+  const amount = [new Balance(tx.msg.amount.amount)];
+
+  return {
+    from: tx.msg.validator_src_address,
+    to: tx.msg.validator_dst_address,
+    amount,
+    isContractInteraction: false,
+    isIncoming,
+    isOutcoming: !isIncoming,
+    tokens: [ISLM_TOKEN],
+    isCosmosTx: true,
+    isEthereumTx: false,
+    icon: IconsName.staking_redelegation,
+    title: getText(I18N.transactionRedelegationTitle),
+    subtitle: formatAddressForSubtitle(
+      tx.msg.validator_src_address,
+      'toHaqq',
+      false,
+    ),
+  };
 }
 
 function parseMsgEthereumRaffleTx(
@@ -115,8 +143,8 @@ function parseMsgWithdrawDelegatorReward(
     isIncoming,
     isOutcoming: !isIncoming,
     tokens: [ISLM_TOKEN],
-    isCosmosTx: false,
-    isEthereumTx: true,
+    isCosmosTx: true,
+    isEthereumTx: false,
     icon: IconsName.staking_reword,
     title: getText(I18N.transactioStakingRewardTitle),
     subtitle: formatAddressForSubtitle(from, 'toHaqq', true),
@@ -139,7 +167,7 @@ function parseMsgDelegate(
     isIncoming,
     isOutcoming: !isIncoming,
     tokens: [ISLM_TOKEN],
-    isCosmosTx: false,
+    isCosmosTx: true,
     isEthereumTx: true,
     icon: IconsName.staking_delegation,
     title: getText(I18N.transactionDelegationTitle),
@@ -163,8 +191,8 @@ function parseMsgUndelegate(
     isIncoming,
     isOutcoming: !isIncoming,
     tokens: [ISLM_TOKEN],
-    isCosmosTx: false,
-    isEthereumTx: true,
+    isCosmosTx: true,
+    isEthereumTx: false,
     icon: IconsName.staking_undelegation,
     title: getText(I18N.transactionUndelegationTitle),
     subtitle: formatAddressForSubtitle(to, 'toHaqq', false),
@@ -280,8 +308,8 @@ function parseMsgSend(
     isIncoming,
     isOutcoming: !isIncoming,
     tokens,
-    isCosmosTx: false,
-    isEthereumTx: true,
+    isCosmosTx: true,
+    isEthereumTx: false,
     icon,
     title,
     subtitle,

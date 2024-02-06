@@ -1644,7 +1644,7 @@ export type IndexerTxMsgBeginRedelegateTx = {
   delegator_address: HaqqCosmosAddress;
   validator_src_address: HaqqCosmosAddress;
   validator_dst_address: HaqqCosmosAddress;
-  amount?: IndexerCoin;
+  amount: IndexerCoin;
   type: IndexerTxMsgType.msgBeginRedelegate;
 };
 
@@ -1774,3 +1774,35 @@ export type IndexerTxParsedTokenInfo = {
   decimals: number;
   contract_address?: string;
 };
+export type IStory = {
+  id: string;
+  title: string;
+  preview: string;
+  status: 'published';
+  open_event: string | null;
+  updated_at: string;
+  created_at: string;
+  attachments: {
+    id: string;
+    story_id: string;
+    position: number;
+    status: 'published';
+    markup: {
+      row: {
+        event?: AdjustEvents;
+        text: string;
+        type: 'button' | 'text';
+      };
+    }[];
+    attachment: {
+      duration: number;
+      source: string;
+      type: 'image' | 'video';
+    };
+    updated_at: string;
+    created_at: string;
+  }[];
+  seen?: boolean;
+};
+
+export type StoriesResponse = IStory[];

@@ -909,6 +909,7 @@ export enum I18N {
   transactioStakingRewardTitle,
   transactionDelegationTitle,
   transactionUndelegationTitle,
+  transactionRedelegationTitle,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1992,4 +1993,5 @@ const en: Record<I18N, string> = {
   [I18N.transactioStakingRewardTitle]: 'Staking reward',
   [I18N.transactionDelegationTitle]: 'Delegate',
   [I18N.transactionUndelegationTitle]: 'Undelegate',
+  [I18N.transactionRedelegationTitle]: 'Redelegate',
 };

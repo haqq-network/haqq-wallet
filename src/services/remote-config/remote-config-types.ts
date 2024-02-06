@@ -12,8 +12,10 @@ export type WalletConnectAllowedNamespaces = Record<
 export interface RemoteConfigBalanceTypes {
   cosmos_min_amount: string;
   cosmos_min_gas_limit: string;
+  cosmos_commission_multiplier: string;
   eth_min_amount: string;
   eth_min_gas_limit: string;
+  eth_commission_multiplier: string;
   transfer_min_amount: string;
   staking_reward_min_amount: string;
 }

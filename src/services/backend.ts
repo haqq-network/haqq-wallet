@@ -6,6 +6,7 @@ import {
   NewsUpdatesResponse,
   Raffle,
   RssNewsRow,
+  StoriesResponse,
 } from '@app/types';
 import {getHttpResponse} from '@app/utils';
 
@@ -349,5 +350,13 @@ export class Backend {
       }),
     });
     return await getHttpResponse<MarkupResponse>(response);
+  }
+
+  async stories(): Promise<StoriesResponse> {
+    const response = await fetch(`${this.getRemoteUrl()}stories`, {
+      method: 'GET',
+      headers: Backend.headers,
+    });
+    return await getHttpResponse<StoriesResponse>(response);
   }
 }

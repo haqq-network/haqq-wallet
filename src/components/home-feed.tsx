@@ -1,9 +1,13 @@
 import React, {memo, useCallback, useState} from 'react';
 
+import {STORIES_ENABLED} from '@env';
+import {useFocusEffect} from '@react-navigation/native';
 import {RefreshControl, ScrollView} from 'react-native';
 
+import {StoriesWrapper} from '@app/components/stories';
 import {createTheme} from '@app/helpers';
 import {loadAllTransactions} from '@app/helpers/load-transactions';
+import {Stories} from '@app/models/stories';
 import {BannersWrapper} from '@app/screens/banners';
 import {WalletsWrapper} from '@app/screens/HomeStack/HomeFeedStack/wallets';
 import {LockedTokensWrapper} from '@app/screens/locked-tokens';
@@ -16,9 +20,15 @@ export const HomeFeed = memo(() => {
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     setLastUpdate(Date.now());
-    await loadAllTransactions();
+    await Promise.allSettled([loadAllTransactions(), Stories.fetch()]);
     setRefreshing(false);
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      Stories.fetch();
+    }, []),
+  );
 
   return (
     <ScrollView
@@ -27,6 +37,7 @@ export const HomeFeed = memo(() => {
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }>
+      {!!STORIES_ENABLED && <StoriesWrapper />}
       <LockedTokensWrapper />
       <WalletsWrapper />
       <BannersWrapper />
