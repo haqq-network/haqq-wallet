@@ -32,4 +32,5 @@ declare module '@env' {
   export const RECAPTCHA_V2_SITEKEY: string;
   export const MMKV_KEY: string;
   export const FOR_DETOX: boolean;
+  export const STORIES_ENABLED: boolean;
 }
