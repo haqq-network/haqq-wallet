@@ -402,7 +402,8 @@ export class Cosmos {
       }
 
       const gas = new Balance(
-        parseInt(resp.gas_info.gas_used, 10) * 1.35,
+        parseInt(resp.gas_info.gas_used, 10) *
+          getRemoteBalanceValue('cosmos_commission_multiplier').toNumber(),
         0,
       ).max(baseGas);
 
