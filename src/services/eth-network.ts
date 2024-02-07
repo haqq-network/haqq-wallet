@@ -4,10 +4,7 @@ import {ProviderInterface} from '@haqq/provider-base';
 import {BigNumber, utils} from 'ethers';
 
 import {app} from '@app/contexts';
-import {
-  getRemoteBalanceValue,
-  getRemoteMultiplierValue,
-} from '@app/helpers/get-remote-value';
+import {getRemoteBalanceValue} from '@app/helpers/get-remote-value';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
@@ -168,11 +165,8 @@ export class EthNetwork {
         maxPriorityFeePerGas: gasPrice.toHex(),
       } as Deferrable<TransactionRequest>);
 
-      estimateGas = new Balance(
-        estGas.toNumber() *
-          getRemoteMultiplierValue('eth_commission_multiplier'),
-        0,
-      ).max(minGas);
+      // TODO eth_commission_multiplier should be added here
+      estimateGas = new Balance(estGas._hex).max(minGas);
     } catch {
       //
     }
