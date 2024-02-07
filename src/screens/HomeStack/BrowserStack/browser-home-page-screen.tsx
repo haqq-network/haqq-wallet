@@ -59,8 +59,11 @@ export const BrowserHomePageScreen = memo(() => {
     RemoteConfig.awaitForInitialization().then(() => {
       const web3BrowserBookmarks = RemoteConfig.get('web3_browser_bookmarks')!;
       web3BrowserBookmarks.forEach(link => {
-        if (!Web3BrowserBookmark.getByUrl(link?.url || '')) {
+        const savedLink = Web3BrowserBookmark.getByUrl(link?.url || '');
+        if (!savedLink) {
           Web3BrowserBookmark.create(link);
+        } else {
+          savedLink.update(link);
         }
       });
     });

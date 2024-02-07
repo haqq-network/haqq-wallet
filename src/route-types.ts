@@ -387,7 +387,7 @@ export type HomeStackParamList = {
     address: string;
     isPopup?: boolean;
   };
-  [HomeStackRoutes.TransactionDetail]: {hash: string; contractName?: string};
+  [HomeStackRoutes.TransactionDetail]: {txId: string; addresses: string[]};
   [HomeStackRoutes.InAppBrowser]: {
     url: string;
     title?: string;
@@ -516,8 +516,8 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
     amount?: Balance;
   };
   [TransactionStackRoutes.TransactionNftFinish]: {
-    hash: string;
     nft: NftItem;
+    transaction: TransactionResponse;
   };
   [TransactionStackRoutes.TransactionAccount]: {
     from: string;

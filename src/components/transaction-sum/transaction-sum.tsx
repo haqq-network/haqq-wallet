@@ -159,11 +159,15 @@ export const TransactionSum = ({
 const styles = createTheme({
   row: {flexDirection: 'row'},
   cryptoBlockImage: {
-    maxHeight: 18,
-    maxWidth: 18,
+    maxHeight: 12,
+    maxWidth: 12,
+    width: 12,
+    height: 12,
     marginTop: 4,
     borderRadius: 5,
     overflow: 'hidden',
+    alignSelf: 'center',
+    marginRight: 4,
   },
   cryptoBlockTitle: {marginTop: 2},
   cryptoBlock: {width: 93},

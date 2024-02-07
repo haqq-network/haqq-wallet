@@ -3,9 +3,9 @@ import {calcFee} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {getExplorerInstanceForProvider} from '@app/helpers/explorer-instance';
 import {Provider} from '@app/models/provider';
-import {Transaction, TransactionStatus} from '@app/models/transaction';
+import {Transaction} from '@app/models/transaction';
 import {Balance} from '@app/services/balance';
-import {ExplorerTransaction} from '@app/types';
+import {ExplorerTransaction, IndexerTransactionStatus} from '@app/types';
 
 export async function onTransactionsLoad(address: string) {
   const providers = Provider.getAll().filter(p => !!p.explorer);
@@ -50,7 +50,7 @@ async function loadTransactionsFromExplorerWithProvider(
         if (!tx) {
           return true;
         }
-        return tx.status !== getTransactionStatus(row);
+        return tx.code !== getTransactionStatus(row);
       })
       .map(row => ({
         row: {
@@ -68,12 +68,14 @@ async function loadTransactionsFromExplorerWithProvider(
   }
 }
 
-const getTransactionStatus = (tx: ExplorerTransaction): TransactionStatus => {
+const getTransactionStatus = (
+  tx: ExplorerTransaction,
+): IndexerTransactionStatus => {
   if (tx.txreceipt_status === '0') {
-    return TransactionStatus.inProgress;
+    return IndexerTransactionStatus.inProgress;
   }
   if (tx.isError === '0') {
-    return TransactionStatus.success;
+    return IndexerTransactionStatus.success;
   }
-  return TransactionStatus.failed;
+  return IndexerTransactionStatus.failed;
 };

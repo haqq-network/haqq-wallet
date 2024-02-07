@@ -8,7 +8,6 @@ import {
   differenceInMinutes,
 } from 'date-fns';
 import Decimal from 'decimal.js';
-import {utils} from 'ethers';
 import _ from 'lodash';
 import {
   Alert,
@@ -22,7 +21,6 @@ import {Adjust} from 'react-native-adjust';
 import prompt, {PromptOptions} from 'react-native-prompt-android';
 
 import {app} from '@app/contexts';
-import {Transaction, TransactionStatus} from '@app/models/transaction';
 import {RemoteConfig} from '@app/services/remote-config';
 
 import {Color, getColor} from './colors';
@@ -46,6 +44,8 @@ import {
   EthTypedData,
   HaqqEthereumAddress,
   IndexerTransaction,
+  IndexerTransactionWithType,
+  IndexerTxMsgType,
   JsonRpcTransactionRequest,
   PartialJsonRpcRequest,
   SendTransactionError,
@@ -70,9 +70,25 @@ export function isNumber(value: string) {
   return value.match(numbersRegExp);
 }
 
-const regex = /(0x\w{2})(.*)(\w{4})$/gm;
+const ethAddressRegex = /(0x\w{2})(.*)(\w{4})$/gm;
+const haqqAddressRegex = /(haqq)(.*)(\w{4})$/gm;
+const haqqValidatorAddressRegex = /(haqqvaloper)(.*)(\w{4})$/gm;
 
 export function splitAddress(address: string) {
+  if (!address) {
+    return [];
+  }
+
+  let regex = ethAddressRegex;
+
+  if (AddressUtils.isHaqqAddress(address)) {
+    regex = haqqAddressRegex;
+  }
+
+  if (AddressUtils.isHaqqValidatorAddress(address)) {
+    regex = haqqValidatorAddressRegex;
+  }
+
   regex.lastIndex = 0;
   const result = regex.exec(address);
   if (!result) {
@@ -919,37 +935,6 @@ export const uppercaseFirtsLetter = (str: string) =>
     // uppercase first letter
     .replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
 
-export const migrateTransaction = (tx: IndexerTransaction): Transaction => {
-  const statusMap = {
-    ['0']: TransactionStatus.success,
-    ['1']: TransactionStatus.failed,
-    ['-1']: TransactionStatus.inProgress,
-  };
-
-  return {
-    account: tx.msg.from_address,
-    raw: '',
-    fee: parseFloat(utils.formatEther(tx.fee ?? 0)),
-    feeHex: new Balance(tx.fee).toHex(),
-    providerId: app.providerId,
-    hash: tx.hash,
-    block: String(tx.block),
-    from: AddressUtils.toEth(tx.msg.from_address),
-    to: AddressUtils.toEth(tx.msg.to_address),
-    value: parseFloat(utils.formatEther(tx.msg.amount ?? 0)),
-    chainId: tx.chain_id,
-    timeStamp: tx.ts,
-    createdAt: +new Date(tx.ts),
-    confirmations: tx.confirmations,
-    contractAddress: tx.msg.contract_address || '',
-    confirmed: tx.confirmations > 10,
-    input: tx.input,
-    status: statusMap[tx.code],
-    type: tx.msg_type,
-    id: tx.id,
-  };
-};
-
 export function promtAsync(
   title?: string,
   message?: string,
@@ -958,4 +943,13 @@ export function promtAsync(
   return new Promise(resolve => {
     prompt(title, message, resolve, options);
   });
+}
+
+/**
+ * wrap for typescript indexet TX type
+ */
+export function wrapIndexerTx<T extends IndexerTxMsgType>(
+  tx: IndexerTransaction,
+) {
+  return tx as IndexerTransactionWithType<T>;
 }

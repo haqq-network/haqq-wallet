@@ -56,7 +56,9 @@ export function useSumAmount(
 
   return {
     isValid:
-      amount.raw.gte(minAmount.raw) && amount.raw.lte(maxAmount.raw) && !error,
+      amount.toEther() >= minAmount.toEther() &&
+      amount.toEther() <= maxAmount.toEther() &&
+      !error,
     maxAmount: maxAmount,
     amount: amountText,
     error,

@@ -28,7 +28,6 @@ import {trackEvent} from '@app/helpers/track-event';
 import {useTheme} from '@app/hooks';
 import {useToast} from '@app/hooks/use-toast';
 import {Contact} from '@app/models/contact';
-import {Transaction} from '@app/models/transaction';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
@@ -95,11 +94,7 @@ export const App = () => {
           await app.init();
           await migrationWallets();
           // MobX stores migration
-          await Promise.allSettled([
-            Contact.migrate(),
-            Wallet.migrate(),
-            Transaction.migrate(),
-          ]);
+          await Promise.allSettled([Contact.migrate(), Wallet.migrate()]);
 
           // We need reopen app for start SSS check
           // because we are working with cloud snapshots

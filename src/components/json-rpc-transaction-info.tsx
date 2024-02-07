@@ -85,13 +85,13 @@ export const JsonRpcTransactionInfo = ({
 
   const isContract = useMemo(
     () =>
-      verifyAddressResponse?.addressType === AddressType.contract ||
+      verifyAddressResponse?.address_type === AddressType.contract ||
       isContractTransaction(params),
     [params, verifyAddressResponse],
   );
 
   const isInWhiteList = useMemo(
-    () => !!verifyAddressResponse?.isInWhiteList,
+    () => !!verifyAddressResponse?.is_in_white_list,
     [verifyAddressResponse],
   );
 

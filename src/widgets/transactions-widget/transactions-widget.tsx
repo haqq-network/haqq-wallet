@@ -2,58 +2,47 @@ import React from 'react';
 
 import {StyleSheet} from 'react-native';
 
+import {TransactionRow} from '@app/components/transaction-list/transaction-row';
 import {Spacer} from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
 import {WidgetHeader} from '@app/components/ui/widget-header';
 import {I18N, getText} from '@app/i18n';
-import {Wallet} from '@app/models/wallet';
-import {
-  ContractNameMap,
-  OnTransactionRowPress,
-  TransactionListContract,
-  TransactionListReceive,
-  TransactionListSend,
-} from '@app/types';
-import {TransactionRowWidget} from '@app/widgets/transactions-widget/transaction-row-widget';
+import {Transaction} from '@app/models/transaction';
 
 type Props = {
+  lastTransactions: Transaction[];
+  isTransactionsLoading: boolean;
+  addressList: string[];
   onPress: () => void;
-  lastTransactions: (
-    | TransactionListSend
-    | TransactionListReceive
-    | TransactionListContract
-  )[];
-  onRowPress: OnTransactionRowPress;
-  wallets: Wallet[];
-  contractNameMap: ContractNameMap;
+  onRowPress(tx: Transaction): void;
 };
 
 export const TransactionsWidget = ({
-  onPress,
   lastTransactions,
+  addressList,
+  onPress,
   onRowPress,
-  wallets,
-  contractNameMap,
 }: Props) => {
   if (lastTransactions.length === 0) {
     return null;
   }
   return (
-    <ShadowCard onPress={onPress} style={styles.wrapper}>
-      <WidgetHeader title={getText(I18N.transactionWidgetShortTitle)} />
-      <Spacer height={8} />
-      {lastTransactions.map(item => {
-        return (
-          <TransactionRowWidget
-            key={item.hash}
-            item={item}
-            onPress={onRowPress}
-            wallets={wallets}
-            contractNameMap={contractNameMap}
-          />
-        );
-      })}
-    </ShadowCard>
+    <>
+      <ShadowCard onPress={onPress} style={styles.wrapper}>
+        <WidgetHeader title={getText(I18N.transactionWidgetShortTitle)} />
+        <Spacer height={8} />
+        {lastTransactions.map(item => {
+          return (
+            <TransactionRow
+              key={item.hash}
+              item={item}
+              addresses={addressList}
+              onPress={onRowPress}
+            />
+          );
+        })}
+      </ShadowCard>
+    </>
   );
 };
 

@@ -18,8 +18,9 @@ import {Balance} from '@app/services/balance';
 import {AppTheme, WalletType} from '@app/types';
 import {
   CARD_DEFAULT_STYLE,
+  DEFAULT_PROVIDERS,
   ETH_HD_PATH,
-  TEST_NETWORK,
+  TEST_NETWORK_ID,
 } from '@app/variables/common';
 
 import {RssNews} from './rss-news';
@@ -152,7 +153,7 @@ export const realm = new Realm({
 
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
-        newObject.providerId = TEST_NETWORK;
+        newObject.providerId = TEST_NETWORK_ID;
       }
     }
 
@@ -168,7 +169,7 @@ export const realm = new Realm({
 
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
-        newObject.providerId = TEST_NETWORK;
+        newObject.providerId = TEST_NETWORK_ID;
       }
     }
 
@@ -222,7 +223,7 @@ export const realm = new Realm({
 
     if (oldRealm.schemaVersion < 27) {
       logger.log('migration step #11');
-      const providersList = require('@assets/migrations/providers.json');
+      const providersList = DEFAULT_PROVIDERS;
 
       const oldObjects = oldRealm.objects<{id: string}>('Provider');
       const newObjects = newRealm.objects<{
@@ -245,6 +246,7 @@ export const realm = new Realm({
 
         if (provider) {
           const newObject = newObjects[objectIndex];
+          // @ts-ignore
           newObject.ethChainId = provider.ethChainId;
           newObject.ethRpcEndpoint = provider.ethRpcEndpoint;
           newObject.cosmosChainId = provider.cosmosChainId;

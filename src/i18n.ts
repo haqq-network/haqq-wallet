@@ -905,6 +905,11 @@ export enum I18N {
   keystoneWalletEnterDeviceNameTitle,
   keystoneWalletSyncPathError,
   keystoneUnknownError,
+  transactionRaffleRewardTitle,
+  transactioStakingRewardTitle,
+  transactionDelegationTitle,
+  transactionUndelegationTitle,
+  transactionRedelegationTitle,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1984,4 +1989,9 @@ const en: Record<I18N, string> = {
   [I18N.customProviderEmailSubmit]: 'Submit',
   [I18N.customProviderEmailCancel]: 'Cancel',
   [I18N.createOrImportWallet]: 'You must have at least one wallet!',
+  [I18N.transactionRaffleRewardTitle]: 'Raffle reward',
+  [I18N.transactioStakingRewardTitle]: 'Staking reward',
+  [I18N.transactionDelegationTitle]: 'Delegate',
+  [I18N.transactionUndelegationTitle]: 'Undelegate',
+  [I18N.transactionRedelegationTitle]: 'Redelegate',
 };

@@ -1,8 +1,11 @@
-import {makeAutoObservable, runInAction} from 'mobx';
+import {ethers} from 'ethers';
+import {makeAutoObservable, runInAction, toJS} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
 import {app} from '@app/contexts';
+import {DEBUG_VARS} from '@app/debug-vars';
 import {AddressUtils} from '@app/helpers/address-utils';
+import {Whitelist} from '@app/helpers/whitelist';
 import {I18N, getText} from '@app/i18n';
 import {Contracts} from '@app/models/contracts';
 import {Wallet} from '@app/models/wallet';
@@ -16,8 +19,8 @@ import {
   IndexerTokensData,
   MobXStore,
 } from '@app/types';
+import {ERC20_TOKEN_ABI} from '@app/variables/abi';
 import {CURRENCY_NAME, WEI, WEI_PRECISION} from '@app/variables/common';
-
 class TokensStore implements MobXStore<IToken> {
   /**
    * All tokens available for all wallets with commulative value
@@ -81,6 +84,8 @@ class TokensStore implements MobXStore<IToken> {
           },
         ],
         storage: storage,
+      }).then(() => {
+        Logger.log('TokensStore data', JSON.stringify(this.data, null, 2));
       });
     }
   }
@@ -165,11 +170,16 @@ class TokensStore implements MobXStore<IToken> {
     const wallets = Wallet.getAll();
     const accounts = wallets.map(w => w.cosmosAddress);
     const updates = await Indexer.instance.updates(accounts, this.lastUpdate);
-    const result = this.parseIndexerTokens(updates);
+    let result = await this.parseIndexerTokens(updates);
+    result = await getHardcodedTokens(result);
+    Logger.log('TokensStore fetchTokens', JSON.stringify(result, null, 2));
     // this.lastUpdate = new Date();
     this.recalculateCommulativeSum(result);
 
     runInAction(() => {
+      if (app.isTesterMode || app.isDeveloper) {
+        // Logger.log('TokensStore fetchTokens', JSON.stringify(result, null, 2));
+      }
       this.tokens = result;
     });
   };
@@ -195,9 +205,26 @@ class TokensStore implements MobXStore<IToken> {
     };
   };
 
-  private parseIndexerTokens = (
+  private parseIndexerTokens = async (
     data: IndexerUpdatesResponse,
-  ): IndexerTokensData => {
+  ): Promise<IndexerTokensData> => {
+    const tokensAndContracts = await Promise.all(
+      data.tokens.map(async token => {
+        try {
+          const contract = await Whitelist.verifyAddress(token.contract);
+          return {
+            token,
+            contract: (contract || {}) as IContract,
+          };
+        } catch (e) {
+          return {
+            token,
+            contract: {} as IContract,
+          };
+        }
+      }),
+    );
+
     return Wallet.getAll().reduce((acc, w) => {
       if (!Array.isArray(data.tokens)) {
         return {
@@ -206,42 +233,44 @@ class TokensStore implements MobXStore<IToken> {
         };
       }
 
-      const addressTokens: IToken[] = data.tokens
+      const addressTokens: IToken[] = tokensAndContracts
         .filter(
-          token =>
+          ({token}) =>
             !!token.contract && AddressUtils.toEth(token.address) === w.address,
         )
-        .map(token => {
+        .map(({token, contract}) => {
           const hasCache = this.hasContractCache(token.contract);
           if (!hasCache) {
-            const contract = data.addresses.find(
+            const contractFromAdresses = data.addresses.find(
               item => item.id === token.contract,
             );
+            this.saveContract(contractFromAdresses);
+          } else {
             this.saveContract(contract);
           }
 
-          // We saved contract in cache on previous step
-          const contract = this.getContract(token.contract);
+          const contractFromCache = this.getContract(token.contract);
+
           const result: IToken = {
-            id: contract.id,
-            contract_created_at: contract.created_at,
-            contract_updated_at: contract.updated_at,
+            id: contractFromCache.id,
+            contract_created_at: contractFromCache.created_at,
+            contract_updated_at: contractFromCache.updated_at,
             value: new Balance(
               token.value,
-              contract.decimals || WEI_PRECISION,
-              contract.symbol || CURRENCY_NAME,
+              contractFromCache.decimals || WEI_PRECISION,
+              contractFromCache.symbol || CURRENCY_NAME,
             ),
-            decimals: contract.decimals,
-            is_erc20: contract.is_erc20,
-            is_erc721: contract.is_erc721,
-            is_erc1155: contract.is_erc1155,
-            is_in_white_list: contract.is_in_white_list,
-            name: contract.name,
-            symbol: contract.symbol,
+            decimals: contractFromCache.decimals,
+            is_erc20: contractFromCache.is_erc20,
+            is_erc721: contractFromCache.is_erc721,
+            is_erc1155: contractFromCache.is_erc1155,
+            is_in_white_list: contractFromCache.is_in_white_list,
+            name: contractFromCache.name,
+            symbol: contractFromCache.symbol,
             created_at: token.created_at,
             updated_at: token.updated_at,
-            image: contract.icon
-              ? {uri: contract.icon}
+            image: contractFromCache.icon
+              ? {uri: contractFromCache.icon}
               : require('@assets/images/empty-icon.png'),
           };
 
@@ -280,3 +309,86 @@ class TokensStore implements MobXStore<IToken> {
 
 const instance = new TokensStore(Boolean(process.env.JEST_WORKER_ID));
 export {instance as Token};
+
+async function getHardcodedTokens(tokensDataToMerge: IndexerTokensData = {}) {
+  const wallets = Wallet.addressList();
+  if (DEBUG_VARS.enableHardcodeERC20TokensContract) {
+    const contracts =
+      DEBUG_VARS.hardcodeERC20TokensContract[app.provider.cosmosChainId];
+    Logger.log('contracts', contracts);
+
+    if (contracts.length) {
+      const tokens = await Promise.all(
+        wallets
+          .map(async wallet => {
+            return [
+              wallet,
+              [
+                ...toJS(tokensDataToMerge[wallet]),
+                ...(
+                  await Promise.all(
+                    contracts
+                      .map(async contract => {
+                        const contractInfo = await Whitelist.verifyAddress(
+                          AddressUtils.toHaqq(contract),
+                        );
+                        if (!contractInfo) {
+                          return null;
+                        }
+
+                        const etherProvider =
+                          new ethers.providers.JsonRpcProvider(
+                            app.provider.ethRpcEndpoint,
+                          );
+                        const contractInterface = new ethers.Contract(
+                          contract,
+                          ERC20_TOKEN_ABI,
+                          etherProvider,
+                        );
+
+                        const balanceResult = await contractInterface.balanceOf(
+                          wallet,
+                        );
+
+                        const balance = new Balance(
+                          balanceResult,
+                          contractInfo.decimals || WEI_PRECISION,
+                          contractInfo.symbol || CURRENCY_NAME,
+                        );
+
+                        if (!balance.isPositive()) {
+                          return;
+                        }
+
+                        return {
+                          id: contract,
+                          contract_created_at: '',
+                          contract_updated_at: '',
+                          value: balance,
+                          decimals: contractInfo.decimals,
+                          is_erc20: true,
+                          is_erc721: false,
+                          is_erc1155: false,
+                          is_in_white_list: true,
+                          name: contractInfo.name,
+                          symbol: contractInfo.symbol,
+                          created_at: '',
+                          updated_at: '',
+                          image: contractInfo.icon
+                            ? {uri: contractInfo.icon}
+                            : require('@assets/images/empty-icon.png'),
+                        } as IToken;
+                      })
+                      .filter(Boolean),
+                  )
+                ).filter(Boolean),
+              ].filter(Boolean),
+            ].filter(Boolean);
+          })
+          .filter(Boolean),
+      );
+      return Object.fromEntries(tokens) as IndexerTokensData;
+    }
+  }
+  return tokensDataToMerge;
+}
