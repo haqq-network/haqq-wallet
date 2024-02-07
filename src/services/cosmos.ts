@@ -47,7 +47,10 @@ import {
 import Decimal from 'decimal.js';
 
 import {AddressUtils} from '@app/helpers/address-utils';
-import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
+import {
+  getRemoteBalanceValue,
+  getRemoteMultiplierValue,
+} from '@app/helpers/get-remote-value';
 import {ledgerTransportCbWrapper} from '@app/helpers/ledger-transport-wrapper';
 import {Provider} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
@@ -384,8 +387,6 @@ export class Cosmos {
 
       const resp = await this.postSimulate(data, account);
 
-      // Logger.log('resp', resp);
-
       // TODO Unhandled exception. Types issue.
       //@ts-ignore
       if (resp.code === 2) {
@@ -403,7 +404,7 @@ export class Cosmos {
 
       const gas = new Balance(parseInt(resp.gas_info.gas_used, 10))
         .operate(
-          getRemoteBalanceValue('cosmos_commission_multiplier').toNumber(),
+          getRemoteMultiplierValue('cosmos_commission_multiplier'),
           'mul',
         )
         .max(baseGas);

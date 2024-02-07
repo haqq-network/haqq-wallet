@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 
 import validate from 'validate.js';
 
-import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
+import {getRemoteBalanceValue} from '@app/helpers/get-remote-value';
 import {I18N, getText} from '@app/i18n';
 import {Balance} from '@app/services/balance';
 

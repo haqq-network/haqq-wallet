@@ -11,7 +11,7 @@ import {
   awaitForWallet,
   getProviderInstanceForWallet,
 } from '@app/helpers';
-import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
+import {getRemoteBalanceValue} from '@app/helpers/get-remote-value';
 import {reduceAmounts} from '@app/helpers/staking';
 import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useMinAmount} from '@app/hooks/use-min-amount';

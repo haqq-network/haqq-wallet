@@ -4,7 +4,10 @@ import {ProviderInterface} from '@haqq/provider-base';
 import {BigNumber, utils} from 'ethers';
 
 import {app} from '@app/contexts';
-import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
+import {
+  getRemoteBalanceValue,
+  getRemoteMultiplierValue,
+} from '@app/helpers/get-remote-value';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
@@ -166,7 +169,7 @@ export class EthNetwork {
       } as Deferrable<TransactionRequest>);
 
       estimateGas = new Balance(estGas.toNumber())
-        .operate(getRemoteBalanceValue('eth_commission_multiplier'), 'mul')
+        .operate(getRemoteMultiplierValue('eth_commission_multiplier'), 'mul')
         .max(minGas);
     } catch {
       //

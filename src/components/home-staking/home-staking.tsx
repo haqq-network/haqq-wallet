@@ -4,7 +4,7 @@ import {ScrollView, View} from 'react-native';
 
 import {Button, ButtonVariant, Loading, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
+import {getRemoteBalanceValue} from '@app/helpers/get-remote-value';
 import {I18N} from '@app/i18n';
 import {Balance} from '@app/services/balance';
 

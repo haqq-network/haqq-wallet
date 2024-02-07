@@ -1,6 +1,6 @@
 import {useMemo} from 'react';
 
-import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
+import {getRemoteBalanceValue} from '@app/helpers/get-remote-value';
 import {useRemoteConfigVar} from '@app/hooks/use-remote-config';
 import {Balance} from '@app/services/balance';
 

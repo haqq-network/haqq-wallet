@@ -1,7 +1,7 @@
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {getProviderInstanceForWallet} from '@app/helpers';
-import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
+import {getRemoteBalanceValue} from '@app/helpers/get-remote-value';
 import {
   StakingMetadata,
   StakingMetadataType,
