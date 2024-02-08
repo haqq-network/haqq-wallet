@@ -282,7 +282,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
     checkParamsExists(req);
     try {
       const rpcProvider = await getLocalRpcProvider(helper);
-      return rpcProvider.estimateGas(req.params[0]);
+      return (await rpcProvider.estimateGas(req.params[0]))?._hex;
     } catch (err) {
       if (err instanceof Error) {
         rejectJRpcReq(err.message);
