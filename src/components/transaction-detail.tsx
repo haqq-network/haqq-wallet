@@ -130,9 +130,9 @@ export const TransactionDetail = ({
                     </View>
                     <Spacer width={4} />
                     <Text t11>
-                      {token.name}
+                      {token.symbol}
                       {STRINGS.NBSP}
-                      <Text color={Color.textBase2}>({token.symbol})</Text>
+                      <Text color={Color.textBase2}>({token.name})</Text>
                     </Text>
                   </>
                 }

@@ -85,7 +85,7 @@ class TokensStore implements MobXStore<IToken> {
         ],
         storage: storage,
       }).then(() => {
-        Logger.log('TokensStore data', JSON.stringify(this.data, null, 2));
+        // Logger.log('TokensStore data', JSON.stringify(this.data, null, 2));
       });
     }
   }
@@ -172,7 +172,7 @@ class TokensStore implements MobXStore<IToken> {
     const updates = await Indexer.instance.updates(accounts, this.lastUpdate);
     let result = await this.parseIndexerTokens(updates);
     result = await getHardcodedTokens(result);
-    Logger.log('TokensStore fetchTokens', JSON.stringify(result, null, 2));
+    // Logger.log('TokensStore fetchTokens', JSON.stringify(result, null, 2));
     // this.lastUpdate = new Date();
     this.recalculateCommulativeSum(result);
 
@@ -315,7 +315,6 @@ async function getHardcodedTokens(tokensDataToMerge: IndexerTokensData = {}) {
   if (DEBUG_VARS.enableHardcodeERC20TokensContract) {
     const contracts =
       DEBUG_VARS.hardcodeERC20TokensContract[app.provider.cosmosChainId];
-    Logger.log('contracts', contracts);
 
     if (contracts.length) {
       const tokens = await Promise.all(
@@ -361,7 +360,7 @@ async function getHardcodedTokens(tokensDataToMerge: IndexerTokensData = {}) {
                         }
 
                         return {
-                          id: contract,
+                          id: AddressUtils.toHaqq(contract),
                           contract_created_at: '',
                           contract_updated_at: '',
                           value: balance,
@@ -382,7 +381,13 @@ async function getHardcodedTokens(tokensDataToMerge: IndexerTokensData = {}) {
                       .filter(Boolean),
                   )
                 ).filter(Boolean),
-              ].filter(Boolean),
+              ].filter(
+                // remove duplicates
+                (token, index, self) =>
+                  self.findIndex(t =>
+                    AddressUtils.equals(t?.id!, token?.id!),
+                  ) === index,
+              ),
             ].filter(Boolean);
           })
           .filter(Boolean),
