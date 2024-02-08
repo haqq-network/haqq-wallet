@@ -1,4 +1,7 @@
-import {getDefaultBalanceValue} from '@app/helpers/get-remote-balance-value';
+import {
+  getDefaultBalanceValue,
+  getDefaultMultiplierValue,
+} from '@app/helpers/get-remote-balance-value';
 
 import {RemoteConfigTypes} from './remote-config-types';
 
@@ -107,14 +110,14 @@ export const REMOTE_CONFIG_DEFAULT_VALUES: Required<RemoteConfigTypes> = {
   version: 1,
   cosmos_min_amount: getDefaultBalanceValue('cosmos_min_amount').toHex(),
   cosmos_min_gas_limit: getDefaultBalanceValue('cosmos_min_gas_limit').toHex(),
-  cosmos_commission_multiplier: getDefaultBalanceValue(
+  cosmos_commission_multiplier: getDefaultMultiplierValue(
     'cosmos_commission_multiplier',
-  ).toHex(),
+  ),
   eth_min_amount: getDefaultBalanceValue('eth_min_amount').toHex(),
   eth_min_gas_limit: getDefaultBalanceValue('eth_min_gas_limit').toHex(),
-  eth_commission_multiplier: getDefaultBalanceValue(
+  eth_commission_multiplier: getDefaultMultiplierValue(
     'eth_commission_multiplier',
-  ).toHex(),
+  ),
   transfer_min_amount: getDefaultBalanceValue('transfer_min_amount').toHex(),
   staking_reward_min_amount: getDefaultBalanceValue(
     'staking_reward_min_amount',

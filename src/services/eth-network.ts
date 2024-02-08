@@ -4,13 +4,17 @@ import {ProviderInterface} from '@haqq/provider-base';
 import {BigNumber, utils} from 'ethers';
 
 import {app} from '@app/contexts';
-import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
+import {
+  getRemoteBalanceValue,
+  getRemoteMultiplierValue,
+} from '@app/helpers/get-remote-balance-value';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {getDefaultChainId} from '@app/network';
 import {Balance} from '@app/services/balance';
 import {storage} from '@app/services/mmkv';
+import {decimalToHex} from '@app/utils';
 
 export const ABI_ERC20_TRANSFER_ACTION = {
   name: 'transfer',
@@ -165,9 +169,22 @@ export class EthNetwork {
         maxPriorityFeePerGas: gasPrice.toHex(),
       } as Deferrable<TransactionRequest>);
 
-      estimateGas = new Balance(estGas.toNumber())
-        .operate(getRemoteBalanceValue('eth_commission_multiplier'), 'mul')
-        .max(minGas);
+      // TODO Investigate and fix new Balance issue when number used instead of hex
+      estimateGas = new Balance(
+        decimalToHex(
+          String(
+            // Convert to int because decimalToHex incorrectly parse decimals work only with integers
+            parseInt(
+              String(
+                // Multiply by eth_commission_multiplier
+                estGas.toNumber() *
+                  getRemoteMultiplierValue('eth_commission_multiplier'),
+              ),
+              10,
+            ),
+          ),
+        ),
+      ).max(minGas);
     } catch {
       //
     }
