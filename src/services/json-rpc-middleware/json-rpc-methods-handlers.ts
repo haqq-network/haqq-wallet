@@ -1,9 +1,15 @@
 import EventEmitter from 'events';
 
 import {JsonRpcRequest} from 'json-rpc-engine';
+import {Alert} from 'react-native';
 
 import {app} from '@app/contexts';
-import {AwaitForWalletError, awaitForWallet} from '@app/helpers';
+import {
+  AwaitForWalletError,
+  awaitForWallet,
+  getProviderInstanceForWallet,
+} from '@app/helpers';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
 import {
   AwaitProviderError,
@@ -22,6 +28,7 @@ import {Wallet} from '@app/models/wallet';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {getDefaultNetwork} from '@app/network';
 import {getAppVersion} from '@app/services/version';
+import {WalletType} from '@app/types';
 import {requestQRScannerPermission} from '@app/utils';
 
 export type JsonRpcHelper = EventEmitter & {
@@ -39,7 +46,7 @@ type JsonRpcMethodHandler =
   | undefined
   | ((params: JsonRpcMethodHandlerParams) => any);
 
-const rejectJsonRpcRequest = (message: string) => {
+const rejectJRpcReq = (message: string) => {
   throw {
     message,
     code: -32000,
@@ -48,7 +55,7 @@ const rejectJsonRpcRequest = (message: string) => {
 
 const checkParamsExists = (req: TJsonRpcRequest) => {
   if (!req.params?.[0]) {
-    rejectJsonRpcRequest(getText(I18N.jsonRpcErrorInvalidParams));
+    rejectJRpcReq(getText(I18N.jsonRpcErrorInvalidParams));
   }
 };
 
@@ -74,7 +81,7 @@ const signTransaction = async ({helper, req}: JsonRpcMethodHandlerParams) => {
     return result;
   } catch (err) {
     // @ts-ignore
-    rejectJsonRpcRequest(err.message);
+    rejectJRpcReq(err.message);
   }
 };
 
@@ -131,7 +138,11 @@ const getLocalRpcProvider = async (helper: JsonRpcHelper) => {
   return provider ? await getRpcProvider(provider) : getDefaultNetwork();
 };
 
+const wrapHexToUint8ArrayString = (hex: string) =>
+  `__uint8array__${hex.replace(/^0x/, '')}`;
+
 export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
+  /* METAMASK ETHEREUM PROVIDER METHODS */
   metamask_getProviderState: ({helper, req}) => {
     const provider = getNetworkProvier(helper);
     return {
@@ -191,7 +202,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
         return [];
       }
       if (err instanceof Error) {
-        rejectJsonRpcRequest(err.message);
+        rejectJRpcReq(err.message);
       }
     }
   },
@@ -227,7 +238,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
       helper.changeChainId(selectedProvider?.ethChainIdHex!);
     } catch (err) {
       if (err instanceof AwaitProviderError) {
-        return rejectJsonRpcRequest(err.message!);
+        return rejectJRpcReq(err.message!);
       }
     }
     return null;
@@ -250,7 +261,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
       return await rpcProvider.call(req.params[0], req.params[1]);
     } catch (err) {
       if (err instanceof Error) {
-        rejectJsonRpcRequest(err.message);
+        rejectJRpcReq(err.message);
       }
     }
   },
@@ -261,7 +272,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
       return rpcProvider.getTransactionCount(req.params[0], req.params[1]);
     } catch (err) {
       if (err instanceof Error) {
-        rejectJsonRpcRequest(err.message);
+        rejectJRpcReq(err.message);
       }
     }
   },
@@ -274,7 +285,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
       return rpcProvider.estimateGas(req.params[0]);
     } catch (err) {
       if (err instanceof Error) {
-        rejectJsonRpcRequest(err.message);
+        rejectJRpcReq(err.message);
       }
     }
   },
@@ -289,7 +300,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
       return await rpcProvider.getCode(req.params[0], req.params[1]);
     } catch (err) {
       if (err instanceof Error) {
-        rejectJsonRpcRequest(err.message);
+        rejectJRpcReq(err.message);
       }
     }
   },
@@ -299,7 +310,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
       return rpcProvider.blockNumber;
     } catch (err) {
       if (err instanceof Error) {
-        rejectJsonRpcRequest(err.message);
+        rejectJRpcReq(err.message);
       }
     }
   },
@@ -310,7 +321,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
       return await rpcProvider.getTransaction(req.params?.[0]);
     } catch (err) {
       if (err instanceof Error) {
-        rejectJsonRpcRequest(err.message);
+        rejectJRpcReq(err.message);
       }
     }
   },
@@ -321,7 +332,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
       return await rpcProvider.getTransactionReceipt(req.params?.[0]);
     } catch (err) {
       if (err instanceof Error) {
-        rejectJsonRpcRequest(err.message);
+        rejectJRpcReq(err.message);
       }
     }
   },
@@ -342,22 +353,20 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
     const pattern = req.params?.[0] as string;
 
     if (!!pattern && typeof pattern !== 'string') {
-      rejectJsonRpcRequest(getText(I18N.jsonRpcErrorInvalidParams));
+      rejectJRpcReq(getText(I18N.jsonRpcErrorInvalidParams));
     }
 
     try {
       const isAccesGranted = await requestQRScannerPermission(helper.origin);
 
       if (!isAccesGranted) {
-        rejectJsonRpcRequest(
-          AwaitForScanQrError.getCameraPermissionError().message!,
-        );
+        rejectJRpcReq(AwaitForScanQrError.getCameraPermissionError().message!);
       }
 
       return await awaitForScanQr({pattern, variant: QRScannerTypeEnum.qr});
     } catch (err) {
       if (err instanceof Error) {
-        rejectJsonRpcRequest(err.message);
+        rejectJRpcReq(err.message);
       }
     }
   },
@@ -365,4 +374,73 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
     const rpcProvider = await getLocalRpcProvider(helper);
     return rpcProvider.getGasPrice();
   },
+  /* HAQQ KEPLR COSMOS PROVIDER METHODS */
+  enable: async ({req, helper}) => {
+    const session = Web3BrowserSession.getByOrigin(helper.origin);
+
+    if (!session || session?.disconected === true) {
+      // TODO: add cosmos chain recognition and filter connection
+      // TODO: create design for approve connection
+      const chains = req.params as string[];
+      const approved = await new Promise<boolean>(resolve => {
+        Alert.alert(
+          'Approve connection',
+          `allow connect this website to chains: "${chains.join(', ')}"`,
+          [
+            {
+              text: getText(I18N.cancel),
+              onPress: () => resolve(false),
+              style: 'cancel',
+            },
+            {
+              text: getText(I18N.accept),
+              onPress: () => resolve(true),
+            },
+          ],
+          {cancelable: false},
+        );
+      });
+
+      if (!approved) {
+        rejectJRpcReq('user rejected');
+      }
+    }
+
+    return true;
+  },
+  disable: async ({helper}) => {
+    helper.disconnectAccount();
+  },
+  getKey: async ({req, helper}) => {
+    const [address] = await JsonRpcMethodsHandlers.eth_requestAccounts?.({
+      helper,
+      req,
+    });
+
+    const wallet = Wallet.getById(address);
+    if (wallet) {
+      const walletProvider = await getProviderInstanceForWallet(wallet);
+      const {publicKey} = await walletProvider.getAccountInfo(wallet.path!);
+
+      return {
+        name: wallet.name,
+        algo: 'ethsecp256k1',
+        pubKey: wrapHexToUint8ArrayString(publicKey),
+        address: wrapHexToUint8ArrayString(address),
+        bech32Address: AddressUtils.toHaqq(address),
+        isNanoLedger: wallet.type === WalletType.ledgerBt,
+        isKeystone: wallet.type === WalletType.keystone,
+      };
+    }
+
+    return undefined;
+  },
+  signAmino: () => rejectJRpcReq('signAmino not implemented'),
+  signDirect: () => rejectJRpcReq('signDirect not implemented'),
+  sendTx: () => rejectJRpcReq('sendTx not implemented'),
+  signArbitrary: () => rejectJRpcReq('signArbitrary not implemented'),
+  verifyArbitrary: () => rejectJRpcReq('verifyArbitrary not implemented'),
+  signEthereum: () => rejectJRpcReq('signEthereum not implemented'),
+  experimentalSuggestChain: () =>
+    rejectJRpcReq('experimentalSuggestChain not implemented'),
 };

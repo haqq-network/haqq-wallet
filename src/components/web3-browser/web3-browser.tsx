@@ -34,7 +34,11 @@ import {
 } from './web3-browser-header';
 import {Web3BrowserHelper} from './web3-browser-helper';
 
-import {clearUrl, getOriginFromUrl} from '../../helpers/web3-browser-utils';
+import {
+  clearUrl,
+  detectDeeplink,
+  getOriginFromUrl,
+} from '../../helpers/web3-browser-utils';
 import {CustomHeaderWebView} from '../custom-header-webview';
 
 export interface Web3BrowserProps {
@@ -182,14 +186,20 @@ export const Web3Browser = ({
     () =>
       `
      function init() {
-        if(window?.ethereum?.isHaqqWallet){
+        if(window?.ethereum?.isHaqqWallet || window?.keplr?.isHaqqWallet){
           return;
         }
         ${inpageBridgeWeb3}
         console.log('ethereum loaded:', !!window.ethereum);
+        console.log('keplr loaded:', !!window.keplr);
+
         if(window.ethereum) {
           window.ethereum.isMetaMask = false;
           window.ethereum.isHaqqWallet = true;
+        }
+        if(window.keplr){
+          window.keplr.isHaqqWallet = true;
+          window.__HAQQ_KEPLR_DEV__ = ${__DEV__};
         }
       };
       ${
@@ -235,6 +245,11 @@ export const Web3Browser = ({
 
   const onLoad = useCallback(
     (event: WebViewNavigationEvent) => {
+      if (detectDeeplink(event.nativeEvent.url)) {
+        webviewRef.current?.stopLoading();
+        return;
+      }
+
       helper.onLoad(event);
       setWebviewNavigationData(event.nativeEvent);
 
@@ -249,6 +264,9 @@ export const Web3Browser = ({
   );
 
   const onNavigationStateChange = useCallback((navState: WebViewNavigation) => {
+    if (detectDeeplink(navState.url)) {
+      return;
+    }
     setWebviewNavigationData(navState);
   }, []);
 

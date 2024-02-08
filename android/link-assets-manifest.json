@@ -210,6 +210,54 @@
       "sha1": "5d69e03083f5c7f66b5c59833ca1862dfad538d2"
     },
     {
+      "path": "assets/images/cloud-problems.png",
+      "sha1": "c88e40be011c3ff112009e0d7c6270f5449a5b82"
+    },
+    {
+      "path": "assets/images/cloud-problems@2x.png",
+      "sha1": "357aaf68e2f9540d15a15d7101dea62b02668ad8"
+    },
+    {
+      "path": "assets/images/cloud-problems@3x.png",
+      "sha1": "13d7d34c51fbeb34327785c8311476d47bd2ef4b"
+    },
+    {
+      "path": "assets/images/cloud-share-not-found.png",
+      "sha1": "13c8f270900afac6ff543f718f31ae04f4876f98"
+    },
+    {
+      "path": "assets/images/cloud-share-not-found@2x.png",
+      "sha1": "5f57b750132dbbd92aa5e31e4e95ab83101936d6"
+    },
+    {
+      "path": "assets/images/cloud-share-not-found@3x.png",
+      "sha1": "036a5e47008fd8bece232cdbfe377614bde20ca8"
+    },
+    {
+      "path": "assets/images/device-keystone.png",
+      "sha1": "0b5a39c3fef7f6fabb9fe88922dfb4f731c6a891"
+    },
+    {
+      "path": "assets/images/device-keystone@2x.png",
+      "sha1": "9522a9931e4353159ab3941d92e65d96f15589b7"
+    },
+    {
+      "path": "assets/images/device-keystone@3x.png",
+      "sha1": "c162bde3e7a17d6e020ed9d443e46e0d6fb7973f"
+    },
+    {
+      "path": "assets/images/device-ledger.png",
+      "sha1": "cb9461a2e29a8c82938c007aceb095ecc71d0b08"
+    },
+    {
+      "path": "assets/images/device-ledger@2x.png",
+      "sha1": "40c94c6db32b704cbcd0eb49a4dc2109fdbe1a89"
+    },
+    {
+      "path": "assets/images/device-ledger@3x.png",
+      "sha1": "04343d9cf39cf00c953522941462ed2449d09389"
+    },
+    {
       "path": "assets/images/domain-blocked-dark.png",
       "sha1": "0b187e6ed8d7d9daabf9e019aff40f3787ca4dff"
     },
@@ -246,6 +294,18 @@
       "sha1": "1cea164bed829ca09847a9e723273c0fb09549a2"
     },
     {
+      "path": "assets/images/empty-icon.png",
+      "sha1": "5d82bc2d4fbc0aff84fcc992797ebbd9ce4239e2"
+    },
+    {
+      "path": "assets/images/empty-icon@2x.png",
+      "sha1": "b6a9e1486b20b5127c4b72cef2b7c798ffc330bc"
+    },
+    {
+      "path": "assets/images/empty-icon@3x.png",
+      "sha1": "a6eba28f65cd3860943181d37407e7891c4da7cf"
+    },
+    {
       "path": "assets/images/exclamation-mark-error.png",
       "sha1": "ef1fd4f4a06e21c979a24a898ea3a24d6fbff540"
     },
@@ -280,6 +340,42 @@
     {
       "path": "assets/images/islm_icon@3x.png",
       "sha1": "72ca926eadbb16697b80c117d9c789fd5fb25cd7"
+    },
+    {
+      "path": "assets/images/jailbreak.png",
+      "sha1": "2b96a5a327b46f2164f2d3daf190611cd3b50f67"
+    },
+    {
+      "path": "assets/images/jailbreak@2x.png",
+      "sha1": "2ab63ef5a0111693ec6a5478a9ae98b8cd69f7cc"
+    },
+    {
+      "path": "assets/images/jailbreak@3x.png",
+      "sha1": "ced0d3b660f44fcef8fecf5058c818a76081d3b7"
+    },
+    {
+      "path": "assets/images/keystone-connect-frame-dark.png",
+      "sha1": "f7eb5479094a377c8502f414e54f61cb6cd78832"
+    },
+    {
+      "path": "assets/images/keystone-connect-frame-dark@2x.png",
+      "sha1": "96fde90a414b846a7f70f19340fe36db624ae90f"
+    },
+    {
+      "path": "assets/images/keystone-connect-frame-dark@3x.png",
+      "sha1": "5b1deb18f5780ab0c0e282bd69a9085b15048f6f"
+    },
+    {
+      "path": "assets/images/keystone-connect-frame-light.png",
+      "sha1": "ba7f1fe927f5c6618870468021f4b8ef92c3cfbd"
+    },
+    {
+      "path": "assets/images/keystone-connect-frame-light@2x.png",
+      "sha1": "f33710c39641128d7159a377cbb5c5192eb8e911"
+    },
+    {
+      "path": "assets/images/keystone-connect-frame-light@3x.png",
+      "sha1": "609c4742aa682c57ac073515599dd723b3451365"
     },
     {
       "path": "assets/images/ledger-locked.png",
@@ -342,6 +438,30 @@
       "sha1": "cb50cda1701776daeba2a7572c42dc45101b8113"
     },
     {
+      "path": "assets/images/none-nft.png",
+      "sha1": "c0c622dd1834988767c5243312068321e2bccc80"
+    },
+    {
+      "path": "assets/images/none-nft@2x.png",
+      "sha1": "0065dd377b4d8bec5e53a0e11dd7bf38af147b55"
+    },
+    {
+      "path": "assets/images/none-nft@3x.png",
+      "sha1": "62096eb35bcc702fb3fe8802be7a12b86a460c93"
+    },
+    {
+      "path": "assets/images/not-enough-gas.png",
+      "sha1": "6b6e35edc47a09702f7f60ac86ffe92aea603a72"
+    },
+    {
+      "path": "assets/images/not-enough-gas@2x.png",
+      "sha1": "f1eed7d13bf83ed6df23b05340e119c884bc9444"
+    },
+    {
+      "path": "assets/images/not-enough-gas@3x.png",
+      "sha1": "88b0fcd7ecdd6c158e7a0d277d13738bf55d95dc"
+    },
+    {
       "path": "assets/images/notification_bell.png",
       "sha1": "3169190b3ebfeb64eed89284c9ecdc8b677e0c15"
     },
@@ -402,8 +522,24 @@
       "sha1": "3f0081fabc3e48d7d9bdba3d2b8d3bb7058c57be"
     },
     {
-      "path": "assets/custom/InpageBridgeWeb3.js",
-      "sha1": "6bfaf0dc9b19e9db0ea9e9f5bf5d5f394e6922d7"
+      "path": "assets/images/sss-limit-reached.png",
+      "sha1": "bc38df932f6fa22379dffbc0aa79b50522238ad8"
+    },
+    {
+      "path": "assets/images/sss-limit-reached@2x.png",
+      "sha1": "53cf84f862f750db271fa12d52e286510aca5eca"
+    },
+    {
+      "path": "assets/images/sss-limit-reached@3x.png",
+      "sha1": "8fee6fd63cb37d3d9fb697e80a8346452614fbad"
+    },
+    {
+      "path": "assets/custom/keplr-mobile-provider.js",
+      "sha1": "d9c82c64652109bbfc16a4a033104505d83f548d"
+    },
+    {
+      "path": "assets/custom/metamask-mobile-provider.js",
+      "sha1": "f103d92e201405c8e9e58390207488295187ae2a"
     }
   ]
 }
