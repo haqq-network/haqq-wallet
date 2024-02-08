@@ -3,6 +3,7 @@ export enum WebViewEventsEnum {
   ACCOUNTS_CHANGED = 'ACCOUNTS_CHANGED',
   CLEAR_HISTORY = 'CLEAR_HISTORY',
   CLEAR_CACHE = 'CLEAR_CACHE',
+  KEPLR_KEYSTORECHANGE = 'keplr_keystorechange',
 }
 
 export interface WindowInfoEvent {
