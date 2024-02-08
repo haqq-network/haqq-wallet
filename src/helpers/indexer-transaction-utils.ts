@@ -11,7 +11,12 @@ import {
   IndexerTxMsgType,
   IndexerTxParsedTokenInfo,
 } from '@app/types';
-import {CURRENCY_NAME, WEI_PRECISION} from '@app/variables/common';
+import {
+  CURRENCY_NAME,
+  IBC_DENOM,
+  WEI_PRECISION,
+  aISLM_DENOM,
+} from '@app/variables/common';
 
 import {AddressUtils} from './address-utils';
 import {shortAddress} from './short-address';
@@ -289,15 +294,21 @@ function parseMsgSend(
 
   const tokens = getTokensInfo(tx);
   const amount = tx?.msg?.amount?.map(a => {
-    const contract = Contracts.getById(a.contract_address!);
+    const contract = Contracts.getById(
+      a.contract_address! || tx.msg.contract_address,
+    );
     if (contract && contract.is_erc20) {
       return new Balance(
         a.amount,
         contract.decimals || 0,
-        contract.symbol || 'ibc',
+        contract.symbol || IBC_DENOM,
       );
     }
-    return new Balance(a.amount, 0, 'ibc');
+
+    const decimals = a.denom === aISLM_DENOM ? WEI_PRECISION : 0;
+    const symbol =
+      a.denom === aISLM_DENOM ? CURRENCY_NAME : a.denom || IBC_DENOM;
+    return new Balance(a.amount, decimals, symbol);
   });
 
   return {
@@ -415,6 +426,11 @@ function getTokensInfo(tx: IndexerTransaction): IndexerTxParsedTokenInfo[] {
     if (result.length) {
       return result;
     }
+  }
+
+  // @ts-ignore
+  if (tx.msg?.amount?.denom === aISLM_DENOM) {
+    return [ISLM_TOKEN];
   }
 
   let contractInfo: IContract | undefined;
