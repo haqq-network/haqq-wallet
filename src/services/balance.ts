@@ -32,8 +32,8 @@ export class Balance implements IBalance, ISerializable {
     symbol = CURRENCY_NAME,
   ) {
     this.originalValue = balance;
-    this.precission = precission ?? WEI_PRECISION;
-    this.symbol = symbol || CURRENCY_NAME;
+    this.precission = precission;
+    this.symbol = symbol;
 
     if (BigNumber.isBigNumber(balance)) {
       const {_hex} = BigNumber.from(balance);
