@@ -117,6 +117,11 @@ jobs:
           bundle install
       - name: Install packages
         run: yarn install 
+      - name: Install Zulu17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
       - uses: actions/cache@v3
