@@ -8,6 +8,7 @@ export interface StoryItemProps {
   mediaType?: 'image' | 'video';
   renderContent?: () => ReactNode;
   renderFooter?: () => ReactNode;
+  duration?: number;
 }
 
 export interface InstagramStoryProps {

@@ -40,6 +40,7 @@ const StoryVideo: FC<StoryVideoProps> = memo(
           onLoad={({duration}: {duration: number}) => onLoad(duration * 1000)}
           onLayout={e => onLayout(e.nativeEvent.layout.height)}
           resizeMode="cover"
+          automaticallyWaitsToMinimizeStalling
         />
       );
     } catch (error) {

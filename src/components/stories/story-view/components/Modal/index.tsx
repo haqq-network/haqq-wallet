@@ -366,10 +366,15 @@ const StoryModal = forwardRef<StoryModalPublicMethods, StoryModalProps>(
                   seenStories={seenStories}
                   onClose={onClose}
                   onLoad={value => {
+                    const current = story.stories.find(
+                      item => item.id === currentStory.value,
+                    );
                     onLoad?.();
                     startAnimation(
                       undefined,
-                      value !== undefined ? videoDuration ?? value : duration,
+                      value !== undefined
+                        ? videoDuration ?? value
+                        : current?.duration ?? duration,
                     );
                   }}
                   avatarSize={storyAvatarSize}
