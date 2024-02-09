@@ -1,5 +1,7 @@
 import EventEmitter from 'events';
 
+import {createEIP712, generateTypes, parseChainId} from '@evmos/eip712';
+import {AccountResponse} from '@evmos/provider';
 import {JsonRpcRequest} from 'json-rpc-engine';
 import {Alert} from 'react-native';
 
@@ -28,8 +30,10 @@ import {Wallet} from '@app/models/wallet';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {getDefaultNetwork} from '@app/network';
 import {getAppVersion} from '@app/services/version';
-import {WalletType} from '@app/types';
+import {HaqqCosmosAddress, WalletType} from '@app/types';
 import {requestQRScannerPermission} from '@app/utils';
+
+import {Cosmos} from '../cosmos';
 
 export type JsonRpcHelper = EventEmitter & {
   origin: string;
@@ -435,7 +439,94 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
 
     return undefined;
   },
-  signAmino: () => rejectJRpcReq('signAmino not implemented'),
+  signAmino: async ({req, helper}) => {
+    const [cosmosChainId, address, msg, _] = req.params as [
+      string,
+      HaqqCosmosAddress,
+      object,
+      {preferNoSetFee: boolean},
+    ];
+
+    // convert amino to eip712 typed data
+    const types = generateTypes(msg);
+    const eip712 = createEIP712(
+      types,
+      parseChainId(cosmosChainId),
+      msg,
+    ) as ReturnType<typeof createEIP712> & {types: any; message: any};
+
+    // delete duplicates values of eip712.message from eip712.types
+    Object.keys(eip712.message).forEach(key => delete eip712.types[key]);
+
+    // TODO: calculate fee if `preferNoSetFee` is false
+    // add feePayer if not defined
+    if (!eip712.message.fee.feePayer) {
+      eip712.message.fee.feePayer = address;
+    }
+
+    // create MsgValue type
+    eip712.types.MsgValue = Object.entries(eip712.message.msgs[0].value).reduce(
+      // @ts-ignore
+      (acc, [key, value]) => {
+        return [
+          ...acc,
+          {
+            name: key,
+            type:
+              key === 'amount'
+                ? Array.isArray(value)
+                  ? 'TypeAmount[]'
+                  : 'TypeAmount'
+                : typeof value,
+          },
+        ];
+      },
+      [],
+    );
+
+    // if MsgValue has 'amount' field, add TypeAmount type.
+    // @ts-ignore
+    if (eip712.types.MsgValue.find(({name}) => name === 'amount')) {
+      eip712.types.TypeAmount = [
+        {
+          name: 'denom',
+          type: 'string',
+        },
+        {
+          name: 'amount',
+          type: 'string',
+        },
+      ];
+    }
+
+    // sign typed data
+    const hexSignature = await awaitForJsonRpcSign({
+      chainId: parseChainId(cosmosChainId),
+      request: {
+        method: 'eth_signTypedData_v4',
+        params: [AddressUtils.toEth(address), JSON.stringify(eip712)],
+      },
+      selectedAccount: AddressUtils.toEth(address),
+      metadata: {
+        url: helper.origin,
+      },
+    });
+
+    const provider = Provider.getByCosmosChainId(cosmosChainId)[0];
+    const cosmos = new Cosmos(provider!);
+    const accountInfo = await cosmos.getAccountInfo(address);
+    const account: AccountResponse['account'] =
+      //@ts-ignore
+      accountInfo?.account?.base_vesting_account || accountInfo?.account;
+
+    return {
+      signature: {
+        pub_key: account.base_account.pub_key,
+        signature: Buffer.from(hexSignature.slice(2), 'hex').toString('base64'),
+      },
+      signed: msg,
+    };
+  },
   signDirect: () => rejectJRpcReq('signDirect not implemented'),
   sendTx: () => rejectJRpcReq('sendTx not implemented'),
   signArbitrary: () => rejectJRpcReq('signArbitrary not implemented'),
