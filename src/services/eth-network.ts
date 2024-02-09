@@ -163,10 +163,8 @@ export class EthNetwork {
       const estGas = await rpcProvider.estimateGas({
         from,
         to,
-        value: value.toHex(),
         data,
-        maxFeePerGas: gasPrice.toHex(),
-        maxPriorityFeePerGas: gasPrice.toHex(),
+        value: value.toHex(),
       } as Deferrable<TransactionRequest>);
 
       // TODO Investigate and fix new Balance issue when number used instead of hex
@@ -185,8 +183,11 @@ export class EthNetwork {
           ),
         ),
       ).max(minGas);
-    } catch {
-      //
+    } catch (err) {
+      Logger.error(
+        'EthNetwork.estimateTransaction error',
+        JSON.stringify(err, null, 2),
+      );
     }
 
     return {
@@ -239,7 +240,7 @@ export class EthNetwork {
     const iface = new utils.Interface(abi);
     const data = iface.encodeFunctionData(ABI_ERC20_TRANSFER_ACTION.name, [
       to,
-      amount.toHex(),
+      amount.toEther(),
     ]);
 
     const unsignedTx = await EthNetwork.populateTransaction(
