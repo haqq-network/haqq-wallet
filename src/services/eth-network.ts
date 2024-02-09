@@ -4,13 +4,17 @@ import {ProviderInterface} from '@haqq/provider-base';
 import {BigNumber, utils} from 'ethers';
 
 import {app} from '@app/contexts';
-import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
+import {
+  getRemoteBalanceValue,
+  getRemoteMultiplierValue,
+} from '@app/helpers/get-remote-balance-value';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {getDefaultChainId} from '@app/network';
 import {Balance} from '@app/services/balance';
 import {storage} from '@app/services/mmkv';
+import {decimalToHex} from '@app/utils';
 
 export const ABI_ERC20_TRANSFER_ACTION = {
   name: 'transfer',
@@ -159,15 +163,31 @@ export class EthNetwork {
       const estGas = await rpcProvider.estimateGas({
         from,
         to,
-        value: value.toHex(),
         data,
-        maxFeePerGas: gasPrice.toHex(),
-        maxPriorityFeePerGas: gasPrice.toHex(),
+        value: value.toHex(),
       } as Deferrable<TransactionRequest>);
 
-      estimateGas = new Balance(estGas._hex).max(minGas);
-    } catch {
-      //
+      // TODO Investigate and fix new Balance issue when number used instead of hex
+      estimateGas = new Balance(
+        decimalToHex(
+          String(
+            // Convert to int because decimalToHex incorrectly parse decimals work only with integers
+            parseInt(
+              String(
+                // Multiply by eth_commission_multiplier
+                estGas.toNumber() *
+                  getRemoteMultiplierValue('eth_commission_multiplier'),
+              ),
+              10,
+            ),
+          ),
+        ),
+      ).max(minGas);
+    } catch (err) {
+      Logger.error(
+        'EthNetwork.estimateTransaction error',
+        JSON.stringify(err, null, 2),
+      );
     }
 
     return {
@@ -220,7 +240,7 @@ export class EthNetwork {
     const iface = new utils.Interface(abi);
     const data = iface.encodeFunctionData(ABI_ERC20_TRANSFER_ACTION.name, [
       to,
-      amount.toHex(),
+      amount.toEther(),
     ]);
 
     const unsignedTx = await EthNetwork.populateTransaction(

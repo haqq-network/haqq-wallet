@@ -14,13 +14,14 @@ import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useTypedNavigation} from '@app/hooks';
 import {useNftCollections} from '@app/hooks/use-nft-collections';
 import {I18N, getText} from '@app/i18n';
+import {HomeStackRoutes} from '@app/route-types';
 import {INftWidget, NftItem, NftWidgetSize} from '@app/types';
 
 export const NftWidgetWrapper = observer(({size}: INftWidget) => {
   const navigation = useTypedNavigation();
   const nftCollections = useNftCollections();
   const onPress = useCallback(() => {
-    navigation.navigate('totalValueInfo', {
+    navigation.navigate(HomeStackRoutes.TotalValueInfo, {
       tab: TotalValueTabNames.nft,
     });
   }, []);

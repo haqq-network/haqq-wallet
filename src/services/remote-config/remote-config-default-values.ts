@@ -1,4 +1,7 @@
-import {getDefaultBalanceValue} from '@app/helpers/get-remote-balance-value';
+import {
+  getDefaultBalanceValue,
+  getDefaultMultiplierValue,
+} from '@app/helpers/get-remote-balance-value';
 
 import {RemoteConfigTypes} from './remote-config-types';
 
@@ -54,6 +57,7 @@ export const REMOTE_CONFIG_DEFAULT_VALUES: Required<RemoteConfigTypes> = {
     '*.haqq.network',
     '*.muslimgocci.app',
     '*.sushi.com',
+    '*.restake.app',
     'https://satellite.money',
     'https://taskon.xyz',
     'https://app.haqq.network',
@@ -107,8 +111,14 @@ export const REMOTE_CONFIG_DEFAULT_VALUES: Required<RemoteConfigTypes> = {
   version: 1,
   cosmos_min_amount: getDefaultBalanceValue('cosmos_min_amount').toHex(),
   cosmos_min_gas_limit: getDefaultBalanceValue('cosmos_min_gas_limit').toHex(),
+  cosmos_commission_multiplier: getDefaultMultiplierValue(
+    'cosmos_commission_multiplier',
+  ),
   eth_min_amount: getDefaultBalanceValue('eth_min_amount').toHex(),
   eth_min_gas_limit: getDefaultBalanceValue('eth_min_gas_limit').toHex(),
+  eth_commission_multiplier: getDefaultMultiplierValue(
+    'eth_commission_multiplier',
+  ),
   transfer_min_amount: getDefaultBalanceValue('transfer_min_amount').toHex(),
   staking_reward_min_amount: getDefaultBalanceValue(
     'staking_reward_min_amount',
@@ -131,4 +141,12 @@ export const REMOTE_CONFIG_DEFAULT_VALUES: Required<RemoteConfigTypes> = {
       icon: 'https://raw.githubusercontent.com/sushiswap/sushiswap/master/apps/evm/public/icon-512x512.svg',
     },
   ],
+  cosmos_explorer: {
+    'haqq_11235-1': 'https://ping.pub/haqq/tx/{{tx_hash}}',
+    'haqq_54211-3': 'https://testnet.ping.pub/haqq/tx/{{tx_hash}}',
+  },
+  eth_explorer: {
+    'haqq_11235-1': 'https://explorer.haqq.network/tx/{{tx_hash}}',
+    'haqq_54211-3': 'https://explorer.testedge2.haqq.network/tx/{{tx_hash}}',
+  },
 };

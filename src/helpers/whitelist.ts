@@ -97,7 +97,7 @@ export class Whitelist {
     provider = app.provider,
   ): Promise<boolean> {
     const result = await Whitelist.verifyAddress(address, provider);
-    return !!result?.isInWhiteList;
+    return !!result?.is_in_white_list;
   }
 
   static async verifyAddress(

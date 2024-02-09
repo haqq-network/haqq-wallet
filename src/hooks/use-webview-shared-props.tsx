@@ -98,7 +98,7 @@ export const useWebViewSharedProps = (
       incognito: DEBUG_VARS.enableWeb3BrowserIncognito,
       pullToRefreshEnabled: true,
       javaScriptCanOpenWindowsAutomatically: true,
-      setSupportMultipleWindows: true,
+      setSupportMultipleWindows: false,
       sharedCookiesEnabled: true,
       useSharedProcessPool: true,
       useWebView2: true,
@@ -117,7 +117,7 @@ export const useWebViewSharedProps = (
       mediaPlaybackRequiresUserAction: true,
       geolocationEnabled: true,
       dataDetectorTypes: 'all',
-      originWhitelist: ['*'],
+      originWhitelist: ['http://', 'https://'],
       userAgent: userAgent,
       decelerationRate: 'normal',
       testID: 'haqq-wallet-webview',
@@ -130,9 +130,9 @@ export const useWebViewSharedProps = (
       javascriptEnabled: true,
       injectedJavaScriptBeforeContentLoaded: `
         ${propsToMerge.injectedJavaScriptBeforeContentLoaded || ''}
-        // injected properties
-        window.platformOS = '${Platform.OS}'
-        window.__HAQQWALLET__ = {}
+        /* injected properties */
+        window.platformOS = '${Platform.OS}';
+        window.__HAQQWALLET__ = {};
 
         ${WebViewGeolocation.script}
         ${WebviewAjustMiddleware.script}

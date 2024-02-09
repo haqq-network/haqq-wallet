@@ -14,6 +14,7 @@ import {
   TransactionStackRoutes,
 } from '@app/route-types';
 import {Balance} from '@app/services/balance';
+import {TransactionResponse} from '@app/types';
 
 // TODO:
 export const TransactionNftConfirmationScreen = observer(() => {
@@ -56,12 +57,6 @@ export const TransactionNftConfirmationScreen = observer(() => {
   }, []);
 
   const onConfirmTransaction = useCallback(async () => {
-    const hash =
-      '0x9915496c761b2ac2dd906d739be0d2228b801caa30243b28ba41875405e6ff80';
-    navigation.navigate(TransactionStackRoutes.TransactionNftFinish, {
-      hash,
-      nft: route.params.nft,
-    });
     // if (wallet) {
     //   if (wallet.type === WalletType.ledgerBt) {
     //     onDoneLedgerBt();
@@ -105,6 +100,11 @@ export const TransactionNftConfirmationScreen = observer(() => {
     //     setDisabled(false);
     //   }
     // }
+    navigation.navigate(TransactionStackRoutes.TransactionNftFinish, {
+      nft: route.params.nft,
+      // TODO: FIXME:
+      transaction: {} as TransactionResponse,
+    });
   }, [navigation, route.params.nft]);
 
   useEffect(() => {

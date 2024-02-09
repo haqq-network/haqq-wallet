@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
 import {useActionSheet} from '@expo/react-native-action-sheet';
+import {computed} from 'mobx';
 import {observer} from 'mobx-react';
 import {StyleProp, View, ViewStyle} from 'react-native';
 
@@ -12,6 +13,7 @@ import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {HaqqEthereumAddress, IToken} from '@app/types';
+import {CURRENCY_NAME} from '@app/variables/common';
 
 export interface TokenViewerProps {
   data: Record<HaqqEthereumAddress, IToken[]>;
@@ -25,7 +27,8 @@ const SortingNamesMap = {
 };
 
 export const TokenViewer = observer(
-  ({data, style, wallet}: TokenViewerProps) => {
+  ({data: _data, style, wallet}: TokenViewerProps) => {
+    const data = useMemo(() => computed(() => _data), [_data]).get();
     const wallets = useMemo(
       () =>
         Object.keys(data)
@@ -139,7 +142,12 @@ export const TokenViewer = observer(
               <WalletCard
                 key={address}
                 wallet={_wallet}
-                tokens={tokens.filter(item => !!item.is_in_white_list)}
+                tokens={tokens.filter(
+                  item =>
+                    item.is_in_white_list &&
+                    // FIXME: only erc20 tokens or native currency (ISLM)
+                    (item.is_erc20 || item.symbol === CURRENCY_NAME),
+                )}
                 tokensOnly={!!wallet}
               />
             );

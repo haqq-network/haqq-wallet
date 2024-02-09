@@ -20,14 +20,13 @@ import {
 import {createTheme, openURL} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
-import {Transaction} from '@app/models/transaction';
 import {Balance} from '@app/services/balance';
 import {EthNetwork} from '@app/services/eth-network';
 import {IToken, TransactionResponse} from '@app/types';
 import {CURRENCY_NAME} from '@app/variables/common';
 
 type TransactionFinishProps = {
-  transaction: Transaction | TransactionResponse | null;
+  transaction: TransactionResponse | null;
   onSubmit: () => void;
   onPressContact: () => void;
   contact: Contact | null;
@@ -53,10 +52,15 @@ export const TransactionFinish = ({
   };
 
   const fee = useMemo(() => {
-    if ((transaction as Transaction).input) {
-      return new Balance((transaction as Transaction)?.fee ?? 0);
+    try {
+      const tx = transaction as TransactionResponse;
+      return new Balance(tx.gasLimit).operate(
+        new Balance(tx.maxFeePerGas || tx.maxPriorityFeePerGas || 0),
+        'mul',
+      );
+    } catch (e) {
+      return Balance.Empty;
     }
-    return Balance.Empty;
   }, [transaction]);
 
   const transactionAmount = useMemo(() => {

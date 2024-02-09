@@ -103,6 +103,12 @@ export enum IconsName {
   privacy = 'privacy',
   import = 'import_icon',
   keystone = 'keystone',
+  question = 'question',
+  raffle_reward = 'raffle_reward',
+  staking_reword = 'staking_reword',
+  staking_redelegation = 'staking_redelegation',
+  staking_delegation = 'staking_delegation',
+  staking_undelegation = 'staking_undelegation',
 }
 
 export type IconSize =

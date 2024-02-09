@@ -25,7 +25,8 @@
     "clean-android-app": "sh ./scripts/clean-android-app.sh",
     "devmode:ios": "xcrun simctl openurl booted haqq:enableDeveloperMode:true",
     "devmode:android": "adb shell am start -a android.intent.action.VIEW -d haqq:enableDeveloperMode:true",
-    "clean": "sh ./scripts/clean.sh"
+    "clean": "sh ./scripts/clean.sh",
+    "update-inpage-bridge-web3": "sh ./scripts/update-inpage-bridge-web3.sh"
   },
   "dependencies": {
     "@birdwingo/react-native-spinning-numbers": "1.0.5",

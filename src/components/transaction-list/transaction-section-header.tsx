@@ -5,27 +5,33 @@ import {StyleSheet, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
-import {TransactionListDate} from '@app/types';
+
+import {SectionHeaderData} from './types';
 
 export type TransactionDate = {
-  item: TransactionListDate;
+  data: SectionHeaderData;
 };
 
-export const TransactionDate = ({item}: TransactionDate) => {
-  const date = useMemo(() => {
-    if (isToday(item.date)) {
+export const TransactionSectionHeader = ({data}: TransactionDate) => {
+  const date = useMemo(
+    () => new Date(data?.section?.timestamp),
+    [data.section.timestamp],
+  );
+
+  const dateStr = useMemo(() => {
+    if (isToday(date)) {
       return 'Today';
     }
 
-    const formatType = isSameYear(new Date(), item.date) ? 'd MMM' : 'd MMM Y';
+    const formatType = isSameYear(new Date(), date) ? 'd MMM' : 'd MMM Y';
 
-    return format(item.date, formatType);
-  }, [item.date]);
+    return format(date, formatType);
+  }, [date]);
 
   return (
     <View style={styles.container}>
       <Text t13 color={Color.textBase2}>
-        {date}
+        {dateStr}
       </Text>
     </View>
   );

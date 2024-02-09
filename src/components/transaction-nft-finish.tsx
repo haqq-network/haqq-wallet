@@ -17,13 +17,12 @@ import {
 import {createTheme, openURL} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
-import {Transaction} from '@app/models/transaction';
 import {Balance} from '@app/services/balance';
 import {EthNetwork} from '@app/services/eth-network';
-import {NftItem} from '@app/types';
+import {NftItem, TransactionResponse} from '@app/types';
 
 type TransactionFinishProps = {
-  transaction: Transaction | null;
+  transaction: TransactionResponse | null;
   item: NftItem;
   onSubmit: () => void;
   onPressContact: () => void;
@@ -45,7 +44,7 @@ export const TransactionNftFinish = ({
   };
 
   const fee = useMemo(() => {
-    return new Balance(transaction?.fee ?? 0);
+    return new Balance(transaction?.maxFeePerGas ?? 0);
   }, [transaction]);
 
   return (
