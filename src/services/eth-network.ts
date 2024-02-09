@@ -4,17 +4,20 @@ import {ProviderInterface} from '@haqq/provider-base';
 import {BigNumber, utils} from 'ethers';
 
 import {app} from '@app/contexts';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {
   getRemoteBalanceValue,
   getRemoteMultiplierValue,
 } from '@app/helpers/get-remote-balance-value';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
+import {Contracts} from '@app/models/contracts';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {getDefaultChainId} from '@app/network';
 import {Balance} from '@app/services/balance';
 import {storage} from '@app/services/mmkv';
 import {decimalToHex} from '@app/utils';
+import {WEI_PRECISION} from '@app/variables/common';
 
 export const ABI_ERC20_TRANSFER_ACTION = {
   name: 'transfer',
@@ -238,9 +241,17 @@ export class EthNetwork {
   ) {
     const abi = [ABI_ERC20_TRANSFER_ACTION];
     const iface = new utils.Interface(abi);
+
+    const contractInfo = Contracts.getById(
+      AddressUtils.toHaqq(contractAddress),
+    );
+
+    const amountNumber =
+      amount.toEther() * Math.pow(10, contractInfo.decimals || WEI_PRECISION);
+
     const data = iface.encodeFunctionData(ABI_ERC20_TRANSFER_ACTION.name, [
       to,
-      amount.toEther(),
+      amountNumber,
     ]);
 
     const unsignedTx = await EthNetwork.populateTransaction(
