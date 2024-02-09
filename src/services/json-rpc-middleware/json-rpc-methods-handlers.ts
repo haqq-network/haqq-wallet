@@ -500,7 +500,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
     }
 
     // sign typed data
-    const hexSignature = await awaitForJsonRpcSign({
+    let hexSignature = await awaitForJsonRpcSign({
       chainId: parseChainId(cosmosChainId),
       request: {
         method: 'eth_signTypedData_v4',
@@ -519,10 +519,19 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
       //@ts-ignore
       accountInfo?.account?.base_vesting_account || accountInfo?.account;
 
+    if (hexSignature.startsWith('0x')) {
+      hexSignature = hexSignature.slice(2);
+    }
+
+    // remove "V" value from signature
+    if (hexSignature.length === 130) {
+      hexSignature = hexSignature.slice(0, 128);
+    }
+
     return {
       signature: {
         pub_key: account.base_account.pub_key,
-        signature: Buffer.from(hexSignature.slice(2), 'hex').toString('base64'),
+        signature: Buffer.from(hexSignature, 'hex').toString('base64'),
       },
       signed: msg,
     };
