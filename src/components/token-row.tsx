@@ -8,6 +8,7 @@ import {Color} from '@app/colors';
 import {Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {IToken} from '@app/types';
+import {LONG_NUM_PRECISION} from '@app/variables/common';
 
 export interface TokenRowProps {
   item: IToken;
@@ -17,7 +18,7 @@ export interface TokenRowProps {
 export const TokenRow = observer(({item: _item, onPress}: TokenRowProps) => {
   const item = useMemo(() => toJS(_item), [_item]);
   const priceInUSD = useMemo(() => {
-    return item.value.toFiat('USD').toBalanceString();
+    return item.value.toFiat('USD').toBalanceString(LONG_NUM_PRECISION);
   }, [item]);
   return (
     <TouchableOpacity
@@ -33,14 +34,14 @@ export const TokenRow = observer(({item: _item, onPress}: TokenRowProps) => {
       <View style={styles.textContainer}>
         <View style={styles.row}>
           <Text t11 numberOfLines={1} style={styles.tokenName}>
-            {item.name}
+            {item.symbol}
           </Text>
           <Spacer />
-          <Text t11>{item.value.toEtherString()}</Text>
+          <Text t11>{item.value.toBalanceString(LONG_NUM_PRECISION)}</Text>
         </View>
         <View style={styles.row}>
           <Text t14 color={Color.textBase2}>
-            {item.symbol}
+            {item.name}
           </Text>
           <Spacer />
           <Text t14 color={Color.textBase2}>

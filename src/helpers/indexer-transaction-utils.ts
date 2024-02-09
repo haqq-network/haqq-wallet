@@ -84,11 +84,11 @@ function parseMsgBeginRedelegate(
   tx: IndexerTransactionWithType<IndexerTxMsgType.msgBeginRedelegate>,
   _: string[],
 ): ParsedTransactionData {
-  const isIncoming = true;
+  const isIncoming = false;
   const amount = [new Balance(tx.msg.amount.amount)];
 
   return {
-    from: tx.msg.validator_src_address,
+    from: AddressUtils.toEth(tx.msg.delegator_address),
     to: tx.msg.validator_dst_address,
     amount,
     isContractInteraction: false,

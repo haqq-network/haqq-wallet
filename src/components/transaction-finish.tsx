@@ -52,12 +52,15 @@ export const TransactionFinish = ({
   };
 
   const fee = useMemo(() => {
-    if ((transaction as TransactionResponse).data) {
-      return new Balance(
-        (transaction as TransactionResponse)?.maxFeePerGas ?? 0,
+    try {
+      const tx = transaction as TransactionResponse;
+      return new Balance(tx.gasLimit).operate(
+        new Balance(tx.maxFeePerGas || tx.maxPriorityFeePerGas || 0),
+        'mul',
       );
+    } catch (e) {
+      return Balance.Empty;
     }
-    return Balance.Empty;
   }, [transaction]);
 
   const transactionAmount = useMemo(() => {

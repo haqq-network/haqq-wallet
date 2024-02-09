@@ -11,6 +11,7 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
@@ -112,20 +113,12 @@ export const TransactionConfirmation = ({
         <View style={styles.info}>
           <DataView label="Cryptocurrency">
             <Text t11 color={Color.textBase1}>
-              <Text i18n={I18N.transactionConfirmationIslamicCoin} />{' '}
-              <Text
-                color={Color.textBase2}
-                i18n={I18N.transactionConfirmationISLM}
-              />
+              {token.name}
             </Text>
           </DataView>
           <DataView label="Network">
             <Text t11 color={Color.textBase1}>
-              <Text i18n={I18N.transactionConfirmationHAQQ} />{' '}
-              <Text
-                color={Color.textBase2}
-                i18n={I18N.transactionConfirmationHQ}
-              />
+              <Text>{app.provider.name}</Text>
             </Text>
           </DataView>
           <DataView label="Amount">
