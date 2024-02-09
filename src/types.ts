@@ -1574,6 +1574,7 @@ export type IndexerTxMsgSend = {
   to_address: HaqqCosmosAddress;
   amount: IndexerCoin[];
   type: IndexerTxMsgType.msgSend;
+  contract_address: string;
 };
 
 export type IndexerTxMsgDelegateTx = {
