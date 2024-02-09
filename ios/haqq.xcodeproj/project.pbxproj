@@ -13,7 +13,6 @@
 		049F6D95AD144BCBB6E77E96 /* banner_notifications.png in Resources */ = {isa = PBXBuildFile; fileRef = C582F54C0C5540078838006B /* banner_notifications.png */; };
 		0D9253CE63D64ECDBC6F7711 /* domain-blocked-light@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5EB18A9D85084F9E8FE9C432 /* domain-blocked-light@2x.png */; };
 		0DC659CFE3ED45AFAAD09C69 /* card-maks@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61C5C66B0F44412FBB1D39B5 /* card-maks@2x.png */; };
-		0EACB076263531B3F8BA156E /* libPods-haqq.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CCC8F2C6C501439878A771C /* libPods-haqq.a */; };
 		1176B7B4E3964C078F779B59 /* exclamation-mark-error@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1631E69B702043598086BDCC /* exclamation-mark-error@3x.png */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		1520005721704D569E5C85EB /* backup-notification-light.png in Resources */ = {isa = PBXBuildFile; fileRef = 6FED6A9545D34AC982895A9E /* backup-notification-light.png */; };
@@ -120,6 +119,7 @@
 		BC311FA5A11F46569DE2508C /* backup-notification-light@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7D7F48BB6BB64A7887914F2C /* backup-notification-light@2x.png */; };
 		BCE8D61DA932477781C76A80 /* ElMessiri-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 22739AB14E6E413385C0ECE0 /* ElMessiri-SemiBold.ttf */; };
 		BD945F44FBB346A3888088FE /* browser-error-dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 68925590CE0E4E9582CD6E9D /* browser-error-dark.png */; };
+		BDF7EAAC38715888122ADCEE /* libPods-haqq.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B1DFAF03367C77C411A6325 /* libPods-haqq.a */; };
 		BEFF23B4E9FE4A40BD7E5624 /* SF-ProText-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F54850256194B99B575DBD3 /* SF-ProText-Regular.ttf */; };
 		BFD84A14503B4832A8CAF889 /* islm_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E0A5095C2B34207A41D2E1A /* islm_icon@3x.png */; };
 		C47B976A9C714DE8B2272371 /* logo-empty.png in Resources */ = {isa = PBXBuildFile; fileRef = 45BB855BE6C744119DB53DC5 /* logo-empty.png */; };
@@ -130,6 +130,7 @@
 		C8699751E49F4C379DDFACB2 /* islm_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 2004C55FA76B4DF68EEFF2C3 /* islm_icon.png */; };
 		C9CE27811447434A801CBB77 /* ledger-locked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4044E8C1BB4C39AA9FF56A /* ledger-locked@2x.png */; };
 		CA97D1A6FCC0490AA0E660A8 /* qr-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8D52915C768145E4B5007D44 /* qr-logo@2x.png */; };
+		CCE74304A95D3744DEB0803A /* libPods-haqq-haqqTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7064F852C87C11A84661A18D /* libPods-haqq-haqqTests.a */; };
 		CD8E3B4D34F041E8824FC13F /* InpageBridgeWeb3.js in Resources */ = {isa = PBXBuildFile; fileRef = EB5972ABD10C480FB1400A0F /* InpageBridgeWeb3.js */; };
 		CEBA4969BB874AF6B924DA37 /* domain-blocked-dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F5FCD1005E8E4C08BB4782E3 /* domain-blocked-dark@3x.png */; };
 		CF0D49E2FABD41D9A34AB04C /* BuildFile in Resources */ = {isa = PBXBuildFile; };
@@ -151,7 +152,6 @@
 		F91F29D716C8453CB76B957E /* bluetooth-failed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 07520727D95E48D48D613B2D /* bluetooth-failed@2x.png */; };
 		FA463726064E4AA790C94EBC /* earn-staking@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 273D756B386048F4B413B149 /* earn-staking@3x.png */; };
 		FB792B1CD4364722B66FA860 /* notification_bell@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EA8F3914E00C46A4AE2D250E /* notification_bell@2x.png */; };
-		FF9963AAD2509F7C7E4D5C95 /* libPods-haqq-haqqTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0A36F5B0FC3F25E6DB63E1E /* libPods-haqq-haqqTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -173,7 +173,6 @@
 		07520727D95E48D48D613B2D /* bluetooth-failed@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "bluetooth-failed@2x.png"; path = "../assets/images/bluetooth-failed@2x.png"; sourceTree = "<group>"; };
 		0A939DA77EF542A2827CE749 /* mnemonic-notify.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "mnemonic-notify.png"; path = "../assets/images/mnemonic-notify.png"; sourceTree = "<group>"; };
 		0C454ACD843E4BE8B4BAF182 /* qr-logo@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "qr-logo@3x.png"; path = "../assets/images/qr-logo@3x.png"; sourceTree = "<group>"; };
-		0CCC8F2C6C501439878A771C /* libPods-haqq.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-haqq.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07F961A680F5B00A75B9A /* haqq.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = haqq.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = haqq/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = haqq/Info.plist; sourceTree = "<group>"; };
@@ -264,6 +263,7 @@
 		6B48442C371E4A5CB312ED9E /* ElMessiri-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ElMessiri-Medium.ttf"; path = "../assets/fonts/ElMessiri-Medium.ttf"; sourceTree = "<group>"; };
 		6C9117DD24DA4B89A6D64989 /* qr-logo.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "qr-logo.png"; path = "../assets/images/qr-logo.png"; sourceTree = "<group>"; };
 		6FED6A9545D34AC982895A9E /* backup-notification-light.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "backup-notification-light.png"; path = "../assets/images/backup-notification-light.png"; sourceTree = "<group>"; };
+		7064F852C87C11A84661A18D /* libPods-haqq-haqqTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-haqq-haqqTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		79B587E186A44824BE2849C6 /* card-maks@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-maks@3x.png"; path = "../assets/images/card-maks@3x.png"; sourceTree = "<group>"; };
 		7A298563846B40C29A7545AA /* islm-logo-circles.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "islm-logo-circles.png"; path = "../assets/images/islm-logo-circles.png"; sourceTree = "<group>"; };
 		7B77EA7E07E045F1BDA90E9A /* earn-staking.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "earn-staking.png"; path = "../assets/images/earn-staking.png"; sourceTree = "<group>"; };
@@ -275,6 +275,7 @@
 		83D5CEDEB17F4E46815F2308 /* SF-ProText-Semibold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-ProText-Semibold.ttf"; path = "../assets/fonts/SF-ProText-Semibold.ttf"; sourceTree = "<group>"; };
 		8437A65A0FC64FFB8169F071 /* exclamation-mark-error.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "exclamation-mark-error.png"; path = "../assets/images/exclamation-mark-error.png"; sourceTree = "<group>"; };
 		8AAA2041937743A185E4F569 /* backup-sss-suggestion-light.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "backup-sss-suggestion-light.png"; path = "../assets/images/backup-sss-suggestion-light.png"; sourceTree = "<group>"; };
+		8B1DFAF03367C77C411A6325 /* libPods-haqq.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-haqq.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D52915C768145E4B5007D44 /* qr-logo@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "qr-logo@2x.png"; path = "../assets/images/qr-logo@2x.png"; sourceTree = "<group>"; };
 		8D9E0B76C3074F8DB59AA2BB /* logo-empty@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "logo-empty@2x.png"; path = "../assets/images/logo-empty@2x.png"; sourceTree = "<group>"; };
 		8DB1E295007D40FE9D29C59B /* backup-sss-suggestion-dark@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "backup-sss-suggestion-dark@3x.png"; path = "../assets/images/backup-sss-suggestion-dark@3x.png"; sourceTree = "<group>"; };
@@ -290,7 +291,6 @@
 		ACC48A1BA8A04336BFF04056 /* domain-blocked-light@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "domain-blocked-light@3x.png"; path = "../assets/images/domain-blocked-light@3x.png"; sourceTree = "<group>"; };
 		AD1883D787E8449B9B3E2EAA /* SF-Pro-Display-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Pro-Display-Bold.ttf"; path = "../assets/fonts/SF-Pro-Display-Bold.ttf"; sourceTree = "<group>"; };
 		AEF6DD2BC5D244B9B1DFBA09 /* earn-staking@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "earn-staking@2x.png"; path = "../assets/images/earn-staking@2x.png"; sourceTree = "<group>"; };
-		B0A36F5B0FC3F25E6DB63E1E /* libPods-haqq-haqqTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-haqq-haqqTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1283B44F2284BA484D1D979 /* browser-error-dark@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "browser-error-dark@2x.png"; path = "../assets/images/browser-error-dark@2x.png"; sourceTree = "<group>"; };
 		B1852229389E40D5A81E386E /* card-maks.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-maks.png"; path = "../assets/images/card-maks.png"; sourceTree = "<group>"; };
 		B3A3E60E58AF4264ADBF0DB9 /* mnemonic-notify@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "mnemonic-notify@3x.png"; path = "../assets/images/mnemonic-notify@3x.png"; sourceTree = "<group>"; };
@@ -328,7 +328,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FF9963AAD2509F7C7E4D5C95 /* libPods-haqq-haqqTests.a in Frameworks */,
+				CCE74304A95D3744DEB0803A /* libPods-haqq-haqqTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -340,7 +340,7 @@
 				213327BF2A08EEAD00E28E6F /* StoreKit.framework in Frameworks */,
 				213327BD2A08EE9E00E28E6F /* AdServices.framework in Frameworks */,
 				213327BB2A08EE9800E28E6F /* AdSupport.framework in Frameworks */,
-				0EACB076263531B3F8BA156E /* libPods-haqq.a in Frameworks */,
+				BDF7EAAC38715888122ADCEE /* libPods-haqq.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -491,8 +491,8 @@
 				213327BC2A08EE9E00E28E6F /* AdServices.framework */,
 				213327BA2A08EE9800E28E6F /* AdSupport.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				0CCC8F2C6C501439878A771C /* libPods-haqq.a */,
-				B0A36F5B0FC3F25E6DB63E1E /* libPods-haqq-haqqTests.a */,
+				8B1DFAF03367C77C411A6325 /* libPods-haqq.a */,
+				7064F852C87C11A84661A18D /* libPods-haqq-haqqTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1286,6 +1286,14 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon-Samples/ReactCommon_Samples.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon/ReactCommon.framework/Headers/react/nativemodule/core",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon-Samples/ReactCommon_Samples.framework/Headers/platform/ios",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-NativeModulesApple/React_NativeModulesApple.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers/react/renderer/graphics/platform/ios",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
@@ -1362,6 +1370,14 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon-Samples/ReactCommon_Samples.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon/ReactCommon.framework/Headers/react/nativemodule/core",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon-Samples/ReactCommon_Samples.framework/Headers/platform/ios",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-NativeModulesApple/React_NativeModulesApple.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers/react/renderer/graphics/platform/ios",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,

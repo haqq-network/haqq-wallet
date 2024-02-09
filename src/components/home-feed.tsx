@@ -1,13 +1,14 @@
-import React, {memo, useCallback, useState} from 'react';
+import React, {memo, useCallback, useEffect, useState} from 'react';
 
 import {STORIES_ENABLED} from '@env';
-import {useFocusEffect} from '@react-navigation/native';
 import {RefreshControl, ScrollView} from 'react-native';
 
 import {StoriesWrapper} from '@app/components/stories';
 import {createTheme} from '@app/helpers';
 import {loadAllTransactions} from '@app/helpers/load-transactions';
+import {useTypedNavigation} from '@app/hooks';
 import {Stories} from '@app/models/stories';
+import {HomeFeedStackParamList, HomeFeedStackRoutes} from '@app/route-types';
 import {BannersWrapper} from '@app/screens/banners';
 import {WalletsWrapper} from '@app/screens/HomeStack/HomeFeedStack/wallets';
 import {LockedTokensWrapper} from '@app/screens/locked-tokens';
@@ -16,6 +17,7 @@ import {WidgetRoot} from '@app/widgets';
 export const HomeFeed = memo(() => {
   const [lastUpdateTimestamp, setLastUpdate] = useState(Date.now());
   const [refreshing, setRefreshing] = useState(false);
+  const navigation = useTypedNavigation<HomeFeedStackParamList>();
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -24,11 +26,9 @@ export const HomeFeed = memo(() => {
     setRefreshing(false);
   }, []);
 
-  useFocusEffect(
-    useCallback(() => {
-      Stories.fetch();
-    }, []),
-  );
+  useEffect(() => {
+    Stories.fetch();
+  }, []);
 
   return (
     <ScrollView
@@ -37,7 +37,13 @@ export const HomeFeed = memo(() => {
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }>
-      {!!STORIES_ENABLED && <StoriesWrapper />}
+      {!!STORIES_ENABLED && (
+        <StoriesWrapper
+          onStoryPress={id =>
+            navigation.navigate(HomeFeedStackRoutes.HomeStories, {id})
+          }
+        />
+      )}
       <LockedTokensWrapper />
       <WalletsWrapper />
       <BannersWrapper />

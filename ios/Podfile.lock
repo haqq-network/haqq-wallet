@@ -580,6 +580,11 @@ PODS:
     - React-Core
   - react-native-splash-screen (3.3.0):
     - React-Core
+  - react-native-video (5.2.1):
+    - React-Core
+    - react-native-video/Video (= 5.2.1)
+  - react-native-video/Video (5.2.1):
+    - React-Core
   - react-native-webview (13.6.0):
     - React-Core
   - React-NativeModulesApple (0.72.4):
@@ -734,7 +739,7 @@ PODS:
     - React-Core
   - RNOS (1.2.7):
     - React
-  - RNPermissions (3.10.1):
+  - RNPermissions (3.10.0):
     - React-Core
   - RNReanimated (3.3.0):
     - DoubleConversion
@@ -860,6 +865,7 @@ DEPENDENCIES:
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
+  - react-native-video (from `../node_modules/react-native-video`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -1041,6 +1047,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-splash-screen:
     :path: "../node_modules/react-native-splash-screen"
+  react-native-video:
+    :path: "../node_modules/react-native-video"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   React-NativeModulesApple:
@@ -1203,6 +1211,7 @@ SPEC CHECKSUMS:
   react-native-randombytes: 421f1c7d48c0af8dbcd471b0324393ebf8fe7846
   react-native-safe-area-context: 9697629f7b2cda43cf52169bb7e0767d330648c2
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
+  react-native-video: c26780b224543c62d5e1b2a7244a5cd1b50e8253
   react-native-webview: 669ae162965f629a8d6a4bdd3b99a304d36ef1f2
   React-NativeModulesApple: edb5ace14f73f4969df6e7b1f3e41bef0012740f
   React-perflogger: 496a1a3dc6737f964107cb3ddae7f9e265ddda58
@@ -1237,7 +1246,7 @@ SPEC CHECKSUMS:
   RNGoogleSignin: ccaa4a81582cf713eea562c5dd9dc1961a715fd0
   RNKeychain: ff836453cba46938e0e9e4c22e43d43fa2c90333
   RNOS: bba50dcae32026943877b163e93d4e1e0eca48eb
-  RNPermissions: a1138972aa0b659398f997e69282ca1a9c056558
+  RNPermissions: 81b4a5e0f9fdb3b145e9622c199df8f629c51f51
   RNReanimated: 9f7068e43b9358a46a688d94a5a3adb258139457
   RNScreens: 50ffe2fa2342eabb2d0afbe19f7c1af286bc7fb3
   RNSentry: 4e4fc87b53002c015f644cb7207d4b598bc3703f
@@ -1254,4 +1263,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 47e53b72709a00bb405eabdba170afb65dd87bdb
 
-COCOAPODS: 1.15.0
+COCOAPODS: 1.15.2
