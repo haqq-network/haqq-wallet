@@ -523,6 +523,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
       hexSignature = hexSignature.slice(2);
     }
 
+    // remove "V" value from signature
     if (hexSignature.length === 130) {
       hexSignature = hexSignature.slice(0, 128);
     }
