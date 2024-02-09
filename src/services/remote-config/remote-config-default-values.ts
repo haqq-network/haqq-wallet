@@ -57,6 +57,7 @@ export const REMOTE_CONFIG_DEFAULT_VALUES: Required<RemoteConfigTypes> = {
     '*.haqq.network',
     '*.muslimgocci.app',
     '*.sushi.com',
+    '*.restake.app',
     'https://satellite.money',
     'https://taskon.xyz',
     'https://app.haqq.network',
