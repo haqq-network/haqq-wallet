@@ -8,7 +8,6 @@ import {sleep} from './helpers/sleep';
 import {PIN, PROVIDER, SOURCE_WALLET} from './test-variables';
 
 describe('Routine', () => {
-  const isAndroid = device.getPlatform() === 'android';
   let mnemonic = '';
   let milkWallet: Wallet;
   beforeAll(async () => {
@@ -55,14 +54,11 @@ describe('Routine', () => {
     await element(by.id(`wallets_${wallet.address.toLowerCase()}_send`)).tap();
 
     const input_address = element(by.id('transaction_address_input'));
-    await input_address.tap();
-    await input_address.replaceText(milkWallet.address);
+    await input_address.typeText(milkWallet.address);
 
     await element(by.id('transaction_address_next')).tap();
-    if (isAndroid) {
-      // Previous step was for keyboard hide
-      await element(by.id('transaction_address_next')).tap();
-    }
+    // Previous step was for keyboard hide
+    await element(by.id('transaction_address_next')).tap();
 
     await element(by.text('ISLM')).tap();
 
