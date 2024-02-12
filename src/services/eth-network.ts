@@ -12,6 +12,7 @@ import {
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {Contracts} from '@app/models/contracts';
 import {Provider} from '@app/models/provider';
+import {Token} from '@app/models/tokens';
 import {Wallet} from '@app/models/wallet';
 import {getDefaultChainId} from '@app/network';
 import {Balance} from '@app/services/balance';
@@ -242,16 +243,23 @@ export class EthNetwork {
     const abi = [ABI_ERC20_TRANSFER_ACTION];
     const iface = new utils.Interface(abi);
 
-    const contractInfo = Contracts.getById(
-      AddressUtils.toHaqq(contractAddress),
-    );
+    const haqqContractAddress = AddressUtils.toHaqq(contractAddress);
+    const contractInfo =
+      Contracts.getById(haqqContractAddress) ||
+      Token.getById(haqqContractAddress);
 
-    const amountNumber =
-      amount.toEther() * Math.pow(10, contractInfo.decimals || WEI_PRECISION);
+    const decimals = contractInfo.decimals ?? WEI_PRECISION;
+
+    const [amountClear] = new Balance(amount.toWei(), 0)
+      .operate(Math.pow(10, amount.getPrecission()), 'div')
+      .operate(Math.pow(10, decimals), 'mul')
+      .toWei()
+      .toString()
+      .split('.');
 
     const data = iface.encodeFunctionData(ABI_ERC20_TRANSFER_ACTION.name, [
       to,
-      amountNumber,
+      amountClear,
     ]);
 
     const unsignedTx = await EthNetwork.populateTransaction(
