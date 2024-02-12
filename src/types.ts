@@ -1238,7 +1238,7 @@ export interface IBannerWidget extends IWidgetBase, Banner {
 }
 
 export interface ITokensWidget extends IWidgetBase {
-  component: 'TokenList';
+  component: 'Tokens';
 }
 
 export enum NftWidgetSize {
