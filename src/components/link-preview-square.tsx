@@ -32,7 +32,7 @@ export const LinkPreviewSquare = ({
         directIconUrl={link.icon}
         title={link.title}
       />
-      <Text t15 numberOfLines={1} style={styles.title}>
+      <Text t15 numberOfLines={1} style={styles.title} center>
         {getHost(link.title || link.url)}
       </Text>
     </WrapperComponent>
@@ -44,6 +44,7 @@ const styles = createTheme({
     width: 60,
   },
   title: {
+    marginTop: 4,
     width: 60,
     maxWidth: 60,
   },
