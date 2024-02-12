@@ -1,5 +1,6 @@
 import React, {useMemo} from 'react';
 
+import {toJS} from 'mobx';
 import {Image, TouchableOpacity, View} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -24,7 +25,7 @@ export const TokenRow = ({item, onPress}: TokenRowProps) => {
       style={styles.container}>
       <Image
         style={styles.icon}
-        source={item.image || require('@assets/images/empty-icon.png')}
+        source={toJS(item.image) || require('@assets/images/empty-icon.png')}
         resizeMode="cover"
       />
       <Spacer width={12} />

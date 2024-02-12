@@ -34,7 +34,7 @@ export const TransactionsWidget = ({
         {lastTransactions.map(item => {
           return (
             <TransactionRow
-              key={item.hash}
+              key={item.id}
               item={item}
               addresses={addressList}
               onPress={onRowPress}

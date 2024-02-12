@@ -1,5 +1,5 @@
 import {hashMessage} from '@walletconnect/utils';
-import {makeAutoObservable, runInAction, toJS} from 'mobx';
+import {makeAutoObservable, runInAction} from 'mobx';
 import {isHydrated} from 'mobx-persist-store';
 
 import {IconProps} from '@app/components/ui';
@@ -110,7 +110,7 @@ class TransactionStore {
   }
 
   getAll() {
-    return toJS(this._transactions);
+    return this._transactions;
   }
 
   remove(id: string) {

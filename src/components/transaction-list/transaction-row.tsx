@@ -97,9 +97,9 @@ export const TransactionRow = memo(
           style={[styles.container, withPadding && styles.containerPadding]}>
           <View style={styles.iconWrapper}>
             <Icon name={item.parsed.icon} color={Color.graphicBase1} />
-            {token && (
+            {!!token && (
               <View style={styles.tokenIconWrapper}>
-                <Image source={token.icon} style={styles.tokenIcon} />
+                <Image source={toJS(token.icon)} style={styles.tokenIcon} />
               </View>
             )}
           </View>
