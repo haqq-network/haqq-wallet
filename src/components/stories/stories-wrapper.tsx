@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useMemo} from 'react';
 
 import {observer} from 'mobx-react';
 import {ScrollView} from 'react-native';
@@ -14,7 +14,7 @@ type Props = {
 };
 
 export const StoriesWrapper = observer(({onStoryPress}: Props) => {
-  const content = useCallback(() => {
+  const content = useMemo(() => {
     if (Stories.isLoading) {
       return [...new Array(7)].map((_, index) => {
         return <StoriesLoaderItem key={index} />;
@@ -38,7 +38,7 @@ export const StoriesWrapper = observer(({onStoryPress}: Props) => {
       contentContainerStyle={styles.container}
       showsHorizontalScrollIndicator={false}
       scrollEnabled={!Stories.isLoading}>
-      {content()}
+      {content}
     </ScrollView>
   );
 });
