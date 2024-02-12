@@ -20,7 +20,7 @@ export const HomeStoriesScreen = observer(() => {
         id: item.id,
         sourceUrl: item.attachment.source,
         mediaType: item.attachment.type,
-        duration: item.attachment.duration,
+        duration: item.attachment.duration * 1000,
       };
     });
 

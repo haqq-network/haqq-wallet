@@ -30,6 +30,13 @@ export const HomeFeed = memo(() => {
     Stories.fetch();
   }, []);
 
+  const onStoryPress = useCallback(
+    (id: string) => {
+      navigation.navigate(HomeFeedStackRoutes.HomeStories, {id});
+    },
+    [navigation],
+  );
+
   return (
     <ScrollView
       contentContainerStyle={styles.contentContainerStyle}
@@ -37,13 +44,7 @@ export const HomeFeed = memo(() => {
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }>
-      {!!STORIES_ENABLED && (
-        <StoriesWrapper
-          onStoryPress={id =>
-            navigation.navigate(HomeFeedStackRoutes.HomeStories, {id})
-          }
-        />
-      )}
+      {!!STORIES_ENABLED && <StoriesWrapper onStoryPress={onStoryPress} />}
       <LockedTokensWrapper />
       <WalletsWrapper />
       <BannersWrapper />
