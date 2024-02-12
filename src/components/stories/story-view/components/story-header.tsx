@@ -6,8 +6,8 @@ import {Color} from '@app/colors';
 import {Icon} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 
-import {WIDTH} from '../../core/constants';
-import {StoryHeaderProps} from '../../core/dto/componentsDTO';
+import {WIDTH} from '../core/constants';
+import {StoryHeaderProps} from '../core/dto/componentsDTO';
 
 const StoryHeader: FC<StoryHeaderProps> = memo(({onClose}) => {
   const width = WIDTH - styles.container.left * 2;

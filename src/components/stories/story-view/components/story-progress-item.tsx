@@ -6,11 +6,11 @@ import Animated, {useAnimatedStyle} from 'react-native-reanimated';
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 
-import {StoryProgressItemProps} from '../../core/dto/componentsDTO';
+import {StoryProgressItemProps} from '../core/dto/componentsDTO';
 
 const AnimatedView = Animated.createAnimatedComponent(View);
 
-const ProgressItem: FC<StoryProgressItemProps> = memo(
+const StoryProgressItem: FC<StoryProgressItemProps> = memo(
   ({progress, active, activeStory, index, width}) => {
     const animatedStyle = useAnimatedStyle(() => {
       if (!active.value || activeStory.value < index) {
@@ -47,4 +47,4 @@ const styles = createTheme({
   },
 });
 
-export {ProgressItem};
+export {StoryProgressItem};

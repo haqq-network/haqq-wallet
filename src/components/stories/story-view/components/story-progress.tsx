@@ -4,12 +4,12 @@ import {View} from 'react-native';
 
 import {createTheme} from '@app/helpers';
 
-import {ProgressItem} from './item';
+import {StoryProgressItem} from './story-progress-item';
 
-import {WIDTH} from '../../core/constants';
-import {StoryProgressProps} from '../../core/dto/componentsDTO';
+import {WIDTH} from '../core/constants';
+import {StoryProgressProps} from '../core/dto/componentsDTO';
 
-const Progress: FC<StoryProgressProps> = memo(
+const StoryProgress: FC<StoryProgressProps> = memo(
   ({
     progress,
     active,
@@ -27,7 +27,7 @@ const Progress: FC<StoryProgressProps> = memo(
     return (
       <View style={[styles.container, {width: WIDTH}]}>
         {[...Array(length).keys()].map(val => (
-          <ProgressItem
+          <StoryProgressItem
             active={active}
             activeStory={activeStory}
             progress={progress}
@@ -55,4 +55,4 @@ const styles = createTheme({
   },
 });
 
-export {Progress};
+export {StoryProgress};

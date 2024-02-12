@@ -10,29 +10,27 @@ import React, {
 import {Image} from 'react-native';
 import {useSharedValue} from 'react-native-reanimated';
 
+import {StoryContainer} from './story-container';
+
 import {
   ANIMATION_DURATION,
   BACKGROUND_COLOR,
   CLOSE_COLOR,
   STORY_AVATAR_SIZE,
-} from '../../core/constants';
-import {StoryModalPublicMethods} from '../../core/dto/componentsDTO';
-import {ProgressStorageProps} from '../../core/dto/helpersDTO';
+} from '../core/constants';
+import {StoryContainerPublicMethods} from '../core/dto/componentsDTO';
+import {ProgressStorageProps} from '../core/dto/helpersDTO';
 import {
-  InstagramStoriesProps,
-  InstagramStoriesPublicMethods,
-} from '../../core/dto/instagramStoriesDTO';
+  StoriesViewProps,
+  StoriesViewPublicMethods,
+} from '../core/dto/storiesViewDTO';
 import {
   clearProgressStorage,
   getProgressStorage,
   setProgressStorage,
-} from '../../core/helpers/storage';
-import {StoryModal} from '../Modal';
+} from '../core/helpers/storage';
 
-const InstagramStories = forwardRef<
-  InstagramStoriesPublicMethods,
-  InstagramStoriesProps
->(
+const StoriesView = forwardRef<StoriesViewPublicMethods, StoriesViewProps>(
   (
     {
       stories,
@@ -54,7 +52,7 @@ const InstagramStories = forwardRef<
     const loadedStories = useSharedValue(false);
     const loadingStory = useSharedValue<string | undefined>(undefined);
 
-    const modalRef = useRef<StoryModalPublicMethods>(null);
+    const modalRef = useRef<StoryContainerPublicMethods>(null);
 
     useEffect(() => {
       onPress(initialID);
@@ -185,7 +183,7 @@ const InstagramStories = forwardRef<
     }, [stories]);
 
     return (
-      <StoryModal
+      <StoryContainer
         ref={modalRef}
         stories={data}
         seenStories={seenStories}
@@ -204,5 +202,5 @@ const InstagramStories = forwardRef<
   },
 );
 
-const InstagramStoriesMemo = memo(InstagramStories);
-export {InstagramStoriesMemo as InstagramStories};
+const StoriesViewMemo = memo(StoriesView);
+export {StoriesViewMemo as StoriesView};

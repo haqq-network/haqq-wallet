@@ -11,15 +11,15 @@ export interface StoryItemProps {
   duration?: number;
 }
 
-export interface InstagramStoryProps {
+export interface StoriesViewStoryProps {
   id: string;
   imgUrl?: string;
   name?: string;
   stories: StoryItemProps[];
 }
 
-export interface InstagramStoriesProps {
-  stories: InstagramStoryProps[];
+export interface StoriesViewProps {
+  stories: StoriesViewStoryProps[];
   saveProgress?: boolean;
   avatarBorderColors?: string[];
   avatarSeenBorderColors?: string[];
@@ -46,7 +46,6 @@ export interface InstagramStoriesProps {
   closeIconColor?: string;
   progressActiveColor?: string;
   progressColor?: string;
-  modalAnimationDuration?: number;
   mediaContainerStyle?: ViewStyle;
   imageStyles?: ImageStyle;
   onShow?: (id: string) => void;
@@ -58,14 +57,14 @@ export interface InstagramStoriesProps {
   initialID: string;
 }
 
-export type InstagramStoriesPublicMethods = {
-  spliceStories: (stories: InstagramStoryProps[], index?: number) => void;
+export type StoriesViewPublicMethods = {
+  spliceStories: (stories: StoriesViewStoryProps[], index?: number) => void;
   spliceUserStories: (
     stories: StoryItemProps[],
     user: string,
     index?: number,
   ) => void;
-  setStories: (stories: InstagramStoryProps[]) => void;
+  setStories: (stories: StoriesViewStoryProps[]) => void;
   clearProgressStorage: () => void;
   hide: () => void;
   show: (id?: string) => void;

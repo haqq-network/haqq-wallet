@@ -6,13 +6,14 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 
-import {HEIGHT} from '../../core/constants';
-import {StoryListProps} from '../../core/dto/componentsDTO';
-import {StoryAnimation} from '../Animation';
-import {StoryContent} from '../Content';
-import {StoryHeader} from '../Header';
-import {StoryImage} from '../Image';
-import {Progress} from '../Progress';
+import {StoryAnimation} from './story-animation';
+import {StoryContent} from './story-content';
+import {StoryHeader} from './story-header';
+import {StoryImage} from './story-image';
+import {StoryProgress} from './story-progress';
+
+import {HEIGHT} from '../core/constants';
+import {StoryListProps} from '../core/dto/componentsDTO';
 
 const StoryList: FC<StoryListProps> = memo(
   ({
@@ -73,7 +74,7 @@ const StoryList: FC<StoryListProps> = memo(
             mediaContainerStyle={mediaContainerStyle}
             imageStyles={imageStyles}
           />
-          <Progress
+          <StoryProgress
             active={isActive}
             activeStory={activeStoryIndex}
             progress={progress}

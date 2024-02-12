@@ -2,9 +2,9 @@ import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
 import {SharedValue} from 'react-native-reanimated';
 
 import {ProgressStorageProps} from './helpersDTO';
-import {InstagramStoryProps} from './instagramStoriesDTO';
+import {StoriesViewStoryProps} from './storiesViewDTO';
 
-export interface StoryAvatarProps extends InstagramStoryProps {
+export interface StoryAvatarProps extends StoriesViewStoryProps {
   loadingStory: SharedValue<string | undefined>;
   seenStories: SharedValue<ProgressStorageProps>;
   onPress: () => void;
@@ -21,8 +21,8 @@ export interface StoryLoaderProps {
   size?: number;
 }
 
-export interface StoryModalProps {
-  stories: InstagramStoryProps[];
+export interface StoryContainerProps {
+  stories: StoriesViewStoryProps[];
   seenStories: SharedValue<ProgressStorageProps>;
   duration: number;
   videoDuration?: number;
@@ -34,7 +34,6 @@ export interface StoryModalProps {
   closeIconColor: string;
   progressActiveColor?: string;
   progressColor?: string;
-  modalAnimationDuration?: number;
   mediaContainerStyle?: ViewStyle;
   imageStyles?: ImageStyle;
   onLoad: () => void;
@@ -48,7 +47,7 @@ export interface StoryModalProps {
   initialID: string;
 }
 
-export type StoryModalPublicMethods = {
+export type StoryContainerPublicMethods = {
   show: (id: string) => void;
   hide: () => void;
   pause: () => void;
@@ -72,7 +71,7 @@ export interface AnimationProps {
 }
 
 export interface StoryImageProps {
-  stories: InstagramStoryProps['stories'];
+  stories: StoriesViewStoryProps['stories'];
   activeStory: SharedValue<string | undefined>;
   defaultImage: string | undefined;
   isDefaultVideo: boolean;
@@ -114,12 +113,14 @@ export interface IconProps {
 }
 
 export interface StoryContentProps {
-  stories: InstagramStoryProps['stories'];
+  stories: StoriesViewStoryProps['stories'];
   active: SharedValue<boolean>;
   activeStory: SharedValue<string | undefined>;
 }
 
-export interface StoryListProps extends InstagramStoryProps, StoryHeaderProps {
+export interface StoryListProps
+  extends StoriesViewStoryProps,
+    StoryHeaderProps {
   index: number;
   x: SharedValue<number>;
   activeUser: SharedValue<string | undefined>;

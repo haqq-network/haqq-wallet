@@ -1,8 +1,8 @@
-import {InstagramStories} from './components/InstagramStories';
+import {StoriesView} from './components';
 import {
-  InstagramStoriesProps,
-  InstagramStoriesPublicMethods,
-} from './core/dto/instagramStoriesDTO';
+  StoriesViewProps,
+  StoriesViewPublicMethods,
+} from './core/dto/storiesViewDTO';
 
-export type {InstagramStoriesProps, InstagramStoriesPublicMethods};
-export {InstagramStories as StoriesView};
+export type {StoriesViewProps, StoriesViewPublicMethods};
+export {StoriesView};

@@ -4,8 +4,8 @@ import React, {FC, memo, useRef, useState} from 'react';
 import {runOnJS, useAnimatedReaction} from 'react-native-reanimated';
 import Video from 'react-native-video';
 
-import {HEIGHT, WIDTH} from '../../core/constants';
-import {StoryVideoProps} from '../../core/dto/componentsDTO';
+import {HEIGHT, WIDTH} from '../core/constants';
+import {StoryVideoProps} from '../core/dto/componentsDTO';
 
 const StoryVideo: FC<StoryVideoProps> = memo(
   ({uri, paused, isActive, onLoad, onLayout, ...props}) => {

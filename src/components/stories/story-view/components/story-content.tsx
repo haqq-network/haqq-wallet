@@ -3,7 +3,7 @@ import React, {FC, memo, useMemo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {runOnJS, useAnimatedReaction} from 'react-native-reanimated';
 
-import {StoryContentProps} from '../../core/dto/componentsDTO';
+import {StoryContentProps} from '../core/dto/componentsDTO';
 
 const StoryContent: FC<StoryContentProps> = memo(
   ({stories, active, activeStory}) => {

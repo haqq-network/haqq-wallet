@@ -9,8 +9,8 @@ import Animated, {
 
 import {createTheme} from '@app/helpers';
 
-import {HEIGHT, WIDTH} from '../../core/constants';
-import {AnimationProps} from '../../core/dto/componentsDTO';
+import {HEIGHT, WIDTH} from '../core/constants';
+import {AnimationProps} from '../core/dto/componentsDTO';
 
 const StoryAnimation: FC<AnimationProps> = memo(({children, x, index}) => {
   const angle = Math.PI / 3;

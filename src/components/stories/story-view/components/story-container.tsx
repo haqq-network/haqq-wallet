@@ -19,23 +19,27 @@ import Animated, {
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {ANIMATION_DURATION} from '@app/variables/common';
 
-import {GestureHandler} from './gesture';
+import {GestureHandler} from './gesture-handler';
+import {StoryList} from './story-list';
 
 import {
   ANIMATION_CONFIG,
   HEIGHT,
   LONG_PRESS_DURATION,
   WIDTH,
-} from '../../core/constants';
+} from '../core/constants';
 import {
   GestureContext,
-  StoryModalProps,
-  StoryModalPublicMethods,
-} from '../../core/dto/componentsDTO';
-import {StoryList} from '../List';
+  StoryContainerProps,
+  StoryContainerPublicMethods,
+} from '../core/dto/componentsDTO';
 
-const StoryModal = forwardRef<StoryModalPublicMethods, StoryModalProps>(
+const StoryContainer = forwardRef<
+  StoryContainerPublicMethods,
+  StoryContainerProps
+>(
   (
     {
       stories,
@@ -47,7 +51,6 @@ const StoryModal = forwardRef<StoryModalPublicMethods, StoryModalProps>(
       containerStyle,
       videoProps,
       closeIconColor,
-      modalAnimationDuration = 300,
       onLoad,
       onShow,
       onHide,
@@ -96,7 +99,7 @@ const StoryModal = forwardRef<StoryModalPublicMethods, StoryModalProps>(
     const onClose = () => {
       'worklet';
 
-      y.value = withTiming(HEIGHT, {duration: modalAnimationDuration}, () =>
+      y.value = withTiming(HEIGHT, {duration: ANIMATION_DURATION}, () =>
         runOnJS(setVisible)(false),
       );
     };
@@ -333,7 +336,7 @@ const StoryModal = forwardRef<StoryModalPublicMethods, StoryModalProps>(
         }
         onLoad?.();
 
-        y.value = withTiming(0, {duration: modalAnimationDuration});
+        y.value = withTiming(0, {duration: ANIMATION_DURATION});
       } else if (currentStory.value !== undefined) {
         onHide?.(currentStory.value);
       }
@@ -409,5 +412,5 @@ const styles = createTheme({
   bgAnimation: StyleSheet.absoluteFillObject,
 });
 
-const StoryModalMemo = memo(StoryModal);
-export {StoryModalMemo as StoryModal};
+const StoryContainerMemo = memo(StoryContainer);
+export {StoryContainerMemo as StoryContainer};

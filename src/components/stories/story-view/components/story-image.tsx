@@ -9,13 +9,13 @@ import {
 } from 'react-native-reanimated';
 
 import {Color} from '@app/colors';
-import {Loader} from '@app/components/stories/story-view/components/Loader';
+import {StoryLoader} from '@app/components/stories/story-view/components/loader';
 import {createTheme} from '@app/helpers';
 
-import {StoryVideo} from './video';
+import {StoryVideo} from './story-video';
 
-import {HEIGHT, LOADER_COLORS, WIDTH} from '../../core/constants';
-import {StoryImageProps} from '../../core/dto/componentsDTO';
+import {HEIGHT, LOADER_COLORS, WIDTH} from '../core/constants';
+import {StoryImageProps} from '../core/dto/componentsDTO';
 
 const StoryImage: FC<StoryImageProps> = memo(
   ({
@@ -95,7 +95,7 @@ const StoryImage: FC<StoryImageProps> = memo(
     return (
       <>
         <View style={styles.container}>
-          <Loader loading={loading} color={color} size={33} />
+          <StoryLoader loading={loading} color={color} size={33} />
         </View>
         <View style={[styles.image, mediaContainerStyle]}>
           {data.uri &&
