@@ -1,6 +1,4 @@
-import {useEffect, useMemo} from 'react';
-
-import {computed} from 'mobx';
+import {useEffect} from 'react';
 
 import {Transaction} from '@app/models/transaction';
 
@@ -10,19 +8,13 @@ import {Transaction} from '@app/models/transaction';
  *  const transactionsList = useTransactionList(addressList);
  */
 export function useTransactionList(addressList: string[]) {
-  const transactions = useMemo(
-    () => computed(() => Transaction.getAll()),
-    [],
-  ).get();
+  const transactions = Transaction.getAll();
 
-  const isTransactionsLoading = useMemo(
-    () => computed(() => Transaction.isLoading),
-    [],
-  ).get();
+  const isTransactionsLoading = Transaction.isLoading;
 
   useEffect(() => {
-    Transaction.fetchLatestTransactions(addressList);
-  }, [addressList]);
+    Transaction.fetchLatestTransactions(addressList, true);
+  }, [addressList[0]]);
 
   return {transactions, isTransactionsLoading};
 }

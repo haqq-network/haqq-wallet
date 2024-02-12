@@ -40,6 +40,12 @@ export type AccountInfoProps = {
   tokens: Record<HaqqEthereumAddress, IToken[]>;
 };
 
+const TAB_INDEX_MAP = {
+  [TabNames.tokens]: 0,
+  [TabNames.transactions]: 1,
+  [TabNames.nft]: 2,
+};
+
 export const AccountInfo = observer(
   ({
     wallet,
@@ -57,7 +63,7 @@ export const AccountInfo = observer(
   }: AccountInfoProps) => {
     const nftCollections = useNftCollections();
 
-    const [activeTab, setActiveTab] = useState(TabNames.transactions);
+    const [activeTab, setActiveTab] = useState(TabNames.tokens);
 
     const hideTransactionsContent = useMemo(
       () => (activeTab === TabNames.transactions ? false : true),
@@ -67,6 +73,42 @@ export const AccountInfo = observer(
     const onTabChange = useCallback((tabName: TabNames) => {
       setActiveTab(tabName);
     }, []);
+
+    const Tabs = useCallback(
+      () => (
+        <TopTabNavigator
+          contentContainerStyle={styles.tabsContentContainerStyle}
+          tabHeaderStyle={styles.tabHeaderStyle}
+          variant={TopTabNavigatorVariant.large}
+          onTabChange={onTabChange}
+          activeTabIndex={TAB_INDEX_MAP[activeTab]}
+          initialTabIndex={TAB_INDEX_MAP[TabNames.tokens]}>
+          {isFeatureEnabled(Feature.tokens) && (
+            <TopTabNavigator.Tab
+              testID="accountInfoTabTokens"
+              name={TabNames.tokens}
+              title={I18N.accountInfoTokensTabTitle}
+              component={null}
+            />
+          )}
+          <TopTabNavigator.Tab
+            testID="accountInfoTabTransactions"
+            name={TabNames.transactions}
+            title={I18N.accountInfoTransactionTabTitle}
+            component={null}
+          />
+          {isFeatureEnabled(Feature.nft) && (
+            <TopTabNavigator.Tab
+              testID="accountInfoTabNft"
+              name={TabNames.nft}
+              title={I18N.accountInfoNftTabTitle}
+              component={null}
+            />
+          )}
+        </TopTabNavigator>
+      ),
+      [activeTab],
+    );
 
     const renderListHeader = useCallback(
       () => (
@@ -83,35 +125,7 @@ export const AccountInfo = observer(
             onSend={onSend}
             onReceive={onReceive}
           />
-          <TopTabNavigator
-            contentContainerStyle={styles.tabsContentContainerStyle}
-            tabHeaderStyle={styles.tabHeaderStyle}
-            variant={TopTabNavigatorVariant.large}
-            onTabChange={onTabChange}
-            initialTabIndex={0}>
-            <TopTabNavigator.Tab
-              testID="accountInfoTabTransactions"
-              name={TabNames.transactions}
-              title={I18N.accountInfoTransactionTabTitle}
-              component={null}
-            />
-            {isFeatureEnabled(Feature.tokens) && (
-              <TopTabNavigator.Tab
-                testID="accountInfoTabTokens"
-                name={TabNames.tokens}
-                title={I18N.accountInfoTokensTabTitle}
-                component={null}
-              />
-            )}
-            {isFeatureEnabled(Feature.nft) && (
-              <TopTabNavigator.Tab
-                testID="accountInfoTabNft"
-                name={TabNames.nft}
-                title={I18N.accountInfoNftTabTitle}
-                component={null}
-              />
-            )}
-          </TopTabNavigator>
+          <Tabs />
         </>
       ),
       [
@@ -126,6 +140,7 @@ export const AccountInfo = observer(
         onSend,
         onReceive,
         onTabChange,
+        Tabs,
       ],
     );
 
