@@ -132,7 +132,7 @@ class TokensStore implements MobXStore<IToken> {
   }
 
   getAll() {
-    return Object.values(toJS(this.data));
+    return Object.values(this.data);
   }
 
   getAllVisible() {
@@ -171,8 +171,8 @@ class TokensStore implements MobXStore<IToken> {
     return true;
   }
 
-  fetchTokens = async () => {
-    if (this.isLoading) {
+  fetchTokens = async (force = false) => {
+    if (this.isLoading && !force) {
       return;
     }
 
