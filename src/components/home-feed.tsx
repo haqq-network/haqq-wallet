@@ -8,8 +8,10 @@ import {RefreshControl, ScrollView} from 'react-native';
 import {StoriesWrapper} from '@app/components/stories';
 import {createTheme} from '@app/helpers';
 import {loadAllTransactions} from '@app/helpers/load-transactions';
+import {useTypedNavigation} from '@app/hooks';
 import {Stories} from '@app/models/stories';
 import {Token} from '@app/models/tokens';
+import {HomeFeedStackParamList, HomeFeedStackRoutes} from '@app/route-types';
 import {BannersWrapper} from '@app/screens/banners';
 import {WalletsWrapper} from '@app/screens/HomeStack/HomeFeedStack/wallets';
 import {LockedTokensWrapper} from '@app/screens/locked-tokens';
@@ -18,6 +20,7 @@ import {WidgetRoot} from '@app/widgets';
 export const HomeFeed = observer(() => {
   const [lastUpdateTimestamp, setLastUpdate] = useState(Date.now());
   const [refreshing, setRefreshing] = useState(false);
+  const navigation = useTypedNavigation<HomeFeedStackParamList>();
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -36,6 +39,13 @@ export const HomeFeed = observer(() => {
     }, []),
   );
 
+  const onStoryPress = useCallback(
+    (id: string) => {
+      navigation.navigate(HomeFeedStackRoutes.HomeStories, {id});
+    },
+    [navigation],
+  );
+
   return (
     <ScrollView
       contentContainerStyle={styles.contentContainerStyle}
@@ -43,7 +53,7 @@ export const HomeFeed = observer(() => {
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }>
-      {!!STORIES_ENABLED && <StoriesWrapper />}
+      {!!STORIES_ENABLED && <StoriesWrapper onStoryPress={onStoryPress} />}
       <LockedTokensWrapper />
       <WalletsWrapper />
       <BannersWrapper />

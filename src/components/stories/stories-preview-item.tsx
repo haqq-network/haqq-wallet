@@ -1,6 +1,6 @@
-import React, {memo, useMemo} from 'react';
+import React, {memo, useCallback, useMemo} from 'react';
 
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Spacer, Text} from '@app/components/ui';
@@ -9,26 +9,28 @@ import {IStory} from '@app/types';
 
 type Props = {
   item: IStory;
+  onPress: (id: IStory['id']) => void;
+  seen: IStory['seen'];
 };
 
-export const StoriesPreviewItem = memo(({item}: Props) => {
-  const isSeen = useMemo(() => item.seen, [item.seen]);
-  const source = useMemo(() => ({uri: item.preview}), [item.preview]);
+export const StoriesPreviewItem = memo(({item, onPress, seen}: Props) => {
+  const source = {uri: item.preview};
   const borderColor = useMemo(
-    () => (isSeen ? styles.borderSeen : styles.borderUnseen),
-    [isSeen],
+    () => (seen ? styles.borderSeen : styles.borderUnseen),
+    [seen],
   );
   const imageWrapperStyles = useMemo(
     () => StyleSheet.flatten([styles.imageWrapper, borderColor]),
-    [borderColor],
+    [borderColor, seen],
   );
   const titleColor = useMemo(
-    () => (isSeen ? Color.textBase1 : Color.textBase2),
-    [isSeen],
+    () => (seen ? Color.textBase1 : Color.textBase2),
+    [seen],
   );
+  const onStoryPress = useCallback(() => onPress(item.id), [item, onPress]);
 
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onStoryPress}>
       <View style={imageWrapperStyles}>
         <Image
           source={source}
@@ -47,7 +49,7 @@ export const StoriesPreviewItem = memo(({item}: Props) => {
         numberOfLines={2}
         color={titleColor}
       />
-    </View>
+    </TouchableOpacity>
   );
 });
 

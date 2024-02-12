@@ -1,6 +1,9 @@
 import React, {memo} from 'react';
 
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {
+  NativeStackNavigationOptions,
+  createNativeStackNavigator,
+} from '@react-navigation/native-stack';
 
 import {QrScannerButton} from '@app/components/qr-scanner-button';
 import {popupScreenOptionsWithMargin} from '@app/helpers';
@@ -10,6 +13,7 @@ import {basicScreenOptions} from '@app/screens';
 import {GovernanceStack} from '@app/screens/HomeStack/GovernanceStack';
 import {HomeEarnStack} from '@app/screens/HomeStack/HomeEarnStack';
 import {HomeFeedScreen} from '@app/screens/HomeStack/HomeFeedStack/home-feed';
+import {HomeStoriesScreen} from '@app/screens/HomeStack/HomeFeedStack/home-stories';
 import {NftDetailsStack} from '@app/screens/HomeStack/NftDetailsStack';
 
 const Stack = createNativeStackNavigator<HomeFeedStackParamList>();
@@ -19,6 +23,10 @@ const screenOptions = {
   headerShown: true,
   title: getText(I18N.homeWalletTitle),
   headerRight: QrScannerButton,
+};
+
+const fullScreenModal: NativeStackNavigationOptions = {
+  presentation: 'fullScreenModal',
 };
 
 const HomeFeedStack = memo(() => {
@@ -40,6 +48,11 @@ const HomeFeedStack = memo(() => {
       <Stack.Screen
         name={HomeFeedStackRoutes.HomeEarn}
         component={HomeEarnStack}
+      />
+      <Stack.Screen
+        name={HomeFeedStackRoutes.HomeStories}
+        component={HomeStoriesScreen}
+        options={fullScreenModal}
       />
     </Stack.Navigator>
   );

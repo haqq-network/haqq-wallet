@@ -14,6 +14,7 @@ import {
   AdjustEvents,
   BiometryType,
   Eventable,
+  IStory,
   IToken,
   JsonRpcMetadata,
   LedgerWalletInitialData,
@@ -233,6 +234,7 @@ export enum HomeFeedStackRoutes {
   Governance = 'governance',
   NftDetails = 'nftDetails',
   HomeEarn = 'homeEarn',
+  HomeStories = 'homeStories',
 }
 
 export type HomeFeedStackParamList = HomeStackParamList & {
@@ -245,6 +247,7 @@ export type HomeFeedStackParamList = HomeStackParamList & {
       }
     | {type: 'collection'; item: NftCollection};
   [HomeFeedStackRoutes.HomeEarn]: undefined;
+  [HomeFeedStackRoutes.HomeStories]: {id: IStory['id']};
 };
 
 export enum BackupStackRoutes {

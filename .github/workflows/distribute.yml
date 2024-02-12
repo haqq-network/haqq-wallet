@@ -9,6 +9,12 @@ on:
         options:
           - true
           - false
+      STORIES_ENABLED:
+        type: choice
+        description: STORIES_ENABLED
+        options:
+          - true
+          - false
       # DEFAULT_BACKEND:
       #   type: choice
       #   description: HAQQ_BACKEND_DEFAULT
@@ -27,7 +33,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
       - uses: actions/cache@v3
         with:
           path: '**/node_modules'
@@ -42,6 +48,7 @@ jobs:
     with:
       IS_DEVELOPMENT: false
       IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
+      STORIES_ENABLED: ${{github.event.inputs.STORIES_ENABLED}}
       BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION}}
     needs:
       - test
@@ -53,6 +60,7 @@ jobs:
     with:
       IS_DEVELOPMENT: false
       IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
+      STORIES_ENABLED: ${{github.event.inputs.STORIES_ENABLED}}
       BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION}}
     needs:
       - test

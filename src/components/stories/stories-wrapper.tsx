@@ -7,8 +7,13 @@ import {StoriesLoaderItem} from '@app/components/stories/stories-loader-item';
 import {StoriesPreviewItem} from '@app/components/stories/stories-preview-item';
 import {createTheme} from '@app/helpers';
 import {Stories} from '@app/models/stories';
+import {IStory} from '@app/types';
 
-export const StoriesWrapper = observer(() => {
+type Props = {
+  onStoryPress: (id: IStory['id']) => void;
+};
+
+export const StoriesWrapper = observer(({onStoryPress}: Props) => {
   const content = useMemo(() => {
     if (Stories.isLoading) {
       return [...new Array(7)].map((_, index) => {
@@ -16,9 +21,16 @@ export const StoriesWrapper = observer(() => {
       });
     }
     return Stories.stories.map(item => {
-      return <StoriesPreviewItem item={item} key={item.id} />;
+      return (
+        <StoriesPreviewItem
+          seen={item.seen}
+          item={item}
+          key={item.id}
+          onPress={onStoryPress}
+        />
+      );
     });
-  }, [Stories.isLoading]);
+  }, []);
 
   return (
     <ScrollView

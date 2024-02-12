@@ -93,6 +93,7 @@ def reactNativeArchitectures() {
 
 apply from: "../../node_modules/@sentry/react-native/sentry.gradle"
 android {
+  namespace 'com.haqq.wallet'
   ndkVersion rootProject.ext.ndkVersion
 
   compileSdkVersion rootProject.ext.compileSdkVersion
