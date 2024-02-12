@@ -23,7 +23,7 @@ import {Contact} from '@app/models/contact';
 import {Balance} from '@app/services/balance';
 import {EthNetwork} from '@app/services/eth-network';
 import {IToken, TransactionResponse} from '@app/types';
-import {CURRENCY_NAME} from '@app/variables/common';
+import {CURRENCY_NAME, LONG_NUM_PRECISION} from '@app/variables/common';
 
 type TransactionFinishProps = {
   transaction: TransactionResponse | null;
@@ -111,7 +111,7 @@ export const TransactionFinish = ({
       <Image source={token.image} style={styles.icon} />
       {transaction && (
         <Text t5 center style={styles.sum}>
-          - {transactionAmount.toBalanceString()}
+          - {transactionAmount.toBalanceString(LONG_NUM_PRECISION)}
         </Text>
       )}
 
