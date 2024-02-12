@@ -9708,9 +9708,9 @@ __metadata:
     markdown-it: 13.0.1
     metro-minify-terser: 0.77.0
     metro-react-native-babel-preset: 0.77.0
-    mobx: 6.10.2
-    mobx-persist-store: 1.1.3
-    mobx-react: 9.0.1
+    mobx: 6.12.0
+    mobx-persist-store: 1.1.4
+    mobx-react: 9.1.0
     obj-multiplex: 1.0.0
     patch-package: 8.0.0
     pbkdf2: 3.1.2
@@ -13373,12 +13373,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mobx-persist-store@npm:1.1.3":
-  version: 1.1.3
-  resolution: "mobx-persist-store@npm:1.1.3"
+"mobx-persist-store@npm:1.1.4":
+  version: 1.1.4
+  resolution: "mobx-persist-store@npm:1.1.4"
   peerDependencies:
     mobx: "*"
-  checksum: 62111f12aead0d3b849e8f2f3da74f1d5dd0b1bd6c4e1acfa3698d32faccd6de380aa9d1898d6f3539d0f58f14ae769a0080df9955aed0d4d5c178a00573207e
+  checksum: 9d4f650eb7673bf7b8b0a5f130aad5306f508c7fd2483d811864f7208fbf7549882d8483db60e422233d094c66a99852ede079b1b79ee4fb2ce85f4bdc2a3d70
   languageName: node
   linkType: hard
 
@@ -13399,9 +13399,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mobx-react@npm:9.0.1":
-  version: 9.0.1
-  resolution: "mobx-react@npm:9.0.1"
+"mobx-react@npm:9.1.0":
+  version: 9.1.0
+  resolution: "mobx-react@npm:9.1.0"
   dependencies:
     mobx-react-lite: ^4.0.4
   peerDependencies:
@@ -13412,14 +13412,14 @@ __metadata:
       optional: true
     react-native:
       optional: true
-  checksum: b0677a6ca2f55ff5adc3b9052a511b2cd9f1f2484bd40a390f2c345936c00b1086631f2458e07efb782d2289b668dcfbbcfe84be56acf5283d95bfb9650efd98
+  checksum: f6de771d7df6da30548081a1718d12a1c24912e9e0d9e6c3b4fed6299d07145ace10a4a44eccb28d8c58b054f63ccce72e555c9c13c4f420b362d214fa83e23d
   languageName: node
   linkType: hard
 
-"mobx@npm:6.10.2":
-  version: 6.10.2
-  resolution: "mobx@npm:6.10.2"
-  checksum: 14d6f1db4e3a61c823510ea130229c96bd4958b77d81057ac1abc6a439703eaf3ea2289192ef205b4250d3adb1d83a439ad56d5e53f2b967c6e62a6bccc23d8a
+"mobx@npm:6.12.0":
+  version: 6.12.0
+  resolution: "mobx@npm:6.12.0"
+  checksum: 482914d39199cadc8808907a2b9dbc634c74534d6c6d6cb34984c199aa94665ce07e7d183c0e97d54f4b06c8e42fec0a48c79484f4bbeac04a4dfd0f160290c6
   languageName: node
   linkType: hard
 
