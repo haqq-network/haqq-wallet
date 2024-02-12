@@ -152,8 +152,8 @@ class TransactionStore {
     return nextTxList;
   };
 
-  fetchLatestTransactions = async (accounts: string[]) => {
-    if (this.isLoading) {
+  fetchLatestTransactions = async (accounts: string[], force = false) => {
+    if (this.isLoading && !force) {
       return;
     }
     const newTxs = (await this._fetch(accounts, 'latest'))
@@ -162,7 +162,6 @@ class TransactionStore {
 
     runInAction(() => {
       this._transactions = newTxs;
-
       this._isLoading = false;
     });
     return newTxs;
