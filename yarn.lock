@@ -2304,6 +2304,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@flatten-js/interval-tree@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "@flatten-js/interval-tree@npm:1.1.2"
+  checksum: c83bad7a21c19ead42d31380b2886123c62f055fb83d3a9cfc72736bf689eb109ab18f99916941727c14f46ee50b196a0ce1ba9251d6e09e053ec35f184c834b
+  languageName: node
+  linkType: hard
+
 "@hapi/hoek@npm:^9.0.0":
   version: 9.3.0
   resolution: "@hapi/hoek@npm:9.3.0"
@@ -6863,6 +6870,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"bunyamin@npm:^1.5.2":
+  version: 1.5.2
+  resolution: "bunyamin@npm:1.5.2"
+  dependencies:
+    "@flatten-js/interval-tree": ^1.1.2
+    multi-sort-stream: ^1.0.4
+    stream-json: ^1.7.5
+    trace-event-lib: ^1.3.1
+  peerDependencies:
+    "@types/bunyan": ^1.8.8
+    bunyan: ^1.8.15 || ^2.0.0
+  peerDependenciesMeta:
+    "@types/bunyan":
+      optional: true
+    bunyan:
+      optional: true
+  checksum: aa753b279e130736a8aa6a4fe79fa3eb1a22c7e09eba5e866ce0241a2c024abf4560fd42c758b6bfda287a86a7901d0200b0b751e13c32c15c99ddb988cbde28
+  languageName: node
+  linkType: hard
+
 "bunyan-debug-stream@npm:^3.1.0":
   version: 3.1.0
   resolution: "bunyan-debug-stream@npm:3.1.0"
@@ -6894,6 +6921,30 @@ __metadata:
   bin:
     bunyan: bin/bunyan
   checksum: a479e0787c3a0b6565b54bd15f0b6c729d624c5aba53523e140e49e279b7a78508df93000e758bf6d02361117d6b4e6e5fc1d5ece05366fb6c4ba41bf1ac7d52
+  languageName: node
+  linkType: hard
+
+"bunyan@npm:^2.0.5":
+  version: 2.0.5
+  resolution: "bunyan@npm:2.0.5"
+  dependencies:
+    dtrace-provider: ~0.8
+    exeunt: 1.1.0
+    moment: ^2.19.3
+    mv: ~2
+    safe-json-stringify: ~1
+  dependenciesMeta:
+    dtrace-provider:
+      optional: true
+    moment:
+      optional: true
+    mv:
+      optional: true
+    safe-json-stringify:
+      optional: true
+  bin:
+    bunyan: bin/bunyan
+  checksum: a932e883387e5bef23eee0f1f9af94e8b885da32492eaf7164dc58e3b42e5a65845068beb7ac8fbcff31511a55728c1a826bf48ba3e4edd7e220ebf0fe2ab989
   languageName: node
   linkType: hard
 
@@ -8041,9 +8092,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"detox@npm:20.14.3":
-  version: 20.14.3
-  resolution: "detox@npm:20.14.3"
+"detox@npm:20.18.1":
+  version: 20.18.1
+  resolution: "detox@npm:20.18.1"
   dependencies:
     ajv: ^8.6.3
     bunyan: ^1.8.12
@@ -8057,6 +8108,7 @@ __metadata:
     funpermaproxy: ^1.1.0
     glob: ^8.0.3
     ini: ^1.3.4
+    jest-environment-emit: ^1.0.5
     json-cycle: ^1.3.0
     lodash: ^4.17.11
     multi-sort-stream: ^1.0.3
@@ -8086,7 +8138,7 @@ __metadata:
       optional: true
   bin:
     detox: local-cli/cli.js
-  checksum: 131d0ac2ad0a4a8032fdba0168a52e1bb838a1ff9838689372be4895080c375524324967b409eb03ce56698d1d15dd546d7f85dabbf120c9b866adeb3abedf89
+  checksum: 29524453f189c5ec71d53fe4b85d11ca7cc925d79ab0f957a8259708b7e85ff741cd8e79ae2374cb84a793d01d2f32d3cb73cacae55ad8e31dff13bf3859a734
   languageName: node
   linkType: hard
 
@@ -9234,6 +9286,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"exeunt@npm:1.1.0":
+  version: 1.1.0
+  resolution: "exeunt@npm:1.1.0"
+  checksum: c0054fa49d7b3abbc2acecd4c6e34c6ce3a0370f9c31d18cdf64dad6be9a6d3fb84d93be892b7d1906f3f23051b3855bde7b255129fc49605a04392f69e98ea2
+  languageName: node
+  linkType: hard
+
 "exit@npm:^0.1.2":
   version: 0.1.2
   resolution: "exit@npm:0.1.2"
@@ -10152,7 +10211,7 @@ __metadata:
     date-fns: 2.30.0
     decimal.js: 10.4.3
     deprecated-react-native-prop-types: 4.1.0
-    detox: 20.14.3
+    detox: 20.18.1
     dotenv: 16.3.1
     eslint: 8.45.0
     eslint-plugin-import: 2.27.5
@@ -11456,6 +11515,39 @@ __metadata:
     jest-util: ^29.7.0
     pretty-format: ^29.7.0
   checksum: e88f99f0184000fc8813f2a0aa79e29deeb63700a3b9b7928b8a418d7d93cd24933608591dbbdea732b473eb2021c72991b5cc51a17966842841c6e28e6f691c
+  languageName: node
+  linkType: hard
+
+"jest-environment-emit@npm:^1.0.5":
+  version: 1.0.6
+  resolution: "jest-environment-emit@npm:1.0.6"
+  dependencies:
+    bunyamin: ^1.5.2
+    bunyan: ^2.0.5
+    bunyan-debug-stream: ^3.1.0
+    funpermaproxy: ^1.1.0
+    lodash.merge: ^4.6.2
+    node-ipc: 9.2.1
+    strip-ansi: ^6.0.0
+    tslib: ^2.5.3
+  peerDependencies:
+    "@jest/environment": ">=27.2.5"
+    "@jest/types": ">=27.2.5"
+    jest: ">=27.2.5"
+    jest-environment-jsdom: ">=27.2.5"
+    jest-environment-node: ">=27.2.5"
+  peerDependenciesMeta:
+    "@jest/environment":
+      optional: true
+    "@jest/types":
+      optional: true
+    jest:
+      optional: true
+    jest-environment-jsdom:
+      optional: true
+    jest-environment-node:
+      optional: true
+  checksum: a5af53deb4c712d2f91cdf1f11f35e823909a30534167fc093a89bf35539c6ed39b51f8b21299f1803e131318f094619e99fa7397389b03195bc0ef213e1dfc9
   languageName: node
   linkType: hard
 
@@ -14181,7 +14273,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"multi-sort-stream@npm:^1.0.3":
+"multi-sort-stream@npm:^1.0.3, multi-sort-stream@npm:^1.0.4":
   version: 1.0.4
   resolution: "multi-sort-stream@npm:1.0.4"
   checksum: b234754e0e7489623f5184ba0e887ffd8014fe829c846fd8a95569339b6e19a616ae1d44f3d064279adfbf92fa5c4d016a89fc5026e16dbd680ebd67067b19a0
@@ -17575,7 +17667,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"stream-json@npm:^1.7.4":
+"stream-json@npm:^1.7.4, stream-json@npm:^1.7.5":
   version: 1.8.0
   resolution: "stream-json@npm:1.8.0"
   dependencies:
@@ -18202,7 +18294,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:1 || 2, tslib@npm:^2.0.0, tslib@npm:^2.0.1, tslib@npm:^2.1.0, tslib@npm:^2.3.0, tslib@npm:^2.4.1 || ^1.9.3, tslib@npm:^2.6.2":
+"tslib@npm:1 || 2, tslib@npm:^2.0.0, tslib@npm:^2.0.1, tslib@npm:^2.1.0, tslib@npm:^2.3.0, tslib@npm:^2.4.1 || ^1.9.3, tslib@npm:^2.5.3, tslib@npm:^2.6.2":
   version: 2.6.2
   resolution: "tslib@npm:2.6.2"
   checksum: 329ea56123005922f39642318e3d1f0f8265d1e7fcb92c633e0809521da75eeaca28d2cf96d7248229deb40e5c19adf408259f4b9640afd20d13aecc1430f3ad
