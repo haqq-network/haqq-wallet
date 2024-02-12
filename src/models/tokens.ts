@@ -35,6 +35,7 @@ class TokensStore implements MobXStore<IToken> {
    */
   tokens: IndexerTokensData = {};
   private lastUpdate = new Date(0);
+  private _isLoading = false;
 
   constructor(shouldSkipPersisting: boolean = false) {
     makeAutoObservable(this);
@@ -88,6 +89,10 @@ class TokensStore implements MobXStore<IToken> {
         // Logger.log('TokensStore data', JSON.stringify(this.data, null, 2));
       });
     }
+  }
+
+  get isLoading() {
+    return this._isLoading;
   }
 
   create(id: string, params: IToken) {
@@ -166,7 +171,15 @@ class TokensStore implements MobXStore<IToken> {
     return true;
   }
 
-  fetchTokens = async () => {
+  fetchTokens = async (force = false) => {
+    if (this.isLoading && !force) {
+      return;
+    }
+
+    runInAction(() => {
+      this._isLoading = true;
+    });
+
     const wallets = Wallet.getAll();
     const accounts = wallets.map(w => w.cosmosAddress);
     const updates = await Indexer.instance.updates(accounts, this.lastUpdate);
@@ -181,6 +194,7 @@ class TokensStore implements MobXStore<IToken> {
         // Logger.log('TokensStore fetchTokens', JSON.stringify(result, null, 2));
       }
       this.tokens = result;
+      this._isLoading = false;
     });
   };
 
