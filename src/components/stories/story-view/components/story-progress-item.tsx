@@ -5,6 +5,7 @@ import Animated, {useAnimatedStyle} from 'react-native-reanimated';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {addOpacityToColor} from '@app/utils';
 
 import {StoryProgressItemProps} from '../core/dto/componentsDTO';
 
@@ -28,8 +29,7 @@ const StoryProgressItem: FC<StoryProgressItemProps> = memo(
       <View
         style={[
           styles.item,
-          // eslint-disable-next-line react-native/no-inline-styles, react-native/no-color-literals
-          {backgroundColor: 'rgba(255, 255, 255, 0.3)'},
+          {backgroundColor: addOpacityToColor(Color.graphicBase3, 0.3)},
           {width},
         ]}>
         <AnimatedView style={[styles.item, animatedStyle]} />

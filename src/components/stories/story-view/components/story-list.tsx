@@ -1,4 +1,4 @@
-import React, {FC, memo} from 'react';
+import React, {FC, memo, useMemo} from 'react';
 
 import Animated, {
   useAnimatedStyle,
@@ -49,8 +49,9 @@ const StoryList: FC<StoryListProps> = memo(
       imageHeight.value = height;
     };
 
-    const lastSeenIndex = stories.findIndex(
-      item => item.id === seenStories.value[id],
+    const lastSeenIndex = useMemo(
+      () => stories.findIndex(item => item.id === seenStories.value[id]),
+      [stories],
     );
 
     return (
