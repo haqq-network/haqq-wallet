@@ -1,6 +1,6 @@
 import React, {memo, useCallback, useState} from 'react';
 
-import {SettingsTheme} from '@app/components/settings-theme';
+import {SettingsTheme} from '@app/components/settings/settings-theme';
 import {app} from '@app/contexts';
 import {useTypedNavigation} from '@app/hooks';
 import {AppTheme} from '@app/types';

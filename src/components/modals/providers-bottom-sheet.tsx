@@ -6,7 +6,7 @@ import {app} from '@app/contexts';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {ModalType, Modals} from '@app/types';
 
-import {SettingsProvidersRow} from '../settings-providers/settings-providers-row';
+import {SettingsProvidersRow} from '../settings/settings-providers/settings-providers-row';
 
 export function ProvidersBottomSheet({
   title,

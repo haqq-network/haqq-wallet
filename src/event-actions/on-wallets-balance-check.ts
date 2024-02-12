@@ -87,7 +87,6 @@ export async function onWalletsBalanceCheck() {
     storage.setItem(BALANCE_CACHE_KEY, value);
 
     app.onWalletsBalance(result);
-
     ExchangeRates.update(updates.rates);
   } catch (e) {
     Logger.error(Events.onWalletsBalanceCheck, e);

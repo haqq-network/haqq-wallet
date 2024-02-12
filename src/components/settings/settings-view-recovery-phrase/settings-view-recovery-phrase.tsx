@@ -5,7 +5,7 @@ import {StyleSheet, View} from 'react-native';
 import {Color} from '@app/colors';
 import {I18N} from '@app/i18n';
 
-import {MnemonicTable, Spacer, Text} from '../ui';
+import {MnemonicTable, Spacer, Text} from '../../ui';
 
 interface SettingsViewRecoveryPhraseProps {
   mnemonic: string;

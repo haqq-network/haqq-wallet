@@ -49,6 +49,12 @@ export const HomeSettings = memo(({theme}: Props) => {
       )}
 
       <SettingsButton
+        next={SettingsStackRoutes.SettingsCurrency}
+        icon={IconsName.currency}
+        title={I18N.homeSettingsCurrency}
+      />
+
+      <SettingsButton
         rightTitle={capitalizedTheme}
         icon={IconsName.brush}
         title={I18N.homeSettingsAppearance}

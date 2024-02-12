@@ -274,6 +274,7 @@ export enum SettingsStackRoutes {
   Home = 'homeSettings_',
   SettingsAccounts = 'settingsAccounts',
   SettingsAddressBook = 'settingsAddressBook',
+  SettingsCurrency = 'settingsCurrency',
   SettingsTheme = 'settingsTheme',
   SettingsNotification = 'settingsNotification',
   SettingsProviders = 'settingsProviders',
@@ -296,6 +297,7 @@ export type SettingsStackParamList = HomeStackParamList & {
   };
   [SettingsStackRoutes.SettingsAccounts]: undefined;
   [SettingsStackRoutes.SettingsAddressBook]: undefined;
+  [SettingsStackRoutes.SettingsCurrency]: undefined;
   [SettingsStackRoutes.SettingsTheme]: undefined;
   [SettingsStackRoutes.SettingsNotification]: undefined;
   [SettingsStackRoutes.SettingsProviders]: undefined;

@@ -2,7 +2,7 @@ import React, {useCallback} from 'react';
 
 import {observer} from 'mobx-react';
 
-import {SettingsSecurityPin} from '@app/components/settings-security-pin';
+import {SettingsSecurityPin} from '@app/components/settings/settings-security-pin';
 import {CustomHeader} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {getProviderInstanceForWallet, showModal} from '@app/helpers';

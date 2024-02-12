@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {ThemedButton} from '@app/components/settings-theme/theme-button';
+import {ThemedButton} from '@app/components/settings/settings-theme/theme-button';
 import {CustomHeader, PopupContainer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
