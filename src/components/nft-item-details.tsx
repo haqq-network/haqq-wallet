@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 
-import {Image, SafeAreaView, ScrollView, View} from 'react-native';
+import {SafeAreaView, ScrollView, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {cleanNumber, createTheme} from '@app/helpers';
@@ -9,6 +9,7 @@ import {I18N} from '@app/i18n';
 import {NftItem} from '@app/types';
 import {WEI} from '@app/variables/common';
 
+import {ImageWrapper} from './image-wrapper';
 import {Button, ButtonVariant, Spacer, Text} from './ui';
 import {TrimmedText} from './ui/trimmed-text';
 
@@ -29,7 +30,7 @@ export const NftItemDetails = ({item, onPressSend}: NftItemDetailsProps) => {
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
         <View style={styles.imageContainer} onLayout={onImageLayout}>
-          <Image
+          <ImageWrapper
             resizeMode="cover"
             source={{uri: item.image}}
             style={{
