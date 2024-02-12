@@ -1,7 +1,7 @@
 import React, {memo, useCallback, useMemo} from 'react';
 
 import {toJS} from 'mobx';
-import {Image, TouchableWithoutFeedback, View} from 'react-native';
+import {TouchableWithoutFeedback, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {CardSmall, DataContent, Icon, Spacer, Text} from '@app/components/ui';
@@ -13,6 +13,8 @@ import {Balance} from '@app/services/balance';
 import {STRINGS} from '@app/variables/common';
 
 import {TransactionStatus} from './transaction-status';
+
+import {ImageWrapper} from '../image-wrapper';
 
 export interface TransactionRowProps {
   item: Transaction;
@@ -99,7 +101,7 @@ export const TransactionRow = memo(
             <Icon name={item.parsed.icon} color={Color.graphicBase1} />
             {!!token && (
               <View style={styles.tokenIconWrapper}>
-                <Image source={toJS(token.icon)} style={styles.tokenIcon} />
+                <ImageWrapper source={token.icon} style={styles.tokenIcon} />
               </View>
             )}
           </View>

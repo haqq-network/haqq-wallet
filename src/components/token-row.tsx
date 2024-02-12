@@ -1,13 +1,14 @@
 import React, {useMemo} from 'react';
 
-import {toJS} from 'mobx';
-import {Image, TouchableOpacity, View} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {IToken} from '@app/types';
 import {LONG_NUM_PRECISION} from '@app/variables/common';
+
+import {ImageWrapper} from './image-wrapper';
 
 export interface TokenRowProps {
   item: IToken;
@@ -23,9 +24,9 @@ export const TokenRow = ({item, onPress}: TokenRowProps) => {
       disabled={!onPress}
       onPress={onPress}
       style={styles.container}>
-      <Image
+      <ImageWrapper
         style={styles.icon}
-        source={toJS(item.image) || require('@assets/images/empty-icon.png')}
+        source={item.image || require('@assets/images/empty-icon.png')}
         resizeMode="cover"
       />
       <Spacer width={12} />

@@ -1,7 +1,6 @@
 import React from 'react';
 
-import {toJS} from 'mobx';
-import {Image, View} from 'react-native';
+import {View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {BottomSheet} from '@app/components/bottom-sheet';
@@ -14,6 +13,8 @@ import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
 import {Balance} from '@app/services/balance';
 import {IS_IOS, LONG_NUM_PRECISION, STRINGS} from '@app/variables/common';
+
+import {ImageWrapper} from './image-wrapper';
 
 type TransactionDetailProps = {
   tx: Transaction;
@@ -127,7 +128,7 @@ export const TransactionDetail = ({
                 title={
                   <>
                     <View style={styles.iconView}>
-                      <Image source={toJS(token.icon)} style={styles.icon} />
+                      <ImageWrapper source={token.icon} style={styles.icon} />
                     </View>
                     <Spacer width={4} />
                     <Text t11>
