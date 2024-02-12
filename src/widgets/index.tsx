@@ -53,7 +53,7 @@ const WidgetMap: IWidgetMap = {
   ),
   Ad: params => <AdWidget key={generateUUID()} banner={params} />,
   Banner: params => <BannerWidget key={generateUUID()} banner={params} />,
-  TokenList: params => <TokensWidgetWrapper key={generateUUID()} {...params} />,
+  Tokens: params => <TokensWidgetWrapper key={generateUUID()} {...params} />,
   Nft: params => <NftWidgetWrapper key={generateUUID()} {...params} />,
 };
 
