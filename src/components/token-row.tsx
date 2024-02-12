@@ -1,7 +1,6 @@
 import React, {useMemo} from 'react';
 
 import {toJS} from 'mobx';
-import {observer} from 'mobx-react';
 import {Image, TouchableOpacity, View} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -15,8 +14,7 @@ export interface TokenRowProps {
   onPress?: () => void;
 }
 
-export const TokenRow = observer(({item: _item, onPress}: TokenRowProps) => {
-  const item = useMemo(() => toJS(_item), [_item]);
+export const TokenRow = ({item, onPress}: TokenRowProps) => {
   const priceInUSD = useMemo(() => {
     return item.value.toFiat('USD').toBalanceString(LONG_NUM_PRECISION);
   }, [item]);
@@ -27,7 +25,7 @@ export const TokenRow = observer(({item: _item, onPress}: TokenRowProps) => {
       style={styles.container}>
       <Image
         style={styles.icon}
-        source={item.image || require('@assets/images/empty-icon.png')}
+        source={toJS(item.image) || require('@assets/images/empty-icon.png')}
         resizeMode="cover"
       />
       <Spacer width={12} />
@@ -51,7 +49,7 @@ export const TokenRow = observer(({item: _item, onPress}: TokenRowProps) => {
       </View>
     </TouchableOpacity>
   );
-});
+};
 
 const styles = createTheme({
   tokenName: {maxWidth: 220},

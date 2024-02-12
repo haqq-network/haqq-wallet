@@ -1,5 +1,5 @@
 import {hashMessage} from '@walletconnect/utils';
-import {makeAutoObservable, runInAction, toJS} from 'mobx';
+import {makeAutoObservable, runInAction} from 'mobx';
 import {isHydrated} from 'mobx-persist-store';
 
 import {IconProps} from '@app/components/ui';
@@ -110,7 +110,7 @@ class TransactionStore {
   }
 
   getAll() {
-    return toJS(this._transactions);
+    return this._transactions;
   }
 
   remove(id: string) {
@@ -152,8 +152,8 @@ class TransactionStore {
     return nextTxList;
   };
 
-  fetchLatestTransactions = async (accounts: string[]) => {
-    if (this.isLoading) {
+  fetchLatestTransactions = async (accounts: string[], force = false) => {
+    if (this.isLoading && !force) {
       return;
     }
     const newTxs = (await this._fetch(accounts, 'latest'))
@@ -162,7 +162,6 @@ class TransactionStore {
 
     runInAction(() => {
       this._transactions = newTxs;
-
       this._isLoading = false;
     });
     return newTxs;
