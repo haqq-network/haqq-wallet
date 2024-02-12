@@ -48,7 +48,7 @@ export const TotalValueInfo = observer(
     balance,
     addressList,
     tokens,
-    initialTab,
+    initialTab = TotalValueTabNames.tokens,
     onPressTxRow,
     onPressInfo,
   }: TotalValueInfoProps) => {
@@ -90,6 +90,7 @@ export const TotalValueInfo = observer(
           <TotalValueInfoHeader balance={balance} onPressInfo={onPressInfo} />
           {isSomeFeaturesEnabled([Feature.nft, Feature.tokens]) && (
             <TopTabNavigator
+              activeTabIndex={TabIndexMap[activeTab]}
               initialTabIndex={initialTabIndex}
               showSeparators
               contentContainerStyle={styles.tabsContentContainerStyle}
@@ -120,7 +121,7 @@ export const TotalValueInfo = observer(
           )}
         </>
       ),
-      [balance, onPressInfo, onTabChange],
+      [balance, onPressInfo, onTabChange, activeTab],
     );
 
     const renderListEmptyComponent = useCallback(

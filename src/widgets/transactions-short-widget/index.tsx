@@ -2,6 +2,7 @@ import React, {useCallback, useMemo} from 'react';
 
 import {observer} from 'mobx-react';
 
+import {TotalValueTabNames} from '@app/components/total-value-info';
 import {useTypedNavigation} from '@app/hooks';
 import {useTransactionList} from '@app/hooks/use-transaction-list';
 import {useWalletsAddressList} from '@app/hooks/use-wallets-address-list';
@@ -52,7 +53,9 @@ export const TransactionsShortWidgetWrapper = observer(() => {
   );
 
   const openTotalInfo = useCallback(() => {
-    navigation.navigate(HomeStackRoutes.TotalValueInfo);
+    navigation.navigate(HomeStackRoutes.TotalValueInfo, {
+      tab: TotalValueTabNames.transactions,
+    });
   }, []);
 
   return (
