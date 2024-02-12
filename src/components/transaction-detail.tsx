@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {toJS} from 'mobx';
 import {Image, View} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -126,7 +127,7 @@ export const TransactionDetail = ({
                 title={
                   <>
                     <View style={styles.iconView}>
-                      <Image source={token.icon} style={styles.icon} />
+                      <Image source={toJS(token.icon)} style={styles.icon} />
                     </View>
                     <Spacer width={4} />
                     <Text t11>
