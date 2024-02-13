@@ -107,7 +107,7 @@ export const WalletCard = memo(
         result = Balance.Empty;
       }
 
-      return result.toFiat('USD').toBalanceString();
+      return result.toFiat().toBalanceString();
     }, [total]);
 
     const onQr = () => {

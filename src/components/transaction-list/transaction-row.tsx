@@ -20,6 +20,7 @@ export interface TransactionRowProps {
   item: Transaction;
   addresses: string[];
   withPadding?: boolean;
+
   onPress(tx: Transaction): void;
 }
 
@@ -159,7 +160,7 @@ export const TransactionRow = memo(
                 numberOfLines={1}>
                 {amoutPrefix}
                 {STRINGS.NBSP}
-                {amount.toFiat('USD').toBalanceString(4)}
+                {amount.toFiat().toBalanceString(4)}
               </Text>
             </View>
           )}

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback} from 'react';
 
 import {observer} from 'mobx-react';
 import {FlatList, ListRenderItem, Text, View} from 'react-native';
@@ -60,10 +60,6 @@ export const SettingsCurrency = observer(({goBack}: SettingsThemeProps) => {
     [getCurrencyDescription, selectedCurrency, setSelectedCurrency],
   );
 
-  useEffect(() => {
-    Currencies.fetch();
-  }, []);
-
   return (
     <View style={styles.container}>
       <CustomHeader
@@ -71,7 +67,6 @@ export const SettingsCurrency = observer(({goBack}: SettingsThemeProps) => {
         iconLeft="arrow_back"
         title={I18N.settingsCurrencyScreen}
       />
-      <Text>This is currencies settings screen</Text>
       <FlatList data={availableCurrencies} renderItem={renderItem} />
     </View>
   );

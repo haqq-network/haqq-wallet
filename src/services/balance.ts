@@ -2,10 +2,9 @@ import Decimal from 'decimal.js';
 import {BigNumber, BigNumberish} from 'ethers';
 
 import {cleanNumber} from '@app/helpers/clean-number';
-import {ExchangeRates} from '@app/services/exchange-rates';
+import {Currencies} from '@app/models/currencies';
 import {
   BalanceConstructor,
-  Fiat,
   HexNumber,
   IBalance,
   ISerializable,
@@ -287,15 +286,8 @@ export class Balance implements IBalance, ISerializable {
   /**
    * Convert balance to fiat currency
    */
-  toFiat = (type: Fiat) => {
-    switch (type) {
-      case 'USD': {
-        return ExchangeRates.convert(this, type);
-      }
-      default: {
-        return Balance.Empty;
-      }
-    }
+  toFiat = () => {
+    return Currencies.convert(this);
   };
 
   private getBnRaw = (

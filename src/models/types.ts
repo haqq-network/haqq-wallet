@@ -8,3 +8,8 @@ export type Currency = {
   title: string;
   updated_at: string;
 };
+
+export type CurrencyRate = {
+  amount: number;
+  denom: string;
+};
