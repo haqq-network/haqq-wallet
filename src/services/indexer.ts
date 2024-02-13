@@ -4,6 +4,7 @@ import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {Whitelist} from '@app/helpers/whitelist';
 import {I18N, getText} from '@app/i18n';
+import {Currencies} from '@app/models/currencies';
 import {Provider} from '@app/models/provider';
 import {
   ContractNameMap,
@@ -58,7 +59,7 @@ export class Indexer {
     const result: IndexerUpdatesResponse = await jsonrpcRequest(
       app.provider.indexer,
       'updates',
-      [accounts, updated].filter(Boolean),
+      [accounts, updated, Currencies.selectedCurrency].filter(Boolean),
     );
 
     return result;

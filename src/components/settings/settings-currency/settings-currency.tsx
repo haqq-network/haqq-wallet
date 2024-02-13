@@ -1,27 +1,101 @@
-import React from 'react';
+import React, {useCallback, useEffect} from 'react';
 
-import {CustomHeader, PopupContainer} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {observer} from 'mobx-react';
+import {FlatList, ListRenderItem, Text, View} from 'react-native';
+
+import {Color} from '@app/colors';
+import {ImageWrapper} from '@app/components/image-wrapper';
+import {CustomHeader, Icon, IconButton, IconsName} from '@app/components/ui';
+import {createTheme, scale} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Currencies} from '@app/models/currencies';
+import {Currency} from '@app/models/types';
 
 export type SettingsThemeProps = {
   goBack: () => void;
 };
 
-export const SettingsCurrency = ({goBack}: SettingsThemeProps) => {
+export const SettingsCurrency = observer(({goBack}: SettingsThemeProps) => {
+  const availableCurrencies = Currencies.currencies;
+  const selectedCurrency = Currencies.selectedCurrency;
+
+  const getCurrencyDescription = useCallback((item: Currency) => {
+    const usableParts = [item.id];
+    item.prefix && usableParts.unshift(item.prefix);
+    item.postfix && usableParts.push(item.postfix);
+
+    return usableParts.join(' \u00B7 ');
+  }, []);
+
+  const setSelectedCurrency = useCallback(
+    (selectedCurrencyId: string) => () => {
+      Currencies.selectedCurrency = selectedCurrencyId;
+    },
+    [],
+  );
+
+  const renderItem: ListRenderItem<Currency> = useCallback(
+    ({item}) => {
+      return (
+        <IconButton
+          onPress={setSelectedCurrency(item.id)}
+          style={styles.listItemContainer}>
+          <View style={styles.currencyInfoContainer}>
+            <ImageWrapper source={{uri: item.icon}} style={styles.icon} />
+            <View>
+              <View>
+                <Text>{item.title}</Text>
+              </View>
+              <View>
+                <Text>{getCurrencyDescription(item)}</Text>
+              </View>
+            </View>
+          </View>
+          {selectedCurrency === item.id && (
+            <Icon name={IconsName.check} color={Color.textGreen1} i24 />
+          )}
+        </IconButton>
+      );
+    },
+    [getCurrencyDescription, selectedCurrency, setSelectedCurrency],
+  );
+
+  useEffect(() => {
+    Currencies.fetch();
+  }, []);
+
   return (
-    <PopupContainer style={styles.container}>
+    <View style={styles.container}>
       <CustomHeader
         onPressLeft={goBack}
         iconLeft="arrow_back"
         title={I18N.settingsCurrencyScreen}
       />
-    </PopupContainer>
+      <Text>This is currencies settings screen</Text>
+      <FlatList data={availableCurrencies} renderItem={renderItem} />
+    </View>
   );
-};
+});
 
 const styles = createTheme({
   container: {
     marginHorizontal: 20,
+  },
+  listItemContainer: {
+    height: scale(74),
+    width: '100%',
+    paddingHorizontal: scale(10),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  icon: {
+    height: scale(42),
+    width: scale(42),
+    borderRadius: scale(8),
+    marginRight: scale(10),
+  },
+  currencyInfoContainer: {
+    flexDirection: 'row',
   },
 });

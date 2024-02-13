@@ -1,5 +1,6 @@
 import {app} from '@app/contexts';
 import {AppInfo} from '@app/helpers/get-app-info';
+import {Currency} from '@app/models/types';
 import {
   MarkupResponse,
   NewsRow,
@@ -358,5 +359,14 @@ export class Backend {
       headers: Backend.headers,
     });
     return await getHttpResponse<StoriesResponse>(response);
+  }
+
+  async availableCurrencies(): Promise<Currency[]> {
+    const response = await fetch(`${this.getRemoteUrl()}currencies`, {
+      method: 'GET',
+      headers: Backend.headers,
+    });
+
+    return await getHttpResponse<any>(response);
   }
 }

@@ -1,5 +1,6 @@
-import React, {memo} from 'react';
+import React from 'react';
 
+import {observer} from 'mobx-react';
 import {ScrollView} from 'react-native';
 
 import {app} from '@app/contexts';
@@ -7,6 +8,7 @@ import {createTheme} from '@app/helpers';
 import {useTesterModeEnabled} from '@app/hooks/use-tester-mode-enabled';
 import {useWalletConnectAccounts} from '@app/hooks/use-wallet-connect-accounts';
 import {I18N} from '@app/i18n';
+import {Currencies} from '@app/models/currencies';
 import {SettingsStackRoutes} from '@app/route-types';
 import {AppTheme} from '@app/types';
 import {capitalize} from '@app/utils';
@@ -19,7 +21,7 @@ type Props = {
   theme: AppTheme;
 };
 
-export const HomeSettings = memo(({theme}: Props) => {
+export const HomeSettings = observer(({theme}: Props) => {
   const capitalizedTheme = capitalize(theme);
   const {accounts} = useWalletConnectAccounts();
   const isTesterMode = useTesterModeEnabled();
@@ -49,6 +51,7 @@ export const HomeSettings = memo(({theme}: Props) => {
       )}
 
       <SettingsButton
+        rightTitle={Currencies.selectedCurrency}
         next={SettingsStackRoutes.SettingsCurrency}
         icon={IconsName.currency}
         title={I18N.homeSettingsCurrency}
