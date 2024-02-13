@@ -7,7 +7,7 @@ import {storage} from '@app/services/mmkv';
 
 class CurrenciesStore {
   private _currencies: Currency[] = [];
-  private _selectedCurrency: string = '';
+  private _selectedCurrency: string = 'USD';
 
   constructor(shouldSkipPersisting: boolean = false) {
     makeAutoObservable(this);

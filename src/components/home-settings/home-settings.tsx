@@ -25,6 +25,7 @@ export const HomeSettings = observer(({theme}: Props) => {
   const capitalizedTheme = capitalize(theme);
   const {accounts} = useWalletConnectAccounts();
   const isTesterMode = useTesterModeEnabled();
+  const selectedCurrency = Currencies.selectedCurrency;
 
   return (
     <ScrollView contentContainerStyle={page.container} testID="settings_home">
@@ -51,7 +52,7 @@ export const HomeSettings = observer(({theme}: Props) => {
       )}
 
       <SettingsButton
-        rightTitle={Currencies.selectedCurrency}
+        rightTitle={selectedCurrency}
         next={SettingsStackRoutes.SettingsCurrency}
         icon={IconsName.currency}
         title={I18N.homeSettingsCurrency}

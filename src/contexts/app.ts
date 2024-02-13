@@ -122,11 +122,6 @@ class App extends AsyncEventEmitter {
 
     this.user = User.getOrCreate();
 
-    // TODO Temporary setup default currency
-    if (!VariablesString.get('currency')) {
-      VariablesString.set('currency', 'AED');
-    }
-
     this._provider = Provider.getById(this.providerId);
 
     if (this._provider) {
