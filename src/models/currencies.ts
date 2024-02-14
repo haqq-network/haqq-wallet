@@ -48,6 +48,10 @@ class CurrenciesStore {
     }, {});
   };
 
+  get currency(): Currency | undefined {
+    return this._currencies[this._selectedCurrency];
+  }
+
   get currencies() {
     return Object.values(this._currencies);
   }

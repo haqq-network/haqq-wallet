@@ -80,6 +80,8 @@ export async function onWalletsBalanceCheck() {
       new Date(updates.last_update),
     );
 
+    // Must be before all balance calculation because each calculation use rate
+    Currencies.setRates(updates.rates);
     const result = parseIndexerBalances(updates);
 
     //Caching balances
@@ -87,7 +89,6 @@ export async function onWalletsBalanceCheck() {
     storage.setItem(BALANCE_CACHE_KEY, value);
 
     app.onWalletsBalance(result);
-    Currencies.setRates(updates.rates);
   } catch (e) {
     Logger.error(Events.onWalletsBalanceCheck, e);
 

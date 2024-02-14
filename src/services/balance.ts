@@ -143,14 +143,26 @@ export class Balance implements IBalance, ISerializable {
     fixed = NUM_PRECISION,
     precission: number = this.precission,
   ) => {
-    if (this.symbol === '$') {
+    const isFiat = !!Currencies.currencies.find(
+      currency => currency.id === this.symbol,
+    );
+    if (isFiat) {
+      const getStringWithSymbol = (value: string) => {
+        const currency = Currencies.currency;
+        const result = [value];
+        currency?.prefix && result.unshift(currency.prefix);
+        currency?.postfix && result.push(currency.postfix);
+        return result.join(' ');
+      };
+
       const floatString = this.toFloatString(fixed, precission);
       const isNegative = floatString.startsWith('-');
       if (isNegative) {
-        return `- ${this.symbol}${floatString.replace('-', '')}`;
+        return `- ${getStringWithSymbol(floatString.replace('-', ''))}`;
       }
-      return `${this.symbol}` + this.toFloatString(fixed, precission);
+      return `${getStringWithSymbol(this.toFloatString(fixed, precission))}`;
     }
+
     return this.toFloatString(fixed, precission) + ` ${this.symbol}`;
   };
 
