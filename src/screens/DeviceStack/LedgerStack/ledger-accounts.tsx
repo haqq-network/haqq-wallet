@@ -118,7 +118,8 @@ export const LedgerAccountsScreen = memo(() => {
   }, [loading, lastIndex, loadAccounts]);
 
   const onPressAdd = useCallback(
-    (item: LedgerAccountItem) => {
+    async (item: LedgerAccountItem) => {
+      await provider.abort();
       navigation.navigate(LedgerStackRoutes.LedgerVerify, {
         type: 'ledger',
         nextScreen: app.onboarded
