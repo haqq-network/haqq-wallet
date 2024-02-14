@@ -1792,7 +1792,7 @@ export type IStory = {
       row: {
         event?: AdjustEvents;
         text: string;
-        type: 'button' | 'text';
+        type: 'button' | 'text' | 'spacer';
       };
     }[];
     attachment: {
@@ -1807,3 +1807,5 @@ export type IStory = {
 };
 
 export type StoriesResponse = IStory[];
+
+export type ArrayElement<A> = A extends readonly (infer T)[] ? T : never;
