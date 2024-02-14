@@ -5,7 +5,7 @@ import {
   ProviderLedgerReactNative,
   scanDevices,
 } from '@haqq/provider-ledger-react-native';
-import {suggestApp} from '@haqq/provider-ledger-react-native/src/commands/suggest-app';
+import {Observable, firstValueFrom} from 'rxjs';
 
 import {LedgerScan} from '@app/components/ledger-scan';
 import {app} from '@app/contexts';
@@ -97,34 +97,52 @@ export const LedgerScanScreen = memo(() => {
 
       ledgerProvidersMap[item.id] = {taskId, provider};
 
-      const transport = await provider.awaitForTransport(item.id, taskId);
+      await provider.suggestApp();
+      return firstValueFrom<void>(
+        provider.withDevice()(
+          transport =>
+            new Observable(o => {
+              const run = async () => {
+                if (!transport) {
+                  throw new Error('can_not_connected');
+                }
 
-      if (!transport) {
-        throw new Error('can_not_connected');
-      }
+                hideModal(ModalType.ledgerNoApp);
+                navigation.navigate(LedgerStackRoutes.LedgerAccounts, {
+                  deviceId: item.id,
+                  deviceName: `Ledger ${item.name}`,
+                });
+                setDeviceError(item, null);
+              };
 
-      try {
-        await suggestApp(transport, LEDGER_APP);
-        hideModal(ModalType.ledgerNoApp);
-        navigation.navigate(LedgerStackRoutes.LedgerAccounts, {
-          deviceId: item.id,
-          deviceName: `Ledger ${item.name}`,
-        });
-        setDeviceError(item, null);
-      } catch (err) {
-        if (err instanceof Error) {
-          setDeviceError(item, err);
-          // @ts-ignore
-          switch (err.statusCode) {
-            case 26631:
-              throw new Error('app_not_found');
-            case 21761:
-              throw new Error('user_refused_on_device');
-          }
-        }
-      } finally {
-        setDeviceLoading(item, false);
-      }
+              run()
+                .then(() => {
+                  o.complete();
+                })
+                .catch(err => {
+                  try {
+                    // handle default errors and reconnect
+                    // this will throw error if `err` is not handled by ProviderLedgerReactNative
+                    o.error(err);
+                  } catch (_) {
+                    o.complete();
+                    setDeviceError(item, err);
+                    switch (err.statusCode) {
+                      case 26631:
+                        throw new Error('app_not_found');
+                      case 21761:
+                        throw new Error('user_refused_on_device');
+                      default:
+                        throw err;
+                    }
+                  }
+                })
+                .finally(() => {
+                  setDeviceLoading(item, false);
+                });
+            }),
+        ),
+      );
     },
     [ledgerProvidersMap, navigation, setDeviceError, setDeviceLoading],
   );
