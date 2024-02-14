@@ -7,7 +7,6 @@ import {
   Button,
   ButtonVariant,
   DataView,
-  ErrorText,
   PopupContainer,
   Spacer,
   Text,
@@ -25,14 +24,11 @@ interface TransactionConfirmationProps {
   item: NftItem;
   fee: Balance;
   contact: Contact | null;
-  error?: string;
-
   disabled?: boolean;
   onConfirmTransaction: () => void;
 }
 
 export const TransactionNftConfirmation = ({
-  error,
   disabled,
   contact,
   to,
@@ -78,11 +74,6 @@ export const TransactionNftConfirmation = ({
           </Text>
         </DataView>
       </View>
-      {error && (
-        <ErrorText center e0>
-          {error}
-        </ErrorText>
-      )}
       <Spacer />
       <Button
         disabled={!fee.isPositive() && !disabled}

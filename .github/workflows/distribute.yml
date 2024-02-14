@@ -9,7 +9,18 @@ on:
         options:
           - true
           - false
-
+      STORIES_ENABLED:
+        type: choice
+        description: STORIES_ENABLED
+        options:
+          - true
+          - false
+      # DEFAULT_BACKEND:
+      #   type: choice
+      #   description: HAQQ_BACKEND_DEFAULT
+      #   options:
+      #     - ${{secrets.HAQQ_BACKEND}}
+      #     - ${{secrets.HAQQ_BACKEND_DEV}}
       BUILD_DESCRIPTION:
         required: true
         description: Please add a short note for a new build
@@ -17,37 +28,39 @@ on:
 jobs:
   test:
     name: Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-cpu16-ram64
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
       - uses: actions/cache@v3
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
       - name: Install packages
-        run: yarn install --frozen-lockfile
+        run: yarn install 
 
   build_android:
-    name: Build and distribute Android app
+    name: Android
     uses: ./.github/workflows/distribute-android.yml
     secrets: inherit
     with:
       IS_DEVELOPMENT: false
       IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
+      STORIES_ENABLED: ${{github.event.inputs.STORIES_ENABLED}}
       BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION}}
     needs:
       - test
 
   build_ios:
-    name: Build and distribute iOS app
+    name: iOS
     uses: ./.github/workflows/distribute-ios.yml
     secrets: inherit
     with:
       IS_DEVELOPMENT: false
       IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
+      STORIES_ENABLED: ${{github.event.inputs.STORIES_ENABLED}}
       BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION}}
     needs:
       - test

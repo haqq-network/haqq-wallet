@@ -18,6 +18,7 @@ import {
   Platform,
 } from 'react-native';
 import {Adjust} from 'react-native-adjust';
+import prompt, {PromptOptions} from 'react-native-prompt-android';
 
 import {app} from '@app/contexts';
 import {RemoteConfig} from '@app/services/remote-config';
@@ -33,6 +34,7 @@ import {I18N, getText} from './i18n';
 import {Banner, BannerButtonEvent, BannerType} from './models/banner';
 import {Wallet} from './models/wallet';
 import {navigator} from './navigator';
+import {HomeStackRoutes, WelcomeStackRoutes} from './route-types';
 import {Balance} from './services/balance';
 import {EthSignError} from './services/eth-sign';
 import {
@@ -41,6 +43,9 @@ import {
   EthType,
   EthTypedData,
   HaqqEthereumAddress,
+  IndexerTransaction,
+  IndexerTransactionWithType,
+  IndexerTxMsgType,
   JsonRpcTransactionRequest,
   PartialJsonRpcRequest,
   SendTransactionError,
@@ -65,9 +70,25 @@ export function isNumber(value: string) {
   return value.match(numbersRegExp);
 }
 
-const regex = /(0x\w{2})(.*)(\w{4})$/gm;
+const ethAddressRegex = /(0x\w{2})(.*)(\w{4})$/gm;
+const haqqAddressRegex = /(haqq)(.*)(\w{4})$/gm;
+const haqqValidatorAddressRegex = /(haqqvaloper)(.*)(\w{4})$/gm;
 
 export function splitAddress(address: string) {
+  if (!address) {
+    return [];
+  }
+
+  let regex = ethAddressRegex;
+
+  if (AddressUtils.isHaqqAddress(address)) {
+    regex = haqqAddressRegex;
+  }
+
+  if (AddressUtils.isHaqqValidatorAddress(address)) {
+    regex = haqqValidatorAddressRegex;
+  }
+
   regex.lastIndex = 0;
   const result = regex.exec(address);
   if (!result) {
@@ -650,22 +671,47 @@ export function isEthSignError(err: any): err is EthSignError {
 
 export interface InAppBrowserOptions {
   title?: string;
-  onPageLoaded?: () => void;
+  onPageLoaded?: (isError: boolean | undefined) => void;
 }
 
 export const openInAppBrowser = (
   url: string,
   options?: InAppBrowserOptions,
 ) => {
-  const {title, onPageLoaded} = options || {};
+  const {screenName, formattedUrl, title} = prepareDataForInAppBrowser(
+    url,
+    options,
+  );
+
+  navigator.navigate(screenName, {
+    url: formattedUrl,
+    title,
+  });
+};
+
+export const prepareDataForInAppBrowser = (
+  url: string,
+  options?: InAppBrowserOptions,
+) => {
+  const {onPageLoaded} = options || {};
   const eventId = `${Events.openInAppBrowserPageLoaded}-${url}`;
+
   if (onPageLoaded) {
     app.once(eventId, onPageLoaded);
   }
-  navigator.navigate('inAppBrowser', {
-    url: onUrlSubmit(url),
-    title,
-  });
+
+  const screenName:
+    | HomeStackRoutes.InAppBrowser
+    | WelcomeStackRoutes.InAppBrowser = app.onboarded
+    ? HomeStackRoutes.InAppBrowser
+    : WelcomeStackRoutes.InAppBrowser;
+
+  return {
+    ...options,
+    formattedUrl: onUrlSubmit(url),
+    eventId,
+    screenName,
+  };
 };
 
 export const openWeb3Browser = (url: string) => {
@@ -849,7 +895,8 @@ export const generateMockBanner = (): Banner => {
     snoozedUntil: new Date(),
     defaultEvent: BannerButtonEvent.test,
     defaultParams: {banner_id: id, type: 'default event'},
-    closeEvent: BannerButtonEvent.test,
+    closeEvent:
+      Math.random() > 0.5 ? BannerButtonEvent.none : BannerButtonEvent.test,
     closeParams: {banner_id: id, type: 'close event'},
     priority: 1,
   };
@@ -887,3 +934,22 @@ export const uppercaseFirtsLetter = (str: string) =>
     .toLowerCase()
     // uppercase first letter
     .replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
+
+export function promtAsync(
+  title?: string,
+  message?: string,
+  options?: PromptOptions,
+): Promise<string> {
+  return new Promise(resolve => {
+    prompt(title, message, resolve, options);
+  });
+}
+
+/**
+ * wrap for typescript indexet TX type
+ */
+export function wrapIndexerTx<T extends IndexerTxMsgType>(
+  tx: IndexerTransaction,
+) {
+  return tx as IndexerTransactionWithType<T>;
+}

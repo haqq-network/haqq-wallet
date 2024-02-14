@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
+import {autorun} from 'mobx';
 import {observer} from 'mobx-react';
 
 import {HomeStaking} from '@app/components/home-staking';
@@ -8,7 +9,7 @@ import {onStakingRewards} from '@app/event-actions/on-staking-rewards';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
 import {abortProviderInstanceForWallet} from '@app/helpers/provider-instance';
-import {sumReduce} from '@app/helpers/staking';
+import {reduceAmounts} from '@app/helpers/staking';
 import {useTypedNavigation} from '@app/hooks';
 import {
   StakingMetadata,
@@ -47,23 +48,20 @@ export const HomeStakingScreen = observer(() => {
   }, []);
 
   useEffect(() => {
-    const rows = StakingMetadata.getAll();
+    const rewards = StakingMetadata.getAllByType(StakingMetadataType.reward);
+    const delegations = StakingMetadata.getAllByType(
+      StakingMetadataType.delegation,
+    );
+    const unDelegations = StakingMetadata.getAllByType(
+      StakingMetadataType.undelegation,
+    );
+    const visibleWallets = Wallet.getAllVisible();
 
     const listener = () => {
-      const rewards = rows.filter(
-        val => val.type === StakingMetadataType.reward,
-      );
-      const delegations = rows.filter(
-        val => val.type === StakingMetadataType.delegation,
-      );
-      const unDelegations = rows.filter(
-        val => val.type === StakingMetadataType.undelegation,
-      );
-
-      const rewardsSum = new Balance(sumReduce(rewards));
-      const stakingSum = new Balance(sumReduce(delegations));
-      const unDelegationSum = new Balance(sumReduce(unDelegations));
-      const availableSum = Wallet.getAllVisible().reduce(
+      const rewardsSum = new Balance(reduceAmounts(rewards));
+      const stakingSum = new Balance(reduceAmounts(delegations));
+      const unDelegationSum = new Balance(reduceAmounts(unDelegations));
+      const availableSum = visibleWallets.reduce(
         (acc, w) =>
           acc.operate(app.getAvailableForStakeBalance(w.address), 'add'),
         Balance.Empty,
@@ -78,10 +76,10 @@ export const HomeStakingScreen = observer(() => {
       });
     };
 
-    rows.addListener(listener);
+    const disposer = autorun(listener);
     app.addListener(Events.onBalanceSync, listener);
     return () => {
-      rows.removeListener(listener);
+      disposer();
       app.removeListener(Events.onBalanceSync, listener);
     };
   }, []);

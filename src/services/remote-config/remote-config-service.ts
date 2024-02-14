@@ -28,16 +28,16 @@ function getCachedConfig() {
 }
 
 export class RemoteConfigService extends Initializable {
+  static instance = new RemoteConfigService();
   public isInited = false;
   public KEY = KEY;
-  static instance = new RemoteConfigService();
 
   /**
    * @return `true` if remote config is successfully initialized
    */
-  public async init(): Promise<RemoteConfigTypes | undefined> {
+  public async init(force = false): Promise<RemoteConfigTypes | undefined> {
     try {
-      if (RemoteConfigService.instance.isInited) {
+      if (RemoteConfigService.instance.isInited && !force) {
         return RemoteConfigService.instance.getAll();
       }
       this.startInitialization();
@@ -82,6 +82,18 @@ export class RemoteConfigService extends Initializable {
       return config[key];
     }
     return undefined;
+  }
+
+  public safeGet<K extends keyof RemoteConfigTypes>(
+    key: K,
+  ): RemoteConfigTypes[K] {
+    const result = RemoteConfigService.instance.get(key);
+
+    if (result) {
+      return result;
+    }
+
+    return REMOTE_CONFIG_DEFAULT_VALUES[key];
   }
 
   public getAll(): RemoteConfigTypes | undefined {

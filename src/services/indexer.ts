@@ -4,12 +4,17 @@ import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {Whitelist} from '@app/helpers/whitelist';
 import {I18N, getText} from '@app/i18n';
+import {Currencies} from '@app/models/currencies';
+import {Provider} from '@app/models/provider';
 import {
   ContractNameMap,
   IContract,
   IndexerBalance,
   IndexerTime,
   IndexerToken,
+  IndexerTransaction,
+  IndexerTransactionResponse,
+  RatesResponse,
 } from '@app/types';
 
 export type IndexerUpdatesResponse = {
@@ -28,6 +33,7 @@ export type IndexerUpdatesResponse = {
   nfts: unknown[];
   tokens: IndexerToken[];
   transactions: unknown[];
+  rates: RatesResponse;
 };
 
 export class Indexer {
@@ -53,7 +59,7 @@ export class Indexer {
     const result: IndexerUpdatesResponse = await jsonrpcRequest(
       app.provider.indexer,
       'updates',
-      [accounts, updated].filter(Boolean),
+      [accounts, updated, Currencies.selectedCurrency].filter(Boolean),
     );
 
     return result;
@@ -73,20 +79,20 @@ export class Indexer {
       return Promise.reject('Empty addresses');
     }
 
-    const response = await jsonrpcRequest<{name: string; id: string}[]>(
-      app.provider.indexer,
-      'addresses',
-      [addresses.map(AddressUtils.toHaqq)],
-    );
+    const response = await jsonrpcRequest<
+      {name: string; id: string; symbol: string}[]
+    >(app.provider.indexer, 'addresses', [addresses.map(AddressUtils.toHaqq)]);
 
     const map = addresses.reduce((acc, item) => {
       const responseExist = Array.isArray(response) && response.length > 0;
       const newValue = responseExist
         ? response.find(infoItem => infoItem.id === AddressUtils.toHaqq(item))
-            ?.name
         : null;
 
-      acc[item] = newValue ?? getText(I18N.transactionContractDefaultName);
+      acc[item] = {
+        name: newValue?.name ?? getText(I18N.transactionContractDefaultName),
+        symbol: newValue?.symbol || '',
+      };
       return acc;
     }, {} as ContractNameMap);
 
@@ -104,5 +110,29 @@ export class Indexer {
       [accounts],
     );
     return response.balance || {};
+  }
+
+  async getTransactions(
+    accounts: string[],
+    latestBlock: string = 'latest',
+    providerId = app.providerId,
+  ): Promise<IndexerTransaction[]> {
+    const provider = Provider.getById(providerId);
+
+    if (!provider?.indexer) {
+      throw new Error('Indexer is not configured');
+    }
+
+    if (!accounts.length) {
+      return [];
+    }
+
+    const haqqAddresses = accounts.filter(a => !!a).map(AddressUtils.toHaqq);
+    const response = await jsonrpcRequest<IndexerTransactionResponse>(
+      provider.indexer,
+      'transactions',
+      [haqqAddresses, latestBlock],
+    );
+    return response?.txs || {};
   }
 }

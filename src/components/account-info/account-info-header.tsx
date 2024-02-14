@@ -66,7 +66,7 @@ export const AccountInfoHeader = ({
           colorPattern={wallet.colorPattern}
         />
         <View style={styles.headerContent}>
-          <Text t3 children={total.toBalanceString()} />
+          <Text t3 children={total.toFiat().toBalanceString()} />
           <CopyMenu
             value={wallet.address}
             style={styles.copyButton}
@@ -85,6 +85,7 @@ export const AccountInfoHeader = ({
       </View>
       <First>
         <StackedVestedTokens
+          totalBalance={total}
           availableBalance={available}
           lockedBalance={locked}
           vestedBalance={vested}

@@ -45,10 +45,12 @@ import {
   cosmosAddress,
 } from '@haqq/provider-base';
 import Decimal from 'decimal.js';
-import {utils} from 'ethers';
 
 import {AddressUtils} from '@app/helpers/address-utils';
-import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
+import {
+  getRemoteBalanceValue,
+  getRemoteMultiplierValue,
+} from '@app/helpers/get-remote-balance-value';
 import {ledgerTransportCbWrapper} from '@app/helpers/ledger-transport-wrapper';
 import {Provider} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
@@ -59,7 +61,7 @@ import {
   CosmosTxV1betaSimulateResponse,
   EvmosVestingV1BalancesResponse,
 } from '@app/types/cosmos';
-import {getHttpResponse} from '@app/utils';
+import {decimalToHex, getHttpResponse} from '@app/utils';
 import {COSMOS_PREFIX, WEI} from '@app/variables/common';
 
 import {EthSign} from './eth-sign';
@@ -119,6 +121,7 @@ export class Cosmos {
   }
 
   async postQuery<T>(path: string, data: string): Promise<T> {
+    Logger.log('cosmos postQuery', path, {data});
     const resp = await fetch(this.getPath(path), {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
@@ -312,17 +315,7 @@ export class Cosmos {
     types: Record<string, Array<TypedDataField>>,
     message: Record<string, any>,
   ): Promise<string | undefined> {
-    // @ts-ignore
-    const {EIP712Domain, ...othTypes} = types;
-
-    const domainHash = utils._TypedDataEncoder.hashStruct(
-      'EIP712Domain',
-      {EIP712Domain},
-      domain,
-    );
-    const valuesHash = utils._TypedDataEncoder.from(othTypes).hash(message);
-
-    return await transport.signTypedData(hdPath, domainHash, valuesHash);
+    return await transport.signTypedData(hdPath, {domain, message, types});
   }
 
   async sendMsg(
@@ -371,14 +364,6 @@ export class Cosmos {
       extension,
     );
 
-    // Logger.log(
-    //   'rawTx',
-    //   msg.legacyAmino.body.toObject(),
-    //   msg.legacyAmino.authInfo.toObject(),
-    //   extension,
-    //   signature,
-    // );
-
     return await this.broadcastTransaction(rawTx);
   }
 
@@ -393,8 +378,6 @@ export class Cosmos {
       );
 
       const resp = await this.postSimulate(data, account);
-
-      // Logger.log('resp', resp);
 
       // TODO Unhandled exception. Types issue.
       //@ts-ignore
@@ -412,8 +395,19 @@ export class Cosmos {
       }
 
       const gas = new Balance(
-        parseInt(resp.gas_info.gas_used, 10) * 1.35,
-        0,
+        decimalToHex(
+          String(
+            // Convert to int because decimalToHex incorrectly parse decimals work only with integers
+            parseInt(
+              String(
+                // Multiply by cosmos_commission_multiplier
+                parseInt(resp.gas_info.gas_used, 10) *
+                  getRemoteMultiplierValue('cosmos_commission_multiplier'),
+              ),
+              10,
+            ),
+          ),
+        ),
       ).max(baseGas);
 
       const amount = baseFee.operate(gas, 'mul').max(totalAmount);

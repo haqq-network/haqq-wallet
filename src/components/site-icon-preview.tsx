@@ -1,12 +1,13 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
-import {Image, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import Animated, {FadeIn} from 'react-native-reanimated';
 import {SvgUri} from 'react-native-svg';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 
+import {ImageWrapper} from './image-wrapper';
 import {First, Text} from './ui';
 
 import {getFavIconUrl, getHost} from '../helpers/web3-browser-utils';
@@ -133,7 +134,7 @@ export const SiteIconPreview = ({
       <First>
         {!isImageFailed && (
           <Animated.View entering={FadeIn} style={sizeBoxStyle}>
-            <Image
+            <ImageWrapper
               resizeMode={'cover'}
               style={page.imageIcon}
               source={imageSource}

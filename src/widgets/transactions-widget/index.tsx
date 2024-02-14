@@ -1,79 +1,48 @@
-import React, {memo, useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
+import {observer} from 'mobx-react';
+
+import {TotalValueTabNames} from '@app/components/total-value-info';
 import {useTypedNavigation} from '@app/hooks';
-import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useTransactionList} from '@app/hooks/use-transaction-list';
-import {Wallet} from '@app/models/wallet';
-import {Indexer} from '@app/services/indexer';
-import {
-  OnTransactionRowPress,
-  TransactionListContract,
-  TransactionListReceive,
-  TransactionListSend,
-  TransactionSource,
-} from '@app/types';
+import {useWalletsAddressList} from '@app/hooks/use-wallets-address-list';
+import {HomeStackRoutes} from '@app/route-types';
+import {IndexerTransaction} from '@app/types';
 import {TransactionsWidget} from '@app/widgets/transactions-widget/transactions-widget';
 
-export const TransactionsWidgetWrapper = memo(() => {
+export const TransactionsWidgetWrapper = observer(() => {
   const navigation = useTypedNavigation();
-  const wallets = useMemo(() => Wallet.getAll(), []);
-  const addressList = Wallet.addressList();
-  const transactions = useTransactionList(addressList);
-  const [contractNameMap, setContractNameMap] = useState({});
+  const addressList = useWalletsAddressList();
+  const {transactions, isTransactionsLoading} = useTransactionList(addressList);
 
-  const openTotalInfo = useCallback(() => {
-    navigation.navigate('totalValueInfo');
-  }, [navigation]);
-
-  const lastThreeTransactions = useMemo<
-    (TransactionListSend | TransactionListReceive | TransactionListContract)[]
-  >(
-    () =>
-      transactions
-        .filter(item =>
-          [
-            TransactionSource.send,
-            TransactionSource.receive,
-            TransactionSource.contract,
-          ].includes(item.source),
-        )
-        .slice(0, 3) as (
-        | TransactionListSend
-        | TransactionListReceive
-        | TransactionListContract
-      )[],
+  const lastThreeTransactions = useMemo(
+    () => transactions.slice(0, 3),
     [transactions],
   );
 
-  useEffectAsync(async () => {
-    const names = lastThreeTransactions
-      .filter(({source}) => source === TransactionSource.contract)
-      .map(item => (item as TransactionListContract).to);
-    const uniqueNames = [...new Set(names)];
-    if (uniqueNames.length > 0) {
-      const info = await Indexer.instance.getContractNames(uniqueNames);
-      setContractNameMap(info);
-    }
-  }, []);
+  const openTotalInfo = useCallback(() => {
+    navigation.navigate(HomeStackRoutes.TotalValueInfo, {
+      tab: TotalValueTabNames.transactions,
+    });
+  }, [navigation]);
 
-  const onRowPress: OnTransactionRowPress = useCallback(
-    (hash, params) => {
-      const screenParams = params || {};
-      navigation.navigate('transactionDetail', {
-        ...screenParams,
-        hash,
+  const onRowPress = useCallback(
+    (tx: IndexerTransaction) => {
+      navigation.navigate(HomeStackRoutes.TransactionDetail, {
+        txId: tx.id,
+        addresses: addressList,
       });
     },
-    [navigation],
+    [navigation, addressList],
   );
 
   return (
     <TransactionsWidget
-      onPress={openTotalInfo}
+      addressList={addressList}
       lastTransactions={lastThreeTransactions}
+      isTransactionsLoading={isTransactionsLoading}
+      onPress={openTotalInfo}
       onRowPress={onRowPress}
-      wallets={wallets}
-      contractNameMap={contractNameMap}
     />
   );
 });

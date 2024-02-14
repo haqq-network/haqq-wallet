@@ -69,7 +69,7 @@ export const HomeGovernance = ({
   return (
     <>
       <CustomHeader
-        onSearchChange={onSearchChange}
+        onChangeSearch={onSearchChange}
         title={I18N.homeGovernance}
         iconRight="search"
         iconLeft="arrow_back"

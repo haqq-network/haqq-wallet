@@ -1,11 +1,6 @@
-import {useCallback, useEffect, useState} from 'react';
+import {useEffect} from 'react';
 
-import {app} from '@app/contexts';
-import {Events} from '@app/events';
-import {prepareTransactions} from '@app/helpers';
-import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {Transaction} from '@app/models/transaction';
-import {TransactionList} from '@app/types';
 
 /**
  * @example
@@ -13,33 +8,13 @@ import {TransactionList} from '@app/types';
  *  const transactionsList = useTransactionList(addressList);
  */
 export function useTransactionList(addressList: string[]) {
-  const [transactionList, setTransactionList] = useState<TransactionList[]>(
-    prepareTransactions(
-      addressList,
-      Transaction.getAllByProviderId(app.providerId),
-    ),
-  );
+  const transactions = Transaction.getAll();
 
-  const updateTransactions = useCallback(
-    async (address: string) => {
-      await awaitForEventDone(Events.onTransactionsLoad, address);
-      const transactions = Transaction.getAllByProviderId(app.providerId);
-      setTransactionList(prepareTransactions(addressList, transactions));
-    },
-    [addressList],
-  );
-
-  const fetchTransactions = useCallback(() => {
-    addressList.forEach(address => updateTransactions(address));
-  }, [addressList, updateTransactions]);
+  const isTransactionsLoading = Transaction.isLoading;
 
   useEffect(() => {
-    app.on(Events.onProviderChanged, fetchTransactions);
+    Transaction.fetchLatestTransactions(addressList, true);
+  }, [addressList[0]]);
 
-    return () => {
-      app.off(Events.onProviderChanged, fetchTransactions);
-    };
-  }, [addressList, fetchTransactions]);
-
-  return transactionList;
+  return {transactions, isTransactionsLoading};
 }

@@ -5,7 +5,7 @@ import {CompositeScreenProps} from '@react-navigation/native';
 import {SettingsAddressBook} from '@app/components/settings-address-book';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForScanQr} from '@app/helpers/await-for-scan-qr';
-import {LinkType} from '@app/helpers/parse-deep-link';
+import {LinkType, parseDeepLink} from '@app/helpers/parse-deep-link';
 import {useTypedNavigation} from '@app/hooks';
 import {Contact} from '@app/models/contact';
 import {AddressBookParamList, AddressBookStackRoutes} from '@app/route-types';
@@ -30,7 +30,8 @@ export const SettingsAddressBookScreen = memo(
     }, [search]);
 
     const onPressQR = useCallback(async () => {
-      const {type, params} = await awaitForScanQr();
+      const data = await awaitForScanQr();
+      const {type, params} = await parseDeepLink(data);
 
       switch (type) {
         case LinkType.Haqq:

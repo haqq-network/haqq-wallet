@@ -8,7 +8,6 @@ export * from './clean-number';
 export * from './create-theme';
 export * from './format-percents';
 export * from './modal';
-export * from './prepare-transactions';
 export * from './provider-instance';
 export * from './scaling-utils';
 export * from './screen-options';

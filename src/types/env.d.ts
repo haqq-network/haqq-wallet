@@ -16,6 +16,7 @@ declare module '@env' {
   export const AIRDROP_MAINNET_URL: string;
   export const HAQQ_BACKEND: string;
   export const HAQQ_BACKEND_DEV: string;
+  export const HAQQ_BACKEND_DEFAULT: string;
 
   export const ADJUST_TOKEN: string;
   export const ADJUST_ENVIRONMENT: 'sandbox' | 'production';
@@ -30,4 +31,6 @@ declare module '@env' {
   export const RECAPTCHA_V2_URL: string;
   export const RECAPTCHA_V2_SITEKEY: string;
   export const MMKV_KEY: string;
+  export const FOR_DETOX: boolean;
+  export const STORIES_ENABLED: boolean;
 }

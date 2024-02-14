@@ -241,7 +241,9 @@ class WalletStore implements MobXStoreFromRealm {
   }
 
   getById(id: string = '') {
-    return this.wallets.find(wallet => wallet.address === id) ?? null;
+    return (
+      this.wallets.find(wallet => wallet.address === id.toLowerCase()) ?? null
+    );
   }
 
   getSize() {
@@ -252,6 +254,12 @@ class WalletStore implements MobXStoreFromRealm {
     return this.wallets.map(
       w => w.address.toLowerCase() as HaqqEthereumAddress,
     );
+  }
+
+  addressListAllVisible() {
+    return this.wallets
+      .filter(w => !w.isHidden)
+      .map(w => w.address.toLowerCase() as HaqqEthereumAddress);
   }
 
   getAll() {

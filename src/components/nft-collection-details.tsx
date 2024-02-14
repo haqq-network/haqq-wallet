@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Image, SafeAreaView, View} from 'react-native';
+import {SafeAreaView, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 
 import {Color} from '@app/colors';
@@ -8,6 +8,7 @@ import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {NftCollection, NftItem} from '@app/types';
 
+import {ImageWrapper} from './image-wrapper';
 import {NftViewerItemPreviewVariant} from './nft-viewer/nft-viewer-item-preview';
 import {NftViewerItemPreviewList} from './nft-viewer/nft-viewer-item-preview-list';
 import {Spacer, Text} from './ui';
@@ -26,7 +27,7 @@ export const NftCollectionDetails = ({
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
         <View>
-          <Image
+          <ImageWrapper
             resizeMode="cover"
             source={{uri: item.image}}
             style={styles.image}

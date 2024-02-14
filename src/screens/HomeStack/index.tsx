@@ -1,5 +1,6 @@
 import React, {memo} from 'react';
 
+import {FOR_DETOX} from '@env';
 import {
   NativeStackNavigationOptions,
   createNativeStackNavigator,
@@ -15,6 +16,7 @@ import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {I18N, getText} from '@app/i18n';
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {basicScreenOptions} from '@app/screens';
+import {DeviceStack} from '@app/screens/DeviceStack';
 import {AccountDetailScreen} from '@app/screens/HomeStack/account-detail';
 import {BackupStack} from '@app/screens/HomeStack/BackupStack';
 import {HomeScreen} from '@app/screens/HomeStack/home';
@@ -38,12 +40,12 @@ import {TotalValueInfoScreen} from '@app/screens/total-value-info';
 import {ValueSelectorScreen} from '@app/screens/value-selector-screen';
 import {WalletSelectorScreen} from '@app/screens/wallet-selector-screen';
 import {Web3BrowserPopup as Web3BrowserPopupScreen} from '@app/screens/web3-browser-popup';
-import {LedgerStack} from '@app/screens/WelcomeStack/LedgerStack';
 import {SignInStack} from '@app/screens/WelcomeStack/SignInStack';
 
-const navigatorOptions = {
+const navigatorOptions: NativeStackNavigationOptions = {
   gestureEnabled: false,
   freezeOnBlur: true,
+  animation: FOR_DETOX ? 'none' : 'default',
 };
 
 const modalOptions: NativeStackNavigationOptions = {
@@ -61,12 +63,13 @@ const fullScreenModalOptions: NativeStackNavigationOptions = {
   animationDuration: 0,
 };
 
-const inAppBrowserOptions: NativeStackNavigationOptions = {
+export const inAppBrowserOptions: NativeStackNavigationOptions = {
   //@ts-ignore
   headerBackHidden: true,
   headerShown: true,
   gestureEnabled: false,
   header: () => <Spacer height={StatusBar.currentHeight} bg={Color.bg1} />,
+  presentation: 'fullScreenModal',
 };
 
 const totalInfoOptions: NativeStackNavigationOptions = {
@@ -91,7 +94,7 @@ const HomeStack = memo(() => {
       />
       <Stack.Screen
         name={HomeStackRoutes.AccountInfo}
-        component={AccountInfoScreen}
+        component={themeUpdaterHOC(AccountInfoScreen)}
         options={getWalletTitle}
       />
 
@@ -103,7 +106,7 @@ const HomeStack = memo(() => {
 
       <Stack.Screen
         name={HomeStackRoutes.AccountDetail}
-        component={AccountDetailScreen}
+        component={themeUpdaterHOC(AccountDetailScreen)}
         options={fullScreenModalOptions}
       />
 
@@ -115,32 +118,26 @@ const HomeStack = memo(() => {
 
       <Stack.Screen
         name={HomeStackRoutes.WalletProtectionPopup}
-        component={WalletProtectionPopupScreen}
+        component={themeUpdaterHOC(WalletProtectionPopupScreen)}
         options={modalOptions}
       />
 
       <Stack.Screen
         name={HomeStackRoutes.WalletConnectApplicationDetailsPopup}
-        component={WalletConnectApplicationDetailsPopupScreen}
+        component={themeUpdaterHOC(WalletConnectApplicationDetailsPopupScreen)}
         options={modalOptions}
       />
 
       <Stack.Screen
         name={HomeStackRoutes.WalletConnectApplicationListPopup}
-        component={WalletConnectApplicationListPopupScreen}
+        component={themeUpdaterHOC(WalletConnectApplicationListPopupScreen)}
         options={modalOptions}
       />
 
       <Stack.Screen
         name={HomeStackRoutes.TransactionDetail}
-        component={TransactionDetailScreen}
+        component={themeUpdaterHOC(TransactionDetailScreen)}
         options={fullScreenModalOptions}
-      />
-
-      <Stack.Screen
-        name={HomeStackRoutes.InAppBrowser}
-        component={InAppBrowserScreen}
-        options={inAppBrowserOptions}
       />
 
       <Stack.Screen
@@ -157,43 +154,43 @@ const HomeStack = memo(() => {
 
       <Stack.Screen
         name={HomeStackRoutes.BackupNotification}
-        component={BackupNotificationScreen}
+        component={themeUpdaterHOC(BackupNotificationScreen)}
         options={fullScreenModalOptions}
       />
 
       <Stack.Screen
         name={HomeStackRoutes.JsonRpcSign}
-        component={themeUpdaterHOC(JsonRpcSignPopupStack)}
+        component={JsonRpcSignPopupStack}
         options={fullScreenModalOptions}
       />
 
       <Stack.Screen
         name={HomeStackRoutes.BackupSssNotification}
-        component={BackupSssNotificationScreen}
+        component={themeUpdaterHOC(BackupSssNotificationScreen)}
         options={fullScreenModalOptions}
       />
 
       <Stack.Screen
         name={HomeStackRoutes.PopupNotificationNews}
-        component={PopupNotificationNewsScreen}
+        component={themeUpdaterHOC(PopupNotificationNewsScreen)}
         options={fullScreenModalOptions}
       />
 
       <Stack.Screen
         name={HomeStackRoutes.PopupNotification}
-        component={PopupNotificationScreen}
+        component={themeUpdaterHOC(PopupNotificationScreen)}
         options={fullScreenModalOptions}
       />
 
       <Stack.Screen
         name={HomeStackRoutes.PopupTrackActivity}
-        component={PopupTrackActivityScreen}
+        component={themeUpdaterHOC(PopupTrackActivityScreen)}
         options={fullScreenModalOptions}
       />
 
       <Stack.Screen
         name={HomeStackRoutes.Web3BrowserPopup}
-        component={Web3BrowserPopupScreen}
+        component={themeUpdaterHOC(Web3BrowserPopupScreen)}
         options={modalOptions}
       />
 
@@ -203,8 +200,8 @@ const HomeStack = memo(() => {
         options={modalOptions}
       />
       <Stack.Screen
-        name={HomeStackRoutes.Ledger}
-        component={LedgerStack}
+        name={HomeStackRoutes.Device}
+        component={DeviceStack}
         options={modalOptions}
       />
       <Stack.Screen
@@ -215,20 +212,26 @@ const HomeStack = memo(() => {
 
       <Stack.Screen
         name={HomeStackRoutes.ValueSelector}
-        component={ValueSelectorScreen}
+        component={themeUpdaterHOC(ValueSelectorScreen)}
         options={modalOptions}
       />
 
       <Stack.Screen
         name={HomeStackRoutes.TotalValueInfo}
-        component={TotalValueInfoScreen}
+        component={themeUpdaterHOC(TotalValueInfoScreen)}
         options={totalInfoOptions}
       />
 
       <Stack.Screen
         name={HomeStackRoutes.WalletSelector}
-        component={WalletSelectorScreen}
+        component={themeUpdaterHOC(WalletSelectorScreen)}
         options={modalOptions}
+      />
+
+      <Stack.Screen
+        name={HomeStackRoutes.InAppBrowser}
+        component={themeUpdaterHOC(InAppBrowserScreen)}
+        options={inAppBrowserOptions}
       />
     </Stack.Navigator>
   );

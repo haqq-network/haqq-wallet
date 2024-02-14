@@ -25,7 +25,7 @@ export const StakingUnDelegatePreviewScreen = observer(() => {
     StakingUnDelegateStackRoutes.StakingUnDelegatePreview
   >().params;
   const [unboundingTime, setUnboundingTime] = useState(604800000);
-  const {error, errorDetails, setError} = useError();
+  const showError = useError();
   const cosmos = useCosmos();
   const wallet = Wallet.getById(account);
 
@@ -87,12 +87,13 @@ export const StakingUnDelegatePreviewScreen = observer(() => {
             case 'ledger_locked':
               break;
             default:
+              const errorDetails = errMessage || e.message;
               Logger.captureException(e, 'staking-undelegate', {
                 id: errorId,
-                message: errMessage || e.message,
+                message: errorDetails,
               });
 
-              setError(errorId, errMessage || e.message);
+              showError(errorId, errorDetails);
           }
         }
       } finally {
@@ -115,8 +116,6 @@ export const StakingUnDelegatePreviewScreen = observer(() => {
       validator={validator}
       disabled={disabled}
       onSend={onDone}
-      error={error}
-      errorDetails={errorDetails}
     />
   );
 });

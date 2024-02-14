@@ -5,6 +5,7 @@ import {Validator} from '@evmos/provider';
 import {Proposal} from '@evmos/provider/dist/rest/gov';
 import {Coin} from '@evmos/transactions';
 import {AccessListish, BigNumberish} from '@haqq/provider-base';
+import {KeystoneAwaitForSignParams} from '@haqq/provider-keystone-react-native';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {NativeStackNavigationOptions} from '@react-navigation/native-stack';
@@ -25,7 +26,6 @@ import {IconProps} from '@app/components/ui';
 import {I18N} from '@app/i18n';
 import {Banner} from '@app/models/banner';
 import {Provider} from '@app/models/provider';
-import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
 import {SignUpStackRoutes, WelcomeStackRoutes} from '@app/route-types';
 import {EthNetwork} from '@app/services';
@@ -74,44 +74,11 @@ export enum AdjustEvents {
   jailed = 'k13htx',
 }
 
-export enum TransactionSource {
-  unknown,
-  date,
-  send,
-  receive,
-  contract,
-}
-
 export enum PopupNotificationBannerTypes {
   notification = 'notification',
 }
 
 export type PopupNotificationBannerId = string | PopupNotificationBannerTypes;
-
-export type TransactionListSend = Transaction & {
-  source: TransactionSource.send;
-};
-
-export type TransactionListReceive = Transaction & {
-  source: TransactionSource.receive;
-};
-
-export type TransactionListContract = Transaction & {
-  source: TransactionSource.contract;
-};
-
-export type TransactionListDate = {
-  hash: string;
-  date: Date;
-  source: TransactionSource.date;
-  providerId: string;
-};
-
-export type TransactionList =
-  | TransactionListSend
-  | TransactionListReceive
-  | TransactionListDate
-  | TransactionListContract;
 
 export type TransactionResponse = Awaited<
   ReturnType<EthNetwork['transferTransaction']>
@@ -148,6 +115,14 @@ export type LedgerWalletInitialData = {
   publicKey: string;
   deviceId: string;
   deviceName: string;
+};
+
+export type KeystoneWalletInitialData = {
+  type: 'keystone';
+  address: HaqqEthereumAddress;
+  hdPath: string;
+  publicKey: string;
+  qrCBORHex: string;
 };
 
 export type RootStackParamList = {
@@ -672,6 +647,7 @@ export enum WalletType {
   hot = 'hot',
   ledgerBt = 'ledger-bt',
   sss = 'sss',
+  keystone = 'keystone',
 }
 
 export enum WalletCardPattern {
@@ -743,6 +719,7 @@ export type AddWalletParams = {
   colorPattern?: string;
   socialLinkEnabled?: boolean;
   mnemonicSaved?: boolean;
+  isImported?: boolean;
 };
 
 export enum ValidatorStatus {
@@ -811,7 +788,6 @@ export type LedgerAccountItem = {
 };
 
 export type ChooseAccountItem = AddWalletParams & {
-  name: string;
   balance: Balance;
   exists?: boolean;
 };
@@ -1033,6 +1009,10 @@ export type Modals = {
     onChange: () => void;
     network: string;
   };
+  customProviderEmail: {
+    onClose?: () => void;
+    onChange: (email: string) => void;
+  };
   walletsBottomSheet: Eventable & {
     onClose?: () => void;
     wallets: Wallet[];
@@ -1072,6 +1052,16 @@ export type Modals = {
     onClose?: () => void;
   };
   cloudShareNotFound: {onClose?: () => void; wallet: Wallet};
+  keystoneScanner: {
+    purpose?: 'sign' | 'sync';
+    eventTaskId?: string;
+    onClose?: () => void;
+  };
+  keystoneQR: KeystoneAwaitForSignParams & {
+    succesEventName: string;
+    errorEventName: string;
+    onClose?: () => void;
+  };
   sssLimitReached: {onClose?: () => void};
 };
 
@@ -1086,6 +1076,7 @@ export enum ModalType {
   cardDetailsQr = 'cardDetailsQr',
   error = 'error',
   claimOnMainnet = 'claimOnMainnet',
+  customProviderEmail = 'customProviderEmail',
   ledgerNoApp = 'ledgerNoApp',
   ledgerAttention = 'ledgerAttention',
   ledgerLocked = 'ledgerLocked',
@@ -1103,6 +1094,8 @@ export enum ModalType {
   cloudVerification = 'cloudVerification',
   viewErrorDetails = 'viewErrorDetails',
   cloudShareNotFound = 'cloudShareNotFound',
+  keystoneScanner = 'keystoneScanner',
+  keystoneQR = 'keystoneQR',
   sssLimitReached = 'sssLimitReached',
 }
 
@@ -1192,7 +1185,9 @@ export interface IBalance {
 
 export abstract class ISerializable {
   static fromJsonString: (obj: string | ISerializable) => ISerializable;
+
   abstract toJsonString(): string;
+
   /**
    * Custom console.log for an object
    */
@@ -1243,7 +1238,7 @@ export interface IBannerWidget extends IWidgetBase, Banner {
 }
 
 export interface ITokensWidget extends IWidgetBase {
-  component: 'Tokens';
+  component: 'TokenList';
 }
 
 export enum NftWidgetSize {
@@ -1251,6 +1246,7 @@ export enum NftWidgetSize {
   medium = 'medium',
   large = 'large',
 }
+
 export interface INftWidget extends IWidgetBase {
   component: 'Nft';
   size: NftWidgetSize;
@@ -1289,12 +1285,7 @@ export type SendTransactionError = {
   transactionHash: string;
 };
 
-export type OnTransactionRowPress = (
-  hash: string,
-  params?: Omit<RootStackParamList['transactionDetail'], 'hash'>,
-) => void;
-
-export type ContractNameMap = Record<string, string>;
+export type ContractNameMap = Record<string, {name: string; symbol: string}>;
 
 export type HaqqCosmosAddress = `haqq${string}` & string;
 export type HaqqEthereumAddress = `0x${string}` & string;
@@ -1309,6 +1300,7 @@ export type IndexerToken = {
   value: string;
 };
 export type IndexerTime = Record<HaqqCosmosAddress, number>;
+
 export interface BalanceData {
   vested: Balance;
   staked: Balance;
@@ -1347,16 +1339,17 @@ export enum AddressType {
 
 export interface VerifyAddressResponse {
   id: string;
-  addressType: AddressType;
+  address_type: AddressType;
   name?: string | null;
   symbol?: string | null;
+  icon?: string | null;
   decimals?: number | null;
-  isErc20?: boolean | null;
-  isErc721?: boolean | null;
-  isErc1155?: boolean | null;
-  isInWhiteList?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
+  is_erc20?: boolean | null;
+  is_erc721?: boolean | null;
+  is_erc1155?: boolean | null;
+  is_in_white_list?: boolean | null;
+  updated_at: string;
+  created_at: string;
 }
 
 export interface MobXStoreFromRealm {
@@ -1377,11 +1370,17 @@ type MobXStoreData =
 
 export interface MobXStore<TData extends MobXStoreData> {
   data: Record<string, TData>;
+
   getById(id: string): TData | undefined;
+
   getAll(): TData[];
+
   create(id: string, item: TData): string;
+
   update(id: string | undefined, item: Omit<Partial<TData>, 'id'>): boolean;
+
   remove(id: string): boolean;
+
   removeAll(): void;
 }
 
@@ -1483,7 +1482,7 @@ export type IToken = {
 };
 
 export type IContract = {
-  address_type: 'contract';
+  address_type: AddressType;
   created_at: string;
   decimals: number | null;
   id: HaqqCosmosAddress;
@@ -1543,3 +1542,270 @@ export type Eventable = Required<{
   successEventName: string;
   errorEventName: string;
 }>;
+
+export type Fiat = 'USD' | 'RUB';
+export type RatesResponse = Record<string, {denom: Fiat; amount: number}[]>;
+
+export type IndexerTxMsgUnknown = {
+  schema: string;
+  type: IndexerTxMsgType.unknown;
+};
+
+export type IndexerTxMsgVote = {
+  proposal_id: number;
+  voter: string;
+  opinion: number;
+  type: IndexerTxMsgType.msgVote;
+};
+
+export type IndexerTxMsgWithdrawDelegatorReward = {
+  delegator_address: HaqqCosmosAddress;
+  validator_address: HaqqCosmosAddress;
+  type: IndexerTxMsgType.msgWithdrawDelegatorReward;
+};
+
+export type IndexerTxMsgWithdrawValidatorCommission = {
+  validator_address: HaqqCosmosAddress;
+  type: IndexerTxMsgType.msgWithdrawValidatorCommission;
+};
+
+export type IndexerTxMsgSend = {
+  from_address: HaqqCosmosAddress;
+  to_address: HaqqCosmosAddress;
+  amount: IndexerCoin[];
+  type: IndexerTxMsgType.msgSend;
+  contract_address: string;
+};
+
+export type IndexerTxMsgDelegateTx = {
+  delegator_address: HaqqCosmosAddress;
+  validator_address: HaqqCosmosAddress;
+  amount: IndexerCoin;
+  type: IndexerTxMsgType.msgDelegate;
+};
+
+export type IndexerTxMsgUndelegateTx = {
+  delegator_address: HaqqCosmosAddress;
+  validator_address: HaqqCosmosAddress;
+  amount: IndexerCoin;
+  type: IndexerTxMsgType.msgUndelegate;
+};
+
+export type IndexerTxMsgEthereumTx = {
+  from_address: HaqqCosmosAddress;
+  to_address: HaqqCosmosAddress;
+  amount: IndexerCoin;
+  type: IndexerTxMsgType.msgEthereumTx;
+};
+
+export type IndexerTxMsgEthereumErc20TransferTx = {
+  contract_address: HaqqCosmosAddress;
+  from_address: HaqqCosmosAddress;
+  to_address: HaqqCosmosAddress;
+  amount: IndexerCoin;
+  type: IndexerTxMsgType.msgEthereumErc20TransferTx;
+};
+
+export type IndexerTxMsgEthereumNftTransferTx = {
+  contract_address: HaqqCosmosAddress;
+  from_address: HaqqCosmosAddress;
+  to_address: HaqqCosmosAddress;
+  token_id: string;
+  type: IndexerTxMsgType.msgEthereumNftTransferTx;
+};
+
+export type IndexerTxMsgEthereumNftMintTx = {
+  contract_address: HaqqCosmosAddress;
+  to_address: HaqqCosmosAddress;
+  token_id: string;
+  type: IndexerTxMsgType.msgEthereumNftMintTx;
+};
+
+export type IndexerTxMsgEthereumRaffleTx = {
+  contract_address: HaqqCosmosAddress;
+  winner: HaqqCosmosAddress;
+  amount: IndexerCoin;
+  ticket: number;
+  type: IndexerTxMsgType.msgEthereumRaffleTx;
+};
+
+export type IndexerTxMsgConvertIntoVestingAccountTx = {
+  from_address: HaqqCosmosAddress;
+  to_address: HaqqCosmosAddress;
+  start_time?: number;
+  merge: boolean;
+  stake: boolean;
+  validator_address: HaqqCosmosAddress;
+  lockup_periods: IndexerPeriod[];
+  vesting_periods: IndexerPeriod[];
+  type: IndexerTxMsgType.msgConvertIntoVestingAccount;
+};
+
+export type IndexerTxMsgBeginRedelegateTx = {
+  delegator_address: HaqqCosmosAddress;
+  validator_src_address: HaqqCosmosAddress;
+  validator_dst_address: HaqqCosmosAddress;
+  amount: IndexerCoin;
+  type: IndexerTxMsgType.msgBeginRedelegate;
+};
+
+export type IndexerTxMsgUnjailTx = {
+  validator_address: HaqqCosmosAddress;
+  type: IndexerTxMsgType.msgUnjail;
+};
+
+export type IndexerTxMsgCreateValidatorTx = {
+  description?: IndexerTxMsgCreateValidatorTxDescription;
+  commission?: IndexerTxMsgCreateValidatorTxCommissionRates;
+  min_self_delegation: string;
+  delegator_address: HaqqCosmosAddress;
+  validator_address: HaqqCosmosAddress;
+  value?: IndexerCoin;
+  type: IndexerTxMsgType.msgCreateValidator;
+};
+
+export type IndexerTxMsgEditValidatorTx = {
+  description?: IndexerTxMsgCreateValidatorTxDescription;
+  commission_rate: string;
+  min_self_delegation: string;
+  validator_address: HaqqCosmosAddress;
+  type: IndexerTxMsgType.msgEditValidator;
+};
+
+export type IndexerTxMsgCreateValidatorTxDescription = {
+  moniker: string;
+  identity: string;
+  website: string;
+  security_contact: string;
+  details: string;
+};
+
+export type IndexerTxMsgCreateValidatorTxCommissionRates = {
+  rate: string;
+  max_rate: string;
+  max_change_rate: string;
+};
+
+export type IndexerPeriod = {
+  amount: IndexerCoin[];
+  length: number;
+};
+
+export type IndexerCoin = {
+  denom: string;
+  amount: string;
+  contract_address?: HaqqCosmosAddress;
+};
+
+export enum IndexerTxMsgType {
+  unknown = 'unknown',
+  msgVote = 'msgVote',
+  msgWithdrawDelegatorReward = 'msgWithdrawDelegatorReward',
+  msgWithdrawValidatorCommission = 'msgWithdrawValidatorCommission',
+  msgSend = 'msgSend',
+  msgDelegate = 'msgDelegate',
+  msgUndelegate = 'msgUndelegate',
+  msgEthereumTx = 'msgEthereumTx',
+  msgEthereumErc20TransferTx = 'msgEthereumErc20TransferTx',
+  msgEthereumNftTransferTx = 'msgEthereumNftTransferTx',
+  msgEthereumNftMintTx = 'msgEthereumNftMintTx',
+  msgEthereumRaffleTx = 'msgEthereumRaffleTx',
+  msgConvertIntoVestingAccount = 'msgConvertIntoVestingAccount',
+  msgBeginRedelegate = 'msgBeginRedelegate',
+  msgUnjail = 'msgUnjail',
+  msgCreateValidator = 'msgCreateValidator',
+  msgEditValidator = 'msgEditValidator',
+}
+
+export type IndexerTxMsgUnion =
+  | {msg: IndexerTxMsgUnknown}
+  | {msg: IndexerTxMsgVote}
+  | {msg: IndexerTxMsgWithdrawDelegatorReward}
+  | {msg: IndexerTxMsgWithdrawValidatorCommission}
+  | {msg: IndexerTxMsgSend}
+  | {msg: IndexerTxMsgDelegateTx}
+  | {msg: IndexerTxMsgUndelegateTx}
+  | {msg: IndexerTxMsgEthereumTx}
+  | {msg: IndexerTxMsgEthereumErc20TransferTx}
+  | {msg: IndexerTxMsgEthereumNftTransferTx}
+  | {msg: IndexerTxMsgEthereumNftMintTx}
+  | {msg: IndexerTxMsgEthereumRaffleTx}
+  | {msg: IndexerTxMsgConvertIntoVestingAccountTx}
+  | {msg: IndexerTxMsgBeginRedelegateTx}
+  | {msg: IndexerTxMsgUnjailTx}
+  | {msg: IndexerTxMsgCreateValidatorTx}
+  | {msg: IndexerTxMsgEditValidatorTx};
+
+export enum IndexerTransactionStatus {
+  inProgress = -1,
+  success = 0,
+  failed = 1,
+}
+
+export type IndexerTransaction = {
+  block: number;
+  chain_id: string;
+  code: IndexerTransactionStatus;
+  fee: number;
+  gas_limit: number;
+  hash: string;
+  input: string;
+  ts: string;
+  id: string;
+  confirmations: number;
+  msg_type: string;
+} & IndexerTxMsgUnion;
+
+export type IndexerTransactionWithType<T extends IndexerTxMsgType> = Extract<
+  IndexerTransaction,
+  {msg: {type: T}}
+>;
+
+export type IndexerTransactionResponse = {
+  hash: string;
+  txs: IndexerTransaction[];
+};
+
+export type ChainId = string;
+
+export type IndexerTxParsedTokenInfo = {
+  name: string;
+  symbol: string;
+  icon: ImageSourcePropType;
+  decimals: number;
+  contract_address?: string;
+};
+export type IStory = {
+  id: string;
+  title: string;
+  preview: string;
+  status: 'published';
+  open_event: string | null;
+  updated_at: string;
+  created_at: string;
+  attachments: {
+    id: string;
+    story_id: string;
+    position: number;
+    status: 'published';
+    markup: {
+      row: {
+        event?: AdjustEvents;
+        text: string;
+        type: 'button' | 'text' | 'spacer';
+      };
+    }[];
+    attachment: {
+      duration: number;
+      source: string;
+      type: 'image' | 'video';
+    };
+    updated_at: string;
+    created_at: string;
+  }[];
+  seen?: boolean;
+};
+
+export type StoriesResponse = IStory[];
+
+export type ArrayElement<A> = A extends readonly (infer T)[] ? T : never;

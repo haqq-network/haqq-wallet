@@ -1,7 +1,7 @@
 import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {Color} from '@app/colors';
-import {SettingsProviders} from '@app/components/settings-providers';
+import {SettingsProviders} from '@app/components/settings/settings-providers';
 import {CustomHeader} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';

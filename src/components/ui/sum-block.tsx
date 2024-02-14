@@ -113,9 +113,13 @@ export const SumBlock = ({
           )}
         </View>
       </View>
-      {/*<View style={page.amount}>*/}
-      {/*  <Text t15>$ {amountUsd}</Text>*/}
-      {/*</View>*/}
+      {!!value && (
+        <View style={styles.amount}>
+          <Text t15 color={Color.textBase2}>
+            {new Balance(Number(value)).toFiat().toBalanceString()}
+          </Text>
+        </View>
+      )}
       {error ? (
         <Text center color={Color.textRed1} t14 testID={`${testID}_error`}>
           {error}
@@ -133,6 +137,7 @@ export const SumBlock = ({
 };
 
 const styles = createTheme({
+  amount: {alignSelf: 'center', marginBottom: 10},
   container: {
     width: '100%',
   },

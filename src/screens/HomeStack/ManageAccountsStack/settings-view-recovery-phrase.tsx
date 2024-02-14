@@ -3,17 +3,17 @@ import React, {memo, useCallback, useState} from 'react';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 
-import {SettingsViewRecoveryPhrase} from '@app/components/settings-view-recovery-phrase';
+import {SettingsViewRecoveryPhrase} from '@app/components/settings/settings-view-recovery-phrase';
 import {CustomHeader, Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
+import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {
   ManageAccountsStackParamList,
   ManageAccountsStackRoutes,
 } from '@app/route-types';
-import {Cloud} from '@app/services/cloud';
 import {ModalType, WalletType} from '@app/types';
 
 import {PinGuardScreen} from '../../pin-guard';
@@ -38,11 +38,11 @@ export const SettingsViewRecoveryPhraseScreen = memo(() => {
         setMnemonic(phraseMnemonic ?? '');
         break;
       case WalletType.sss:
-        const storage = new Cloud();
+        const storage = await getProviderStorage(accountId);
         const providerSss = new ProviderSSSReactNative({
           storage,
-          account: accountId,
           getPassword: app.getPassword.bind(app),
+          account: accountId,
         });
         try {
           const phraseSss = await providerSss.getMnemonicPhrase();

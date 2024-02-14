@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {observer} from 'mobx-react';
 
@@ -6,19 +6,13 @@ import {TotalValueInfo} from '@app/components/total-value-info';
 import {Loading} from '@app/components/ui';
 import {showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {useEffectAsync} from '@app/hooks/use-effect-async';
-import {useTransactionList} from '@app/hooks/use-transaction-list';
+import {useWalletsAddressList} from '@app/hooks/use-wallets-address-list';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {Token} from '@app/models/tokens';
+import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
-import {Indexer} from '@app/services/indexer';
-import {
-  ModalType,
-  OnTransactionRowPress,
-  TransactionListContract,
-  TransactionSource,
-} from '@app/types';
+import {ModalType} from '@app/types';
 import {calculateBalances} from '@app/utils';
 
 export const TotalValueInfoScreen = observer(() => {
@@ -28,38 +22,21 @@ export const TotalValueInfoScreen = observer(() => {
     HomeStackRoutes.TotalValueInfo
   >();
   const wallets = Wallet.getAllVisible();
-  const addressList = useMemo(() => Wallet.addressList(), []);
-  const transactionsList = useTransactionList(addressList);
+  const addressList = useWalletsAddressList();
   const balances = useWalletsBalance(wallets);
   const calculatedBalance = useMemo(
     () => calculateBalances(balances, wallets),
     [balances, wallets],
   );
 
-  const [contractNameMap, setContractNameMap] = useState({});
-
-  useEffectAsync(async () => {
-    Token.fetchTokens();
-
-    const names = transactionsList
-      .filter(({source}) => source === TransactionSource.contract)
-      .map(item => (item as TransactionListContract).to);
-    const uniqueNames = [...new Set(names)];
-    if (uniqueNames.length > 0) {
-      const info = await Indexer.instance.getContractNames(uniqueNames);
-      setContractNameMap(info);
-    }
-  }, []);
-
-  const onPressRow: OnTransactionRowPress = useCallback(
-    (hash, params) => {
-      const screenParams = params || {};
+  const onPressTxRow = useCallback(
+    (tx: Transaction) => {
       navigation.navigate(HomeStackRoutes.TransactionDetail, {
-        ...screenParams,
-        hash,
+        txId: tx.id,
+        addresses: addressList,
       });
     },
-    [navigation],
+    [navigation, addressList],
   );
 
   const onPressInfo = useCallback(
@@ -74,10 +51,9 @@ export const TotalValueInfoScreen = observer(() => {
   return (
     <TotalValueInfo
       balance={calculatedBalance}
-      transactionsList={transactionsList}
+      addressList={addressList}
       onPressInfo={onPressInfo}
-      onPressRow={onPressRow}
-      contractNameMap={contractNameMap}
+      onPressTxRow={onPressTxRow}
       tokens={Token.tokens}
       initialTab={route?.params?.tab}
     />

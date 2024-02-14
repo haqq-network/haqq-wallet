@@ -1,3 +1,4 @@
+import {normalize0x} from '@haqq/provider-keystone-react-native';
 import {getSdkError} from '@walletconnect/utils';
 import {JsonRpcError, createAsyncMiddleware} from 'json-rpc-engine';
 
@@ -41,6 +42,10 @@ export const createJsonRpcMiddleware = ({
       }
 
       res.result = await handler({req, helper});
+
+      if (typeof res.result === 'string') {
+        res.result = normalize0x(res.result);
+      }
 
       if (req.method === 'eth_requestAccounts' && Array.isArray(res.result)) {
         helper.emit(WebViewEventsEnum.ACCOUNTS_CHANGED, [...res.result]);

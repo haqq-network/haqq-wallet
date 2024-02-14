@@ -2,8 +2,10 @@ import {Balance} from '@app/services/balance';
 import {
   RemoteConfig,
   RemoteConfigBalanceTypes,
+  RemoteConfigMultiplierTypes,
 } from '@app/services/remote-config';
 import {
+  BALANCE_MULTIPLIER,
   COSMOS_MIN_AMOUNT,
   COSMOS_MIN_GAS_LIMIT,
   MIN_AMOUNT,
@@ -30,7 +32,7 @@ export const getDefaultBalanceValue = <
     case 'eth_min_gas_limit':
       return MIN_GAS_LIMIT;
     default:
-      return MIN_AMOUNT;
+      return Balance.Empty;
   }
 };
 
@@ -43,10 +45,34 @@ export const getRemoteBalanceValue = <T extends keyof RemoteConfigBalanceTypes>(
     return new Balance(remoteValue);
   }
 
-  const defaultValue = getDefaultBalanceValue(key);
+  return getDefaultBalanceValue(key);
+};
 
-  if (!defaultValue) {
-    return Balance.Empty;
+export const getDefaultMultiplierValue = <
+  T extends keyof RemoteConfigMultiplierTypes,
+>(
+  key: T,
+): number => {
+  switch (key) {
+    case 'cosmos_commission_multiplier':
+      return parseFloat(String(BALANCE_MULTIPLIER));
+    case 'eth_commission_multiplier':
+      return parseFloat(String(BALANCE_MULTIPLIER));
+    default:
+      return parseFloat(String(BALANCE_MULTIPLIER));
   }
-  return defaultValue;
+};
+
+export const getRemoteMultiplierValue = <
+  T extends keyof RemoteConfigMultiplierTypes,
+>(
+  key: T,
+) => {
+  const remoteValue = RemoteConfig.get(key);
+
+  if (remoteValue) {
+    return parseFloat(String(remoteValue));
+  }
+
+  return getDefaultMultiplierValue(key);
 };

@@ -22,6 +22,7 @@ import {BluetoothUnauthorized} from '@app/components/modals/bluetooth-unauthoriz
 import {CaptchaModal} from '@app/components/modals/capthca-modal';
 import {CloudShareNotFound} from '@app/components/modals/cloud-share-not-found';
 import {CloudVerification} from '@app/components/modals/cloud-verification';
+import {CustomProviderEmail} from '@app/components/modals/custom-provider-email';
 import {LocationUnauthorized} from '@app/components/modals/location-unauthorized';
 import {ProvidersBottomSheet} from '@app/components/modals/providers-bottom-sheet';
 import {RaffleAgreement} from '@app/components/modals/raffle-agreement';
@@ -34,6 +35,8 @@ import {useTheme} from '@app/hooks';
 import {ModalType, Modals, ModalsListBase} from '@app/types';
 
 import {DomainBlocked} from './domain-blocked';
+import {KeystoneQRModal} from './keystone/keystone-qr';
+import {KeystoneScannerModal} from './keystone/keystone-scanner';
 import {LockedTokensInfo} from './locked-tokens-info';
 import {NotEnoughGas} from './not-enough-gas';
 
@@ -89,6 +92,10 @@ export const ModalWrapper = ({
         return <BluetoothUnauthorized onClose={onCloseModalPress} />;
       case ModalType.qr:
         return <QRModal {...modal} onClose={onCloseModalPress} />;
+      case ModalType.keystoneScanner:
+        return <KeystoneScannerModal {...modal} onClose={onCloseModalPress} />;
+      case ModalType.keystoneQR:
+        return <KeystoneQRModal {...modal} onClose={onCloseModalPress} />;
       case ModalType.cardDetailsQr:
         return <DetailsQrModal {...modal} onClose={onCloseModalPress} />;
       case ModalType.error:
@@ -127,6 +134,8 @@ export const ModalWrapper = ({
         return <CloudVerification {...modal} />;
       case ModalType.viewErrorDetails:
         return <ViewErrorDetails {...modal} onClose={onCloseModalPress} />;
+      case ModalType.customProviderEmail:
+        return <CustomProviderEmail {...modal} onClose={onCloseModalPress} />;
       case ModalType.cloudShareNotFound:
         return <CloudShareNotFound {...modal} onClose={onCloseModalPress} />;
       case ModalType.sssLimitReached:

@@ -9,6 +9,7 @@ import {ShadowCard} from '@app/components/ui/shadow-card';
 import {WidgetHeader} from '@app/components/ui/widget-header';
 import {I18N, getText} from '@app/i18n';
 import {IToken} from '@app/types';
+import {CURRENCY_NAME} from '@app/variables/common';
 
 type Props = {
   onPress: () => void;
@@ -37,7 +38,12 @@ export const TokensWidget = ({onPress, tokens}: Props) => {
       <WidgetHeader title={getText(I18N.tokensWidgetTitle)} />
       <Spacer height={8} />
       {tokens
-        .filter(item => !!item.is_in_white_list)
+        .filter(
+          item =>
+            !!item.is_in_white_list &&
+            // FIXME: only erc20 tokens or native currency (ISLM)
+            (item.is_erc20 || item.symbol === CURRENCY_NAME),
+        )
         .slice(0, VISIBLE_ITEM_AMOUNT)
         .map(item => {
           return <TokenRow key={item.id} item={item} />;

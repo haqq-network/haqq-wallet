@@ -93,6 +93,7 @@ def reactNativeArchitectures() {
 
 apply from: "../../node_modules/@sentry/react-native/sentry.gradle"
 android {
+  namespace 'com.haqq.wallet'
   ndkVersion rootProject.ext.ndkVersion
 
   compileSdkVersion rootProject.ext.compileSdkVersion
@@ -101,8 +102,8 @@ android {
     applicationId "com.haqq.wallet"
     minSdkVersion rootProject.ext.minSdkVersion
     targetSdkVersion rootProject.ext.targetSdkVersion
-    versionCode 337
-    versionName "1.5.4"
+    versionCode 360
+    versionName "1.6.0"
     missingDimensionStrategy 'react-native-camera', 'general'
     manifestPlaceholders = [
       appAuthRedirectScheme    : 'haqq'
@@ -142,8 +143,10 @@ android {
   buildTypes {
     debug {
       signingConfig signingConfigs.debug
+      crunchPngs false
     }
     release {
+      crunchPngs false
       // Caution! In production, you need to generate your own keystore file.
       // see https://reactnative.dev/docs/signed-apk-android.
       signingConfig signingConfigs.release
@@ -171,7 +174,10 @@ android {
 }
 
 dependencies {
-  androidTestImplementation('com.wix:detox:+')
+  androidTestImplementation('com.wix:detox:+') {
+      exclude module: "protobuf-lite"
+  }
+  implementation 'com.facebook.soloader:soloader:0.10.4+'
   implementation 'androidx.appcompat:appcompat:1.1.0'
   implementation "com.facebook.react:react-android"
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"

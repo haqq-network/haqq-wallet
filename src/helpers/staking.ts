@@ -15,9 +15,3 @@ export function formatStakingDate(date?: string) {
     {days: String(days)},
   );
 }
-
-export function sumReduce(
-  stakingData: (StakingMetadata & Realm.Object<unknown, never>)[],
-) {
-  return stakingData.reduce((acc, val) => acc + val.amount, 0);
-}

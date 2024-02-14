@@ -23,6 +23,7 @@ export enum IconsName {
   color_flat = 'color_flat',
   color_gradient = 'color_gradient',
   copy = 'copy',
+  currency = 'currency',
   drag = 'drag',
   doc = 'doc',
   deposit = 'deposit',
@@ -102,6 +103,13 @@ export enum IconsName {
   shield_partially = 'shield_partially',
   privacy = 'privacy',
   import = 'import_icon',
+  keystone = 'keystone',
+  question = 'question',
+  raffle_reward = 'raffle_reward',
+  staking_reword = 'staking_reword',
+  staking_redelegation = 'staking_redelegation',
+  staking_delegation = 'staking_delegation',
+  staking_undelegation = 'staking_undelegation',
 }
 
 export type IconSize =

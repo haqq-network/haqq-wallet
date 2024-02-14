@@ -7,6 +7,7 @@ import {
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
+import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {I18N, getText} from '@app/i18n';
 import {
   OnboardingStackRoutes,
@@ -73,23 +74,23 @@ const SignUpStack = memo(() => {
     <Stack.Navigator screenOptions={popupScreenOptions}>
       <Stack.Screen
         name={SignUpStackRoutes.SignUpAgreement}
-        component={SignUpAgreementScreen}
+        component={themeUpdaterHOC(SignUpAgreementScreen)}
         options={hideBack}
         initialParams={{nextScreen: nextScreen}}
       />
       <Stack.Screen
         name={SignUpStackRoutes.SignUpNetworks}
-        component={SignupNetworksScreen}
+        component={themeUpdaterHOC(SignupNetworksScreen)}
         options={hideBack}
       />
       <Stack.Screen
         name={SignUpStackRoutes.SignUpNetworkExists}
-        component={SignupNetworkExistsScreen}
+        component={themeUpdaterHOC(SignupNetworkExistsScreen)}
         options={hideBack}
       />
       <Stack.Screen
         name={SignUpStackRoutes.SignUpPin}
-        component={SignupPinScreen}
+        component={themeUpdaterHOC(SignupPinScreen)}
         options={screenOptionsTitleOnly}
       />
       <Stack.Screen
@@ -99,12 +100,12 @@ const SignUpStack = memo(() => {
       />
       <Stack.Screen
         name={SignUpStackRoutes.SignupCloudProblems}
-        component={CloudProblemsScreen}
+        component={themeUpdaterHOC(CloudProblemsScreen)}
         options={hideBack}
       />
       <Stack.Screen
         name={SignUpStackRoutes.SignupImportantInfo}
-        component={SignUpImportantInfoScreen}
+        component={themeUpdaterHOC(SignUpImportantInfoScreen)}
       />
 
       <Stack.Screen

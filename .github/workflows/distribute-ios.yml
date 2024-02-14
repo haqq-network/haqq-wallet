@@ -17,6 +17,19 @@ on:
           - true
           - false
 
+      STORIES_ENABLED:
+        type: choice
+        description: STORIES_ENABLED
+        options:
+          - true
+          - false
+      # DEFAULT_BACKEND:
+      #   type: choice
+      #   description: HAQQ_BACKEND_DEFAULT
+      #   options:
+      #     - ${{secrets.HAQQ_BACKEND}}
+      #     - ${{secrets.HAQQ_BACKEND_DEV}}
+
       BUILD_DESCRIPTION:
         required: true
         description: Please add a short note for a new build
@@ -29,19 +42,27 @@ on:
       IS_SSS_ENABLED:
         required: true
         type: string
+      STORIES_ENABLED:
+        required: true
+        type: string
+      # DEFAULT_BACKEND:
+      #   required: true
+      #   type: string
       BUILD_DESCRIPTION:
         required: true
         type: string
 
 jobs:
   build:
-    name: Build and distribute iOS app
+    name: Distribute iOS app
     runs-on: macOS
     steps:
+      - name: Show macOS machine infomation
+        run: uname -a
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
       # - uses: ruby/setup-ruby@v1
       #   with:
       #     ruby-version: '3.1'
@@ -62,11 +83,13 @@ jobs:
       #          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
       #          restore-keys: |
       #            ${{ runner.os }}-gems-
+      - name: Cache XCode build
+        uses: mikehardy/buildcache-action@v2
       - name: Install Fastlane
         run: |
           bundle install
       - name: Install packages
-        run: yarn install --frozen-lockfile
+        run: yarn install 
       - name: Install pods
         run: cd ios && pod install
       - name: Git init
@@ -101,6 +124,7 @@ jobs:
           echo "RECAPTCHA_V2_URL=${{secrets.RECAPTCHA_V2_URL}}" >> .env
           echo "RECAPTCHA_V2_SITEKEY=${{secrets.RECAPTCHA_V2_SITEKEY}}" >> .env
           echo "HCAPTCHA_URL=${{secrets.HCAPTCHA_URL}}" >> .env
+          echo "STORIES_ENABLED=${{github.event.inputs.STORIES_ENABLED}}" >> .env
 
           echo "DETOX_MILK_PRIVATE_KEY=${{secrets.DETOX_MILK_PRIVATE_KEY}}" >> .env
           echo "DETOX_PROVIDER=${{secrets.DETOX_PROVIDER}}" >> .env

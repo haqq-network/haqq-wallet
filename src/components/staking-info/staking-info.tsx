@@ -212,6 +212,7 @@ export const StakingInfo = ({
               variant={ButtonVariant.second}
               onPress={onPressGetReward}
               i18n={I18N.stakingInfoGetReward}
+              testID="staking-get-reward"
             />
             <Spacer height={18} />
           </>
@@ -221,12 +222,14 @@ export const StakingInfo = ({
             variant={ButtonVariant.contained}
             i18n={I18N.stakingInfoDelegate}
             onPress={onDelegate}
+            testID="staking-delegate"
           />
           {delegations?.length && (
             <Button
               variant={ButtonVariant.contained}
               i18n={I18N.stakingInfoUnDelegate}
               onPress={onUnDelegate}
+              testID="staking-undelegate"
             />
           )}
         </Inline>

@@ -7,11 +7,11 @@ import {
   Button,
   ButtonVariant,
   DataView,
-  ErrorText,
   PopupContainer,
   Spacer,
   Text,
 } from '@app/components/ui';
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
@@ -26,9 +26,6 @@ interface TransactionConfirmationProps {
   amount: Balance;
   fee: Balance | null;
   contact: Contact | null;
-  error: string;
-  errorDetails: string;
-
   disabled?: boolean;
   onConfirmTransaction: () => void;
   token: IToken;
@@ -36,8 +33,6 @@ interface TransactionConfirmationProps {
 
 export const TransactionConfirmation = ({
   testID,
-  error,
-  errorDetails,
   disabled,
   contact,
   to,
@@ -48,17 +43,33 @@ export const TransactionConfirmation = ({
 }: TransactionConfirmationProps) => {
   const splittedTo = useMemo(() => splitAddress(to), [to]);
 
-  const sumText = useMemo(() => {
+  const transactionSum = useMemo(() => {
     if (fee === null) {
-      return getText(I18N.estimatingGas);
+      return null;
     }
 
     if (amount.isIslamic) {
-      return fee.operate(amount, 'add').toBalanceString(LONG_NUM_PRECISION);
+      return fee.operate(amount, 'add');
     }
 
-    return amount.toBalanceString(LONG_NUM_PRECISION);
+    return amount;
   }, [fee, amount]);
+
+  const sumText = useMemo(() => {
+    if (transactionSum === null) {
+      return getText(I18N.estimatingGas);
+    }
+
+    return transactionSum.toBalanceString(LONG_NUM_PRECISION);
+  }, [transactionSum]);
+
+  const usdText = useMemo(() => {
+    if (transactionSum === null) {
+      return '';
+    }
+
+    return transactionSum.toFiat().toBalanceString();
+  }, [transactionSum]);
 
   return (
     <PopupContainer style={styles.container} testID={testID}>
@@ -73,6 +84,10 @@ export const TransactionConfirmation = ({
       <Text t11 color={Color.textBase1} center style={styles.sum}>
         {sumText}
       </Text>
+      <Text t15 color={Color.textBase2} center>
+        {usdText}
+      </Text>
+      <Spacer height={16} />
       <Text
         t11
         color={Color.textBase2}
@@ -98,20 +113,12 @@ export const TransactionConfirmation = ({
         <View style={styles.info}>
           <DataView label="Cryptocurrency">
             <Text t11 color={Color.textBase1}>
-              <Text i18n={I18N.transactionConfirmationIslamicCoin} />{' '}
-              <Text
-                color={Color.textBase2}
-                i18n={I18N.transactionConfirmationISLM}
-              />
+              {token.name}
             </Text>
           </DataView>
           <DataView label="Network">
             <Text t11 color={Color.textBase1}>
-              <Text i18n={I18N.transactionConfirmationHAQQ} />{' '}
-              <Text
-                color={Color.textBase2}
-                i18n={I18N.transactionConfirmationHQ}
-              />
+              <Text>{app.provider.name}</Text>
             </Text>
           </DataView>
           <DataView label="Amount">
@@ -127,11 +134,6 @@ export const TransactionConfirmation = ({
             </Text>
           </DataView>
         </View>
-        {error && (
-          <ErrorText center e0 errorDetails={errorDetails}>
-            {error}
-          </ErrorText>
-        )}
       </Spacer>
       <Button
         disabled={!fee?.isPositive() && !disabled}
@@ -174,7 +176,6 @@ const styles = createTheme({
     backgroundColor: Color.bg3,
   },
   sum: {
-    marginBottom: 16,
     fontWeight: '700',
     fontSize: 28,
     lineHeight: 38,

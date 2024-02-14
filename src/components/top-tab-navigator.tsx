@@ -32,6 +32,7 @@ export type TopTabNavigatorProps = {
   scrollHeaderEnabled?: boolean;
   /** @default 0 */
   initialTabIndex?: number;
+  activeTabIndex?: number;
   variant: TopTabNavigatorVariant;
   containerStyle?: StyleProp<ViewStyle>;
   contentContainerStyle?: StyleProp<ViewStyle>;
@@ -47,6 +48,7 @@ export type TopTabNavigatorComponent = {
 export interface TabProps {
   name: string;
   title: string | I18N;
+  testID?: string;
   component: React.ComponentType<{}> | JSX.Element | null;
   /**
    * @description only for `TopTabNavigatorVariant.small`
@@ -83,6 +85,7 @@ const TopTabNavigator: TopTabNavigatorComponent = ({
   contentContainerStyle,
   showSeparators,
   tabHeaderStyle,
+  activeTabIndex: currentIndex,
   onTabChange,
   ...props
 }) => {
@@ -100,6 +103,12 @@ const TopTabNavigator: TopTabNavigatorComponent = ({
   const [activeTab, setActiveTab] = useState(
     filteredChildren?.[activeTabIndex],
   );
+
+  useEffect(() => {
+    if (currentIndex && currentIndex !== activeTabIndex) {
+      setActiveTabIndex(currentIndex);
+    }
+  }, [currentIndex, activeTabIndex]);
 
   const onTabPress = useCallback((tab: TabType, index: number) => {
     setActiveTabIndex(index);

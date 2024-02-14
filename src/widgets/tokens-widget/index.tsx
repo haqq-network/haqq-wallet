@@ -2,8 +2,10 @@ import React, {useCallback, useEffect, useMemo} from 'react';
 
 import {observer} from 'mobx-react';
 
+import {TotalValueTabNames} from '@app/components/total-value-info';
 import {useTypedNavigation} from '@app/hooks';
 import {Token} from '@app/models/tokens';
+import {HomeStackRoutes} from '@app/route-types';
 import {Balance} from '@app/services/balance';
 import {IToken} from '@app/types';
 import {TokensWidget} from '@app/widgets/tokens-widget/tokens-widget';
@@ -12,7 +14,9 @@ export const TokensWidgetWrapper = observer(() => {
   const tokens = Token.getAllPositive();
   const navigation = useTypedNavigation();
   const openTotalValue = useCallback(() => {
-    navigation.navigate('totalValueInfo');
+    navigation.navigate(HomeStackRoutes.TotalValueInfo, {
+      tab: TotalValueTabNames.tokens,
+    });
   }, [navigation]);
 
   useEffect(() => {
@@ -37,7 +41,7 @@ export const TokensWidgetWrapper = observer(() => {
     });
 
     return Object.values(cache);
-  }, []);
+  }, [tokens]);
 
   if (tokens.length === 0) {
     return null;

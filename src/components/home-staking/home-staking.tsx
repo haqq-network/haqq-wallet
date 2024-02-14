@@ -86,6 +86,7 @@ export const HomeStaking = ({
             disabled={!canGetRewards || isAnimation}
             onPress={handleGetRewards}
             style={styles.margin}
+            testID="staking-get-rewards"
           />
         )}
         <Button
@@ -93,6 +94,7 @@ export const HomeStaking = ({
           variant={ButtonVariant.contained}
           onPress={onPressValidators}
           style={styles.margin}
+          testID="staking-validators"
         />
         <Spacer height={20} />
       </View>

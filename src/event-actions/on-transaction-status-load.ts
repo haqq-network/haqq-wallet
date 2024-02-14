@@ -1,12 +1,14 @@
+import {app} from '@app/contexts';
 import {getExplorerInstanceForProvider} from '@app/helpers/explorer-instance';
-import {Transaction, TransactionStatus} from '@app/models/transaction';
+import {Transaction} from '@app/models/transaction';
+import {IndexerTransactionStatus} from '@app/types';
 
 export async function onTransactionStatusLoad(txHash: string) {
   const tx = Transaction.getById(txHash);
   if (tx) {
     const txStatus = await loadStatus(tx);
 
-    Transaction.update(tx.hash, {...tx, status: txStatus});
+    Transaction.update(tx.hash, {...tx, code: txStatus});
   }
 }
 
@@ -18,7 +20,7 @@ export async function onTransactionStatusLoad(txHash: string) {
 const loadStatus = async (tx: Transaction) => {
   try {
     if (tx) {
-      const explorer = getExplorerInstanceForProvider(tx.providerId);
+      const explorer = getExplorerInstanceForProvider(app.providerId);
       const receipt = await explorer.transactionReceiptStatus(tx.hash);
       const status = await explorer.transactionStatus(tx.hash);
 
@@ -32,10 +34,10 @@ const loadStatus = async (tx: Transaction) => {
       return getTransactionStatus(receipt.result.status, status.result.isError);
     }
 
-    return TransactionStatus.inProgress;
+    return IndexerTransactionStatus.inProgress;
   } catch (e) {
     Logger.captureException(e, 'loadTransactionsFromExplorer');
-    return TransactionStatus.inProgress;
+    return IndexerTransactionStatus.inProgress;
   }
 };
 
@@ -49,12 +51,12 @@ const loadStatus = async (tx: Transaction) => {
 const getTransactionStatus = (
   receiptStatus: '0' | '1',
   errorStatus: '0' | '1',
-): TransactionStatus => {
+): IndexerTransactionStatus => {
   if (receiptStatus === '0') {
-    return TransactionStatus.inProgress;
+    return IndexerTransactionStatus.inProgress;
   }
   if (errorStatus === '0') {
-    return TransactionStatus.success;
+    return IndexerTransactionStatus.success;
   }
-  return TransactionStatus.failed;
+  return IndexerTransactionStatus.failed;
 };

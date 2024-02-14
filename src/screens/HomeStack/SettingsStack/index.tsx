@@ -13,6 +13,7 @@ import {SettingsProviderEditScreen} from '@app/screens/HomeStack/ProvidersStack/
 import {SecurityStack} from '@app/screens/HomeStack/SecurityStack';
 import {HomeSettingsScreen} from '@app/screens/HomeStack/SettingsStack/home-settings';
 import {SettingsAboutScreen} from '@app/screens/HomeStack/SettingsStack/settings-about';
+import {SettingsCurrencyScreen} from '@app/screens/HomeStack/SettingsStack/settings-currency';
 import {SettingsNotificationScreen} from '@app/screens/HomeStack/SettingsStack/settings-notification-screen';
 import {SettingsTestScreen} from '@app/screens/HomeStack/SettingsStack/settings-test';
 import {SettingsThemeScreen} from '@app/screens/HomeStack/SettingsStack/settings-theme';
@@ -43,6 +44,13 @@ const SettingsStack = memo(() => {
       <Stack.Screen
         name={SettingsStackRoutes.SettingsAddressBook}
         component={AddressBookStack}
+      />
+      <Stack.Screen
+        name={SettingsStackRoutes.SettingsCurrency}
+        component={SettingsCurrencyScreen}
+        options={{
+          headerShown: false,
+        }}
       />
       <Stack.Screen
         name={SettingsStackRoutes.SettingsTheme}

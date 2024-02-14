@@ -14,6 +14,7 @@ import {
   AdjustEvents,
   BiometryType,
   Eventable,
+  IStory,
   IToken,
   JsonRpcMetadata,
   LedgerWalletInitialData,
@@ -33,7 +34,8 @@ import {WalletConnectApproveConnectionEvent} from '@app/types/wallet-connect';
 export type AnyRouteFromParent =
   | SignInStackRoutes
   | SignUpStackRoutes
-  | LedgerStackRoutes;
+  | LedgerStackRoutes
+  | KeystoneStackRoutes;
 
 export enum WelcomeStackRoutes {
   Welcome = 'welcome',
@@ -42,6 +44,8 @@ export enum WelcomeStackRoutes {
   Ledger = 'ledger',
   SignIn = 'signin',
   NewsDetail = 'newsDetail',
+  InAppBrowser = 'inAppBrowser',
+  Device = 'device',
 }
 
 export type WelcomeStackParamList = {
@@ -59,6 +63,8 @@ export type WelcomeStackParamList = {
     linkEvent: AdjustEvents;
     scrollEvent: AdjustEvents;
   };
+  [WelcomeStackRoutes.Device]: undefined;
+  [WelcomeStackRoutes.InAppBrowser]: HomeStackParamList[HomeStackRoutes.InAppBrowser];
 };
 
 export enum SignUpStackRoutes {
@@ -228,6 +234,7 @@ export enum HomeFeedStackRoutes {
   Governance = 'governance',
   NftDetails = 'nftDetails',
   HomeEarn = 'homeEarn',
+  HomeStories = 'homeStories',
 }
 
 export type HomeFeedStackParamList = HomeStackParamList & {
@@ -240,6 +247,7 @@ export type HomeFeedStackParamList = HomeStackParamList & {
       }
     | {type: 'collection'; item: NftCollection};
   [HomeFeedStackRoutes.HomeEarn]: undefined;
+  [HomeFeedStackRoutes.HomeStories]: {id: IStory['id']};
 };
 
 export enum BackupStackRoutes {
@@ -266,6 +274,7 @@ export enum SettingsStackRoutes {
   Home = 'homeSettings_',
   SettingsAccounts = 'settingsAccounts',
   SettingsAddressBook = 'settingsAddressBook',
+  SettingsCurrency = 'settingsCurrency',
   SettingsTheme = 'settingsTheme',
   SettingsNotification = 'settingsNotification',
   SettingsProviders = 'settingsProviders',
@@ -288,6 +297,7 @@ export type SettingsStackParamList = HomeStackParamList & {
   };
   [SettingsStackRoutes.SettingsAccounts]: undefined;
   [SettingsStackRoutes.SettingsAddressBook]: undefined;
+  [SettingsStackRoutes.SettingsCurrency]: undefined;
   [SettingsStackRoutes.SettingsTheme]: undefined;
   [SettingsStackRoutes.SettingsNotification]: undefined;
   [SettingsStackRoutes.SettingsProviders]: undefined;
@@ -356,12 +366,14 @@ export enum HomeStackRoutes {
   TotalValueInfo = 'totalValueInfo',
   ValueSelector = 'valueSelector',
   BrowserPrivacyPopupStack = 'browserPrivacyPopupStack',
+  Device = '_device',
 }
 
 export type HomeStackParamList = {
   [HomeStackRoutes.Home]: undefined;
   [HomeStackRoutes.Create]: undefined;
   [HomeStackRoutes.Ledger]: undefined;
+  [HomeStackRoutes.Device]: undefined;
   [HomeStackRoutes.SignIn]: undefined;
   [HomeStackRoutes.AccountInfo]: {accountId: string};
   [HomeStackRoutes.Transaction]: {
@@ -380,7 +392,7 @@ export type HomeStackParamList = {
     address: string;
     isPopup?: boolean;
   };
-  [HomeStackRoutes.TransactionDetail]: {hash: string; contractName?: string};
+  [HomeStackRoutes.TransactionDetail]: {txId: string; addresses: string[]};
   [HomeStackRoutes.InAppBrowser]: {
     url: string;
     title?: string;
@@ -509,8 +521,8 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
     amount?: Balance;
   };
   [TransactionStackRoutes.TransactionNftFinish]: {
-    hash: string;
     nft: NftItem;
+    transaction: TransactionResponse;
   };
   [TransactionStackRoutes.TransactionAccount]: {
     from: string;
@@ -762,4 +774,34 @@ export type WalletConnectApprovalStackParamList = {
   [WalletConnectApprovalStackRoutes.WalletConnectApproval]: {
     event: WalletConnectApproveConnectionEvent;
   };
+};
+
+export enum KeystoneStackRoutes {
+  KeystoneAccounts = 'KeystoneAccounts',
+  KeystoneConnectionSteps = 'KeystoneConnectionSteps',
+  KeystoneFinish = 'KeystoneFinish',
+  KeystoneCameraPermission = 'KeystoneCameraPermission',
+  OnboardingSetupPin = 'OnboardingSetupPin',
+}
+
+export type KeystoneStackParamList = WelcomeStackParamList & {
+  [KeystoneStackRoutes.KeystoneConnectionSteps]: WelcomeStackParamList[WelcomeStackRoutes.Device];
+  [KeystoneStackRoutes.KeystoneCameraPermission]: undefined;
+  [KeystoneStackRoutes.KeystoneAccounts]: {
+    qrCBORHex: string;
+  };
+  [KeystoneStackRoutes.KeystoneFinish]: undefined;
+  [KeystoneStackRoutes.OnboardingSetupPin]: undefined;
+};
+
+export enum DeviceStackRoutes {
+  DeviceSelect = 'DeviceSelect',
+  DeviceKeystone = 'DeviceKeystone',
+  DeviceLedger = 'DeviceLedger',
+}
+
+export type DeviceStackParamList = {
+  DeviceSelect: undefined;
+  DeviceKeystone: undefined;
+  DeviceLedger: undefined;
 };

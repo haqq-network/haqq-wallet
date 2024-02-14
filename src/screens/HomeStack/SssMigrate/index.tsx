@@ -3,6 +3,7 @@ import React, {memo} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
+import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {useTypedRoute} from '@app/hooks';
 import {
   HomeStackParamList,
@@ -25,7 +26,7 @@ export const SssMigrateStack = memo(() => {
     <Stack.Navigator screenOptions={popupScreenOptions}>
       <Stack.Screen
         name={SssMigrateStackRoutes.SssMigrateAgreement}
-        component={SssMigrateAgreementScreen}
+        component={themeUpdaterHOC(SssMigrateAgreementScreen)}
         options={hideBack}
         initialParams={{
           accountId: route.params.accountId,
@@ -33,27 +34,27 @@ export const SssMigrateStack = memo(() => {
       />
       <Stack.Screen
         name={SssMigrateStackRoutes.SssMigrateNetworks}
-        component={SssMigrateNetworksScreen}
+        component={themeUpdaterHOC(SssMigrateNetworksScreen)}
         options={hideBack}
       />
       <Stack.Screen
         name={SssMigrateStackRoutes.SssMigrateRewrite}
-        component={SssMigrateRewriteScreen}
+        component={themeUpdaterHOC(SssMigrateRewriteScreen)}
         options={hideBack}
       />
       <Stack.Screen
         name={SssMigrateStackRoutes.SssMigrateStore}
-        component={SssMigrateStoreScreen}
+        component={themeUpdaterHOC(SssMigrateStoreScreen)}
         options={hideBack}
       />
       <Stack.Screen
         name={SssMigrateStackRoutes.SssMigrateFinish}
-        component={SssMigrateFinishScreen}
+        component={themeUpdaterHOC(SssMigrateFinishScreen)}
         options={hideBack}
       />
       <Stack.Screen
         name={SssMigrateStackRoutes.SssMigrateSignupImportantInfo}
-        component={SignUpImportantInfoScreen}
+        component={themeUpdaterHOC(SignUpImportantInfoScreen)}
       />
     </Stack.Navigator>
   );

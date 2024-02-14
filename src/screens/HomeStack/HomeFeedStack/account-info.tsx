@@ -1,20 +1,16 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {observer} from 'mobx-react';
 
 import {AccountInfo} from '@app/components/account-info';
 import {Loading} from '@app/components/ui';
-import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {useEffectAsync} from '@app/hooks/use-effect-async';
-import {useTransactionList} from '@app/hooks/use-transaction-list';
+import {useWallet} from '@app/hooks/use-wallet';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
-import {Transaction} from '@app/models/transaction';
-import {Wallet} from '@app/models/wallet';
+import {Token} from '@app/models/tokens';
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
-import {Indexer} from '@app/services/indexer';
-import {ModalType} from '@app/types';
+import {IndexerTransaction, ModalType} from '@app/types';
 
 export const AccountInfoScreen = observer(() => {
   const route = useTypedRoute<
@@ -23,32 +19,12 @@ export const AccountInfoScreen = observer(() => {
   >();
   const navigation = useTypedNavigation<HomeStackParamList>();
   const accountId = useMemo(() => route.params.accountId, [route]);
-  const wallet = Wallet.getById(accountId);
+  const wallet = useWallet(accountId);
   const balances = useWalletsBalance([wallet!]);
   const {available, locked, staked, total, unlock, vested} = useMemo(
     () => balances[wallet?.address!],
     [balances, wallet],
   );
-  const transactionList = useTransactionList([accountId]);
-
-  const transactions = useMemo(() => {
-    return Transaction.getAllByAccountIdAndProviderId(
-      route.params.accountId,
-      app.providerId,
-    );
-  }, [route.params.accountId]);
-  const [contractNameMap, setContractNameMap] = useState({});
-
-  useEffectAsync(async () => {
-    const names = transactions
-      .filter(({input}) => input.includes('0x') && input.length > 2)
-      .map(item => item.to);
-    const uniqueNames = [...new Set(names)];
-    if (uniqueNames.length > 0) {
-      const info = await Indexer.instance.getContractNames(uniqueNames);
-      setContractNameMap(info);
-    }
-  }, []);
 
   const onReceive = useCallback(() => {
     showModal(ModalType.cardDetailsQr, {address: route.params.accountId});
@@ -60,13 +36,14 @@ export const AccountInfoScreen = observer(() => {
     });
   }, [navigation, route.params.accountId]);
 
-  const onPressRow = useCallback(
-    (hash: string) => {
+  const onPressTxRow = useCallback(
+    (tx: IndexerTransaction) => {
       navigation.navigate(HomeStackRoutes.TransactionDetail, {
-        hash,
+        txId: tx.id,
+        addresses: [accountId],
       });
     },
-    [navigation],
+    [navigation, accountId],
   );
 
   const onPressInfo = useCallback(
@@ -81,18 +58,17 @@ export const AccountInfoScreen = observer(() => {
   return (
     <AccountInfo
       wallet={wallet}
-      transactionsList={transactionList}
       onPressInfo={onPressInfo}
       onReceive={onReceive}
       onSend={onSend}
-      onPressRow={onPressRow}
-      contractNameMap={contractNameMap}
+      onPressTxRow={onPressTxRow}
       available={available}
       locked={locked}
       staked={staked}
       total={total}
       unlock={unlock}
       vested={vested}
+      tokens={Token.tokens}
     />
   );
 });

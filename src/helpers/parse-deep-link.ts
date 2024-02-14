@@ -81,87 +81,91 @@ export type LinkParseResult = CommonResultData &
   );
 
 export const parseDeepLink = (link: string): LinkParseResult => {
-  if (!link) {
-    return {type: LinkType.Unrecognized, rawData: '', params: {}};
-  }
-
-  if (AddressUtils.isEthAddress(link)) {
-    return {type: LinkType.Address, params: {address: link}, rawData: link};
-  }
-
-  if (link.startsWith(`${DeeplinkProtocol.etherium}:`)) {
-    const to = link.split(':')[1];
-    if (AddressUtils.isEthAddress(to)) {
-      return {type: LinkType.Etherium, params: {address: to}, rawData: link};
+  try {
+    if (!link) {
+      return {type: LinkType.Unrecognized, rawData: '', params: {}};
     }
-  }
 
-  if (link.startsWith(`${DeeplinkProtocol.wc}:`)) {
-    const uri = decodeURIComponent(link.replace(/^wc:\/{0,2}/, ''));
-    return {type: LinkType.WalletConnect, params: {uri}, rawData: link};
-  }
+    if (AddressUtils.isEthAddress(link)) {
+      return {type: LinkType.Address, params: {address: link}, rawData: link};
+    }
 
-  if (link.startsWith(`${DeeplinkProtocol.haqq}:`)) {
-    const url = new Url<ParsedQuery>(link, true);
+    if (link.startsWith(`${DeeplinkProtocol.etherium}:`)) {
+      const to = link.split(':')[1];
+      if (AddressUtils.isEthAddress(to)) {
+        return {type: LinkType.Etherium, params: {address: to}, rawData: link};
+      }
+    }
 
-    const [key, ...params] = (url.host || url.pathname || url.hostname).split(
-      ':',
-    );
+    if (link.startsWith(`${DeeplinkProtocol.wc}:`)) {
+      const uri = decodeURIComponent(link.replace(/^wc:\/{0,2}/, ''));
+      return {type: LinkType.WalletConnect, params: {uri}, rawData: link};
+    }
 
-    if (AddressUtils.isEthAddress(key) || AddressUtils.isHaqqAddress(key)) {
+    if (link.startsWith(`${DeeplinkProtocol.haqq}:`)) {
+      const url = new Url<ParsedQuery>(link, true);
+
+      const [key, ...params] = (url.host || url.pathname || url.hostname).split(
+        ':',
+      );
+
+      if (AddressUtils.isEthAddress(key) || AddressUtils.isHaqqAddress(key)) {
+        return {
+          type: LinkType.Address,
+          params: {address: key},
+          rawData: link,
+        };
+      }
+
+      switch (key) {
+        case DeeplinkUrlKey.wc:
+          return {
+            type: LinkType.WalletConnect,
+            params: {uri: url.query.uri!},
+            rawData: link,
+          };
+        case DeeplinkUrlKey.browser:
+        case DeeplinkUrlKey.web3browser:
+          return {
+            type: LinkType.Browser,
+            params: {
+              key,
+              url: url.query.uri!,
+            },
+            rawData: link,
+          };
+        case DeeplinkUrlKey.back9test:
+          return {
+            type: LinkType.Back9test,
+            params: {
+              code: params[0],
+            },
+            rawData: link,
+          };
+        case DeeplinkUrlKey.enableDeveloperMode:
+          return {
+            type: LinkType.EnableDeveloperMode,
+            params: {},
+            rawData: link,
+          };
+        case DeeplinkUrlKey.provider:
+          return {
+            type: LinkType.Provider,
+            params: {
+              provider: JSON.parse(base64.decode(params[0])),
+            },
+            rawData: link,
+          };
+      }
+
       return {
-        type: LinkType.Address,
-        params: {address: key},
+        type: LinkType.Haqq,
+        params: {key, ...params},
         rawData: link,
       };
     }
-
-    switch (key) {
-      case DeeplinkUrlKey.wc:
-        return {
-          type: LinkType.WalletConnect,
-          params: {uri: url.query.uri!},
-          rawData: link,
-        };
-      case DeeplinkUrlKey.browser:
-      case DeeplinkUrlKey.web3browser:
-        return {
-          type: LinkType.Browser,
-          params: {
-            key,
-            url: url.query.uri!,
-          },
-          rawData: link,
-        };
-      case DeeplinkUrlKey.back9test:
-        return {
-          type: LinkType.Back9test,
-          params: {
-            code: params[0],
-          },
-          rawData: link,
-        };
-      case DeeplinkUrlKey.enableDeveloperMode:
-        return {
-          type: LinkType.EnableDeveloperMode,
-          params: {},
-          rawData: link,
-        };
-      case DeeplinkUrlKey.provider:
-        return {
-          type: LinkType.Provider,
-          params: {
-            provider: JSON.parse(base64.decode(params[0])),
-          },
-          rawData: link,
-        };
-    }
-
-    return {
-      type: LinkType.Haqq,
-      params: {key, ...params},
-      rawData: link,
-    };
+  } catch (e) {
+    Logger.captureException(e, 'parseDeepLink', {link});
   }
 
   return {type: LinkType.Unrecognized, rawData: link, params: {}};

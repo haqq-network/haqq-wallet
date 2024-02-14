@@ -116,9 +116,11 @@ export const StakingValidators = ({
   return (
     <>
       <CustomHeader
-        onSearchChange={onSearchChange}
+        onChangeSearch={onSearchChange}
         title={I18N.stakingValidators}
         iconRight="search"
+        testIdRight="staking-validators-search"
+        testIdSearch="staking-validators-search-input"
         iconLeft="arrow_back"
         onPressLeft={onGoBack}
       />

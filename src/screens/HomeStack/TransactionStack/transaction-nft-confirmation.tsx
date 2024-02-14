@@ -6,6 +6,7 @@ import {TransactionNftConfirmation} from '@app/components/transaction-nft-confir
 import {abortProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
+import {useError} from '@app/hooks/use-error';
 import {Contact} from '@app/models/contact';
 import {Wallet} from '@app/models/wallet';
 import {
@@ -13,6 +14,7 @@ import {
   TransactionStackRoutes,
 } from '@app/route-types';
 import {Balance} from '@app/services/balance';
+import {TransactionResponse} from '@app/types';
 
 // TODO:
 export const TransactionNftConfirmationScreen = observer(() => {
@@ -31,7 +33,7 @@ export const TransactionNftConfirmationScreen = observer(() => {
     [route.params.to],
   );
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [error, setError] = useState('');
+  const showError = useError();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [disabled, setDisabled] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -55,12 +57,6 @@ export const TransactionNftConfirmationScreen = observer(() => {
   }, []);
 
   const onConfirmTransaction = useCallback(async () => {
-    const hash =
-      '0x9915496c761b2ac2dd906d739be0d2228b801caa30243b28ba41875405e6ff80';
-    navigation.navigate(TransactionStackRoutes.TransactionNftFinish, {
-      hash,
-      nft: route.params.nft,
-    });
     // if (wallet) {
     //   if (wallet.type === WalletType.ledgerBt) {
     //     onDoneLedgerBt();
@@ -98,16 +94,17 @@ export const TransactionNftConfirmationScreen = observer(() => {
     //       walletType: wallet.type,
     //     });
     //     if (e instanceof Error) {
-    //       setError(
-    //         getText(I18N.transactionFailed, {
-    //           id: errorId,
-    //         }),
-    //       );
+    //       showError(errorId);
     //     }
     //   } finally {
     //     setDisabled(false);
     //   }
     // }
+    navigation.navigate(TransactionStackRoutes.TransactionNftFinish, {
+      nft: route.params.nft,
+      // TODO: FIXME:
+      transaction: {} as TransactionResponse,
+    });
   }, [navigation, route.params.nft]);
 
   useEffect(() => {
@@ -124,7 +121,6 @@ export const TransactionNftConfirmationScreen = observer(() => {
       item={route.params.nft}
       fee={fee}
       onConfirmTransaction={onConfirmTransaction}
-      error={error}
     />
   );
 });

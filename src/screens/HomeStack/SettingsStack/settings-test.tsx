@@ -30,7 +30,10 @@ import {
 } from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
-import {awaitForScanQr} from '@app/helpers/await-for-scan-qr';
+import {
+  QRScannerTypeEnum,
+  awaitForScanQr,
+} from '@app/helpers/await-for-scan-qr';
 import {
   awaitForValue,
   objectsToValues,
@@ -38,6 +41,7 @@ import {
 } from '@app/helpers/await-for-value';
 import {getUid} from '@app/helpers/get-uid';
 import {getAdjustAdid} from '@app/helpers/get_adjust_adid';
+import {parseDeepLink} from '@app/helpers/parse-deep-link';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Banner} from '@app/models/banner';
@@ -55,10 +59,16 @@ import {EthNetwork} from '@app/services';
 import {Airdrop} from '@app/services/airdrop';
 import {Balance} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {Indexer} from '@app/services/indexer';
 import {SssProviders} from '@app/services/provider-sss';
 import {message as toastMessage} from '@app/services/toast';
 import {getUserAgent} from '@app/services/version';
-import {ModalType, Modals, PartialJsonRpcRequest} from '@app/types';
+import {
+  IndexerTransaction,
+  ModalType,
+  Modals,
+  PartialJsonRpcRequest,
+} from '@app/types';
 import {
   generateMockBanner,
   isError,
@@ -67,7 +77,7 @@ import {
   openWeb3Browser,
 } from '@app/utils';
 import {MIN_GAS_LIMIT} from '@app/variables/balance';
-import {HAQQ_METADATA, TEST_URLS} from '@app/variables/common';
+import {HAQQ_METADATA, STRINGS, TEST_URLS} from '@app/variables/common';
 
 const logger = Logger.create('SettingsTestScreen', {
   emodjiPrefix: '🔵',
@@ -154,6 +164,11 @@ const getTestModals = (): TestModals => {
       onChange: () => logger.log('claimOnMainnet onChange'),
       network: 'MainMet',
     },
+    customProviderEmail: {
+      onClose: () => logger.log('customProviderEmail closed'),
+      onChange: (value: string) =>
+        logger.log('customProviderEmail onChange', value),
+    },
     transactionError: {
       onClose: () => logger.log('transactionError closed'),
       message: 'Something went wrong',
@@ -190,6 +205,18 @@ const getTestModals = (): TestModals => {
     cloudShareNotFound: {
       onClose: () => logger.log('cloudShareNotFound closed'),
       wallet: wallets[0],
+    },
+    keystoneQR: {
+      cborHex: '',
+      errorEventName: '',
+      requestID: '',
+      succesEventName: '',
+      urType: '',
+    },
+    keystoneScanner: {
+      eventTaskId: 'test-modal',
+      onClose: () => logger.log('keystoneScanner closed'),
+      purpose: 'sign',
     },
     sssLimitReached: {
       onClose: () => logger.log('sssLimitReached closed'),
@@ -514,6 +541,9 @@ export const SettingsTestScreen = observer(() => {
     setLeadingAccount(VariablesString.get('leadingAccount'));
   }, [showActionSheetWithOptions]);
 
+  const [txList, setTxList] = useState<IndexerTransaction[]>([]);
+  const [blockNumber, setBlockNumber] = useState('latest');
+
   return (
     <ScrollView style={styles.container}>
       <Title text="Install Referrer" />
@@ -573,6 +603,32 @@ export const SettingsTestScreen = observer(() => {
         variant={ButtonVariant.contained}
       />
 
+      <Title text="Transaction" />
+      <Spacer height={8} />
+      <Text>
+        TX count: {txList.length}
+        {STRINGS.N}
+        last block: {blockNumber}
+      </Text>
+      <Button
+        title="load tx list"
+        onPress={async () => {
+          const result = await Indexer.instance.getTransactions(
+            Wallet.addressList(),
+            blockNumber,
+          );
+
+          const lastTx = result[result.length - 1];
+          if (lastTx) {
+            setBlockNumber(`${lastTx.block}`);
+          }
+
+          Logger.log('tx result', JSON.stringify(result, null, 2));
+          setTxList(txListOld => [...txListOld, ...result]);
+        }}
+        variant={ButtonVariant.contained}
+      />
+
       <Title text="Leading account" />
       <Text t11>{leadingAccount}</Text>
       <Spacer height={8} />
@@ -581,7 +637,6 @@ export const SettingsTestScreen = observer(() => {
         onPress={onSetLeadingAccount}
         variant={ButtonVariant.contained}
       />
-
       <Spacer height={8} />
       <Title text="Raw Sign Request" />
       <Input
@@ -652,8 +707,12 @@ export const SettingsTestScreen = observer(() => {
         title="QR scanner"
         onPress={async () => {
           try {
-            const result = await awaitForScanQr({pattern: regexp});
-            Alert.alert('result', JSON.stringify(result, null, 2));
+            const result = await awaitForScanQr({
+              pattern: regexp,
+              variant: QRScannerTypeEnum.qr,
+            });
+            const parsed = await parseDeepLink(result);
+            Alert.alert('result', JSON.stringify(parsed, null, 2));
           } catch (err) {
             Alert.alert('error', JSON.stringify(err, null, 2));
           }
@@ -743,7 +802,6 @@ export const SettingsTestScreen = observer(() => {
         onPress={() => onCheckContract()}
         variant={ButtonVariant.contained}
       />
-
       <Title text="Services" />
       <Button
         title="Create test banner"
@@ -772,7 +830,6 @@ export const SettingsTestScreen = observer(() => {
         onPress={onResetUid}
         variant={ButtonVariant.contained}
       />
-
       <Title text="Captcha" />
       <Button
         title="Show hcaptcha captcha"
@@ -951,7 +1008,6 @@ export const SettingsTestScreen = observer(() => {
         }}
         variant={ButtonVariant.contained}
       />
-
       <Spacer minHeight={100} />
       <Button
         title="Turn off developer"

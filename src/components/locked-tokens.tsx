@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import {View} from 'react-native';
 
@@ -7,18 +7,22 @@ import {createTheme} from '@app/helpers';
 import {useIsBalancesFirstSync} from '@app/hooks/use-is-balances-sync';
 import {I18N} from '@app/i18n';
 import {BalanceData} from '@app/types';
+import {CURRENCY_NAME} from '@app/variables/common';
 
-import {First, Icon, IconButton, IconsName, Spacer, Text} from './ui';
+import {Badge, First, Icon, IconButton, IconsName, Spacer, Text} from './ui';
 import {Placeholder} from './ui/placeholder';
 
 export interface LockedTokensProps {
   balance?: BalanceData;
+
   onForwardPress(): void;
 }
 
 export function LockedTokens({balance, onForwardPress}: LockedTokensProps) {
   const {available, locked, total} = balance ?? {};
   const isBalancesFirstSync = useIsBalancesFirstSync();
+  const defaultTotalValueISLM = useMemo(() => `0 ${CURRENCY_NAME}`, []);
+  const defaultTotalValueUSD = useMemo(() => '$0', []);
 
   return (
     <View style={styles.container}>
@@ -30,7 +34,13 @@ export function LockedTokens({balance, onForwardPress}: LockedTokensProps) {
           </Placeholder>
         )}
         <View style={styles.row}>
-          <Text t7>{total?.toBalanceString() ?? '0'}</Text>
+          <Text t7>{total?.toBalanceString(0) ?? defaultTotalValueISLM}</Text>
+          <Spacer width={4} />
+          <Badge
+            text={total?.toFiat()?.toBalanceString() ?? defaultTotalValueUSD}
+            labelColor={Color.graphicSecond1}
+            textColor={Color.textBase1}
+          />
           <Spacer width={4} />
           <IconButton onPress={onForwardPress} style={styles.iconButton}>
             <Icon

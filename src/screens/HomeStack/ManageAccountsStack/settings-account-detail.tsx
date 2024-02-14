@@ -3,7 +3,7 @@ import React, {useCallback, useEffect} from 'react';
 import {observer} from 'mobx-react';
 import {Alert} from 'react-native';
 
-import {SettingsAccountDetail} from '@app/components/settings-account-detail';
+import {SettingsAccountDetail} from '@app/components/settings/settings-account-detail';
 import {CustomHeader, IconsName} from '@app/components/ui';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {hideModal, showModal} from '@app/helpers';
@@ -19,8 +19,7 @@ import {
 } from '@app/route-types';
 import {sendNotification} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {ModalType} from '@app/types';
-import {AdjustEvents} from '@app/types';
+import {AdjustEvents, ModalType} from '@app/types';
 
 export const SettingsAccountDetailScreen = observer(() => {
   const navigation = useTypedNavigation<ManageAccountsStackParamList>();

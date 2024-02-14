@@ -30,6 +30,10 @@ export const hideBack: NativeStackNavigationOptions = {
   headerRight: DismissPopupButton,
 };
 
+export const hideHeader: NativeStackNavigationOptions = {
+  headerShown: false,
+};
+
 export const modalWithoutBack = {
   ...hideBack,
   presentation: 'modal',

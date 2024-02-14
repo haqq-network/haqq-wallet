@@ -77,6 +77,7 @@ const newsOptions: BottomTabNavigationOptions = {
   headerStyle: {
     height: StatusBar.currentHeight,
   },
+  unmountOnBlur: true,
 };
 
 const browserOptions = {
@@ -136,6 +137,7 @@ export const HomeScreen = memo(() => {
         component={HomeFeedStack}
         options={({route}) => ({
           ...feedOptions,
+          tabBarTestID: 'homeFeed',
           tabBarStyle: (routeA => {
             const routeName = (getFocusedRouteNameFromRoute(routeA) ??
               HomeFeedStackRoutes.HomeFeed) as HomeFeedStackRoutes;
@@ -155,6 +157,7 @@ export const HomeScreen = memo(() => {
         component={BrowserStack}
         options={{
           ...browserOptions,
+          tabBarTestID: 'homeBrowser',
           tabBarStyle: screenOptions.tabBarStyle,
         }}
       />
@@ -163,6 +166,7 @@ export const HomeScreen = memo(() => {
         component={HomeNewsStack}
         options={({route}) => ({
           ...newsOptions,
+          tabBarTestID: 'homeNews',
           tabBarStyle: (routeA => {
             const routeName = (getFocusedRouteNameFromRoute(routeA) ??
               NewsStackRoutes.News) as NewsStackRoutes;
@@ -182,6 +186,7 @@ export const HomeScreen = memo(() => {
         component={SettingsStack}
         options={({route}) => ({
           ...settingsOptions,
+          tabBarTestID: 'homeSettings',
           tabBarStyle: (routeA => {
             const routeName = (getFocusedRouteNameFromRoute(routeA) ??
               SettingsStackRoutes.Home) as SettingsStackRoutes;

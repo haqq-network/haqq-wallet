@@ -4,13 +4,21 @@ import {ProviderInterface} from '@haqq/provider-base';
 import {BigNumber, utils} from 'ethers';
 
 import {app} from '@app/contexts';
-import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
+import {AddressUtils} from '@app/helpers/address-utils';
+import {
+  getRemoteBalanceValue,
+  getRemoteMultiplierValue,
+} from '@app/helpers/get-remote-balance-value';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
+import {Contracts} from '@app/models/contracts';
 import {Provider} from '@app/models/provider';
+import {Token} from '@app/models/tokens';
 import {Wallet} from '@app/models/wallet';
 import {getDefaultChainId} from '@app/network';
 import {Balance} from '@app/services/balance';
 import {storage} from '@app/services/mmkv';
+import {decimalToHex} from '@app/utils';
+import {WEI_PRECISION} from '@app/variables/common';
 
 export const ABI_ERC20_TRANSFER_ACTION = {
   name: 'transfer',
@@ -35,9 +43,6 @@ const BALANCE_CACHE_KEY = 'balance_storage';
 export class EthNetwork {
   static chainId: number = getDefaultChainId();
   static explorer: string | undefined;
-
-  private static getBalanceCacheKey = (address: string) =>
-    BALANCE_CACHE_KEY + address.toLowerCase();
 
   static async populateTransaction(
     from: string,
@@ -162,15 +167,31 @@ export class EthNetwork {
       const estGas = await rpcProvider.estimateGas({
         from,
         to,
-        value: value.toHex(),
         data,
-        maxFeePerGas: gasPrice.toHex(),
-        maxPriorityFeePerGas: gasPrice.toHex(),
+        value: value.toHex(),
       } as Deferrable<TransactionRequest>);
 
-      estimateGas = new Balance(estGas._hex).max(minGas);
-    } catch {
-      //
+      // TODO Investigate and fix new Balance issue when number used instead of hex
+      estimateGas = new Balance(
+        decimalToHex(
+          String(
+            // Convert to int because decimalToHex incorrectly parse decimals work only with integers
+            parseInt(
+              String(
+                // Multiply by eth_commission_multiplier
+                estGas.toNumber() *
+                  getRemoteMultiplierValue('eth_commission_multiplier'),
+              ),
+              10,
+            ),
+          ),
+        ),
+      ).max(minGas);
+    } catch (err) {
+      Logger.error(
+        'EthNetwork.estimateTransaction error',
+        JSON.stringify(err, null, 2),
+      );
     }
 
     return {
@@ -179,6 +200,9 @@ export class EthNetwork {
       estimateGas,
     };
   }
+
+  private static getBalanceCacheKey = (address: string) =>
+    BALANCE_CACHE_KEY + address.toLowerCase();
 
   async transferTransaction(
     transport: ProviderInterface,
@@ -218,9 +242,24 @@ export class EthNetwork {
   ) {
     const abi = [ABI_ERC20_TRANSFER_ACTION];
     const iface = new utils.Interface(abi);
+
+    const haqqContractAddress = AddressUtils.toHaqq(contractAddress);
+    const contractInfo =
+      Contracts.getById(haqqContractAddress) ||
+      Token.getById(haqqContractAddress);
+
+    const decimals = contractInfo.decimals ?? WEI_PRECISION;
+
+    const [amountClear] = new Balance(amount.toWei(), 0)
+      .operate(Math.pow(10, amount.getPrecission()), 'div')
+      .operate(Math.pow(10, decimals), 'mul')
+      .toWei()
+      .toString()
+      .split('.');
+
     const data = iface.encodeFunctionData(ABI_ERC20_TRANSFER_ACTION.name, [
       to,
-      amount.toHex(),
+      amountClear,
     ]);
 
     const unsignedTx = await EthNetwork.populateTransaction(

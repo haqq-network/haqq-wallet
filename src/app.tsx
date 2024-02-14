@@ -26,12 +26,17 @@ import {createTheme, hideModal, showModal} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {trackEvent} from '@app/helpers/track-event';
 import {useTheme} from '@app/hooks';
+import {useToast} from '@app/hooks/use-toast';
 import {Contact} from '@app/models/contact';
-import {Transaction} from '@app/models/transaction';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
-import {OnboardingStackRoutes} from '@app/route-types';
+import {
+  KeystoneStackRoutes,
+  LedgerStackRoutes,
+  OnboardingStackRoutes,
+  SssMigrateStackRoutes,
+} from '@app/route-types';
 import {RootStack} from '@app/screens/RootStack';
 import {AppTheme, ModalType} from '@app/types';
 import {getAppTrackingAuthorizationStatus, sleep} from '@app/utils';
@@ -47,16 +52,35 @@ const appTheme = createTheme({
   },
 });
 
+const CREATE_WALLET_FINISH_SCREENS: string[] = [
+  OnboardingStackRoutes.OnboardingFinish,
+  LedgerStackRoutes.LedgerFinish,
+  SssMigrateStackRoutes.SssMigrateFinish,
+  KeystoneStackRoutes.KeystoneFinish,
+];
+
 export const App = () => {
   const [initialized, setInitialized] = useState(false);
   const [isPinReseted, setPinReseted] = useState(false);
   const [onboarded, setOnboarded] = useState(app.onboarded);
   const theme = useTheme();
+  const toast = useToast();
 
   const navTheme = useMemo(
     () => ({dark: theme === AppTheme.dark, colors: appTheme.colors}) as Theme,
     [theme],
   );
+
+  useEffect(() => {
+    const sub = (value: boolean) => {
+      setOnboarded(value);
+    };
+
+    app.addListener(Events.onOnboardedChanged, sub);
+    return () => {
+      app.removeListener(Events.onOnboardedChanged, sub);
+    };
+  }, []);
 
   useEffect(() => {
     const splashTimer = setTimeout(() => {
@@ -70,11 +94,7 @@ export const App = () => {
           await app.init();
           await migrationWallets();
           // MobX stores migration
-          await Promise.allSettled([
-            Contact.migrate(),
-            Wallet.migrate(),
-            Transaction.migrate(),
-          ]);
+          await Promise.allSettled([Contact.migrate(), Wallet.migrate()]);
 
           // We need reopen app for start SSS check
           // because we are working with cloud snapshots
@@ -83,9 +103,6 @@ export const App = () => {
       })
       .then(() => {
         setOnboarded(app.onboarded);
-        app.addListener(Events.onOnboardedChanged, value =>
-          setOnboarded(value),
-        );
         awaitForEventDone(Events.onAppLoggedId);
       })
       .then(() => {
@@ -103,7 +120,6 @@ export const App = () => {
 
     return () => {
       clearTimeout(splashTimer);
-      app.removeAllListeners(Events.onOnboardedChanged);
     };
   }, []);
 
@@ -176,7 +192,10 @@ export const App = () => {
     });
 
     const currentRouteName = navigator?.getCurrentRoute?.()?.name;
-    if (currentRouteName === OnboardingStackRoutes.OnboardingFinish) {
+    if (
+      !!currentRouteName &&
+      CREATE_WALLET_FINISH_SCREENS.includes(currentRouteName)
+    ) {
       setPinReseted(false);
     }
   }, []);
@@ -203,6 +222,7 @@ export const App = () => {
                 isReady={initialized}
               />
               <AppScreenSecurityOverview />
+              {toast}
             </NavigationContainer>
           </MenuProvider>
         </SafeAreaProvider>

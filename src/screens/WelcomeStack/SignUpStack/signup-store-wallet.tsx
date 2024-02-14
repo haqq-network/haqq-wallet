@@ -17,8 +17,7 @@ import {
   WelcomeStackRoutes,
 } from '@app/route-types';
 import {SssProviders} from '@app/services/provider-sss';
-import {ModalType} from '@app/types';
-import {WalletType} from '@app/types';
+import {ModalType, WalletType} from '@app/types';
 import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
 export const SignUpStoreWalletScreen = observer(() => {
@@ -27,6 +26,8 @@ export const SignUpStoreWalletScreen = observer(() => {
     SignUpStackParamList,
     SignUpStackRoutes.SignupStoreWallet
   >();
+
+  Logger.log('SignUpStoreWalletScreen', route.params);
 
   const goBack = useCallback(() => {
     hideModal(ModalType.loading);
