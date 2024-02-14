@@ -68,7 +68,7 @@ export const TransactionConfirmation = ({
       return '';
     }
 
-    return transactionSum.toFiat('USD').toBalanceString();
+    return transactionSum.toFiat().toBalanceString();
   }, [transactionSum]);
 
   return (

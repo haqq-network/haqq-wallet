@@ -8,6 +8,18 @@ import {RemoteConfigTypes} from './remote-config-types';
 import {getAppVersion} from '../version';
 
 export const REMOTE_CONFIG_DEFAULT_VALUES: Required<RemoteConfigTypes> = {
+  cosmos_commission_multilplier: 1.35,
+  currency: {
+    created_at: '2024-02-12T06:24:48.111998Z',
+    icon: '',
+    id: 'USD',
+    postfix: '',
+    prefix: '',
+    status: 'unknown',
+    title: 'US Dollars',
+    updated_at: '2024-02-12T06:24:48.111998Z',
+  },
+  eth_commission_multilplier: 1.35,
   wallet_connect: {
     eip155: {
       methods: [

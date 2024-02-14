@@ -3,7 +3,7 @@ import React, {memo, useCallback, useState} from 'react';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 
-import {SettingsViewRecoveryPhrase} from '@app/components/settings-view-recovery-phrase';
+import {SettingsViewRecoveryPhrase} from '@app/components/settings/settings-view-recovery-phrase';
 import {CustomHeader, Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';

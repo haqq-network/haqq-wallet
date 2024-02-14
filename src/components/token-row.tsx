@@ -17,7 +17,7 @@ export interface TokenRowProps {
 
 export const TokenRow = ({item, onPress}: TokenRowProps) => {
   const priceInUSD = useMemo(() => {
-    return item.value.toFiat('USD').toBalanceString(LONG_NUM_PRECISION);
+    return item.value.toFiat().toBalanceString(LONG_NUM_PRECISION);
   }, [item]);
   return (
     <TouchableOpacity

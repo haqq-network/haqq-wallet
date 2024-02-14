@@ -3,7 +3,7 @@ import React, {useCallback, useEffect} from 'react';
 import {observer} from 'mobx-react';
 import {Alert} from 'react-native';
 
-import {SettingsAccountDetail} from '@app/components/settings-account-detail';
+import {SettingsAccountDetail} from '@app/components/settings/settings-account-detail';
 import {CustomHeader, IconsName} from '@app/components/ui';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {hideModal, showModal} from '@app/helpers';

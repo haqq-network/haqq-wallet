@@ -2,7 +2,7 @@ import React, {memo, useCallback, useState} from 'react';
 
 import {Alert} from 'react-native';
 
-import {SettingsSecurity} from '@app/components/settings-security';
+import {SettingsSecurity} from '@app/components/settings/settings-security';
 import {CustomHeader} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {useTypedNavigation} from '@app/hooks';

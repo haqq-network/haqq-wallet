@@ -1,6 +1,7 @@
-import React, {memo, useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 
 import {SessionTypes} from '@walletconnect/types';
+import {observer} from 'mobx-react';
 import {
   TouchableWithoutFeedback,
   View,
@@ -23,6 +24,7 @@ import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {useIsBalancesFirstSync} from '@app/hooks/use-is-balances-sync';
 import {I18N} from '@app/i18n';
+import {Currencies} from '@app/models/currencies';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {BalanceData, WalletType} from '@app/types';
@@ -57,7 +59,7 @@ enum ProtectionStatus {
   hidden,
 }
 
-export const WalletCard = memo(
+export const WalletCard = observer(
   ({
     testID,
     wallet,
@@ -76,6 +78,7 @@ export const WalletCard = memo(
     const isBalancesFirstSync = useIsBalancesFirstSync();
     const screenWidth = useWindowDimensions().width;
     const isImported = wallet.isImported || isSecondMnemonic;
+    const selectedCurrency = Currencies.selectedCurrency;
 
     const protectionStatus = useMemo(() => {
       // Wallet is 2nd mnemonic (imported) or user have imported this wallet after SSS
@@ -100,6 +103,7 @@ export const WalletCard = memo(
       () => shortAddress(wallet?.address ?? '', '•'),
       [wallet?.address],
     );
+
     const parsedTotal = useMemo(() => {
       let result = total;
 
@@ -107,8 +111,8 @@ export const WalletCard = memo(
         result = Balance.Empty;
       }
 
-      return result.toFiat('USD').toBalanceString();
-    }, [total]);
+      return result.toFiat().toBalanceString();
+    }, [total, selectedCurrency]);
 
     const onQr = () => {
       onPressQR(wallet.address);

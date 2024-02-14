@@ -22,7 +22,7 @@ import {single, validate} from 'validate.js';
 
 import {Color} from '@app/colors';
 import {ActionsSheet} from '@app/components/actions-sheet';
-import {WrappedInput} from '@app/components/settings-providers/settings-provider-edit/wrapped-input';
+import {WrappedInput} from '@app/components/settings/settings-providers/settings-provider-edit/wrapped-input';
 import {
   Button,
   ButtonSize,

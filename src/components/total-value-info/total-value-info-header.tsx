@@ -29,7 +29,7 @@ export const TotalValueInfoHeader = ({
           <Text
             style={styles.usdText}
             t13
-            children={balance.total.toFiat('USD').toBalanceString()}
+            children={balance.total.toFiat().toBalanceString()}
           />
         </View>
       </View>
