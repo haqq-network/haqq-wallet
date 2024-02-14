@@ -520,6 +520,8 @@ class App extends AsyncEventEmitter {
           }
           await awaitForEventDone(Events.onAppActive);
           await onUpdatesSync();
+          RemoteConfig.init(true);
+          await RemoteConfig.awaitForInitialization();
           break;
         case AppStatus.inactive:
           if (this.authenticated) {
