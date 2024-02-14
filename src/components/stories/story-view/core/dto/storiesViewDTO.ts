@@ -2,6 +2,8 @@ import {ReactNode} from 'react';
 
 import {ImageStyle, ScrollViewProps, TextStyle, ViewStyle} from 'react-native';
 
+import {ArrayElement, IStory} from '@app/types';
+
 export interface StoryItemProps {
   id: string;
   sourceUrl: string;
@@ -9,6 +11,7 @@ export interface StoryItemProps {
   renderContent?: () => ReactNode;
   renderFooter?: () => ReactNode;
   duration?: number;
+  markup: ArrayElement<IStory['attachments']>['markup'];
 }
 
 export interface StoriesViewStoryProps {

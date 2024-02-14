@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {toJS} from 'mobx';
 import {observer} from 'mobx-react';
 
 import {StoriesView} from '@app/components/stories/story-view';
@@ -21,6 +22,7 @@ export const HomeStoriesScreen = observer(() => {
         sourceUrl: item.attachment.source,
         mediaType: item.attachment.type,
         duration: item.attachment.duration * 1000,
+        markup: toJS(item.markup),
       };
     });
 

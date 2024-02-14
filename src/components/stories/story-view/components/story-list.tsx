@@ -10,6 +10,7 @@ import {StoryAnimation} from './story-animation';
 import {StoryContent} from './story-content';
 import {StoryHeader} from './story-header';
 import {StoryImage} from './story-image';
+import {StoryOverlay} from './story-overlay';
 import {StoryProgress} from './story-progress';
 
 import {HEIGHT} from '../core/constants';
@@ -89,6 +90,7 @@ const StoryList: FC<StoryListProps> = memo(
             active={isActive}
             activeStory={activeStory}
           />
+          <StoryOverlay stories={stories} activeStory={activeStory} />
         </Animated.View>
       </StoryAnimation>
     );
