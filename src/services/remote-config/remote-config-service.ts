@@ -35,9 +35,9 @@ export class RemoteConfigService extends Initializable {
   /**
    * @return `true` if remote config is successfully initialized
    */
-  public async init(): Promise<RemoteConfigTypes | undefined> {
+  public async init(force = false): Promise<RemoteConfigTypes | undefined> {
     try {
-      if (RemoteConfigService.instance.isInited) {
+      if (RemoteConfigService.instance.isInited && !force) {
         return RemoteConfigService.instance.getAll();
       }
       this.startInitialization();
