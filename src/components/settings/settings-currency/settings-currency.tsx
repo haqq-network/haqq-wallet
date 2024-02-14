@@ -1,11 +1,18 @@
 import React, {useCallback} from 'react';
 
 import {observer} from 'mobx-react';
-import {FlatList, ListRenderItem, Text, View} from 'react-native';
+import {FlatList, ListRenderItem, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {ImageWrapper} from '@app/components/image-wrapper';
-import {CustomHeader, Icon, IconButton, IconsName} from '@app/components/ui';
+import {
+  CustomHeader,
+  Icon,
+  IconButton,
+  IconsName,
+  Text,
+  TextVariant,
+} from '@app/components/ui';
 import {createTheme, scale} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Currencies} from '@app/models/currencies';
@@ -44,10 +51,14 @@ export const SettingsCurrency = observer(({goBack}: SettingsThemeProps) => {
             <ImageWrapper source={{uri: item.icon}} style={styles.icon} />
             <View>
               <View>
-                <Text>{item.title}</Text>
+                <Text variant={TextVariant.t11} style={styles.currencyTitle}>
+                  {item.title}
+                </Text>
               </View>
               <View>
-                <Text>{getCurrencyDescription(item)}</Text>
+                <Text color={Color.textBase2}>
+                  {getCurrencyDescription(item)}
+                </Text>
               </View>
             </View>
           </View>
@@ -93,4 +104,5 @@ const styles = createTheme({
   currencyInfoContainer: {
     flexDirection: 'row',
   },
+  currencyTitle: {fontSize: 18},
 });
