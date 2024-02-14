@@ -1,6 +1,7 @@
-import React, {memo, useCallback, useEffect} from 'react';
+import React, {memo, useCallback} from 'react';
 
 import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
+import {useFocusEffect} from '@react-navigation/native';
 
 import {LedgerVerify} from '@app/components/ledger-verify';
 import {app} from '@app/contexts';
@@ -30,37 +31,40 @@ export const LedgerVerifyScreen = memo(() => {
     );
   }, [navigation, route.params]);
 
-  useEffect(() => {
-    const provider = new ProviderLedgerReactNative({
-      getPassword: app.getPassword.bind(app),
-      deviceId: route.params.deviceId,
-      appName: LEDGER_APP,
-    });
+  useFocusEffect(
+    useCallback(() => {
+      const provider = new ProviderLedgerReactNative({
+        getPassword: app.getPassword.bind(app),
+        deviceId: route.params.deviceId,
+        appName: LEDGER_APP,
+      });
 
-    requestAnimationFrame(async () => {
-      try {
-        await awaitForBluetooth();
-
-        const address = await provider.confirmAddress(route.params.hdPath);
-
-        if (address && address.toLowerCase() === route.params.address) {
-          onDone();
+      requestAnimationFrame(async () => {
+        try {
+          await awaitForBluetooth();
+          const address = await provider.confirmAddress(route.params.hdPath);
+          if (address && address.toLowerCase() === route.params.address) {
+            onDone();
+          } else {
+            navigation.goBack();
+          }
+        } catch (e) {
+          Logger.error('LedgerVerifyScreen', e);
+          navigation.goBack();
         }
-      } catch (e) {
-        navigation.goBack();
-      }
-    });
+      });
 
-    return () => {
-      provider.abort();
-    };
-  }, [
-    route.params.deviceId,
-    route.params.hdPath,
-    onDone,
-    route.params.address,
-    navigation,
-  ]);
+      return () => {
+        provider.abort();
+      };
+    }, [
+      route.params.deviceId,
+      route.params.hdPath,
+      onDone,
+      route.params.address,
+      navigation,
+    ]),
+  );
 
   return <LedgerVerify address={route.params.address} />;
 });

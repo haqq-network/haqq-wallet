@@ -2992,25 +2992,25 @@ __metadata:
   linkType: hard
 
 "@ledgerhq/hw-transport-mocker@npm:^6.27.7":
-  version: 6.28.1
-  resolution: "@ledgerhq/hw-transport-mocker@npm:6.28.1"
+  version: 6.28.3
+  resolution: "@ledgerhq/hw-transport-mocker@npm:6.28.3"
   dependencies:
-    "@ledgerhq/hw-transport": ^6.30.1
+    "@ledgerhq/hw-transport": ^6.30.3
     "@ledgerhq/logs": ^6.12.0
     rxjs: ^7.8.1
-  checksum: b67ff5abd0ab84d1b8fdb96f4e0825ce0c46b9c009c388208096e776c5b1f7a83e6287492c2b131d7e61dd82527b366ff98ce19b9538976941e6f9ae71ff38bf
+  checksum: bd8349d29728eb75fd8d6d8af2f9ae0704519b46a4599bd1c3d025886231e7d95ca2b233d8e2e57f093d054ddb16833d92a4839f914864277b23dfa3d2132693
   languageName: node
   linkType: hard
 
-"@ledgerhq/hw-transport@npm:^6.27.7, @ledgerhq/hw-transport@npm:^6.27.8, @ledgerhq/hw-transport@npm:^6.30.1":
-  version: 6.30.1
-  resolution: "@ledgerhq/hw-transport@npm:6.30.1"
+"@ledgerhq/hw-transport@npm:^6.27.7, @ledgerhq/hw-transport@npm:^6.27.8, @ledgerhq/hw-transport@npm:^6.30.3":
+  version: 6.30.3
+  resolution: "@ledgerhq/hw-transport@npm:6.30.3"
   dependencies:
     "@ledgerhq/devices": ^8.2.0
     "@ledgerhq/errors": ^6.16.1
     "@ledgerhq/logs": ^6.12.0
     events: ^3.3.0
-  checksum: 71e6c05a8bf27ef494721d7d528ad71082146fc9e62d558f88ed35ffc282e04e5903f687e9606d85a0408bb677576b8b32e9a2c8e267d3f6a963aeec60640931
+  checksum: 745b13b66afe02231c20a338a4a6e8d2cfd2ff3f17e033c89a6da9b7e64b0812e73dc6ce5cd44147058d208a17c152aa7cf138c31be4aa094d15b1921642c920
   languageName: node
   linkType: hard
 
@@ -10148,7 +10148,7 @@ __metadata:
     "@haqq/provider-base": 0.0.20
     "@haqq/provider-hot-react-native": 0.0.7
     "@haqq/provider-keystone-react-native": 0.0.5
-    "@haqq/provider-ledger-react-native": 0.0.25
+    "@haqq/provider-ledger-react-native": 0.0.26
     "@haqq/provider-mnemonic-react-native": 0.0.12
     "@haqq/provider-sss-react-native": 0.0.12
     "@haqq/provider-web3-utils": 0.0.14
