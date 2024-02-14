@@ -13,7 +13,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  NODE_VERSION: '16.17.1'
+  NODE_VERSION: '18.19.0'
 
 jobs:
   test:
