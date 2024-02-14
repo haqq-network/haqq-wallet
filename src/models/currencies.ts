@@ -7,7 +7,7 @@ import {Balance} from '@app/services/balance';
 import {storage} from '@app/services/mmkv';
 
 class CurrenciesStore {
-  private _selectedCurrency: string = 'USD';
+  private _selectedCurrency: string = '';
   private _currencies: Record<string, Currency> = {};
   private _rates: Record<string, CurrencyRate> = {};
 
@@ -60,8 +60,20 @@ class CurrenciesStore {
     return this._selectedCurrency;
   }
 
-  set selectedCurrency(selectedCurrency: string) {
-    this._selectedCurrency = selectedCurrency;
+  set selectedCurrency(selectedCurrency: string | undefined) {
+    if (!selectedCurrency) {
+      return;
+    }
+
+    const supportedCurrency = Object.values(this._currencies).find(
+      currency => currency.id === selectedCurrency,
+    );
+
+    if (supportedCurrency) {
+      this._selectedCurrency = selectedCurrency;
+    } else {
+      this._selectedCurrency = 'USD';
+    }
   }
 
   convert = (balance: Balance): Balance => {
