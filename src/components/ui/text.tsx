@@ -23,34 +23,90 @@ export type TextValue =
       children?: React.ReactNode;
     };
 
+export enum TextVariant {
+  t0 = 't0',
+  t1 = 't1',
+  t2 = 't2',
+  t3 = 't3',
+  t4 = 't4',
+  t5 = 't5',
+  t6 = 't6',
+  t7 = 't7',
+  t8 = 't8',
+  t9 = 't9',
+  t10 = 't10',
+  t11 = 't11',
+  t12 = 't12',
+  t13 = 't13',
+  t14 = 't14',
+  t15 = 't15',
+  t16 = 't16',
+  t17 = 't17',
+  t18 = 't18',
+  u0 = 'u0',
+  u1 = 'u1',
+}
+
+export enum TextPosition {
+  left = 'left',
+  right = 'right',
+  center = 'center',
+}
+
 export type TextProps = Omit<RNTextProps, 'style' | 'children'> & {
+  /** @deprecated Please use variant instead */
   t0?: boolean;
+  /** @deprecated Please use variant instead */
   t1?: boolean;
+  /** @deprecated Please use variant instead */
   t2?: boolean;
+  /** @deprecated Please use variant instead */
   t3?: boolean;
+  /** @deprecated Please use variant instead */
   t4?: boolean;
+  /** @deprecated Please use variant instead */
   t5?: boolean;
+  /** @deprecated Please use variant instead */
   t6?: boolean;
+  /** @deprecated Please use variant instead */
   t7?: boolean;
+  /** @deprecated Please use variant instead */
   t8?: boolean;
+  /** @deprecated Please use variant instead */
   t9?: boolean;
+  /** @deprecated Please use variant instead */
   t10?: boolean;
+  /** @deprecated Please use variant instead */
   t11?: boolean;
+  /** @deprecated Please use variant instead */
   t12?: boolean;
+  /** @deprecated Please use variant instead */
   t13?: boolean;
+  /** @deprecated Please use variant instead */
   t14?: boolean;
+  /** @deprecated Please use variant instead */
   t15?: boolean;
+  /** @deprecated Please use variant instead */
   t16?: boolean;
+  /** @deprecated Please use variant instead */
   t17?: boolean;
+  /** @deprecated Please use variant instead */
   t18?: boolean;
+  /** @deprecated Please use variant instead */
   u0?: boolean;
+  /** @deprecated Please use variant instead */
   u1?: boolean;
+
   clean?: boolean;
+  /** @deprecated Please use position instead */
   center?: boolean;
+  /** @deprecated Please use position instead */
   right?: boolean;
   color?: ColorType;
   style?: StyleProp<TextStyle>;
   showChildren?: boolean;
+  variant?: TextVariant;
+  position?: TextPosition;
 } & TextValue;
 
 export const Text = ({
@@ -84,12 +140,36 @@ export const Text = ({
   right,
   color,
   showChildren,
+  variant,
+  position,
   ...props
 }: TextProps) => {
   const value = useMemo(
     () => (typeof i18n !== 'undefined' ? getText(i18n, i18params) : children),
     [children, i18n, i18params],
   );
+
+  const variantStyle = useMemo(() => {
+    if (!variant) {
+      return style;
+    }
+    const pageVariantStyle = page[`${variant}Style`];
+    if (!pageVariantStyle) {
+      return style;
+    }
+    return StyleSheet.flatten([pageVariantStyle, style]);
+  }, [variant, style]);
+
+  const positionStyle = useMemo(() => {
+    if (!position) {
+      return {};
+    }
+    const pagePositionStyle = page[position];
+    if (!pagePositionStyle) {
+      return {};
+    }
+    return pagePositionStyle;
+  }, [position]);
 
   return clean ? (
     <RNText style={style} allowFontScaling={false} {...props}>
@@ -120,9 +200,11 @@ export const Text = ({
         t18 && StyleSheet.flatten([page.t18Style, style]),
         u0 && StyleSheet.flatten([page.u0Style, style]),
         u1 && StyleSheet.flatten([page.u1Style, style]),
+        variantStyle,
         !!color && {color: getColor(color as Color)},
         center && page.center,
         right && page.right,
+        positionStyle,
       ]}
       {...props}>
       {value}
@@ -198,6 +280,9 @@ const page = createTheme({
   },
   right: {
     textAlign: 'right',
+  },
+  left: {
+    textAlign: 'left',
   },
   u0Style: {
     fontStyle: 'normal',
