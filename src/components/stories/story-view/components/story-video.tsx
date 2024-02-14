@@ -41,6 +41,7 @@ const StoryVideo: FC<StoryVideoProps> = memo(
           onLayout={e => onLayout(e.nativeEvent.layout.height)}
           resizeMode="cover"
           automaticallyWaitsToMinimizeStalling
+          ignoreSilentSwitch="ignore"
         />
       );
     } catch (error) {
