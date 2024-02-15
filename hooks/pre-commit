@@ -1,4 +1,5 @@
 #!/bin/sh
+npx patch-package --error-on-fail
 
 STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep ".tsx\{0,1\}$")
 
