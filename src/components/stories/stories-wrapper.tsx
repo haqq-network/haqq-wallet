@@ -15,7 +15,7 @@ type Props = {
 
 export const StoriesWrapper = observer(({onStoryPress}: Props) => {
   const content = () => {
-    if (Stories.isLoading) {
+    if (!Stories.isHydrated || Stories.isLoading) {
       return [...new Array(7)].map((_, index) => {
         return <StoriesLoaderItem key={index} />;
       });

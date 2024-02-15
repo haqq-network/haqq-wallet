@@ -1,5 +1,5 @@
 import {makeAutoObservable, runInAction} from 'mobx';
-import {makePersistable} from 'mobx-persist-store';
+import {isHydrated, makePersistable} from 'mobx-persist-store';
 
 import {Backend} from '@app/services/backend';
 import {storage} from '@app/services/mmkv';
@@ -58,6 +58,10 @@ class StoriesStore {
     runInAction(() => {
       this.data[id].seen = true;
     });
+  };
+
+  isHydrated = () => {
+    return isHydrated(this);
   };
 }
 
