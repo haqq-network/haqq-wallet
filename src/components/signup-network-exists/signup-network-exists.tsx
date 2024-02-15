@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from 'react';
 
-import {Image} from 'react-native';
+import {Image, Platform} from 'react-native';
 
 import {Color} from '@app/colors';
 import {BottomSheet} from '@app/components/bottom-sheet';
@@ -118,6 +118,7 @@ const styles = createTheme({
   container: {
     flex: 1,
     paddingHorizontal: 20,
+    paddingTop: Platform.OS === 'android' ? 60 : 0,
   },
   img: {
     height: 136,
