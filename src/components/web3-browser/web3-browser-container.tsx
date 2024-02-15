@@ -39,12 +39,13 @@ export function WebViewContainer({
         `);
     };
 
-    Keyboard.addListener('keyboardDidShow', show);
-    Keyboard.addListener('keyboardDidHide', hide);
+    const subs = [
+      Keyboard.addListener('keyboardDidShow', show),
+      Keyboard.addListener('keyboardDidHide', hide),
+    ];
 
     () => {
-      Keyboard.removeAllListeners('keyboardDidShow');
-      Keyboard.removeAllListeners('keyboardDidHide');
+      subs.forEach(s => s.remove());
     };
   }, [webviewRef.current]);
 
