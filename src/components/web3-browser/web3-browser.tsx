@@ -1,7 +1,7 @@
 // @refresh reset
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
-import {KeyboardAvoidingView, View} from 'react-native';
+import {View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import WebView from 'react-native-webview';
 import {
@@ -19,7 +19,7 @@ import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
-import {IS_ANDROID, IS_IOS} from '@app/variables/common';
+import {IS_IOS} from '@app/variables/common';
 
 import {
   InpageBridgeWeb3,
@@ -28,6 +28,7 @@ import {
   WindowInfoEvent,
 } from './scripts';
 import {Web3BrowserActionMenu} from './web3-browser-action-menu';
+import {WebViewContainer} from './web3-browser-container';
 import {
   Web3BrowserHeader,
   Web3BrowserPressHeaderEvent,
@@ -96,7 +97,6 @@ export const Web3Browser = ({
   bookmarks,
   showActionMenu,
   userProvider,
-  focused,
   onPressClose,
   toggleActionMenu,
   onPressHeaderWallet,
@@ -331,7 +331,6 @@ export const Web3Browser = ({
         styles.container,
         IS_IOS && !popup && {paddingTop: insets.top},
         IS_IOS && popup && {paddingBottom: insets.bottom},
-        IS_ANDROID && !popup && styles.marginTop,
       ]}>
       <Web3BrowserHeader
         walletAddress={walletAddress}
@@ -347,22 +346,22 @@ export const Web3Browser = ({
         onPressClose={onPressClose}
       />
 
-      <KeyboardAvoidingView
-        style={styles.webviewContainer}
-        enabled={focused}
-        behavior={IS_IOS ? 'height' : 'padding'}>
+      <WebViewContainer webviewRef={webviewRef}>
         <CustomHeaderWebView
           {...webViewDefaultProps}
           browserType="web3"
           ref={webviewRef}
           onLoad={onLoad}
           onLoadEnd={helper.onLoadEnd}
+          style={styles.webview}
+          scalesPageToFit
+          containerStyle={styles.webview}
           onShouldStartLoadWithRequest={helper.onShouldStartLoadWithRequest}
           onContentProcessDidTerminate={onContentProcessDidTerminate}
           source={{uri: initialUrl}}
           onNavigationStateChange={onNavigationStateChange}
         />
-      </KeyboardAvoidingView>
+      </WebViewContainer>
 
       <Web3BrowserActionMenu
         walletAddress={walletAddress}
@@ -389,13 +388,12 @@ export const Web3Browser = ({
 };
 
 const styles = createTheme({
-  webviewContainer: {
+  webview: {
     flex: 1,
   },
   container: {
     flex: 1,
-  },
-  marginTop: {
-    marginTop: 10,
+    width: '100%',
+    height: '100%',
   },
 });
