@@ -4,6 +4,7 @@ import {
   NativeStackNavigationOptions,
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
+import {Platform} from 'react-native';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
@@ -86,7 +87,10 @@ const SignUpStack = memo(() => {
       <Stack.Screen
         name={SignUpStackRoutes.SignUpNetworkExists}
         component={themeUpdaterHOC(SignupNetworkExistsScreen)}
-        options={hideBack}
+        options={{
+          ...hideBack,
+          headerShown: Platform.OS === 'ios',
+        }}
       />
       <Stack.Screen
         name={SignUpStackRoutes.SignUpPin}
