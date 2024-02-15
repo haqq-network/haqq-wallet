@@ -10424,7 +10424,7 @@ __metadata:
     react-native-toast-message: 2.2.0
     react-native-touch-id: 4.4.1
     react-native-video: 5.2.1
-    react-native-webview: 13.6.0
+    react-native-webview: 13.8.1
     react-test-renderer: 18.2.0
     react-timer-mixin: 0.13.4
     readable-stream: 4.4.2
@@ -16212,16 +16212,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-webview@npm:13.6.0":
-  version: 13.6.0
-  resolution: "react-native-webview@npm:13.6.0"
+"react-native-webview@npm:13.8.1":
+  version: 13.8.1
+  resolution: "react-native-webview@npm:13.8.1"
   dependencies:
     escape-string-regexp: 2.0.0
     invariant: 2.2.4
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: f7220fb18dcf5e9631674831ac8beb3bc4b99863f812676c25394a3cce487975b05c8fc795b0ee4ff1ead43da304ddea104f5e6683ea3f4c3a135b14ae193069
+  checksum: 1760405dcd601c4f5a6e8b9f35f7eaf8e4107a47861037f4f73a7e39a3a6d10824fd76a04454266ff99e40742aedbf02aacca4b548b5744c96d22ebcacc97f04
   languageName: node
   linkType: hard
 
