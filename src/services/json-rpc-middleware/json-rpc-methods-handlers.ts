@@ -247,7 +247,14 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
     }
     return null;
   },
-  eth_hashrate: () => '0x00',
+  eth_hashrate: async ({helper, req}) => {
+    try {
+      const rpcProvider = await getLocalRpcProvider(helper);
+      return await rpcProvider.perform('eth_hashrate', req.params);
+    } catch (err) {
+      return '0x00';
+    }
+  },
   eth_getBlockByNumber: async ({req, helper}) => {
     checkParamsExists(req);
     const rpcProvider = await getLocalRpcProvider(helper);
