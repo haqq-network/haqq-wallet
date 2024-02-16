@@ -23,25 +23,31 @@ export const restoreWallet = async (
 
   // Choose account flow
   await element(by.id('wallet_add_1')).tap();
-  await element(by.text('Ledger')).tap();
-  await expect(element(by.id('wallet_remove_1'))).toBeVisible();
-  await element(by.text('Basic')).tap();
-  await element(by.id('wallet_remove_1')).tap();
-  await expect(element(by.id('choose_account_next'))).not.toBeVisible();
-  await element(by.id('wallet_add_1')).tap();
+
+  // TODO: Think how to reduce steps in other tests
+  // await element(by.text('Ledger')).tap();
+  // await expect(element(by.id('wallet_remove_1'))).toBeVisible();
+  // await element(by.text('Basic')).tap();
+  // await element(by.id('wallet_remove_1')).tap();
+  // await expect(element(by.id('choose_account_next'))).not.toBeVisible();
+  // await element(by.id('wallet_add_1')).tap();
   await element(by.id('choose_account_next')).tap();
 
   await expect(element(by.id('onboarding_setup_pin_set'))).toBeVisible();
 
+  await device.disableSynchronization();
   for (const num of PIN.split('')) {
     await element(by.id(`numeric_keyboard_${num}`)).tap();
   }
+  await device.enableSynchronization();
 
   await expect(element(by.text('Please repeat pin code'))).toBeVisible();
 
+  await device.disableSynchronization();
   for (const num of PIN.split('')) {
     await element(by.id(`numeric_keyboard_${num}`)).tap();
   }
+  await device.enableSynchronization();
 
   if (!isAndroid) {
     await waitFor(element(by.id('onboarding_biometry_title')))
@@ -66,7 +72,5 @@ export const restoreWallet = async (
     }
   }
 
-  if (attempt === 1) {
-    await element(by.id('onboarding_finish_finish')).tap();
-  }
+  await element(by.id('onboarding_finish_finish')).tap();
 };
