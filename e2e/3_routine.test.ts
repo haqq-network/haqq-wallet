@@ -4,7 +4,6 @@ import {Wallet, utils} from 'ethers';
 import {ensureWalletIsVisible} from './helpers/ensureWalletIsVisible';
 import {getCoins} from './helpers/getCoins';
 import {restoreWallet} from './helpers/restoreWallet';
-import {sleep} from './helpers/sleep';
 import {PIN, PROVIDER, SOURCE_WALLET} from './test-variables';
 
 describe('Routine', () => {
@@ -33,9 +32,11 @@ describe('Routine', () => {
       .toBeVisible()
       .withTimeout(15000);
 
+    await device.disableSynchronization();
     for (const num of PIN.split('')) {
       await element(by.id(`numeric_keyboard_${num}`)).tap();
     }
+    await device.enableSynchronization();
 
     await ensureWalletIsVisible(mnemonic);
   });
@@ -47,9 +48,8 @@ describe('Routine', () => {
 
     const wallet = Wallet.fromMnemonic(mnemonic);
 
-    await getCoins(mnemonic, '0.002');
-
-    await sleep(10_000);
+    const coinsAmount = '0.0022';
+    await getCoins(mnemonic, coinsAmount);
 
     await element(by.id(`wallets_${wallet.address.toLowerCase()}_send`)).tap();
 
@@ -57,10 +57,9 @@ describe('Routine', () => {
     await input_address.typeText(milkWallet.address);
 
     await element(by.id('transaction_address_next')).tap();
-    // Previous step was for keyboard hide
-    await element(by.id('transaction_address_next')).tap();
-
-    await element(by.text('ISLM')).tap();
+    await element(by.text(`${coinsAmount} ISLM`))
+      .atIndex(0)
+      .tap();
 
     const input_form = element(by.id('transaction_sum_form_input'));
     await input_form.tap();

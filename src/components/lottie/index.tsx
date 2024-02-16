@@ -1,5 +1,6 @@
 import React, {useEffect, useRef} from 'react';
 
+import {FOR_DETOX} from '@env';
 import type AnimatedLottieView from 'lottie-react-native';
 import Lottie, {AnimatedLottieViewProps} from 'lottie-react-native';
 import {AppState, StyleProp, ViewStyle} from 'react-native';
@@ -34,6 +35,9 @@ export const LottieWrap = React.forwardRef<LottieWrapRef, AnimatedLottie>(
 
     useEffect(() => {
       const listener = AppState.addEventListener('change', state => {
+        if (FOR_DETOX) {
+          return;
+        }
         if (state === 'active') {
           lottieRef?.current?.resume();
         }
@@ -44,6 +48,9 @@ export const LottieWrap = React.forwardRef<LottieWrapRef, AnimatedLottie>(
     }, []);
 
     useLayoutEffectAsync(async () => {
+      if (FOR_DETOX) {
+        return;
+      }
       // FIXME: Please upgrade lottie-react-native after new release
       // https://github.com/lottie-react-native/lottie-react-native/issues/1092
       await sleep(333);

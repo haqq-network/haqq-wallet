@@ -46,6 +46,7 @@ const navigatorOptions: NativeStackNavigationOptions = {
   gestureEnabled: false,
   freezeOnBlur: true,
   animation: FOR_DETOX ? 'none' : 'default',
+  animationDuration: FOR_DETOX ? 0 : 350,
 };
 
 const modalOptions: NativeStackNavigationOptions = {
@@ -60,7 +61,6 @@ const fullScreenModalOptions: NativeStackNavigationOptions = {
   headerShown: false,
   presentation: 'transparentModal',
   animation: 'fade',
-  animationDuration: 0,
 };
 
 export const inAppBrowserOptions: NativeStackNavigationOptions = {
