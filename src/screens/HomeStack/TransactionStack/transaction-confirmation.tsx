@@ -125,8 +125,10 @@ export const TransactionConfirmationScreen = observer(() => {
           walletType: wallet.type,
         });
 
-        if (e instanceof Error) {
-          showError(errorId, e.message);
+        // @ts-ignore
+        const errMsg = e?.message || e?.toString?.() || JSON.stringify(e);
+        if (errMsg) {
+          showError(errorId, errMsg);
         }
       } finally {
         setDisabled(false);
