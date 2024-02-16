@@ -126,6 +126,7 @@ export const StakingValidators = ({
       />
       <Spacer height={12} />
       <SectionList
+        testID="staking-validators-list"
         style={styles.container}
         renderItem={renderItem}
         keyExtractor={item => item.operator_address}

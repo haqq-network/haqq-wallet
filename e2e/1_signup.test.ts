@@ -17,9 +17,11 @@ describe('Signup', () => {
 
     await element(by.id('wallet_without_protection_button')).tap();
 
+    await device.disableSynchronization();
     for (const num of PIN.split('')) {
       await element(by.id(`numeric_keyboard_${num}`)).tap();
     }
+    await device.enableSynchronization();
 
     await element(by.id('protect_phrase_button')).tap();
 

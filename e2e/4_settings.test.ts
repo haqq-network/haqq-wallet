@@ -87,9 +87,11 @@ describe('Routine', () => {
 
     await element(by.id('view_recovery_phrase')).tap();
 
+    await device.disableSynchronization();
     for (const num of PIN.split('')) {
       await element(by.id(`numeric_keyboard_${num}`)).tap();
     }
+    await device.enableSynchronization();
 
     for (const word of mnemonic_words) {
       await waitFor(element(by.text(word)))

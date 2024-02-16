@@ -1,4 +1,4 @@
-import {by, device, element, waitFor} from 'detox';
+import {by, device, element, expect, waitFor} from 'detox';
 import {utils} from 'ethers';
 
 import {getCoins} from './helpers/getCoins';
@@ -7,7 +7,6 @@ import {sleep} from './helpers/sleep';
 import {PIN} from './test-variables';
 
 describe('Coin delegation and undelegation', () => {
-  // const isAndroid = device.getPlatform() === 'android';
   let mnemonic = '';
   beforeAll(async () => {
     await device.launchApp({
@@ -28,11 +27,17 @@ describe('Coin delegation and undelegation', () => {
   });
 
   it('Should delegate coins', async () => {
-    await element(by.text('Staking')).tap();
-    await waitFor(element(by.id('staking-availableSum'))).toBeVisible();
+    const stakingBanner = element(by.text('Staking')).atIndex(1);
+    await waitFor(stakingBanner)
+      .toBeVisible()
+      .whileElement(by.id('home-feed-container'))
+      .scroll(250, 'down');
+    await stakingBanner.tap();
+
+    await expect(element(by.id('staking-availableSum'))).toBeVisible();
 
     await element(by.id('staking-validators')).tap();
-    await waitFor(element(by.text('Validators list'))).toBeVisible();
+    await expect(element(by.text('Validators list'))).toBeVisible();
 
     await element(by.id('staking-validators-search')).tap();
     await element(by.id('staking-validators-search-input')).replaceText(
@@ -40,6 +45,11 @@ describe('Coin delegation and undelegation', () => {
     );
 
     const validator = element(by.id('validator-val02'));
+
+    await waitFor(validator)
+      .toBeVisible()
+      .whileElement(by.id('staking-validators-list'))
+      .scroll(200, 'down');
     await validator.tap();
 
     await element(by.id('staking-delegate')).tap();
@@ -48,7 +58,7 @@ describe('Coin delegation and undelegation', () => {
     await element(by.text('Preview')).tap();
 
     await element(by.id('staking-preview')).tap();
-    await waitFor(element(by.text('Delegate Completed'))).toBeVisible();
+    await expect(element(by.text('Delegate Completed'))).toBeVisible();
 
     await element(by.text('Done')).tap();
     await element(by.id('go_back')).tap();
@@ -59,7 +69,7 @@ describe('Coin delegation and undelegation', () => {
 
   it('Should undelegate coins', async () => {
     await element(by.id('staking-validators')).tap();
-    await waitFor(element(by.text('Validators list'))).toBeVisible();
+    await expect(element(by.text('Validators list'))).toBeVisible();
     const validator = element(by.id('validator-val02'));
     await validator.tap();
 
