@@ -176,15 +176,16 @@ class TransactionStore {
     blockNumber: BlockNumber = 'latest',
   ) => {
     try {
+      const accountHash = hashMessage(accounts.join(''));
+      const cacheKey: CacheKey = `${accountHash}:${blockNumber}`;
+
       runInAction(() => {
         this._isLoading = true;
-
-        const accountHash = hashMessage(accounts.join(''));
         if (
           blockNumber === 'latest' &&
           this._lastSyncedAccountsHash !== accountHash
         ) {
-          const cahced = this._cache.get(`${accountHash}:${blockNumber}`);
+          const cahced = this._cache.get(cacheKey);
           if (cahced?.length) {
             this._transactions = cahced;
           } else {
@@ -205,7 +206,7 @@ class TransactionStore {
       const parsed = result
         .map(tx => parseTransaction(tx, accounts))
         .filter(tx => !!tx.parsed);
-      this._cache.set(`${this._lastSyncedAccountsHash}:${blockNumber}`, parsed);
+      this._cache.set(cacheKey, parsed);
       return parsed;
     } catch (e) {
       Logger.captureException(e, 'TransactionStore._fetch', {
