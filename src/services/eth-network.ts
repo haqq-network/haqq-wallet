@@ -188,10 +188,8 @@ export class EthNetwork {
         ),
       ).max(minGas);
     } catch (err) {
-      Logger.error(
-        'EthNetwork.estimateTransaction error',
-        JSON.stringify(err, null, 2),
-      );
+      Logger.captureException(err, 'EthNetwork.estimateTransaction error');
+      throw err;
     }
 
     return {
