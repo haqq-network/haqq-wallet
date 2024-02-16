@@ -1,5 +1,5 @@
 import {hashMessage} from '@walletconnect/utils';
-import {makeAutoObservable, runInAction} from 'mobx';
+import {makeAutoObservable, runInAction, when} from 'mobx';
 import {isHydrated} from 'mobx-persist-store';
 
 import {IconProps} from '@app/components/ui';
@@ -11,6 +11,8 @@ import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
 import {IndexerTransaction, IndexerTxParsedTokenInfo} from '@app/types';
+
+import {Token} from './tokens';
 
 export enum TransactionStatus {
   failed,
@@ -37,12 +39,17 @@ export type Transaction = IndexerTransaction & {
   parsed: ParsedTransactionData;
 };
 
+type AccountsHash = string;
+type BlockNumber = 'latest' | `${number}`;
+type CacheKey = `${AccountsHash}:${BlockNumber}`;
+
 class TransactionStore {
   realmSchemaName = TransactionRealmObject.schema.name;
   private _transactions: Array<Transaction> = [];
-  private _lastSyncedAccountsHash = '';
-  private _lastSyncedBlockNumber = 'latest';
+  private _lastSyncedAccountsHash: AccountsHash = '';
+  private _lastSyncedBlockNumber: BlockNumber = 'latest';
   private _isLoading = false;
+  private _cache = new Map<CacheKey, Transaction[]>();
 
   constructor() {
     makeAutoObservable(this);
@@ -134,15 +141,14 @@ class TransactionStore {
 
     const prevTxList = this._transactions;
     const lastTx = prevTxList[prevTxList.length - 1];
-    const blockNumber = isHashEquals && lastTx ? `${lastTx.block}` : 'latest';
+    const blockNumber: BlockNumber =
+      isHashEquals && lastTx ? `${lastTx.block}` : 'latest';
 
     if (isHashEquals && blockNumber === this._lastSyncedBlockNumber) {
       return this._transactions;
     }
 
-    const nextTxList = (await this._fetch(accounts, blockNumber))
-      .map(tx => parseTransaction(tx, accounts))
-      .filter(tx => !!tx.parsed);
+    const nextTxList = await this._fetch(accounts, blockNumber);
 
     runInAction(() => {
       this._transactions = [...prevTxList, ...nextTxList];
@@ -156,9 +162,7 @@ class TransactionStore {
     if (this.isLoading && !force) {
       return;
     }
-    const newTxs = (await this._fetch(accounts, 'latest'))
-      .map(tx => parseTransaction(tx, accounts))
-      .filter(tx => !!tx.parsed);
+    const newTxs = await this._fetch(accounts, 'latest');
 
     runInAction(() => {
       this._transactions = newTxs;
@@ -167,28 +171,43 @@ class TransactionStore {
     return newTxs;
   };
 
-  private _fetch = (accounts: string[], blockNumber = 'latest') => {
+  private _fetch = async (
+    accounts: string[],
+    blockNumber: BlockNumber = 'latest',
+  ) => {
     try {
+      const accountHash = hashMessage(accounts.join(''));
+      const cacheKey: CacheKey = `${accountHash}:${blockNumber}`;
+
       runInAction(() => {
         this._isLoading = true;
-
-        const accountHash = hashMessage(accounts.join(''));
         if (
           blockNumber === 'latest' &&
           this._lastSyncedAccountsHash !== accountHash
         ) {
-          this._transactions = [];
+          const cahced = this._cache.get(cacheKey);
+          if (cahced?.length) {
+            this._transactions = cahced;
+          } else {
+            this._transactions = [];
+          }
         }
 
         this._lastSyncedAccountsHash = accountHash;
         this._lastSyncedBlockNumber = blockNumber;
       });
 
-      return Indexer.instance.getTransactions(
+      const result = await Indexer.instance.getTransactions(
         accounts,
         blockNumber,
         app.providerId,
       );
+      await when(() => !Token.isLoading, {});
+      const parsed = result
+        .map(tx => parseTransaction(tx, accounts))
+        .filter(tx => !!tx.parsed);
+      this._cache.set(cacheKey, parsed);
+      return parsed;
     } catch (e) {
       Logger.captureException(e, 'TransactionStore._fetch', {
         accounts,
