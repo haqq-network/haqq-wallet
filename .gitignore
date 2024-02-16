@@ -84,3 +84,8 @@ google-account.json
 
 # e2e tests artifacts
 artifacts/*
+
+# nix
+.devenv
+.direnv
+.pre-commit-config.yaml
