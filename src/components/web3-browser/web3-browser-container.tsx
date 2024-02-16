@@ -2,10 +2,9 @@
 import React, {useEffect} from 'react';
 
 import {Keyboard, KeyboardEventListener, View} from 'react-native';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 import {createTheme} from '@app/helpers';
-import {IS_ANDROID, IS_IOS} from '@app/variables/common';
+import {IS_IOS} from '@app/variables/common';
 
 import {Web3BrowserProps} from './web3-browser';
 
@@ -16,11 +15,13 @@ export function WebViewContainer({
   webviewRef: Web3BrowserProps['webviewRef'];
   children: any;
 }) {
+  // implement keyboard avoid for android
   useEffect(() => {
     if (IS_IOS) {
       return;
     }
 
+    // remove injected div
     const hide = () => {
       webviewRef.current?.injectJavaScript(
         'document.querySelectorAll("#keyboard-div").forEach(el => el.remove());true;',
@@ -29,7 +30,7 @@ export function WebViewContainer({
 
     const show: KeyboardEventListener = ({endCoordinates}) => {
       hide();
-      // injects div to implement keyboard avoid
+      // injects div with keyboard height to implement keyboard avoid
       webviewRef.current?.injectJavaScript(`
           var keyboardDiv = document.createElement('div');
           keyboardDiv.style = "width: 100vw; height: ${endCoordinates.height}px;";
@@ -49,19 +50,7 @@ export function WebViewContainer({
     };
   }, [webviewRef.current]);
 
-  if (IS_IOS) {
-    return (
-      <KeyboardAwareScrollView
-        bounces={false}
-        contentContainerStyle={styles.webviewContainer}>
-        {children}
-      </KeyboardAwareScrollView>
-    );
-  }
-
-  if (IS_ANDROID) {
-    return <View style={styles.webviewContainer}>{children}</View>;
-  }
+  return <View style={styles.webviewContainer}>{children}</View>;
 }
 
 const styles = createTheme({
