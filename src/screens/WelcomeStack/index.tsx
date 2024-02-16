@@ -44,6 +44,7 @@ const WelcomeStack = memo(({initialRouteName}: Props) => {
       screenOptions={{
         ...basicScreenOptions,
         animation: FOR_DETOX ? 'none' : 'default',
+        animationDuration: FOR_DETOX ? 0 : 350,
       }}>
       <Stack.Screen
         component={themeUpdaterHOC(WelcomeScreen)}

@@ -14,5 +14,5 @@ export const getCoins = async (mnemonic: string, amount: string = '0.0017') => {
 
   await milkWallet.sendTransaction(tx);
 
-  await sleep(30_000);
+  await sleep(15_000);
 };

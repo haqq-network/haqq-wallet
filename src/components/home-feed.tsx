@@ -50,6 +50,7 @@ export const HomeFeed = observer(() => {
 
   return (
     <ScrollView
+      testID="home-feed-container"
       contentContainerStyle={styles.contentContainerStyle}
       style={styles.container}
       refreshControl={
