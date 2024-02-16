@@ -113,6 +113,28 @@ const getEthAccounts = ({helper}: JsonRpcMethodHandlerParams) => {
   return [];
 };
 
+function determineNumberType(number: number) {
+  if (!Number.isInteger(number)) {
+    return 'string';
+  }
+
+  // int32
+  if (number >= -2147483648 && number <= 2147483647) {
+    return 'int32';
+  }
+
+  // uint32
+  if (number >= 0 && number <= 4294967295) {
+    return 'uint32';
+  }
+
+  if (number < 0) {
+    return 'int64';
+  } else {
+    return 'uint64';
+  }
+}
+
 const getNetworkProvier = (helper: JsonRpcHelper) => {
   // goerli
   // return {
@@ -475,16 +497,21 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
     eip712.types.MsgValue = Object.entries(eip712.message.msgs[0].value).reduce(
       // @ts-ignore
       (acc, [key, value]) => {
+        let type: string = typeof value;
+
+        if (key === 'amount') {
+          type = Array.isArray(value) ? 'TypeAmount[]' : 'TypeAmount';
+        }
+
+        if (typeof value === 'number') {
+          type = determineNumberType(value);
+        }
+
         return [
           ...acc,
           {
             name: key,
-            type:
-              key === 'amount'
-                ? Array.isArray(value)
-                  ? 'TypeAmount[]'
-                  : 'TypeAmount'
-                : typeof value,
+            type,
           },
         ];
       },
