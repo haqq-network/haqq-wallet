@@ -56,7 +56,7 @@ on:
 jobs:
   build:
     name: Distribute Android app
-    runs-on: self-hosted
+    runs-on: ubuntu-cpu16-ram64
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
