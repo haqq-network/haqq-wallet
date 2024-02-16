@@ -78,7 +78,11 @@ export const SettingsCurrency = observer(({goBack}: SettingsThemeProps) => {
         iconLeft="arrow_back"
         title={I18N.settingsCurrencyScreen}
       />
-      <FlatList data={availableCurrencies} renderItem={renderItem} />
+      <FlatList
+        data={availableCurrencies}
+        renderItem={renderItem}
+        bounces={false}
+      />
     </View>
   );
 });
