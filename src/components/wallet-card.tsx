@@ -111,7 +111,7 @@ export const WalletCard = observer(
         result = Balance.Empty;
       }
 
-      return result.toFiat().toBalanceString();
+      return result.toFiat();
     }, [total, selectedCurrency]);
 
     const onQr = () => {

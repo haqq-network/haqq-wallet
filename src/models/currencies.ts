@@ -76,12 +76,12 @@ class CurrenciesStore {
     }
   }
 
-  convert = (balance: Balance): Balance => {
+  convert = (balance: Balance): Balance | null => {
     const rate = this._rates[balance.getSymbol()]?.amount;
     const currency = this._currencies[this._selectedCurrency];
 
     if (!rate) {
-      return new Balance(0, undefined, balance.getSymbol());
+      return null;
     }
     //FIXME: Temporary solution. Need to fix Balance tests first
     const result = new Balance(rate).toFloat() * balance.toFloat();
