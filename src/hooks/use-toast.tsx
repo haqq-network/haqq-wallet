@@ -7,6 +7,7 @@ import Toast, {
 } from 'react-native-toast-message';
 
 import {Color} from '@app/colors';
+import {ModalProvider} from '@app/components/modal-provider';
 import {createTheme} from '@app/helpers';
 
 const toastConfig: ToastConfig = {
@@ -21,7 +22,11 @@ const toastConfig: ToastConfig = {
 };
 
 export const useToast = () => {
-  return <Toast config={toastConfig} />;
+  return (
+    <ModalProvider>
+      <Toast config={toastConfig} />
+    </ModalProvider>
+  );
 };
 
 const styles = createTheme({
