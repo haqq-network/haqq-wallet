@@ -6,7 +6,6 @@ import {Color} from '@app/colors';
 import {Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {IToken} from '@app/types';
-import {LONG_NUM_PRECISION} from '@app/variables/common';
 
 import {ImageWrapper} from './image-wrapper';
 
@@ -17,7 +16,7 @@ export interface TokenRowProps {
 
 export const TokenRow = ({item, onPress}: TokenRowProps) => {
   const priceInUSD = useMemo(() => {
-    return item.value.toFiat().toBalanceString(LONG_NUM_PRECISION);
+    return item.value.toFiat().toBalanceString(4);
   }, [item]);
   return (
     <TouchableOpacity
@@ -36,7 +35,7 @@ export const TokenRow = ({item, onPress}: TokenRowProps) => {
             {item.symbol}
           </Text>
           <Spacer />
-          <Text t11>{item.value.toBalanceString(LONG_NUM_PRECISION)}</Text>
+          <Text t11>{item.value.toBalanceString('auto')}</Text>
         </View>
         <View style={styles.row}>
           <Text t14 color={Color.textBase2}>

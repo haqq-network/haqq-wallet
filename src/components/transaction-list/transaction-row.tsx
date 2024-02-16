@@ -150,7 +150,7 @@ export const TransactionRow = memo(
                 numberOfLines={1}>
                 {amoutPrefix}
                 {STRINGS.NBSP}
-                {amount.toBalanceString(4)}
+                {amount.toBalanceString('auto')}
               </Text>
               <Spacer height={2} />
               <Text
