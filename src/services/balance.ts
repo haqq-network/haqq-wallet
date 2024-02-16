@@ -11,6 +11,7 @@ import {
 } from '@app/types';
 import {
   CURRENCY_NAME,
+  LONG_NUM_PRECISION,
   NUM_DELIMITER,
   NUM_PRECISION,
   WEI_PRECISION,
@@ -140,9 +141,17 @@ export class Balance implements IBalance, ISerializable {
    * @example 123.45 ISLM
    */
   toBalanceString = (
-    fixed = NUM_PRECISION,
+    fixed: number | 'auto' = NUM_PRECISION,
     precission: number = this.precission,
   ) => {
+    let fixedNum = 0;
+    if (fixed === 'auto') {
+      const float = this.toFloat(precission);
+      fixedNum = float > 1 ? NUM_PRECISION : LONG_NUM_PRECISION;
+    } else {
+      fixedNum = fixed;
+    }
+
     const isFiat = !!Currencies.currencies.find(
       currency => currency.id === this.symbol,
     );
@@ -155,15 +164,15 @@ export class Balance implements IBalance, ISerializable {
         return result.join(' ');
       };
 
-      const floatString = this.toFloatString(fixed, precission);
+      const floatString = this.toFloatString(fixedNum, precission);
       const isNegative = floatString.startsWith('-');
       if (isNegative) {
         return `- ${getStringWithSymbol(floatString.replace('-', ''))}`;
       }
-      return `${getStringWithSymbol(this.toFloatString(fixed, precission))}`;
+      return `${getStringWithSymbol(this.toFloatString(fixedNum, precission))}`;
     }
 
-    return this.toFloatString(fixed, precission) + ` ${this.symbol}`;
+    return this.toFloatString(fixedNum, precission) + ` ${this.symbol}`;
   };
 
   toString = () => {
