@@ -1,5 +1,5 @@
 import {hashMessage} from '@walletconnect/utils';
-import {makeAutoObservable, runInAction} from 'mobx';
+import {makeAutoObservable, runInAction, when} from 'mobx';
 import {isHydrated} from 'mobx-persist-store';
 
 import {IconProps} from '@app/components/ui';
@@ -11,6 +11,8 @@ import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
 import {IndexerTransaction, IndexerTxParsedTokenInfo} from '@app/types';
+
+import {Token} from './tokens';
 
 export enum TransactionStatus {
   failed,
@@ -199,6 +201,7 @@ class TransactionStore {
         blockNumber,
         app.providerId,
       );
+      await when(() => !Token.isLoading, {});
       const parsed = result
         .map(tx => parseTransaction(tx, accounts))
         .filter(tx => !!tx.parsed);
