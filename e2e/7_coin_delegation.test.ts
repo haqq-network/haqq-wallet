@@ -29,7 +29,7 @@ describe('Coin delegation and undelegation', () => {
     await waitFor(element(by.text('ISLM: 0.1')))
       .toBeVisible()
       .withTimeout(120_000);
-    const stakingBanner = element(by.text('Staking')).atIndex(1);
+    const stakingBanner = element(by.id('staking-widget')).atIndex(1);
     await waitFor(stakingBanner)
       .toBeVisible()
       .whileElement(by.id('home-feed-container'))
