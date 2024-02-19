@@ -31,9 +31,10 @@ import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {getDefaultNetwork} from '@app/network';
 import {getAppVersion} from '@app/services/version';
 import {HaqqCosmosAddress, WalletType} from '@app/types';
-import {requestQRScannerPermission} from '@app/utils';
+import {makeID, requestQRScannerPermission} from '@app/utils';
 
 import {Cosmos} from '../cosmos';
+import {EthSign} from '../eth-sign';
 
 export type JsonRpcHelper = EventEmitter & {
   origin: string;
@@ -234,11 +235,11 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   },
   eth_chainId: ({helper}) => {
     const provider = getNetworkProvier(helper);
-    return provider?.ethChainId;
+    return provider?.ethChainIdHex;
   },
   net_version: ({helper}) => {
     const provider = getNetworkProvier(helper);
-    return provider?.networkVersion;
+    return provider?.ethChainId;
   },
   eth_accounts: getEthAccounts,
   eth_coinbase: getEthAccounts,
@@ -314,6 +315,9 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   eth_estimateGas: async ({req, helper}) => {
     checkParamsExists(req);
     try {
+      return (await EthSign.calculateGasPrice(req.params[0])).toHex();
+    } catch {}
+    try {
       const rpcProvider = await getLocalRpcProvider(helper);
       return (await rpcProvider.estimateGas(req.params[0]))?._hex;
     } catch (err) {
@@ -372,7 +376,11 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   eth_sendTransaction: signTransaction,
   eth_sign: signTransaction,
   personal_sign: signTransaction,
-  eth_signTypedData: signTransaction,
+  eth_signTypedData: () => {
+    rejectJRpcReq(
+      'eth_signTypedData not supported use eth_signTypedData_v4 instead',
+    );
+  },
   eth_signTypedData_v3: signTransaction,
   eth_signTypedData_v4: signTransaction,
   wallet_addEthereumChain: ({req}) => {
@@ -406,6 +414,32 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   eth_gasPrice: async ({helper}) => {
     const rpcProvider = await getLocalRpcProvider(helper);
     return rpcProvider.getGasPrice();
+  },
+  wallet_requestPermissions: async ({req, helper}) => {
+    return JsonRpcMethodsHandlers.wallet_getPermissions!({req, helper});
+  },
+  wallet_getPermissions: async ({helper}) => {
+    const session = Web3BrowserSession.getByOrigin(helper.origin);
+    if (session?.selectedAccount) {
+      return [
+        {
+          id: makeID(8),
+          parentCapability: 'eth_accounts',
+          invoker: helper.origin,
+          caveats: [
+            {
+              type: 'restrictReturnedAccounts',
+              value: [session.selectedAccount],
+            },
+          ],
+          date: Date.now(),
+        },
+      ];
+    }
+    return [];
+  },
+  wallet_revokePermissions: async () => {
+    return null;
   },
   /* HAQQ KEPLR COSMOS PROVIDER METHODS */
   enable: async ({req, helper}) => {
@@ -505,6 +539,10 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
 
         if (typeof value === 'number') {
           type = determineNumberType(value);
+        }
+
+        if (typeof value === 'boolean') {
+          type = 'bool';
         }
 
         return [

@@ -17,9 +17,14 @@ export enum EthereumEventsEnum {
   ACCOUNTS_CHANGED = 'accountsChanged',
   CHAIN_CHANGED = 'chainChanged',
   DISCONNECT = 'disconnect',
+  METAMASK_CHAINCHANGED = 'metamask_chainChanged',
 }
 
 export interface EthereumEventsParams {
+  [EthereumEventsEnum.METAMASK_CHAINCHANGED]: {
+    chainId: string;
+    networkVersion: string;
+  };
   [EthereumEventsEnum.ACCOUNTS_CHANGED]: string[];
   [EthereumEventsEnum.CHAIN_CHANGED]: string;
   [EthereumEventsEnum.DISCONNECT]: undefined;

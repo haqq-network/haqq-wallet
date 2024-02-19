@@ -316,6 +316,10 @@ export const TEST_URLS: Partial<Link>[] = [
     title: 'ChainList app',
     url: 'https://chainlist.org/',
   },
+  {
+    url: 'https://eip6963.org',
+    title: 'EIP6963',
+  },
 ];
 
 export const DEVELOPER_MODE_DOCS =
