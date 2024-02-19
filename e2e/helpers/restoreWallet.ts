@@ -1,5 +1,7 @@
 import {by, element, expect, waitFor} from 'detox';
 
+import {isVisible} from '../helpers/isVisibile';
+
 export const restoreWallet = async (
   mnemonic: string,
   PIN: string,
@@ -27,6 +29,12 @@ export const restoreWallet = async (
     .withTimeout(5000);
   await element(by.id('wallet_add_1')).tap();
 
+  const isWalletRemoveVisible = await isVisible('wallet_remove_1');
+  if (!isWalletRemoveVisible) {
+    //Try one more time
+    await element(by.id('wallet_add_1')).tap();
+  }
+
   // TODO: Think how to reduce steps in other tests
   // await element(by.text('Ledger')).tap();
   // await expect(element(by.id('wallet_remove_1'))).toBeVisible();
@@ -36,9 +44,6 @@ export const restoreWallet = async (
   // await element(by.id('wallet_add_1')).tap();
 
   // Generating accounts from hdPath might be slow on low-end devices
-  await waitFor(element(by.id('choose_account_next')))
-    .toBeVisible()
-    .withTimeout(5000);
   await element(by.id('choose_account_next')).tap();
 
   await expect(element(by.id('onboarding_setup_pin_set'))).toBeVisible();
