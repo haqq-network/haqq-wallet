@@ -2,6 +2,7 @@ import {by, device, element, expect, waitFor} from 'detox';
 import {utils} from 'ethers';
 
 import {getCoins} from './helpers/getCoins';
+import {isVisible} from './helpers/isVisibile';
 import {restoreWallet} from './helpers/restoreWallet';
 import {sleep} from './helpers/sleep';
 import {PIN} from './test-variables';
@@ -16,9 +17,7 @@ describe('Coin delegation and undelegation', () => {
 
     mnemonic = utils.entropyToMnemonic(utils.randomBytes(32));
     await restoreWallet(mnemonic, PIN);
-  });
 
-  it('Should transfer coins', async () => {
     await waitFor(element(by.id('wallets')))
       .toBeVisible()
       .withTimeout(15000);
@@ -27,6 +26,9 @@ describe('Coin delegation and undelegation', () => {
   });
 
   it('Should delegate coins', async () => {
+    await waitFor(element(by.text('ISLM: 0.1')))
+      .toBeVisible()
+      .withTimeout(120_000);
     const stakingBanner = element(by.text('Staking')).atIndex(1);
     await waitFor(stakingBanner)
       .toBeVisible()
@@ -40,9 +42,9 @@ describe('Coin delegation and undelegation', () => {
     await expect(element(by.text('Validators list'))).toBeVisible();
 
     await element(by.id('staking-validators-search')).tap();
-    await element(by.id('staking-validators-search-input')).replaceText(
-      'val02',
-    );
+    const input = element(by.id('staking-validators-search-input'));
+    await input.replaceText('val02');
+    await input.tapReturnKey();
 
     const validator = element(by.id('validator-val02'));
 
@@ -52,8 +54,16 @@ describe('Coin delegation and undelegation', () => {
       .scroll(200, 'down');
     await validator.tap();
 
+    const isValidatorStillExist = await isVisible('validator-val02');
+    if (isValidatorStillExist) {
+      await validator.tap();
+    }
+
     await element(by.id('staking-delegate')).tap();
 
+    await waitFor(element(by.id('undefined_input')))
+      .toBeVisible()
+      .withTimeout(1500);
     await element(by.id('undefined_input')).replaceText('0.01');
     await element(by.text('Preview')).tap();
 

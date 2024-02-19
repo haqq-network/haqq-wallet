@@ -3,6 +3,7 @@ import {Wallet, utils} from 'ethers';
 
 import {ensureWalletIsVisible} from './helpers/ensureWalletIsVisible';
 import {getCoins} from './helpers/getCoins';
+import {isVisible} from './helpers/isVisibile';
 import {restoreWallet} from './helpers/restoreWallet';
 import {PIN, PROVIDER, SOURCE_WALLET} from './test-variables';
 
@@ -51,12 +52,19 @@ describe('Routine', () => {
     const coinsAmount = '0.0022';
     await getCoins(mnemonic, coinsAmount);
 
+    await waitFor(element(by.text('ISLM: 0.002')))
+      .toBeVisible()
+      .withTimeout(120_000);
     await element(by.id(`wallets_${wallet.address.toLowerCase()}_send`)).tap();
 
     const input_address = element(by.id('transaction_address_input'));
     await input_address.typeText(milkWallet.address);
 
     await element(by.id('transaction_address_next')).tap();
+    const nextStillVisible = await isVisible('transaction_address_next');
+    if (nextStillVisible) {
+      await element(by.id('transaction_address_next')).tap();
+    }
     await element(by.text(`${coinsAmount} ISLM`))
       .atIndex(0)
       .tap();
