@@ -35,6 +35,8 @@ const production: DebugVars = {
     'haqq_54211-3': [
       '0xd567B3d7B8FE3C79a1AD8dA978812cfC4Fa05e75', // AXL
       '0x80b5a32E4F032B2a058b4F29EC95EEfEEB87aDcd', // axlUSDC
+      '0x3452e23F9c4cC62c70B7ADAd699B264AF3549C19', // axlUSDC from axelar faucet
+      '0x5db67696C3c088DfBf588d3dd849f44266ff0ffa', // AXL from axelar faucet
     ],
     // Mainnet
     'haqq_11235-1': [
@@ -50,8 +52,7 @@ const production: DebugVars = {
       '0x5aD523d94Efb56C400941eb6F34393b84c75ba39', // USDT on Kava
     ],
   },
-  // TODO: disable
-  enableHardcodeERC20TokensContract: true,
+  enableHardcodeERC20TokensContract: false,
 };
 
 const debug: DebugVars = {
@@ -72,12 +73,13 @@ const debug: DebugVars = {
     // '0x65221cede3abdd03e377e3a4ce84e14fcd497919',
     // '0x98ed1f5d1e0ca514c390b7e08cbb8d769fc87ac5',
   ],
-  enableHardcodeERC20TokensContract: true,
   hardcodeERC20TokensContract: {
     // TestEdge2
     'haqq_54211-3': [
       '0xd567B3d7B8FE3C79a1AD8dA978812cfC4Fa05e75', // AXL
       '0x80b5a32E4F032B2a058b4F29EC95EEfEEB87aDcd', // axlUSDC
+      '0x3452e23F9c4cC62c70B7ADAd699B264AF3549C19', // axlUSDC from axelar faucet
+      '0x5db67696C3c088DfBf588d3dd849f44266ff0ffa', // AXL from axelar faucet
     ],
     // Mainnet
     'haqq_11235-1': [
@@ -93,6 +95,7 @@ const debug: DebugVars = {
       '0x5aD523d94Efb56C400941eb6F34393b84c75ba39', // USDT on Kava
     ],
   },
+  enableHardcodeERC20TokensContract: true,
 };
 
 export const DEBUG_VARS = __DEV__ ? debug : production;
