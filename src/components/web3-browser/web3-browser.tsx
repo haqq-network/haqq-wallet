@@ -20,6 +20,7 @@ import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {IS_IOS} from '@app/variables/common';
+import {EIP6963ProviderInfo} from '@app/variables/EIP6963';
 
 import {
   InpageBridgeWeb3,
@@ -201,8 +202,24 @@ export const Web3Browser = ({
         console.log('keplr loaded:', !!window.keplr);
 
         if(window.ethereum) {
-          window.ethereum.isMetaMask = false;
           window.ethereum.isHaqqWallet = true;
+          function announceProvider() {
+            const info = ${JSON.stringify(EIP6963ProviderInfo)};
+            window.dispatchEvent(
+              new CustomEvent("eip6963:announceProvider", {
+                detail: Object.freeze({ info, provider: window.ethereum }),
+              })
+            );
+          }
+        
+          window.addEventListener(
+            "eip6963:requestProvider",
+            (event) => {
+              announceProvider();
+            }
+          );
+        
+          announceProvider();
         }
         if(window.keplr){
           window.keplr.isHaqqWallet = true;
