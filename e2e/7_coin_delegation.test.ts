@@ -33,7 +33,7 @@ describe('Coin delegation and undelegation', () => {
     await waitFor(stakingBanner)
       .toBeVisible()
       .whileElement(by.id('home-feed-container'))
-      .scroll(250, 'down');
+      .scroll(100, 'down');
     await stakingBanner.tap();
 
     await expect(element(by.id('staking-availableSum'))).toBeVisible();
@@ -51,7 +51,7 @@ describe('Coin delegation and undelegation', () => {
     await waitFor(validator)
       .toBeVisible()
       .whileElement(by.id('staking-validators-list'))
-      .scroll(200, 'down');
+      .scroll(100, 'down');
     await validator.tap();
 
     const isValidatorStillExist = await isVisible('validator-val02');

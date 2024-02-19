@@ -83,7 +83,7 @@ describe('Routine', () => {
     await waitFor(element(by.id('view_recovery_phrase')))
       .toBeVisible()
       .whileElement(by.id('account_details'))
-      .scroll(300, 'down');
+      .scroll(100, 'down');
 
     await element(by.id('view_recovery_phrase')).tap();
 
