@@ -22,6 +22,9 @@ export const restoreWallet = async (
   await element(by.id('signin_restore_submit')).tap();
 
   // Choose account flow
+  await waitFor(element(by.id('wallet_add_1')))
+    .toBeVisible()
+    .withTimeout(5000);
   await element(by.id('wallet_add_1')).tap();
 
   // TODO: Think how to reduce steps in other tests
@@ -31,6 +34,11 @@ export const restoreWallet = async (
   // await element(by.id('wallet_remove_1')).tap();
   // await expect(element(by.id('choose_account_next'))).not.toBeVisible();
   // await element(by.id('wallet_add_1')).tap();
+
+  // Generating accounts from hdPath might be slow on low-end devices
+  await waitFor(element(by.id('choose_account_next')))
+    .toBeVisible()
+    .withTimeout(5000);
   await element(by.id('choose_account_next')).tap();
 
   await expect(element(by.id('onboarding_setup_pin_set'))).toBeVisible();
