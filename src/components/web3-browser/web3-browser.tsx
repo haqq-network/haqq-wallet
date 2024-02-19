@@ -135,12 +135,19 @@ export const Web3Browser = ({
   }, [initialUrl, sessions, webviewNavigationData?.url]);
   const prevSession = usePrevious(currentSession);
 
+  const onPressRefreshHandler = useCallback(async () => {
+    onPressRefresh?.();
+    setInpageBridgeWeb3('');
+    const script = await InpageBridgeWeb3.loadScript();
+    setInpageBridgeWeb3(script);
+  }, []);
+
   useEffect(() => {
     if (prevSession && !currentSession) {
       helper.disconnectAccount();
-      webviewRef.current?.reload();
+      onPressRefreshHandler();
     }
-  }, [currentSession, helper, prevSession, webviewRef]);
+  }, [currentSession, helper, prevSession, webviewRef, onPressRefreshHandler]);
 
   useEffect(() => {
     // if saved account in session removed from wallet
@@ -149,9 +156,9 @@ export const Web3Browser = ({
       !Wallet.getById(currentSession?.selectedAccount)
     ) {
       helper.disconnectAccount();
-      webviewRef.current?.reload();
+      onPressRefreshHandler();
     }
-  }, [currentSession, helper, webviewRef]);
+  }, [currentSession, helper, webviewRef, onPressRefreshHandler]);
 
   const walletAddress = selectedAccount || currentSession?.selectedAccount;
   const siteUrl = useMemo(
@@ -213,8 +220,8 @@ export const Web3Browser = ({
   );
 
   const onContentProcessDidTerminate = useCallback(() => {
-    webviewRef?.current?.reload?.();
-  }, [webviewRef]);
+    onPressRefreshHandler();
+  }, [webviewRef, onPressRefreshHandler]);
 
   const handlePressAddBookmark = useCallback(() => {
     const url =
@@ -257,10 +264,10 @@ export const Web3Browser = ({
         event?.nativeEvent?.navigationType === 'backforward' &&
         !event.nativeEvent?.loading
       ) {
-        webviewRef?.current?.reload();
+        onPressRefreshHandler();
       }
     },
-    [helper, webviewRef],
+    [helper, webviewRef, onPressRefreshHandler],
   );
 
   const onNavigationStateChange = useCallback((navState: WebViewNavigation) => {
@@ -375,7 +382,7 @@ export const Web3Browser = ({
         toggleActionMenu={toggleActionMenu}
         onPressProviders={onPressProviders}
         onPressHome={onPressHome}
-        onPressRefresh={onPressRefresh}
+        onPressRefresh={onPressRefreshHandler}
         onPressCopyLink={onPressCopyLink}
         onPressDisconnect={onPressDisconnect}
         onPressShare={onPressShare}

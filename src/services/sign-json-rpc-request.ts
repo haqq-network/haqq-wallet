@@ -171,7 +171,11 @@ export class SignJsonRpcRequest {
         result = tx.hash;
         break;
       case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
-        let signTransactionRequest: TransactionRequest = request.params[0];
+        let signTransactionRequest: TransactionRequest = Array.isArray(
+          request.params,
+        )
+          ? request.params[0]
+          : request.params;
 
         const {address} = await instanceProvider.getAccountInfo(path);
         const nonce = await rpcProvider.getTransactionCount(address, 'latest');

@@ -224,7 +224,6 @@ export class Web3BrowserHelper extends EventEmitter implements JsonRpcHelper {
     }
     this.emitToEthereum(EthereumEventsEnum.CHAIN_CHANGED, chainIdHex);
     this.emitToWindow(WebViewEventsEnum.KEPLR_KEYSTORECHANGE);
-    this.webviewRef.current?.reload?.();
   };
 
   private postMessage = (
