@@ -34,6 +34,7 @@ import {HaqqCosmosAddress, WalletType} from '@app/types';
 import {makeID, requestQRScannerPermission} from '@app/utils';
 
 import {Cosmos} from '../cosmos';
+import {EthSign} from '../eth-sign';
 
 export type JsonRpcHelper = EventEmitter & {
   origin: string;
@@ -314,6 +315,9 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   eth_estimateGas: async ({req, helper}) => {
     checkParamsExists(req);
     try {
+      return (await EthSign.calculateGasPrice(req.params[0])).toHex();
+    } catch {}
+    try {
       const rpcProvider = await getLocalRpcProvider(helper);
       return (await rpcProvider.estimateGas(req.params[0]))?._hex;
     } catch (err) {
@@ -535,6 +539,10 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
 
         if (typeof value === 'number') {
           type = determineNumberType(value);
+        }
+
+        if (typeof value === 'boolean') {
+          type = 'bool';
         }
 
         return [
