@@ -1,4 +1,5 @@
 import {TransactionRequest} from '@haqq/provider-base';
+import {normalize0x} from '@haqq/provider-keystone-react-native';
 import {getSdkError} from '@walletconnect/utils';
 
 import {app} from '@app/contexts';
@@ -142,7 +143,10 @@ export class SignJsonRpcRequest {
           );
           const signedMessageHash = await signTypedDataResult;
 
-          if (wallet.type === WalletType.ledgerBt) {
+          if (
+            wallet.type === WalletType.ledgerBt ||
+            wallet.type === WalletType.keystone
+          ) {
             result = signedMessageHash;
           } else {
             result = `0x${signedMessageHash}`;
@@ -215,6 +219,6 @@ export class SignJsonRpcRequest {
 
     logger.log('✅ signEIP155Request result:', result, result.length);
 
-    return result;
+    return normalize0x(result);
   }
 }
