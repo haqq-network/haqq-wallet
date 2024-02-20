@@ -1,7 +1,6 @@
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {AddressUtils} from '@app/helpers/address-utils';
-import {Currencies} from '@app/models/currencies';
 import {VariablesDate} from '@app/models/variables-date';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
@@ -80,8 +79,6 @@ export async function onWalletsBalanceCheck() {
       new Date(updates.last_update),
     );
 
-    // Must be before all balance calculation because each calculation use rate
-    Currencies.setRates(updates.rates);
     const result = parseIndexerBalances(updates);
 
     //Caching balances

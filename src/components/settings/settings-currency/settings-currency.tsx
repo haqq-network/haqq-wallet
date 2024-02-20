@@ -36,8 +36,8 @@ export const SettingsCurrency = observer(({goBack}: SettingsThemeProps) => {
   }, []);
 
   const setSelectedCurrency = useCallback(
-    (selectedCurrencyId: string) => () => {
-      Currencies.selectedCurrency = selectedCurrencyId;
+    (selectedCurrencyId: string) => async () => {
+      await Currencies.setSelectedCurrency(selectedCurrencyId);
     },
     [],
   );
