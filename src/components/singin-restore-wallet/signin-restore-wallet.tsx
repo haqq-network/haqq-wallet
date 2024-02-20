@@ -1,7 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
 import {utils} from 'ethers';
-import {ScrollView, StyleSheet} from 'react-native';
+import {Keyboard, ScrollView, StyleSheet} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
 import {
@@ -86,6 +86,11 @@ export const SignInRestore = ({
           multiline
           errorTextI18n={I18N.signinRestoreWalletTextFieldError}
           testID={`${testID}_input`}
+          onKeyPress={({nativeEvent: {key: keyValue}}) => {
+            if (keyValue === 'Enter') {
+              Keyboard.dismiss();
+            }
+          }}
         />
 
         <IconButton onPress={onPressPaste} style={page.button}>

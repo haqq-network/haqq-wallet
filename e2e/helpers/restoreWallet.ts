@@ -1,6 +1,6 @@
 import {by, element, expect, waitFor} from 'detox';
 
-import {isVisible} from '../helpers/isVisibile';
+import {isVisible} from './isVisibile';
 
 export const restoreWallet = async (
   mnemonic: string,
@@ -18,15 +18,22 @@ export const restoreWallet = async (
 
   await element(by.id('signin_agreement_agree')).tap();
 
-  await element(by.id('signin_restore_input')).tap();
-  await element(by.id('signin_restore_input')).replaceText(mnemonic);
+  const input = element(by.id('signin_restore_input'));
+  await input.tap();
+  await input.typeText(mnemonic);
+  await input.tapReturnKey();
 
-  await element(by.id('signin_restore_submit')).tap();
+  try {
+    await element(by.id('signin_restore')).scroll(10, 'down');
+  } catch (err) {
+    //
+  }
+  await element(by.id('signin_restore_submit')).tap({x: 0, y: 0});
 
   // Choose account flow
   await waitFor(element(by.id('wallet_add_1')))
     .toBeVisible()
-    .withTimeout(5000);
+    .withTimeout(3000);
   await element(by.id('wallet_add_1')).tap();
 
   const isWalletRemoveVisible = await isVisible('wallet_remove_1');

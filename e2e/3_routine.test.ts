@@ -59,6 +59,7 @@ describe('Routine', () => {
 
     const input_address = element(by.id('transaction_address_input'));
     await input_address.typeText(milkWallet.address);
+    await input_address.tapReturnKey();
 
     await element(by.id('transaction_address_next')).tap();
     const nextStillVisible = await isVisible('transaction_address_next');
