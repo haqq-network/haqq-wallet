@@ -19,6 +19,7 @@ export async function onProviderChanged() {
       Token.fetchTokens(true),
       Transaction.fetchLatestTransactions(Wallet.addressList(), true),
       Currencies.fetchCurrencies(),
+      Currencies.setSelectedCurrency(),
     ]);
   } finally {
     hideModal(ModalType.loading);
