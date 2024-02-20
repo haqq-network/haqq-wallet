@@ -223,26 +223,25 @@ const StoryContainer = forwardRef<
       scrollTo(id, false);
     };
 
-    const onPressIn = () => {
+    const onPressIn = ({nativeEvent: {locationX}}: GestureResponderEvent) => {
       stopAnimation();
       paused.value = true;
-    };
 
-    const onLongPress = () => startAnimation(true);
+      if (locationX < WIDTH / 3) {
+        paused.value = false;
 
-    const onPress = ({nativeEvent: {locationX}}: GestureResponderEvent) => {
-      if (locationX < WIDTH / 2) {
         const success = toPreviousStory();
 
         if (!success) {
           startAnimation(true);
         }
-      } else {
+      } else if (locationX > (WIDTH * 2) / 3) {
+        paused.value = false;
         toNextStory();
       }
-
-      paused.value = false;
     };
+
+    const onLongPress = () => startAnimation(true);
 
     useImperativeHandle(
       ref,
@@ -288,7 +287,6 @@ const StoryContainer = forwardRef<
       <Animated.View style={styles.container} testID="storyModal">
         <Pressable
           onPressIn={onPressIn}
-          onPress={onPress}
           onLongPress={onLongPress}
           delayLongPress={LONG_PRESS_DURATION}
           style={styles.container}>
