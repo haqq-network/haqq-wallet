@@ -111,15 +111,11 @@ class CurrenciesStore {
     this.selectedCurrency = selectedCurrency;
   };
 
-  convert = (balance: Balance): Balance | null => {
+  convert = (balance: Balance): Balance => {
     const rate = this._rates[balance.getSymbol()]?.amount;
     const currency = this._currencies[this._selectedCurrency];
 
-    if (!rate) {
-      return null;
-    }
-
-    if (!currency?.id) {
+    if (!rate || !currency) {
       return Balance.Empty;
     }
 
