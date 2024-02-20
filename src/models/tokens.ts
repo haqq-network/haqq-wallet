@@ -356,13 +356,19 @@ async function getHardcodedTokens(tokensDataToMerge: IndexerTokensData = {}) {
                           wallet,
                         );
 
-                        const symbol = await contractInterface.symbol();
-                        const decimals = await contractInterface.decimals();
-                        const name = await contractInterface.name();
-
                         const contractInfo = await Whitelist.verifyAddress(
                           AddressUtils.toHaqq(contract),
                         );
+
+                        let symbol =
+                          contractInfo?.symbol ||
+                          (await contractInterface.symbol());
+                        let decimals =
+                          contractInfo?.decimals ||
+                          (await contractInterface.decimals());
+                        let name =
+                          contractInfo?.name ||
+                          (await contractInterface.name());
 
                         const balance = new Balance(
                           balanceResult,
