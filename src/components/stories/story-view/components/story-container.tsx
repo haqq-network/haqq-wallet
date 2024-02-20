@@ -10,7 +10,6 @@ import {GestureResponderEvent, Pressable, StyleSheet} from 'react-native';
 import Animated, {
   cancelAnimation,
   runOnJS,
-  useAnimatedGestureHandler,
   useAnimatedReaction,
   useDerivedValue,
   useSharedValue,
@@ -21,7 +20,6 @@ import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {ANIMATION_DURATION} from '@app/variables/common';
 
-import {GestureHandler} from './gesture-handler';
 import {StoryList} from './story-list';
 
 import {
@@ -31,7 +29,6 @@ import {
   WIDTH,
 } from '../core/constants';
 import {
-  GestureContext,
   StoryContainerProps,
   StoryContainerPublicMethods,
 } from '../core/dto/componentsDTO';
@@ -55,7 +52,6 @@ const StoryContainer = forwardRef<
       onShow,
       onHide,
       onSeenStoriesChange,
-      onSwipeUp,
       onStoryStart,
       onStoryEnd,
       ...props
@@ -227,66 +223,6 @@ const StoryContainer = forwardRef<
       scrollTo(id, false);
     };
 
-    const onGestureEvent = useAnimatedGestureHandler({
-      onStart: (e, ctx: GestureContext) => {
-        ctx.x = x.value;
-        ctx.userId = userId.value;
-      },
-      onActive: (e, ctx) => {
-        if (
-          ctx.x === x.value &&
-          (ctx.vertical || Math.abs(e.velocityX) < Math.abs(e.velocityY))
-        ) {
-          ctx.vertical = true;
-          y.value = e.translationY / 2;
-        } else {
-          ctx.moving = true;
-          x.value = Math.max(
-            0,
-            Math.min(ctx.x + -e.translationX, WIDTH * (stories.length - 1)),
-          );
-        }
-      },
-      onFinish: (e, ctx) => {
-        if (ctx.vertical) {
-          if (e.translationY > 100) {
-            onClose();
-          } else {
-            if (e.translationY < -100 && onSwipeUp) {
-              runOnJS(onSwipeUp)(
-                stories[userIndex.value]?.id,
-                stories[userIndex.value]?.stories[storyIndex.value ?? 0]?.id,
-              );
-            }
-
-            y.value = withTiming(0);
-            startAnimation(true);
-          }
-        } else if (ctx.moving) {
-          const diff = x.value - ctx.x;
-          let newX;
-
-          if (Math.abs(diff) < WIDTH / 4) {
-            newX = ctx.x;
-          } else {
-            newX =
-              diff > 0
-                ? Math.ceil(x.value / WIDTH) * WIDTH
-                : Math.floor(x.value / WIDTH) * WIDTH;
-          }
-
-          const newUserId = stories[Math.round(newX / WIDTH)]?.id;
-          if (newUserId !== undefined) {
-            scrollTo(newUserId, true, newUserId === ctx.userId, ctx.userId);
-          }
-        }
-
-        ctx.moving = false;
-        ctx.vertical = false;
-        ctx.userId = undefined;
-      },
-    });
-
     const onPressIn = () => {
       stopAnimation();
       paused.value = true;
@@ -349,50 +285,48 @@ const StoryContainer = forwardRef<
     );
 
     return (
-      <GestureHandler onGestureEvent={onGestureEvent}>
-        <Animated.View style={styles.container} testID="storyModal">
-          <Pressable
-            onPressIn={onPressIn}
-            onPress={onPress}
-            onLongPress={onLongPress}
-            delayLongPress={LONG_PRESS_DURATION}
-            style={styles.container}>
-            <Animated.View style={[styles.absolute, containerStyle]}>
-              {stories?.map((story, index) => (
-                <StoryList
-                  {...story}
-                  index={index}
-                  x={x}
-                  activeUser={userId}
-                  activeStory={currentStory}
-                  progress={animation}
-                  seenStories={seenStories}
-                  onClose={onClose}
-                  onLoad={value => {
-                    const current = story.stories.find(
-                      item => item.id === currentStory.value,
-                    );
-                    onLoad?.();
-                    startAnimation(
-                      undefined,
-                      value !== undefined
-                        ? videoDuration ?? value
-                        : current?.duration ?? duration,
-                    );
-                  }}
-                  avatarSize={storyAvatarSize}
-                  textStyle={textStyle}
-                  paused={paused}
-                  videoProps={videoProps}
-                  closeColor={closeIconColor}
-                  key={story.id}
-                  {...props}
-                />
-              ))}
-            </Animated.View>
-          </Pressable>
-        </Animated.View>
-      </GestureHandler>
+      <Animated.View style={styles.container} testID="storyModal">
+        <Pressable
+          onPressIn={onPressIn}
+          onPress={onPress}
+          onLongPress={onLongPress}
+          delayLongPress={LONG_PRESS_DURATION}
+          style={styles.container}>
+          <Animated.View style={[styles.absolute, containerStyle]}>
+            {stories?.map((story, index) => (
+              <StoryList
+                {...story}
+                index={index}
+                x={x}
+                activeUser={userId}
+                activeStory={currentStory}
+                progress={animation}
+                seenStories={seenStories}
+                onClose={onClose}
+                onLoad={value => {
+                  const current = story.stories.find(
+                    item => item.id === currentStory.value,
+                  );
+                  onLoad?.();
+                  startAnimation(
+                    undefined,
+                    value !== undefined
+                      ? videoDuration ?? value
+                      : current?.duration ?? duration,
+                  );
+                }}
+                avatarSize={storyAvatarSize}
+                textStyle={textStyle}
+                paused={paused}
+                videoProps={videoProps}
+                closeColor={closeIconColor}
+                key={story.id}
+                {...props}
+              />
+            ))}
+          </Animated.View>
+        </Pressable>
+      </Animated.View>
     );
   },
 );
