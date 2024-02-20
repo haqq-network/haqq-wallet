@@ -85,7 +85,7 @@ class CurrenciesStore {
     }
   }
 
-  setSelectedCurrency = async (selectedCurrency: string | undefined) => {
+  setSelectedCurrency = async (selectedCurrency?: string) => {
     const wallets = Wallet.getAllVisible();
     const lastBalanceUpdates = VariablesDate.get(
       `indexer_${app.provider.cosmosChainId}`,
