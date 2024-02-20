@@ -19,13 +19,13 @@ export async function onProviderChanged() {
       Token.fetchTokens(true),
       Transaction.fetchLatestTransactions(Wallet.addressList(), true),
       Currencies.fetchCurrencies(),
-      Currencies.setSelectedCurrency(),
     ]);
   } finally {
     hideModal(ModalType.loading);
   }
 
   await Promise.allSettled([
+    Currencies.setSelectedCurrency(),
     awaitForEventDone(Events.onTesterModeChanged, app.isTesterMode),
     EthRpcEndpointAvailability.checkEthRpcEndpointAvailability(),
     Stories.fetch(true),

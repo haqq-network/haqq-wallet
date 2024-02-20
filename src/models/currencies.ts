@@ -118,6 +118,11 @@ class CurrenciesStore {
     if (!rate) {
       return null;
     }
+
+    if (!currency?.id) {
+      return Balance.Empty;
+    }
+
     //FIXME: Temporary solution. Need to fix Balance tests first
     const result = new Balance(rate).toFloat() * balance.toFloat();
     return new Balance(result, undefined, currency.id);
