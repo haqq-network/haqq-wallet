@@ -61,6 +61,10 @@ class CurrenciesStore {
     return Object.values(this._currencies);
   }
 
+  get isRatesAvailable(): boolean {
+    return !!Object.keys(this._rates).length;
+  }
+
   get selectedCurrency() {
     return this._selectedCurrency;
   }

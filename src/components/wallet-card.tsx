@@ -78,7 +78,6 @@ export const WalletCard = observer(
     const isBalancesFirstSync = useIsBalancesFirstSync();
     const screenWidth = useWindowDimensions().width;
     const isImported = wallet.isImported || isSecondMnemonic;
-    const selectedCurrency = Currencies.selectedCurrency;
 
     const protectionStatus = useMemo(() => {
       // Wallet is 2nd mnemonic (imported) or user have imported this wallet after SSS
@@ -112,7 +111,7 @@ export const WalletCard = observer(
       }
 
       return result.toFiat();
-    }, [total, selectedCurrency]);
+    }, [total, Currencies.selectedCurrency, Currencies.isRatesAvailable]);
 
     const onQr = () => {
       onPressQR(wallet.address);
