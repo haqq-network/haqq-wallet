@@ -44,6 +44,7 @@ import {
   base64PublicKey,
   cosmosAddress,
 } from '@haqq/provider-base';
+import {normalize0x} from '@haqq/provider-keystone-react-native';
 import Decimal from 'decimal.js';
 
 import {AddressUtils} from '@app/helpers/address-utils';
@@ -315,7 +316,13 @@ export class Cosmos {
     types: Record<string, Array<TypedDataField>>,
     message: Record<string, any>,
   ): Promise<string | undefined> {
-    return await transport.signTypedData(hdPath, {domain, message, types});
+    const signature = await transport.signTypedData(hdPath, {
+      domain,
+      message,
+      types,
+    });
+
+    return normalize0x(signature);
   }
 
   async sendMsg(

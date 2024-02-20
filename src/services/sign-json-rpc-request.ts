@@ -141,16 +141,7 @@ export class SignJsonRpcRequest {
             typedData.types,
             typedData.message,
           );
-          const signedMessageHash = await signTypedDataResult;
-
-          if (
-            wallet.type === WalletType.ledgerBt ||
-            wallet.type === WalletType.keystone
-          ) {
-            result = signedMessageHash;
-          } else {
-            result = `0x${signedMessageHash}`;
-          }
+          result = await signTypedDataResult;
         } else {
           throw new Error(getText(I18N.jsonRpcErrorInvalidParams));
         }
