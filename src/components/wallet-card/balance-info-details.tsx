@@ -80,6 +80,6 @@ const styles = createTheme({
     alignItems: 'center',
   },
   lockedTokensContainer: {
-    transform: [{translateY: -4}],
+    transform: [{translateY: -8}],
   },
 });

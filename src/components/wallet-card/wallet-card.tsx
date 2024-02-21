@@ -4,7 +4,7 @@ import {SessionTypes} from '@walletconnect/types';
 import {useWindowDimensions} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Card, Spacer} from '@app/components/ui';
+import {Card} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useIsBalancesFirstSync} from '@app/hooks/use-is-balances-sync';
 import {Wallet} from '@app/models/wallet';
@@ -90,7 +90,6 @@ export const WalletCard = ({
         locked={locked}
         onAccountInfo={onAccountInfo}
       />
-      <Spacer />
       <CardButtons
         testID={testID}
         wallet={wallet}
