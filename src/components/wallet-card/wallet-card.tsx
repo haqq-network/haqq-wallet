@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 
 import {SessionTypes} from '@walletconnect/types';
-import {observer} from 'mobx-react';
 import {useWindowDimensions} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -32,78 +31,76 @@ export type BalanceProps = {
   isSecondMnemonic: boolean;
 };
 
-export const WalletCard = observer(
-  ({
-    testID,
-    wallet,
-    walletConnectSessions,
-    showLockedTokens,
-    onPressSend,
-    onPressQR,
-    onPressWalletConnect,
-    onPressProtection,
-    onPressAccountInfo,
-    balance,
-    isSecondMnemonic,
-  }: BalanceProps) => {
-    const {locked, total} = balance ?? {};
-    const [cardState, setCardState] = useState('loading');
-    const isBalancesFirstSync = useIsBalancesFirstSync();
-    const screenWidth = useWindowDimensions().width;
+export const WalletCard = ({
+  testID,
+  wallet,
+  walletConnectSessions,
+  showLockedTokens,
+  onPressSend,
+  onPressQR,
+  onPressWalletConnect,
+  onPressProtection,
+  onPressAccountInfo,
+  balance,
+  isSecondMnemonic,
+}: BalanceProps) => {
+  const {locked, total} = balance ?? {};
+  const [cardState, setCardState] = useState('loading');
+  const isBalancesFirstSync = useIsBalancesFirstSync();
+  const screenWidth = useWindowDimensions().width;
 
-    const onAccountInfo = () => {
-      onPressAccountInfo(wallet?.address);
-    };
+  const onAccountInfo = () => {
+    onPressAccountInfo(wallet?.address);
+  };
 
-    return (
-      <Card
-        testID={`${testID}_card`}
-        colorFrom={wallet?.colorFrom}
-        colorTo={wallet?.colorTo}
-        colorPattern={wallet?.colorPattern}
-        pattern={wallet?.pattern}
-        style={styles.container}
-        width={screenWidth - 40}
-        onLoad={() => {
-          setCardState('laded');
-        }}>
-        <CardName
-          onAccountInfo={onAccountInfo}
-          isBalancesFirstSync={isBalancesFirstSync}
-          testID={testID}
-          wallet={wallet}
-        />
-        <ProtectionBadge
-          wallet={wallet}
-          isSecondMnemonic={isSecondMnemonic}
-          walletConnectSessions={walletConnectSessions}
-          onPressProtection={onPressProtection}
-          onPressWalletConnect={onPressWalletConnect}
-        />
-        <BalanceInfoTotal
-          isBalancesFirstSync={isBalancesFirstSync}
-          total={total}
-          onAccountInfo={onAccountInfo}
-        />
-        <BalanceInfoDetails
-          isBalancesFirstSync={isBalancesFirstSync}
-          showLockedTokens={showLockedTokens}
-          total={total}
-          locked={locked}
-          onAccountInfo={onAccountInfo}
-        />
-        <Spacer />
-        <CardButtons
-          testID={testID}
-          wallet={wallet}
-          cardState={cardState}
-          onPressQR={onPressQR}
-          onPressSend={onPressSend}
-        />
-      </Card>
-    );
-  },
-);
+  return (
+    <Card
+      testID={`${testID}_card`}
+      colorFrom={wallet?.colorFrom}
+      colorTo={wallet?.colorTo}
+      colorPattern={wallet?.colorPattern}
+      pattern={wallet?.pattern}
+      style={styles.container}
+      width={screenWidth - 40}
+      onLoad={() => {
+        setCardState('laded');
+      }}>
+      <CardName
+        onAccountInfo={onAccountInfo}
+        isBalancesFirstSync={isBalancesFirstSync}
+        testID={testID}
+        wallet={wallet}
+      />
+      <ProtectionBadge
+        wallet={wallet}
+        isSecondMnemonic={isSecondMnemonic}
+        walletConnectSessions={walletConnectSessions}
+        onPressProtection={onPressProtection}
+        onPressWalletConnect={onPressWalletConnect}
+      />
+      <BalanceInfoTotal
+        isBalancesFirstSync={isBalancesFirstSync}
+        total={total}
+        onAccountInfo={onAccountInfo}
+      />
+      <BalanceInfoDetails
+        isBalancesFirstSync={isBalancesFirstSync}
+        showLockedTokens={showLockedTokens}
+        total={total}
+        locked={locked}
+        onAccountInfo={onAccountInfo}
+      />
+      <Spacer />
+      <CardButtons
+        testID={testID}
+        wallet={wallet}
+        cardState={cardState}
+        onPressQR={onPressQR}
+        onPressSend={onPressSend}
+      />
+    </Card>
+  );
+};
 
 const styles = createTheme({
   container: {
