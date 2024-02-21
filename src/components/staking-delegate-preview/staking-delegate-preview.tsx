@@ -48,7 +48,7 @@ export const StakingDelegatePreview = ({
   );
 
   return (
-    <PopupContainer style={styles.container}>
+    <PopupContainer testID="staking-preview-container" style={styles.container}>
       <Image
         source={require('@assets/images/islm_icon.png')}
         style={styles.icon}

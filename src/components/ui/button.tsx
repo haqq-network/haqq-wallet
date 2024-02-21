@@ -233,6 +233,11 @@ export const Button = ({
       onPress={onPressButton}
       activeOpacity={FOR_DETOX ? 1 : 0.7}
       disabled={disabled || loadFlag}
+      testID={
+        loadFlag
+          ? `${props.testID ?? 'button'}-loading`
+          : props.testID ?? 'button'
+      }
       {...props}>
       {loadFlag ? (
         <ActivityIndicator
