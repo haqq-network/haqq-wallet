@@ -78,7 +78,7 @@ export const ProtectionBadge = ({
           <IconButton
             testID="wallet_without_protection_button"
             onPress={onProtection}
-            style={styles.withoutProtection}>
+            style={[styles.protection, styles.withoutProtection]}>
             <Icon
               name={IconsName.shield_empty}
               color={Color.graphicBase3}
@@ -99,7 +99,7 @@ export const ProtectionBadge = ({
           <IconButton
             testID="wallet_without_protection_button"
             onPress={onProtection}
-            style={styles.partiallyProtection}>
+            style={[styles.protection, styles.partiallyProtection]}>
             <Icon
               name={IconsName.shield_partially}
               color={Color.textYellow1}
@@ -116,7 +116,9 @@ export const ProtectionBadge = ({
         </>
       )}
       {!!walletConnectSessions?.length && (
-        <IconButton onPress={onWalletConnect} style={styles.walletConnectApps}>
+        <IconButton
+          onPress={onWalletConnect}
+          style={[styles.protection, styles.walletConnectApps]}>
           <Icon i16 name={IconsName.link} color={Color.graphicBase3} />
           <Spacer width={4} />
           <Text
@@ -129,7 +131,7 @@ export const ProtectionBadge = ({
       )}
       {protectionStatus === ProtectionStatus.full && (
         <>
-          <IconButton style={styles.fullProtection}>
+          <IconButton style={styles.protection}>
             <Icon name={IconsName.shield} color={Color.textSecond2} i16 />
             <Spacer width={4} />
             <Text
@@ -144,7 +146,7 @@ export const ProtectionBadge = ({
       {([WalletType.hot, WalletType.ledgerBt].includes(wallet.type) ||
         isImported) && (
         <>
-          <IconButton style={styles.fullProtection}>
+          <IconButton style={styles.protection}>
             <Icon name={IconsName.import} color={Color.textSecond2} i16 />
             <Spacer width={4} />
             <Text
@@ -165,43 +167,24 @@ const styles = createTheme({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  withoutProtection: {
+  protection: {
     flexDirection: 'row',
     alignSelf: 'flex-start',
+    marginTop: 4,
     marginBottom: 8,
-    backgroundColor: Color.bg5,
     borderRadius: 4,
     paddingHorizontal: 6,
     paddingVertical: 2,
     height: 20,
+  },
+  withoutProtection: {
+    backgroundColor: Color.bg5,
   },
   partiallyProtection: {
-    flexDirection: 'row',
-    alignSelf: 'flex-start',
-    marginBottom: 8,
     backgroundColor: Color.bg6,
-    borderRadius: 4,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    height: 20,
-  },
-  fullProtection: {
-    flexDirection: 'row',
-    alignSelf: 'flex-start',
-    marginBottom: 8,
-    borderRadius: 4,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    height: 20,
   },
   walletConnectApps: {
     alignSelf: 'flex-start',
-    flexDirection: 'row',
-    marginBottom: 8,
     backgroundColor: Color.bg9,
-    height: 20,
-    borderRadius: 4,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
   },
 });
