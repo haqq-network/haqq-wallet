@@ -23,13 +23,12 @@ export const SettingsSecurityPinScreen = observer(() => {
       const close = showModal(ModalType.loading);
       try {
         await SecurePinUtils.updatePin(pin);
+        sendNotification(I18N.notificationPinChanged);
       } catch (e) {
         const details = (e as Error)?.message;
         showModal(ModalType.pinError, {details});
       }
       close();
-
-      sendNotification(I18N.notificationPinChanged);
       goBack();
       return true;
     },

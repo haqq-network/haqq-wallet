@@ -451,6 +451,8 @@ class App extends AsyncEventEmitter {
           await SecurePinUtils.rollbackPin();
           showModal(ModalType.pinError);
         } catch (e) {
+          const details = (e as Error)?.message || e?.toString();
+          showModal(ModalType.pinError, {details});
           Logger.captureException(e, 'app.auth rollback pin failed');
         }
       }

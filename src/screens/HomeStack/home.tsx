@@ -14,6 +14,7 @@ import {HomeScreenLabel} from '@app/components/home-screen/label';
 import {HomeScreenTabBarIcon} from '@app/components/home-screen/tab-bar-icon';
 import {HomeScreenTitle} from '@app/components/home-screen/title';
 import {Spacer} from '@app/components/ui';
+import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation} from '@app/hooks';
@@ -129,6 +130,10 @@ export const HomeScreen = memo(() => {
       navigation.removeListener('beforeRemove', subscription);
     };
   }, [navigation]);
+
+  if (!app.isUnlocked) {
+    return null;
+  }
 
   return (
     <Tab.Navigator detachInactiveScreens screenOptions={navigationOptions}>
