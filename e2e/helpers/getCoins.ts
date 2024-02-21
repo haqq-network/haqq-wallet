@@ -1,3 +1,4 @@
+import {log} from 'detox';
 import {Wallet, utils} from 'ethers';
 
 import {sleep} from './sleep';
@@ -12,7 +13,14 @@ export const getCoins = async (mnemonic: string, amount: string = '0.0017') => {
     value: utils.parseEther(amount),
   };
 
-  await milkWallet.sendTransaction(tx);
-
+  try {
+    const result = await milkWallet.sendTransaction(tx);
+    log.warn('Sending transaction result: ', JSON.stringify(result));
+  } catch (err) {
+    log.warn('Error while sending the transaction: ', JSON.stringify(err));
+    log.warn('Trying again...');
+    await getCoins(mnemonic, amount);
+    return;
+  }
   await sleep(15_000);
 };

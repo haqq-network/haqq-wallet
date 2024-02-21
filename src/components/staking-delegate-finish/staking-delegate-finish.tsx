@@ -33,7 +33,9 @@ export const StakingDelegateFinish = ({
   fee,
 }: StakingDelegateFinishProps) => {
   return (
-    <PopupContainer style={styles.container}>
+    <PopupContainer
+      testID={'staking-finish-container'}
+      style={styles.container}>
       <View style={styles.sub}>
         <LottieWrap
           source={require('@assets/animations/transaction-finish.json')}

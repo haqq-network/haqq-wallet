@@ -43,7 +43,9 @@ export const StakingUnDelegatePreview = ({
   );
 
   return (
-    <PopupContainer style={styles.container}>
+    <PopupContainer
+      testID="staking-undelegate-container"
+      style={styles.container}>
       <View style={styles.icon}>
         <Icon name="logo" i42 color={Color.graphicBase3} />
       </View>
@@ -99,6 +101,7 @@ export const StakingUnDelegatePreview = ({
         onPress={onSend}
         style={styles.submit}
         loading={disabled}
+        testID="staking-undelegate-button"
       />
     </PopupContainer>
   );

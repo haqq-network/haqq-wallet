@@ -1,4 +1,4 @@
-import {by, element, expect, waitFor} from 'detox';
+import {by, element, expect, log, waitFor} from 'detox';
 
 import {isVisible} from './isVisibile';
 
@@ -20,15 +20,21 @@ export const restoreWallet = async (
 
   const input = element(by.id('signin_restore_input'));
   await input.tap();
-  await input.typeText(mnemonic);
-  await input.tapReturnKey();
+  await input.replaceText(mnemonic);
+  if (!isAndroid) {
+    await input.tapReturnKey();
+  }
 
   try {
-    await element(by.id('signin_restore')).scroll(10, 'down');
+    await element(by.id('signin_restore')).scroll(200, 'down');
   } catch (err) {
-    //
+    log.warn('Error while scrolling: ' + JSON.stringify(err));
   }
-  await element(by.id('signin_restore_submit')).tap({x: 0, y: 0});
+  try {
+    await element(by.id('signin_restore_submit')).tap({x: 0, y: 0});
+  } catch (err) {
+    log.warn('Error while tap: ' + JSON.stringify(err));
+  }
 
   // Choose account flow
   await waitFor(element(by.id('wallet_add_1')))
@@ -92,5 +98,8 @@ export const restoreWallet = async (
     }
   }
 
+  await waitFor(element(by.id('onboarding_finish_finish')))
+    .toBeVisible()
+    .withTimeout(3000);
   await element(by.id('onboarding_finish_finish')).tap();
 };

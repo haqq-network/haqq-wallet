@@ -42,7 +42,7 @@ export const StakingUnDelegateFinish = ({
   };
 
   return (
-    <PopupContainer style={styles.container}>
+    <PopupContainer testID="staking-undelegate-finish" style={styles.container}>
       <View style={styles.sub}>
         <LottieWrap
           source={require('@assets/animations/transaction-finish.json')}

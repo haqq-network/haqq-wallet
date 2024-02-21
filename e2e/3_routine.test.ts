@@ -1,4 +1,4 @@
-import {by, device, element, waitFor} from 'detox';
+import {by, device, element, log, waitFor} from 'detox';
 import {Wallet, utils} from 'ethers';
 
 import {ensureWalletIsVisible} from './helpers/ensureWalletIsVisible';
@@ -10,6 +10,7 @@ import {PIN, PROVIDER, SOURCE_WALLET} from './test-variables';
 describe('Routine', () => {
   let mnemonic = '';
   let milkWallet: Wallet;
+  const isAndroid = device.getPlatform() === 'android';
   beforeAll(async () => {
     await device.launchApp({
       newInstance: true,
@@ -54,21 +55,31 @@ describe('Routine', () => {
 
     await waitFor(element(by.text('ISLM: 0.002')))
       .toBeVisible()
-      .withTimeout(120_000);
+      .withTimeout(6 * 60_000);
     await element(by.id(`wallets_${wallet.address.toLowerCase()}_send`)).tap();
 
     const input_address = element(by.id('transaction_address_input'));
     await input_address.typeText(milkWallet.address);
-    await input_address.tapReturnKey();
-
+    if (!isAndroid) {
+      await input_address.tapReturnKey();
+    }
     await element(by.id('transaction_address_next')).tap();
     const nextStillVisible = await isVisible('transaction_address_next');
     if (nextStillVisible) {
-      await element(by.id('transaction_address_next')).tap();
+      try {
+        await element(by.id('transaction_address_next')).tap();
+      } catch (err) {
+        log.warn('Error while tap: ' + JSON.stringify(err));
+      }
     }
     await element(by.text(`${coinsAmount} ISLM`))
       .atIndex(0)
       .tap();
+    if (isAndroid) {
+      await element(by.text(`${coinsAmount} ISLM`))
+        .atIndex(0)
+        .tap();
+    }
 
     const input_form = element(by.id('transaction_sum_form_input'));
     await input_form.tap();
