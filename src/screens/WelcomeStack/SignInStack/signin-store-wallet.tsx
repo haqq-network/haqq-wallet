@@ -14,7 +14,12 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {ErrorHandler} from '@app/models/error-handler';
 import {Wallet} from '@app/models/wallet';
-import {SignInStackParamList, SignInStackRoutes} from '@app/route-types';
+import {
+  OnboardingStackRoutes,
+  SignInStackParamList,
+  SignInStackRoutes,
+  WelcomeStackRoutes,
+} from '@app/route-types';
 import {RemoteConfig} from '@app/services/remote-config';
 import {ModalType, WalletType} from '@app/types';
 import {MAIN_ACCOUNT_NAME} from '@app/variables/common';
@@ -33,7 +38,7 @@ export const SignInStoreWalletScreen = observer(() => {
   useEffect(() => {
     const goBack = () => {
       hideModal(ModalType.loading);
-      //@ts-ignore
+      //@ts-expect-error
       navigation.replace(WelcomeStackRoutes.SignIn, {next: ''});
     };
     setTimeout(async () => {
@@ -124,7 +129,7 @@ export const SignInStoreWalletScreen = observer(() => {
           if (app.onboarded) {
             //@ts-ignore
             navigation.navigate(SignInStackRoutes.OnboardingSetupPin, {
-              //@ts-ignore
+              //@ts-expect-error
               screen: OnboardingStackRoutes.OnboardingFinish,
               params,
             });

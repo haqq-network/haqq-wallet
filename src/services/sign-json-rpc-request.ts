@@ -1,4 +1,5 @@
 import {TransactionRequest} from '@haqq/provider-base';
+import {normalize0x} from '@haqq/provider-keystone-react-native';
 import {getSdkError} from '@walletconnect/utils';
 
 import {app} from '@app/contexts';
@@ -140,13 +141,7 @@ export class SignJsonRpcRequest {
             typedData.types,
             typedData.message,
           );
-          const signedMessageHash = await signTypedDataResult;
-
-          if (wallet.type === WalletType.ledgerBt) {
-            result = signedMessageHash;
-          } else {
-            result = `0x${signedMessageHash}`;
-          }
+          result = await signTypedDataResult;
         } else {
           throw new Error(getText(I18N.jsonRpcErrorInvalidParams));
         }
@@ -167,7 +162,11 @@ export class SignJsonRpcRequest {
         result = tx.hash;
         break;
       case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
-        let signTransactionRequest: TransactionRequest = request.params[0];
+        let signTransactionRequest: TransactionRequest = Array.isArray(
+          request.params,
+        )
+          ? request.params[0]
+          : request.params;
 
         const {address} = await instanceProvider.getAccountInfo(path);
         const nonce = await rpcProvider.getTransactionCount(address, 'latest');
@@ -215,6 +214,6 @@ export class SignJsonRpcRequest {
 
     logger.log('✅ signEIP155Request result:', result, result.length);
 
-    return result;
+    return normalize0x(result);
   }
 }

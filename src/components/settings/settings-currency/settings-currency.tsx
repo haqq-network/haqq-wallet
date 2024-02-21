@@ -2,6 +2,7 @@ import React, {useCallback} from 'react';
 
 import {observer} from 'mobx-react';
 import {FlatList, ListRenderItem, View} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
 import {ImageWrapper} from '@app/components/image-wrapper';
@@ -35,11 +36,13 @@ export const SettingsCurrency = observer(({goBack}: SettingsThemeProps) => {
   }, []);
 
   const setSelectedCurrency = useCallback(
-    (selectedCurrencyId: string) => () => {
-      Currencies.selectedCurrency = selectedCurrencyId;
+    (selectedCurrencyId: string) => async () => {
+      await Currencies.setSelectedCurrency(selectedCurrencyId);
     },
     [],
   );
+
+  const {bottom} = useSafeAreaInsets();
 
   const renderItem: ListRenderItem<Currency> = useCallback(
     ({item}) => {
@@ -49,7 +52,7 @@ export const SettingsCurrency = observer(({goBack}: SettingsThemeProps) => {
           style={styles.listItemContainer}>
           <View style={styles.currencyInfoContainer}>
             <ImageWrapper source={{uri: item.icon}} style={styles.icon} />
-            <View>
+            <View style={styles.descriptionContainer}>
               <View>
                 <Text variant={TextVariant.t11} style={styles.currencyTitle}>
                   {item.title}
@@ -72,7 +75,7 @@ export const SettingsCurrency = observer(({goBack}: SettingsThemeProps) => {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {marginBottom: bottom}]}>
       <CustomHeader
         onPressLeft={goBack}
         iconLeft="arrow_back"
@@ -100,13 +103,16 @@ const styles = createTheme({
     justifyContent: 'space-between',
   },
   icon: {
-    height: scale(42),
-    width: scale(42),
+    height: scale(40),
+    width: scale(40),
     borderRadius: scale(8),
     marginRight: scale(10),
   },
   currencyInfoContainer: {
     flexDirection: 'row',
+  },
+  descriptionContainer: {
+    justifyContent: 'space-evenly',
   },
   currencyTitle: {fontSize: 18},
 });

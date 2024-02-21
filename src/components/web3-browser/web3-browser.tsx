@@ -20,6 +20,7 @@ import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {IS_IOS} from '@app/variables/common';
+import {EIP6963ProviderInfo} from '@app/variables/EIP6963';
 
 import {
   InpageBridgeWeb3,
@@ -135,12 +136,19 @@ export const Web3Browser = ({
   }, [initialUrl, sessions, webviewNavigationData?.url]);
   const prevSession = usePrevious(currentSession);
 
+  const onPressRefreshHandler = useCallback(async () => {
+    onPressRefresh?.();
+    setInpageBridgeWeb3('');
+    const script = await InpageBridgeWeb3.loadScript();
+    setInpageBridgeWeb3(script);
+  }, []);
+
   useEffect(() => {
     if (prevSession && !currentSession) {
       helper.disconnectAccount();
-      webviewRef.current?.reload();
+      onPressRefreshHandler();
     }
-  }, [currentSession, helper, prevSession, webviewRef]);
+  }, [currentSession, helper, prevSession, webviewRef, onPressRefreshHandler]);
 
   useEffect(() => {
     // if saved account in session removed from wallet
@@ -149,9 +157,9 @@ export const Web3Browser = ({
       !Wallet.getById(currentSession?.selectedAccount)
     ) {
       helper.disconnectAccount();
-      webviewRef.current?.reload();
+      onPressRefreshHandler();
     }
-  }, [currentSession, helper, webviewRef]);
+  }, [currentSession, helper, webviewRef, onPressRefreshHandler]);
 
   const walletAddress = selectedAccount || currentSession?.selectedAccount;
   const siteUrl = useMemo(
@@ -194,8 +202,24 @@ export const Web3Browser = ({
         console.log('keplr loaded:', !!window.keplr);
 
         if(window.ethereum) {
-          window.ethereum.isMetaMask = false;
           window.ethereum.isHaqqWallet = true;
+          function announceProvider() {
+            const info = ${JSON.stringify(EIP6963ProviderInfo)};
+            window.dispatchEvent(
+              new CustomEvent("eip6963:announceProvider", {
+                detail: Object.freeze({ info, provider: window.ethereum }),
+              })
+            );
+          }
+        
+          window.addEventListener(
+            "eip6963:requestProvider",
+            (event) => {
+              announceProvider();
+            }
+          );
+        
+          announceProvider();
         }
         if(window.keplr){
           window.keplr.isHaqqWallet = true;
@@ -213,8 +237,8 @@ export const Web3Browser = ({
   );
 
   const onContentProcessDidTerminate = useCallback(() => {
-    webviewRef?.current?.reload?.();
-  }, [webviewRef]);
+    onPressRefreshHandler();
+  }, [webviewRef, onPressRefreshHandler]);
 
   const handlePressAddBookmark = useCallback(() => {
     const url =
@@ -257,10 +281,10 @@ export const Web3Browser = ({
         event?.nativeEvent?.navigationType === 'backforward' &&
         !event.nativeEvent?.loading
       ) {
-        webviewRef?.current?.reload();
+        onPressRefreshHandler();
       }
     },
-    [helper, webviewRef],
+    [helper, webviewRef, onPressRefreshHandler],
   );
 
   const onNavigationStateChange = useCallback((navState: WebViewNavigation) => {
@@ -375,7 +399,7 @@ export const Web3Browser = ({
         toggleActionMenu={toggleActionMenu}
         onPressProviders={onPressProviders}
         onPressHome={onPressHome}
-        onPressRefresh={onPressRefresh}
+        onPressRefresh={onPressRefreshHandler}
         onPressCopyLink={onPressCopyLink}
         onPressDisconnect={onPressDisconnect}
         onPressShare={onPressShare}

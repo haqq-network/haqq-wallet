@@ -1,9 +1,13 @@
 import {makeAutoObservable, runInAction} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
+import {app} from '@app/contexts';
 import {Currency, CurrencyRate} from '@app/models/types';
+import {VariablesDate} from '@app/models/variables-date';
+import {Wallet} from '@app/models/wallet';
 import {Backend} from '@app/services/backend';
 import {Balance} from '@app/services/balance';
+import {Indexer} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
 
 class CurrenciesStore {
@@ -37,12 +41,13 @@ class CurrenciesStore {
     }
   };
 
-  setRates = async (rates: any) => {
+  setRates = (rates: any, selectedCurrency?: string) => {
+    const currency = selectedCurrency || this._selectedCurrency;
     const tokens = Object.keys(rates);
 
     this._rates = tokens.reduce((prev, token) => {
       const denom = rates[token].find(
-        (rate: CurrencyRate) => rate.denom === this._selectedCurrency,
+        (rate: CurrencyRate) => rate.denom === currency,
       );
       return {...prev, [token]: denom};
     }, {});
@@ -54,6 +59,10 @@ class CurrenciesStore {
 
   get currencies() {
     return Object.values(this._currencies);
+  }
+
+  get isRatesAvailable(): boolean {
+    return !!Object.keys(this._rates).length;
   }
 
   get selectedCurrency() {
@@ -76,13 +85,40 @@ class CurrenciesStore {
     }
   }
 
-  convert = (balance: Balance): Balance | null => {
+  setSelectedCurrency = async (selectedCurrency?: string) => {
+    const wallets = Wallet.getAllVisible();
+    const lastBalanceUpdates = VariablesDate.get(
+      `indexer_${app.provider.cosmosChainId}`,
+    );
+
+    if (!app.provider.indexer) {
+      throw new Error('Indexer is not available');
+    }
+
+    let accounts = wallets.map(w => w.cosmosAddress);
+    const updates = await Indexer.instance.updates(
+      accounts,
+      lastBalanceUpdates,
+      selectedCurrency,
+    );
+
+    VariablesDate.set(
+      `indexer_${app.provider.cosmosChainId}`,
+      new Date(updates.last_update),
+    );
+
+    this.setRates(updates.rates, selectedCurrency);
+    this.selectedCurrency = selectedCurrency;
+  };
+
+  convert = (balance: Balance): Balance => {
     const rate = this._rates[balance.getSymbol()]?.amount;
     const currency = this._currencies[this._selectedCurrency];
 
-    if (!rate) {
-      return null;
+    if (!rate || !currency) {
+      return Balance.Empty;
     }
+
     //FIXME: Temporary solution. Need to fix Balance tests first
     const result = new Balance(rate).toFloat() * balance.toFloat();
     return new Balance(result, undefined, currency.id);

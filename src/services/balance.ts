@@ -308,12 +308,7 @@ export class Balance implements IBalance, ISerializable {
    * Convert balance to fiat currency
    */
   toFiat = (fixed = NUM_PRECISION, precission: number = this.precission) => {
-    const convertedBalance = Currencies.convert(this);
-    if (!convertedBalance) {
-      return '';
-    }
-
-    return convertedBalance.toBalanceString(fixed, precission);
+    return Currencies.convert(this).toBalanceString(fixed, precission);
   };
 
   private getBnRaw = (

@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
-import {View} from 'react-native';
+import {Platform, View} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 
 import {Color} from '@app/colors';
@@ -22,7 +22,10 @@ import {ModalType, Modals} from '@app/types';
 type Props = Modals[ModalType.keystoneQR];
 
 const QR_CODE_SIZE_DECREASE_PX = 40;
-const QR_CHANGE_INTERVAL_MS = 250;
+const QR_CHANGE_INTERVAL_MS = Platform.select({
+  android: __DEV__ ? 1000 : 250,
+  default: 250,
+});
 const QR_FILL_COLOR = '#000000';
 const QR_BG_COLOR = '#ffffff';
 

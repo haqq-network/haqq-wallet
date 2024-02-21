@@ -10,6 +10,7 @@ import {HAQQ_METADATA, ZERO_HEX_NUMBER} from '@app/variables/common';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 import {Balance} from './balance';
+import {EthNetwork} from './eth-network';
 
 export type EthSignErrorDataDetails = {
   handled?: boolean;
@@ -156,11 +157,20 @@ export class EthSign {
   }
 
   static async calculateGasPrice(tx: TransactionRequest) {
-    const rpcProvider = await app.getRpcProvider();
-    const estimatedGas = await rpcProvider.estimateGas(tx);
-    const gasPrice = await rpcProvider.getGasPrice();
-
-    return new Balance(estimatedGas).operate(new Balance(gasPrice), 'mul');
+    try {
+      const {feeWei} = await EthNetwork.estimateTransaction(
+        tx.from!,
+        tx.to!,
+        new Balance(tx.value!),
+        tx.data?.toString(),
+      );
+      return feeWei;
+    } catch {
+      const rpcProvider = await app.getRpcProvider();
+      const estimatedGas = await rpcProvider.estimateGas(tx);
+      const gasPrice = await rpcProvider.getGasPrice();
+      return new Balance(estimatedGas).operate(new Balance(gasPrice), 'mul');
+    }
   }
 
   static async signTypedData(wallet: Wallet | string, typedData: EIPTypedData) {

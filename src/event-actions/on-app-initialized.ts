@@ -7,8 +7,8 @@ import {RemoteConfig} from '@app/services/remote-config';
  */
 export async function onAppInitialized() {
   await RemoteConfig.init();
-  if (!Currencies.selectedCurrency) {
-    Currencies.selectedCurrency = RemoteConfig.get('currency')?.id;
-  }
+  Currencies.setSelectedCurrency(
+    Currencies.selectedCurrency || RemoteConfig.get('currency')?.id,
+  );
   EthRpcEndpointAvailability.checkEthRpcEndpointAvailability();
 }
