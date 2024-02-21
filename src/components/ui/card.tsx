@@ -105,7 +105,8 @@ export const Card = ({
 const page = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     position: 'relative',
   },
   image: {

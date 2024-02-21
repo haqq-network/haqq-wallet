@@ -8,7 +8,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import {Spacer} from '@app/components/ui';
-import {WalletCard} from '@app/components/wallet-card';
+import {WalletCard} from '@app/components/wallet-card/wallet-card';
 import {WalletCreate} from '@app/components/wallet-create';
 import {CarouselItem} from '@app/components/wallets/carousel-item';
 import {Dot} from '@app/components/wallets/dot';
