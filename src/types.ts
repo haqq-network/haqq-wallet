@@ -1063,6 +1063,10 @@ export type Modals = {
     onClose?: () => void;
   };
   sssLimitReached: {onClose?: () => void};
+  pinError: {
+    details?: string;
+    onClose?: () => void;
+  };
 };
 
 export enum ModalType {
@@ -1097,6 +1101,7 @@ export enum ModalType {
   keystoneScanner = 'keystoneScanner',
   keystoneQR = 'keystoneQR',
   sssLimitReached = 'sssLimitReached',
+  pinError = 'pinError',
 }
 
 export interface NftAttribute {

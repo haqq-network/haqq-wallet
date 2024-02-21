@@ -27,6 +27,7 @@ import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {checkNeedUpdate} from '@app/helpers/check-app-version';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {getUid} from '@app/helpers/get-uid';
+import {SecurePinUtils} from '@app/helpers/secure-pin-utils';
 import {seedData} from '@app/models/seed-data';
 import {Token} from '@app/models/tokens';
 import {VariablesBool} from '@app/models/variables-bool';
@@ -50,6 +51,7 @@ import {
   DynamicLink,
   HaqqEthereumAddress,
   IndexerBalanceData,
+  ModalType,
 } from '../types';
 import {
   LIGHT_GRAPHIC_GREEN_1,
@@ -444,7 +446,14 @@ class App extends AsyncEventEmitter {
     this.resetAuth();
     await SystemDialog.getResult(async () => {
       const close = showModal('pin');
-
+      if (SecurePinUtils.isPinChangedWithFail()) {
+        try {
+          await SecurePinUtils.rollbackPin();
+          showModal(ModalType.pinError);
+        } catch (e) {
+          Logger.captureException(e, 'app.auth rollback pin failed');
+        }
+      }
       await Promise.race([this.makeBiometryAuth(), this.makePinAuth()]);
 
       if (this.authenticated) {

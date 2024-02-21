@@ -912,6 +912,17 @@ export enum I18N {
   transactionDelegationTitle,
   transactionUndelegationTitle,
   transactionRedelegationTitle,
+  pinErrorModalClose,
+  pinErrorModalTitle,
+  pinErrorModalDescription,
+  recoveryPinTitle,
+  recoveryPinPlaceholder,
+  recoveryPinDescription,
+  recoveryPinButton,
+  pinErrorModalRecoveryFail,
+  recoveryPinSuccess,
+  recoveryPinNoNeedRecovery,
+  recoveryPinSamePin,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1998,4 +2009,17 @@ const en: Record<I18N, string> = {
   [I18N.transactionDelegationTitle]: 'Delegate',
   [I18N.transactionUndelegationTitle]: 'Undelegate',
   [I18N.transactionRedelegationTitle]: 'Redelegate',
+  [I18N.pinErrorModalClose]: 'Close',
+  [I18N.pinErrorModalTitle]: 'Problem with updating the PIN code',
+  [I18N.pinErrorModalDescription]:
+    'We tried to update the pin code, but unfortunately an error occurred during the update. Please use the old pin code',
+  [I18N.recoveryPinTitle]: 'Recovery PIN',
+  [I18N.recoveryPinPlaceholder]: 'Your old pin',
+  [I18N.recoveryPinButton]: 'Recovery',
+  [I18N.pinErrorModalRecoveryFail]: 'Recovery PIN fail',
+  [I18N.recoveryPinSuccess]: 'Your PIN code has been successfully recovered',
+  [I18N.recoveryPinNoNeedRecovery]: 'No need to recover PIN code',
+  [I18N.recoveryPinSamePin]: "Recovery pin can'not be same as the current pin",
+  [I18N.recoveryPinDescription]:
+    'If you have problems changing the PIN code or got "Incorrect password" error, on this screen you can restore access to wallets by entering the pin you wanted to change to.',
 };
