@@ -1,3 +1,6 @@
 import 'dotenv/config';
+import {checkMilkAddressBalance} from './helpers/checkMilkAddressBalance';
 
-beforeAll(async () => {});
+beforeAll(async () => {
+  await checkMilkAddressBalance();
+});
