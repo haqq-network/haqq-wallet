@@ -8,7 +8,6 @@ import {
 import {StatusBar} from 'react-native';
 
 import {Color} from '@app/colors';
-import {PopupHeader} from '@app/components';
 import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
 import {Spacer} from '@app/components/ui';
 import {popupScreenOptionsWithMargin} from '@app/helpers';
@@ -76,7 +75,6 @@ export const inAppBrowserOptions: NativeStackNavigationOptions = {
 const totalInfoOptions: NativeStackNavigationOptions = {
   ...modalOptions,
   headerShown: true,
-  header: PopupHeader,
   headerLeft: () => null,
   headerRight: DismissPopupButton,
   title: getText(I18N.lockedTokensTotalValue),
