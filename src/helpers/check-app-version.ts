@@ -16,6 +16,10 @@ export type Version = {
 };
 
 export function parseVersion(version: string): Version | null {
+  if (!version) {
+    return null;
+  }
+
   const match = version.match(/^(\d+)\.(\d+)(?:\.(\d+))?$/);
 
   if (!match) {
