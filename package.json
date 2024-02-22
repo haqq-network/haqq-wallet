@@ -36,7 +36,7 @@
     "@expo/react-native-action-sheet": "4.0.1",
     "@haqq/encryption-react-native": "0.0.4",
     "@haqq/provider-base": "0.0.22",
-    "@haqq/provider-hot-react-native": "0.0.8",
+    "@haqq/provider-hot-react-native": "0.0.9",
     "@haqq/provider-keystone-react-native": "0.0.6",
     "@haqq/provider-ledger-react-native": "0.0.27",
     "@haqq/provider-mnemonic-react-native": "0.0.13",

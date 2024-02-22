@@ -2367,9 +2367,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@haqq/provider-hot-react-native@npm:0.0.8":
-  version: 0.0.8
-  resolution: "@haqq/provider-hot-react-native@npm:0.0.8"
+"@haqq/provider-hot-react-native@npm:0.0.9":
+  version: 0.0.9
+  resolution: "@haqq/provider-hot-react-native@npm:0.0.9"
   dependencies:
     "@ethersproject/bytes": ^5.7.0
     "@ethersproject/transactions": ^5.7.0
@@ -2379,7 +2379,7 @@ __metadata:
     "@haqq/provider-web3-utils": "*"
     "@haqq/shared-react-native": "*"
     react-native-encrypted-storage: "*"
-  checksum: 9fd3f00ccb6a29279814c3c4a20eb655f92a88968fc4a74b6f1f07fd431c134dd1c97a5d31269224031fd3026b20661d4c0b736f43fd0e9202b8461bdea105e7
+  checksum: a919c6683fbc6c5a5307b77c183ea407dba6d58cd2fce3c772f942790a173c23b258cb418da92555f3c256a189ce255dd81289d885773de7ad1bb89fdb38abbe
   languageName: node
   linkType: hard
 
@@ -10264,7 +10264,7 @@ __metadata:
     "@expo/react-native-action-sheet": 4.0.1
     "@haqq/encryption-react-native": 0.0.4
     "@haqq/provider-base": 0.0.22
-    "@haqq/provider-hot-react-native": 0.0.8
+    "@haqq/provider-hot-react-native": 0.0.9
     "@haqq/provider-keystone-react-native": 0.0.6
     "@haqq/provider-ledger-react-native": 0.0.27
     "@haqq/provider-mnemonic-react-native": 0.0.13
