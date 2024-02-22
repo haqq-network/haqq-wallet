@@ -462,7 +462,7 @@ class App extends AsyncEventEmitter {
         } catch (e) {
           const details = (e as Error)?.message || e?.toString();
           showModal(ModalType.pinError, {details});
-          Logger.captureException(e, 'app.auth rollback pin failed');
+          Logger.error(e, 'app.auth rollback pin failed');
         }
       }
       await Promise.race([this.makeBiometryAuth(), this.makePinAuth()]);
