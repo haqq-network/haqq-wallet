@@ -167,7 +167,6 @@ export const TransactionList = observer(
       ),
       [isTransactionsLoading],
     );
-    Logger.log({isTransactionsLoading});
 
     return (
       <>

@@ -20,7 +20,7 @@ export const TotalValueInfoHeader = ({
   onPressInfo,
 }: TotalValueInfoProps) => {
   return (
-    <View>
+    <>
       <View style={styles.header}>
         <Text t12 i18n={I18N.totalValueAccount} color={Color.textBase2} />
         <Spacer height={4} />
@@ -39,7 +39,7 @@ export const TotalValueInfoHeader = ({
           unlock={balance?.unlock}
         />
       </First>
-    </View>
+    </>
   );
 };
 

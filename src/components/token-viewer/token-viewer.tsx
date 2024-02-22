@@ -6,7 +6,13 @@ import {observer} from 'mobx-react';
 import {StyleProp, View, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Icon, IconButton, IconsName, Text} from '@app/components/ui';
+import {
+  Icon,
+  IconButton,
+  IconsName,
+  Text,
+  TextVariant,
+} from '@app/components/ui';
 import {WalletCard} from '@app/components/ui/walletCard';
 import {createTheme} from '@app/helpers';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
@@ -113,13 +119,17 @@ export const TokenViewer = observer(
         <View style={styles.row}>
           <IconButton onPress={onPressSort} style={styles.sortWrapper}>
             <Icon color={Color.graphicBase1} name={IconsName.arrow_sort} />
-            <Text color={Color.graphicBase1} t13>
+            <Text color={Color.graphicBase1} variant={TextVariant.t13}>
               {sorting}
             </Text>
           </IconButton>
           <IconButton onPress={onChangeViewModePress} style={styles.button}>
             <Icon color={Color.graphicBase1} name={zeroBalanceIcon} />
-            <Text color={Color.graphicBase1} i18n={I18N.tokensZeroBalance} />
+            <Text
+              variant={TextVariant.t13}
+              color={Color.graphicBase1}
+              i18n={I18N.tokensZeroBalance}
+            />
           </IconButton>
         </View>
         {(Object.keys(data) as HaqqEthereumAddress[])
@@ -163,6 +173,7 @@ const styles = createTheme({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginBottom: 12,
   },
   empty: {
     flex: 1,

@@ -4,7 +4,7 @@ import {observer} from 'mobx-react';
 
 import {TokenViewer} from '@app/components/token-viewer';
 import {TransactionEmpty} from '@app/components/transaction-empty';
-import {First, PopupContainer, Spacer} from '@app/components/ui';
+import {First, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {
   Feature,
@@ -142,7 +142,7 @@ export const TotalValueInfo = observer(
           )}
           {activeTab === TotalValueTabNames.tokens && (
             <>
-              <Spacer height={24} />
+              <Spacer height={4} />
               <TokenViewer data={tokens} style={styles.nftViewerContainer} />
             </>
           )}
@@ -152,15 +152,13 @@ export const TotalValueInfo = observer(
     );
 
     return (
-      <PopupContainer plain>
-        <TransactionList
-          addresses={addressList}
-          onTransactionPress={onPressTxRow}
-          hideContent={hideTransactionsContent}
-          ListHeaderComponent={renderListHeader}
-          ListEmptyComponent={renderListEmptyComponent}
-        />
-      </PopupContainer>
+      <TransactionList
+        addresses={addressList}
+        onTransactionPress={onPressTxRow}
+        hideContent={hideTransactionsContent}
+        ListHeaderComponent={renderListHeader}
+        ListEmptyComponent={renderListEmptyComponent}
+      />
     );
   },
 );
@@ -175,6 +173,7 @@ const styles = createTheme({
   grow: {flexGrow: 1},
   tabHeaderStyle: {
     marginHorizontal: 20,
+    marginVertical: 12,
   },
   nftViewerContainer: {
     marginHorizontal: 20,
