@@ -39,6 +39,7 @@ import {KeystoneQRModal} from './keystone/keystone-qr';
 import {KeystoneScannerModal} from './keystone/keystone-scanner';
 import {LockedTokensInfo} from './locked-tokens-info';
 import {NotEnoughGas} from './not-enough-gas';
+import {PinErrorModal} from './pin-error-modal';
 
 export type ModalWrapperProps<
   ModalsList extends ModalsListBase,
@@ -140,6 +141,8 @@ export const ModalWrapper = ({
         return <CloudShareNotFound {...modal} onClose={onCloseModalPress} />;
       case ModalType.sssLimitReached:
         return <SSSLimitReached {...modal} onClose={onCloseModalPress} />;
+      case ModalType.pinError:
+        return <PinErrorModal {...modal} onClose={onCloseModalPress} />;
       default:
         return null;
     }
