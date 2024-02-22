@@ -42,7 +42,7 @@ const HomeEarnStack = memo(() => {
         component={HomeStakingScreen}
         options={{
           ...popupScreenOptionsWithMargin,
-          title: '',
+          title: getText(I18N.homeStaking),
           headerShown: true,
         }}
       />
