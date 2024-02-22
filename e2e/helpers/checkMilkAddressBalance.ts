@@ -1,3 +1,5 @@
+import 'dotenv/config';
+import {log} from 'detox';
 import {Wallet, utils} from 'ethers';
 
 import {PROVIDER, SOURCE_WALLET} from '../test-variables';
@@ -10,7 +12,15 @@ export const checkMilkAddressBalance = async () => {
 
   if (balanceRaw.lt(minAmountInEther)) {
     throw new Error(
-      'Insufficient MilkAddress balance: ' + utils.formatEther(balanceRaw),
+      `Insufficient MilkAddress (${
+        milkWallet.address
+      }) balance: ${utils.formatEther(balanceRaw)}`,
     );
   }
+
+  log.warn(
+    `MilkAddress (${milkWallet.address}) balance: ${utils.formatEther(
+      balanceRaw,
+    )}`,
+  );
 };
