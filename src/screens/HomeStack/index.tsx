@@ -55,6 +55,7 @@ const modalOptions: NativeStackNavigationOptions = {
   headerShown: false,
   gestureEnabled: true,
   gestureDirection: 'vertical',
+  animation: 'slide_from_bottom',
 };
 
 const fullScreenModalOptions: NativeStackNavigationOptions = {
@@ -74,6 +75,7 @@ export const inAppBrowserOptions: NativeStackNavigationOptions = {
 
 const totalInfoOptions: NativeStackNavigationOptions = {
   ...modalOptions,
+  headerStyle: undefined,
   headerShown: true,
   headerLeft: () => null,
   headerRight: DismissPopupButton,
