@@ -5,10 +5,7 @@ import {BigNumber, utils} from 'ethers';
 
 import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
-import {
-  getRemoteBalanceValue,
-  getRemoteMultiplierValue,
-} from '@app/helpers/get-remote-balance-value';
+import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {Contracts} from '@app/models/contracts';
 import {Provider} from '@app/models/provider';
@@ -17,7 +14,7 @@ import {Wallet} from '@app/models/wallet';
 import {getDefaultChainId} from '@app/network';
 import {Balance} from '@app/services/balance';
 import {storage} from '@app/services/mmkv';
-import {decimalToHex} from '@app/utils';
+import {applyEthTxMultiplier} from '@app/utils';
 import {WEI_PRECISION} from '@app/variables/common';
 
 export const ABI_ERC20_TRANSFER_ACTION = {
@@ -50,8 +47,9 @@ export class EthNetwork {
     value: Balance,
     data: string = '0x',
     minGas = getRemoteBalanceValue('eth_min_gas_limit'),
+    provider = app.provider,
   ) {
-    const rpcProvider = await getRpcProvider(app.provider);
+    const rpcProvider = await getRpcProvider(provider);
 
     const nonce = await rpcProvider.getTransactionCount(from, 'latest');
 
@@ -72,7 +70,7 @@ export class EthNetwork {
       maxPriorityFeePerGas: estimate.gasPrice.toHex(),
       gasLimit: estimate.estimateGas.toHex(),
       data,
-      chainId: EthNetwork.chainId,
+      chainId: provider.ethChainId,
     };
 
     const tx = await utils.resolveProperties(transaction);
@@ -152,12 +150,13 @@ export class EthNetwork {
     value: Balance,
     data = '0x',
     minGas: Balance = getRemoteBalanceValue('eth_min_gas_limit'),
+    provider = app.provider,
   ): Promise<{
     feeWei: Balance;
     gasPrice: Balance;
     estimateGas: Balance;
   }> {
-    const rpcProvider = await getRpcProvider(app.provider);
+    const rpcProvider = await getRpcProvider(provider);
 
     const getGasPrice = await rpcProvider.getGasPrice();
     const gasPrice = new Balance(getGasPrice._hex);
@@ -171,22 +170,7 @@ export class EthNetwork {
         value: value.toHex(),
       } as Deferrable<TransactionRequest>);
 
-      // TODO Investigate and fix new Balance issue when number used instead of hex
-      estimateGas = new Balance(
-        decimalToHex(
-          String(
-            // Convert to int because decimalToHex incorrectly parse decimals work only with integers
-            parseInt(
-              String(
-                // Multiply by eth_commission_multiplier
-                estGas.toNumber() *
-                  getRemoteMultiplierValue('eth_commission_multiplier'),
-              ),
-              10,
-            ),
-          ),
-        ),
-      ).max(minGas);
+      estimateGas = applyEthTxMultiplier(new Balance(estGas)).max(minGas);
     } catch (err) {
       Logger.captureException(err, 'EthNetwork.estimateTransaction error');
       throw err;
