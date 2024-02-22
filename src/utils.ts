@@ -27,6 +27,7 @@ import {Color, getColor} from './colors';
 import {DEBUG_VARS} from './debug-vars';
 import {Events} from './events';
 import {AddressUtils} from './helpers/address-utils';
+import {getRemoteMultiplierValue} from './helpers/get-remote-balance-value';
 import {shortAddress} from './helpers/short-address';
 import {getHost, onUrlSubmit} from './helpers/web3-browser-utils';
 import {WalletBalance} from './hooks/use-wallets-balance';
@@ -811,10 +812,13 @@ export const getTransactionFromJsonRpcRequest = (
       ? request.params[0]
       : request.params;
 
-    delete params.gasLimit;
-    delete params.gasPrice;
-    delete params.maxFeePerGas;
-    delete params.maxPriorityFeePerGas;
+    // @ts-ignore
+    if (params.gas) {
+      // @ts-ignore
+      params.gasPrice = params.gas;
+      // @ts-ignore
+      delete params.gas;
+    }
 
     return params;
   }
@@ -952,4 +956,23 @@ export function wrapIndexerTx<T extends IndexerTxMsgType>(
   tx: IndexerTransaction,
 ) {
   return tx as IndexerTransactionWithType<T>;
+}
+
+export function applyEthTxMultiplier(toBalance: Balance) {
+  // TODO Investigate and fix new Balance issue when number used instead of hex
+  return new Balance(
+    decimalToHex(
+      String(
+        // Convert to int because decimalToHex incorrectly parse decimals work only with integers
+        parseInt(
+          String(
+            // Multiply by eth_commission_multiplier
+            toBalance.toNumber() *
+              getRemoteMultiplierValue('eth_commission_multiplier'),
+          ),
+          10,
+        ),
+      ),
+    ),
+  );
 }
