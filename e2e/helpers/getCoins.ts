@@ -2,7 +2,6 @@ import {log} from 'detox';
 import {Wallet, utils} from 'ethers';
 
 import {MilkAddressProxy} from './milkAddressProxy';
-import {sleep} from './sleep';
 
 export const getCoins = async (
   mnemonic: string,
@@ -22,5 +21,4 @@ export const getCoins = async (
     await getCoins(mnemonic, amount, attempt + 1);
     return;
   }
-  await sleep(15_000);
 };
