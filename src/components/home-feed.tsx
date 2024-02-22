@@ -53,6 +53,7 @@ export const HomeFeed = observer(() => {
       testID="home-feed-container"
       contentContainerStyle={styles.contentContainerStyle}
       style={styles.container}
+      showsVerticalScrollIndicator={false}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }>

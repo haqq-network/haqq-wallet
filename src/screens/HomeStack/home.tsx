@@ -158,7 +158,10 @@ export const HomeScreen = memo(() => {
           tabBarStyle: (routeA => {
             const routeName = (getFocusedRouteNameFromRoute(routeA) ??
               HomeFeedStackRoutes.HomeFeed) as HomeFeedStackRoutes;
-            const whitelist = [HomeFeedStackRoutes.HomeFeed];
+            const whitelist = [
+              HomeFeedStackRoutes.HomeFeed,
+              HomeFeedStackRoutes.HomeEarn,
+            ];
             if (!whitelist.includes(routeName)) {
               return {
                 height: 0,
