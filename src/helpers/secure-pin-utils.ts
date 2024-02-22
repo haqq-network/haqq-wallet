@@ -115,6 +115,7 @@ const updatePin = async (newPin: string) => {
     clearPinChangedProviders();
     for (const wallet of wallets) {
       if (wallet.accountId && !checkPinChangedForProvider(wallet.accountId)) {
+        Logger.log('updatePin for wallet', wallet.address);
         const provider = await getProviderForUpdatePin(wallet, () =>
           Promise.resolve(appPin),
         );
@@ -126,6 +127,7 @@ const updatePin = async (newPin: string) => {
           if (!isPinCorrect) {
             return await rollbackPin();
           }
+          Logger.log('updatePin success', wallet.address);
         }
       }
     }

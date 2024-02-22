@@ -22,5 +22,6 @@ export function getWalletTitle(props: {
     presentation: 'modal' as StackPresentationTypes,
     gestureEnabled: true,
     gestureDirection: 'vertical',
+    animation: 'slide_from_bottom',
   };
 }

@@ -5,6 +5,7 @@ module.exports = {
       $0: 'jest',
       config: 'e2e/jest.config.js',
     },
+    forwardEnv: true,
     jest: {
       setupTimeout: 600000,
     },
