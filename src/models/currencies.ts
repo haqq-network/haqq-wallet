@@ -41,13 +41,12 @@ class CurrenciesStore {
     }
   };
 
-  setRates = (rates: any, selectedCurrency?: string) => {
-    const currency = selectedCurrency || this._selectedCurrency;
+  setRates = (rates: any) => {
     const tokens = Object.keys(rates);
 
     this._rates = tokens.reduce((prev, token) => {
       const denom = rates[token].find(
-        (rate: CurrencyRate) => rate.denom === currency,
+        (rate: CurrencyRate) => rate.denom === this._selectedCurrency,
       );
       return {...prev, [token]: denom};
     }, {});
@@ -86,6 +85,10 @@ class CurrenciesStore {
   }
 
   setSelectedCurrency = async (selectedCurrency?: string) => {
+    // Set current currency before any requests
+    this.selectedCurrency = selectedCurrency;
+
+    // Request rates based on current currency
     const wallets = Wallet.getAllVisible();
     const lastBalanceUpdates = VariablesDate.get(
       `indexer_${app.provider.cosmosChainId}`,
@@ -99,7 +102,7 @@ class CurrenciesStore {
     const updates = await Indexer.instance.updates(
       accounts,
       lastBalanceUpdates,
-      selectedCurrency,
+      this._selectedCurrency,
     );
 
     VariablesDate.set(
@@ -107,8 +110,8 @@ class CurrenciesStore {
       new Date(updates.last_update),
     );
 
-    this.setRates(updates.rates, selectedCurrency);
-    this.selectedCurrency = selectedCurrency;
+    // Update rates
+    this.setRates(updates.rates);
   };
 
   convert = (balance: Balance): Balance => {

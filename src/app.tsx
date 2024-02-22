@@ -28,6 +28,7 @@ import {trackEvent} from '@app/helpers/track-event';
 import {useTheme} from '@app/hooks';
 import {useToast} from '@app/hooks/use-toast';
 import {Contact} from '@app/models/contact';
+import {Currencies} from '@app/models/currencies';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
@@ -38,6 +39,7 @@ import {
   SssMigrateStackRoutes,
 } from '@app/route-types';
 import {RootStack} from '@app/screens/RootStack';
+import {RemoteConfig} from '@app/services/remote-config';
 import {AppTheme, ModalType} from '@app/types';
 import {getAppTrackingAuthorizationStatus, sleep} from '@app/utils';
 import {SPLASH_TIMEOUT_MS} from '@app/variables/common';
@@ -93,6 +95,9 @@ export const App = () => {
         if (app.onboarded) {
           await app.init();
           await migrationWallets();
+          Currencies.setSelectedCurrency(
+            Currencies.selectedCurrency || RemoteConfig.get('currency')?.id,
+          );
           // MobX stores migration
           await Promise.allSettled([Contact.migrate(), Wallet.migrate()]);
 
