@@ -81,7 +81,7 @@ function getAppStatus() {
 
 class App extends AsyncEventEmitter {
   private user: User;
-  private authenticated: boolean = DEBUG_VARS.enableSkipPinOnLogin;
+  private _authenticated: boolean = DEBUG_VARS.enableSkipPinOnLogin;
   private appStatus: AppStatus = AppStatus.inactive;
   private _balances: Map<HaqqEthereumAddress, BalanceData> = new Map();
   private _balance: Map<string, Balance> = new Map();
@@ -151,6 +151,15 @@ class App extends AsyncEventEmitter {
   }
 
   private _startUpTime: number;
+
+  set authenticated(value: boolean) {
+    this._authenticated = value;
+    this.emit(Events.onAuthenticatedChanged, value);
+  }
+
+  get authenticated() {
+    return this._authenticated;
+  }
 
   get startUpTime() {
     return this._startUpTime;
