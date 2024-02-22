@@ -11,6 +11,4 @@ module.exports = {
   testEnvironment: 'detox/runners/jest/testEnvironment',
   verbose: true,
   setupFilesAfterEnv: ['./e2e/init.ts'],
-  globalSetup: './e2e/globalSetup.ts',
-  globalTeardown: './e2e/globalTeardown.ts',
 };
