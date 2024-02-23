@@ -2,11 +2,13 @@ import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {TransactionSum} from '@app/components/transaction-sum';
 import {app} from '@app/contexts';
+import {showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
+import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Wallet} from '@app/models/wallet';
 import {
@@ -16,6 +18,7 @@ import {
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {ModalType} from '@app/types';
 import {generateUUID} from '@app/utils';
 
 export const TransactionSumScreen = memo(() => {
@@ -38,10 +41,37 @@ export const TransactionSumScreen = memo(() => {
   );
   const [fee, setFee] = useState<Balance | null>(null);
   const contact = useMemo(() => Contact.getById(to), [to]);
-
+  const [isLoading, setLoading] = useState(false);
   const onAddress = useCallback((address: string) => {
     setTo(address);
   }, []);
+
+  const getFee = useCallback(
+    async (amount: Balance) => {
+      try {
+        const token = route.params.token;
+        if (token.is_erc20) {
+          const {feeWei} = await EthNetwork.estimateERC20Transfer(
+            wallet?.address!,
+            route.params.to,
+            amount,
+            AddressUtils.toEth(token.id),
+          );
+          return feeWei;
+        } else {
+          const {feeWei} = await EthNetwork.estimateTransaction(
+            route.params.from,
+            route.params.to,
+            amount,
+          );
+          return feeWei;
+        }
+      } catch {
+        return null;
+      }
+    },
+    [route.params],
+  );
 
   useEffect(() => {
     //@ts-ignore
@@ -55,16 +85,25 @@ export const TransactionSumScreen = memo(() => {
   }, [event, onAddress]);
 
   const onAmount = useCallback(
-    (amount: Balance) => {
-      if (fee !== null) {
+    async (amount: Balance) => {
+      setLoading(true);
+      const feeWei = await getFee(amount);
+      if (feeWei?.isPositive()) {
         navigation.navigate(TransactionStackRoutes.TransactionConfirmation, {
-          fee,
+          fee: feeWei,
           from: route.params.from,
           to,
           amount,
           token: route.params.token,
         });
+      } else {
+        showModal(ModalType.error, {
+          title: getText(I18N.notEnoughGasTitle),
+          description: getText(I18N.modalDontHaveFeeError),
+          close: getText(I18N.cancel),
+        });
       }
+      setLoading(false);
     },
     [fee, navigation, route.params.from, to],
   );
@@ -103,6 +142,7 @@ export const TransactionSumScreen = memo(() => {
       onToken={onToken}
       testID="transaction_sum"
       token={route.params.token}
+      isLoading={isLoading}
     />
   );
 });
