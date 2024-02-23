@@ -2,6 +2,7 @@ import React, {memo} from 'react';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
+import {CurrencyHeader} from '@app/components/settings/settings-currency/currency-header';
 import {popupScreenOptionsWithMargin} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {SettingsStackParamList, SettingsStackRoutes} from '@app/route-types';
@@ -49,7 +50,8 @@ const SettingsStack = memo(() => {
         name={SettingsStackRoutes.SettingsCurrency}
         component={SettingsCurrencyScreen}
         options={{
-          headerShown: false,
+          headerShown: true,
+          header: CurrencyHeader,
         }}
       />
       <Stack.Screen
