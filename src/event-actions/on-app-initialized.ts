@@ -1,4 +1,5 @@
 import {EthRpcEndpointAvailability} from '@app/helpers/eth-rpc-endpoint-availability';
+import {Currencies} from '@app/models/currencies';
 import {RemoteConfig} from '@app/services/remote-config';
 
 /**
@@ -6,5 +7,8 @@ import {RemoteConfig} from '@app/services/remote-config';
  */
 export async function onAppInitialized() {
   await RemoteConfig.init();
+  Currencies.setSelectedCurrency(
+    Currencies.selectedCurrency || RemoteConfig.get('currency')?.id,
+  );
   EthRpcEndpointAvailability.checkEthRpcEndpointAvailability();
 }
