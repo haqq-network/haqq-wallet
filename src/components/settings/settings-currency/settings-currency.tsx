@@ -2,7 +2,6 @@ import React, {useCallback} from 'react';
 
 import {observer} from 'mobx-react';
 import {FlatList, ListRenderItem, View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
 import {ImageWrapper} from '@app/components/image-wrapper';
@@ -36,8 +35,6 @@ export const SettingsCurrency = observer(() => {
     [],
   );
 
-  const {bottom} = useSafeAreaInsets();
-
   const renderItem: ListRenderItem<Currency> = useCallback(
     ({item}) => {
       return (
@@ -69,12 +66,14 @@ export const SettingsCurrency = observer(() => {
   );
 
   return (
-    <View style={[styles.container, {marginBottom: bottom}]}>
+    <View style={styles.container}>
       <FlatList
         showsVerticalScrollIndicator={false}
         data={availableCurrencies}
         renderItem={renderItem}
         bounces={false}
+        style={styles.flatList}
+        contentContainerStyle={styles.flatListContent}
       />
     </View>
   );
@@ -83,6 +82,7 @@ export const SettingsCurrency = observer(() => {
 const styles = createTheme({
   container: {
     marginHorizontal: 20,
+    flex: 1,
   },
   listItemContainer: {
     height: scale(74),
@@ -105,4 +105,10 @@ const styles = createTheme({
     justifyContent: 'space-evenly',
   },
   currencyTitle: {fontSize: 18},
+  flatList: {
+    flex: 1,
+  },
+  flatListContent: {
+    paddingBottom: 50,
+  },
 });
