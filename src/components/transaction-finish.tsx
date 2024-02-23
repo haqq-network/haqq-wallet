@@ -34,6 +34,7 @@ type TransactionFinishProps = {
   testID?: string;
   token: IToken;
   amount?: Balance;
+  fee: Balance;
 };
 
 export const TransactionFinish = ({
@@ -45,23 +46,12 @@ export const TransactionFinish = ({
   testID,
   token,
   amount,
+  fee,
 }: TransactionFinishProps) => {
   const onPressHash = async () => {
     const url = `${EthNetwork.explorer}tx/${transaction?.hash}`;
     await openURL(url);
   };
-
-  const fee = useMemo(() => {
-    try {
-      const tx = transaction as TransactionResponse;
-      return new Balance(tx.gasLimit).operate(
-        new Balance(tx.maxFeePerGas || tx.maxPriorityFeePerGas || 0),
-        'mul',
-      );
-    } catch (e) {
-      return Balance.Empty;
-    }
-  }, [transaction]);
 
   const transactionAmount = useMemo(() => {
     if (amount) {

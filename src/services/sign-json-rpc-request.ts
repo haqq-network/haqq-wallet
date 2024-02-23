@@ -171,18 +171,20 @@ export class SignJsonRpcRequest {
         const gasLimit = getRemoteBalanceValue('eth_min_gas_limit').max(
           new Balance(signTransactionRequest.gasLimit || '0'),
         );
-        const {estimateGas, gasPrice} = await EthNetwork.estimateTransaction(
-          signTransactionRequest.from!,
-          signTransactionRequest.to!,
-          new Balance(signTransactionRequest.value! || Balance.Empty),
-          signTransactionRequest.data?.toString()!,
-          gasLimit,
-          provider,
-        );
-        const maxPriorityFeePerGas = gasPrice.max(
+        const {estimateGas, maxFeePerGas, maxPriorityFeePerGas} =
+          await EthNetwork.estimateTransaction(
+            signTransactionRequest.from!,
+            signTransactionRequest.to!,
+            new Balance(signTransactionRequest.value! || Balance.Empty),
+            signTransactionRequest.data?.toString()!,
+            gasLimit,
+            provider,
+          );
+
+        const maxPriorityFeePerGasCalculated = maxPriorityFeePerGas.max(
           signTransactionRequest.maxPriorityFeePerGas || 0,
         );
-        const maxFeePerGas = gasPrice.max(
+        const maxFeePerGasCalculated = maxFeePerGas.max(
           signTransactionRequest.maxFeePerGas || 0,
         );
 
@@ -191,8 +193,8 @@ export class SignJsonRpcRequest {
           nonce,
           type: 2,
           gasLimit: estimateGas.toHex(),
-          maxFeePerGas: maxFeePerGas.toHex(),
-          maxPriorityFeePerGas: maxPriorityFeePerGas.toHex(),
+          maxFeePerGas: maxFeePerGasCalculated.toHex(),
+          maxPriorityFeePerGas: maxPriorityFeePerGasCalculated.toHex(),
         };
 
         if (signTransactionRequest.gasPrice) {

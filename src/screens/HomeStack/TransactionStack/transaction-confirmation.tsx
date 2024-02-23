@@ -57,14 +57,27 @@ export const TransactionConfirmationScreen = observer(() => {
       FEE_ESTIMATING_TIMEOUT_MS,
     );
 
-    const result = await EthNetwork.estimateTransaction(
-      route.params.from,
-      route.params.to,
-      route.params.amount,
-    );
+    let feeWei = Balance.Empty;
+
+    if (token.is_erc20) {
+      const result = await EthNetwork.estimateERC20Transfer(
+        wallet?.address!,
+        route.params.to,
+        route.params.amount,
+        AddressUtils.toEth(token.id),
+      );
+      feeWei = result.feeWei;
+    } else {
+      const result = await EthNetwork.estimateTransaction(
+        route.params.from,
+        route.params.to,
+        route.params.amount,
+      );
+      feeWei = result.feeWei;
+    }
 
     clearTimeout(timer);
-    setFee(result.feeWei);
+    setFee(feeWei);
 
     return () => {
       clearTimeout(timer);
