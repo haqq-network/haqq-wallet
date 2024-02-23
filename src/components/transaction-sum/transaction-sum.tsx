@@ -35,6 +35,7 @@ export type TransactionSumProps = {
   onToken: () => void;
   testID?: string;
   token: IToken;
+  isLoading: boolean;
 };
 
 export const TransactionSum = ({
@@ -47,6 +48,7 @@ export const TransactionSum = ({
   onToken,
   testID,
   token,
+  isLoading,
 }: TransactionSumProps) => {
   const transactionFee = useMemo(() => {
     return fee !== null
@@ -147,7 +149,8 @@ export const TransactionSum = ({
       </Spacer>
       <Spacer minHeight={16} />
       <Button
-        disabled={!amounts.isValid}
+        loading={isLoading}
+        disabled={!amounts.isValid || isLoading}
         variant={ButtonVariant.contained}
         i18n={I18N.transactionSumPreview}
         onPress={onDone}
