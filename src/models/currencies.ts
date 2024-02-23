@@ -9,6 +9,7 @@ import {Backend} from '@app/services/backend';
 import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
+import {RemoteConfig} from '@app/services/remote-config';
 
 class CurrenciesStore {
   private _selectedCurrency: string = '';
@@ -85,6 +86,10 @@ class CurrenciesStore {
   }
 
   setSelectedCurrency = async (selectedCurrency?: string) => {
+    await RemoteConfig.awaitForInitialization();
+    if (!selectedCurrency) {
+      selectedCurrency = RemoteConfig.safeGet('currency').id;
+    }
     // Set current currency before any requests
     this.selectedCurrency = selectedCurrency;
 
