@@ -17,6 +17,8 @@ import {storage} from '@app/services/mmkv';
 import {applyEthTxMultiplier} from '@app/utils';
 import {WEI_PRECISION} from '@app/variables/common';
 
+import {RemoteConfig} from './remote-config';
+
 export const ABI_ERC20_TRANSFER_ACTION = {
   name: 'transfer',
   type: 'function',
@@ -66,8 +68,8 @@ export class EthNetwork {
       value: value.toHex(),
       nonce,
       type: 2,
-      maxFeePerGas: estimate.gasPrice.toHex(),
-      maxPriorityFeePerGas: estimate.gasPrice.toHex(),
+      maxFeePerGas: estimate.maxFeePerGas.toHex(),
+      maxPriorityFeePerGas: estimate.maxPriorityFeePerGas.toHex(),
       gasLimit: estimate.estimateGas.toHex(),
       data,
       chainId: provider.ethChainId,
@@ -155,11 +157,24 @@ export class EthNetwork {
     feeWei: Balance;
     gasPrice: Balance;
     estimateGas: Balance;
+    maxFeePerGas: Balance;
+    maxPriorityFeePerGas: Balance;
   }> {
     const rpcProvider = await getRpcProvider(provider);
 
-    const getGasPrice = await rpcProvider.getGasPrice();
-    const gasPrice = new Balance(getGasPrice._hex);
+    const feeData = await rpcProvider.getFeeData();
+
+    if (!feeData?.gasPrice) {
+      throw new Error('Gas price not found');
+    }
+
+    const gasPrice = new Balance(feeData.gasPrice, 18);
+    const maxFeePerGas = new Balance(feeData.maxFeePerGas || gasPrice, 18);
+    const maxPriorityFeePerGas = new Balance(
+      feeData.maxPriorityFeePerGas || gasPrice,
+      18,
+    );
+
     let estimateGas = minGas;
 
     try {
@@ -170,7 +185,11 @@ export class EthNetwork {
         value: value.toHex(),
       } as Deferrable<TransactionRequest>);
 
-      estimateGas = applyEthTxMultiplier(new Balance(estGas)).max(minGas);
+      if (RemoteConfig.get('enable_eth_commission_multiplier')) {
+        estimateGas = applyEthTxMultiplier(new Balance(estGas)).max(minGas);
+      } else {
+        estimateGas = new Balance(estGas).max(minGas);
+      }
     } catch (err) {
       Logger.captureException(err, 'EthNetwork.estimateTransaction error');
       throw err;
@@ -180,6 +199,8 @@ export class EthNetwork {
       feeWei: estimateGas.operate(gasPrice, 'mul'),
       gasPrice,
       estimateGas,
+      maxFeePerGas,
+      maxPriorityFeePerGas,
     };
   }
 
@@ -215,9 +236,7 @@ export class EthNetwork {
     return iface.decodeFunctionResult(method, resp);
   }
 
-  async transferERC20(
-    transport: ProviderInterface,
-    from: Wallet,
+  static getERC20TransferData(
     to: string,
     amount: Balance,
     contractAddress: string,
@@ -244,6 +263,35 @@ export class EthNetwork {
       amountClear,
     ]);
 
+    return data;
+  }
+
+  static async estimateERC20Transfer(
+    from: string,
+    to: string,
+    amount: Balance,
+    contractAddress: string,
+    provider = app.provider,
+  ) {
+    const data = EthNetwork.getERC20TransferData(to, amount, contractAddress);
+    return await EthNetwork.estimateTransaction(
+      from,
+      contractAddress,
+      Balance.Empty,
+      data,
+      getRemoteBalanceValue('eth_min_gas_limit'),
+      provider,
+    );
+  }
+
+  async transferERC20(
+    transport: ProviderInterface,
+    from: Wallet,
+    to: string,
+    amount: Balance,
+    contractAddress: string,
+  ) {
+    const data = EthNetwork.getERC20TransferData(to, amount, contractAddress);
     const unsignedTx = await EthNetwork.populateTransaction(
       from.address,
       contractAddress,

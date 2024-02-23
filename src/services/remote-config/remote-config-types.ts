@@ -22,6 +22,7 @@ export type RemoteConfigBalanceTypes = {
 export type RemoteConfigMultiplierTypes = {
   cosmos_commission_multiplier: number;
   eth_commission_multiplier: number;
+  enable_eth_commission_multiplier: boolean;
 };
 
 export type ExplorerUrlsMap = Record<ChainId, string>;
