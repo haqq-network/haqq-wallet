@@ -439,6 +439,7 @@ class App extends AsyncEventEmitter {
       accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
     });
 
+    this.authenticated = true;
     return pass;
   }
 
