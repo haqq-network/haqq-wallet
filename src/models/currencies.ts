@@ -1,4 +1,4 @@
-import {makeAutoObservable, runInAction} from 'mobx';
+import {makeAutoObservable, runInAction, when} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
 import {app} from '@app/contexts';
@@ -10,11 +10,13 @@ import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
 import {RemoteConfig} from '@app/services/remote-config';
+import {STORE_REHYDRATION_TIMEOUT_MS} from '@app/variables/common';
 
 class CurrenciesStore {
   private _selectedCurrency: string = '';
   private _currencies: Record<string, Currency> = {};
   private _rates: Record<string, CurrencyRate> = {};
+  private _isInited = false;
 
   constructor(shouldSkipPersisting: boolean = false) {
     makeAutoObservable(this);
@@ -24,7 +26,9 @@ class CurrenciesStore {
         //@ts-ignore
         properties: ['_currencies', '_selectedCurrency'],
         storage: storage,
-      });
+      }).finally(() => runInAction(() => (this._isInited = true)));
+    } else {
+      runInAction(() => (this._isInited = true));
     }
 
     this.fetchCurrencies();
@@ -52,6 +56,10 @@ class CurrenciesStore {
       return {...prev, [token]: denom};
     }, {});
   };
+
+  get isInited() {
+    return this._isInited;
+  }
 
   get currency(): Currency | undefined {
     return this._currencies[this._selectedCurrency];
@@ -87,17 +95,29 @@ class CurrenciesStore {
 
   setSelectedCurrency = async (selectedCurrency?: string) => {
     await RemoteConfig.awaitForInitialization();
+    await when(() => this.isInited === true);
+
     if (!selectedCurrency) {
-      selectedCurrency = RemoteConfig.safeGet('currency').id;
+      if (this.selectedCurrency) {
+        selectedCurrency = this.selectedCurrency;
+      } else {
+        selectedCurrency = RemoteConfig.safeGet('currency').id;
+      }
     }
+
     // Set current currency before any requests
-    this.selectedCurrency = selectedCurrency;
+    runInAction(() => {
+      // @ts-ignore
+      this._selectedCurrency = selectedCurrency;
+    });
 
     // Request rates based on current currency
+    await when(() => Wallet.isHydrated, {
+      timeout: STORE_REHYDRATION_TIMEOUT_MS,
+    });
     const wallets = Wallet.getAllVisible();
-    const lastBalanceUpdates = VariablesDate.get(
-      `indexer_${app.provider.cosmosChainId}`,
-    );
+    const lastBalanceUpdates =
+      VariablesDate.get(`indexer_${app.provider.cosmosChainId}`) || new Date(0);
 
     if (!app.provider.indexer) {
       throw new Error('Indexer is not available');
@@ -107,7 +127,7 @@ class CurrenciesStore {
     const updates = await Indexer.instance.updates(
       accounts,
       lastBalanceUpdates,
-      this._selectedCurrency,
+      selectedCurrency,
     );
 
     VariablesDate.set(
