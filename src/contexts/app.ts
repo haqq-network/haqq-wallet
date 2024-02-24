@@ -28,6 +28,7 @@ import {checkNeedUpdate} from '@app/helpers/check-app-version';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {getUid} from '@app/helpers/get-uid';
 import {SecurePinUtils} from '@app/helpers/secure-pin-utils';
+import {Currencies} from '@app/models/currencies';
 import {seedData} from '@app/models/seed-data';
 import {Token} from '@app/models/tokens';
 import {VariablesBool} from '@app/models/variables-bool';
@@ -57,7 +58,6 @@ import {
   LIGHT_GRAPHIC_GREEN_1,
   MAINNET_ETH_CHAIN_ID,
   MAIN_NETWORK_ID,
-  TEST_NETWORK_ID,
 } from '../variables/common';
 
 const optionalConfigObject = {
@@ -207,7 +207,7 @@ class App extends AsyncEventEmitter {
       VariablesString.get('providerId') ??
       (ENVIRONMENT === 'production' || ENVIRONMENT === 'distribution'
         ? MAIN_NETWORK_ID
-        : TEST_NETWORK_ID)
+        : MAIN_NETWORK_ID)
     );
   }
 
@@ -440,6 +440,7 @@ class App extends AsyncEventEmitter {
     });
 
     this.authenticated = true;
+    Currencies.setSelectedCurrency();
     return pass;
   }
 
