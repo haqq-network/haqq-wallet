@@ -75,7 +75,6 @@ jobs:
           echo "SENTRY_DSN=${{secrets.SENTRY_DSN}}" >> .env
           echo "NETWORK_EXPLORER=${{secrets.NETWORK_EXPLORER}}" >> .env
           echo "ENVIRONMENT=test" >> .env
-          echo "IS_DEVELOPMENT=${{github.event.inputs.IS_DEVELOPMENT}}" >> .env
           echo "WALLET_CONNECT_PROJECT_ID=${{secrets.WALLET_CONNECT_PROJECT_ID}}" >> .env
           echo "WALLET_CONNECT_RELAY_URL=${{secrets.WALLET_CONNECT_RELAY_URL}}" >> .env
           echo "WEB3AUTH_CLIENT_ID=${{secrets.WEB3AUTH_CLIENT_ID}}" >> .env
@@ -85,7 +84,6 @@ jobs:
           echo "HAQQ_BACKEND_DEV=${{secrets.HAQQ_BACKEND_DEV}}" >> .env
           echo "ADJUST_TOKEN=${{secrets.ADJUST_TOKEN}}" >> .env
           echo "ADJUST_ENVIRONMENT=${{secrets.ADJUST_ENVIRONMENT}}" >> .env
-          echo "IS_SSS_ENABLED=${{github.event.inputs.IS_SSS_ENABLED}}" >> .env
           echo "GOOGLE_PLAY_PACKAGE=${{secrets.GOOGLE_PLAY_PACKAGE}}" >> .env
           echo "APPSTORE_APP_ID=${{secrets.APPSTORE_APP_ID}}" >> .env
           echo "TURNSTILE_URL=${{secrets.TURNSTILE_URL}}" >> .env
@@ -93,7 +91,9 @@ jobs:
           echo "RECAPTCHA_V2_URL=${{secrets.RECAPTCHA_V2_URL}}" >> .env
           echo "RECAPTCHA_V2_SITEKEY=${{secrets.RECAPTCHA_V2_SITEKEY}}" >> .env
           echo "HCAPTCHA_URL=${{secrets.HCAPTCHA_URL}}" >> .env
-          echo "STORIES_ENABLED=${{github.event.inputs.STORIES_ENABLED}}" >> .env
+          echo "IS_DEVELOPMENT=${{github.event.inputs.IS_DEVELOPMENT || inputs.IS_DEVELOPMENT || 'false'}}" >> .env
+          echo "IS_SSS_ENABLED=${{github.event.inputs.IS_SSS_ENABLED || inputs.IS_SSS_ENABLED || 'true'}}" >> .env
+          echo "STORIES_ENABLED=${{github.event.inputs.STORIES_ENABLED || inputs.STORIES_ENABLED || 'true'}}" >> .env
 
           echo "DETOX_MILK_PRIVATE_KEY=${{secrets.DETOX_MILK_PRIVATE_KEY}}" >> .env
           echo "DETOX_PROVIDER=${{secrets.DETOX_PROVIDER}}" >> .env
