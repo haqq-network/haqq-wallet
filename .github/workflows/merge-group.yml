@@ -1,10 +1,8 @@
-name: CI
+name: Merge Queue Action
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+  merge_group:
+    types: [checks_requested]
 
 concurrency:
   group: ${{ github.ref }}
@@ -34,8 +32,6 @@ jobs:
 
   build:
     runs-on: self-hosted
-    needs:
-      - test
     steps:
       - name: Show self-hosted machine infomation
         run: uname -a
@@ -54,13 +50,3 @@ jobs:
 
       - name: Build ios bundle
         run: yarn react-native bundle --platform ios --dev false --entry-file index.js --bundle-output ./index.ios.bundle
-
-  e2e:
-    if: contains(github.event.pull_request.labels.*.name, 'e2e')
-    name: e2e
-    uses: ./.github/workflows/e2e.yml
-    secrets: inherit
-    with:
-      IS_DEVELOPMENT: false
-      IS_SSS_ENABLED: true
-      STORIES_ENABLED: true

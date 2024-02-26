@@ -10,7 +10,8 @@ jobs:
     steps:
       - name: Show self-hosted machine infomation
         run: uname -a
-      - uses: actions/checkout@v3
+
+      - uses: actions/checkout@v4
         with:
           token: ${{ secrets.SERVICE_TOKEN }}
 
@@ -21,6 +22,7 @@ jobs:
       - name: Install Fastlane
         run: |
           bundle install
+
       - name: Execute Fastlane command
         run: |
           bundle exec fastlane ios patch_build

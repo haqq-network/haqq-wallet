@@ -27,48 +27,41 @@ on:
   workflow_call:
     inputs:
       IS_DEVELOPMENT:
-        required: true
+        required: false
         type: string
       IS_SSS_ENABLED:
-        required: true
+        required: false
         type: string
       STORIES_ENABLED:
-        required: true
+        required: false
         type: string
 
 jobs:
   build:
-    name: Run e2e tests
+    name: e2e iOS
     runs-on: macOS
     steps:
       - name: Show macOS machine infomation
         run: uname -a
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
-      - name: Cache Node Modules
-        uses: actions/cache@v2
-        id: yarn-cache
-        with:
-          path: |
-            **/node_modules
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
-      - name: Cache XCode build
-        uses: mikehardy/buildcache-action@v2
+          cache: yarn
 
       - name: Install packages
         run: yarn install 
 
       - name: Install pods
-        run: cd ios && pod install
+        run: cd ios && pod install && cd ../
+
       - name: Git init
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "Github actions"
+
       - name: Decode secrets
         run: |
           echo ${{secrets.GOOGLE_SERVICE_IOS}} | base64 -d > ios/GoogleService-Info.plist
@@ -79,7 +72,6 @@ jobs:
           echo "SENTRY_DSN=${{secrets.SENTRY_DSN}}" >> .env
           echo "NETWORK_EXPLORER=${{secrets.NETWORK_EXPLORER}}" >> .env
           echo "ENVIRONMENT=test" >> .env
-          echo "IS_DEVELOPMENT=${{github.event.inputs.IS_DEVELOPMENT}}" >> .env
           echo "WALLET_CONNECT_PROJECT_ID=${{secrets.WALLET_CONNECT_PROJECT_ID}}" >> .env
           echo "WALLET_CONNECT_RELAY_URL=${{secrets.WALLET_CONNECT_RELAY_URL}}" >> .env
           echo "WEB3AUTH_CLIENT_ID=${{secrets.WEB3AUTH_CLIENT_ID}}" >> .env
@@ -89,7 +81,6 @@ jobs:
           echo "HAQQ_BACKEND_DEV=${{secrets.HAQQ_BACKEND_DEV}}" >> .env
           echo "ADJUST_TOKEN=${{secrets.ADJUST_TOKEN}}" >> .env
           echo "ADJUST_ENVIRONMENT=${{secrets.ADJUST_ENVIRONMENT}}" >> .env
-          echo "IS_SSS_ENABLED=${{github.event.inputs.IS_SSS_ENABLED}}" >> .env
           echo "GOOGLE_PLAY_PACKAGE=${{secrets.GOOGLE_PLAY_PACKAGE}}" >> .env
           echo "APPSTORE_APP_ID=${{secrets.APPSTORE_APP_ID}}" >> .env
           echo "TURNSTILE_URL=${{secrets.TURNSTILE_URL}}" >> .env
@@ -97,7 +88,9 @@ jobs:
           echo "RECAPTCHA_V2_URL=${{secrets.RECAPTCHA_V2_URL}}" >> .env
           echo "RECAPTCHA_V2_SITEKEY=${{secrets.RECAPTCHA_V2_SITEKEY}}" >> .env
           echo "HCAPTCHA_URL=${{secrets.HCAPTCHA_URL}}" >> .env
-          echo "STORIES_ENABLED=${{github.event.inputs.STORIES_ENABLED}}" >> .env
+          echo "IS_DEVELOPMENT=${{github.event.inputs.IS_DEVELOPMENT || inputs.IS_DEVELOPMENT || 'false'}}" >> .env
+          echo "IS_SSS_ENABLED=${{github.event.inputs.IS_SSS_ENABLED || inputs.IS_SSS_ENABLED || 'true'}}" >> .env
+          echo "STORIES_ENABLED=${{github.event.inputs.STORIES_ENABLED || inputs.STORIES_ENABLED || 'true'}}" >> .env
 
           echo "DETOX_MILK_PRIVATE_KEY=${{secrets.DETOX_MILK_PRIVATE_KEY}}" >> .env
           echo "DETOX_PROVIDER=${{secrets.DETOX_PROVIDER}}" >> .env
