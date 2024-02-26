@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useMemo, useRef} from 'react';
 
 import {LayoutChangeEvent, TouchableOpacity, View} from 'react-native';
 import Animated, {SlideInRight, SlideOutRight} from 'react-native-reanimated';
@@ -52,6 +52,7 @@ export const Web3BrowserHeader = ({
   onPressClose,
   popup,
 }: Web3BrowserHeaderProps) => {
+  const prevWalletAddress = useRef<string | undefined>(walletAddress);
   const clearSiteUrl = useMemo(() => clearUrl(siteUrl), [siteUrl]);
 
   const handleUrlPress = useCallback(() => {
@@ -67,6 +68,21 @@ export const Web3BrowserHeader = ({
     }
     onPressHeaderWallet?.(walletAddress);
   }, [onPressHeaderWallet, walletAddress]);
+
+  const walletEnteringAnimation = useMemo(() => {
+    if (!prevWalletAddress.current && walletAddress) {
+      prevWalletAddress.current = walletAddress;
+      return SlideInRight;
+    }
+    return undefined;
+  }, [walletAddress]);
+  const walletExitingAnimation = useMemo(() => {
+    if (prevWalletAddress.current && !walletAddress) {
+      prevWalletAddress.current = walletAddress;
+      return SlideOutRight;
+    }
+    return undefined;
+  }, [walletAddress]);
 
   const stylesHeaderWithRule = [styles.header, IS_ANDROID && {marginTop: 40}];
 
@@ -124,7 +140,9 @@ export const Web3BrowserHeader = ({
       {!!walletAddress && (
         <>
           <Spacer width={15} />
-          <Animated.View entering={SlideInRight} exiting={SlideOutRight}>
+          <Animated.View
+            entering={walletEnteringAnimation}
+            exiting={walletExitingAnimation}>
             <WalletRow
               type={WalletRowTypes.variant3}
               item={Wallet.getById(walletAddress)!}

@@ -161,4 +161,6 @@ export const REMOTE_CONFIG_DEFAULT_VALUES: Required<RemoteConfigTypes> = {
     'haqq_11235-1': 'https://explorer.haqq.network/tx/{{tx_hash}}',
     'haqq_54211-3': 'https://explorer.testedge2.haqq.network/tx/{{tx_hash}}',
   },
+  tx_timestamp_headers: true,
+  enable_eth_commission_multiplier: false,
 };

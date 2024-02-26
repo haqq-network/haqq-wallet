@@ -1,6 +1,5 @@
-import React, {useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
-import Decimal from 'decimal.js';
 import {ActivityIndicator, View} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -12,11 +11,14 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {cleanNumber, createTheme} from '@app/helpers';
+import {app} from '@app/contexts';
+import {createTheme} from '@app/helpers';
+import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N} from '@app/i18n';
+import {Provider} from '@app/models/provider';
+import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
-import {EthSign} from '@app/services/eth-sign';
 import {
   AddressType,
   JsonRpcMetadata,
@@ -28,7 +30,7 @@ import {
   getTransactionFromJsonRpcRequest,
   isContractTransaction,
 } from '@app/utils';
-import {WEI} from '@app/variables/common';
+import {LONG_NUM_PRECISION} from '@app/variables/common';
 
 import {SiteIconPreview, SiteIconPreviewSize} from './site-icon-preview';
 
@@ -50,44 +52,62 @@ export const JsonRpcTransactionInfo = ({
   const [calculatedFee, setCalculatedFee] = useState(Balance.Empty);
   const [isFeeLoading, setFeeLoading] = useState(true);
 
-  const params = useMemo(
+  const tx = useMemo(
     () => getTransactionFromJsonRpcRequest(request),
     [request],
   );
 
+  const getProvider = useCallback(() => {
+    const provider = Provider.getByEthChainId(
+      chainId || tx?.chainId || app.provider.ethChainId,
+    );
+    return provider!;
+  }, [chainId]);
+
   const url = useMemo(() => getHostnameFromUrl(metadata?.url), [metadata]);
 
-  const demicalAmount = useMemo(
-    () =>
-      params?.value ? new Decimal(params?.value).div(WEI) : new Decimal(0),
-    [params],
-  );
+  const value = useMemo(() => {
+    if (!tx?.value) {
+      return Balance.Empty;
+    }
 
-  const demicalEstimateFee = useMemo(
-    () => (params?.gasPrice ? new Decimal(params?.gasPrice) : new Decimal(0)),
-    [params],
-  );
+    return new Balance(tx.value);
+  }, [tx]);
 
-  const amount = useMemo(
-    () => cleanNumber(demicalAmount.toString(), ' ', 2),
-    [demicalAmount],
-  );
+  const getFee = useCallback(async () => {
+    if (!tx) {
+      return Balance.Empty;
+    }
 
-  const total = useMemo(
-    () =>
-      cleanNumber(
-        demicalAmount.add(demicalEstimateFee.div(WEI)).toString(),
-        ' ',
-        2,
-      ),
-    [demicalAmount, demicalEstimateFee],
-  );
+    try {
+      const gasLimit = getRemoteBalanceValue('eth_min_gas_limit').max(
+        new Balance(tx.gasLimit || '0'),
+      );
+      const {feeWei} = await EthNetwork.estimateTransaction(
+        tx.from!,
+        tx.to!,
+        new Balance(tx.value! || Balance.Empty),
+        tx.data,
+        gasLimit,
+        getProvider(),
+      );
+      return feeWei;
+    } catch {
+      return Balance.Empty;
+    }
+  }, [tx]);
+
+  const total = useMemo(() => {
+    const float = value.toFloat();
+    const fixedNum = float >= 1 ? 3 : LONG_NUM_PRECISION;
+    return value.operate(calculatedFee, 'add').toBalanceString(fixedNum);
+  }, [value, calculatedFee]);
 
   const isContract = useMemo(
     () =>
       verifyAddressResponse?.address_type === AddressType.contract ||
-      isContractTransaction(params),
-    [params, verifyAddressResponse],
+      isContractTransaction(tx),
+    [tx, verifyAddressResponse],
   );
 
   const isInWhiteList = useMemo(
@@ -100,14 +120,14 @@ export const JsonRpcTransactionInfo = ({
 
   useEffectAsync(async () => {
     try {
-      if (params) {
+      if (tx) {
         setFeeLoading(true);
-        const estimatedGas = await EthSign.calculateGasPrice(params);
+        const estimatedGas = await getFee();
         setCalculatedFee(estimatedGas);
       }
     } catch (err) {
       Logger.captureException(err, 'JsonRpcTransactionInfo:calculateFee', {
-        params,
+        params: tx,
         chainId,
       });
     } finally {
@@ -156,7 +176,7 @@ export const JsonRpcTransactionInfo = ({
 
       <Spacer height={4} />
 
-      <Text t3>{total} ISLM</Text>
+      <Text t3>{total}</Text>
 
       <Spacer height={16} />
 
@@ -165,7 +185,7 @@ export const JsonRpcTransactionInfo = ({
       <Spacer height={4} />
 
       <Text t11 color={Color.textBase2}>
-        {params?.from}
+        {tx?.from}
       </Text>
 
       <Spacer height={28} />
@@ -195,15 +215,14 @@ export const JsonRpcTransactionInfo = ({
           <Text
             t11
             color={Color.textBase1}
-            i18n={I18N.transactionConfirmationAmount}
-            i18params={{amount}}
+            children={value.toBalanceString('auto')}
           />
         </DataView>
         <DataView i18n={I18N.transactionInfoNetworkFee}>
           <First>
             {isFeeLoading && <ActivityIndicator />}
             <Text t11 color={Color.textBase1}>
-              {calculatedFee.toBalanceString()}
+              {calculatedFee.toBalanceString(LONG_NUM_PRECISION)}
             </Text>
           </First>
         </DataView>

@@ -22,12 +22,14 @@ export const HomeFeed = observer(() => {
   const [refreshing, setRefreshing] = useState(false);
   const navigation = useTypedNavigation<HomeFeedStackParamList>();
 
-  const onRefresh = useCallback(async () => {
-    setRefreshing(true);
+  const onRefresh = useCallback(async (skipLoading = false) => {
+    if (!skipLoading) {
+      setRefreshing(true);
+    }
     setLastUpdate(Date.now());
     await Promise.allSettled([
       loadAllTransactions(),
-      Stories.fetch(),
+      Stories.fetch(true),
       Token.fetchTokens(),
     ]);
     setRefreshing(false);
@@ -35,7 +37,7 @@ export const HomeFeed = observer(() => {
 
   useFocusEffect(
     useCallback(() => {
-      onRefresh();
+      onRefresh(true);
     }, []),
   );
 
@@ -48,8 +50,10 @@ export const HomeFeed = observer(() => {
 
   return (
     <ScrollView
+      testID="home-feed-container"
       contentContainerStyle={styles.contentContainerStyle}
       style={styles.container}
+      showsVerticalScrollIndicator={false}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }>

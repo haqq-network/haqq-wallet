@@ -103,6 +103,7 @@ export class Whitelist {
   static async verifyAddress(
     address: string | string[],
     provider = app.provider,
+    force = false,
   ) {
     if (!provider.indexer || !address) {
       return null;
@@ -110,22 +111,23 @@ export class Whitelist {
 
     const key = `${CACHE_KEY}:${JSON.stringify(address)}:${provider.id}`;
     let responseFromCache: CachedVerifyAddressResponse | null = null;
+    if (!force) {
+      try {
+        const cache = VariablesString.get(key);
+        if (cache) {
+          responseFromCache = JSON.parse(cache);
 
-    try {
-      const cache = VariablesString.get(key);
-      if (cache) {
-        responseFromCache = JSON.parse(cache);
-
-        // Cache is valid for 3 hour
-        if (
-          responseFromCache?.cachedAt &&
-          responseFromCache.cachedAt + CACHE_LIFE_TIME > Date.now()
-        ) {
-          return responseFromCache;
+          // Cache is valid for 3 hour
+          if (
+            responseFromCache?.cachedAt &&
+            responseFromCache.cachedAt + CACHE_LIFE_TIME > Date.now()
+          ) {
+            return responseFromCache;
+          }
         }
+      } catch (err) {
+        logger.error('verifyAddress from cache', err);
       }
-    } catch (err) {
-      logger.error('verifyAddress from cache', err);
     }
 
     try {

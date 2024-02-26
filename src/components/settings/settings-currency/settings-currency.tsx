@@ -1,21 +1,22 @@
 import React, {useCallback} from 'react';
 
 import {observer} from 'mobx-react';
-import {FlatList, ListRenderItem, Text, View} from 'react-native';
+import {FlatList, ListRenderItem, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {ImageWrapper} from '@app/components/image-wrapper';
-import {CustomHeader, Icon, IconButton, IconsName} from '@app/components/ui';
+import {
+  Icon,
+  IconButton,
+  IconsName,
+  Text,
+  TextVariant,
+} from '@app/components/ui';
 import {createTheme, scale} from '@app/helpers';
-import {I18N} from '@app/i18n';
 import {Currencies} from '@app/models/currencies';
 import {Currency} from '@app/models/types';
 
-export type SettingsThemeProps = {
-  goBack: () => void;
-};
-
-export const SettingsCurrency = observer(({goBack}: SettingsThemeProps) => {
+export const SettingsCurrency = observer(() => {
   const availableCurrencies = Currencies.currencies;
   const selectedCurrency = Currencies.selectedCurrency;
 
@@ -28,8 +29,8 @@ export const SettingsCurrency = observer(({goBack}: SettingsThemeProps) => {
   }, []);
 
   const setSelectedCurrency = useCallback(
-    (selectedCurrencyId: string) => () => {
-      Currencies.selectedCurrency = selectedCurrencyId;
+    (selectedCurrencyId: string) => async () => {
+      await Currencies.setSelectedCurrency(selectedCurrencyId);
     },
     [],
   );
@@ -42,12 +43,16 @@ export const SettingsCurrency = observer(({goBack}: SettingsThemeProps) => {
           style={styles.listItemContainer}>
           <View style={styles.currencyInfoContainer}>
             <ImageWrapper source={{uri: item.icon}} style={styles.icon} />
-            <View>
+            <View style={styles.descriptionContainer}>
               <View>
-                <Text>{item.title}</Text>
+                <Text variant={TextVariant.t11} style={styles.currencyTitle}>
+                  {item.title}
+                </Text>
               </View>
               <View>
-                <Text>{getCurrencyDescription(item)}</Text>
+                <Text color={Color.textBase2}>
+                  {getCurrencyDescription(item)}
+                </Text>
               </View>
             </View>
           </View>
@@ -62,12 +67,14 @@ export const SettingsCurrency = observer(({goBack}: SettingsThemeProps) => {
 
   return (
     <View style={styles.container}>
-      <CustomHeader
-        onPressLeft={goBack}
-        iconLeft="arrow_back"
-        title={I18N.settingsCurrencyScreen}
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        data={availableCurrencies}
+        renderItem={renderItem}
+        bounces={false}
+        style={styles.flatList}
+        contentContainerStyle={styles.flatListContent}
       />
-      <FlatList data={availableCurrencies} renderItem={renderItem} />
     </View>
   );
 });
@@ -75,6 +82,7 @@ export const SettingsCurrency = observer(({goBack}: SettingsThemeProps) => {
 const styles = createTheme({
   container: {
     marginHorizontal: 20,
+    flex: 1,
   },
   listItemContainer: {
     height: scale(74),
@@ -85,12 +93,22 @@ const styles = createTheme({
     justifyContent: 'space-between',
   },
   icon: {
-    height: scale(42),
-    width: scale(42),
+    height: scale(40),
+    width: scale(40),
     borderRadius: scale(8),
     marginRight: scale(10),
   },
   currencyInfoContainer: {
     flexDirection: 'row',
+  },
+  descriptionContainer: {
+    justifyContent: 'space-evenly',
+  },
+  currencyTitle: {fontSize: 18},
+  flatList: {
+    flex: 1,
+  },
+  flatListContent: {
+    paddingBottom: 50,
   },
 });

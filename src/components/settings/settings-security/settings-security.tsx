@@ -2,8 +2,24 @@ import React from 'react';
 
 import {StyleSheet, Switch, View} from 'react-native';
 
-import {DataContent, MenuNavigationButton, Spacer} from '@app/components/ui';
-import {I18N} from '@app/i18n';
+import {Color} from '@app/colors';
+import {
+  Button,
+  ButtonVariant,
+  DataContent,
+  First,
+  Icon,
+  IconsName,
+  InfoBlock,
+  Input,
+  MenuNavigationButton,
+  Spacer,
+  Text,
+  TextPosition,
+  TextVariant,
+} from '@app/components/ui';
+import {app} from '@app/contexts';
+import {I18N, getText} from '@app/i18n';
 import {BiometryType} from '@app/types';
 
 const biometryName = {
@@ -18,13 +34,21 @@ interface SettingsSecurityProps {
   biometryType: BiometryType | null;
   onSubmit: () => void;
   onToggleBiometry: () => void;
+  recoveryPin: string;
+  isRecoveryButtonDisabled: boolean;
+  onRecoveryPress: () => void;
+  onRecoveryPinChange: (value: string) => void;
 }
 
 export const SettingsSecurity = ({
-  onSubmit,
   biometryType,
   biometry,
+  recoveryPin,
+  isRecoveryButtonDisabled,
+  onSubmit,
   onToggleBiometry,
+  onRecoveryPress,
+  onRecoveryPinChange,
 }: SettingsSecurityProps) => {
   return (
     <View style={page.container}>
@@ -44,6 +68,49 @@ export const SettingsSecurity = ({
           <Spacer />
           <Switch value={biometry} onChange={onToggleBiometry} />
         </MenuNavigationButton>
+      )}
+      <Spacer height={8} />
+      {(app.isTesterMode || app.isDeveloper) && (
+        <View>
+          <Spacer height={10} />
+          <Text
+            variant={TextVariant.t10}
+            i18n={I18N.recoveryPinTitle}
+            position={TextPosition.left}
+          />
+          <Spacer height={8} />
+          <InfoBlock
+            border
+            warning
+            icon={<Icon name={IconsName.warning} color={Color.textYellow1} />}
+            i18n={I18N.recoveryPinDescription}
+          />
+          <Spacer height={8} />
+          <Input
+            keyboardType="numeric"
+            placeholder={getText(I18N.recoveryPinPlaceholder)}
+            value={recoveryPin}
+            onChangeText={onRecoveryPinChange}
+          />
+          <Spacer height={8} />
+          <First>
+            {isRecoveryButtonDisabled && (
+              <Button
+                disabled
+                i18n={I18N.recoveryPinButton}
+                variant={ButtonVariant.contained}
+                onPress={onRecoveryPress}
+              />
+            )}
+            <Button
+              timer={5}
+              disabled={isRecoveryButtonDisabled}
+              i18n={I18N.recoveryPinButton}
+              variant={ButtonVariant.contained}
+              onPress={onRecoveryPress}
+            />
+          </First>
+        </View>
       )}
       <Spacer />
     </View>

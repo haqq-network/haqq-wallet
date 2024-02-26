@@ -75,7 +75,12 @@ export const JsonRpcSignScreen = memo(() => {
       setSignLoading(true);
       const result = await SignJsonRpcRequest.signEIP155Request(
         wallet!,
-        request,
+        {
+          ...request,
+          params: isTransaction
+            ? getTransactionFromJsonRpcRequest(request)
+            : request.params,
+        },
         chainId,
       );
       app.emit('json-rpc-sign-success', result);

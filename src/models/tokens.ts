@@ -342,13 +342,6 @@ async function getHardcodedTokens(tokensDataToMerge: IndexerTokensData = {}) {
                   await Promise.all(
                     contracts
                       .map(async contract => {
-                        const contractInfo = await Whitelist.verifyAddress(
-                          AddressUtils.toHaqq(contract),
-                        );
-                        if (!contractInfo) {
-                          return null;
-                        }
-
                         const etherProvider =
                           new ethers.providers.JsonRpcProvider(
                             app.provider.ethRpcEndpoint,
@@ -363,10 +356,24 @@ async function getHardcodedTokens(tokensDataToMerge: IndexerTokensData = {}) {
                           wallet,
                         );
 
+                        const contractInfo = await Whitelist.verifyAddress(
+                          AddressUtils.toHaqq(contract),
+                        );
+
+                        let symbol =
+                          contractInfo?.symbol ||
+                          (await contractInterface.symbol());
+                        let decimals =
+                          contractInfo?.decimals ||
+                          (await contractInterface.decimals());
+                        let name =
+                          contractInfo?.name ||
+                          (await contractInterface.name());
+
                         const balance = new Balance(
                           balanceResult,
-                          contractInfo.decimals || WEI_PRECISION,
-                          contractInfo.symbol || CURRENCY_NAME,
+                          decimals,
+                          symbol,
                         );
 
                         if (!balance.isPositive()) {
@@ -378,17 +385,17 @@ async function getHardcodedTokens(tokensDataToMerge: IndexerTokensData = {}) {
                           contract_created_at: '',
                           contract_updated_at: '',
                           value: balance,
-                          decimals: contractInfo.decimals,
+                          decimals: decimals,
                           is_erc20: true,
                           is_erc721: false,
                           is_erc1155: false,
                           is_in_white_list: true,
-                          name: contractInfo.name,
-                          symbol: contractInfo.symbol,
+                          name: name,
+                          symbol: symbol,
                           created_at: '',
                           updated_at: '',
-                          image: contractInfo.icon
-                            ? {uri: contractInfo.icon}
+                          image: contractInfo?.icon
+                            ? {uri: contractInfo?.icon}
                             : require('@assets/images/empty-icon.png'),
                         } as IToken;
                       })

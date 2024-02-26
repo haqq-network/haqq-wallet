@@ -138,6 +138,13 @@ export const Button = ({
     return status === 'RUNNING';
   }, [status]);
 
+  const isDisabledByTimer = useMemo(() => {
+    if (__DEV__) {
+      return false;
+    }
+    return isTimerActive;
+  }, [isTimerActive]);
+
   const onPressDebounced = useCallback(
     _.debounce(onPress ?? defaultOnPress, DEBOUNCE_MS, {
       leading: true,
@@ -232,7 +239,12 @@ export const Button = ({
       style={containerStyle as ViewStyle}
       onPress={onPressButton}
       activeOpacity={FOR_DETOX ? 1 : 0.7}
-      disabled={disabled || loadFlag}
+      disabled={disabled || loadFlag || isDisabledByTimer}
+      testID={
+        loadFlag
+          ? `${props.testID ?? 'button'}-loading`
+          : props.testID ?? 'button'
+      }
       {...props}>
       {loadFlag ? (
         <ActivityIndicator

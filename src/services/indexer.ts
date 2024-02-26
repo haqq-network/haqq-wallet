@@ -4,7 +4,6 @@ import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {Whitelist} from '@app/helpers/whitelist';
 import {I18N, getText} from '@app/i18n';
-import {Currencies} from '@app/models/currencies';
 import {Provider} from '@app/models/provider';
 import {
   ContractNameMap,
@@ -49,6 +48,7 @@ export class Indexer {
   async updates(
     accounts: string[],
     lastUpdated: Date | undefined,
+    selectedCurrency?: string,
   ): Promise<IndexerUpdatesResponse> {
     if (!app.provider.indexer) {
       throw new Error('Indexer is not configured');
@@ -59,7 +59,7 @@ export class Indexer {
     const result: IndexerUpdatesResponse = await jsonrpcRequest(
       app.provider.indexer,
       'updates',
-      [accounts, updated, Currencies.selectedCurrency].filter(Boolean),
+      [accounts, updated, selectedCurrency].filter(Boolean),
     );
 
     return result;

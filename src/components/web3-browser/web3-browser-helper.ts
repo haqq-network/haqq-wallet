@@ -222,9 +222,15 @@ export class Web3BrowserHelper extends EventEmitter implements JsonRpcHelper {
         selectedChainIdHex: chainIdHex,
       });
     }
+    const chainInfo = {
+      chainId: chainIdHex,
+      networkVersion: parseInt(chainIdHex, 16).toString(),
+    };
     this.emitToEthereum(EthereumEventsEnum.CHAIN_CHANGED, chainIdHex);
+    this.emitToEthereum(EthereumEventsEnum.METAMASK_CHAINCHANGED, chainInfo);
     this.emitToWindow(WebViewEventsEnum.KEPLR_KEYSTORECHANGE);
-    this.webviewRef.current?.reload?.();
+    this.emitToWindow(EthereumEventsEnum.METAMASK_CHAINCHANGED, chainInfo);
+    this.emitToWindow(EthereumEventsEnum.CHAIN_CHANGED);
   };
 
   private postMessage = (

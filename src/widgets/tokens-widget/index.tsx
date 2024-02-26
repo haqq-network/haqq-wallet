@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useMemo} from 'react';
 
+import {toJS} from 'mobx';
 import {observer} from 'mobx-react';
 
 import {TotalValueTabNames} from '@app/components/total-value-info';
@@ -35,7 +36,7 @@ export const TokensWidgetWrapper = observer(() => {
         );
       } else {
         if (token.symbol) {
-          cache[token.symbol] = token;
+          cache[token.symbol] = toJS(token);
         }
       }
     });

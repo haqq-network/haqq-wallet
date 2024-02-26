@@ -56,7 +56,9 @@ export const ChooseAccountFooter = ({
             variant={ButtonVariant.contained}
             size={ButtonSize.middle}
             loading={loading}
-            testID="choose_account_next"
+            testID={
+              loading ? 'choose_account_loading_next' : 'choose_account_next'
+            }
           />
         </>
       )}

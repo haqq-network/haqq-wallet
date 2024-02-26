@@ -1,4 +1,4 @@
-name: Run e2e tests
+name: Run e2e tests for both platforms
 
 on:
   workflow_dispatch:
@@ -17,6 +17,13 @@ on:
           - true
           - false
 
+      STORIES_ENABLED:
+        type: choice
+        description: STORIES_ENABLED
+        options:
+          - true
+          - false
+
 jobs:
   build_android:
     name: Android
@@ -25,6 +32,7 @@ jobs:
     with:
       IS_DEVELOPMENT: ${{github.event.inputs.IS_DEVELOPMENT}}
       IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
+      STORIES_ENABLED: ${{github.event.inputs.STORIES_ENABLED}}
 
   build_ios:
     name: iOS
@@ -33,3 +41,4 @@ jobs:
     with:
       IS_DEVELOPMENT: ${{github.event.inputs.IS_DEVELOPMENT}}
       IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
+      STORIES_ENABLED: ${{github.event.inputs.STORIES_ENABLED}}

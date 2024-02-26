@@ -22,6 +22,7 @@ export type RemoteConfigBalanceTypes = {
 export type RemoteConfigMultiplierTypes = {
   cosmos_commission_multiplier: number;
   eth_commission_multiplier: number;
+  enable_eth_commission_multiplier: boolean;
 };
 
 export type ExplorerUrlsMap = Record<ChainId, string>;
@@ -59,4 +60,5 @@ export type RemoteConfigTypes = RemoteConfigBalanceTypes &
     web3_app_whitelist: string[];
     web3_browser_bookmarks: Omit<Link, 'subtitle' | 'id'>[];
     welcome_screen: keyof RootStackParamList;
+    tx_timestamp_headers: boolean;
   };

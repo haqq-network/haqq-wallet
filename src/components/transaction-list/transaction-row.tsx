@@ -66,7 +66,7 @@ export const TransactionRow = memo(
       return Color.textBase1;
     }, [item, addresses]);
 
-    const amoutPrefix = useMemo(() => {
+    const amountPrefix = useMemo(() => {
       if (item.parsed.isIncoming) {
         return '+';
       }
@@ -77,6 +77,8 @@ export const TransactionRow = memo(
 
       return '';
     }, [item, addresses]);
+
+    const amountInFiat = useMemo(() => amount.toFiat(4), [amount]);
 
     const wallet = useMemo(() => {
       let address = '';
@@ -148,9 +150,9 @@ export const TransactionRow = memo(
                 color={amoutColor}
                 ellipsizeMode="middle"
                 numberOfLines={1}>
-                {amoutPrefix}
+                {amountPrefix}
                 {STRINGS.NBSP}
-                {amount.toBalanceString(4)}
+                {amount.toBalanceString('auto')}
               </Text>
               <Spacer height={2} />
               <Text
@@ -158,9 +160,9 @@ export const TransactionRow = memo(
                 color={Color.textBase2}
                 ellipsizeMode="middle"
                 numberOfLines={1}>
-                {amoutPrefix}
+                {Boolean(amountInFiat) && amountPrefix}
                 {STRINGS.NBSP}
-                {amount.toFiat().toBalanceString(4)}
+                {amount.toFiat(4)}
               </Text>
             </View>
           )}
