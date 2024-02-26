@@ -21,7 +21,10 @@ describe('Routine', () => {
     await element(by.id('settings_manage_accounts')).tap();
     await element(by.text('Main account')).tap();
 
-    await expect(element(by.id('recovery_warning'))).toBeVisible();
+    await waitFor(element(by.id('recovery_warning')))
+      .toBeVisible()
+      .whileElement(by.id('account_details'))
+      .scroll(100, 'down');
     await element(by.id('recovery_phrase')).tap();
 
     await element(by.id('backup_warning')).scrollTo('bottom');

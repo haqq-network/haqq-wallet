@@ -152,27 +152,39 @@ export class Balance implements IBalance, ISerializable {
       fixedNum = fixed;
     }
 
-    const isFiat = !!Currencies.currencies.find(
-      currency => currency.id === this.symbol,
-    );
-    if (isFiat) {
-      const getStringWithSymbol = (value: string) => {
-        const currency = Currencies.currency;
-        const result = [value];
-        currency?.prefix && result.unshift(currency.prefix);
-        currency?.postfix && result.push(currency.postfix);
-        return result.join(' ');
-      };
+    return this.toFloatString(fixedNum, precission) + ` ${this.symbol}`;
+  };
 
-      const floatString = this.toFloatString(fixedNum, precission);
-      const isNegative = floatString.startsWith('-');
-      if (isNegative) {
-        return `- ${getStringWithSymbol(floatString.replace('-', ''))}`;
-      }
-      return `${getStringWithSymbol(this.toFloatString(fixedNum, precission))}`;
+  /**
+   * Convert balance to float string according to cleanNumber helper and append currency name
+   * @example 123.45 ISLM
+   */
+  toFiatBalanceString = (
+    fixed: number | 'auto' = NUM_PRECISION,
+    precission: number = this.precission,
+  ) => {
+    let fixedNum = 0;
+    if (fixed === 'auto') {
+      const float = this.toFloat(precission);
+      fixedNum = float > 1 ? NUM_PRECISION : LONG_NUM_PRECISION;
+    } else {
+      fixedNum = fixed;
     }
 
-    return this.toFloatString(fixedNum, precission) + ` ${this.symbol}`;
+    const getStringWithSymbol = (value: string) => {
+      const currency = Currencies.currency;
+      const result = [value];
+      currency?.prefix && result.unshift(currency.prefix);
+      currency?.postfix && result.push(currency.postfix);
+      return result.join(' ');
+    };
+
+    const floatString = this.toFloatString(fixedNum, precission);
+    const isNegative = floatString.startsWith('-');
+    if (isNegative) {
+      return `- ${getStringWithSymbol(floatString.replace('-', ''))}`;
+    }
+    return `${getStringWithSymbol(this.toFloatString(fixedNum, precission))}`;
   };
 
   toString = () => {
@@ -308,7 +320,7 @@ export class Balance implements IBalance, ISerializable {
    * Convert balance to fiat currency
    */
   toFiat = (fixed = NUM_PRECISION, precission: number = this.precission) => {
-    return Currencies.convert(this).toBalanceString(fixed, precission);
+    return Currencies.convert(this).toFiatBalanceString(fixed, precission);
   };
 
   private getBnRaw = (

@@ -1,0 +1,52 @@
+name: Merge Queue Action
+
+on:
+  merge_group:
+    types: [checks_requested]
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Run linters
+        run: |
+          yarn lint
+          yarn typescript:check
+          yarn prettier:check
+
+  build:
+    runs-on: self-hosted
+    steps:
+      - name: Show self-hosted machine infomation
+        run: uname -a
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build ios bundle
+        run: yarn react-native bundle --platform ios --dev false --entry-file index.js --bundle-output ./index.ios.bundle

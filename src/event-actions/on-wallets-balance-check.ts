@@ -1,6 +1,7 @@
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {AddressUtils} from '@app/helpers/address-utils';
+import {Currencies} from '@app/models/currencies';
 import {VariablesDate} from '@app/models/variables-date';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
@@ -72,6 +73,7 @@ export async function onWalletsBalanceCheck() {
     const updates = await Indexer.instance.updates(
       accounts,
       lastBalanceUpdates,
+      Currencies.selectedCurrency,
     );
 
     VariablesDate.set(
@@ -86,6 +88,10 @@ export async function onWalletsBalanceCheck() {
     storage.setItem(BALANCE_CACHE_KEY, value);
 
     app.onWalletsBalance(result);
+
+    if (updates.rates) {
+      Currencies.setRates(updates.rates);
+    }
   } catch (e) {
     Logger.error(Events.onWalletsBalanceCheck, e);
 

@@ -4,12 +4,12 @@ import {Wallet, utils} from 'ethers';
 import {ensureWalletIsVisible} from './helpers/ensureWalletIsVisible';
 import {getCoins} from './helpers/getCoins';
 import {isVisible} from './helpers/isVisibile';
+import {MilkAddressProxy} from './helpers/milkAddressProxy';
 import {restoreWallet} from './helpers/restoreWallet';
-import {PIN, PROVIDER, SOURCE_WALLET} from './test-variables';
+import {PIN} from './test-variables';
 
 describe('Routine', () => {
   let mnemonic = '';
-  let milkWallet: Wallet;
   const isAndroid = device.getPlatform() === 'android';
   beforeAll(async () => {
     await device.launchApp({
@@ -18,7 +18,6 @@ describe('Routine', () => {
     });
 
     mnemonic = utils.entropyToMnemonic(utils.randomBytes(32));
-    milkWallet = new Wallet(SOURCE_WALLET, PROVIDER);
     await restoreWallet(mnemonic, PIN);
   });
 
@@ -50,16 +49,16 @@ describe('Routine', () => {
 
     const wallet = Wallet.fromMnemonic(mnemonic);
 
-    const coinsAmount = '0.0022';
+    const coinsAmount = '0.003';
     await getCoins(mnemonic, coinsAmount);
 
-    await waitFor(element(by.text('ISLM: 0.002')))
+    await waitFor(element(by.text('ISLM: 0.003')))
       .toBeVisible()
       .withTimeout(6 * 60_000);
     await element(by.id(`wallets_${wallet.address.toLowerCase()}_send`)).tap();
 
     const input_address = element(by.id('transaction_address_input'));
-    await input_address.typeText(milkWallet.address);
+    await input_address.typeText(MilkAddressProxy.address);
     if (!isAndroid) {
       await input_address.tapReturnKey();
     }

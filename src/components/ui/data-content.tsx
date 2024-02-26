@@ -44,13 +44,12 @@ export const DataContent = ({
         style,
       ]}>
       <View style={styles.titleContainer}>
-        {/* @ts-expect-error */}
         <Text
           t11
           style={[styles.title, bold && styles.boldTitle]}
           color={Color.textBase1}
           ellipsizeMode="tail"
-          i18n={titleI18n}
+          i18n={titleI18n!}
           i18params={titleI18nParams}
           numberOfLines={numberOfLines}
           onPress={onPress}>
@@ -90,5 +89,5 @@ const styles = createTheme({
     flexDirection: 'row',
   },
   reverse: {flexDirection: 'column-reverse'},
-  boldTitle: {fontSize: 16, fontWeight: 'bold', marginBottom: 6},
+  boldTitle: {fontSize: 16, fontWeight: 'bold', marginBottom: 2},
 });

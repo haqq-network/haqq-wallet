@@ -6,7 +6,7 @@ import {TransactionConfirmation} from '@app/components/transaction-confirmation'
 import {app} from '@app/contexts';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
-import {removeProviderInstanceForWallet} from '@app/helpers';
+import {removeProviderInstanceForWallet, showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {
@@ -25,7 +25,8 @@ import {
 } from '@app/route-types';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
-import {AdjustEvents} from '@app/types';
+import {EthSignErrorDataDetails} from '@app/services/eth-sign';
+import {AdjustEvents, ModalType} from '@app/types';
 import {makeID} from '@app/utils';
 import {FEE_ESTIMATING_TIMEOUT_MS} from '@app/variables/common';
 
@@ -56,14 +57,27 @@ export const TransactionConfirmationScreen = observer(() => {
       FEE_ESTIMATING_TIMEOUT_MS,
     );
 
-    const result = await EthNetwork.estimateTransaction(
-      route.params.from,
-      route.params.to,
-      route.params.amount,
-    );
+    let feeWei = Balance.Empty;
+
+    if (token.is_erc20) {
+      const result = await EthNetwork.estimateERC20Transfer(
+        wallet?.address!,
+        route.params.to,
+        route.params.amount,
+        AddressUtils.toEth(token.id),
+      );
+      feeWei = result.feeWei;
+    } else {
+      const result = await EthNetwork.estimateTransaction(
+        route.params.from,
+        route.params.to,
+        route.params.amount,
+      );
+      feeWei = result.feeWei;
+    }
 
     clearTimeout(timer);
-    setFee(result.feeWei);
+    setFee(feeWei);
 
     return () => {
       clearTimeout(timer);
@@ -124,6 +138,27 @@ export const TransactionConfirmationScreen = observer(() => {
           id: errorId,
           walletType: wallet.type,
         });
+
+        const err = e as EthSignErrorDataDetails;
+        const txInfo = err?.transaction;
+        const errCode = err?.code;
+
+        if (
+          !!txInfo?.gasLimit &&
+          !!txInfo?.maxFeePerGas &&
+          errCode === 'INSUFFICIENT_FUNDS'
+        ) {
+          err.handled = true;
+          const gasLimit = new Balance(txInfo.gasLimit).operate(
+            new Balance(txInfo.gasPrice || txInfo.maxFeePerGas),
+            'mul',
+          );
+          showModal(ModalType.notEnoughGas, {
+            gasLimit: gasLimit,
+            currentAmount: app.getAvailableBalance(wallet!.address),
+          });
+          return;
+        }
 
         // @ts-ignore
         const errMsg = e?.message || e?.toString?.() || JSON.stringify(e);

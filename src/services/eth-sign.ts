@@ -158,6 +158,11 @@ export class EthSign {
 
   static async calculateGasPrice(tx: TransactionRequest) {
     try {
+      const rpcProvider = await app.getRpcProvider();
+      const estimatedGas = await rpcProvider.estimateGas(tx);
+      const gasPrice = await rpcProvider.getGasPrice();
+      return new Balance(estimatedGas).operate(new Balance(gasPrice), 'mul');
+    } catch {
       const {feeWei} = await EthNetwork.estimateTransaction(
         tx.from!,
         tx.to!,
@@ -165,11 +170,6 @@ export class EthSign {
         tx.data?.toString(),
       );
       return feeWei;
-    } catch {
-      const rpcProvider = await app.getRpcProvider();
-      const estimatedGas = await rpcProvider.estimateGas(tx);
-      const gasPrice = await rpcProvider.getGasPrice();
-      return new Balance(estimatedGas).operate(new Balance(gasPrice), 'mul');
     }
   }
 

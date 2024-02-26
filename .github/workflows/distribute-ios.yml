@@ -59,43 +59,31 @@ jobs:
     steps:
       - name: Show macOS machine infomation
         run: uname -a
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
-      # - uses: ruby/setup-ruby@v1
-      #   with:
-      #     ruby-version: '3.1'
-      #     bundler-cache: true
-      #      - uses: actions/cache@v3
-      #        with:
-      #          path: ios/Pods
-      #          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
-      #          restore-keys: |
-      #            ${{ runner.os }}-pods-
-      #      - uses: actions/cache@v3
-      #        with:
-      #          path: '**/node_modules'
-      #          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-      #      - uses: actions/cache@v3
-      #        with:
-      #          path: vendor/bundle
-      #          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
-      #          restore-keys: |
-      #            ${{ runner.os }}-gems-
+
       - name: Cache XCode build
         uses: mikehardy/buildcache-action@v2
+
       - name: Install Fastlane
         run: |
           bundle install
+
       - name: Install packages
         run: yarn install 
+
       - name: Install pods
-        run: cd ios && pod install
+        run: cd ios && pod install && cd ../
+
       - name: Git init
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "Github actions"
+
       - name: Decode secrets
         run: |
           echo ${{secrets.GOOGLE_SERVICE_IOS}} | base64 -d > ios/GoogleService-Info.plist

@@ -13,6 +13,7 @@ import {
   IconsName,
   Spacer,
   Text,
+  TextVariant,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
@@ -66,7 +67,11 @@ export const WalletCard = ({wallet, tokens, tokensOnly}: Props) => {
         />
       </View>
 
-      <DashedLine width={1} color={Color.graphicSecond2} />
+      <DashedLine
+        style={styles.dashedLine}
+        width={1}
+        color={Color.graphicSecond2}
+      />
 
       {locked?.isPositive() && (
         <>
@@ -74,7 +79,7 @@ export const WalletCard = ({wallet, tokens, tokensOnly}: Props) => {
             <Icon i18 color={Color.graphicBase1} name={IconsName.coin} />
             <Spacer width={4} />
             <Text
-              t13
+              variant={TextVariant.t14}
               color={Color.textBase1}
               i18n={I18N.lockedTokensAvailable}
               i18params={{count: available?.toFloatString() ?? '0'}}
@@ -83,13 +88,17 @@ export const WalletCard = ({wallet, tokens, tokensOnly}: Props) => {
             <Icon i18 color={Color.graphicBase1} name={IconsName.lock} />
             <Spacer width={4} />
             <Text
-              t13
+              variant={TextVariant.t14}
               color={Color.textBase1}
               i18n={I18N.lockedTokensLocked}
               i18params={{count: locked?.toFloatString() ?? '0'}}
             />
           </View>
-          <DashedLine width={1} color={Color.graphicSecond2} />
+          <DashedLine
+            style={styles.dashedLine}
+            width={1}
+            color={Color.graphicSecond2}
+          />
         </>
       )}
 
@@ -102,7 +111,11 @@ export const WalletCard = ({wallet, tokens, tokensOnly}: Props) => {
         <View style={styles.footer}>
           <Icon name={IconsName.coin} color={Color.textSecond1} />
           <Spacer width={4} />
-          <Text t13 color={Color.textSecond1} i18n={I18N.noTokens} />
+          <Text
+            variant={TextVariant.t13}
+            color={Color.textSecond1}
+            i18n={I18N.noTokens}
+          />
         </View>
       )}
     </View>
@@ -117,6 +130,7 @@ const styles = createTheme({
     paddingVertical: 12,
   },
   line: {marginVertical: 12},
+  dashedLine: {marginVertical: 4},
   cardWrapper: {
     flexDirection: 'row',
     alignItems: 'center',

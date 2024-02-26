@@ -8,7 +8,6 @@ import {
   CARD_DEFAULT_STYLE,
   GRADIENT_END,
   GRADIENT_START,
-  MAGIC_CARD_HEIGHT,
 } from '@app/variables/common';
 
 export type CardProps = {
@@ -48,7 +47,7 @@ export const Card = ({
           page.container,
           {
             width: width,
-            height: height || Math.max(width * MAGIC_CARD_HEIGHT, 212),
+            height: height,
             borderRadius,
           },
           style,
@@ -74,7 +73,7 @@ export const Card = ({
       style={[
         {
           width: width,
-          height: height || Math.max(width * MAGIC_CARD_HEIGHT, 212),
+          height: height,
           borderRadius,
         },
         style,
@@ -105,7 +104,8 @@ export const Card = ({
 const page = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     position: 'relative',
   },
   image: {

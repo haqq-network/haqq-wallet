@@ -1,4 +1,4 @@
-import React, {memo} from 'react';
+import React, {memo, useEffect, useState} from 'react';
 
 import {
   BottomTabNavigationOptions,
@@ -13,7 +13,9 @@ import {Color} from '@app/colors';
 import {HomeScreenLabel} from '@app/components/home-screen/label';
 import {HomeScreenTabBarIcon} from '@app/components/home-screen/tab-bar-icon';
 import {HomeScreenTitle} from '@app/components/home-screen/title';
-import {Spacer} from '@app/components/ui';
+import {Loading, Spacer} from '@app/components/ui';
+import {app} from '@app/contexts';
+import {Events} from '@app/events';
 import {showModal} from '@app/helpers';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation} from '@app/hooks';
@@ -99,6 +101,7 @@ const navigationOptions = {
 };
 
 export const HomeScreen = memo(() => {
+  const [isAppUnlocked, setIsAppUnlocked] = useState(app.isUnlocked);
   const navigation = useTypedNavigation();
 
   useEffectAsync(async () => {
@@ -130,6 +133,20 @@ export const HomeScreen = memo(() => {
     };
   }, [navigation]);
 
+  useEffect(() => {
+    const sub = (unlocked: boolean) => {
+      setIsAppUnlocked(unlocked);
+    };
+    app.on(Events.onAuthenticatedChanged, sub);
+    return () => {
+      app.off(Events.onAuthenticatedChanged, sub);
+    };
+  }, []);
+
+  if (!isAppUnlocked) {
+    return <Loading />;
+  }
+
   return (
     <Tab.Navigator detachInactiveScreens screenOptions={navigationOptions}>
       <Tab.Screen
@@ -141,7 +158,10 @@ export const HomeScreen = memo(() => {
           tabBarStyle: (routeA => {
             const routeName = (getFocusedRouteNameFromRoute(routeA) ??
               HomeFeedStackRoutes.HomeFeed) as HomeFeedStackRoutes;
-            const whitelist = [HomeFeedStackRoutes.HomeFeed];
+            const whitelist = [
+              HomeFeedStackRoutes.HomeFeed,
+              HomeFeedStackRoutes.HomeEarn,
+            ];
             if (!whitelist.includes(routeName)) {
               return {
                 height: 0,

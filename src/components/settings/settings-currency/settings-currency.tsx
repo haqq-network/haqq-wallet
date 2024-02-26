@@ -2,12 +2,10 @@ import React, {useCallback} from 'react';
 
 import {observer} from 'mobx-react';
 import {FlatList, ListRenderItem, View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
 import {ImageWrapper} from '@app/components/image-wrapper';
 import {
-  CustomHeader,
   Icon,
   IconButton,
   IconsName,
@@ -15,15 +13,10 @@ import {
   TextVariant,
 } from '@app/components/ui';
 import {createTheme, scale} from '@app/helpers';
-import {I18N} from '@app/i18n';
 import {Currencies} from '@app/models/currencies';
 import {Currency} from '@app/models/types';
 
-export type SettingsThemeProps = {
-  goBack: () => void;
-};
-
-export const SettingsCurrency = observer(({goBack}: SettingsThemeProps) => {
+export const SettingsCurrency = observer(() => {
   const availableCurrencies = Currencies.currencies;
   const selectedCurrency = Currencies.selectedCurrency;
 
@@ -41,8 +34,6 @@ export const SettingsCurrency = observer(({goBack}: SettingsThemeProps) => {
     },
     [],
   );
-
-  const {bottom} = useSafeAreaInsets();
 
   const renderItem: ListRenderItem<Currency> = useCallback(
     ({item}) => {
@@ -75,16 +66,14 @@ export const SettingsCurrency = observer(({goBack}: SettingsThemeProps) => {
   );
 
   return (
-    <View style={[styles.container, {marginBottom: bottom}]}>
-      <CustomHeader
-        onPressLeft={goBack}
-        iconLeft="arrow_back"
-        title={I18N.settingsCurrencyScreen}
-      />
+    <View style={styles.container}>
       <FlatList
+        showsVerticalScrollIndicator={false}
         data={availableCurrencies}
         renderItem={renderItem}
         bounces={false}
+        style={styles.flatList}
+        contentContainerStyle={styles.flatListContent}
       />
     </View>
   );
@@ -93,6 +82,7 @@ export const SettingsCurrency = observer(({goBack}: SettingsThemeProps) => {
 const styles = createTheme({
   container: {
     marginHorizontal: 20,
+    flex: 1,
   },
   listItemContainer: {
     height: scale(74),
@@ -115,4 +105,10 @@ const styles = createTheme({
     justifyContent: 'space-evenly',
   },
   currencyTitle: {fontSize: 18},
+  flatList: {
+    flex: 1,
+  },
+  flatListContent: {
+    paddingBottom: 50,
+  },
 });
