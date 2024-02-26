@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint:
+  test:
     runs-on: self-hosted
     steps:
       - name: Checkout
@@ -35,7 +35,7 @@ jobs:
   build:
     runs-on: self-hosted
     needs:
-      - lint
+      - test
     steps:
       - name: Show self-hosted machine infomation
         run: uname -a

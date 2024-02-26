@@ -48,7 +48,7 @@ jobs:
           node-version: 18
 
       - name: AVD cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: avd-cache
         with:
           path: |

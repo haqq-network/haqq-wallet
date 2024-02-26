@@ -51,9 +51,6 @@ jobs:
           node-version: 18
           cache: yarn
 
-      - name: Cache XCode build
-        uses: mikehardy/buildcache-action@v2
-
       - name: Install packages
         run: yarn install 
 
