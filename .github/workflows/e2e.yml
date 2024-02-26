@@ -6,7 +6,7 @@ on:
       IS_DEVELOPMENT:
         type: choice
         description: IS_DEVELOPMENT
-        default: false
+        default: 'false'
         options:
           - false
           - true
@@ -14,7 +14,7 @@ on:
       IS_SSS_ENABLED:
         type: choice
         description: IS_SSS_ENABLED
-        default: true
+        default: 'true'
         options:
           - true
           - false
@@ -22,7 +22,7 @@ on:
       STORIES_ENABLED:
         type: choice
         description: STORIES_ENABLED
-        default: true
+        default: 'true'
         options:
           - true
           - false
@@ -31,15 +31,15 @@ on:
     inputs:
       IS_DEVELOPMENT:
         required: false
-        default: false
+        default: 'false'
         type: string
       IS_SSS_ENABLED:
         required: false
-        default: true
+        default: 'true'
         type: string
       STORIES_ENABLED:
         required: false
-        default: true
+        default: 'true'
         type: string
 
 jobs:
