@@ -6,6 +6,7 @@ on:
       IS_DEVELOPMENT:
         type: choice
         description: IS_DEVELOPMENT
+        default: false
         options:
           - false
           - true
@@ -13,6 +14,7 @@ on:
       IS_SSS_ENABLED:
         type: choice
         description: IS_SSS_ENABLED
+        default: true
         options:
           - true
           - false
@@ -20,6 +22,7 @@ on:
       STORIES_ENABLED:
         type: choice
         description: STORIES_ENABLED
+        default: true
         options:
           - true
           - false
@@ -27,18 +30,21 @@ on:
   workflow_call:
     inputs:
       IS_DEVELOPMENT:
-        required: true
+        required: false
+        default: false
         type: string
       IS_SSS_ENABLED:
-        required: true
+        required: false
+        default: true
         type: string
       STORIES_ENABLED:
-        required: true
+        required: false
+        default: true
         type: string
 
 jobs:
   build:
-    name: Run e2e tests
+    name: e2e iOS
     runs-on: macOS
     steps:
       - name: Show macOS machine infomation
