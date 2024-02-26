@@ -49,10 +49,10 @@ describe('Routine', () => {
 
     const wallet = Wallet.fromMnemonic(mnemonic);
 
-    const coinsAmount = '0.0022';
+    const coinsAmount = '0.003';
     await getCoins(mnemonic, coinsAmount);
 
-    await waitFor(element(by.text('ISLM: 0.002')))
+    await waitFor(element(by.text('ISLM: 0.003')))
       .toBeVisible()
       .withTimeout(6 * 60_000);
     await element(by.id(`wallets_${wallet.address.toLowerCase()}_send`)).tap();
