@@ -31,7 +31,7 @@ const LedgerStack = memo(() => {
     props => (
       <OnboardingStack
         initialParams={{
-          [OnboardingStackRoutes.OnboardingSetupPin]: {...props.route.params},
+          [OnboardingStackRoutes.OnboardingSetupPin]: {...props?.route?.params},
           [OnboardingStackRoutes.OnboardingRepeatPin]: {
             nextScreen: LedgerStackRoutes.LedgerStoreWallet,
           },
@@ -92,7 +92,7 @@ const LedgerStack = memo(() => {
 
       <Stack.Screen
         name={LedgerStackRoutes.OnboardingSetupPin}
-        component={themeUpdaterHOC(OnboardingStackGenerated)}
+        component={OnboardingStackGenerated}
         options={hideHeader}
       />
     </Stack.Navigator>
