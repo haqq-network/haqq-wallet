@@ -11,8 +11,6 @@ concurrency:
 jobs:
   build:
     runs-on: self-hosted
-    needs:
-      - test
     steps:
       - name: Show self-hosted machine infomation
         run: uname -a
