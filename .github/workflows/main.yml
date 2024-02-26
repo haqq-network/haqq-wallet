@@ -60,7 +60,3 @@ jobs:
     name: e2e
     uses: ./.github/workflows/e2e.yml
     secrets: inherit
-    with:
-      IS_DEVELOPMENT: ${{false}}
-      IS_SSS_ENABLED: ${{true}}
-      STORIES_ENABLED: ${{true}}
