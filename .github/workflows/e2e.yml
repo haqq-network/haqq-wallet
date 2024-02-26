@@ -24,6 +24,18 @@ on:
           - true
           - false
 
+  workflow_call:
+    inputs:
+      IS_DEVELOPMENT:
+        required: true
+        type: string
+      IS_SSS_ENABLED:
+        required: true
+        type: string
+      STORIES_ENABLED:
+        required: true
+        type: string
+
 jobs:
   build_android:
     name: Android
