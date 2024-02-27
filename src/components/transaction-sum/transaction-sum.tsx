@@ -16,6 +16,7 @@ import {
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {useSumAmount} from '@app/hooks';
+import {useKeyboard} from '@app/hooks/use-keyboard';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Balance} from '@app/services/balance';
@@ -50,6 +51,7 @@ export const TransactionSum = ({
   token,
   isLoading,
 }: TransactionSumProps) => {
+  const {keyboardShown} = useKeyboard();
   const transactionFee = useMemo(() => {
     return fee !== null
       ? fee.operate(BALANCE_MULTIPLIER, 'mul').max(FEE_AMOUNT)
@@ -156,7 +158,7 @@ export const TransactionSum = ({
         onPress={onDone}
         testID={`${testID}_next`}
       />
-      <Spacer height={16} />
+      <Spacer height={keyboardShown ? 26 : 16} />
     </KeyboardSafeArea>
   );
 };

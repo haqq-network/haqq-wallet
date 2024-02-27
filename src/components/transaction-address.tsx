@@ -22,6 +22,7 @@ import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForScanQr} from '@app/helpers/await-for-scan-qr';
 import {LinkType, parseDeepLink} from '@app/helpers/parse-deep-link';
 import {withActionsContactItem} from '@app/hocs';
+import {useKeyboard} from '@app/hooks/use-keyboard';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Wallet} from '@app/models/wallet';
@@ -56,6 +57,7 @@ export const TransactionAddress = ({
   onAddress,
   testID,
 }: TransactionAddressProps) => {
+  const {keyboardShown} = useKeyboard();
   const [error, setError] = useState(false);
   const onDone = useCallback(async () => {
     onAddress(address.trim());
@@ -205,7 +207,7 @@ export const TransactionAddress = ({
           loading={loading}
           testID={`${testID}_next`}
         />
-        <Spacer height={20} />
+        <Spacer height={keyboardShown ? 26 : 16} />
       </KeyboardSafeArea>
     </PopupContainer>
   );
