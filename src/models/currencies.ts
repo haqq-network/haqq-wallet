@@ -1,3 +1,4 @@
+import {hashMessage} from '@walletconnect/utils';
 import {makeAutoObservable, runInAction, when} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
@@ -10,13 +11,20 @@ import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
 import {RemoteConfig} from '@app/services/remote-config';
-import {STORE_REHYDRATION_TIMEOUT_MS} from '@app/variables/common';
+import {RatesResponse} from '@app/types';
+import {
+  STORE_REHYDRATION_TIMEOUT_MS,
+  WEI_PRECISION,
+} from '@app/variables/common';
 
+// optimization for `convert()` method
+const convertedCache = new Map<string, Balance>();
 class CurrenciesStore {
   private _selectedCurrency: string = '';
   private _currencies: Record<string, Currency> = {};
   private _rates: Record<string, CurrencyRate> = {};
   private _isInited = false;
+  private _prevRatesHash = '';
 
   constructor(shouldSkipPersisting: boolean = false) {
     makeAutoObservable(this);
@@ -39,22 +47,46 @@ class CurrenciesStore {
     if (Array.isArray(currencies)) {
       runInAction(() => {
         this._currencies = currencies.reduce(
-          (_prev, _cur) => ({..._prev, [_cur.id]: _cur}),
+          (_prev, _cur) => ({..._prev, [_cur?.id?.toLowerCase()]: _cur}),
           {},
         );
       });
     }
   };
 
-  setRates = (rates: any) => {
-    const tokens = Object.keys(rates);
+  setRates = (rates: RatesResponse) => {
+    if (!rates) {
+      return;
+    }
+    // optimization to prevent unnecessary loops while parsing rates
+    // nedeed because rates are updated inside onWalletsBalanceCheck
+    const ratesHash = hashMessage(JSON.stringify(rates));
+    if (this._prevRatesHash === ratesHash) {
+      return;
+    }
+    this._prevRatesHash = ratesHash;
+    convertedCache.clear();
 
-    this._rates = tokens.reduce((prev, token) => {
-      const denom = rates[token].find(
-        (rate: CurrencyRate) => rate.denom === this._selectedCurrency,
-      );
-      return {...prev, [token]: denom};
-    }, {});
+    const ratesMap: Record<string, CurrencyRate> = Object.entries(rates).reduce(
+      (prev, [tokenKey, fiatRates]) => {
+        const rate = fiatRates?.find(
+          it =>
+            it.denom?.toLowerCase() === this.selectedCurrency?.toLowerCase(),
+        );
+        return {
+          ...prev,
+          [tokenKey?.toLocaleLowerCase()]: {
+            amount: rate?.amount
+              ? parseFloat(rate.amount) / 10 ** WEI_PRECISION
+              : 0,
+            denom: rate?.denom,
+          } as CurrencyRate,
+        };
+      },
+      {},
+    );
+
+    this._rates = ratesMap;
   };
 
   get isInited() {
@@ -62,7 +94,7 @@ class CurrenciesStore {
   }
 
   get currency(): Currency | undefined {
-    return this._currencies[this._selectedCurrency];
+    return this._currencies[this._selectedCurrency?.toLocaleLowerCase()];
   }
 
   get currencies() {
@@ -77,22 +109,6 @@ class CurrenciesStore {
     return this._selectedCurrency;
   }
 
-  set selectedCurrency(selectedCurrency: string | undefined) {
-    if (!selectedCurrency) {
-      return;
-    }
-
-    const supportedCurrency = Object.values(this._currencies).find(
-      currency => currency.id === selectedCurrency,
-    );
-
-    if (supportedCurrency) {
-      this._selectedCurrency = selectedCurrency;
-    } else {
-      this._selectedCurrency = 'USD';
-    }
-  }
-
   setSelectedCurrency = async (selectedCurrency?: string) => {
     await RemoteConfig.awaitForInitialization();
     await when(() => this.isInited === true);
@@ -105,11 +121,11 @@ class CurrenciesStore {
       }
     }
 
-    // Set current currency before any requests
     runInAction(() => {
-      // @ts-ignore
-      this._selectedCurrency = selectedCurrency;
+      // Set current currency before any requests
+      this._selectedCurrency = selectedCurrency as string;
     });
+    convertedCache.clear();
 
     // Request rates based on current currency
     await when(() => Wallet.isHydrated, {
@@ -140,16 +156,30 @@ class CurrenciesStore {
   };
 
   convert = (balance: Balance): Balance => {
-    const rate = this._rates[balance.getSymbol()]?.amount;
-    const currency = this._currencies[this._selectedCurrency];
+    const currencyId = this.selectedCurrency?.toLocaleLowerCase();
+    const serialized = balance.toJsonString();
+    const cacheKey = `${serialized}-${app.providerId}-${currencyId}-${this._prevRatesHash}`;
+
+    const cached = convertedCache.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
+    if (!balance || !this._selectedCurrency) {
+      return Balance.Empty;
+    }
+
+    const rate = this._rates[balance.getSymbol()?.toLocaleLowerCase()]?.amount;
+    const currency = this._currencies[currencyId];
 
     if (!rate || !currency) {
       return Balance.Empty;
     }
 
-    //FIXME: Temporary solution. Need to fix Balance tests first
-    const result = new Balance(rate).toFloat() * balance.toFloat();
-    return new Balance(result, undefined, currency.id);
+    const converted = new Balance(rate, 0).operate(balance, 'mul');
+    const result = new Balance(converted, undefined, currency.id);
+    convertedCache.set(cacheKey, result);
+    return result;
   };
 }
 
