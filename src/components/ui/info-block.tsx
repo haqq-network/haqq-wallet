@@ -97,6 +97,7 @@ const styles = createTheme({
     borderRadius: 16,
     paddingVertical: 12,
     paddingHorizontal: 16,
+    marginBottom: 16,
   },
   warningContainer: {
     backgroundColor: Color.bg6,
