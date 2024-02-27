@@ -89,9 +89,7 @@ export async function onWalletsBalanceCheck() {
 
     app.onWalletsBalance(result);
 
-    if (updates.rates) {
-      Currencies.setRates(updates.rates);
-    }
+    Currencies.setRates(updates.rates);
   } catch (e) {
     Logger.error(Events.onWalletsBalanceCheck, e);
 
