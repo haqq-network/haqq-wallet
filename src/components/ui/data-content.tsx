@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {View, ViewStyle} from 'react-native';
+import {TextProps, View, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Text} from '@app/components/ui/text';
@@ -20,6 +20,7 @@ export type DataContentProps = {
   titleI18nParams?: Record<string, string>;
   onPress?: () => void;
   bold?: boolean;
+  subtitleProps?: TextProps;
 };
 export const DataContent = ({
   title,
@@ -34,6 +35,7 @@ export const DataContent = ({
   titleI18nParams,
   numberOfLines = 1,
   bold = false,
+  subtitleProps,
 }: DataContentProps) => {
   return (
     <View
@@ -63,7 +65,8 @@ export const DataContent = ({
             t14
             i18n={subtitleI18n}
             i18params={subtitleI18nParams}
-            color={Color.textBase2}>
+            color={Color.textBase2}
+            {...(subtitleProps || {})}>
             {subtitle}
           </Text>
         </>
