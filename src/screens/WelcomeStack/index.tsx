@@ -6,7 +6,7 @@ import {
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
 
-import {popupScreenOptions} from '@app/helpers';
+import {getModalScreenOptions} from '@app/helpers/get-modal-screen-options';
 import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {WelcomeStackParamList, WelcomeStackRoutes} from '@app/route-types';
 import {basicScreenOptions} from '@app/screens';
@@ -28,10 +28,9 @@ const modalOptions: NativeStackNavigationOptions = {
   animation: 'slide_from_bottom',
 };
 
-const newsDetailOptions = {
-  ...popupScreenOptions,
+const newsDetailOptions: NativeStackNavigationOptions = {
+  ...getModalScreenOptions(),
   ...modalOptions,
-  headerShown: true,
 };
 
 type Props = {

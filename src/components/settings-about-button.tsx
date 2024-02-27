@@ -34,7 +34,7 @@ export const SettingsAboutButton = ({
       <Icon i24 name={name} color={color} />
       <Text variant={TextVariant.t11} i18n={i18n} style={styles.buttonText} />
       <Spacer />
-      <Icon i14 name="arrow_forward" color={Color.graphicSecond3} />
+      <Icon i12 name="arrow_forward" color={Color.graphicSecond3} />
     </IconButton>
   );
 };

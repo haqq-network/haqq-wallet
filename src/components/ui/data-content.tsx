@@ -9,6 +9,7 @@ import {I18N} from '@app/i18n';
 
 export type DataContentProps = {
   title?: React.ReactNode;
+  titleColor?: Color;
   subtitle?: string | React.ReactNode;
   style?: ViewStyle;
   reversed?: boolean;
@@ -36,6 +37,7 @@ export const DataContent = ({
   numberOfLines = 1,
   bold = false,
   subtitleProps,
+  titleColor = Color.textBase1,
 }: DataContentProps) => {
   return (
     <View
@@ -49,7 +51,7 @@ export const DataContent = ({
         <Text
           t11
           style={[styles.title, bold && styles.boldTitle]}
-          color={Color.textBase1}
+          color={titleColor}
           ellipsizeMode="tail"
           i18n={titleI18n!}
           i18params={titleI18nParams}
