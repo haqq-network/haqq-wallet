@@ -25,6 +25,7 @@ const modalOptions: NativeStackNavigationOptions = {
   presentation: 'modal',
   gestureEnabled: true,
   gestureDirection: 'vertical',
+  animation: 'slide_from_bottom',
 };
 
 const newsDetailOptions = {
