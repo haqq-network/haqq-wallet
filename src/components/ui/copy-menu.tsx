@@ -12,13 +12,12 @@ import {
 import {Color} from '@app/colors';
 import {Icon, IconsName} from '@app/components/ui/icon';
 import Popover from '@app/components/ui/popover';
-import {Text} from '@app/components/ui/text';
+import {Text, TextVariant} from '@app/components/ui/text';
 import {createTheme} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {sendNotification} from '@app/services';
-import {PLACEHOLDER_GRAY} from '@app/variables/common';
 
 export type CopyMenuProps = ViewProps & {
   value: string;
@@ -73,21 +72,23 @@ export const CopyMenu = ({
         optionsContainerStyle={styles.optionsContainer}
         customStyles={optionCustomStyles}>
         <MenuOption onSelect={onCopyPress} style={styles.option}>
-          <Text t11 i18n={I18N.copyAddress} />
-          <Icon i18 name={IconsName.copy} color={Color.textBase1} />
+          <Text variant={TextVariant.t11} i18n={I18N.copyAddress} />
+          <Icon i22 name={IconsName.copy} color={Color.textBase1} />
         </MenuOption>
         <View style={styles.divider} />
         <MenuOption onSelect={onBech32CopyPress} style={styles.option}>
-          <Text t11 i18n={I18N.copyBech32Address} />
+          <Text variant={TextVariant.t11} i18n={I18N.copyBech32Address} />
           <View style={styles.horizontalSpace} />
-          <Icon i18 name={IconsName.copy} color={Color.textBase1} />
+          <Icon i22 name={IconsName.copy} color={Color.textBase1} />
         </MenuOption>
-        {withSettings && <View style={styles.divider} />}
         {withSettings && (
-          <MenuOption onSelect={onPressSettings} style={styles.option}>
-            <Text t11 i18n={I18N.homeSettingsTitle} />
-            <Icon i18 name={IconsName.settings} color={Color.textBase1} />
-          </MenuOption>
+          <>
+            <View style={styles.divider} />
+            <MenuOption onSelect={onPressSettings} style={styles.option}>
+              <Text variant={TextVariant.t11} i18n={I18N.homeSettingsTitle} />
+              <Icon i22 name={IconsName.settings} color={Color.textBase1} />
+            </MenuOption>
+          </>
         )}
       </MenuOptions>
     </Menu>
@@ -99,10 +100,11 @@ const styles = createTheme({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  divider: {height: 1, width: '100%', backgroundColor: PLACEHOLDER_GRAY},
+  divider: {height: 1, width: '100%', backgroundColor: Color.graphicSecond2},
   optionsContainer: {
-    borderRadius: 8,
-    backgroundColor: Color.bg3,
+    borderRadius: 12,
+    backgroundColor: Color.graphicSecond1,
+    transform: [{translateX: -32}],
   },
   horizontalSpace: {width: 16},
   option: {
@@ -110,6 +112,6 @@ const styles = createTheme({
     alignItems: 'center',
     justifyContent: 'space-between',
     margin: 8,
-    backgroundColor: Color.bg3,
+    backgroundColor: Color.transparent,
   },
 });
