@@ -24,7 +24,7 @@ class RNToast: NSObject {
 
     DispatchQueue.main.async {
       let view = CustomToastView(child: CustomTextToastView(message, theme: theme), theme: theme)
-      let toast = Toast.custom(view: view, config: ToastConfiguration.init(displayTime:2))
+      let toast = Toast.custom(view: view, config: ToastConfiguration.init())
       toast.show()
       RNToast.cache.append(toast)
     }
