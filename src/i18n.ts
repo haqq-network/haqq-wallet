@@ -923,6 +923,7 @@ export enum I18N {
   recoveryPinSuccess,
   recoveryPinNoNeedRecovery,
   recoveryPinSamePin,
+  transactionInfoFunctionValue,
   isUsed,
 }
 
@@ -2021,6 +2022,7 @@ const en: Record<I18N, string> = {
   [I18N.recoveryPinSuccess]: 'Your PIN code has been successfully recovered',
   [I18N.recoveryPinNoNeedRecovery]: 'No need to recover PIN code',
   [I18N.recoveryPinSamePin]: "Recovery pin can'not be same as the current pin",
+  [I18N.transactionInfoFunctionValue]: 'Token amount',
   [I18N.recoveryPinDescription]:
     'If you have problems changing the PIN code or got "Incorrect password" error, on this screen you can restore access to wallets by entering the pin you wanted to change to.',
   [I18N.isUsed]: ' is used',

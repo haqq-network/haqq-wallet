@@ -22,7 +22,7 @@ export class AddressUtils {
         .toBech32(address)
         .toLowerCase() as HaqqCosmosAddress;
     } catch (e) {
-      Logger.captureException(e, 'AddressUtils.toHaqq', {address});
+      Logger.warn(e, 'AddressUtils.toHaqq', {address});
       return address as HaqqCosmosAddress;
     }
   }
@@ -42,7 +42,7 @@ export class AddressUtils {
         .toHex(address)
         .toLowerCase() as HaqqEthereumAddress;
     } catch (e) {
-      Logger.captureException(e, 'AddressUtils.toEth', {address});
+      Logger.warn(e, 'AddressUtils.toEth', {address});
       return address as HaqqEthereumAddress;
     }
   }
@@ -54,7 +54,7 @@ export class AddressUtils {
       }
       return utils.isAddress(address);
     } catch (e) {
-      Logger.captureException(e, 'AddressUtils.isEthAddress', {address});
+      Logger.warn(e, 'AddressUtils.isEthAddress', {address});
       return false;
     }
   }
@@ -78,7 +78,7 @@ export class AddressUtils {
         return AddressUtils.isEthAddress(hex);
       }
     } catch (e) {
-      Logger.captureException(e, 'AddressUtils.isHaqqAddress', {address});
+      Logger.warn(e, 'AddressUtils.isHaqqAddress', {address});
     }
     return false;
   };
@@ -102,7 +102,7 @@ export class AddressUtils {
 
       return response.address_type === AddressType.contract;
     } catch (e) {
-      Logger.captureException(e, 'AddressUtils.isContractAddress', {address});
+      Logger.warn(e, 'AddressUtils.isContractAddress', {address});
       return false;
     }
   };
