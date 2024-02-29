@@ -10,8 +10,10 @@ import {
 } from 'react-native-popup-menu';
 
 import {Color} from '@app/colors';
+import {SolidLine} from '@app/components/solid-line';
 import {Icon, IconsName} from '@app/components/ui/icon';
 import Popover from '@app/components/ui/popover';
+import {Spacer} from '@app/components/ui/spacer';
 import {Text, TextVariant} from '@app/components/ui/text';
 import {createTheme} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
@@ -75,15 +77,15 @@ export const CopyMenu = ({
           <Text variant={TextVariant.t11} i18n={I18N.copyAddress} />
           <Icon i22 name={IconsName.copy} color={Color.textBase1} />
         </MenuOption>
-        <View style={styles.divider} />
+        <SolidLine width="100%" color={Color.graphicSecond2} />
         <MenuOption onSelect={onBech32CopyPress} style={styles.option}>
           <Text variant={TextVariant.t11} i18n={I18N.copyBech32Address} />
-          <View style={styles.horizontalSpace} />
+          <Spacer width={16} />
           <Icon i22 name={IconsName.copy} color={Color.textBase1} />
         </MenuOption>
         {withSettings && (
           <>
-            <View style={styles.divider} />
+            <SolidLine width="100%" color={Color.graphicSecond2} />
             <MenuOption onSelect={onPressSettings} style={styles.option}>
               <Text variant={TextVariant.t11} i18n={I18N.homeSettingsTitle} />
               <Icon i22 name={IconsName.settings} color={Color.textBase1} />
@@ -100,13 +102,11 @@ const styles = createTheme({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  divider: {height: 1, width: '100%', backgroundColor: Color.graphicSecond2},
   optionsContainer: {
     borderRadius: 12,
     backgroundColor: Color.graphicSecond1,
     transform: [{translateX: -32}],
   },
-  horizontalSpace: {width: 16},
   option: {
     flexDirection: 'row',
     alignItems: 'center',
