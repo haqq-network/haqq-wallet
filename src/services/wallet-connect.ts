@@ -2,20 +2,21 @@ import {EventEmitter} from 'events';
 
 import {WALLET_CONNECT_PROJECT_ID, WALLET_CONNECT_RELAY_URL} from '@env';
 import {Core} from '@walletconnect/core';
+import {ICore, SignClientTypes} from '@walletconnect/types';
 import {
-  ICore,
-  PairingTypes,
-  SessionTypes,
-  SignClientTypes,
-} from '@walletconnect/types';
-import {getSdkError} from '@walletconnect/utils';
+  buildApprovedNamespaces,
+  getSdkError,
+  parseUri,
+} from '@walletconnect/utils';
 import {IWeb3Wallet, Web3Wallet} from '@walletconnect/web3wallet';
 
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {Events, WalletConnectEvents} from '@app/events';
+import {getLeadingAccount} from '@app/helpers/get-leading-account';
 import {Initializable} from '@app/helpers/initializable';
 import {I18N} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
 import {WalletConnectSessionMetadata} from '@app/models/wallet-connect-session-metadata';
@@ -23,17 +24,15 @@ import {message as sendMessage, sendNotification} from '@app/services/toast';
 import {filterWalletConnectSessionsByAddress, isError, sleep} from '@app/utils';
 
 import {AppUtils} from './app-utils';
+import {PushNotifications} from './push-notifications';
 import {RemoteConfig} from './remote-config';
 
 export type WalletConnectEventTypes = keyof SignClientTypes.EventArguments;
-const EMPTY_NAMESPACE = {
-  methods: [],
-  events: [],
-  chains: [],
-};
 
 const logger = Logger.create('WalletConnect', {
   enabled: DEBUG_VARS.enableWalletConnectLogger,
+  stringifyJson: true,
+  emodjiPrefix: '⚪️',
 });
 
 const PAIRING_URLS_KEY = 'wallet_connect_pairing_urls';
@@ -111,13 +110,46 @@ export class WalletConnect extends Initializable {
           this._emitActiveSessions();
         })
         .on('session_expire', this._emitActiveSessions.bind(this))
-        .on('session_delete', this._emitActiveSessions.bind(this));
+        .on('session_delete', this._emitActiveSessions.bind(this))
+        .on('session_request_expire', async ({id}) => {
+          try {
+            await this.rejectSession(id, 'Session request expired');
+          } catch (err) {
+            logger.error('session_request_expire', err);
+          }
+          this._emitActiveSessions.bind(this);
+        });
+
+      this._core.relayer.on('relayer_disconnect', async () => {
+        await this._reInit();
+      });
 
       // this event called when user disconect from web site
       this._client.core.expirer.on(
         'expirer_deleted',
         this._emitActiveSessions.bind(this),
       );
+
+      app.on(Events.onProviderChanged, async (providerId: string) => {
+        const provider = Provider.getById(providerId)!;
+        const chainId = provider.ethChainId;
+        await this.awaitForInitialization();
+        WalletConnectSessionMetadata.getAll().forEach(async ({topic}) => {
+          try {
+            await this._client?.emitSessionEvent({
+              topic,
+              event: {
+                name: 'chainChanged',
+                data: chainId,
+              },
+              chainId: `eip155:${chainId}`,
+            });
+          } catch (err) {
+            logger.error('send event chainChanged', {topic}, err);
+          }
+        });
+      });
+
       const end = Date.now();
       const initDuration = end - this._initStartTime;
       logger.log(
@@ -129,6 +161,12 @@ export class WalletConnect extends Initializable {
           `WC init: ${initDuration}ms, , attempts: ${this._initAttempts}`,
         );
       }
+      const token = await PushNotifications.instance.getToken(true);
+      if (token) {
+        this.setupPushNotifications(token);
+      } else {
+        logger.log('FCM token not found, push notifiactions disabled!');
+      }
       this.stopInitialization();
     } catch (err) {
       if (err instanceof Error) {
@@ -137,6 +175,27 @@ export class WalletConnect extends Initializable {
         await sleep(5000);
         return WalletConnect.instance._reInit();
       }
+    }
+  }
+
+  public async setupPushNotifications(token: string) {
+    try {
+      logger.log('setupPushNotifications: token', token);
+      await this.awaitForInitialization();
+      const clientId = await this._client?.core?.crypto?.getClientId();
+      if (clientId) {
+        await this._client?.registerDeviceToken({
+          token,
+          clientId,
+          notificationType: 'fcm',
+          // flag that enabled detailed notifications
+          enableEncrypted: false,
+        });
+      } else {
+        logger.error('setupPushNotifications: clientId not found');
+      }
+    } catch (err) {
+      logger.error('setupPushNotifications', err);
     }
   }
 
@@ -151,37 +210,40 @@ export class WalletConnect extends Initializable {
   }
 
   public async pair(uri: string) {
-    const pairedUrls = this.getPairedUrls();
-
-    const exists = !!pairedUrls[uri];
-
-    if (exists) {
-      return sendNotification(I18N.walletConnectPairAlreadyExists);
-    }
-
-    VariablesString.setObject(PAIRING_URLS_KEY, {
-      ...pairedUrls,
-      [uri]: false,
-    });
-
-    await this.awaitForInitialization();
-
-    if (!this._client || !this._core) {
-      return sendNotification(I18N.walletConnectPairInitError);
-    }
-
-    let resp: PairingTypes.Struct;
-
     try {
+      await this.awaitForInitialization();
+      const pairedUrls = this.getPairedUrls();
       if (!uri?.startsWith('wc:')) {
         uri = `wc:${uri}`;
       }
+      const exists = !!pairedUrls[uri];
+      const {topic} = parseUri(uri) || {};
 
-      resp = await this._core.pairing.pair({uri});
+      if (!this._client || !this._core) {
+        return sendNotification(I18N.walletConnectPairInitError);
+      }
+
+      if (
+        exists ||
+        this._core?.pairing?.pairings?.keys?.includes(topic) ||
+        this._core?.crypto.keychain.has(topic)
+      ) {
+        VariablesString.setObject(PAIRING_URLS_KEY, {
+          ...pairedUrls,
+          [uri]: false,
+        });
+        try {
+          await this.disconnectSession(topic);
+        } catch {}
+        return sendNotification(I18N.walletConnectPairAlreadyExists);
+      }
+
+      const resp = await this._core.pairing.pair({uri, activatePairing: false});
 
       if (!resp) {
         sendNotification(I18N.walletConnectPairError);
       } else {
+        await this._core?.pairing?.activate({topic});
         VariablesString.setObject(PAIRING_URLS_KEY, {
           ...pairedUrls,
           [uri]: true,
@@ -234,72 +296,26 @@ export class WalletConnect extends Initializable {
       return;
     }
 
-    const {requiredNamespaces, optionalNamespaces, relays} = params;
-
-    const useDebugNamespaces =
-      app.isTesterMode || DEBUG_VARS.allowAnySourcesForWalletConnectLogin;
-
-    const walletConnectConfig = RemoteConfig.get('wallet_connect');
-
-    const allowedNamespaces = useDebugNamespaces
-      ? Object.keys(requiredNamespaces).length
-        ? requiredNamespaces
-        : walletConnectConfig
-      : walletConnectConfig;
-
-    if (!allowedNamespaces) {
-      throw Error('[WalletConnect]: allowedNamespaces not found');
-    }
-    const namespaces: SessionTypes.Namespaces = {};
-
-    Object.keys(allowedNamespaces).forEach(namespace => {
-      const allowed = {...EMPTY_NAMESPACE, ...allowedNamespaces[namespace]};
-      const required = {...EMPTY_NAMESPACE, ...requiredNamespaces[namespace]};
-      const optional = {...EMPTY_NAMESPACE, ...optionalNamespaces[namespace]};
-
-      const methods: string[] = [];
-      [...required?.methods, ...optional?.methods].forEach(method => {
-        if (
-          !methods.includes?.(method) &&
-          allowed.methods?.includes?.(method)
-        ) {
-          methods.push(method);
-        }
-      });
-
-      const events: string[] = [];
-      [...required?.events, ...optional?.events].forEach(event => {
-        if (!events.includes?.(event) && allowed.events?.includes?.(event)) {
-          events.push(event);
-        }
-      });
-
-      const chains: string[] = [];
-      [...(required?.chains || []), ...(optional?.chains || [])].forEach(
-        chain => {
-          if (!chains.includes?.(chain) && allowed.chains?.includes?.(chain)) {
-            chains.push(chain);
-          }
-        },
-      );
-
-      const accounts = Array.from(chains).map(
-        chain => `${chain}:${currentETHAddress}`,
-      );
-
-      namespaces[namespace] = {
-        accounts,
-        methods,
-        events,
-        chains,
-      };
+    const address = currentETHAddress || getLeadingAccount()?.address;
+    const walletConnectConfig = RemoteConfig.safeGet('wallet_connect');
+    const namespaces = buildApprovedNamespaces({
+      proposal: params,
+      supportedNamespaces: Object.entries(walletConnectConfig).reduce(
+        (prev, [namespace, opts]) => ({
+          ...prev,
+          [namespace]: {
+            ...opts,
+            accounts: opts.chains?.map(chain => `${chain}:${address}`),
+          },
+        }),
+        {},
+      ),
     });
 
-    logger.log('namespaces', JSON.stringify(namespaces, null, 2));
+    logger.log('-> namespaces', namespaces);
 
     const session = await this._client.approveSession({
       id: proposalId,
-      relayProtocol: relays[0].protocol,
       namespaces,
     });
 

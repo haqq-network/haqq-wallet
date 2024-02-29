@@ -270,6 +270,26 @@ export class Backend {
     return await getHttpResponse<NewsUpdatesResponse>(newsResp);
   }
 
+  async updateNotificationToken(
+    subscribtionId: string,
+    token: string,
+    uid: string,
+  ): Promise<{id: string}> {
+    const req = await fetch(
+      `${this.getRemoteUrl()}notification_token/${subscribtionId}`,
+      {
+        method: 'POST',
+        headers: Backend.headers,
+        body: JSON.stringify({
+          token,
+          uid,
+        }),
+      },
+    );
+
+    return await getHttpResponse<{id: string}>(req);
+  }
+
   async createNotificationToken(
     token: string,
     uid: string,
