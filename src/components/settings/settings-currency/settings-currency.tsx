@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 
 import {observer} from 'mobx-react';
 import {FlatList, ListRenderItem, View} from 'react-native';
@@ -12,12 +12,28 @@ import {
   Text,
   TextVariant,
 } from '@app/components/ui';
-import {createTheme, scale} from '@app/helpers';
+import {SearchLine} from '@app/components/ui/custom-header/search-line';
+import {createTheme} from '@app/helpers';
 import {Currencies} from '@app/models/currencies';
 import {Currency} from '@app/models/types';
 
 export const SettingsCurrency = observer(() => {
-  const availableCurrencies = Currencies.currencies;
+  const [search, setSearch] = useState('');
+
+  const filter = useCallback(
+    (item: Currency) => {
+      if (item.id.toLowerCase().includes(search.toLowerCase())) {
+        return true;
+      }
+      if (item.title.toLowerCase().includes(search.toLowerCase())) {
+        return true;
+      }
+      return false;
+    },
+    [search],
+  );
+
+  const availableCurrencies = Currencies.currencies.filter(filter);
   const selectedCurrency = Currencies.selectedCurrency;
 
   const getCurrencyDescription = useCallback((item: Currency) => {
@@ -39,16 +55,15 @@ export const SettingsCurrency = observer(() => {
     ({item}) => {
       return (
         <IconButton
+          testID={item.id}
           onPress={setSelectedCurrency(item.id)}
           style={styles.listItemContainer}>
           <View style={styles.currencyInfoContainer}>
             <ImageWrapper source={{uri: item.icon}} style={styles.icon} />
             <View style={styles.descriptionContainer}>
-              <View>
-                <Text variant={TextVariant.t11} style={styles.currencyTitle}>
-                  {item.title}
-                </Text>
-              </View>
+              <Text variant={TextVariant.t11} style={styles.currencyTitle}>
+                {item.title}
+              </Text>
               <View>
                 <Text color={Color.textBase2}>
                   {getCurrencyDescription(item)}
@@ -65,8 +80,18 @@ export const SettingsCurrency = observer(() => {
     [getCurrencyDescription, selectedCurrency, setSelectedCurrency],
   );
 
+  const onSearch = useCallback((value: string) => {
+    setSearch(value);
+  }, []);
+
   return (
     <View style={styles.container}>
+      <SearchLine
+        onChange={onSearch}
+        testId={'currency-search'}
+        cancelEnabled={false}
+        autoFocus={false}
+      />
       <FlatList
         showsVerticalScrollIndicator={false}
         data={availableCurrencies}
@@ -85,18 +110,16 @@ const styles = createTheme({
     flex: 1,
   },
   listItemContainer: {
-    height: scale(74),
-    width: '100%',
-    paddingHorizontal: scale(10),
+    height: 74,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
   icon: {
-    height: scale(40),
-    width: scale(40),
-    borderRadius: scale(8),
-    marginRight: scale(10),
+    height: 42,
+    width: 42,
+    borderRadius: 8,
+    marginRight: 12,
   },
   currencyInfoContainer: {
     flexDirection: 'row',
@@ -104,7 +127,7 @@ const styles = createTheme({
   descriptionContainer: {
     justifyContent: 'space-evenly',
   },
-  currencyTitle: {fontSize: 18},
+  currencyTitle: {fontSize: 18, marginBottom: 2},
   flatList: {
     flex: 1,
   },

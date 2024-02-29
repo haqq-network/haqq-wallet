@@ -1,7 +1,14 @@
 import React, {useCallback} from 'react';
 
 import {Color} from '@app/colors';
-import {Icon, IconButton, IconsName, Spacer, Text} from '@app/components/ui';
+import {
+  Icon,
+  IconButton,
+  IconsName,
+  Spacer,
+  Text,
+  TextVariant,
+} from '@app/components/ui';
 import {createTheme, openURL} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
@@ -25,9 +32,9 @@ export const SettingsAboutButton = ({
   return (
     <IconButton onPress={onPress} style={styles.button}>
       <Icon i24 name={name} color={color} />
-      <Text t11 i18n={i18n} style={styles.buttonText} />
+      <Text variant={TextVariant.t11} i18n={i18n} style={styles.buttonText} />
       <Spacer />
-      <Icon i24 name="arrow_forward" color={Color.graphicSecond3} />
+      <Icon i12 name="arrow_forward" color={Color.graphicSecond3} />
     </IconButton>
   );
 };

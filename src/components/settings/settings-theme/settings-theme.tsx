@@ -18,31 +18,33 @@ export const SettingsTheme = ({
   goBack,
 }: SettingsThemeProps) => {
   return (
-    <PopupContainer style={styles.container}>
+    <>
       <CustomHeader
         onPressLeft={goBack}
         iconLeft="arrow_back"
         title={I18N.settingsThemeScreen}
       />
-      <ThemedButton
-        value={AppTheme.system}
-        name={I18N.settingsThemeSystem}
-        active={theme === AppTheme.system}
-        onChange={onChangeTheme}
-      />
-      <ThemedButton
-        value={AppTheme.light}
-        name={I18N.settingsThemeLight}
-        active={theme === AppTheme.light}
-        onChange={onChangeTheme}
-      />
-      <ThemedButton
-        value={AppTheme.dark}
-        name={I18N.settingsThemeDark}
-        active={theme === AppTheme.dark}
-        onChange={onChangeTheme}
-      />
-    </PopupContainer>
+      <PopupContainer style={styles.container}>
+        <ThemedButton
+          value={AppTheme.system}
+          name={I18N.settingsThemeSystem}
+          active={theme === AppTheme.system}
+          onChange={onChangeTheme}
+        />
+        <ThemedButton
+          value={AppTheme.light}
+          name={I18N.settingsThemeLight}
+          active={theme === AppTheme.light}
+          onChange={onChangeTheme}
+        />
+        <ThemedButton
+          value={AppTheme.dark}
+          name={I18N.settingsThemeDark}
+          active={theme === AppTheme.dark}
+          onChange={onChangeTheme}
+        />
+      </PopupContainer>
+    </>
   );
 };
 

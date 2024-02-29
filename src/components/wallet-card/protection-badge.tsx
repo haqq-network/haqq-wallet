@@ -116,18 +116,21 @@ export const ProtectionBadge = ({
         </>
       )}
       {!!walletConnectSessions?.length && (
-        <IconButton
-          onPress={onWalletConnect}
-          style={[styles.protection, styles.walletConnectApps]}>
-          <Icon i16 name={IconsName.link} color={Color.graphicBase3} />
-          <Spacer width={4} />
-          <Text
-            variant={TextVariant.t15}
-            i18n={I18N.walletCardConnectedApps}
-            i18params={{count: `${walletConnectSessions?.length}`}}
-            color={Color.textBase3}
-          />
-        </IconButton>
+        <>
+          <IconButton
+            onPress={onWalletConnect}
+            style={[styles.protection, styles.walletConnectApps]}>
+            <Icon i16 name={IconsName.link} color={Color.graphicBase3} />
+            <Spacer width={4} />
+            <Text
+              variant={TextVariant.t15}
+              i18n={I18N.walletCardConnectedApps}
+              i18params={{count: `${walletConnectSessions?.length}`}}
+              color={Color.textBase3}
+            />
+          </IconButton>
+          <Spacer width={8} />
+        </>
       )}
       {protectionStatus === ProtectionStatus.full && (
         <>
@@ -173,15 +176,17 @@ const styles = createTheme({
     marginTop: 4,
     marginBottom: 8,
     borderRadius: 4,
-    paddingHorizontal: 6,
+    paddingRight: 6,
     paddingVertical: 2,
     height: 20,
   },
   withoutProtection: {
     backgroundColor: Color.bg5,
+    paddingLeft: 6,
   },
   partiallyProtection: {
     backgroundColor: Color.bg6,
+    paddingLeft: 6,
   },
   walletConnectApps: {
     alignSelf: 'flex-start',
