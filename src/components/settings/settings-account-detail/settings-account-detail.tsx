@@ -227,7 +227,7 @@ const styles = createTheme({
     backgroundColor: Color.bg8,
     borderRadius: 16,
     padding: CARD_PADDING,
-    marginBottom: 10,
+    marginBottom: 20,
   },
   headerName: {
     marginBottom: 4,

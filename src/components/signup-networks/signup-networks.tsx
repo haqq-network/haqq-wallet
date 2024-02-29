@@ -8,6 +8,7 @@ import {
   PopupContainer,
   Spacer,
   Text,
+  TextVariant,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
@@ -79,12 +80,6 @@ export const SignupNetworks = ({
           loop
         />
       </Spacer>
-      {/* <SocialButton variant={SocialButtonVariant.discord} />
-        <Spacer height={10} />
-        <SocialButton variant={SocialButtonVariant.twitter} />
-        <Spacer height={10} />
-        <SocialButton variant={SocialButtonVariant.facebook} /> */}
-
       {isAppleSupported && (
         <>
           <Spacer height={10} />
@@ -124,7 +119,7 @@ export const SignupNetworks = ({
       )}
       <Spacer height={10} />
       <Text
-        t15
+        variant={TextVariant.t15}
         i18n={I18N.sssNetworkWeb3AuthDescription}
         color={Color.textBase2}
       />
@@ -136,6 +131,7 @@ export const SignupNetworks = ({
         textColor={Color.textRed1}
         testID="sss_login_later"
       />
+      <Spacer height={16} />
     </PopupContainer>
   );
 };

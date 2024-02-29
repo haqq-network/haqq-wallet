@@ -114,6 +114,7 @@ export enum IconsName {
 
 export type IconSize =
   | {i12: boolean}
+  | {i14: boolean}
   | {i16: boolean}
   | {i18: boolean}
   | {i20: boolean}
@@ -141,6 +142,7 @@ export const Icon = ({name, style, color, ...props}: IconProps) => {
       StyleSheet.flatten([
         styles.i24Container,
         'i12' in props && styles.i12Container,
+        'i14' in props && styles.i14Container,
         'i16' in props && styles.i16Container,
         'i18' in props && styles.i18Container,
         'i20' in props && styles.i20Container,
@@ -211,6 +213,10 @@ const styles = StyleSheet.create({
   i16Container: {
     width: 16,
     height: 16,
+  },
+  i14Container: {
+    width: 14,
+    height: 14,
   },
   i12Container: {
     width: 12,

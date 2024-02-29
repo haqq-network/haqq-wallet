@@ -3,6 +3,7 @@ import React, {forwardRef, useImperativeHandle, useMemo, useState} from 'react';
 import {Platform, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
+import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {ColorType} from '@app/types';
@@ -133,5 +134,6 @@ const styles = createTheme({
     height: 56,
     flexDirection: 'row',
     zIndex: 1,
+    backgroundColor: Color.bg1,
   },
 });

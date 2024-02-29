@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react';
 
 import {isFuture} from 'date-fns';
-import {View} from 'react-native';
+import {View, useWindowDimensions} from 'react-native';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
@@ -40,6 +40,7 @@ export function StackedVestedTokens({
   unlock,
   totalBalance,
 }: StackedVestedTokensProps) {
+  const {width} = useWindowDimensions();
   const vestedUnlockDescription = useMemo(() => {
     if (!unlock) {
       return '';
@@ -99,7 +100,7 @@ export function StackedVestedTokens({
           </View>
           <DashedLine
             style={styles.separator}
-            width={2}
+            width={width - 40}
             color={Color.graphicSecond2}
           />
         </>
@@ -123,7 +124,7 @@ export function StackedVestedTokens({
         <>
           <DashedLine
             style={styles.separator}
-            width={2}
+            width={width - 40}
             color={Color.graphicSecond2}
           />
           <View style={styles.row}>

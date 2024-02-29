@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 
-import {View} from 'react-native';
+import {View, useWindowDimensions} from 'react-native';
 
 import {Color} from '@app/colors';
 import {DashedLine} from '@app/components/dashed-line';
@@ -31,6 +31,7 @@ const CARD_WIDTH = 57.78;
 const CARD_RADIUS = 8;
 
 export const WalletCard = ({wallet, tokens, tokensOnly}: Props) => {
+  const {width} = useWindowDimensions();
   const balances = useWalletsBalance([wallet]);
   const {available, locked} = useMemo(
     () => calculateBalances(balances, [wallet]),
@@ -69,7 +70,7 @@ export const WalletCard = ({wallet, tokens, tokensOnly}: Props) => {
 
       <DashedLine
         style={styles.dashedLine}
-        width={1}
+        width={width - 40}
         color={Color.graphicSecond2}
       />
 
@@ -96,7 +97,7 @@ export const WalletCard = ({wallet, tokens, tokensOnly}: Props) => {
           </View>
           <DashedLine
             style={styles.dashedLine}
-            width={1}
+            width={width - 40}
             color={Color.graphicSecond2}
           />
         </>
@@ -106,7 +107,11 @@ export const WalletCard = ({wallet, tokens, tokensOnly}: Props) => {
         return <TokenRow key={generateUUID()} item={token} />;
       })}
       {tokens.length > 0 ? (
-        <SolidLine style={styles.line} width={1} color={Color.graphicSecond2} />
+        <SolidLine
+          style={styles.line}
+          width={width - 40}
+          color={Color.graphicSecond2}
+        />
       ) : (
         <View style={styles.footer}>
           <Icon name={IconsName.coin} color={Color.textSecond1} />
