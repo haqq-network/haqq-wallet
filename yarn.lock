@@ -7898,13 +7898,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dedent@npm:^0.6.0":
-  version: 0.6.0
-  resolution: "dedent@npm:0.6.0"
-  checksum: fe2c0f5adb0b24407988e4adcd22befa0a27259091d4c40574c72da29fa6a6989e15a522ffc0f934ba6bb511b6498b315e7cdcf4a33a310cfaf1a8555a106484
-  languageName: node
-  linkType: hard
-
 "dedent@npm:^1.0.0":
   version: 1.5.1
   resolution: "dedent@npm:1.5.1"
@@ -10276,7 +10269,7 @@ __metadata:
     js-sha3: 0.8.0
     json-rpc-engine: 6.1.0
     json-stable-stringify: 1.0.2
-    lottie-react-native: 5.1.6
+    lottie-react-native: 6.6.0
     markdown-it: 13.0.1
     metro-minify-terser: 0.77.0
     metro-react-native-babel-preset: 0.77.0
@@ -10323,7 +10316,7 @@ __metadata:
     react-native-qr-decode-image-camera: 1.1.3
     react-native-qrcode-svg: 6.2.0
     react-native-randombytes: 3.6.1
-    react-native-reanimated: 3.7.0
+    react-native-reanimated: 3.7.1
     react-native-redash: 18.1.0
     react-native-safe-area-context: 4.7.1
     react-native-screens: 3.29.0
@@ -10820,7 +10813,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"invariant@npm:*, invariant@npm:2, invariant@npm:2.2.4, invariant@npm:^2.2.2, invariant@npm:^2.2.4":
+"invariant@npm:*, invariant@npm:2, invariant@npm:2.2.4, invariant@npm:^2.2.4":
   version: 2.2.4
   resolution: "invariant@npm:2.2.4"
   dependencies:
@@ -12652,21 +12645,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lottie-react-native@npm:5.1.6":
-  version: 5.1.6
-  resolution: "lottie-react-native@npm:5.1.6"
-  dependencies:
-    invariant: ^2.2.2
-    react-native-safe-modules: ^1.0.3
+"lottie-react-native@npm:6.6.0":
+  version: 6.6.0
+  resolution: "lottie-react-native@npm:6.6.0"
   peerDependencies:
-    lottie-ios: ^3.4.0
+    "@dotlottie/react-player": ^1.6.1
+    "@lottiefiles/react-lottie-player": ^3.5.3
     react: "*"
     react-native: ">=0.46"
     react-native-windows: ">=0.63.x"
   peerDependenciesMeta:
+    "@dotlottie/react-player":
+      optional: true
+    "@lottiefiles/react-lottie-player":
+      optional: true
     react-native-windows:
       optional: true
-  checksum: e051e3c3e50b6d0c766895ac122cdccdd1acb76daec6eac9538a2892d8e52ab9e0b5580ab258c37d04b1924bc9962c9b8fdcced0a81d332a6076bfa045783f50
+  checksum: c989a1765caf7d6a80d72eb1c4702648cc744b07c13f1085f6f4233992264686191d84ff88233b6083ae2548261fccd9375cb9de1f81364f3f2477928d6f5c3b
   languageName: node
   linkType: hard
 
@@ -15960,9 +15955,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-reanimated@npm:3.7.0":
-  version: 3.7.0
-  resolution: "react-native-reanimated@npm:3.7.0"
+"react-native-reanimated@npm:3.7.1":
+  version: 3.7.1
+  resolution: "react-native-reanimated@npm:3.7.1"
   dependencies:
     "@babel/plugin-transform-object-assign": ^7.16.7
     "@babel/preset-typescript": ^7.16.7
@@ -15977,7 +15972,7 @@ __metadata:
     "@babel/plugin-transform-template-literals": ^7.0.0-0
     react: "*"
     react-native: "*"
-  checksum: f3ea132d889184eec56023cb82454805dbbc0fb7c4c3921bec6b9d9db6d530beb5e25b2f9d05f265c66bb8a08e0fff70a2376fea5a6ba871f9f479f3538556cd
+  checksum: 5adc6d07ac519992f19dae8d627ddf65fe7d2d80393e53aac06946f7cee3819440c30469ea668bac81af0ac557143fe1c06911d36899fc50e947f05a15950f37
   languageName: node
   linkType: hard
 
@@ -16004,17 +15999,6 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 2a07c0b0751c9ceb435c7b107a881080d7b4142fca597ea4701894aeb7c2fec02eeaef094bc28f3d2eaed39f4fc8ef26764c156bf17af93407d723db5608e1e5
-  languageName: node
-  linkType: hard
-
-"react-native-safe-modules@npm:^1.0.3":
-  version: 1.0.3
-  resolution: "react-native-safe-modules@npm:1.0.3"
-  dependencies:
-    dedent: ^0.6.0
-  peerDependencies:
-    react-native: "*"
-  checksum: df30e1935dfb32ece9be57cd21ccbbecd058a68942536ff6c543f591e5488cc22f17093131eaabf490b6e187caa78e802a4b2e55c890af1c48a3f012dd57c9f2
   languageName: node
   linkType: hard
 

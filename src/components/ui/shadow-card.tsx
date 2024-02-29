@@ -40,12 +40,12 @@ const styles = createTheme({
     shadowColor: Color.shadowColor3,
     shadowOffset: {
       width: 0,
-      height: 6,
+      height: 4,
     },
     backgroundColor: Color.bg1,
-    shadowRadius: 24,
+    shadowRadius: 14,
     shadowOpacity: 1,
-    elevation: 13,
+    elevation: 15,
 
     paddingVertical: 16,
     marginTop: 24,

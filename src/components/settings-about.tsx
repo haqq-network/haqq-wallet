@@ -34,14 +34,6 @@ export const SettingsAbout = memo(
         </Spacer>
         <Text t14 i18n={I18N.settingsAboutTitle} style={styles.title} />
         <View style={styles.buttons}>
-          {/* <IconButton onPress={onPressRate} style={page.button}>
-          <StarIcon color={GRAPHIC_BASE_1} />
-          <Text t11 style={page.buttonText}>
-            Rate HAQQ wallet App
-          </Text>
-          <Spacer />
-           <Icon i24 name="arrow_forward" color={Color.graphicSecond3} />
-        </IconButton> */}
           <SettingsAboutButton
             name="global"
             color={Color.graphicBase1}

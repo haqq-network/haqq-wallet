@@ -93,6 +93,7 @@ const browserOptions = {
 const settingsOptions = {
   headerShown: false,
   tabBarIcon: tabBarIcon('homeSettings'),
+  unmountOnBlur: true,
 };
 
 const navigationOptions = {

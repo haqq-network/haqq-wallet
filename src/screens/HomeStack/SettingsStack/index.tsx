@@ -36,6 +36,7 @@ const SettingsStack = memo(() => {
           ...popupScreenOptionsWithMargin,
           title: 'Settings',
           headerShown: true,
+          headerLeft: () => null,
         }}
       />
       <Stack.Screen

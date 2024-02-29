@@ -52,6 +52,12 @@ export const CardName = ({
           color={Color.graphicBase3}
           style={styles.marginLeft}
         />
+        <Icon
+          i16
+          name={IconsName.more}
+          color={Color.graphicBase3}
+          style={styles.marginLeft}
+        />
       </CopyMenu>
     </View>
   );

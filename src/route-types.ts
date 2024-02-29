@@ -592,6 +592,7 @@ export type ManageAccountsStackParamList = HomeStackParamList &
     [ManageAccountsStackRoutes.SettingsAccounts]: undefined;
     [ManageAccountsStackRoutes.SettingsAccountDetail]: {
       address: string;
+      fromHomePage?: boolean;
     };
     [ManageAccountsStackRoutes.SettingsAccountEdit]: {
       address: string;

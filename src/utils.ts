@@ -8,6 +8,7 @@ import {
   differenceInMinutes,
 } from 'date-fns';
 import Decimal from 'decimal.js';
+import {ethers} from 'ethers';
 import _ from 'lodash';
 import {
   Alert,
@@ -52,6 +53,7 @@ import {
   SendTransactionError,
   WalletConnectParsedAccount,
 } from './types';
+import {ERC20_TOKEN_ABI} from './variables/abi';
 import {IS_ANDROID, STORE_PAGE_URL} from './variables/common';
 import {EIP155_SIGNING_METHODS} from './variables/EIP155';
 
@@ -975,4 +977,21 @@ export function applyEthTxMultiplier(toBalance: Balance) {
       ),
     ),
   );
+}
+
+export function parseERC20TxDataFromHexInput(hex?: string) {
+  try {
+    if (!hex) {
+      return undefined;
+    }
+    let data = hex;
+    if (!hex.startsWith('0x')) {
+      data = `0x${hex}`;
+    }
+    if (data) {
+      const erc20Interface = new ethers.utils.Interface(ERC20_TOKEN_ABI);
+      return erc20Interface.parseTransaction({data: data});
+    }
+  } catch (e) {}
+  return undefined;
 }
