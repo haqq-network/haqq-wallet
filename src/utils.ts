@@ -8,7 +8,7 @@ import {
   differenceInMinutes,
 } from 'date-fns';
 import Decimal from 'decimal.js';
-import {utils} from 'ethers';
+import {ethers} from 'ethers';
 import _ from 'lodash';
 import {
   Alert,
@@ -22,13 +22,13 @@ import {Adjust} from 'react-native-adjust';
 import prompt, {PromptOptions} from 'react-native-prompt-android';
 
 import {app} from '@app/contexts';
-import {Transaction, TransactionStatus} from '@app/models/transaction';
 import {RemoteConfig} from '@app/services/remote-config';
 
 import {Color, getColor} from './colors';
 import {DEBUG_VARS} from './debug-vars';
 import {Events} from './events';
 import {AddressUtils} from './helpers/address-utils';
+import {getRemoteMultiplierValue} from './helpers/get-remote-balance-value';
 import {shortAddress} from './helpers/short-address';
 import {getHost, onUrlSubmit} from './helpers/web3-browser-utils';
 import {WalletBalance} from './hooks/use-wallets-balance';
@@ -46,11 +46,14 @@ import {
   EthTypedData,
   HaqqEthereumAddress,
   IndexerTransaction,
+  IndexerTransactionWithType,
+  IndexerTxMsgType,
   JsonRpcTransactionRequest,
   PartialJsonRpcRequest,
   SendTransactionError,
   WalletConnectParsedAccount,
 } from './types';
+import {ERC20_TOKEN_ABI} from './variables/abi';
 import {IS_ANDROID, STORE_PAGE_URL} from './variables/common';
 import {EIP155_SIGNING_METHODS} from './variables/EIP155';
 
@@ -70,9 +73,25 @@ export function isNumber(value: string) {
   return value.match(numbersRegExp);
 }
 
-const regex = /(0x\w{2})(.*)(\w{4})$/gm;
+const ethAddressRegex = /(0x\w{2})(.*)(\w{4})$/gm;
+const haqqAddressRegex = /(haqq)(.*)(\w{4})$/gm;
+const haqqValidatorAddressRegex = /(haqqvaloper)(.*)(\w{4})$/gm;
 
 export function splitAddress(address: string) {
+  if (!address) {
+    return [];
+  }
+
+  let regex = ethAddressRegex;
+
+  if (AddressUtils.isHaqqAddress(address)) {
+    regex = haqqAddressRegex;
+  }
+
+  if (AddressUtils.isHaqqValidatorAddress(address)) {
+    regex = haqqValidatorAddressRegex;
+  }
+
   regex.lastIndex = 0;
   const result = regex.exec(address);
   if (!result) {
@@ -795,10 +814,13 @@ export const getTransactionFromJsonRpcRequest = (
       ? request.params[0]
       : request.params;
 
-    delete params.gasLimit;
-    delete params.gasPrice;
-    delete params.maxFeePerGas;
-    delete params.maxPriorityFeePerGas;
+    // @ts-ignore
+    if (params.gas) {
+      // @ts-ignore
+      params.gasPrice = params.gas;
+      // @ts-ignore
+      delete params.gas;
+    }
 
     return params;
   }
@@ -919,37 +941,6 @@ export const uppercaseFirtsLetter = (str: string) =>
     // uppercase first letter
     .replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
 
-export const migrateTransaction = (tx: IndexerTransaction): Transaction => {
-  const statusMap = {
-    ['0']: TransactionStatus.success,
-    ['1']: TransactionStatus.failed,
-    ['-1']: TransactionStatus.inProgress,
-  };
-
-  return {
-    account: tx.msg.from_address,
-    raw: '',
-    fee: parseFloat(utils.formatEther(tx.fee ?? 0)),
-    feeHex: new Balance(tx.fee).toHex(),
-    providerId: app.providerId,
-    hash: tx.hash,
-    block: String(tx.block),
-    from: AddressUtils.toEth(tx.msg.from_address),
-    to: AddressUtils.toEth(tx.msg.to_address),
-    value: parseFloat(utils.formatEther(tx.msg.amount ?? 0)),
-    chainId: tx.chain_id,
-    timeStamp: tx.ts,
-    createdAt: +new Date(tx.ts),
-    confirmations: tx.confirmations,
-    contractAddress: tx.msg.contract_address || '',
-    confirmed: tx.confirmations > 10,
-    input: tx.input,
-    status: statusMap[tx.code],
-    type: tx.msg_type,
-    id: tx.id,
-  };
-};
-
 export function promtAsync(
   title?: string,
   message?: string,
@@ -958,4 +949,49 @@ export function promtAsync(
   return new Promise(resolve => {
     prompt(title, message, resolve, options);
   });
+}
+
+/**
+ * wrap for typescript indexet TX type
+ */
+export function wrapIndexerTx<T extends IndexerTxMsgType>(
+  tx: IndexerTransaction,
+) {
+  return tx as IndexerTransactionWithType<T>;
+}
+
+export function applyEthTxMultiplier(toBalance: Balance) {
+  // TODO Investigate and fix new Balance issue when number used instead of hex
+  return new Balance(
+    decimalToHex(
+      String(
+        // Convert to int because decimalToHex incorrectly parse decimals work only with integers
+        parseInt(
+          String(
+            // Multiply by eth_commission_multiplier
+            toBalance.toNumber() *
+              getRemoteMultiplierValue('eth_commission_multiplier'),
+          ),
+          10,
+        ),
+      ),
+    ),
+  );
+}
+
+export function parseERC20TxDataFromHexInput(hex?: string) {
+  try {
+    if (!hex) {
+      return undefined;
+    }
+    let data = hex;
+    if (!hex.startsWith('0x')) {
+      data = `0x${hex}`;
+    }
+    if (data) {
+      const erc20Interface = new ethers.utils.Interface(ERC20_TOKEN_ABI);
+      return erc20Interface.parseTransaction({data: data});
+    }
+  } catch (e) {}
+  return undefined;
 }

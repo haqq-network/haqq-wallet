@@ -18,8 +18,8 @@ export const ISLMLogo = ({style, border, inverted}: ISLMLogoProps) => {
     () => ({
       name: 'islm',
       style: {
-        width: inverted ? 42 : 54,
-        height: inverted ? 42 : 54,
+        width: inverted ? 42 : 44,
+        height: inverted ? 42 : 44,
       },
       color: inverted ? Color.graphicBase3 : Color.graphicGreen1,
     }),
@@ -54,8 +54,8 @@ const styles = createTheme({
     height: 44,
   },
   border: {
-    width: 44 + 15,
-    height: 44 + 15,
+    width: 60,
+    height: 60,
     borderWidth: 1,
     borderColor: Color.graphicBase2,
     borderStyle: 'dashed',

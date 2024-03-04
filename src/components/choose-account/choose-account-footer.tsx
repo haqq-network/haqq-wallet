@@ -9,6 +9,8 @@ import {
   ButtonVariant,
   Spacer,
   Text,
+  TextPosition,
+  TextVariant,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
@@ -28,10 +30,10 @@ export const ChooseAccountFooter = ({
   return (
     <View style={styles.container}>
       <Text
-        t15
+        variant={TextVariant.t15}
+        position={TextPosition.center}
         i18n={I18N.chooseAccountLoadInfo}
         color={Color.textBase2}
-        center
       />
       <Spacer height={10} />
       <Button
@@ -44,7 +46,7 @@ export const ChooseAccountFooter = ({
       />
       {count > 0 && (
         <>
-          <Spacer height={10} />
+          <Spacer height={18} />
           <Button
             onPress={onAdd}
             i18n={
@@ -56,7 +58,9 @@ export const ChooseAccountFooter = ({
             variant={ButtonVariant.contained}
             size={ButtonSize.middle}
             loading={loading}
-            testID="choose_account_next"
+            testID={
+              loading ? 'choose_account_loading_next' : 'choose_account_next'
+            }
           />
         </>
       )}

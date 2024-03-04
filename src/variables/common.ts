@@ -1,3 +1,4 @@
+import DefaultProvidersJson from '@assets/migrations/providers.json';
 import {APPSTORE_APP_ID, GOOGLE_PLAY_PACKAGE} from '@env';
 import {Platform} from 'react-native';
 import {Easing} from 'react-native-reanimated';
@@ -107,7 +108,8 @@ export const DEFAULT_CARD_PATTERN = '#0DAC6F';
 export const SHADOW_COLOR_1 = 'rgba(25, 26, 28, 0.06)';
 export const SHADOW_COLOR_2 = 'rgba(25, 26, 28, 0.5)';
 
-export const SHADOW_COLOR_3_LIGHT = 'rgba(25, 26, 28, 0.1)';
+export const SHADOW_COLOR_3_LIGHT =
+  Platform.OS === 'ios' ? 'rgba(25, 26, 28, 0.1)' : 'rgba(25, 26, 28, 0.4)';
 export const SHADOW_COLOR_3_DARK = 'rgba(12, 14, 13, 1)';
 
 export const PLACEHOLDER_GRAY = '#AAAAAA';
@@ -178,8 +180,9 @@ export const ETH_HD_SHORT_PATH = "44'/60'/0'/0"; // HD derivation path
 export const LEDGER_HD_PATH_TEMPLATE = "44'/60'/index'/0/0"; // HD derivation path
 export const ETH_HD_PATH = `${ETH_HD_SHORT_PATH}/0`; // HD derivation path
 
-export const MAIN_NETWORK = '6d83b352-6da6-4a71-a250-ba222080e21f';
-export const TEST_NETWORK = '75a6778b-0a79-4a06-96c9-daddc8d2c013';
+export const DEFAULT_PROVIDERS = DefaultProvidersJson;
+export const MAIN_NETWORK_ID = DEFAULT_PROVIDERS[1].id;
+export const TEST_NETWORK_ID = DEFAULT_PROVIDERS[0].id;
 
 export const PRIVACY_POLICY = 'https://www.boredgen.net/wallet/privacy-policy';
 export const TERMS_OF_CONDITIONS =
@@ -210,6 +213,9 @@ export const PLATFORM_COMPANY = Platform.select({
 
 export const COSMOS_PREFIX = 'haqq';
 export const CURRENCY_NAME = 'ISLM';
+export const aISLM_DENOM = 'aISLM';
+export const IBC_DENOM = 'IBC';
+export const MULTICOIN_DENOM = 'multicoin';
 
 export const STRINGS = {
   /** non-breaking space  */
@@ -310,6 +316,10 @@ export const TEST_URLS: Partial<Link>[] = [
   {
     title: 'ChainList app',
     url: 'https://chainlist.org/',
+  },
+  {
+    url: 'https://eip6963.org',
+    title: 'EIP6963',
   },
 ];
 

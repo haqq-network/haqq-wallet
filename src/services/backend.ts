@@ -1,11 +1,13 @@
 import {app} from '@app/contexts';
 import {AppInfo} from '@app/helpers/get-app-info';
+import {Currency} from '@app/models/types';
 import {
   MarkupResponse,
   NewsRow,
   NewsUpdatesResponse,
   Raffle,
   RssNewsRow,
+  StoriesResponse,
 } from '@app/types';
 import {getHttpResponse} from '@app/utils';
 
@@ -268,6 +270,26 @@ export class Backend {
     return await getHttpResponse<NewsUpdatesResponse>(newsResp);
   }
 
+  async updateNotificationToken(
+    subscribtionId: string,
+    token: string,
+    uid: string,
+  ): Promise<{id: string}> {
+    const req = await fetch(
+      `${this.getRemoteUrl()}notification_token/${subscribtionId}`,
+      {
+        method: 'POST',
+        headers: Backend.headers,
+        body: JSON.stringify({
+          token,
+          uid,
+        }),
+      },
+    );
+
+    return await getHttpResponse<{id: string}>(req);
+  }
+
   async createNotificationToken(
     token: string,
     uid: string,
@@ -349,5 +371,22 @@ export class Backend {
       }),
     });
     return await getHttpResponse<MarkupResponse>(response);
+  }
+
+  async stories(): Promise<StoriesResponse> {
+    const response = await fetch(`${this.getRemoteUrl()}stories`, {
+      method: 'GET',
+      headers: Backend.headers,
+    });
+    return await getHttpResponse<StoriesResponse>(response);
+  }
+
+  async availableCurrencies(): Promise<Currency[]> {
+    const response = await fetch(`${this.getRemoteUrl()}currencies`, {
+      method: 'GET',
+      headers: Backend.headers,
+    });
+
+    return await getHttpResponse<any>(response);
   }
 }

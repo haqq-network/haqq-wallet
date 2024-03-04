@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {observer} from 'mobx-react';
-import {Image, SafeAreaView, View} from 'react-native';
+import {SafeAreaView, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 
 import {createTheme} from '@app/helpers';
@@ -9,6 +9,7 @@ import {I18N} from '@app/i18n';
 import {Nft} from '@app/models/nft';
 import {HaqqCosmosAddress, NftItem} from '@app/types';
 
+import {ImageWrapper} from './image-wrapper';
 import {NftViewerItemPreviewVariant} from './nft-viewer/nft-viewer-item-preview/nft-viewer-item-preview';
 import {NftViewerItemPreviewList} from './nft-viewer/nft-viewer-item-preview/nft-viewer-item-preview-list';
 import {Spacer, Text} from './ui';
@@ -25,7 +26,7 @@ export const NftCollectionDetails = observer(
       <SafeAreaView style={styles.container}>
         <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
           <View>
-            <Image
+            <ImageWrapper
               resizeMode="cover"
               source={{uri: collection.icon ?? collection.data[0]?.image}}
               style={styles.image}

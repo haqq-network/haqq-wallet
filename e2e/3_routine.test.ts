@@ -1,16 +1,16 @@
-import {by, device, element, waitFor} from 'detox';
+import {by, device, element, log, waitFor} from 'detox';
 import {Wallet, utils} from 'ethers';
 
 import {ensureWalletIsVisible} from './helpers/ensureWalletIsVisible';
 import {getCoins} from './helpers/getCoins';
+import {isVisible} from './helpers/isVisibile';
+import {MilkAddressProxy} from './helpers/milkAddressProxy';
 import {restoreWallet} from './helpers/restoreWallet';
-import {sleep} from './helpers/sleep';
-import {PIN, PROVIDER, SOURCE_WALLET} from './test-variables';
+import {PIN} from './test-variables';
 
 describe('Routine', () => {
-  const isAndroid = device.getPlatform() === 'android';
   let mnemonic = '';
-  let milkWallet: Wallet;
+  const isAndroid = device.getPlatform() === 'android';
   beforeAll(async () => {
     await device.launchApp({
       newInstance: true,
@@ -18,7 +18,6 @@ describe('Routine', () => {
     });
 
     mnemonic = utils.entropyToMnemonic(utils.randomBytes(32));
-    milkWallet = new Wallet(SOURCE_WALLET, PROVIDER);
     await restoreWallet(mnemonic, PIN);
   });
 
@@ -34,9 +33,11 @@ describe('Routine', () => {
       .toBeVisible()
       .withTimeout(15000);
 
+    await device.disableSynchronization();
     for (const num of PIN.split('')) {
       await element(by.id(`numeric_keyboard_${num}`)).tap();
     }
+    await device.enableSynchronization();
 
     await ensureWalletIsVisible(mnemonic);
   });
@@ -48,23 +49,36 @@ describe('Routine', () => {
 
     const wallet = Wallet.fromMnemonic(mnemonic);
 
-    await getCoins(mnemonic, '0.002');
+    const coinsAmount = '0.003';
+    await getCoins(mnemonic, coinsAmount);
 
-    await sleep(10_000);
-
+    await waitFor(element(by.text('ISLM: 0.003')))
+      .toBeVisible()
+      .withTimeout(6 * 60_000);
     await element(by.id(`wallets_${wallet.address.toLowerCase()}_send`)).tap();
 
     const input_address = element(by.id('transaction_address_input'));
-    await input_address.tap();
-    await input_address.replaceText(milkWallet.address);
-
-    await element(by.id('transaction_address_next')).tap();
-    if (isAndroid) {
-      // Previous step was for keyboard hide
-      await element(by.id('transaction_address_next')).tap();
+    await input_address.typeText(MilkAddressProxy.address);
+    if (!isAndroid) {
+      await input_address.tapReturnKey();
     }
-
-    await element(by.text('ISLM')).tap();
+    await element(by.id('transaction_address_next')).tap();
+    const nextStillVisible = await isVisible('transaction_address_next');
+    if (nextStillVisible) {
+      try {
+        await element(by.id('transaction_address_next')).tap();
+      } catch (err) {
+        log.warn('Error while tap: ' + JSON.stringify(err));
+      }
+    }
+    await element(by.text(`${coinsAmount} ISLM`))
+      .atIndex(0)
+      .tap();
+    if (isAndroid) {
+      await element(by.text(`${coinsAmount} ISLM`))
+        .atIndex(0)
+        .tap();
+    }
 
     const input_form = element(by.id('transaction_sum_form_input'));
     await input_form.tap();

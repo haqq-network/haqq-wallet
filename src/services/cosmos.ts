@@ -44,10 +44,14 @@ import {
   base64PublicKey,
   cosmosAddress,
 } from '@haqq/provider-base';
+import {normalize0x} from '@haqq/provider-keystone-react-native';
 import Decimal from 'decimal.js';
 
 import {AddressUtils} from '@app/helpers/address-utils';
-import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
+import {
+  getRemoteBalanceValue,
+  getRemoteMultiplierValue,
+} from '@app/helpers/get-remote-balance-value';
 import {ledgerTransportCbWrapper} from '@app/helpers/ledger-transport-wrapper';
 import {Provider} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
@@ -58,7 +62,7 @@ import {
   CosmosTxV1betaSimulateResponse,
   EvmosVestingV1BalancesResponse,
 } from '@app/types/cosmos';
-import {getHttpResponse} from '@app/utils';
+import {decimalToHex, getHttpResponse} from '@app/utils';
 import {COSMOS_PREFIX, WEI} from '@app/variables/common';
 
 import {EthSign} from './eth-sign';
@@ -312,7 +316,13 @@ export class Cosmos {
     types: Record<string, Array<TypedDataField>>,
     message: Record<string, any>,
   ): Promise<string | undefined> {
-    return await transport.signTypedData(hdPath, {domain, message, types});
+    const signature = await transport.signTypedData(hdPath, {
+      domain,
+      message,
+      types,
+    });
+
+    return normalize0x(signature);
   }
 
   async sendMsg(
@@ -361,14 +371,6 @@ export class Cosmos {
       extension,
     );
 
-    // Logger.log(
-    //   'rawTx',
-    //   msg.legacyAmino.body.toObject(),
-    //   msg.legacyAmino.authInfo.toObject(),
-    //   extension,
-    //   signature,
-    // );
-
     return await this.broadcastTransaction(rawTx);
   }
 
@@ -383,8 +385,6 @@ export class Cosmos {
       );
 
       const resp = await this.postSimulate(data, account);
-
-      // Logger.log('resp', resp);
 
       // TODO Unhandled exception. Types issue.
       //@ts-ignore
@@ -402,8 +402,19 @@ export class Cosmos {
       }
 
       const gas = new Balance(
-        parseInt(resp.gas_info.gas_used, 10) * 1.35,
-        0,
+        decimalToHex(
+          String(
+            // Convert to int because decimalToHex incorrectly parse decimals work only with integers
+            parseInt(
+              String(
+                // Multiply by cosmos_commission_multiplier
+                parseInt(resp.gas_info.gas_used, 10) *
+                  getRemoteMultiplierValue('cosmos_commission_multiplier'),
+              ),
+              10,
+            ),
+          ),
+        ),
       ).max(baseGas);
 
       const amount = baseFee.operate(gas, 'mul').max(totalAmount);

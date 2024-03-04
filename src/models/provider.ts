@@ -68,6 +68,10 @@ export class Provider extends Realm.Object {
     }
   }
 
+  static getAllIds() {
+    return Provider.getAll().map(({id}) => id);
+  }
+
   static getAll() {
     return realm.objects<Provider>('Provider');
   }

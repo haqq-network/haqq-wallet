@@ -1,18 +1,18 @@
-import {TransactionReceipt} from '@ethersproject/abstract-provider';
-import {utils} from 'ethers';
+import {hashMessage} from '@walletconnect/utils';
 import {makeAutoObservable, runInAction, when} from 'mobx';
-import {isHydrated, makePersistable} from 'mobx-persist-store';
+import {isHydrated} from 'mobx-persist-store';
 
-import {calcFee} from '@app/helpers';
-import {awaitForRealm} from '@app/helpers/await-for-realm';
-import {realm} from '@app/models/index';
+import {IconProps} from '@app/components/ui';
+import {app} from '@app/contexts';
+import {Events} from '@app/events';
+import {parseTransaction} from '@app/helpers/indexer-transaction-utils';
 import {TransactionRealmObject} from '@app/models/realm-object-for-migration';
+import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
-import {storage} from '@app/services/mmkv';
-import {HaqqEthereumAddress, MobXStoreFromRealm} from '@app/types';
-import {migrateTransaction} from '@app/utils';
-import {DEFAULT_FEE, STORE_REHYDRATION_TIMEOUT_MS} from '@app/variables/common';
+import {IndexerTransaction, IndexerTxParsedTokenInfo} from '@app/types';
+
+import {Token} from './tokens';
 
 export enum TransactionStatus {
   failed,
@@ -20,104 +20,65 @@ export enum TransactionStatus {
   inProgress,
 }
 
-export type Transaction = {
-  account: string;
-  raw: string;
-  fee: number;
-  feeHex: string;
-  providerId: string;
-  hash: string;
-  block?: string;
-  from: HaqqEthereumAddress;
-  to: HaqqEthereumAddress;
-  value: number;
-  chainId: string | number;
-  timeStamp?: number | string;
-  createdAt: number;
-  confirmations?: number | string;
-  contractAddress: string | null;
-  confirmed: boolean;
-  input: string;
-  status: TransactionStatus;
-  type?: string;
-  id: string;
+export interface ParsedTransactionData {
+  from: string;
+  to: string;
+  title: string;
+  subtitle: string;
+  icon: IconProps['name'];
+  isCosmosTx: boolean;
+  isEthereumTx: boolean;
+  isContractInteraction: boolean;
+  isIncoming: boolean;
+  isOutcoming: boolean;
+  amount: Balance[];
+  tokens: IndexerTxParsedTokenInfo[];
+}
+
+export type Transaction = IndexerTransaction & {
+  parsed: ParsedTransactionData;
 };
 
-class TransactionStore implements MobXStoreFromRealm {
-  realmSchemaName = TransactionRealmObject.schema.name;
-  transactions: Transaction[] = [];
+type AccountsHash = string;
+type BlockNumber = 'latest' | `${number}`;
+type CacheKey = `${AccountsHash}:${BlockNumber}`;
 
-  constructor(shouldSkipPersisting: boolean = false) {
+class TransactionStore {
+  realmSchemaName = TransactionRealmObject.schema.name;
+  private _transactions: Array<Transaction> = [];
+  private _lastSyncedAccountsHash: AccountsHash = '';
+  private _lastSyncedBlockNumber: BlockNumber = 'latest';
+  private _isLoading = false;
+  private _cache = new Map<CacheKey, Transaction[]>();
+
+  constructor() {
     makeAutoObservable(this);
-    if (!shouldSkipPersisting) {
-      makePersistable(this, {
-        name: this.constructor.name,
-        properties: ['transactions'],
-        storage: storage,
-      });
-    }
+    app.on(Events.onProviderChanged, () => {
+      this.removeAll();
+      this.fetchLatestTransactions(Wallet.addressList());
+    });
   }
 
   get isHydrated() {
     return isHydrated(this);
   }
 
-  migrate = async () => {
-    await awaitForRealm();
-    await when(() => this.isHydrated, {
-      timeout: STORE_REHYDRATION_TIMEOUT_MS,
-    });
+  get isLoading() {
+    return this._isLoading;
+  }
 
-    const realmData = realm.objects<Transaction>(this.realmSchemaName);
-    if (realmData.length > 0) {
-      realmData.forEach(item => {
-        realm.write(() => realm.delete(item));
-      });
-    }
-  };
+  create(transaction: Transaction) {
+    const existingTransaction = this.getById(transaction.id);
 
-  create(
-    transaction: Transaction,
-    providerId: string,
-    fee: Balance = Balance.Empty,
-  ) {
-    const existingTransaction = this.getById(transaction.hash.toLowerCase());
     const newTransaction: Transaction = {
       ...existingTransaction,
-      hash: transaction.hash.toLowerCase(),
-      block: transaction.block,
-      account: transaction.from.toLowerCase(),
-      raw: JSON.stringify(transaction),
-      from: transaction.from.toLowerCase() as HaqqEthereumAddress,
-      to: transaction.to.toLowerCase() as HaqqEthereumAddress,
-      contractAddress: transaction.contractAddress
-        ? transaction.contractAddress.toLowerCase()
-        : null,
-      value: parseFloat(utils.formatEther(transaction.value ?? 0)),
-      fee: fee.toEther(),
-      feeHex: fee.toHex(),
-      providerId,
-      chainId: String(transaction.chainId),
-      createdAt: existingTransaction
-        ? existingTransaction.createdAt
-        : transaction.timeStamp
-        ? parseInt(String(transaction.timeStamp), 10) * 1000
-        : Date.now(),
-      confirmed: transaction.confirmations
-        ? parseInt(String(transaction.confirmations), 10) > 10
-        : false,
-      input: transaction.input ?? '0x',
-      status:
-        transaction.status ||
-        existingTransaction?.status ||
-        TransactionStatus.inProgress,
-      id: transaction.hash,
+      ...transaction,
     };
 
     if (existingTransaction) {
-      this.update(newTransaction.hash, newTransaction);
+      this.update(newTransaction.id, newTransaction);
     } else {
-      this.transactions.push(newTransaction);
+      this._transactions.push(newTransaction);
     }
 
     return newTransaction;
@@ -127,9 +88,9 @@ class TransactionStore implements MobXStoreFromRealm {
     const transaction = this.getById(id);
 
     if (transaction) {
-      this.transactions = this.transactions.map(t => {
-        if (t.hash === transaction.hash) {
-          return {...t, ...params};
+      this._transactions = this._transactions.map(t => {
+        if (t.id === transaction.id) {
+          return {...t, ...params} as Transaction;
         }
         return t;
       });
@@ -139,67 +100,123 @@ class TransactionStore implements MobXStoreFromRealm {
   getById(id: string) {
     const transactionLowerCaseId = id.toLowerCase();
     return (
-      this.transactions.find(
+      this.getAll().find(
+        transaction => transaction.id.toLowerCase() === transactionLowerCaseId,
+      ) || null
+    );
+  }
+
+  getByHash(hash: string) {
+    const transactionLowerCaseHash = hash.toLowerCase();
+    return (
+      this.getAll().find(
         transaction =>
-          transaction.hash.toLowerCase() === transactionLowerCaseId,
+          transaction.hash.toLowerCase() === transactionLowerCaseHash,
       ) || null
     );
   }
 
   getAll() {
-    return this.transactions;
-  }
-
-  getAllByProviderId(providerId: string) {
-    return this.transactions.filter(
-      transaction => transaction.providerId === providerId,
-    );
-  }
-
-  getAllByAccountIdAndProviderId(accountId: string, providerId: string) {
-    const accountIdLowerCase = accountId.toLowerCase();
-    return this.transactions.filter(
-      ({providerId: pid, from, to}) =>
-        pid === providerId &&
-        (from === accountIdLowerCase || to === accountIdLowerCase),
-    );
+    return this._transactions;
   }
 
   remove(id: string) {
-    this.transactions = this.transactions.filter(
-      transaction => transaction.hash !== id,
+    this._transactions = this._transactions.filter(
+      transaction => transaction.id !== id,
     );
   }
 
   removeAll() {
-    this.transactions = [];
+    this._lastSyncedAccountsHash = '';
+    this._lastSyncedBlockNumber = 'latest';
+    this._transactions = [];
   }
 
-  setConfirmed(id: string, receipt: TransactionReceipt) {
-    const tx = this.getById(id);
-    const txIndex = this.transactions.findIndex(({hash}) => hash === id);
-
-    if (tx) {
-      tx.confirmed = true;
-      tx.fee = calcFee(
-        receipt.effectiveGasPrice ?? DEFAULT_FEE,
-        receipt.cumulativeGasUsed,
-      );
-
-      this.transactions.splice(txIndex, 1, tx);
+  fetchNextTransactions = async (accounts: string[]) => {
+    if (this.isLoading) {
+      return;
     }
-  }
+    const accountHash = hashMessage(accounts.join(''));
+    const isHashEquals = this._lastSyncedAccountsHash === accountHash;
 
-  fetchTransactions = async (accounts: string[]) => {
-    const result = await Indexer.instance.getTransactions(accounts);
-    const newTxs = result.map(tx => migrateTransaction(tx));
+    const prevTxList = this._transactions;
+    const lastTx = prevTxList[prevTxList.length - 1];
+    const blockNumber: BlockNumber =
+      isHashEquals && lastTx ? `${lastTx.block}` : 'latest';
+
+    if (isHashEquals && blockNumber === this._lastSyncedBlockNumber) {
+      return this._transactions;
+    }
+
+    const nextTxList = await this._fetch(accounts, blockNumber);
 
     runInAction(() => {
-      this.transactions = newTxs;
+      this._transactions = [...prevTxList, ...nextTxList];
+      this._isLoading = false;
+    });
+
+    return nextTxList;
+  };
+
+  fetchLatestTransactions = async (accounts: string[], force = false) => {
+    if (this.isLoading && !force) {
+      return;
+    }
+    const newTxs = await this._fetch(accounts, 'latest');
+
+    runInAction(() => {
+      this._transactions = newTxs;
+      this._isLoading = false;
     });
     return newTxs;
   };
+
+  private _fetch = async (
+    accounts: string[],
+    blockNumber: BlockNumber = 'latest',
+  ) => {
+    try {
+      const accountHash = hashMessage(accounts.join(''));
+      const cacheKey: CacheKey = `${accountHash}:${blockNumber}`;
+
+      runInAction(() => {
+        this._isLoading = true;
+        if (
+          blockNumber === 'latest' &&
+          this._lastSyncedAccountsHash !== accountHash
+        ) {
+          const cahced = this._cache.get(cacheKey);
+          if (cahced?.length) {
+            this._transactions = cahced;
+          } else {
+            this._transactions = [];
+          }
+        }
+
+        this._lastSyncedAccountsHash = accountHash;
+        this._lastSyncedBlockNumber = blockNumber;
+      });
+
+      const result = await Indexer.instance.getTransactions(
+        accounts,
+        blockNumber,
+        app.providerId,
+      );
+      await when(() => !Token.isLoading, {});
+      const parsed = result
+        .map(tx => parseTransaction(tx, accounts))
+        .filter(tx => !!tx.parsed);
+      this._cache.set(cacheKey, parsed);
+      return parsed;
+    } catch (e) {
+      Logger.captureException(e, 'TransactionStore._fetch', {
+        accounts,
+        blockNumber,
+      });
+      return [];
+    }
+  };
 }
 
-const instance = new TransactionStore(Boolean(process.env.JEST_WORKER_ID));
+const instance = new TransactionStore();
 export {instance as Transaction};

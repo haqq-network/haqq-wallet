@@ -1,18 +1,24 @@
+import {log} from 'detox';
 import {Wallet, utils} from 'ethers';
 
-import {sleep} from './sleep';
+import {MilkAddressProxy} from './milkAddressProxy';
 
-import {PROVIDER, SOURCE_WALLET} from '../test-variables';
-
-export const getCoins = async (mnemonic: string, amount: string = '0.0017') => {
-  const milkWallet = new Wallet(SOURCE_WALLET, PROVIDER);
+export const getCoins = async (
+  mnemonic: string,
+  amount: string = '0.0017',
+  attempt = 1,
+) => {
+  if (attempt > 3) {
+    return;
+  }
   const wallet = Wallet.fromMnemonic(mnemonic);
-  const tx = {
-    to: wallet.address,
-    value: utils.parseEther(amount),
-  };
 
-  await milkWallet.sendTransaction(tx);
-
-  await sleep(30_000);
+  try {
+    await MilkAddressProxy.send(wallet.address, utils.parseEther(amount));
+  } catch (err) {
+    log.warn('Error while sending the transaction: ', err);
+    log.warn('Trying again...');
+    await getCoins(mnemonic, amount, attempt + 1);
+    return;
+  }
 };

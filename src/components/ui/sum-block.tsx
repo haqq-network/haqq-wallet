@@ -116,7 +116,7 @@ export const SumBlock = ({
       {!!value && (
         <View style={styles.amount}>
           <Text t15 color={Color.textBase2}>
-            {new Balance(Number(value)).toFiat('USD').toBalanceString()}
+            {new Balance(Number(value)).toFiat()}
           </Text>
         </View>
       )}

@@ -1,4 +1,4 @@
-import React, {memo} from 'react';
+import React, {memo, useEffect, useState} from 'react';
 
 import {
   BottomTabNavigationOptions,
@@ -13,8 +13,11 @@ import {Color} from '@app/colors';
 import {HomeScreenLabel} from '@app/components/home-screen/label';
 import {HomeScreenTabBarIcon} from '@app/components/home-screen/tab-bar-icon';
 import {HomeScreenTitle} from '@app/components/home-screen/title';
-import {Spacer} from '@app/components/ui';
+import {Loading, Spacer} from '@app/components/ui';
+import {app} from '@app/contexts';
+import {Events} from '@app/events';
 import {showModal} from '@app/helpers';
+import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {VariablesBool} from '@app/models/variables-bool';
@@ -28,7 +31,6 @@ import {BrowserStack} from '@app/screens/HomeStack/BrowserStack';
 import {HomeFeedStack} from '@app/screens/HomeStack/HomeFeedStack';
 import {HomeNewsStack} from '@app/screens/HomeStack/HomeNewsStack';
 import {SettingsStack} from '@app/screens/HomeStack/SettingsStack';
-import {Cloud} from '@app/services/cloud';
 import {ModalType, WalletType} from '@app/types';
 import {IS_IOS} from '@app/variables/common';
 
@@ -91,6 +93,7 @@ const browserOptions = {
 const settingsOptions = {
   headerShown: false,
   tabBarIcon: tabBarIcon('homeSettings'),
+  unmountOnBlur: true,
 };
 
 const navigationOptions = {
@@ -99,15 +102,16 @@ const navigationOptions = {
 };
 
 export const HomeScreen = memo(() => {
+  const [isAppUnlocked, setIsAppUnlocked] = useState(app.isUnlocked);
   const navigation = useTypedNavigation();
 
   useEffectAsync(async () => {
-    const cloud = new Cloud();
     const walletToCheck = Wallet.getAllVisible().find(
       item => item.type === WalletType.sss && !!item.socialLinkEnabled,
     );
     if (walletToCheck && walletToCheck.accountId) {
-      const cloudShare = await cloud.getItem(
+      const storage = await getProviderStorage(walletToCheck.accountId);
+      const cloudShare = await storage.getItem(
         `haqq_${walletToCheck.accountId.toLowerCase()}`,
       );
       const isReady = VariablesBool.get('isReadyForSSSVerification');
@@ -130,6 +134,20 @@ export const HomeScreen = memo(() => {
     };
   }, [navigation]);
 
+  useEffect(() => {
+    const sub = (unlocked: boolean) => {
+      setIsAppUnlocked(unlocked);
+    };
+    app.on(Events.onAuthenticatedChanged, sub);
+    return () => {
+      app.off(Events.onAuthenticatedChanged, sub);
+    };
+  }, []);
+
+  if (!isAppUnlocked) {
+    return <Loading />;
+  }
+
   return (
     <Tab.Navigator detachInactiveScreens screenOptions={navigationOptions}>
       <Tab.Screen
@@ -141,7 +159,10 @@ export const HomeScreen = memo(() => {
           tabBarStyle: (routeA => {
             const routeName = (getFocusedRouteNameFromRoute(routeA) ??
               HomeFeedStackRoutes.HomeFeed) as HomeFeedStackRoutes;
-            const whitelist = [HomeFeedStackRoutes.HomeFeed];
+            const whitelist = [
+              HomeFeedStackRoutes.HomeFeed,
+              HomeFeedStackRoutes.HomeEarn,
+            ];
             if (!whitelist.includes(routeName)) {
               return {
                 height: 0,

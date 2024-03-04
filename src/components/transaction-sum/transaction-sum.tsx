@@ -16,6 +16,7 @@ import {
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {useSumAmount} from '@app/hooks';
+import {useKeyboard} from '@app/hooks/use-keyboard';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Balance} from '@app/services/balance';
@@ -35,6 +36,7 @@ export type TransactionSumProps = {
   onToken: () => void;
   testID?: string;
   token: IToken;
+  isLoading: boolean;
 };
 
 export const TransactionSum = ({
@@ -47,7 +49,9 @@ export const TransactionSum = ({
   onToken,
   testID,
   token,
+  isLoading,
 }: TransactionSumProps) => {
+  const {keyboardShown} = useKeyboard();
   const transactionFee = useMemo(() => {
     return fee !== null
       ? fee.operate(BALANCE_MULTIPLIER, 'mul').max(FEE_AMOUNT)
@@ -75,7 +79,7 @@ export const TransactionSum = ({
   const inputSumRef = useRef<TextInput>(null);
 
   const formattedAddress = useMemo(
-    () => (contact ? `${contact.name} ${shortAddress(to)}` : shortAddress(to)),
+    () => (contact ? `${contact.name} ${shortAddress(to)}` : to),
     [contact, to],
   );
 
@@ -119,17 +123,19 @@ export const TransactionSum = ({
           i18nLabel={I18N.transactionCrypto}
           style={styles.cryptoBlock}
           onPress={onToken}>
-          {!!token.image && (
-            <Image style={styles.cryptoBlockImage} source={token.image} />
-          )}
-          <Text
-            style={styles.cryptoBlockTitle}
-            t11
-            color={Color.textBase1}
-            numberOfLines={1}
-            ellipsizeMode="middle">
-            {token.symbol}
-          </Text>
+          <View style={styles.cryptoBlockWrapper}>
+            {!!token.image && (
+              <Image style={styles.cryptoBlockImage} source={token.image} />
+            )}
+            <Text
+              style={styles.cryptoBlockTitle}
+              t11
+              color={Color.textBase1}
+              numberOfLines={1}
+              ellipsizeMode="middle">
+              {token.symbol}
+            </Text>
+          </View>
         </LabeledBlock>
       </View>
       <Spacer centered>
@@ -145,13 +151,14 @@ export const TransactionSum = ({
       </Spacer>
       <Spacer minHeight={16} />
       <Button
-        disabled={!amounts.isValid}
+        loading={isLoading}
+        disabled={!amounts.isValid || isLoading}
         variant={ButtonVariant.contained}
         i18n={I18N.transactionSumPreview}
         onPress={onDone}
         testID={`${testID}_next`}
       />
-      <Spacer height={16} />
+      <Spacer height={keyboardShown ? 26 : 16} />
     </KeyboardSafeArea>
   );
 };
@@ -159,16 +166,29 @@ export const TransactionSum = ({
 const styles = createTheme({
   row: {flexDirection: 'row'},
   cryptoBlockImage: {
-    maxHeight: 18,
-    maxWidth: 18,
-    marginTop: 4,
+    maxHeight: 12,
+    maxWidth: 12,
+    width: 12,
+    height: 12,
     borderRadius: 5,
     overflow: 'hidden',
+    alignSelf: 'center',
+    marginRight: 4,
   },
-  cryptoBlockTitle: {marginTop: 2},
-  cryptoBlock: {width: 93},
-  sumblock: {
+  cryptoBlockTitle: {
+    marginRight: 8,
+  },
+  cryptoBlockWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cryptoBlock: {
     flex: 1,
+    alignItems: 'center',
+  },
+  sumblock: {
+    flex: 3,
     paddingBottom: 8,
     marginRight: 8,
   },

@@ -15,6 +15,7 @@ import {
   BiometryType,
   Eventable,
   HaqqCosmosAddress,
+  IStory,
   IToken,
   JsonRpcMetadata,
   LedgerWalletInitialData,
@@ -234,6 +235,7 @@ export enum HomeFeedStackRoutes {
   Governance = 'governance',
   NftDetails = 'nftDetails',
   HomeEarn = 'homeEarn',
+  HomeStories = 'homeStories',
 }
 
 export type HomeFeedStackParamList = HomeStackParamList & {
@@ -246,6 +248,7 @@ export type HomeFeedStackParamList = HomeStackParamList & {
       }
     | {type: 'collection'; item: NftCollection};
   [HomeFeedStackRoutes.HomeEarn]: undefined;
+  [HomeFeedStackRoutes.HomeStories]: {id: IStory['id']};
 };
 
 export enum BackupStackRoutes {
@@ -272,6 +275,7 @@ export enum SettingsStackRoutes {
   Home = 'homeSettings_',
   SettingsAccounts = 'settingsAccounts',
   SettingsAddressBook = 'settingsAddressBook',
+  SettingsCurrency = 'settingsCurrency',
   SettingsTheme = 'settingsTheme',
   SettingsNotification = 'settingsNotification',
   SettingsProviders = 'settingsProviders',
@@ -294,6 +298,7 @@ export type SettingsStackParamList = HomeStackParamList & {
   };
   [SettingsStackRoutes.SettingsAccounts]: undefined;
   [SettingsStackRoutes.SettingsAddressBook]: undefined;
+  [SettingsStackRoutes.SettingsCurrency]: undefined;
   [SettingsStackRoutes.SettingsTheme]: undefined;
   [SettingsStackRoutes.SettingsNotification]: undefined;
   [SettingsStackRoutes.SettingsProviders]: undefined;
@@ -388,7 +393,7 @@ export type HomeStackParamList = {
     address: string;
     isPopup?: boolean;
   };
-  [HomeStackRoutes.TransactionDetail]: {hash: string; contractName?: string};
+  [HomeStackRoutes.TransactionDetail]: {txId: string; addresses: string[]};
   [HomeStackRoutes.InAppBrowser]: {
     url: string;
     title?: string;
@@ -519,8 +524,8 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
     amount?: Balance;
   };
   [TransactionStackRoutes.TransactionNftFinish]: {
-    hash: string;
     nft: NftItem;
+    transaction: TransactionResponse;
   };
   [TransactionStackRoutes.TransactionAccount]: {
     from: string;
@@ -590,6 +595,7 @@ export type ManageAccountsStackParamList = HomeStackParamList &
     [ManageAccountsStackRoutes.SettingsAccounts]: undefined;
     [ManageAccountsStackRoutes.SettingsAccountDetail]: {
       address: string;
+      fromHomePage?: boolean;
     };
     [ManageAccountsStackRoutes.SettingsAccountEdit]: {
       address: string;

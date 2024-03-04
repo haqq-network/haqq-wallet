@@ -9,10 +9,10 @@ import {generateUUID} from '@app/utils';
 import {realm} from './index';
 import {AppLanguage, AppTheme} from '../types';
 import {
-  MAIN_NETWORK,
+  MAIN_NETWORK_ID,
   PIN_BANNED_ATTEMPTS,
   PIN_BANNED_TIMEOUT_SECONDS,
-  TEST_NETWORK,
+  TEST_NETWORK_ID,
   USER_LAST_ACTIVITY_TIMEOUT_SECONDS,
 } from '../variables/common';
 
@@ -108,8 +108,8 @@ export class User extends EventEmitter {
         isDeveloper: IS_DEVELOPMENT === '1',
         providerId:
           ENVIRONMENT === 'production' || ENVIRONMENT === 'distribution'
-            ? MAIN_NETWORK
-            : TEST_NETWORK,
+            ? MAIN_NETWORK_ID
+            : TEST_NETWORK_ID,
       });
     });
 

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {View, ViewStyle} from 'react-native';
+import {TextProps, View, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Text} from '@app/components/ui/text';
@@ -9,6 +9,7 @@ import {I18N} from '@app/i18n';
 
 export type DataContentProps = {
   title?: React.ReactNode;
+  titleColor?: Color;
   subtitle?: string | React.ReactNode;
   style?: ViewStyle;
   reversed?: boolean;
@@ -20,6 +21,7 @@ export type DataContentProps = {
   titleI18nParams?: Record<string, string>;
   onPress?: () => void;
   bold?: boolean;
+  subtitleProps?: TextProps;
 };
 export const DataContent = ({
   title,
@@ -34,6 +36,8 @@ export const DataContent = ({
   titleI18nParams,
   numberOfLines = 1,
   bold = false,
+  subtitleProps,
+  titleColor = Color.textBase1,
 }: DataContentProps) => {
   return (
     <View
@@ -44,13 +48,12 @@ export const DataContent = ({
         style,
       ]}>
       <View style={styles.titleContainer}>
-        {/* @ts-expect-error */}
         <Text
           t11
           style={[styles.title, bold && styles.boldTitle]}
-          color={Color.textBase1}
+          color={titleColor}
           ellipsizeMode="tail"
-          i18n={titleI18n}
+          i18n={titleI18n!}
           i18params={titleI18nParams}
           numberOfLines={numberOfLines}
           onPress={onPress}>
@@ -64,7 +67,8 @@ export const DataContent = ({
             t14
             i18n={subtitleI18n}
             i18params={subtitleI18nParams}
-            color={Color.textBase2}>
+            color={Color.textBase2}
+            {...(subtitleProps || {})}>
             {subtitle}
           </Text>
         </>
@@ -90,5 +94,5 @@ const styles = createTheme({
     flexDirection: 'row',
   },
   reverse: {flexDirection: 'column-reverse'},
-  boldTitle: {fontSize: 16, fontWeight: 'bold', marginBottom: 6},
+  boldTitle: {fontSize: 16, fontWeight: 'bold', marginBottom: 2},
 });

@@ -256,6 +256,12 @@ class WalletStore implements MobXStoreFromRealm {
     );
   }
 
+  addressListAllVisible() {
+    return this.wallets
+      .filter(w => !w.isHidden)
+      .map(w => w.address.toLowerCase() as HaqqEthereumAddress);
+  }
+
   getAll() {
     return this.wallets;
   }

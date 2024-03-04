@@ -1,7 +1,6 @@
-import React, {useCallback, useMemo, useRef} from 'react';
+import React, {useMemo} from 'react';
 
 import {BigNumber} from '@ethersproject/bignumber';
-import {useFocusEffect} from '@react-navigation/native';
 import {Image, View} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -11,23 +10,23 @@ import {
   Icon,
   IconButton,
   LottieWrap,
-  LottieWrapRef,
   NetworkFee,
   PopupContainer,
   Spacer,
   Text,
+  TextPosition,
+  TextVariant,
 } from '@app/components/ui';
 import {createTheme, openURL} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
-import {Transaction} from '@app/models/transaction';
 import {Balance} from '@app/services/balance';
 import {EthNetwork} from '@app/services/eth-network';
 import {IToken, TransactionResponse} from '@app/types';
-import {CURRENCY_NAME} from '@app/variables/common';
+import {CURRENCY_NAME, LONG_NUM_PRECISION} from '@app/variables/common';
 
 type TransactionFinishProps = {
-  transaction: Transaction | TransactionResponse | null;
+  transaction: TransactionResponse | null;
   onSubmit: () => void;
   onPressContact: () => void;
   contact: Contact | null;
@@ -35,6 +34,7 @@ type TransactionFinishProps = {
   testID?: string;
   token: IToken;
   amount?: Balance;
+  fee: Balance;
 };
 
 export const TransactionFinish = ({
@@ -46,18 +46,12 @@ export const TransactionFinish = ({
   testID,
   token,
   amount,
+  fee,
 }: TransactionFinishProps) => {
   const onPressHash = async () => {
     const url = `${EthNetwork.explorer}tx/${transaction?.hash}`;
     await openURL(url);
   };
-
-  const fee = useMemo(() => {
-    if ((transaction as Transaction).input) {
-      return new Balance((transaction as Transaction)?.fee ?? 0);
-    }
-    return Balance.Empty;
-  }, [transaction]);
 
   const transactionAmount = useMemo(() => {
     if (amount) {
@@ -78,46 +72,46 @@ export const TransactionFinish = ({
     );
   }, [transaction, token, amount]);
 
-  const lottie = useRef<LottieWrapRef>(null);
-  const startAnimation = useCallback(() => {
-    if (lottie.current) {
-      lottie.current.play();
-    }
-  }, [lottie.current]);
-  useFocusEffect(startAnimation);
-
   return (
     <PopupContainer style={styles.container} testID={testID}>
       <View style={styles.sub}>
         <LottieWrap
-          ref={lottie}
           source={require('@assets/animations/transaction-finish.json')}
           style={styles.image}
-          autoPlay={false}
+          autoPlay={true}
           loop={false}
         />
       </View>
       <Text
-        t4
+        variant={TextVariant.t4}
         i18n={I18N.transactionFinishSendingComplete}
         style={styles.title}
-        center
+        position={TextPosition.center}
         color={Color.textGreen1}
       />
       <Image source={token.image} style={styles.icon} />
       {transaction && (
-        <Text t5 center style={styles.sum}>
-          - {transactionAmount.toBalanceString()}
+        <Text
+          variant={TextVariant.t5}
+          position={TextPosition.center}
+          style={styles.sum}>
+          - {transactionAmount.toBalanceString(LONG_NUM_PRECISION)}
         </Text>
       )}
 
       <View style={styles.contactLine}>
         {contact?.name && (
-          <Text t13 center style={styles.address}>
+          <Text
+            variant={TextVariant.t13}
+            position={TextPosition.center}
+            style={styles.address}>
             {contact.name + ' '}
           </Text>
         )}
-        <Text t14 center style={styles.address}>
+        <Text
+          variant={TextVariant.t14}
+          position={TextPosition.center}
+          style={styles.address}>
           {short}
         </Text>
       </View>
@@ -126,12 +120,12 @@ export const TransactionFinish = ({
 
       <View style={styles.providerContainer}>
         <Text
-          t14
+          variant={TextVariant.t14}
           color={Color.textBase2}
           i18n={I18N.transactionConfirmationHAQQ}
         />
         <Text
-          t14
+          variant={TextVariant.t14}
           color={Color.textBase2}
           i18n={I18N.transactionConfirmationHQ}
         />
@@ -161,8 +155,8 @@ export const TransactionFinish = ({
                 ? I18N.transactionFinishEditContact
                 : I18N.transactionFinishAddContact
             }
-            t15
-            center
+            variant={TextVariant.t15}
+            position={TextPosition.center}
             color={Color.textBase2}
           />
         </IconButton>
@@ -174,8 +168,8 @@ export const TransactionFinish = ({
             i24
           />
           <Text
-            t15
-            center
+            variant={TextVariant.t15}
+            position={TextPosition.center}
             i18n={I18N.transactionFinishHash}
             color={Color.textBase2}
           />
@@ -195,6 +189,7 @@ export const TransactionFinish = ({
 const styles = createTheme({
   container: {
     paddingHorizontal: 20,
+    justifyContent: 'space-between',
   },
   sub: {
     justifyContent: 'center',

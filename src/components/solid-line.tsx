@@ -1,12 +1,18 @@
 import React from 'react';
 
-import {Platform, StyleProp, View, ViewStyle} from 'react-native';
+import {
+  DimensionValue,
+  Platform,
+  StyleProp,
+  View,
+  ViewStyle,
+} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
 
 export interface Props {
-  width: number;
+  width: DimensionValue;
   color?: Color;
   style?: StyleProp<ViewStyle>;
 }

@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 
-import {ListRenderItem, StyleSheet} from 'react-native';
+import {FlatListProps, ListRenderItem, StyleSheet} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 
 import {Spacer} from '@app/components/ui';
@@ -8,15 +8,16 @@ import {HaqqCosmosAddress, NftCollection} from '@app/types';
 
 import {NftViewerCollectionPreview} from '../nft-viewer-collection-preview';
 
-export interface NftViewerCollectionPreviewGridProps {
+export type NftViewerCollectionPreviewGridProps = {
   data: NftCollection[];
 
   onPress(collectionId: HaqqCosmosAddress): void;
-}
+} & Pick<FlatListProps<any>, 'ListHeaderComponent'>;
 
 export const NftViewerCollectionPreviewGrid = ({
   data,
   onPress,
+  ListHeaderComponent,
 }: NftViewerCollectionPreviewGridProps) => {
   const renderItemSeparatorComponent = useCallback(
     () => <Spacer width={12} height={12} />,
@@ -38,6 +39,7 @@ export const NftViewerCollectionPreviewGrid = ({
       renderItem={renderItem}
       scrollEnabled={false}
       columnWrapperStyle={styles.columnWrapperStyle}
+      ListHeaderComponent={ListHeaderComponent}
     />
   );
 };

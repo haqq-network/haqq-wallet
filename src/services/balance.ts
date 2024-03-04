@@ -2,16 +2,16 @@ import Decimal from 'decimal.js';
 import {BigNumber, BigNumberish} from 'ethers';
 
 import {cleanNumber} from '@app/helpers/clean-number';
-import {ExchangeRates} from '@app/services/exchange-rates';
+import {Currencies} from '@app/models/currencies';
 import {
   BalanceConstructor,
-  Fiat,
   HexNumber,
   IBalance,
   ISerializable,
 } from '@app/types';
 import {
   CURRENCY_NAME,
+  LONG_NUM_PRECISION,
   NUM_DELIMITER,
   NUM_PRECISION,
   WEI_PRECISION,
@@ -85,6 +85,18 @@ export class Balance implements IBalance, ISerializable {
     return this.symbol === CURRENCY_NAME;
   }
 
+  getPrecission() {
+    return this.precission;
+  }
+
+  getSymbol() {
+    return this.symbol;
+  }
+
+  static getEmpty = (precision = WEI_PRECISION, symbol = CURRENCY_NAME) => {
+    return new Balance(zeroBN, precision, symbol);
+  };
+
   static fromJsonString = (obj: string | Balance) => {
     const serializedValue: {
       value: HexNumber;
@@ -129,18 +141,50 @@ export class Balance implements IBalance, ISerializable {
    * @example 123.45 ISLM
    */
   toBalanceString = (
-    fixed = NUM_PRECISION,
+    fixed: number | 'auto' = NUM_PRECISION,
     precission: number = this.precission,
   ) => {
-    if (this.symbol === '$') {
-      const floatString = this.toFloatString(fixed, precission);
-      const isNegative = floatString.startsWith('-');
-      if (isNegative) {
-        return `- ${this.symbol}${floatString.replace('-', '')}`;
-      }
-      return `${this.symbol}` + this.toFloatString(fixed, precission);
+    let fixedNum = 0;
+    if (fixed === 'auto') {
+      const float = this.toFloat(precission);
+      fixedNum = float > 1 ? NUM_PRECISION : LONG_NUM_PRECISION;
+    } else {
+      fixedNum = fixed;
     }
-    return this.toFloatString(fixed, precission) + ` ${this.symbol}`;
+
+    return this.toFloatString(fixedNum, precission) + ` ${this.symbol}`;
+  };
+
+  /**
+   * Convert balance to float string according to cleanNumber helper and append currency name
+   * @example 123.45 ISLM
+   */
+  toFiatBalanceString = (
+    fixed: number | 'auto' = NUM_PRECISION,
+    precission: number = this.precission,
+  ) => {
+    let fixedNum = 0;
+    if (fixed === 'auto') {
+      const float = this.toFloat(precission);
+      fixedNum = float > 1 ? NUM_PRECISION : LONG_NUM_PRECISION;
+    } else {
+      fixedNum = fixed;
+    }
+
+    const getStringWithSymbol = (value: string) => {
+      const currency = Currencies.currency;
+      const result = [value];
+      currency?.prefix && result.unshift(currency.prefix);
+      currency?.postfix && result.push(currency.postfix);
+      return result.join(' ');
+    };
+
+    const floatString = this.toFloatString(fixedNum, precission);
+    const isNegative = floatString.startsWith('-');
+    if (isNegative) {
+      return `- ${getStringWithSymbol(floatString.replace('-', ''))}`;
+    }
+    return `${getStringWithSymbol(this.toFloatString(fixedNum, precission))}`;
   };
 
   toString = () => {
@@ -275,15 +319,8 @@ export class Balance implements IBalance, ISerializable {
   /**
    * Convert balance to fiat currency
    */
-  toFiat = (type: Fiat) => {
-    switch (type) {
-      case 'USD': {
-        return ExchangeRates.convert(this, type);
-      }
-      default: {
-        return Balance.Empty;
-      }
-    }
+  toFiat = (fixed = NUM_PRECISION, precission: number = this.precission) => {
+    return Currencies.convert(this).toFiatBalanceString(fixed, precission);
   };
 
   private getBnRaw = (

@@ -21,7 +21,10 @@ describe('Routine', () => {
     await element(by.id('settings_manage_accounts')).tap();
     await element(by.text('Main account')).tap();
 
-    await expect(element(by.id('recovery_warning'))).toBeVisible();
+    await waitFor(element(by.id('recovery_warning')))
+      .toBeVisible()
+      .whileElement(by.id('account_details'))
+      .scroll(100, 'down');
     await element(by.id('recovery_phrase')).tap();
 
     await element(by.id('backup_warning')).scrollTo('bottom');
@@ -83,13 +86,15 @@ describe('Routine', () => {
     await waitFor(element(by.id('view_recovery_phrase')))
       .toBeVisible()
       .whileElement(by.id('account_details'))
-      .scroll(300, 'down');
+      .scroll(100, 'down');
 
     await element(by.id('view_recovery_phrase')).tap();
 
+    await device.disableSynchronization();
     for (const num of PIN.split('')) {
       await element(by.id(`numeric_keyboard_${num}`)).tap();
     }
+    await device.enableSynchronization();
 
     for (const word of mnemonic_words) {
       await waitFor(element(by.text(word)))

@@ -41,7 +41,10 @@ export const StakingWidget = memo(
     }, [canGetRewards, onGetReward]);
 
     return (
-      <ShadowCard onPress={onPress} style={styles.wrapper}>
+      <ShadowCard
+        testID="staking-widget"
+        onPress={onPress}
+        style={styles.wrapper}>
         <WidgetHeader
           icon={'staking_thin'}
           title={getText(I18N.earnStaking)}

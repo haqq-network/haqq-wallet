@@ -2,12 +2,7 @@ import React, {useCallback, useMemo, useRef, useState} from 'react';
 
 import {PhishingController} from '@metamask/phishing-controller';
 import {parseUri} from '@walletconnect/utils';
-import {
-  KeyboardAvoidingView,
-  SafeAreaView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
 import WebView from 'react-native-webview';
 import {
   ShouldStartLoadRequest,
@@ -31,11 +26,12 @@ import {
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useWebViewSharedProps} from '@app/hooks/use-webview-shared-props';
 import {getHostnameFromUrl} from '@app/utils';
-import {IS_ANDROID, IS_IOS} from '@app/variables/common';
+import {IS_ANDROID} from '@app/variables/common';
 
 import {CustomHeaderWebView} from './custom-header-webview';
 import {Icon, IconButton, IconsName, Spacer, Text} from './ui';
 import {Separator} from './ui/separator';
+import {WebViewContainer} from './web3-browser/web3-browser-container';
 
 type InAppBrowserProps = {
   url: string;
@@ -229,9 +225,7 @@ export const InAppBrowser = ({
           />
         </IconButton>
       </View>
-      <KeyboardAvoidingView
-        style={styles.webviewContainer}
-        behavior={IS_IOS ? 'height' : 'padding'}>
+      <WebViewContainer webviewRef={webviewRef}>
         <CustomHeaderWebView
           {...webViewDefaultProps}
           browserType="inapp"
@@ -244,7 +238,7 @@ export const InAppBrowser = ({
           onNavigationStateChange={onNavigationStateChange}
           source={{uri: url, headers: getAppHeaders('inapp')}}
         />
-      </KeyboardAvoidingView>
+      </WebViewContainer>
       <View style={styles.actionPanel}>
         <Spacer width={40} />
         <IconButton
@@ -301,9 +295,6 @@ const styles = createTheme({
     paddingBottom: 12,
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: Color.graphicBase2,
-  },
-  webviewContainer: {
-    flex: 1,
   },
   title: {
     flex: 1,

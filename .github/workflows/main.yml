@@ -5,33 +5,27 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-  merge_group:
-    types: [checks_requested]
 
 concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  NODE_VERSION: '16.17.1'
-
 jobs:
   test:
-    runs-on: ubuntu-cpu16-ram64
+    runs-on: self-hosted
     steps:
       - name: Checkout
-        uses: actions/checkout@v3.0.2
+        uses: actions/checkout@v4
+        
       - name: Setup node
-        uses: actions/setup-node@v3.4.1
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: 18
           cache: yarn
-      - uses: actions/cache@v2
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
       - name: Install dependencies
-        run: yarn install 
+        run: yarn install
+
       - name: Run linters
         run: |
           yarn lint
@@ -45,18 +39,28 @@ jobs:
     steps:
       - name: Show self-hosted machine infomation
         run: uname -a
+
       - name: Checkout
-        uses: actions/checkout@v3.0.2
+        uses: actions/checkout@v4
+
       - name: Setup node
-        uses: actions/setup-node@v3.4.1
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: 18
           cache: yarn
-      - uses: actions/cache@v2
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
       - name: Install dependencies
-        run: yarn install 
+        run: yarn install
+
       - name: Build ios bundle
         run: yarn react-native bundle --platform ios --dev false --entry-file index.js --bundle-output ./index.ios.bundle
+
+  e2e:
+    if: contains(github.event.pull_request.labels.*.name, 'e2e')
+    name: e2e
+    uses: ./.github/workflows/e2e.yml
+    secrets: inherit
+    with:
+      IS_DEVELOPMENT: false
+      IS_SSS_ENABLED: true
+      STORIES_ENABLED: true

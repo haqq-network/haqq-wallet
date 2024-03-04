@@ -17,15 +17,19 @@ export const createWallet = async (PIN: string, attempt: number = 1) => {
   await element(by.label('Accept')).atIndex(0).tap();
   await expect(element(by.id('onboarding_setup_pin_set'))).toBeVisible();
 
+  await device.disableSynchronization();
   for (const num of PIN.split('')) {
     await element(by.id(`numeric_keyboard_${num}`)).tap();
   }
+  await device.enableSynchronization();
 
   await expect(element(by.text('Please repeat pin code'))).toBeVisible();
 
+  await device.disableSynchronization();
   for (const num of PIN.split('')) {
     await element(by.id(`numeric_keyboard_${num}`)).tap();
   }
+  await device.enableSynchronization();
 
   if (!isAndroid) {
     await waitFor(element(by.id('onboarding_biometry_title')))

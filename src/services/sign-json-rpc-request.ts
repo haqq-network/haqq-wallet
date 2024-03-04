@@ -1,9 +1,11 @@
 import {TransactionRequest} from '@haqq/provider-base';
+import {normalize0x} from '@haqq/provider-keystone-react-native';
 import {getSdkError} from '@walletconnect/utils';
 
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {getProviderInstanceForWallet, hideModal} from '@app/helpers';
+import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {I18N, getText} from '@app/i18n';
 import {Provider} from '@app/models/provider';
@@ -17,6 +19,9 @@ import {
   isEthTypedData,
 } from '@app/utils';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
+
+import {Balance} from './balance';
+import {EthNetwork} from './eth-network';
 
 const logger = Logger.create('SignJsonRpcRequest', {
   enabled:
@@ -100,7 +105,7 @@ export class SignJsonRpcRequest {
       throw new Error(getText(I18N.jsonRpcErrorInvalidProvider));
     }
 
-    const provider = chainId && Provider.getByEthChainId(chainId);
+    const provider = Provider.getByEthChainId(chainId!) || app.provider;
 
     const rpcProvider = provider
       ? await getRpcProvider(provider)
@@ -108,13 +113,6 @@ export class SignJsonRpcRequest {
 
     const path = wallet.path || '/';
     let result: string | undefined;
-
-    try {
-      if (request.params?.[0]?.gas) {
-        request.params[0].gasPrice = request.params[0].gas;
-        delete request.params[0].gas;
-      }
-    } catch (e) {}
 
     switch (request.method) {
       case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
@@ -140,13 +138,7 @@ export class SignJsonRpcRequest {
             typedData.types,
             typedData.message,
           );
-          const signedMessageHash = await signTypedDataResult;
-
-          if (wallet.type === WalletType.ledgerBt) {
-            result = signedMessageHash;
-          } else {
-            result = `0x${signedMessageHash}`;
-          }
+          result = await signTypedDataResult;
         } else {
           throw new Error(getText(I18N.jsonRpcErrorInvalidParams));
         }
@@ -167,24 +159,42 @@ export class SignJsonRpcRequest {
         result = tx.hash;
         break;
       case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
-        let signTransactionRequest: TransactionRequest = request.params[0];
+        let signTransactionRequest: TransactionRequest = Array.isArray(
+          request.params,
+        )
+          ? request.params[0]
+          : request.params;
 
         const {address} = await instanceProvider.getAccountInfo(path);
         const nonce = await rpcProvider.getTransactionCount(address, 'latest');
 
-        const gasPrice = await rpcProvider.getGasPrice();
-        const {_hex: estimateGas} = await rpcProvider.estimateGas({
-          ...signTransactionRequest,
-          from: address,
-        });
+        const gasLimit = getRemoteBalanceValue('eth_min_gas_limit').max(
+          new Balance(signTransactionRequest.gasLimit || '0'),
+        );
+        const {estimateGas, maxFeePerGas, maxPriorityFeePerGas} =
+          await EthNetwork.estimateTransaction(
+            signTransactionRequest.from!,
+            signTransactionRequest.to!,
+            new Balance(signTransactionRequest.value! || Balance.Empty),
+            signTransactionRequest.data?.toString()!,
+            gasLimit,
+            provider,
+          );
+
+        const maxPriorityFeePerGasCalculated = maxPriorityFeePerGas.max(
+          signTransactionRequest.maxPriorityFeePerGas || 0,
+        );
+        const maxFeePerGasCalculated = maxFeePerGas.max(
+          signTransactionRequest.maxFeePerGas || 0,
+        );
 
         signTransactionRequest = {
           ...signTransactionRequest,
           nonce,
           type: 2,
-          gasLimit: estimateGas,
-          maxFeePerGas: gasPrice._hex,
-          maxPriorityFeePerGas: gasPrice._hex,
+          gasLimit: estimateGas.toHex(),
+          maxFeePerGas: maxFeePerGasCalculated.toHex(),
+          maxPriorityFeePerGas: maxPriorityFeePerGasCalculated.toHex(),
         };
 
         if (signTransactionRequest.gasPrice) {
@@ -215,6 +225,6 @@ export class SignJsonRpcRequest {
 
     logger.log('✅ signEIP155Request result:', result, result.length);
 
-    return result;
+    return normalize0x(result);
   }
 }

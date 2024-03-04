@@ -28,6 +28,7 @@ import {
   hideModal,
   showModal,
 } from '@app/helpers';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
 import {
@@ -42,6 +43,7 @@ import {
 import {getUid} from '@app/helpers/get-uid';
 import {getAdjustAdid} from '@app/helpers/get_adjust_adid';
 import {parseDeepLink} from '@app/helpers/parse-deep-link';
+import {SecurePinUtils} from '@app/helpers/secure-pin-utils';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Banner} from '@app/models/banner';
@@ -59,10 +61,16 @@ import {EthNetwork} from '@app/services';
 import {Airdrop} from '@app/services/airdrop';
 import {Balance} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {Indexer} from '@app/services/indexer';
 import {SssProviders} from '@app/services/provider-sss';
-import {message as toastMessage} from '@app/services/toast';
+import {message, message as toastMessage} from '@app/services/toast';
 import {getUserAgent} from '@app/services/version';
-import {ModalType, Modals, PartialJsonRpcRequest} from '@app/types';
+import {
+  IndexerTransaction,
+  ModalType,
+  Modals,
+  PartialJsonRpcRequest,
+} from '@app/types';
 import {
   generateMockBanner,
   isError,
@@ -71,7 +79,7 @@ import {
   openWeb3Browser,
 } from '@app/utils';
 import {MIN_GAS_LIMIT} from '@app/variables/balance';
-import {HAQQ_METADATA, TEST_URLS} from '@app/variables/common';
+import {HAQQ_METADATA, STRINGS, TEST_URLS} from '@app/variables/common';
 
 const logger = Logger.create('SettingsTestScreen', {
   emodjiPrefix: '🔵',
@@ -214,6 +222,9 @@ const getTestModals = (): TestModals => {
     },
     sssLimitReached: {
       onClose: () => logger.log('sssLimitReached closed'),
+    },
+    pinError: {
+      details: 'test error',
     },
   };
 
@@ -363,6 +374,8 @@ export const SettingsTestScreen = observer(() => {
   const {showActionSheetWithOptions} = useActionSheet();
   const [wc, setWc] = useState('');
   const [rawSignData, setRawSignData] = useState('');
+  const [pinForSimulate, setPinForSimulate] = useState('');
+  const isPinForSimulateValid = pinForSimulate.length === 6;
   const [signData, setSignData] = useState<PartialJsonRpcRequest>();
   const [isValidRawSignData, setValidRawSignData] = useState(false);
   const [deeplink, setDeeplink] = useState('');
@@ -535,6 +548,9 @@ export const SettingsTestScreen = observer(() => {
     setLeadingAccount(VariablesString.get('leadingAccount'));
   }, [showActionSheetWithOptions]);
 
+  const [txList, setTxList] = useState<IndexerTransaction[]>([]);
+  const [blockNumber, setBlockNumber] = useState('latest');
+
   return (
     <ScrollView style={styles.container}>
       <Title text="Install Referrer" />
@@ -594,6 +610,32 @@ export const SettingsTestScreen = observer(() => {
         variant={ButtonVariant.contained}
       />
 
+      <Title text="Transaction" />
+      <Spacer height={8} />
+      <Text>
+        TX count: {txList.length}
+        {STRINGS.N}
+        last block: {blockNumber}
+      </Text>
+      <Button
+        title="load tx list"
+        onPress={async () => {
+          const result = await Indexer.instance.getTransactions(
+            Wallet.addressList(),
+            blockNumber,
+          );
+
+          const lastTx = result[result.length - 1];
+          if (lastTx) {
+            setBlockNumber(`${lastTx.block}`);
+          }
+
+          Logger.log('tx result', JSON.stringify(result, null, 2));
+          setTxList(txListOld => [...txListOld, ...result]);
+        }}
+        variant={ButtonVariant.contained}
+      />
+
       <Title text="Leading account" />
       <Text t11>{leadingAccount}</Text>
       <Spacer height={8} />
@@ -602,7 +644,6 @@ export const SettingsTestScreen = observer(() => {
         onPress={onSetLeadingAccount}
         variant={ButtonVariant.contained}
       />
-
       <Spacer height={8} />
       <Title text="Raw Sign Request" />
       <Input
@@ -684,6 +725,107 @@ export const SettingsTestScreen = observer(() => {
           }
         }}
         variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Title text="Pin" />
+      <Input
+        keyboardType="numeric"
+        placeholder="new pin code"
+        value={pinForSimulate}
+        onChangeText={value => {
+          setPinForSimulate(value?.trim()?.replace(/\D/g, '').slice(0, 6));
+        }}
+      />
+      <Spacer height={8} />
+      <Button
+        title="Simulate 'incorrect password' error"
+        variant={ButtonVariant.contained}
+        disabled={!isPinForSimulateValid}
+        onPress={async () => {
+          try {
+            const appPin = await app.getPassword();
+            if (appPin === pinForSimulate) {
+              throw new Error('pin is the same as current');
+            }
+            await SecurePinUtils.simulateIncorrectPasswordError(pinForSimulate);
+            showModal(ModalType.pinError, {details: 'simulated error'});
+            message('simulated finished');
+          } catch (err) {
+            showModal(ModalType.error, {
+              title: 'Error',
+              // @ts-ignore
+              description: err.message,
+              close: 'close',
+            });
+          }
+        }}
+      />
+      <Spacer height={8} />
+      <Button
+        title="Recovery pin"
+        variant={ButtonVariant.contained}
+        disabled={!isPinForSimulateValid}
+        onPress={async () => {
+          try {
+            const appPin = await app.getPassword();
+            if (appPin === pinForSimulate) {
+              throw new Error('pin is the same as current');
+            }
+            await SecurePinUtils.recoveryPin(pinForSimulate);
+            message('recovery pin success');
+          } catch (err) {
+            showModal(ModalType.error, {
+              title: 'Error',
+              // @ts-ignore
+              description: err.message,
+              close: 'close',
+            });
+          }
+        }}
+      />
+      <Spacer height={8} />
+      <Button
+        title="Automatic rollback (cached pin)"
+        variant={ButtonVariant.contained}
+        onPress={async () => {
+          try {
+            await SecurePinUtils.rollbackPin();
+            message('rollback success');
+          } catch (err) {
+            showModal(ModalType.error, {
+              title: 'Error',
+              // @ts-ignore
+              description: err.message,
+              close: 'close',
+            });
+          }
+        }}
+      />
+      <Spacer height={8} />
+      <Button
+        title="Check pin"
+        variant={ButtonVariant.contained}
+        onPress={async () => {
+          try {
+            const wallet = Wallet.getAll()[0];
+            const provider = await getProviderInstanceForWallet(wallet);
+            if (!provider) {
+              throw new Error('provider not found');
+            }
+            const {address} = await provider.getAccountInfo(wallet.path!);
+            if (!AddressUtils.equals(address, wallet.address)) {
+              throw new Error('address not match');
+            }
+            message('your pin is correct');
+          } catch (e) {
+            showModal(ModalType.error, {
+              title: 'Error',
+              // @ts-ignore
+              description: e.message,
+              close: 'close',
+            });
+          }
+        }}
       />
       <Spacer height={8} />
       <Title text="Browser" />
@@ -768,7 +910,6 @@ export const SettingsTestScreen = observer(() => {
         onPress={() => onCheckContract()}
         variant={ButtonVariant.contained}
       />
-
       <Title text="Services" />
       <Button
         title="Create test banner"
@@ -797,7 +938,6 @@ export const SettingsTestScreen = observer(() => {
         onPress={onResetUid}
         variant={ButtonVariant.contained}
       />
-
       <Title text="Captcha" />
       <Button
         title="Show hcaptcha captcha"
@@ -976,7 +1116,6 @@ export const SettingsTestScreen = observer(() => {
         }}
         variant={ButtonVariant.contained}
       />
-
       <Spacer minHeight={100} />
       <Button
         title="Turn off developer"

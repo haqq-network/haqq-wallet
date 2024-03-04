@@ -35,6 +35,7 @@ import {
   detectDynamicLink,
   detectDynamicLinkAndNavigate,
   emitToEthereumJS,
+  emitToWindowJS,
   getOriginFromUrl,
   isJsonRpcRequest,
   isWindowInfoEvent,
@@ -197,6 +198,7 @@ export class Web3BrowserHelper extends EventEmitter implements JsonRpcHelper {
     }
     this.emitToEthereum(EthereumEventsEnum.ACCOUNTS_CHANGED, []);
     this.emitToEthereum(EthereumEventsEnum.DISCONNECT);
+    this.emitToWindow(WebViewEventsEnum.KEPLR_KEYSTORECHANGE);
     this.emit(WebViewEventsEnum.ACCOUNTS_CHANGED, []);
   };
 
@@ -208,6 +210,7 @@ export class Web3BrowserHelper extends EventEmitter implements JsonRpcHelper {
         disconected: false,
       });
     }
+    this.emitToWindow(WebViewEventsEnum.KEPLR_KEYSTORECHANGE);
     this.emitToEthereum(EthereumEventsEnum.ACCOUNTS_CHANGED, [accountId]);
     this.emit(WebViewEventsEnum.ACCOUNTS_CHANGED, [accountId]);
   };
@@ -219,14 +222,21 @@ export class Web3BrowserHelper extends EventEmitter implements JsonRpcHelper {
         selectedChainIdHex: chainIdHex,
       });
     }
+    const chainInfo = {
+      chainId: chainIdHex,
+      networkVersion: parseInt(chainIdHex, 16).toString(),
+    };
     this.emitToEthereum(EthereumEventsEnum.CHAIN_CHANGED, chainIdHex);
-    this.webviewRef.current?.reload?.();
+    this.emitToEthereum(EthereumEventsEnum.METAMASK_CHAINCHANGED, chainInfo);
+    this.emitToWindow(WebViewEventsEnum.KEPLR_KEYSTORECHANGE);
+    this.emitToWindow(EthereumEventsEnum.METAMASK_CHAINCHANGED, chainInfo);
+    this.emitToWindow(EthereumEventsEnum.CHAIN_CHANGED);
   };
 
   private postMessage = (
     data: JsonRpcRequest<any> | JsonRpcResponse<any>,
     origin?: string,
-    providerName?: string,
+    providerName?: 'haqq-keplr-provider' | 'metamask-provider',
   ) => {
     if (!origin) {
       origin = this.origin;
@@ -251,6 +261,11 @@ export class Web3BrowserHelper extends EventEmitter implements JsonRpcHelper {
     params?: EthereumEventsParams[EventName],
   ) => {
     const js = emitToEthereumJS(event, params);
+    this.webviewRef.current?.injectJavaScript?.(js);
+  };
+
+  private emitToWindow = (event: string, params?: any) => {
+    const js = emitToWindowJS(event, params);
     this.webviewRef.current?.injectJavaScript?.(js);
   };
 }

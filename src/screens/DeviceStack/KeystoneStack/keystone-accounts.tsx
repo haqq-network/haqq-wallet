@@ -15,6 +15,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useError} from '@app/hooks/use-error';
 import {I18N, getText} from '@app/i18n';
+import {Currencies} from '@app/models/currencies';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 import {
@@ -89,6 +90,7 @@ export const KeystoneAccountsScreen = memo(() => {
         const balances = await Indexer.instance.updates(
           wallets.map(AddressUtils.toHaqq),
           new Date(0),
+          Currencies.selectedCurrency,
         );
         const resultWithBalances = result.map(item => ({
           ...item,

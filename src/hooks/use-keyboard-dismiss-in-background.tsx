@@ -12,6 +12,8 @@ export function useKeyboardDismissInBackground() {
 
     const sub = AppState.addEventListener('change', subscription);
 
-    return sub.remove;
+    return () => {
+      sub.remove();
+    };
   }, []);
 }

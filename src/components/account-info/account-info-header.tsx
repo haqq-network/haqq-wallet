@@ -66,7 +66,7 @@ export const AccountInfoHeader = ({
           colorPattern={wallet.colorPattern}
         />
         <View style={styles.headerContent}>
-          <Text t3 children={total.toFiat('USD').toBalanceString()} />
+          <Text t3 children={total.toFiat()} />
           <CopyMenu
             value={wallet.address}
             style={styles.copyButton}

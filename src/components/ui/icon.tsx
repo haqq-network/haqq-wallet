@@ -23,6 +23,7 @@ export enum IconsName {
   color_flat = 'color_flat',
   color_gradient = 'color_gradient',
   copy = 'copy',
+  currency = 'currency',
   drag = 'drag',
   doc = 'doc',
   deposit = 'deposit',
@@ -103,15 +104,23 @@ export enum IconsName {
   privacy = 'privacy',
   import = 'import_icon',
   keystone = 'keystone',
+  question = 'question',
+  raffle_reward = 'raffle_reward',
+  staking_reword = 'staking_reword',
+  staking_redelegation = 'staking_redelegation',
+  staking_delegation = 'staking_delegation',
+  staking_undelegation = 'staking_undelegation',
 }
 
 export type IconSize =
   | {i12: boolean}
+  | {i14: boolean}
   | {i16: boolean}
   | {i18: boolean}
   | {i20: boolean}
   | {i22: boolean}
   | {i24: boolean}
+  | {i26: boolean}
   | {i32: boolean}
   | {i42: boolean}
   | {i48: boolean}
@@ -133,11 +142,13 @@ export const Icon = ({name, style, color, ...props}: IconProps) => {
       StyleSheet.flatten([
         styles.i24Container,
         'i12' in props && styles.i12Container,
+        'i14' in props && styles.i14Container,
         'i16' in props && styles.i16Container,
         'i18' in props && styles.i18Container,
         'i20' in props && styles.i20Container,
         'i22' in props && styles.i22Container,
         'i24' in props && styles.i24Container,
+        'i26' in props && styles.i26Container,
         'i32' in props && styles.i32Container,
         'i42' in props && styles.i42Container,
         'i48' in props && styles.i48Container,
@@ -183,6 +194,10 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
   },
+  i26Container: {
+    width: 26,
+    height: 26,
+  },
   i22Container: {
     width: 22,
     height: 22,
@@ -198,6 +213,10 @@ const styles = StyleSheet.create({
   i16Container: {
     width: 16,
     height: 16,
+  },
+  i14Container: {
+    width: 14,
+    height: 14,
   },
   i12Container: {
     width: 12,

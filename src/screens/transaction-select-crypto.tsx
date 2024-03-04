@@ -13,6 +13,7 @@ import {
   TransactionStackRoutes,
 } from '@app/route-types';
 import {IToken} from '@app/types';
+import {CURRENCY_NAME} from '@app/variables/common';
 
 export const TransactionSelectCryptoScreen = observer(() => {
   const navigation = useTypedNavigation<TransactionStackParamList>();
@@ -23,10 +24,14 @@ export const TransactionSelectCryptoScreen = observer(() => {
 
   const tokens = useMemo(
     () =>
-      computed(() =>
-        Token.tokens[AddressUtils.toEth(params.from)].filter(
-          item => !!item.is_in_white_list,
-        ),
+      computed(
+        () =>
+          Token.tokens[AddressUtils.toEth(params.from)]?.filter(
+            item =>
+              !!item.is_in_white_list &&
+              // FIXME: only erc20 tokens or native currency (ISLM)
+              (item.is_erc20 || item.symbol === CURRENCY_NAME),
+          ) ?? [],
       ),
     [params.from],
   ).get();

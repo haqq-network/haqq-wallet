@@ -1,4 +1,4 @@
-name: Run e2e tests
+name: Run e2e tests for both platforms
 
 on:
   workflow_dispatch:
@@ -17,19 +17,40 @@ on:
           - true
           - false
 
+      STORIES_ENABLED:
+        type: choice
+        description: STORIES_ENABLED
+        options:
+          - true
+          - false
+
+  workflow_call:
+    inputs:
+      IS_DEVELOPMENT:
+        required: false
+        type: string
+      IS_SSS_ENABLED:
+        required: false
+        type: string
+      STORIES_ENABLED:
+        required: false
+        type: string
+
 jobs:
   build_android:
     name: Android
     uses: ./.github/workflows/e2e_android.yml
     secrets: inherit
     with:
-      IS_DEVELOPMENT: ${{github.event.inputs.IS_DEVELOPMENT}}
-      IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
+      IS_DEVELOPMENT: ${{github.event.inputs.IS_DEVELOPMENT || inputs.IS_DEVELOPMENT || 'false'}}
+      IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED || inputs.IS_SSS_ENABLED || 'true'}}
+      STORIES_ENABLED: ${{github.event.inputs.STORIES_ENABLED || inputs.STORIES_ENABLED || 'true'}}
 
   build_ios:
     name: iOS
     uses: ./.github/workflows/e2e_ios.yml
     secrets: inherit
     with:
-      IS_DEVELOPMENT: ${{github.event.inputs.IS_DEVELOPMENT}}
-      IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
+      IS_DEVELOPMENT: ${{github.event.inputs.IS_DEVELOPMENT || inputs.IS_DEVELOPMENT || 'false'}}
+      IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED || inputs.IS_SSS_ENABLED || 'true'}}
+      STORIES_ENABLED: ${{github.event.inputs.STORIES_ENABLED || inputs.STORIES_ENABLED || 'true'}}

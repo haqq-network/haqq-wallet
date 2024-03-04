@@ -4,13 +4,20 @@ import {ProviderInterface} from '@haqq/provider-base';
 import {BigNumber, utils} from 'ethers';
 
 import {app} from '@app/contexts';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
+import {Contracts} from '@app/models/contracts';
 import {Provider} from '@app/models/provider';
+import {Token} from '@app/models/tokens';
 import {Wallet} from '@app/models/wallet';
 import {getDefaultChainId} from '@app/network';
 import {Balance} from '@app/services/balance';
 import {storage} from '@app/services/mmkv';
+import {applyEthTxMultiplier} from '@app/utils';
+import {WEI_PRECISION} from '@app/variables/common';
+
+import {RemoteConfig} from './remote-config';
 
 export const ABI_ERC20_TRANSFER_ACTION = {
   name: 'transfer',
@@ -42,8 +49,9 @@ export class EthNetwork {
     value: Balance,
     data: string = '0x',
     minGas = getRemoteBalanceValue('eth_min_gas_limit'),
+    provider = app.provider,
   ) {
-    const rpcProvider = await getRpcProvider(app.provider);
+    const rpcProvider = await getRpcProvider(provider);
 
     const nonce = await rpcProvider.getTransactionCount(from, 'latest');
 
@@ -60,11 +68,11 @@ export class EthNetwork {
       value: value.toHex(),
       nonce,
       type: 2,
-      maxFeePerGas: estimate.gasPrice.toHex(),
-      maxPriorityFeePerGas: estimate.gasPrice.toHex(),
+      maxFeePerGas: estimate.maxFeePerGas.toHex(),
+      maxPriorityFeePerGas: estimate.maxPriorityFeePerGas.toHex(),
       gasLimit: estimate.estimateGas.toHex(),
       data,
-      chainId: EthNetwork.chainId,
+      chainId: provider.ethChainId,
     };
 
     const tx = await utils.resolveProperties(transaction);
@@ -144,36 +152,55 @@ export class EthNetwork {
     value: Balance,
     data = '0x',
     minGas: Balance = getRemoteBalanceValue('eth_min_gas_limit'),
+    provider = app.provider,
   ): Promise<{
     feeWei: Balance;
     gasPrice: Balance;
     estimateGas: Balance;
+    maxFeePerGas: Balance;
+    maxPriorityFeePerGas: Balance;
   }> {
-    const rpcProvider = await getRpcProvider(app.provider);
+    const rpcProvider = await getRpcProvider(provider);
 
-    const getGasPrice = await rpcProvider.getGasPrice();
-    const gasPrice = new Balance(getGasPrice._hex);
+    const feeData = await rpcProvider.getFeeData();
+
+    if (!feeData?.gasPrice) {
+      throw new Error('Gas price not found');
+    }
+
+    const gasPrice = new Balance(feeData.gasPrice, 18);
+    const maxFeePerGas = new Balance(feeData.maxFeePerGas || gasPrice, 18);
+    const maxPriorityFeePerGas = new Balance(
+      feeData.maxPriorityFeePerGas || gasPrice,
+      18,
+    );
+
     let estimateGas = minGas;
 
     try {
       const estGas = await rpcProvider.estimateGas({
         from,
         to,
-        value: value.toHex(),
         data,
-        maxFeePerGas: gasPrice.toHex(),
-        maxPriorityFeePerGas: gasPrice.toHex(),
+        value: value.toHex(),
       } as Deferrable<TransactionRequest>);
 
-      estimateGas = new Balance(estGas._hex).max(minGas);
-    } catch {
-      //
+      if (RemoteConfig.get('enable_eth_commission_multiplier')) {
+        estimateGas = applyEthTxMultiplier(new Balance(estGas)).max(minGas);
+      } else {
+        estimateGas = new Balance(estGas).max(minGas);
+      }
+    } catch (err) {
+      Logger.captureException(err, 'EthNetwork.estimateTransaction error');
+      throw err;
     }
 
     return {
       feeWei: estimateGas.operate(gasPrice, 'mul'),
       gasPrice,
       estimateGas,
+      maxFeePerGas,
+      maxPriorityFeePerGas,
     };
   }
 
@@ -209,6 +236,54 @@ export class EthNetwork {
     return iface.decodeFunctionResult(method, resp);
   }
 
+  static getERC20TransferData(
+    to: string,
+    amount: Balance,
+    contractAddress: string,
+  ) {
+    const abi = [ABI_ERC20_TRANSFER_ACTION];
+    const iface = new utils.Interface(abi);
+
+    const haqqContractAddress = AddressUtils.toHaqq(contractAddress);
+    const contractInfo =
+      Contracts.getById(haqqContractAddress) ||
+      Token.getById(haqqContractAddress);
+
+    const decimals = contractInfo.decimals ?? WEI_PRECISION;
+
+    const [amountClear] = new Balance(amount.toWei(), 0)
+      .operate(Math.pow(10, amount.getPrecission()), 'div')
+      .operate(Math.pow(10, decimals), 'mul')
+      .toWei()
+      .toString()
+      .split('.');
+
+    const data = iface.encodeFunctionData(ABI_ERC20_TRANSFER_ACTION.name, [
+      to,
+      amountClear,
+    ]);
+
+    return data;
+  }
+
+  static async estimateERC20Transfer(
+    from: string,
+    to: string,
+    amount: Balance,
+    contractAddress: string,
+    provider = app.provider,
+  ) {
+    const data = EthNetwork.getERC20TransferData(to, amount, contractAddress);
+    return await EthNetwork.estimateTransaction(
+      from,
+      contractAddress,
+      Balance.Empty,
+      data,
+      getRemoteBalanceValue('eth_min_gas_limit'),
+      provider,
+    );
+  }
+
   async transferERC20(
     transport: ProviderInterface,
     from: Wallet,
@@ -216,13 +291,7 @@ export class EthNetwork {
     amount: Balance,
     contractAddress: string,
   ) {
-    const abi = [ABI_ERC20_TRANSFER_ACTION];
-    const iface = new utils.Interface(abi);
-    const data = iface.encodeFunctionData(ABI_ERC20_TRANSFER_ACTION.name, [
-      to,
-      amount.toHex(),
-    ]);
-
+    const data = EthNetwork.getERC20TransferData(to, amount, contractAddress);
     const unsignedTx = await EthNetwork.populateTransaction(
       from.address,
       contractAddress,

@@ -15,25 +15,32 @@ import {
 export type CardSmallProps = {
   children?: React.ReactNode;
   width: number;
+  height?: number | undefined;
   style?: StyleProp<ViewStyle> | undefined;
   borderRadius?: number;
   transparent?: boolean;
+  withPadding?: boolean;
   colorFrom: string;
   colorTo: string;
   colorPattern: string;
   pattern: string;
 };
 
+const HEIGHT_RATIO = 0.692307692;
+
 export const CardSmall = ({
   children,
   width,
+  height,
   style,
   colorFrom,
   colorTo,
   colorPattern,
   borderRadius = 16,
+  withPadding = true,
   pattern = CARD_DEFAULT_STYLE,
 }: CardSmallProps) => {
+  const cardHeight = typeof height === 'number' ? height : width * HEIGHT_RATIO;
   return (
     <LinearGradient
       colors={[colorFrom, colorTo]}
@@ -41,10 +48,10 @@ export const CardSmall = ({
       end={GRADIENT_END}
       style={[
         styles.container,
+        withPadding && styles.padding,
         {
           width: width,
-          height: width * 0.692307692,
-
+          height: cardHeight,
           borderRadius,
         },
         style,
@@ -59,7 +66,7 @@ export const CardSmall = ({
         style={[
           {
             width: width,
-            height: width * 0.692307692,
+            height: cardHeight,
             tintColor: colorPattern,
           },
           StyleSheet.absoluteFillObject,
@@ -72,7 +79,9 @@ export const CardSmall = ({
 
 const styles = createTheme({
   container: {
-    padding: 16,
     overflow: 'hidden',
+  },
+  padding: {
+    padding: 16,
   },
 });

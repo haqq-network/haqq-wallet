@@ -26,7 +26,7 @@ const KeystoneStack = observer(() => {
     props => (
       <OnboardingStack
         initialParams={{
-          [OnboardingStackRoutes.OnboardingSetupPin]: {...props.route.params},
+          [OnboardingStackRoutes.OnboardingSetupPin]: {...props?.route?.params},
           [OnboardingStackRoutes.OnboardingRepeatPin]: {
             nextScreen: KeystoneStackRoutes.KeystoneFinish,
           },
@@ -64,7 +64,7 @@ const KeystoneStack = observer(() => {
       />
       <Stack.Screen
         name={KeystoneStackRoutes.OnboardingSetupPin}
-        component={themeUpdaterHOC(OnboardingStackGenerated)}
+        component={OnboardingStackGenerated}
         options={hideHeader}
       />
     </Stack.Navigator>

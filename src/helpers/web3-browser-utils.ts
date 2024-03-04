@@ -17,9 +17,14 @@ export enum EthereumEventsEnum {
   ACCOUNTS_CHANGED = 'accountsChanged',
   CHAIN_CHANGED = 'chainChanged',
   DISCONNECT = 'disconnect',
+  METAMASK_CHAINCHANGED = 'metamask_chainChanged',
 }
 
 export interface EthereumEventsParams {
+  [EthereumEventsEnum.METAMASK_CHAINCHANGED]: {
+    chainId: string;
+    networkVersion: string;
+  };
   [EthereumEventsEnum.ACCOUNTS_CHANGED]: string[];
   [EthereumEventsEnum.CHAIN_CHANGED]: string;
   [EthereumEventsEnum.DISCONNECT]: undefined;
@@ -89,11 +94,23 @@ export const emitToEthereumJS = <EventName extends EthereumEventsEnum>(
     `;
 };
 
+export const emitToWindowJS = (event: string, params?: any) => {
+  params = params ? JSON.stringify(params) : 'undefined';
+  return `
+        window.dispatchEvent(new CustomEvent("${event}", {
+          bubbles: true,
+          detail: ${params},
+        }))
+        true;
+    `;
+};
+
 export const changeWebViewUrlJS = (href: string) => {
   return `(function(){window.location.href = '${href}' })()`;
 };
 
-export const detectDeeplink = (url: string) => !/^https?:\/\//.test(url);
+export const detectDeeplink = (url: string) =>
+  !/^https?:\/\//.test(url) || !url.startsWith('http');
 
 // Checking whether an application can navigate to another application through a deep link.
 // return true if deeplink detected

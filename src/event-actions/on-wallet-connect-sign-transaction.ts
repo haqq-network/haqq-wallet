@@ -1,15 +1,88 @@
+import {getSdkError} from '@walletconnect/utils';
+
+import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
+import {awaitForProvider} from '@app/helpers/await-for-provider';
+import {
+  QRScannerTypeEnum,
+  awaitForScanQr,
+} from '@app/helpers/await-for-scan-qr';
+import {I18N, getText} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {WalletConnectSessionRequestType} from '@app/types/wallet-connect';
-import {isError} from '@app/utils';
+import {isError, requestQRScannerPermission} from '@app/utils';
+
+const SIGN_METHOD_WHITELIST = [
+  'eth_sendTransaction',
+  'eth_signTransaction',
+  'eth_sign',
+  'personal_sign',
+  'eth_signTypedData_v3',
+  'eth_signTypedData_v4',
+];
 
 export async function onWalletConnectSignTransaction(
   event: WalletConnectSessionRequestType,
 ) {
   try {
     const session = WalletConnect.instance.getSessionByTopic(event.topic);
-    if (session) {
+    const method = event?.params?.request?.method;
+
+    if (session && method === 'wallet_switchEthereumChain') {
+      const providers = Provider.getAll();
+      const providerId = await awaitForProvider({
+        providers,
+        initialProviderId: app.providerId!,
+        title: I18N.networks,
+      });
+
+      if (providerId) {
+        app.providerId = providerId;
+        await WalletConnect.instance.approveSessionRequest(providerId, event);
+      } else {
+        await WalletConnect.instance.rejectSessionRequest(
+          event.id,
+          event.topic,
+          getSdkError('USER_REJECTED_CHAINS').message,
+        );
+      }
+    }
+
+    if (session && method === 'wallet_scanQRCode') {
+      // @ts-ignore
+      const pattern = event?.params?.[0] as string;
+
+      if (!!pattern && typeof pattern !== 'string') {
+        await WalletConnect.instance.rejectSessionRequest(
+          event.id,
+          event.topic,
+          getText(I18N.jsonRpcErrorInvalidParams),
+        );
+      }
+
+      const isAccesGranted = await requestQRScannerPermission(
+        session.peer.metadata.url,
+      );
+
+      if (!isAccesGranted) {
+        await WalletConnect.instance.rejectSessionRequest(
+          event.id,
+          event.topic,
+          getSdkError('USER_REJECTED').message,
+        );
+      }
+
+      const result = await awaitForScanQr({
+        pattern,
+        variant: QRScannerTypeEnum.qr,
+      });
+      await WalletConnect.instance.approveSessionRequest(result, event);
+    }
+
+    const isAllowed = SIGN_METHOD_WHITELIST.includes(method);
+    if (session && method && isAllowed) {
       const [_, chainId, accountId] =
         session.namespaces.eip155?.accounts?.[0]?.split?.(':');
 
@@ -36,7 +109,7 @@ export async function onWalletConnectSignTransaction(
       await WalletConnect.instance.rejectSessionRequest(
         event.id,
         event.topic,
-        err.message,
+        err.message || getSdkError('USER_REJECTED').message,
       );
     }
   }

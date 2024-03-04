@@ -13,13 +13,14 @@ import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Nft} from '@app/models/nft';
+import {HomeStackRoutes} from '@app/route-types';
 import {INftWidget, NftWidgetSize} from '@app/types';
 import {NftCollectionInfoBanner} from '@app/widgets/nft-widget/nft-collection-info-banner';
 
 export const NftWidgetWrapper = observer(({size}: INftWidget) => {
   const navigation = useTypedNavigation();
   const onPress = useCallback(() => {
-    navigation.navigate('totalValueInfo', {
+    navigation.navigate(HomeStackRoutes.TotalValueInfo, {
       tab: TotalValueTabNames.nft,
     });
   }, []);

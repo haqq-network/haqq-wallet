@@ -1,6 +1,6 @@
 import React, {memo, useCallback, useMemo} from 'react';
 
-import {SettingsProviderEdit} from '@app/components/settings-providers/settings-provider-edit';
+import {SettingsProviderEdit} from '@app/components/settings/settings-providers/settings-provider-edit';
 import {app} from '@app/contexts';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {Provider} from '@app/models/provider';
@@ -58,14 +58,12 @@ export const SettingsProviderEditScreen = memo(() => {
   }, [provider, route?.params.data]);
 
   return (
-    <>
-      <SettingsProviderEdit
-        provider={providerData}
-        onSubmit={onSubmit}
-        onDelete={onDelete}
-        onSelect={onSelect}
-        onCancel={goBack}
-      />
-    </>
+    <SettingsProviderEdit
+      provider={providerData}
+      onSubmit={onSubmit}
+      onDelete={onDelete}
+      onSelect={onSelect}
+      onCancel={goBack}
+    />
   );
 });

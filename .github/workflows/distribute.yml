@@ -9,6 +9,12 @@ on:
         options:
           - true
           - false
+      STORIES_ENABLED:
+        type: choice
+        description: STORIES_ENABLED
+        options:
+          - true
+          - false
       # DEFAULT_BACKEND:
       #   type: choice
       #   description: HAQQ_BACKEND_DEFAULT
@@ -24,14 +30,12 @@ jobs:
     name: Tests
     runs-on: ubuntu-cpu16-ram64
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
         with:
-          node-version: 16
-      - uses: actions/cache@v3
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+          node-version: 18
+
       - name: Install packages
         run: yarn install 
 
@@ -42,6 +46,7 @@ jobs:
     with:
       IS_DEVELOPMENT: false
       IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
+      STORIES_ENABLED: ${{github.event.inputs.STORIES_ENABLED}}
       BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION}}
     needs:
       - test
@@ -53,6 +58,7 @@ jobs:
     with:
       IS_DEVELOPMENT: false
       IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
+      STORIES_ENABLED: ${{github.event.inputs.STORIES_ENABLED}}
       BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION}}
     needs:
       - test

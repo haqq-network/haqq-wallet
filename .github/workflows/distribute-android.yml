@@ -17,6 +17,13 @@ on:
           - true
           - false
 
+      STORIES_ENABLED:
+        type: choice
+        description: STORIES_ENABLED
+        options:
+          - true
+          - false
+
       # DEFAULT_BACKEND:
       #   type: choice
       #   description: HAQQ_BACKEND_DEFAULT
@@ -36,6 +43,9 @@ on:
       IS_SSS_ENABLED:
         required: true
         type: string
+      STORIES_ENABLED:
+        required: true
+        type: string
       # DEFAULT_BACKEND:
       #   required: true
       #   type: string
@@ -48,23 +58,17 @@ jobs:
     name: Distribute Android app
     runs-on: ubuntu-cpu16-ram64
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
         with:
-          node-version: 16
-      - uses: actions/cache@v3
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-      - uses: actions/cache@v3
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-gems-
+          node-version: 18
+
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2.0'
+          bundler-cache: true
+
       - name: Decode secrets
         run: |
           echo ${{secrets.HAQQ_KEYSTORE}} | base64 -d > android/app/haqq-upload-key.keystore
@@ -95,29 +99,28 @@ jobs:
           echo "RECAPTCHA_V2_URL=${{secrets.RECAPTCHA_V2_URL}}" >> .env
           echo "RECAPTCHA_V2_SITEKEY=${{secrets.RECAPTCHA_V2_SITEKEY}}" >> .env
           echo "HCAPTCHA_URL=${{secrets.HCAPTCHA_URL}}" >> .env
+          echo "STORIES_ENABLED=${{github.event.inputs.STORIES_ENABLED}}" >> .env
 
           echo "DETOX_MILK_PRIVATE_KEY=${{secrets.DETOX_MILK_PRIVATE_KEY}}" >> .env
           echo "DETOX_PROVIDER=${{secrets.DETOX_PROVIDER}}" >> .env
           echo "DETOX_CHAIN_ID=${{secrets.DETOX_CHAIN_ID}}" >> .env
           echo "MMKV_KEY=${{secrets.MMKV_KEY}}" >> .env
 
-      - name: Install Fastlane
-        run: |
-          bundle install
       - name: Install packages
-        run: yarn install 
+        run: yarn install
+
+      - name: Install Zulu17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
-      - uses: actions/cache@v3
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
+
       - name: Execute Fastlane command
         run: bundle exec fastlane android distribute
         env:

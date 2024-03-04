@@ -17,9 +17,11 @@ describe('Signup', () => {
 
     await element(by.id('wallet_without_protection_button')).tap();
 
+    await device.disableSynchronization();
     for (const num of PIN.split('')) {
       await element(by.id(`numeric_keyboard_${num}`)).tap();
     }
+    await device.enableSynchronization();
 
     await element(by.id('protect_phrase_button')).tap();
 
@@ -46,11 +48,15 @@ describe('Signup', () => {
       .withTimeout(3000);
 
     for (const word of mnemonic_words) {
-      const el = element(by.id(`backup_verify_word_${word}_enabled`)).atIndex(
-        0,
-      );
-      await waitFor(el).toBeVisible().withTimeout(3000);
-      await el.tap();
+      const elEnabled = element(
+        by.id(`backup_verify_word_${word}_enabled`),
+      ).atIndex(0);
+      const elDisabled = element(
+        by.id(`backup_verify_word_${word}_disabled`),
+      ).atIndex(0);
+      await waitFor(elEnabled).toBeVisible().withTimeout(1000);
+      await elEnabled.tap();
+      await waitFor(elDisabled).toBeVisible().withTimeout(1000);
     }
 
     await element(by.id('backup_verify')).scrollTo('bottom');

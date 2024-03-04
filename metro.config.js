@@ -1,13 +1,9 @@
-const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
-
-/**
- * Metro configuration for React Native
- * https://github.com/facebook/react-native
- *
- * @format
- */
-const blacklist = require('metro-config/src/defaults/exclusionList');
 require('dotenv').config();
+const path = require("path");
+const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
+const blacklist = require('metro-config/src/defaults/exclusionList');
+
+const defaultModuleResolver = getDefaultConfig(__dirname).resolver.resolveRequest;
 
 const config = {
   resetCache: true,
@@ -15,7 +11,7 @@ const config = {
   transformer: {
     getTransformOptions: async () => ({
       transform: {
-        experimentalImportSupport: true,
+        experimentalImportSupport: false,
         inlineRequires: true,
       },
     }),
@@ -33,6 +29,30 @@ const config = {
       // process.env.PROVIDER_WEB3_UTILS,
       // process.env.PROVIDER_LEDGER_RN_PACKAGE,
     ].filter(Boolean),
+    resolveRequest: (context, moduleName, platform) => {
+      try {
+        return context.resolveRequest(context, moduleName, platform);
+      } catch (error) {
+        console.warn('\n1️⃣ context.resolveRequest cannot resolve: ', moduleName);
+      }
+
+      try {
+        const resolution = require.resolve(moduleName, {
+          paths: [path.dirname(context.originModulePath), ...config.resolver.nodeModulesPaths],
+        });
+
+        if (path.isAbsolute(resolution)){
+          return {
+            filePath: resolution,
+            type: "sourceFile",
+          };
+        } 
+      } catch(error) {
+        console.warn('\n2️⃣ require.resolve cannot resolve: ', moduleName);
+      }
+
+      return defaultModuleResolver(context, moduleName, platform);
+    },
   },
   watchFolders: [
     // process.env.PROVIDER_BASE_PACKAGE,

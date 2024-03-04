@@ -3,7 +3,7 @@ import React, {useCallback, useEffect} from 'react';
 import {observer} from 'mobx-react';
 import {Alert} from 'react-native';
 
-import {SettingsAccountDetail} from '@app/components/settings-account-detail';
+import {SettingsAccountDetail} from '@app/components/settings/settings-account-detail';
 import {CustomHeader, IconsName} from '@app/components/ui';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {hideModal, showModal} from '@app/helpers';
@@ -27,7 +27,7 @@ export const SettingsAccountDetailScreen = observer(() => {
     ManageAccountsStackParamList,
     ManageAccountsStackRoutes.SettingsAccountDetail
   >().params;
-  const {address} = params;
+  const {address, fromHomePage} = params;
   const wallet = Wallet.getById(address);
 
   const onPressRename = useCallback(() => {
@@ -109,6 +109,14 @@ export const SettingsAccountDetailScreen = observer(() => {
     });
   }, [navigation, wallet?.accountId]);
 
+  const onPressBack = () => {
+    if (fromHomePage) {
+      navigation.push(HomeStackRoutes.Home);
+      return;
+    }
+    navigation.goBack();
+  };
+
   if (!wallet) {
     return null;
   }
@@ -118,7 +126,7 @@ export const SettingsAccountDetailScreen = observer(() => {
       <CustomHeader
         title={I18N.settingsAccountDetailHeaderTitle}
         iconLeft={IconsName.arrow_back}
-        onPressLeft={navigation.goBack}
+        onPressLeft={onPressBack}
         iconRight={IconsName.trash}
         onPressRight={onRemove}
       />

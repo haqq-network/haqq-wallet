@@ -168,6 +168,7 @@ export const SettingsDeveloperTools = observer(() => {
             const result = await Whitelist.verifyAddress(
               verifyAddress,
               provider!,
+              true,
             );
 
             if (result) {

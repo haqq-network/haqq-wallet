@@ -39,6 +39,12 @@ export class PushNotifications extends EventEmitter {
       // Logger.log('onNotificationOpenedApp', remoteMessage);
       app.emit(Events.onPushNotification, remoteMessage);
     });
+
+    messaging().onTokenRefresh(token => {
+      if (token) {
+        app.emit(Events.onPushTokenRefresh, token);
+      }
+    });
   }
 
   get isAvailable() {

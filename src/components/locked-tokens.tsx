@@ -14,6 +14,7 @@ import {Placeholder} from './ui/placeholder';
 
 export interface LockedTokensProps {
   balance?: BalanceData;
+
   onForwardPress(): void;
 }
 
@@ -36,9 +37,7 @@ export function LockedTokens({balance, onForwardPress}: LockedTokensProps) {
           <Text t7>{total?.toBalanceString(0) ?? defaultTotalValueISLM}</Text>
           <Spacer width={4} />
           <Badge
-            text={
-              total?.toFiat('USD')?.toBalanceString() ?? defaultTotalValueUSD
-            }
+            text={total?.toFiat() ?? defaultTotalValueUSD}
             labelColor={Color.graphicSecond1}
             textColor={Color.textBase1}
           />

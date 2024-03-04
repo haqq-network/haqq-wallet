@@ -117,6 +117,14 @@ export const TextField: React.FC<Props> = memo(
       });
     }, [value, focusAnim, isFocused]);
 
+    useEffect(() => {
+      if (autoFocus) {
+        setTimeout(() => {
+          inputRef.current?.focus();
+        }, 100);
+      }
+    }, [autoFocus]);
+
     let color = getColor(error ? Color.textRed1 : Color.textBase2);
 
     const labelAnimStyle = useAnimatedStyle(
@@ -172,7 +180,6 @@ export const TextField: React.FC<Props> = memo(
               onContentSizeChange={contentSizeChangeEvent}
               onBlur={onBlurEvent}
               onFocus={onFocusEvent}
-              autoFocus={autoFocus}
               numberOfLines={numberOfLines}
             />
           </View>

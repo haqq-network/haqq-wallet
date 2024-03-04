@@ -27,6 +27,8 @@ import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {checkNeedUpdate} from '@app/helpers/check-app-version';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {getUid} from '@app/helpers/get-uid';
+import {SecurePinUtils} from '@app/helpers/secure-pin-utils';
+import {Currencies} from '@app/models/currencies';
 import {Nft} from '@app/models/nft';
 import {seedData} from '@app/models/seed-data';
 import {Token} from '@app/models/tokens';
@@ -51,12 +53,13 @@ import {
   DynamicLink,
   HaqqEthereumAddress,
   IndexerBalanceData,
+  ModalType,
 } from '../types';
 import {
   LIGHT_GRAPHIC_GREEN_1,
   MAINNET_ETH_CHAIN_ID,
-  MAIN_NETWORK,
-  TEST_NETWORK,
+  MAIN_NETWORK_ID,
+  TEST_NETWORK_ID,
 } from '../variables/common';
 
 const optionalConfigObject = {
@@ -82,7 +85,7 @@ function getAppStatus() {
 
 class App extends AsyncEventEmitter {
   private user: User;
-  private authenticated: boolean = DEBUG_VARS.enableSkipPinOnLogin;
+  private _authenticated: boolean = DEBUG_VARS.enableSkipPinOnLogin;
   private appStatus: AppStatus = AppStatus.inactive;
   private _balances: Map<HaqqEthereumAddress, BalanceData> = new Map();
   private _balance: Map<string, Balance> = new Map();
@@ -153,6 +156,15 @@ class App extends AsyncEventEmitter {
 
   private _startUpTime: number;
 
+  set authenticated(value: boolean) {
+    this._authenticated = value;
+    this.emit(Events.onAuthenticatedChanged, value);
+  }
+
+  get authenticated() {
+    return this._authenticated;
+  }
+
   get startUpTime() {
     return this._startUpTime;
   }
@@ -196,8 +208,8 @@ class App extends AsyncEventEmitter {
     return (
       VariablesString.get('providerId') ??
       (ENVIRONMENT === 'production' || ENVIRONMENT === 'distribution'
-        ? MAIN_NETWORK
-        : TEST_NETWORK)
+        ? MAIN_NETWORK_ID
+        : TEST_NETWORK_ID)
     );
   }
 
@@ -207,7 +219,7 @@ class App extends AsyncEventEmitter {
       VariablesString.set('providerId', value);
       this._provider = p;
       EthNetwork.init(p);
-      app.emit(Events.onProviderChanged);
+      app.emit(Events.onProviderChanged, p.id);
     } else {
       throw new Error('Provider not found');
     }
@@ -429,6 +441,8 @@ class App extends AsyncEventEmitter {
       accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
     });
 
+    this.authenticated = true;
+    Currencies.setSelectedCurrency();
     return pass;
   }
 
@@ -445,7 +459,16 @@ class App extends AsyncEventEmitter {
     this.resetAuth();
     await SystemDialog.getResult(async () => {
       const close = showModal('pin');
-
+      if (SecurePinUtils.isPinChangedWithFail()) {
+        try {
+          await SecurePinUtils.rollbackPin();
+          showModal(ModalType.pinError);
+        } catch (e) {
+          const details = (e as Error)?.message || e?.toString();
+          showModal(ModalType.pinError, {details});
+          Logger.error(e, 'app.auth rollback pin failed');
+        }
+      }
       await Promise.race([this.makeBiometryAuth(), this.makePinAuth()]);
 
       if (this.authenticated) {
@@ -521,6 +544,8 @@ class App extends AsyncEventEmitter {
           }
           await awaitForEventDone(Events.onAppActive);
           await onUpdatesSync();
+          RemoteConfig.init(true);
+          await RemoteConfig.awaitForInitialization();
           break;
         case AppStatus.inactive:
           if (this.authenticated) {
@@ -564,8 +589,7 @@ class App extends AsyncEventEmitter {
     }
 
     if (changed) {
-      Token.fetchTokens();
-      Nft.fetchNft();
+      Promise.all([Token.fetchTokens(), Nft.fetchNft()]);
       this.emit(Events.onBalanceSync);
     }
   }

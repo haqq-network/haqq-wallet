@@ -5,37 +5,81 @@ import {AddressType, HaqqCosmosAddress, HaqqEthereumAddress} from '@app/types';
 
 import {Whitelist} from './whitelist';
 
+export const HAQQ_VALIDATOR_PREFIX = 'haqqvaloper';
 export class AddressUtils {
   static toHaqq(address: string) {
-    if (AddressUtils.isHaqqAddress(address)) {
-      return address.toLowerCase() as HaqqCosmosAddress;
+    try {
+      if (!address) {
+        return '' as HaqqCosmosAddress;
+      }
+      if (AddressUtils.isHaqqValidatorAddress(address)) {
+        return (address || '').toLowerCase() as HaqqCosmosAddress;
+      }
+      if (AddressUtils.isHaqqAddress(address)) {
+        return address.toLowerCase() as HaqqCosmosAddress;
+      }
+      return converter('haqq')
+        .toBech32(address)
+        .toLowerCase() as HaqqCosmosAddress;
+    } catch (e) {
+      Logger.warn(e, 'AddressUtils.toHaqq', {address});
+      return address as HaqqCosmosAddress;
     }
-    return converter('haqq')
-      .toBech32(address)
-      .toLowerCase() as HaqqCosmosAddress;
   }
 
   static toEth(address: string) {
-    if (AddressUtils.isEthAddress(address)) {
-      return address.toLowerCase() as HaqqEthereumAddress;
+    try {
+      if (!address) {
+        return '' as HaqqEthereumAddress;
+      }
+      if (AddressUtils.isHaqqValidatorAddress(address)) {
+        return (address || '').toLowerCase() as HaqqEthereumAddress;
+      }
+      if (AddressUtils.isEthAddress(address)) {
+        return address.toLowerCase() as HaqqEthereumAddress;
+      }
+      return converter('haqq')
+        .toHex(address)
+        .toLowerCase() as HaqqEthereumAddress;
+    } catch (e) {
+      Logger.warn(e, 'AddressUtils.toEth', {address});
+      return address as HaqqEthereumAddress;
     }
-    return converter('haqq')
-      .toHex(address)
-      .toLowerCase() as HaqqEthereumAddress;
   }
 
   static isEthAddress(address: string): address is HaqqEthereumAddress {
-    return utils.isAddress(address);
+    try {
+      if (!address) {
+        return false;
+      }
+      return utils.isAddress(address);
+    } catch (e) {
+      Logger.warn(e, 'AddressUtils.isEthAddress', {address});
+      return false;
+    }
   }
+
+  static isHaqqValidatorAddress = (address: string) => {
+    return (
+      typeof address === 'string' && address.startsWith(HAQQ_VALIDATOR_PREFIX)
+    );
+  };
 
   static isHaqqAddress = (address: string): address is HaqqCosmosAddress => {
     try {
+      if (!address) {
+        return false;
+      }
       if (typeof address === 'string' && address.startsWith('haqq')) {
+        if (AddressUtils.isHaqqValidatorAddress(address)) {
+          return true;
+        }
         const hex = AddressUtils.toEth(address as HaqqCosmosAddress);
         return AddressUtils.isEthAddress(hex);
       }
-    } catch (e) {}
-
+    } catch (e) {
+      Logger.warn(e, 'AddressUtils.isHaqqAddress', {address});
+    }
     return false;
   };
 
@@ -46,13 +90,21 @@ export class AddressUtils {
   };
 
   static isContractAddress = async (address: string) => {
-    const response = await Whitelist.verifyAddress(address);
+    try {
+      if (!address) {
+        return false;
+      }
+      const response = await Whitelist.verifyAddress(address);
 
-    if (!response) {
+      if (!response) {
+        return false;
+      }
+
+      return response.address_type === AddressType.contract;
+    } catch (e) {
+      Logger.warn(e, 'AddressUtils.isContractAddress', {address});
       return false;
     }
-
-    return response.addressType === AddressType.contract;
   };
 
   static equals = (a: string, b: string) => {

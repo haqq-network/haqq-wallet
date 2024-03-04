@@ -1,17 +1,25 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
 import {useActionSheet} from '@expo/react-native-action-sheet';
+import {computed} from 'mobx';
 import {observer} from 'mobx-react';
 import {StyleProp, View, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Icon, IconButton, IconsName, Text} from '@app/components/ui';
+import {
+  Icon,
+  IconButton,
+  IconsName,
+  Text,
+  TextVariant,
+} from '@app/components/ui';
 import {WalletCard} from '@app/components/ui/walletCard';
 import {createTheme} from '@app/helpers';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {HaqqEthereumAddress, IToken} from '@app/types';
+import {CURRENCY_NAME} from '@app/variables/common';
 
 export interface TokenViewerProps {
   data: Record<HaqqEthereumAddress, IToken[]>;
@@ -25,7 +33,8 @@ const SortingNamesMap = {
 };
 
 export const TokenViewer = observer(
-  ({data, style, wallet}: TokenViewerProps) => {
+  ({data: _data, style, wallet}: TokenViewerProps) => {
+    const data = useMemo(() => computed(() => _data), [_data]).get();
     const wallets = useMemo(
       () =>
         Object.keys(data)
@@ -110,13 +119,17 @@ export const TokenViewer = observer(
         <View style={styles.row}>
           <IconButton onPress={onPressSort} style={styles.sortWrapper}>
             <Icon color={Color.graphicBase1} name={IconsName.arrow_sort} />
-            <Text color={Color.graphicBase1} t13>
+            <Text color={Color.graphicBase1} variant={TextVariant.t13}>
               {sorting}
             </Text>
           </IconButton>
           <IconButton onPress={onChangeViewModePress} style={styles.button}>
             <Icon color={Color.graphicBase1} name={zeroBalanceIcon} />
-            <Text color={Color.graphicBase1} i18n={I18N.tokensZeroBalance} />
+            <Text
+              variant={TextVariant.t13}
+              color={Color.graphicBase1}
+              i18n={I18N.tokensZeroBalance}
+            />
           </IconButton>
         </View>
         {(Object.keys(data) as HaqqEthereumAddress[])
@@ -139,7 +152,12 @@ export const TokenViewer = observer(
               <WalletCard
                 key={address}
                 wallet={_wallet}
-                tokens={tokens.filter(item => !!item.is_in_white_list)}
+                tokens={tokens.filter(
+                  item =>
+                    item.is_in_white_list &&
+                    // FIXME: only erc20 tokens or native currency (ISLM)
+                    (item.is_erc20 || item.symbol === CURRENCY_NAME),
+                )}
                 tokensOnly={!!wallet}
               />
             );
@@ -155,6 +173,7 @@ const styles = createTheme({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginBottom: 12,
   },
   empty: {
     flex: 1,
