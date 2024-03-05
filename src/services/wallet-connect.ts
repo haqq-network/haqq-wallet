@@ -120,8 +120,15 @@ export class WalletConnect extends Initializable {
           this._emitActiveSessions.bind(this);
         });
 
+      this._core.relayer.on('relayer_connect', async () => {
+        // connection to the relay server is established
+        logger.log('🟢 relayer_connect');
+        sendNotification(I18N.walletConnectConnectionEstablished);
+      });
       this._core.relayer.on('relayer_disconnect', async () => {
-        await this._reInit();
+        // connection to the relay server is lost
+        logger.log('🔴 relayer_disconnect');
+        sendNotification(I18N.walletConnectConnectionLost);
       });
 
       // this event called when user disconect from web site
