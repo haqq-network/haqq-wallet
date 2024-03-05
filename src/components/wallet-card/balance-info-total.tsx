@@ -26,7 +26,7 @@ export const BalanceInfoTotal = observer(
         result = Balance.Empty;
       }
 
-      return result.toFiat();
+      return result.toBalanceString();
     }, [total, Currencies.selectedCurrency, Currencies.isRatesAvailable]);
 
     return (

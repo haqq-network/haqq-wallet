@@ -1,6 +1,6 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
-import {ActivityIndicator, View} from 'react-native';
+import {ActivityIndicator, ScrollView, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -149,7 +149,7 @@ export const JsonRpcTransactionInfo = ({
   }, [txParsedData]);
 
   return (
-    <>
+    <View style={styles.container}>
       <Text t5 i18n={I18N.walletConnectSignTransactionForSignature} />
 
       <Spacer height={8} />
@@ -203,7 +203,7 @@ export const JsonRpcTransactionInfo = ({
 
       <Spacer height={28} />
 
-      <View style={styles.info}>
+      <ScrollView style={styles.info} showsVerticalScrollIndicator={false}>
         <DataView i18n={I18N.transactionInfoTypeOperation}>
           <Text t11 color={Color.textBase1}>
             {functionName?.length ? (
@@ -250,9 +250,9 @@ export const JsonRpcTransactionInfo = ({
             </Text>
           </First>
         </DataView>
-      </View>
+      </ScrollView>
       <Spacer height={10} />
-    </>
+    </View>
   );
 };
 
@@ -270,5 +270,10 @@ const styles = createTheme({
   },
   signContractAttention: {
     width: '100%',
+  },
+  container: {
+    flex: 1,
+    width: '100%',
+    alignItems: 'center',
   },
 });

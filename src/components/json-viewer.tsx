@@ -9,15 +9,20 @@ import {createTheme} from '@app/helpers';
 interface JsonViewerProps {
   data: Renderable;
   style?: StyleProp<ViewStyle>;
+  autoexpand?: boolean;
 }
 
-export const JsonViewer = ({data, style}: JsonViewerProps) => {
+export const JsonViewer = ({
+  data,
+  style,
+  autoexpand = false,
+}: JsonViewerProps) => {
   return (
     <View style={[styles.defaultStyle, style]}>
       <JSONTree
         data={data}
         hideRoot
-        shouldExpandNode={() => true}
+        shouldExpandNode={() => !!autoexpand}
         theme={getTheme()}
       />
     </View>

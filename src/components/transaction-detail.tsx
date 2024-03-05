@@ -63,7 +63,7 @@ export const TransactionDetail = ({
           <Text
             t13
             color={Color.textBase2}
-            children={total.toFiat(LONG_NUM_PRECISION)}
+            children={total.toFiat({fixed: LONG_NUM_PRECISION})}
           />
           <Spacer height={20} />
         </>

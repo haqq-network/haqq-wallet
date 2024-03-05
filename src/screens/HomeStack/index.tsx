@@ -82,6 +82,11 @@ const totalInfoOptions: NativeStackNavigationOptions = {
   title: getText(I18N.lockedTokensTotalValue),
 };
 
+const web3BrowserOptions: NativeStackNavigationOptions = {
+  ...modalOptions,
+  gestureEnabled: false,
+};
+
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 
 const HomeStack = memo(() => {
@@ -193,7 +198,7 @@ const HomeStack = memo(() => {
       <Stack.Screen
         name={HomeStackRoutes.Web3BrowserPopup}
         component={themeUpdaterHOC(Web3BrowserPopupScreen)}
-        options={modalOptions}
+        options={web3BrowserOptions}
       />
 
       <Stack.Screen
