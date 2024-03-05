@@ -1,4 +1,3 @@
-import {TypedDataField} from '@ethersproject/abstract-signer';
 import {
   createMsgDelegate,
   createMsgDeposit,
@@ -313,12 +312,13 @@ export class Cosmos {
     hdPath: string,
     transport: ProviderInterface,
     domain: Record<string, any>,
-    types: Record<string, Array<TypedDataField>>,
+    types: EIPTypedData['types'],
     message: Record<string, any>,
   ): Promise<string | undefined> {
     const signature = await transport.signTypedData(hdPath, {
       domain,
       message,
+      // @ts-ignore
       types,
     });
 
@@ -341,7 +341,7 @@ export class Cosmos {
       hdPath,
       transport,
       msg.eipToSign.domain,
-      msg.eipToSign.types as Record<string, Array<TypedDataField>>,
+      msg.eipToSign.types,
       msg.eipToSign.message,
     );
 
