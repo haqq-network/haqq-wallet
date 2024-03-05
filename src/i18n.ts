@@ -925,6 +925,9 @@ export enum I18N {
   recoveryPinSamePin,
   transactionInfoFunctionValue,
   isUsed,
+  transactionInfoMemo,
+  transactionInforHideRawOperationInfo,
+  transactionInforShowRawOperationInfo,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1866,6 +1869,9 @@ const en: Record<I18N, string> = {
   [I18N.transactionInfoNetwork]: 'Network',
   [I18N.transactionInfoAmount]: 'Amount',
   [I18N.transactionInfoNetworkFee]: 'Network Fee',
+  [I18N.transactionInfoMemo]: 'Memo',
+  [I18N.transactionInforHideRawOperationInfo]: 'Hide raw operation info',
+  [I18N.transactionInforShowRawOperationInfo]: 'Show raw operation info',
   [I18N.developerModeAttentionEnable]: 'Enable',
   [I18N.developerModeAttentionCancel]: 'Cancel',
   [I18N.developerModeAttentionTitle]: 'Developer Mode',

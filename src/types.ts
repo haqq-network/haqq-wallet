@@ -4,13 +4,18 @@ import {BigNumber} from '@ethersproject/bignumber';
 import {Validator} from '@evmos/provider';
 import {Proposal} from '@evmos/provider/dist/rest/gov';
 import {Coin} from '@evmos/transactions';
-import {AccessListish, BigNumberish} from '@haqq/provider-base';
+import {
+  AccessListish,
+  BigNumberish,
+  TypedDataTypesNames,
+} from '@haqq/provider-base';
 import {KeystoneAwaitForSignParams} from '@haqq/provider-keystone-react-native';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {NativeStackNavigationOptions} from '@react-navigation/native-stack';
 import {SessionTypes} from '@walletconnect/types';
 import Decimal from 'decimal.js';
+import {TypedDataField} from 'ethers';
 import {
   ImageSourcePropType,
   ImageStyle,
@@ -1446,18 +1451,40 @@ export interface ExplorerApiResponse<T> {
   status: ExplorerStatusEnum;
 }
 
-export interface EIPTypedData {
-  types: object;
-  primaryType: string;
-  domain: {
-    name: string;
-    version: string;
-    chainId: number;
-    verifyingContract: string;
-    salt: string;
+export type EIPAmountField = {
+  amount: string;
+  denom: string;
+};
+
+export type EIPMessage = {
+  memo?: string;
+  chain_id: string;
+  account_number: string;
+  sequence: string;
+  fee?: {
+    amount: EIPAmountField[];
+    gas: string;
+    feePayer?: string;
   };
-  message: object;
-}
+  msgs: any[];
+};
+
+export type EIPDomain = {
+  name: string;
+  version: string;
+  chainId: number;
+  verifyingContract: string | 'cosmos';
+  salt: string;
+};
+
+export type EIPTypesMap = Record<TypedDataTypesNames, TypedDataField[]>;
+
+export type EIPTypedData = {
+  primaryType: string;
+  domain: EIPDomain;
+  types: EIPTypesMap | object;
+  message: EIPMessage | object;
+};
 
 export type ExtractPromiseType<T> = T extends Promise<infer U> ? U : T;
 
@@ -1706,6 +1733,7 @@ export enum IndexerTxMsgType {
   unknown = 'unknown',
   msgVote = 'msgVote',
   msgWithdrawDelegatorReward = 'msgWithdrawDelegatorReward',
+  msgWithdrawDelegationReward = 'msgWithdrawDelegationReward',
   msgWithdrawValidatorCommission = 'msgWithdrawValidatorCommission',
   msgSend = 'msgSend',
   msgDelegate = 'msgDelegate',

@@ -42,6 +42,7 @@ import {EthSignError} from './services/eth-sign';
 import {
   AdjustTrackingAuthorizationStatus,
   BalanceData,
+  EIPTypedData,
   EthType,
   EthTypedData,
   HaqqEthereumAddress,
@@ -994,4 +995,42 @@ export function parseERC20TxDataFromHexInput(hex?: string) {
     }
   } catch (e) {}
   return undefined;
+}
+
+const SUPPORTED_COSMOS_TX_TYPE_FOR_RENDER = [
+  IndexerTxMsgType.msgDelegate,
+  IndexerTxMsgType.msgUndelegate,
+  IndexerTxMsgType.msgBeginRedelegate,
+  IndexerTxMsgType.msgWithdrawDelegationReward,
+].map(s => s.toLowerCase());
+
+export function isSupportedCosmosTxForRender(
+  tx?: any | EIPTypedData,
+): tx is EIPTypedData {
+  if (!tx && typeof tx !== 'object') {
+    return false;
+  }
+
+  if (
+    'domain' in tx &&
+    'message' in tx &&
+    // @ts-ignore
+    tx.domain?.verifyingContract === 'cosmos'
+  ) {
+    // @ts-ignore
+    const firstMessage = tx.message?.msgs?.[0] as any;
+    if (!firstMessage) {
+      return false;
+    }
+    const msgType = firstMessage['@type'] || firstMessage.type;
+
+    let isSupportedType = false;
+    SUPPORTED_COSMOS_TX_TYPE_FOR_RENDER.forEach(type => {
+      if (msgType.toLowerCase().includes(type)) {
+        isSupportedType = true;
+      }
+    });
+    return isSupportedType;
+  }
+  return false;
 }
