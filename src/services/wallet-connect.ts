@@ -13,14 +13,16 @@ import {IWeb3Wallet, Web3Wallet} from '@walletconnect/web3wallet';
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {Events, WalletConnectEvents} from '@app/events';
+import {showModal} from '@app/helpers';
 import {getLeadingAccount} from '@app/helpers/get-leading-account';
 import {Initializable} from '@app/helpers/initializable';
-import {I18N} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
 import {WalletConnectSessionMetadata} from '@app/models/wallet-connect-session-metadata';
 import {message as sendMessage, sendNotification} from '@app/services/toast';
+import {ModalType} from '@app/types';
 import {filterWalletConnectSessionsByAddress, isError, sleep} from '@app/utils';
 
 import {AppUtils} from './app-utils';
@@ -227,7 +229,12 @@ export class WalletConnect extends Initializable {
       const {topic} = parseUri(uri) || {};
 
       if (!this._client || !this._core) {
-        return sendNotification(I18N.walletConnectPairInitError);
+        showModal(ModalType.error, {
+          title: getText(I18N.walletConnectErrorTitle),
+          description: getText(I18N.walletConnectPairInitError),
+          close: getText(I18N.walletConnectErrorClose),
+        });
+        return;
       }
 
       if (
@@ -242,13 +249,22 @@ export class WalletConnect extends Initializable {
         try {
           await this.disconnectSession(topic);
         } catch {}
-        return sendNotification(I18N.walletConnectPairAlreadyExists);
+        showModal(ModalType.error, {
+          title: getText(I18N.walletConnectErrorTitle),
+          description: getText(I18N.walletConnectPairAlreadyExists),
+          close: getText(I18N.walletConnectErrorClose),
+        });
+        return;
       }
 
       const resp = await this._core.pairing.pair({uri, activatePairing: false});
 
       if (!resp) {
-        sendNotification(I18N.walletConnectPairError);
+        showModal(ModalType.error, {
+          title: getText(I18N.walletConnectErrorTitle),
+          description: getText(I18N.walletConnectPairError),
+          close: getText(I18N.walletConnectErrorClose),
+        });
       } else {
         await this._core?.pairing?.activate({topic});
         VariablesString.setObject(PAIRING_URLS_KEY, {
@@ -259,7 +275,11 @@ export class WalletConnect extends Initializable {
       logger.log('WalletConnect:pair ', resp);
     } catch (err) {
       if (isError(err)) {
-        sendMessage(`[WC]: ${err.message}`);
+        showModal(ModalType.error, {
+          title: getText(I18N.walletConnectErrorTitle),
+          description: err.message || err.name || err.toString(),
+          close: getText(I18N.walletConnectErrorClose),
+        });
         // @ts-ignore
         logger.captureException(err, 'WalletConnect.pair', {resp});
         await this._reInit();
