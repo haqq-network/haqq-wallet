@@ -1,24 +1,15 @@
 import {makeAutoObservable, runInAction} from 'mobx';
-import {isHydrated, makePersistable} from 'mobx-persist-store';
+import {isHydrated} from 'mobx-persist-store';
 
 import {Backend} from '@app/services/backend';
-import {storage} from '@app/services/mmkv';
 import {IStory} from '@app/types';
 
 class StoriesStore {
   private data: Record<IStory['id'], IStory> = {};
   isLoading = false;
 
-  constructor(shouldSkipPersisting: boolean = false) {
+  constructor() {
     makeAutoObservable(this);
-    if (!shouldSkipPersisting) {
-      makePersistable(this, {
-        name: this.constructor.name,
-        //@ts-ignore
-        properties: ['data'],
-        storage: storage,
-      });
-    }
   }
 
   fetch = async (skipLoadingFlag = false) => {
@@ -65,5 +56,5 @@ class StoriesStore {
   };
 }
 
-const instance = new StoriesStore(Boolean(process.env.JEST_WORKER_ID));
+const instance = new StoriesStore();
 export {instance as Stories};
