@@ -930,6 +930,8 @@ export enum I18N {
   transactionInforShowRawOperationInfo,
   walletConnectConnectionLost,
   walletConnectConnectionEstablished,
+  walletConnectErrorTitle,
+  walletConnectErrorClose,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -2037,4 +2039,6 @@ const en: Record<I18N, string> = {
   [I18N.walletConnectConnectionEstablished]:
     'wallet connect server is established',
   [I18N.walletConnectConnectionLost]: 'wallet connect server is lost',
+  [I18N.walletConnectErrorClose]: 'Close',
+  [I18N.walletConnectErrorTitle]: 'WalletConnect Error',
 };
