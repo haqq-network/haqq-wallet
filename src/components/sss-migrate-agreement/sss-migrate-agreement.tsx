@@ -12,9 +12,8 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {useThemeSelector} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {Color} from '@app/theme';
+import {Color, useThemeSelector} from '@app/theme';
 
 export type SssMigrateAgreementProps = {
   onDone: () => void;

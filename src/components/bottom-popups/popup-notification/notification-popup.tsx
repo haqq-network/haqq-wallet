@@ -10,9 +10,8 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useThemeSelector} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {Color} from '@app/theme';
+import {Color, useThemeSelector} from '@app/theme';
 import {SHADOW_COLOR_1} from '@app/variables/common';
 
 export type NotificationPopupProps = {

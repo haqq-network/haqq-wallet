@@ -4,9 +4,8 @@ import {Image, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {createTheme} from '@app/helpers';
-import {useThemeSelector} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {Color} from '@app/theme';
+import {Color, useThemeSelector} from '@app/theme';
 import {IS_IOS} from '@app/variables/common';
 
 import {Button, ButtonVariant, Spacer, Text} from '../ui';

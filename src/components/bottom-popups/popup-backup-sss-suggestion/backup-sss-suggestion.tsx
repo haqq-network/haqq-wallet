@@ -11,9 +11,8 @@ import {
 } from '@app/components/ui';
 import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
-import {useThemeSelector} from '@app/hooks/use-theme-selector';
 import {I18N, getText} from '@app/i18n';
-import {Color} from '@app/theme';
+import {Color, useThemeSelector} from '@app/theme';
 
 export type BackupSssNotificationProps = {
   onClickBackup: () => Promise<void>;

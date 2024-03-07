@@ -9,9 +9,9 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useThemeSelector} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {useThemeSelector} from '@app/theme';
 
 type SssMigrateFinishProps = {
   onSubmit: () => void;

@@ -11,10 +11,9 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useThemeSelector} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {Color} from '@app/theme';
+import {Color, useThemeSelector} from '@app/theme';
 import {ModalType, Modals} from '@app/types';
 
 export const DomainBlocked = ({

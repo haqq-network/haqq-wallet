@@ -4,10 +4,9 @@ import {ActivityIndicator, Image, TouchableOpacity, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import {cleanNumber, createTheme, getWindowWidth} from '@app/helpers';
-import {useThemeSelector} from '@app/hooks';
 import {useTimer} from '@app/hooks/use-timer';
 import {I18N} from '@app/i18n';
-import {Color, getColor} from '@app/theme';
+import {Color, getColor, useThemeSelector} from '@app/theme';
 import {Raffle, TimerUpdateInterval} from '@app/types';
 import {WEI} from '@app/variables/common';
 
