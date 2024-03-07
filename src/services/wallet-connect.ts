@@ -143,20 +143,11 @@ export class WalletConnect extends Initializable {
         const provider = Provider.getById(providerId)!;
         const chainId = provider.ethChainId;
         await this.awaitForInitialization();
-        WalletConnectSessionMetadata.getAll().forEach(async ({topic}) => {
-          try {
-            await this._client?.emitSessionEvent({
-              topic,
-              event: {
-                name: 'chainChanged',
-                data: chainId,
-              },
-              chainId: `eip155:${chainId}`,
-            });
-          } catch (err) {
-            logger.error('send event chainChanged', {topic}, err);
-          }
-        });
+        for (let session of WalletConnectSessionMetadata.getAll()) {
+          // sleep to avoid frequency requests to wallet connect relay server
+          await sleep(300);
+          await this.emitChainChange(chainId, session.topic);
+        }
       });
 
       const end = Date.now();
@@ -184,6 +175,21 @@ export class WalletConnect extends Initializable {
         await sleep(5000);
         return WalletConnect.instance._reInit();
       }
+    }
+  }
+
+  public async emitChainChange(chainId: number | `${number}`, topic: string) {
+    try {
+      await this._client?.emitSessionEvent({
+        topic,
+        event: {
+          name: 'chainChanged',
+          data: chainId,
+        },
+        chainId: `eip155:${chainId}`,
+      });
+    } catch (err) {
+      logger.error('emitChainChange', {topic}, err);
     }
   }
 
@@ -347,6 +353,9 @@ export class WalletConnect extends Initializable {
     });
 
     WalletConnectSessionMetadata.create(session.topic);
+    // set chain which currently active in app
+    await this.emitChainChange(app.provider.ethChainId, session.topic);
+
     this._emitActiveSessions();
     this.redirect();
     return session;
