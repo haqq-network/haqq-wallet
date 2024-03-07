@@ -31,7 +31,7 @@ import {TransactionError} from '@app/components/modals/transaction-error';
 import {ViewErrorDetails} from '@app/components/modals/view-error-details';
 import {WalletsBottomSheet} from '@app/components/modals/wallets-bottom-sheet';
 import {createTheme, hideModal} from '@app/helpers';
-import {useTheme} from '@app/hooks';
+import {Theme} from '@app/theme';
 import {ModalType, Modals, ModalsListBase} from '@app/types';
 
 import {DomainBlocked} from './domain-blocked';
@@ -66,12 +66,11 @@ export const ModalWrapper = ({
     hideModal(type);
   }, [modal, type]);
 
-  const theme = useTheme();
   const dimensions = useWindowDimensions();
 
   const key = useMemo(
-    () => `${theme}-${dimensions.width}-${dimensions.height}`,
-    [dimensions, theme],
+    () => `${Theme.currentTheme}-${dimensions.width}-${dimensions.height}`,
+    [dimensions, Theme.currentTheme],
   );
 
   const entry = useMemo(() => {

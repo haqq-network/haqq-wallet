@@ -11,10 +11,9 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {AppTheme} from '@app/theme';
+import {AppTheme, Theme} from '@app/theme';
 
 type BackupFinishProps = {
   onSubmit: () => void;
@@ -22,19 +21,18 @@ type BackupFinishProps = {
 };
 
 export const BackupFinish = ({onSubmit, testID}: BackupFinishProps) => {
-  const theme = useTheme();
   const animationSize = useWindowDimensions().width - 116;
   useEffect(() => {
     vibrate(HapticEffects.success);
   }, []);
 
   const animation = useMemo(() => {
-    if (theme === AppTheme.dark) {
+    if (Theme.currentTheme === AppTheme.dark) {
       return require('@assets/animations/backup-success-dark.json');
     }
 
     return require('@assets/animations/backup-success-light.json');
-  }, [theme]);
+  }, [Theme.currentTheme]);
 
   return (
     <PopupContainer style={page.popupContainer} testID={testID}>

@@ -2,16 +2,15 @@ import React, {useMemo} from 'react';
 
 import {useWindowDimensions} from 'react-native';
 
-import {useTheme} from '@app/hooks';
+import {Theme} from '@app/theme';
 
 export function themeUpdaterHOC(Screen: React.ElementType | null) {
   return function HOC(...props: any[]) {
-    const theme = useTheme();
     const dimensions = useWindowDimensions();
 
     const key = useMemo(
-      () => `${theme}-${dimensions.width}`,
-      [dimensions, theme],
+      () => `${Theme.currentTheme}-${dimensions.width}`,
+      [dimensions, Theme.currentTheme],
     );
 
     if (!Screen) {

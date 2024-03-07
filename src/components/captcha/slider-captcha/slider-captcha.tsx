@@ -29,12 +29,11 @@ import {useTiming} from 'react-native-redash';
 import {RiveWrapper} from '@app/components/ui/rive-wrapper';
 import {createTheme} from '@app/helpers';
 import {getUid} from '@app/helpers/get-uid';
-import {useTheme} from '@app/hooks';
 import {useLayout} from '@app/hooks/use-layout';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {Backend} from '@app/services/backend';
-import {Color, getColor} from '@app/theme';
+import {Color, Theme, getColor} from '@app/theme';
 import {getBase64ImageSource, isAbortControllerError, sleep} from '@app/utils';
 
 import {Icon, IconButton, IconsName, Loading, Spacer, Text} from '../../ui';
@@ -71,7 +70,6 @@ export type CaptchaRequestState = {
 };
 
 export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
-  const theme = useTheme();
   const [imageSource, setImageSource] = useState<
     CaptchaRequestState | undefined
   >();
@@ -120,7 +118,7 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
       [SliderCaptchaState.error]: getColor(Color.graphicRed1),
     }),
 
-    [theme],
+    [Theme.currentTheme],
   );
 
   const fetchImageSource = useCallback(async (): Promise<void> => {

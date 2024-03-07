@@ -12,8 +12,7 @@ import {StyleSheet, View} from 'react-native';
 import {WebViewMessageEvent} from 'react-native-webview';
 
 import {createTheme, getWindowHeight, getWindowWidth} from '@app/helpers';
-import {useTheme} from '@app/hooks';
-import {AppTheme, Color, getColor} from '@app/theme';
+import {AppTheme, Color, Theme, getColor} from '@app/theme';
 
 import {Hcaptcha, Ocaptcha, ReCaptchaV2, SliderCaptcha, Turnstile} from './';
 import {First} from '../ui';
@@ -44,8 +43,7 @@ export const Captcha = ({
   type = CaptchaType.slider,
   onData,
 }: CaptchaProps) => {
-  const appTheme = useTheme();
-  const theme = appTheme === AppTheme.dark ? 'dark' : 'light';
+  const theme = Theme.currentTheme === AppTheme.dark ? 'dark' : 'light';
 
   const onMessage = useCallback(
     (event: WebViewMessageEvent) => {

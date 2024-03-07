@@ -12,23 +12,20 @@ import {
 } from '@app/components/ui';
 import {Terms} from '@app/components/ui/terms';
 import {createTheme, getWindowWidth} from '@app/helpers';
-import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {AppTheme, Color} from '@app/theme';
+import {AppTheme, Color, Theme} from '@app/theme';
 
 export type LedgerAgreementProps = {
   onDone: () => void;
 };
 
 export const LedgerAgreement = ({onDone}: LedgerAgreementProps) => {
-  const theme = useTheme();
-
   const lottieAnimation = useMemo(() => {
-    if (theme === AppTheme.dark) {
+    if (Theme.currentTheme === AppTheme.dark) {
       return require('@assets/animations/body-ledger-dark.json');
     }
     return require('@assets/animations/body-ledger-light.json');
-  }, [theme]);
+  }, [Theme.currentTheme]);
 
   return (
     <PopupContainer style={page.container}>

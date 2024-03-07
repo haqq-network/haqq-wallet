@@ -10,9 +10,8 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {AppTheme} from '@app/theme';
+import {AppTheme, Theme} from '@app/theme';
 
 export type FinishProps = {
   title: I18N;
@@ -22,14 +21,13 @@ export type FinishProps = {
 };
 
 export const Finish = ({onFinish, testID, title}: FinishProps) => {
-  const theme = useTheme();
   const animation = useMemo(() => {
-    if (theme === AppTheme.dark) {
+    if (Theme.currentTheme === AppTheme.dark) {
       return require('@assets/animations/success-animation-dark.json');
     }
 
     return require('@assets/animations/success-animation-light.json');
-  }, [theme]);
+  }, [Theme.currentTheme]);
 
   return (
     <PopupContainer testID={testID}>

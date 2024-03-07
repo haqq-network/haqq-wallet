@@ -1,11 +1,7 @@
 import React from 'react';
 
-import {Color, getColor} from '@app/theme';
-
-import {useTheme} from './use-theme';
+import {Color, Theme, getColor} from '@app/theme';
 
 export function useColor(color: Color) {
-  const theme = useTheme();
-
-  return React.useMemo(() => getColor(color), [color, theme]);
+  return React.useMemo(() => getColor(color), [color, Theme.currentTheme]);
 }

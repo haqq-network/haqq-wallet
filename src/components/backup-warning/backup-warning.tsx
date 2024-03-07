@@ -12,9 +12,8 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {AppTheme, Color} from '@app/theme';
+import {AppTheme, Color, Theme} from '@app/theme';
 
 interface BackupWarningProps {
   onPressBackup: () => void;
@@ -22,14 +21,12 @@ interface BackupWarningProps {
 }
 
 export function BackupWarning({onPressBackup, testID}: BackupWarningProps) {
-  const theme = useTheme();
-
   const animation = useMemo(() => {
-    if (theme === AppTheme.dark) {
+    if (Theme.currentTheme === AppTheme.dark) {
       return require('@assets/animations/backup-start-dark.json');
     }
     return require('@assets/animations/backup-start-light.json');
-  }, [theme]);
+  }, [Theme.currentTheme]);
 
   return (
     <PopupContainer style={styles.container} testID={testID}>

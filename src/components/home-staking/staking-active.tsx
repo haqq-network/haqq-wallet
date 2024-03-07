@@ -12,10 +12,9 @@ import {View} from 'react-native';
 
 import {InfoBlockAmount, Inline, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Balance} from '@app/services/balance';
-import {AppTheme, Color} from '@app/theme';
+import {AppTheme, Color, Theme} from '@app/theme';
 import {IS_IOS} from '@app/variables/common';
 
 interface StakingActiveProps {
@@ -34,7 +33,6 @@ export const StakingActive = forwardRef(
     {availableSum, rewardSum, stakedSum, unDelegationSum}: StakingActiveProps,
     ref,
   ) => {
-    const theme = useTheme();
     const [isReceiveAnimation, setIsReceiveAnimation] = useState(false);
     const lottieRef = useRef<AnimatedLottieView>(null);
     const isEndRef = useRef<Boolean>(false);
@@ -42,30 +40,30 @@ export const StakingActive = forwardRef(
     const animationFile = useMemo(() => {
       switch (true) {
         case isReceiveAnimation:
-          if (theme === AppTheme.dark) {
+          if (Theme.currentTheme === AppTheme.dark) {
             return require('@assets/animations/get-reward-dark.json');
           }
           return require('@assets/animations/get-reward-light.json');
         case stakedSum.toNumber() > 100:
-          if (theme === AppTheme.dark) {
+          if (Theme.currentTheme === AppTheme.dark) {
             return require('@assets/animations/stake-dark-100.json');
           }
 
           return require('@assets/animations/stake-light-100.json');
         case stakedSum.toNumber() > 20:
-          if (theme === AppTheme.dark) {
+          if (Theme.currentTheme === AppTheme.dark) {
             return require('@assets/animations/stake-dark-20-100.json');
           }
 
           return require('@assets/animations/stake-light-20-100.json');
         default:
-          if (theme === AppTheme.dark) {
+          if (Theme.currentTheme === AppTheme.dark) {
             return require('@assets/animations/stake-dark-0-20.json');
           }
 
           return require('@assets/animations/stake-light-0-20.json');
       }
-    }, [isReceiveAnimation, theme, stakedSum]);
+    }, [isReceiveAnimation, Theme.currentTheme, stakedSum]);
 
     useImperativeHandle(ref, () => ({
       getReward() {

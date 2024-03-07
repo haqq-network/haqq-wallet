@@ -1,8 +1,6 @@
 import {useMemo} from 'react';
 
-import {AppTheme} from '@app/theme';
-
-import {useTheme} from './use-theme';
+import {AppTheme, Theme} from '@app/theme';
 
 export interface ThemeSelectorParams<T> {
   dark: T;
@@ -13,13 +11,11 @@ export const useThemeSelector = <T>({
   dark,
   light,
 }: ThemeSelectorParams<T>): T => {
-  const theme = useTheme();
-
   return useMemo(() => {
-    if (theme === AppTheme.dark) {
+    if (Theme.currentTheme === AppTheme.dark) {
       return dark;
     }
 
     return light;
-  }, [dark, light, theme]);
+  }, [dark, light, Theme.currentTheme]);
 };

@@ -2,8 +2,7 @@ import React, {useMemo} from 'react';
 
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
-import {useTheme} from '@app/hooks';
-import {Color} from '@app/theme';
+import {Color, Theme} from '@app/theme';
 import {addOpacityToColor} from '@app/utils';
 
 export type SkeletonPlaceholderProps = {
@@ -53,15 +52,14 @@ const Placeholder: PlaceholderType = function Placeholder({
   highlightColor,
   ...props
 }) {
-  const theme = useTheme();
   const _backgroundColor = useMemo(
     () => addOpacityToColor(backgroundColor || Color.graphicSecond1, opacity),
-    [theme, opacity],
+    [Theme.currentTheme, opacity],
   );
 
   const _highlightColor = useMemo(
     () => addOpacityToColor(highlightColor || Color.graphicSecond4, 0.7),
-    [theme],
+    [Theme.currentTheme],
   );
 
   return (

@@ -39,7 +39,6 @@ export enum Events {
   onWalletsStakingBalanceCheck = 'onWalletsStakingBalanceCheck',
   onSyncAppBalances = 'onSyncAppBalances',
   onWalletVisibilityChange = 'onWalletVisibilityChange',
-  onThemeChanged = 'onThemeChanged',
   onBlockRequestCheck = 'onBlockRequestCheck',
   onRequestMarkup = 'onRequestMarkup',
   onTesterModeChanged = 'onTesterModeChanged',

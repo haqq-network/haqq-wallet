@@ -15,13 +15,12 @@ import {
   SCAN_QR_TASK_ID_LENGTH,
 } from '@app/helpers/await-for-scan-qr';
 import {KeystoneUrHelper} from '@app/helpers/keystone-ur-helper';
-import {useTheme} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N, getText} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {SystemDialog} from '@app/services/system-dialog';
-import {Color, getColor} from '@app/theme';
+import {Color, Theme, getColor} from '@app/theme';
 import {ModalType, Modals} from '@app/types';
 import {
   IS_IOS,
@@ -51,7 +50,6 @@ export const KeystoneScannerModal = ({
   const [error, setError] = useState('');
   const [isAuthorized, setIsAuthorized] = useState(false);
   const timeoutId = useRef<NodeJS.Timeout | null>(null);
-  const theme = useTheme();
 
   const resetUrDecoder = useCallback(() => {
     setProgress(0);
@@ -202,7 +200,7 @@ export const KeystoneScannerModal = ({
     return () => {
       StatusBar.setBackgroundColor('transparent');
     };
-  }, [theme]);
+  }, [Theme.currentTheme]);
 
   if (!isAuthorized) {
     return renserNotAuthorizedView();

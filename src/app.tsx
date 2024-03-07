@@ -7,7 +7,7 @@ import {
   DefaultTheme,
   NavigationAction,
   NavigationContainer,
-  Theme,
+  Theme as RNTheme,
 } from '@react-navigation/native';
 import * as Sentry from '@sentry/react-native';
 import {AppState, Linking, Platform, StyleSheet} from 'react-native';
@@ -24,7 +24,6 @@ import {Events} from '@app/events';
 import {createTheme, hideModal, showModal} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {trackEvent} from '@app/helpers/track-event';
-import {useTheme} from '@app/hooks';
 import {useToast} from '@app/hooks/use-toast';
 import {Contact} from '@app/models/contact';
 import {VariablesBool} from '@app/models/variables-bool';
@@ -37,7 +36,7 @@ import {
   SssMigrateStackRoutes,
 } from '@app/route-types';
 import {RootStack} from '@app/screens/RootStack';
-import {AppTheme, Color} from '@app/theme';
+import {AppTheme, Color, Theme} from '@app/theme';
 import {ModalType} from '@app/types';
 import {getAppTrackingAuthorizationStatus, sleep} from '@app/utils';
 import {SPLASH_TIMEOUT_MS} from '@app/variables/common';
@@ -63,12 +62,15 @@ export const App = () => {
   const [initialized, setInitialized] = useState(false);
   const [isPinReseted, setPinReseted] = useState(false);
   const [onboarded, setOnboarded] = useState(app.onboarded);
-  const theme = useTheme();
   const toast = useToast();
 
   const navTheme = useMemo(
-    () => ({dark: theme === AppTheme.dark, colors: appTheme.colors}) as Theme,
-    [theme],
+    () =>
+      ({
+        dark: Theme.currentTheme === AppTheme.dark,
+        colors: appTheme.colors,
+      }) as RNTheme,
+    [Theme.currentTheme],
   );
 
   useEffect(() => {

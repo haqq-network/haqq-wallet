@@ -5,16 +5,13 @@ import SplashScreen from 'react-native-splash-screen';
 
 import {Spacer, StatusBarColor, Text} from '@app/components/ui';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
-import {AppTheme, Color, getColor} from '@app/theme';
+import {AppTheme, Color, Theme, getColor} from '@app/theme';
 
 import {createTheme} from './helpers';
-import {useTheme} from './hooks';
 import {I18N} from './i18n';
 import {AdjustEvents} from './types';
 
 export const Jailbreak = () => {
-  const theme = useTheme();
-
   useEffect(() => {
     SplashScreen.hide();
     onTrackEvent(AdjustEvents.stakingValidators);
@@ -25,7 +22,11 @@ export const Jailbreak = () => {
       <SafeAreaView style={styles.content}>
         <Image source={require('@assets/images/jailbreak.png')} />
         <StatusBarColor
-          barStyle={theme === AppTheme.dark ? 'light-content' : 'dark-content'}
+          barStyle={
+            Theme.currentTheme === AppTheme.dark
+              ? 'light-content'
+              : 'dark-content'
+          }
           backgroundColor={getColor(Color.bg1)}
         />
         <Spacer height={48} />
