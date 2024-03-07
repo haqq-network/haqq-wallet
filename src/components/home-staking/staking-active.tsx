@@ -8,6 +8,7 @@ import React, {
 
 import type AnimatedLottieView from 'lottie-react-native';
 import Lottie from 'lottie-react-native';
+import {observer} from 'mobx-react';
 import {View} from 'react-native';
 
 import {InfoBlockAmount, Inline, Spacer, Text} from '@app/components/ui';
@@ -27,103 +28,110 @@ export interface StakingActiveInterface {
   getReward: () => void;
 }
 
-export const StakingActive = forwardRef(
-  (
-    {availableSum, rewardSum, stakedSum, unDelegationSum}: StakingActiveProps,
-    ref,
-  ) => {
-    const [isReceiveAnimation, setIsReceiveAnimation] = useState(false);
-    const lottieRef = useRef<AnimatedLottieView>(null);
-    const isEndRef = useRef<Boolean>(false);
+export const StakingActive = observer(
+  forwardRef(
+    (
+      {availableSum, rewardSum, stakedSum, unDelegationSum}: StakingActiveProps,
+      ref,
+    ) => {
+      const [isReceiveAnimation, setIsReceiveAnimation] = useState(false);
+      const lottieRef = useRef<AnimatedLottieView>(null);
+      const isEndRef = useRef<Boolean>(false);
 
-    const animationFile = useMemo(() => {
-      switch (true) {
-        case isReceiveAnimation:
-          if (Theme.currentTheme === AppTheme.dark) {
-            return require('@assets/animations/get-reward-dark.json');
-          }
-          return require('@assets/animations/get-reward-light.json');
-        case stakedSum.toNumber() > 100:
-          if (Theme.currentTheme === AppTheme.dark) {
-            return require('@assets/animations/stake-dark-100.json');
-          }
+      const animationFile = useMemo(() => {
+        switch (true) {
+          case isReceiveAnimation:
+            if (Theme.currentTheme === AppTheme.dark) {
+              return require('@assets/animations/get-reward-dark.json');
+            }
+            return require('@assets/animations/get-reward-light.json');
+          case stakedSum.toNumber() > 100:
+            if (Theme.currentTheme === AppTheme.dark) {
+              return require('@assets/animations/stake-dark-100.json');
+            }
 
-          return require('@assets/animations/stake-light-100.json');
-        case stakedSum.toNumber() > 20:
-          if (Theme.currentTheme === AppTheme.dark) {
-            return require('@assets/animations/stake-dark-20-100.json');
-          }
+            return require('@assets/animations/stake-light-100.json');
+          case stakedSum.toNumber() > 20:
+            if (Theme.currentTheme === AppTheme.dark) {
+              return require('@assets/animations/stake-dark-20-100.json');
+            }
 
-          return require('@assets/animations/stake-light-20-100.json');
-        default:
-          if (Theme.currentTheme === AppTheme.dark) {
-            return require('@assets/animations/stake-dark-0-20.json');
-          }
+            return require('@assets/animations/stake-light-20-100.json');
+          default:
+            if (Theme.currentTheme === AppTheme.dark) {
+              return require('@assets/animations/stake-dark-0-20.json');
+            }
 
-          return require('@assets/animations/stake-light-0-20.json');
-      }
-    }, [isReceiveAnimation, Theme.currentTheme, stakedSum]);
+            return require('@assets/animations/stake-light-0-20.json');
+        }
+      }, [isReceiveAnimation, Theme.currentTheme, stakedSum]);
 
-    useImperativeHandle(ref, () => ({
-      getReward() {
-        isEndRef.current = false;
-        setIsReceiveAnimation(true);
-      },
-    }));
+      useImperativeHandle(ref, () => ({
+        getReward() {
+          isEndRef.current = false;
+          setIsReceiveAnimation(true);
+        },
+      }));
 
-    const onAnimationFinish = (isCancelled: boolean) => {
-      if (!isCancelled) {
-        lottieRef.current?.play();
-        if (isReceiveAnimation) {
-          if (IS_IOS) {
-            setIsReceiveAnimation(false);
-          } else {
-            setTimeout(() => setIsReceiveAnimation(false), 2000);
+      const onAnimationFinish = (isCancelled: boolean) => {
+        if (!isCancelled) {
+          lottieRef.current?.play();
+          if (isReceiveAnimation) {
+            if (IS_IOS) {
+              setIsReceiveAnimation(false);
+            } else {
+              setTimeout(() => setIsReceiveAnimation(false), 2000);
+            }
           }
         }
-      }
-    };
+      };
 
-    return (
-      <View>
-        <Spacer height={23} />
-        <Text t14 center color={Color.textBase2} i18n={I18N.homeStakingEmpty} />
-        <Spacer height={36} />
-        <Lottie
-          source={animationFile}
-          autoPlay
-          onAnimationFinish={onAnimationFinish}
-          loop={false}
-          ref={lottieRef}
-          style={styles.circleIconContainer}
-        />
-        <Spacer height={20} />
-        <Text t8 center i18n={I18N.homeStakingRewards} />
-        <Text testID="staking-rewardSum" t3 center color={Color.textGreen1}>
-          {rewardSum.toBalanceString()}
-        </Text>
-        <Spacer height={28} />
-        <InfoBlockAmount
-          isLarge
-          amountColor={Color.textGreen1}
-          value={stakedSum.toFloat()}
-          titleI18N={I18N.homeStakingStaked}
-        />
-        <Spacer height={12} />
-        <Inline gap={12}>
-          <InfoBlockAmount
-            value={availableSum.toFloat()}
-            titleI18N={I18N.sumBlockAvailable}
+      return (
+        <View>
+          <Spacer height={23} />
+          <Text
+            t14
+            center
+            color={Color.textBase2}
+            i18n={I18N.homeStakingEmpty}
           />
-          <InfoBlockAmount
-            value={unDelegationSum.toFloat()}
-            titleI18N={I18N.homeStakingUnbounded}
+          <Spacer height={36} />
+          <Lottie
+            source={animationFile}
+            autoPlay
+            onAnimationFinish={onAnimationFinish}
+            loop={false}
+            ref={lottieRef}
+            style={styles.circleIconContainer}
           />
-        </Inline>
-        <Spacer height={20} />
-      </View>
-    );
-  },
+          <Spacer height={20} />
+          <Text t8 center i18n={I18N.homeStakingRewards} />
+          <Text testID="staking-rewardSum" t3 center color={Color.textGreen1}>
+            {rewardSum.toBalanceString()}
+          </Text>
+          <Spacer height={28} />
+          <InfoBlockAmount
+            isLarge
+            amountColor={Color.textGreen1}
+            value={stakedSum.toFloat()}
+            titleI18N={I18N.homeStakingStaked}
+          />
+          <Spacer height={12} />
+          <Inline gap={12}>
+            <InfoBlockAmount
+              value={availableSum.toFloat()}
+              titleI18N={I18N.sumBlockAvailable}
+            />
+            <InfoBlockAmount
+              value={unDelegationSum.toFloat()}
+              titleI18N={I18N.homeStakingUnbounded}
+            />
+          </Inline>
+          <Spacer height={20} />
+        </View>
+      );
+    },
+  ),
 );
 
 const styles = createTheme({

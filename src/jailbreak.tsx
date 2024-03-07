@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react';
 
+import {observer} from 'mobx-react';
 import {Image, SafeAreaView, View} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 
@@ -10,7 +11,7 @@ import {AppTheme, Color, Theme, createTheme, getColor} from '@app/theme';
 import {I18N} from './i18n';
 import {AdjustEvents} from './types';
 
-export const Jailbreak = () => {
+export const Jailbreak = observer(() => {
   useEffect(() => {
     SplashScreen.hide();
     onTrackEvent(AdjustEvents.stakingValidators);
@@ -49,7 +50,7 @@ export const Jailbreak = () => {
       </SafeAreaView>
     </View>
   );
-};
+});
 
 const styles = createTheme({
   container: {

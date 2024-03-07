@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useMemo} from 'react';
 
+import {observer} from 'mobx-react';
 import {StyleSheet, View, useWindowDimensions} from 'react-native';
 
 import {
@@ -50,111 +51,115 @@ export type ModalWrapperProps<
   onClose: (modal: Extract<ModalName, string>) => void;
 };
 
-export const ModalWrapper = ({
-  type,
-  modal,
-  onClose,
-}: ModalWrapperProps<Modals, any>) => {
-  useEffect(() => {
-    return () => {
-      onClose(modal);
-    };
-  }, [modal, onClose]);
+export const ModalWrapper = observer(
+  ({type, modal, onClose}: ModalWrapperProps<Modals, any>) => {
+    useEffect(() => {
+      return () => {
+        onClose(modal);
+      };
+    }, [modal, onClose]);
 
-  const onCloseModalPress = useCallback(() => {
-    modal.onClose?.();
-    hideModal(type);
-  }, [modal, type]);
+    const onCloseModalPress = useCallback(() => {
+      modal.onClose?.();
+      hideModal(type);
+    }, [modal, type]);
 
-  const dimensions = useWindowDimensions();
+    const dimensions = useWindowDimensions();
 
-  const key = useMemo(
-    () => `${Theme.currentTheme}-${dimensions.width}-${dimensions.height}`,
-    [dimensions, Theme.currentTheme],
-  );
+    const key = useMemo(
+      () => `${Theme.currentTheme}-${dimensions.width}-${dimensions.height}`,
+      [dimensions, Theme.currentTheme],
+    );
 
-  const entry = useMemo(() => {
-    if (!modal) {
-      return null;
-    }
-    switch (type) {
-      case ModalType.loading:
-        return <LoadingModal {...modal} />;
-      case ModalType.pin:
-        return <PinModal />;
-      case ModalType.splash:
-        return <SplashModal />;
-      case ModalType.noInternet:
-        return <NoInternet {...modal} />;
-      case ModalType.bluetoothPoweredOff:
-        return <BluetoothPoweredOff onClose={onCloseModalPress} />;
-      case ModalType.bluetoothUnauthorized:
-        return <BluetoothUnauthorized onClose={onCloseModalPress} />;
-      case ModalType.qr:
-        return <QRModal {...modal} onClose={onCloseModalPress} />;
-      case ModalType.keystoneScanner:
-        return <KeystoneScannerModal {...modal} onClose={onCloseModalPress} />;
-      case ModalType.keystoneQR:
-        return <KeystoneQRModal {...modal} onClose={onCloseModalPress} />;
-      case ModalType.cardDetailsQr:
-        return <DetailsQrModal {...modal} onClose={onCloseModalPress} />;
-      case ModalType.error:
-        return <ErrorModal {...modal} onClose={onCloseModalPress} />;
-      case ModalType.claimOnMainnet:
-        return <ClaimOnMainNet {...modal} onClose={onCloseModalPress} />;
-      case ModalType.ledgerNoApp:
-        return <LedgerNoApp {...modal} onClose={onCloseModalPress} />;
-      case ModalType.ledgerAttention:
-        return <LedgerAttention onClose={onCloseModalPress} />;
-      case ModalType.ledgerLocked:
-        return <LedgerLocked onClose={onCloseModalPress} />;
-      case ModalType.errorAccountAdded:
-        return <ErrorAccountAdded onClose={onCloseModalPress} />;
-      case ModalType.errorCreateAccount:
-        return <ErrorCreateAccount onClose={onCloseModalPress} />;
-      case ModalType.walletsBottomSheet:
-        return <WalletsBottomSheet {...modal} onClose={onCloseModalPress} />;
-      case ModalType.transactionError:
-        return <TransactionError {...modal} onClose={onCloseModalPress} />;
-      case ModalType.locationUnauthorized:
-        return <LocationUnauthorized onClose={onCloseModalPress} />;
-      case ModalType.providersBottomSheet:
-        return <ProvidersBottomSheet {...modal} onClose={onCloseModalPress} />;
-      case ModalType.captcha:
-        return <CaptchaModal onClose={modal.onClose} variant={modal.variant} />;
-      case ModalType.domainBlocked:
-        return <DomainBlocked {...modal} onClose={onCloseModalPress} />;
-      case ModalType.raffleAgreement:
-        return <RaffleAgreement {...modal} onClose={onCloseModalPress} />;
-      case ModalType.lockedTokensInfo:
-        return <LockedTokensInfo {...modal} onClose={onCloseModalPress} />;
-      case ModalType.notEnoughGas:
-        return <NotEnoughGas {...modal} onClose={onCloseModalPress} />;
-      case ModalType.cloudVerification:
-        return <CloudVerification {...modal} />;
-      case ModalType.viewErrorDetails:
-        return <ViewErrorDetails {...modal} onClose={onCloseModalPress} />;
-      case ModalType.customProviderEmail:
-        return <CustomProviderEmail {...modal} onClose={onCloseModalPress} />;
-      case ModalType.cloudShareNotFound:
-        return <CloudShareNotFound {...modal} onClose={onCloseModalPress} />;
-      case ModalType.sssLimitReached:
-        return <SSSLimitReached {...modal} onClose={onCloseModalPress} />;
-      case ModalType.pinError:
-        return <PinErrorModal {...modal} onClose={onCloseModalPress} />;
-      default:
+    const entry = useMemo(() => {
+      if (!modal) {
         return null;
-    }
-  }, [modal, onCloseModalPress, type]);
+      }
+      switch (type) {
+        case ModalType.loading:
+          return <LoadingModal {...modal} />;
+        case ModalType.pin:
+          return <PinModal />;
+        case ModalType.splash:
+          return <SplashModal />;
+        case ModalType.noInternet:
+          return <NoInternet {...modal} />;
+        case ModalType.bluetoothPoweredOff:
+          return <BluetoothPoweredOff onClose={onCloseModalPress} />;
+        case ModalType.bluetoothUnauthorized:
+          return <BluetoothUnauthorized onClose={onCloseModalPress} />;
+        case ModalType.qr:
+          return <QRModal {...modal} onClose={onCloseModalPress} />;
+        case ModalType.keystoneScanner:
+          return (
+            <KeystoneScannerModal {...modal} onClose={onCloseModalPress} />
+          );
+        case ModalType.keystoneQR:
+          return <KeystoneQRModal {...modal} onClose={onCloseModalPress} />;
+        case ModalType.cardDetailsQr:
+          return <DetailsQrModal {...modal} onClose={onCloseModalPress} />;
+        case ModalType.error:
+          return <ErrorModal {...modal} onClose={onCloseModalPress} />;
+        case ModalType.claimOnMainnet:
+          return <ClaimOnMainNet {...modal} onClose={onCloseModalPress} />;
+        case ModalType.ledgerNoApp:
+          return <LedgerNoApp {...modal} onClose={onCloseModalPress} />;
+        case ModalType.ledgerAttention:
+          return <LedgerAttention onClose={onCloseModalPress} />;
+        case ModalType.ledgerLocked:
+          return <LedgerLocked onClose={onCloseModalPress} />;
+        case ModalType.errorAccountAdded:
+          return <ErrorAccountAdded onClose={onCloseModalPress} />;
+        case ModalType.errorCreateAccount:
+          return <ErrorCreateAccount onClose={onCloseModalPress} />;
+        case ModalType.walletsBottomSheet:
+          return <WalletsBottomSheet {...modal} onClose={onCloseModalPress} />;
+        case ModalType.transactionError:
+          return <TransactionError {...modal} onClose={onCloseModalPress} />;
+        case ModalType.locationUnauthorized:
+          return <LocationUnauthorized onClose={onCloseModalPress} />;
+        case ModalType.providersBottomSheet:
+          return (
+            <ProvidersBottomSheet {...modal} onClose={onCloseModalPress} />
+          );
+        case ModalType.captcha:
+          return (
+            <CaptchaModal onClose={modal.onClose} variant={modal.variant} />
+          );
+        case ModalType.domainBlocked:
+          return <DomainBlocked {...modal} onClose={onCloseModalPress} />;
+        case ModalType.raffleAgreement:
+          return <RaffleAgreement {...modal} onClose={onCloseModalPress} />;
+        case ModalType.lockedTokensInfo:
+          return <LockedTokensInfo {...modal} onClose={onCloseModalPress} />;
+        case ModalType.notEnoughGas:
+          return <NotEnoughGas {...modal} onClose={onCloseModalPress} />;
+        case ModalType.cloudVerification:
+          return <CloudVerification {...modal} />;
+        case ModalType.viewErrorDetails:
+          return <ViewErrorDetails {...modal} onClose={onCloseModalPress} />;
+        case ModalType.customProviderEmail:
+          return <CustomProviderEmail {...modal} onClose={onCloseModalPress} />;
+        case ModalType.cloudShareNotFound:
+          return <CloudShareNotFound {...modal} onClose={onCloseModalPress} />;
+        case ModalType.sssLimitReached:
+          return <SSSLimitReached {...modal} onClose={onCloseModalPress} />;
+        case ModalType.pinError:
+          return <PinErrorModal {...modal} onClose={onCloseModalPress} />;
+        default:
+          return null;
+      }
+    }, [modal, onCloseModalPress, type]);
 
-  return (
-    <View
-      key={key}
-      style={[StyleSheet.absoluteFill, modal.collapsed && styles.collapsed]}>
-      {entry}
-    </View>
-  );
-};
+    return (
+      <View
+        key={key}
+        style={[StyleSheet.absoluteFill, modal.collapsed && styles.collapsed]}>
+        {entry}
+      </View>
+    );
+  },
+);
 
 const styles = createTheme({
   collapsed: {

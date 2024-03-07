@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
+import {observer} from 'mobx-react';
 import {
   ActivityIndicator,
   Image,
@@ -68,7 +69,7 @@ export type CaptchaRequestState = {
   puzzle: ImageURISource;
 };
 
-export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
+export const SliderCaptcha = observer(({onData}: SliderCaptchaProps) => {
   const [imageSource, setImageSource] = useState<
     CaptchaRequestState | undefined
   >();
@@ -473,7 +474,7 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
       </View>
     </View>
   );
-};
+});
 
 const styles = createTheme({
   container: {

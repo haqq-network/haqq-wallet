@@ -10,6 +10,7 @@ import {
   Theme as RNTheme,
 } from '@react-navigation/native';
 import * as Sentry from '@sentry/react-native';
+import {observer} from 'mobx-react';
 import {AppState, Linking, Platform, StyleSheet} from 'react-native';
 import {Adjust, AdjustConfig} from 'react-native-adjust';
 import {AdjustOaid} from 'react-native-adjust-oaid';
@@ -58,7 +59,7 @@ const CREATE_WALLET_FINISH_SCREENS: string[] = [
   KeystoneStackRoutes.KeystoneFinish,
 ];
 
-export const App = () => {
+export const App = observer(() => {
   const [initialized, setInitialized] = useState(false);
   const [isPinReseted, setPinReseted] = useState(false);
   const [onboarded, setOnboarded] = useState(app.onboarded);
@@ -231,7 +232,7 @@ export const App = () => {
       </ActionSheetProvider>
     </GestureHandlerRootView>
   );
-};
+});
 
 const styles = StyleSheet.create({
   rootView: {

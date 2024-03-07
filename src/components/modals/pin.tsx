@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
+import {observer} from 'mobx-react';
 import {Keyboard, TouchableOpacity, View} from 'react-native';
 
 import {Pin, PinInterface} from '@app/components/pin/pin';
@@ -12,7 +13,7 @@ import {PIN_BANNED_ATTEMPTS} from '@app/variables/common';
 
 export type PinModalProps = {};
 
-export const PinModal = () => {
+export const PinModal = observer(() => {
   const pinRef = useRef<PinInterface>();
   const [showRestore, setShowRestore] = useState(false);
 
@@ -74,7 +75,7 @@ export const PinModal = () => {
       {showRestore && <RestorePassword onClose={() => setShowRestore(false)} />}
     </View>
   );
-};
+});
 
 const page = createTheme({
   container: {

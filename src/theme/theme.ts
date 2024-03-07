@@ -1,4 +1,4 @@
-import {makeAutoObservable} from 'mobx';
+import {makeAutoObservable, runInAction} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 import {AppState, Appearance, StatusBar} from 'react-native';
 
@@ -33,11 +33,13 @@ class Theme {
       return;
     }
 
-    this._systemTheme = systemColorScheme;
-    this._currentTheme =
-      this._currentTheme === AppTheme.system
-        ? this._systemTheme ?? AppTheme.light
-        : this._currentTheme;
+    runInAction(() => {
+      this._systemTheme = systemColorScheme;
+      this._currentTheme =
+        this._currentTheme === AppTheme.system
+          ? this._systemTheme ?? AppTheme.light
+          : this._currentTheme;
+    });
   };
 
   get currentTheme() {
