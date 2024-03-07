@@ -8,13 +8,13 @@ import {
   TURNSTILE_SITEKEY,
   TURNSTILE_URL,
 } from '@env';
+import {AppTheme} from '@theme';
 import {StyleSheet, View} from 'react-native';
 import {WebViewMessageEvent} from 'react-native-webview';
 
 import {Color, getColor} from '@app/colors';
 import {createTheme, getWindowHeight, getWindowWidth} from '@app/helpers';
 import {useTheme} from '@app/hooks';
-import {AppTheme} from '@app/types';
 
 import {Hcaptcha, Ocaptcha, ReCaptchaV2, SliderCaptcha, Turnstile} from './';
 import {First} from '../ui';

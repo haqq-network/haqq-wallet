@@ -1,5 +1,5 @@
-import {app} from '@app/contexts';
-import {AppTheme} from '@app/types';
+import {AppTheme, Theme} from '@theme';
+
 import {
   DARK_APPLE_BG,
   DARK_APPLE_TEXT,
@@ -138,7 +138,7 @@ export function getColor(key: Color | string) {
     return key;
   }
 
-  if (app.currentTheme === AppTheme.dark) {
+  if (Theme.currentTheme === AppTheme.dark) {
     return dark[key as Color];
   }
 

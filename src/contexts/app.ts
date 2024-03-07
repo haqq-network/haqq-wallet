@@ -9,7 +9,7 @@ import {appleAuth} from '@invertase/react-native-apple-authentication';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {subMinutes} from 'date-fns';
-import {AppState, Appearance, Platform, StatusBar} from 'react-native';
+import {AppState, Platform} from 'react-native';
 import Keychain, {
   STORAGE_TYPE,
   getGenericPassword,
@@ -46,7 +46,6 @@ import {Provider} from '../models/provider';
 import {User} from '../models/user';
 import {
   AppLanguage,
-  AppTheme,
   BalanceData,
   BiometryType,
   DynamicLink,
@@ -71,12 +70,12 @@ const isSupportedConfig = {
   unifiedErrors: false,
 };
 
-enum AppStatus {
+export enum AppStatus {
   inactive,
   active,
 }
 
-function getAppStatus() {
+export function getAppStatus() {
   return AppState.currentState === 'active'
     ? AppStatus.active
     : AppStatus.inactive;
@@ -97,7 +96,6 @@ class App extends AsyncEventEmitter {
       android: false,
       ios: appleAuth.isSupported,
     }) || false;
-  private _systemTheme: AppTheme = Appearance.getColorScheme() as AppTheme;
 
   constructor() {
     super();
@@ -140,11 +138,6 @@ class App extends AsyncEventEmitter {
     dynamicLinks().onLink(this.handleDynamicLink);
     dynamicLinks().getInitialLink().then(this.handleDynamicLink);
 
-    this.listenTheme = this.listenTheme.bind(this);
-
-    Appearance.addChangeListener(this.listenTheme);
-    AppState.addEventListener('change', this.listenTheme);
-    this.listenTheme();
     AppState.addEventListener('change', this.onAppStatusChanged.bind(this));
 
     if (!VariablesBool.exists('isDeveloper')) {
@@ -335,35 +328,6 @@ class App extends AsyncEventEmitter {
     VariablesBool.set('isTesterMode', value);
   }
 
-  get currentTheme() {
-    return this.theme === AppTheme.system
-      ? this._systemTheme ?? AppTheme.light
-      : this.theme;
-  }
-
-  get theme() {
-    return (VariablesString.get('theme') as AppTheme) || AppTheme.system;
-  }
-
-  set theme(value) {
-    VariablesString.set('theme', value);
-
-    this.emit(Events.onThemeChanged, value);
-
-    if (AppTheme.system === value) {
-      const scheme = this._systemTheme;
-      StatusBar.setBarStyle(
-        scheme === 'light' ? 'dark-content' : 'light-content',
-        false,
-      );
-    } else {
-      StatusBar.setBarStyle(
-        value === AppTheme.dark ? 'light-content' : 'dark-content',
-        false,
-      );
-    }
-  }
-
   onTesterModeChange(value: boolean) {
     this.setEnabledLoggersForTestMode(value);
     this.emit(Events.onTesterModeChanged, value);
@@ -375,24 +339,6 @@ class App extends AsyncEventEmitter {
       DEBUG_VARS.enableWalletConnectLogger = enabled;
       DEBUG_VARS.enableAwaitJsonRpcSignLogger = enabled;
     }
-  }
-
-  listenTheme() {
-    const systemColorScheme = Appearance.getColorScheme() as AppTheme;
-
-    if (getAppStatus() === AppStatus.inactive) {
-      return;
-    }
-
-    if (systemColorScheme !== this._systemTheme) {
-      this._systemTheme = systemColorScheme;
-      this.emit(Events.onThemeChanged, systemColorScheme);
-    }
-
-    StatusBar.setBarStyle(
-      this.currentTheme === AppTheme.light ? 'dark-content' : 'light-content',
-      false,
-    );
   }
 
   async init(): Promise<void> {

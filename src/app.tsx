@@ -10,6 +10,7 @@ import {
   Theme,
 } from '@react-navigation/native';
 import * as Sentry from '@sentry/react-native';
+import {AppTheme} from '@theme';
 import {AppState, Linking, Platform, StyleSheet} from 'react-native';
 import {Adjust, AdjustConfig} from 'react-native-adjust';
 import {AdjustOaid} from 'react-native-adjust-oaid';
@@ -38,7 +39,7 @@ import {
   SssMigrateStackRoutes,
 } from '@app/route-types';
 import {RootStack} from '@app/screens/RootStack';
-import {AppTheme, ModalType} from '@app/types';
+import {ModalType} from '@app/types';
 import {getAppTrackingAuthorizationStatus, sleep} from '@app/utils';
 import {SPLASH_TIMEOUT_MS} from '@app/variables/common';
 

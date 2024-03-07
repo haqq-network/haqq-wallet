@@ -706,12 +706,6 @@ export enum AppLanguage {
   ar = 'ar',
 }
 
-export enum AppTheme {
-  light = 'light',
-  dark = 'dark',
-  system = 'system',
-}
-
 export type AddWalletParams = {
   address: HaqqEthereumAddress;
   accountId: string;

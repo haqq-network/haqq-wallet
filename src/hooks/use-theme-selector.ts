@@ -1,6 +1,6 @@
 import {useMemo} from 'react';
 
-import {AppTheme} from '@app/types';
+import {AppTheme} from '@theme';
 
 import {useTheme} from './use-theme';
 

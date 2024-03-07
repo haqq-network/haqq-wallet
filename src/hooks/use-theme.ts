@@ -1,15 +1,17 @@
 import {useEffect, useState} from 'react';
 
+import {Theme} from '@theme';
+
 import {app} from '@app/contexts/app';
 import {Events} from '@app/events';
 
 export function useTheme() {
-  const [theme, setTheme] = useState(app.currentTheme);
+  const [theme, setTheme] = useState(Theme.currentTheme);
 
   useEffect(() => {
     const subscription = () => {
-      if (theme !== app.currentTheme) {
-        setTheme(app.currentTheme);
+      if (theme !== Theme.currentTheme) {
+        setTheme(Theme.currentTheme);
       }
     };
 
