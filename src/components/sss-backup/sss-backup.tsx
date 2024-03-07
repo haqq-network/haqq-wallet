@@ -11,10 +11,9 @@ import {
   PopupContainer,
   Spacer,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {SystemDialog} from '@app/services/system-dialog';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 
 export enum PasswordExists {
   checking,

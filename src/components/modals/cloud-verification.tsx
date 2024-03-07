@@ -5,9 +5,9 @@ import {View} from 'react-native';
 import {BottomPopupContainer} from '@app/components/bottom-popups';
 import {Button, ButtonVariant, Spacer, Text} from '@app/components/ui';
 import {RiveWrapper} from '@app/components/ui/rive-wrapper';
-import {createTheme, hideModal} from '@app/helpers';
+import {hideModal} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Color, useThemeSelector} from '@app/theme';
+import {Color, createTheme, useThemeSelector} from '@app/theme';
 import {ModalType, Modals} from '@app/types';
 import {ProviderNameMap} from '@app/variables/sss';
 

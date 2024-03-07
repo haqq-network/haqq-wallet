@@ -20,9 +20,8 @@ import Animated, {
 
 import {Spacer} from '@app/components/ui/spacer';
 import {Text, TextProps} from '@app/components/ui/text';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Color, getColor} from '@app/theme';
+import {Color, createTheme, getColor} from '@app/theme';
 import {IS_IOS} from '@app/variables/common';
 
 type Props = Omit<TextInputProps, 'placeholder'> & {

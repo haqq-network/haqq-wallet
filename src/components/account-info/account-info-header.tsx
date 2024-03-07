@@ -12,12 +12,11 @@ import {
   Text,
 } from '@app/components/ui';
 import {CopyMenu} from '@app/components/ui/copy-menu';
-import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 
 import {StackedVestedTokens} from '../stacked-vested-tokens';
 

@@ -4,9 +4,8 @@ import {Image, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Button, ButtonSize, ButtonVariant, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 
 type WelcomeProps = {
   onPressSignup: () => void;

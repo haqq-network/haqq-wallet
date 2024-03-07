@@ -3,11 +3,10 @@ import React, {useCallback} from 'react';
 import {observer} from 'mobx-react';
 import {FlatList, ListRenderItem, View} from 'react-native';
 
-import {createTheme} from '@app/helpers';
 import {getText} from '@app/i18n';
 import {PermissionMap} from '@app/models/browser-permission';
 import {STATUS_ANSWER_MAP} from '@app/screens/browser-privacy-details-screen';
-import {Color, getColor} from '@app/theme';
+import {Color, createTheme, getColor} from '@app/theme';
 import {BrowserPermissionItem, BrowserPermissionType} from '@app/types';
 import {uppercaseFirtsLetter} from '@app/utils';
 

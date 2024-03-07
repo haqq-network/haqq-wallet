@@ -12,7 +12,6 @@ import {
 
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
-import {createTheme} from '@app/helpers';
 import {getAppHeaders} from '@app/helpers/get-app-headers';
 import {
   changeWebViewUrlJS,
@@ -24,7 +23,7 @@ import {
 } from '@app/helpers/web3-browser-utils';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useWebViewSharedProps} from '@app/hooks/use-webview-shared-props';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {getHostnameFromUrl} from '@app/utils';
 import {IS_ANDROID} from '@app/variables/common';
 

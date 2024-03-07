@@ -4,10 +4,9 @@ import {AddressEmpty} from '@app/components/address-empty';
 import {AddressHeader} from '@app/components/address-header';
 import {ListContact} from '@app/components/list-contact';
 import {Box, Icon, IconButton, Text, TextField} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {withActionsContactItem} from '@app/hocs';
 import {I18N} from '@app/i18n';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 
 const ListOfContacts = withActionsContactItem(ListContact, {
   nextScreen: 'settingsContactEdit',

@@ -12,11 +12,10 @@ import {
   Spacer,
 } from '@app/components/ui';
 import {SumBlock} from '@app/components/ui/sum-block';
-import {createTheme} from '@app/helpers';
 import {useSumAmount} from '@app/hooks/use-sum-amount';
 import {I18N} from '@app/i18n';
 import {Balance} from '@app/services/balance';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {CURRENCY_NAME} from '@app/variables/common';
 
 export type StakingDelegateFormProps = {

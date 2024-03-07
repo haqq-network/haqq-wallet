@@ -8,9 +8,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
-import {Color, getColor} from '@app/theme';
+import {Color, createTheme, getColor} from '@app/theme';
 
 import {HeaderButton} from './header-button';
 

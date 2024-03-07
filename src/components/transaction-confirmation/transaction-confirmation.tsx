@@ -11,11 +11,10 @@ import {
   Text,
 } from '@app/components/ui';
 import {app} from '@app/contexts';
-import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Balance} from '@app/services/balance';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {IToken} from '@app/types';
 import {splitAddress} from '@app/utils';
 import {LONG_NUM_PRECISION, WEI_PRECISION} from '@app/variables/common';

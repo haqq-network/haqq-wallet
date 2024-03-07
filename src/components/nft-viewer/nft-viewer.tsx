@@ -11,11 +11,10 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import {createTheme} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
 import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {I18N, getText} from '@app/i18n';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {NftCollection, NftItem} from '@app/types';
 import {SortDirectionEnum, arraySortUtil} from '@app/utils';
 

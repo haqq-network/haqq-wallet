@@ -7,7 +7,7 @@ import Animated, {
   useAnimatedStyle,
 } from 'react-native-reanimated';
 
-import {createTheme} from '@app/helpers';
+import {createTheme} from '@app/theme';
 
 import {HEIGHT, WIDTH} from '../core/constants';
 import {AnimationProps} from '../core/dto/componentsDTO';

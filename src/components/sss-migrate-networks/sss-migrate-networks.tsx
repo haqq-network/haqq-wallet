@@ -8,10 +8,9 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {SssProviders} from '@app/services/provider-sss';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 
 import {SocialButton, SocialButtonVariant} from '../social-button';
 

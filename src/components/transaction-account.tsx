@@ -4,8 +4,8 @@ import {FlatList} from 'react-native';
 
 import {PopupContainer} from '@app/components/ui';
 import {WalletRow} from '@app/components/wallet-row';
-import {createTheme} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
+import {createTheme} from '@app/theme';
 
 type TransactionAccountProps = {
   rows: Wallet[];

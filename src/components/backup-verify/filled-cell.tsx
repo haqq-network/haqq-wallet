@@ -3,8 +3,8 @@ import React from 'react';
 import {Pressable} from 'react-native';
 
 import {Text} from '@app/components/ui';
-import {createTheme, getWindowWidth} from '@app/helpers';
-import {Color} from '@app/theme';
+import {getWindowWidth} from '@app/helpers';
+import {Color, createTheme} from '@app/theme';
 
 export type FilledCellProps = {
   word: string;

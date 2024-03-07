@@ -2,8 +2,7 @@ import {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {Image, View} from 'react-native';
 
-import {createTheme} from '@app/helpers';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 
 import {First, Icon} from '../ui';
 

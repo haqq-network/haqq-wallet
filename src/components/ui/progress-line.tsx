@@ -8,8 +8,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import {Spacer, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
-import {Color, getColor} from '@app/theme';
+import {Color, createTheme, getColor} from '@app/theme';
 
 export type ProgressLineProps = {
   initialProgress?: number;

@@ -3,8 +3,7 @@ import React, {useMemo} from 'react';
 import {TouchableOpacity, View} from 'react-native';
 
 import {Spacer, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {IToken} from '@app/types';
 
 import {ImageWrapper} from './image-wrapper';

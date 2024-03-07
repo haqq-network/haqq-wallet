@@ -8,8 +8,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import Svg, {Circle} from 'react-native-svg';
 
-import {createTheme} from '@app/helpers';
-import {Color, getColor} from '@app/theme';
+import {Color, createTheme, getColor} from '@app/theme';
 import {ColorType} from '@app/types';
 
 interface ProgressCircleProps {

@@ -4,13 +4,12 @@ import {observer} from 'mobx-react';
 import {ScrollView} from 'react-native';
 
 import {app} from '@app/contexts';
-import {createTheme} from '@app/helpers';
 import {useTesterModeEnabled} from '@app/hooks/use-tester-mode-enabled';
 import {useWalletConnectAccounts} from '@app/hooks/use-wallet-connect-accounts';
 import {I18N} from '@app/i18n';
 import {Currencies} from '@app/models/currencies';
 import {SettingsStackRoutes} from '@app/route-types';
-import {Theme} from '@app/theme';
+import {Theme, createTheme} from '@app/theme';
 import {capitalize} from '@app/utils';
 
 import {SettingsButton} from './settings-button';

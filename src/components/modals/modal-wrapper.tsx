@@ -30,8 +30,8 @@ import {SSSLimitReached} from '@app/components/modals/sss-limit-reached';
 import {TransactionError} from '@app/components/modals/transaction-error';
 import {ViewErrorDetails} from '@app/components/modals/view-error-details';
 import {WalletsBottomSheet} from '@app/components/modals/wallets-bottom-sheet';
-import {createTheme, hideModal} from '@app/helpers';
-import {Theme} from '@app/theme';
+import {hideModal} from '@app/helpers';
+import {Theme, createTheme} from '@app/theme';
 import {ModalType, Modals, ModalsListBase} from '@app/types';
 
 import {DomainBlocked} from './domain-blocked';

@@ -3,10 +3,9 @@ import React, {useCallback, useMemo, useState} from 'react';
 import {observer} from 'mobx-react';
 import {FlatList, ListRenderItem, View} from 'react-native';
 
-import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {BrowserPermissionTuple} from '@app/models/browser-permission';
-import {Color, getColor} from '@app/theme';
+import {Color, createTheme, getColor} from '@app/theme';
 import {Link} from '@app/types';
 import {uppercaseFirtsLetter} from '@app/utils';
 

@@ -12,9 +12,9 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme, getWindowWidth} from '@app/helpers';
+import {getWindowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {MAGIC_CARD_HEIGHT, SHADOW_COLOR_1} from '@app/variables/common';
 
 export type BalanceProps = {

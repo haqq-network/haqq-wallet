@@ -3,9 +3,8 @@ import React from 'react';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 
 import {Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 
 import {Spacer} from './spacer';
 

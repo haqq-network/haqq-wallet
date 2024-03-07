@@ -8,8 +8,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import {createTheme} from '@app/helpers';
-import {Color, getColor} from '@app/theme';
+import {Color, createTheme, getColor} from '@app/theme';
 
 export interface Props {
   width: DimensionValue;

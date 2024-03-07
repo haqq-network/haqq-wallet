@@ -7,8 +7,7 @@ import Toast, {
 } from 'react-native-toast-message';
 
 import {ModalProvider} from '@app/components/modal-provider';
-import {createTheme} from '@app/helpers';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 
 const toastConfig: ToastConfig = {
   error: (props: BaseToastProps) => (

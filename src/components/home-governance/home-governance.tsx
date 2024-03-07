@@ -5,8 +5,8 @@ import {FlatList, ListRenderItem, View} from 'react-native';
 
 import {ProposalVotingEmpty} from '@app/components/proposal-voting-empty';
 import {CustomHeader, Loading, Spacer, Tag} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {createTheme} from '@app/theme';
 import {ProposalsTagKeys} from '@app/types';
 import {ProposalsTagType, ProposalsTags} from '@app/variables/proposal';
 

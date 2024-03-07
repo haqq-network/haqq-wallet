@@ -4,7 +4,7 @@ import {View} from 'react-native';
 
 import {NumericKeyboard} from '@app/components/pin/numeric-keyboard';
 import {ErrorText, PopupContainer, Spacer, Text} from '@app/components/ui';
-import {createTheme, verticalScale} from '@app/helpers';
+import {verticalScale} from '@app/helpers';
 import {useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {
@@ -12,7 +12,7 @@ import {
   OnboardingStackRoutes,
 } from '@app/route-types';
 import {vibrate} from '@app/services/haptic';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 
 type OnboardingRepeatPinProps = {
   onSetPin: (pin: string) => void;

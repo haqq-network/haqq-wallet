@@ -11,9 +11,9 @@ import {
   Terms,
   Text,
 } from '@app/components/ui';
-import {createTheme, getWindowHeight, getWindowWidth} from '@app/helpers';
+import {getWindowHeight, getWindowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {AppTheme, Color, Theme} from '@app/theme';
+import {AppTheme, Color, Theme, createTheme} from '@app/theme';
 
 export type RestoreAgreementProps = {
   onDone: () => void;

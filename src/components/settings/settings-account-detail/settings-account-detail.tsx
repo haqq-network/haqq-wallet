@@ -18,13 +18,12 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {WalletType} from '@app/types';
 
 type SettingsAccountDetailProps = {

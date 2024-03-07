@@ -11,9 +11,9 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme, getWindowHeight, getWindowWidth} from '@app/helpers';
+import {getWindowHeight, getWindowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 
 export type LedgerBluetooth = {
   onPressAllow: () => void;

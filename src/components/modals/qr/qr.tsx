@@ -10,7 +10,7 @@ import {QRreader, QRscanner} from 'react-native-qr-decode-image-camera';
 import {Text} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {onDeepLink} from '@app/event-actions/on-deep-link';
-import {createTheme, setCollapsedModal} from '@app/helpers';
+import {setCollapsedModal} from '@app/helpers';
 import {
   AwaitForScanQrError,
   AwaitForScanQrEvents,
@@ -21,7 +21,7 @@ import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {SystemDialog} from '@app/services/system-dialog';
-import {Color, Theme, getColor} from '@app/theme';
+import {Color, Theme, createTheme, getColor} from '@app/theme';
 import {ModalType, Modals} from '@app/types';
 import {isError} from '@app/utils';
 import {IS_IOS, QR_STATUS_BAR} from '@app/variables/common';

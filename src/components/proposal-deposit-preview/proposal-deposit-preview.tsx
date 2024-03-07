@@ -11,11 +11,10 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N, getText} from '@app/i18n';
 import {Balance} from '@app/services/balance';
-import {Color, getColor} from '@app/theme';
+import {Color, createTheme, getColor} from '@app/theme';
 
 export type ProposalDepositPreviewProps = {
   amount: number;

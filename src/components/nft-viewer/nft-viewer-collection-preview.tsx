@@ -2,10 +2,9 @@ import React, {useCallback, useMemo} from 'react';
 
 import {ImageBackground, TouchableOpacity, View} from 'react-native';
 
-import {createTheme} from '@app/helpers';
 import {useLayout} from '@app/hooks/use-layout';
 import {I18N} from '@app/i18n';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {NftCollection} from '@app/types';
 import {addOpacityToColor} from '@app/utils';
 

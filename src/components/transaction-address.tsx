@@ -16,7 +16,6 @@ import {
   Text,
   TextField,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForScanQr} from '@app/helpers/await-for-scan-qr';
 import {LinkType, parseDeepLink} from '@app/helpers/parse-deep-link';
@@ -27,7 +26,7 @@ import {Contact} from '@app/models/contact';
 import {Wallet} from '@app/models/wallet';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {SystemDialog} from '@app/services/system-dialog';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {showUnrecognizedDataAttention} from '@app/utils';
 
 import {WalletRow, WalletRowTypes} from './wallet-row';

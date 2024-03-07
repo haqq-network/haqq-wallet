@@ -5,9 +5,8 @@ import SplashScreen from 'react-native-splash-screen';
 
 import {Spacer, StatusBarColor, Text} from '@app/components/ui';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
-import {AppTheme, Color, Theme, getColor} from '@app/theme';
+import {AppTheme, Color, Theme, createTheme, getColor} from '@app/theme';
 
-import {createTheme} from './helpers';
 import {I18N} from './i18n';
 import {AdjustEvents} from './types';
 

@@ -4,8 +4,7 @@ import {StyleSheet, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
 import {CardSmall, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {splitAddress} from '@app/utils';
 
 import {WalletRowProps} from './wallet-row';

@@ -3,9 +3,8 @@ import React, {useMemo} from 'react';
 import {StyleProp, View, ViewStyle} from 'react-native';
 
 import {Icon, IconsName, Spacer, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Color, getColor} from '@app/theme';
+import {Color, createTheme, getColor} from '@app/theme';
 import {ColorType} from '@app/types';
 
 export type BadgeValue =

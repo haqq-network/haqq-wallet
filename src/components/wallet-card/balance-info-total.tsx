@@ -5,10 +5,9 @@ import {TouchableWithoutFeedback, View} from 'react-native';
 
 import {First, Icon, IconsName, Text, TextVariant} from '@app/components/ui';
 import {Placeholder} from '@app/components/ui/placeholder';
-import {createTheme} from '@app/helpers';
 import {Currencies} from '@app/models/currencies';
 import {Balance} from '@app/services/balance';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {CARD_ACTION_CONTAINER_BG} from '@app/variables/common';
 
 type BalanceInfoTotalProps = {

@@ -4,8 +4,9 @@ import {View} from 'react-native';
 
 import {BottomPopupContainer} from '@app/components/bottom-popups';
 import {app} from '@app/contexts';
-import {createTheme, hideModal} from '@app/helpers';
+import {hideModal} from '@app/helpers';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {createTheme} from '@app/theme';
 import {ModalType} from '@app/types';
 
 import {Captcha, CaptchaType} from '../captcha';

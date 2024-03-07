@@ -14,9 +14,9 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers/create-theme';
 import {I18N} from '@app/i18n';
 import {Color} from '@app/theme';
+import {createTheme} from '@app/theme/helpers/create-theme';
 
 import {ActionsSheetProps} from '.';
 

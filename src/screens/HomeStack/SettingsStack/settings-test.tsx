@@ -22,7 +22,6 @@ import {onDeepLink} from '@app/event-actions/on-deep-link';
 import {Events} from '@app/events';
 import {
   awaitForWallet,
-  createTheme,
   getProviderInstanceForWallet,
   getWindowHeight,
   hideModal,
@@ -65,6 +64,7 @@ import {Indexer} from '@app/services/indexer';
 import {SssProviders} from '@app/services/provider-sss';
 import {message, message as toastMessage} from '@app/services/toast';
 import {getUserAgent} from '@app/services/version';
+import {createTheme} from '@app/theme';
 import {
   IndexerTransaction,
   ModalType,

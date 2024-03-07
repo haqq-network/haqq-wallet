@@ -3,7 +3,7 @@ import React from 'react';
 import {Animated, View} from 'react-native';
 
 import {SwipeableButton} from '@app/components/ui/swipeable-button';
-import {createTheme} from '@app/helpers';
+import {createTheme} from '@app/theme';
 import {SwipeableAction} from '@app/types';
 
 export type SwipeableButtonListProps<T> = {

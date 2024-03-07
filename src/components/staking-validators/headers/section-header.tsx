@@ -3,8 +3,7 @@ import React from 'react';
 import {View} from 'react-native';
 
 import {Text} from '@app/components/ui/text';
-import {createTheme} from '@app/helpers';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 
 export type SectionHeaderProps = {title: string};
 export const SectionHeader = ({title}: SectionHeaderProps) => {

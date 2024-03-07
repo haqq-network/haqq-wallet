@@ -9,8 +9,7 @@ import {
 } from 'react-native-reanimated';
 
 import {StoryLoader} from '@app/components/stories/story-view/components/loader';
-import {createTheme} from '@app/helpers';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 
 import {StoryVideo} from './story-video';
 

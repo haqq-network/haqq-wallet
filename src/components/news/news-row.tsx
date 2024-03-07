@@ -4,8 +4,7 @@ import {format} from 'date-fns';
 import {Image, TouchableWithoutFeedback, View} from 'react-native';
 
 import {Icon, IconsName, Spacer, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {BaseNewsItem} from '@app/types';
 
 export type NewsRowProps = {

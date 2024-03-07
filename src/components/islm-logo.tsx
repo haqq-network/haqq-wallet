@@ -2,8 +2,7 @@ import React, {useMemo} from 'react';
 
 import {StyleProp, View, ViewStyle} from 'react-native';
 
-import {createTheme} from '@app/helpers';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 
 import {Icon, IconProps} from './ui';
 

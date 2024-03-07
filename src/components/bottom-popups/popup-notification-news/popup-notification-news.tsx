@@ -10,9 +10,9 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme, getWindowWidth} from '@app/helpers';
+import {getWindowWidth} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
-import {Color, useThemeSelector} from '@app/theme';
+import {Color, createTheme, useThemeSelector} from '@app/theme';
 import {SHADOW_COLOR_1} from '@app/variables/common';
 
 export type PopupNotificationTopicProps = {

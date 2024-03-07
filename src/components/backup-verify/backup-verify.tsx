@@ -19,10 +19,9 @@ import {
 } from '@app/components/ui';
 import {CarouselItem} from '@app/components/wallets/carousel-item';
 import {Dot} from '@app/components/wallets/dot';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {shuffleWords} from '@app/utils';
 
 export type BackupVerifyProps = {

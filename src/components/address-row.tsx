@@ -2,9 +2,8 @@ import React from 'react';
 
 import {TouchableWithoutFeedback, View} from 'react-native';
 
-import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 
 import {Box, DataContent, Text} from './ui';
 

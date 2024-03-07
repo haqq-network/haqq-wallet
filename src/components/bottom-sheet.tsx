@@ -41,9 +41,9 @@ import {
   SwiperIcon,
   Text,
 } from '@app/components/ui';
-import {createTheme, getWindowWidth} from '@app/helpers';
+import {getWindowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Color, getColor} from '@app/theme';
+import {Color, createTheme, getColor} from '@app/theme';
 import {ANIMATION_DURATION, ANIMATION_TYPE} from '@app/variables/common';
 
 type TitleProp =

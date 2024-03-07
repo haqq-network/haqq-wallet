@@ -14,7 +14,6 @@ import {
   TextSum,
 } from '@app/components/ui';
 import {VotingLine, VotingLineInterface} from '@app/components/voting-line';
-import {createTheme} from '@app/helpers';
 import {
   proposalDepositNeeds,
   proposalVotes,
@@ -22,7 +21,7 @@ import {
 } from '@app/helpers/governance';
 import {useTimer} from '@app/hooks/use-timer';
 import {I18N} from '@app/i18n';
-import {Color, getColor} from '@app/theme';
+import {Color, createTheme, getColor} from '@app/theme';
 import {TimerUpdateInterval, VoteNamesType} from '@app/types';
 import {SHADOW_COLOR_1} from '@app/variables/common';
 

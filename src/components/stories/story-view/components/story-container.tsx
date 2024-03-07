@@ -16,8 +16,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import {createTheme} from '@app/helpers';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {ANIMATION_DURATION} from '@app/variables/common';
 
 import {StoryList} from './story-list';

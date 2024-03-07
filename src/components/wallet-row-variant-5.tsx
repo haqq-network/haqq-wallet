@@ -9,8 +9,7 @@ import {
   Text,
 } from '@app/components/ui';
 import {app} from '@app/contexts';
-import {createTheme} from '@app/helpers';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {splitAddress} from '@app/utils';
 
 import {WalletRowProps} from './wallet-row';

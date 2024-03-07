@@ -10,9 +10,8 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 
 import {Spacer, Text, TextProps} from './ui';
 

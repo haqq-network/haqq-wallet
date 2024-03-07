@@ -2,8 +2,7 @@ import React from 'react';
 
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 
-import {createTheme} from '@app/helpers';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 
 import {Text, TextProps} from './text';
 

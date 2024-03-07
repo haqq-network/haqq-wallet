@@ -3,9 +3,9 @@ import React from 'react';
 import {View} from 'react-native';
 
 import {Button, ButtonVariant, Text, TextProps} from '@app/components/ui';
-import {createTheme, showModal} from '@app/helpers';
+import {showModal} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
-import {Color, getColor} from '@app/theme';
+import {Color, createTheme, getColor} from '@app/theme';
 import {ModalType} from '@app/types';
 
 type ErrorTextProps = {

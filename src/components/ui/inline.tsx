@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 
-import {createTheme} from '@app/helpers';
+import {createTheme} from '@app/theme';
 
 export type InlineProps = {
   gap: number;

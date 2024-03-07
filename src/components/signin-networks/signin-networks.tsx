@@ -13,11 +13,10 @@ import {
   TextVariant,
 } from '@app/components/ui';
 import {app} from '@app/contexts';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {SssProviders} from '@app/services/provider-sss';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {WalletType} from '@app/types';
 
 import {SocialButton, SocialButtonVariant} from '../social-button';

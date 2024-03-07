@@ -4,9 +4,8 @@ import {View} from 'react-native';
 import Animated, {FadeIn} from 'react-native-reanimated';
 
 import {Text, Waiting} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 
 export type SplashModalProps = {};
 

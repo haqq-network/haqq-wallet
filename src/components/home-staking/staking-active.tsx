@@ -11,10 +11,9 @@ import Lottie from 'lottie-react-native';
 import {View} from 'react-native';
 
 import {InfoBlockAmount, Inline, Spacer, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Balance} from '@app/services/balance';
-import {AppTheme, Color, Theme} from '@app/theme';
+import {AppTheme, Color, Theme, createTheme} from '@app/theme';
 import {IS_IOS} from '@app/variables/common';
 
 interface StakingActiveProps {

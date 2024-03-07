@@ -4,10 +4,9 @@ import {LayoutRectangle, StyleSheet, View} from 'react-native';
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {SHADOW_COLOR_1} from '@app/variables/common';
 
 import {DataContent, First, Icon, IconButton, IconsName} from '../ui';

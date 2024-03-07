@@ -4,9 +4,8 @@ import {LayoutChangeEvent, TouchableOpacity, View} from 'react-native';
 import Animated, {SlideInRight, SlideOutRight} from 'react-native-reanimated';
 import {WebViewNavigation} from 'react-native-webview';
 
-import {createTheme} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {IS_ANDROID} from '@app/variables/common';
 
 import {clearUrl} from '../../helpers/web3-browser-utils';

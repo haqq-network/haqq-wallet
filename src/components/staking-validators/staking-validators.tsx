@@ -9,9 +9,9 @@ import {
 import {SectionHeader} from '@app/components/staking-validators/headers/section-header';
 import {UnstackedHeader} from '@app/components/staking-validators/headers/unstacked-header';
 import {CustomHeader, Loading, Spacer} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {ValidatorSortKey, validatorsSort} from '@app/helpers/validators-sort';
 import {I18N, getText} from '@app/i18n';
+import {createTheme} from '@app/theme';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
 
 import {ValidatorRow} from './validator-row';

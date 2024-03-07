@@ -12,7 +12,6 @@ import {
   SumBlock,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {useSumAmount} from '@app/hooks';
 import {useKeyboard} from '@app/hooks/use-keyboard';
@@ -20,7 +19,7 @@ import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Balance} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {IToken} from '@app/types';
 import {BALANCE_MULTIPLIER, FEE_AMOUNT} from '@app/variables/balance';
 import {CURRENCY_NAME} from '@app/variables/common';

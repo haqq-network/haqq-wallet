@@ -2,9 +2,8 @@ import React, {useMemo} from 'react';
 
 import {TouchableOpacity, TouchableOpacityProps, View} from 'react-native';
 
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Color, getColor} from '@app/theme';
+import {Color, createTheme, getColor} from '@app/theme';
 
 import {Text} from './text';
 

@@ -8,11 +8,10 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import {createTheme} from '@app/helpers';
 import {useRemoteConfigVar} from '@app/hooks/use-remote-config';
 import {useTransactionList} from '@app/hooks/use-transaction-list';
 import {Transaction} from '@app/models/transaction';
-import {Color, getColor} from '@app/theme';
+import {Color, createTheme, getColor} from '@app/theme';
 
 import {TransactionRow} from './transaction-row';
 import {TransactionSectionHeader} from './transaction-section-header';

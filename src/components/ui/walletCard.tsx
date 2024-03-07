@@ -14,11 +14,10 @@ import {
   Text,
   TextVariant,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {IToken} from '@app/types';
 import {calculateBalances, generateUUID} from '@app/utils';
 

@@ -2,10 +2,10 @@ import React, {useMemo} from 'react';
 
 import {SafeAreaView, ScrollView, View} from 'react-native';
 
-import {cleanNumber, createTheme} from '@app/helpers';
+import {cleanNumber} from '@app/helpers';
 import {useLayout} from '@app/hooks/use-layout';
 import {I18N} from '@app/i18n';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {NftItem} from '@app/types';
 import {WEI} from '@app/variables/common';
 

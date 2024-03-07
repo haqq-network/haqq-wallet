@@ -4,9 +4,8 @@ import {View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {RiveWrapper} from '@app/components/ui/rive-wrapper';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {IS_IOS} from '@app/variables/common';
 
 import {Button, ButtonVariant, First, Spacer, Text} from '../ui';

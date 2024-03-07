@@ -13,11 +13,10 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {ChooseAccountItem} from '@app/types';
 
 export type LedgerAccountsRowProps = {

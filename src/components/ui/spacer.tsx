@@ -2,8 +2,7 @@ import React, {useMemo} from 'react';
 
 import {StyleSheet, View, ViewProps} from 'react-native';
 
-import {createTheme} from '@app/helpers';
-import {Color, getColor} from '@app/theme';
+import {Color, createTheme, getColor} from '@app/theme';
 import {addOpacityToColor} from '@app/utils';
 
 export type SpacerProps = ViewProps & {

@@ -13,11 +13,11 @@ import {WalletCreate} from '@app/components/wallet-create';
 import {CarouselItem} from '@app/components/wallets/carousel-item';
 import {Dot} from '@app/components/wallets/dot';
 import {Plus} from '@app/components/wallets/plus';
-import {createTheme} from '@app/helpers';
 import {useWalletConnectSessions} from '@app/hooks/use-wallet-connect-sessions';
 import {WalletBalance} from '@app/hooks/use-wallets-balance';
 import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
+import {createTheme} from '@app/theme';
 import {WalletType} from '@app/types';
 import {filterWalletConnectSessionsByAddress} from '@app/utils';
 

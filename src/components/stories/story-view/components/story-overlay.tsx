@@ -5,7 +5,7 @@ import {SharedValue} from 'react-native-reanimated';
 
 import {StoryItemProps} from '@app/components/stories/story-view/core/dto/storiesViewDTO';
 import {Button, Spacer, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {createTheme} from '@app/theme';
 import {ArrayElement} from '@app/types';
 import {generateUUID} from '@app/utils';
 

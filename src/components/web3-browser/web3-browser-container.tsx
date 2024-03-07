@@ -3,7 +3,7 @@ import React, {useEffect} from 'react';
 
 import {Keyboard, KeyboardEventListener, View} from 'react-native';
 
-import {createTheme} from '@app/helpers';
+import {createTheme} from '@app/theme';
 import {IS_IOS} from '@app/variables/common';
 
 import {Web3BrowserProps} from './web3-browser';

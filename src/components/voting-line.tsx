@@ -11,9 +11,8 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import {Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {getText} from '@app/i18n';
-import {Color, getColor} from '@app/theme';
+import {Color, createTheme, getColor} from '@app/theme';
 import {VoteNamesType, VotesType} from '@app/types';
 import {VOTES} from '@app/variables/votes';
 

@@ -3,9 +3,9 @@ import React, {useCallback, useMemo, useRef} from 'react';
 import {RefreshControl, ScrollView, TouchableOpacity, View} from 'react-native';
 import {RiveRef} from 'rive-react-native';
 
-import {cleanNumber, createTheme} from '@app/helpers';
+import {cleanNumber} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Color, useThemeSelector} from '@app/theme';
+import {Color, createTheme, useThemeSelector} from '@app/theme';
 import {Raffle} from '@app/types';
 import {SHADOW_COLOR_1} from '@app/variables/common';
 

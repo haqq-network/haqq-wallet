@@ -11,8 +11,8 @@ import {
 import {StyleSheet, View} from 'react-native';
 import {WebViewMessageEvent} from 'react-native-webview';
 
-import {createTheme, getWindowHeight, getWindowWidth} from '@app/helpers';
-import {AppTheme, Color, Theme, getColor} from '@app/theme';
+import {getWindowHeight, getWindowWidth} from '@app/helpers';
+import {AppTheme, Color, Theme, createTheme, getColor} from '@app/theme';
 
 import {Hcaptcha, Ocaptcha, ReCaptchaV2, SliderCaptcha, Turnstile} from './';
 import {First} from '../ui';

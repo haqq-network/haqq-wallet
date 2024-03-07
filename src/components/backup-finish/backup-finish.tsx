@@ -10,10 +10,9 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {AppTheme, Theme} from '@app/theme';
+import {AppTheme, Theme, createTheme} from '@app/theme';
 
 type BackupFinishProps = {
   onSubmit: () => void;

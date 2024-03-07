@@ -4,8 +4,7 @@ import {Device} from '@haqq/provider-ledger-react-native';
 import {ActivityIndicator, TouchableOpacity} from 'react-native';
 
 import {Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 
 export type LedgerScanRowProps = {
   item: Device;

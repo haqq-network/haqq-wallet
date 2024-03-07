@@ -13,11 +13,10 @@ import {
   TextVariant,
 } from '@app/components/ui';
 import {WalletCard} from '@app/components/ui/walletCard';
-import {createTheme} from '@app/helpers';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {HaqqEthereumAddress, IToken} from '@app/types';
 import {CURRENCY_NAME} from '@app/variables/common';
 

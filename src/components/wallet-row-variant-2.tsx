@@ -3,9 +3,8 @@ import React, {useCallback, useMemo} from 'react';
 import {StyleSheet, View} from 'react-native';
 
 import {CardSmall, MenuNavigationButton, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {splitAddress} from '@app/utils';
 import {STRINGS} from '@app/variables/common';
 

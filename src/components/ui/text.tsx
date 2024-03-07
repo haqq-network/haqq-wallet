@@ -10,9 +10,8 @@ import {
   TextStyle,
 } from 'react-native';
 
-import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
-import {Color, getColor} from '@app/theme';
+import {Color, createTheme, getColor} from '@app/theme';
 import {ColorType, FontT} from '@app/types';
 
 export type TextValue =

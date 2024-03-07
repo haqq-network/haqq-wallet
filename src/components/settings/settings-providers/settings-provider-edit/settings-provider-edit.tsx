@@ -30,10 +30,9 @@ import {
   IconsName,
   Spacer,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {Provider, ProviderKeys} from '@app/models/provider';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 
 export type SettingsProviderEditData = Omit<
   Partial<Provider>,

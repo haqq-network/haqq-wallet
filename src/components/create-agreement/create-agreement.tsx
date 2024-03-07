@@ -11,9 +11,9 @@ import {
   Text,
 } from '@app/components/ui';
 import {Terms} from '@app/components/ui/terms';
-import {createTheme, getWindowHeight, getWindowWidth} from '@app/helpers';
+import {getWindowHeight, getWindowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 
 export type CreateAgreementProps = {
   onDone: () => void;

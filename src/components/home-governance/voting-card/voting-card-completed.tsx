@@ -6,10 +6,9 @@ import {Pressable, View} from 'react-native';
 
 import {Icon, Spacer, Text} from '@app/components/ui';
 import {VotingLine} from '@app/components/voting-line';
-import {createTheme} from '@app/helpers';
 import {proposalVotes} from '@app/helpers/governance';
 import {I18N} from '@app/i18n';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {SHADOW_COLOR_1} from '@app/variables/common';
 
 export enum VotingCompletedStatuses {

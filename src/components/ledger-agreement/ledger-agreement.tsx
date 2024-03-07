@@ -11,9 +11,9 @@ import {
   Text,
 } from '@app/components/ui';
 import {Terms} from '@app/components/ui/terms';
-import {createTheme, getWindowWidth} from '@app/helpers';
+import {getWindowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {AppTheme, Color, Theme} from '@app/theme';
+import {AppTheme, Color, Theme, createTheme} from '@app/theme';
 
 export type LedgerAgreementProps = {
   onDone: () => void;

@@ -3,10 +3,10 @@ import React, {useMemo, useRef, useState} from 'react';
 import {ScrollView, View} from 'react-native';
 
 import {Button, ButtonVariant, Loading, Spacer} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {I18N} from '@app/i18n';
 import {Balance} from '@app/services/balance';
+import {createTheme} from '@app/theme';
 
 import {StakingActive, StakingActiveInterface} from './staking-active';
 import {StakingEmpty} from './staking-empty';

@@ -10,10 +10,9 @@ import {
 } from 'react-native-popup-menu';
 
 import {Icon, IconsName, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {ValidatorSortKey} from '@app/helpers/validators-sort';
 import {I18N, getText} from '@app/i18n';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 
 type UnstackedHeaderProps = {
   isSwitchOn?: boolean;

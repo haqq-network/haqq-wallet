@@ -4,11 +4,10 @@ import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Renderable} from 'react-native-json-tree';
 
-import {createTheme} from '@app/helpers';
 import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {I18N} from '@app/i18n';
 import {Balance} from '@app/services/balance';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {EIPMessage, EIPTypedData} from '@app/types';
 
 import {JsonViewer} from './json-viewer';

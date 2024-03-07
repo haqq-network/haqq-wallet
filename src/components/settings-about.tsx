@@ -4,9 +4,9 @@ import {ScrollView, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {LottieWrap, Spacer, Text} from '@app/components/ui';
-import {createTheme, getWindowWidth} from '@app/helpers';
+import {getWindowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {PRIVACY_POLICY, TERMS_OF_CONDITIONS} from '@app/variables/common';
 
 import {SettingsAboutButton} from './settings-about-button';

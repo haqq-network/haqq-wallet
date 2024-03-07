@@ -3,8 +3,8 @@ import React, {useCallback} from 'react';
 import {StyleProp, ViewStyle} from 'react-native';
 
 import {DataContent, MenuNavigationButton} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {AwaitValue} from '@app/helpers/await-for-value';
+import {createTheme} from '@app/theme';
 
 export type ValueRowProps = {
   item: AwaitValue;

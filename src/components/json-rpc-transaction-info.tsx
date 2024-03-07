@@ -11,14 +11,13 @@ import {
   Text,
 } from '@app/components/ui';
 import {app} from '@app/contexts';
-import {createTheme} from '@app/helpers';
 import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {
   AddressType,
   JsonRpcMetadata,

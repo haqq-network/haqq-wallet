@@ -2,8 +2,7 @@ import React, {useMemo} from 'react';
 
 import {View} from 'react-native';
 
-import {createTheme} from '@app/helpers';
-import {Color, useColor} from '@app/theme';
+import {Color, createTheme, useColor} from '@app/theme';
 
 export interface BarChartItem {
   id: string;

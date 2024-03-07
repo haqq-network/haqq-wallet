@@ -5,8 +5,8 @@ import {View} from 'react-native';
 import Timer from 'react-timer-mixin';
 
 import {Text} from '@app/components/ui';
-import {cleanNumber, createTheme} from '@app/helpers';
-import {Color, getColor} from '@app/theme';
+import {cleanNumber} from '@app/helpers';
+import {Color, createTheme, getColor} from '@app/theme';
 import {CURRENCY_NAME} from '@app/variables/common';
 
 type Props = {

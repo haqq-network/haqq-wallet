@@ -12,10 +12,9 @@ import {
   TextVariant,
 } from '@app/components/ui';
 import {SearchLine} from '@app/components/ui/custom-header/search-line';
-import {createTheme} from '@app/helpers';
 import {Currencies} from '@app/models/currencies';
 import {Currency} from '@app/models/types';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 
 export const SettingsCurrency = observer(() => {
   const [search, setSearch] = useState('');

@@ -3,7 +3,7 @@ import React, {memo} from 'react';
 import {View} from 'react-native';
 
 import {Placeholder} from '@app/components/ui/placeholder';
-import {createTheme} from '@app/helpers';
+import {createTheme} from '@app/theme';
 
 export const StoriesLoaderItem = memo(() => {
   return (

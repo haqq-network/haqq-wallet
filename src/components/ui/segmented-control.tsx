@@ -3,9 +3,8 @@ import React, {useMemo} from 'react';
 import {TouchableWithoutFeedback, View, ViewStyle} from 'react-native';
 
 import {Text} from '@app/components/ui/text';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 
 export type SegmentedControlValue<T> = {
   value: T;

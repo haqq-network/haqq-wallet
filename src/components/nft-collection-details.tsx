@@ -3,9 +3,8 @@ import React from 'react';
 import {SafeAreaView, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {NftCollection, NftItem} from '@app/types';
 
 import {ImageWrapper} from './image-wrapper';

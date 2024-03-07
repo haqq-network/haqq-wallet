@@ -2,9 +2,8 @@ import React from 'react';
 
 import {Image, View} from 'react-native';
 
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Color, useThemeSelector} from '@app/theme';
+import {Color, createTheme, useThemeSelector} from '@app/theme';
 
 import {Spacer, Text} from './ui';
 

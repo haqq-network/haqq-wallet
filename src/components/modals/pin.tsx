@@ -6,9 +6,8 @@ import {Pin, PinInterface} from '@app/components/pin/pin';
 import {RestorePassword} from '@app/components/restore-password';
 import {Text} from '@app/components/ui';
 import {app} from '@app/contexts';
-import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
-import {Color, Theme} from '@app/theme';
+import {Color, Theme, createTheme} from '@app/theme';
 import {PIN_BANNED_ATTEMPTS} from '@app/variables/common';
 
 export type PinModalProps = {};

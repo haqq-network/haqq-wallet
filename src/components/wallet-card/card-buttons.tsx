@@ -3,10 +3,9 @@ import React from 'react';
 import {View} from 'react-native';
 
 import {BlurView, Icon, IconButton, IconsName, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 import {IS_IOS, SYSTEM_BLUR_2} from '@app/variables/common';
 
 type CardButtonsProps = {

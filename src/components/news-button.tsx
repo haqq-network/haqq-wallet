@@ -3,9 +3,8 @@ import React from 'react';
 import {View} from 'react-native';
 
 import {Icon} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {useVariablesBool} from '@app/hooks/use-variables-bool';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 
 export interface NewsButtonProps {
   focused: boolean;

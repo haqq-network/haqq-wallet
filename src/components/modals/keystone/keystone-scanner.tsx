@@ -8,7 +8,6 @@ import {QRscanner} from 'react-native-qr-decode-image-camera';
 
 import {First, Text} from '@app/components/ui';
 import {app} from '@app/contexts';
-import {createTheme} from '@app/helpers';
 import {
   AwaitForScanQrError,
   AwaitForScanQrEvents,
@@ -20,7 +19,7 @@ import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N, getText} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {SystemDialog} from '@app/services/system-dialog';
-import {Color, Theme, getColor} from '@app/theme';
+import {Color, Theme, createTheme, getColor} from '@app/theme';
 import {ModalType, Modals} from '@app/types';
 import {
   IS_IOS,

@@ -11,9 +11,8 @@ import {
   Input,
   KeyboardSafeArea,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
-import {Color} from '@app/theme';
+import {Color, createTheme} from '@app/theme';
 
 interface SettingsAddressBookEditProps {
   initName?: string;
