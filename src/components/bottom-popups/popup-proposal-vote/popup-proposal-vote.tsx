@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 
 import {ActivityIndicator, View, useWindowDimensions} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
 import {
   Button,
   ButtonSize,
@@ -12,6 +11,7 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Color, getColor} from '@app/theme';
 import {VoteNamesType} from '@app/types';
 import {VOTES} from '@app/variables/votes';
 

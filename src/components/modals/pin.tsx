@@ -2,7 +2,6 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 import {Keyboard, TouchableOpacity, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {Pin, PinInterface} from '@app/components/pin/pin';
 import {RestorePassword} from '@app/components/restore-password';
 import {Text} from '@app/components/ui';
@@ -10,6 +9,7 @@ import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {Color} from '@app/theme';
 import {PIN_BANNED_ATTEMPTS} from '@app/variables/common';
 
 export type PinModalProps = {};

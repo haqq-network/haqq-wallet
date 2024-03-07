@@ -10,7 +10,6 @@ import {
   Theme,
 } from '@react-navigation/native';
 import * as Sentry from '@sentry/react-native';
-import {AppTheme} from '@theme';
 import {AppState, Linking, Platform, StyleSheet} from 'react-native';
 import {Adjust, AdjustConfig} from 'react-native-adjust';
 import {AdjustOaid} from 'react-native-adjust-oaid';
@@ -19,7 +18,6 @@ import {MenuProvider} from 'react-native-popup-menu';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
-import {Color} from '@app/colors';
 import {AppScreenSecurityOverview} from '@app/components/app-screen-security-overview';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
@@ -39,6 +37,7 @@ import {
   SssMigrateStackRoutes,
 } from '@app/route-types';
 import {RootStack} from '@app/screens/RootStack';
+import {AppTheme, Color} from '@app/theme';
 import {ModalType} from '@app/types';
 import {getAppTrackingAuthorizationStatus, sleep} from '@app/utils';
 import {SPLASH_TIMEOUT_MS} from '@app/variables/common';

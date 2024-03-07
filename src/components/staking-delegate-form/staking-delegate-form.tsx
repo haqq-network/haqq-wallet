@@ -2,7 +2,6 @@ import React, {useCallback, useEffect, useMemo} from 'react';
 
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -19,6 +18,7 @@ import {formatPercents} from '@app/helpers/format-percents';
 import {useSumAmount} from '@app/hooks/use-sum-amount';
 import {I18N} from '@app/i18n';
 import {Balance} from '@app/services/balance';
+import {Color} from '@app/theme';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
 import {FEE_AMOUNT} from '@app/variables/balance';
 import {CURRENCY_NAME} from '@app/variables/common';

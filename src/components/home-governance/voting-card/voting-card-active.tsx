@@ -3,7 +3,6 @@ import React, {useCallback, useEffect, useRef} from 'react';
 import {Proposal} from '@evmos/provider/dist/rest/gov';
 import {Pressable, View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
 import {
   Icon,
   ProgressCircle,
@@ -23,6 +22,7 @@ import {
 } from '@app/helpers/governance';
 import {useTimer} from '@app/hooks/use-timer';
 import {I18N} from '@app/i18n';
+import {Color, getColor} from '@app/theme';
 import {TimerUpdateInterval, VoteNamesType} from '@app/types';
 import {SHADOW_COLOR_1} from '@app/variables/common';
 

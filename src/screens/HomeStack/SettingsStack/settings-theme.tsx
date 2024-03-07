@@ -1,11 +1,12 @@
-import React, {memo, useCallback} from 'react';
+import React, {useCallback} from 'react';
 
-import {AppTheme, Theme} from '@theme';
+import {observer} from 'mobx-react';
 
 import {SettingsTheme} from '@app/components/settings/settings-theme';
 import {useTypedNavigation} from '@app/hooks';
+import {AppTheme, Theme} from '@app/theme';
 
-export const SettingsThemeScreen = memo(() => {
+export const SettingsThemeScreen = observer(() => {
   const navigation = useTypedNavigation();
   const onChangeTheme = useCallback((newTheme: AppTheme) => {
     Theme.currentTheme = newTheme;

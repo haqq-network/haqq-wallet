@@ -7,7 +7,6 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonSize,
@@ -22,6 +21,7 @@ import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {Color} from '@app/theme';
 import {WalletCardPattern, WalletCardStyle} from '@app/types';
 import {generateFlatColors, generateGradientColors} from '@app/utils';
 import {CARD_CIRCLE_TOTAL, CARD_RHOMBUS_TOTAL} from '@app/variables/common';

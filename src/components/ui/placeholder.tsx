@@ -2,8 +2,8 @@ import React, {useMemo} from 'react';
 
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
-import {Color} from '@app/colors';
 import {useTheme} from '@app/hooks';
+import {Color} from '@app/theme';
 import {addOpacityToColor} from '@app/utils';
 
 export type SkeletonPlaceholderProps = {

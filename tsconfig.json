@@ -6,8 +6,7 @@
     "baseUrl": ".",
     "paths": {
       "@app/*": ["src/*"],
-      "@assets/*": ["assets/*"],
-      "@theme": ["src/theme"],
+      "@assets/*": ["assets/*"]
     }
   },
   "typeRoots": ["./src/types"]

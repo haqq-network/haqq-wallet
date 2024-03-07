@@ -2,7 +2,6 @@ import React, {memo, useMemo} from 'react';
 
 import {StyleSheet, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {Spacer, Text} from '@app/components/ui';
 import {BarChart} from '@app/components/ui/bar-chart';
 import {ShadowCard} from '@app/components/ui/shadow-card';
@@ -10,6 +9,7 @@ import {WidgetHeader} from '@app/components/ui/widget-header';
 import {useMinAmount} from '@app/hooks/use-min-amount';
 import {I18N, getText} from '@app/i18n';
 import {Balance} from '@app/services/balance';
+import {Color} from '@app/theme';
 
 type Props = {
   spend: Balance;

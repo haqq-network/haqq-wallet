@@ -2,10 +2,10 @@ import React from 'react';
 
 import {View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
 import {Button, ButtonVariant, NoInternetIcon, Text} from '@app/components/ui';
 import {createTheme, hideModal} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Color, getColor} from '@app/theme';
 import {ModalType, Modals} from '@app/types';
 
 import {BottomPopupContainer} from '../bottom-popups';

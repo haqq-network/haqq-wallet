@@ -2,10 +2,10 @@ import React from 'react';
 
 import {TextProps, View, ViewStyle} from 'react-native';
 
-import {Color} from '@app/colors';
 import {Text} from '@app/components/ui/text';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Color} from '@app/theme';
 
 export type DataContentProps = {
   title?: React.ReactNode;

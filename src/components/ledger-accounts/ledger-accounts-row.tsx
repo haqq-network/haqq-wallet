@@ -2,7 +2,6 @@ import React from 'react';
 
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonSize,
@@ -15,6 +14,7 @@ import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
+import {Color} from '@app/theme';
 import {LedgerAccountItem} from '@app/types';
 
 export type LedgerAccountsRowProps = {

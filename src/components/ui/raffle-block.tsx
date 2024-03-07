@@ -3,11 +3,11 @@ import React, {useCallback, useMemo, useState} from 'react';
 import {ActivityIndicator, Image, TouchableOpacity, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-import {Color, getColor} from '@app/colors';
 import {cleanNumber, createTheme, getWindowWidth} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks';
 import {useTimer} from '@app/hooks/use-timer';
 import {I18N} from '@app/i18n';
+import {Color, getColor} from '@app/theme';
 import {Raffle, TimerUpdateInterval} from '@app/types';
 import {WEI} from '@app/variables/common';
 

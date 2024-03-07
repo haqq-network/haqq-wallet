@@ -3,7 +3,6 @@ import React from 'react';
 import {Proposal} from '@evmos/provider/dist/rest/gov';
 import {Image, View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -16,6 +15,7 @@ import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N, getText} from '@app/i18n';
 import {Balance} from '@app/services/balance';
+import {Color, getColor} from '@app/theme';
 
 export type ProposalDepositPreviewProps = {
   amount: number;

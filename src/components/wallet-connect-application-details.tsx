@@ -4,7 +4,6 @@ import {format} from 'date-fns';
 import {Image, ScrollView, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -17,6 +16,7 @@ import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {WalletConnectSessionMetadata} from '@app/models/wallet-connect-session-metadata';
+import {Color} from '@app/theme';
 import {WalletConnectSessionType} from '@app/types/wallet-connect';
 import {getHostnameFromUrl} from '@app/utils';
 

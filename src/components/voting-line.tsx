@@ -10,10 +10,10 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import {Color, getColor} from '@app/colors';
 import {Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {getText} from '@app/i18n';
+import {Color, getColor} from '@app/theme';
 import {VoteNamesType, VotesType} from '@app/types';
 import {VOTES} from '@app/variables/votes';
 

@@ -2,7 +2,6 @@ import React, {useCallback} from 'react';
 
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -14,6 +13,7 @@ import {
 import {useThemeSelector} from '@app/hooks';
 import {useTesterModeEnabled} from '@app/hooks/use-tester-mode-enabled';
 import {I18N, getText} from '@app/i18n';
+import {Color} from '@app/theme';
 import {Link} from '@app/types';
 
 import {BrowserHomePageLinkList} from './browser-home-page-link-list';

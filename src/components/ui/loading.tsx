@@ -2,8 +2,8 @@ import React from 'react';
 
 import {ActivityIndicator, StyleProp, View, ViewStyle} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {Color, getColor} from '@app/theme';
 
 export interface LoadingProps {
   style?: StyleProp<ViewStyle>;

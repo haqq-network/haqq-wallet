@@ -1,6 +1,5 @@
 import React, {useCallback, useState} from 'react';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -15,6 +14,7 @@ import {
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {SystemDialog} from '@app/services/system-dialog';
+import {Color} from '@app/theme';
 
 export enum PasswordExists {
   checking,

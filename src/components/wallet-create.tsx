@@ -2,7 +2,6 @@ import React from 'react';
 
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonSize,
@@ -15,6 +14,7 @@ import {
 } from '@app/components/ui';
 import {createTheme, getWindowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Color} from '@app/theme';
 import {MAGIC_CARD_HEIGHT, SHADOW_COLOR_1} from '@app/variables/common';
 
 export type BalanceProps = {

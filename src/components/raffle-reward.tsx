@@ -2,10 +2,10 @@ import React, {useMemo} from 'react';
 
 import {Image, SafeAreaView, StyleSheet, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {cleanNumber} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {Color} from '@app/theme';
 import {Raffle} from '@app/types';
 import {WEI} from '@app/variables/common';
 

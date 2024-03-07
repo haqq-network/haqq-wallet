@@ -2,7 +2,6 @@ import React, {useMemo} from 'react';
 
 import {View, useWindowDimensions} from 'react-native';
 
-import {Color} from '@app/colors';
 import {DashedLine} from '@app/components/dashed-line';
 import {SolidLine} from '@app/components/solid-line';
 import {TokenRow} from '@app/components/token-row';
@@ -19,6 +18,7 @@ import {createTheme} from '@app/helpers';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {Color} from '@app/theme';
 import {IToken} from '@app/types';
 import {calculateBalances, generateUUID} from '@app/utils';
 

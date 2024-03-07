@@ -2,11 +2,11 @@ import React, {useState} from 'react';
 
 import {StyleProp, TouchableOpacity, View, ViewStyle} from 'react-native';
 
-import {Color} from '@app/colors';
 import {Spacer, Text, TextSum} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
+import {Color} from '@app/theme';
 
 type valueType = {
   amount: number;

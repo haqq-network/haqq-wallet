@@ -23,8 +23,8 @@ import prompt, {PromptOptions} from 'react-native-prompt-android';
 
 import {app} from '@app/contexts';
 import {RemoteConfig} from '@app/services/remote-config';
+import {Color, getColor} from '@app/theme';
 
-import {Color, getColor} from './colors';
 import {DEBUG_VARS} from './debug-vars';
 import {Events} from './events';
 import {AddressUtils} from './helpers/address-utils';

@@ -5,7 +5,6 @@ import {
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
 
-import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
 import {popupScreenOptions} from '@app/helpers';
 import {I18N} from '@app/i18n';
@@ -15,6 +14,7 @@ import {BrowserEditBookmarksScreen} from '@app/screens/HomeStack/BrowserStack/br
 import {BrowserHomePageScreen} from '@app/screens/HomeStack/BrowserStack/browser-home-page-screen';
 import {BrowserSearchPageScreen} from '@app/screens/HomeStack/BrowserStack/browser-search-page-screen';
 import {Web3BrowserScreen} from '@app/screens/HomeStack/BrowserStack/web3-browser';
+import {Color} from '@app/theme';
 import {IS_IOS} from '@app/variables/common';
 
 const Stack = createNativeStackNavigator<BrowserStackParamList>();

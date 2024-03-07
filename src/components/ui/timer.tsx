@@ -3,10 +3,10 @@ import React from 'react';
 import {format} from 'date-fns';
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {useTimer} from '@app/hooks/use-timer';
 import {I18N} from '@app/i18n';
+import {Color} from '@app/theme';
 import {TimerUpdateInterval} from '@app/types';
 
 import {CircularProgress} from './circular-progress';

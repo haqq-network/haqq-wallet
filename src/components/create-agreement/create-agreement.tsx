@@ -2,7 +2,6 @@ import React from 'react';
 
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -14,6 +13,7 @@ import {
 import {Terms} from '@app/components/ui/terms';
 import {createTheme, getWindowHeight, getWindowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Color} from '@app/theme';
 
 export type CreateAgreementProps = {
   onDone: () => void;

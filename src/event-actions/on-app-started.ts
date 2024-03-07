@@ -1,7 +1,6 @@
 import messaging from '@react-native-firebase/messaging';
 import {Linking} from 'react-native';
 
-import {Color} from '@app/colors';
 import {app} from '@app/contexts';
 import {onAppBackup} from '@app/event-actions/on-app-backup';
 import {onBannerAddClaimCode} from '@app/event-actions/on-banner-add-claim-code';
@@ -15,6 +14,7 @@ import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {I18N, getText} from '@app/i18n';
 import {Banner} from '@app/models/banner';
 import {Refferal} from '@app/models/refferal';
+import {Color} from '@app/theme';
 
 import {onUpdatesSync} from './on-updates-sync';
 

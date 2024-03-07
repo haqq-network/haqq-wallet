@@ -2,7 +2,7 @@ import React from 'react';
 
 import {StyleSheet, View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color, getColor} from '@app/theme';
 
 import {NoContactsIcon, Text} from './ui';
 

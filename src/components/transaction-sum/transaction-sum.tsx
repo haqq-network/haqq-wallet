@@ -3,7 +3,6 @@ import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 import {Image, TextInput, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -21,6 +20,7 @@ import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Balance} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {Color} from '@app/theme';
 import {IToken} from '@app/types';
 import {BALANCE_MULTIPLIER, FEE_AMOUNT} from '@app/variables/balance';
 import {CURRENCY_NAME} from '@app/variables/common';

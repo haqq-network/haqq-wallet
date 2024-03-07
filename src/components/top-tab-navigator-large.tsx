@@ -9,10 +9,10 @@ import Animated, {
 } from 'react-native-reanimated';
 import {useTiming} from 'react-native-redash';
 
-import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {useLayout} from '@app/hooks/use-layout';
 import {getText} from '@app/i18n';
+import {Color} from '@app/theme';
 import {isI18N} from '@app/utils';
 import {SHADOW_COLOR_1} from '@app/variables/common';
 

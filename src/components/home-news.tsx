@@ -8,8 +8,8 @@ import {
 } from 'react-native';
 import {Results} from 'realm';
 
-import {Color, getColor} from '@app/colors';
 import {I18N} from '@app/i18n';
+import {Color, getColor} from '@app/theme';
 import {BaseNewsItem} from '@app/types';
 
 import {NewsRowList} from './news';

@@ -6,9 +6,9 @@ import Toast, {
   ToastConfig,
 } from 'react-native-toast-message';
 
-import {Color} from '@app/colors';
 import {ModalProvider} from '@app/components/modal-provider';
 import {createTheme} from '@app/helpers';
+import {Color} from '@app/theme';
 
 const toastConfig: ToastConfig = {
   error: (props: BaseToastProps) => (

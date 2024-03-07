@@ -10,11 +10,11 @@ import {isBefore} from 'date-fns';
 import {View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {Color} from '@app/colors';
 import {Spacer, Text} from '@app/components/ui';
 import {createTheme, moderateVerticalScale} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {Color} from '@app/theme';
 
 import {NumericKeyboard} from './numeric-keyboard';
 

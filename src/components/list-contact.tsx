@@ -3,9 +3,9 @@ import React from 'react';
 import {FlatList, FlatListProps} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {Color, getColor} from '@app/colors';
 import {AddressRow} from '@app/components/address-row';
 import {Icon, Spacer, SwipeableRow} from '@app/components/ui';
+import {Color, getColor} from '@app/theme';
 
 export type ContactFlatListProps = Omit<FlatListProps<any>, 'renderItem'>;
 

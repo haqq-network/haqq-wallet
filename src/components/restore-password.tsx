@@ -2,13 +2,13 @@ import React, {useCallback, useRef} from 'react';
 
 import {Alert, StyleSheet} from 'react-native';
 
-import {Color} from '@app/colors';
 import {onAppReset} from '@app/event-actions/on-app-reset';
 import {onWalletReset} from '@app/event-actions/on-wallet-reset';
 import {hideModal, showModal} from '@app/helpers';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N, getText} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {Color} from '@app/theme';
 import {ModalType} from '@app/types';
 import {sleep} from '@app/utils';
 

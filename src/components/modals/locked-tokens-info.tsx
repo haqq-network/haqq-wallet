@@ -1,10 +1,10 @@
 import React from 'react';
 
-import {Color} from '@app/colors';
 import {BottomSheet} from '@app/components/bottom-sheet';
 import {Spacer, Text} from '@app/components/ui';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N} from '@app/i18n';
+import {Color} from '@app/theme';
 import {ModalType, Modals} from '@app/types';
 
 export function LockedTokensInfo({

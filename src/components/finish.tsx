@@ -1,6 +1,5 @@
 import React, {useMemo} from 'react';
 
-import {AppTheme} from '@theme';
 import {StyleSheet} from 'react-native';
 
 import {
@@ -13,6 +12,7 @@ import {
 } from '@app/components/ui';
 import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {AppTheme} from '@app/theme';
 
 export type FinishProps = {
   title: I18N;

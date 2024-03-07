@@ -2,7 +2,6 @@ import React, {useEffect} from 'react';
 
 import {Image, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {BottomPopupContainer} from '@app/components/bottom-popups';
 import {
   Button,
@@ -15,6 +14,7 @@ import {createTheme} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {Color} from '@app/theme';
 import {ModalType, Modals} from '@app/types';
 
 export const DomainBlocked = ({

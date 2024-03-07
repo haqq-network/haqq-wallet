@@ -2,7 +2,6 @@ import React, {useMemo} from 'react';
 
 import {Image, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -16,6 +15,7 @@ import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Balance} from '@app/services/balance';
+import {Color} from '@app/theme';
 import {IToken} from '@app/types';
 import {splitAddress} from '@app/utils';
 import {LONG_NUM_PRECISION, WEI_PRECISION} from '@app/variables/common';

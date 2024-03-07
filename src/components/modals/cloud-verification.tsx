@@ -2,13 +2,13 @@ import React, {memo} from 'react';
 
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {BottomPopupContainer} from '@app/components/bottom-popups';
 import {Button, ButtonVariant, Spacer, Text} from '@app/components/ui';
 import {RiveWrapper} from '@app/components/ui/rive-wrapper';
 import {createTheme, hideModal} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {Color} from '@app/theme';
 import {ModalType, Modals} from '@app/types';
 import {ProviderNameMap} from '@app/variables/sss';
 

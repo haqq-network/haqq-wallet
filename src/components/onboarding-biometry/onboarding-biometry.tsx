@@ -2,7 +2,6 @@ import React, {useMemo} from 'react';
 
 import {StyleSheet} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -15,6 +14,7 @@ import {
   TouchIdIcon,
 } from '@app/components/ui';
 import {I18N, getText} from '@app/i18n';
+import {Color, getColor} from '@app/theme';
 import {BiometryType} from '@app/types';
 import {BIOMETRY_TYPES_NAMES} from '@app/variables/biometry';
 

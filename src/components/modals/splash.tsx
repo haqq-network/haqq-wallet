@@ -3,10 +3,10 @@ import React, {memo, useEffect, useState} from 'react';
 import {View} from 'react-native';
 import Animated, {FadeIn} from 'react-native-reanimated';
 
-import {Color} from '@app/colors';
 import {Text, Waiting} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Color} from '@app/theme';
 
 export type SplashModalProps = {};
 

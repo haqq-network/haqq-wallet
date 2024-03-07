@@ -1,7 +1,6 @@
-import {Theme} from '@theme';
 import {Dimensions, ImageStyle, TextStyle, ViewStyle} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color, Theme, getColor} from '@app/theme';
 
 type StyleValue<T> = T | (() => T);
 type StyleValueToCommon<T> = T extends () => infer U ? U : T;

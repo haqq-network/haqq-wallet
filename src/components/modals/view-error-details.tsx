@@ -3,7 +3,6 @@ import React, {memo, useCallback, useMemo} from 'react';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {Platform, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {BottomPopupContainer} from '@app/components/bottom-popups';
 import {Button, ButtonVariant, Spacer, Text} from '@app/components/ui';
 import {createTheme, hideModal} from '@app/helpers';
@@ -11,6 +10,7 @@ import {I18N, getText} from '@app/i18n';
 import {sendNotification} from '@app/services';
 import {RemoteConfig} from '@app/services/remote-config';
 import {getAppVersion} from '@app/services/version';
+import {Color} from '@app/theme';
 import {ModalType, Modals} from '@app/types';
 
 export const ViewErrorDetails = memo(

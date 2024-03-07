@@ -2,8 +2,8 @@ import React, {useCallback} from 'react';
 
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {Color} from '@app/theme';
 
 import {LinkPreviewProps} from './link-preview';
 import {SiteIconPreview, SiteIconPreviewSize} from './site-icon-preview';

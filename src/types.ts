@@ -24,7 +24,6 @@ import {
 } from 'react-native';
 import {Results} from 'realm';
 
-import {Color} from '@app/colors';
 import {CaptchaType} from '@app/components/captcha';
 import {TotalValueTabNames} from '@app/components/total-value-info';
 import {IconProps} from '@app/components/ui';
@@ -36,6 +35,7 @@ import {SignUpStackRoutes, WelcomeStackRoutes} from '@app/route-types';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {SssProviders} from '@app/services/provider-sss';
+import {Color} from '@app/theme';
 import {WalletConnectApproveConnectionEvent} from '@app/types/wallet-connect';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 

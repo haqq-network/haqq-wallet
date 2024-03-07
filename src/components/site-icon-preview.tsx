@@ -4,8 +4,8 @@ import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import Animated, {FadeIn} from 'react-native-reanimated';
 import {SvgUri} from 'react-native-svg';
 
-import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {Color} from '@app/theme';
 
 import {ImageWrapper} from './image-wrapper';
 import {First, Text} from './ui';

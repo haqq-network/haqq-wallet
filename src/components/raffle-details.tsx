@@ -2,10 +2,10 @@ import React, {useCallback, useMemo, useState} from 'react';
 
 import {Image, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {cleanNumber, createTheme} from '@app/helpers';
 import {useTimer} from '@app/hooks/use-timer';
 import {I18N} from '@app/i18n';
+import {Color} from '@app/theme';
 import {Raffle, TimerUpdateInterval} from '@app/types';
 import {WEI} from '@app/variables/common';
 

@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react';
 
-import {Color} from '@app/colors';
 import {Icon, IconsName} from '@app/components/ui';
+import {Color} from '@app/theme';
 
 import {NewsButton} from '../news-button';
 

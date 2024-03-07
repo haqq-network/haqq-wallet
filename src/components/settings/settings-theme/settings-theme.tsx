@@ -1,11 +1,10 @@
 import React from 'react';
 
-import {AppTheme} from '@theme';
-
 import {ThemedButton} from '@app/components/settings/settings-theme/theme-button';
 import {CustomHeader, PopupContainer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {AppTheme} from '@app/theme';
 
 export type SettingsThemeProps = {
   theme: AppTheme;

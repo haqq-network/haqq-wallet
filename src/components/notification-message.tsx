@@ -2,9 +2,9 @@ import React, {useCallback, useEffect, useRef} from 'react';
 
 import {Animated, TouchableWithoutFeedback} from 'react-native';
 
-import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
 import {createTheme, getWindowWidth} from '@app/helpers';
+import {Color} from '@app/theme';
 import {asyncTiming, sleep} from '@app/utils';
 import {SHADOW_COLOR_2} from '@app/variables/common';
 

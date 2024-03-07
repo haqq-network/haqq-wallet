@@ -3,13 +3,13 @@ import React from 'react';
 import {View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {Color} from '@app/colors';
 import {JsonRpcSignInfo} from '@app/components/json-rpc-sign-info';
 import {JsonRpcTransactionInfo} from '@app/components/json-rpc-transaction-info';
 import {Button, ButtonVariant, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {Color} from '@app/theme';
 import {
   JsonRpcMetadata,
   PartialJsonRpcRequest,

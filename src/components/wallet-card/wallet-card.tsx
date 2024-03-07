@@ -3,11 +3,11 @@ import React, {useState} from 'react';
 import {SessionTypes} from '@walletconnect/types';
 import {useWindowDimensions} from 'react-native';
 
-import {Color} from '@app/colors';
 import {Card, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useIsBalancesFirstSync} from '@app/hooks/use-is-balances-sync';
 import {Wallet} from '@app/models/wallet';
+import {Color} from '@app/theme';
 import {BalanceData} from '@app/types';
 import {SHADOW_COLOR_1} from '@app/variables/common';
 

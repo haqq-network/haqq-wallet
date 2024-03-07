@@ -2,11 +2,11 @@ import React from 'react';
 
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {QrTopView} from '@app/components/modals/qr/qr-top-view';
 import {Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Color} from '@app/theme';
 
 export type QrNoAccessProps = {
   onClose: () => void;

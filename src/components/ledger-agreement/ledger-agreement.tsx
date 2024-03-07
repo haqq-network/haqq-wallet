@@ -1,9 +1,7 @@
 import React, {useMemo} from 'react';
 
-import {AppTheme} from '@theme';
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {LottieWrap} from '@app/components/lottie';
 import {
   Button,
@@ -16,6 +14,7 @@ import {Terms} from '@app/components/ui/terms';
 import {createTheme, getWindowWidth} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {AppTheme, Color} from '@app/theme';
 
 export type LedgerAgreementProps = {
   onDone: () => void;

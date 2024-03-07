@@ -1,6 +1,5 @@
 import React from 'react';
 
-import {Color} from '@app/colors';
 import {
   DataContent,
   Icon,
@@ -8,6 +7,7 @@ import {
   PopupContainer,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {Color} from '@app/theme';
 import {AppLanguage} from '@app/types';
 
 type SettingsLanguageProps = {

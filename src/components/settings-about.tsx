@@ -3,10 +3,10 @@ import React, {memo} from 'react';
 import {ScrollView, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {Color} from '@app/colors';
 import {LottieWrap, Spacer, Text} from '@app/components/ui';
 import {createTheme, getWindowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Color} from '@app/theme';
 import {PRIVACY_POLICY, TERMS_OF_CONDITIONS} from '@app/variables/common';
 
 import {SettingsAboutButton} from './settings-about-button';

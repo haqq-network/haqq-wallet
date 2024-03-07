@@ -3,10 +3,10 @@ import React, {useMemo} from 'react';
 import {isFuture} from 'date-fns';
 import {View, useWindowDimensions} from 'react-native';
 
-import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {Balance} from '@app/services/balance';
+import {Color} from '@app/theme';
 
 import {DashedLine} from './dashed-line';
 import {Icon, IconButton, IconsName, Spacer, Text} from './ui';

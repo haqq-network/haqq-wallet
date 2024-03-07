@@ -2,11 +2,11 @@ import React, {useEffect, useState} from 'react';
 
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {NumericKeyboard} from '@app/components/pin/numeric-keyboard';
 import {ErrorText, PopupContainer, Spacer, Text} from '@app/components/ui';
 import {createTheme, verticalScale} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Color} from '@app/theme';
 
 interface OnboardingSetupPinProps {
   onKeyboard: (value: number) => void;

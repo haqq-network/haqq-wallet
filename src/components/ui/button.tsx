@@ -15,9 +15,9 @@ import {
 } from 'react-native';
 import {useTimer} from 'use-timer';
 
-import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Color, getColor} from '@app/theme';
 import {ColorType} from '@app/types';
 import {sleep} from '@app/utils';
 

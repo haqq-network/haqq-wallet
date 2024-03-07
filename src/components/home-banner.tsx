@@ -10,8 +10,8 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-import {Color, getColor} from '@app/colors';
 import {Banner, BannerButton, BannerButtonEvent} from '@app/models/banner';
+import {Color, getColor} from '@app/theme';
 import {sleep} from '@app/utils';
 import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
 

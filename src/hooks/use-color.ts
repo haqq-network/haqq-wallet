@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Color, getColor} from '@app/colors';
+import {Color, getColor} from '@app/theme';
 
 import {useTheme} from './use-theme';
 

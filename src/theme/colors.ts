@@ -1,5 +1,3 @@
-import {AppTheme, Theme} from '@theme';
-
 import {
   DARK_APPLE_BG,
   DARK_APPLE_TEXT,
@@ -85,6 +83,9 @@ import {
   SHADOW_COLOR_3_LIGHT,
   TRANSPARENT,
 } from '@app/variables/common';
+
+import {Theme} from './theme';
+import {AppTheme} from './types';
 
 export enum Color {
   transparent = 'transparent',

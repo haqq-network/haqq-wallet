@@ -1,10 +1,10 @@
 import React, {useCallback} from 'react';
 
-import {Color} from '@app/colors';
 import {Icon, IconButton} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
 import {HomeFeedStackParamList, HomeFeedStackRoutes} from '@app/route-types';
+import {Color} from '@app/theme';
 
 export const GovernanceButton = () => {
   const navigation = useTypedNavigation<HomeFeedStackParamList>();

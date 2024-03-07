@@ -2,7 +2,6 @@ import React, {useCallback, useEffect, useMemo} from 'react';
 
 import {formatDistance} from 'date-fns';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -17,6 +16,7 @@ import {createTheme} from '@app/helpers';
 import {useSumAmount} from '@app/hooks/use-sum-amount';
 import {I18N} from '@app/i18n';
 import {Balance} from '@app/services/balance';
+import {Color} from '@app/theme';
 import {CURRENCY_NAME} from '@app/variables/common';
 
 export type StakingDelegateFormProps = {

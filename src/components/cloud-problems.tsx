@@ -2,7 +2,6 @@ import React, {memo, useMemo} from 'react';
 
 import {Image, StyleSheet, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -12,6 +11,7 @@ import {
 } from '@app/components/ui';
 import {I18N} from '@app/i18n';
 import {SssProviders} from '@app/services/provider-sss';
+import {Color} from '@app/theme';
 import {ProviderNameMap} from '@app/variables/sss';
 
 type Props = {

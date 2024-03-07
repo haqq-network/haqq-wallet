@@ -1,9 +1,8 @@
 import {useEffect, useState} from 'react';
 
-import {Theme} from '@theme';
-
 import {app} from '@app/contexts/app';
 import {Events} from '@app/events';
+import {Theme} from '@app/theme';
 
 export function useTheme() {
   const [theme, setTheme] = useState(Theme.currentTheme);

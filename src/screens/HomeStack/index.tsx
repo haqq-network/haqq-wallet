@@ -7,7 +7,6 @@ import {
 } from '@react-navigation/native-stack';
 import {StatusBar} from 'react-native';
 
-import {Color} from '@app/colors';
 import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
 import {Spacer} from '@app/components/ui';
 import {popupScreenOptionsWithMargin} from '@app/helpers';
@@ -41,6 +40,7 @@ import {ValueSelectorScreen} from '@app/screens/value-selector-screen';
 import {WalletSelectorScreen} from '@app/screens/wallet-selector-screen';
 import {Web3BrowserPopup as Web3BrowserPopupScreen} from '@app/screens/web3-browser-popup';
 import {SignInStack} from '@app/screens/WelcomeStack/SignInStack';
+import {Color} from '@app/theme';
 
 const navigatorOptions: NativeStackNavigationOptions = {
   gestureEnabled: false,

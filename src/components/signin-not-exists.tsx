@@ -3,9 +3,9 @@ import React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {Color} from '@app/colors';
 import {I18N} from '@app/i18n';
 import {SssProviders} from '@app/services/provider-sss';
+import {Color} from '@app/theme';
 
 import {Button, ButtonVariant, Spacer, Text} from './ui';
 

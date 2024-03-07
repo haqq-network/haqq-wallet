@@ -5,11 +5,11 @@ import {NavigationAction} from '@react-navigation/routers';
 import {Image, ImageSourcePropType, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {Color} from '@app/colors';
 import {GoBackPopupButton} from '@app/components/popup/go-back-popup-button';
 import {SpacerPopupButton} from '@app/components/popup/spacer-popup-button';
 import {Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers/create-theme';
+import {Color} from '@app/theme';
 import {ScreenOptionType} from '@app/types';
 import {IS_ANDROID} from '@app/variables/common';
 

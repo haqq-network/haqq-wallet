@@ -3,7 +3,6 @@ import React, {useCallback, useMemo, useState} from 'react';
 import {utils} from 'ethers';
 import {Keyboard, ScrollView, StyleSheet} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -16,6 +15,7 @@ import {
 import {hideModal} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {SystemDialog} from '@app/services/system-dialog';
+import {Color, getColor} from '@app/theme';
 import {ModalType} from '@app/types';
 
 interface SinginRestoreWalletProps {

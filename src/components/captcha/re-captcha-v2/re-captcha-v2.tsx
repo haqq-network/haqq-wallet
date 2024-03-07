@@ -7,11 +7,11 @@ import {
   WebViewMessageEvent,
 } from 'react-native-webview/lib/WebViewTypes';
 
-import {Color} from '@app/colors';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {createTheme, hideModal} from '@app/helpers';
 import {WebViewLogger} from '@app/helpers/webview-logger';
 import {getUserAgent} from '@app/services/version';
+import {Color} from '@app/theme';
 import {ModalType} from '@app/types';
 import {openInAppBrowser} from '@app/utils';
 

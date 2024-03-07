@@ -2,7 +2,6 @@ import React, {useCallback, useEffect} from 'react';
 
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {BottomPopupContainer} from '@app/components/bottom-popups';
 import {
   Button,
@@ -15,6 +14,7 @@ import {createTheme, openURL} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {VariablesBool} from '@app/models/variables-bool';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {Color} from '@app/theme';
 import {ModalType, Modals} from '@app/types';
 import {STRINGS, TERMS_OF_CONDITIONS} from '@app/variables/common';
 

@@ -2,12 +2,12 @@ import React from 'react';
 
 import {FlatList, View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
 import {NoTransactionsIcon, Text} from '@app/components/ui';
 import {WalletRow} from '@app/components/wallet-row';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {Color, getColor} from '@app/theme';
 
 type SettingsAccountsProps = {
   onPressRow: (address: string) => void;

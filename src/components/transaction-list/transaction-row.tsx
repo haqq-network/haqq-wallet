@@ -3,13 +3,13 @@ import React, {memo, useCallback, useMemo} from 'react';
 import {toJS} from 'mobx';
 import {TouchableWithoutFeedback, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {CardSmall, DataContent, Icon, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
+import {Color} from '@app/theme';
 import {STRINGS} from '@app/variables/common';
 
 import {TransactionStatus} from './transaction-status';

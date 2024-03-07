@@ -2,11 +2,11 @@ import React from 'react';
 
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {Icon, IconButton, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {moderateScale} from '@app/helpers/scaling-utils';
 import {I18N} from '@app/i18n';
+import {Color} from '@app/theme';
 
 export type NumericKeyboardProps = {
   onPress: (value: number) => void;

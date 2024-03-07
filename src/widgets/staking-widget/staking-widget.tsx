@@ -2,7 +2,6 @@ import React, {memo, useCallback, useMemo, useState} from 'react';
 
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {Button, ButtonSize, ButtonVariant, Text} from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
 import {WidgetHeader} from '@app/components/ui/widget-header';
@@ -10,6 +9,7 @@ import {createTheme} from '@app/helpers';
 import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {I18N, getText} from '@app/i18n';
 import {Balance} from '@app/services/balance';
+import {Color} from '@app/theme';
 
 type Props = {
   onPress: () => void;

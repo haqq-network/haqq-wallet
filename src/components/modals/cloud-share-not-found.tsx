@@ -5,7 +5,6 @@ import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {observer} from 'mobx-react';
 import {Image, Platform, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {BottomPopupContainer} from '@app/components/bottom-popups';
 import {
   Button,
@@ -25,6 +24,7 @@ import {Wallet} from '@app/models/wallet';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {onLoginApple, onLoginGoogle} from '@app/services/provider-sss';
 import {RemoteConfig} from '@app/services/remote-config';
+import {Color} from '@app/theme';
 import {ModalType, Modals} from '@app/types';
 
 export const CloudShareNotFound = observer(

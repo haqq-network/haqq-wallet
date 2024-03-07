@@ -10,8 +10,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {Color} from '@app/theme';
 import {ANIMATION_DURATION, ANIMATION_TYPE} from '@app/variables/common';
 
 const timingOutAnimationConfig: WithTimingConfig = {

@@ -2,7 +2,6 @@ import React from 'react';
 
 import {Image, StyleSheet} from 'react-native';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -11,6 +10,7 @@ import {
   Text,
 } from '@app/components/ui';
 import {I18N} from '@app/i18n';
+import {Color} from '@app/theme';
 
 interface SignNotExistsProps {
   onPrimaryPress(): void;

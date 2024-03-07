@@ -2,7 +2,6 @@ import React, {useCallback, useEffect, useState} from 'react';
 
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {NumericKeyboard} from '@app/components/pin/numeric-keyboard';
 import {ErrorText, PopupContainer, Spacer, Text} from '@app/components/ui';
 import {createTheme, verticalScale} from '@app/helpers';
@@ -13,6 +12,7 @@ import {
   OnboardingStackRoutes,
 } from '@app/route-types';
 import {vibrate} from '@app/services/haptic';
+import {Color} from '@app/theme';
 
 type OnboardingRepeatPinProps = {
   onSetPin: (pin: string) => void;

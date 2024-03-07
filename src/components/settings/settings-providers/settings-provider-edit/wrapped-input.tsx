@@ -2,10 +2,10 @@ import React, {useCallback} from 'react';
 
 import {NativeSyntheticEvent, TextInputFocusEventData} from 'react-native';
 
-import {Color} from '@app/colors';
 import {Icon, IconButton, TextField} from '@app/components/ui';
 import {I18N} from '@app/i18n';
 import {ProviderKeys} from '@app/models/provider';
+import {Color} from '@app/theme';
 
 export type WrappedInputProps = {
   autoFocus?: boolean;

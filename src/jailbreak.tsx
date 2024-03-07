@@ -1,13 +1,12 @@
 import React, {useEffect} from 'react';
 
-import {AppTheme} from '@theme';
 import {Image, SafeAreaView, View} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 
 import {Spacer, StatusBarColor, Text} from '@app/components/ui';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
+import {AppTheme, Color, getColor} from '@app/theme';
 
-import {Color, getColor} from './colors';
 import {createTheme} from './helpers';
 import {useTheme} from './hooks';
 import {I18N} from './i18n';

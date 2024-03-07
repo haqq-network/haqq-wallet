@@ -1,6 +1,5 @@
 import React, {useEffect, useMemo} from 'react';
 
-import {AppTheme} from '@theme';
 import {useWindowDimensions} from 'react-native';
 
 import {
@@ -15,6 +14,7 @@ import {createTheme} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {AppTheme} from '@app/theme';
 
 type BackupFinishProps = {
   onSubmit: () => void;

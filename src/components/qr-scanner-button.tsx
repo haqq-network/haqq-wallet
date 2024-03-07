@@ -4,11 +4,11 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {StyleSheet} from 'react-native';
 
-import {Color} from '@app/colors';
 import {Icon, IconButton} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
+import {Color} from '@app/theme';
 import {ModalType, RootStackParamList} from '@app/types';
 
 export const QrScannerButton = () => {

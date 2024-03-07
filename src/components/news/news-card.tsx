@@ -4,8 +4,8 @@ import {format} from 'date-fns';
 import {ImageBackground, TouchableWithoutFeedback, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-import {Color, getColor} from '@app/colors';
 import {createTheme, getWindowWidth} from '@app/helpers';
+import {Color, getColor} from '@app/theme';
 import {BaseNewsItem} from '@app/types';
 import {addOpacityToColor} from '@app/utils';
 import {MAGIC_NEWS_CARD_HEIGHT} from '@app/variables/common';

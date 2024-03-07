@@ -1,9 +1,7 @@
 import React, {useMemo} from 'react';
 
-import {AppTheme} from '@theme';
 import {StyleSheet} from 'react-native';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -16,6 +14,7 @@ import {
 } from '@app/components/ui';
 import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {AppTheme, Color} from '@app/theme';
 
 interface BackupWarningProps {
   onPressBackup: () => void;

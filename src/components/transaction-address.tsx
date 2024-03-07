@@ -3,7 +3,6 @@ import React, {useCallback, useState} from 'react';
 import {ListRenderItem, View} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 
-import {Color} from '@app/colors';
 import {ListContact} from '@app/components/list-contact';
 import {
   Button,
@@ -28,6 +27,7 @@ import {Contact} from '@app/models/contact';
 import {Wallet} from '@app/models/wallet';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {SystemDialog} from '@app/services/system-dialog';
+import {Color} from '@app/theme';
 import {showUnrecognizedDataAttention} from '@app/utils';
 
 import {WalletRow, WalletRowTypes} from './wallet-row';

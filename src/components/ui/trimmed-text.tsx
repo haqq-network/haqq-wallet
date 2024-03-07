@@ -1,7 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
-import {Color} from '@app/colors';
 import {I18N, getText} from '@app/i18n';
+import {Color} from '@app/theme';
 
 import {First} from './first';
 import {Text, TextProps} from './text';

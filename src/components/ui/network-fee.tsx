@@ -1,9 +1,9 @@
 import React, {useMemo} from 'react';
 
-import {Color} from '@app/colors';
 import {Text} from '@app/components/ui/text';
 import {I18N, getText} from '@app/i18n';
 import {Balance} from '@app/services/balance';
+import {Color} from '@app/theme';
 import {LONG_NUM_PRECISION} from '@app/variables/common';
 
 export type NetworkFeeProps = {

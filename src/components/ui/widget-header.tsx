@@ -2,8 +2,8 @@ import React from 'react';
 
 import {StyleSheet, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {Icon, IconsName, Spacer, Text} from '@app/components/ui';
+import {Color} from '@app/theme';
 
 type Props = {
   icon?: IconsName | keyof typeof IconsName;

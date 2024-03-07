@@ -6,17 +6,16 @@ import React, {
   useState,
 } from 'react';
 
-import {AppTheme} from '@theme';
 import type AnimatedLottieView from 'lottie-react-native';
 import Lottie from 'lottie-react-native';
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {InfoBlockAmount, Inline, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Balance} from '@app/services/balance';
+import {AppTheme, Color} from '@app/theme';
 import {IS_IOS} from '@app/variables/common';
 
 interface StakingActiveProps {

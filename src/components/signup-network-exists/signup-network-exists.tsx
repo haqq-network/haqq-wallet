@@ -2,7 +2,6 @@ import React, {useCallback, useState} from 'react';
 
 import {Image, Platform} from 'react-native';
 
-import {Color} from '@app/colors';
 import {BottomSheet} from '@app/components/bottom-sheet';
 import {
   Button,
@@ -14,6 +13,7 @@ import {
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {SssProviders} from '@app/services/provider-sss';
+import {Color} from '@app/theme';
 import {capitalize} from '@app/utils';
 
 export type SignupNetworkExistsProps = {

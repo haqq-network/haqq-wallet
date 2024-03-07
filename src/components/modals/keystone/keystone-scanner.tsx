@@ -6,7 +6,6 @@ import {BarCodeReadEvent} from 'react-native-camera';
 // @ts-ignore
 import {QRscanner} from 'react-native-qr-decode-image-camera';
 
-import {Color, getColor} from '@app/colors';
 import {First, Text} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
@@ -22,6 +21,7 @@ import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N, getText} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {SystemDialog} from '@app/services/system-dialog';
+import {Color, getColor} from '@app/theme';
 import {ModalType, Modals} from '@app/types';
 import {
   IS_IOS,

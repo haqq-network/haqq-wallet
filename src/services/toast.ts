@@ -1,7 +1,7 @@
-import {Theme} from '@theme';
 import {NativeModules} from 'react-native';
 
 import {I18N, getText} from '@app/i18n';
+import {Theme} from '@app/theme';
 
 const {RNToast} = NativeModules;
 

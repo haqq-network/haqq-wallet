@@ -4,11 +4,11 @@ import {PhishingController} from '@metamask/phishing-controller';
 import {FlatList, ListRenderItem, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
-import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {useTesterModeEnabled} from '@app/hooks/use-tester-mode-enabled';
 import {I18N, getText} from '@app/i18n';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
+import {Color} from '@app/theme';
 import {Link} from '@app/types';
 
 import {LinkPreview, LinkPreviewVariant} from './link-preview';

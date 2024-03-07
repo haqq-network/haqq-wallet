@@ -2,7 +2,6 @@ import React, {useCallback} from 'react';
 
 import {Alert, Image, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonSize,
@@ -13,6 +12,7 @@ import {
 import {createTheme, getWindowWidth} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks/use-theme-selector';
 import {I18N, getText} from '@app/i18n';
+import {Color} from '@app/theme';
 import {SHADOW_COLOR_1} from '@app/variables/common';
 
 export type BackupNotificationProps = {

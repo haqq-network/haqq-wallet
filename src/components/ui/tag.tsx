@@ -2,10 +2,10 @@ import React, {memo} from 'react';
 
 import {StyleProp, TouchableOpacity, ViewStyle} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
 import {Text} from '@app/components/ui/text';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Color, getColor} from '@app/theme';
 
 const TagColors = {
   active: {bg: Color.graphicGreen1, text: Color.textBase3},

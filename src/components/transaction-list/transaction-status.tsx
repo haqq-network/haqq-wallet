@@ -2,10 +2,10 @@ import React, {useMemo} from 'react';
 
 import {ImageStyle, StyleProp, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {Icon, IconsName, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Color} from '@app/theme';
 import {IndexerTransactionStatus} from '@app/types';
 
 type TransactionStatusProps = {

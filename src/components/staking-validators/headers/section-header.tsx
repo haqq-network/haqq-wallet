@@ -2,9 +2,9 @@ import React from 'react';
 
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {Text} from '@app/components/ui/text';
 import {createTheme} from '@app/helpers';
+import {Color} from '@app/theme';
 
 export type SectionHeaderProps = {title: string};
 export const SectionHeader = ({title}: SectionHeaderProps) => {

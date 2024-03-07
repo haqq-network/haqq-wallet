@@ -2,8 +2,8 @@ import React from 'react';
 
 import {useNavigation} from '@react-navigation/native';
 
-import {Color} from '@app/colors';
 import {Icon, IconButton} from '@app/components/ui';
+import {Color} from '@app/theme';
 import {DEFAULT_HITSLOP} from '@app/variables/common';
 
 type Props = {

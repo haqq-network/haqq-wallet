@@ -2,7 +2,6 @@ import React from 'react';
 
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {
   First,
   Icon,
@@ -15,6 +14,7 @@ import {Placeholder} from '@app/components/ui/placeholder';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Balance} from '@app/services/balance';
+import {Color} from '@app/theme';
 
 type BalanceInfoDetailsProps = {
   isBalancesFirstSync: boolean;

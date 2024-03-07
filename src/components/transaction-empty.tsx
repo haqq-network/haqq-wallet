@@ -2,9 +2,9 @@ import React from 'react';
 
 import {StyleSheet, View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
 import {NoTransactionsIcon, Text} from '@app/components/ui';
 import {I18N} from '@app/i18n';
+import {Color, getColor} from '@app/theme';
 
 export const TransactionEmpty = () => {
   return (

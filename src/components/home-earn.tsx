@@ -3,10 +3,10 @@ import React, {useCallback, useMemo, useRef} from 'react';
 import {RefreshControl, ScrollView, TouchableOpacity, View} from 'react-native';
 import {RiveRef} from 'rive-react-native';
 
-import {Color} from '@app/colors';
 import {cleanNumber, createTheme} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {Color} from '@app/theme';
 import {Raffle} from '@app/types';
 import {SHADOW_COLOR_1} from '@app/variables/common';
 

@@ -2,7 +2,6 @@ import React, {useMemo} from 'react';
 
 import {Image, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -19,6 +18,7 @@ import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Balance} from '@app/services/balance';
 import {EthNetwork} from '@app/services/eth-network';
+import {Color} from '@app/theme';
 import {NftItem, TransactionResponse} from '@app/types';
 
 type TransactionFinishProps = {

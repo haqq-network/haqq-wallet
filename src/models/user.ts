@@ -1,10 +1,10 @@
 import {EventEmitter} from 'events';
 
 import {ENVIRONMENT, IS_DEVELOPMENT} from '@env';
-import {AppTheme} from '@theme';
 import {addSeconds, isAfter, subSeconds} from 'date-fns';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
+import {AppTheme} from '@app/theme';
 import {generateUUID} from '@app/utils';
 
 import {realm} from './index';

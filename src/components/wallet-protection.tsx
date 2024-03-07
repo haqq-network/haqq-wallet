@@ -2,7 +2,6 @@ import React from 'react';
 
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -17,6 +16,7 @@ import {
 import {createTheme} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {Color} from '@app/theme';
 
 export interface WalletProtectionProps {
   onPressPhrase(): void;

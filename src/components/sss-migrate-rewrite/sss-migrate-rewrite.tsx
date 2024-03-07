@@ -2,7 +2,6 @@ import React, {useCallback, useState} from 'react';
 
 import {Image, StyleSheet, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {BottomSheet} from '@app/components/bottom-sheet';
 import {
   Button,
@@ -13,6 +12,7 @@ import {
 } from '@app/components/ui';
 import {I18N} from '@app/i18n';
 import {SssProviders} from '@app/services/provider-sss';
+import {Color} from '@app/theme';
 import {capitalize} from '@app/utils';
 
 export type SssMigrateAgreementProps = {

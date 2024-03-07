@@ -3,7 +3,6 @@ import React, {useCallback, useState} from 'react';
 import {observer} from 'mobx-react';
 import {FlatList, ListRenderItem, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {ImageWrapper} from '@app/components/image-wrapper';
 import {
   Icon,
@@ -16,6 +15,7 @@ import {SearchLine} from '@app/components/ui/custom-header/search-line';
 import {createTheme} from '@app/helpers';
 import {Currencies} from '@app/models/currencies';
 import {Currency} from '@app/models/types';
+import {Color} from '@app/theme';
 
 export const SettingsCurrency = observer(() => {
   const [search, setSearch] = useState('');

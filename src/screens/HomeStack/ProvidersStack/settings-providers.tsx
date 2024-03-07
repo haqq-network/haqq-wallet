@@ -1,6 +1,5 @@
 import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
-import {Color} from '@app/colors';
 import {SettingsProviders} from '@app/components/settings/settings-providers';
 import {CustomHeader} from '@app/components/ui';
 import {app} from '@app/contexts';
@@ -9,6 +8,7 @@ import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {ProvidersStackParamList, ProvidersStackRoutes} from '@app/route-types';
+import {Color} from '@app/theme';
 
 export const SettingsProvidersScreen = memo(() => {
   const navigation = useTypedNavigation<ProvidersStackParamList>();

@@ -1,6 +1,5 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -13,6 +12,7 @@ import {
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {SssProviders} from '@app/services/provider-sss';
+import {Color} from '@app/theme';
 
 import {SocialButton, SocialButtonVariant} from '../social-button';
 

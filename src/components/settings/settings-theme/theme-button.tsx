@@ -1,12 +1,11 @@
 import React from 'react';
 
-import {AppTheme} from '@theme';
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {DataContent, Icon, IconButton} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {AppTheme, Color} from '@app/theme';
 
 export type ThemeButtonProps = {
   value: AppTheme;

@@ -2,8 +2,8 @@ import React from 'react';
 
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 
-import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {Color} from '@app/theme';
 
 import {Text, TextProps} from './text';
 

@@ -7,11 +7,11 @@ import {NativeSyntheticEvent} from 'react-native/Libraries/Types/CoreEventTypes'
 import Markdown from 'react-native-markdown-package';
 import SimpleMarkdown from 'simple-markdown';
 
-import {Color} from '@app/colors';
 import {PopupContainer, Spacer, Text} from '@app/components/ui';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {createTheme, openURL} from '@app/helpers';
 import {News} from '@app/models/news';
+import {Color} from '@app/theme';
 import {AdjustEvents} from '@app/types';
 import {makeID} from '@app/utils';
 

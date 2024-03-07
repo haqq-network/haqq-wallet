@@ -2,11 +2,11 @@ import React, {useMemo} from 'react';
 
 import {ScrollView, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {First, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {Color} from '@app/theme';
 import {JsonRpcMetadata, PartialJsonRpcRequest} from '@app/types';
 import {
   getHostnameFromUrl,

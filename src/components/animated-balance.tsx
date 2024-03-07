@@ -4,9 +4,9 @@ import React, {Component} from 'react';
 import {View} from 'react-native';
 import Timer from 'react-timer-mixin';
 
-import {Color, getColor} from '@app/colors';
 import {Text} from '@app/components/ui';
 import {cleanNumber, createTheme} from '@app/helpers';
+import {Color, getColor} from '@app/theme';
 import {CURRENCY_NAME} from '@app/variables/common';
 
 type Props = {

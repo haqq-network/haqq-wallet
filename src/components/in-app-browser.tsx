@@ -10,7 +10,6 @@ import {
   WebViewNavigationEvent,
 } from 'react-native-webview/lib/WebViewTypes';
 
-import {Color} from '@app/colors';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {createTheme} from '@app/helpers';
@@ -25,6 +24,7 @@ import {
 } from '@app/helpers/web3-browser-utils';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useWebViewSharedProps} from '@app/hooks/use-webview-shared-props';
+import {Color} from '@app/theme';
 import {getHostnameFromUrl} from '@app/utils';
 import {IS_ANDROID} from '@app/variables/common';
 

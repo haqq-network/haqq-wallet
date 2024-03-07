@@ -2,8 +2,8 @@ import React, {useCallback, useMemo} from 'react';
 
 import {ImageBackground, TouchableOpacity, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {cleanNumber, createTheme} from '@app/helpers';
+import {Color} from '@app/theme';
 import {addOpacityToColor} from '@app/utils';
 import {WEI} from '@app/variables/common';
 

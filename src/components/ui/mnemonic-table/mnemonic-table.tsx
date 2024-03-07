@@ -2,13 +2,13 @@ import React, {useMemo} from 'react';
 
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {SecurityView} from '@app/components/security-view';
 import {CopyButton} from '@app/components/ui/copy-button';
 import {Icon} from '@app/components/ui/icon';
 import {Text} from '@app/components/ui/text';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Color} from '@app/theme';
 
 import {MnemonicWord} from './mnemonic-word';
 

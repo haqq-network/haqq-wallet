@@ -3,9 +3,9 @@ import React, {useCallback, useMemo} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
-import {Color} from '@app/colors';
 import {CardSmall, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {Color} from '@app/theme';
 
 import {WalletRowProps} from './wallet-row';
 

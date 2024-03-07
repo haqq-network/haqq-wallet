@@ -2,8 +2,8 @@ import React, {ReactNode} from 'react';
 
 import {TouchableOpacity, TouchableOpacityProps} from 'react-native';
 
-import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {Color} from '@app/theme';
 
 type Props = {
   children: ReactNode;

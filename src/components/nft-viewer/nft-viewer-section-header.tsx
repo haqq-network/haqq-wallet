@@ -2,8 +2,8 @@ import React, {useCallback} from 'react';
 
 import {Image, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {Color} from '@app/theme';
 import {NftCollection} from '@app/types';
 
 import {MenuNavigationButton, Spacer, Text} from '../ui';

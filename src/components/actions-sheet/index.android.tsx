@@ -13,10 +13,10 @@ import Animated, {
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers/create-theme';
 import {I18N} from '@app/i18n';
+import {Color} from '@app/theme';
 
 import {ActionsSheetProps} from '.';
 

@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 
 import {Image, ImageStyle, StyleProp, StyleSheet} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color, getColor} from '@app/theme';
 
 export enum IconsName {
   address_book = 'address_book',

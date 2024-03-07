@@ -3,11 +3,11 @@ import React, {PropsWithChildren, useCallback} from 'react';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {TouchableWithoutFeedback, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {Icon, IconsName} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {sendNotification} from '@app/services';
+import {Color} from '@app/theme';
 
 type AddressInfoProps = {
   copyValue?: string;

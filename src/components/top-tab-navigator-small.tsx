@@ -3,8 +3,8 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 
-import {Color} from '@app/colors';
 import {getText} from '@app/i18n';
+import {Color} from '@app/theme';
 import {isI18N} from '@app/utils';
 
 import {TopTabNavigatorExtendedProps} from './top-tab-navigator';
