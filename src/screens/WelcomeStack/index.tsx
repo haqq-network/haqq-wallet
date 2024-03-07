@@ -7,7 +7,6 @@ import {
 } from '@react-navigation/native-stack';
 
 import {getModalScreenOptions} from '@app/helpers/get-modal-screen-options';
-import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {WelcomeStackParamList, WelcomeStackRoutes} from '@app/route-types';
 import {basicScreenOptions} from '@app/screens';
 import {DeviceStack} from '@app/screens/DeviceStack';
@@ -47,15 +46,15 @@ const WelcomeStack = memo(({initialRouteName}: Props) => {
         animationDuration: FOR_DETOX ? 0 : 350,
       }}>
       <Stack.Screen
-        component={themeUpdaterHOC(WelcomeScreen)}
+        component={WelcomeScreen}
         name={WelcomeStackRoutes.Welcome}
       />
       <Stack.Screen
-        component={themeUpdaterHOC(WelcomeNewsScreen)}
+        component={WelcomeNewsScreen}
         name={WelcomeStackRoutes.WelcomeNews}
       />
       <Stack.Screen
-        component={themeUpdaterHOC(NewsDetailScreen)}
+        component={NewsDetailScreen}
         name={WelcomeStackRoutes.NewsDetail}
         options={newsDetailOptions}
       />
@@ -76,7 +75,7 @@ const WelcomeStack = memo(({initialRouteName}: Props) => {
       />
       <Stack.Screen
         name={WelcomeStackRoutes.InAppBrowser}
-        component={themeUpdaterHOC(InAppBrowserScreen)}
+        component={InAppBrowserScreen}
         options={inAppBrowserOptions}
       />
     </Stack.Navigator>

@@ -8,7 +8,6 @@ import {Platform} from 'react-native';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
-import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {I18N, getText} from '@app/i18n';
 import {
   OnboardingStackRoutes,
@@ -75,18 +74,18 @@ const SignUpStack = memo(() => {
     <Stack.Navigator screenOptions={popupScreenOptions}>
       <Stack.Screen
         name={SignUpStackRoutes.SignUpAgreement}
-        component={themeUpdaterHOC(SignUpAgreementScreen)}
+        component={SignUpAgreementScreen}
         options={hideBack}
         initialParams={{nextScreen: nextScreen}}
       />
       <Stack.Screen
         name={SignUpStackRoutes.SignUpNetworks}
-        component={themeUpdaterHOC(SignupNetworksScreen)}
+        component={SignupNetworksScreen}
         options={hideBack}
       />
       <Stack.Screen
         name={SignUpStackRoutes.SignUpNetworkExists}
-        component={themeUpdaterHOC(SignupNetworkExistsScreen)}
+        component={SignupNetworkExistsScreen}
         options={{
           ...hideBack,
           headerShown: Platform.OS === 'ios',
@@ -94,7 +93,7 @@ const SignUpStack = memo(() => {
       />
       <Stack.Screen
         name={SignUpStackRoutes.SignUpPin}
-        component={themeUpdaterHOC(SignupPinScreen)}
+        component={SignupPinScreen}
         options={screenOptionsTitleOnly}
       />
       <Stack.Screen
@@ -104,12 +103,12 @@ const SignUpStack = memo(() => {
       />
       <Stack.Screen
         name={SignUpStackRoutes.SignupCloudProblems}
-        component={themeUpdaterHOC(CloudProblemsScreen)}
+        component={CloudProblemsScreen}
         options={hideBack}
       />
       <Stack.Screen
         name={SignUpStackRoutes.SignupImportantInfo}
-        component={themeUpdaterHOC(SignUpImportantInfoScreen)}
+        component={SignUpImportantInfoScreen}
       />
 
       <Stack.Screen
