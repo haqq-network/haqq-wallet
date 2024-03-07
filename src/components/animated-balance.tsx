@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 
-// import SpinningNumbers from '@birdwingo/react-native-spinning-numbers';
 import {View} from 'react-native';
 import Timer from 'react-timer-mixin';
 

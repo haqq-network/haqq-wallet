@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 
 import {StyleSheet} from 'react-native';
 
@@ -11,7 +11,7 @@ import {
   Text,
 } from '@app/components/ui';
 import {I18N} from '@app/i18n';
-import {AppTheme, Theme} from '@app/theme';
+import {useThemeSelector} from '@app/theme';
 
 export type FinishProps = {
   title: I18N;
@@ -21,13 +21,10 @@ export type FinishProps = {
 };
 
 export const Finish = ({onFinish, testID, title}: FinishProps) => {
-  const animation = useMemo(() => {
-    if (Theme.currentTheme === AppTheme.dark) {
-      return require('@assets/animations/success-animation-dark.json');
-    }
-
-    return require('@assets/animations/success-animation-light.json');
-  }, [Theme.currentTheme]);
+  const animation = useThemeSelector({
+    dark: require('@assets/animations/success-animation-dark.json'),
+    light: require('@assets/animations/success-animation-light.json'),
+  });
 
   return (
     <PopupContainer testID={testID}>

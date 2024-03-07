@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo} from 'react';
+import React, {useEffect} from 'react';
 
 import {useWindowDimensions} from 'react-native';
 
@@ -12,7 +12,7 @@ import {
 } from '@app/components/ui';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {AppTheme, Theme, createTheme} from '@app/theme';
+import {createTheme, useThemeSelector} from '@app/theme';
 
 type BackupFinishProps = {
   onSubmit: () => void;
@@ -25,13 +25,10 @@ export const BackupFinish = ({onSubmit, testID}: BackupFinishProps) => {
     vibrate(HapticEffects.success);
   }, []);
 
-  const animation = useMemo(() => {
-    if (Theme.currentTheme === AppTheme.dark) {
-      return require('@assets/animations/backup-success-dark.json');
-    }
-
-    return require('@assets/animations/backup-success-light.json');
-  }, [Theme.currentTheme]);
+  const animation = useThemeSelector({
+    dark: require('@assets/animations/backup-success-dark.json'),
+    light: require('@assets/animations/backup-success-light.json'),
+  });
 
   return (
     <PopupContainer style={page.popupContainer} testID={testID}>

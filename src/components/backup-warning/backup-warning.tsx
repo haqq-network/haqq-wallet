@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 
 import {StyleSheet} from 'react-native';
 
@@ -13,7 +13,7 @@ import {
   Text,
 } from '@app/components/ui';
 import {I18N} from '@app/i18n';
-import {AppTheme, Color, Theme} from '@app/theme';
+import {Color, useThemeSelector} from '@app/theme';
 
 interface BackupWarningProps {
   onPressBackup: () => void;
@@ -21,12 +21,10 @@ interface BackupWarningProps {
 }
 
 export function BackupWarning({onPressBackup, testID}: BackupWarningProps) {
-  const animation = useMemo(() => {
-    if (Theme.currentTheme === AppTheme.dark) {
-      return require('@assets/animations/backup-start-dark.json');
-    }
-    return require('@assets/animations/backup-start-light.json');
-  }, [Theme.currentTheme]);
+  const animation = useThemeSelector({
+    dark: require('@assets/animations/backup-start-dark.json'),
+    light: require('@assets/animations/backup-start-light.json'),
+  });
 
   return (
     <PopupContainer style={styles.container} testID={testID}>

@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 
 import {View} from 'react-native';
 
@@ -13,19 +13,17 @@ import {
 import {Terms} from '@app/components/ui/terms';
 import {getWindowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {AppTheme, Color, Theme, createTheme} from '@app/theme';
+import {Color, createTheme, useThemeSelector} from '@app/theme';
 
 export type LedgerAgreementProps = {
   onDone: () => void;
 };
 
 export const LedgerAgreement = ({onDone}: LedgerAgreementProps) => {
-  const lottieAnimation = useMemo(() => {
-    if (Theme.currentTheme === AppTheme.dark) {
-      return require('@assets/animations/body-ledger-dark.json');
-    }
-    return require('@assets/animations/body-ledger-light.json');
-  }, [Theme.currentTheme]);
+  const lottieAnimation = useThemeSelector({
+    dark: require('@assets/animations/body-ledger-dark.json'),
+    light: require('@assets/animations/body-ledger-light.json'),
+  });
 
   return (
     <PopupContainer style={page.container}>
