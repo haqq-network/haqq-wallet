@@ -20,22 +20,22 @@ describe('Reset Wallet', () => {
   });
 
   it('should reset existing wallet', async () => {
-    await restoreWallet(mnemonic, PIN, 1);
+    await restoreWallet(mnemonic, PIN);
     await ensureWalletIsVisible(mnemonic);
     await device.reloadReactNative();
     await element(by.id('forgot_the_code')).tap();
     await element(by.id('reset_wallet')).tap();
     await element(by.label('Reset')).atIndex(0).tap();
-    await restoreWallet(mnemonic, PIN, 2);
+    await restoreWallet(mnemonic, PIN);
     await ensureWalletIsVisible(mnemonic);
   });
 
   it('should reset new wallet', async () => {
-    await createWallet(PIN, 1);
+    await createWallet(PIN);
     await device.reloadReactNative();
     await element(by.id('forgot_the_code')).tap();
     await element(by.id('reset_wallet')).tap();
     await element(by.label('Reset')).atIndex(0).tap();
-    await createWallet(PIN, 2);
+    await createWallet(PIN);
   });
 });

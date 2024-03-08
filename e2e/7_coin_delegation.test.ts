@@ -25,9 +25,10 @@ describe('Coin delegation and undelegation', () => {
   });
 
   it('Should delegate coins', async () => {
-    await waitFor(element(by.text('ISLM: 0.1')))
-      .toBeVisible()
+    await waitFor(element(by.id('current-total')))
+      .toHaveText('0.1 ISLM')
       .withTimeout(6 * 60_000);
+
     const stakingBanner = element(by.id('staking-widget'));
     await waitFor(stakingBanner)
       .toBeVisible()

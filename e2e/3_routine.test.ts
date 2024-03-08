@@ -52,8 +52,8 @@ describe('Routine', () => {
     const coinsAmount = '0.003';
     await getCoins(mnemonic, coinsAmount);
 
-    await waitFor(element(by.text('ISLM: 0.003')))
-      .toBeVisible()
+    await waitFor(element(by.id('current-total')))
+      .toHaveText('0.003 ISLM')
       .withTimeout(6 * 60_000);
     await element(by.id(`wallets_${wallet.address.toLowerCase()}_send`)).tap();
 
