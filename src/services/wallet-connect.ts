@@ -16,6 +16,7 @@ import {Events, WalletConnectEvents} from '@app/events';
 import {showModal} from '@app/helpers';
 import {getLeadingAccount} from '@app/helpers/get-leading-account';
 import {Initializable} from '@app/helpers/initializable';
+import {Url} from '@app/helpers/url';
 import {I18N, getText} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {VariablesBool} from '@app/models/variables-bool';
@@ -45,6 +46,7 @@ export class WalletConnect extends Initializable {
   private _core: ICore | null = null;
   private _initAttempts = 0;
   private _initStartTime = 0;
+  private _handledJsonRpcEvents = new Map<string, boolean>();
 
   public getActiveSessions() {
     return this._client?.engine?.signClient?.session?.getAll?.() || [];
@@ -97,12 +99,17 @@ export class WalletConnect extends Initializable {
       this
         // https://docs.walletconnect.com/2.0/javascript/web3wallet/wallet-usage#responding-to-session-requests
         ._walletConnectOnEvent('session_proposal', proposal => {
-          logger.log('🟢 session_proposal', JSON.stringify(proposal, null, 2));
+          logger.log('🟢 session_proposal', proposal);
           app.emit(Events.onWalletConnectApproveConnection, proposal);
         })
         // https://docs.walletconnect.com/2.0/javascript/web3wallet/wallet-usage#responding-to-session-requests
         .on('session_request', async event => {
-          logger.log('🟢 session_request', JSON.stringify(event, null, 2));
+          const handledKey = `${event.id}-${event.topic}`;
+          if (this._handledJsonRpcEvents.get(handledKey)) {
+            return logger.log('🟣 session_request already in progress', event);
+          }
+          this._handledJsonRpcEvents.set(handledKey, true);
+          logger.log('🟢 session_request', event);
           app.emit(Events.onWalletConnectSignTransaction, event);
         })
         // https://docs.walletconnect.com/2.0/javascript/web3wallet/wallet-usage#extend-a-session
@@ -143,20 +150,11 @@ export class WalletConnect extends Initializable {
         const provider = Provider.getById(providerId)!;
         const chainId = provider.ethChainId;
         await this.awaitForInitialization();
-        WalletConnectSessionMetadata.getAll().forEach(async ({topic}) => {
-          try {
-            await this._client?.emitSessionEvent({
-              topic,
-              event: {
-                name: 'chainChanged',
-                data: chainId,
-              },
-              chainId: `eip155:${chainId}`,
-            });
-          } catch (err) {
-            logger.error('send event chainChanged', {topic}, err);
-          }
-        });
+        for (let session of WalletConnectSessionMetadata.getAll()) {
+          // sleep to avoid frequency requests to wallet connect relay server
+          await sleep(300);
+          await this.emitChainChange(chainId, session.topic);
+        }
       });
 
       const end = Date.now();
@@ -184,6 +182,21 @@ export class WalletConnect extends Initializable {
         await sleep(5000);
         return WalletConnect.instance._reInit();
       }
+    }
+  }
+
+  public async emitChainChange(chainId: number | `${number}`, topic: string) {
+    try {
+      await this._client?.emitSessionEvent({
+        topic,
+        event: {
+          name: 'chainChanged',
+          data: chainId,
+        },
+        chainId: `eip155:${chainId}`,
+      });
+    } catch (err) {
+      logger.error('emitChainChange', {topic}, err);
     }
   }
 
@@ -216,6 +229,27 @@ export class WalletConnect extends Initializable {
     return (
       VariablesString.getObject<Record<string, boolean>>(PAIRING_URLS_KEY) || {}
     );
+  }
+
+  public async handleRequest(uri: string) {
+    try {
+      const {query} = new Url<{sessionTopic: string; requestId: string}>(
+        uri,
+        true,
+      );
+      if (!query?.sessionTopic && !query?.requestId) {
+        return false;
+      }
+      const session = this.getSessionByTopic(query.sessionTopic);
+      if (session) {
+        await this._reInit();
+      }
+
+      return true;
+    } catch (err) {
+      logger.error('handleRequest', err);
+    }
+    return false;
   }
 
   public async pair(uri: string) {
@@ -347,6 +381,9 @@ export class WalletConnect extends Initializable {
     });
 
     WalletConnectSessionMetadata.create(session.topic);
+    // set chain which currently active in app
+    await this.emitChainChange(app.provider.ethChainId, session.topic);
+
     this._emitActiveSessions();
     this.redirect();
     return session;
