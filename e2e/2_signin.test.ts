@@ -1,4 +1,4 @@
-import {device, log} from 'detox';
+import {device} from 'detox';
 import {Wallet, utils} from 'ethers';
 
 import {ensureWalletIsVisible} from './helpers/ensureWalletIsVisible';
@@ -15,15 +15,15 @@ describe('Signin', () => {
     const randomWallet = Wallet.createRandom();
     privateKey = randomWallet.privateKey;
     privateKeyMnemonic = randomWallet.mnemonic.phrase;
-  });
-
-  beforeEach(async () => {
-    await device.uninstallApp();
-    await device.installApp();
     await device.launchApp({
       newInstance: true,
       permissions: {notifications: 'NO'},
     });
+  });
+
+  afterAll(async () => {
+    await device.uninstallApp();
+    await device.installApp();
   });
 
   it('should restore privateKey wallet and import mnemonic wallet', async () => {
@@ -41,6 +41,12 @@ describe('Signin', () => {
   });
 
   it('should restore mnemonic wallet and import privateKey wallet', async () => {
+    await device.uninstallApp();
+    await device.installApp();
+    await device.launchApp({
+      newInstance: true,
+      permissions: {notifications: 'NO'},
+    });
     await restoreWallet(mnemonic, PIN);
     await ensureWalletIsVisible(mnemonic);
 
@@ -55,6 +61,12 @@ describe('Signin', () => {
   });
 
   it('should restore random wallet and more random wallets', async () => {
+    await device.uninstallApp();
+    await device.installApp();
+    await device.launchApp({
+      newInstance: true,
+      permissions: {notifications: 'NO'},
+    });
     const generateRandomWallet = (): {
       wallet: string;
       mnemonic: string;
@@ -92,7 +104,6 @@ describe('Signin', () => {
       await element(by.id('wallets_create_import')).tap();
 
       const randomWallet = generateRandomWallet();
-      log.warn(randomWallet, attempt + 1);
       const restore = randomWallet.isPrivateKey
         ? restorePrivateKey
         : restoreWallet;

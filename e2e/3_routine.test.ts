@@ -74,11 +74,6 @@ describe('Routine', () => {
     await element(by.text(`${coinsAmount} ISLM`))
       .atIndex(0)
       .tap();
-    if (isAndroid) {
-      await element(by.text(`${coinsAmount} ISLM`))
-        .atIndex(0)
-        .tap();
-    }
 
     const input_form = element(by.id('transaction_sum_form_input'));
     await input_form.tap();
