@@ -2,6 +2,7 @@ import {device} from 'detox';
 import {Wallet, utils} from 'ethers';
 
 import {ensureWalletIsVisible} from './helpers/ensureWalletIsVisible';
+import {launchApp} from './helpers/launchApp';
 import {restorePrivateKey} from './helpers/restorePrivateKey';
 import {restoreWallet} from './helpers/restoreWallet';
 import {PIN} from './test-variables';
@@ -23,9 +24,7 @@ describe('Signin', () => {
     const randomWallet = Wallet.createRandom();
     privateKey = randomWallet.privateKey;
     privateKeyMnemonic = randomWallet.mnemonic.phrase;
-    await device.launchApp({
-      permissions: {notifications: 'NO'},
-    });
+    await launchApp();
   });
 
   it('should restore privateKey wallet and import mnemonic wallet', async () => {

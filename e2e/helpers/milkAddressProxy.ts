@@ -82,7 +82,7 @@ class MilkAddressProxy {
     }
 
     log.warn(
-      `${this.proxy.address} ---${utils.formatEther(
+      `${this.proxy.address} --- ${utils.formatEther(
         amount,
       )} ISLM ---> ${address} ...`,
     );
@@ -117,7 +117,7 @@ class MilkAddressProxy {
     };
 
     log.warn(
-      `${this.milkAddress.address} ---${utils.formatEther(
+      `${this.milkAddress.address} --- ${utils.formatEther(
         MINIMUM_REQUIRED_BALANCE,
       )} ISLM ---> ${this.proxy.address} ...`,
     );

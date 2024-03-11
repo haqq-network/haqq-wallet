@@ -2,13 +2,12 @@ import {by, device, element, waitFor} from 'detox';
 
 import {createWallet} from './helpers/createWallet';
 import {ensureWalletIsVisible} from './helpers/ensureWalletIsVisible';
+import {launchApp} from './helpers/launchApp';
 import {PIN} from './test-variables';
 
 describe('Signup', () => {
   beforeAll(async () => {
-    await device.launchApp({
-      permissions: {notifications: 'NO'},
-    });
+    await launchApp();
   });
 
   it('should create and backup phrase', async () => {

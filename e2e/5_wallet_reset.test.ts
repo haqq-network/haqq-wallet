@@ -3,6 +3,7 @@ import {utils} from 'ethers';
 
 import {createWallet} from './helpers/createWallet';
 import {ensureWalletIsVisible} from './helpers/ensureWalletIsVisible';
+import {launchApp} from './helpers/launchApp';
 import {restoreWallet} from './helpers/restoreWallet';
 import {PIN} from './test-variables';
 
@@ -11,9 +12,7 @@ describe('Reset Wallet', () => {
   beforeEach(async () => {
     await device.uninstallApp();
     await device.installApp();
-    await device.launchApp({
-      permissions: {notifications: 'NO'},
-    });
+    await launchApp();
 
     mnemonic = utils.entropyToMnemonic(utils.randomBytes(32));
   });

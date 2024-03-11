@@ -2,15 +2,14 @@ import {by, device, element, expect, waitFor} from 'detox';
 
 import {createWallet} from './helpers/createWallet';
 import {ensureWalletIsVisible} from './helpers/ensureWalletIsVisible';
+import {launchApp} from './helpers/launchApp';
 import {PIN} from './test-variables';
 
 describe('Routine', () => {
   const mnemonic_words: string[] = [];
 
   beforeAll(async () => {
-    await device.launchApp({
-      permissions: {notifications: 'NO'},
-    });
+    await launchApp();
 
     await createWallet(PIN);
   });

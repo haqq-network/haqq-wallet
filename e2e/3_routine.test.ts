@@ -4,6 +4,7 @@ import {Wallet, utils} from 'ethers';
 import {ensureWalletIsVisible} from './helpers/ensureWalletIsVisible';
 import {getCoins} from './helpers/getCoins';
 import {isVisible} from './helpers/isVisibile';
+import {launchApp} from './helpers/launchApp';
 import {MilkAddressProxy} from './helpers/milkAddressProxy';
 import {restoreWallet} from './helpers/restoreWallet';
 import {PIN} from './test-variables';
@@ -11,11 +12,8 @@ import {PIN} from './test-variables';
 describe('Routine', () => {
   let mnemonic = '';
   beforeAll(async () => {
-    await device.launchApp({
-      permissions: {notifications: 'NO'},
-    });
-
     mnemonic = utils.entropyToMnemonic(utils.randomBytes(32));
+    await launchApp();
     await restoreWallet(mnemonic, PIN);
   });
 
@@ -24,8 +22,7 @@ describe('Routine', () => {
   });
 
   it('should reopen app', async () => {
-    await device.terminateApp();
-    await device.launchApp();
+    await device.reloadReactNative();
 
     await waitFor(element(by.id('pin')))
       .toBeVisible()

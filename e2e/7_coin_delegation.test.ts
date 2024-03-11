@@ -1,8 +1,9 @@
-import {by, device, element, expect, waitFor} from 'detox';
+import {by, element, expect, waitFor} from 'detox';
 import {utils} from 'ethers';
 
 import {getCoins} from './helpers/getCoins';
 import {isVisible} from './helpers/isVisibile';
+import {launchApp} from './helpers/launchApp';
 import {restoreWallet} from './helpers/restoreWallet';
 import {sleep} from './helpers/sleep';
 import {PIN} from './test-variables';
@@ -10,9 +11,7 @@ import {PIN} from './test-variables';
 describe.skip('Coin delegation and undelegation', () => {
   let mnemonic = '';
   beforeAll(async () => {
-    await device.launchApp({
-      permissions: {notifications: 'NO'},
-    });
+    await launchApp();
 
     mnemonic = utils.entropyToMnemonic(utils.randomBytes(32));
     await restoreWallet(mnemonic, PIN);
