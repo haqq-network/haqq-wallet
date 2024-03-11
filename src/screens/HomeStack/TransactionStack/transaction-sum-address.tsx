@@ -4,6 +4,7 @@ import {observer} from 'mobx-react';
 
 import {TransactionAddress} from '@app/components/transaction-address';
 import {app} from '@app/contexts';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {Contact} from '@app/models/contact';
@@ -33,17 +34,48 @@ export const TransactionSumAddressScreen = observer(() => {
     }
 
     if (!address) {
-      return wallets;
+      return wallets.filter(
+        w =>
+          !AddressUtils.equals(w.address, route.params.from) &&
+          !AddressUtils.equals(w.address, route.params.to),
+      );
     }
 
     const lowerCaseAddress = address.toLowerCase();
+
     return wallets.filter(
       w =>
-        w.address.toLowerCase().includes(lowerCaseAddress) ||
-        w.cosmosAddress.toLowerCase().includes(lowerCaseAddress) ||
-        w.name.toLowerCase().includes(lowerCaseAddress),
+        (w.address.toLowerCase().includes(lowerCaseAddress) ||
+          w.cosmosAddress.toLowerCase().includes(lowerCaseAddress) ||
+          w.name.toLowerCase().includes(lowerCaseAddress)) &&
+        !AddressUtils.equals(w.address, route.params.from),
     );
   }, [address, wallets]);
+
+  const filteredContacts = useMemo(() => {
+    if (!contacts || !contacts.length) {
+      return [];
+    }
+
+    if (!address) {
+      return contacts.filter(
+        c => !AddressUtils.equals(c.account, route.params.from),
+      );
+    }
+
+    const lowerCaseAddress = address.toLowerCase();
+
+    return contacts.filter(c => {
+      const hexAddress = AddressUtils.toEth(c.account);
+      const haqqAddress = AddressUtils.toHaqq(hexAddress);
+      return (
+        (hexAddress.includes(lowerCaseAddress) ||
+          haqqAddress.includes(lowerCaseAddress) ||
+          c.name.toLowerCase().includes(lowerCaseAddress)) &&
+        !AddressUtils.equals(hexAddress, route.params.from)
+      );
+    });
+  }, [address, contacts]);
 
   const onDone = useCallback(
     (result: string) => {
@@ -58,7 +90,7 @@ export const TransactionSumAddressScreen = observer(() => {
       address={address}
       setAddress={setAddress}
       filteredWallets={filteredWallets}
-      contacts={contacts}
+      contacts={filteredContacts}
       onAddress={onDone}
     />
   );

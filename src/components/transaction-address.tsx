@@ -1,6 +1,11 @@
 import React, {useCallback, useState} from 'react';
 
-import {ListRenderItem, View} from 'react-native';
+import {
+  ListRenderItem,
+  NativeSyntheticEvent,
+  TextInputKeyPressEventData,
+  View,
+} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 
 import {Color} from '@app/colors';
@@ -80,6 +85,33 @@ export const TransactionAddress = ({
     }
   }, [setAddress]);
 
+  const onSubmitEditing = useCallback(() => {
+    if (!address) {
+      return;
+    }
+
+    if (AddressUtils.isValidAddress(address.trim())) {
+      return onDone();
+    }
+
+    if (contacts?.length === 0 && filteredWallets?.length === 1) {
+      return onAddress(filteredWallets[0].address);
+    }
+
+    if (contacts?.length === 1 && filteredWallets?.length === 0) {
+      return onAddress(contacts[0].account);
+    }
+  }, [onDone, address]);
+
+  const onKeyPress = useCallback(
+    ({nativeEvent}: NativeSyntheticEvent<TextInputKeyPressEventData>) => {
+      if (nativeEvent.key === 'Enter') {
+        onSubmitEditing();
+      }
+    },
+    [onSubmitEditing],
+  );
+
   const onPressClear = useCallback(() => {
     setAddress('');
   }, [setAddress]);
@@ -149,6 +181,7 @@ export const TransactionAddress = ({
           errorText={getText(I18N.transactionAddressError)}
           autoFocus
           multiline
+          onKeyPress={onKeyPress}
           numberOfLines={10}
           placeholder={I18N.transactionAddressPlaceholder}
           testID={`${testID}_input`}
@@ -194,7 +227,11 @@ export const TransactionAddress = ({
             <View style={styles.marginHorizontal}>
               <Text t6 i18n={I18N.transactionMyContacts} />
             </View>
-            <ListOfContacts onPressAddress={onPressAddress} />
+            <ListOfContacts
+              // @ts-ignore
+              data={contacts}
+              onPressAddress={onPressAddress}
+            />
           </>
         )}
         <Spacer flex={1} />
