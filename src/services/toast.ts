@@ -1,3 +1,4 @@
+import {FOR_DETOX} from '@env';
 import {NativeModules} from 'react-native';
 
 import {app} from '@app/contexts';
@@ -10,5 +11,8 @@ export const message = (msg: string) => {
 };
 
 export function sendNotification(text: I18N, params = {}) {
+  if (FOR_DETOX) {
+    return;
+  }
   message(getText(text, params));
 }
