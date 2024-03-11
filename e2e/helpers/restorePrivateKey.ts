@@ -2,8 +2,8 @@ import {by, element, expect, log, waitFor} from 'detox';
 
 import {isVisible} from './isVisibile';
 
-export const restoreWallet = async (
-  mnemonic: string,
+export const restorePrivateKey = async (
+  privateKey: string,
   PIN: string,
   attempt: number = 1,
 ) => {
@@ -24,7 +24,7 @@ export const restoreWallet = async (
 
   const input = element(by.id('signin_restore_input'));
   await input.tap();
-  await input.replaceText(mnemonic);
+  await input.replaceText(privateKey);
   await input.tapReturnKey();
 
   try {
@@ -36,30 +36,11 @@ export const restoreWallet = async (
     log.warn('Error while tap: ' + JSON.stringify(err));
   }
 
-  // Choose account flow
-  await waitFor(element(by.id('wallet_add_1')))
-    .toBeVisible()
-    .withTimeout(3000);
-  await element(by.id('wallet_add_1')).tap();
-
-  const isWalletRemoveVisible = await isVisible('wallet_remove_1');
-  if (!isWalletRemoveVisible) {
-    //Try one more time
-    await element(by.id('wallet_add_1')).tap();
-  }
-
-  // TODO: Think how to reduce steps in other tests
-  // await element(by.text('Ledger')).tap();
-  // await expect(element(by.id('wallet_remove_1'))).toBeVisible();
-  // await element(by.text('Basic')).tap();
-  // await element(by.id('wallet_remove_1')).tap();
-  // await expect(element(by.id('choose_account_next'))).not.toBeVisible();
-  // await element(by.id('wallet_add_1')).tap();
-
-  // Generating accounts from hdPath might be slow on low-end devices
-  await element(by.id('choose_account_next')).tap();
-
   if (isFirstTry) {
+    await expect(element(by.id('onboarding_setup_pin_set'))).toBeVisible();
+
+    // First tap after restoring PRIVATE KEY ONLY (crazy) is missing
+    await element(by.id('onboarding_setup_pin_set')).tap();
     await expect(element(by.id('onboarding_setup_pin_set'))).toBeVisible();
 
     await device.disableSynchronization();
@@ -98,10 +79,14 @@ export const restoreWallet = async (
         await expect(element(by.id('onboarding_finish_title'))).toBeVisible();
       }
     }
+  }
+  await waitFor(element(by.id('onboarding_finish_finish')))
+    .toBeVisible()
+    .withTimeout(3000);
+  await element(by.id('onboarding_finish_finish')).tap();
 
-    await waitFor(element(by.id('onboarding_finish_finish')))
-      .toBeVisible()
-      .withTimeout(3000);
+  // Android: sometimes finish button should be pressed twice
+  if (await isVisible('onboarding_finish_finish')) {
     await element(by.id('onboarding_finish_finish')).tap();
   }
 };
