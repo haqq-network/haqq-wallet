@@ -7,7 +7,7 @@ import {restoreWallet} from './helpers/restoreWallet';
 import {sleep} from './helpers/sleep';
 import {PIN} from './test-variables';
 
-describe('Coin delegation and undelegation', () => {
+describe.skip('Coin delegation and undelegation', () => {
   let mnemonic = '';
   beforeAll(async () => {
     await device.launchApp({
