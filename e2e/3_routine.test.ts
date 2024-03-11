@@ -10,7 +10,6 @@ import {PIN} from './test-variables';
 
 describe('Routine', () => {
   let mnemonic = '';
-  const isAndroid = device.getPlatform() === 'android';
   beforeAll(async () => {
     await device.launchApp({
       permissions: {notifications: 'NO'},
@@ -58,9 +57,6 @@ describe('Routine', () => {
 
     const input_address = element(by.id('transaction_address_input'));
     await input_address.typeText(MilkAddressProxy.address);
-    if (!isAndroid) {
-      await input_address.tapReturnKey();
-    }
     await element(by.id('transaction_address_next')).tap();
     const nextStillVisible = await isVisible('transaction_address_next');
     if (nextStillVisible) {

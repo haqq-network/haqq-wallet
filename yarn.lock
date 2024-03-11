@@ -8105,9 +8105,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"detox@npm:20.18.1":
-  version: 20.18.1
-  resolution: "detox@npm:20.18.1"
+"detox@npm:20.18.5":
+  version: 20.18.5
+  resolution: "detox@npm:20.18.5"
   dependencies:
     ajv: ^8.6.3
     bunyan: ^1.8.12
@@ -8151,7 +8151,7 @@ __metadata:
       optional: true
   bin:
     detox: local-cli/cli.js
-  checksum: 29524453f189c5ec71d53fe4b85d11ca7cc925d79ab0f957a8259708b7e85ff741cd8e79ae2374cb84a793d01d2f32d3cb73cacae55ad8e31dff13bf3859a734
+  checksum: 6b3596b7f70e40eaab4f6b26cfee9eca47df589bdb89181cdc38dc8e7089be07f496eb76de01cc93a40669d9bb924bdc1ee649a79790dd8e84de5ded56ca4938
   languageName: node
   linkType: hard
 
@@ -10253,7 +10253,7 @@ __metadata:
     date-fns: 2.30.0
     decimal.js: 10.4.3
     deprecated-react-native-prop-types: 4.1.0
-    detox: 20.18.1
+    detox: 20.18.5
     dotenv: 16.3.1
     eslint: 8.45.0
     eslint-plugin-import: 2.27.5
