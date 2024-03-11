@@ -1,6 +1,6 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
-import {ActivityIndicator, View} from 'react-native';
+import {ActivityIndicator, ScrollView, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -29,6 +29,7 @@ import {
   getHostnameFromUrl,
   getTransactionFromJsonRpcRequest,
   isContractTransaction,
+  parseERC20TxDataFromHexInput,
 } from '@app/utils';
 import {LONG_NUM_PRECISION} from '@app/variables/common';
 
@@ -57,11 +58,11 @@ export const JsonRpcTransactionInfo = ({
     [request],
   );
 
-  const getProvider = useCallback(() => {
-    const provider = Provider.getByEthChainId(
+  const provider = useMemo(() => {
+    const _provider = Provider.getByEthChainId(
       chainId || tx?.chainId || app.provider.ethChainId,
     );
-    return provider!;
+    return _provider!;
   }, [chainId]);
 
   const url = useMemo(() => getHostnameFromUrl(metadata?.url), [metadata]);
@@ -89,13 +90,13 @@ export const JsonRpcTransactionInfo = ({
         new Balance(tx.value! || Balance.Empty),
         tx.data,
         gasLimit,
-        getProvider(),
+        provider,
       );
       return feeWei;
     } catch {
       return Balance.Empty;
     }
-  }, [tx]);
+  }, [tx, provider]);
 
   const total = useMemo(() => {
     const float = value.toFloat();
@@ -135,8 +136,20 @@ export const JsonRpcTransactionInfo = ({
     }
   }, [chainId]);
 
+  const txParsedData = useMemo(
+    () => parseERC20TxDataFromHexInput(tx?.data),
+    [tx],
+  );
+
+  const functionName = useMemo(() => {
+    if (txParsedData) {
+      return txParsedData.name;
+    }
+    return '';
+  }, [txParsedData]);
+
   return (
-    <>
+    <View style={styles.container}>
       <Text t5 i18n={I18N.walletConnectSignTransactionForSignature} />
 
       <Spacer height={8} />
@@ -190,16 +203,20 @@ export const JsonRpcTransactionInfo = ({
 
       <Spacer height={28} />
 
-      <View style={styles.info}>
+      <ScrollView style={styles.info} showsVerticalScrollIndicator={false}>
         <DataView i18n={I18N.transactionInfoTypeOperation}>
           <Text t11 color={Color.textBase1}>
-            <Text
-              i18n={
-                isContract
-                  ? I18N.transactionInfoContractInteraction
-                  : I18N.transactionInfoSendingFunds
-              }
-            />
+            {functionName?.length ? (
+              <Text children={functionName} />
+            ) : (
+              <Text
+                i18n={
+                  isContract
+                    ? I18N.transactionInfoContractInteraction
+                    : I18N.transactionInfoSendingFunds
+                }
+              />
+            )}
           </Text>
         </DataView>
         <DataView i18n={I18N.transactionInfoCryptocurrency}>
@@ -211,6 +228,13 @@ export const JsonRpcTransactionInfo = ({
             />
           </Text>
         </DataView>
+        {!!provider?.id && (
+          <DataView i18n={I18N.transactionInfoNetwork}>
+            <Text t11 color={Color.textBase1}>
+              {provider.name}
+            </Text>
+          </DataView>
+        )}
         <DataView i18n={I18N.transactionInfoAmount}>
           <Text
             t11
@@ -226,9 +250,9 @@ export const JsonRpcTransactionInfo = ({
             </Text>
           </First>
         </DataView>
-      </View>
+      </ScrollView>
       <Spacer height={10} />
-    </>
+    </View>
   );
 };
 
@@ -246,5 +270,10 @@ const styles = createTheme({
   },
   signContractAttention: {
     width: '100%',
+  },
+  container: {
+    flex: 1,
+    width: '100%',
+    alignItems: 'center',
   },
 });

@@ -1,5 +1,7 @@
 import React from 'react';
 
+import {View} from 'react-native';
+
 import {Color} from '@app/colors';
 import {DataContent, Icon, IconButton} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
@@ -24,13 +26,22 @@ export const ThemedButton = ({
       onPress={() => {
         onChange(value);
       }}>
-      <DataContent titleI18n={name} />
+      <View style={styles.row}>
+        <DataContent titleI18n={name} />
+        {active && (
+          <DataContent
+            titleI18n={I18N.isUsed}
+            titleColor={Color.graphicGreen1}
+          />
+        )}
+      </View>
       {active && <Icon name="check" i24 color={Color.graphicGreen1} />}
     </IconButton>
   );
 };
 
 const styles = createTheme({
+  row: {flexDirection: 'row'},
   button: {
     flexDirection: 'row',
     justifyContent: 'space-between',

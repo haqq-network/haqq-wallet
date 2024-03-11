@@ -112,6 +112,7 @@ export const TransactionSumScreen = memo(() => {
     vibrate(HapticEffects.impactLight);
     navigation.navigate(TransactionStackRoutes.TransactionSumAddress, {
       to,
+      from: route.params.from,
       event,
     });
   }, [event, navigation, to]);

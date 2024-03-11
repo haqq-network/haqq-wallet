@@ -78,7 +78,7 @@ export const TransactionRow = memo(
       return '';
     }, [item, addresses]);
 
-    const amountInFiat = useMemo(() => amount.toFiat(4), [amount]);
+    const amountInFiat = useMemo(() => amount.toFiat({fixed: 4}), [amount]);
 
     const wallet = useMemo(() => {
       let address = '';
@@ -162,7 +162,7 @@ export const TransactionRow = memo(
                 numberOfLines={1}>
                 {Boolean(amountInFiat) && amountPrefix}
                 {STRINGS.NBSP}
-                {amount.toFiat(4)}
+                {amount.toFiat({fixed: 4})}
               </Text>
             </View>
           )}

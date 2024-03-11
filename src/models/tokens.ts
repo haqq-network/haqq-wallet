@@ -21,6 +21,7 @@ import {
 } from '@app/types';
 import {ERC20_TOKEN_ABI} from '@app/variables/abi';
 import {CURRENCY_NAME, WEI, WEI_PRECISION} from '@app/variables/common';
+
 class TokensStore implements MobXStore<IToken> {
   /**
    * All tokens available for all wallets with commulative value
@@ -133,6 +134,17 @@ class TokensStore implements MobXStore<IToken> {
 
   getAll() {
     return Object.values(this.data);
+  }
+
+  getByAddress(address?: string) {
+    try {
+      if (!address) {
+        return null;
+      }
+      return this.getAll()?.find(t => AddressUtils.equals(address, t.id));
+    } catch {
+      return null;
+    }
   }
 
   getAllVisible() {

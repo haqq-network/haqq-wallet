@@ -60,6 +60,7 @@ const handleAddress = async (
 export async function onDeepLink(
   link: string,
   withoutFromAddress: boolean = false,
+  isInitialRun = false,
 ) {
   try {
     if (!link) {
@@ -86,7 +87,9 @@ export async function onDeepLink(
 
     if (link.startsWith(`${DeeplinkProtocol.wc}:`)) {
       const uri = decodeURIComponent(link.replace(/^wc:\/{0,2}/, ''));
-      VariablesBool.set('isWalletConnectFromDeepLink', true);
+      if (isInitialRun) {
+        VariablesBool.set('isWalletConnectFromDeepLink', true);
+      }
       app.emit(Events.onWalletConnectUri, uri);
       return true;
     }
@@ -111,8 +114,10 @@ export async function onDeepLink(
 
       switch (key) {
         case DeeplinkUrlKey.wc:
-          VariablesBool.set('isWalletConnectFromDeepLink', true);
-          app.emit(Events.onWalletConnectUri, url.query.uri);
+          if (isInitialRun) {
+            VariablesBool.set('isWalletConnectFromDeepLink', true);
+          }
+          app.emit(Events.onWalletConnectUri, url.query.uri || url.href);
           return true;
         case DeeplinkUrlKey.browser:
         case DeeplinkUrlKey.web3browser:

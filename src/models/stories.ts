@@ -31,11 +31,11 @@ class StoriesStore {
     if (Array.isArray(stories)) {
       const normalizedStories = stories.reduce(
         (prev, cur) => {
-          const existingValue = prev[cur.id];
+          const existingValue = this.data[cur.id];
           prev[cur.id] = {...cur, seen: existingValue?.seen ?? false};
           return prev;
         },
-        Object.assign({}, this.data),
+        {} as Record<IStory['id'], IStory>,
       );
       runInAction(() => {
         this.data = normalizedStories;

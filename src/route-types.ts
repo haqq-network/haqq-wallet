@@ -536,6 +536,7 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
   };
   [TransactionStackRoutes.TransactionSumAddress]: {
     to: string;
+    from: string;
     event: string;
   };
   [TransactionStackRoutes.TransactionContactEdit]: {
@@ -592,6 +593,7 @@ export type ManageAccountsStackParamList = HomeStackParamList &
     [ManageAccountsStackRoutes.SettingsAccounts]: undefined;
     [ManageAccountsStackRoutes.SettingsAccountDetail]: {
       address: string;
+      fromHomePage?: boolean;
     };
     [ManageAccountsStackRoutes.SettingsAccountEdit]: {
       address: string;

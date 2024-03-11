@@ -31,18 +31,21 @@ export const WalletSelectorScreen = memo(() => {
   useFocusEffect(
     useCallback(() => {
       return () => {
-        if (selectedAddress.current) {
-          app.emit(successEventName, selectedAddress.current);
-        } else {
+        if (!selectedAddress.current) {
           app.emit(errorEventName);
         }
       };
-    }, [navigation, errorEventName, successEventName]),
+    }, [navigation, errorEventName]),
   );
 
-  const onWalletSelected = useCallback((address: string) => {
-    selectedAddress.current = address;
-  }, []);
+  const onWalletSelected = useCallback(
+    (address: string) => {
+      selectedAddress.current = address;
+      app.emit(successEventName, address);
+      navigation.pop();
+    },
+    [navigation, successEventName, selectedAddress.current],
+  );
 
   const Component = useCallback(
     () => (

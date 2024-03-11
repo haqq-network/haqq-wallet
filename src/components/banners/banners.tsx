@@ -48,7 +48,6 @@ export const Banners = ({banners, onPressBanner}: BannersProps) => {
           ))}
         </ScrollView>
       </First>
-      <Spacer height={24} />
     </>
   );
 };
