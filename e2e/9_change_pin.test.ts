@@ -8,7 +8,6 @@ describe('Changing PIN and auth with new PIN', () => {
   const newPin = '987654';
   beforeAll(async () => {
     await device.launchApp({
-      newInstance: true,
       permissions: {notifications: 'NO'},
     });
 

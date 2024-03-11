@@ -13,7 +13,6 @@ describe('Routine', () => {
   const isAndroid = device.getPlatform() === 'android';
   beforeAll(async () => {
     await device.launchApp({
-      newInstance: true,
       permissions: {notifications: 'NO'},
     });
 
@@ -85,14 +84,20 @@ describe('Routine', () => {
       .toBeVisible()
       .withTimeout(15000);
 
-    await element(by.id('transaction_confirmation')).scrollTo('bottom');
+    await waitFor(element(by.id('transaction_confirmation_submit')))
+      .toBeVisible()
+      .whileElement(by.id('transaction_confirmation'))
+      .scroll(50, 'down');
     await element(by.id('transaction_confirmation_submit')).tap();
 
     await waitFor(element(by.id('transaction_finish')))
       .toBeVisible()
       .withTimeout(15000);
 
-    await element(by.id('transaction_finish')).scrollTo('bottom');
+    await waitFor(element(by.id('transaction_finish_finish')))
+      .toBeVisible()
+      .whileElement(by.id('transaction_finish'))
+      .scroll(50, 'down');
     await element(by.id('transaction_finish_finish')).tap();
   });
 });

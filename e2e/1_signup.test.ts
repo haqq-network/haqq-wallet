@@ -7,7 +7,6 @@ import {PIN} from './test-variables';
 describe('Signup', () => {
   beforeAll(async () => {
     await device.launchApp({
-      newInstance: true,
       permissions: {notifications: 'NO'},
     });
   });
@@ -25,7 +24,10 @@ describe('Signup', () => {
 
     await element(by.id('protect_phrase_button')).tap();
 
-    await element(by.id('backup_warning')).scrollTo('bottom');
+    await waitFor(element(by.id('backup_warning_next')))
+      .toBeVisible()
+      .whileElement(by.id('backup_warning'))
+      .scroll(50, 'down');
     await element(by.id('backup_warning_next')).tap();
 
     const mnemonic_words = [];
@@ -39,7 +41,10 @@ describe('Signup', () => {
       mnemonic_words.push(text);
     }
 
-    await element(by.id('backup_create')).scrollTo('bottom');
+    await waitFor(element(by.id('backup_create_checkbox')))
+      .toBeVisible()
+      .whileElement(by.id('backup_create'))
+      .scroll(50, 'down');
     await element(by.id('backup_create_checkbox')).tap();
     await element(by.id('backup_create_next')).tap();
 
@@ -59,7 +64,10 @@ describe('Signup', () => {
       await waitFor(elDisabled).toBeVisible().withTimeout(1000);
     }
 
-    await element(by.id('backup_verify')).scrollTo('bottom');
+    await waitFor(element(by.id('backup_verify_check')))
+      .toBeVisible()
+      .whileElement(by.id('backup_verify'))
+      .scroll(50, 'down');
     await element(by.id('backup_verify_check')).tap();
 
     await waitFor(element(by.id('backup_finish')))

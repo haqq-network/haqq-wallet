@@ -82,9 +82,9 @@ class MilkAddressProxy {
     }
 
     log.warn(
-      `Sending ${utils.formatEther(amount)} ISLM from ${
-        this.proxy.address
-      } to ${address} ...`,
+      `${this.proxy.address} ---${utils.formatEther(
+        amount,
+      )} ISLM ---> ${address} ...`,
     );
     const tx = {
       to: address,
@@ -117,9 +117,9 @@ class MilkAddressProxy {
     };
 
     log.warn(
-      `Sending ${utils.formatEther(MINIMUM_REQUIRED_BALANCE)} ISLM from ${
-        this.milkAddress.address
-      } to ${this.proxy.address} ...`,
+      `${this.milkAddress.address} ---${utils.formatEther(
+        MINIMUM_REQUIRED_BALANCE,
+      )} ISLM ---> ${this.proxy.address} ...`,
     );
 
     // TODO: Check for errors

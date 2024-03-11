@@ -17,7 +17,6 @@ describe.skip('SSS Wallet', () => {
     await device.uninstallApp();
     await device.installApp();
     await device.launchApp({
-      newInstance: true,
       permissions: {notifications: 'NO'},
     });
   });

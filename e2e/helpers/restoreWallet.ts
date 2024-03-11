@@ -29,9 +29,7 @@ export const restoreWallet = async (
 
   try {
     await element(by.id('signin_restore')).scroll(200, 'down');
-  } catch (err) {
-    log.warn('Error while scrolling: ' + JSON.stringify(err));
-  }
+  } catch (err) {}
   try {
     await element(by.id('signin_restore_submit')).tap({x: 0, y: 0});
   } catch (err) {

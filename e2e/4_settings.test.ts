@@ -9,7 +9,6 @@ describe('Routine', () => {
 
   beforeAll(async () => {
     await device.launchApp({
-      newInstance: true,
       permissions: {notifications: 'NO'},
     });
 
@@ -27,7 +26,10 @@ describe('Routine', () => {
       .scroll(100, 'down');
     await element(by.id('recovery_phrase')).tap();
 
-    await element(by.id('backup_warning')).scrollTo('bottom');
+    await waitFor(element(by.id('backup_warning_next')))
+      .toBeVisible()
+      .whileElement(by.id('backup_warning'))
+      .scroll(50, 'down');
     await element(by.id('backup_warning_next')).tap();
 
     for (let i = 1; i <= 12; i++) {
@@ -39,7 +41,10 @@ describe('Routine', () => {
       mnemonic_words.push(text);
     }
 
-    await element(by.id('backup_create')).scrollTo('bottom');
+    await waitFor(element(by.id('backup_create_checkbox')))
+      .toBeVisible()
+      .whileElement(by.id('backup_create'))
+      .scroll(50, 'down');
     await element(by.id('backup_create_checkbox')).tap();
     await element(by.id('backup_create_next')).tap();
 
@@ -55,7 +60,10 @@ describe('Routine', () => {
       await el.tap();
     }
 
-    await element(by.id('backup_verify')).scrollTo('bottom');
+    await waitFor(element(by.id('backup_verify_check')))
+      .toBeVisible()
+      .whileElement(by.id('backup_verify'))
+      .scroll(50, 'down');
     await element(by.id('backup_verify_check')).tap();
 
     await waitFor(element(by.id('backup_finish')))

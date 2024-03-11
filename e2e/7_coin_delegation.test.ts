@@ -11,7 +11,6 @@ describe.skip('Coin delegation and undelegation', () => {
   let mnemonic = '';
   beforeAll(async () => {
     await device.launchApp({
-      newInstance: true,
       permissions: {notifications: 'NO'},
     });
 

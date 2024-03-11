@@ -16,7 +16,6 @@ describe('Signin', () => {
     privateKey = randomWallet.privateKey;
     privateKeyMnemonic = randomWallet.mnemonic.phrase;
     await device.launchApp({
-      newInstance: true,
       permissions: {notifications: 'NO'},
     });
   });
@@ -44,7 +43,6 @@ describe('Signin', () => {
     await device.uninstallApp();
     await device.installApp();
     await device.launchApp({
-      newInstance: true,
       permissions: {notifications: 'NO'},
     });
     await restoreWallet(mnemonic, PIN);
@@ -64,7 +62,6 @@ describe('Signin', () => {
     await device.uninstallApp();
     await device.installApp();
     await device.launchApp({
-      newInstance: true,
       permissions: {notifications: 'NO'},
     });
     const generateRandomWallet = (): {
