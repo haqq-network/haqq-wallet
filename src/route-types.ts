@@ -536,6 +536,7 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
   };
   [TransactionStackRoutes.TransactionSumAddress]: {
     to: string;
+    from: string;
     event: string;
   };
   [TransactionStackRoutes.TransactionContactEdit]: {

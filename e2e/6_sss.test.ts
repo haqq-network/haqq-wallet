@@ -2,6 +2,7 @@ import {expect as jestExpect} from '@jest/globals';
 import {by, device, element, expect, waitFor} from 'detox';
 
 import {getTimeStamp} from './helpers/getTimeStamp';
+import {launchApp} from './helpers/launchApp';
 import {PIN} from './test-variables';
 
 describe.skip('SSS Wallet', () => {
@@ -16,10 +17,7 @@ describe.skip('SSS Wallet', () => {
   beforeEach(async () => {
     await device.uninstallApp();
     await device.installApp();
-    await device.launchApp({
-      newInstance: true,
-      permissions: {notifications: 'NO'},
-    });
+    await launchApp();
   });
 
   it('should create SSS wallet', async () => {

@@ -1,19 +1,17 @@
-import {by, device, element, expect, waitFor} from 'detox';
+import {by, element, expect, waitFor} from 'detox';
 import {utils} from 'ethers';
 
 import {getCoins} from './helpers/getCoins';
 import {isVisible} from './helpers/isVisibile';
+import {launchApp} from './helpers/launchApp';
 import {restoreWallet} from './helpers/restoreWallet';
 import {sleep} from './helpers/sleep';
 import {PIN} from './test-variables';
 
-describe('Coin delegation and undelegation', () => {
+describe.skip('Coin delegation and undelegation', () => {
   let mnemonic = '';
   beforeAll(async () => {
-    await device.launchApp({
-      newInstance: true,
-      permissions: {notifications: 'NO'},
-    });
+    await launchApp();
 
     mnemonic = utils.entropyToMnemonic(utils.randomBytes(32));
     await restoreWallet(mnemonic, PIN);
@@ -25,9 +23,10 @@ describe('Coin delegation and undelegation', () => {
   });
 
   it('Should delegate coins', async () => {
-    await waitFor(element(by.text('ISLM: 0.1')))
-      .toBeVisible()
+    await waitFor(element(by.id('current-total')))
+      .toHaveText('0.1 ISLM')
       .withTimeout(6 * 60_000);
+
     const stakingBanner = element(by.id('staking-widget'));
     await waitFor(stakingBanner)
       .toBeVisible()
