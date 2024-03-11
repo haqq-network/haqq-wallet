@@ -10,6 +10,14 @@ describe('Signin', () => {
   let mnemonic = '';
   let privateKey = '';
   let privateKeyMnemonic = '';
+
+  const resetApp = async () => {
+    await device.reloadReactNative();
+    await element(by.id('forgot_the_code')).tap();
+    await element(by.id('reset_wallet')).tap();
+    await element(by.label('Reset')).atIndex(0).tap();
+  };
+
   beforeAll(async () => {
     mnemonic = utils.entropyToMnemonic(utils.randomBytes(32));
     const randomWallet = Wallet.createRandom();
@@ -18,11 +26,6 @@ describe('Signin', () => {
     await device.launchApp({
       permissions: {notifications: 'NO'},
     });
-  });
-
-  afterAll(async () => {
-    await device.uninstallApp();
-    await device.installApp();
   });
 
   it('should restore privateKey wallet and import mnemonic wallet', async () => {
@@ -40,11 +43,7 @@ describe('Signin', () => {
   });
 
   it('should restore mnemonic wallet and import privateKey wallet', async () => {
-    await device.uninstallApp();
-    await device.installApp();
-    await device.launchApp({
-      permissions: {notifications: 'NO'},
-    });
+    await resetApp();
     await restoreWallet(mnemonic, PIN);
     await ensureWalletIsVisible(mnemonic);
 
@@ -59,11 +58,7 @@ describe('Signin', () => {
   });
 
   it('should restore random wallet and more random wallets', async () => {
-    await device.uninstallApp();
-    await device.installApp();
-    await device.launchApp({
-      permissions: {notifications: 'NO'},
-    });
+    await resetApp();
     const generateRandomWallet = (): {
       wallet: string;
       mnemonic: string;
