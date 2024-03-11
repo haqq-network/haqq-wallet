@@ -1,4 +1,5 @@
 import {realm} from '@app/models';
+import {WalletConnect} from '@app/services/wallet-connect';
 
 export class WalletConnectSessionMetadata extends Realm.Object {
   static schema = {
@@ -54,15 +55,15 @@ export class WalletConnectSessionMetadata extends Realm.Object {
     );
   }
 
-  static removeAll() {
-    const WalletConnectStorages = realm.objects<WalletConnectSessionMetadata>(
-      WalletConnectSessionMetadata.schema.name,
-    );
+  static async removeAll() {
+    const sessions = WalletConnectSessionMetadata.getAll();
 
-    for (const WalletConnectStorage of WalletConnectStorages) {
-      realm.write(() => {
-        realm.delete(WalletConnectStorage);
-      });
+    for (const s of sessions) {
+      try {
+        await WalletConnect.instance.disconnectSession(s.topic);
+      } catch (err) {
+        Logger.error('WalletConnectSessionMetadata.removeAll', s);
+      }
     }
   }
 

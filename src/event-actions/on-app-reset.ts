@@ -12,44 +12,43 @@ import {WalletConnectSessionMetadata} from '@app/models/wallet-connect-session-m
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
-import {WalletConnect} from '@app/services/wallet-connect';
+import {WC_PAIRING_URLS_KEY} from '@app/services/wallet-connect';
 
 export async function onAppReset() {
-  const uid = await EncryptedStorage.getItem('uid');
-  await EncryptedStorage.clear();
-  Transaction.removeAll();
-  Wallet.removeAll();
-  Web3BrowserBookmark.removeAll();
-  Web3BrowserSearchHistory.removeAll();
-  Web3BrowserSession.removeAll();
-  Contact.removeAll();
+  try {
+    Wallet.removeAll();
+    Contact.removeAll();
+    Transaction.removeAll();
+    Web3BrowserSession.removeAll();
+    Web3BrowserBookmark.removeAll();
+    Web3BrowserSearchHistory.removeAll();
+    WalletConnectSessionMetadata.removeAll();
+    VariablesString.remove(WC_PAIRING_URLS_KEY);
+    VariablesString.remove('rootMnemonicAccountId');
+    const uid = await EncryptedStorage.getItem('uid');
 
-  const wcSessions = WalletConnectSessionMetadata.getAll();
-  if (wcSessions?.length) {
-    await Promise.all(
-      wcSessions.map(({topic}) =>
-        WalletConnect.instance.disconnectSession(topic),
-      ),
-    );
-  }
-  WalletConnectSessionMetadata.removeAll();
-
-  const asyncStorageKeys = await RNAsyncStorage.getAllKeys();
-  if (asyncStorageKeys.length > 0) {
-    if (Platform.OS === 'android') {
-      await RNAsyncStorage.clear();
+    try {
+      const asyncStorageKeys = await RNAsyncStorage.getAllKeys();
+      if (asyncStorageKeys.length > 0) {
+        // it also remove wallet connect library cache
+        await Platform.select({
+          ios: RNAsyncStorage.multiRemove(asyncStorageKeys),
+          default: RNAsyncStorage.clear(),
+        });
+      }
+    } catch (err) {
+      Logger.captureException(err, 'onAppReset: RNAsyncStorage.clear()');
     }
-    if (Platform.OS === 'ios') {
-      await RNAsyncStorage.multiRemove(asyncStorageKeys);
+
+    await resetGenericPassword();
+    await EncryptedStorage.clear();
+    if (uid) {
+      await EncryptedStorage.setItem('uid', uid);
     }
+    app.getUser().resetUserData();
+  } catch (err) {
+    Logger.captureException(err, 'onAppReset');
+  } finally {
+    app.onboarded = false;
   }
-
-  app.getUser().resetUserData();
-  VariablesString.set('rootMnemonicAccountId', '');
-  await resetGenericPassword();
-
-  if (uid) {
-    await EncryptedStorage.setItem('uid', uid);
-  }
-  app.onboarded = false;
 }
