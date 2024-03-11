@@ -319,8 +319,24 @@ export class Balance implements IBalance, ISerializable {
   /**
    * Convert balance to fiat currency
    */
-  toFiat = (fixed = NUM_PRECISION, precission: number = this.precission) => {
-    return Currencies.convert(this).toFiatBalanceString(fixed, precission);
+  toFiat = (props?: {
+    fixed?: number;
+    precission?: number;
+    useDefaultCurrency?: boolean;
+  }) => {
+    const convertedBalance = Currencies.convert(this);
+    const fixed = props?.fixed ?? NUM_PRECISION;
+    const precission = props?.precission ?? this.precission;
+    const useDefaultCurrency = props?.useDefaultCurrency ?? false;
+
+    if (!convertedBalance.toNumber()) {
+      if (useDefaultCurrency) {
+        return this.toBalanceString(fixed, precission);
+      }
+      return '';
+    }
+
+    return convertedBalance.toFiatBalanceString(fixed, precission);
   };
 
   private getBnRaw = (

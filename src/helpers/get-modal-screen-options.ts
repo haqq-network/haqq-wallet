@@ -1,11 +1,13 @@
-import {StackNavigationOptions} from '@react-navigation/stack';
+import {NativeStackNavigationOptions} from '@react-navigation/native-stack';
 
 import {PopupHeader} from '@app/components';
 import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
 import {SpacerPopupButton} from '@app/components/popup/spacer-popup-button';
 import {I18N, getText} from '@app/i18n';
 
-export const getModalScreenOptions = (title?: I18N): StackNavigationOptions => {
+export const getModalScreenOptions = (
+  title?: I18N,
+): NativeStackNavigationOptions => {
   return {
     title: title ? getText(title) : undefined,
     headerShown: true,

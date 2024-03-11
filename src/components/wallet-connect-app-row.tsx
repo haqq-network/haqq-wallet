@@ -3,7 +3,6 @@ import React, {useCallback, useMemo} from 'react';
 import {SessionTypes} from '@walletconnect/types';
 import {Image, StyleProp, ViewStyle} from 'react-native';
 
-import {Color} from '@app/colors';
 import {DataContent, MenuNavigationButton} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 
@@ -32,6 +31,8 @@ export const WalletConnectAppRow = ({
     onPress?.(item);
   }, [item, onPress]);
 
+  const subtitleProps = useMemo(() => ({numberOfLines: 1}), []);
+
   return (
     <MenuNavigationButton onPress={handlePress} style={style}>
       <Image style={styles.appIcon} source={imageSource} />
@@ -39,6 +40,7 @@ export const WalletConnectAppRow = ({
         style={styles.info}
         title={application.name}
         subtitle={application.description}
+        subtitleProps={subtitleProps}
       />
     </MenuNavigationButton>
   );
@@ -49,7 +51,6 @@ const styles = createTheme({
     width: 42,
     height: 42,
     borderRadius: 8,
-    backgroundColor: Color.graphicGreen1,
   },
   info: {
     marginLeft: 12,

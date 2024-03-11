@@ -8,6 +8,7 @@ import {
   differenceInMinutes,
 } from 'date-fns';
 import Decimal from 'decimal.js';
+import {ethers} from 'ethers';
 import _ from 'lodash';
 import {
   Alert,
@@ -41,6 +42,7 @@ import {EthSignError} from './services/eth-sign';
 import {
   AdjustTrackingAuthorizationStatus,
   BalanceData,
+  EIPTypedData,
   EthType,
   EthTypedData,
   HaqqEthereumAddress,
@@ -52,6 +54,7 @@ import {
   SendTransactionError,
   WalletConnectParsedAccount,
 } from './types';
+import {ERC20_TOKEN_ABI} from './variables/abi';
 import {IS_ANDROID, STORE_PAGE_URL} from './variables/common';
 import {EIP155_SIGNING_METHODS} from './variables/EIP155';
 
@@ -975,4 +978,59 @@ export function applyEthTxMultiplier(toBalance: Balance) {
       ),
     ),
   );
+}
+
+export function parseERC20TxDataFromHexInput(hex?: string) {
+  try {
+    if (!hex) {
+      return undefined;
+    }
+    let data = hex;
+    if (!hex.startsWith('0x')) {
+      data = `0x${hex}`;
+    }
+    if (data) {
+      const erc20Interface = new ethers.utils.Interface(ERC20_TOKEN_ABI);
+      return erc20Interface.parseTransaction({data: data});
+    }
+  } catch (e) {}
+  return undefined;
+}
+
+const SUPPORTED_COSMOS_TX_TYPE_FOR_RENDER = [
+  IndexerTxMsgType.msgDelegate,
+  IndexerTxMsgType.msgUndelegate,
+  IndexerTxMsgType.msgBeginRedelegate,
+  IndexerTxMsgType.msgWithdrawDelegationReward,
+].map(s => s.toLowerCase());
+
+export function isSupportedCosmosTxForRender(
+  tx?: any | EIPTypedData,
+): tx is EIPTypedData {
+  if (!tx && typeof tx !== 'object') {
+    return false;
+  }
+
+  if (
+    'domain' in tx &&
+    'message' in tx &&
+    // @ts-ignore
+    tx.domain?.verifyingContract === 'cosmos'
+  ) {
+    // @ts-ignore
+    const firstMessage = tx.message?.msgs?.[0] as any;
+    if (!firstMessage) {
+      return false;
+    }
+    const msgType = firstMessage['@type'] || firstMessage.type;
+
+    let isSupportedType = false;
+    SUPPORTED_COSMOS_TX_TYPE_FOR_RENDER.forEach(type => {
+      if (msgType.toLowerCase().includes(type)) {
+        isSupportedType = true;
+      }
+    });
+    return isSupportedType;
+  }
+  return false;
 }

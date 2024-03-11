@@ -34,6 +34,8 @@ import {onWalletsVestingBalanceCheck} from '@app/event-actions/on-wallets-vestin
 import {Events} from '@app/events';
 import {throttle} from '@app/utils';
 
+import {onPushTokenRefresh} from './on-push-token-refresh';
+
 app.on(Events.onWalletsBalanceCheck, throttle(onWalletsBalanceCheck, 1000));
 app.on(Events.onWalletsVestingBalanceCheck, onWalletsVestingBalanceCheck);
 app.on(Events.onWalletsStakingBalanceCheck, onWalletsStakingBalanceCheck);
@@ -69,3 +71,4 @@ app.on(Events.onProviderChanged, onProviderChanged);
 app.on(Events.onAppReviewRequest, onAppReviewRequest);
 app.on(Events.onNeedUpdate, onNeedUpdate);
 app.on(Events.onBlockRequestCheck, onBlockRequestCheck);
+app.on(Events.onPushTokenRefresh, onPushTokenRefresh);

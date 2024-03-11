@@ -7,6 +7,11 @@ import React, {
 } from 'react';
 
 import {GestureResponderEvent, Pressable, StyleSheet} from 'react-native';
+import {
+  Directions,
+  Gesture,
+  GestureDetector,
+} from 'react-native-gesture-handler';
 import Animated, {
   cancelAnimation,
   runOnJS,
@@ -241,6 +246,11 @@ const StoryContainer = forwardRef<
       }
     };
 
+    const onPressOut = () => {
+      paused.value = false;
+      startAnimation(true);
+    };
+
     const onLongPress = () => startAnimation(true);
 
     useImperativeHandle(
@@ -283,48 +293,55 @@ const StoryContainer = forwardRef<
       [animation.value],
     );
 
+    const swipeDown = Gesture.Fling()
+      .direction(Directions.DOWN)
+      .onEnd(() => onClose());
+
     return (
-      <Animated.View style={styles.container} testID="storyModal">
-        <Pressable
-          onPressIn={onPressIn}
-          onLongPress={onLongPress}
-          delayLongPress={LONG_PRESS_DURATION}
-          style={styles.container}>
-          <Animated.View style={[styles.absolute, containerStyle]}>
-            {stories?.map((story, index) => (
-              <StoryList
-                {...story}
-                index={index}
-                x={x}
-                activeUser={userId}
-                activeStory={currentStory}
-                progress={animation}
-                seenStories={seenStories}
-                onClose={onClose}
-                onLoad={value => {
-                  const current = story.stories.find(
-                    item => item.id === currentStory.value,
-                  );
-                  onLoad?.();
-                  startAnimation(
-                    undefined,
-                    value !== undefined
-                      ? videoDuration ?? value
-                      : current?.duration ?? duration,
-                  );
-                }}
-                avatarSize={storyAvatarSize}
-                textStyle={textStyle}
-                paused={paused}
-                videoProps={videoProps}
-                closeColor={closeIconColor}
-                key={story.id}
-                {...props}
-              />
-            ))}
-          </Animated.View>
-        </Pressable>
-      </Animated.View>
+      <GestureDetector gesture={swipeDown}>
+        <Animated.View style={styles.container} testID="storyModal">
+          <Pressable
+            onPressIn={onPressIn}
+            onPressOut={onPressOut}
+            onLongPress={onLongPress}
+            delayLongPress={LONG_PRESS_DURATION}
+            style={styles.container}>
+            <Animated.View style={[styles.absolute, containerStyle]}>
+              {stories?.map((story, index) => (
+                <StoryList
+                  {...story}
+                  index={index}
+                  x={x}
+                  activeUser={userId}
+                  activeStory={currentStory}
+                  progress={animation}
+                  seenStories={seenStories}
+                  onClose={onClose}
+                  onLoad={value => {
+                    const current = story.stories.find(
+                      item => item.id === currentStory.value,
+                    );
+                    onLoad?.();
+                    startAnimation(
+                      undefined,
+                      value !== undefined
+                        ? videoDuration ?? value
+                        : current?.duration ?? duration,
+                    );
+                  }}
+                  avatarSize={storyAvatarSize}
+                  textStyle={textStyle}
+                  paused={paused}
+                  videoProps={videoProps}
+                  closeColor={closeIconColor}
+                  key={story.id}
+                  {...props}
+                />
+              ))}
+            </Animated.View>
+          </Pressable>
+        </Animated.View>
+      </GestureDetector>
     );
   },
 );

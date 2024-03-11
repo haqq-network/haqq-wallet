@@ -21,9 +21,17 @@ export type SearchLineProps = {
   onChange?: (text: string) => void;
   onCancel?: () => void;
   testId?: string;
+  cancelEnabled?: boolean;
+  autoFocus?: boolean;
 };
 
-export function SearchLine({onChange, onCancel, testId}: SearchLineProps) {
+export function SearchLine({
+  onChange,
+  onCancel,
+  testId,
+  cancelEnabled = true,
+  autoFocus = true,
+}: SearchLineProps) {
   const inputWidth = useSharedValue(0.9);
   const inputRef = useRef<TextInput>(null);
 
@@ -34,9 +42,11 @@ export function SearchLine({onChange, onCancel, testId}: SearchLineProps) {
 
   const onShown = useCallback(() => {
     requestAnimationFrame(() => {
-      inputRef.current?.focus();
+      if (autoFocus) {
+        inputRef.current?.focus();
+      }
     });
-  }, []);
+  }, [autoFocus]);
 
   useEffect(() => {
     inputWidth.value = withTiming(1, {duration: 200}, () => {
@@ -65,13 +75,17 @@ export function SearchLine({onChange, onCancel, testId}: SearchLineProps) {
           testID={`${testId}-input`}
         />
       </Animated.View>
-      <Spacer width={14} />
-      <HeaderButton
-        onPress={onPressCancel}
-        color={Color.textGreen1}
-        i18n={I18N.cancel}
-        testID={`${testId}-cancel`}
-      />
+      {cancelEnabled && (
+        <>
+          <Spacer width={14} />
+          <HeaderButton
+            onPress={onPressCancel}
+            color={Color.textGreen1}
+            i18n={I18N.cancel}
+            testID={`${testId}-cancel`}
+          />
+        </>
+      )}
     </View>
   );
 }

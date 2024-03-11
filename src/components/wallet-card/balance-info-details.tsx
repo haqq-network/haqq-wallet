@@ -15,7 +15,6 @@ import {Placeholder} from '@app/components/ui/placeholder';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Balance} from '@app/services/balance';
-import {CURRENCY_NAME} from '@app/variables/common';
 
 type BalanceInfoDetailsProps = {
   isBalancesFirstSync: boolean;
@@ -38,7 +37,7 @@ export const BalanceInfoDetails = ({
         <Text
           variant={TextVariant.t15}
           color={Color.textSecond2}
-          children={`${CURRENCY_NAME}: ${total?.toFloatString() ?? 0}`}
+          children={total?.toFiat()}
           onPress={onAccountInfo}
           suppressHighlighting={true}
         />

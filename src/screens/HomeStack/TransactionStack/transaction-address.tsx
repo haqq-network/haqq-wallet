@@ -54,6 +54,32 @@ export const TransactionAddressScreen = observer(() => {
     );
   }, [address, wallets]);
 
+  const filteredContacts = useMemo(() => {
+    if (!contacts || !contacts.length) {
+      return [];
+    }
+
+    if (!address) {
+      return contacts.filter(
+        c => !AddressUtils.equals(c.account, route.params.from),
+      );
+    }
+
+    const lowerCaseAddress = address.toLowerCase();
+
+    return contacts.filter(c => {
+      const hexAddress = AddressUtils.toEth(c.account);
+      const haqqAddress = AddressUtils.toHaqq(hexAddress);
+
+      return (
+        (hexAddress.includes(lowerCaseAddress) ||
+          haqqAddress.includes(lowerCaseAddress) ||
+          c.name?.toLowerCase().includes(lowerCaseAddress)) &&
+        !AddressUtils.equals(hexAddress, route.params.from)
+      );
+    });
+  }, [address, contacts]);
+
   const onDone = useCallback(
     async (result: string) => {
       try {
@@ -91,7 +117,7 @@ export const TransactionAddressScreen = observer(() => {
       address={address}
       setAddress={setAddress}
       filteredWallets={filteredWallets}
-      contacts={contacts}
+      contacts={filteredContacts}
       onAddress={onDone}
       testID="transaction_address"
     />

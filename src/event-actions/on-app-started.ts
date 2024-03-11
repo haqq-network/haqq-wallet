@@ -33,7 +33,7 @@ export async function onAppStarted() {
   const initialUrl = await Linking.getInitialURL();
 
   if (initialUrl) {
-    app.emit(Events.onDeepLink, initialUrl);
+    app.emit(Events.onDeepLink, initialUrl, false, true);
   }
 
   Banner.removeAll();

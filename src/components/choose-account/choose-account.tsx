@@ -110,6 +110,7 @@ const styles = StyleSheet.create({
   },
   tabsContentContainerStyle: {
     height: 64,
+    marginTop: 12,
   },
   tabHeaderStyle: {
     marginHorizontal: 20,

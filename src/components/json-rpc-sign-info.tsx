@@ -1,9 +1,9 @@
 import React, {useMemo} from 'react';
 
-import {View} from 'react-native';
+import {ScrollView, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Spacer, Text} from '@app/components/ui';
+import {First, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
@@ -12,12 +12,14 @@ import {
   getHostnameFromUrl,
   getSignParamsMessage,
   getSignTypedDataParamsData,
+  isSupportedCosmosTxForRender,
   isValidJSON,
 } from '@app/utils';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 import {JsonViewer} from './json-viewer';
 import {SiteIconPreview, SiteIconPreviewSize} from './site-icon-preview';
+import {TypedDataViewer} from './typed-data-viewer';
 import {WalletRow, WalletRowTypes} from './wallet-row';
 
 interface WalletConnectSignInfoProps {
@@ -69,9 +71,13 @@ export const JsonRpcSignInfo = ({
 }: WalletConnectSignInfoProps) => {
   const message = useMemo(() => getMessageByRequest(request), [request]);
   const url = useMemo(() => getHostnameFromUrl(metadata?.url), [metadata]);
+  const isSupportedConsmosTx = useMemo(
+    () => message?.json && isSupportedCosmosTxForRender(message.text),
+    [message],
+  );
 
   return (
-    <>
+    <View style={styles.container}>
       <Text t5 i18n={I18N.walletConnectSignSignMessage} />
 
       <Spacer height={8} />
@@ -95,28 +101,48 @@ export const JsonRpcSignInfo = ({
 
       <Spacer height={12} />
 
-      <Text
-        style={styles.messageTitle}
-        t9
-        i18n={I18N.walletConnectSignMessage}
-      />
-      <Spacer height={4} />
-      {!message?.json && (
-        <Text color={Color.textBase2} style={styles.message} t11>
-          {message.text}
-        </Text>
-      )}
-
-      {!!message?.json && (
-        <JsonViewer style={styles.json} data={message.text} />
-      )}
-    </>
+      <First>
+        {isSupportedConsmosTx && <TypedDataViewer data={message.text} />}
+        <>
+          <Text
+            style={styles.messageTitle}
+            t9
+            i18n={I18N.walletConnectSignMessage}
+          />
+          <Spacer height={4} />
+          <ScrollView style={styles.json} showsVerticalScrollIndicator={false}>
+            {!message?.json && (
+              <Text color={Color.textBase2} style={styles.message} t11>
+                {message.text}
+              </Text>
+            )}
+            {!!message?.json && (
+              <ScrollView
+                horizontal
+                style={styles.json}
+                showsHorizontalScrollIndicator={false}>
+                <JsonViewer
+                  autoexpand={false}
+                  style={styles.json}
+                  data={message.text}
+                />
+              </ScrollView>
+            )}
+          </ScrollView>
+        </>
+      </First>
+    </View>
   );
 };
 
 const styles = createTheme({
+  container: {
+    alignItems: 'center',
+    flex: 1,
+  },
   json: {
-    width: '40%',
+    flex: 1,
+    width: '100%',
   },
   messageTitle: {
     alignSelf: 'flex-start',

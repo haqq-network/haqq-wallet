@@ -46,6 +46,7 @@ export const WalletConnectApprovalScreen = observer(() => {
           event,
         },
       );
+      await onPressReject();
     }
     navigation.goBack();
   }, [event, navigation, selectedWallet?.address]);

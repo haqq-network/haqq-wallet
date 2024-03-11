@@ -10,6 +10,8 @@ import {
   PopupContainer,
   Spacer,
   Text,
+  TextPosition,
+  TextVariant,
 } from '@app/components/ui';
 import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
@@ -95,12 +97,6 @@ export const SigninNetworks = observer(
             loop
           />
         </Spacer>
-        {/* <SocialButton variant={SocialButtonVariant.discord} />
-        <Spacer height={10} />
-        <SocialButton variant={SocialButtonVariant.twitter} />
-        <Spacer height={10} />
-        <SocialButton variant={SocialButtonVariant.facebook} /> */}
-
         {isAppleSupported && !isSSSDisabled && (
           <>
             <Spacer height={10} />
@@ -140,8 +136,8 @@ export const SigninNetworks = observer(
         )}
         <Spacer height={10} />
         <Text
-          t15
-          center
+          variant={TextVariant.t15}
+          position={TextPosition.center}
           i18n={I18N.sssNetworkWeb3AuthDescription}
           color={Color.textBase2}
         />
@@ -152,6 +148,7 @@ export const SigninNetworks = observer(
           variant={ButtonVariant.contained}
           testID="signin_network_skip"
         />
+        <Spacer height={16} />
       </PopupContainer>
     );
   },

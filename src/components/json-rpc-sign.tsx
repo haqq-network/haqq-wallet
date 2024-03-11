@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {ScrollView, View} from 'react-native';
+import {View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
@@ -50,13 +50,7 @@ export const JsonRpcSign = ({
 
   return (
     <View style={styles.container}>
-      <ScrollView
-        bounces={false}
-        showsVerticalScrollIndicator={false}
-        style={styles.scroll}
-        contentContainerStyle={styles.scrollContainer}>
-        <Spacer height={32} />
-
+      <View style={styles.txContainer}>
         {isTransaction && (
           <JsonRpcTransactionInfo
             metadata={metadata}
@@ -74,7 +68,7 @@ export const JsonRpcSign = ({
             wallet={wallet!}
           />
         )}
-      </ScrollView>
+      </View>
 
       <View style={[styles.buttonContainer, {marginBottom: insets.bottom}]}>
         <Spacer height={4} />
@@ -106,10 +100,8 @@ const styles = createTheme({
     justifyContent: 'space-between',
     flex: 1,
   },
-  scrollContainer: {
-    alignItems: 'center',
-  },
-  scroll: {
+  txContainer: {
+    flex: 1,
     width: '100%',
   },
   buttonContainer: {
