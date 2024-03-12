@@ -12,10 +12,12 @@ import {PIN_BANNED_ATTEMPTS} from '@app/variables/common';
 interface PinGuardProps {
   onEnter?: () => Promise<void> | void;
   children?: any;
+  title?: I18N;
+  enabled?: boolean;
 }
 
 export const PinGuardScreen = memo(
-  ({onEnter, children = null}: PinGuardProps) => {
+  ({onEnter, children = null, title, enabled}: PinGuardProps) => {
     const pinRef = useRef<PinInterface>();
     const {setOptions} = useTypedNavigation();
     const [loggedIn, setLoggedIn] = useState(false);
@@ -55,8 +57,8 @@ export const PinGuardScreen = memo(
       }
     };
 
-    if (!loggedIn) {
-      return <PinGuard pinRef={pinRef} onPin={onPin} />;
+    if (!loggedIn && enabled) {
+      return <PinGuard pinRef={pinRef} onPin={onPin} title={title} />;
     }
     return children;
   },

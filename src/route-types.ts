@@ -161,7 +161,10 @@ export enum SssMigrateStackRoutes {
 }
 
 export type SssMigrateStackParamList = HomeStackParamList & {
-  [SssMigrateStackRoutes.SssMigrateAgreement]: {accountId: string};
+  [SssMigrateStackRoutes.SssMigrateAgreement]: {
+    accountId: string;
+    pinEnabled?: boolean;
+  };
   [SssMigrateStackRoutes.SssMigrateNetworks]: {accountId: string};
   [SssMigrateStackRoutes.SssMigrateRewrite]: {
     accountId: string;
@@ -260,6 +263,7 @@ export enum BackupStackRoutes {
 export type BackupStackParamList = HomeStackParamList & {
   [BackupStackRoutes.BackupWarning]: {
     wallet: Wallet;
+    pinEnabled?: boolean;
   };
   [BackupStackRoutes.BackupCreate]: {
     wallet: Wallet;
@@ -382,8 +386,14 @@ export type HomeStackParamList = {
     nft?: NftItem;
   };
   [HomeStackRoutes.AccountDetail]: {address: string};
-  [HomeStackRoutes.Backup]: {wallet: Wallet};
-  [HomeStackRoutes.WalletProtectionPopup]: {wallet: Wallet};
+  [HomeStackRoutes.Backup]: {
+    wallet: Wallet;
+    pinEnabled?: boolean;
+  };
+  [HomeStackRoutes.WalletProtectionPopup]: {
+    wallet: Wallet;
+    pinEnabled?: boolean;
+  };
   [HomeStackRoutes.WalletConnectApplicationDetailsPopup]: {
     session: SessionTypes.Struct;
     isPopup?: boolean;
@@ -403,7 +413,10 @@ export type HomeStackParamList = {
       event: WalletConnectApproveConnectionEvent;
     };
   };
-  [HomeStackRoutes.SssMigrate]: {accountId: string};
+  [HomeStackRoutes.SssMigrate]: {
+    accountId: string;
+    pinEnabled?: boolean;
+  };
   [HomeStackRoutes.BackupNotification]: {wallet: Wallet};
   [HomeStackRoutes.JsonRpcSign]: {
     request: PartialJsonRpcRequest;

@@ -3,6 +3,7 @@ import React, {memo} from 'react';
 import {BackupWarning} from '@app/components/backup-warning';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {BackupStackParamList, BackupStackRoutes} from '@app/route-types';
+import {PinGuardScreen} from '@app/screens/pin-guard';
 
 export const BackupWarningScreen = memo(() => {
   const navigation = useTypedNavigation<BackupStackParamList>();
@@ -18,6 +19,8 @@ export const BackupWarningScreen = memo(() => {
   };
 
   return (
-    <BackupWarning onPressBackup={onPressBackup} testID="backup_warning" />
+    <PinGuardScreen enabled={route.params.pinEnabled}>
+      <BackupWarning onPressBackup={onPressBackup} testID="backup_warning" />
+    </PinGuardScreen>
   );
 });
