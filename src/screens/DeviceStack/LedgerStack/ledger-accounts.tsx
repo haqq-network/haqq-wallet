@@ -7,10 +7,11 @@ import {LedgerAccounts} from '@app/components/ledger-accounts';
 import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
+import {safeLoadBalances} from '@app/helpers/safe-load-balances';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {Wallet} from '@app/models/wallet';
 import {LedgerStackParamList, LedgerStackRoutes} from '@app/route-types';
-import {EthNetwork} from '@app/services';
+import {Balance} from '@app/services/balance';
 import {LedgerAccountItem} from '@app/types';
 import {
   ETH_HD_SHORT_PATH,
@@ -85,8 +86,6 @@ export const LedgerAccountsScreen = memo(() => {
 
           const data = await provider.getAccountInfo(hdPath);
 
-          const balance = await EthNetwork.getBalance(data.address);
-
           addressList.push({
             address: data.address.toLowerCase(),
             hdPath,
@@ -94,11 +93,20 @@ export const LedgerAccountsScreen = memo(() => {
             exists: Wallet.addressList().includes(
               AddressUtils.toEth(data.address),
             ),
-            balance: balance.toFloat(),
+            balance: Balance.Empty,
           });
         }
 
-        setAddresses(list => list.concat(addressList));
+        const wallets = addressList.map(item => item.address);
+        const balances = await safeLoadBalances(wallets);
+        const resultWithBalances = addressList.map(item => ({
+          ...item,
+          balance: new Balance(
+            balances.total[AddressUtils.toHaqq(item.address)] || item.balance,
+          ),
+        }));
+
+        setAddresses(list => list.concat(resultWithBalances));
         setLastIndex(lastIndex + 5);
       } catch (e) {
         if (e instanceof Error) {

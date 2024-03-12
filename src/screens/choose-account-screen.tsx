@@ -12,10 +12,10 @@ import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {getWalletsFromProvider} from '@app/helpers/get-wallets-from-provider';
+import {safeLoadBalances} from '@app/helpers/safe-load-balances';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N, getText} from '@app/i18n';
-import {Currencies} from '@app/models/currencies';
 import {Wallet} from '@app/models/wallet';
 import {
   HomeStackRoutes,
@@ -24,7 +24,6 @@ import {
   SignInStackRoutes,
 } from '@app/route-types';
 import {Balance} from '@app/services/balance';
-import {Indexer} from '@app/services/indexer';
 import {ChooseAccountItem, ModalType, WalletType} from '@app/types';
 import {MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
@@ -102,15 +101,12 @@ export const ChooseAccountScreen = observer(() => {
         index += 1;
       }
       const wallets = result.map(item => item.address);
-      const balances = await Indexer.instance.updates(
-        wallets.map(AddressUtils.toHaqq),
-        new Date(0),
-        Currencies.selectedCurrency,
-      );
+      const balances = await safeLoadBalances(wallets);
+
       const resultWithBalances = result.map(item => ({
         ...item,
         balance: new Balance(
-          balances.total[AddressUtils.toHaqq(item.address)] || item.balance,
+          balances?.total[AddressUtils.toHaqq(item.address)] || item.balance,
         ),
       }));
       setAddresses(resultWithBalances);
