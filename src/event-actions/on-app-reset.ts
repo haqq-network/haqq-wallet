@@ -1,5 +1,4 @@
 import RNAsyncStorage from '@react-native-async-storage/async-storage';
-import {Platform} from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {resetGenericPassword} from 'react-native-keychain';
 
@@ -13,6 +12,7 @@ import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {WC_PAIRING_URLS_KEY} from '@app/services/wallet-connect';
+import {sleep} from '@app/utils';
 
 export async function onAppReset() {
   try {
@@ -29,12 +29,9 @@ export async function onAppReset() {
 
     try {
       const asyncStorageKeys = await RNAsyncStorage.getAllKeys();
-      if (asyncStorageKeys.length > 0) {
-        // it also remove wallet connect library cache
-        await Platform.select({
-          ios: RNAsyncStorage.multiRemove(asyncStorageKeys),
-          default: RNAsyncStorage.clear(),
-        });
+      for (let key of asyncStorageKeys) {
+        await RNAsyncStorage.removeItem(key);
+        await sleep(100);
       }
     } catch (err) {
       Logger.captureException(err, 'onAppReset: RNAsyncStorage.clear()');
