@@ -42,6 +42,7 @@ import {AppTheme, ModalType} from '@app/types';
 import {getAppTrackingAuthorizationStatus, sleep} from '@app/utils';
 import {SPLASH_TIMEOUT_MS} from '@app/variables/common';
 
+import {AppVersionAbsoluteView} from './components/app-version-absolute-view';
 import {migrationWallets} from './models/migration-wallets';
 
 const appTheme = createTheme({
@@ -223,6 +224,7 @@ export const App = () => {
               />
               <AppScreenSecurityOverview />
               {toast}
+              <AppVersionAbsoluteView />
             </NavigationContainer>
           </MenuProvider>
         </SafeAreaProvider>
