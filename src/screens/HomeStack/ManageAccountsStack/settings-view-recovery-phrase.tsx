@@ -56,7 +56,10 @@ export const SettingsViewRecoveryPhraseScreen = memo(() => {
   }, [accountId, type]);
 
   return (
-    <PinGuardScreen onEnter={onEnter}>
+    <PinGuardScreen
+      enabled
+      onEnter={onEnter}
+      title={I18N.settingsViewRecoveryPhraseTitle}>
       <CustomHeader
         onPressLeft={navigation.goBack}
         iconLeft="arrow_back"

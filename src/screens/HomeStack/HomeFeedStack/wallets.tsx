@@ -5,7 +5,6 @@ import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {observer} from 'mobx-react';
 
 import {Wallets} from '@app/components/wallets';
-import {app} from '@app/contexts';
 import {getProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet';
 import {useTypedNavigation} from '@app/hooks';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
@@ -36,14 +35,20 @@ export const WalletsWrapper = observer(() => {
 
   const onPressPhrase = useCallback(
     (wallet: Wallet) => {
-      navigation.navigate(HomeStackRoutes.Backup, {wallet});
+      navigation.navigate(HomeStackRoutes.Backup, {
+        wallet,
+        pinEnabled: true,
+      });
     },
     [navigation],
   );
 
   const onPressSocial = useCallback(
     (accountId: string) => {
-      navigation.navigate(HomeStackRoutes.SssMigrate, {accountId});
+      navigation.navigate(HomeStackRoutes.SssMigrate, {
+        accountId,
+        pinEnabled: true,
+      });
     },
     [navigation],
   );
@@ -61,17 +66,17 @@ export const WalletsWrapper = observer(() => {
       )?.accountId;
 
       if (isNoBackup && !userHaveSSSProtectedWallets) {
-        await app.auth();
-        navigation.navigate(HomeStackRoutes.WalletProtectionPopup, {wallet});
+        navigation.navigate(HomeStackRoutes.WalletProtectionPopup, {
+          wallet,
+          pinEnabled: true,
+        });
         return;
       }
 
       if (!wallet.mnemonicSaved) {
-        await app.auth();
         onPressPhrase(wallet);
       }
       if (!wallet.socialLinkEnabled && !userHaveSSSProtectedWallets) {
-        await app.auth();
         onPressSocial(accountId);
       }
     },
