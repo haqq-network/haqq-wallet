@@ -12,9 +12,12 @@ export async function ensureWalletIsVisible(mnemonic: string) {
 
   const shorted = shortAddress(wallet.address.toLowerCase(), '•');
 
-  await waitFor(element(by.id(`wallets_${wallet.address.toLowerCase()}_card`)))
+  const walletID = `wallets_${wallet.address.toLowerCase()}_card`;
+
+  await waitFor(element(by.id(walletID)))
     .toBeVisible()
-    .withTimeout(5000);
+    .whileElement(by.id('wallets'))
+    .scroll(350, 'right');
 
   await expect(
     element(by.id(`wallets_${wallet.address.toLowerCase()}_address`)),

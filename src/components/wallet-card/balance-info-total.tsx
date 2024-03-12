@@ -38,6 +38,7 @@ export const BalanceInfoTotal = observer(
         )}
         <View style={styles.row}>
           <Text
+            testID="current-total"
             variant={TextVariant.t0}
             color={Color.textBase3}
             numberOfLines={1}
