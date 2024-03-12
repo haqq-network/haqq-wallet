@@ -18,6 +18,7 @@ import {IS_IOS} from '@app/variables/common';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {enableFreeze, enableScreens} from 'react-native-screens';
+import {enableBatchedStateUpdates} from '@app/hooks/batched-set-state';
 
 if (!global.BigInt) {
   const BigInt = require('big-integer');
@@ -29,6 +30,7 @@ if (!global.BigInt) {
 
 enableScreens();
 enableFreeze(true);
+enableBatchedStateUpdates()
 
 LogBox.ignoreLogs(["The 'navigation' object hasn't been initialized"]);
 
