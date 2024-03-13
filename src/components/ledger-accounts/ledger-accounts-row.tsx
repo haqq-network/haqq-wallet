@@ -10,7 +10,6 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {cleanNumber} from '@app/helpers/clean-number';
 import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
 import {Color, createTheme} from '@app/theme';
@@ -39,7 +38,7 @@ export const LedgerAccountsRow = ({
         </Text>
       </View>
       <DataContent
-        title={`${cleanNumber(item.balance)} ISLM`}
+        title={item?.balance?.toBalanceString('auto')}
         subtitle={shortAddress(item.address)}
       />
       <Spacer />

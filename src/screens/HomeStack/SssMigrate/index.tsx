@@ -27,9 +27,7 @@ export const SssMigrateStack = memo(() => {
         name={SssMigrateStackRoutes.SssMigrateAgreement}
         component={SssMigrateAgreementScreen}
         options={hideBack}
-        initialParams={{
-          accountId: route.params.accountId,
-        }}
+        initialParams={route.params}
       />
       <Stack.Screen
         name={SssMigrateStackRoutes.SssMigrateNetworks}

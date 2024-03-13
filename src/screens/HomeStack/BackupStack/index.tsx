@@ -30,14 +30,13 @@ const stackScreenOptions = {
 };
 
 export const BackupStack = memo(() => {
-  const {wallet} = useTypedRoute<HomeStackParamList, HomeStackRoutes.Backup>()
-    .params;
+  const route = useTypedRoute<HomeStackParamList, HomeStackRoutes.Backup>();
   return (
     <Stack.Navigator screenOptions={stackScreenOptions}>
       <Stack.Screen
         name={BackupStackRoutes.BackupWarning}
         component={BackupWarningScreen}
-        initialParams={{wallet}}
+        initialParams={route.params}
         options={screenOptions}
       />
       <Stack.Screen

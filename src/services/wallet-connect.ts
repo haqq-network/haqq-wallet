@@ -38,7 +38,7 @@ const logger = Logger.create('WalletConnect', {
   emodjiPrefix: '⚪️',
 });
 
-const PAIRING_URLS_KEY = 'wallet_connect_pairing_urls';
+export const WC_PAIRING_URLS_KEY = 'wallet_connect_pairing_urls';
 
 export class WalletConnect extends Initializable {
   static instance = new WalletConnect();
@@ -227,7 +227,8 @@ export class WalletConnect extends Initializable {
    */
   public getPairedUrls() {
     return (
-      VariablesString.getObject<Record<string, boolean>>(PAIRING_URLS_KEY) || {}
+      VariablesString.getObject<Record<string, boolean>>(WC_PAIRING_URLS_KEY) ||
+      {}
     );
   }
 
@@ -276,7 +277,7 @@ export class WalletConnect extends Initializable {
         this._core?.pairing?.pairings?.keys?.includes(topic) ||
         this._core?.crypto.keychain.has(topic)
       ) {
-        VariablesString.setObject(PAIRING_URLS_KEY, {
+        VariablesString.setObject(WC_PAIRING_URLS_KEY, {
           ...pairedUrls,
           [uri]: false,
         });
@@ -301,7 +302,7 @@ export class WalletConnect extends Initializable {
         });
       } else {
         await this._core?.pairing?.activate({topic});
-        VariablesString.setObject(PAIRING_URLS_KEY, {
+        VariablesString.setObject(WC_PAIRING_URLS_KEY, {
           ...pairedUrls,
           [uri]: true,
         });
