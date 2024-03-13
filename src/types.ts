@@ -789,7 +789,7 @@ export type LedgerAccountItem = {
   hdPath: string;
   publicKey: string;
   exists: boolean;
-  balance: number;
+  balance: Balance;
 };
 
 export type ChooseAccountItem = AddWalletParams & {

@@ -51,12 +51,14 @@ export const WalletCreate = ({
         i18n={I18N.walletCreateNew}
         onPress={onPressCreate}
         style={styles.create}
+        testID={`${testID}_create`}
       />
       <Inline gap={0}>
         <Button
           variant={ButtonVariant.second}
           size={ButtonSize.middle}
-          onPress={onPressHardwareWallet}>
+          onPress={onPressHardwareWallet}
+          testID={`${testID}_hardware`}>
           <View style={styles.createButtonChildren}>
             <Text t9 i18n={I18N.walletCreateConnect} color={Color.textGreen1} />
             <Spacer width={8} />
@@ -69,6 +71,7 @@ export const WalletCreate = ({
           size={ButtonSize.middle}
           i18n={I18N.walletCreateImport}
           onPress={onPressRestore}
+          testID={`${testID}_import`}
         />
       </Inline>
     </View>

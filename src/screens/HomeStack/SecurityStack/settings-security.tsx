@@ -93,7 +93,7 @@ export const SettingsSecurityScreen = memo(() => {
   );
 
   return (
-    <PinGuardScreen>
+    <PinGuardScreen enabled title={I18N.settingsSecurity}>
       <CustomHeader
         onPressLeft={navigation.goBack}
         iconLeft="arrow_back"

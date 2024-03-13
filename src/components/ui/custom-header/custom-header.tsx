@@ -1,7 +1,10 @@
 import React, {forwardRef, useImperativeHandle, useMemo, useState} from 'react';
 
 import {Platform, View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {
+  useSafeAreaFrame,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
@@ -70,6 +73,8 @@ export const CustomHeader = forwardRef<
     ref,
   ) => {
     const insets = useSafeAreaInsets();
+    const frame = useSafeAreaFrame();
+
     const [isSearching, setIsSearching] = useState(false);
 
     const stopSearch = () => setIsSearching(false);
@@ -83,10 +88,10 @@ export const CustomHeader = forwardRef<
     const top = useMemo(
       () =>
         Platform.select({
-          ios: insets.top,
+          ios: insets.top - frame.y,
           android: insets.top,
         }),
-      [insets],
+      [insets, frame],
     );
 
     return (

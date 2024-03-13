@@ -10,7 +10,6 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks/use-theme-selector';
 import {I18N, getText} from '@app/i18n';
@@ -48,7 +47,6 @@ export const BackupSssSuggestion = ({
   });
 
   const onBackup = useCallback(async () => {
-    await app.auth();
     onClickBackup();
   }, [onClickBackup]);
 

@@ -9,18 +9,15 @@ import {CustomHeader} from '../ui';
 interface PinGuardProps {
   onPin: (pin: string) => void;
   pinRef: React.MutableRefObject<PinInterface | undefined>;
+  title?: I18N;
 }
 
-export const PinGuard = ({onPin, pinRef}: PinGuardProps) => {
+export const PinGuard = ({onPin, pinRef, title}: PinGuardProps) => {
   const {goBack} = useTypedNavigation();
 
   return (
     <>
-      <CustomHeader
-        onPressLeft={goBack}
-        iconLeft="arrow_back"
-        title={I18N.settingsSecurity}
-      />
+      <CustomHeader onPressLeft={goBack} iconLeft="arrow_back" title={title} />
       <Pin title={I18N.settingsSecurityWalletPin} onPin={onPin} ref={pinRef} />
     </>
   );

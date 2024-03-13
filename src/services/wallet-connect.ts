@@ -13,14 +13,17 @@ import {IWeb3Wallet, Web3Wallet} from '@walletconnect/web3wallet';
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {Events, WalletConnectEvents} from '@app/events';
+import {showModal} from '@app/helpers';
 import {getLeadingAccount} from '@app/helpers/get-leading-account';
 import {Initializable} from '@app/helpers/initializable';
-import {I18N} from '@app/i18n';
+import {Url} from '@app/helpers/url';
+import {I18N, getText} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
 import {WalletConnectSessionMetadata} from '@app/models/wallet-connect-session-metadata';
 import {message as sendMessage, sendNotification} from '@app/services/toast';
+import {ModalType} from '@app/types';
 import {filterWalletConnectSessionsByAddress, isError, sleep} from '@app/utils';
 
 import {AppUtils} from './app-utils';
@@ -35,7 +38,7 @@ const logger = Logger.create('WalletConnect', {
   emodjiPrefix: '⚪️',
 });
 
-const PAIRING_URLS_KEY = 'wallet_connect_pairing_urls';
+export const WC_PAIRING_URLS_KEY = 'wallet_connect_pairing_urls';
 
 export class WalletConnect extends Initializable {
   static instance = new WalletConnect();
@@ -43,6 +46,7 @@ export class WalletConnect extends Initializable {
   private _core: ICore | null = null;
   private _initAttempts = 0;
   private _initStartTime = 0;
+  private _handledJsonRpcEvents = new Map<string, boolean>();
 
   public getActiveSessions() {
     return this._client?.engine?.signClient?.session?.getAll?.() || [];
@@ -95,12 +99,17 @@ export class WalletConnect extends Initializable {
       this
         // https://docs.walletconnect.com/2.0/javascript/web3wallet/wallet-usage#responding-to-session-requests
         ._walletConnectOnEvent('session_proposal', proposal => {
-          logger.log('🟢 session_proposal', JSON.stringify(proposal, null, 2));
+          logger.log('🟢 session_proposal', proposal);
           app.emit(Events.onWalletConnectApproveConnection, proposal);
         })
         // https://docs.walletconnect.com/2.0/javascript/web3wallet/wallet-usage#responding-to-session-requests
         .on('session_request', async event => {
-          logger.log('🟢 session_request', JSON.stringify(event, null, 2));
+          const handledKey = `${event.id}-${event.topic}`;
+          if (this._handledJsonRpcEvents.get(handledKey)) {
+            return logger.log('🟣 session_request already in progress', event);
+          }
+          this._handledJsonRpcEvents.set(handledKey, true);
+          logger.log('🟢 session_request', event);
           app.emit(Events.onWalletConnectSignTransaction, event);
         })
         // https://docs.walletconnect.com/2.0/javascript/web3wallet/wallet-usage#extend-a-session
@@ -120,8 +129,15 @@ export class WalletConnect extends Initializable {
           this._emitActiveSessions.bind(this);
         });
 
+      this._core.relayer.on('relayer_connect', async () => {
+        // connection to the relay server is established
+        logger.log('🟢 relayer_connect');
+        sendNotification(I18N.walletConnectConnectionEstablished);
+      });
       this._core.relayer.on('relayer_disconnect', async () => {
-        await this._reInit();
+        // connection to the relay server is lost
+        logger.log('🔴 relayer_disconnect');
+        sendNotification(I18N.walletConnectConnectionLost);
       });
 
       // this event called when user disconect from web site
@@ -134,20 +150,11 @@ export class WalletConnect extends Initializable {
         const provider = Provider.getById(providerId)!;
         const chainId = provider.ethChainId;
         await this.awaitForInitialization();
-        WalletConnectSessionMetadata.getAll().forEach(async ({topic}) => {
-          try {
-            await this._client?.emitSessionEvent({
-              topic,
-              event: {
-                name: 'chainChanged',
-                data: chainId,
-              },
-              chainId: `eip155:${chainId}`,
-            });
-          } catch (err) {
-            logger.error('send event chainChanged', {topic}, err);
-          }
-        });
+        for (let session of WalletConnectSessionMetadata.getAll()) {
+          // sleep to avoid frequency requests to wallet connect relay server
+          await sleep(300);
+          await this.emitChainChange(chainId, session.topic);
+        }
       });
 
       const end = Date.now();
@@ -178,6 +185,21 @@ export class WalletConnect extends Initializable {
     }
   }
 
+  public async emitChainChange(chainId: number | `${number}`, topic: string) {
+    try {
+      await this._client?.emitSessionEvent({
+        topic,
+        event: {
+          name: 'chainChanged',
+          data: chainId,
+        },
+        chainId: `eip155:${chainId}`,
+      });
+    } catch (err) {
+      logger.error('emitChainChange', {topic}, err);
+    }
+  }
+
   public async setupPushNotifications(token: string) {
     try {
       logger.log('setupPushNotifications: token', token);
@@ -205,8 +227,30 @@ export class WalletConnect extends Initializable {
    */
   public getPairedUrls() {
     return (
-      VariablesString.getObject<Record<string, boolean>>(PAIRING_URLS_KEY) || {}
+      VariablesString.getObject<Record<string, boolean>>(WC_PAIRING_URLS_KEY) ||
+      {}
     );
+  }
+
+  public async handleRequest(uri: string) {
+    try {
+      const {query} = new Url<{sessionTopic: string; requestId: string}>(
+        uri,
+        true,
+      );
+      if (!query?.sessionTopic && !query?.requestId) {
+        return false;
+      }
+      const session = this.getSessionByTopic(query.sessionTopic);
+      if (session) {
+        await this._reInit();
+      }
+
+      return true;
+    } catch (err) {
+      logger.error('handleRequest', err);
+    }
+    return false;
   }
 
   public async pair(uri: string) {
@@ -220,7 +264,12 @@ export class WalletConnect extends Initializable {
       const {topic} = parseUri(uri) || {};
 
       if (!this._client || !this._core) {
-        return sendNotification(I18N.walletConnectPairInitError);
+        showModal(ModalType.error, {
+          title: getText(I18N.walletConnectErrorTitle),
+          description: getText(I18N.walletConnectPairInitError),
+          close: getText(I18N.walletConnectErrorClose),
+        });
+        return;
       }
 
       if (
@@ -228,23 +277,32 @@ export class WalletConnect extends Initializable {
         this._core?.pairing?.pairings?.keys?.includes(topic) ||
         this._core?.crypto.keychain.has(topic)
       ) {
-        VariablesString.setObject(PAIRING_URLS_KEY, {
+        VariablesString.setObject(WC_PAIRING_URLS_KEY, {
           ...pairedUrls,
           [uri]: false,
         });
         try {
           await this.disconnectSession(topic);
         } catch {}
-        return sendNotification(I18N.walletConnectPairAlreadyExists);
+        showModal(ModalType.error, {
+          title: getText(I18N.walletConnectErrorTitle),
+          description: getText(I18N.walletConnectPairAlreadyExists),
+          close: getText(I18N.walletConnectErrorClose),
+        });
+        return;
       }
 
       const resp = await this._core.pairing.pair({uri, activatePairing: false});
 
       if (!resp) {
-        sendNotification(I18N.walletConnectPairError);
+        showModal(ModalType.error, {
+          title: getText(I18N.walletConnectErrorTitle),
+          description: getText(I18N.walletConnectPairError),
+          close: getText(I18N.walletConnectErrorClose),
+        });
       } else {
         await this._core?.pairing?.activate({topic});
-        VariablesString.setObject(PAIRING_URLS_KEY, {
+        VariablesString.setObject(WC_PAIRING_URLS_KEY, {
           ...pairedUrls,
           [uri]: true,
         });
@@ -252,7 +310,11 @@ export class WalletConnect extends Initializable {
       logger.log('WalletConnect:pair ', resp);
     } catch (err) {
       if (isError(err)) {
-        sendMessage(`[WC]: ${err.message}`);
+        showModal(ModalType.error, {
+          title: getText(I18N.walletConnectErrorTitle),
+          description: err.message || err.name || err.toString(),
+          close: getText(I18N.walletConnectErrorClose),
+        });
         // @ts-ignore
         logger.captureException(err, 'WalletConnect.pair', {resp});
         await this._reInit();
@@ -320,6 +382,9 @@ export class WalletConnect extends Initializable {
     });
 
     WalletConnectSessionMetadata.create(session.topic);
+    // set chain which currently active in app
+    await this.emitChainChange(app.provider.ethChainId, session.topic);
+
     this._emitActiveSessions();
     this.redirect();
     return session;

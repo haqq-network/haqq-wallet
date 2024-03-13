@@ -553,6 +553,9 @@ PODS:
     - React-Core
   - react-native-cameraroll (4.1.2):
     - React-Core
+  - react-native-compat (2.11.2):
+    - RCT-Folly (= 2021.07.22.00)
+    - React-Core
   - react-native-cookies (6.2.1):
     - React-Core
   - react-native-detector (0.2.3):
@@ -828,6 +831,7 @@ DEPENDENCIES:
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-camera (from `../node_modules/react-native-camera`)
   - "react-native-cameraroll (from `../node_modules/@react-native-community/cameraroll`)"
+  - "react-native-compat (from `../node_modules/@walletconnect/react-native-compat`)"
   - "react-native-cookies (from `../node_modules/@react-native-cookies/cookies`)"
   - react-native-detector (from `../node_modules/react-native-detector`)
   - react-native-encrypted-storage (from `../node_modules/react-native-encrypted-storage`)
@@ -997,6 +1001,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-camera"
   react-native-cameraroll:
     :path: "../node_modules/@react-native-community/cameraroll"
+  react-native-compat:
+    :path: "../node_modules/@walletconnect/react-native-compat"
   react-native-cookies:
     :path: "../node_modules/@react-native-cookies/cookies"
   react-native-detector:
@@ -1174,6 +1180,7 @@ SPEC CHECKSUMS:
   react-native-blur: cfdad7b3c01d725ab62a8a729f42ea463998afa2
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
   react-native-cameraroll: 2957f2bce63ae896a848fbe0d5352c1bd4d20866
+  react-native-compat: e31d4e4ba7db54f2649c4b34b9b594029b51b5e2
   react-native-cookies: f54fcded06bb0cda05c11d86788020b43528a26c
   react-native-detector: 751696a5534f6bbc11be87515cca3d8d32593d73
   react-native-encrypted-storage: db300a3f2f0aba1e818417c1c0a6be549038deb7

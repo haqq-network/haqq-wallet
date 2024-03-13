@@ -117,7 +117,7 @@ export async function onDeepLink(
           if (isInitialRun) {
             VariablesBool.set('isWalletConnectFromDeepLink', true);
           }
-          app.emit(Events.onWalletConnectUri, url.query.uri);
+          app.emit(Events.onWalletConnectUri, url.query.uri || url.href);
           return true;
         case DeeplinkUrlKey.browser:
         case DeeplinkUrlKey.web3browser:

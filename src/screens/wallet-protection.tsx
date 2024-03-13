@@ -4,6 +4,8 @@ import {WalletProtection} from '@app/components/wallet-protection';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 
+import {PinGuardScreen} from './pin-guard';
+
 export const WalletProtectionScreen = memo(() => {
   const navigation = useTypedNavigation<HomeStackParamList>();
   const route = useTypedRoute<
@@ -24,9 +26,11 @@ export const WalletProtectionScreen = memo(() => {
   }, [accountId, navigation]);
 
   return (
-    <WalletProtection
-      onPressPhrase={onPressPhrase}
-      onPressSocial={onPressSocial}
-    />
+    <PinGuardScreen enabled={route.params.pinEnabled}>
+      <WalletProtection
+        onPressPhrase={onPressPhrase}
+        onPressSocial={onPressSocial}
+      />
+    </PinGuardScreen>
   );
 });

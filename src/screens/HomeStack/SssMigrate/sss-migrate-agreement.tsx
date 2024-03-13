@@ -6,6 +6,7 @@ import {
   SssMigrateStackParamList,
   SssMigrateStackRoutes,
 } from '@app/route-types';
+import {PinGuardScreen} from '@app/screens/pin-guard';
 
 export const SssMigrateAgreementScreen = memo(() => {
   const navigation = useTypedNavigation<SssMigrateStackParamList>();
@@ -19,5 +20,9 @@ export const SssMigrateAgreementScreen = memo(() => {
     });
   }, [navigation, route.params.accountId]);
 
-  return <SssMigrateAgreement onDone={onDone} />;
+  return (
+    <PinGuardScreen enabled={route.params.pinEnabled}>
+      <SssMigrateAgreement onDone={onDone} />
+    </PinGuardScreen>
+  );
 });

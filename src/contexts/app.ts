@@ -155,6 +155,13 @@ class App extends AsyncEventEmitter {
   }
 
   private _startUpTime: number;
+  /**
+   * NOTE: This flag is only used for Biometric unlock in onAppStateChanged callback
+   *
+   * @private
+   * @type {boolean}
+   */
+  private _authInProgress: boolean = false;
 
   set authenticated(value: boolean) {
     this._authenticated = value;
@@ -535,17 +542,21 @@ class App extends AsyncEventEmitter {
 
   async onAppStatusChanged() {
     const appStatus = getAppStatus();
-    if (this.appStatus !== appStatus) {
+    if (this.appStatus !== appStatus && !this._authInProgress) {
+      this.appStatus = appStatus;
+
       switch (appStatus) {
         case AppStatus.active:
           if (this.user?.isOutdatedLastActivity() && this.authenticated) {
             this.authenticated = false;
+            this._authInProgress = true;
             await this.auth();
           }
           await awaitForEventDone(Events.onAppActive);
           await onUpdatesSync();
           RemoteConfig.init(true);
           await RemoteConfig.awaitForInitialization();
+          this._authInProgress = false;
           break;
         case AppStatus.inactive:
           if (this.authenticated) {
@@ -553,8 +564,6 @@ class App extends AsyncEventEmitter {
           }
           break;
       }
-
-      this.appStatus = appStatus;
     }
   }
 
