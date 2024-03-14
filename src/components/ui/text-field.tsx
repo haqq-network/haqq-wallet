@@ -1,6 +1,12 @@
-import React, {memo, useCallback, useEffect, useRef, useState} from 'react';
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 
-import {useFocusEffect} from '@react-navigation/native';
 import {
   LayoutChangeEvent,
   NativeSyntheticEvent,
@@ -118,22 +124,21 @@ export const TextField: React.FC<Props> = memo(
       });
     }, [value, focusAnim, isFocused]);
 
-    useFocusEffect(
-      useCallback(() => {
-        let timer: NodeJS.Timeout | null = null;
-        if (autoFocus) {
-          timer = setTimeout(() => {
-            inputRef.current?.focus();
-          }, 100);
-        }
+    useLayoutEffect(() => {
+      if (inputRef.current?.isFocused() || !autoFocus) {
+        return;
+      }
 
-        return () => {
-          if (timer) {
-            clearTimeout(timer);
-          }
-        };
-      }, [autoFocus]),
-    );
+      const timer = setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
+
+      return () => {
+        if (timer) {
+          clearTimeout(timer);
+        }
+      };
+    }, [autoFocus]);
 
     let color = getColor(error ? Color.textRed1 : Color.textBase2);
 
