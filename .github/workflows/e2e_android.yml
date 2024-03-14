@@ -180,7 +180,7 @@ jobs:
           ndk: 21.4.7075529
           target: google_apis
           emulator-build: 7425822
-          script: adb kill-server && adb start-server && nc -z localhost 5037 && adb shell content insert --uri content://settings/system --bind name:s:show_touches --bind value:i:1 && yarn detox:android:test
+          script: adb kill-server && adb start-server && nc -z localhost 5037 && adb shell settings put global development_settings_enabled 1 && adb shell content insert --uri content://settings/system --bind name:s:show_touches --bind value:i:1 && yarn detox:android:test
           arch: x86
           cores: 2
           avd-name: HAQQ_e2e

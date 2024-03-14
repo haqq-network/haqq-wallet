@@ -250,6 +250,7 @@ export class EthNetwork {
         amount,
         walletType: wallet.type,
         from: wallet.address,
+        hdPath: wallet.path || 'null',
         to,
       });
       throw error;
@@ -337,6 +338,7 @@ export class EthNetwork {
         contractAddress,
         from: from.address,
         to,
+        hdPath: from.path || 'null',
       });
       throw error;
     }
