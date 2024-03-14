@@ -124,12 +124,6 @@ export const TransactionAddress = ({
     [onAddress],
   );
 
-  const onPressPaste = useCallback(async () => {
-    vibrate(HapticEffects.impactLight);
-    const pasteString = await SystemDialog.getClipboardString();
-    setAddress(pasteString);
-  }, [setAddress]);
-
   const myAccountsKeyExtractor = useCallback(
     (item: Wallet) => item.address,
     [],
@@ -152,22 +146,22 @@ export const TransactionAddress = ({
   const handleChangeAddress = useCallback(
     async (value: string) => {
       const nextValue = value.trim();
-      // If nextValue longer than previous value more than 1 symbol that it is paste action
-      if (nextValue.length && nextValue.length > address.length + 1) {
-        await onPressPaste();
-      } else if (
-        // If nextValue increased by 1 or decreased by 1 than this is input action
-        nextValue.length === address.length + 1 ||
-        nextValue.length + 1 === address.length
-      ) {
+      if (nextValue) {
         setAddress(nextValue);
+        setError(!AddressUtils.isValidAddress(nextValue));
+      } else {
+        setAddress('');
+        setError(false);
       }
-
-      const isValidAddress = AddressUtils.isValidAddress(nextValue);
-      setError(!isValidAddress);
     },
-    [onPressPaste, address],
+    [setAddress, setError, address],
   );
+
+  const onPressPaste = useCallback(async () => {
+    vibrate(HapticEffects.impactLight);
+    const pasteString = await SystemDialog.getClipboardString();
+    handleChangeAddress(pasteString);
+  }, [handleChangeAddress]);
 
   return (
     <PopupContainer testID={testID}>
