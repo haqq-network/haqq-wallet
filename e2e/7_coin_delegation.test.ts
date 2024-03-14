@@ -31,7 +31,7 @@ describe('Coin delegation and undelegation', () => {
     await waitFor(stakingBanner)
       .toBeVisible()
       .whileElement(by.id('home-feed-container'))
-      .scroll(100, 'down');
+      .scroll(250, 'down');
     await stakingBanner.tap();
 
     await expect(element(by.id('staking-availableSum'))).toBeVisible();
