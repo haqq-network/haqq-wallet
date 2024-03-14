@@ -20,6 +20,7 @@ export const TokenRow = ({item, onPress}: TokenRowProps) => {
   }, [item]);
   return (
     <TouchableOpacity
+      testID={String(item.symbol)?.toUpperCase()}
       disabled={!onPress}
       onPress={onPress}
       style={styles.container}>
