@@ -10271,7 +10271,7 @@ __metadata:
     json-stable-stringify: 1.0.2
     lottie-react-native: 6.6.0
     markdown-it: 13.0.1
-    metro-minify-terser: 0.77.0
+    metro-minify-terser: 0.80.6
     metro-react-native-babel-preset: 0.77.0
     mobx: 6.12.0
     mobx-persist-store: 1.1.4
@@ -13127,15 +13127,6 @@ __metadata:
   dependencies:
     terser: ^5.15.0
   checksum: 58beaed29fe4b2783fd06ec6ea8fe0dcc5056b2bb48dab0c5109884f3d9afffe8709c5157a364a3a0b4de48c300efe4101b34645624b95129cf1c17e5821e4ed
-  languageName: node
-  linkType: hard
-
-"metro-minify-terser@npm:0.77.0":
-  version: 0.77.0
-  resolution: "metro-minify-terser@npm:0.77.0"
-  dependencies:
-    terser: ^5.15.0
-  checksum: 4cae29da2979aa409e464d1f9d52687df0f720670145e08f3ee1e6c9e7254774470add669561cb65f858ce196e1fa48a7152c20bb240f151d4c6f37152332650
   languageName: node
   linkType: hard
 
