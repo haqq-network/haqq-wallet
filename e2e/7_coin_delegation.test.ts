@@ -1,28 +1,28 @@
-import {by, element, expect, waitFor} from 'detox';
-import {utils} from 'ethers';
+import {by, element, expect, log, waitFor} from 'detox';
+import {Wallet} from 'ethers';
 
 import {getCoins} from './helpers/getCoins';
 import {isVisible} from './helpers/isVisibile';
 import {launchApp} from './helpers/launchApp';
+import {MilkAddressProxy} from './helpers/milkAddressProxy';
 import {restoreWallet} from './helpers/restoreWallet';
 import {sleep} from './helpers/sleep';
 import {PIN} from './test-variables';
 
-describe.skip('Coin delegation and undelegation', () => {
-  let mnemonic = '';
+describe('Coin delegation and undelegation', () => {
+  const wallet = Wallet.createRandom();
   beforeAll(async () => {
     await launchApp();
 
-    mnemonic = utils.entropyToMnemonic(utils.randomBytes(32));
-    await restoreWallet(mnemonic, PIN);
+    await restoreWallet(wallet.mnemonic.phrase, PIN);
 
     await waitFor(element(by.id('wallets')))
       .toBeVisible()
       .withTimeout(15000);
-    await getCoins(mnemonic, '0.10');
+    await getCoins(wallet.mnemonic.phrase, '0.10');
   });
 
-  it('Should delegate coins', async () => {
+  it('should delegate coins', async () => {
     await waitFor(element(by.id('current-total')))
       .toHaveText('0.1 ISLM')
       .withTimeout(6 * 60_000);
@@ -78,7 +78,7 @@ describe.skip('Coin delegation and undelegation', () => {
     await sleep(8_000);
   });
 
-  it('Should undelegate coins', async () => {
+  it('should undelegate coins', async () => {
     await element(by.id('staking-validators')).tap();
     await expect(element(by.text('Validators list'))).toBeVisible();
     const validator = element(by.id('validator-val02'));
@@ -97,5 +97,55 @@ describe.skip('Coin delegation and undelegation', () => {
 
     await element(by.id('staking-undelegate-finish')).scrollTo('bottom');
     await element(by.text('Done')).tap();
+  });
+
+  it('should send the remaining money back to milkaddress by using max button', async () => {
+    await device.reloadReactNative();
+    await waitFor(element(by.id('numeric_keyboard_1')))
+      .toBeVisible()
+      .withTimeout(5000);
+    await device.disableSynchronization();
+    for (const num of PIN.split('')) {
+      await element(by.id(`numeric_keyboard_${num}`)).tap();
+    }
+    await device.enableSynchronization();
+
+    await element(by.id(`wallets_${wallet.address.toLowerCase()}_send`)).tap();
+
+    const input_address = element(by.id('transaction_address_input'));
+    await input_address.typeText(MilkAddressProxy.address);
+    await element(by.id('transaction_address_next')).tap();
+    const nextStillVisible = await isVisible('transaction_address_next');
+    if (nextStillVisible) {
+      try {
+        await element(by.id('transaction_address_next')).tap();
+      } catch (err) {
+        log.warn('Error while tap: ' + JSON.stringify(err));
+      }
+    }
+
+    await element(by.id('ISLM')).tap();
+    await element(by.text('Max')).tap();
+    await element(by.id(`transaction_sum_next`)).tap();
+
+    await waitFor(element(by.id('transaction_confirmation')))
+      .toBeVisible()
+      .withTimeout(15000);
+
+    await waitFor(element(by.id('transaction_confirmation_submit')))
+      .toBeVisible()
+      .whileElement(by.id('transaction_confirmation'))
+      .scroll(50, 'down');
+    await element(by.id('transaction_confirmation_submit')).tap();
+
+    await waitFor(element(by.id('transaction_finish')))
+      .toBeVisible()
+      .withTimeout(15000);
+
+    await waitFor(element(by.id('transaction_finish_finish')))
+      .toBeVisible()
+      .whileElement(by.id('transaction_finish'))
+      .scroll(50, 'down');
+    await element(by.id('transaction_finish_finish')).tap();
   });
 });
