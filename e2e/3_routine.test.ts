@@ -65,6 +65,14 @@ describe('Routine', () => {
       }
     }
     await element(by.id('ISLM')).tap();
+    const islmStillVisible = await isVisible('ISLM');
+    if (islmStillVisible) {
+      try {
+        await element(by.id('ISLM')).tap();
+      } catch (err) {
+        //
+      }
+    }
 
     const input_form = element(by.id('transaction_sum_form_input'));
     await waitFor(input_form).toBeFocused();
