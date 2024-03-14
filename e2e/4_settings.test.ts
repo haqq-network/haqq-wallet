@@ -212,9 +212,11 @@ describe('Routine', () => {
     }
     await device.enableSynchronization();
 
-    for (const word of mnemonic_words) {
-      await waitFor(element(by.text(word)))
-        .toBeVisible()
+    for (let i = 0; i < mnemonic_words.length; i++) {
+      await waitFor(
+        element(by.id(`settings_view_recovery_phrase_word_${i + 1}`)),
+      )
+        .toHaveText(mnemonic_words[i])
         .withTimeout(1000);
     }
 
@@ -238,9 +240,12 @@ describe('Routine', () => {
     }
     await device.enableSynchronization();
 
-    for (const word of secondMnemonic.split(' ')) {
-      await waitFor(element(by.text(word)))
-        .toBeVisible()
+    const secondMnemonicArray = secondMnemonic.split(' ');
+    for (let i = 0; i < secondMnemonicArray.length; i++) {
+      await waitFor(
+        element(by.id(`settings_view_recovery_phrase_word_${i + 1}`)),
+      )
+        .toHaveText(secondMnemonicArray[i])
         .withTimeout(1000);
     }
     /* #endregion */
