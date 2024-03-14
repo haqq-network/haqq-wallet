@@ -1,4 +1,5 @@
 import {makeAutoObservable} from 'mobx';
+import {Keyboard} from 'react-native';
 
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
@@ -26,6 +27,10 @@ class ModalStore {
   };
 
   showModal = (type: ModalName, params: Modals[ModalName] = {}) => {
+    // dismiss keyboard when modal is shown
+    // in some cases, keyboard renders over the modal
+    // and modal is not visible
+    Keyboard.dismiss();
     const newModal: ModalState = {type, ...params, uid: makeID(6)};
     if (this.isExist(newModal.type)) {
       this.removeByType(newModal.type);
