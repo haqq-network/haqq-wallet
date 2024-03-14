@@ -53,8 +53,7 @@ describe('Routine', () => {
     await element(by.id(`wallets_${wallet.address.toLowerCase()}_send`)).tap();
 
     const input_address = element(by.id('transaction_address_input'));
-    await input_address.replaceText(MilkAddressProxy.address);
-    await input_address.tapReturnKey();
+    await input_address.typeText(MilkAddressProxy.address);
     await element(by.id('transaction_address_next')).tap();
     const nextStillVisible = await isVisible('transaction_address_next');
     if (nextStillVisible) {
