@@ -91,7 +91,11 @@ export const TransactionConfirmationScreen = observer(() => {
 
         const ethNetworkProvider = new EthNetwork();
 
-        const provider = await getProviderInstanceForWallet(wallet);
+        const provider = await getProviderInstanceForWallet(
+          wallet,
+          false,
+          true,
+        );
 
         let transaction;
         if (token.is_erc20) {
