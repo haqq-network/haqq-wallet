@@ -51,11 +51,22 @@ export type ModalWrapperProps<
   onClose: (modal: Extract<ModalName, string>) => void;
 };
 
+const AUTO_CLOSE_DISABLED = [
+  ModalType.pin,
+  ModalType.splash,
+  ModalType.loading,
+  ModalType.qr,
+  ModalType.keystoneScanner,
+  ModalType.keystoneQR,
+];
+
 export const ModalWrapper = observer(
   ({type, modal, onClose}: ModalWrapperProps<Modals, any>) => {
     useEffect(() => {
       return () => {
-        onClose(modal);
+        if (!AUTO_CLOSE_DISABLED.includes(type)) {
+          onClose(modal);
+        }
       };
     }, [modal, onClose]);
 

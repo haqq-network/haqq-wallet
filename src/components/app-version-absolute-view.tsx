@@ -6,6 +6,7 @@ import {getAppVersion, getBuildNumber} from '@app/services/version';
 import {Color, createTheme} from '@app/theme';
 import {STRINGS} from '@app/variables/common';
 
+import {ModalProvider} from './modal-provider';
 import {Text} from './ui';
 
 export const AppVersionAbsoluteView = memo(() => {
@@ -15,11 +16,13 @@ export const AppVersionAbsoluteView = memo(() => {
     [],
   );
   return (
-    <View style={styles.container}>
-      <Text clean style={styles.text}>
-        {version}
-      </Text>
-    </View>
+    <ModalProvider>
+      <View style={styles.container}>
+        <Text clean style={styles.text}>
+          {version}
+        </Text>
+      </View>
+    </ModalProvider>
   );
 });
 
@@ -28,6 +31,7 @@ const styles = createTheme({
     position: 'absolute',
     bottom: 2,
     left: 2,
+    zIndex: 999,
   },
   text: {
     fontSize: 8,
