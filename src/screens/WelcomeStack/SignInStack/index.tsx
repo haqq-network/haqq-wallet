@@ -4,7 +4,6 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
-import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {I18N, getText} from '@app/i18n';
 import {
   OnboardingStackRoutes,
@@ -72,41 +71,41 @@ const SignInStack = memo(() => {
       initialRouteName={inittialRouteName}>
       <Stack.Screen
         name={SignInStackRoutes.SigninNetworks}
-        component={themeUpdaterHOC(SignInNetworksScreen)}
+        component={SignInNetworksScreen}
         options={{...hideBack, ...screenOptions}}
       />
       <Stack.Screen
         name={SignInStackRoutes.SigninAgreement}
-        component={themeUpdaterHOC(SignInAgreementScreen)}
+        component={SignInAgreementScreen}
         options={{...hideBack, ...screenOptions}}
       />
 
       <Stack.Screen
         name={SignInStackRoutes.SigninNotExists}
-        component={themeUpdaterHOC(SigninNotExistsScreen)}
+        component={SigninNotExistsScreen}
         options={{...hideBack, ...screenOptions}}
       />
 
       <Stack.Screen
         name={SignInStackRoutes.SigninNotRecovery}
-        component={themeUpdaterHOC(SigninNotRecoveryScreen)}
+        component={SigninNotRecoveryScreen}
         options={{...hideBack, ...screenOptions}}
       />
 
       <Stack.Screen
         name={SignInStackRoutes.SigninSharesNotFound}
-        component={themeUpdaterHOC(SigninSharesNotFoundScreen)}
+        component={SigninSharesNotFoundScreen}
         options={{...hideBack, ...screenOptions}}
       />
 
       <Stack.Screen
         name={SignInStackRoutes.SigninRestoreWallet}
-        component={themeUpdaterHOC(SignInRestoreScreen)}
+        component={SignInRestoreScreen}
         options={{title}}
       />
       <Stack.Screen
         name={SignInStackRoutes.SigninPin}
-        component={themeUpdaterHOC(SignInPinScreen)}
+        component={SignInPinScreen}
         options={{title}}
       />
       <Stack.Screen
@@ -123,14 +122,14 @@ const SignInStack = memo(() => {
 
       <Stack.Screen
         name={SignInStackRoutes.SigninChooseAccount}
-        component={themeUpdaterHOC(ChooseAccountScreen)}
+        component={ChooseAccountScreen}
         options={{title: getText(I18N.ledgerChooseAccount)}}
         initialParams={{nextScreen: SignInStackRoutes.SigninStoreWallet}}
       />
 
       <Stack.Screen
         name={SignInStackRoutes.SigninCloudProblems}
-        component={themeUpdaterHOC(CloudProblemsScreen)}
+        component={CloudProblemsScreen}
         options={{...hideBack, ...screenOptions}}
       />
     </Stack.Navigator>

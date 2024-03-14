@@ -2,10 +2,9 @@ import React, {useMemo} from 'react';
 
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
-import {createTheme} from '@app/helpers';
 import {useIsBalancesFirstSync} from '@app/hooks/use-is-balances-sync';
 import {I18N} from '@app/i18n';
+import {Color, createTheme} from '@app/theme';
 import {BalanceData} from '@app/types';
 import {CURRENCY_NAME} from '@app/variables/common';
 

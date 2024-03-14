@@ -2,8 +2,8 @@ import React from 'react';
 
 import {StyleSheet, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
+import {Color} from '@app/theme';
 
 export type MnemonicWordProps = {
   word: string;

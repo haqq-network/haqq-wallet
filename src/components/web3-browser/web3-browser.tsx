@@ -9,7 +9,6 @@ import {
   WebViewNavigationEvent,
 } from 'react-native-webview/lib/WebViewTypes';
 
-import {createTheme} from '@app/helpers';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useLayout} from '@app/hooks/use-layout';
 import {usePrevious} from '@app/hooks/use-previous';
@@ -19,6 +18,7 @@ import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
+import {createTheme} from '@app/theme';
 import {IS_IOS} from '@app/variables/common';
 import {EIP6963ProviderInfo} from '@app/variables/EIP6963';
 
@@ -211,14 +211,14 @@ export const Web3Browser = ({
               })
             );
           }
-        
+
           window.addEventListener(
             "eip6963:requestProvider",
             (event) => {
               announceProvider();
             }
           );
-        
+
           announceProvider();
         }
         if(window.keplr){

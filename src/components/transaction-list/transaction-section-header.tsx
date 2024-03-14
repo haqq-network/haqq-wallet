@@ -3,8 +3,8 @@ import React, {useMemo} from 'react';
 import {format, isSameYear, isToday} from 'date-fns';
 import {StyleSheet, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
+import {Color} from '@app/theme';
 
 import {SectionHeaderData} from './types';
 

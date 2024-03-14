@@ -3,8 +3,7 @@ import React from 'react';
 import {StyleProp, View, ViewStyle} from 'react-native';
 import JSONTree, {Renderable} from 'react-native-json-tree';
 
-import {Color, getColor} from '@app/colors';
-import {createTheme} from '@app/helpers';
+import {Color, createTheme, getColor} from '@app/theme';
 
 interface JsonViewerProps {
   data: Renderable;

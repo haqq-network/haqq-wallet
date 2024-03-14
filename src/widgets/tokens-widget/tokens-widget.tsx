@@ -2,12 +2,12 @@ import React, {useMemo} from 'react';
 
 import {StyleSheet} from 'react-native';
 
-import {Color} from '@app/colors';
 import {TokenRow} from '@app/components/token-row';
 import {Spacer, Text} from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
 import {WidgetHeader} from '@app/components/ui/widget-header';
 import {I18N, getText} from '@app/i18n';
+import {Color} from '@app/theme';
 import {IToken} from '@app/types';
 import {CURRENCY_NAME} from '@app/variables/common';
 

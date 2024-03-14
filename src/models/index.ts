@@ -15,7 +15,8 @@ import {VariablesDate} from '@app/models/variables-date';
 import {VariablesString} from '@app/models/variables-string';
 import {VestingMetadata} from '@app/models/vesting-metadata';
 import {Balance} from '@app/services/balance';
-import {AppTheme, WalletType} from '@app/types';
+import {AppTheme} from '@app/theme';
+import {WalletType} from '@app/types';
 import {
   CARD_DEFAULT_STYLE,
   DEFAULT_PROVIDERS,

@@ -2,9 +2,9 @@ import React from 'react';
 
 import {StyleSheet, View, useWindowDimensions} from 'react-native';
 
-import {Color} from '@app/colors';
 import {Icon, Text} from '@app/components/ui';
 import {I18N} from '@app/i18n';
+import {Color} from '@app/theme';
 
 interface ProposalVotingEmptyProps {
   votingCategory: string;

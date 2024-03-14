@@ -4,10 +4,11 @@ import {ENVIRONMENT, IS_DEVELOPMENT} from '@env';
 import {addSeconds, isAfter, subSeconds} from 'date-fns';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
+import {AppTheme} from '@app/theme';
 import {generateUUID} from '@app/utils';
 
 import {realm} from './index';
-import {AppLanguage, AppTheme} from '../types';
+import {AppLanguage} from '../types';
 import {
   MAIN_NETWORK_ID,
   PIN_BANNED_ATTEMPTS,

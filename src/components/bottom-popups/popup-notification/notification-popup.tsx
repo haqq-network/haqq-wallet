@@ -2,7 +2,6 @@ import React, {useCallback, useState} from 'react';
 
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonSize,
@@ -10,9 +9,8 @@ import {
   LottieWrap,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
-import {useThemeSelector} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {Color, createTheme, useThemeSelector} from '@app/theme';
 import {SHADOW_COLOR_1} from '@app/variables/common';
 
 export type NotificationPopupProps = {

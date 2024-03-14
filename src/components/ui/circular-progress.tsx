@@ -9,8 +9,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import Svg, {Circle, CircleProps} from 'react-native-svg';
 
-import {Color} from '@app/colors';
-import {useColor} from '@app/hooks/use-color';
+import {Color, useColor} from '@app/theme';
 
 export interface CircularProgressProps {
   /**

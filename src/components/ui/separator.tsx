@@ -2,8 +2,7 @@ import React from 'react';
 
 import {View, ViewProps} from 'react-native';
 
-import {Color} from '@app/colors';
-import {createTheme} from '@app/helpers';
+import {Color, createTheme} from '@app/theme';
 
 export type SeparatorProps = {height?: number} & ViewProps;
 

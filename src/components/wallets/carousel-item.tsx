@@ -6,7 +6,7 @@ import Animated, {
   useAnimatedStyle,
 } from 'react-native-reanimated';
 
-import {createTheme} from '@app/helpers';
+import {createTheme} from '@app/theme';
 
 export type CarouselItemProps = {
   index: number;

@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
+import {observer} from 'mobx-react';
 import {
   ActivityIndicator,
   Image,
@@ -26,15 +27,13 @@ import Animated, {
 } from 'react-native-reanimated';
 import {useTiming} from 'react-native-redash';
 
-import {Color, getColor} from '@app/colors';
 import {RiveWrapper} from '@app/components/ui/rive-wrapper';
-import {createTheme} from '@app/helpers';
 import {getUid} from '@app/helpers/get-uid';
-import {useTheme} from '@app/hooks';
 import {useLayout} from '@app/hooks/use-layout';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {Backend} from '@app/services/backend';
+import {Color, Theme, createTheme, getColor} from '@app/theme';
 import {getBase64ImageSource, isAbortControllerError, sleep} from '@app/utils';
 
 import {Icon, IconButton, IconsName, Loading, Spacer, Text} from '../../ui';
@@ -70,8 +69,7 @@ export type CaptchaRequestState = {
   puzzle: ImageURISource;
 };
 
-export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
-  const theme = useTheme();
+export const SliderCaptcha = observer(({onData}: SliderCaptchaProps) => {
   const [imageSource, setImageSource] = useState<
     CaptchaRequestState | undefined
   >();
@@ -120,7 +118,7 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
       [SliderCaptchaState.error]: getColor(Color.graphicRed1),
     }),
 
-    [theme],
+    [Theme.currentTheme],
   );
 
   const fetchImageSource = useCallback(async (): Promise<void> => {
@@ -476,7 +474,7 @@ export const SliderCaptcha = ({onData}: SliderCaptchaProps) => {
       </View>
     </View>
   );
-};
+});
 
 const styles = createTheme({
   container: {

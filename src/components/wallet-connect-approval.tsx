@@ -3,7 +3,6 @@ import React, {useMemo} from 'react';
 import {Image, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {Color} from '@app/colors';
 import {DashedLine} from '@app/components/dashed-line';
 import {ISLMLogo} from '@app/components/islm-logo';
 import {
@@ -16,9 +15,9 @@ import {
   Text,
 } from '@app/components/ui';
 import {WalletRow, WalletRowTypes} from '@app/components/wallet-row';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {Color, createTheme} from '@app/theme';
 import {WalletConnectApproveConnectionEvent} from '@app/types/wallet-connect';
 import {getHostnameFromUrl} from '@app/utils';
 

@@ -3,8 +3,8 @@ import React from 'react';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 
 import {Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {createTheme} from '@app/theme';
 
 export type BlockProps = {
   name: I18N;

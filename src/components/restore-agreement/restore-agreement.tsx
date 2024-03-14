@@ -1,8 +1,7 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -12,10 +11,9 @@ import {
   Terms,
   Text,
 } from '@app/components/ui';
-import {createTheme, getWindowHeight, getWindowWidth} from '@app/helpers';
-import {useTheme} from '@app/hooks';
+import {getWindowHeight, getWindowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {AppTheme} from '@app/types';
+import {Color, createTheme, useThemeSelector} from '@app/theme';
 
 export type RestoreAgreementProps = {
   onDone: () => void;
@@ -23,15 +21,10 @@ export type RestoreAgreementProps = {
 };
 
 export const RestoreAgreement = ({onDone, testID}: RestoreAgreementProps) => {
-  const theme = useTheme();
-
-  const animation = useMemo(() => {
-    if (theme === AppTheme.dark) {
-      return require('@assets/animations/backup-start-dark.json');
-    }
-
-    return require('@assets/animations/backup-start-light.json');
-  }, [theme]);
+  const animation = useThemeSelector({
+    dark: require('@assets/animations/backup-start-dark.json'),
+    light: require('@assets/animations/backup-start-light.json'),
+  });
 
   return (
     <PopupContainer style={styles.container} testID={testID}>

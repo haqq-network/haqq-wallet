@@ -9,7 +9,7 @@ import {Button, ButtonVariant, Input, Spacer, Text} from '@app/components/ui';
 import {WebViewEventsEnum} from '@app/components/web3-browser';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
-import {awaitForWallet, createTheme, hideModal, showModal} from '@app/helpers';
+import {awaitForWallet, hideModal, showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
 import {awaitForProvider} from '@app/helpers/await-for-provider';
@@ -24,6 +24,7 @@ import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {navigator} from '@app/navigator';
 import {message as toastMessage} from '@app/services/toast';
 import {getUserAgent} from '@app/services/version';
+import {createTheme} from '@app/theme';
 import {PartialJsonRpcRequest} from '@app/types';
 import {openInAppBrowser, openWeb3Browser} from '@app/utils';
 import {

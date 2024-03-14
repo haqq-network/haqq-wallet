@@ -2,8 +2,8 @@ import React, {useMemo} from 'react';
 
 import {StyleSheet} from 'react-native';
 
-import {Color} from '@app/colors';
 import {I18N, getText} from '@app/i18n';
+import {Color} from '@app/theme';
 
 import {Button, ButtonProps} from './ui';
 

@@ -1,7 +1,6 @@
 import {Dimensions, ImageStyle, TextStyle, ViewStyle} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
-import {app} from '@app/contexts';
+import {Color, Theme, getColor} from '@app/theme';
 
 type StyleValue<T> = T | (() => T);
 type StyleValueToCommon<T> = T extends () => infer U ? U : T;
@@ -44,7 +43,7 @@ export function createTheme<T extends NamedStyles<T> | NamedStyles<any>>(
     Object.defineProperty(style, key, {
       get() {
         const dimensions = Dimensions.get('window');
-        const k = `${key}_${app.currentTheme}_${dimensions.width}_${dimensions.height}`;
+        const k = `${key}_${Theme.currentTheme}_${dimensions.width}_${dimensions.height}`;
         if (!cache.has(k)) {
           // @ts-ignore
           const res = Object.entries(styles[key]).reduce(

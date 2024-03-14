@@ -2,7 +2,6 @@ import React, {memo, useState} from 'react';
 
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonSize,
@@ -12,8 +11,8 @@ import {
   Input,
   KeyboardSafeArea,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
+import {Color, createTheme} from '@app/theme';
 
 interface SettingsAddressBookEditProps {
   initName?: string;

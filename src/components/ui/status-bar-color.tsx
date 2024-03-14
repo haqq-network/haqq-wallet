@@ -2,7 +2,7 @@ import React from 'react';
 
 import {StatusBar, StyleSheet, View} from 'react-native';
 
-import {Color, getColor} from '@app/colors';
+import {Color, getColor} from '@app/theme';
 
 export const StatusBarColor = ({
   backgroundColor = getColor(Color.bg1),

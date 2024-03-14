@@ -2,16 +2,15 @@ import React from 'react';
 
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {BottomSheet} from '@app/components/bottom-sheet';
 import {TransactionStatus} from '@app/components/transaction-status/transaction-status';
 import {DataContent, Icon, IconButton, Spacer, Text} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
 import {Balance} from '@app/services/balance';
+import {Color, createTheme} from '@app/theme';
 import {IS_IOS, LONG_NUM_PRECISION, STRINGS} from '@app/variables/common';
 
 import {ImageWrapper} from './image-wrapper';

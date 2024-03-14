@@ -2,7 +2,6 @@ import React, {useCallback, useMemo} from 'react';
 
 import {StyleSheet} from 'react-native';
 
-import {Color} from '@app/colors';
 import {
   CardSmall,
   DataContent,
@@ -10,7 +9,7 @@ import {
   Text,
 } from '@app/components/ui';
 import {app} from '@app/contexts';
-import {createTheme} from '@app/helpers';
+import {Color, createTheme} from '@app/theme';
 import {splitAddress} from '@app/utils';
 
 import {WalletRowProps} from './wallet-row';

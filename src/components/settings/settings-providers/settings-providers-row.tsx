@@ -2,9 +2,9 @@ import React from 'react';
 
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {DataContent, Icon} from '@app/components/ui';
 import {Provider} from '@app/models/provider';
+import {Color} from '@app/theme';
 
 export type SettingsProvidersRowProps = {
   item: Provider;

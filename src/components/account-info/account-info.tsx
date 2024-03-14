@@ -5,12 +5,12 @@ import {observer} from 'mobx-react';
 import {TokenViewer} from '@app/components/token-viewer';
 import {TransactionEmpty} from '@app/components/transaction-empty';
 import {First, PopupContainer, Spacer} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useNftCollections} from '@app/hooks/use-nft-collections';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
+import {createTheme} from '@app/theme';
 import {HaqqEthereumAddress, IToken, IndexerTransaction} from '@app/types';
 
 import {AccountInfoHeader} from './account-info-header';

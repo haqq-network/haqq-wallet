@@ -3,8 +3,7 @@ import React, {FC, memo} from 'react';
 import {View} from 'react-native';
 import Animated, {useAnimatedStyle} from 'react-native-reanimated';
 
-import {Color} from '@app/colors';
-import {createTheme} from '@app/helpers';
+import {Color, createTheme} from '@app/theme';
 import {addOpacityToColor} from '@app/utils';
 
 import {StoryProgressItemProps} from '../core/dto/componentsDTO';

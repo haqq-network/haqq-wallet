@@ -4,7 +4,7 @@ import {SessionTypes} from '@walletconnect/types';
 import {Image, StyleProp, ViewStyle} from 'react-native';
 
 import {DataContent, MenuNavigationButton} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {createTheme} from '@app/theme';
 
 export interface WalletConnectAppRowProps {
   item: SessionTypes.Struct;

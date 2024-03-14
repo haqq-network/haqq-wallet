@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 
-import {Color} from '@app/colors';
 import {ActionsSheet} from '@app/components/actions-sheet';
 import {SettingsAddressBookEdit} from '@app/components/settings-address-book-edit';
 import {CustomHeader} from '@app/components/ui';
 import {I18N} from '@app/i18n';
+import {Color} from '@app/theme';
 
 type SettingsContactEditProps = {
   address: string;

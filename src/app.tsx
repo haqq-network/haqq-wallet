@@ -7,9 +7,10 @@ import {
   DefaultTheme,
   NavigationAction,
   NavigationContainer,
-  Theme,
+  Theme as RNTheme,
 } from '@react-navigation/native';
 import * as Sentry from '@sentry/react-native';
+import {observer} from 'mobx-react';
 import {AppState, Linking, Platform, StyleSheet} from 'react-native';
 import {Adjust, AdjustConfig} from 'react-native-adjust';
 import {AdjustOaid} from 'react-native-adjust-oaid';
@@ -18,14 +19,12 @@ import {MenuProvider} from 'react-native-popup-menu';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
-import {Color} from '@app/colors';
 import {AppScreenSecurityOverview} from '@app/components/app-screen-security-overview';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
-import {createTheme, hideModal, showModal} from '@app/helpers';
+import {hideModal, showModal} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {trackEvent} from '@app/helpers/track-event';
-import {useTheme} from '@app/hooks';
 import {useToast} from '@app/hooks/use-toast';
 import {Contact} from '@app/models/contact';
 import {VariablesBool} from '@app/models/variables-bool';
@@ -38,7 +37,8 @@ import {
   SssMigrateStackRoutes,
 } from '@app/route-types';
 import {RootStack} from '@app/screens/RootStack';
-import {AppTheme, ModalType} from '@app/types';
+import {AppTheme, Color, Theme, createTheme} from '@app/theme';
+import {ModalType} from '@app/types';
 import {getAppTrackingAuthorizationStatus, sleep} from '@app/utils';
 import {SPLASH_TIMEOUT_MS} from '@app/variables/common';
 
@@ -60,16 +60,19 @@ const CREATE_WALLET_FINISH_SCREENS: string[] = [
   KeystoneStackRoutes.KeystoneFinish,
 ];
 
-export const App = () => {
+export const App = observer(() => {
   const [initialized, setInitialized] = useState(false);
   const [isPinReseted, setPinReseted] = useState(false);
   const [onboarded, setOnboarded] = useState(app.onboarded);
-  const theme = useTheme();
   const toast = useToast();
 
   const navTheme = useMemo(
-    () => ({dark: theme === AppTheme.dark, colors: appTheme.colors}) as Theme,
-    [theme],
+    () =>
+      ({
+        dark: Theme.currentTheme === AppTheme.dark,
+        colors: appTheme.colors,
+      }) as RNTheme,
+    [Theme.currentTheme],
   );
 
   useEffect(() => {
@@ -231,7 +234,7 @@ export const App = () => {
       </ActionSheetProvider>
     </GestureHandlerRootView>
   );
-};
+});
 
 const styles = StyleSheet.create({
   rootView: {

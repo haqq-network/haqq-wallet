@@ -1,9 +1,9 @@
 import {isAfter} from 'date-fns';
 
-import {Color, getColor} from '@app/colors';
 import {app} from '@app/contexts';
 import {Banner, BannerButtonEvent, BannerType} from '@app/models/banner';
 import {VariablesDate} from '@app/models/variables-date';
+import {Color, getColor} from '@app/theme';
 import {PopupNotificationBannerTypes} from '@app/types';
 
 export async function onBannerNotificationCreate() {

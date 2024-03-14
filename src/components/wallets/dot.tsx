@@ -6,8 +6,7 @@ import Animated, {
   useAnimatedStyle,
 } from 'react-native-reanimated';
 
-import {Color} from '@app/colors';
-import {createTheme} from '@app/helpers';
+import {Color, createTheme} from '@app/theme';
 
 export type DotProps = {
   pan: Animated.SharedValue<number>;

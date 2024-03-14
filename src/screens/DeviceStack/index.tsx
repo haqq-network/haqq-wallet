@@ -3,7 +3,6 @@ import React, {memo} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {hideBack, hideHeader, popupScreenOptions} from '@app/helpers';
-import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {DeviceStackParamList, DeviceStackRoutes} from '@app/route-types';
 import {DeviceSelectScreen} from '@app/screens/DeviceStack/device-select';
 import {KeystoneStack} from '@app/screens/DeviceStack/KeystoneStack';
@@ -18,7 +17,7 @@ const DeviceStack = memo(() => {
       initialRouteName={DeviceStackRoutes.DeviceSelect}>
       <Stack.Screen
         name={DeviceStackRoutes.DeviceSelect}
-        component={themeUpdaterHOC(DeviceSelectScreen)}
+        component={DeviceSelectScreen}
         options={hideBack}
       />
       <Stack.Screen

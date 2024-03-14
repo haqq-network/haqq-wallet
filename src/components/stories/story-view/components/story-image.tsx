@@ -8,9 +8,8 @@ import {
   useSharedValue,
 } from 'react-native-reanimated';
 
-import {Color} from '@app/colors';
 import {StoryLoader} from '@app/components/stories/story-view/components/loader';
-import {createTheme} from '@app/helpers';
+import {Color, createTheme} from '@app/theme';
 
 import {StoryVideo} from './story-video';
 

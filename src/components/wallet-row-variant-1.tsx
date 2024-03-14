@@ -3,8 +3,8 @@ import React, {useCallback, useMemo} from 'react';
 import {StyleSheet} from 'react-native';
 
 import {CardSmall, DataContent, MenuNavigationButton} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
+import {createTheme} from '@app/theme';
 
 import {WalletRowProps} from './wallet-row';
 

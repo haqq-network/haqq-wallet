@@ -2,9 +2,8 @@ import React from 'react';
 
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {Text, Waiting} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {Color, createTheme} from '@app/theme';
 import {ModalType, Modals} from '@app/types';
 
 export const LoadingModal = ({text}: Modals[ModalType.loading]) => {

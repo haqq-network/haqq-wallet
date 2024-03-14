@@ -6,7 +6,6 @@ import {observer} from 'mobx-react';
 import {RefreshControl, ScrollView} from 'react-native';
 
 import {StoriesWrapper} from '@app/components/stories';
-import {createTheme} from '@app/helpers';
 import {loadAllTransactions} from '@app/helpers/load-transactions';
 import {useTypedNavigation} from '@app/hooks';
 import {Stories} from '@app/models/stories';
@@ -15,6 +14,7 @@ import {HomeFeedStackParamList, HomeFeedStackRoutes} from '@app/route-types';
 import {BannersWrapper} from '@app/screens/banners';
 import {WalletsWrapper} from '@app/screens/HomeStack/HomeFeedStack/wallets';
 import {LockedTokensWrapper} from '@app/screens/locked-tokens';
+import {createTheme} from '@app/theme';
 import {WidgetRoot} from '@app/widgets';
 
 export const HomeFeed = observer(() => {

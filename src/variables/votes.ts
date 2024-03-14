@@ -1,5 +1,5 @@
-import {Color} from '@app/colors';
 import {I18N} from '@app/i18n';
+import {Color} from '@app/theme';
 import {VoteNamesType} from '@app/types';
 
 export const VOTES: {

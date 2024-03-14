@@ -3,11 +3,9 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Platform, View} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 
-import {Color} from '@app/colors';
 import {BottomPopupContainer} from '@app/components/bottom-popups';
 import {Button, ButtonVariant, Spacer, Text} from '@app/components/ui';
 import {app} from '@app/contexts';
-import {createTheme} from '@app/helpers';
 import {AwaitForQRSignError} from '@app/helpers/await-for-qr-sign';
 import {
   QRScannerTypeEnum,
@@ -17,6 +15,7 @@ import {KeystoneUrHelper} from '@app/helpers/keystone-ur-helper';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {useLayout} from '@app/hooks/use-layout';
 import {I18N} from '@app/i18n';
+import {Color, createTheme} from '@app/theme';
 import {ModalType, Modals} from '@app/types';
 
 type Props = Modals[ModalType.keystoneQR];

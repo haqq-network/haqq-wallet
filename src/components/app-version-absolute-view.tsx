@@ -2,9 +2,8 @@ import {memo, useMemo} from 'react';
 
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
-import {createTheme} from '@app/helpers';
 import {getAppVersion, getBuildNumber} from '@app/services/version';
+import {Color, createTheme} from '@app/theme';
 import {STRINGS} from '@app/variables/common';
 
 import {ModalProvider} from './modal-provider';

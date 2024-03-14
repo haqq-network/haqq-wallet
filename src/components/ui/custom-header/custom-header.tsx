@@ -6,9 +6,8 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 
-import {Color} from '@app/colors';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Color, createTheme} from '@app/theme';
 import {ColorType} from '@app/types';
 
 import {HeaderButton, HeaderButtonProps} from './header-button';

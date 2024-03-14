@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -13,9 +12,9 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {Color, createTheme} from '@app/theme';
 
 interface BackupCreateProps {
   onSubmit: () => void;

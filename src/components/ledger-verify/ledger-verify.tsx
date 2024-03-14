@@ -1,8 +1,9 @@
 import React from 'react';
 
 import {LottieWrap, PopupContainer, Text} from '@app/components/ui';
-import {createTheme, getWindowWidth} from '@app/helpers';
+import {getWindowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {createTheme} from '@app/theme';
 
 export type LedgerInfo = {
   address: string;

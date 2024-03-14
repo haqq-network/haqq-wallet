@@ -2,8 +2,8 @@ import React, {useCallback} from 'react';
 
 import {FlatList, ListRenderItem, StyleSheet, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {I18N} from '@app/i18n';
+import {Color} from '@app/theme';
 import {Link} from '@app/types';
 
 import {LinkPreview} from './link-preview';

@@ -6,9 +6,10 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
 import {WalletSelector} from '@app/components/wallet-selector';
 import {app} from '@app/contexts';
-import {createTheme, popupScreenOptions} from '@app/helpers';
+import {popupScreenOptions} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
+import {createTheme} from '@app/theme';
 
 const Stack = createNativeStackNavigator();
 

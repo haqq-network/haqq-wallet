@@ -1,4 +1,3 @@
-import {Color} from '@app/colors';
 import {app} from '@app/contexts';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
@@ -17,6 +16,7 @@ import {Refferal} from '@app/models/refferal';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {Airdrop, AirdropError, AirdropErrorCode} from '@app/services/airdrop';
+import {Color} from '@app/theme';
 import {AdjustEvents} from '@app/types';
 import {MAIN_NETWORK_ID} from '@app/variables/common';
 

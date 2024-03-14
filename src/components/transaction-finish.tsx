@@ -3,7 +3,6 @@ import React, {useMemo} from 'react';
 import {BigNumber} from '@ethersproject/bignumber';
 import {Image, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -17,11 +16,12 @@ import {
   TextPosition,
   TextVariant,
 } from '@app/components/ui';
-import {createTheme, openURL} from '@app/helpers';
+import {openURL} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Balance} from '@app/services/balance';
 import {EthNetwork} from '@app/services/eth-network';
+import {Color, createTheme} from '@app/theme';
 import {IToken, TransactionResponse} from '@app/types';
 import {CURRENCY_NAME, LONG_NUM_PRECISION} from '@app/variables/common';
 

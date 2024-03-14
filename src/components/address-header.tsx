@@ -2,8 +2,8 @@ import React from 'react';
 
 import {StyleSheet} from 'react-native';
 
-import {Color} from '@app/colors';
 import {I18N} from '@app/i18n';
+import {Color} from '@app/theme';
 
 import {Text} from './ui';
 

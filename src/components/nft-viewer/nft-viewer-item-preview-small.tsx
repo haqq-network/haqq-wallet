@@ -2,8 +2,7 @@ import React, {useCallback} from 'react';
 
 import {Image, TouchableOpacity} from 'react-native';
 
-import {Color} from '@app/colors';
-import {createTheme} from '@app/helpers';
+import {Color, createTheme} from '@app/theme';
 
 import {NftViewerItemPreviewExtendedProps} from './nft-viewer-item-preview';
 

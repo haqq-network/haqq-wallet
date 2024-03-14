@@ -2,7 +2,6 @@ import React, {useCallback, useMemo, useState} from 'react';
 
 import {observer} from 'mobx-react';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -14,10 +13,10 @@ import {
   TextVariant,
 } from '@app/components/ui';
 import {app} from '@app/contexts';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {SssProviders} from '@app/services/provider-sss';
+import {Color, createTheme} from '@app/theme';
 import {WalletType} from '@app/types';
 
 import {SocialButton, SocialButtonVariant} from '../social-button';

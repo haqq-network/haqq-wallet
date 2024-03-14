@@ -2,7 +2,7 @@ import React from 'react';
 
 import {StyleProp, View, ViewStyle} from 'react-native';
 
-import {createTheme} from '@app/helpers';
+import {createTheme} from '@app/theme';
 
 import {BarChartItem} from './bar-chart-item';
 import {BarChartText} from './bar-chart-text';

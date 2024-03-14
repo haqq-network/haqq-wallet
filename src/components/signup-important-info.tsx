@@ -3,7 +3,6 @@ import React, {memo} from 'react';
 import {Platform, View} from 'react-native';
 import Markdown from 'react-native-markdown-display';
 
-import {Color, getColor} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -11,8 +10,8 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
+import {Color, createTheme, getColor} from '@app/theme';
 
 type Props = {
   onNext: () => void;

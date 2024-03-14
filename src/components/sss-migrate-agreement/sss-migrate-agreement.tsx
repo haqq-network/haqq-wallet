@@ -2,7 +2,6 @@ import React from 'react';
 
 import {StyleSheet, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -13,8 +12,8 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {useThemeSelector} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {Color, useThemeSelector} from '@app/theme';
 
 export type SssMigrateAgreementProps = {
   onDone: () => void;

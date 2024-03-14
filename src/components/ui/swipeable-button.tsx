@@ -2,7 +2,7 @@ import React, {useCallback} from 'react';
 
 import {Animated, TouchableWithoutFeedback} from 'react-native';
 
-import {createTheme} from '@app/helpers';
+import {createTheme} from '@app/theme';
 import {SwipeableAction} from '@app/types';
 
 type SwipeableButtonProps<T> = SwipeableAction<T> & {

@@ -1,5 +1,3 @@
-import {app} from '@app/contexts';
-import {AppTheme} from '@app/types';
 import {
   DARK_APPLE_BG,
   DARK_APPLE_TEXT,
@@ -86,6 +84,9 @@ import {
   TRANSPARENT,
 } from '@app/variables/common';
 
+import {Theme} from './theme';
+import {AppTheme} from './types';
+
 export enum Color {
   transparent = 'transparent',
   textBase1 = 'textBase1',
@@ -138,7 +139,7 @@ export function getColor(key: Color | string) {
     return key;
   }
 
-  if (app.currentTheme === AppTheme.dark) {
+  if (Theme.currentTheme === AppTheme.dark) {
     return dark[key as Color];
   }
 

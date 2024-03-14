@@ -6,9 +6,9 @@ import {Results} from 'realm';
 
 import {NewsRow} from '@app/components/news/news-row';
 import {Button, ButtonSize, ButtonVariant, Spacer} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {News as NewsModel} from '@app/models/news';
+import {createTheme} from '@app/theme';
 
 type WelcomeProps = {
   news: Results<NewsModel>;

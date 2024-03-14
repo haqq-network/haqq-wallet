@@ -2,9 +2,9 @@ import React, {ReactNode, useRef} from 'react';
 
 import RNMarkdown, {ASTNode, MarkdownIt} from 'react-native-markdown-display';
 
-import {Color, getColor} from '@app/colors';
 import {Text} from '@app/components/ui';
-import {createTheme, getWindowWidth} from '@app/helpers';
+import {getWindowWidth} from '@app/helpers';
+import {Color, createTheme, getColor} from '@app/theme';
 
 const rules = {
   paragraph: (node: ASTNode, children: ReactNode[]) => {

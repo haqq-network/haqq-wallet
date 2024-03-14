@@ -2,9 +2,8 @@ import React, {FC, memo} from 'react';
 
 import {TouchableOpacity, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {Icon} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
+import {Color, createTheme} from '@app/theme';
 
 import {WIDTH} from '../core/constants';
 import {StoryHeaderProps} from '../core/dto/componentsDTO';

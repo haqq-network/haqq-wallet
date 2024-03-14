@@ -8,10 +8,10 @@ import {
 } from '@app/components/ui';
 import {NetworkFee} from '@app/components/ui/network-fee';
 import {SumBlock} from '@app/components/ui/sum-block';
-import {createTheme} from '@app/helpers';
 import {useSumAmount} from '@app/hooks/use-sum-amount';
 import {I18N} from '@app/i18n';
 import {Balance} from '@app/services/balance';
+import {createTheme} from '@app/theme';
 import {FEE_AMOUNT} from '@app/variables/balance';
 import {CURRENCY_NAME} from '@app/variables/common';
 

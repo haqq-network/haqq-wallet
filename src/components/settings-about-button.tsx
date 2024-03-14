@@ -1,6 +1,5 @@
 import React, {useCallback} from 'react';
 
-import {Color} from '@app/colors';
 import {
   Icon,
   IconButton,
@@ -9,8 +8,9 @@ import {
   Text,
   TextVariant,
 } from '@app/components/ui';
-import {createTheme, openURL} from '@app/helpers';
+import {openURL} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Color, createTheme} from '@app/theme';
 
 type SettingsAboutButtonProps = {
   i18n: I18N;

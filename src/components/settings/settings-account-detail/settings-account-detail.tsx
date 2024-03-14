@@ -2,7 +2,6 @@ import React, {useMemo} from 'react';
 
 import {Switch, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {AddressInfo} from '@app/components/address-info/address-info';
 import {
   Button,
@@ -19,12 +18,12 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {Color, createTheme} from '@app/theme';
 import {WalletType} from '@app/types';
 
 type SettingsAccountDetailProps = {

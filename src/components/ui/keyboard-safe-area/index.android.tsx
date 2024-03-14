@@ -9,8 +9,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {createTheme} from '@app/helpers';
 import {useKeyboardDismissInBackground} from '@app/hooks';
+import {createTheme} from '@app/theme';
 
 import {KeyboardSafeAreaProps} from '.';
 

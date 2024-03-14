@@ -2,7 +2,6 @@ import React, {useCallback} from 'react';
 
 import {Alert, Image, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonSize,
@@ -10,9 +9,8 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
-import {useThemeSelector} from '@app/hooks/use-theme-selector';
 import {I18N, getText} from '@app/i18n';
+import {Color, createTheme, useThemeSelector} from '@app/theme';
 
 export type BackupSssNotificationProps = {
   onClickBackup: () => Promise<void>;

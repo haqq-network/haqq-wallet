@@ -3,9 +3,10 @@ import React from 'react';
 import {ScrollView, View} from 'react-native';
 
 import {HomeBanner, HomeBannerProps} from '@app/components/home-banner';
-import {createTheme, getWindowWidth} from '@app/helpers';
+import {getWindowWidth} from '@app/helpers';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {Banner} from '@app/models/banner';
+import {createTheme} from '@app/theme';
 
 import {First, Spacer} from '../ui';
 

@@ -4,7 +4,6 @@ import {StyleSheet, View} from 'react-native';
 
 import {ModalProvider} from '@app/components/modal-provider';
 import {getWelcomeScreen} from '@app/helpers/get-welcome-screen';
-import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {HomeStack} from '@app/screens/HomeStack';
 import {ModalsScreen} from '@app/screens/modals-screen';
 import {WelcomeStack} from '@app/screens/WelcomeStack';
@@ -29,7 +28,7 @@ const RootStack = memo(({onboarded, isPinReseted, isReady}: Props) => {
   }, [onboarded, isPinReseted, initialRouteName]);
 
   const WrappedModals = useMemo(() => {
-    const Modals = themeUpdaterHOC(ModalsScreen);
+    const Modals = ModalsScreen;
     return <Modals initialModal={!isReady ? {type: 'splash'} : undefined} />;
   }, [isReady]);
 

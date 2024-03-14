@@ -3,7 +3,6 @@ import React, {memo} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {popupScreenOptionsWithMargin} from '@app/helpers';
-import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {
@@ -31,7 +30,7 @@ export const JsonRpcSignPopupStack = memo(() => {
     <Stack.Navigator screenOptions={screenOptions}>
       <Stack.Screen
         name={JsonRpcSignPopupStackRoutes.JsonRpcSign}
-        component={themeUpdaterHOC(JsonRpcSignScreen)}
+        component={JsonRpcSignScreen}
         initialParams={route.params}
       />
     </Stack.Navigator>

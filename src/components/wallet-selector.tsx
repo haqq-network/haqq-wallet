@@ -4,8 +4,8 @@ import {StyleProp, View, ViewStyle} from 'react-native';
 
 import {PopupContainer} from '@app/components/ui';
 import {WalletRow, WalletRowTypes} from '@app/components/wallet-row';
-import {createTheme} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
+import {createTheme} from '@app/theme';
 
 interface Props {
   initialAddress?: string;

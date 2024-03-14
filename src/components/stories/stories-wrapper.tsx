@@ -5,8 +5,8 @@ import {ScrollView} from 'react-native';
 
 import {StoriesLoaderItem} from '@app/components/stories/stories-loader-item';
 import {StoriesPreviewItem} from '@app/components/stories/stories-preview-item';
-import {createTheme} from '@app/helpers';
 import {Stories} from '@app/models/stories';
+import {createTheme} from '@app/theme';
 import {IStory} from '@app/types';
 
 type Props = {

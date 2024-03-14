@@ -20,7 +20,6 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {single, validate} from 'validate.js';
 
-import {Color} from '@app/colors';
 import {ActionsSheet} from '@app/components/actions-sheet';
 import {WrappedInput} from '@app/components/settings/settings-providers/settings-provider-edit/wrapped-input';
 import {
@@ -31,9 +30,9 @@ import {
   IconsName,
   Spacer,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {Provider, ProviderKeys} from '@app/models/provider';
+import {Color, createTheme} from '@app/theme';
 
 export type SettingsProviderEditData = Omit<
   Partial<Provider>,

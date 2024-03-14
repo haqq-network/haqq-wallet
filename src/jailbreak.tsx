@@ -1,20 +1,17 @@
 import React, {useEffect} from 'react';
 
+import {observer} from 'mobx-react';
 import {Image, SafeAreaView, View} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 
 import {Spacer, StatusBarColor, Text} from '@app/components/ui';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
+import {AppTheme, Color, Theme, createTheme, getColor} from '@app/theme';
 
-import {Color, getColor} from './colors';
-import {createTheme} from './helpers';
-import {useTheme} from './hooks';
 import {I18N} from './i18n';
-import {AdjustEvents, AppTheme} from './types';
+import {AdjustEvents} from './types';
 
-export const Jailbreak = () => {
-  const theme = useTheme();
-
+export const Jailbreak = observer(() => {
   useEffect(() => {
     SplashScreen.hide();
     onTrackEvent(AdjustEvents.stakingValidators);
@@ -25,7 +22,11 @@ export const Jailbreak = () => {
       <SafeAreaView style={styles.content}>
         <Image source={require('@assets/images/jailbreak.png')} />
         <StatusBarColor
-          barStyle={theme === AppTheme.dark ? 'light-content' : 'dark-content'}
+          barStyle={
+            Theme.currentTheme === AppTheme.dark
+              ? 'light-content'
+              : 'dark-content'
+          }
           backgroundColor={getColor(Color.bg1)}
         />
         <Spacer height={48} />
@@ -49,7 +50,7 @@ export const Jailbreak = () => {
       </SafeAreaView>
     </View>
   );
-};
+});
 
 const styles = createTheme({
   container: {

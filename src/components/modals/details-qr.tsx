@@ -6,7 +6,6 @@ import {Share, View, useWindowDimensions} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import QRCode from 'react-native-qrcode-svg';
 
-import {Color} from '@app/colors';
 import {BottomSheet} from '@app/components/bottom-sheet';
 import {
   Button,
@@ -17,10 +16,10 @@ import {
   InfoBlock,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
+import {Color, createTheme} from '@app/theme';
 import {ModalType, Modals} from '@app/types';
 import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
 

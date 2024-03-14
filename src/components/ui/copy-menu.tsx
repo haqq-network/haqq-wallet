@@ -9,17 +9,16 @@ import {
   MenuTrigger,
 } from 'react-native-popup-menu';
 
-import {Color} from '@app/colors';
 import {SolidLine} from '@app/components/solid-line';
 import {Icon, IconsName} from '@app/components/ui/icon';
 import Popover from '@app/components/ui/popover';
 import {Spacer} from '@app/components/ui/spacer';
 import {Text, TextVariant} from '@app/components/ui/text';
-import {createTheme} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {sendNotification} from '@app/services';
+import {Color, createTheme} from '@app/theme';
 
 export type CopyMenuProps = ViewProps & {
   value: string;

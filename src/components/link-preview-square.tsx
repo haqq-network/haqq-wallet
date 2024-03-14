@@ -2,8 +2,8 @@ import React, {useCallback, useMemo} from 'react';
 
 import {TouchableOpacity, View} from 'react-native';
 
-import {createTheme} from '@app/helpers';
 import {getHost} from '@app/helpers/web3-browser-utils';
+import {createTheme} from '@app/theme';
 
 import {LinkPreviewProps} from './link-preview';
 import {SiteIconPreview, SiteIconPreviewSize} from './site-icon-preview';

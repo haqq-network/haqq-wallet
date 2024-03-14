@@ -2,8 +2,8 @@ import React from 'react';
 
 import {Pin, PinInterface} from '@app/components/pin';
 import {PopupContainer} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {createTheme} from '@app/theme';
 
 export type RestoreAgreementProps = {
   onPin: (pin: string) => void;

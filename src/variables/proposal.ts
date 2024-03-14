@@ -1,6 +1,6 @@
-import {Color} from '@app/colors';
 import {IconsName as IconsNameUI} from '@app/components/ui';
 import {I18N} from '@app/i18n';
+import {Color} from '@app/theme';
 import {ProposalsTagKeys} from '@app/types';
 
 export type ProposalsTagType = [

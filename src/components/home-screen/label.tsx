@@ -1,8 +1,8 @@
 import React, {useMemo} from 'react';
 
-import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
 import {I18N} from '@app/i18n';
+import {Color} from '@app/theme';
 
 export type HomeScreenLabelProps = {
   route: string;

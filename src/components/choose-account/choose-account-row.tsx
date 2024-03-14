@@ -2,7 +2,6 @@ import React, {useCallback, useMemo} from 'react';
 
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonSize,
@@ -14,10 +13,10 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {Color, createTheme} from '@app/theme';
 import {ChooseAccountItem} from '@app/types';
 
 export type LedgerAccountsRowProps = {

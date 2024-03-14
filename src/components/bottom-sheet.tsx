@@ -32,7 +32,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {Color, getColor} from '@app/colors';
 import {ModalProvider} from '@app/components/modal-provider';
 import {
   First,
@@ -42,8 +41,9 @@ import {
   SwiperIcon,
   Text,
 } from '@app/components/ui';
-import {createTheme, getWindowWidth} from '@app/helpers';
+import {getWindowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Color, createTheme, getColor} from '@app/theme';
 import {ANIMATION_DURATION, ANIMATION_TYPE} from '@app/variables/common';
 
 type TitleProp =

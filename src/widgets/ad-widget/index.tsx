@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-import {Color, getColor} from '@app/colors';
 import {
   Button,
   ButtonSize,
@@ -26,6 +25,7 @@ import {onDeepLink} from '@app/event-actions/on-deep-link';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {getWindowDimensions} from '@app/helpers';
 import {BannerButtonEvent} from '@app/models/banner';
+import {Color, getColor} from '@app/theme';
 import {IAdWidget} from '@app/types';
 import {openWeb3Browser} from '@app/utils';
 import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';

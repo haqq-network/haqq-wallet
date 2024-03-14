@@ -2,8 +2,8 @@ import React from 'react';
 
 import {StyleSheet} from 'react-native';
 
-import {Color} from '@app/colors';
 import {useTypedNavigation} from '@app/hooks';
+import {Color} from '@app/theme';
 
 import {Icon, IconButton} from '../ui';
 

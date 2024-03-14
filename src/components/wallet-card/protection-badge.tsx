@@ -3,7 +3,6 @@ import React, {useMemo} from 'react';
 import {SessionTypes} from '@walletconnect/types';
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {
   Icon,
   IconButton,
@@ -12,9 +11,9 @@ import {
   Text,
   TextVariant,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {Color, createTheme} from '@app/theme';
 import {WalletType} from '@app/types';
 
 enum ProtectionStatus {

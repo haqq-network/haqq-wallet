@@ -4,7 +4,6 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
 import {popupScreenOptions} from '@app/helpers';
-import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {
@@ -37,7 +36,7 @@ export const WalletConnectApprovalStack = () => {
     <Stack.Navigator screenOptions={screenOptions}>
       <Stack.Screen
         name={WalletConnectApprovalStackRoutes.WalletConnectApproval}
-        component={themeUpdaterHOC(WalletConnectApprovalScreen)}
+        component={WalletConnectApprovalScreen}
         options={screenOptionsApprovalScreen}
         initialParams={route.params.params}
       />

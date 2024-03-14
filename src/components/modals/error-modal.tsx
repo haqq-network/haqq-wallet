@@ -2,7 +2,6 @@ import React, {useEffect} from 'react';
 
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {BottomPopupContainer} from '@app/components/bottom-popups';
 import {
   Button,
@@ -12,8 +11,8 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {Color, createTheme} from '@app/theme';
 import {ModalType, Modals} from '@app/types';
 
 export const ErrorModal = ({

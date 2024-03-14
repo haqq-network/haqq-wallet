@@ -2,7 +2,6 @@ import React from 'react';
 
 import {Image, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -12,10 +11,10 @@ import {
   Text,
 } from '@app/components/ui';
 import {NetworkFee} from '@app/components/ui/network-fee';
-import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
 import {Balance} from '@app/services/balance';
+import {Color, createTheme} from '@app/theme';
 import {ValidatorItem} from '@app/types';
 
 export type StakingDelegateFinishProps = {

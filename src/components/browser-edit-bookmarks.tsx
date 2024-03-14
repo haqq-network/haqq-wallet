@@ -7,9 +7,9 @@ import DraggableFlatList, {
   ScaleDecorator,
 } from 'react-native-draggable-flatlist';
 
-import {Color} from '@app/colors';
 import {useRemoteConfigVar} from '@app/hooks/use-remote-config';
 import {I18N} from '@app/i18n';
+import {Color} from '@app/theme';
 import {Link} from '@app/types';
 
 import {LinkPreview, LinkPreviewVariant} from './link-preview';

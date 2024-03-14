@@ -2,7 +2,6 @@ import React, {useMemo} from 'react';
 
 import {Image, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -11,10 +10,10 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Balance} from '@app/services/balance';
+import {Color, createTheme} from '@app/theme';
 import {NftItem} from '@app/types';
 import {splitAddress} from '@app/utils';
 import {CURRENCY_NAME, WEI} from '@app/variables/common';

@@ -2,7 +2,7 @@ import React, {FC, memo} from 'react';
 
 import {View} from 'react-native';
 
-import {createTheme} from '@app/helpers';
+import {createTheme} from '@app/theme';
 
 import {StoryProgressItem} from './story-progress-item';
 

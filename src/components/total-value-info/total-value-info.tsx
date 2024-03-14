@@ -5,7 +5,6 @@ import {observer} from 'mobx-react';
 import {TokenViewer} from '@app/components/token-viewer';
 import {TransactionEmpty} from '@app/components/transaction-empty';
 import {First, Spacer} from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {
   Feature,
   isFeatureEnabled,
@@ -14,6 +13,7 @@ import {
 import {useNftCollections} from '@app/hooks/use-nft-collections';
 import {I18N} from '@app/i18n';
 import {Transaction} from '@app/models/transaction';
+import {createTheme} from '@app/theme';
 import {BalanceData, HaqqEthereumAddress, IToken} from '@app/types';
 
 import {TotalValueInfoHeader} from './total-value-info-header';

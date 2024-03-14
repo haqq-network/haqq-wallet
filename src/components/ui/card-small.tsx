@@ -4,8 +4,8 @@ import {PATTERNS_SOURCE} from '@env';
 import {Image, StyleProp, StyleSheet, ViewStyle} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-import {createTheme} from '@app/helpers';
 import {RemoteConfig} from '@app/services/remote-config';
+import {createTheme} from '@app/theme';
 import {
   CARD_DEFAULT_STYLE,
   GRADIENT_END,

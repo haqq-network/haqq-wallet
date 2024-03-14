@@ -1,9 +1,9 @@
 import {isAfter} from 'date-fns';
 
-import {Color} from '@app/colors';
 import {Banner} from '@app/models/banner';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesDate} from '@app/models/variables-date';
+import {Color} from '@app/theme';
 
 const topics: Record<string, any> = {
   news: {

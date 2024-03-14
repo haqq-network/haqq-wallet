@@ -6,7 +6,6 @@ import Decimal from 'decimal.js';
 import {View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {Color} from '@app/colors';
 import {
   Badge,
   Icon,
@@ -15,9 +14,10 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {cleanNumber, createTheme} from '@app/helpers';
+import {cleanNumber} from '@app/helpers';
 import {proposalDepositNeeds, yesPercent} from '@app/helpers/governance';
 import {I18N} from '@app/i18n';
+import {Color, createTheme} from '@app/theme';
 import {VoteNamesType} from '@app/types';
 import {NUM_PRECISION, WEI} from '@app/variables/common';
 import {ProposalsTags} from '@app/variables/proposal';

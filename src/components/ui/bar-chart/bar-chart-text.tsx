@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 
-import {useColor} from '@app/hooks/use-color';
+import {useColor} from '@app/theme';
 
 import {BarChartItem} from './bar-chart-item';
 

@@ -2,14 +2,13 @@ import React, {useCallback, useMemo} from 'react';
 
 import {TouchableWithoutFeedback, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
 import {InfoBox} from '@app/components/ui/info-box';
-import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {formatPercents} from '@app/helpers/format-percents';
 import {useMinAmount} from '@app/hooks/use-min-amount';
 import {I18N} from '@app/i18n';
+import {Color, createTheme} from '@app/theme';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
 import {WEI} from '@app/variables/common';
 

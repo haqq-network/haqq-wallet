@@ -3,7 +3,6 @@ import React, {useCallback, useMemo} from 'react';
 import {ScrollView, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-import {Color} from '@app/colors';
 import {Block} from '@app/components/staking-info/block';
 import {Markdown} from '@app/components/staking-info/markdown';
 import {
@@ -18,12 +17,13 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme, openURL} from '@app/helpers';
+import {openURL} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {formatPercents} from '@app/helpers/format-percents';
 import {formatStakingDate, reduceAmounts} from '@app/helpers/staking';
 import {I18N} from '@app/i18n';
 import {StakingMetadata} from '@app/models/staking-metadata';
+import {Color, createTheme} from '@app/theme';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
 import {WEI} from '@app/variables/common';
 

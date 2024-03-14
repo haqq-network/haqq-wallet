@@ -3,7 +3,6 @@ import React from 'react';
 import {Image, View} from 'react-native';
 import {State} from 'react-native-ble-plx';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -12,8 +11,9 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme, getWindowHeight, getWindowWidth} from '@app/helpers';
+import {getWindowHeight, getWindowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Color, createTheme} from '@app/theme';
 
 export type LedgerBluetooth = {
   onPressAllow: () => void;

@@ -2,12 +2,11 @@ import React, {useMemo} from 'react';
 
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {Icon, IconsName, Text, TextVariant} from '@app/components/ui';
 import {CopyMenu} from '@app/components/ui/copy-menu';
-import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {Wallet} from '@app/models/wallet';
+import {Color, createTheme} from '@app/theme';
 
 type CardNameProps = {
   wallet: Wallet;

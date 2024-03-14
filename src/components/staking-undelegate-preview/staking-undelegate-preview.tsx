@@ -3,7 +3,6 @@ import React, {useMemo} from 'react';
 import {formatDistance} from 'date-fns';
 import {View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -14,10 +13,10 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
-import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
 import {Balance} from '@app/services/balance';
+import {Color, createTheme} from '@app/theme';
 import {ValidatorItem} from '@app/types';
 
 export type StakingDelegatePreviewProps = {

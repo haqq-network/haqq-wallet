@@ -1,8 +1,8 @@
 import {isAfter} from 'date-fns';
 
-import {Color, getColor} from '@app/colors';
 import {Banner, BannerButtonEvent, BannerType} from '@app/models/banner';
 import {VariablesDate} from '@app/models/variables-date';
+import {Color, getColor} from '@app/theme';
 import {AdjustTrackingAuthorizationStatus} from '@app/types';
 import {getAppTrackingAuthorizationStatus} from '@app/utils';
 

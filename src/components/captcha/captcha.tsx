@@ -8,13 +8,12 @@ import {
   TURNSTILE_SITEKEY,
   TURNSTILE_URL,
 } from '@env';
+import {observer} from 'mobx-react';
 import {StyleSheet, View} from 'react-native';
 import {WebViewMessageEvent} from 'react-native-webview';
 
-import {Color, getColor} from '@app/colors';
-import {createTheme, getWindowHeight, getWindowWidth} from '@app/helpers';
-import {useTheme} from '@app/hooks';
-import {AppTheme} from '@app/types';
+import {getWindowHeight, getWindowWidth} from '@app/helpers';
+import {AppTheme, Color, Theme, createTheme, getColor} from '@app/theme';
 
 import {Hcaptcha, Ocaptcha, ReCaptchaV2, SliderCaptcha, Turnstile} from './';
 import {First} from '../ui';
@@ -39,87 +38,88 @@ export interface CaptchaProps {
   onData(token: CaptchaDataTypes): void;
 }
 
-export const Captcha = ({
-  languageCode = 'en',
-  enableAutoOpenChallenge,
-  type = CaptchaType.slider,
-  onData,
-}: CaptchaProps) => {
-  const appTheme = useTheme();
-  const theme = appTheme === AppTheme.dark ? 'dark' : 'light';
+export const Captcha = observer(
+  ({
+    languageCode = 'en',
+    enableAutoOpenChallenge,
+    type = CaptchaType.slider,
+    onData,
+  }: CaptchaProps) => {
+    const theme = Theme.currentTheme === AppTheme.dark ? 'dark' : 'light';
 
-  const onMessage = useCallback(
-    (event: WebViewMessageEvent) => {
-      const data = event.nativeEvent.data as CaptchaDataTypes;
-      onData?.(data);
-    },
-    [onData],
-  );
+    const onMessage = useCallback(
+      (event: WebViewMessageEvent) => {
+        const data = event.nativeEvent.data as CaptchaDataTypes;
+        onData?.(data);
+      },
+      [onData],
+    );
 
-  const onPressOutside = useCallback(() => {
-    onData?.('click-outside');
-  }, [onData]);
+    const onPressOutside = useCallback(() => {
+      onData?.('click-outside');
+    }, [onData]);
 
-  return (
-    <View style={styles.container}>
-      <View onTouchEnd={onPressOutside} style={styles.overlay} />
-      <First>
-        {type === CaptchaType.slider && <SliderCaptcha onData={onData} />}
-        {type === CaptchaType.ocaptcha && <Ocaptcha onData={onData} />}
-        {type === CaptchaType.hcaptcha && (
-          <>
-            <View style={styles.whiteBox} />
-            <Hcaptcha
-              siteKey={HCAPTCHA_SITE_KEY}
-              url={HCAPTCHA_URL}
-              showLoading
-              size={'compact'}
-              onMessage={onMessage}
-              theme={theme}
-              style={styles.hcaptcha}
-              containerStyle={styles.hcaptchaContainer}
-              backgroundColor={'transparent'}
-              enableAutoOpenChallenge={enableAutoOpenChallenge}
-              languageCode={languageCode}
-            />
-          </>
-        )}
-        {type === CaptchaType.turnstile && (
-          <>
-            <View style={styles.whiteBox2} />
-            <Turnstile
-              url={TURNSTILE_URL}
-              siteKey={TURNSTILE_SITEKEY}
-              showLoading
-              onMessage={onMessage}
-              theme={theme}
-              style={styles.hcaptcha}
-              containerStyle={styles.hcaptchaContainer}
-              backgroundColor={'transparent'}
-              languageCode={languageCode}
-            />
-          </>
-        )}
-        {type === CaptchaType.recaptcha2 && (
-          <>
-            <View style={styles.whiteBox3} />
-            <ReCaptchaV2
-              showLoading
-              siteKey={RECAPTCHA_V2_SITEKEY}
-              url={RECAPTCHA_V2_URL}
-              theme={theme}
-              onMessage={onMessage}
-              style={styles.hcaptcha}
-              containerStyle={styles.hcaptchaContainer}
-              backgroundColor={'transparent'}
-              languageCode={languageCode}
-            />
-          </>
-        )}
-      </First>
-    </View>
-  );
-};
+    return (
+      <View style={styles.container}>
+        <View onTouchEnd={onPressOutside} style={styles.overlay} />
+        <First>
+          {type === CaptchaType.slider && <SliderCaptcha onData={onData} />}
+          {type === CaptchaType.ocaptcha && <Ocaptcha onData={onData} />}
+          {type === CaptchaType.hcaptcha && (
+            <>
+              <View style={styles.whiteBox} />
+              <Hcaptcha
+                siteKey={HCAPTCHA_SITE_KEY}
+                url={HCAPTCHA_URL}
+                showLoading
+                size={'compact'}
+                onMessage={onMessage}
+                theme={theme}
+                style={styles.hcaptcha}
+                containerStyle={styles.hcaptchaContainer}
+                backgroundColor={'transparent'}
+                enableAutoOpenChallenge={enableAutoOpenChallenge}
+                languageCode={languageCode}
+              />
+            </>
+          )}
+          {type === CaptchaType.turnstile && (
+            <>
+              <View style={styles.whiteBox2} />
+              <Turnstile
+                url={TURNSTILE_URL}
+                siteKey={TURNSTILE_SITEKEY}
+                showLoading
+                onMessage={onMessage}
+                theme={theme}
+                style={styles.hcaptcha}
+                containerStyle={styles.hcaptchaContainer}
+                backgroundColor={'transparent'}
+                languageCode={languageCode}
+              />
+            </>
+          )}
+          {type === CaptchaType.recaptcha2 && (
+            <>
+              <View style={styles.whiteBox3} />
+              <ReCaptchaV2
+                showLoading
+                siteKey={RECAPTCHA_V2_SITEKEY}
+                url={RECAPTCHA_V2_URL}
+                theme={theme}
+                onMessage={onMessage}
+                style={styles.hcaptcha}
+                containerStyle={styles.hcaptchaContainer}
+                backgroundColor={'transparent'}
+                languageCode={languageCode}
+              />
+            </>
+          )}
+        </First>
+      </View>
+    );
+  },
+);
 
 const styles = createTheme({
   container: {flex: 1, alignItems: 'center', justifyContent: 'center'},

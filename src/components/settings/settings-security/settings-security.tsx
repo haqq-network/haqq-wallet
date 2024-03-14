@@ -2,7 +2,6 @@ import React from 'react';
 
 import {StyleSheet, Switch, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
@@ -20,6 +19,7 @@ import {
 } from '@app/components/ui';
 import {app} from '@app/contexts';
 import {I18N, getText} from '@app/i18n';
+import {Color} from '@app/theme';
 import {BiometryType} from '@app/types';
 
 const biometryName = {

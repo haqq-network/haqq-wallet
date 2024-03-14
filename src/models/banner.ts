@@ -1,8 +1,8 @@
 import {makeAutoObservable} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
-import {Color} from '@app/colors';
 import {storage} from '@app/services/mmkv';
+import {Color} from '@app/theme';
 
 import UUID = Realm.BSON.UUID;
 
