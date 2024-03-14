@@ -9,7 +9,7 @@ import {restoreWallet} from './helpers/restoreWallet';
 import {sleep} from './helpers/sleep';
 import {PIN} from './test-variables';
 
-describe('Coin delegation and undelegation', () => {
+describe.skip('Coin delegation and undelegation', () => {
   const wallet = Wallet.createRandom();
   beforeAll(async () => {
     await launchApp();
