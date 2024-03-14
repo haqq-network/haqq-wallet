@@ -8,6 +8,8 @@ import React, {
 } from 'react';
 
 import {
+  InteractionManager,
+  Keyboard,
   LayoutChangeEvent,
   NativeSyntheticEvent,
   Pressable,
@@ -30,6 +32,7 @@ import {Spacer} from '@app/components/ui/spacer';
 import {Text, TextProps} from '@app/components/ui/text';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {sleep} from '@app/utils';
 import {IS_IOS} from '@app/variables/common';
 
 type Props = Omit<TextInputProps, 'placeholder'> & {
@@ -125,17 +128,22 @@ export const TextField: React.FC<Props> = memo(
     }, [value, focusAnim, isFocused]);
 
     useLayoutEffect(() => {
-      if (inputRef.current?.isFocused() || !autoFocus) {
+      if (!autoFocus) {
         return;
       }
 
-      const timer = setTimeout(() => {
-        inputRef.current?.focus();
-      }, 100);
+      const interaction = InteractionManager.runAfterInteractions(async () => {
+        if (!inputRef.current?.isFocused()) {
+          Keyboard.dismiss();
+          await sleep(100);
+          inputRef.current?.focus();
+        }
+      });
 
       return () => {
-        if (timer) {
-          clearTimeout(timer);
+        interaction.cancel();
+        if (inputRef.current?.isFocused()) {
+          inputRef.current?.blur();
         }
       };
     }, [autoFocus]);
