@@ -26,7 +26,8 @@
     "devmode:ios": "xcrun simctl openurl booted haqq:enableDeveloperMode:true",
     "devmode:android": "adb shell am start -a android.intent.action.VIEW -d haqq:enableDeveloperMode:true",
     "clean": "sh ./scripts/clean.sh",
-    "update-inpage-bridge-web3": "sh ./scripts/update-inpage-bridge-web3.sh"
+    "update-inpage-bridge-web3": "sh ./scripts/update-inpage-bridge-web3.sh",
+    "git:action:restart": "git pull && git commit --amend -n --no-edit && git push -f"
   },
   "dependencies": {
     "@birdwingo/react-native-spinning-numbers": "1.0.5",
