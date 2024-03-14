@@ -64,9 +64,7 @@ describe('Routine', () => {
         log.warn('Error while tap: ' + JSON.stringify(err));
       }
     }
-    await element(by.text(`${coinsAmount} ISLM`))
-      .atIndex(0)
-      .tap();
+    await element(by.id('ISLM')).tap();
 
     const input_form = element(by.id('transaction_sum_form_input'));
     await waitFor(input_form).toBeFocused();
