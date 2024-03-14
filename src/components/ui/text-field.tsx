@@ -1,7 +1,15 @@
-import React, {memo, useCallback, useEffect, useRef, useState} from 'react';
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 
-import {useFocusEffect} from '@react-navigation/native';
 import {
+  InteractionManager,
+  Keyboard,
   LayoutChangeEvent,
   NativeSyntheticEvent,
   Pressable,
@@ -24,6 +32,7 @@ import {Spacer} from '@app/components/ui/spacer';
 import {Text, TextProps} from '@app/components/ui/text';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {sleep} from '@app/utils';
 import {IS_IOS} from '@app/variables/common';
 
 type Props = Omit<TextInputProps, 'placeholder'> & {
@@ -118,22 +127,26 @@ export const TextField: React.FC<Props> = memo(
       });
     }, [value, focusAnim, isFocused]);
 
-    useFocusEffect(
-      useCallback(() => {
-        let timer: NodeJS.Timeout | null = null;
-        if (autoFocus) {
-          timer = setTimeout(() => {
-            inputRef.current?.focus();
-          }, 100);
-        }
+    useLayoutEffect(() => {
+      if (!autoFocus) {
+        return;
+      }
 
-        return () => {
-          if (timer) {
-            clearTimeout(timer);
-          }
-        };
-      }, [autoFocus]),
-    );
+      const interaction = InteractionManager.runAfterInteractions(async () => {
+        if (!inputRef.current?.isFocused()) {
+          Keyboard.dismiss();
+          await sleep(100);
+          inputRef.current?.focus();
+        }
+      });
+
+      return () => {
+        interaction.cancel();
+        if (inputRef.current?.isFocused()) {
+          inputRef.current?.blur();
+        }
+      };
+    }, [autoFocus]);
 
     let color = getColor(error ? Color.textRed1 : Color.textBase2);
 
