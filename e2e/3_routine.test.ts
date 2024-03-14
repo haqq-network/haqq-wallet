@@ -53,6 +53,7 @@ describe('Routine', () => {
     await element(by.id(`wallets_${wallet.address.toLowerCase()}_send`)).tap();
 
     const input_address = element(by.id('transaction_address_input'));
+    await waitFor(input_address).toBeFocused();
     await input_address.typeText(MilkAddressProxy.address);
     await element(by.id('transaction_address_next')).tap();
     const nextStillVisible = await isVisible('transaction_address_next');
@@ -66,7 +67,7 @@ describe('Routine', () => {
     await element(by.id('ISLM')).tap();
 
     const input_form = element(by.id('transaction_sum_form_input'));
-    await input_form.tap();
+    await waitFor(input_form).toBeFocused();
     await input_form.replaceText('0.001');
 
     await element(by.id(`transaction_sum_next`)).tap();
