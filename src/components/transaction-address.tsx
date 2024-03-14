@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import {
   ListRenderItem,
@@ -64,6 +64,11 @@ export const TransactionAddress = ({
 }: TransactionAddressProps) => {
   const {keyboardShown} = useKeyboard();
   const [error, setError] = useState(false);
+
+  const doneDisabled = useMemo(() => {
+    return !address?.trim() || error || !AddressUtils.isValidAddress(address);
+  }, [error, address]);
+
   const onDone = useCallback(async () => {
     onAddress(address.trim());
   }, [onAddress, address]);
@@ -230,7 +235,7 @@ export const TransactionAddress = ({
         )}
         <Spacer flex={1} />
         <Button
-          disabled={error}
+          disabled={doneDisabled}
           variant={ButtonVariant.contained}
           i18n={I18N.continue}
           onPress={onDone}
