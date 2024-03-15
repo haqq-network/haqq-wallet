@@ -52,7 +52,7 @@ export const PinModal = observer(() => {
   );
 
   return (
-    <View style={page.container} key={Theme.currentTheme} testID="pin">
+    <View style={page.container} key={String(Theme.currentTheme)} testID="pin">
       <Pin
         ref={pinRef}
         title={getText(I18N.modalPinTitle)}

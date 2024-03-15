@@ -15,7 +15,7 @@ export const SettingsThemeScreen = observer(() => {
   return (
     <SettingsTheme
       goBack={navigation.goBack}
-      theme={Theme.currentTheme}
+      theme={Theme.currentSelectedTheme}
       onChangeTheme={onChangeTheme}
     />
   );

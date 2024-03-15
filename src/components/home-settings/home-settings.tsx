@@ -17,7 +17,7 @@ import {SettingsButton} from './settings-button';
 import {IconsName} from '../ui';
 
 export const HomeSettings = observer(() => {
-  const capitalizedTheme = capitalize(Theme.currentTheme);
+  const capitalizedTheme = capitalize(Theme.currentSelectedTheme);
   const {accounts} = useWalletConnectAccounts();
   const isTesterMode = useTesterModeEnabled();
   const selectedCurrency = Currencies.selectedCurrency;

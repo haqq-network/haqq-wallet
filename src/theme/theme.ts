@@ -9,7 +9,7 @@ import {storage} from '@app/services/mmkv';
 import {AppTheme} from './types';
 
 class Theme {
-  _systemTheme = Appearance.getColorScheme() as AppTheme;
+  _systemTheme = Appearance.getColorScheme();
   _currentTheme: AppTheme =
     (Appearance.getColorScheme() as AppTheme) ?? AppTheme.light;
 
@@ -27,7 +27,7 @@ class Theme {
   }
 
   onChangeThemeListener = () => {
-    const systemColorScheme = Appearance.getColorScheme() as AppTheme;
+    const systemColorScheme = Appearance.getColorScheme();
 
     if (getAppStatus() === AppStatus.inactive) {
       return;
@@ -35,14 +35,16 @@ class Theme {
 
     runInAction(() => {
       this._systemTheme = systemColorScheme;
-      this._currentTheme =
-        this._currentTheme === AppTheme.system
-          ? this._systemTheme ?? AppTheme.light
-          : this._currentTheme;
     });
   };
 
-  get currentTheme() {
+  get currentTheme(): Omit<AppTheme, AppTheme.system> {
+    return this._currentTheme === AppTheme.system
+      ? this._systemTheme ?? AppTheme.light
+      : this._currentTheme;
+  }
+
+  get currentSelectedTheme(): AppTheme {
     return this._currentTheme;
   }
 
