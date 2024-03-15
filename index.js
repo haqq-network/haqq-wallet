@@ -55,6 +55,9 @@ if (SENTRY_DSN && DEBUG_VARS.enableSentry) {
       tracesSampleRate: 1.0,
       environment: ENVIRONMENT ?? 'development',
       enableWatchdogTerminationTracking: false,
+      attachScreenshot: true,
+      attachStacktrace: true,
+      attachViewHierarchy: true,
     });
   } catch (e) {
     console.log('sentry init failed');

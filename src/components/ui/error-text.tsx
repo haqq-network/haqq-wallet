@@ -42,6 +42,7 @@ export const ErrorText = ({
           title={getText(I18N.viewDetailsTitle)}
           onPress={() => {
             showModal(ModalType.viewErrorDetails, {
+              errorId: 'unknown',
               errorDetails: errorDetails!,
             });
           }}

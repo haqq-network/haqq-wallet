@@ -14,7 +14,12 @@ import {getAppVersion} from '@app/services/version';
 import {ModalType, Modals} from '@app/types';
 
 export const ViewErrorDetails = memo(
-  ({errorDetails}: Modals[ModalType.viewErrorDetails]) => {
+  ({errorDetails, errorId}: Modals[ModalType.viewErrorDetails]) => {
+    const errString = useMemo(
+      () => `${errorDetails} \n${getText(I18N.errorCode, {id: errorId})}`,
+      [errorDetails, errorId],
+    );
+
     const appVersion = useMemo(
       () =>
         getText(I18N.yourAppVersion, {
@@ -36,7 +41,9 @@ export const ViewErrorDetails = memo(
 
     const onCopyPress = useCallback(() => {
       Clipboard.setString(
-        `${errorDetails}\n${appVersion}\n${remoteAppVersion}`,
+        `${getText(I18N.errorCode, {
+          id: errorId,
+        })}\n${errorDetails}\n${appVersion}\n${remoteAppVersion}`,
       );
       hideModal(ModalType.viewErrorDetails);
       sendNotification(I18N.notificationCopied);
@@ -47,7 +54,7 @@ export const ViewErrorDetails = memo(
         onPressOutContent={() => hideModal(ModalType.viewErrorDetails)}>
         {() => (
           <View style={styles.modalView}>
-            <Text t14>{errorDetails}</Text>
+            <Text t14>{errString}</Text>
             <Spacer height={12} />
             <View style={styles.versionContainer}>
               <View>

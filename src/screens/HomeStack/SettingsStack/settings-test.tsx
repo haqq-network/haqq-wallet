@@ -45,6 +45,7 @@ import {getAdjustAdid} from '@app/helpers/get_adjust_adid';
 import {parseDeepLink} from '@app/helpers/parse-deep-link';
 import {SecurePinUtils} from '@app/helpers/secure-pin-utils';
 import {useTypedNavigation} from '@app/hooks';
+import {useError} from '@app/hooks/use-error';
 import {I18N} from '@app/i18n';
 import {Banner} from '@app/models/banner';
 import {News} from '@app/models/news';
@@ -201,6 +202,7 @@ const getTestModals = (): TestModals => {
       onClose: () => logger.log('notEnoughGas closed'),
     },
     viewErrorDetails: {
+      errorId: 'test-error',
       errorDetails: 'viewErrorDetails',
       onClose: () => logger.log('viewErrorDetails closed'),
     },
@@ -209,11 +211,12 @@ const getTestModals = (): TestModals => {
       wallet: wallets[0],
     },
     keystoneQR: {
-      cborHex: '',
-      errorEventName: '',
-      requestID: '',
-      succesEventName: '',
-      urType: '',
+      cborHex:
+        'a601d825503e1717c8547342479d8539a5685b0168025901e27b227479706573223a7b224d696e74223a5b7b226e616d65223a227369676e6572222c2274797065223a2261646472657373227d2c7b226e616d65223a22757365724964222c2274797065223a2275696e74323536227d5d2c22454950373132446f6d61696e223a5b7b226e616d65223a226e616d65222c2274797065223a22737472696e67227d2c7b226e616d65223a2276657273696f6e222c2274797065223a22737472696e67227d2c7b226e616d65223a22636861696e4964222c2274797065223a2275696e74323536227d2c7b226e616d65223a22766572696679696e67436f6e7472616374222c2274797065223a2261646472657373227d5d7d2c22646f6d61696e223a7b226e616d65223a2248534254222c2276657273696f6e223a2231222c22636861696e4964223a22307864336333222c22766572696679696e67436f6e7472616374223a22307865306339376336653332353962393538366531396533396335616361386165346337623939653032227d2c227072696d61727954797065223a224d696e74222c226d657373616765223a7b227369676e6572223a22307831624237316235373161313665656432393344393331643234356634336432613144333431373539222c22757365724964223a3936393832337d7d03020419d3c305d90130a2018a182cf5183cf500f500f400f4021af4122bfb06541bb71b571a16eed293d931d245f43d2a1d341759',
+      errorEventName: 'test-error',
+      requestID: 'test-id',
+      succesEventName: 'test-success',
+      urType: 'eth-sign-request',
     },
     keystoneScanner: {
       eventTaskId: 'test-modal',
@@ -534,6 +537,8 @@ export const SettingsTestScreen = observer(() => {
     });
   }, [showActionSheetWithOptions]);
 
+  const showError = useError();
+
   const onSetLeadingAccount = useCallback(async () => {
     const wallets = Wallet.getAll();
     const initialAddress = VariablesString.get('leadingAccount');
@@ -612,7 +617,7 @@ export const SettingsTestScreen = observer(() => {
 
       <Title text="Transaction" />
       <Spacer height={8} />
-      <Text>
+      <Text t11>
         TX count: {txList.length}
         {STRINGS.N}
         last block: {blockNumber}
@@ -632,6 +637,23 @@ export const SettingsTestScreen = observer(() => {
 
           Logger.log('tx result', JSON.stringify(result, null, 2));
           setTxList(txListOld => [...txListOld, ...result]);
+        }}
+        variant={ButtonVariant.contained}
+      />
+
+      <Title text="Sentry error" />
+      <Button
+        title="Send test error"
+        onPress={() => {
+          const error = new Error("Test error, don't worry, be happy! 👾");
+          const errorId = makeID(6);
+          Logger.captureException(error, 'SettingsTestScreen', {
+            id: errorId,
+            error,
+            testObject: {a: 1, b: 2},
+            testArray: [1, 2, 3],
+          });
+          showError(errorId, error.message);
         }}
         variant={ButtonVariant.contained}
       />
