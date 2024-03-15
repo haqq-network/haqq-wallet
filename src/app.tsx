@@ -174,10 +174,6 @@ export const App = observer(() => {
       getAppTrackingAuthorizationStatus().then(status => {
         Logger.log('Authorization status = ' + status);
       });
-
-      // Adjust.getAdid((adid) => {
-      // Logger.log('Adid = ' + adid);
-      // });
     }
     return () => {
       Adjust.componentWillUnmount();

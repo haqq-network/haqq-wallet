@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 
-import {Text} from '@app/components/ui';
+import {Text, TextPosition, TextVariant} from '@app/components/ui';
 import {I18N} from '@app/i18n';
 
 export type HomeScreenTitleProps = {
@@ -31,5 +31,7 @@ export const HomeScreenTitle = ({route}: HomeScreenTitleProps) => {
     return null;
   }
 
-  return <Text t8 center i18n={name} />;
+  return (
+    <Text variant={TextVariant.t8} position={TextPosition.center} i18n={name} />
+  );
 };
