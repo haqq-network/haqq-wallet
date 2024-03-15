@@ -13,6 +13,7 @@ export const useError = () => {
       text2: getText(I18N.errorText),
       onPress: () => {
         showModal(ModalType.viewErrorDetails, {
+          errorId,
           errorDetails,
         });
       },

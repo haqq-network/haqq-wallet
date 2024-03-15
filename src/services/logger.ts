@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import * as Sentry from '@sentry/react-native';
-
 interface LoggerOptions {
   stringifyJson?: boolean;
   emodjiPrefix?: '🟢' | '🔵' | '🟣' | '🔴' | '⚪️' | '🟡' | '🟠' | '🟤' | '⚫️';
@@ -12,7 +11,13 @@ interface LoggerOptions {
 
 const BG_GREEN_TEXT_WHITE_BOLD = __DEV__ ? '\x1b[42m\x1b[37m\x1b[1m' : '';
 const RESET = __DEV__ ? '\x1b[0m' : '';
-
+const ALLOWED_TAGS_PRIMITIVE_TYPES = [
+  'number',
+  'string',
+  'boolean',
+  'bigint',
+  'symbol',
+];
 export class LoggerService {
   private _enabled?: boolean;
   private _stringifyJson?: boolean;
@@ -84,7 +89,18 @@ export class LoggerService {
         scope.clear();
         scope.setTag('source', source);
         scope.setTag('tag', this._tag);
-        scope.setExtras(context);
+
+        Object.entries(context).forEach(([key, value]) => {
+          if (ALLOWED_TAGS_PRIMITIVE_TYPES.includes(typeof value)) {
+            const k = key === 'id' || key === 'errorId' ? 'error_id' : key;
+            scope.setTag(k, value);
+          } else if (Array.isArray(value)) {
+            scope.setContext(key, {value});
+          } else {
+            scope.setContext(key, value);
+          }
+        });
+
         return scope;
       });
     } catch (e) {
