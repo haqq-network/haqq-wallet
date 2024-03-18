@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 
 import {SessionTypes} from '@walletconnect/types';
 import {useWindowDimensions} from 'react-native';
@@ -46,8 +46,20 @@ export const WalletCard = ({
 }: BalanceProps) => {
   const {locked, total} = balance ?? {};
   const [cardState, setCardState] = useState('loading');
-  const isBalancesFirstSync = useIsBalancesFirstSync();
+  const {isBalaceLoadingError, isBalancesFirstSync} = useIsBalancesFirstSync();
   const screenWidth = useWindowDimensions().width;
+
+  const showPlaceholder = useMemo(() => {
+    if (isBalancesFirstSync) {
+      return true;
+    }
+
+    if (isBalaceLoadingError) {
+      return !total?.isPositive();
+    }
+
+    return false;
+  }, [isBalaceLoadingError, isBalancesFirstSync]);
 
   const onAccountInfo = () => {
     onPressAccountInfo(wallet?.address);
@@ -67,7 +79,7 @@ export const WalletCard = ({
       }}>
       <CardName
         onAccountInfo={onAccountInfo}
-        isBalancesFirstSync={isBalancesFirstSync}
+        isBalancesFirstSync={showPlaceholder}
         testID={testID}
         wallet={wallet}
       />
@@ -79,12 +91,12 @@ export const WalletCard = ({
         onPressWalletConnect={onPressWalletConnect}
       />
       <BalanceInfoTotal
-        isBalancesFirstSync={isBalancesFirstSync}
+        isBalancesFirstSync={showPlaceholder}
         total={total}
         onAccountInfo={onAccountInfo}
       />
       <BalanceInfoDetails
-        isBalancesFirstSync={isBalancesFirstSync}
+        isBalancesFirstSync={showPlaceholder}
         showLockedTokens={showLockedTokens}
         total={total}
         locked={locked}

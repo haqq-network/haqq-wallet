@@ -57,7 +57,7 @@ jobs:
           key: avd-29
 
       - name: Install packages
-        run: yarn install 
+        run: yarn install
 
       - name: Install Zulu17
         uses: actions/setup-java@v4

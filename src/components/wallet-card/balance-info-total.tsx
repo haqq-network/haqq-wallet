@@ -4,7 +4,14 @@ import {observer} from 'mobx-react';
 import {TouchableWithoutFeedback, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {First, Icon, IconsName, Text, TextVariant} from '@app/components/ui';
+import {
+  First,
+  Icon,
+  IconsName,
+  Spacer,
+  Text,
+  TextVariant,
+} from '@app/components/ui';
 import {Placeholder} from '@app/components/ui/placeholder';
 import {createTheme} from '@app/helpers';
 import {Currencies} from '@app/models/currencies';
@@ -32,9 +39,12 @@ export const BalanceInfoTotal = observer(
     return (
       <First>
         {isBalancesFirstSync && (
-          <Placeholder opacity={0.6}>
-            <Placeholder.Item width={110} height={35} />
-          </Placeholder>
+          <>
+            <Placeholder opacity={0.6}>
+              <Placeholder.Item width={110} height={35} />
+            </Placeholder>
+            <Spacer height={10} />
+          </>
         )}
         <View style={styles.row}>
           <Text
