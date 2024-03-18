@@ -19,7 +19,6 @@ import TouchID from 'react-native-touch-id';
 
 import {DEBUG_VARS} from '@app/debug-vars';
 import {onUpdatesSync} from '@app/event-actions/on-updates-sync';
-import {getEmptyBalances} from '@app/event-actions/on-wallets-balance-check';
 import {Events} from '@app/events';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {AsyncEventEmitter} from '@app/helpers/async-event-emitter';
@@ -605,7 +604,7 @@ class App extends AsyncEventEmitter {
   getBalanceData(address: string) {
     return (
       this._balances.get(AddressUtils.toEth(address)) ||
-      getEmptyBalances()[AddressUtils.toEth(address)]
+      Balance.emptyBalances[AddressUtils.toEth(address)]
     );
   }
 
