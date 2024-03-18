@@ -90,8 +90,10 @@ export async function onWalletsBalanceCheck() {
     app.onWalletsBalance(result);
 
     Currencies.setRates(updates.rates);
+    app.emit(Events.onWalletsBalanceCheckError, null);
   } catch (e) {
     Logger.error(Events.onWalletsBalanceCheck, e);
+    app.emit(Events.onWalletsBalanceCheckError, e);
 
     // Trying to find cached balances
     const balancesRaw = storage.getItem(BALANCE_CACHE_KEY) as
@@ -101,8 +103,6 @@ export async function onWalletsBalanceCheck() {
       const updates = JSON.parse(balancesRaw) as IndexerUpdatesResponse;
       const result = parseIndexerBalances(updates);
       app.onWalletsBalance(result);
-    } else {
-      app.emit(Events.onWalletsBalanceCheckError, e);
     }
   }
 }
