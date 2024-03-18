@@ -1,6 +1,7 @@
 import React, {useCallback, useState} from 'react';
 
 import {STORIES_ENABLED} from '@env';
+import {Nft} from '@features/nft';
 import {useFocusEffect} from '@react-navigation/native';
 import {observer} from 'mobx-react';
 import {RefreshControl, ScrollView} from 'react-native';
@@ -31,6 +32,7 @@ export const HomeFeed = observer(() => {
       loadAllTransactions(),
       Stories.fetch(true),
       Token.fetchTokens(),
+      Nft.fetchNft(),
     ]);
     setRefreshing(false);
   }, []);

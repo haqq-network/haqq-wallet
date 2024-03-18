@@ -1,3 +1,4 @@
+import {NftCollection} from '@features/nft';
 import {jsonrpcRequest} from '@haqq/shared-react-native';
 
 import {app} from '@app/contexts';
@@ -134,5 +135,24 @@ export class Indexer {
       [haqqAddresses, latestBlock],
     );
     return response?.txs || {};
+  }
+
+  async getNfts(accounts: string[]): Promise<NftCollection[]> {
+    if (!app.provider.indexer) {
+      throw new Error('Indexer is not configured');
+    }
+
+    if (!accounts.length) {
+      return [];
+    }
+
+    const haqqAddresses = accounts.filter(a => !!a).map(AddressUtils.toHaqq);
+    const response = await jsonrpcRequest<NftCollection[]>(
+      app.provider.indexer,
+      'nft',
+      [haqqAddresses],
+    );
+
+    return response || [];
   }
 }
