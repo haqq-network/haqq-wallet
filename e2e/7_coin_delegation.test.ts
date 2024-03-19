@@ -124,7 +124,7 @@ describe('Coin delegation and undelegation', () => {
       }
     }
 
-    await element(by.id('ISLM')).tap();
+    await element(by.id('Islamic coin')).tap();
     await element(by.text('Max')).tap();
     await element(by.id(`transaction_sum_next`)).tap();
 

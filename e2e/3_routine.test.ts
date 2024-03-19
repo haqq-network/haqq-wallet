@@ -63,7 +63,7 @@ describe('Routine', () => {
         log.warn('Error while tap: ' + JSON.stringify(err));
       }
     }
-    await element(by.id('ISLM')).tap();
+    await element(by.id('Islamic coin')).tap();
 
     const input_form = element(by.id('transaction_sum_form_input'));
     await input_form.tap();
