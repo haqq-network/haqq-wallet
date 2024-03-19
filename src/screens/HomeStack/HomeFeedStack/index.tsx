@@ -6,6 +6,7 @@ import {
 } from '@react-navigation/native-stack';
 
 import {QrScannerButton} from '@app/components/qr-scanner-button';
+import {Spacer} from '@app/components/ui';
 import {popupScreenOptionsWithMargin} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {HomeFeedStackParamList, HomeFeedStackRoutes} from '@app/route-types';
@@ -18,11 +19,12 @@ import {NftDetailsStack} from '@app/screens/HomeStack/NftDetailsStack';
 
 const Stack = createNativeStackNavigator<HomeFeedStackParamList>();
 
-const screenOptions = {
+const screenOptions: NativeStackNavigationOptions = {
   ...popupScreenOptionsWithMargin,
   headerShown: true,
   title: getText(I18N.homeWalletTitle),
   headerRight: QrScannerButton,
+  headerLeft: () => <Spacer width={20} />,
 };
 
 const fullScreenModal: NativeStackNavigationOptions = {
