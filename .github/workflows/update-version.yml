@@ -1,0 +1,36 @@
+name: Update version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_type:
+        type: choice
+        description: Version type to update
+        default: 'patch'
+        options: 
+        - major
+        - minor
+        - patch
+
+jobs:
+  update_version:
+    runs-on: self-hosted
+    steps:
+      - name: Show self-hosted machine infomation
+        run: uname -a
+
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.SERVICE_TOKEN }}
+
+      - name: Execute Update script
+        run: |
+          yarn env:update ${{github.event.inputs.version_type}}
+
+      - name: Create a commit
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "Build"
+          git pull origin main
+          git commit -am "update: version"
+          git push --force-with-lease

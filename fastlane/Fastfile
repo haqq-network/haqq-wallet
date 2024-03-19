@@ -52,6 +52,24 @@ platform :android do
         aab: 'android/app/build/outputs/bundle/release/app-release.aab'
       )
   end
+
+  lane :submit_latest_to_review do
+    latest_build_number = google_play_track_version_codes(
+        package_name: 'com.haqq.wallet',
+        track: "internal",
+        json_key: './android/app/google-account.json',
+      )[0]
+
+      deliver(
+        build_number: latest_build_number,
+        submit_for_review: true,
+        automatic_release: false,
+        force: true, # Skip HTMl report verification
+        skip_metadata: true,
+        skip_screenshots: true,
+        skip_binary_upload: true
+      )
+  end
 end
 
 platform :ios do
@@ -237,5 +255,22 @@ platform :ios do
     )
 
     delete_temp_keychain(keychain_name)
+  end
+
+  lane :submit_latest_to_review do
+      latest_build_number = latest_testflight_build_number(
+        app_identifier: app_identifier,
+        api_key: api_key,
+      )
+
+      deliver(
+        build_number: latest_build_number,
+        submit_for_review: true,
+        automatic_release: false,
+        force: true, # Skip HTMl report verification
+        skip_metadata: true,
+        skip_screenshots: true,
+        skip_binary_upload: true
+      )
   end
 end
