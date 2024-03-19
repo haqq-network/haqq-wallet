@@ -1,5 +1,4 @@
 /* eslint-disable no-bitwise */
-import {PATTERNS_SOURCE} from '@env';
 import {SessionTypes} from '@walletconnect/types';
 import {
   differenceInDays,
@@ -19,6 +18,7 @@ import {
   Platform,
 } from 'react-native';
 import {Adjust} from 'react-native-adjust';
+import Config from 'react-native-config';
 import prompt, {PromptOptions} from 'react-native-prompt-android';
 
 import {app} from '@app/contexts';
@@ -185,7 +185,7 @@ export const HSBToHEX = (h: number, s: number, b: number) => {
 export function getPatternName(pattern: string) {
   return `${RemoteConfig.get_env(
     'pattern_source',
-    PATTERNS_SOURCE,
+    Config.PATTERNS_SOURCE,
   )}${pattern}@3x.png`;
 }
 

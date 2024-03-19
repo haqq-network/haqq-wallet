@@ -1,9 +1,9 @@
-import {GENERATE_SHARES_URL} from '@env';
 import {lagrangeInterpolation} from '@haqq/provider-sss-react-native';
 import {generateEntropy} from '@haqq/provider-web3-utils';
 import {jsonrpcRequest} from '@haqq/shared-react-native';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
 import BN from 'bn.js';
+import Config from 'react-native-config';
 
 import {awaitForPopupClosed} from '@app/helpers';
 import {getGoogleTokens} from '@app/helpers/get-google-tokens';
@@ -129,7 +129,7 @@ export async function onAuthorized(
   }>(
     RemoteConfig.get_env(
       'sss_generate_shares_url',
-      GENERATE_SHARES_URL,
+      Config.GENERATE_SHARES_URL,
     ) as string,
     'shares',
     [verifier, token, false],

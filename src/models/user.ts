@@ -1,7 +1,7 @@
 import {EventEmitter} from 'events';
 
-import {ENVIRONMENT, IS_DEVELOPMENT} from '@env';
 import {addSeconds, isAfter, subSeconds} from 'date-fns';
+import Config from 'react-native-config';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
 import {generateUUID} from '@app/utils';
@@ -105,9 +105,10 @@ export class User extends EventEmitter {
         bluetooth: false,
         language: AppLanguage.en,
         theme: AppTheme.system,
-        isDeveloper: IS_DEVELOPMENT === '1',
+        isDeveloper: Config.IS_DEVELOPMENT === '1',
         providerId:
-          ENVIRONMENT === 'production' || ENVIRONMENT === 'distribution'
+          Config.ENVIRONMENT === 'production' ||
+          Config.ENVIRONMENT === 'distribution'
             ? MAIN_NETWORK_ID
             : TEST_NETWORK_ID,
       });

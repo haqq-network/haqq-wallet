@@ -1,36 +1,47 @@
-declare module '@env' {
-  export const PROVIDER_NETWORK: string;
-  export const PROVIDER_CHAIN_ID: string;
-  export const SENTRY_DSN: string;
-  export const PATTERNS_SOURCE: string;
-  export const ENVIRONMENT: string;
-  export const IS_DEVELOPMENT: string;
-  export const WALLET_CONNECT_PROJECT_ID: string;
-  export const WALLET_CONNECT_RELAY_URL: string;
-  export const HCAPTCHA_SITE_KEY: string;
-  export const HCAPTCHA_URL: string;
-  export const GOOGLE_SIGNIN_WEB_CLIENT_ID: string;
-  export const METADATA_URL: string;
-  export const GENERATE_SHARES_URL: string;
-  export const IS_SSS_ENABLED: string;
-  export const AIRDROP_MAINNET_URL: string;
-  export const HAQQ_BACKEND: string;
-  export const HAQQ_BACKEND_DEV: string;
-  export const HAQQ_BACKEND_DEFAULT: string;
+declare module 'react-native-config' {
+  export interface NativeConfig {
+    PROVIDER_NETWORK: string;
+    PROVIDER_CHAIN_ID: string;
+    SENTRY_DSN: string;
+    PATTERNS_SOURCE: string;
+    ENVIRONMENT: string;
+    IS_DEVELOPMENT: string;
+    WALLET_CONNECT_PROJECT_ID: string;
+    WALLET_CONNECT_RELAY_URL: string;
+    HCAPTCHA_SITE_KEY: string;
+    HCAPTCHA_URL: string;
+    GOOGLE_SIGNIN_WEB_CLIENT_ID: string;
+    METADATA_URL: string;
+    GENERATE_SHARES_URL: string;
+    IS_SSS_ENABLED: string;
+    AIRDROP_MAINNET_URL: string;
+    HAQQ_BACKEND: string;
+    HAQQ_BACKEND_DEV: string;
+    HAQQ_BACKEND_DEFAULT: string;
 
-  export const ADJUST_TOKEN: string;
-  export const ADJUST_ENVIRONMENT: 'sandbox' | 'production';
-  export const AIRDROP_GASDROP_SECRET: string;
-  export const AIRDROP_GASDROP_CAMPAIGN_ID: string;
-  export const GOOGLE_PLAY_PACKAGE: string;
-  export const APPSTORE_APP_ID: string;
-  // https://dash.cloudflare.com/login
-  export const TURNSTILE_URL: string;
-  export const TURNSTILE_SITEKEY: string;
-  // https://www.google.com/recaptcha/admin/create
-  export const RECAPTCHA_V2_URL: string;
-  export const RECAPTCHA_V2_SITEKEY: string;
-  export const MMKV_KEY: string;
-  export const FOR_DETOX: boolean;
-  export const STORIES_ENABLED: boolean;
+    ADJUST_TOKEN: string;
+    ADJUST_ENVIRONMENT: 'sandbox' | 'production';
+    AIRDROP_GASDROP_SECRET: string;
+    AIRDROP_GASDROP_CAMPAIGN_ID: string;
+    GOOGLE_PLAY_PACKAGE: string;
+    APPSTORE_APP_ID: string;
+    // https://dash.cloudflare.com/login
+    TURNSTILE_URL: string;
+    TURNSTILE_SITEKEY: string;
+    // https://www.google.com/recaptcha/admin/create
+    RECAPTCHA_V2_URL: string;
+    RECAPTCHA_V2_SITEKEY: string;
+    MMKV_KEY: string;
+    FOR_DETOX: boolean;
+    STORIES_ENABLED: boolean;
+    DETOX_MILK_PRIVATE_KEY: string;
+    DETOX_PROVIDER: string;
+    DETOX_CHAIN_ID: string;
+
+    APP_VERSION: string;
+  }
+
+  export const Config: NativeConfig;
+  // eslint-disable-next-line import/no-default-export
+  export default Config;
 }
