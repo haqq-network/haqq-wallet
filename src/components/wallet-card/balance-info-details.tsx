@@ -33,15 +33,26 @@ export const BalanceInfoDetails = ({
 }: BalanceInfoDetailsProps) => {
   return (
     <View style={styles.row}>
-      <View style={styles.lockedTokensContainer}>
-        <Text
-          variant={TextVariant.t15}
-          color={Color.textSecond2}
-          children={total?.toFiat()}
-          onPress={onAccountInfo}
-          suppressHighlighting={true}
-        />
-      </View>
+      <First>
+        {isBalancesFirstSync && (
+          <>
+            <Spacer height={8} />
+            <Placeholder opacity={0.6}>
+              <Placeholder.Item width={40} height={14} />
+            </Placeholder>
+          </>
+        )}
+        <View style={styles.lockedTokensContainer}>
+          <Text
+            variant={TextVariant.t15}
+            color={Color.textSecond2}
+            children={total?.toFiat()}
+            onPress={onAccountInfo}
+            suppressHighlighting={true}
+          />
+        </View>
+      </First>
+
       <Spacer width={10} />
       {showLockedTokens && (
         <First>
@@ -49,7 +60,7 @@ export const BalanceInfoDetails = ({
             <>
               <Spacer height={8} />
               <Placeholder opacity={0.6}>
-                <Placeholder.Item width={'25%'} height={14} />
+                <Placeholder.Item width={60} height={14} />
               </Placeholder>
             </>
           )}

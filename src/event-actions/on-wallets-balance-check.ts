@@ -12,23 +12,6 @@ import {ZERO_HEX_NUMBER} from '@app/variables/common';
 
 const BALANCE_CACHE_KEY = 'balance_storage_indexer';
 
-export const getEmptyBalances = (): IndexerBalanceData => {
-  return Wallet.getAll().reduce((acc, w) => {
-    return {
-      ...acc,
-      [w.address]: {
-        staked: Balance.Empty,
-        vested: Balance.Empty,
-        available: Balance.Empty,
-        total: Balance.Empty,
-        locked: Balance.Empty,
-        availableForStake: Balance.Empty,
-        unlock: new Date(0),
-      },
-    };
-  }, {});
-};
-
 const parseIndexerBalances = (
   data: IndexerUpdatesResponse,
 ): IndexerBalanceData => {
@@ -90,8 +73,10 @@ export async function onWalletsBalanceCheck() {
     app.onWalletsBalance(result);
 
     Currencies.setRates(updates.rates);
+    app.emit(Events.onWalletsBalanceCheckError, null);
   } catch (e) {
     Logger.error(Events.onWalletsBalanceCheck, e);
+    app.emit(Events.onWalletsBalanceCheckError, e);
 
     // Trying to find cached balances
     const balancesRaw = storage.getItem(BALANCE_CACHE_KEY) as
@@ -101,8 +86,6 @@ export async function onWalletsBalanceCheck() {
       const updates = JSON.parse(balancesRaw) as IndexerUpdatesResponse;
       const result = parseIndexerBalances(updates);
       app.onWalletsBalance(result);
-    } else {
-      app.emit(Events.onWalletsBalanceCheckError, e);
     }
   }
 }

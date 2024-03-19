@@ -1053,6 +1053,7 @@ export type Modals = {
     showClose?: boolean;
   };
   viewErrorDetails: {
+    errorId: string;
     errorDetails: string;
     onClose?: () => void;
   };

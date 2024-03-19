@@ -20,15 +20,27 @@ export interface LockedTokensProps {
 
 export function LockedTokens({balance, onForwardPress}: LockedTokensProps) {
   const {available, locked, total} = balance ?? {};
-  const isBalancesFirstSync = useIsBalancesFirstSync();
+  const {isBalaceLoadingError, isBalancesFirstSync} = useIsBalancesFirstSync();
   const defaultTotalValueISLM = useMemo(() => `0 ${CURRENCY_NAME}`, []);
   const defaultTotalValueUSD = useMemo(() => '$0', []);
+
+  const showPlaceholder = useMemo(() => {
+    if (isBalancesFirstSync) {
+      return true;
+    }
+
+    if (isBalaceLoadingError) {
+      return !total?.isPositive();
+    }
+
+    return false;
+  }, [isBalaceLoadingError, isBalancesFirstSync]);
 
   return (
     <View style={styles.container}>
       <Text t12 color={Color.textBase2} i18n={I18N.lockedTokensTotalValue} />
       <First>
-        {isBalancesFirstSync && (
+        {showPlaceholder && (
           <Placeholder opacity={0.9}>
             <Placeholder.Item height={24} width={100} />
           </Placeholder>

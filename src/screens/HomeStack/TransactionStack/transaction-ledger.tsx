@@ -57,7 +57,7 @@ export const TransactionLedgerScreen = memo(() => {
         const ethNetworkProvider = new EthNetwork();
         const transaction = await ethNetworkProvider.transferTransaction(
           transport.current!,
-          wallet.path!,
+          wallet,
           route.params.to,
           route.params.amount,
         );

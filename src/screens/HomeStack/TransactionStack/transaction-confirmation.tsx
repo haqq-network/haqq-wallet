@@ -109,7 +109,7 @@ export const TransactionConfirmationScreen = observer(() => {
         } else {
           transaction = await ethNetworkProvider.transferTransaction(
             provider,
-            wallet.path!,
+            wallet,
             route.params.to,
             route.params.amount,
           );
@@ -141,6 +141,9 @@ export const TransactionConfirmationScreen = observer(() => {
           amount: route.params.amount.toHex(),
           id: errorId,
           walletType: wallet.type,
+          token,
+          contact,
+          provider: app.provider.name,
         });
 
         const err = e as EthSignErrorDataDetails;
