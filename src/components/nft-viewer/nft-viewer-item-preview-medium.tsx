@@ -16,6 +16,7 @@ export const NftViewerItemPreviewMedium = ({
 }: NftViewerItemPreviewExtendedProps) => {
   const handlePress = useCallback(() => onPress?.(item), [onPress, item]);
 
+  // TODO Remove image check when default image will be added
   return (
     <TouchableOpacity
       disabled={!onPress}

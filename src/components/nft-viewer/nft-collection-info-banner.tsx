@@ -30,6 +30,7 @@ export const NftCollectionInfoBanner = ({data, onPress}: Props) => {
     [onPress, item.address],
   );
 
+  // TODO Remove image check when default image will be added
   return (
     <TouchableOpacity
       disabled={!onPress}
