@@ -84,3 +84,6 @@ google-account.json
 
 # e2e tests artifacts
 artifacts/*
+
+# react-native-config codegen
+ios/tmp.xcconfig
