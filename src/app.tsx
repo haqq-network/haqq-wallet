@@ -9,13 +9,19 @@ import {
   Theme,
 } from '@react-navigation/native';
 import * as Sentry from '@sentry/react-native';
-import {AppState, Linking, Platform, StyleSheet} from 'react-native';
+import {
+  AppState,
+  Dimensions,
+  Linking,
+  Platform,
+  StyleSheet,
+} from 'react-native';
 import {Adjust, AdjustConfig} from 'react-native-adjust';
 import {AdjustOaid} from 'react-native-adjust-oaid';
 import Config from 'react-native-config';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {MenuProvider} from 'react-native-popup-menu';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {Metrics, SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
 import {Color} from '@app/colors';
@@ -59,6 +65,22 @@ const CREATE_WALLET_FINISH_SCREENS: string[] = [
   SssMigrateStackRoutes.SssMigrateFinish,
   KeystoneStackRoutes.KeystoneFinish,
 ];
+
+const {width, height} = Dimensions.get('window');
+const SAFE_AREA_INTIAL_METRICS: Metrics = {
+  frame: {
+    height,
+    width,
+    x: 0,
+    y: 0,
+  },
+  insets: {
+    bottom: 0,
+    left: 0,
+    right: 0,
+    top: 0,
+  },
+};
 
 export const App = () => {
   const [initialized, setInitialized] = useState(false);
@@ -212,8 +234,8 @@ export const App = () => {
 
   return (
     <GestureHandlerRootView style={styles.rootView}>
-      <ActionSheetProvider>
-        <SafeAreaProvider>
+      <SafeAreaProvider initialMetrics={SAFE_AREA_INTIAL_METRICS}>
+        <ActionSheetProvider>
           <MenuProvider>
             <NavigationContainer
               onUnhandledAction={onUnhandledAction}
@@ -230,8 +252,8 @@ export const App = () => {
               <AppVersionAbsoluteView />
             </NavigationContainer>
           </MenuProvider>
-        </SafeAreaProvider>
-      </ActionSheetProvider>
+        </ActionSheetProvider>
+      </SafeAreaProvider>
     </GestureHandlerRootView>
   );
 };
