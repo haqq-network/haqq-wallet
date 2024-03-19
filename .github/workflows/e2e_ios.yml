@@ -98,6 +98,8 @@ jobs:
           echo "MMKV_KEY=${{secrets.MMKV_KEY}}" >> .env
           echo "FOR_DETOX=true" >> .env
 
+          cat .env
+
       - name: Build apps
         run: |
           eval "$(ssh-agent -s)"
