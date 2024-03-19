@@ -1,8 +1,8 @@
 import React, {memo, useCallback} from 'react';
 
-import {METADATA_URL} from '@env';
 import {ITEM_KEY} from '@haqq/provider-sss-react-native/dist/constants';
 import {accountInfo} from '@haqq/provider-web3-utils';
+import Config from 'react-native-config';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
 import {SigninNetworks} from '@app/components/signin-networks';
@@ -45,7 +45,10 @@ export const SignInNetworksScreen = memo(() => {
         }
 
         const walletInfo = await getMetadataValueWrapped(
-          RemoteConfig.get_env('sss_metadata_url', METADATA_URL) as string,
+          RemoteConfig.get_env(
+            'sss_metadata_url',
+            Config.METADATA_URL,
+          ) as string,
           creds.privateKey,
           'socialShareIndex',
         );

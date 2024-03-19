@@ -1,9 +1,9 @@
 import {EventEmitter} from 'events';
 
-import {HAQQ_BACKEND} from '@env';
 import messaging from '@react-native-firebase/messaging';
 import {PermissionsAndroid} from 'react-native';
 import {Adjust} from 'react-native-adjust';
+import Config from 'react-native-config';
 
 import {app} from '@app/contexts';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
@@ -25,7 +25,7 @@ export enum PushNotificationTopicsEnum {
 
 export class PushNotifications extends EventEmitter {
   static instance = new PushNotifications();
-  path: string = HAQQ_BACKEND;
+  path: string = Config.HAQQ_BACKEND;
 
   constructor() {
     super();

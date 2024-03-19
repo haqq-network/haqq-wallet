@@ -1,4 +1,4 @@
-import {IS_SSS_ENABLED} from '@env';
+import Config from 'react-native-config';
 
 import {app} from '@app/contexts';
 
@@ -15,7 +15,7 @@ export enum Feature {
 export const isFeatureEnabled = (feature: Feature): boolean => {
   switch (feature) {
     case Feature.sss:
-      return IS_SSS_ENABLED === 'true' && app.isOathSigninSupported;
+      return Config.IS_SSS_ENABLED === 'true' && app.isOathSigninSupported;
     case Feature.earn:
       return true;
     case Feature.governanceAndStaking:

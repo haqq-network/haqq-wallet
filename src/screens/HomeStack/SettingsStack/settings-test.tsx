@@ -1,12 +1,12 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
-import {HAQQ_BACKEND, HAQQ_BACKEND_DEV} from '@env';
 import {useActionSheet} from '@expo/react-native-action-sheet';
 import Clipboard from '@react-native-clipboard/clipboard';
 import messaging from '@react-native-firebase/messaging';
 import {utils} from 'ethers';
 import {observer} from 'mobx-react';
 import {Alert, Platform, ScrollView} from 'react-native';
+import Config from 'react-native-config';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {
   PlayInstallReferrer,
@@ -349,8 +349,8 @@ const abi = [
 ];
 
 const BACKENDS = [
-  ['production', HAQQ_BACKEND],
-  ['development', HAQQ_BACKEND_DEV],
+  ['production', Config.HAQQ_BACKEND],
+  ['development', Config.HAQQ_BACKEND_DEV],
 ];
 
 async function callContract(to: string, func: string, ...params: any[]) {

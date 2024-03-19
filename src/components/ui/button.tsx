@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {useCallback, useMemo} from 'react';
 
-import {FOR_DETOX} from '@env';
 import _ from 'lodash';
 import {
   ActivityIndicator,
@@ -13,6 +12,7 @@ import {
   ViewProps,
   ViewStyle,
 } from 'react-native';
+import Config from 'react-native-config';
 import {useTimer} from 'use-timer';
 
 import {Color, getColor} from '@app/colors';
@@ -238,7 +238,7 @@ export const Button = ({
     <TouchableOpacity
       style={containerStyle as ViewStyle}
       onPress={onPressButton}
-      activeOpacity={FOR_DETOX ? 1 : 0.7}
+      activeOpacity={Config.FOR_DETOX ? 1 : 0.7}
       disabled={disabled || loadFlag || isDisabledByTimer}
       testID={
         loadFlag

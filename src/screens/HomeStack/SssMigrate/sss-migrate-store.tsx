@@ -1,10 +1,10 @@
 import {useEffect} from 'react';
 
-import {GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {mnemonicToEntropy} from 'ethers/lib/utils';
 import {observer} from 'mobx-react';
+import Config from 'react-native-config';
 
 import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
@@ -64,11 +64,11 @@ export const SssMigrateStoreScreen = observer(() => {
           {
             metadataUrl: RemoteConfig.get_env(
               'sss_metadata_url',
-              METADATA_URL,
+              Config.METADATA_URL,
             ) as string,
             generateSharesUrl: RemoteConfig.get_env(
               'sss_generate_shares_url',
-              GENERATE_SHARES_URL,
+              Config.GENERATE_SHARES_URL,
             ) as string,
           },
         ).catch(err => ErrorHandler.handle('sssLimitReached', err));

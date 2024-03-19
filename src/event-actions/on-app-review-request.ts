@@ -1,5 +1,5 @@
-import {FOR_DETOX} from '@env';
 import {differenceInDays} from 'date-fns';
+import Config from 'react-native-config';
 import InAppReview from 'react-native-in-app-review';
 
 import {Events} from '@app/events';
@@ -11,7 +11,7 @@ const logger = Logger.create(Events.onAppReviewRequest);
 
 export async function onAppReviewRequest() {
   try {
-    if (!InAppReview.isAvailable() || FOR_DETOX) {
+    if (!InAppReview.isAvailable() || Config.FOR_DETOX) {
       return logger.warn('in app review not supported');
     }
 

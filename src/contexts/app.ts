@@ -1,15 +1,10 @@
-import {
-  ENVIRONMENT,
-  HAQQ_BACKEND,
-  HAQQ_BACKEND_DEFAULT,
-  IS_DEVELOPMENT,
-} from '@env';
 import {decryptPassworder, encryptPassworder} from '@haqq/shared-react-native';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {subMinutes} from 'date-fns';
 import {AppState, Appearance, Platform, StatusBar} from 'react-native';
+import Config from 'react-native-config';
 import Keychain, {
   STORAGE_TYPE,
   getGenericPassword,
@@ -148,7 +143,7 @@ class App extends AsyncEventEmitter {
     AppState.addEventListener('change', this.onAppStatusChanged.bind(this));
 
     if (!VariablesBool.exists('isDeveloper')) {
-      VariablesBool.set('isDeveloper', IS_DEVELOPMENT === 'true');
+      VariablesBool.set('isDeveloper', Config.IS_DEVELOPMENT === 'true');
     }
     this.setEnabledLoggersForTestMode(this.isTesterMode);
   }
@@ -213,7 +208,8 @@ class App extends AsyncEventEmitter {
   get providerId() {
     return (
       VariablesString.get('providerId') ??
-      (ENVIRONMENT === 'production' || ENVIRONMENT === 'distribution'
+      (Config.ENVIRONMENT === 'production' ||
+      Config.ENVIRONMENT === 'distribution'
         ? MAIN_NETWORK_ID
         : TEST_NETWORK_ID)
     );
@@ -237,11 +233,13 @@ class App extends AsyncEventEmitter {
 
   get backend() {
     if (!VariablesString.exists('backend')) {
-      return HAQQ_BACKEND_DEFAULT || HAQQ_BACKEND;
+      return Config.HAQQ_BACKEND_DEFAULT || Config.HAQQ_BACKEND;
     }
 
     return (
-      VariablesString.get('backend') || HAQQ_BACKEND_DEFAULT || HAQQ_BACKEND
+      VariablesString.get('backend') ||
+      Config.HAQQ_BACKEND_DEFAULT ||
+      Config.HAQQ_BACKEND
     );
   }
 

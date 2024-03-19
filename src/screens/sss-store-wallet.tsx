@@ -1,8 +1,8 @@
-// @ts-nocheck
+//@ts-nocheck
 import React, {useEffect} from 'react';
 
-import {GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import Config from 'react-native-config';
 
 import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
@@ -41,11 +41,11 @@ export const SssStoreWalletScreen = () => {
           {
             metadataUrl: RemoteConfig.get_env(
               'sss_metadata_url',
-              METADATA_URL,
+              Config.METADATA_URL,
             ) as string,
             generateSharesUrl: RemoteConfig.get_env(
               'sss_generate_shares_url',
-              GENERATE_SHARES_URL,
+              Config.GENERATE_SHARES_URL,
             ) as string,
           },
         ).catch(err => ErrorHandler.handle('sssLimitReached', err));

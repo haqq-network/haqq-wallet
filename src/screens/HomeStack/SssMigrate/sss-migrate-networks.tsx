@@ -1,6 +1,6 @@
 import React, {memo, useCallback} from 'react';
 
-import {METADATA_URL} from '@env';
+import Config from 'react-native-config';
 
 import {SssMigrateNetworks} from '@app/components/sss-migrate-networks';
 import {app} from '@app/contexts';
@@ -48,7 +48,10 @@ export const SssMigrateNetworksScreen = memo(() => {
       }
       if (creds.privateKey) {
         const walletInfo = await getMetadataValueWrapped(
-          RemoteConfig.get_env('sss_metadata_url', METADATA_URL) as string,
+          RemoteConfig.get_env(
+            'sss_metadata_url',
+            Config.METADATA_URL,
+          ) as string,
           creds.privateKey,
           'socialShareIndex',
         );

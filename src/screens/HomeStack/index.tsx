@@ -1,11 +1,11 @@
 import React, {memo} from 'react';
 
-import {FOR_DETOX} from '@env';
 import {
   NativeStackNavigationOptions,
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
 import {StatusBar} from 'react-native';
+import Config from 'react-native-config';
 
 import {Color} from '@app/colors';
 import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
@@ -45,8 +45,8 @@ import {SignInStack} from '@app/screens/WelcomeStack/SignInStack';
 const navigatorOptions: NativeStackNavigationOptions = {
   gestureEnabled: false,
   freezeOnBlur: true,
-  animation: FOR_DETOX ? 'none' : 'default',
-  animationDuration: FOR_DETOX ? 0 : 350,
+  animation: Config.FOR_DETOX ? 'none' : 'default',
+  animationDuration: Config.FOR_DETOX ? 0 : 350,
 };
 
 const modalOptions: NativeStackNavigationOptions = {
