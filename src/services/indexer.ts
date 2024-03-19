@@ -190,21 +190,28 @@ export class Indexer {
   }
 
   async getNfts(accounts: string[]): Promise<NftCollectionIndexer[]> {
-    if (!app.provider.indexer) {
-      throw new Error('Indexer is not configured');
+    try {
+      if (!app.provider.indexer) {
+        throw new Error('Indexer is not configured');
+      }
+
+      if (!accounts.length) {
+        return [];
+      }
+
+      const haqqAddresses = accounts.filter(a => !!a).map(AddressUtils.toHaqq);
+      const response = await jsonrpcRequest<NftCollectionIndexer[]>(
+        app.provider.indexer,
+        'nft',
+        [haqqAddresses],
+      );
+
+      return response || [];
+    } catch (err) {
+      if (err instanceof JSONRPCError) {
+        this.captureException(err, 'Indexer:getNfts', err.meta);
+      }
+      throw err;
     }
-
-    if (!accounts.length) {
-      return [];
-    }
-
-    const haqqAddresses = accounts.filter(a => !!a).map(AddressUtils.toHaqq);
-    const response = await jsonrpcRequest<NftCollectionIndexer[]>(
-      app.provider.indexer,
-      'nft',
-      [haqqAddresses],
-    );
-
-    return response || [];
   }
 }
