@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback} from 'react';
 
 import {observer} from 'mobx-react';
 import {StyleSheet} from 'react-native';
@@ -14,26 +14,19 @@ import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useTypedNavigation} from '@app/hooks';
 import {useNftCollections} from '@app/hooks/use-nft-collections';
 import {I18N, getText} from '@app/i18n';
+import {Nft} from '@app/models/nft';
 import {HomeStackRoutes} from '@app/route-types';
-import {INftWidget, NftItem, NftWidgetSize} from '@app/types';
+import {INftWidget, NftWidgetSize} from '@app/types';
 
 export const NftWidgetWrapper = observer(({size}: INftWidget) => {
   const navigation = useTypedNavigation();
   const nftCollections = useNftCollections();
+  const allNft = Nft.getAll();
   const onPress = useCallback(() => {
     navigation.navigate(HomeStackRoutes.TotalValueInfo, {
       tab: TotalValueTabNames.nft,
     });
   }, []);
-
-  const allNft = useMemo(
-    () =>
-      nftCollections.reduce(
-        (prev, curr) => [...prev, ...curr?.items],
-        [] as NftItem[],
-      ),
-    [nftCollections],
-  );
 
   if (
     !isFeatureEnabled(Feature.nft) ||
