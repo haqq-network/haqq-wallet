@@ -11,3 +11,5 @@
 -dontwarn com.google.android.gms.**
 -keep class com.google.android.gms.**{ *; }
 -keep interface com.google.android.gms.** { *; }
+-keep class com.haqq.wallet.BuildConfig { *; }
+-keepresources string/build_config_package

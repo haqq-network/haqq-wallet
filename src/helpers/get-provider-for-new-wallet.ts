@@ -1,6 +1,6 @@
-import {GENERATE_SHARES_URL, METADATA_URL} from '@env';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import Config from 'react-native-config';
 
 import {app} from '@app/contexts';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
@@ -26,11 +26,11 @@ export async function getProviderForNewWallet(params?: WalletInitialData) {
       {
         metadataUrl: RemoteConfig.get_env(
           'sss_metadata_url',
-          METADATA_URL,
+          Config.METADATA_URL,
         ) as string,
         generateSharesUrl: RemoteConfig.get_env(
           'sss_generate_shares_url',
-          GENERATE_SHARES_URL,
+          Config.GENERATE_SHARES_URL,
         ) as string,
       },
     ).catch(err => ErrorHandler.handle('sssLimitReached', err));

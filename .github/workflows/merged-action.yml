@@ -1,0 +1,12 @@
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  releaseAfterMerge:
+    if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'releaseAfterMerge')
+    runs-on: self-hosted
+    steps:
+    - run: |
+        echo ReleaseAfterMerge action

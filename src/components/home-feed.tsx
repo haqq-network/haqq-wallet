@@ -1,9 +1,9 @@
 import React, {useCallback, useState} from 'react';
 
-import {STORIES_ENABLED} from '@env';
 import {useFocusEffect} from '@react-navigation/native';
 import {observer} from 'mobx-react';
 import {RefreshControl, ScrollView} from 'react-native';
+import Config from 'react-native-config';
 
 import {StoriesWrapper} from '@app/components/stories';
 import {createTheme} from '@app/helpers';
@@ -57,7 +57,9 @@ export const HomeFeed = observer(() => {
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }>
-      {!!STORIES_ENABLED && <StoriesWrapper onStoryPress={onStoryPress} />}
+      {!!Config.STORIES_ENABLED && (
+        <StoriesWrapper onStoryPress={onStoryPress} />
+      )}
       <LockedTokensWrapper />
       <WalletsWrapper />
       <BannersWrapper />

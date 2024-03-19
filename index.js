@@ -6,7 +6,7 @@ import '@ethersproject/shims';
 import '@walletconnect/react-native-compat';
 import {AppRegistry, I18nManager, LogBox} from 'react-native';
 
-import {ENVIRONMENT, SENTRY_DSN, FOR_DETOX} from '@env';
+import Config from 'react-native-config';
 import {JsonRpcProvider} from '@ethersproject/providers';
 import * as Sentry from '@sentry/react-native';
 import {name as appName} from './app.json';
@@ -46,14 +46,14 @@ if (__DEV__ && IS_IOS) {
   messaging().setAPNSToken('dev-apns-token', 'sandbox');
 }
 
-if (SENTRY_DSN && DEBUG_VARS.enableSentry) {
+if (Config.SENTRY_DSN && DEBUG_VARS.enableSentry) {
   try {
     Sentry.init({
-      dsn: SENTRY_DSN,
+      dsn: Config.SENTRY_DSN,
       // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
       // We recommend adjusting this value in production.
       tracesSampleRate: 1.0,
-      environment: ENVIRONMENT ?? 'development',
+      environment: Config.ENVIRONMENT ?? 'development',
       enableWatchdogTerminationTracking: false,
       attachScreenshot: true,
       attachStacktrace: true,
@@ -111,4 +111,4 @@ const Wrapped = Sentry.wrap(App);
 
 AppRegistry.registerComponent(appName, () => Wrapped);
 
-AppRegistry.registerComponent('jailbreak', () => FOR_DETOX ? Wrapped : Jailbreak);
+AppRegistry.registerComponent('jailbreak', () => Config.FOR_DETOX ? Wrapped : Jailbreak);

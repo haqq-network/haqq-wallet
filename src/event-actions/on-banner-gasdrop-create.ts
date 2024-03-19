@@ -1,4 +1,4 @@
-import {AIRDROP_GASDROP_CAMPAIGN_ID, AIRDROP_GASDROP_SECRET} from '@env';
+import Config from 'react-native-config';
 
 import {onBannerAddClaimCode} from '@app/event-actions/on-banner-add-claim-code';
 import {onTrackEvent} from '@app/event-actions/on-track-event';
@@ -30,9 +30,12 @@ export async function onBannerGasdropCreate() {
     const link_info = await Airdrop.instance.gasdrop_code(
       RemoteConfig.get_env(
         'airdrop_gasdrop_campaign_id',
-        AIRDROP_GASDROP_CAMPAIGN_ID,
+        Config.AIRDROP_GASDROP_CAMPAIGN_ID,
       ),
-      RemoteConfig.get_env('airdrop_gasdrop_secret', AIRDROP_GASDROP_SECRET),
+      RemoteConfig.get_env(
+        'airdrop_gasdrop_secret',
+        Config.AIRDROP_GASDROP_SECRET,
+      ),
       account.address,
       adid,
     );

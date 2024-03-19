@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
-import {ADJUST_ENVIRONMENT, ADJUST_TOKEN} from '@env';
 import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
 import {
@@ -13,6 +12,7 @@ import * as Sentry from '@sentry/react-native';
 import {AppState, Linking, Platform, StyleSheet} from 'react-native';
 import {Adjust, AdjustConfig} from 'react-native-adjust';
 import {AdjustOaid} from 'react-native-adjust-oaid';
+import Config from 'react-native-config';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {MenuProvider} from 'react-native-popup-menu';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
@@ -160,7 +160,10 @@ export const App = () => {
   }, [initialized]);
 
   useEffect(() => {
-    const adjustConfig = new AdjustConfig(ADJUST_TOKEN, ADJUST_ENVIRONMENT);
+    const adjustConfig = new AdjustConfig(
+      Config.ADJUST_TOKEN,
+      Config.ADJUST_ENVIRONMENT,
+    );
     adjustConfig.setLogLevel(AdjustConfig.LogLevelVerbose);
     if (Platform.OS === 'android') {
       AdjustOaid.readOaid();

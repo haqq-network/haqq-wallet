@@ -1,14 +1,7 @@
 import React, {useCallback} from 'react';
 
-import {
-  HCAPTCHA_SITE_KEY,
-  HCAPTCHA_URL,
-  RECAPTCHA_V2_SITEKEY,
-  RECAPTCHA_V2_URL,
-  TURNSTILE_SITEKEY,
-  TURNSTILE_URL,
-} from '@env';
 import {StyleSheet, View} from 'react-native';
+import Config from 'react-native-config';
 import {WebViewMessageEvent} from 'react-native-webview';
 
 import {Color, getColor} from '@app/colors';
@@ -70,8 +63,8 @@ export const Captcha = ({
           <>
             <View style={styles.whiteBox} />
             <Hcaptcha
-              siteKey={HCAPTCHA_SITE_KEY}
-              url={HCAPTCHA_URL}
+              siteKey={Config.HCAPTCHA_SITE_KEY}
+              url={Config.HCAPTCHA_URL}
               showLoading
               size={'compact'}
               onMessage={onMessage}
@@ -88,8 +81,8 @@ export const Captcha = ({
           <>
             <View style={styles.whiteBox2} />
             <Turnstile
-              url={TURNSTILE_URL}
-              siteKey={TURNSTILE_SITEKEY}
+              url={Config.TURNSTILE_URL}
+              siteKey={Config.TURNSTILE_SITEKEY}
               showLoading
               onMessage={onMessage}
               theme={theme}
@@ -105,8 +98,8 @@ export const Captcha = ({
             <View style={styles.whiteBox3} />
             <ReCaptchaV2
               showLoading
-              siteKey={RECAPTCHA_V2_SITEKEY}
-              url={RECAPTCHA_V2_URL}
+              siteKey={Config.RECAPTCHA_V2_SITEKEY}
+              url={Config.RECAPTCHA_V2_URL}
               theme={theme}
               onMessage={onMessage}
               style={styles.hcaptcha}

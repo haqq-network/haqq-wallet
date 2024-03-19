@@ -1,10 +1,10 @@
-import {MMKV_KEY} from '@env';
 import {StorageController} from 'mobx-persist-store';
+import Config from 'react-native-config';
 import {MMKV} from 'react-native-mmkv';
 
 const instance = new MMKV({
   id: 'mmkv-storage',
-  encryptionKey: MMKV_KEY,
+  encryptionKey: Config.MMKV_KEY,
 });
 
 export const storage: StorageController = {

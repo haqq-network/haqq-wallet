@@ -1,9 +1,9 @@
 import React, {useEffect, useRef} from 'react';
 
-import {FOR_DETOX} from '@env';
 import type AnimatedLottieView from 'lottie-react-native';
 import Lottie, {LottieViewProps} from 'lottie-react-native';
 import {AppState, StyleProp, ViewStyle} from 'react-native';
+import Config from 'react-native-config';
 
 export type LottieWrapRef = {
   play: () => void;
@@ -32,7 +32,7 @@ export const LottieWrap = React.forwardRef<LottieWrapRef, AnimatedLottie>(
 
     useEffect(() => {
       const listener = AppState.addEventListener('change', state => {
-        if (FOR_DETOX) {
+        if (Config.FOR_DETOX) {
           return;
         }
         if (state === 'active') {
@@ -47,7 +47,7 @@ export const LottieWrap = React.forwardRef<LottieWrapRef, AnimatedLottie>(
     return (
       <Lottie
         {...props}
-        autoPlay={props?.autoPlay ?? !FOR_DETOX ?? false}
+        autoPlay={props?.autoPlay ?? !Config.FOR_DETOX ?? false}
         ref={lottieRef}
         renderMode={'HARDWARE'}
         cacheComposition

@@ -1,6 +1,5 @@
 import {EventEmitter} from 'events';
 
-import {WALLET_CONNECT_PROJECT_ID, WALLET_CONNECT_RELAY_URL} from '@env';
 import {Core} from '@walletconnect/core';
 import {ICore, SignClientTypes} from '@walletconnect/types';
 import {
@@ -9,6 +8,7 @@ import {
   parseUri,
 } from '@walletconnect/utils';
 import {IWeb3Wallet, Web3Wallet} from '@walletconnect/web3wallet';
+import Config from 'react-native-config';
 
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
@@ -70,8 +70,8 @@ export class WalletConnect extends Initializable {
       this._initAttempts++;
       logger.log(
         'WalletConnect:init',
-        WALLET_CONNECT_PROJECT_ID,
-        WALLET_CONNECT_RELAY_URL,
+        Config.WALLET_CONNECT_PROJECT_ID,
+        Config.WALLET_CONNECT_RELAY_URL,
       );
 
       if (this._client) {
@@ -80,8 +80,8 @@ export class WalletConnect extends Initializable {
 
       this._core = new Core({
         logger: DEBUG_VARS.enableWalletConnectLogger ? 'debug' : 'error',
-        projectId: WALLET_CONNECT_PROJECT_ID,
-        relayUrl: WALLET_CONNECT_RELAY_URL,
+        projectId: Config.WALLET_CONNECT_PROJECT_ID,
+        relayUrl: Config.WALLET_CONNECT_RELAY_URL,
       });
 
       this._client = await Web3Wallet.init({

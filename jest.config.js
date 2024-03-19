@@ -5,7 +5,7 @@ module.exports = {
   maxWorkers: 1,
   moduleNameMapper: {
     '^@app/(.*)$': '<rootDir>/src/$1',
-    '^@env$': 'react-native-dotenv',
+    '^@env$': 'react-native-config',
   },
   testEnvironment: 'node',
   transform: {

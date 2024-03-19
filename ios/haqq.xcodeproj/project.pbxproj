@@ -216,6 +216,7 @@
 		164BC3E0578D429BB60C3882 /* banner_analytics.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = banner_analytics.png; path = ../assets/images/banner_analytics.png; sourceTree = "<group>"; };
 		166B15FB75D74202AC4A7394 /* signup-network-exists-warning@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "signup-network-exists-warning@2x.png"; path = "../assets/images/signup-network-exists-warning@2x.png"; sourceTree = "<group>"; };
 		189C4904319D4B4B92D30F92 /* question-circle@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "question-circle@3x.png"; path = "../assets/images/question-circle@3x.png"; sourceTree = "<group>"; };
+		1943950A2BA8140A006FAAB3 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		19A622B72AA87A3200808B26 /* cloud_verification_dark.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = cloud_verification_dark.riv; sourceTree = "<group>"; };
 		19A622B82AA87A3200808B26 /* cloud_verification_light.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = cloud_verification_light.riv; sourceTree = "<group>"; };
 		1A10FA9E2B21B6FF005408F2 /* animated_camera.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = animated_camera.riv; sourceTree = "<group>"; };
@@ -576,6 +577,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				1943950A2BA8140A006FAAB3 /* Config.xcconfig */,
 				1AE36A152B7B756A009F6A5B /* metamask-mobile-provider.js */,
 				13B07FAE1A68108700A75B9A /* haqq */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -1376,6 +1378,7 @@
 		};
 		83CBBA201A601CBA00E9B192 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1943950A2BA8140A006FAAB3 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -1451,11 +1454,7 @@
 					"-DFOLLY_MOBILE=1",
 					"-DFOLLY_USE_LIBCPP=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-Wl",
-					"-ld_classic",
-				);
+				OTHER_LDFLAGS = "$(inherited)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -1464,6 +1463,7 @@
 		};
 		83CBBA211A601CBA00E9B192 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1943950A2BA8140A006FAAB3 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -1534,11 +1534,7 @@
 					"-DFOLLY_MOBILE=1",
 					"-DFOLLY_USE_LIBCPP=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-Wl",
-					"-ld_classic",
-				);
+				OTHER_LDFLAGS = "$(inherited)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;

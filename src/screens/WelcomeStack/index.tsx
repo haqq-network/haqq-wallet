@@ -1,10 +1,10 @@
 import React, {memo} from 'react';
 
-import {FOR_DETOX} from '@env';
 import {
   NativeStackNavigationOptions,
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
+import Config from 'react-native-config';
 
 import {getModalScreenOptions} from '@app/helpers/get-modal-screen-options';
 import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
@@ -43,8 +43,8 @@ const WelcomeStack = memo(({initialRouteName}: Props) => {
       initialRouteName={initialRouteName}
       screenOptions={{
         ...basicScreenOptions,
-        animation: FOR_DETOX ? 'none' : 'default',
-        animationDuration: FOR_DETOX ? 0 : 350,
+        animation: Config.FOR_DETOX ? 'none' : 'default',
+        animationDuration: Config.FOR_DETOX ? 0 : 350,
       }}>
       <Stack.Screen
         component={themeUpdaterHOC(WelcomeScreen)}

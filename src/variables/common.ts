@@ -1,6 +1,6 @@
 import DefaultProvidersJson from '@assets/migrations/providers.json';
-import {APPSTORE_APP_ID, GOOGLE_PLAY_PACKAGE} from '@env';
 import {Platform} from 'react-native';
+import Config from 'react-native-config';
 import {Easing} from 'react-native-reanimated';
 
 import {PushNotificationTopicsEnum} from '@app/services/push-notifications';
@@ -189,8 +189,8 @@ export const TERMS_OF_CONDITIONS =
   'https://www.boredgen.net/wallet/terms-and-conditions';
 
 export const STORE_PAGE_URL = Platform.select({
-  ios: `https://apps.apple.com/app/id${APPSTORE_APP_ID}`,
-  android: `https://play.google.com/store/apps/details?id=${GOOGLE_PLAY_PACKAGE}`,
+  ios: `https://apps.apple.com/app/id${Config.APPSTORE_APP_ID}`,
+  android: `https://play.google.com/store/apps/details?id=${Config.GOOGLE_PLAY_PACKAGE}`,
   default: 'https://haqq.network/wallet',
 });
 
