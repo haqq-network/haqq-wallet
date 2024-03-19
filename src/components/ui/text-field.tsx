@@ -3,6 +3,7 @@ import React, {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -33,7 +34,7 @@ import {Text, TextProps} from '@app/components/ui/text';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {sleep} from '@app/utils';
-import {IS_IOS} from '@app/variables/common';
+import {IS_ANDROID, IS_IOS} from '@app/variables/common';
 
 type Props = Omit<TextInputProps, 'placeholder'> & {
   label: I18N;
@@ -128,7 +129,7 @@ export const TextField: React.FC<Props> = memo(
     }, [value, focusAnim, isFocused]);
 
     useLayoutEffect(() => {
-      if (!autoFocus) {
+      if (!autoFocus || IS_ANDROID) {
         return;
       }
 
@@ -146,6 +147,13 @@ export const TextField: React.FC<Props> = memo(
           inputRef.current?.blur();
         }
       };
+    }, [autoFocus]);
+
+    const enableAutoFocus = useMemo(() => {
+      if (IS_ANDROID) {
+        return autoFocus;
+      }
+      return false;
     }, [autoFocus]);
 
     let color = getColor(error ? Color.textRed1 : Color.textBase2);
@@ -204,6 +212,7 @@ export const TextField: React.FC<Props> = memo(
               onBlur={onBlurEvent}
               onFocus={onFocusEvent}
               numberOfLines={numberOfLines}
+              autoFocus={enableAutoFocus}
             />
           </View>
           {rightAction && <View style={styles.sub}>{rightAction}</View>}
