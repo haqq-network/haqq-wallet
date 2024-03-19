@@ -1,13 +1,12 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 
 import {SafeAreaView, ScrollView, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {cleanNumber, createTheme} from '@app/helpers';
+import {createTheme} from '@app/helpers';
 import {useLayout} from '@app/hooks/use-layout';
 import {I18N} from '@app/i18n';
-import {NftItem} from '@app/types';
-import {WEI} from '@app/variables/common';
+import {NftItem} from '@app/models/nft';
 
 import {ImageWrapper} from './image-wrapper';
 import {Button, ButtonVariant, Spacer, Text} from './ui';
@@ -21,18 +20,14 @@ export interface NftItemDetailsProps {
 
 export const NftItemDetails = ({item, onPressSend}: NftItemDetailsProps) => {
   const [imageLayout, onImageLayout] = useLayout();
-  const lastSalePrice = useMemo(
-    () => cleanNumber(parseInt(item.last_sale_price, 16) / WEI),
-    [item],
-  );
-
+  // TODO Remove image check when default image will be added
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
         <View style={styles.imageContainer} onLayout={onImageLayout}>
           <ImageWrapper
             resizeMode="cover"
-            source={{uri: item.image}}
+            source={{uri: item.cached_url || undefined}}
             style={{
               width: imageLayout.width,
               height: imageLayout.width,
@@ -52,26 +47,26 @@ export const NftItemDetails = ({item, onPressSend}: NftItemDetailsProps) => {
         <Text t12 i18n={I18N.nftDetailsLastSalePrice} />
         <Spacer height={8} />
         <Text t14 color={Color.textBase1}>
-          {lastSalePrice} ISLM
+          {item.price.toBalanceString()}
         </Text>
         <Spacer height={20} />
         <Text t12 i18n={I18N.nftDetailsAttributes} />
         <Spacer height={8} />
-        <View style={styles.attributeListContainer}>
-          {item.attributes?.map?.(attr => {
-            return (
-              <View key={attr.trait_type} style={styles.attributeContainer}>
-                <View style={styles.attributeValueContainer}>
-                  <Text t13>{attr.value}</Text>
-                  <Text t13>{attr.frequency * 100}%</Text>
-                </View>
-                <Text t15 color={Color.textBase2}>
-                  {attr.trait_type}
-                </Text>
-              </View>
-            );
-          })}
-        </View>
+        {/*<View style={styles.attributeListContainer}>*/}
+        {/*  {item.attributes?.map?.(attr => {*/}
+        {/*    return (*/}
+        {/*      <View key={attr.trait_type} style={styles.attributeContainer}>*/}
+        {/*        <View style={styles.attributeValueContainer}>*/}
+        {/*          <Text t13>{attr.value}</Text>*/}
+        {/*          <Text t13>{attr.frequency * 100}%</Text>*/}
+        {/*        </View>*/}
+        {/*        <Text t15 color={Color.textBase2}>*/}
+        {/*          {attr.trait_type}*/}
+        {/*        </Text>*/}
+        {/*      </View>*/}
+        {/*    );*/}
+        {/*  })}*/}
+        {/*</View>*/}
       </ScrollView>
       <View>
         <Spacer height={16} />
@@ -98,21 +93,21 @@ const styles = createTheme({
     width: '100%',
     borderRadius: 12,
   },
-  attributeListContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    columnGap: 12,
-  },
-  attributeContainer: {
-    borderRadius: 10,
-    width: '48%',
-    padding: 8,
-    backgroundColor: Color.bg3,
-    marginBottom: 12,
-  },
-  attributeValueContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
+  // attributeListContainer: {
+  //   flexDirection: 'row',
+  //   flexWrap: 'wrap',
+  //   columnGap: 12,
+  // },
+  // attributeContainer: {
+  //   borderRadius: 10,
+  //   width: '48%',
+  //   padding: 8,
+  //   backgroundColor: Color.bg3,
+  //   marginBottom: 12,
+  // },
+  // attributeValueContainer: {
+  //   flexDirection: 'row',
+  //   justifyContent: 'space-between',
+  //   alignItems: 'center',
+  // },
 });

@@ -6,7 +6,7 @@ import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {useLayout} from '@app/hooks/use-layout';
 import {I18N} from '@app/i18n';
-import {NftCollection} from '@app/types';
+import {NftCollection} from '@app/models/nft';
 import {addOpacityToColor} from '@app/utils';
 
 import {Text} from '../ui';
@@ -48,7 +48,7 @@ export const NftViewerCollectionPreview = ({
             t17
             color={Color.textSecond2}
             i18n={I18N.nftCollectionPreviewItemsCount}
-            i18params={{count: `${item?.items?.length}`}}
+            i18params={{count: `${item?.nfts?.length}`}}
           />
         </View>
       </ImageBackground>

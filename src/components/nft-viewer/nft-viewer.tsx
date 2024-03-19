@@ -16,11 +16,11 @@ import {createTheme} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
 import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {I18N, getText} from '@app/i18n';
-import {NftCollection, NftItem} from '@app/types';
+import {NftCollection, NftItem} from '@app/models/nft';
+import {NftWidgetSize} from '@app/types';
 import {SortDirectionEnum, arraySortUtil} from '@app/utils';
 
 import {NftViewerCollectionPreviewList} from './nft-viewer-collection-preview-list';
-import {NftViewerItemPreviewVariant} from './nft-viewer-item-preview';
 import {NftViewerItemPreviewList} from './nft-viewer-item-preview-list';
 import {NftViewerSectionHeader} from './nft-viewer-section-header';
 
@@ -142,9 +142,9 @@ export const NftViewer = ({
     useCallback(
       ({item: section}) => (
         <NftViewerItemPreviewList
-          variant={NftViewerItemPreviewVariant.medium}
+          variant={NftWidgetSize.medium}
           onPress={onNftItemPress}
-          data={section.items}
+          data={section.nfts}
         />
       ),
       [onNftItemPress],

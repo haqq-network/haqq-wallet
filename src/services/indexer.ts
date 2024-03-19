@@ -5,6 +5,7 @@ import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {Whitelist} from '@app/helpers/whitelist';
 import {I18N, getText} from '@app/i18n';
+import {NftCollectionIndexer} from '@app/models/nft';
 import {Provider} from '@app/models/provider';
 import {
   ContractNameMap,
@@ -183,6 +184,32 @@ export class Indexer {
     } catch (err) {
       if (err instanceof JSONRPCError) {
         this.captureException(err, 'Indexer:getTransactions', err.meta);
+      }
+      throw err;
+    }
+  }
+
+  async getNfts(accounts: string[]): Promise<NftCollectionIndexer[]> {
+    try {
+      if (!app.provider.indexer) {
+        throw new Error('Indexer is not configured');
+      }
+
+      if (!accounts.length) {
+        return [];
+      }
+
+      const haqqAddresses = accounts.filter(a => !!a).map(AddressUtils.toHaqq);
+      const response = await jsonrpcRequest<NftCollectionIndexer[]>(
+        app.provider.indexer,
+        'nft',
+        [haqqAddresses],
+      );
+
+      return response || [];
+    } catch (err) {
+      if (err instanceof JSONRPCError) {
+        this.captureException(err, 'Indexer:getNfts', err.meta);
       }
       throw err;
     }

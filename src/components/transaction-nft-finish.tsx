@@ -17,9 +17,10 @@ import {
 import {createTheme, openURL} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
+import {NftItem} from '@app/models/nft';
 import {Balance} from '@app/services/balance';
 import {EthNetwork} from '@app/services/eth-network';
-import {NftItem, TransactionResponse} from '@app/types';
+import {TransactionResponse} from '@app/types';
 
 type TransactionFinishProps = {
   transaction: TransactionResponse | null;
@@ -64,7 +65,11 @@ export const TransactionNftFinish = ({
         center
         color={Color.textGreen1}
       />
-      <Image source={{uri: item.image}} style={styles.icon} borderRadius={12} />
+      <Image
+        source={{uri: item.cached_url || undefined}}
+        style={styles.icon}
+        borderRadius={12}
+      />
       <Text t5 center>
         {item.name}
       </Text>

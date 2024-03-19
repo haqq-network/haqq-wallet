@@ -7,8 +7,8 @@ import {TransactionEmpty} from '@app/components/transaction-empty';
 import {First, PopupContainer, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
-import {useNftCollections} from '@app/hooks/use-nft-collections';
 import {I18N} from '@app/i18n';
+import {Nft} from '@app/models/nft';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {HaqqEthereumAddress, IToken, IndexerTransaction} from '@app/types';
@@ -61,7 +61,7 @@ export const AccountInfo = observer(
     onPressTxRow,
     tokens,
   }: AccountInfoProps) => {
-    const nftCollections = useNftCollections();
+    const nftCollections = Nft.getAllCollections();
 
     const [activeTab, setActiveTab] = useState(TabNames.tokens);
 
