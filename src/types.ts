@@ -30,6 +30,7 @@ import {TotalValueTabNames} from '@app/components/total-value-info';
 import {IconProps} from '@app/components/ui';
 import {I18N} from '@app/i18n';
 import {Banner} from '@app/models/banner';
+import {NftCollection, NftItem} from '@app/models/nft';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {SignUpStackRoutes, WelcomeStackRoutes} from '@app/route-types';
@@ -1108,33 +1109,6 @@ export enum ModalType {
   keystoneQR = 'keystoneQR',
   sssLimitReached = 'sssLimitReached',
   pinError = 'pinError',
-}
-
-export interface NftAttribute {
-  trait_type: string;
-  value: string;
-  frequency: number;
-}
-
-export interface NftItem {
-  address: string;
-  name: string;
-  description: string;
-  image: string;
-  external_link: string;
-  attributes: NftAttribute[];
-  last_sale_price: string;
-  owner_address: string;
-}
-
-export interface NftCollection {
-  address: string;
-  name: string;
-  description: string;
-  image: string;
-  external_link: string;
-  items: NftItem[];
-  created_at: number;
 }
 
 export interface BaseNewsItem {

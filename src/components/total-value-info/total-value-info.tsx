@@ -11,8 +11,8 @@ import {
   isFeatureEnabled,
   isSomeFeaturesEnabled,
 } from '@app/helpers/is-feature-enabled';
-import {useNftCollections} from '@app/hooks/use-nft-collections';
 import {I18N} from '@app/i18n';
+import {Nft} from '@app/models/nft';
 import {Transaction} from '@app/models/transaction';
 import {BalanceData, HaqqEthereumAddress, IToken} from '@app/types';
 
@@ -52,7 +52,7 @@ export const TotalValueInfo = observer(
     onPressTxRow,
     onPressInfo,
   }: TotalValueInfoProps) => {
-    const nftCollections = useNftCollections();
+    const nftCollections = Nft.getAllCollections();
     const initialTabName = useMemo(() => {
       if (
         initialTab === TotalValueTabNames.tokens &&

@@ -4,7 +4,7 @@ import {HaqqCosmosAddress, HaqqEthereumAddress} from '@app/types';
 export type NftCollectionIndexer = {
   address: HaqqEthereumAddress;
   description: string;
-  external_url: HaqqEthereumAddress;
+  external_url: string;
   id: HaqqCosmosAddress;
   image: string;
   name: string;
@@ -32,10 +32,16 @@ export type NftItemIndexer = {
 };
 
 // TODO Reset image as not null when default image will be provided
-export type NftItem = Omit<NftItemIndexer, 'price'> & {
+export type NftItem = Omit<NftItemIndexer, 'price' | 'description'> & {
+  description: string;
   price: Balance;
 };
 
-export type NftCollection = Omit<NftCollectionIndexer, 'nfts'> & {
+export type NftCollection = Omit<
+  NftCollectionIndexer,
+  'nfts' | 'description'
+> & {
+  created_at: number; // FIXME Indexer doesn't contain created_at
+  description: string;
   nfts: NftItem[];
 };

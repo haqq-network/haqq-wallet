@@ -3,7 +3,7 @@ import React, {useCallback} from 'react';
 import {FlatListProps, ListRenderItem, StyleSheet} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 
-import {NftCollection} from '@app/types';
+import {NftCollection} from '@app/models/nft';
 
 import {NftViewerCollectionPreview} from './nft-viewer-collection-preview';
 

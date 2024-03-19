@@ -6,16 +6,17 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {NftCollection, NftItem} from '@app/types';
+import {NftCollection, NftItem} from '@app/models/nft';
+import {NftWidgetSize} from '@app/types';
 
 import {ImageWrapper} from './image-wrapper';
-import {NftViewerItemPreviewVariant} from './nft-viewer/nft-viewer-item-preview';
 import {NftViewerItemPreviewList} from './nft-viewer/nft-viewer-item-preview-list';
 import {Spacer, Text} from './ui';
 import {TrimmedText} from './ui/trimmed-text';
 
 export interface NftCollectionDetailsProps {
   item: NftCollection;
+
   onPressNftItem(item: NftItem): void;
 }
 
@@ -23,13 +24,14 @@ export const NftCollectionDetails = ({
   item,
   onPressNftItem,
 }: NftCollectionDetailsProps) => {
+  // TODO Remove image check when default image will be added
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
         <View>
           <ImageWrapper
             resizeMode="cover"
-            source={{uri: item.image}}
+            source={{uri: undefined}}
             style={styles.image}
             borderRadius={12}
           />
@@ -48,8 +50,8 @@ export const NftCollectionDetails = ({
         <View>
           <NftViewerItemPreviewList
             scrollEnabled={false}
-            variant={NftViewerItemPreviewVariant.large}
-            data={item.items}
+            variant={NftWidgetSize.large}
+            data={item.nfts}
             onPress={onPressNftItem}
           />
         </View>
