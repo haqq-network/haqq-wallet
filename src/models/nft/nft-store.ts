@@ -1,8 +1,9 @@
 import {makeAutoObservable, runInAction} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
-import {NftCollection, NftItem} from '@app/models/nft';
+import {NftCollection, NftCollectionIndexer, NftItem} from '@app/models/nft';
 import {Wallet} from '@app/models/wallet';
+import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
 import {HaqqCosmosAddress} from '@app/types';
@@ -119,9 +120,15 @@ class NftStore {
     });
   };
 
-  private parseIndexerNft = (data: NftCollection[]): void => {
+  private parseIndexerNft = (data: NftCollectionIndexer[]): void => {
     data.forEach(item => {
-      this.data[item.id] = item;
+      this.data[item.id] = {
+        ...item,
+        nfts: item.nfts.map(nft => ({
+          ...nft,
+          price: nft.price ? new Balance(nft.price) : Balance.getEmpty(),
+        })),
+      };
     });
   };
 }

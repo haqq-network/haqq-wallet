@@ -1,6 +1,17 @@
+import {Balance} from '@app/services/balance';
 import {HaqqCosmosAddress, HaqqEthereumAddress} from '@app/types';
 
-export type NftItem = {
+export type NftCollectionIndexer = {
+  address: HaqqEthereumAddress;
+  description: string;
+  external_url: HaqqEthereumAddress;
+  id: HaqqCosmosAddress;
+  image: string;
+  name: string;
+  nfts: NftItemIndexer[];
+};
+
+export type NftItemIndexer = {
   address: HaqqCosmosAddress;
   block: number;
   cached_url: string | null;
@@ -20,12 +31,10 @@ export type NftItem = {
   price?: string;
 };
 
-export type NftCollection = {
-  address: HaqqEthereumAddress;
-  description: string;
-  external_url: HaqqEthereumAddress;
-  id: HaqqCosmosAddress;
-  image: string;
-  name: string;
+export type NftItem = Omit<NftItemIndexer, 'price'> & {
+  price: Balance;
+};
+
+export type NftCollection = Omit<NftCollectionIndexer, 'nfts'> & {
   nfts: NftItem[];
 };

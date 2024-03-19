@@ -25,11 +25,6 @@ export const NftCollectionInfoBanner = ({data, onPress}: Props) => {
     [collection],
   );
 
-  const lastSalePrice = useMemo(
-    () => (item.price ? cleanNumber(parseInt(item.price, 16) / WEI) : '-'),
-    [item],
-  );
-
   const handlePress = useCallback(
     () => onPress?.(item.address),
     [onPress, item.address],
@@ -68,7 +63,7 @@ export const NftCollectionInfoBanner = ({data, onPress}: Props) => {
           </Text>
           <Spacer width={6} />
           <Text variant={TextVariant.t17} color={Color.textSecond2}>
-            {lastSalePrice} ISLM
+            {item.price.toBalanceString()}
           </Text>
         </View>
       </ImageBackground>
