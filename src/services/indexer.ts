@@ -1,10 +1,10 @@
-import {NftCollection} from '@features/nft';
 import {jsonrpcRequest} from '@haqq/shared-react-native';
 
 import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {Whitelist} from '@app/helpers/whitelist';
 import {I18N, getText} from '@app/i18n';
+import {NftCollection} from '@app/models/nft';
 import {Provider} from '@app/models/provider';
 import {
   ContractNameMap,

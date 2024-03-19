@@ -1,12 +1,11 @@
 import {makeAutoObservable, runInAction} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
+import {NftCollection, NftItem} from '@app/models/nft';
 import {Wallet} from '@app/models/wallet';
 import {Indexer} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
 import {HaqqCosmosAddress} from '@app/types';
-
-import {NftCollection, NftItem} from '../types';
 
 class NftStore {
   data: Record<HaqqCosmosAddress, NftCollection> = {};

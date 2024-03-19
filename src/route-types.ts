@@ -6,6 +6,7 @@ import {SessionTypes} from '@walletconnect/types';
 
 import {TotalValueTabNames} from '@app/components/total-value-info';
 import {AwaitValue} from '@app/helpers/await-for-value';
+import {NftItem} from '@app/models/nft';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
@@ -19,7 +20,6 @@ import {
   JsonRpcMetadata,
   LedgerWalletInitialData,
   NftCollection,
-  NftItem,
   PartialJsonRpcRequest,
   PopupNotificationBannerId,
   Raffle,
