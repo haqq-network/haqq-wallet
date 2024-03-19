@@ -61,4 +61,5 @@ export type RemoteConfigTypes = RemoteConfigBalanceTypes &
     web3_browser_bookmarks: Omit<Link, 'subtitle' | 'id'>[];
     welcome_screen: keyof RootStackParamList;
     tx_timestamp_headers: boolean;
+    indexer_sentry_capture_exeption_throttle_ms: number;
   };

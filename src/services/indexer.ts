@@ -1,4 +1,5 @@
-import {jsonrpcRequest} from '@haqq/shared-react-native';
+import {JSONRPCError, jsonrpcRequest} from '@haqq/shared-react-native';
+import _ from 'lodash';
 
 import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
@@ -16,6 +17,8 @@ import {
   IndexerTransactionResponse,
   RatesResponse,
 } from '@app/types';
+
+import {RemoteConfig} from './remote-config';
 
 export type IndexerUpdatesResponse = {
   addresses: IContract[];
@@ -36,6 +39,8 @@ export type IndexerUpdatesResponse = {
   rates: RatesResponse;
 };
 
+const logger = Logger.create('IndexerService');
+
 export class Indexer {
   static instance = new Indexer();
 
@@ -46,24 +51,48 @@ export class Indexer {
     'content-type': 'application/json;charset=UTF-8',
   };
 
+  captureException = logger.captureException;
+
+  constructor() {
+    this.init();
+  }
+
+  async init() {
+    await RemoteConfig.awaitForInitialization();
+    this.captureException = _.throttle(
+      logger.captureException,
+      RemoteConfig.safeGet('indexer_sentry_capture_exeption_throttle_ms'),
+      {
+        leading: true,
+      },
+    );
+  }
+
   async updates(
     accounts: string[],
     lastUpdated: Date | undefined,
     selectedCurrency?: string,
   ): Promise<IndexerUpdatesResponse> {
-    if (!app.provider.indexer) {
-      throw new Error('Indexer is not configured');
+    try {
+      if (!app.provider.indexer) {
+        throw new Error('Indexer is not configured');
+      }
+
+      const updated = lastUpdated || new Date(0);
+
+      const result: IndexerUpdatesResponse = await jsonrpcRequest(
+        app.provider.indexer,
+        'updates',
+        [accounts, updated, selectedCurrency].filter(Boolean),
+      );
+
+      return result;
+    } catch (err) {
+      if (err instanceof JSONRPCError) {
+        this.captureException(err, 'Indexer:updates', err.meta);
+      }
+      throw err;
     }
-
-    const updated = lastUpdated || new Date(0);
-
-    const result: IndexerUpdatesResponse = await jsonrpcRequest(
-      app.provider.indexer,
-      'updates',
-      [accounts, updated, selectedCurrency].filter(Boolean),
-    );
-
-    return result;
   }
 
   async getContractName(address: string): Promise<string> {
@@ -72,45 +101,61 @@ export class Indexer {
   }
 
   async getContractNames(addresses: string[]): Promise<ContractNameMap> {
-    if (!app.provider.indexer) {
-      throw new Error('Indexer is not configured');
+    try {
+      if (!app.provider.indexer) {
+        throw new Error('Indexer is not configured');
+      }
+
+      if (addresses.length === 0) {
+        return Promise.reject('Empty addresses');
+      }
+
+      const response = await jsonrpcRequest<
+        {name: string; id: string; symbol: string}[]
+      >(app.provider.indexer, 'addresses', [
+        addresses.map(AddressUtils.toHaqq),
+      ]);
+
+      const map = addresses.reduce((acc, item) => {
+        const responseExist = Array.isArray(response) && response.length > 0;
+        const newValue = responseExist
+          ? response.find(infoItem => infoItem.id === AddressUtils.toHaqq(item))
+          : null;
+
+        acc[item] = {
+          name: newValue?.name ?? getText(I18N.transactionContractDefaultName),
+          symbol: newValue?.symbol || '',
+        };
+        return acc;
+      }, {} as ContractNameMap);
+
+      return map;
+    } catch (err) {
+      if (err instanceof JSONRPCError) {
+        this.captureException(err, 'Indexer:getContractNames', err.meta);
+      }
+      throw err;
     }
-
-    if (addresses.length === 0) {
-      return Promise.reject('Empty addresses');
-    }
-
-    const response = await jsonrpcRequest<
-      {name: string; id: string; symbol: string}[]
-    >(app.provider.indexer, 'addresses', [addresses.map(AddressUtils.toHaqq)]);
-
-    const map = addresses.reduce((acc, item) => {
-      const responseExist = Array.isArray(response) && response.length > 0;
-      const newValue = responseExist
-        ? response.find(infoItem => infoItem.id === AddressUtils.toHaqq(item))
-        : null;
-
-      acc[item] = {
-        name: newValue?.name ?? getText(I18N.transactionContractDefaultName),
-        symbol: newValue?.symbol || '',
-      };
-      return acc;
-    }, {} as ContractNameMap);
-
-    return map;
   }
 
   async getBalances(accounts: string[]): Promise<Record<string, string>> {
-    if (!app.provider.indexer) {
-      throw new Error('Indexer is not configured');
-    }
+    try {
+      if (!app.provider.indexer) {
+        throw new Error('Indexer is not configured');
+      }
 
-    const response = await jsonrpcRequest<IndexerUpdatesResponse>(
-      app.provider.indexer,
-      'balances',
-      [accounts],
-    );
-    return response.balance || {};
+      const response = await jsonrpcRequest<IndexerUpdatesResponse>(
+        app.provider.indexer,
+        'balances',
+        [accounts],
+      );
+      return response.balance || {};
+    } catch (err) {
+      if (err instanceof JSONRPCError) {
+        this.captureException(err, 'Indexer:getBalances', err.meta);
+      }
+      throw err;
+    }
   }
 
   async getTransactions(
@@ -118,23 +163,30 @@ export class Indexer {
     latestBlock: string = 'latest',
     providerId = app.providerId,
   ): Promise<IndexerTransaction[]> {
-    const provider = Provider.getById(providerId);
+    try {
+      const provider = Provider.getById(providerId);
 
-    if (!provider?.indexer) {
-      throw new Error('Indexer is not configured');
+      if (!provider?.indexer) {
+        throw new Error('Indexer is not configured');
+      }
+
+      if (!accounts.length) {
+        return [];
+      }
+
+      const haqqAddresses = accounts.filter(a => !!a).map(AddressUtils.toHaqq);
+      const response = await jsonrpcRequest<IndexerTransactionResponse>(
+        provider.indexer,
+        'transactions',
+        [haqqAddresses, latestBlock],
+      );
+      return response?.txs || {};
+    } catch (err) {
+      if (err instanceof JSONRPCError) {
+        this.captureException(err, 'Indexer:getTransactions', err.meta);
+      }
+      throw err;
     }
-
-    if (!accounts.length) {
-      return [];
-    }
-
-    const haqqAddresses = accounts.filter(a => !!a).map(AddressUtils.toHaqq);
-    const response = await jsonrpcRequest<IndexerTransactionResponse>(
-      provider.indexer,
-      'transactions',
-      [haqqAddresses, latestBlock],
-    );
-    return response?.txs || {};
   }
 
   async getNfts(accounts: string[]): Promise<NftCollectionIndexer[]> {

@@ -2466,9 +2466,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@haqq/shared-react-native@npm:0.0.9":
-  version: 0.0.9
-  resolution: "@haqq/shared-react-native@npm:0.0.9"
+"@haqq/shared-react-native@npm:0.0.11":
+  version: 0.0.11
+  resolution: "@haqq/shared-react-native@npm:0.0.11"
   dependencies:
     base-64: ^1.0.0
     bn.js: 5.2.1
@@ -2479,7 +2479,7 @@ __metadata:
     "@haqq/provider-web3-utils": 0.0.10
     react: "*"
     react-native: "*"
-  checksum: 9a2d52ce97a9291a30cb11324cc68c9af427a04ddf1def9c018ff6c94a28694d9aa07c8c1d2296dcfdc2df85fb187c70391759d0340466ed534ba5824c8d9014
+  checksum: 636c7c7b684fb369cfc718c9f15b38dcfa9665d1539913005c5edfaa3e4681fc0193d3efba7ce2ed0a4219eea035c2cc33771d0ab68bfb99f22348f4046c48a5
   languageName: node
   linkType: hard
 
@@ -10205,7 +10205,7 @@ __metadata:
     "@haqq/provider-mnemonic-react-native": 0.0.14
     "@haqq/provider-sss-react-native": 0.0.14
     "@haqq/provider-web3-utils": 0.0.14
-    "@haqq/shared-react-native": 0.0.9
+    "@haqq/shared-react-native": 0.0.11
     "@invertase/react-native-apple-authentication": 2.2.2
     "@keystonehq/bc-ur-registry-eth": 0.7.7
     "@keystonehq/ur-decoder": 0.12.2

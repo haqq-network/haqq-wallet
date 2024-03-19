@@ -1,4 +1,4 @@
-import {jsonrpcRequest} from '@haqq/shared-react-native';
+import {JSONRPCError, jsonrpcRequest} from '@haqq/shared-react-native';
 
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
@@ -149,6 +149,9 @@ export class Whitelist {
 
       return response;
     } catch (err) {
+      if (err instanceof JSONRPCError) {
+        Logger.captureException(err, 'Whitelist:verifyAddress', err.meta);
+      }
       logger.error('verifyAddress', err);
 
       if (responseFromCache) {
