@@ -6,31 +6,34 @@ import {Color} from '@app/colors';
 import {cleanNumber, createTheme} from '@app/helpers';
 import {useLayout} from '@app/hooks/use-layout';
 import {I18N} from '@app/i18n';
-import {NftCollection, NftItem} from '@app/types';
+import {NftCollection} from '@app/models/nft';
 import {addOpacityToColor, getRandomItemFromArray} from '@app/utils';
 import {WEI} from '@app/variables/common';
 
-import {Spacer, Text} from '../ui';
+import {Spacer, Text, TextVariant} from '../ui';
 
 type Props = {
   data: NftCollection[];
-  onPress?(item: NftItem): void;
+  onPress?(nftId: string): void;
 };
 
 export const NftCollectionInfoBanner = ({data, onPress}: Props) => {
   const [layout, onLayout] = useLayout();
   const collection = useMemo(() => getRandomItemFromArray(data), [data]);
   const item = useMemo(
-    () => getRandomItemFromArray(collection.items),
+    () => getRandomItemFromArray(collection.nfts),
     [collection],
   );
 
   const lastSalePrice = useMemo(
-    () => cleanNumber(parseInt(item.last_sale_price, 16) / WEI),
+    () => (item.price ? cleanNumber(parseInt(item.price, 16) / WEI) : '-'),
     [item],
   );
 
-  const handlePress = useCallback(() => onPress?.(item), [onPress, item]);
+  const handlePress = useCallback(
+    () => onPress?.(item.address),
+    [onPress, item.address],
+  );
 
   return (
     <TouchableOpacity
@@ -41,16 +44,20 @@ export const NftCollectionInfoBanner = ({data, onPress}: Props) => {
       <ImageBackground
         imageStyle={styles.imageContainer}
         style={layout}
-        source={{uri: item.image}}>
+        source={{uri: item.cached_url ?? undefined}}>
         <View style={styles.itemHeaderText}>
-          <Text t8 color={Color.textBase3} i18n={I18N.nftWidgetTitle} />
+          <Text
+            variant={TextVariant.t8}
+            color={Color.textBase3}
+            i18n={I18N.nftWidgetTitle}
+          />
           <Spacer width={8} />
           <Text
-            t14
+            variant={TextVariant.t14}
             color={Color.textBase3}
             i18n={I18N.nftWidgetItems}
             i18params={{
-              count: String(collection?.items?.length || 0),
+              count: String(collection?.nfts?.length || 0),
             }}
           />
         </View>
@@ -60,7 +67,7 @@ export const NftCollectionInfoBanner = ({data, onPress}: Props) => {
             {item.name}
           </Text>
           <Spacer width={6} />
-          <Text t17 color={Color.textSecond2}>
+          <Text variant={TextVariant.t17} color={Color.textSecond2}>
             {lastSalePrice} ISLM
           </Text>
         </View>

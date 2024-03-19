@@ -1,7 +1,6 @@
 import React, {useCallback, useState} from 'react';
 
 import {STORIES_ENABLED} from '@env';
-import {Nft} from '@features/nft';
 import {useFocusEffect} from '@react-navigation/native';
 import {observer} from 'mobx-react';
 import {RefreshControl, ScrollView} from 'react-native';
@@ -10,6 +9,7 @@ import {StoriesWrapper} from '@app/components/stories';
 import {createTheme} from '@app/helpers';
 import {loadAllTransactions} from '@app/helpers/load-transactions';
 import {useTypedNavigation} from '@app/hooks';
+import {Nft} from '@app/models/nft';
 import {Stories} from '@app/models/stories';
 import {Token} from '@app/models/tokens';
 import {HomeFeedStackParamList, HomeFeedStackRoutes} from '@app/route-types';

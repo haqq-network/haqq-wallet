@@ -69,6 +69,13 @@ class NftStore {
     );
   }
 
+  getAllCollections() {
+    return Object.values(this.data).reduce(
+      (acc: NftCollection[], item) => [...acc, item],
+      [],
+    );
+  }
+
   update(item: NftItem, existingItem?: NftItem | null) {
     const itemToUpdate = existingItem ?? this.getNftById(item.address);
     if (!itemToUpdate) {

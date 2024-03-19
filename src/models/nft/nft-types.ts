@@ -17,6 +17,7 @@ export type NftItem = {
   original_url: string | null;
   token_id: string;
   updated_at: string;
+  price?: string;
 };
 
 export type NftCollection = {

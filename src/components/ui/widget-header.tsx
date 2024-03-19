@@ -3,7 +3,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Icon, IconsName, Spacer, Text} from '@app/components/ui';
+import {Icon, IconsName, Spacer, Text, TextVariant} from '@app/components/ui';
 
 type Props = {
   icon?: IconsName | keyof typeof IconsName;
@@ -25,9 +25,9 @@ export const WidgetHeader = ({
       <View style={styles.row}>
         {!!icon && <Icon i62 name={icon} color={Color.graphicGreen1} />}
         <View style={[styles.column, styles.textWrapper]}>
-          <Text t8>{title}</Text>
+          <Text variant={TextVariant.t8}>{title}</Text>
           {!!description && (
-            <Text t14 style={styles.description}>
+            <Text variant={TextVariant.t14} style={styles.description}>
               {description}
             </Text>
           )}
@@ -40,20 +40,20 @@ export const WidgetHeader = ({
     <View style={styles.column}>
       <View style={styles.row}>
         {!!icon && <Icon name={icon} color={Color.graphicBase1} />}
-        <Text t8 style={icon && styles.title}>
+        <Text variant={TextVariant.t8} style={icon && styles.title}>
           {title}
         </Text>
         {!!lable && (
           <>
             <Spacer width={8} />
-            <Text t14 color={Color.textBase2}>
+            <Text variant={TextVariant.t14} color={Color.textBase2}>
               {lable}
             </Text>
           </>
         )}
       </View>
       {!!description && (
-        <Text t14 style={styles.description}>
+        <Text variant={TextVariant.t14} style={styles.description}>
           {description}
         </Text>
       )}
