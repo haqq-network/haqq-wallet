@@ -25,7 +25,7 @@ jobs:
 
       - name: Execute Update script
         run: |
-          yarn env:update ${{github.event.inputs.version_type}}
+          yarn && yarn env:update ${{github.event.inputs.version_type}}
 
       - name: Create a commit
         run: |
