@@ -95,7 +95,6 @@ jobs:
           echo "DETOX_MILK_PRIVATE_KEY=${{secrets.DETOX_MILK_PRIVATE_KEY}}" >> .env
           echo "DETOX_PROVIDER=${{secrets.DETOX_PROVIDER}}" >> .env
           echo "DETOX_CHAIN_ID=${{secrets.DETOX_CHAIN_ID}}" >> .env
-          echo "MMKV_KEY=${{secrets.MMKV_KEY}}" >> .env
           echo "FOR_DETOX=true" >> .env
 
           cat .env
