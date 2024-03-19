@@ -24,13 +24,6 @@ on:
           - true
           - false
 
-      # DEFAULT_BACKEND:
-      #   type: choice
-      #   description: HAQQ_BACKEND_DEFAULT
-      #   options:
-      #     - ${{secrets.HAQQ_BACKEND}}
-      #     - ${{secrets.HAQQ_BACKEND_DEV}}
-
       BUILD_DESCRIPTION:
         required: true
         description: Please add a short note for a new build
