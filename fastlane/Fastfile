@@ -68,7 +68,8 @@ platform :android do
         skip_metadata: true,
         skip_screenshots: true,
         skip_binary_upload: true,
-        run_precheck_before_submit: false
+        run_precheck_before_submit: false,
+        app_version: ENV["RELEASE_VERSION"]
       )
   end
 
@@ -290,7 +291,8 @@ platform :ios do
         skip_metadata: true,
         skip_screenshots: true,
         skip_binary_upload: true,
-        run_precheck_before_submit: false
+        run_precheck_before_submit: false,
+        app_version: ENV["RELEASE_VERSION"]
       )
   end
 end
