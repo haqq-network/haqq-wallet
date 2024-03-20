@@ -39,6 +39,14 @@ Android Production App
 
 
 
+### android submit_latest_to_review
+
+```sh
+[bundle exec] fastlane android submit_latest_to_review
+```
+
+
+
 ----
 
 
@@ -80,6 +88,14 @@ IOS Production App
 
 ```sh
 [bundle exec] fastlane ios distribute
+```
+
+
+
+### ios submit_latest_to_review
+
+```sh
+[bundle exec] fastlane ios submit_latest_to_review
 ```
 
 

@@ -3,18 +3,16 @@ import React, {useCallback} from 'react';
 import {ListRenderItem, StyleSheet} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 
-import {NftItem} from '@app/types';
+import {NftItem} from '@app/models/nft';
+import {NftWidgetSize} from '@app/types';
 
-import {
-  NftViewerItemPreview,
-  NftViewerItemPreviewVariant,
-} from './nft-viewer-item-preview';
+import {NftViewerItemPreview} from './nft-viewer-item-preview';
 
 import {Spacer} from '../ui';
 
 export interface NftViewerItemPreviewListProps {
   data: NftItem[];
-  variant: NftViewerItemPreviewVariant;
+  variant: NftWidgetSize;
   scrollEnabled?: boolean;
 
   onPress?(item: NftItem): void;
@@ -41,8 +39,8 @@ export const NftViewerItemPreviewList = ({
   );
 
   switch (variant) {
-    case NftViewerItemPreviewVariant.small:
-    case NftViewerItemPreviewVariant.medium:
+    case NftWidgetSize.small:
+    case NftWidgetSize.medium:
       return (
         <FlatList
           data={data}
@@ -55,7 +53,7 @@ export const NftViewerItemPreviewList = ({
           renderItem={renderItem}
         />
       );
-    case NftViewerItemPreviewVariant.large:
+    case NftWidgetSize.large:
       return (
         <FlatList
           data={data}

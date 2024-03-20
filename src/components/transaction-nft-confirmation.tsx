@@ -14,8 +14,8 @@ import {
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
+import {NftItem} from '@app/models/nft';
 import {Balance} from '@app/services/balance';
-import {NftItem} from '@app/types';
 import {splitAddress} from '@app/utils';
 import {CURRENCY_NAME, WEI} from '@app/variables/common';
 
@@ -38,9 +38,14 @@ export const TransactionNftConfirmation = ({
 }: TransactionConfirmationProps) => {
   const splittedTo = useMemo(() => splitAddress(to), [to]);
 
+  // TODO Remove image check when default image will be added
   return (
     <PopupContainer style={styles.container}>
-      <Image source={{uri: item.image}} style={styles.icon} borderRadius={12} />
+      <Image
+        source={{uri: item.cached_url || undefined}}
+        style={styles.icon}
+        borderRadius={12}
+      />
       <Text t5 center>
         {item.name}
       </Text>

@@ -9,6 +9,7 @@ import {StoriesWrapper} from '@app/components/stories';
 import {createTheme} from '@app/helpers';
 import {loadAllTransactions} from '@app/helpers/load-transactions';
 import {useTypedNavigation} from '@app/hooks';
+import {Nft} from '@app/models/nft';
 import {Stories} from '@app/models/stories';
 import {Token} from '@app/models/tokens';
 import {HomeFeedStackParamList, HomeFeedStackRoutes} from '@app/route-types';
@@ -31,6 +32,7 @@ export const HomeFeed = observer(() => {
       loadAllTransactions(),
       Stories.fetch(true),
       Token.fetchTokens(),
+      Nft.fetchNft(),
     ]);
     setRefreshing(false);
   }, []);

@@ -18,7 +18,7 @@ export const NftItemDetailsScreen = memo(() => {
 
   const onPressSend = useCallback(() => {
     // TODO:
-    const from = params.item.owner_address;
+    const from = params.item.contract;
 
     //FIXME: Test this
     navigation.navigate(HomeStackRoutes.Transaction, {

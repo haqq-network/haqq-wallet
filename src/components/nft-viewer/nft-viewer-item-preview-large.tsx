@@ -3,10 +3,9 @@ import React, {useCallback, useMemo} from 'react';
 import {ImageBackground, TouchableOpacity, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {cleanNumber, createTheme} from '@app/helpers';
+import {createTheme} from '@app/helpers';
 import {useLayout} from '@app/hooks/use-layout';
 import {addOpacityToColor} from '@app/utils';
-import {WEI} from '@app/variables/common';
 
 import {NftViewerItemPreviewExtendedProps} from './nft-viewer-item-preview';
 
@@ -18,11 +17,6 @@ export const NftViewerItemPreviewLarge = ({
 }: NftViewerItemPreviewExtendedProps) => {
   const handlePress = useCallback(() => onPress?.(item), [onPress, item]);
   const [layout, onLayout] = useLayout();
-  const lastSalePrice = useMemo(
-    () => cleanNumber(parseInt(item.last_sale_price, 16) / WEI),
-    [item],
-  );
-
   const itemTextStyle = useMemo(
     () => ({
       width: layout.width - ITEM_TEXT_POSSITION_OFFSET * 2,
@@ -39,13 +33,13 @@ export const NftViewerItemPreviewLarge = ({
       <ImageBackground
         imageStyle={styles.imageContainer}
         style={layout}
-        source={{uri: item.image}}>
+        source={{uri: item.cached_url || undefined}}>
         <View style={[styles.itemText, itemTextStyle]}>
           <Text numberOfLines={1} t13 color={Color.textBase3}>
             {item.name}
           </Text>
           <Text t17 color={Color.textSecond2}>
-            {lastSalePrice} ISLM
+            {item.price.toBalanceString()}
           </Text>
         </View>
       </ImageBackground>

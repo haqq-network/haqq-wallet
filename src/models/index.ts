@@ -1,7 +1,6 @@
 import Realm from 'realm';
 
 import {News} from '@app/models/news';
-import {NftCollection} from '@app/models/nft-collection';
 import {Provider} from '@app/models/provider';
 import {
   ContactRealmObject,
@@ -43,7 +42,6 @@ export const realm = new Realm({
     ContactRealmObject,
     Provider,
     Refferal,
-    NftCollection,
     News,
     VariablesDate,
     VariablesBool,

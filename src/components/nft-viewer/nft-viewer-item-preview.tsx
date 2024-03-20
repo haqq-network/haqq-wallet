@@ -1,14 +1,9 @@
-import {NftItem} from '@app/types';
+import {NftItem} from '@app/models/nft';
+import {NftWidgetSize} from '@app/types';
 
 import {NftViewerItemPreviewLarge} from './nft-viewer-item-preview-large';
 import {NftViewerItemPreviewMedium} from './nft-viewer-item-preview-medium';
 import {NftViewerItemPreviewSmall} from './nft-viewer-item-preview-small';
-
-export enum NftViewerItemPreviewVariant {
-  small = 'small',
-  medium = 'medium',
-  large = 'large',
-}
 
 export interface NftViewerItemPreviewExtendedProps {
   item: NftItem;
@@ -17,7 +12,7 @@ export interface NftViewerItemPreviewExtendedProps {
 }
 
 export type NftViewerItemPreviewProps = NftViewerItemPreviewExtendedProps & {
-  variant: NftViewerItemPreviewVariant;
+  variant: NftWidgetSize;
 };
 
 export const NftViewerItemPreview = ({
@@ -25,11 +20,11 @@ export const NftViewerItemPreview = ({
   ...props
 }: NftViewerItemPreviewProps) => {
   switch (variant) {
-    case NftViewerItemPreviewVariant.small:
+    case NftWidgetSize.small:
       return <NftViewerItemPreviewSmall {...props} />;
-    case NftViewerItemPreviewVariant.medium:
+    case NftWidgetSize.medium:
       return <NftViewerItemPreviewMedium {...props} />;
-    case NftViewerItemPreviewVariant.large:
+    case NftWidgetSize.large:
       return <NftViewerItemPreviewLarge {...props} />;
     default:
       return null;

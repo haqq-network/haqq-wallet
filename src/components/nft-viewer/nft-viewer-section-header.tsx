@@ -4,7 +4,7 @@ import {Image, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
-import {NftCollection} from '@app/types';
+import {NftCollection} from '@app/models/nft';
 
 import {MenuNavigationButton, Spacer, Text} from '../ui';
 
@@ -33,7 +33,7 @@ export const NftViewerSectionHeader = ({
           {item.name}
         </Text>
         <Text t14 color={Color.textBase2}>
-          {item.items.length} items
+          {item.nfts.length} items
         </Text>
       </View>
     </MenuNavigationButton>

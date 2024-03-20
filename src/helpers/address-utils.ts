@@ -7,7 +7,7 @@ import {Whitelist} from './whitelist';
 
 export const HAQQ_VALIDATOR_PREFIX = 'haqqvaloper';
 export class AddressUtils {
-  static toHaqq(address: string) {
+  static toHaqq(address: string): HaqqCosmosAddress {
     try {
       if (!address) {
         return '' as HaqqCosmosAddress;
