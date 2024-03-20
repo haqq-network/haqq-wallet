@@ -14,7 +14,7 @@ jobs:
     with:
       IS_SSS_ENABLED: true
       STORIES_ENABLED: true
-      BUILD_DESCRIPTION: ${{github.event.pull_request.body}}
+      BUILD_DESCRIPTION: Merged Action
 
   send_to_review:
     if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'releaseAfterMerge')
