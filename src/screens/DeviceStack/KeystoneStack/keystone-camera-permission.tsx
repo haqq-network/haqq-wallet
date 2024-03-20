@@ -9,7 +9,7 @@ import {
 } from '@app/helpers/await-for-scan-qr';
 import {useTypedNavigation} from '@app/hooks';
 import {KeystoneStackRoutes} from '@app/route-types';
-import {SystemDialog} from '@app/services/system-dialog';
+import {requestCameraPermissions} from '@app/utils';
 
 const logger = Logger.create('KeystoneCameraPermissionScreen');
 
@@ -25,7 +25,7 @@ export const KeystoneCameraPermissionScreen = () => {
       }
       setSyncInProgress(true);
 
-      const result = await SystemDialog.requestCameraPermissions();
+      const result = await requestCameraPermissions();
 
       if (result) {
         const qrCBORHex = await awaitForScanQr({

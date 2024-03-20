@@ -22,9 +22,8 @@ import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {SystemDialog} from '@app/services/system-dialog';
 import {ModalType, Modals} from '@app/types';
-import {isError} from '@app/utils';
+import {isError, requestCameraPermissions} from '@app/utils';
 import {IS_IOS, QR_STATUS_BAR} from '@app/variables/common';
 
 import {QrBottomView} from './qr-bottom-view';
@@ -202,7 +201,7 @@ export const QRModal = ({onClose, eventTaskId, pattern}: QRModalProps) => {
 
   useEffectAsync(async () => {
     try {
-      const result = await SystemDialog.requestCameraPermissions();
+      const result = await requestCameraPermissions();
       Logger.log('Camera permission is authorized: ', result);
       setIsAuthorized(result);
     } catch (err) {

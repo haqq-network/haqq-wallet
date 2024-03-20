@@ -15,8 +15,6 @@ import {Backend} from '@app/services/backend';
 import {AdjustEvents} from '@app/types';
 import {IS_ANDROID} from '@app/variables/common';
 
-import {SystemDialog} from './system-dialog';
-
 export enum PushNotificationTopicsEnum {
   news = 'news',
   transactions = 'transactions',
@@ -53,12 +51,12 @@ export class PushNotifications extends EventEmitter {
 
   async requestPermissions() {
     if (IS_ANDROID) {
-      await SystemDialog.permissionsAndroidRequest(
+      await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
       );
     }
 
-    const authStatus = await SystemDialog.messagingRequestPermission();
+    const authStatus = await messaging().requestPermission();
 
     const enabled =
       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||

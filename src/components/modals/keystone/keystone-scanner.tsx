@@ -21,8 +21,8 @@ import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N, getText} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {SystemDialog} from '@app/services/system-dialog';
 import {ModalType, Modals} from '@app/types';
+import {requestCameraPermissions} from '@app/utils';
 import {
   IS_IOS,
   QR_STATUS_BAR,
@@ -174,7 +174,7 @@ export const KeystoneScannerModal = ({
 
   useEffectAsync(async () => {
     try {
-      const result = await SystemDialog.requestCameraPermissions();
+      const result = await requestCameraPermissions();
       Logger.log('Camera permission is authorized: ', result);
       setIsAuthorized(result);
     } catch (err) {
