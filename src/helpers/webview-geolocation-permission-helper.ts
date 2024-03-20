@@ -6,8 +6,6 @@ import {
   request,
 } from 'react-native-permissions';
 
-import {SystemDialog} from '@app/services/system-dialog';
-
 const awaitForPermsissionStatus = async (
   permission: Promise<PermissionStatus>,
 ) => {
@@ -30,7 +28,7 @@ const awaitForPermsissionStatus = async (
       default: () => Promise.resolve(false),
     });
 
-    return await SystemDialog.getResult(fn);
+    return await fn();
   } catch (e) {
     Logger.error('🔴 geolocation-permission-helper:checkGeoPermissions:', e);
     return await checkGeoPermissions();

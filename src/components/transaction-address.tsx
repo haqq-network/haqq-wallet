@@ -1,5 +1,6 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
+import Clipboard from '@react-native-clipboard/clipboard';
 import {
   ListRenderItem,
   NativeSyntheticEvent,
@@ -32,7 +33,6 @@ import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Wallet} from '@app/models/wallet';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {SystemDialog} from '@app/services/system-dialog';
 import {showUnrecognizedDataAttention} from '@app/utils';
 
 import {WalletRow, WalletRowTypes} from './wallet-row';
@@ -164,7 +164,7 @@ export const TransactionAddress = ({
 
   const onPressPaste = useCallback(async () => {
     vibrate(HapticEffects.impactLight);
-    const pasteString = await SystemDialog.getClipboardString();
+    const pasteString = await Clipboard.getString();
     handleChangeAddress(pasteString);
   }, [handleChangeAddress]);
 

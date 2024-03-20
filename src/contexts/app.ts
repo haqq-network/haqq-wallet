@@ -33,7 +33,6 @@ import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {RemoteConfig} from '@app/services/remote-config';
-import {SystemDialog} from '@app/services/system-dialog';
 
 import {showModal} from '../helpers';
 import {Provider} from '../models/provider';
@@ -460,24 +459,22 @@ class App extends AsyncEventEmitter {
 
   async auth() {
     this.resetAuth();
-    await SystemDialog.getResult(async () => {
-      const close = showModal('pin');
-      if (SecurePinUtils.isPinChangedWithFail()) {
-        try {
-          await SecurePinUtils.rollbackPin();
-          showModal(ModalType.pinError);
-        } catch (e) {
-          const details = (e as Error)?.message || e?.toString();
-          showModal(ModalType.pinError, {details});
-          Logger.error(e, 'app.auth rollback pin failed');
-        }
+    const close = showModal('pin');
+    if (SecurePinUtils.isPinChangedWithFail()) {
+      try {
+        await SecurePinUtils.rollbackPin();
+        showModal(ModalType.pinError);
+      } catch (e) {
+        const details = (e as Error)?.message || e?.toString();
+        showModal(ModalType.pinError, {details});
+        Logger.error(e, 'app.auth rollback pin failed');
       }
-      await Promise.race([this.makeBiometryAuth(), this.makePinAuth()]);
+    }
+    await Promise.race([this.makeBiometryAuth(), this.makePinAuth()]);
 
-      if (this.authenticated) {
-        close();
-      }
-    });
+    if (this.authenticated) {
+      close();
+    }
   }
 
   async makeBiometryAuth() {

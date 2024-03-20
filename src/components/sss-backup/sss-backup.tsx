@@ -1,5 +1,7 @@
 import React, {useCallback, useState} from 'react';
 
+import Clipboard from '@react-native-clipboard/clipboard';
+
 import {Color} from '@app/colors';
 import {
   Button,
@@ -14,7 +16,6 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {SystemDialog} from '@app/services/system-dialog';
 
 export enum PasswordExists {
   checking,
@@ -42,7 +43,7 @@ export const SssBackup = ({
   const [isGoogleDriveChecking, setIsGoogleDriveChecking] = useState(false);
 
   const onPressPaste = useCallback(async () => {
-    const pasteString = await SystemDialog.getClipboardString();
+    const pasteString = await Clipboard.getString();
 
     setPassword(pasteString);
   }, []);

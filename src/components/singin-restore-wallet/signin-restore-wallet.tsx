@@ -1,5 +1,6 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
+import Clipboard from '@react-native-clipboard/clipboard';
 import {utils} from 'ethers';
 import {Keyboard, ScrollView, StyleSheet} from 'react-native';
 
@@ -15,7 +16,6 @@ import {
 } from '@app/components/ui';
 import {hideModal} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {SystemDialog} from '@app/services/system-dialog';
 import {ModalType} from '@app/types';
 
 interface SinginRestoreWalletProps {
@@ -58,7 +58,7 @@ export const SignInRestore = ({
   }, []);
 
   const onPressPaste = useCallback(async () => {
-    const text = await SystemDialog.getClipboardString();
+    const text = await Clipboard.getString();
     onChangeKey(text.trim());
   }, [onChangeKey]);
 

@@ -1,7 +1,5 @@
 import {Permission, PermissionsAndroid, Platform} from 'react-native';
 
-import {SystemDialog} from '@app/services/system-dialog';
-
 const {PERMISSIONS, RESULTS} = PermissionsAndroid;
 
 /**
@@ -24,9 +22,7 @@ export async function requestLocationPermission(): Promise<LocationRequestResult
     return {granted: true, status: RESULTS.GRANTED};
   }
 
-  const status = await SystemDialog.permissionsAndroidRequest(
-    locationPermission,
-  );
+  const status = await PermissionsAndroid.request(locationPermission);
 
   Logger.log(
     'requestLocationPermission status: ',
