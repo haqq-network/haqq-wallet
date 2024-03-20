@@ -10,8 +10,11 @@ import {
   PopupContainer,
   Spacer,
   Text,
+  TextPosition,
+  TextVariant,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {useNftImage} from '@app/hooks/use-nft-image';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {NftItem} from '@app/models/nft';
@@ -37,43 +40,56 @@ export const TransactionNftConfirmation = ({
   onConfirmTransaction,
 }: TransactionConfirmationProps) => {
   const splittedTo = useMemo(() => splitAddress(to), [to]);
+  const imageUri = useNftImage(item.cached_url);
 
-  // TODO Remove image check when default image will be added
   return (
     <PopupContainer style={styles.container}>
       <Image
-        source={{uri: item.cached_url || undefined}}
+        source={imageUri}
         style={styles.icon}
         borderRadius={12}
+        resizeMode="contain"
       />
-      <Text t5 center>
+      <Text variant={TextVariant.t5} position={TextPosition.center}>
         {item.name}
       </Text>
       <Spacer height={16} />
       <Text
-        t11
+        variant={TextVariant.t11}
         color={Color.textBase2}
-        center
+        position={TextPosition.center}
         style={styles.subtitle}
         i18n={I18N.transactionConfirmationSendTo}
       />
       {contact && (
-        <Text t11 color={Color.textBase1} center style={styles.contact}>
+        <Text
+          variant={TextVariant.t11}
+          color={Color.textBase1}
+          position={TextPosition.center}
+          style={styles.contact}>
           {contact.name}
         </Text>
       )}
-      <Text t11 color={Color.textBase1} center style={styles.address}>
-        <Text t11 color={Color.textBase1} center style={styles.address}>
+      <Text
+        variant={TextVariant.t11}
+        color={Color.textBase1}
+        position={TextPosition.center}
+        style={styles.address}>
+        <Text
+          variant={TextVariant.t11}
+          color={Color.textBase1}
+          position={TextPosition.center}
+          style={styles.address}>
           {splittedTo[0]}
         </Text>
-        <Text t11 color={Color.textBase2}>
+        <Text variant={TextVariant.t11} color={Color.textBase2}>
           {splittedTo[1]}
         </Text>
-        <Text t11>{splittedTo[2]}</Text>
+        <Text variant={TextVariant.t11}>{splittedTo[2]}</Text>
       </Text>
       <View style={styles.info}>
         <DataView label="Network Fee">
-          <Text t11 color={Color.textBase1}>
+          <Text variant={TextVariant.t11} color={Color.textBase1}>
             {/* TODO: Migrate to fee.toWeiString() */}
             {`${+fee * WEI} a${CURRENCY_NAME}`}
           </Text>
