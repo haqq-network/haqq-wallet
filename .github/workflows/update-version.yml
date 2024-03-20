@@ -22,6 +22,16 @@ jobs:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.SERVICE_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install
 
       - name: Execute Update script
         run: |
@@ -31,6 +41,6 @@ jobs:
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "Build"
-          git pull origin main
-          git commit -am "update: version"
+          git add package.json
+          git commit -m "update: version"
           git push --force-with-lease

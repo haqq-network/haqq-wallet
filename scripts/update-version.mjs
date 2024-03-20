@@ -14,4 +14,4 @@ for (const flag of flags) {
 }
 
 const packageJson = require('../package.json');
-await $`sed -i '' 's/^APP_VERSION=.*/APP_VERSION=${packageJson.version}/' .env`.quiet();
+await $`sed 's/^APP_VERSION=.*/APP_VERSION=${packageJson.version}/' .env > temp && mv temp .env`.quiet();
