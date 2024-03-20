@@ -10,83 +10,82 @@ jobs:
     name: Prepare Artifact
     runs-on: ubuntu-cpu16-ram64
     steps:
-      build:
-        - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-        - uses: actions/setup-node@v4
-          with:
-            node-version: 18
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
 
-        - uses: ruby/setup-ruby@v1
-          with:
-            ruby-version: '3.2.0'
-            bundler-cache: true
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2.0'
+          bundler-cache: true
 
-        - name: Decode secrets
-          run: |
-            echo ${{secrets.HAQQ_KEYSTORE}} | base64 -d > android/app/haqq-upload-key.keystore
-            echo ${{secrets.GOOGLE_SERVICE_ACCOUNT}} | base64 -d > android/app/google-account.json
-            echo ${{secrets.GOOGLE_SERVICE_ANDROID}} | base64 -d > android/app/google-services.json
+      - name: Decode secrets
+        run: |
+          echo ${{secrets.HAQQ_KEYSTORE}} | base64 -d > android/app/haqq-upload-key.keystore
+          echo ${{secrets.GOOGLE_SERVICE_ACCOUNT}} | base64 -d > android/app/google-account.json
+          echo ${{secrets.GOOGLE_SERVICE_ANDROID}} | base64 -d > android/app/google-services.json
 
-            echo "PROVIDER_NETWORK=${{secrets.PROVIDER_NETWORK}}" >> .env
-            echo "PROVIDER_WS_NETWORK=${{secrets.PROVIDER_WS_NETWORK}}" >> .env
-            echo "PROVIDER_CHAIN_ID=${{secrets.PROVIDER_CHAIN_ID}}" >> .env
-            echo "SENTRY_DSN=${{secrets.SENTRY_DSN}}" >> .env
-            echo "NETWORK_EXPLORER=${{secrets.NETWORK_EXPLORER}}" >> .env
-            echo "ENVIRONMENT=distribution" >> .env
-            echo "IS_DEVELOPMENT=${{github.event.inputs.IS_DEVELOPMENT}}" >> .env
-            echo "WALLET_CONNECT_PROJECT_ID=${{secrets.WALLET_CONNECT_PROJECT_ID}}" >> .env
-            echo "WALLET_CONNECT_RELAY_URL=${{secrets.WALLET_CONNECT_RELAY_URL}}" >> .env
-            echo "WEB3AUTH_CLIENT_ID=${{secrets.WEB3AUTH_CLIENT_ID}}" >> .env
-            echo "HCAPTCHA_SITE_KEY=${{secrets.HCAPTCHA_SITE_KEY}}" >> .env
-            echo "GOOGLE_SIGNIN_WEB_CLIENT_ID=${{secrets.GOOGLE_SIGNIN_WEB_CLIENT_ID}}" >> .env
-            echo "HAQQ_BACKEND=${{secrets.HAQQ_BACKEND}}" >> .env
-            echo "HAQQ_BACKEND_DEV=${{secrets.HAQQ_BACKEND_DEV}}" >> .env
-            echo "ADJUST_TOKEN=${{secrets.ADJUST_TOKEN}}" >> .env
-            echo "ADJUST_ENVIRONMENT=${{secrets.ADJUST_ENVIRONMENT}}" >> .env
-            echo "IS_SSS_ENABLED=${{github.event.inputs.IS_SSS_ENABLED}}" >> .env
-            echo "GOOGLE_PLAY_PACKAGE=${{secrets.GOOGLE_PLAY_PACKAGE}}" >> .env
-            echo "APPSTORE_APP_ID=${{secrets.APPSTORE_APP_ID}}" >> .env
-            echo "TURNSTILE_URL=${{secrets.TURNSTILE_URL}}" >> .env
-            echo "TURNSTILE_SITEKEY=${{secrets.TURNSTILE_SITEKEY}}" >> .env
-            echo "RECAPTCHA_V2_URL=${{secrets.RECAPTCHA_V2_URL}}" >> .env
-            echo "RECAPTCHA_V2_SITEKEY=${{secrets.RECAPTCHA_V2_SITEKEY}}" >> .env
-            echo "HCAPTCHA_URL=${{secrets.HCAPTCHA_URL}}" >> .env
-            echo "STORIES_ENABLED=${{github.event.inputs.STORIES_ENABLED}}" >> .env
+          echo "PROVIDER_NETWORK=${{secrets.PROVIDER_NETWORK}}" >> .env
+          echo "PROVIDER_WS_NETWORK=${{secrets.PROVIDER_WS_NETWORK}}" >> .env
+          echo "PROVIDER_CHAIN_ID=${{secrets.PROVIDER_CHAIN_ID}}" >> .env
+          echo "SENTRY_DSN=${{secrets.SENTRY_DSN}}" >> .env
+          echo "NETWORK_EXPLORER=${{secrets.NETWORK_EXPLORER}}" >> .env
+          echo "ENVIRONMENT=distribution" >> .env
+          echo "IS_DEVELOPMENT=${{github.event.inputs.IS_DEVELOPMENT}}" >> .env
+          echo "WALLET_CONNECT_PROJECT_ID=${{secrets.WALLET_CONNECT_PROJECT_ID}}" >> .env
+          echo "WALLET_CONNECT_RELAY_URL=${{secrets.WALLET_CONNECT_RELAY_URL}}" >> .env
+          echo "WEB3AUTH_CLIENT_ID=${{secrets.WEB3AUTH_CLIENT_ID}}" >> .env
+          echo "HCAPTCHA_SITE_KEY=${{secrets.HCAPTCHA_SITE_KEY}}" >> .env
+          echo "GOOGLE_SIGNIN_WEB_CLIENT_ID=${{secrets.GOOGLE_SIGNIN_WEB_CLIENT_ID}}" >> .env
+          echo "HAQQ_BACKEND=${{secrets.HAQQ_BACKEND}}" >> .env
+          echo "HAQQ_BACKEND_DEV=${{secrets.HAQQ_BACKEND_DEV}}" >> .env
+          echo "ADJUST_TOKEN=${{secrets.ADJUST_TOKEN}}" >> .env
+          echo "ADJUST_ENVIRONMENT=${{secrets.ADJUST_ENVIRONMENT}}" >> .env
+          echo "IS_SSS_ENABLED=${{github.event.inputs.IS_SSS_ENABLED}}" >> .env
+          echo "GOOGLE_PLAY_PACKAGE=${{secrets.GOOGLE_PLAY_PACKAGE}}" >> .env
+          echo "APPSTORE_APP_ID=${{secrets.APPSTORE_APP_ID}}" >> .env
+          echo "TURNSTILE_URL=${{secrets.TURNSTILE_URL}}" >> .env
+          echo "TURNSTILE_SITEKEY=${{secrets.TURNSTILE_SITEKEY}}" >> .env
+          echo "RECAPTCHA_V2_URL=${{secrets.RECAPTCHA_V2_URL}}" >> .env
+          echo "RECAPTCHA_V2_SITEKEY=${{secrets.RECAPTCHA_V2_SITEKEY}}" >> .env
+          echo "HCAPTCHA_URL=${{secrets.HCAPTCHA_URL}}" >> .env
+          echo "STORIES_ENABLED=${{github.event.inputs.STORIES_ENABLED}}" >> .env
 
-            echo "DETOX_MILK_PRIVATE_KEY=${{secrets.DETOX_MILK_PRIVATE_KEY}}" >> .env
-            echo "DETOX_PROVIDER=${{secrets.DETOX_PROVIDER}}" >> .env
-            echo "DETOX_CHAIN_ID=${{secrets.DETOX_CHAIN_ID}}" >> .env
-            echo "MMKV_KEY=${{secrets.MMKV_KEY}}" >> .env
+          echo "DETOX_MILK_PRIVATE_KEY=${{secrets.DETOX_MILK_PRIVATE_KEY}}" >> .env
+          echo "DETOX_PROVIDER=${{secrets.DETOX_PROVIDER}}" >> .env
+          echo "DETOX_CHAIN_ID=${{secrets.DETOX_CHAIN_ID}}" >> .env
+          echo "MMKV_KEY=${{secrets.MMKV_KEY}}" >> .env
 
-        - name: Install packages
-          run: yarn install
+      - name: Install packages
+        run: yarn install
 
-        - name: Install Zulu17
-          uses: actions/setup-java@v3
-          with:
-            distribution: 'zulu'
-            java-version: '17'
+      - name: Install Zulu17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
 
-        - name: Setup Android SDK
-          uses: android-actions/setup-android@v2
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
 
-        - name: Setup Gradle
-          uses: gradle/gradle-build-action@v2
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
 
-        - name: Build Android App
-          run: bundle exec fastlane android build_release
-          env:
-            HAQQ_UPLOAD_STORE_FILE: ${{ secrets.HAQQ_UPLOAD_STORE_FILE }}
-            HAQQ_UPLOAD_STORE_PASSWORD: ${{ secrets.HAQQ_UPLOAD_STORE_PASSWORD }}
-            HAQQ_UPLOAD_KEY_ALIAS: ${{ secrets.HAQQ_UPLOAD_KEY_ALIAS }}
-            HAQQ_UPLOAD_KEY_PASSWORD: ${{ secrets.HAQQ_UPLOAD_KEY_PASSWORD }}
+      - name: Build Android App
+        run: bundle exec fastlane android build_release
+        env:
+          HAQQ_UPLOAD_STORE_FILE: ${{ secrets.HAQQ_UPLOAD_STORE_FILE }}
+          HAQQ_UPLOAD_STORE_PASSWORD: ${{ secrets.HAQQ_UPLOAD_STORE_PASSWORD }}
+          HAQQ_UPLOAD_KEY_ALIAS: ${{ secrets.HAQQ_UPLOAD_KEY_ALIAS }}
+          HAQQ_UPLOAD_KEY_PASSWORD: ${{ secrets.HAQQ_UPLOAD_KEY_PASSWORD }}
 
-        - name: Upload Artifact
-          uses: actions/upload-artifact@v3
-          with:
-            name: haqq.apk
-            path: android/app/build/outputs/apk/app-release.apk
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: haqq.apk
+          path: android/app/build/outputs/apk/app-release.apk
 
   release:
     name: Generate Release

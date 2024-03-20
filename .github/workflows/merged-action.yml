@@ -7,7 +7,6 @@ on:
 
 jobs:
   distribute_apps:
-    runs-on: self-hosted
     if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'releaseAfterMerge')
     name: Distribute Apps
     uses: ./.github/workflows/distribute.yml
@@ -18,7 +17,6 @@ jobs:
       BUILD_DESCRIPTION: ${{github.event.pull_request.body}}
 
   send_to_review:
-    runs-on: self-hosted
     if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'releaseAfterMerge')
     name: Submit latest to Review
     uses: ./.github/workflows/review-latest.yml
