@@ -1,12 +1,27 @@
+name: Action for Merged PR
+
 on:
   pull_request:
     types:
       - closed
 
 jobs:
-  releaseAfterMerge:
-    if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'releaseAfterMerge')
+  distribute_apps:
     runs-on: self-hosted
-    steps:
-    - run: |
-        echo ReleaseAfterMerge action
+    if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'releaseAfterMerge')
+    name: Distribute Apps
+    uses: ./.github/workflows/distribute.yml
+    secrets: inherit
+    with:
+      IS_SSS_ENABLED: true
+      STORIES_ENABLED: true
+      BUILD_DESCRIPTION: ${{github.event.pull_request.body}}
+
+  send_to_review:
+    runs-on: self-hosted
+    if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'releaseAfterMerge')
+    name: Submit latest to Review
+    uses: ./.github/workflows/review-latest.yml
+    secrets: inherit
+    needs:
+      - distribute_apps

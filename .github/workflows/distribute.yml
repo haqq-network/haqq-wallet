@@ -18,6 +18,17 @@ on:
       BUILD_DESCRIPTION:
         required: true
         description: Please add a short note for a new build
+  workflow_call:
+    inputs:
+      IS_SSS_ENABLED:
+        required: false
+        type: string
+      STORIES_ENABLED:
+        required: false
+        type: string
+      BUILD_DESCRIPTION:
+        required: false
+        type: string
 
 jobs:
   test:
