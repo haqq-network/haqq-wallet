@@ -61,7 +61,7 @@ platform :android do
       )[0]
 
       deliver(
-        build_number: latest_build_number,
+        build_number: latest_build_number.to_i,
         submit_for_review: true,
         automatic_release: false,
         force: true, # Skip HTMl report verification
@@ -282,7 +282,7 @@ platform :ios do
       )
 
       deliver(
-        build_number: latest_build_number,
+        build_number: latest_build_number.to_i,
         submit_for_review: true,
         automatic_release: false,
         force: true, # Skip HTMl report verification
