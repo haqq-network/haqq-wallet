@@ -47,6 +47,14 @@ Android Production App
 
 
 
+### android build_release
+
+```sh
+[bundle exec] fastlane android build_release
+```
+
+
+
 ----
 
 
