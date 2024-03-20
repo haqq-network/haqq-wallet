@@ -76,7 +76,7 @@ jobs:
     uses: ./.github/workflows/slack-notify.yml
     secrets: inherit
     with:
-      BUILD_DESCRIPTION: ${{inputs.BUILD_DESCRIPTION || github.event.inputs.BUILD_DESCRIPTION || "Action for Merged PR"}}
+      BUILD_DESCRIPTION: ${{inputs.BUILD_DESCRIPTION || github.event.inputs.BUILD_DESCRIPTION || 'Action for Merged PR'}}
 
   patch_build:
     name: Patch build versions
