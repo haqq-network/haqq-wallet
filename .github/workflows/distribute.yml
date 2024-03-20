@@ -77,6 +77,8 @@ jobs:
     secrets: inherit
     with:
       BUILD_DESCRIPTION: ${{inputs.BUILD_DESCRIPTION || github.event.inputs.BUILD_DESCRIPTION || 'Action for Merged PR'}}
+    env:
+      BUILD_DESCRIPTION: ${{inputs.BUILD_DESCRIPTION || github.event.inputs.BUILD_DESCRIPTION || 'Action for Merged PR'}}
 
   patch_build:
     name: Patch build versions
