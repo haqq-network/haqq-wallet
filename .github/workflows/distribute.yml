@@ -50,9 +50,9 @@ jobs:
     secrets: inherit
     with:
       IS_DEVELOPMENT: false
-      IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
-      STORIES_ENABLED: ${{github.event.inputs.STORIES_ENABLED}}
-      BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION}}
+      IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED || inputs.IS_SSS_ENABLED}}
+      STORIES_ENABLED: ${{github.event.inputs.STORIES_ENABLED || inputs.STORIES_ENABLED}}
+      BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION || inputs.BUILD_DESCRIPTION}}
     needs:
       - test
 
@@ -62,9 +62,9 @@ jobs:
     secrets: inherit
     with:
       IS_DEVELOPMENT: false
-      IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED}}
-      STORIES_ENABLED: ${{github.event.inputs.STORIES_ENABLED}}
-      BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION}}
+      IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED || inputs.IS_SSS_ENABLED}}
+      STORIES_ENABLED: ${{github.event.inputs.STORIES_ENABLED || inputs.STORIES_ENABLED}}
+      BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION || inputs.BUILD_DESCRIPTION}}
     needs:
       - test
 
@@ -76,7 +76,7 @@ jobs:
     uses: ./.github/workflows/slack-notify.yml
     secrets: inherit
     with:
-      BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION}}
+      BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION || inputs.BUILD_DESCRIPTION}}
 
   patch_build:
     name: Patch build versions
