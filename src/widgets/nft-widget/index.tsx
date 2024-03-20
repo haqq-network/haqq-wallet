@@ -20,6 +20,7 @@ export const NftWidgetWrapper = observer(({size}: INftWidget) => {
   const navigation = useTypedNavigation();
   const nftCollections = Nft.getAllCollections();
   const allNft = Nft.getAll();
+
   const onPress = useCallback(() => {
     navigation.navigate(HomeStackRoutes.TotalValueInfo, {
       tab: TotalValueTabNames.nft,
