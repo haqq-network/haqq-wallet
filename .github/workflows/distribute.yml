@@ -52,7 +52,7 @@ jobs:
       IS_DEVELOPMENT: ${{github.event.inputs.IS_DEVELOPMENT || inputs.IS_DEVELOPMENT || 'false'}}
       IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED || inputs.IS_SSS_ENABLED || 'true'}}
       STORIES_ENABLED: ${{github.event.inputs.STORIES_ENABLED || inputs.STORIES_ENABLED || 'true'}}
-      BUILD_DESCRIPTION: ${{inputs.BUILD_DESCRIPTION || github.event.inputs.BUILD_DESCRIPTION || "Action for Merged PR"}}
+      BUILD_DESCRIPTION: ${{inputs.BUILD_DESCRIPTION || github.event.inputs.BUILD_DESCRIPTION || 'Action for Merged PR'}}
     needs:
       - test
 
@@ -64,7 +64,7 @@ jobs:
       IS_DEVELOPMENT: ${{github.event.inputs.IS_DEVELOPMENT || inputs.IS_DEVELOPMENT || 'false'}}
       IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED || inputs.IS_SSS_ENABLED || 'true'}}
       STORIES_ENABLED: ${{github.event.inputs.STORIES_ENABLED || inputs.STORIES_ENABLED || 'true'}}
-      BUILD_DESCRIPTION: ${{inputs.BUILD_DESCRIPTION || github.event.inputs.BUILD_DESCRIPTION || "Action for Merged PR"}}
+      BUILD_DESCRIPTION: ${{inputs.BUILD_DESCRIPTION || github.event.inputs.BUILD_DESCRIPTION || 'Action for Merged PR'}}
     needs:
       - test
 
