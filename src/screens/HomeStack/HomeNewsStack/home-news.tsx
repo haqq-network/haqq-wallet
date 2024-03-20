@@ -4,14 +4,14 @@ import {Collection, CollectionChangeSet} from 'realm';
 
 import {HomeNews} from '@app/components/home-news';
 import {onRssFeedSync} from '@app/event-actions/on-rss-feed-sync';
-import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {onUpdatesSync} from '@app/event-actions/on-updates-sync';
 import {useTypedNavigation} from '@app/hooks';
 import {News} from '@app/models/news';
 import {RssNews} from '@app/models/rss-news';
 import {VariablesBool} from '@app/models/variables-bool';
 import {NewsStackParamList, NewsStackRoutes} from '@app/route-types';
-import {AdjustEvents, NewsStatus} from '@app/types';
+import {EventTracker} from '@app/services/event-tracker';
+import {MarketingEvents, NewsStatus} from '@app/types';
 import {openInAppBrowser} from '@app/utils';
 
 const RSS_FEED_ITEMS_PAGE_LIMIT = 15;
@@ -40,7 +40,7 @@ export const HomeNewsScreen = memo(() => {
 
   useEffect(() => {
     onUpdatesSync();
-    onTrackEvent(AdjustEvents.newsOpen);
+    EventTracker.instance.trackEvent(MarketingEvents.newsOpen);
   }, []);
 
   useEffect(() => {
@@ -95,9 +95,9 @@ export const HomeNewsScreen = memo(() => {
     (id: string) => {
       navigation.navigate(NewsStackRoutes.NewsDetail, {
         id,
-        openEvent: AdjustEvents.newsOpenItem,
-        linkEvent: AdjustEvents.newsOpenLink,
-        scrollEvent: AdjustEvents.newsScrolledItem,
+        openEvent: MarketingEvents.newsOpenItem,
+        linkEvent: MarketingEvents.newsOpenLink,
+        scrollEvent: MarketingEvents.newsScrolledItem,
       });
     },
     [navigation],

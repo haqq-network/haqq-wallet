@@ -41,7 +41,6 @@ import {
   stringsToValues,
 } from '@app/helpers/await-for-value';
 import {getUid} from '@app/helpers/get-uid';
-import {getAdjustAdid} from '@app/helpers/get_adjust_adid';
 import {parseDeepLink} from '@app/helpers/parse-deep-link';
 import {SecurePinUtils} from '@app/helpers/secure-pin-utils';
 import {useTypedNavigation} from '@app/hooks';
@@ -61,6 +60,7 @@ import {SettingsStackParamList} from '@app/route-types';
 import {EthNetwork} from '@app/services';
 import {Airdrop} from '@app/services/airdrop';
 import {Balance} from '@app/services/balance';
+import {EventTracker} from '@app/services/event-tracker';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {Indexer} from '@app/services/indexer';
 import {SssProviders} from '@app/services/provider-sss';
@@ -403,7 +403,7 @@ export const SettingsTestScreen = observer(() => {
       setUid(id);
     });
 
-    getAdjustAdid().then(id => {
+    EventTracker.instance.getAdid().then(id => {
       setAdid(id);
     });
 

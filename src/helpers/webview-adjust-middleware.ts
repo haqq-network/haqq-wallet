@@ -1,7 +1,7 @@
 import {WebViewMessageEvent} from 'react-native-webview';
 
-import {onTrackEvent} from '@app/event-actions/on-track-event';
-import {AdjustEvents} from '@app/types';
+import {EventTracker} from '@app/services/event-tracker';
+import {MarketingEvents} from '@app/types';
 
 import {Whitelist} from './whitelist';
 
@@ -12,7 +12,7 @@ export enum AdjustMiddlewareEventNames {
 type AdjustTrackEvent = {
   event: AdjustMiddlewareEventNames.adjustTrackEvent;
   data: {
-    event: AdjustEvents;
+    event: MarketingEvents;
     params: Record<string, string>;
   };
 };
@@ -67,7 +67,7 @@ export const WebviewAjustMiddleware = {
 
     switch (eventData.event) {
       case AdjustMiddlewareEventNames.adjustTrackEvent:
-        onTrackEvent(data.event, data.params);
+        EventTracker.instance.trackEvent(data.event, data.params);
         return true;
       default:
         return false;

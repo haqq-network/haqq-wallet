@@ -4,7 +4,6 @@ import {ProviderInterface} from '@haqq/provider-base';
 
 import {TransactionLedger} from '@app/components/transaction-ledger';
 import {app} from '@app/contexts';
-import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
 import {showModal} from '@app/helpers';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
@@ -18,7 +17,8 @@ import {
   TransactionStackRoutes,
 } from '@app/route-types';
 import {EthNetwork} from '@app/services';
-import {AdjustEvents, ModalType} from '@app/types';
+import {EventTracker} from '@app/services/event-tracker';
+import {MarketingEvents, ModalType} from '@app/types';
 
 export const TransactionLedgerScreen = memo(() => {
   const transport = useRef<ProviderInterface | null>(null);
@@ -63,7 +63,7 @@ export const TransactionLedgerScreen = memo(() => {
         );
 
         if (transaction) {
-          onTrackEvent(AdjustEvents.sendFund);
+          EventTracker.instance.trackEvent(MarketingEvents.sendFund);
 
           await awaitForEventDone(
             Events.onTransactionCreate,

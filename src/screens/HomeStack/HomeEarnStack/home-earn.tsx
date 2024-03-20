@@ -9,7 +9,6 @@ import {Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {onEarnGetTicket} from '@app/event-actions/on-earn-get-ticket';
 import {onStakingRewards} from '@app/event-actions/on-staking-rewards';
-import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
 import {getUid} from '@app/helpers/get-uid';
 import {prepareRaffles} from '@app/helpers/prepare-raffles';
@@ -23,7 +22,8 @@ import {Wallet} from '@app/models/wallet';
 import {HomeEarnStackParamList, HomeEarnStackRoutes} from '@app/route-types';
 import {Backend} from '@app/services/backend';
 import {Balance} from '@app/services/balance';
-import {AdjustEvents, Raffle, RaffleStatus} from '@app/types';
+import {EventTracker} from '@app/services/event-tracker';
+import {MarketingEvents, Raffle, RaffleStatus} from '@app/types';
 import {NUM_PRECISION, WEI} from '@app/variables/common';
 
 const initData = {
@@ -126,7 +126,7 @@ export const HomeEarnScreen = observer(() => {
   );
 
   useEffect(() => {
-    onTrackEvent(AdjustEvents.earnOpen);
+    EventTracker.instance.trackEvent(MarketingEvents.earnOpen);
   }, []);
 
   const onPressStaking = useCallback(() => {

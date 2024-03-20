@@ -1,15 +1,14 @@
 import Config from 'react-native-config';
 
 import {onBannerAddClaimCode} from '@app/event-actions/on-banner-add-claim-code';
-import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {getLeadingAccount} from '@app/helpers/get-leading-account';
-import {getAdjustAdid} from '@app/helpers/get_adjust_adid';
 import {Refferal} from '@app/models/refferal';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {Airdrop} from '@app/services/airdrop';
+import {EventTracker} from '@app/services/event-tracker';
 import {RemoteConfig} from '@app/services/remote-config';
-import {AdjustEvents} from '@app/types';
+import {MarketingEvents} from '@app/types';
 
 export async function onBannerGasdropCreate() {
   const taken = VariablesBool.get('gasdropTaken');
@@ -25,7 +24,7 @@ export async function onBannerGasdropCreate() {
       return;
     }
 
-    const adid = await getAdjustAdid();
+    const adid = await EventTracker.instance.getAdid();
 
     const link_info = await Airdrop.instance.gasdrop_code(
       RemoteConfig.get_env(
@@ -57,7 +56,7 @@ export async function onBannerGasdropCreate() {
         wallet: info.wallet,
       });
       await onBannerAddClaimCode(link_info.code as string);
-      onTrackEvent(AdjustEvents.claimCreated, {
+      EventTracker.instance.trackEvent(MarketingEvents.claimCreated, {
         claimCode: link_info.code as string,
       });
     }

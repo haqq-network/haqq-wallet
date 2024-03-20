@@ -3,7 +3,6 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {observer} from 'mobx-react';
 
 import {StakingDelegatePreview} from '@app/components/staking-delegate-preview';
-import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {
   abortProviderInstanceForWallet,
@@ -16,7 +15,8 @@ import {
   StakingDelegateStackParamList,
   StakingDelegateStackRoutes,
 } from '@app/route-types';
-import {AdjustEvents, WalletType} from '@app/types';
+import {EventTracker} from '@app/services/event-tracker';
+import {MarketingEvents, WalletType} from '@app/types';
 import {makeID} from '@app/utils';
 
 export const StakingDelegatePreviewScreen = observer(() => {
@@ -71,7 +71,7 @@ export const StakingDelegatePreviewScreen = observer(() => {
           throw new Error('transaction_error');
         }
 
-        onTrackEvent(AdjustEvents.stakingDelegate, {
+        EventTracker.instance.trackEvent(MarketingEvents.stakingDelegate, {
           operator_address: validator.operator_address,
         });
 

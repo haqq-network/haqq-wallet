@@ -2,7 +2,6 @@ import React, {memo, useCallback, useEffect, useMemo} from 'react';
 
 import {Finish} from '@app/components/finish';
 import {app} from '@app/contexts';
-import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
 import {hideModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
@@ -12,6 +11,7 @@ import {
   OnboardingStackParamList,
   OnboardingStackRoutes,
 } from '@app/route-types';
+import {EventTracker} from '@app/services/event-tracker';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {ModalType} from '@app/types';
@@ -53,7 +53,7 @@ export const OnboardingFinishScreen = memo(() => {
   }, [route, navigation, app.onboarded]);
 
   useEffect(() => {
-    onTrackEvent(route.params.event);
+    EventTracker.instance.trackEvent(route.params.event);
     hideModal(ModalType.loading);
     vibrate(HapticEffects.success);
   }, [route.params.event]);

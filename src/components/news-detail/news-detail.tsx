@@ -9,10 +9,10 @@ import SimpleMarkdown from 'simple-markdown';
 
 import {Color} from '@app/colors';
 import {PopupContainer, Spacer, Text} from '@app/components/ui';
-import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {createTheme, openURL} from '@app/helpers';
 import {News} from '@app/models/news';
-import {AdjustEvents} from '@app/types';
+import {EventTracker} from '@app/services/event-tracker';
+import {MarketingEvents} from '@app/types';
 import {makeID} from '@app/utils';
 
 type NodeImage = {
@@ -54,9 +54,9 @@ type Node = NodeImage | NodeHeading | NodeParagraph | NodeText | NodeList;
 
 export type NewsDetailProps = {
   item: News;
-  openEvent: AdjustEvents;
-  scrollEvent: AdjustEvents;
-  linkEvent: AdjustEvents;
+  openEvent: MarketingEvents;
+  scrollEvent: MarketingEvents;
+  linkEvent: MarketingEvents;
 };
 
 type Output = (
@@ -209,7 +209,7 @@ const rules = {
     react: function (node: NodeLink, output: Output, {...state}) {
       state.withinLink = true;
       const _pressHandler = async () => {
-        onTrackEvent(AdjustEvents.newsOpenLink, {
+        EventTracker.instance.trackEvent(MarketingEvents.newsOpenLink, {
           url: node.target,
         });
 
@@ -237,7 +237,7 @@ export const NewsDetail = ({
   const scrolled = useRef(false);
 
   useEffect(() => {
-    onTrackEvent(openEvent, {
+    EventTracker.instance.trackEvent(openEvent, {
       id: item.id,
     });
   }, [item.id, openEvent]);
@@ -245,7 +245,7 @@ export const NewsDetail = ({
   const onScroll = useCallback(
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
       if (!scrolled.current && e.nativeEvent.contentOffset.y > 50) {
-        onTrackEvent(scrollEvent, {
+        EventTracker.instance.trackEvent(scrollEvent, {
           id: item.id,
         });
         scrolled.current = true;
@@ -256,7 +256,7 @@ export const NewsDetail = ({
 
   const onClickLink = useCallback(
     async (url: string) => {
-      onTrackEvent(linkEvent, {
+      EventTracker.instance.trackEvent(linkEvent, {
         url,
       });
 

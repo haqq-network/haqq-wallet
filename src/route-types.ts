@@ -12,13 +12,13 @@ import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {SssProviders} from '@app/services/provider-sss';
 import {
-  AdjustEvents,
   BiometryType,
   Eventable,
   IStory,
   IToken,
   JsonRpcMetadata,
   LedgerWalletInitialData,
+  MarketingEvents,
   PartialJsonRpcRequest,
   PopupNotificationBannerId,
   Raffle,
@@ -58,9 +58,9 @@ export type WelcomeStackParamList = {
   [WelcomeStackRoutes.SignIn]: undefined;
   [WelcomeStackRoutes.NewsDetail]: {
     id: string;
-    openEvent: AdjustEvents;
-    linkEvent: AdjustEvents;
-    scrollEvent: AdjustEvents;
+    openEvent: MarketingEvents;
+    linkEvent: MarketingEvents;
+    scrollEvent: MarketingEvents;
   };
   [WelcomeStackRoutes.Device]: undefined;
   [WelcomeStackRoutes.InAppBrowser]: HomeStackParamList[HomeStackRoutes.InAppBrowser];
@@ -213,9 +213,9 @@ export type NewsStackParamList = HomeStackParamList & {
   [NewsStackRoutes.News]: undefined;
   [NewsStackRoutes.NewsDetail]: {
     id: string;
-    openEvent: AdjustEvents;
-    linkEvent: AdjustEvents;
-    scrollEvent: AdjustEvents;
+    openEvent: MarketingEvents;
+    linkEvent: MarketingEvents;
+    scrollEvent: MarketingEvents;
   };
   [NewsStackRoutes.OurNews]: undefined;
 };
@@ -651,7 +651,7 @@ export type OnboardingStackParamList = WelcomeStackParamList & {
     nextScreen?: AnyRouteFromParent;
     action: 'create' | 'restore';
     hide?: boolean;
-    event: AdjustEvents;
+    event: MarketingEvents;
     onboarding?: boolean;
   };
 };

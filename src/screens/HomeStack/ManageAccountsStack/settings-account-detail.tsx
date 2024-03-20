@@ -5,7 +5,6 @@ import {Alert} from 'react-native';
 
 import {SettingsAccountDetail} from '@app/components/settings/settings-account-detail';
 import {CustomHeader, IconsName} from '@app/components/ui';
-import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {hideModal, showModal} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks/use-typed-navigation';
 import {useTypedRoute} from '@app/hooks/use-typed-route';
@@ -18,8 +17,9 @@ import {
   SettingsStackRoutes,
 } from '@app/route-types';
 import {sendNotification} from '@app/services';
+import {EventTracker} from '@app/services/event-tracker';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {AdjustEvents, ModalType} from '@app/types';
+import {MarketingEvents, ModalType} from '@app/types';
 
 export const SettingsAccountDetailScreen = observer(() => {
   const navigation = useTypedNavigation<ManageAccountsStackParamList>();
@@ -41,7 +41,7 @@ export const SettingsAccountDetailScreen = observer(() => {
   }, [navigation, address]);
 
   useEffect(() => {
-    onTrackEvent(AdjustEvents.settingsAccountDetails, {
+    EventTracker.instance.trackEvent(MarketingEvents.settingsAccountDetails, {
       address: address,
     });
   }, [address]);

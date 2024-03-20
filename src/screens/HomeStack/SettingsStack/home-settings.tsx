@@ -2,11 +2,11 @@ import React, {memo, useEffect, useState} from 'react';
 
 import {HomeSettings} from '@app/components/home-settings';
 import {app} from '@app/contexts';
-import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {SettingsStackParamList, SettingsStackRoutes} from '@app/route-types';
-import {AdjustEvents} from '@app/types';
+import {EventTracker} from '@app/services/event-tracker';
+import {MarketingEvents} from '@app/types';
 
 export const HomeSettingsScreen = memo(() => {
   const navigation = useTypedNavigation<SettingsStackParamList>();
@@ -17,7 +17,7 @@ export const HomeSettingsScreen = memo(() => {
   const [theme, setTheme] = useState(app.theme);
 
   useEffect(() => {
-    onTrackEvent(AdjustEvents.settingsOpen);
+    EventTracker.instance.trackEvent(MarketingEvents.settingsOpen);
   }, []);
 
   useEffect(() => {

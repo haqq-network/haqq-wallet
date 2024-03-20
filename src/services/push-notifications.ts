@@ -2,18 +2,18 @@ import {EventEmitter} from 'events';
 
 import messaging from '@react-native-firebase/messaging';
 import {PermissionsAndroid} from 'react-native';
-import {Adjust} from 'react-native-adjust';
 import Config from 'react-native-config';
 
 import {app} from '@app/contexts';
-import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
 import {getUid} from '@app/helpers/get-uid';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
 import {Backend} from '@app/services/backend';
-import {AdjustEvents} from '@app/types';
+import {MarketingEvents} from '@app/types';
 import {IS_ANDROID} from '@app/variables/common';
+
+import {EventTracker} from './event-tracker';
 
 export enum PushNotificationTopicsEnum {
   news = 'news',
@@ -78,9 +78,8 @@ export class PushNotifications extends EventEmitter {
         VariablesBool.set('notifications', true);
       }
 
-      Adjust.setPushToken(token);
-
-      onTrackEvent(AdjustEvents.pushNotifications);
+      EventTracker.instance.setPushToken(token);
+      EventTracker.instance.trackEvent(MarketingEvents.pushNotifications);
     }
     return enabled;
   }

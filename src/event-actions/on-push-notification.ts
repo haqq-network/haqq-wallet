@@ -6,7 +6,7 @@ import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 import {NewsStackRoutes} from '@app/route-types';
 import {Backend} from '@app/services/backend';
-import {AdjustEvents, RaffleStatus, RemoteMessage} from '@app/types';
+import {MarketingEvents, RaffleStatus, RemoteMessage} from '@app/types';
 import {WEI} from '@app/variables/common';
 
 enum PushNotificationTypes {
@@ -55,9 +55,9 @@ export async function onPushNotification(message: RemoteMessage<Data>) {
       navigator.navigate(NewsStackRoutes.NewsDetail, {
         id: message.data.id,
         // @ts-ignore
-        openEvent: AdjustEvents.newsOpenPushItem,
-        linkEvent: AdjustEvents.newsOpenPushLink,
-        scrollEvent: AdjustEvents.newsScrolledPushItem,
+        openEvent: MarketingEvents.newsOpenPushItem,
+        linkEvent: MarketingEvents.newsOpenPushLink,
+        scrollEvent: MarketingEvents.newsScrolledPushItem,
       });
       break;
     case PushNotificationTypes.raffle:

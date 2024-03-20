@@ -6,7 +6,6 @@ import {observer} from 'mobx-react';
 import {HomeStaking} from '@app/components/home-staking';
 import {app} from '@app/contexts';
 import {onStakingRewards} from '@app/event-actions/on-staking-rewards';
-import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
 import {abortProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {reduceAmounts} from '@app/helpers/staking';
@@ -18,7 +17,8 @@ import {
 import {Wallet} from '@app/models/wallet';
 import {HomeEarnStackParamList, HomeEarnStackRoutes} from '@app/route-types';
 import {Balance} from '@app/services/balance';
-import {AdjustEvents} from '@app/types';
+import {EventTracker} from '@app/services/event-tracker';
+import {MarketingEvents} from '@app/types';
 
 const initData = {
   stakingSum: Balance.Empty,
@@ -44,7 +44,7 @@ export const HomeStakingScreen = observer(() => {
   }, [navigation]);
 
   useEffect(() => {
-    onTrackEvent(AdjustEvents.stakingOpen);
+    EventTracker.instance.trackEvent(MarketingEvents.stakingOpen);
   }, []);
 
   useEffect(() => {

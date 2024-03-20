@@ -7,7 +7,7 @@ import {useTypedNavigation} from '@app/hooks';
 import {News} from '@app/models/news';
 import {VariablesBool} from '@app/models/variables-bool';
 import {WelcomeStackParamList, WelcomeStackRoutes} from '@app/route-types';
-import {AdjustEvents, PopupNotificationBannerTypes} from '@app/types';
+import {MarketingEvents, PopupNotificationBannerTypes} from '@app/types';
 
 export const WelcomeNewsScreen = memo(() => {
   const navigation = useTypedNavigation<WelcomeStackParamList>();
@@ -39,9 +39,9 @@ export const WelcomeNewsScreen = memo(() => {
     (id: string) => {
       navigation.navigate(WelcomeStackRoutes.NewsDetail, {
         id,
-        openEvent: AdjustEvents.newsOpenOnboardingItem,
-        linkEvent: AdjustEvents.newsOpenOnboardingLink,
-        scrollEvent: AdjustEvents.newsScrolledOnboardingItem,
+        openEvent: MarketingEvents.newsOpenOnboardingItem,
+        linkEvent: MarketingEvents.newsOpenOnboardingLink,
+        scrollEvent: MarketingEvents.newsScrolledOnboardingItem,
       });
     },
     [navigation],
