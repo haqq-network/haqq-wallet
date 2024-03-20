@@ -57,7 +57,12 @@ if (Config.SENTRY_DSN && DEBUG_VARS.enableSentry) {
       enableWatchdogTerminationTracking: false,
       attachScreenshot: true,
       attachStacktrace: true,
-      attachViewHierarchy: true,
+      beforeSend(event, hint){
+        if(event.level !== 'fatal') {
+          delete hint.attachments;
+        }
+        return event;
+      }
     });
   } catch (e) {
     console.log('sentry init failed');
