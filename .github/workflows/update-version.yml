@@ -41,5 +41,6 @@ jobs:
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "Build"
-          git commit -am "update: version"
+          git add package.json
+          git commit -m "update: version"
           git push --force-with-lease
