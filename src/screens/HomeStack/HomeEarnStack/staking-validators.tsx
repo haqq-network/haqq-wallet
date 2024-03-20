@@ -8,7 +8,6 @@ import {
   StakingValidators,
   Validators,
 } from '@app/components/staking-validators';
-import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {setValidatorsPower} from '@app/helpers/validators-power';
 import {validatorsSortPower} from '@app/helpers/validators-sort';
 import {validatorsSplit} from '@app/helpers/validators-split';
@@ -18,7 +17,8 @@ import {
   StakingMetadataType,
 } from '@app/models/staking-metadata';
 import {HomeEarnStackParamList, HomeEarnStackRoutes} from '@app/route-types';
-import {AdjustEvents, ValidatorItem} from '@app/types';
+import {EventTracker} from '@app/services/event-tracker';
+import {MarketingEvents, ValidatorItem} from '@app/types';
 
 export const StakingValidatorsScreen = observer(() => {
   const navigation = useTypedNavigation<HomeEarnStackParamList>();
@@ -30,7 +30,7 @@ export const StakingValidatorsScreen = observer(() => {
   const [validators, setValidators] = useState<Validator[]>([]);
 
   useEffect(() => {
-    onTrackEvent(AdjustEvents.stakingValidators);
+    EventTracker.instance.trackEvent(MarketingEvents.stakingValidators);
   }, []);
 
   useEffect(() => {

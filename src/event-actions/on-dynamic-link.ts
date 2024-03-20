@@ -1,11 +1,11 @@
 import url from 'url';
 
 import {onBannerAddClaimCode} from '@app/event-actions/on-banner-add-claim-code';
-import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Refferal} from '@app/models/refferal';
 import {VariablesString} from '@app/models/variables-string';
 import {Airdrop} from '@app/services/airdrop';
-import {AdjustEvents, DynamicLink} from '@app/types';
+import {EventTracker} from '@app/services/event-tracker';
+import {DynamicLink, MarketingEvents} from '@app/types';
 
 export async function onDynamicLink(link: Partial<DynamicLink> | null) {
   if (link && 'url' in link) {
@@ -40,7 +40,7 @@ export async function onDynamicLink(link: Partial<DynamicLink> | null) {
           wallet: info.wallet,
         });
         await onBannerAddClaimCode(parsedUrl.query.campaign_code as string);
-        onTrackEvent(AdjustEvents.claimCreated, {
+        EventTracker.instance.trackEvent(MarketingEvents.claimCreated, {
           claimCode: parsedUrl.query.campaign_code as string,
         });
       }

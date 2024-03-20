@@ -22,7 +22,7 @@ import {SignInPinScreen} from '@app/screens/WelcomeStack/SignInStack/signin-pin'
 import {SignInRestoreScreen} from '@app/screens/WelcomeStack/SignInStack/signin-restore-wallet';
 import {SigninSharesNotFoundScreen} from '@app/screens/WelcomeStack/SignInStack/signin-shares-not-found';
 import {SignInStoreWalletScreen} from '@app/screens/WelcomeStack/SignInStack/signin-store-wallet';
-import {AdjustEvents, ScreenOptionType} from '@app/types';
+import {MarketingEvents, ScreenOptionType} from '@app/types';
 
 const Stack = createNativeStackNavigator<SignInStackParamList>();
 
@@ -56,7 +56,7 @@ const SignInStack = memo(() => {
           },
           [OnboardingStackRoutes.OnboardingFinish]: {
             action: 'restore' as 'restore',
-            event: AdjustEvents.accountRestored,
+            event: MarketingEvents.accountRestored,
             onboarding: true,
           },
         }}

@@ -10390,6 +10390,7 @@ __metadata:
     obj-multiplex: 1.0.0
     patch-package: 8.0.0
     pbkdf2: 3.1.2
+    posthog-react-native: ^3.0.0
     prettier: 3.0.0
     pump: 3.0.0
     randombytes: 2.1.0
@@ -10404,6 +10405,7 @@ __metadata:
     react-native-config: 1.5.1
     react-native-crypto: 2.2.0
     react-native-detector: 0.2.3
+    react-native-device-info: ^10.13.1
     react-native-draggable-flatlist: 4.0.1
     react-native-encrypted-storage: 4.0.3
     react-native-fs: 2.20.0
@@ -14939,6 +14941,39 @@ __metadata:
   languageName: node
   linkType: hard
 
+"posthog-react-native@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "posthog-react-native@npm:3.0.0"
+  peerDependencies:
+    "@react-native-async-storage/async-storage": ">=1.0.0"
+    "@react-navigation/native": ">= 5.0.10"
+    expo-application: ">= 4.0.0"
+    expo-device: ">= 4.0.0"
+    expo-file-system: ">= 13.0.0"
+    expo-localization: ">= 11.0.0"
+    react-native-device-info: ">= 10.0.0"
+    react-native-navigation: ">=6.0.0"
+  peerDependenciesMeta:
+    "@react-native-async-storage/async-storage":
+      optional: true
+    "@react-navigation/native":
+      optional: true
+    expo-application:
+      optional: true
+    expo-device:
+      optional: true
+    expo-file-system:
+      optional: true
+    expo-localization:
+      optional: true
+    react-native-device-info:
+      optional: true
+    react-native-navigation:
+      optional: true
+  checksum: e3c416a6d6b3458bb8d1b13062bd1b70f721159eab79a4656486173ab266e334839d1359f1b4d599ed1a7c5d866d78b0979a88b81d3b93d48a5642c62b2b1679
+  languageName: node
+  linkType: hard
+
 "prebuild-install@npm:^7.0.1":
   version: 7.1.1
   resolution: "prebuild-install@npm:7.1.1"
@@ -15501,6 +15536,15 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: ac8e8f3932c5f986c3445e2ba865184eb5e6eae551c55a1611f02eaafc8cfa68f8671b3eee3c2665cd9eab8b378b69f2abb9dc99004dda7aa3c5cb2058789054
+  languageName: node
+  linkType: hard
+
+"react-native-device-info@npm:^10.13.1":
+  version: 10.13.1
+  resolution: "react-native-device-info@npm:10.13.1"
+  peerDependencies:
+    react-native: "*"
+  checksum: 27854142fb9bbd57013bdbd66677ca8b19600b738e45e1a114f7082ae3603769b4ceaca25d12e5a80bdb2cfc0915252c0c23b3dbfde84349d73ccd2879e4e126
   languageName: node
   linkType: hard
 

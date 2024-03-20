@@ -73,7 +73,7 @@ export const TransactionNftConfirmationScreen = observer(() => {
     //       new Decimal(route.params.amount).mul(WEI).toFixed(),
     //     );
     //     if (transaction) {
-    //       onTrackEvent(AdjustEvents.sendFund);
+    //       EventTracker.instance.trackEvent(AdjustEvents.sendFund);
     //       await awaitForEventDone(
     //         Events.onTransactionCreate,
     //         transaction,

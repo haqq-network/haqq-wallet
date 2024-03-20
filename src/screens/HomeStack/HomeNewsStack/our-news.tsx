@@ -4,12 +4,12 @@ import {Collection, CollectionChangeSet} from 'realm';
 
 import {OurNews} from '@app/components/our-news';
 import {onNewsSync} from '@app/event-actions/on-news-sync';
-import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {useTypedNavigation} from '@app/hooks';
 import {News} from '@app/models/news';
 import {VariablesBool} from '@app/models/variables-bool';
 import {NewsStackParamList, NewsStackRoutes} from '@app/route-types';
-import {AdjustEvents} from '@app/types';
+import {EventTracker} from '@app/services/event-tracker';
+import {MarketingEvents} from '@app/types';
 
 const NEWS_ITEMS_PAGE_LIMIT = 15;
 
@@ -31,7 +31,7 @@ export const OurNewsScreen = memo(() => {
   );
 
   useEffect(() => {
-    onTrackEvent(AdjustEvents.newsOpen);
+    EventTracker.instance.trackEvent(MarketingEvents.newsOpen);
   }, []);
 
   useEffect(() => {
@@ -66,9 +66,9 @@ export const OurNewsScreen = memo(() => {
     (id: string) => {
       navigation.navigate(NewsStackRoutes.NewsDetail, {
         id,
-        openEvent: AdjustEvents.newsOpenItem,
-        linkEvent: AdjustEvents.newsOpenLink,
-        scrollEvent: AdjustEvents.newsScrolledItem,
+        openEvent: MarketingEvents.newsOpenItem,
+        linkEvent: MarketingEvents.newsOpenLink,
+        scrollEvent: MarketingEvents.newsScrolledItem,
       });
     },
     [navigation],

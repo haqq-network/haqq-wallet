@@ -4,7 +4,6 @@ import {observer} from 'mobx-react';
 
 import {TransactionConfirmation} from '@app/components/transaction-confirmation';
 import {app} from '@app/contexts';
-import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
 import {removeProviderInstanceForWallet, showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
@@ -26,7 +25,8 @@ import {
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {EthSignErrorDataDetails} from '@app/services/eth-sign';
-import {AdjustEvents, ModalType} from '@app/types';
+import {EventTracker} from '@app/services/event-tracker';
+import {MarketingEvents, ModalType} from '@app/types';
 import {makeID} from '@app/utils';
 import {FEE_ESTIMATING_TIMEOUT_MS} from '@app/variables/common';
 
@@ -116,7 +116,7 @@ export const TransactionConfirmationScreen = observer(() => {
         }
 
         if (transaction) {
-          onTrackEvent(AdjustEvents.sendFund);
+          EventTracker.instance.trackEvent(MarketingEvents.sendFund);
 
           await awaitForEventDone(
             Events.onTransactionCreate,

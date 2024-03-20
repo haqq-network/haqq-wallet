@@ -9,16 +9,7 @@ import {
   Theme,
 } from '@react-navigation/native';
 import * as Sentry from '@sentry/react-native';
-import {
-  AppState,
-  Dimensions,
-  Linking,
-  Platform,
-  StyleSheet,
-} from 'react-native';
-import {Adjust, AdjustConfig} from 'react-native-adjust';
-import {AdjustOaid} from 'react-native-adjust-oaid';
-import Config from 'react-native-config';
+import {AppState, Dimensions, Linking, StyleSheet} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {MenuProvider} from 'react-native-popup-menu';
 import {Metrics, SafeAreaProvider} from 'react-native-safe-area-context';
@@ -45,11 +36,12 @@ import {
 } from '@app/route-types';
 import {RootStack} from '@app/screens/RootStack';
 import {AppTheme, ModalType} from '@app/types';
-import {getAppTrackingAuthorizationStatus, sleep} from '@app/utils';
+import {sleep} from '@app/utils';
 import {SPLASH_TIMEOUT_MS} from '@app/variables/common';
 
 import {AppVersionAbsoluteView} from './components/app-version-absolute-view';
 import {migrationWallets} from './models/migration-wallets';
+import {EventTracker} from './services/event-tracker';
 
 const appTheme = createTheme({
   colors: {
@@ -182,27 +174,9 @@ export const App = () => {
   }, [initialized]);
 
   useEffect(() => {
-    const adjustConfig = new AdjustConfig(
-      Config.ADJUST_TOKEN,
-      Config.ADJUST_ENVIRONMENT,
-    );
-    adjustConfig.setLogLevel(AdjustConfig.LogLevelVerbose);
-    if (Platform.OS === 'android') {
-      AdjustOaid.readOaid();
-    }
-
-    Adjust.create(adjustConfig);
-    if (app.isDeveloper) {
-      getAppTrackingAuthorizationStatus().then(status => {
-        Logger.log('Authorization status = ' + status);
-      });
-
-      // Adjust.getAdid((adid) => {
-      // Logger.log('Adid = ' + adid);
-      // });
-    }
+    EventTracker.instance.initialize();
     return () => {
-      Adjust.componentWillUnmount();
+      EventTracker.instance.dispose();
     };
   }, []);
 

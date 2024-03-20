@@ -7,7 +7,7 @@ import {basicScreenOptions} from '@app/screens';
 import {OnboardingFinishScreen} from '@app/screens/WelcomeStack/OnboardingStack/onboarding-finish';
 import {SignUpAgreementScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-agreement';
 import {SignUpStoreWalletScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-store-wallet';
-import {AdjustEvents, ScreenOptionType} from '@app/types';
+import {MarketingEvents, ScreenOptionType} from '@app/types';
 
 const SignUpStack = createNativeStackNavigator();
 
@@ -46,7 +46,7 @@ export const CreateStack = memo(props => {
         initialParams={{
           action: 'create',
           hide: true,
-          event: AdjustEvents.accountAdded,
+          event: MarketingEvents.accountAdded,
         }}
       />
     </SignUpStack.Navigator>

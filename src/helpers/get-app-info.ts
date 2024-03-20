@@ -5,10 +5,10 @@ import {NetworkInfo} from 'react-native-network-info';
 import {app} from '@app/contexts';
 import {getLeadingAccount} from '@app/helpers/get-leading-account';
 import {getUid} from '@app/helpers/get-uid';
-import {getAdjustAdid} from '@app/helpers/get_adjust_adid';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
+import {EventTracker} from '@app/services/event-tracker';
 import {PushNotifications} from '@app/services/push-notifications';
 import {getAppVersion} from '@app/services/version';
 import {
@@ -38,7 +38,7 @@ export type AppInfo = {
 export async function getAppInfo(): Promise<AppInfo> {
   const wallets = Wallet.getAll().map(wallet => wallet.address.toLowerCase());
   const uid = await getUid();
-  const adid = await getAdjustAdid();
+  const adid = await EventTracker.instance.getAdid();
   const ipAddress = await NetworkInfo.getIPAddress();
   const leadingAccount = getLeadingAccount();
 

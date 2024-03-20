@@ -42,7 +42,7 @@ import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 import {AwaitValue} from './helpers/await-for-value';
 
-export enum AdjustEvents {
+export enum MarketingEvents {
   accountCreated = 'q3vxmg',
   accountAdded = 'tgdgp7',
   accountImported = 'iwqq4g',
@@ -282,7 +282,7 @@ export type RootStackParamList = {
   createFinish: {
     action: string;
     hide: boolean;
-    event: AdjustEvents;
+    event: MarketingEvents;
     onboarding?: boolean;
   };
   createAgreement: {
@@ -1213,13 +1213,13 @@ export interface ILayoutWidget extends IWidgetBase {
 export interface IAdWidget extends IWidgetBase, Banner {
   component: 'Ad';
   target?: string;
-  event?: AdjustEvents;
+  event?: MarketingEvents;
 }
 
 export interface IBannerWidget extends IWidgetBase, Banner {
   component: 'Banner';
   target?: string;
-  event?: AdjustEvents;
+  event?: MarketingEvents;
 }
 
 export interface ITokensWidget extends IWidgetBase {
@@ -1798,7 +1798,7 @@ export type IStory = {
     status: 'published';
     markup: {
       row: {
-        event?: AdjustEvents;
+        event?: MarketingEvents;
         text: string;
         type: 'button' | 'text' | 'spacer';
       };

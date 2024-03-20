@@ -1,6 +1,5 @@
 import {Color} from '@app/colors';
 import {app} from '@app/contexts';
-import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {Events} from '@app/events';
 import {
   awaitForWallet,
@@ -9,7 +8,6 @@ import {
 } from '@app/helpers';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {getUid} from '@app/helpers/get-uid';
-import {getAdjustAdid} from '@app/helpers/get_adjust_adid';
 import {I18N, getText} from '@app/i18n';
 import {Banner} from '@app/models/banner';
 import {Provider} from '@app/models/provider';
@@ -17,7 +15,8 @@ import {Refferal} from '@app/models/refferal';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {Airdrop, AirdropError, AirdropErrorCode} from '@app/services/airdrop';
-import {AdjustEvents} from '@app/types';
+import {EventTracker} from '@app/services/event-tracker';
+import {MarketingEvents} from '@app/types';
 import {MAIN_NETWORK_ID} from '@app/variables/common';
 
 export async function onBannerClaimAirdrop(claimCode: string) {
@@ -33,7 +32,7 @@ export async function onBannerClaimAirdrop(claimCode: string) {
 
     const referral = Refferal.getById(claimCode);
 
-    onTrackEvent(AdjustEvents.claimOpened, {
+    EventTracker.instance.trackEvent(MarketingEvents.claimOpened, {
       claimCode: claimCode,
     });
 
@@ -67,7 +66,7 @@ export async function onBannerClaimAirdrop(claimCode: string) {
       claimCode,
     );
     const uid = await getUid();
-    const adid = await getAdjustAdid();
+    const adid = await EventTracker.instance.getAdid();
 
     await Airdrop.instance.claim(
       walletId,
@@ -81,7 +80,7 @@ export async function onBannerClaimAirdrop(claimCode: string) {
     app.emit(Events.onAppReviewRequest);
 
     Banner.remove(banner.id);
-    onTrackEvent(AdjustEvents.claimFetched, {
+    EventTracker.instance.trackEvent(MarketingEvents.claimFetched, {
       claimCode: claimCode,
     });
 
@@ -106,7 +105,7 @@ export async function onBannerClaimAirdrop(claimCode: string) {
       });
     }
   } catch (e) {
-    onTrackEvent(AdjustEvents.claimFailed, {
+    EventTracker.instance.trackEvent(MarketingEvents.claimFailed, {
       claimCode: claimCode,
     });
 

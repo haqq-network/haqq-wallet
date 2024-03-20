@@ -23,7 +23,7 @@ import {SignupNetworkExistsScreen} from '@app/screens/WelcomeStack/SignUpStack/s
 import {SignupNetworksScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-networks';
 import {SignupPinScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-pin';
 import {SignUpStoreWalletScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-store-wallet';
-import {AdjustEvents} from '@app/types';
+import {MarketingEvents} from '@app/types';
 
 const Stack = createNativeStackNavigator<SignUpStackParamList>();
 
@@ -61,7 +61,7 @@ const SignUpStack = memo(() => {
           [OnboardingStackRoutes.OnboardingFinish]: {
             nextScreen: undefined,
             action: 'create',
-            event: AdjustEvents.accountCreated,
+            event: MarketingEvents.accountCreated,
             onboarding: true,
           },
         }}

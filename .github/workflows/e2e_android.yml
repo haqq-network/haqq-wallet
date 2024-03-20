@@ -110,6 +110,8 @@ jobs:
           echo "DETOX_CHAIN_ID=${{secrets.DETOX_CHAIN_ID}}" >> .env
           echo "MMKV_KEY=${{secrets.MMKV_KEY}}" >> .env
           echo "FOR_DETOX=true" >> .env
+          echo "POSTHOG_API_KEY=${{secrets.POSTHOG_API_KEY}}" >> .env
+          echo "POSTHOG_HOST=${{secrets.POSTHOG_HOST}}" >> .env
 
       - name: Build android app
         run: |

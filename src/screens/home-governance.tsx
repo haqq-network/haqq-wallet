@@ -3,9 +3,9 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Proposal} from '@evmos/provider/dist/rest/gov';
 
 import {HomeGovernance} from '@app/components/home-governance';
-import {onTrackEvent} from '@app/event-actions/on-track-event';
 import {useCosmos, useTypedNavigation} from '@app/hooks';
-import {AdjustEvents, ProposalsTagKeys} from '@app/types';
+import {EventTracker} from '@app/services/event-tracker';
+import {MarketingEvents, ProposalsTagKeys} from '@app/types';
 import {ProposalsTagType} from '@app/variables/proposal';
 
 export const HomeGovernanceScreen = () => {
@@ -31,7 +31,7 @@ export const HomeGovernanceScreen = () => {
   }, [cosmos]);
 
   useEffect(() => {
-    onTrackEvent(AdjustEvents.governanceOpen);
+    EventTracker.instance.trackEvent(MarketingEvents.governanceOpen);
   }, []);
 
   const onPressCard = useCallback(
