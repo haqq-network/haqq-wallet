@@ -38,7 +38,7 @@ jobs:
           bundle exec fastlane ios slack_notification
           echo "changelog=$(cat fastlane/changelog.txt)" >> $GITHUB_OUTPUT
         env:
-          BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION}}
+          BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION || inputs.BUILD_DESCRIPTION}}
           DEVELOPER_APP_IDENTIFIER: ${{ secrets.IOS_IDENTIFIER }}
           GIT_AUTHORIZATION: ${{ secrets.GIT_AUTHORIZATION }}
           APP_STORE_CONNECT_TEAM_ID: ${{ secrets.APP_STORE_CONNECT_TEAM_ID }}
