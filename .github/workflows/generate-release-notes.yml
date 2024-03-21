@@ -101,11 +101,10 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: haqq.apk
-          path: build
 
       - name: Generate Release Notes
         uses: softprops/action-gh-release@v2
         with:
           make_latest: true
           generate_release_notes: true
-          files: build/haqq.apk
+          files: haqq.apk
