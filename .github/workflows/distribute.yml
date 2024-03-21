@@ -37,52 +37,56 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18
+      # - uses: actions/setup-node@v4
+      #   with:
+      #     node-version: 18
 
-      - name: Install packages
-        run: yarn install 
+      # - name: Install packages
+      #   run: yarn install 
 
-  build_android:
-    name: Android
-    uses: ./.github/workflows/distribute-android.yml
-    secrets: inherit
-    with:
-      IS_DEVELOPMENT: ${{github.event.inputs.IS_DEVELOPMENT || inputs.IS_DEVELOPMENT || 'false'}}
-      IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED || inputs.IS_SSS_ENABLED || 'true'}}
-      STORIES_ENABLED: ${{github.event.inputs.STORIES_ENABLED || inputs.STORIES_ENABLED || 'true'}}
-      BUILD_DESCRIPTION: ${{inputs.BUILD_DESCRIPTION || github.event.inputs.BUILD_DESCRIPTION || 'Action for Merged PR'}}
-    needs:
-      - test
+      - name: Show Info
+        id: info
+        run: |
+          echo ${{github.event.inputs.BUILD_DESCRIPTION}}
+          echo ${{inputs.BUILD_DESCRIPTION}}
 
-  build_ios:
-    name: iOS
-    uses: ./.github/workflows/distribute-ios.yml
-    secrets: inherit
-    with:
-      IS_DEVELOPMENT: ${{github.event.inputs.IS_DEVELOPMENT || inputs.IS_DEVELOPMENT || 'false'}}
-      IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED || inputs.IS_SSS_ENABLED || 'true'}}
-      STORIES_ENABLED: ${{github.event.inputs.STORIES_ENABLED || inputs.STORIES_ENABLED || 'true'}}
-      BUILD_DESCRIPTION: ${{inputs.BUILD_DESCRIPTION || github.event.inputs.BUILD_DESCRIPTION || 'Action for Merged PR'}}
-    needs:
-      - test
+  # build_android:
+  #   name: Android
+  #   uses: ./.github/workflows/distribute-android.yml
+  #   secrets: inherit
+  #   with:
+  #     IS_DEVELOPMENT: ${{github.event.inputs.IS_DEVELOPMENT || inputs.IS_DEVELOPMENT || 'false'}}
+  #     IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED || inputs.IS_SSS_ENABLED || 'true'}}
+  #     STORIES_ENABLED: ${{github.event.inputs.STORIES_ENABLED || inputs.STORIES_ENABLED || 'true'}}
+  #     BUILD_DESCRIPTION: ${{inputs.BUILD_DESCRIPTION || github.event.inputs.BUILD_DESCRIPTION || 'Action for Merged PR'}}
+  #   needs:
+  #     - test
+
+  # build_ios:
+  #   name: iOS
+  #   uses: ./.github/workflows/distribute-ios.yml
+  #   secrets: inherit
+  #   with:
+  #     IS_DEVELOPMENT: ${{github.event.inputs.IS_DEVELOPMENT || inputs.IS_DEVELOPMENT || 'false'}}
+  #     IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED || inputs.IS_SSS_ENABLED || 'true'}}
+  #     STORIES_ENABLED: ${{github.event.inputs.STORIES_ENABLED || inputs.STORIES_ENABLED || 'true'}}
+  #     BUILD_DESCRIPTION: ${{inputs.BUILD_DESCRIPTION || github.event.inputs.BUILD_DESCRIPTION || 'Action for Merged PR'}}
+  #   needs:
+  #     - test
 
   slack_notify:
-    needs:
-      - build_ios
-      - build_android
+    # needs:
+    #   - build_ios
+    #   - build_android
     name: Create changelogs
     uses: ./.github/workflows/slack-notify.yml
     secrets: inherit
     with:
       BUILD_DESCRIPTION: ${{inputs.BUILD_DESCRIPTION || github.event.inputs.BUILD_DESCRIPTION || 'Action for Merged PR'}}
-    env:
-      BUILD_DESCRIPTION: ${{inputs.BUILD_DESCRIPTION || github.event.inputs.BUILD_DESCRIPTION || 'Action for Merged PR'}}
 
-  patch_build:
-    name: Patch build versions
-    uses: ./.github/workflows/patch-build-versions.yml
-    secrets: inherit
-    needs:
-      - slack_notify
+  # patch_build:
+  #   name: Patch build versions
+  #   uses: ./.github/workflows/patch-build-versions.yml
+  #   secrets: inherit
+  #   needs:
+  #     - slack_notify

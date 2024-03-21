@@ -5,40 +5,62 @@ on:
   workflow_call:
 
 jobs:
-  submit_latest_to_review:
+
+  show_info:
     runs-on: self-hosted
     steps:
-      - name: Show self-hosted machine infomation
-        run: uname -a
-
-      - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.SERVICE_TOKEN }}
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18
-
-      - name: Install packages
-        run: yarn install
-
-      - name: Verify env file
-        run: yarn env:verify
-
-      - name: Decode secrets
+      - name: Show Info
+        id: info
         run: |
-          echo ${{secrets.GOOGLE_SERVICE_ACCOUNT}} | base64 -d > android/app/google-account.json
+          echo ${{github.event.pull_request.title}}
+          echo ${{github.event.pull_request.body}}
+          echo ${{github.event.pull_request}}
 
-      - name: Install Fastlane
-        run: |
-          bundle install
+  distribute_apps:
+    name: Distribute Apps
+    uses: ./.github/workflows/distribute.yml
+    secrets: inherit
+    with:
+      IS_SSS_ENABLED: true
+      STORIES_ENABLED: true
+      BUILD_DESCRIPTION: ${{github.event.pull_request.body}}
 
-      - name: Execute Fastlane command
-        run: |
-          bundle exec fastlane ios submit_latest_to_review
-          bundle exec fastlane android submit_latest_to_review
-        env:
-          APPLE_KEY_ID: ${{ secrets.APPLE_KEY_ID }}
-          APPLE_ISSUER_ID: ${{ secrets.APPLE_ISSUER_ID }}
-          APPLE_KEY_CONTENT: ${{ secrets.APPLE_KEY_CONTENT }}
-          DEVELOPER_APP_IDENTIFIER: ${{ secrets.IOS_IDENTIFIER }}
+  # submit_latest_to_review:
+  #   runs-on: self-hosted
+  #   steps:
+  #     - name: Show self-hosted machine infomation
+  #       run: uname -a
+
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         token: ${{ secrets.SERVICE_TOKEN }}
+
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 18
+
+  #     - name: Install packages
+  #       run: yarn install
+
+  #     - name: Verify env file
+  #       run: yarn env:verify
+
+  #     - name: Decode secrets
+  #       run: |
+  #         echo ${{secrets.GOOGLE_SERVICE_ACCOUNT}} | base64 -d > android/app/google-account.json
+
+  #     - name: Install Fastlane
+  #       run: |
+  #         bundle install
+
+      # - name: Execute Fastlane command
+      #   run: |
+      #     bundle exec fastlane ios submit_latest_to_review
+      #     bundle exec fastlane android submit_latest_to_review
+      #   env:
+      #     APPLE_KEY_ID: ${{ secrets.APPLE_KEY_ID }}
+      #     APPLE_ISSUER_ID: ${{ secrets.APPLE_ISSUER_ID }}
+      #     APPLE_KEY_CONTENT: ${{ secrets.APPLE_KEY_CONTENT }}
+      #     DEVELOPER_APP_IDENTIFIER: ${{ secrets.IOS_IDENTIFIER }}
+
+      
