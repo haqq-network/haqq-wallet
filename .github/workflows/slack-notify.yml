@@ -37,8 +37,6 @@ jobs:
           echo ${{secrets.GOOGLE_SERVICE_ACCOUNT}} | base64 -d > android/app/google-account.json
           bundle exec fastlane ios slack_notification
           echo "changelog=$(cat fastlane/changelog.txt)" >> $GITHUB_OUTPUT
-          echo ${{github.event.inputs.BUILD_DESCRIPTION}}
-          echo ${{inputs.BUILD_DESCRIPTION}}
         env:
           BUILD_DESCRIPTION: ${{github.event.inputs.BUILD_DESCRIPTION || inputs.BUILD_DESCRIPTION}}
           DEVELOPER_APP_IDENTIFIER: ${{ secrets.IOS_IDENTIFIER }}
@@ -58,11 +56,11 @@ jobs:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           FIREBASE_TESTERS: ${{ secrets.FIREBASE_TESTERS }}
 
-      # - name: Send GitHub Action trigger data to Slack workflow
-      #   uses: slackapi/slack-github-action@v1
-      #   with:
-      #     payload: |
-      #       ${{ steps.changelog.outputs.changelog }}
-      #   env:
-      #     SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      - name: Send GitHub Action trigger data to Slack workflow
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            ${{ steps.changelog.outputs.changelog }}
+        env:
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
