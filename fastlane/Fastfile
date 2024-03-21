@@ -1,3 +1,9 @@
+fastlane_require 'dotenv'
+
+before_all do
+  Dotenv.overload '../.env'
+end
+
 platform :android do
   desc "Android Production App"
 
@@ -62,7 +68,8 @@ platform :android do
         skip_screenshots: true,
         skip_binary_upload: true,
         run_precheck_before_submit: false,
-        skip_app_version_update: false
+        skip_app_version_update: false,
+        app_version: ENV["APP_VERSION"]
       )
   end
 
@@ -284,7 +291,8 @@ platform :ios do
         skip_screenshots: true,
         skip_binary_upload: true,
         run_precheck_before_submit: false,
-        skip_app_version_update: false
+        skip_app_version_update: false,
+        app_version: ENV["APP_VERSION"]
       )
   end
 end

@@ -15,6 +15,16 @@ jobs:
         with:
           token: ${{ secrets.SERVICE_TOKEN }}
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install packages
+        run: yarn install
+
+      - name: Verify env file
+        run: yarn env:verify
+
       - name: Decode secrets
         run: |
           echo ${{secrets.GOOGLE_SERVICE_ACCOUNT}} | base64 -d > android/app/google-account.json
