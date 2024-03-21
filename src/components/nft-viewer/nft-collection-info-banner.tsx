@@ -5,6 +5,7 @@ import {ImageBackground, TouchableOpacity, View} from 'react-native';
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {useLayout} from '@app/hooks/use-layout';
+import {useNftImage} from '@app/hooks/use-nft-image';
 import {I18N} from '@app/i18n';
 import {NftCollection} from '@app/models/nft';
 import {addOpacityToColor, getRandomItemFromArray} from '@app/utils';
@@ -23,13 +24,13 @@ export const NftCollectionInfoBanner = ({data, onPress}: Props) => {
     () => getRandomItemFromArray(collection.nfts),
     [collection],
   );
+  const imageUri = useNftImage(item.cached_url);
 
   const handlePress = useCallback(
     () => onPress?.(item.address),
     [onPress, item.address],
   );
 
-  // TODO Remove image check when default image will be added
   return (
     <TouchableOpacity
       disabled={!onPress}
@@ -39,7 +40,7 @@ export const NftCollectionInfoBanner = ({data, onPress}: Props) => {
       <ImageBackground
         imageStyle={styles.imageContainer}
         style={layout}
-        source={{uri: item.cached_url ?? undefined}}>
+        source={imageUri}>
         <View style={styles.itemHeaderText}>
           <Text
             variant={TextVariant.t8}
@@ -58,7 +59,10 @@ export const NftCollectionInfoBanner = ({data, onPress}: Props) => {
         </View>
         <Spacer />
         <View style={styles.itemInfoText}>
-          <Text numberOfLines={1} t15 color={Color.textBase3}>
+          <Text
+            numberOfLines={1}
+            variant={TextVariant.t15}
+            color={Color.textBase3}>
             {item.name}
           </Text>
           <Spacer width={6} />

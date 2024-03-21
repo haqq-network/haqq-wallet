@@ -129,7 +129,8 @@ class NftStore {
         nfts: item.nfts.map(nft => ({
           ...nft,
           // TODO Set cached_url into default if nft doesn't have one
-          description: nft.description || '',
+          name: nft.name || 'Unknown',
+          description: nft.description || '-',
           price: nft.price ? new Balance(nft.price) : Balance.getEmpty(),
         })),
       };

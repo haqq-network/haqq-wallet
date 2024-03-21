@@ -4,6 +4,7 @@ import {Image, TouchableOpacity} from 'react-native';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {useNftImage} from '@app/hooks/use-nft-image';
 
 import {NftViewerItemPreviewExtendedProps} from './nft-viewer-item-preview';
 
@@ -12,17 +13,14 @@ export const NftViewerItemPreviewSmall = ({
   onPress,
 }: NftViewerItemPreviewExtendedProps) => {
   const handlePress = useCallback(() => onPress?.(item), [onPress, item]);
+  const imageUri = useNftImage(item.cached_url);
 
-  // TODO Remove image check when default image will be added
   return (
     <TouchableOpacity
       disabled={!onPress}
       onPress={handlePress}
       style={styles.container}>
-      <Image
-        style={styles.image}
-        source={{uri: item.cached_url || undefined}}
-      />
+      <Image style={styles.image} source={imageUri} resizeMode="contain" />
     </TouchableOpacity>
   );
 };
@@ -34,11 +32,13 @@ const styles = createTheme({
     borderRadius: 12,
     width: SIZE,
     height: SIZE,
+    transform: [{scale: 0.55}],
   },
   container: {
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 12,
+    padding: 12,
     width: SIZE,
     height: SIZE,
     backgroundColor: Color.bg9,

@@ -5,11 +5,12 @@ import {SafeAreaView, ScrollView, View} from 'react-native';
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {useLayout} from '@app/hooks/use-layout';
+import {useNftImage} from '@app/hooks/use-nft-image';
 import {I18N} from '@app/i18n';
 import {NftItem} from '@app/models/nft';
 
 import {ImageWrapper} from './image-wrapper';
-import {Button, ButtonVariant, Spacer, Text} from './ui';
+import {Button, ButtonVariant, Spacer, Text, TextVariant} from './ui';
 import {TrimmedText} from './ui/trimmed-text';
 
 export interface NftItemDetailsProps {
@@ -20,14 +21,15 @@ export interface NftItemDetailsProps {
 
 export const NftItemDetails = ({item, onPressSend}: NftItemDetailsProps) => {
   const [imageLayout, onImageLayout] = useLayout();
-  // TODO Remove image check when default image will be added
+  const imageUri = useNftImage(item.cached_url);
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
         <View style={styles.imageContainer} onLayout={onImageLayout}>
           <ImageWrapper
-            resizeMode="cover"
-            source={{uri: item.cached_url || undefined}}
+            resizeMode="contain"
+            source={imageUri}
             style={{
               width: imageLayout.width,
               height: imageLayout.width,
@@ -36,21 +38,24 @@ export const NftItemDetails = ({item, onPressSend}: NftItemDetailsProps) => {
           />
         </View>
         <Spacer height={20} />
-        <Text t5>{item.name}</Text>
+        <Text variant={TextVariant.t5}>{item.name}</Text>
         <Spacer height={16} />
-        <Text t12 i18n={I18N.nftDetailsDescription} />
+        <Text variant={TextVariant.t12} i18n={I18N.nftDetailsDescription} />
         <Spacer height={8} />
-        <TrimmedText limit={100} t14 color={Color.textBase2}>
+        <TrimmedText
+          limit={100}
+          variant={TextVariant.t14}
+          color={Color.textBase2}>
           {item.description}
         </TrimmedText>
         <Spacer height={20} />
-        <Text t12 i18n={I18N.nftDetailsLastSalePrice} />
+        <Text variant={TextVariant.t12} i18n={I18N.nftDetailsLastSalePrice} />
         <Spacer height={8} />
-        <Text t14 color={Color.textBase1}>
+        <Text variant={TextVariant.t14} color={Color.textBase1}>
           {item.price.toBalanceString()}
         </Text>
         <Spacer height={20} />
-        <Text t12 i18n={I18N.nftDetailsAttributes} />
+        <Text variant={TextVariant.t12} i18n={I18N.nftDetailsAttributes} />
         <Spacer height={8} />
         {/*<View style={styles.attributeListContainer}>*/}
         {/*  {item.attributes?.map?.(attr => {*/}

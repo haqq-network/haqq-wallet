@@ -8,6 +8,8 @@ export type NftCollectionIndexer = {
   id: HaqqCosmosAddress;
   image: string;
   name: string;
+  symbol: string;
+  created_at: number;
   nfts: NftItemIndexer[];
 };
 
@@ -24,7 +26,7 @@ export type NftItemIndexer = {
   is_link_checked: boolean;
   is_name_checked: boolean;
   metadata: null; // TODO Check it
-  name: string | null;
+  name: string;
   original_url: string | null;
   token_id: string;
   updated_at: string;
