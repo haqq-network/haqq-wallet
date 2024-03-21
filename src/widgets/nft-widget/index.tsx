@@ -36,8 +36,15 @@ export const NftWidgetWrapper = observer(({size}: INftWidget) => {
   }
 
   switch (size) {
+    case NftWidgetSize.large:
+      return (
+        <ShadowCard disablePadding onPress={onPress} style={styles.wrapper}>
+          <NftCollectionInfoBanner data={nftCollections} />
+        </ShadowCard>
+      );
     case NftWidgetSize.small:
     case NftWidgetSize.medium:
+    default:
       return (
         <ShadowCard
           onPress={onPress}
@@ -51,19 +58,11 @@ export const NftWidgetWrapper = observer(({size}: INftWidget) => {
           <Spacer height={8} />
           <NftViewerItemPreviewList
             scrollEnabled={false}
-            variant={size}
+            variant={size || NftWidgetSize.small}
             data={allNft}
           />
         </ShadowCard>
       );
-    case NftWidgetSize.large:
-      return (
-        <ShadowCard disablePadding onPress={onPress} style={styles.wrapper}>
-          <NftCollectionInfoBanner data={nftCollections} />
-        </ShadowCard>
-      );
-    default:
-      return null;
   }
 });
 
