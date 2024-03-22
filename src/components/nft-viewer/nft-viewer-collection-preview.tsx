@@ -4,12 +4,13 @@ import {ImageBackground, TouchableOpacity, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {useNftCollectionImage} from '@app/hooks/nft';
 import {useLayout} from '@app/hooks/use-layout';
 import {I18N} from '@app/i18n';
 import {NftCollection} from '@app/models/nft';
 import {addOpacityToColor} from '@app/utils';
 
-import {Text} from '../ui';
+import {Text, TextVariant} from '../ui';
 
 export interface NftViewerCollectionPreviewProps {
   item: NftCollection;
@@ -31,6 +32,8 @@ export const NftViewerCollectionPreview = ({
     [layout.width],
   );
 
+  const collectionImageUri = useNftCollectionImage(item.nfts);
+
   return (
     <TouchableOpacity
       onPress={handlePress}
@@ -39,13 +42,16 @@ export const NftViewerCollectionPreview = ({
       <ImageBackground
         imageStyle={styles.imageContainer}
         style={layout}
-        source={{uri: item.image}}>
+        source={collectionImageUri}>
         <View style={[styles.itemText, itemTextStyle]}>
-          <Text numberOfLines={1} t13 color={Color.textBase3}>
+          <Text
+            numberOfLines={1}
+            variant={TextVariant.t13}
+            color={Color.textBase3}>
             {item.name}
           </Text>
           <Text
-            t17
+            variant={TextVariant.t17}
             color={Color.textSecond2}
             i18n={I18N.nftCollectionPreviewItemsCount}
             i18params={{count: `${item?.nfts?.length}`}}

@@ -4,7 +4,7 @@ import {Image, TouchableOpacity} from 'react-native';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
-import {useNftImage} from '@app/hooks/use-nft-image';
+import {useNftImage} from '@app/hooks/nft/use-nft-image';
 
 import {NftViewerItemPreviewExtendedProps} from './nft-viewer-item-preview';
 
@@ -32,7 +32,6 @@ const styles = createTheme({
     borderRadius: 12,
     width: SIZE,
     height: SIZE,
-    transform: [{scale: 0.55}],
   },
   container: {
     alignItems: 'center',
