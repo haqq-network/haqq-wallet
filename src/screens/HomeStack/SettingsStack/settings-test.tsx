@@ -64,6 +64,7 @@ import {EventTracker} from '@app/services/event-tracker';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {Indexer} from '@app/services/indexer';
 import {SssProviders} from '@app/services/provider-sss';
+import {PushNotifications} from '@app/services/push-notifications';
 import {message, message as toastMessage} from '@app/services/toast';
 import {getUserAgent} from '@app/services/version';
 import {
@@ -391,6 +392,7 @@ export const SettingsTestScreen = observer(() => {
   const [backend, setBackend] = useState(app.backend);
   const [uid, setUid] = useState<null | string>(null);
   const [adid, setAdid] = useState<null | string>(null);
+  const [pushToken, setPushToken] = useState<null | string>(null);
   const [leadingAccount, setLeadingAccount] = useState(
     VariablesString.get('leadingAccount'),
   );
@@ -399,13 +401,9 @@ export const SettingsTestScreen = observer(() => {
   >(null);
 
   useEffect(() => {
-    getUid().then(id => {
-      setUid(id);
-    });
-
-    EventTracker.instance.getAdid().then(id => {
-      setAdid(id);
-    });
+    getUid().then(setUid);
+    PushNotifications.instance.getToken().then(setPushToken);
+    EventTracker.instance.getAdid().then(setAdid);
 
     PlayInstallReferrer.getInstallReferrerInfo((installReferrerInfo, error) => {
       setRefInfo(error || installReferrerInfo);
@@ -568,6 +566,20 @@ export const SettingsTestScreen = observer(() => {
         {JSON.stringify(refInfo)}
       </Text>
       <Spacer height={8} />
+      {pushToken && (
+        <>
+          <Title text="FCM Token (push notification)" />
+          <Text
+            t11
+            onPress={() => {
+              Clipboard.setString(pushToken);
+              toastMessage('Copied to clipboard');
+            }}>
+            {uid}
+          </Text>
+          <Spacer height={8} />
+        </>
+      )}
       {uid && (
         <>
           <Title text="uid" />
