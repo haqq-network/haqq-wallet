@@ -38,7 +38,7 @@ export const NftWidgetWrapper = observer(({size}: INftWidget) => {
   switch (size) {
     case NftWidgetSize.large:
       return (
-        <ShadowCard disablePadding onPress={onPress} style={styles.wrapper}>
+        <ShadowCard disablePadding onPress={onPress}>
           <NftCollectionInfoBanner data={nftCollections} />
         </ShadowCard>
       );
@@ -46,9 +46,7 @@ export const NftWidgetWrapper = observer(({size}: INftWidget) => {
     case NftWidgetSize.medium:
     default:
       return (
-        <ShadowCard
-          onPress={onPress}
-          style={[styles.wrapper, styles.paddingLeft]}>
+        <ShadowCard onPress={onPress} style={styles.paddingLeft}>
           <WidgetHeader
             title={getText(I18N.nftWidgetTitle)}
             lable={getText(I18N.nftWidgetItems, {
@@ -67,9 +65,6 @@ export const NftWidgetWrapper = observer(({size}: INftWidget) => {
 });
 
 const styles = StyleSheet.create({
-  wrapper: {
-    marginHorizontal: 16,
-  },
   paddingLeft: {
     paddingLeft: 16,
   },
