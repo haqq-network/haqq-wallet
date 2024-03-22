@@ -1,4 +1,10 @@
-import React, {DependencyList, useCallback, useMemo, useRef} from 'react';
+import React, {
+  DependencyList,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import {makeID} from '@haqq/shared-react-native';
 import Geolocation from '@react-native-community/geolocation';
@@ -16,8 +22,10 @@ import {DEBUG_VARS} from '@app/debug-vars';
 import {WebviewAjustMiddleware} from '@app/helpers/webview-adjust-middleware';
 import {WebViewGeolocation} from '@app/helpers/webview-geolocation';
 import {VariablesString} from '@app/models/variables-string';
+import {EventTracker} from '@app/services/event-tracker';
 import {getUserAgent} from '@app/services/version';
 
+import {useEffectAsync} from './use-effect-async';
 import {useTesterModeEnabled} from './use-tester-mode-enabled';
 
 export const useWebViewSharedProps = (
@@ -31,6 +39,7 @@ export const useWebViewSharedProps = (
   const instanceId = useRef(makeID(5)).current;
   const userAgent = useRef(getUserAgent()).current;
   const isTesterMode = useTesterModeEnabled();
+  const [distinctId, setDistinctId] = useState('');
 
   const renderError = useCallback(
     (...args: Parameters<NonNullable<WebViewProps['renderError']>>) => (
@@ -47,6 +56,11 @@ export const useWebViewSharedProps = (
     },
     [],
   );
+
+  useEffectAsync(async () => {
+    await EventTracker.instance.awaitForInitialization();
+    setDistinctId(EventTracker.instance.posthog?.getDistinctId() || '');
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
@@ -132,7 +146,9 @@ export const useWebViewSharedProps = (
         ${propsToMerge.injectedJavaScriptBeforeContentLoaded || ''}
         /* injected properties */
         window.platformOS = '${Platform.OS}';
-        window.__HAQQWALLET__ = {};
+        window.__HAQQWALLET__ = {
+          POSTHOG_DISTINCT_ID: '${distinctId}'
+        };
 
         ${WebViewGeolocation.script}
         ${WebviewAjustMiddleware.script}
