@@ -5,7 +5,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
-import {useNftImage} from '@app/hooks/use-nft-image';
+import {useNftCollectionImage} from '@app/hooks/nft';
 import {I18N} from '@app/i18n';
 import {NftCollection, NftItem} from '@app/models/nft';
 import {NftWidgetSize} from '@app/types';
@@ -25,7 +25,7 @@ export const NftCollectionDetails = ({
   item,
   onPressNftItem,
 }: NftCollectionDetailsProps) => {
-  const imageUri = useNftImage();
+  const collectionImageUri = useNftCollectionImage(item.nfts);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -33,7 +33,7 @@ export const NftCollectionDetails = ({
         <View>
           <ImageWrapper
             resizeMode="contain"
-            source={imageUri}
+            source={collectionImageUri}
             style={styles.image}
             borderRadius={12}
           />

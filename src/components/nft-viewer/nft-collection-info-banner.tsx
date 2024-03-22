@@ -4,8 +4,8 @@ import {ImageBackground, TouchableOpacity, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {useNftImage} from '@app/hooks/nft/use-nft-image';
 import {useLayout} from '@app/hooks/use-layout';
-import {useNftImage} from '@app/hooks/use-nft-image';
 import {I18N} from '@app/i18n';
 import {NftCollection} from '@app/models/nft';
 import {addOpacityToColor, getRandomItemFromArray} from '@app/utils';

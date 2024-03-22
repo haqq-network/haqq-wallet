@@ -14,7 +14,7 @@ import {
   TextVariant,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useNftImage} from '@app/hooks/use-nft-image';
+import {useNftImage} from '@app/hooks/nft/use-nft-image';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {NftItem} from '@app/models/nft';
