@@ -24,7 +24,15 @@ import {NftViewerCollectionPreviewList} from './nft-viewer-collection-preview-li
 import {NftViewerItemPreviewList} from './nft-viewer-item-preview-list';
 import {NftViewerSectionHeader} from './nft-viewer-section-header';
 
-import {First, Icon, IconButton, IconsName, Spacer, Text} from '../ui';
+import {
+  First,
+  Icon,
+  IconButton,
+  IconsName,
+  Spacer,
+  Text,
+  TextVariant,
+} from '../ui';
 
 export interface NftViewerProps {
   data: NftCollection[];
@@ -180,7 +188,7 @@ export const NftViewer = ({
   return (
     <View style={style}>
       <View style={styles.row}>
-        <Text t13 onPress={onPressSort}>
+        <Text variant={TextVariant.t13} onPress={onPressSort}>
           {NftSortingNamesMap[sortFieldName]}
         </Text>
         <IconButton onPress={onChangeViewModePress}>
