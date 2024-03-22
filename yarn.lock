@@ -3941,20 +3941,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-firebase/analytics@npm:18.2.0":
-  version: 18.2.0
-  resolution: "@react-native-firebase/analytics@npm:18.2.0"
+"@react-native-firebase/analytics@npm:19.0.1":
+  version: 19.0.1
+  resolution: "@react-native-firebase/analytics@npm:19.0.1"
   peerDependencies:
-    "@react-native-firebase/app": 18.2.0
-  checksum: 557dfb1c92b11022131afbc5ef614ea89b7477319dec2d50ad3bcea6b450b58093d6554c94c1fdf273a415d92ebc48005e6a2e6b3bdd9cd817ad7cfb7816ea4b
+    "@react-native-firebase/app": 19.0.1
+  checksum: 9559c006d25719f011957368d34fc321a21169b1b8f3095cf47a79d7d01a6025bb3423ae2e9adf293ded1c4c476b28be807952ca819186d4ceadc8e68df73c5a
   languageName: node
   linkType: hard
 
-"@react-native-firebase/app@npm:18.2.0":
-  version: 18.2.0
-  resolution: "@react-native-firebase/app@npm:18.2.0"
+"@react-native-firebase/app@npm:19.0.1":
+  version: 19.0.1
+  resolution: "@react-native-firebase/app@npm:19.0.1"
   dependencies:
-    opencollective-postinstall: ^2.0.1
+    opencollective-postinstall: ^2.0.3
     superstruct: ^0.6.2
   peerDependencies:
     expo: ">=47.0.0"
@@ -3963,29 +3963,33 @@ __metadata:
   peerDependenciesMeta:
     expo:
       optional: true
-  checksum: 09bc237651e69e671f856be6e452a4c8fadd79f65f91bb488d5da1f76cdf6fc27009dd50ea8a19b825b558769df08228be3978f1ae6d8402b8daae3ae095d5f7
+  checksum: d934aff14b1f7303596ffe9f27697f80522be683e26bb2f3a6ab98a9a59771f8fb6ebef4e8e704490518a9a82c17031ccc932e34a77110970463e9ffd7266991
   languageName: node
   linkType: hard
 
-"@react-native-firebase/dynamic-links@npm:18.2.0":
-  version: 18.2.0
-  resolution: "@react-native-firebase/dynamic-links@npm:18.2.0"
+"@react-native-firebase/dynamic-links@npm:19.0.1":
+  version: 19.0.1
+  resolution: "@react-native-firebase/dynamic-links@npm:19.0.1"
   peerDependencies:
-    "@react-native-firebase/app": 18.2.0
+    "@react-native-firebase/app": 19.0.1
     expo: ">=47.0.0"
   peerDependenciesMeta:
     expo:
       optional: true
-  checksum: a432b55a1de0eabd45c192593de2deb4f2d8a4ab8b4b36a4b61ac3e8bc7c94f7fe816edc99ee874bab426b1d3c364b1fa13553a268040ea103dc6fd2f71f962e
+  checksum: a03511c0314838b809011a0ff0636557937e062e4730ad109445d107199331503af5b86b78dc5524ad28f80fc7cc7e466c0f4b471e1da3bbadc55a5e760e3b69
   languageName: node
   linkType: hard
 
-"@react-native-firebase/messaging@npm:18.2.0":
-  version: 18.2.0
-  resolution: "@react-native-firebase/messaging@npm:18.2.0"
+"@react-native-firebase/messaging@npm:19.0.1":
+  version: 19.0.1
+  resolution: "@react-native-firebase/messaging@npm:19.0.1"
   peerDependencies:
-    "@react-native-firebase/app": 18.2.0
-  checksum: 9b3f1e8660659497716b4dc142fbb7755c8bfbec4fc08f2728c95519dddbfcd571a59839915d37c40232eb0ac7558ebc2c69397604106b576fe6b6218ab3dbfd
+    "@react-native-firebase/app": 19.0.1
+    expo: ">=47.0.0"
+  peerDependenciesMeta:
+    expo:
+      optional: true
+  checksum: fc6fae35d29673edd411132af40cb19495aa5bbf975ac36146e494aa5f464d21a9138b7c7636ee287f275c43ce5e79a8f45728b67f588fa826601d0beb50f8ea
   languageName: node
   linkType: hard
 
@@ -10318,10 +10322,10 @@ __metadata:
     "@react-native-community/geolocation": 3.1.0
     "@react-native-community/netinfo": 9.4.1
     "@react-native-cookies/cookies": 6.2.1
-    "@react-native-firebase/analytics": 18.2.0
-    "@react-native-firebase/app": 18.2.0
-    "@react-native-firebase/dynamic-links": 18.2.0
-    "@react-native-firebase/messaging": 18.2.0
+    "@react-native-firebase/analytics": 19.0.1
+    "@react-native-firebase/app": 19.0.1
+    "@react-native-firebase/dynamic-links": 19.0.1
+    "@react-native-firebase/messaging": 19.0.1
     "@react-native-google-signin/google-signin": 10.0.1
     "@react-native-masked-view/masked-view": 0.3.0
     "@react-native/metro-config": 0.72.11
@@ -14498,7 +14502,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"opencollective-postinstall@npm:^2.0.1":
+"opencollective-postinstall@npm:^2.0.3":
   version: 2.0.3
   resolution: "opencollective-postinstall@npm:2.0.3"
   bin:
