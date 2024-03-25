@@ -1148,7 +1148,7 @@ SPEC CHECKSUMS:
   Adjust: 41d0d5c031409aebe7fb1f5703ff0d3306133439
   AppAuth: a13994980c1ec792f7e2e665acd4d4aa6be43240
   BlastedImage: 7dd925da7db9dcf1120efc0009bad5492e843b1e
-  boost: 0a937fbcfdd646fca221c4f1d9750d7ccfdfc2dc
+  boost: 7dcd2de282d72e344012f7d6564d024930a6a440
   BVLinearGradient: fbe308a1d19a8133f69e033abc85d8008644f5e3
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   CryptoSwift: c4f2debceb38bf44c80659afe009f71e23e4a082

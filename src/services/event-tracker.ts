@@ -1,4 +1,5 @@
 import PostHog from 'posthog-react-native';
+import {Alert} from 'react-native';
 import {Adjust, AdjustConfig, AdjustEvent} from 'react-native-adjust';
 import {AdjustOaid} from 'react-native-adjust-oaid';
 import Config from 'react-native-config';
@@ -140,8 +141,11 @@ export class EventTracker extends Initializable {
         Config.ADJUST_TOKEN,
         Config.ADJUST_ENVIRONMENT,
       );
-
       adjustConfig.setLogLevel(AdjustConfig.LogLevelVerbose);
+      adjustConfig.setDeferredDeeplinkCallbackListener(({uri}) => {
+        Logger.log('Adjust deferred deeplink', uri);
+        Alert.alert('Adjust deferred deeplink', uri);
+      });
       if (IS_ANDROID) {
         AdjustOaid.readOaid();
       }
