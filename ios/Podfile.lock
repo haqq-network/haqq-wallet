@@ -8,6 +8,9 @@ PODS:
   - AppAuth/Core (1.7.3)
   - AppAuth/ExternalUserAgent (1.7.3):
     - AppAuth/Core
+  - BlastedImage (0.0.13):
+    - React-Core
+    - SDWebImage
   - boost (1.76.0)
   - BVLinearGradient (2.7.3):
     - React-Core
@@ -774,6 +777,9 @@ PODS:
     - Sentry/HybridSDK (= 8.8.0)
   - RNSVG (13.10.0):
     - React-Core
+  - SDWebImage (5.19.0):
+    - SDWebImage/Core (= 5.19.0)
+  - SDWebImage/Core (5.19.0)
   - secp256k1Swift (0.7.4):
     - secp256k1Wrapper (~> 0.0.5)
   - secp256k1Wrapper (0.0.5)
@@ -789,6 +795,7 @@ PODS:
     - Yoga (~> 1.14)
 
 DEPENDENCIES:
+  - BlastedImage (from `../node_modules/react-native-blasted-image`)
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
@@ -946,6 +953,7 @@ SPEC REPOS:
     - OpenSSL-Universal
     - PromisesObjC
     - RiveRuntime
+    - SDWebImage
     - secp256k1Swift
     - secp256k1Wrapper
     - Sentry
@@ -955,6 +963,8 @@ SPEC REPOS:
     - YogaKit
 
 EXTERNAL SOURCES:
+  BlastedImage:
+    :path: "../node_modules/react-native-blasted-image"
   boost:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
   BVLinearGradient:
@@ -1137,7 +1147,8 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Adjust: 41d0d5c031409aebe7fb1f5703ff0d3306133439
   AppAuth: a13994980c1ec792f7e2e665acd4d4aa6be43240
-  boost: 7dcd2de282d72e344012f7d6564d024930a6a440
+  BlastedImage: 7dd925da7db9dcf1120efc0009bad5492e843b1e
+  boost: 0a937fbcfdd646fca221c4f1d9750d7ccfdfc2dc
   BVLinearGradient: fbe308a1d19a8133f69e033abc85d8008644f5e3
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   CryptoSwift: c4f2debceb38bf44c80659afe009f71e23e4a082
@@ -1258,6 +1269,7 @@ SPEC CHECKSUMS:
   RNScreens: 3c5b9f4a9dcde752466854b6109b79c0e205dad3
   RNSentry: 4e4fc87b53002c015f644cb7207d4b598bc3703f
   RNSVG: 80584470ff1ffc7994923ea135a3e5ad825546b9
+  SDWebImage: 981fd7e860af070920f249fd092420006014c3eb
   secp256k1Swift: ea49d2b06724444a03cf7938a2d3fc7acc4c0f08
   secp256k1Wrapper: 0378417cd06d51187bbc9e178ec318e7902e2120
   Sentry: 927dfb29d18a14d924229a59cc2ad149f43349f2

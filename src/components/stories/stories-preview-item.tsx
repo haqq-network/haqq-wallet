@@ -1,6 +1,7 @@
 import React, {memo, useCallback, useMemo} from 'react';
 
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {ImageURISource, StyleSheet, TouchableOpacity, View} from 'react-native';
+import BlastedImage from 'react-native-blasted-image';
 
 import {Color} from '@app/colors';
 import {Spacer, Text} from '@app/components/ui';
@@ -14,7 +15,9 @@ type Props = {
 };
 
 export const StoriesPreviewItem = memo(({item, onPress, seen}: Props) => {
-  const source = {uri: item.preview};
+  const source: ImageURISource = {
+    uri: item.preview,
+  };
   const borderColor = useMemo(
     () => (seen ? styles.borderSeen : styles.borderUnseen),
     [seen],
@@ -27,18 +30,13 @@ export const StoriesPreviewItem = memo(({item, onPress, seen}: Props) => {
     () => (seen ? Color.textBase1 : Color.textBase2),
     [seen],
   );
+
   const onStoryPress = useCallback(() => onPress(item.id), [item, onPress]);
 
   return (
     <TouchableOpacity style={styles.container} onPress={onStoryPress}>
       <View style={imageWrapperStyles}>
-        <Image
-          source={source}
-          height={56}
-          width={56}
-          borderRadius={8}
-          resizeMode="cover"
-        />
+        <BlastedImage style={styles.image} source={source} resizeMode="cover" />
       </View>
 
       <Spacer height={2} />
@@ -54,6 +52,7 @@ export const StoriesPreviewItem = memo(({item, onPress, seen}: Props) => {
 });
 
 const styles = createTheme({
+  image: {height: 56, width: 56, borderRadius: 8},
   container: {
     minHeight: 94,
     flexDirection: 'column',

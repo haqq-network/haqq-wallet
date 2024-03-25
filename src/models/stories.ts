@@ -1,5 +1,6 @@
 import {makeAutoObservable, runInAction} from 'mobx';
 import {isHydrated, makePersistable} from 'mobx-persist-store';
+import BlastedImage from 'react-native-blasted-image';
 
 import {Backend} from '@app/services/backend';
 import {storage} from '@app/services/mmkv';
@@ -28,6 +29,7 @@ class StoriesStore {
       });
     }
     const stories = await Backend.instance.stories();
+    BlastedImage.preload(stories.map(story => ({uri: story.preview})));
     if (Array.isArray(stories)) {
       const normalizedStories = stories.reduce(
         (prev, cur) => {
