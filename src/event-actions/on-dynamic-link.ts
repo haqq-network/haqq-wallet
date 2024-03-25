@@ -11,6 +11,11 @@ export async function onDynamicLink(link: Partial<DynamicLink> | null) {
   if (link && 'url' in link) {
     const parsedUrl = url.parse(link.url!, true);
 
+    if (typeof parsedUrl?.query?.distinct_id === 'string') {
+      await EventTracker.instance.awaitForInitialization();
+      EventTracker.instance.posthog?.identify(parsedUrl.query.distinct_id);
+    }
+
     if (typeof parsedUrl?.query?.block_code === 'string') {
       VariablesString.set('block_code', parsedUrl.query.block_code);
     }
