@@ -1,4 +1,5 @@
 import RNAsyncStorage from '@react-native-async-storage/async-storage';
+import BlastedImage from 'react-native-blasted-image';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {resetGenericPassword} from 'react-native-keychain';
 
@@ -16,6 +17,7 @@ import {sleep} from '@app/utils';
 
 export async function onAppReset() {
   try {
+    BlastedImage.clearAllCaches();
     Wallet.removeAll();
     Contact.removeAll();
     Transaction.removeAll();
