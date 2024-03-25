@@ -12,6 +12,7 @@ import {
 import {KeystoneAwaitForSignParams} from '@haqq/provider-keystone-react-native';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
 import {NativeStackNavigationOptions} from '@react-navigation/native-stack';
 import {SessionTypes} from '@walletconnect/types';
 import Decimal from 'decimal.js';
@@ -849,12 +850,12 @@ export interface EthTypedData {
   };
 }
 
-export interface RemoteMessage<TData = Record<string, any>> {
+export type RemoteMessage<TData = Record<string, any>> = Omit<
+  FirebaseMessagingTypes.RemoteMessage,
+  'data'
+> & {
   data: TData;
-  from: string;
-  messageId: string;
-  notification: {body: string; title: string};
-}
+};
 
 export interface NewsUpdatesResponse {
   news: NewsRow[];
