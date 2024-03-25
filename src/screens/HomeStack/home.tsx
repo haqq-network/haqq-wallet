@@ -205,6 +205,14 @@ export const HomeScreen = memo(() => {
       <Tab.Screen
         name="homeSettings"
         component={SettingsStack}
+        listeners={({navigation: nav}) => ({
+          tabPress: e => {
+            e.preventDefault();
+            nav.navigate('homeSettings', {
+              screen: SettingsStackRoutes.Home,
+            });
+          },
+        })}
         options={({route}) => ({
           ...settingsOptions,
           tabBarTestID: 'homeSettings',
