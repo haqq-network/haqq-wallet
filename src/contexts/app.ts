@@ -176,16 +176,20 @@ class App extends AsyncEventEmitter {
 
   get isGoogleSigninSupported() {
     return (
-      Boolean(RemoteConfig.get('sss_google')) && this._googleSigninSupported
+      Boolean(RemoteConfig.get('sss_google_provider')) &&
+      this._googleSigninSupported
     );
   }
 
   get isAppleSigninSupported() {
-    return Boolean(RemoteConfig.get('sss_apple')) && this._appleSigninSupported;
+    return (
+      Boolean(RemoteConfig.get('sss_apple_provider')) &&
+      this._appleSigninSupported
+    );
   }
 
   get isCustomSigninSupported() {
-    return Boolean(RemoteConfig.get('sss_custom'));
+    return Boolean(RemoteConfig.get('sss_custom_provider'));
   }
 
   get isOathSigninSupported() {

@@ -48,11 +48,11 @@ export type RemoteConfigTypes = RemoteConfigBalanceTypes &
     indexer_endpoints: Record<string, string>;
     ios_version: string;
     pattern_source: string;
-    sss_apple: string;
-    sss_custom: string | undefined;
+    sss_apple_provider: string;
+    sss_custom_provider: string | undefined;
     sss_custom_url: string | undefined;
     sss_generate_shares_url: string;
-    sss_google: string;
+    sss_google_provider: string;
     sss_metadata_url: string;
     tm_endpoints: Record<string, string[]>;
     version: number;

@@ -47,7 +47,7 @@ export async function onLoginCustom() {
   const authState = await getHttpResponse(token);
 
   const authInfo = parseJwt(authState.idToken);
-  const verifier = RemoteConfig.get('sss_custom');
+  const verifier = RemoteConfig.get('sss_custom_provider');
 
   if (!verifier) {
     throw new Error('sss_custom is not set');
@@ -67,7 +67,7 @@ export async function onLoginGoogle() {
   }
   const authInfo = parseJwt(authState.idToken);
 
-  const verifier = RemoteConfig.get('sss_google');
+  const verifier = RemoteConfig.get('sss_google_provider');
 
   if (!verifier) {
     // Logger.log('SSS_GOOGLE_ERROR', 'sss_google is not set');
@@ -91,7 +91,7 @@ export async function onLoginApple() {
 
   const authInfo = parseJwt(identityToken);
 
-  const verifier = RemoteConfig.get('sss_apple');
+  const verifier = RemoteConfig.get('sss_apple_provider');
 
   if (!verifier) {
     throw new Error('sss_apple is not set');
