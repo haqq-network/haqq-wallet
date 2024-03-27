@@ -13,7 +13,6 @@ import {Spacer} from '../ui';
 export interface NftViewerItemPreviewListProps {
   data: NftItem[];
   variant: NftWidgetSize;
-  scrollEnabled?: boolean;
 
   onPress?(item: NftItem): void;
 }
@@ -21,7 +20,6 @@ export interface NftViewerItemPreviewListProps {
 export const NftViewerItemPreviewList = ({
   data,
   variant,
-  scrollEnabled = true,
   onPress,
 }: NftViewerItemPreviewListProps) => {
   const keyExtractor = useCallback(
@@ -42,20 +40,6 @@ export const NftViewerItemPreviewList = ({
   );
 
   switch (variant) {
-    case NftWidgetSize.small:
-    case NftWidgetSize.medium:
-      return (
-        <FlatList
-          data={data}
-          horizontal
-          scrollEnabled={scrollEnabled}
-          keyExtractor={keyExtractor}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-          ItemSeparatorComponent={renderItemSeparatorComponent}
-          renderItem={renderItem}
-        />
-      );
     case NftWidgetSize.large:
       return (
         <FlatList
@@ -66,12 +50,23 @@ export const NftViewerItemPreviewList = ({
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={renderItemSeparatorComponent}
           renderItem={renderItem}
-          scrollEnabled={scrollEnabled}
           columnWrapperStyle={styles.columnWrapperStyle}
         />
       );
+    case NftWidgetSize.small:
+    case NftWidgetSize.medium:
     default:
-      return null;
+      return (
+        <FlatList
+          data={data}
+          horizontal
+          keyExtractor={keyExtractor}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          ItemSeparatorComponent={renderItemSeparatorComponent}
+          renderItem={renderItem}
+        />
+      );
   }
 };
 
