@@ -12,6 +12,7 @@
 	<array>
 		<string>applinks:haqq.page.link</string>
 		<string>applinks:jwt-one.vercel.app</string>
+		<string>applinks:tjmb.adj.st</string>
 	</array>
 	<key>com.apple.developer.icloud-container-identifiers</key>
 	<array>
