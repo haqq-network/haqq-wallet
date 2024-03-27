@@ -2,7 +2,6 @@ import React from 'react';
 
 import {SafeAreaView, ScrollView, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {useNftImage} from '@app/hooks/nft/use-nft-image';
 import {useLayout} from '@app/hooks/use-layout';
@@ -22,7 +21,6 @@ import {
   Text,
   TextVariant,
 } from '../../../../../components/ui';
-import {TrimmedText} from '../../../../../components/ui/trimmed-text';
 
 export interface NftItemDetailsProps {
   item: NftItem;
