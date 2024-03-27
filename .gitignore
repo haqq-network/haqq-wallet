@@ -87,3 +87,6 @@ artifacts/*
 
 # react-native-config codegen
 ios/tmp.xcconfig
+
+.direnv
+.devenv
