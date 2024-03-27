@@ -21,16 +21,16 @@ export const SettingsLanguage = ({
 }: SettingsLanguageProps) => {
   return (
     <PopupContainer style={styles.container}>
-      <IconButton
-        style={styles.button}
-        onPress={() => {
-          onUpdatelanguage(AppLanguage.ar);
-        }}>
-        <DataContent title="Arabic" subtitle="العربية" />
-        {language === AppLanguage.ar && (
-          <Icon name="check" color={Color.graphicGreen1} i24 />
-        )}
-      </IconButton>
+      {/*<IconButton*/}
+      {/*  style={styles.button}*/}
+      {/*  onPress={() => {*/}
+      {/*    onUpdatelanguage(AppLanguage.ar);*/}
+      {/*  }}>*/}
+      {/*  <DataContent title="Arabic" subtitle="العربية" />*/}
+      {/*  {language === AppLanguage.ar && (*/}
+      {/*    <Icon name="check" color={Color.graphicGreen1} i24 />*/}
+      {/*  )}*/}
+      {/*</IconButton>*/}
       <IconButton
         style={styles.button}
         onPress={() => {
@@ -38,6 +38,26 @@ export const SettingsLanguage = ({
         }}>
         <DataContent title="English" subtitle="English" />
         {language === AppLanguage.en && (
+          <Icon name="check" color={Color.graphicGreen1} i24 />
+        )}
+      </IconButton>
+      <IconButton
+        style={styles.button}
+        onPress={() => {
+          onUpdatelanguage(AppLanguage.ru);
+        }}>
+        <DataContent title="Russin" subtitle="Русский" />
+        {language === AppLanguage.ru && (
+          <Icon name="check" color={Color.graphicGreen1} i24 />
+        )}
+      </IconButton>
+      <IconButton
+        style={styles.button}
+        onPress={() => {
+          onUpdatelanguage(AppLanguage.tr);
+        }}>
+        <DataContent title="Turkish" subtitle="Turkish" />
+        {language === AppLanguage.tr && (
           <Icon name="check" color={Color.graphicGreen1} i24 />
         )}
       </IconButton>

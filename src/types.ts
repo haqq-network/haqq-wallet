@@ -705,7 +705,8 @@ export type FontT = TextStyle | ViewStyle | ImageStyle | undefined;
 
 export enum AppLanguage {
   en = 'en',
-  ar = 'ar',
+  tr = 'tr',
+  ru = 'ru',
 }
 
 export enum AppTheme {

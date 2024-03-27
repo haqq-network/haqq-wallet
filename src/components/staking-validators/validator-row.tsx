@@ -3,7 +3,7 @@ import React, {useCallback, useMemo} from 'react';
 import {TouchableWithoutFeedback, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Text} from '@app/components/ui';
+import {Text, TextVariant} from '@app/components/ui';
 import {InfoBox} from '@app/components/ui/info-box';
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
@@ -60,24 +60,28 @@ export const ValidatorRow = ({onPress, item}: ValidatorRowProps) => {
           <ValidatorAvatar identity={item.description.identity} />
           <View style={styles.infoContainer}>
             <View style={styles.infoRow}>
-              <Text t11>{item.description.moniker}</Text>
-              <Text t11>{validatorCommission}%</Text>
+              <Text variant={TextVariant.t11}>{item.description.moniker}</Text>
+              <Text variant={TextVariant.t11}>{validatorCommission}%</Text>
             </View>
             <View style={styles.infoRow}>
               <View style={styles.powerRow}>
                 <Text
-                  t14
+                  variant={TextVariant.t14}
                   color={Color.textBase2}
                   i18n={I18N.stakingValidatorsRowPower}
                   i18params={{power: cleanNumber(votingPower)}}
                 />
                 {votingPowerPercents && (
-                  <Text t14 color={Color.textBase2}>
+                  <Text variant={TextVariant.t14} color={Color.textBase2}>
                     {` · ${votingPowerPercents}%`}
                   </Text>
                 )}
               </View>
-              <Text t14 color={textColor} i18n={item.localStatus as number} />
+              <Text
+                variant={TextVariant.t14}
+                color={textColor}
+                i18n={item.localStatus as unknown as I18N}
+              />
             </View>
           </View>
         </View>
