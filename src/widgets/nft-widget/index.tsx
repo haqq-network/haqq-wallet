@@ -55,7 +55,6 @@ export const NftWidgetWrapper = observer(({size}: INftWidget) => {
           />
           <Spacer height={8} />
           <NftViewerItemPreviewList
-            scrollEnabled={false}
             variant={size || NftWidgetSize.small}
             data={allNft}
           />
