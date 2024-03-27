@@ -137,13 +137,15 @@ export class EventTracker extends Initializable {
 
   private _configureAdjust() {
     try {
+      logger.log('Adjust initialization');
       const adjustConfig = new AdjustConfig(
         Config.ADJUST_TOKEN,
         Config.ADJUST_ENVIRONMENT,
       );
       adjustConfig.setLogLevel(AdjustConfig.LogLevelVerbose);
+      adjustConfig.setShouldLaunchDeeplink(true);
       adjustConfig.setDeferredDeeplinkCallbackListener(({uri}) => {
-        Logger.log('Adjust deferred deeplink', uri);
+        logger.log('Adjust deferred deeplink', uri);
         Alert.alert('Adjust deferred deeplink', uri);
       });
       if (IS_ANDROID) {
@@ -156,6 +158,7 @@ export class EventTracker extends Initializable {
           logger.log('Authorization status = ' + status);
         });
       }
+      logger.log('✅ Adjust initialization finished');
     } catch (error) {
       logger.captureException(error, 'adjust initialization error');
     }
