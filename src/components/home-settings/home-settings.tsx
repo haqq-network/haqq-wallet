@@ -59,6 +59,13 @@ export const HomeSettings = observer(({theme}: Props) => {
       />
 
       <SettingsButton
+        rightTitle={app.language}
+        next={SettingsStackRoutes.SettingsLanguage}
+        icon={IconsName.language}
+        title={I18N.homeSettingsLanguage}
+      />
+
+      <SettingsButton
         rightTitle={capitalizedTheme}
         icon={IconsName.brush}
         title={I18N.homeSettingsAppearance}

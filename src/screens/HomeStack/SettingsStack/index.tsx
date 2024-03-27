@@ -21,6 +21,7 @@ import {SettingsThemeScreen} from '@app/screens/HomeStack/SettingsStack/settings
 import {WalletConnectStack} from '@app/screens/HomeStack/WalletConnectStack';
 import {BackupSssSuggestionScreen} from '@app/screens/popup-backup-sss-suggestion';
 import {SettingsDeveloperTools as SettingsDeveloperToolsScreen} from '@app/screens/settings-developer-tools';
+import {SettingsLanguageScreen} from '@app/screens/settings-language';
 
 const Stack = createNativeStackNavigator<SettingsStackParamList>();
 
@@ -54,6 +55,10 @@ const SettingsStack = memo(() => {
           headerShown: true,
           header: CurrencyHeader,
         }}
+      />
+      <Stack.Screen
+        name={SettingsStackRoutes.SettingsLanguage}
+        component={SettingsLanguageScreen}
       />
       <Stack.Screen
         name={SettingsStackRoutes.SettingsTheme}

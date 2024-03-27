@@ -5,7 +5,7 @@ import {format} from 'date-fns';
 import {Pressable, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Icon, Spacer, Text} from '@app/components/ui';
+import {Icon, Spacer, Text, TextVariant} from '@app/components/ui';
 import {VotingLine} from '@app/components/voting-line';
 import {createTheme} from '@app/helpers';
 import {proposalVotes} from '@app/helpers/governance';
@@ -45,34 +45,41 @@ export const VotingCardCompleted = ({
       <View style={styles.topInfoBlock}>
         <Icon i18 color={statusColor} name={isRejected ? 'close' : 'check'} />
         <Spacer width={5.5} />
-        <Text t12 color={statusColor} i18n={status as number} />
+        <Text
+          variant={TextVariant.t12}
+          color={statusColor}
+          i18n={status as unknown as I18N}
+        />
         <Spacer />
         {isVoted && (
           <Text
-            t17
+            variant={TextVariant.t17}
             color={Color.textBase2}
             i18n={I18N.homeGovernanceVotingCardYouVoted}
           />
         )}
       </View>
       <View style={styles.container}>
-        <Text t14 color={Color.textBase2}>
+        <Text variant={TextVariant.t14} color={Color.textBase2}>
           #{item.proposal_id}
         </Text>
         <Spacer height={2} />
-        <Text t8 numberOfLines={2} color={Color.textBase2}>
+        <Text
+          variant={TextVariant.t8}
+          numberOfLines={2}
+          color={Color.textBase2}>
           {item.content.title}
         </Text>
         <Spacer height={12} />
         <View style={styles.dateContainer}>
           <View>
             <Text
-              t14
+              variant={TextVariant.t14}
               color={Color.textBase2}
               i18n={I18N.homeGovernanceVotingCardVotingStart}
             />
             <Spacer height={4} />
-            <Text t14 color={Color.textBase1}>
+            <Text variant={TextVariant.t14} color={Color.textBase1}>
               {item.voting_start_time &&
                 format(new Date(item.voting_start_time), 'dd MMM yyyy, H:mm')}
             </Text>
@@ -80,12 +87,12 @@ export const VotingCardCompleted = ({
           <Spacer width={16} />
           <View>
             <Text
-              t14
+              variant={TextVariant.t14}
               color={Color.textBase2}
               i18n={I18N.homeGovernanceVotingCardVotingEnd}
             />
             <Spacer height={4} />
-            <Text t14 color={Color.textBase1}>
+            <Text variant={TextVariant.t14} color={Color.textBase1}>
               {item.voting_end_time &&
                 format(new Date(item.voting_end_time), 'dd MMM yyyy, H:mm')}
             </Text>
