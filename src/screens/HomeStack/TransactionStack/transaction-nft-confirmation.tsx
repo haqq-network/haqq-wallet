@@ -31,7 +31,6 @@ import {MarketingEvents, ModalType} from '@app/types';
 import {makeID} from '@app/utils';
 import {FEE_ESTIMATING_TIMEOUT_MS} from '@app/variables/common';
 
-// TODO:
 export const TransactionNftConfirmationScreen = observer(() => {
   const navigation = useTypedNavigation<TransactionStackParamList>();
   useAndroidBackHandler(() => {
