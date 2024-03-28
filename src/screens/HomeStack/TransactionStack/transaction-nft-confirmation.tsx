@@ -3,9 +3,19 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {observer} from 'mobx-react';
 
 import {TransactionNftConfirmation} from '@app/components/transaction-nft-confirmation';
-import {abortProviderInstanceForWallet} from '@app/helpers/provider-instance';
+import {app} from '@app/contexts';
+import {Events} from '@app/events';
+import {showModal} from '@app/helpers';
+import {AddressUtils} from '@app/helpers/address-utils';
+import {awaitForEventDone} from '@app/helpers/await-for-event-done';
+import {
+  abortProviderInstanceForWallet,
+  getProviderInstanceForWallet,
+  removeProviderInstanceForWallet,
+} from '@app/helpers/provider-instance';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
+import {useLayoutEffectAsync} from '@app/hooks/use-effect-async';
 import {useError} from '@app/hooks/use-error';
 import {Contact} from '@app/models/contact';
 import {Wallet} from '@app/models/wallet';
@@ -13,99 +23,142 @@ import {
   TransactionStackParamList,
   TransactionStackRoutes,
 } from '@app/route-types';
+import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
-import {TransactionResponse} from '@app/types';
+import {EthSignErrorDataDetails} from '@app/services/eth-sign';
+import {EventTracker} from '@app/services/event-tracker';
+import {MarketingEvents, ModalType} from '@app/types';
+import {makeID} from '@app/utils';
+import {FEE_ESTIMATING_TIMEOUT_MS} from '@app/variables/common';
 
 // TODO:
 export const TransactionNftConfirmationScreen = observer(() => {
   const navigation = useTypedNavigation<TransactionStackParamList>();
-  const route = useTypedRoute<
-    TransactionStackParamList,
-    TransactionStackRoutes.TransactionNftConfirmation
-  >();
   useAndroidBackHandler(() => {
     navigation.goBack();
     return true;
   }, [navigation]);
+  const route = useTypedRoute<
+    TransactionStackParamList,
+    TransactionStackRoutes.TransactionNftConfirmation
+  >();
+  const {nft} = route.params;
+
   const wallet = Wallet.getById(route.params.from);
   const contact = useMemo(
     () => Contact.getById(route.params.to),
     [route.params.to],
   );
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   const showError = useError();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [disabled, setDisabled] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [fee, setFee] = useState(route.params.fee ?? Balance.Empty);
 
-  useEffect(() => {
-    // EthNetwork.estimateTransaction(
-    //   route.params.from,
-    //   route.params.to,
-    //   route.params.amount,
-    // ).then(result => setFee(result.fee));
-  }, []);
+  useLayoutEffectAsync(async () => {
+    const timer = setTimeout(
+      () => setFee(route.params.fee ?? Balance.Empty),
+      FEE_ESTIMATING_TIMEOUT_MS,
+    );
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const onDoneLedgerBt = useCallback(() => {
-    //   navigation.navigate('transactionLedger', {
-    //     from: route.params.from,
-    //     to: route.params.to,
-    //     amount: route.params.amount,
-    //     fee: fee,
+    let feeWei = Balance.Empty;
+
+    const result = await EthNetwork.estimateERC721Transfer(
+      wallet?.address!,
+      route.params.to,
+      nft.tokenId,
+      AddressUtils.toEth(nft.contract),
+    );
+    feeWei = result.feeWei;
+
+    clearTimeout(timer);
+    setFee(feeWei);
+
+    return () => {
+      clearTimeout(timer);
+    };
   }, []);
 
   const onConfirmTransaction = useCallback(async () => {
-    // if (wallet) {
-    //   if (wallet.type === WalletType.ledgerBt) {
-    //     onDoneLedgerBt();
-    //     return;
-    //   }
-    //   try {
-    //     setDisabled(true);
-    //     const ethNetworkProvider = new EthNetwork();
-    //     const provider = await getProviderInstanceForWallet(wallet);
-    //     const transaction = await ethNetworkProvider.sendTransaction(
-    //       provider,
-    //       wallet.path!,
-    //       route.params.to,
-    //       new Decimal(route.params.amount).mul(WEI).toFixed(),
-    //     );
-    //     if (transaction) {
-    //       EventTracker.instance.trackEvent(AdjustEvents.sendFund);
-    //       await awaitForEventDone(
-    //         Events.onTransactionCreate,
-    //         transaction,
-    //         user.providerId,
-    //         fee,
-    //       );
-    //       navigation.navigate('transactionFinish', {
-    //         hash: transaction.hash,
-    //       });
-    //     }
-    //   } catch (e) {
-    //     const errorId = makeID(4);
-    //     Logger.captureException(e, 'transaction-confirmation', {
-    //       from: route.params.from,
-    //       to: route.params.to,
-    //       amount: route.params.amount,
-    //       id: errorId,
-    //       walletType: wallet.type,
-    //     });
-    //     if (e instanceof Error) {
-    //       showError(errorId);
-    //     }
-    //   } finally {
-    //     setDisabled(false);
-    //   }
-    // }
-    navigation.navigate(TransactionStackRoutes.TransactionNftFinish, {
-      nft: route.params.nft,
-      // TODO: FIXME:
-      transaction: {} as TransactionResponse,
-    });
-  }, [navigation, route.params.nft]);
+    if (wallet) {
+      try {
+        setDisabled(true);
+
+        const ethNetworkProvider = new EthNetwork();
+
+        const provider = await getProviderInstanceForWallet(
+          wallet,
+          false,
+          true,
+        );
+
+        const transaction = await ethNetworkProvider.transferERC721(
+          provider,
+          wallet,
+          route.params.to,
+          nft.tokenId,
+          AddressUtils.toEth(nft.contract),
+        );
+
+        if (transaction) {
+          EventTracker.instance.trackEvent(MarketingEvents.sendFund);
+
+          await awaitForEventDone(
+            Events.onTransactionCreate,
+            transaction,
+            app.providerId,
+            fee,
+          );
+
+          navigation.navigate(TransactionStackRoutes.TransactionNftFinish, {
+            nft: route.params.nft,
+            transaction,
+          });
+        }
+      } catch (e) {
+        const errorId = makeID(4);
+
+        Logger.captureException(e, 'transaction-nft-confirmation', {
+          from: route.params.from,
+          to: route.params.to,
+          nft: nft,
+          id: errorId,
+          walletType: wallet.type,
+          contact,
+          provider: app.provider.name,
+        });
+
+        const err = e as EthSignErrorDataDetails;
+        const txInfo = err?.transaction;
+        const errCode = err?.code;
+
+        if (
+          !!txInfo?.gasLimit &&
+          !!txInfo?.maxFeePerGas &&
+          errCode === 'INSUFFICIENT_FUNDS'
+        ) {
+          err.handled = true;
+          const gasLimit = new Balance(txInfo.gasLimit).operate(
+            new Balance(txInfo.gasPrice || txInfo.maxFeePerGas),
+            'mul',
+          );
+          showModal(ModalType.notEnoughGas, {
+            gasLimit: gasLimit,
+            currentAmount: app.getAvailableBalance(wallet!.address),
+          });
+          return;
+        }
+
+        // @ts-ignore
+        const errMsg = e?.message || e?.toString?.() || JSON.stringify(e);
+        if (errMsg) {
+          showError(errorId, errMsg);
+        }
+      } finally {
+        setDisabled(false);
+        removeProviderInstanceForWallet(wallet);
+      }
+    }
+  }, [fee, navigation, nft, route.params.from, route.params.to, wallet]);
 
   useEffect(() => {
     return () => {
