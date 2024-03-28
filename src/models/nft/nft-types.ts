@@ -36,7 +36,7 @@ export type NftItemIndexer = {
 // TODO Reset image as not null when default image will be provided
 export type NftItem = Omit<NftItemIndexer, 'price' | 'description'> & {
   description: string;
-  price: Balance;
+  price?: Balance;
 };
 
 export type NftCollection = Omit<

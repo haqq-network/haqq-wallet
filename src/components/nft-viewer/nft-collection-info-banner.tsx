@@ -67,7 +67,7 @@ export const NftCollectionInfoBanner = ({data, onPress}: Props) => {
           </Text>
           <Spacer width={6} />
           <Text variant={TextVariant.t17} color={Color.textSecond2}>
-            {item.price.toBalanceString()}
+            {item.price?.toBalanceString()}
           </Text>
         </View>
       </ImageBackground>
