@@ -21,7 +21,7 @@ import {createTheme, openURL} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Balance} from '@app/services/balance';
-import {EthNetwork} from '@app/services/eth-network';
+import {EthNetwork} from '@app/services/eth-network/eth-network';
 import {IToken, TransactionResponse} from '@app/types';
 import {CURRENCY_NAME, LONG_NUM_PRECISION} from '@app/variables/common';
 

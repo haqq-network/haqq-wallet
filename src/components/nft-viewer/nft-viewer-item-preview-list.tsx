@@ -23,7 +23,7 @@ export const NftViewerItemPreviewList = ({
   onPress,
 }: NftViewerItemPreviewListProps) => {
   const keyExtractor = useCallback(
-    (item: NftItem) => `${item.contract}_${item.token_id}`,
+    (item: NftItem) => `${item.contract}_${item.tokenId}`,
     [],
   );
 

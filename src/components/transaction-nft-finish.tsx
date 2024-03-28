@@ -19,7 +19,7 @@ import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {NftItem} from '@app/models/nft';
 import {Balance} from '@app/services/balance';
-import {EthNetwork} from '@app/services/eth-network';
+import {EthNetwork} from '@app/services/eth-network/eth-network';
 import {TransactionResponse} from '@app/types';
 
 type TransactionFinishProps = {

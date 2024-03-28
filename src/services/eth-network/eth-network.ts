@@ -7,37 +7,18 @@ import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
-import {Contracts} from '@app/models/contracts';
 import {Provider} from '@app/models/provider';
-import {Token} from '@app/models/tokens';
 import {Wallet} from '@app/models/wallet';
 import {getDefaultChainId} from '@app/network';
 import {Balance} from '@app/services/balance';
+import {getERC721TransferData} from '@app/services/eth-network/erc721';
 import {storage} from '@app/services/mmkv';
 import {applyEthTxMultiplier} from '@app/utils';
-import {WEI_PRECISION} from '@app/variables/common';
 
-import {RemoteConfig} from './remote-config';
+import {getERC20TransferData} from './erc20';
+import {BALANCE_CACHE_KEY} from './types';
 
-export const ABI_ERC20_TRANSFER_ACTION = {
-  name: 'transfer',
-  type: 'function',
-  inputs: [
-    {
-      name: '_to',
-      type: 'address',
-    },
-    {
-      type: 'uint256',
-      name: '_tokens',
-    },
-  ],
-  constant: false,
-  outputs: [],
-  payable: false,
-};
-
-const BALANCE_CACHE_KEY = 'balance_storage';
+import {RemoteConfig} from '../remote-config';
 
 export class EthNetwork {
   static chainId: number = getDefaultChainId();
@@ -257,44 +238,6 @@ export class EthNetwork {
     }
   }
 
-  async callContract(abi: any[], to: string, method: string, ...params: any[]) {
-    const iface = new utils.Interface(abi);
-    const data = iface.encodeFunctionData(method, params);
-
-    const resp = await EthNetwork.call(to, data);
-    return iface.decodeFunctionResult(method, resp);
-  }
-
-  static getERC20TransferData(
-    to: string,
-    amount: Balance,
-    contractAddress: string,
-  ) {
-    const abi = [ABI_ERC20_TRANSFER_ACTION];
-    const iface = new utils.Interface(abi);
-
-    const haqqContractAddress = AddressUtils.toHaqq(contractAddress);
-    const contractInfo =
-      Contracts.getById(haqqContractAddress) ||
-      Token.getById(haqqContractAddress);
-
-    const decimals = contractInfo.decimals ?? WEI_PRECISION;
-
-    const [amountClear] = new Balance(amount.toWei(), 0)
-      .operate(Math.pow(10, amount.getPrecission()), 'div')
-      .operate(Math.pow(10, decimals), 'mul')
-      .toWei()
-      .toString()
-      .split('.');
-
-    const data = iface.encodeFunctionData(ABI_ERC20_TRANSFER_ACTION.name, [
-      to,
-      amountClear,
-    ]);
-
-    return data;
-  }
-
   static async estimateERC20Transfer(
     from: string,
     to: string,
@@ -302,7 +245,7 @@ export class EthNetwork {
     contractAddress: string,
     provider = app.provider,
   ) {
-    const data = EthNetwork.getERC20TransferData(to, amount, contractAddress);
+    const data = getERC20TransferData(to, amount, contractAddress);
     return await EthNetwork.estimateTransaction(
       from,
       contractAddress,
@@ -321,7 +264,7 @@ export class EthNetwork {
     contractAddress: string,
   ) {
     try {
-      const data = EthNetwork.getERC20TransferData(to, amount, contractAddress);
+      const data = getERC20TransferData(to, amount, contractAddress);
       const unsignedTx = await EthNetwork.populateTransaction(
         from.address,
         contractAddress,
@@ -335,6 +278,55 @@ export class EthNetwork {
     } catch (error) {
       Logger.captureException(error, 'EthNetwork.transferERC20', {
         amount,
+        contractAddress,
+        from: from.address,
+        to,
+        hdPath: from.path || 'null',
+      });
+      throw error;
+    }
+  }
+
+  static async estimateERC721Transfer(
+    from: string,
+    to: string,
+    tokenId: number,
+    contractAddress: string,
+    provider = app.provider,
+  ) {
+    const data = getERC721TransferData(from, to, tokenId);
+    return await EthNetwork.estimateTransaction(
+      from,
+      contractAddress,
+      Balance.Empty,
+      data,
+      getRemoteBalanceValue('eth_min_gas_limit'),
+      provider,
+    );
+  }
+
+  async transferERC721(
+    transport: ProviderInterface,
+    from: Wallet,
+    to: string,
+    tokenId: number,
+    contractAddress: string,
+  ) {
+    try {
+      const data = getERC721TransferData(from.address, to, tokenId);
+      const unsignedTx = await EthNetwork.populateTransaction(
+        from.address,
+        contractAddress,
+        Balance.Empty,
+        data,
+      );
+
+      const signedTx = await transport.signTransaction(from.path!, unsignedTx);
+
+      return await EthNetwork.sendTransaction(signedTx);
+    } catch (error) {
+      Logger.captureException(error, 'EthNetwork.transferERC20', {
+        tokenId,
         contractAddress,
         from: from.address,
         to,

@@ -25,18 +25,23 @@ export type NftItemIndexer = {
   is_failed: boolean;
   is_link_checked: boolean;
   is_name_checked: boolean;
-  metadata: null; // TODO Check it
+  metadata: null | Object; // TODO Check it
   name: string;
   original_url: string | null;
   token_id: string;
   updated_at: string;
   price?: string;
+  attributes?: any[]; // TODO Add types when will be implemented on BE
 };
 
 // TODO Reset image as not null when default image will be provided
-export type NftItem = Omit<NftItemIndexer, 'price' | 'description'> & {
+export type NftItem = Omit<
+  NftItemIndexer,
+  'price' | 'description' | 'token_id'
+> & {
   description: string;
   price?: Balance;
+  tokenId: number;
 };
 
 export type NftCollection = Omit<

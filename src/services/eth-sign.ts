@@ -10,7 +10,7 @@ import {HAQQ_METADATA, ZERO_HEX_NUMBER} from '@app/variables/common';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 import {Balance} from './balance';
-import {EthNetwork} from './eth-network';
+import {EthNetwork} from './eth-network/eth-network';
 
 export type EthSignErrorDataDetails = {
   handled?: boolean;

@@ -5,7 +5,7 @@ import {Spacer, Text, TextVariant} from '@app/components/ui';
 import {I18N} from '@app/i18n';
 
 type Props = {
-  tokenId: string;
+  tokenId: number;
 };
 
 export const NftItemDetailsTokenId = ({tokenId}: Props) => {

@@ -10,6 +10,8 @@ import {
   PopupContainer,
   Spacer,
   Text,
+  TextPosition,
+  TextVariant,
 } from '@app/components/ui';
 import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
@@ -75,59 +77,78 @@ export const TransactionConfirmation = ({
     <PopupContainer style={styles.container} testID={testID}>
       <Image source={token.image} style={styles.icon} />
       <Text
-        t11
+        variant={TextVariant.t11}
         color={Color.textBase2}
-        center
+        position={TextPosition.center}
         style={styles.subtitle}
         i18n={I18N.transactionConfirmationTotalAmount}
       />
-      <Text t11 color={Color.textBase1} center style={styles.sum}>
+      <Text
+        variant={TextVariant.t11}
+        color={Color.textBase1}
+        position={TextPosition.center}
+        style={styles.sum}>
         {sumText}
       </Text>
-      <Text t15 color={Color.textBase2} center>
+      <Text
+        variant={TextVariant.t15}
+        color={Color.textBase2}
+        position={TextPosition.center}>
         {usdText}
       </Text>
       <Spacer height={16} />
       <Text
-        t11
+        variant={TextVariant.t11}
         color={Color.textBase2}
-        center
+        position={TextPosition.center}
         style={styles.subtitle}
         i18n={I18N.transactionConfirmationSendTo}
       />
       {contact && (
-        <Text t11 color={Color.textBase1} center style={styles.contact}>
+        <Text
+          variant={TextVariant.t11}
+          color={Color.textBase1}
+          position={TextPosition.center}
+          style={styles.contact}>
           {contact.name}
         </Text>
       )}
-      <Text t11 color={Color.textBase1} center style={styles.address}>
-        <Text t11 color={Color.textBase1} center style={styles.address}>
+      <Text
+        variant={TextVariant.t11}
+        color={Color.textBase1}
+        position={TextPosition.center}
+        style={styles.address}>
+        <Text
+          variant={TextVariant.t11}
+          color={Color.textBase1}
+          position={TextPosition.center}
+          style={styles.address}>
           {splittedTo[0]}
         </Text>
-        <Text t11 color={Color.textBase2}>
+        <Text variant={TextVariant.t11} color={Color.textBase2}>
           {splittedTo[1]}
         </Text>
-        <Text t11>{splittedTo[2]}</Text>
+        <Text variant={TextVariant.t11}>{splittedTo[2]}</Text>
       </Text>
       <Spacer style={styles.spacer}>
         <View style={styles.info}>
           <DataView label="Cryptocurrency">
-            <Text t11 color={Color.textBase1}>
+            <Text variant={TextVariant.t11} color={Color.textBase1}>
               {token.name}
             </Text>
           </DataView>
           <DataView label="Network">
-            <Text t11 color={Color.textBase1}>
+            <Text variant={TextVariant.t11} color={Color.textBase1}>
               <Text>{app.provider.name}</Text>
             </Text>
           </DataView>
           <DataView label="Amount">
-            <Text t11 color={Color.textBase1}>
+            <Text variant={TextVariant.t11} color={Color.textBase1}>
               {amount.toBalanceString(LONG_NUM_PRECISION)}
             </Text>
           </DataView>
           <DataView label="Network Fee">
-            <Text t11 color={Color.textBase1}>
+            <Text variant={TextVariant.t11} color={Color.textBase1}>
               {fee === null
                 ? getText(I18N.estimatingGas)
                 : fee.toBalanceString(LONG_NUM_PRECISION, WEI_PRECISION)}
