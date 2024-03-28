@@ -805,6 +805,7 @@ export const ar = {
   [I18N.nftDetailsLastSalePrice]: 'آخر سعر بيع',
   [I18N.nftDetailsAttributes]: 'السمات',
   [I18N.nftDetailsSend]: 'إرسال',
+  [I18N.nftDetailsTokenId]: 'Token ID',
   [I18N.nftDetailsYourItems]: 'العناصر الخاصة بك',
   [I18N.transactionNftFinishSendingComplete]: 'اكتمل الإرسال',
   [I18N.domainBlockedTitle]: 'النطاق محظور',

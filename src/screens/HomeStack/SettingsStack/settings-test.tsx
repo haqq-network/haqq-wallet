@@ -657,7 +657,7 @@ export const SettingsTestScreen = observer(() => {
 
       <Title text="Localization" />
       <Button
-        title={`Switch to ${I18nManager.isRTL ? 'English' : 'Arabic'}`}
+        title={`Switch to ${I18nManager.isRTL ? 'LTR' : 'RTL'}`}
         onPress={() => {
           const isRTL = I18nManager.isRTL;
           setRTL(!isRTL);
