@@ -13,6 +13,7 @@ import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.ReactRootView
 import com.haqq.wallet.MainActivity.MainActivityDelegate
 import org.devio.rn.splashscreen.SplashScreen
+import com.facebook.react.modules.i18nmanager.I18nUtil;
 
 class MainActivity : ReactActivity() {
   /**
@@ -35,6 +36,8 @@ class MainActivity : ReactActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     SplashScreen.show(this, true)
+    val sharedI18nUtilInstance: I18nUtil = I18nUtil.getInstance()
+    sharedI18nUtilInstance.allowRTL(getApplicationContext(),true)
     super.onCreate(null)
   }
 

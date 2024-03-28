@@ -4,21 +4,21 @@
 import './global';
 import '@ethersproject/shims';
 import '@walletconnect/react-native-compat';
-import {AppRegistry, I18nManager, LogBox} from 'react-native';
+import { AppRegistry, I18nManager, LogBox } from 'react-native';
 
 import Config from 'react-native-config';
-import {JsonRpcProvider} from '@ethersproject/providers';
+import { JsonRpcProvider } from '@ethersproject/providers';
 import * as Sentry from '@sentry/react-native';
-import {name as appName} from './app.json';
-import {App} from './src/app';
+import { name as appName } from './app.json';
+import { App } from './src/app';
 import './src/event-actions';
-import {Jailbreak} from './src/jailbreak';
+import { Jailbreak } from './src/jailbreak';
 import messaging from '@react-native-firebase/messaging';
-import {IS_IOS} from '@app/variables/common';
-import {DEBUG_VARS} from '@app/debug-vars';
-import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
-import {enableFreeze, enableScreens} from 'react-native-screens';
-import {enableBatchedStateUpdates} from '@app/hooks/batched-set-state';
+import { IS_IOS } from '@app/variables/common';
+import { DEBUG_VARS } from '@app/debug-vars';
+import { Feature, isFeatureEnabled } from '@app/helpers/is-feature-enabled';
+import { enableFreeze, enableScreens } from 'react-native-screens';
+import { enableBatchedStateUpdates } from '@app/hooks/batched-set-state';
 
 if (!global.BigInt) {
   const BigInt = require('big-integer');
@@ -35,9 +35,8 @@ enableBatchedStateUpdates()
 LogBox.ignoreLogs(["The 'navigation' object hasn't been initialized"]);
 
 try {
-  const isRTLEnabled = isFeatureEnabled(Feature.rtl);
+  const isRTLEnabled = true;
   I18nManager.allowRTL(isRTLEnabled);
-  I18nManager.forceRTL(isRTLEnabled);
   I18nManager.swapLeftAndRightInRTL(isRTLEnabled);
 } catch (e) {
 }
@@ -57,8 +56,8 @@ if (Config.SENTRY_DSN && DEBUG_VARS.enableSentry) {
       enableWatchdogTerminationTracking: false,
       attachScreenshot: true,
       attachStacktrace: true,
-      beforeSend(event, hint){
-        if(event.level !== 'fatal') {
+      beforeSend(event, hint) {
+        if (event.level !== 'fatal') {
           delete hint.attachments;
         }
         return event;

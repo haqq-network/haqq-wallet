@@ -1,5 +1,9 @@
+import {I18nManager} from 'react-native';
+
 import {getAppVersion, getBuildNumber} from '@app/services/version';
 import {LEDGER_APP, PLATFORM_COMPANY, STRINGS} from '@app/variables/common';
+
+import {ar} from './ar';
 
 export enum I18N {
   empty,
@@ -937,7 +941,8 @@ export enum I18N {
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
-  let str = en[key];
+  const locale = I18nManager.isRTL ? ar : en;
+  let str = locale[key];
   if (params) {
     return Object.entries(params).reduce(
       (memo, [k, v]) => memo.replaceAll(`{{${k}}}`, v),
