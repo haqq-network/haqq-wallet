@@ -59,6 +59,8 @@ jobs:
           echo "MMKV_KEY=${{secrets.MMKV_KEY}}" >> .env
           echo "POSTHOG_API_KEY=${{secrets.POSTHOG_API_KEY}}" >> .env
           echo "POSTHOG_HOST=${{secrets.POSTHOG_HOST}}" >> .env
+          echo "LOCALISE_KEY=${{secrets.LOCALISE_KEY}}" >> .env
+          echo "LOCALISE_PROJECT_ID=${{secrets.LOCALISE_PROJECT_ID}}" >> .env
 
       - name: Install packages
         run: yarn install
