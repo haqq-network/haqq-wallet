@@ -949,6 +949,13 @@ const translations = new LocalizedStrings(languages);
 
 let hasLang = false;
 
+const fixLocalise = (value: string) => {
+  return value
+    .replaceAll('{{', '{')
+    .replaceAll('}}', '}')
+    .replaceAll('\\n', '\n');
+};
+
 export function getText(key: I18N, params?: Record<string, string>): string {
   if (!hasLang) {
     translations.setLanguage(app.language);
@@ -960,9 +967,12 @@ export function getText(key: I18N, params?: Record<string, string>): string {
   }
 
   if (params) {
-    return translations.formatString(translations[key], params) as string;
+    return translations.formatString(
+      fixLocalise(translations[key]),
+      params,
+    ) as string;
   }
-  return translations[key];
+  return fixLocalise(translations[key]);
 }
 
 export function setLanguage(lang: AppLanguage) {
