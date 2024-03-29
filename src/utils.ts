@@ -12,6 +12,7 @@ import _ from 'lodash';
 import {
   Alert,
   Animated,
+  I18nManager,
   Linking,
   NativeModules,
   PermissionsAndroid,
@@ -1034,3 +1035,7 @@ export function isSupportedCosmosTxForRender(
   }
   return false;
 }
+
+export const setRTL = (isRTL: boolean) => {
+  I18nManager.forceRTL(isRTL);
+};
