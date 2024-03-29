@@ -707,6 +707,7 @@ export enum AppLanguage {
   en = 'en',
   tr = 'tr',
   ru = 'ru',
+  ar = 'ar',
 }
 
 export enum AppTheme {

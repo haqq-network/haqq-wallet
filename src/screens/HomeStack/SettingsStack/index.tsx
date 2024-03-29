@@ -59,6 +59,7 @@ const SettingsStack = memo(() => {
       <Stack.Screen
         name={SettingsStackRoutes.SettingsLanguage}
         component={SettingsLanguageScreen}
+        options={{presentation: 'modal'}}
       />
       <Stack.Screen
         name={SettingsStackRoutes.SettingsTheme}

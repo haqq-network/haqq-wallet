@@ -4,6 +4,7 @@ import {AppLanguage} from '@app/types';
 
 import {app} from './contexts';
 
+import ar from '../assets/locales/ar/ar.json';
 import en from '../assets/locales/en/en.json';
 import ru from '../assets/locales/ru/ru.json';
 import tr from '../assets/locales/tr/tr.json';
@@ -943,7 +944,7 @@ export enum I18N {
   walletConnectInvalidUri = 'walletConnectInvalidUri',
 }
 
-const languages = {en, ru, tr};
+const languages = {en, ru, tr, ar};
 
 const translations = new LocalizedStrings(languages);
 
@@ -963,7 +964,7 @@ export function getText(key: I18N, params?: Record<string, string>): string {
   }
 
   if (!translations[key]) {
-    return key;
+    return `[${key}]`;
   }
 
   if (params) {

@@ -42,6 +42,7 @@ import {Balance} from './services/balance';
 import {EthSignError} from './services/eth-sign';
 import {
   AdjustTrackingAuthorizationStatus,
+  AppLanguage,
   BalanceData,
   EIPTypedData,
   EthType,
@@ -1036,6 +1037,12 @@ export function isSupportedCosmosTxForRender(
   return false;
 }
 
-export const setRTL = (isRTL: boolean) => {
+export const setRTL = (lang: AppLanguage) => {
+  const rtlLanguages = [AppLanguage.ar];
+  const isRTL = rtlLanguages.includes(lang);
   I18nManager.forceRTL(isRTL);
+
+  // if (isRTL !== I18nManager.isRTL) {
+  //   RNRestart.restart();
+  // }
 };
