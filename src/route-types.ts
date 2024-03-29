@@ -343,7 +343,6 @@ export type GovernanceStackParamList = HomeFeedStackParamList & {
   };
 };
 
-///////////////////////////////////////
 export enum HomeStackRoutes {
   Home = 'home',
   Create = '_create',
