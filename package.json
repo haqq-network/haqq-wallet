@@ -8,6 +8,7 @@
     "start": "watchman watch-del-all && react-native start --reset-cache",
     "test": "jest",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
+    "lint:assets": "prettier --write ./assets/locales",
     "typescript:check": "tsc",
     "prettier:check": "prettier --check ./src",
     "prettier:format": "prettier --write ./src",

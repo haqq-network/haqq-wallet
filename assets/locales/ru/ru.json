@@ -1,4 +1,5 @@
 {
+  "testui": "Тестовый тест пользовательского интерфейса",
   "StakingInfoUnDelegationDay": "",
   "StakingInfoUnDelegationDays": "",
   "accept": "",
@@ -334,7 +335,7 @@
   "nftDetailsDescription": "",
   "nftDetailsLastSalePrice": "",
   "nftDetailsSend": "",
-  "nftDetailsTokenId": "",
+  "nftDetailsTokenId": "Идентификатор токена",
   "nftDetailsYourItems": "",
   "nftItemDetailsTitle": "",
   "nftViewerNoNFTs": "",

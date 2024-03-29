@@ -1,4 +1,5 @@
 {
+  "testui": "Test testi kullanıcı arayüzü",
   "StakingInfoUnDelegationDay": "",
   "StakingInfoUnDelegationDays": "",
   "accept": "",
@@ -334,7 +335,7 @@
   "nftDetailsDescription": "",
   "nftDetailsLastSalePrice": "",
   "nftDetailsSend": "",
-  "nftDetailsTokenId": "",
+  "nftDetailsTokenId": "Jeton Kimliği",
   "nftDetailsYourItems": "",
   "nftItemDetailsTitle": "",
   "nftViewerNoNFTs": "",
