@@ -698,6 +698,7 @@ export enum I18N {
   nftDetailsLastSalePrice = 'nftDetailsLastSalePrice',
   nftDetailsAttributes = 'nftDetailsAttributes',
   nftDetailsSend = 'nftDetailsSend',
+  nftDetailsTokenId = 'nftDetailsTokenId',
   transactionNftFinishSendingComplete = 'transactionNftFinishSendingComplete',
   domainBlockedTitle = 'domainBlockedTitle',
   domainBlockedDescription1 = 'domainBlockedDescription1',

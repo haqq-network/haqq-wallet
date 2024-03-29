@@ -1,6 +1,12 @@
 import React, {useMemo} from 'react';
 
-import {Image, ImageStyle, StyleProp, StyleSheet} from 'react-native';
+import {
+  I18nManager,
+  Image,
+  ImageStyle,
+  StyleProp,
+  StyleSheet,
+} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
 
@@ -162,10 +168,19 @@ export const Icon = ({name, style, color, ...props}: IconProps) => {
     [color, props, style],
   );
   const icon = useMemo(() => ({uri: name}), [name]);
-  return <Image source={icon} style={container} />;
+  return (
+    <Image
+      source={icon}
+      style={[
+        container,
+        I18nManager.isRTL && name.includes('arrow') && styles.rtl,
+      ]}
+    />
+  );
 };
 
 const styles = StyleSheet.create({
+  rtl: {transform: [{rotate: '180deg'}]},
   i120Container: {
     width: 120,
     height: 120,

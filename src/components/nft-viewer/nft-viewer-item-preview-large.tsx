@@ -9,7 +9,7 @@ import {addOpacityToColor} from '@app/utils';
 
 import {NftViewerItemPreviewExtendedProps} from './nft-viewer-item-preview';
 
-import {Text} from '../ui';
+import {Text, TextVariant} from '../ui';
 
 export const NftViewerItemPreviewLarge = ({
   item,
@@ -35,11 +35,14 @@ export const NftViewerItemPreviewLarge = ({
         style={layout}
         source={{uri: item.cached_url || undefined}}>
         <View style={[styles.itemText, itemTextStyle]}>
-          <Text numberOfLines={1} t13 color={Color.textBase3}>
+          <Text
+            numberOfLines={1}
+            variant={TextVariant.t13}
+            color={Color.textBase3}>
             {item.name}
           </Text>
-          <Text t17 color={Color.textSecond2}>
-            {item.price.toBalanceString()}
+          <Text variant={TextVariant.t17} color={Color.textSecond2}>
+            {item.price?.toBalanceString()}
           </Text>
         </View>
       </ImageBackground>

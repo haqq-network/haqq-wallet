@@ -12,7 +12,6 @@ export const useIsBalancesFirstSync = () => {
   useEffect(() => {
     const checkBalance = async () => {
       await awaitForEventDone(Events.onWalletsBalanceCheck);
-      setBalanceLoading(false);
     };
 
     const listener = async (err?: Error | null) => {
@@ -20,7 +19,7 @@ export const useIsBalancesFirstSync = () => {
         setError(err);
         await sleep(1000);
         await checkBalance();
-      } else if (error !== null) {
+      } else if (error === null) {
         setError(null);
         setBalanceLoading(false);
       }

@@ -54,7 +54,6 @@ export const NftCollectionDetails = ({
         <Spacer height={8} />
         <View>
           <NftViewerItemPreviewList
-            scrollEnabled={false}
             variant={NftWidgetSize.large}
             data={item.nfts}
             onPress={onPressNftItem}

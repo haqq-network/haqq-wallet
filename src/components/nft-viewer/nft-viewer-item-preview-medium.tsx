@@ -35,7 +35,7 @@ export const NftViewerItemPreviewMedium = ({
             {item.name}
           </Text>
           <Text variant={TextVariant.t17} color={Color.textSecond2}>
-            {item.price.toBalanceString()}
+            {item.price?.toBalanceString()}
           </Text>
         </View>
       </ImageBackground>

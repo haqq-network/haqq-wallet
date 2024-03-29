@@ -1,6 +1,5 @@
 import React, {memo, useCallback} from 'react';
 
-import {NftItemDetails} from '@app/components/nft-item-details';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {Wallet} from '@app/models/wallet';
 import {
@@ -8,6 +7,7 @@ import {
   NftDetailsStackParamList,
   NftDetailsStackRoutes,
 } from '@app/route-types';
+import {NftItemDetails} from '@app/screens/HomeStack/NftDetailsStack/components/nft-item-details/nft-item-details';
 
 export const NftItemDetailsScreen = memo(() => {
   const navigation = useTypedNavigation<NftDetailsStackParamList>();

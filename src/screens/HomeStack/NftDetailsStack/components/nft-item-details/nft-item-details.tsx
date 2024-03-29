@@ -2,16 +2,25 @@ import React from 'react';
 
 import {SafeAreaView, ScrollView, View} from 'react-native';
 
-import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {useNftImage} from '@app/hooks/nft/use-nft-image';
 import {useLayout} from '@app/hooks/use-layout';
 import {I18N} from '@app/i18n';
 import {NftItem} from '@app/models/nft';
+import {
+  NftItemDetailsDescription,
+  NftItemDetailsPrice,
+  NftItemDetailsTokenId,
+} from '@app/screens/HomeStack/NftDetailsStack/components/nft-item-details/components';
 
-import {ImageWrapper} from './image-wrapper';
-import {Button, ButtonVariant, Spacer, Text, TextVariant} from './ui';
-import {TrimmedText} from './ui/trimmed-text';
+import {ImageWrapper} from '../../../../../components/image-wrapper';
+import {
+  Button,
+  ButtonVariant,
+  Spacer,
+  Text,
+  TextVariant,
+} from '../../../../../components/ui';
 
 export interface NftItemDetailsProps {
   item: NftItem;
@@ -40,21 +49,9 @@ export const NftItemDetails = ({item, onPressSend}: NftItemDetailsProps) => {
         <Spacer height={20} />
         <Text variant={TextVariant.t5}>{item.name}</Text>
         <Spacer height={16} />
-        <Text variant={TextVariant.t12} i18n={I18N.nftDetailsDescription} />
-        <Spacer height={8} />
-        <TrimmedText
-          limit={100}
-          variant={TextVariant.t14}
-          color={Color.textBase2}>
-          {item.description}
-        </TrimmedText>
-        <Spacer height={20} />
-        <Text variant={TextVariant.t12} i18n={I18N.nftDetailsLastSalePrice} />
-        <Spacer height={8} />
-        <Text variant={TextVariant.t14} color={Color.textBase1}>
-          {item.price.toBalanceString()}
-        </Text>
-        <Spacer height={20} />
+        <NftItemDetailsDescription description={item.description} />
+        <NftItemDetailsPrice price={item.price} />
+        <NftItemDetailsTokenId tokenId={item.token_id} />
         <Text variant={TextVariant.t12} i18n={I18N.nftDetailsAttributes} />
         <Spacer height={8} />
         {/*<View style={styles.attributeListContainer}>*/}
