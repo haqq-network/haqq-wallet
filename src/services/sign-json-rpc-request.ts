@@ -21,7 +21,7 @@ import {
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 import {Balance} from './balance';
-import {EthNetwork} from './eth-network';
+import {EthNetwork} from './eth-network/eth-network';
 
 const logger = Logger.create('SignJsonRpcRequest', {
   enabled:

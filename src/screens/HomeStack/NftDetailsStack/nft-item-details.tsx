@@ -1,7 +1,6 @@
 import React, {memo, useCallback} from 'react';
 
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {Wallet} from '@app/models/wallet';
 import {
   HomeStackRoutes,
   NftDetailsStackParamList,
@@ -17,14 +16,10 @@ export const NftItemDetailsScreen = memo(() => {
   >();
 
   const onPressSend = useCallback(() => {
-    // TODO:
-    const from = params.item.contract;
+    const from = params.item.address;
 
-    //FIXME: Test this
     navigation.navigate(HomeStackRoutes.Transaction, {
       from,
-      // TODO:
-      to: Wallet.getAllVisible()[0].address,
       nft: params.item,
     });
   }, [params.item, navigation]);
