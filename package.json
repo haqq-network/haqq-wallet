@@ -29,7 +29,8 @@
     "update-inpage-bridge-web3": "sh ./scripts/update-inpage-bridge-web3.sh",
     "git:action:restart": "git pull && git commit --amend -n --no-edit && git push -f",
     "env:verify": "yarn zx ./scripts/verify-env.mjs",
-    "env:update": "yarn zx ./scripts/update-version.mjs"
+    "env:update": "yarn zx ./scripts/update-version.mjs",
+    "locales:update": "yarn zx ./scripts/pull-locales.mjs"
   },
   "dependencies": {
     "@birdwingo/react-native-spinning-numbers": "1.0.5",
