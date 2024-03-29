@@ -763,8 +763,6 @@ PODS:
     - React-Core
   - RNKeychain (8.1.1):
     - React-Core
-  - RNLocalize (3.0.6):
-    - React-Core
   - RNOS (1.2.7):
     - React
   - RNPermissions (3.10.0):
@@ -909,7 +907,6 @@ DEPENDENCIES:
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - "RNGoogleSignin (from `../node_modules/@react-native-google-signin/google-signin`)"
   - RNKeychain (from `../node_modules/react-native-keychain`)
-  - RNLocalize (from `../node_modules/react-native-localize`)
   - RNOS (from `../node_modules/react-native-os`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
@@ -1135,8 +1132,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-google-signin/google-signin"
   RNKeychain:
     :path: "../node_modules/react-native-keychain"
-  RNLocalize:
-    :path: "../node_modules/react-native-localize"
   RNOS:
     :path: "../node_modules/react-native-os"
   RNPermissions:
@@ -1158,7 +1153,7 @@ SPEC CHECKSUMS:
   Adjust: 41d0d5c031409aebe7fb1f5703ff0d3306133439
   AppAuth: a13994980c1ec792f7e2e665acd4d4aa6be43240
   BlastedImage: 7dd925da7db9dcf1120efc0009bad5492e843b1e
-  boost: 7dcd2de282d72e344012f7d6564d024930a6a440
+  boost: 0a937fbcfdd646fca221c4f1d9750d7ccfdfc2dc
   BVLinearGradient: fbe308a1d19a8133f69e033abc85d8008644f5e3
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   CryptoSwift: c4f2debceb38bf44c80659afe009f71e23e4a082
@@ -1274,7 +1269,6 @@ SPEC CHECKSUMS:
   RNGestureHandler: dec4645026e7401a0899f2846d864403478ff6a5
   RNGoogleSignin: ccaa4a81582cf713eea562c5dd9dc1961a715fd0
   RNKeychain: ff836453cba46938e0e9e4c22e43d43fa2c90333
-  RNLocalize: 4222a3756cdbe2dc9a5bdf445765a4d2572107cb
   RNOS: bba50dcae32026943877b163e93d4e1e0eca48eb
   RNPermissions: 81b4a5e0f9fdb3b145e9622c199df8f629c51f51
   RNReanimated: 43675f1f0e704abe8ebf953fd79b00e66302cda2

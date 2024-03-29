@@ -10394,7 +10394,7 @@ __metadata:
     obj-multiplex: 1.0.0
     patch-package: 8.0.0
     pbkdf2: 3.1.2
-    posthog-react-native: ^3.0.0
+    posthog-react-native: 3.0.0
     prettier: 3.0.0
     pump: 3.0.0
     randombytes: 2.1.0
@@ -10410,7 +10410,7 @@ __metadata:
     react-native-config: 1.5.1
     react-native-crypto: 2.2.0
     react-native-detector: 0.2.3
-    react-native-device-info: ^10.13.1
+    react-native-device-info: 10.13.1
     react-native-draggable-flatlist: 4.0.1
     react-native-encrypted-storage: 4.0.3
     react-native-fs: 2.20.0
@@ -10422,8 +10422,7 @@ __metadata:
     react-native-keyboard-aware-scroll-view: 0.9.5
     react-native-keychain: 8.1.1
     react-native-linear-gradient: 2.7.3
-    react-native-localization: ^2.3.2
-    react-native-localize: ^3.0.6
+    react-native-localization: 2.3.2
     react-native-markdown-display: 7.0.0-alpha.2
     react-native-markdown-package: 1.8.2
     react-native-mmkv: 2.11.0
@@ -14955,7 +14954,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"posthog-react-native@npm:^3.0.0":
+"posthog-react-native@npm:3.0.0":
   version: 3.0.0
   resolution: "posthog-react-native@npm:3.0.0"
   peerDependencies:
@@ -15573,7 +15572,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-device-info@npm:^10.13.1":
+"react-native-device-info@npm:10.13.1":
   version: 10.13.1
   resolution: "react-native-device-info@npm:10.13.1"
   peerDependencies:
@@ -15734,7 +15733,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-localization@npm:^2.3.2":
+"react-native-localization@npm:2.3.2":
   version: 2.3.2
   resolution: "react-native-localization@npm:2.3.2"
   dependencies:
@@ -15747,20 +15746,6 @@ __metadata:
     react-native-windows:
       optional: true
   checksum: ec349d16fb2a97ecba471410f383feaa78b56880337e11750f99fa0ede678d6372e40a809b75ac8dee256ad47e9916687ef259999805e085e286d66af10fb24e
-  languageName: node
-  linkType: hard
-
-"react-native-localize@npm:^3.0.6":
-  version: 3.0.6
-  resolution: "react-native-localize@npm:3.0.6"
-  peerDependencies:
-    react: ">=18.1.0"
-    react-native: ">=0.70.0"
-    react-native-macos: ">=0.70.0"
-  peerDependenciesMeta:
-    react-native-macos:
-      optional: true
-  checksum: 83d0c7756f316b97951af2dc70713d922d7aa67130242add08c6851b08a07c719ecd3a02b87b1b3fd2e33f46bec719658ecc745bd3e48fa7e6d12ce3ea821a6b
   languageName: node
   linkType: hard
 
