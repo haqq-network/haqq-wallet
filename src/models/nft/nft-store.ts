@@ -1,25 +1,16 @@
 import {makeAutoObservable, runInAction} from 'mobx';
-import {makePersistable} from 'mobx-persist-store';
 
 import {NftCollection, NftCollectionIndexer, NftItem} from '@app/models/nft';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
-import {storage} from '@app/services/mmkv';
 import {HaqqCosmosAddress} from '@app/types';
 
 class NftStore {
   data: Record<HaqqCosmosAddress, NftCollection> = {};
 
-  constructor(shouldSkipPersisting: boolean = false) {
+  constructor() {
     makeAutoObservable(this);
-    if (!shouldSkipPersisting) {
-      makePersistable(this, {
-        name: this.constructor.name,
-        properties: ['data'],
-        storage: storage,
-      });
-    }
   }
 
   create(item: NftItem) {
@@ -43,6 +34,24 @@ class NftStore {
 
   getCollectionById(contractAddress: HaqqCosmosAddress): NftCollection | null {
     return this.data[contractAddress] ?? null;
+  }
+
+  getCollectionsByWallet(address: HaqqCosmosAddress): NftCollection[] {
+    return Object.keys(this.data).reduce((acc, key) => {
+      const collection = this.data[key as HaqqCosmosAddress];
+      const filteredNfts = collection.nfts.filter(
+        nft => nft.address === address,
+      );
+
+      if (filteredNfts.length) {
+        acc.push({
+          ...collection,
+          nfts: filteredNfts,
+        });
+      }
+
+      return acc;
+    }, [] as NftCollection[]);
   }
 
   getNftById(nftAddress: HaqqCosmosAddress): NftItem | null {
@@ -121,6 +130,8 @@ class NftStore {
   };
 
   private parseIndexerNft = (data: NftCollectionIndexer[]): void => {
+    this.data = {};
+
     data.forEach(item => {
       this.data[item.id] = {
         ...item,
@@ -138,5 +149,5 @@ class NftStore {
   };
 }
 
-const instance = new NftStore(Boolean(process.env.JEST_WORKER_ID));
+const instance = new NftStore();
 export {instance as Nft};

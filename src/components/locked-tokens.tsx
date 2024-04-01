@@ -20,7 +20,7 @@ export interface LockedTokensProps {
 
 export function LockedTokens({balance, onForwardPress}: LockedTokensProps) {
   const {available, locked, total} = balance ?? {};
-  const {isBalaceLoadingError, isBalancesFirstSync} = useIsBalancesFirstSync();
+  const {isBalanceLoadingError, isBalancesFirstSync} = useIsBalancesFirstSync();
   const defaultTotalValueISLM = useMemo(() => `0 ${CURRENCY_NAME}`, []);
   const defaultTotalValueUSD = useMemo(() => '$0', []);
 
@@ -29,12 +29,12 @@ export function LockedTokens({balance, onForwardPress}: LockedTokensProps) {
       return true;
     }
 
-    if (isBalaceLoadingError) {
+    if (isBalanceLoadingError) {
       return !total?.isPositive();
     }
 
     return false;
-  }, [isBalaceLoadingError, isBalancesFirstSync]);
+  }, [isBalanceLoadingError, isBalancesFirstSync]);
 
   return (
     <View style={styles.container}>
