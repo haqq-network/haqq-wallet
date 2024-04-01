@@ -32,5 +32,5 @@ export const useIsBalancesFirstSync = () => {
     };
   }, [error]);
 
-  return {isBalancesFirstSync, isBalaceLoadingError: !!error};
+  return {isBalancesFirstSync, isBalanceLoadingError: !!error};
 };
