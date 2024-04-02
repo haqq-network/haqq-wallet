@@ -98,9 +98,12 @@ export const TransactionSumScreen = memo(() => {
         });
       } else {
         showModal(ModalType.error, {
-          title: getText(I18N.notEnoughGasTitle),
-          description: getText(I18N.modalDontHaveFeeError),
-          close: getText(I18N.cancel),
+          title: getText(I18N.feeCalculatingRpcErrorTitle),
+          description: getText(I18N.feeCalculatingRpcErrorDescription),
+          close: getText(I18N.feeCalculatingRpcErrorClose),
+          onClose: () => {
+            onAmount(amount);
+          },
         });
       }
       setLoading(false);

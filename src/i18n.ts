@@ -938,6 +938,9 @@ export enum I18N {
   walletConnectErrorTitle,
   walletConnectErrorClose,
   walletConnectInvalidUri,
+  feeCalculatingRpcErrorClose,
+  feeCalculatingRpcErrorDescription,
+  feeCalculatingRpcErrorTitle,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -1836,7 +1839,7 @@ const en: Record<I18N, string> = {
     'Locked tokens are the sum of your tokens - vested tokens and tokens staked by you, including tokens that are in an unbonded period. \n\nVested tokens are your tokens but you cannot transfer to other users or use them to pay for gas, but you can delegate to validators - stake to improve the reliability of the HAQQ network, and make a profit. Vested tokens are unlocked according to the schedule',
   [I18N.totalValueScreenTitle]: 'Transactions',
   [I18N.totalValueAccount]: 'Total balance',
-  [I18N.modalDontHaveFeeError]: "You don't have enough aISLM to pay the fee",
+  [I18N.modalDontHaveFeeError]: "You don't have enough ISLM to pay the fee",
   [I18N.modalDontHaveFeeClose]: 'Close',
   [I18N.notEnoughGasTitle]: 'Not enough gas',
   [I18N.notEnoughGasDescription]:
@@ -2050,4 +2053,7 @@ const en: Record<I18N, string> = {
   [I18N.walletConnectErrorClose]: 'Close',
   [I18N.walletConnectErrorTitle]: 'WalletConnect Error',
   [I18N.walletConnectInvalidUri]: 'WalletConnect invalid URI',
+  [I18N.feeCalculatingRpcErrorTitle]: 'Something went wrong',
+  [I18N.feeCalculatingRpcErrorDescription]: 'Estimate gas request failed',
+  [I18N.feeCalculatingRpcErrorClose]: 'Try again',
 };
