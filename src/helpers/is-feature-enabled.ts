@@ -21,7 +21,7 @@ export const isFeatureEnabled = (feature: Feature): boolean => {
     case Feature.governanceAndStaking:
       return app.isDeveloper;
     case Feature.nft:
-      return app.isDeveloper;
+      return Config.IS_NFT_ENABLED === 'true';
     case Feature.tokens:
       return true;
     case Feature.rtl:

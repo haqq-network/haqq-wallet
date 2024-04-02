@@ -17,6 +17,13 @@ on:
           - true
           - false
 
+      IS_NFT_ENABLED:
+        type: choice
+        description: IS_NFT_ENABLED
+        options:
+          - true
+          - false
+
       STORIES_ENABLED:
         type: choice
         description: STORIES_ENABLED
@@ -30,6 +37,9 @@ on:
         required: false
         type: string
       IS_SSS_ENABLED:
+        required: false
+        type: string
+      IS_NFT_ENABLED:
         required: false
         type: string
       STORIES_ENABLED:
@@ -52,7 +62,7 @@ jobs:
           cache: yarn
 
       - name: Install packages
-        run: yarn install 
+        run: yarn install
 
       - name: Install pods
         run: cd ios && pod install --repo-update && cd ../
@@ -90,6 +100,7 @@ jobs:
           echo "HCAPTCHA_URL=${{secrets.HCAPTCHA_URL}}" >> .env
           echo "IS_DEVELOPMENT=${{github.event.inputs.IS_DEVELOPMENT || inputs.IS_DEVELOPMENT || 'false'}}" >> .env
           echo "IS_SSS_ENABLED=${{github.event.inputs.IS_SSS_ENABLED || inputs.IS_SSS_ENABLED || 'true'}}" >> .env
+          echo "IS_NFT_ENABLED=${{github.event.inputs.IS_NFT_ENABLED || inputs.IS_NFT_ENABLED || 'true'}}" >> .env
           echo "STORIES_ENABLED=${{github.event.inputs.STORIES_ENABLED || inputs.STORIES_ENABLED || 'true'}}" >> .env
 
           echo "DETOX_MILK_PRIVATE_KEY=${{secrets.DETOX_MILK_PRIVATE_KEY}}" >> .env

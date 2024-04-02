@@ -16,6 +16,7 @@ declare module 'react-native-config' {
     METADATA_URL: string;
     GENERATE_SHARES_URL: string;
     IS_SSS_ENABLED: string;
+    IS_NFT_ENABLED: string;
     AIRDROP_MAINNET_URL: string;
     HAQQ_BACKEND: string;
     HAQQ_BACKEND_DEV: string;

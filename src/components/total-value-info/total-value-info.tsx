@@ -107,7 +107,6 @@ export const TotalValueInfo = observer(
                 title={I18N.accountInfoTransactionTabTitle}
                 component={null}
               />
-              x
               {isFeatureEnabled(Feature.nft) && (
                 <TopTabNavigator.Tab
                   name={TotalValueTabNames.nft}
