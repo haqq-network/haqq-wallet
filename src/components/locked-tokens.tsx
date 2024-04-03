@@ -42,7 +42,7 @@ export function LockedTokens({balance, onForwardPress}: LockedTokensProps) {
       <First>
         {showPlaceholder && (
           <Placeholder opacity={0.9}>
-            <Placeholder.Item height={24} width={100} />
+            <Placeholder.Item height={20} width={100} />
           </Placeholder>
         )}
         <View style={styles.row}>
@@ -109,6 +109,7 @@ const styles = createTheme({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
+    height: 20,
   },
   iconButton: {
     width: 24,
