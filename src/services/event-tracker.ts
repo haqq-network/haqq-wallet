@@ -14,6 +14,41 @@ const logger = Logger.create('EventTracker');
 
 const DISABLED = __DEV__ || Config.FOR_DETOX;
 
+const EventsNameMap: Record<MarketingEvents, string> = {
+  [MarketingEvents.accountCreated]: 'account_created',
+  [MarketingEvents.accountAdded]: 'account_added',
+  [MarketingEvents.accountImported]: 'account_imported',
+  [MarketingEvents.accountRestored]: 'account_restored',
+  [MarketingEvents.backupCompleted]: 'backup_completed',
+  [MarketingEvents.sendFund]: 'send_fund',
+  [MarketingEvents.pushNotifications]: 'push_notifications',
+  [MarketingEvents.pushChannelSubscribe]: 'push_channel_subscribe',
+  [MarketingEvents.pushChannelUnsubscribe]: 'push_channel_unsubscribe',
+  [MarketingEvents.newsOpenItem]: 'news_open_item',
+  [MarketingEvents.newsOpenLink]: 'news_open_link',
+  [MarketingEvents.newsScrolledItem]: 'news_scrolled_item',
+  [MarketingEvents.newsOpenOnboardingItem]: 'news_open_onboarding_item',
+  [MarketingEvents.newsOpenOnboardingLink]: 'news_open_onboarding_link',
+  [MarketingEvents.newsScrolledOnboardingItem]: 'news_scrolled_onboarding_item',
+  [MarketingEvents.newsOpenPushItem]: 'news_open_push_item',
+  [MarketingEvents.newsOpenPushLink]: 'news_open_push_link',
+  [MarketingEvents.newsScrolledPushItem]: 'news_scrolled_push_item',
+  [MarketingEvents.newsOpen]: 'news_open',
+  [MarketingEvents.earnOpen]: 'earn_open',
+  [MarketingEvents.browserOpen]: 'browser_open',
+  [MarketingEvents.governanceOpen]: 'governance_open',
+  [MarketingEvents.settingsOpen]: 'settings_open',
+  [MarketingEvents.claimOpened]: 'claim_opened',
+  [MarketingEvents.claimFetched]: 'claim_fetched',
+  [MarketingEvents.claimCreated]: 'claim_created',
+  [MarketingEvents.claimFailed]: 'claim_failed',
+  [MarketingEvents.settingsAccountDetails]: 'settings_account_details',
+  [MarketingEvents.stakingOpen]: 'staking_open',
+  [MarketingEvents.stakingDelegate]: 'staking_delegate',
+  [MarketingEvents.stakingValidators]: 'staking_validators',
+  [MarketingEvents.jailed]: 'jailed',
+};
+
 export class EventTracker extends Initializable {
   public static instance = new EventTracker();
 
@@ -131,7 +166,8 @@ export class EventTracker extends Initializable {
     event: MarketingEvents,
     params: Record<string, string> = {},
   ) {
-    this._posthog?.capture(event, {$set: params});
+    const eventName = EventsNameMap[event] ?? event ?? 'unknown';
+    this._posthog?.capture(eventName, {$set: params});
   }
 
   private _configureAdjust() {
