@@ -43,6 +43,7 @@ export enum TextVariant {
   t16 = 't16',
   t17 = 't17',
   t18 = 't18',
+  t19 = 't19',
   u0 = 'u0',
   u1 = 'u1',
 }
@@ -93,6 +94,8 @@ export type TextProps = Omit<RNTextProps, 'style' | 'children'> & {
   /** @deprecated Please use variant instead */
   t18?: boolean;
   /** @deprecated Please use variant instead */
+  t19?: boolean;
+  /** @deprecated Please use variant instead */
   u0?: boolean;
   /** @deprecated Please use variant instead */
   u1?: boolean;
@@ -129,6 +132,7 @@ export const Text = ({
   t16,
   t17,
   t18,
+  t19,
   u0,
   u1,
   style,
@@ -198,6 +202,7 @@ export const Text = ({
         t16 && StyleSheet.flatten([page.t16Style, style]),
         t17 && StyleSheet.flatten([page.t17Style, style]),
         t18 && StyleSheet.flatten([page.t18Style, style]),
+        t19 && StyleSheet.flatten([page.t19Style, style]),
         u0 && StyleSheet.flatten([page.u0Style, style]),
         u1 && StyleSheet.flatten([page.u1Style, style]),
         variantStyle,
@@ -416,6 +421,12 @@ const page = createTheme({
     ...sfProTextSemibold600,
     fontSize: 12,
     lineHeight: 16,
+    color: Color.textBase1,
+  },
+  t19Style: {
+    ...sfProTextSemibold600,
+    fontSize: 12,
+    lineHeight: 14,
     color: Color.textBase1,
   },
 });
