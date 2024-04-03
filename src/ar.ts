@@ -864,7 +864,7 @@ export const ar = {
     'الرموز المقفلة هي مجموع الرموز المميزة الخاصة بك - الرموز المميزة والرموز المميزة التي قمت بتثبيتها, بما في ذلك الرموز المميزة الموجودة في فترة عدم الإيداع. \n\nالرموز المميزة هي الرموز المميزة الخاصة بك ولكن لا يمكنك نقلها إلى مستخدمين آخرين أو استخدامها لدفع ثمن الغاز, ولكن يمكنك تفويض المدققين - حصة لتحسين موثوقية شبكة HAQQ وتحقيق الربح. يتم فتح الرموز المميزة وفقًا للجدول الزمني',
   [I18N.totalValueScreenTitle]: 'المعاملات',
   [I18N.totalValueAccount]: 'إجمالي الرصيد',
-  [I18N.modalDontHaveFeeError]: 'ليس لديك ما يكفي من AISLM لدفع الرسوم',
+  [I18N.modalDontHaveFeeError]: 'ليس لديك ما يكفي من ISLM لدفع الرسوم',
   [I18N.modalDontHaveFeeClose]: 'إغلاق',
   [I18N.notEnoughGasTitle]: 'الغاز غير كافٍ',
   [I18N.notEnoughGasDescription]:
@@ -1079,4 +1079,7 @@ export const ar = {
   [I18N.walletConnectErrorClose]: 'إغلاق',
   [I18N.walletConnectErrorTitle]: 'خطأ في WalletConnect',
   [I18N.walletConnectInvalidUri]: 'URI غير صالح لـWalletConnect',
+  [I18N.feeCalculatingRpcErrorTitle]: 'هناك خطأ ما',
+  [I18N.feeCalculatingRpcErrorDescription]: 'فشل طلب تقدير الغاز',
+  [I18N.feeCalculatingRpcErrorClose]: 'حاول ثانية',
 };
