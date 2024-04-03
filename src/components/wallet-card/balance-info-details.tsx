@@ -38,7 +38,7 @@ export const BalanceInfoDetails = ({
           <>
             <Spacer height={8} />
             <Placeholder opacity={0.6}>
-              <Placeholder.Item width={40} height={14} />
+              <Placeholder.Item width={40} height={16} />
             </Placeholder>
           </>
         )}
@@ -60,7 +60,7 @@ export const BalanceInfoDetails = ({
             <>
               <Spacer height={8} />
               <Placeholder opacity={0.6}>
-                <Placeholder.Item width={60} height={14} />
+                <Placeholder.Item width={60} height={16} />
               </Placeholder>
             </>
           )}
