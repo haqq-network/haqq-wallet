@@ -1,10 +1,11 @@
 import React, {useMemo} from 'react';
 
 import {format, isSameYear, isToday} from 'date-fns';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
+import {createTheme} from '@app/helpers';
 
 import {SectionHeaderData} from './types';
 
@@ -37,10 +38,11 @@ export const TransactionSectionHeader = ({data}: TransactionDate) => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = createTheme({
   container: {
     paddingTop: 16,
     paddingBottom: 8,
     paddingHorizontal: 24,
+    backgroundColor: Color.bg1,
   },
 });
