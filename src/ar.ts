@@ -931,6 +931,7 @@ export const ar = {
   [I18N.jsonRpcErrorInvalidProvider]: 'المحفظة غير محددة',
   [I18N.jsonRpcErrorInvalidWallet]: 'موفر المحفظة غير محدد',
   [I18N.tokensZeroBalance]: 'رصيد صفر',
+  [I18N.tokensLowBalance]: 'رصيد منخفض',
   [I18N.noTokens]: 'لا توجد رموز مميزة',
   [I18N.tokensSorting]: 'فرز الرموز المميزة',
   [I18N.tokensSortingByAmount]: 'حسب المبلغ',

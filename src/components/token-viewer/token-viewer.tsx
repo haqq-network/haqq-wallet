@@ -32,6 +32,8 @@ const SortingNamesMap = {
   available: getText(I18N.tokensSortingByAvailable),
 };
 
+const MIN_LOW_AMOUNT = 0.01;
+
 export const TokenViewer = observer(
   ({data: _data, style, wallet}: TokenViewerProps) => {
     const data = useMemo(() => computed(() => _data), [_data]).get();
@@ -45,12 +47,12 @@ export const TokenViewer = observer(
     const balances = useWalletsBalance(wallets);
     const {showActionSheetWithOptions} = useActionSheet();
 
-    const [showZeroBalance, setShowZeroBalance] = useState(true);
+    const [showLowBalance, setShowLowBalance] = useState(true);
     const [sorting, setSorting] = useState(SortingNamesMap.amount);
 
-    const zeroBalanceIcon = useMemo(() => {
-      return showZeroBalance ? IconsName.eye_open : IconsName.eye_close;
-    }, [showZeroBalance]);
+    const lowBalanceIcon = useMemo(() => {
+      return showLowBalance ? IconsName.eye_open : IconsName.eye_close;
+    }, [showLowBalance]);
 
     const onPressSort = useCallback(() => {
       showActionSheetWithOptions(
@@ -79,7 +81,7 @@ export const TokenViewer = observer(
     }, [showActionSheetWithOptions]);
 
     const onChangeViewModePress = useCallback(() => {
-      setShowZeroBalance(prev => !prev);
+      setShowLowBalance(prev => !prev);
     }, []);
 
     const sort = useCallback(
@@ -124,11 +126,11 @@ export const TokenViewer = observer(
             </Text>
           </IconButton>
           <IconButton onPress={onChangeViewModePress} style={styles.button}>
-            <Icon color={Color.graphicBase1} name={zeroBalanceIcon} />
+            <Icon color={Color.graphicBase1} name={lowBalanceIcon} />
             <Text
               variant={TextVariant.t13}
               color={Color.graphicBase1}
-              i18n={I18N.tokensZeroBalance}
+              i18n={I18N.tokensLowBalance}
             />
           </IconButton>
         </View>
@@ -138,10 +140,17 @@ export const TokenViewer = observer(
           .map(address => {
             const _wallet = Wallet.getById(address);
             const tokens = data[address].filter(token => {
-              if (showZeroBalance) {
+              if (showLowBalance) {
                 return true;
               }
-              return token.value.isPositive();
+              const fiatString = token.value.toFiat();
+              const fiat = parseFloat(fiatString);
+
+              if (!fiatString || Number.isNaN(fiat)) {
+                return token.value.raw.gte(MIN_LOW_AMOUNT);
+              }
+
+              return fiat >= MIN_LOW_AMOUNT;
             });
 
             if (!_wallet) {
