@@ -23,7 +23,8 @@ export type AppInfo = {
   chain_id: string;
   platform: PlatformOSType;
   version: string;
-  adid: string | null;
+  posthog_id: string | null;
+  adjust_id: string | null;
   ip_address: string | null;
   leading_address: string | null;
   notifications: {
@@ -38,7 +39,8 @@ export type AppInfo = {
 export async function getAppInfo(): Promise<AppInfo> {
   const wallets = Wallet.getAll().map(wallet => wallet.address.toLowerCase());
   const uid = await getUid();
-  const adid = await EventTracker.instance.getAdid();
+  const posthog_id = await EventTracker.instance.getAdid('posthog');
+  const adjust_id = await EventTracker.instance.getAdid('adjust');
   const ipAddress = await NetworkInfo.getIPAddress();
   const leadingAccount = getLeadingAccount();
 
@@ -49,7 +51,8 @@ export async function getAppInfo(): Promise<AppInfo> {
     chain_id: app.provider.cosmosChainId,
     platform: Platform.OS,
     version: getAppVersion(),
-    adid,
+    posthog_id,
+    adjust_id,
     ip_address: ipAddress,
     leading_address: leadingAccount?.address ?? null,
     notifications: {
