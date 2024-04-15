@@ -1,5 +1,5 @@
 export const ABI_ERC721_TRANSFER_FROM_ACTION = {
-  name: 'transferFrom',
+  name: 'safeTransferFrom',
   type: 'function',
   constant: false,
   inputs: [
@@ -21,6 +21,40 @@ export const ABI_ERC721_TRANSFER_FROM_ACTION = {
   ],
   outputs: [],
   payable: false,
+  stateMutability: 'nonpayable',
+};
+
+export const ABI_ERC1155_TRANSFER_ACTION = {
+  name: 'safeTransferFrom',
+  type: 'function',
+  inputs: [
+    {
+      internalType: 'address',
+      name: 'from',
+      type: 'address',
+    },
+    {
+      internalType: 'address',
+      name: 'to',
+      type: 'address',
+    },
+    {
+      internalType: 'uint256',
+      name: 'id',
+      type: 'uint256',
+    },
+    {
+      internalType: 'uint256',
+      name: 'amount',
+      type: 'uint256',
+    },
+    {
+      internalType: 'bytes',
+      name: 'data',
+      type: 'bytes',
+    },
+  ],
+  outputs: [],
   stateMutability: 'nonpayable',
 };
 

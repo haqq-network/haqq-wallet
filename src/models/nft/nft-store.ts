@@ -1,10 +1,18 @@
 import {makeAutoObservable, runInAction} from 'mobx';
 
-import {NftCollection, NftCollectionIndexer, NftItem} from '@app/models/nft';
+import {AddressUtils} from '@app/helpers/address-utils';
+import {Whitelist} from '@app/helpers/whitelist';
+import {Contracts} from '@app/models/contracts';
+import {
+  ContractType,
+  NftCollection,
+  NftCollectionIndexer,
+  NftItem,
+} from '@app/models/nft';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
-import {HaqqCosmosAddress} from '@app/types';
+import {HaqqCosmosAddress, IContract} from '@app/types';
 
 class NftStore {
   data: Record<HaqqCosmosAddress, NftCollection> = {};
@@ -125,20 +133,34 @@ class NftStore {
 
     runInAction(() => {
       this.parseIndexerNft(nfts);
-      Logger.log('nfts', JSON.stringify(this.data, null, 2));
     });
   };
 
   private parseIndexerNft = (data: NftCollectionIndexer[]): void => {
     this.data = {};
 
-    data.forEach(item => {
+    data.forEach(async item => {
+      const contractAddress = AddressUtils.toHaqq(item.address);
+      const contract = (this.getContract(contractAddress) ||
+        (await Whitelist.verifyAddress(item.address)) ||
+        {}) as IContract;
+      const hasCache = this.hasContractCache(contractAddress);
+      if (!hasCache) {
+        this.saveContract(contract);
+      }
+
+      const contractType = contract.is_erc721
+        ? ContractType.erc721
+        : ContractType.erc1155;
+
       this.data[item.id] = {
         ...item,
         description: item.description || '',
         created_at: Date.now(),
+        contractType: contractType,
         nfts: item.nfts.map(nft => ({
           ...nft,
+          contractType: contractType,
           name: nft.name || 'Unknown',
           description: nft.description || '-',
           tokenId: Number(nft.token_id),
@@ -146,6 +168,24 @@ class NftStore {
         })),
       };
     });
+
+    Logger.log('nfts', JSON.stringify(this.data, null, 2));
+  };
+
+  private hasContractCache = (id: HaqqCosmosAddress) => {
+    return !!Contracts.getById(id);
+  };
+
+  private saveContract = (contract: IContract | undefined) => {
+    if (!contract) {
+      return;
+    }
+
+    Contracts.create(contract.id, contract);
+  };
+
+  private getContract = (id: HaqqCosmosAddress) => {
+    return Contracts.getById(id);
   };
 }
 
