@@ -22,12 +22,15 @@ export const NftItemDetailsAttributes = ({properties}: Props) => {
               return (
                 <View key={key} style={styles.attributeContainer}>
                   <View style={styles.attributeValueContainer}>
-                    <Text variant={TextVariant.t13}>{key}</Text>
-                    <Text variant={TextVariant.t13}>
-                      {value}
-                      {/*{prop.frequency * 100}%*/}
-                    </Text>
+                    <Text variant={TextVariant.t13}>{value}</Text>
+                    {/*<Text variant={TextVariant.t13}>*/}
+                    {/*  {value}*/}
+                    {/*  /!*{prop.frequency * 100}%*!/*/}
+                    {/*</Text>*/}
                   </View>
+                  <Text variant={TextVariant.t15} color={Color.textBase2}>
+                    {key}
+                  </Text>
                 </View>
               );
             })
