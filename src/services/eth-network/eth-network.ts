@@ -11,6 +11,7 @@ import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {getDefaultChainId} from '@app/network';
 import {Balance} from '@app/services/balance';
+import {getERC1155TransferData} from '@app/services/eth-network/erc1155';
 import {getERC721TransferData} from '@app/services/eth-network/erc721';
 import {storage} from '@app/services/mmkv';
 import {applyEthTxMultiplier} from '@app/utils';
@@ -292,7 +293,6 @@ export class EthNetwork {
     to: string,
     tokenId: number,
     contractAddress: string,
-    provider = app.provider,
   ) {
     const data = getERC721TransferData(from, to, tokenId);
     return await EthNetwork.estimateTransaction(
@@ -301,7 +301,7 @@ export class EthNetwork {
       Balance.Empty,
       data,
       getRemoteBalanceValue('eth_min_gas_limit'),
-      provider,
+      app.provider,
     );
   }
 
@@ -325,7 +325,55 @@ export class EthNetwork {
 
       return await EthNetwork.sendTransaction(signedTx);
     } catch (error) {
-      Logger.captureException(error, 'EthNetwork.transferERC20', {
+      Logger.captureException(error, 'EthNetwork.transferERC721', {
+        tokenId,
+        contractAddress,
+        from: from.address,
+        to,
+        hdPath: from.path || 'null',
+      });
+      throw error;
+    }
+  }
+
+  static async estimateERC1155Transfer(
+    from: string,
+    to: string,
+    tokenId: number,
+    contractAddress: string,
+  ) {
+    const data = getERC1155TransferData(from, to, tokenId);
+    return await EthNetwork.estimateTransaction(
+      from,
+      contractAddress,
+      Balance.Empty,
+      data,
+      getRemoteBalanceValue('eth_min_gas_limit'),
+      app.provider,
+    );
+  }
+
+  async transferERC1155(
+    transport: ProviderInterface,
+    from: Wallet,
+    to: string,
+    tokenId: number,
+    contractAddress: string,
+  ) {
+    try {
+      const data = getERC1155TransferData(from.address, to, tokenId);
+      const unsignedTx = await EthNetwork.populateTransaction(
+        from.address,
+        contractAddress,
+        Balance.Empty,
+        data,
+      );
+
+      const signedTx = await transport.signTransaction(from.path!, unsignedTx);
+
+      return await EthNetwork.sendTransaction(signedTx);
+    } catch (error) {
+      Logger.captureException(error, 'EthNetwork.transferERC1155', {
         tokenId,
         contractAddress,
         from: from.address,

@@ -18,6 +18,7 @@ import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useLayoutEffectAsync} from '@app/hooks/use-effect-async';
 import {useError} from '@app/hooks/use-error';
 import {Contact} from '@app/models/contact';
+import {ContractType} from '@app/models/nft';
 import {Wallet} from '@app/models/wallet';
 import {
   TransactionStackParamList,
@@ -27,7 +28,7 @@ import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {EthSignErrorDataDetails} from '@app/services/eth-sign';
 import {EventTracker} from '@app/services/event-tracker';
-import {MarketingEvents, ModalType} from '@app/types';
+import {MarketingEvents, ModalType, TransactionResponse} from '@app/types';
 import {makeID} from '@app/utils';
 import {FEE_ESTIMATING_TIMEOUT_MS} from '@app/variables/common';
 
@@ -61,13 +62,23 @@ export const TransactionNftConfirmationScreen = observer(() => {
 
     let feeWei = Balance.Empty;
 
-    const result = await EthNetwork.estimateERC721Transfer(
-      wallet?.address!,
-      route.params.to,
-      nft.tokenId,
-      AddressUtils.toEth(nft.contract),
-    );
-    feeWei = result.feeWei;
+    if (nft.contractType === ContractType.erc721) {
+      const result = await EthNetwork.estimateERC721Transfer(
+        wallet?.address!,
+        route.params.to,
+        nft.tokenId,
+        AddressUtils.toEth(nft.contract),
+      );
+      feeWei = result.feeWei;
+    } else {
+      const result = await EthNetwork.estimateERC1155Transfer(
+        wallet?.address!,
+        route.params.to,
+        nft.tokenId,
+        AddressUtils.toEth(nft.contract),
+      );
+      feeWei = result.feeWei;
+    }
 
     clearTimeout(timer);
     setFee(feeWei);
@@ -90,13 +101,24 @@ export const TransactionNftConfirmationScreen = observer(() => {
           true,
         );
 
-        const transaction = await ethNetworkProvider.transferERC721(
-          provider,
-          wallet,
-          route.params.to,
-          nft.tokenId,
-          AddressUtils.toEth(nft.contract),
-        );
+        let transaction: TransactionResponse | null = null;
+        if (nft.contractType === ContractType.erc721) {
+          transaction = await ethNetworkProvider.transferERC721(
+            provider,
+            wallet,
+            route.params.to,
+            nft.tokenId,
+            AddressUtils.toEth(nft.contract),
+          );
+        } else {
+          transaction = await ethNetworkProvider.transferERC1155(
+            provider,
+            wallet,
+            route.params.to,
+            nft.tokenId,
+            AddressUtils.toEth(nft.contract),
+          );
+        }
 
         if (transaction) {
           EventTracker.instance.trackEvent(MarketingEvents.sendFund);
