@@ -942,6 +942,8 @@ export enum I18N {
   feeCalculatingRpcErrorDescription,
   feeCalculatingRpcErrorTitle,
   tokensLowBalance,
+  swapWidgetDescription,
+  swapWidgetTitle,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -2058,4 +2060,7 @@ const en: Record<I18N, string> = {
   [I18N.feeCalculatingRpcErrorTitle]: 'Something went wrong',
   [I18N.feeCalculatingRpcErrorDescription]: 'Estimate gas request failed',
   [I18N.feeCalculatingRpcErrorClose]: 'Try again',
+  [I18N.swapWidgetTitle]: 'Swap tokens',
+  [I18N.swapWidgetDescription]:
+    'Haqq wallet finds the best price for your token swap',
 };

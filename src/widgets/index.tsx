@@ -14,6 +14,7 @@ import {VariablesString} from '@app/models/variables-string';
 import {Backend} from '@app/services/backend';
 import {IWidget} from '@app/types';
 import {generateUUID} from '@app/utils';
+import {SwapWidget} from '@app/widgets//swap-widget';
 import {AdWidget} from '@app/widgets/ad-widget';
 import {BannerWidget} from '@app/widgets/banner-widget';
 import {GovernanceWidgetWrapper} from '@app/widgets/governance-widget';
@@ -55,6 +56,7 @@ const WidgetMap: IWidgetMap = {
   Banner: params => <BannerWidget key={generateUUID()} banner={params} />,
   TokenList: params => <TokensWidgetWrapper key={generateUUID()} {...params} />,
   Nft: params => <NftWidgetWrapper key={generateUUID()} {...params} />,
+  Swap: params => <SwapWidget key={generateUUID()} {...params} />,
 };
 
 export const WidgetRoot = memo(({lastUpdate}: {lastUpdate: number}) => {

@@ -1238,6 +1238,10 @@ export interface INftWidget extends IWidgetBase {
   size: NftWidgetSize;
 }
 
+export interface ISwapWidget extends IWidgetBase {
+  component: 'Swap';
+}
+
 export type IWidget =
   | ITransactionsWidget
   | ITransactionsShortWidget
@@ -1248,7 +1252,8 @@ export type IWidget =
   | IAdWidget
   | IBannerWidget
   | ITokensWidget
-  | INftWidget;
+  | INftWidget
+  | ISwapWidget;
 
 export interface MarkupResponse {
   blocks: ILayoutWidget;
