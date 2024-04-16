@@ -81,6 +81,7 @@ class NftStore {
   }
 
   getAll() {
+    Logger.log('NFTs', JSON.stringify(this.data, null, 2));
     return Object.values(this.data).reduce(
       (acc: NftItem[], item) => [...acc, ...item.nfts],
       [],
@@ -139,37 +140,37 @@ class NftStore {
   private parseIndexerNft = (data: NftCollectionIndexer[]): void => {
     this.data = {};
 
-    data.forEach(async item => {
-      const contractAddress = AddressUtils.toHaqq(item.address);
-      const contract = (this.getContract(contractAddress) ||
-        (await Whitelist.verifyAddress(item.address)) ||
-        {}) as IContract;
-      const hasCache = this.hasContractCache(contractAddress);
-      if (!hasCache) {
-        this.saveContract(contract);
-      }
+    runInAction(() => {
+      data.forEach(async item => {
+        const contractAddress = AddressUtils.toHaqq(item.address);
+        const contract = (this.getContract(contractAddress) ||
+          (await Whitelist.verifyAddress(item.address)) ||
+          {}) as IContract;
+        const hasCache = this.hasContractCache(contractAddress);
+        if (!hasCache) {
+          this.saveContract(contract);
+        }
 
-      const contractType = contract.is_erc721
-        ? ContractType.erc721
-        : ContractType.erc1155;
+        const contractType = contract.is_erc721
+          ? ContractType.erc721
+          : ContractType.erc1155;
 
-      this.data[item.id] = {
-        ...item,
-        description: item.description || '',
-        created_at: Date.now(),
-        contractType: contractType,
-        nfts: item.nfts.map(nft => ({
-          ...nft,
+        this.data[item.id] = {
+          ...item,
+          description: item.description || '',
+          created_at: Date.now(),
           contractType: contractType,
-          name: nft.name || 'Unknown',
-          description: nft.description || '-',
-          tokenId: Number(nft.token_id),
-          price: nft.price ? new Balance(nft.price) : Balance.getEmpty(),
-        })),
-      };
+          nfts: item.nfts.map(nft => ({
+            ...nft,
+            contractType: contractType,
+            name: nft.name || 'Unknown',
+            description: nft.description || '-',
+            tokenId: Number(nft.token_id),
+            price: nft.price ? new Balance(nft.price) : Balance.getEmpty(),
+          })),
+        };
+      });
     });
-
-    Logger.log('nfts', JSON.stringify(this.data, null, 2));
   };
 
   private hasContractCache = (id: HaqqCosmosAddress) => {
