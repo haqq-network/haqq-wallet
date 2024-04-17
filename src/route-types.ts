@@ -452,14 +452,14 @@ export type HomeStackParamList = {
   };
 };
 
-export enum NftDetailsStackRoutes {
+export enum NftStackRoutes {
   NftItemDetails = 'nftItemDetails',
   NftCollectionDetails = 'nftCollectionDetails',
 }
 
-export type NftDetailsStackParamList = HomeFeedStackParamList & {
-  [NftDetailsStackRoutes.NftItemDetails]: {item: NftItem};
-  [NftDetailsStackRoutes.NftCollectionDetails]: {item: NftCollection};
+export type NftStackParamList = HomeFeedStackParamList & {
+  [NftStackRoutes.NftItemDetails]: {item: NftItem};
+  [NftStackRoutes.NftCollectionDetails]: {item: NftCollection};
 };
 
 export enum ProposalDepositStackRoutes {

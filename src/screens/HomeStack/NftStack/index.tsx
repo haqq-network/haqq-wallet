@@ -9,14 +9,14 @@ import {I18N, getText} from '@app/i18n';
 import {
   HomeFeedStackParamList,
   HomeFeedStackRoutes,
-  NftDetailsStackParamList,
-  NftDetailsStackRoutes,
+  NftStackParamList,
+  NftStackRoutes,
 } from '@app/route-types';
-import {NftCollectionDetailsScreen} from '@app/screens/HomeStack/NftDetailsStack/nft-collection-details';
-import {NftItemDetailsScreen} from '@app/screens/HomeStack/NftDetailsStack/nft-item-details';
+import {NftCollectionDetailsScreen} from '@app/screens/HomeStack/NftStack/nft-collection-details';
+import {NftItemDetailsScreen} from '@app/screens/HomeStack/NftStack/nft-item-details';
 import {ScreenOptionType} from '@app/types';
 
-const Stack = createNativeStackNavigator<NftDetailsStackParamList>();
+const Stack = createNativeStackNavigator<NftStackParamList>();
 
 const screenOptions: ScreenOptionType = popupScreenOptionsWithMargin;
 
@@ -39,27 +39,27 @@ export const NftDetailsStack = () => {
   const {type, ...params} = route.params;
   const screenName =
     type === 'nft'
-      ? NftDetailsStackRoutes.NftItemDetails
-      : NftDetailsStackRoutes.NftCollectionDetails;
+      ? NftStackRoutes.NftItemDetails
+      : NftStackRoutes.NftCollectionDetails;
 
   return (
     <Stack.Navigator
       screenOptions={screenOptions}
       initialRouteName={screenName}>
       <Stack.Screen
-        name={NftDetailsStackRoutes.NftCollectionDetails}
+        name={NftStackRoutes.NftCollectionDetails}
         component={NftCollectionDetailsScreen}
         options={nftCollectionDetailsOptions}
         initialParams={
-          params as unknown as NftDetailsStackParamList[NftDetailsStackRoutes.NftCollectionDetails]
+          params as NftStackParamList[NftStackRoutes.NftCollectionDetails]
         }
       />
       <Stack.Screen
-        name={NftDetailsStackRoutes.NftItemDetails}
+        name={NftStackRoutes.NftItemDetails}
         component={NftItemDetailsScreen}
         options={nftItemDetailsOptions}
         initialParams={
-          params as unknown as NftDetailsStackParamList[NftDetailsStackRoutes.NftItemDetails]
+          params as NftStackParamList[NftStackRoutes.NftItemDetails]
         }
       />
     </Stack.Navigator>

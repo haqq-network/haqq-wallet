@@ -4,6 +4,7 @@ import {
   NativeStackNavigationOptions,
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
+import {NftDetailsStack} from 'src/screens/HomeStack/NftStack';
 
 import {QrScannerButton} from '@app/components/qr-scanner-button';
 import {Spacer} from '@app/components/ui';
@@ -15,7 +16,6 @@ import {GovernanceStack} from '@app/screens/HomeStack/GovernanceStack';
 import {HomeEarnStack} from '@app/screens/HomeStack/HomeEarnStack';
 import {HomeFeedScreen} from '@app/screens/HomeStack/HomeFeedStack/home-feed';
 import {HomeStoriesScreen} from '@app/screens/HomeStack/HomeFeedStack/home-stories';
-import {NftDetailsStack} from '@app/screens/HomeStack/NftDetailsStack';
 
 const Stack = createNativeStackNavigator<HomeFeedStackParamList>();
 
