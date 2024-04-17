@@ -3,16 +3,17 @@ import React, {memo, useCallback} from 'react';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {
   HomeStackRoutes,
-  NftDetailsStackParamList,
-  NftDetailsStackRoutes,
+  NftStackParamList,
+  NftStackRoutes,
 } from '@app/route-types';
-import {NftItemDetails} from '@app/screens/HomeStack/NftDetailsStack/components/nft-item-details/nft-item-details';
+
+import {NftItemDetails} from './components/nft-item-details/nft-item-details';
 
 export const NftItemDetailsScreen = memo(() => {
-  const navigation = useTypedNavigation<NftDetailsStackParamList>();
+  const navigation = useTypedNavigation<NftStackParamList>();
   const {params} = useTypedRoute<
-    NftDetailsStackParamList,
-    NftDetailsStackRoutes.NftItemDetails
+    NftStackParamList,
+    NftStackRoutes.NftItemDetails
   >();
 
   const onPressSend = useCallback(() => {
