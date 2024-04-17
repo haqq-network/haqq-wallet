@@ -6,7 +6,8 @@ import {
   NftStackParamList,
   NftStackRoutes,
 } from '@app/route-types';
-import {NftItemDetails} from '@app/screens/HomeStack/NftStack/components/nft-item-details/nft-item-details';
+
+import {NftItemDetails} from './components/nft-item-details/nft-item-details';
 
 export const NftItemDetailsScreen = memo(() => {
   const navigation = useTypedNavigation<NftStackParamList>();

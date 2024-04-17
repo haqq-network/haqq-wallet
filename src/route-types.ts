@@ -234,7 +234,7 @@ export type SecurityStackParamList = HomeStackParamList &
 export enum HomeFeedStackRoutes {
   HomeFeed = 'homeFeed_',
   Governance = 'governance',
-  NftDetails = 'nftDetails',
+  Nft = 'nft',
   HomeEarn = 'homeEarn',
   HomeStories = 'homeStories',
 }
@@ -242,12 +242,15 @@ export enum HomeFeedStackRoutes {
 export type HomeFeedStackParamList = HomeStackParamList & {
   [HomeFeedStackRoutes.HomeFeed]: undefined;
   [HomeFeedStackRoutes.Governance]: undefined;
-  [HomeFeedStackRoutes.NftDetails]:
+  [HomeFeedStackRoutes.Nft]:
     | {
-        type: 'nft';
+        initScreen: NftStackRoutes.NftItemDetails;
         item: NftItem;
       }
-    | {type: 'collection'; item: NftCollection};
+    | {
+        initScreen: NftStackRoutes.NftCollectionDetails;
+        item: NftCollection;
+      };
   [HomeFeedStackRoutes.HomeEarn]: undefined;
   [HomeFeedStackRoutes.HomeStories]: {id: IStory['id']};
 };

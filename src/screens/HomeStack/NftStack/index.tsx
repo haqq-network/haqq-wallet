@@ -12,9 +12,10 @@ import {
   NftStackParamList,
   NftStackRoutes,
 } from '@app/route-types';
-import {NftCollectionDetailsScreen} from '@app/screens/HomeStack/NftStack/nft-collection-details';
-import {NftItemDetailsScreen} from '@app/screens/HomeStack/NftStack/nft-item-details';
 import {ScreenOptionType} from '@app/types';
+
+import {NftCollectionDetailsScreen} from './nft-collection-details';
+import {NftItemDetailsScreen} from './nft-item-details';
 
 const Stack = createNativeStackNavigator<NftStackParamList>();
 
@@ -31,27 +32,21 @@ const nftItemDetailsOptions: ScreenOptionType = {
   headerBackHidden: false,
 };
 
-export const NftDetailsStack = () => {
-  const route = useTypedRoute<
-    HomeFeedStackParamList,
-    HomeFeedStackRoutes.NftDetails
-  >();
-  const {type, ...params} = route.params;
-  const screenName =
-    type === 'nft'
-      ? NftStackRoutes.NftItemDetails
-      : NftStackRoutes.NftCollectionDetails;
+export const NftStack = () => {
+  const {
+    params: {initScreen, item},
+  } = useTypedRoute<HomeFeedStackParamList, HomeFeedStackRoutes.Nft>();
 
   return (
     <Stack.Navigator
       screenOptions={screenOptions}
-      initialRouteName={screenName}>
+      initialRouteName={initScreen}>
       <Stack.Screen
         name={NftStackRoutes.NftCollectionDetails}
         component={NftCollectionDetailsScreen}
         options={nftCollectionDetailsOptions}
         initialParams={
-          params as NftStackParamList[NftStackRoutes.NftCollectionDetails]
+          {item} as NftStackParamList[NftStackRoutes.NftCollectionDetails]
         }
       />
       <Stack.Screen
@@ -59,7 +54,7 @@ export const NftDetailsStack = () => {
         component={NftItemDetailsScreen}
         options={nftItemDetailsOptions}
         initialParams={
-          params as NftStackParamList[NftStackRoutes.NftItemDetails]
+          {item} as NftStackParamList[NftStackRoutes.NftItemDetails]
         }
       />
     </Stack.Navigator>
