@@ -7,16 +7,21 @@ import {Color} from '@app/colors';
 import {Spacer, Text, TextVariant} from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
 import {WidgetHeader} from '@app/components/ui/widget-header';
-import {createTheme} from '@app/helpers';
+import {awaitForWallet, createTheme} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {Wallet} from '@app/models/wallet';
 import {HomeStackRoutes} from '@app/route-types';
 
 export const SwapWidget = observer(() => {
   const navigation = useTypedNavigation();
 
-  const onPress = useCallback(() => {
-    navigation.navigate(HomeStackRoutes.Swap);
+  const onPress = useCallback(async () => {
+    const address = await awaitForWallet({
+      wallets: Wallet.getAll(),
+      title: I18N.selectAccount,
+    });
+    navigation.navigate(HomeStackRoutes.Swap, {address});
   }, [navigation]);
 
   return (

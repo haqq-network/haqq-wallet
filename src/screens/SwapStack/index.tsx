@@ -4,7 +4,13 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {hideBack, hideHeader, popupScreenOptions} from '@app/helpers';
 import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
-import {SwapStackParamList, SwapStackRoutes} from '@app/route-types';
+import {useTypedRoute} from '@app/hooks';
+import {
+  HomeStackParamList,
+  HomeStackRoutes,
+  SwapStackParamList,
+  SwapStackRoutes,
+} from '@app/route-types';
 
 import {SwapFinishScreen} from './swap-finish-screen';
 import {SwapPreviewScreen} from './swap-preview-screen';
@@ -13,6 +19,7 @@ import {SwapScreen} from './swap-screen';
 const Stack = createNativeStackNavigator<SwapStackParamList>();
 
 const SwapStack = memo(() => {
+  const {params} = useTypedRoute<HomeStackParamList, HomeStackRoutes.Swap>();
   return (
     <Stack.Navigator
       screenOptions={popupScreenOptions}
@@ -21,11 +28,13 @@ const SwapStack = memo(() => {
         name={SwapStackRoutes.Swap}
         component={themeUpdaterHOC(SwapScreen)}
         options={hideBack}
+        initialParams={params}
       />
       <Stack.Screen
         name={SwapStackRoutes.Preview}
         component={themeUpdaterHOC(SwapPreviewScreen)}
         options={hideHeader}
+        initialParams={params}
       />
       <Stack.Screen
         name={SwapStackRoutes.Finish}

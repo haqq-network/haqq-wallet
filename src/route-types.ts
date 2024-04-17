@@ -454,7 +454,9 @@ export type HomeStackParamList = {
     screen: 'browserPrivacyDetails' | 'browserPrivacy';
     params?: RootStackParamList[RootStackParamList['browserPrivacyPopupStack']['screen']];
   };
-  [HomeStackRoutes.Swap]: undefined;
+  [HomeStackRoutes.Swap]: {
+    address: string;
+  };
 };
 
 export enum NftStackRoutes {
@@ -825,8 +827,12 @@ export type DeviceStackParamList = {
 };
 
 export type SwapStackParamList = {
-  Swap: undefined;
-  Preview: undefined;
+  Swap: {
+    address: string;
+  };
+  Preview: {
+    address: string;
+  };
   Finish: undefined;
 };
 
