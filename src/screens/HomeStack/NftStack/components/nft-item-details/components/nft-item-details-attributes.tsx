@@ -8,28 +8,33 @@ import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
 type Props = {
-  attributes?: any[]; // TODO Add types when will be implemented on BE
+  properties: Record<string, string> | null;
 };
 
-export const NftItemDetailsAttributes = ({attributes}: Props) => {
+export const NftItemDetailsAttributes = ({properties}: Props) => {
   return (
     <>
       <Text variant={TextVariant.t12} i18n={I18N.nftDetailsAttributes} />
       <Spacer height={8} />
       <View style={styles.attributeListContainer}>
-        {attributes?.map?.(attr => {
-          return (
-            <View key={attr.trait_type} style={styles.attributeContainer}>
-              <View style={styles.attributeValueContainer}>
-                <Text variant={TextVariant.t13}>{attr.value}</Text>
-                <Text variant={TextVariant.t13}>{attr.frequency * 100}%</Text>
-              </View>
-              <Text variant={TextVariant.t15} color={Color.textBase2}>
-                {attr.trait_type}
-              </Text>
-            </View>
-          );
-        })}
+        {properties
+          ? Object.entries(properties).map(([key, value]) => {
+              return (
+                <View key={key} style={styles.attributeContainer}>
+                  <View style={styles.attributeValueContainer}>
+                    <Text variant={TextVariant.t13}>{value}</Text>
+                    {/*<Text variant={TextVariant.t13}>*/}
+                    {/*  {value}*/}
+                    {/*  /!*{prop.frequency * 100}%*!/*/}
+                    {/*</Text>*/}
+                  </View>
+                  <Text variant={TextVariant.t15} color={Color.textBase2}>
+                    {key}
+                  </Text>
+                </View>
+              );
+            })
+          : null}
       </View>
     </>
   );

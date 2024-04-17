@@ -20,7 +20,6 @@ import {Contact} from '@app/models/contact';
 import {NftItem} from '@app/models/nft';
 import {Balance} from '@app/services/balance';
 import {splitAddress} from '@app/utils';
-import {CURRENCY_NAME, WEI} from '@app/variables/common';
 
 interface TransactionConfirmationProps {
   to: string;
@@ -90,8 +89,7 @@ export const TransactionNftConfirmation = ({
       <View style={styles.info}>
         <DataView label="Network Fee">
           <Text variant={TextVariant.t11} color={Color.textBase1}>
-            {/* TODO: Migrate to fee.toWeiString() */}
-            {`${+fee * WEI} a${CURRENCY_NAME}`}
+            {fee.toBalanceString()}
           </Text>
         </DataView>
       </View>

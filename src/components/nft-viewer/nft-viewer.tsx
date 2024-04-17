@@ -18,6 +18,7 @@ import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {I18N, getText} from '@app/i18n';
 import {Nft, NftCollection, NftItem} from '@app/models/nft';
 import {Wallet} from '@app/models/wallet';
+import {HomeFeedStackRoutes, NftStackRoutes} from '@app/route-types';
 import {NftWidgetSize} from '@app/types';
 import {SortDirectionEnum, arraySortUtil} from '@app/utils';
 
@@ -135,14 +136,20 @@ export const NftViewer = ({
 
   const onNftCollectionPress = useCallback(
     (item: NftCollection) => {
-      navigation.navigate('nftDetails', {type: 'collection', item});
+      navigation.navigate(HomeFeedStackRoutes.Nft, {
+        initScreen: NftStackRoutes.NftCollectionDetails,
+        item,
+      });
     },
     [navigation],
   );
 
   const onNftItemPress = useCallback(
     (item: NftItem) => {
-      navigation.navigate('nftDetails', {type: 'nft', item});
+      navigation.navigate(HomeFeedStackRoutes.Nft, {
+        initScreen: NftStackRoutes.NftItemDetails,
+        item,
+      });
     },
     [navigation],
   );
