@@ -1,45 +1,37 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useMemo} from 'react';
 
-import {ImageBackground, TouchableOpacity, View} from 'react-native';
+import {observer} from 'mobx-react';
+import {ImageBackground, View} from 'react-native';
 
 import {Color} from '@app/colors';
+import {Spacer, Text, TextVariant} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useNftImage} from '@app/hooks/nft/use-nft-image';
-import {useLayout} from '@app/hooks/use-layout';
 import {I18N} from '@app/i18n';
-import {NftCollection} from '@app/models/nft';
+import {Nft} from '@app/models/nft';
 import {addOpacityToColor, getRandomItemFromArray} from '@app/utils';
 
-import {Spacer, Text, TextVariant} from '../ui';
-
-type Props = {
-  data: NftCollection[];
-  onPress?(nftId: string): void;
-};
-
-export const NftCollectionInfoBanner = ({data, onPress}: Props) => {
-  const [layout, onLayout] = useLayout();
-  const collection = useMemo(() => getRandomItemFromArray(data), [data]);
+export const NftCollectionView = observer(() => {
+  const nftCollections = Nft.getAllCollections();
+  const collection = useMemo(
+    () => getRandomItemFromArray(nftCollections),
+    [nftCollections],
+  );
   const item = useMemo(
     () => getRandomItemFromArray(collection.nfts),
     [collection],
   );
   const imageUri = useNftImage(item.cached_url);
 
-  const handlePress = useCallback(
-    () => onPress?.(item.address),
-    [onPress, item.address],
-  );
+  if (!nftCollections.length) {
+    return null;
+  }
 
   return (
-    <TouchableOpacity
-      disabled={!onPress}
-      onPress={handlePress}
-      style={styles.container}
-      onLayout={onLayout}>
+    <View style={styles.container}>
       <ImageBackground
+        resizeMode="cover"
         imageStyle={styles.imageContainer}
-        style={layout}
         source={imageUri}>
         <View style={styles.itemHeaderText}>
           <Text
@@ -71,9 +63,9 @@ export const NftCollectionInfoBanner = ({data, onPress}: Props) => {
           </Text>
         </View>
       </ImageBackground>
-    </TouchableOpacity>
+    </View>
   );
-};
+});
 
 const ITEM_TEXT_POSSITION_OFFSET = 8;
 const LEFT_OFFSET = 20;
@@ -91,10 +83,10 @@ const styles = createTheme({
   },
   imageContainer: {
     borderRadius: 12,
+    width: '100%',
+    height: 167,
   },
   container: {
-    alignItems: 'center',
-    justifyContent: 'center',
     borderRadius: 12,
     width: '100%',
     height: 167,
