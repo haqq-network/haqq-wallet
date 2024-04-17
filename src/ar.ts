@@ -1083,4 +1083,6 @@ export const ar = {
   [I18N.feeCalculatingRpcErrorTitle]: 'هناك خطأ ما',
   [I18N.feeCalculatingRpcErrorDescription]: 'فشل طلب تقدير الغاز',
   [I18N.feeCalculatingRpcErrorClose]: 'حاول ثانية',
+  [I18N.swapWidgetTitle]: 'تجد محفظة حق أفضل سعر لمبادلة الرمز المميز الخاص بك',
+  [I18N.swapWidgetDescription]: 'مبادلة الرموز',
 };

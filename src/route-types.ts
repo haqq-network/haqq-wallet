@@ -369,6 +369,7 @@ export enum HomeStackRoutes {
   ValueSelector = 'valueSelector',
   BrowserPrivacyPopupStack = 'browserPrivacyPopupStack',
   Device = '_device',
+  Swap = '_swap',
 }
 
 export type HomeStackParamList = {
@@ -450,6 +451,7 @@ export type HomeStackParamList = {
     screen: 'browserPrivacyDetails' | 'browserPrivacy';
     params?: RootStackParamList[RootStackParamList['browserPrivacyPopupStack']['screen']];
   };
+  [HomeStackRoutes.Swap]: undefined;
 };
 
 export enum NftDetailsStackRoutes {
@@ -818,3 +820,15 @@ export type DeviceStackParamList = {
   DeviceKeystone: undefined;
   DeviceLedger: undefined;
 };
+
+export type SwapStackParamList = {
+  Swap: undefined;
+  Preview: undefined;
+  Finish: undefined;
+};
+
+export enum SwapStackRoutes {
+  Swap = 'Swap',
+  Preview = 'Preview',
+  Finish = 'Finish',
+}

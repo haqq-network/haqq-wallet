@@ -42,6 +42,8 @@ import {WalletSelectorScreen} from '@app/screens/wallet-selector-screen';
 import {Web3BrowserPopup as Web3BrowserPopupScreen} from '@app/screens/web3-browser-popup';
 import {SignInStack} from '@app/screens/WelcomeStack/SignInStack';
 
+import {SwapStack} from '../SwapStack';
+
 const navigatorOptions: NativeStackNavigationOptions = {
   gestureEnabled: false,
   freezeOnBlur: true,
@@ -239,6 +241,11 @@ const HomeStack = memo(() => {
         name={HomeStackRoutes.InAppBrowser}
         component={themeUpdaterHOC(InAppBrowserScreen)}
         options={inAppBrowserOptions}
+      />
+      <Stack.Screen
+        name={HomeStackRoutes.Swap}
+        component={SwapStack}
+        options={modalOptions}
       />
     </Stack.Navigator>
   );

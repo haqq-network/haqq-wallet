@@ -14,6 +14,7 @@ import {VariablesString} from '@app/models/variables-string';
 import {Backend} from '@app/services/backend';
 import {IWidget} from '@app/types';
 import {generateUUID} from '@app/utils';
+import {SwapWidget} from '@app/widgets//swap-widget';
 import {AdWidget} from '@app/widgets/ad-widget';
 import {BannerWidget} from '@app/widgets/banner-widget';
 import {GovernanceWidgetWrapper} from '@app/widgets/governance-widget';
@@ -29,32 +30,44 @@ type IWidgetMap = {
     params: Extract<IWidget, {component: key}> & {
       children?: ReactNode[];
       deep?: boolean;
+      id?: string;
     },
   ) => ReactNode;
 };
 
 const WidgetMap: IWidgetMap = {
   Transactions: params => (
-    <TransactionsWidgetWrapper key={generateUUID()} {...params} />
+    <TransactionsWidgetWrapper key={params.id ?? generateUUID()} {...params} />
   ),
   TransactionsShort: () => null,
-  Raffles: params => <RafflesWidgetWrapper key={generateUUID()} {...params} />,
-  Staking: params => <StakingWidgetWrapper key={generateUUID()} {...params} />,
+  Raffles: params => (
+    <RafflesWidgetWrapper key={params.id ?? generateUUID()} {...params} />
+  ),
+  Staking: params => (
+    <StakingWidgetWrapper key={params.id ?? generateUUID()} {...params} />
+  ),
   Governance: params => (
-    <GovernanceWidgetWrapper key={generateUUID()} {...params} />
+    <GovernanceWidgetWrapper key={params.id ?? generateUUID()} {...params} />
   ),
   Layout: params => (
     <LayoutWidgetWrapper
-      key={generateUUID()}
+      key={params.id ?? generateUUID()}
       deep={false}
       children={[]}
       {...params}
     />
   ),
-  Ad: params => <AdWidget key={generateUUID()} banner={params} />,
-  Banner: params => <BannerWidget key={generateUUID()} banner={params} />,
-  TokenList: params => <TokensWidgetWrapper key={generateUUID()} {...params} />,
-  Nft: params => <NftWidgetWrapper key={generateUUID()} {...params} />,
+  Ad: params => <AdWidget key={params.id ?? generateUUID()} banner={params} />,
+  Banner: params => (
+    <BannerWidget key={params.id ?? generateUUID()} banner={params} />
+  ),
+  TokenList: params => (
+    <TokensWidgetWrapper key={params.id ?? generateUUID()} {...params} />
+  ),
+  Nft: params => (
+    <NftWidgetWrapper key={params.id ?? generateUUID()} {...params} />
+  ),
+  Swap: params => <SwapWidget key={params.id ?? generateUUID()} {...params} />,
 };
 
 export const WidgetRoot = memo(({lastUpdate}: {lastUpdate: number}) => {
