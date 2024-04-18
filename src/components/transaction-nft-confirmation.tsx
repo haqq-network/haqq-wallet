@@ -94,14 +94,16 @@ export const TransactionNftConfirmation = ({
         </DataView>
       </View>
       <Spacer />
-      <Button
-        disabled={!fee.isPositive() && !disabled}
-        variant={ButtonVariant.contained}
-        i18n={I18N.transactionConfirmationSend}
-        onPress={onConfirmTransaction}
-        style={styles.submit}
-        loading={disabled}
-      />
+      {!item.is_transfer_prohibinden && (
+        <Button
+          disabled={!fee.isPositive() && !disabled}
+          variant={ButtonVariant.contained}
+          i18n={I18N.transactionConfirmationSend}
+          onPress={onConfirmTransaction}
+          style={styles.submit}
+          loading={disabled}
+        />
+      )}
     </PopupContainer>
   );
 };
