@@ -75,7 +75,7 @@ export const TotalValueInfo = observer(
     const [activeTab, setActiveTab] = useState(initialTabName);
 
     const hideTransactionsContent = useMemo(
-      () => (activeTab === TotalValueTabNames.transactions ? false : true),
+      () => activeTab !== TotalValueTabNames.transactions,
       [activeTab],
     );
 

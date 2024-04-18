@@ -16,8 +16,6 @@ import {HomeEarnStack} from '@app/screens/HomeStack/HomeEarnStack';
 import {HomeFeedScreen} from '@app/screens/HomeStack/HomeFeedStack/home-feed';
 import {HomeStoriesScreen} from '@app/screens/HomeStack/HomeFeedStack/home-stories';
 
-import {NftStack} from '../NftStack';
-
 const Stack = createNativeStackNavigator<HomeFeedStackParamList>();
 
 const screenOptions: NativeStackNavigationOptions = {
@@ -44,7 +42,6 @@ const HomeFeedStack = memo(() => {
         name={HomeFeedStackRoutes.Governance}
         component={GovernanceStack}
       />
-      <Stack.Screen name={HomeFeedStackRoutes.Nft} component={NftStack} />
       <Stack.Screen
         name={HomeFeedStackRoutes.HomeEarn}
         component={HomeEarnStack}

@@ -8,7 +8,7 @@ import {useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {
   HomeFeedStackParamList,
-  HomeFeedStackRoutes,
+  HomeStackRoutes,
   NftStackParamList,
   NftStackRoutes,
 } from '@app/route-types';
@@ -35,7 +35,7 @@ const nftItemDetailsOptions: ScreenOptionType = {
 export const NftStack = () => {
   const {
     params: {initScreen, item},
-  } = useTypedRoute<HomeFeedStackParamList, HomeFeedStackRoutes.Nft>();
+  } = useTypedRoute<HomeFeedStackParamList, HomeStackRoutes.Nft>();
 
   return (
     <Stack.Navigator
