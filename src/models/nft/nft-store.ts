@@ -160,6 +160,7 @@ class NftStore {
           description: item.description || '',
           created_at: Date.now(),
           contractType: contractType,
+          is_transfer_prohibinden: Boolean(contract.is_transfer_prohibinden),
           nfts: item.nfts.map(nft => ({
             ...nft,
             contractType: contractType,
@@ -167,6 +168,7 @@ class NftStore {
             description: nft.description || '-',
             tokenId: Number(nft.token_id),
             price: nft.price ? new Balance(nft.price) : Balance.getEmpty(),
+            is_transfer_prohibinden: Boolean(contract.is_transfer_prohibinden),
           })),
         };
       });

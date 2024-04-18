@@ -1498,6 +1498,7 @@ export type IContract = {
   is_erc721: boolean | null;
   is_erc1155: boolean | null;
   is_in_white_list: boolean | null;
+  is_transfer_prohibinden?: boolean | null;
   name: string | null;
   symbol: string | null;
   updated_at: string;
