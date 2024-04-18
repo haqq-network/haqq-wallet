@@ -10,6 +10,7 @@ import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {I18N, getText} from '@app/i18n';
 import {Contact, ContactType} from '@app/models/contact';
 import {
+  HomeFeedStackRoutes,
   TransactionStackParamList,
   TransactionStackRoutes,
 } from '@app/route-types';
@@ -17,8 +18,7 @@ import {sendNotification} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
 export const TransactionNftFinishScreen = observer(() => {
-  const {navigate, getParent, goBack} =
-    useTypedNavigation<TransactionStackParamList>();
+  const {navigate, goBack} = useTypedNavigation<TransactionStackParamList>();
   useAndroidBackHandler(() => {
     goBack();
     return true;
@@ -44,7 +44,7 @@ export const TransactionNftFinishScreen = observer(() => {
   );
 
   const onSubmit = () => {
-    getParent()?.goBack();
+    navigate(HomeFeedStackRoutes.HomeFeed);
   };
 
   const onPressContact = useCallback(() => {

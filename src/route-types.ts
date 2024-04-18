@@ -234,7 +234,6 @@ export type SecurityStackParamList = HomeStackParamList &
 export enum HomeFeedStackRoutes {
   HomeFeed = 'homeFeed_',
   Governance = 'governance',
-  Nft = 'nft',
   HomeEarn = 'homeEarn',
   HomeStories = 'homeStories',
 }
@@ -242,15 +241,6 @@ export enum HomeFeedStackRoutes {
 export type HomeFeedStackParamList = HomeStackParamList & {
   [HomeFeedStackRoutes.HomeFeed]: undefined;
   [HomeFeedStackRoutes.Governance]: undefined;
-  [HomeFeedStackRoutes.Nft]:
-    | {
-        initScreen: NftStackRoutes.NftItemDetails;
-        item: NftItem;
-      }
-    | {
-        initScreen: NftStackRoutes.NftCollectionDetails;
-        item: NftCollection;
-      };
   [HomeFeedStackRoutes.HomeEarn]: undefined;
   [HomeFeedStackRoutes.HomeStories]: {id: IStory['id']};
 };
@@ -351,6 +341,7 @@ export enum HomeStackRoutes {
   SignIn = '_signin',
   AccountInfo = 'accountInfo',
   Transaction = 'transaction',
+  Nft = 'Nft',
   AccountDetail = 'accountDetail',
   Backup = 'backup',
   WalletProtectionPopup = 'walletProtectionPopup',
@@ -386,6 +377,15 @@ export type HomeStackParamList = {
     to?: string;
     nft?: NftItem;
   };
+  [HomeStackRoutes.Nft]:
+    | {
+        initScreen: NftStackRoutes.NftItemDetails;
+        item: NftItem;
+      }
+    | {
+        initScreen: NftStackRoutes.NftCollectionDetails;
+        item: NftCollection;
+      };
   [HomeStackRoutes.AccountDetail]: {address: string};
   [HomeStackRoutes.Backup]: {
     wallet: Wallet;
