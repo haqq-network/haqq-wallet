@@ -43,6 +43,7 @@ export type NftItem = Omit<
   description: string;
   price?: Balance;
   tokenId: number;
+  is_transfer_prohibinden: boolean;
 };
 
 export type NftCollection = Omit<
@@ -52,6 +53,7 @@ export type NftCollection = Omit<
   contractType: ContractType;
   created_at: number; // FIXME Indexer doesn't contain created_at
   description: string;
+  is_transfer_prohibinden: boolean;
   nfts: NftItem[];
 };
 

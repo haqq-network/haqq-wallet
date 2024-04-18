@@ -2,7 +2,7 @@ import React, {useCallback, useMemo, useRef, useState} from 'react';
 
 import {PhishingController} from '@metamask/phishing-controller';
 import {parseUri} from '@walletconnect/utils';
-import {SafeAreaView, StyleSheet, View} from 'react-native';
+import {ActivityIndicator, SafeAreaView, StyleSheet, View} from 'react-native';
 import WebView from 'react-native-webview';
 import {
   ShouldStartLoadRequest,
@@ -87,11 +87,13 @@ export const InAppBrowser = ({
   );
 
   const onPressRefresh = useCallback(() => {
-    webviewRef?.current?.reload?.();
+    webviewRef?.current?.injectJavaScript?.('window.location.reload();');
+    setPageLoading(true);
   }, [webviewRef]);
 
   const onPressStopLoading = useCallback(() => {
     webviewRef?.current?.stopLoading?.();
+    setPageLoading(false);
   }, [webviewRef]);
 
   const handlePressExport = useCallback(() => {
@@ -202,7 +204,7 @@ export const InAppBrowser = ({
       <View style={styles.titleContainer}>
         {isPageLoading && (
           <IconButton onPress={onPressStopLoading}>
-            <Icon i24 name={IconsName.close} color={Color.graphicSecond2} />
+            <ActivityIndicator size="small" color={Color.graphicSecond2} />
           </IconButton>
         )}
         {!isPageLoading && (

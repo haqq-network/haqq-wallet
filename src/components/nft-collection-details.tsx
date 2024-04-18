@@ -32,7 +32,7 @@ export const NftCollectionDetails = ({
       <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
         <View>
           <ImageWrapper
-            resizeMode="contain"
+            resizeMode="cover"
             source={collectionImageUri}
             style={styles.image}
             borderRadius={12}
