@@ -23,7 +23,7 @@ export const TransactionNftFinishScreen = observer(() => {
     goBack();
     return true;
   }, [goBack]);
-  const {nft, transaction} = useTypedRoute<
+  const {nft, transaction, to, fee} = useTypedRoute<
     TransactionStackParamList,
     TransactionStackRoutes.TransactionNftFinish
   >().params;
@@ -38,10 +38,7 @@ export const TransactionNftFinishScreen = observer(() => {
     }
   }, [contact?.account, transaction?.to]);
 
-  const short = useMemo(
-    () => shortAddress(transaction?.to ?? ''),
-    [transaction?.to],
-  );
+  const short = useMemo(() => shortAddress(to ?? ''), [to]);
 
   const onSubmit = () => {
     navigate(HomeFeedStackRoutes.HomeFeed);
@@ -94,6 +91,7 @@ export const TransactionNftFinishScreen = observer(() => {
       transaction={transaction}
       contact={contact}
       short={short}
+      fee={fee}
     />
   );
 });
