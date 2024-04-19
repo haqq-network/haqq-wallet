@@ -45,7 +45,7 @@ export const TransactionNftFinishScreen = observer(() => {
   };
 
   const onPressContact = useCallback(() => {
-    if (transaction?.to) {
+    if (to) {
       prompt(
         getText(
           contact
@@ -53,7 +53,7 @@ export const TransactionNftFinishScreen = observer(() => {
             : I18N.transactionFinishAddContact,
         ),
         getText(I18N.transactionFinishContactMessage, {
-          address: transaction?.to,
+          address: to,
         }),
         value => {
           if (contact) {
