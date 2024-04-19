@@ -23,7 +23,7 @@ export const TransactionNftFinishScreen = observer(() => {
     goBack();
     return true;
   }, [goBack]);
-  const {nft, transaction, to} = useTypedRoute<
+  const {nft, transaction, to, fee} = useTypedRoute<
     TransactionStackParamList,
     TransactionStackRoutes.TransactionNftFinish
   >().params;
@@ -91,6 +91,7 @@ export const TransactionNftFinishScreen = observer(() => {
       transaction={transaction}
       contact={contact}
       short={short}
+      fee={fee}
     />
   );
 });

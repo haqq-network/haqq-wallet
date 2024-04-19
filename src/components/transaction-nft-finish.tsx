@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 
 import {Image, View} from 'react-native';
 
@@ -32,6 +32,7 @@ type TransactionFinishProps = {
   onPressContact: () => void;
   contact: Contact | null;
   short: string;
+  fee?: Balance | null;
 };
 
 export const TransactionNftFinish = ({
@@ -41,15 +42,12 @@ export const TransactionNftFinish = ({
   onPressContact,
   contact,
   short,
+  fee,
 }: TransactionFinishProps) => {
   const onPressHash = async () => {
     const url = `${EthNetwork.explorer}tx/${transaction?.hash}`;
     await openURL(url);
   };
-
-  const fee = useMemo(() => {
-    return new Balance(transaction?.maxFeePerGas ?? 0);
-  }, [transaction]);
 
   const nftImageUri = useNftImage(item.cached_url);
 
