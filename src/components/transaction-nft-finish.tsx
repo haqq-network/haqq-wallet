@@ -13,8 +13,11 @@ import {
   PopupContainer,
   Spacer,
   Text,
+  TextPosition,
+  TextVariant,
 } from '@app/components/ui';
 import {createTheme, openURL} from '@app/helpers';
+import {useNftImage} from '@app/hooks/nft';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {NftItem} from '@app/models/nft';
@@ -48,6 +51,8 @@ export const TransactionNftFinish = ({
     return new Balance(transaction?.maxFeePerGas ?? 0);
   }, [transaction]);
 
+  const nftImageUri = useNftImage(item.cached_url);
+
   return (
     <PopupContainer style={styles.container}>
       <View style={styles.sub}>
@@ -59,28 +64,30 @@ export const TransactionNftFinish = ({
         />
       </View>
       <Text
-        t4
+        variant={TextVariant.t4}
         i18n={I18N.transactionNftFinishSendingComplete}
         style={styles.title}
-        center
+        position={TextPosition.center}
         color={Color.textGreen1}
       />
-      <Image
-        source={{uri: item.cached_url || undefined}}
-        style={styles.icon}
-        borderRadius={12}
-      />
-      <Text t5 center>
+      <Image source={nftImageUri} style={styles.icon} borderRadius={12} />
+      <Text variant={TextVariant.t5} position={TextPosition.center}>
         {item.name}
       </Text>
       <Spacer height={8} />
       <View style={styles.contactLine}>
         {contact?.name && (
-          <Text t13 center style={styles.address}>
+          <Text
+            variant={TextVariant.t13}
+            position={TextPosition.center}
+            style={styles.address}>
             {contact.name + ' '}
           </Text>
         )}
-        <Text t14 center style={styles.address}>
+        <Text
+          variant={TextVariant.t14}
+          position={TextPosition.center}
+          style={styles.address}>
           {short}
         </Text>
       </View>
@@ -113,8 +120,8 @@ export const TransactionNftFinish = ({
                 ? I18N.transactionFinishEditContact
                 : I18N.transactionFinishAddContact
             }
-            t15
-            center
+            variant={TextVariant.t15}
+            position={TextPosition.center}
             color={Color.textBase2}
           />
         </IconButton>
@@ -126,8 +133,8 @@ export const TransactionNftFinish = ({
             i24
           />
           <Text
-            t15
-            center
+            variant={TextVariant.t15}
+            position={TextPosition.center}
             i18n={I18N.transactionFinishHash}
             color={Color.textBase2}
           />

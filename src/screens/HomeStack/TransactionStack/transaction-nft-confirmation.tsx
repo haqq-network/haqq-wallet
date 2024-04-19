@@ -133,6 +133,7 @@ export const TransactionNftConfirmationScreen = observer(() => {
           navigation.navigate(TransactionStackRoutes.TransactionNftFinish, {
             nft: route.params.nft,
             transaction,
+            to: route.params.to,
           });
         }
       } catch (e) {
