@@ -62,13 +62,13 @@ export const TransactionNftFinishScreen = observer(() => {
             });
             sendNotification(I18N.transactionFinishContactUpdated);
           } else {
-            Contact.create(transaction.to!, {
+            Contact.create(to, {
               name: value,
               type: ContactType.address,
               visible: true,
             });
             sendNotification(I18N.transactionFinishContactAdded);
-            setContact(Contact.getById(transaction?.to ?? ''));
+            setContact(Contact.getById(to ?? ''));
           }
         },
         {
@@ -77,7 +77,7 @@ export const TransactionNftFinishScreen = observer(() => {
         },
       );
     }
-  }, [transaction?.to, contact]);
+  }, [to, contact]);
 
   useEffect(() => {
     vibrate(HapticEffects.success);
