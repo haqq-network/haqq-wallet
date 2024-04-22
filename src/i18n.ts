@@ -4,10 +4,7 @@ import {AppLanguage} from '@app/types';
 
 import {app} from './contexts';
 
-import ar from '../assets/locales/ar/ar.json';
 import en from '../assets/locales/en/en.json';
-import ru from '../assets/locales/ru/ru.json';
-import tr from '../assets/locales/tr/tr.json';
 
 export enum I18N {
   empty = 'empty',
@@ -948,9 +945,8 @@ export enum I18N {
   feeCalculatingRpcErrorClose = 'feeCalculatingRpcErrorClose',
 }
 
-const languages = {en, ru, tr, ar};
-
-const translations = new LocalizedStrings(languages);
+const defaultTranslation = {en};
+const translations = new LocalizedStrings(defaultTranslation);
 
 let hasLang = false;
 
@@ -980,7 +976,15 @@ export function getText(key: I18N, params?: Record<string, string>): string {
   return fixLocalise(translations[key]);
 }
 
+const supportedTranslationsMap: {[key in AppLanguage]: NodeRequire} = {
+  en: require('../assets/locales/en/en.json'),
+  ar: require('../assets/locales/ar/ar.json'),
+  ru: require('../assets/locales/ru/ru.json'),
+  tr: require('../assets/locales/tr/tr.json'),
+};
+
 export function setLanguage(lang: AppLanguage) {
+  translations.setContent({[lang]: supportedTranslationsMap[lang]});
   translations.setLanguage(lang);
   app.language = lang;
 }
