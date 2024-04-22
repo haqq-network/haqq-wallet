@@ -26,6 +26,7 @@ export const NftViewerItemPreviewMedium = ({
       <ImageBackground
         imageStyle={styles.imageContainer}
         style={styles.image}
+        resizeMode="contain"
         source={imageUri}>
         <View style={styles.itemText}>
           <Text
