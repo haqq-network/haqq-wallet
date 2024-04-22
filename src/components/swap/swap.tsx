@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
-import {BigNumberish} from '@haqq/provider-base';
 import {useIsFocused} from '@react-navigation/native';
 import BigNumber from 'bignumber.js';
 import {ethers} from 'ethers';
@@ -30,7 +29,9 @@ import {
   ButtonVariant,
   First,
   Spacer,
+  Text,
   TextField,
+  TextVariant,
 } from '../ui';
 import {Placeholder} from '../ui/placeholder';
 
@@ -388,7 +389,7 @@ export const Swap = observer(() => {
   const [needApproveTokenIn, setNeedApproveTokenIn] = useState(false);
   const isFocused = useIsFocused();
   const isLoading = !amountsOut.amount || isQuoterProcess;
-  // const [priceImpact, setPriceImpact] = useState<BigNumber>();
+  const [priceImpact, setPriceImpact] = useState<BigNumber>();
 
   const {
     params: {address},
@@ -502,13 +503,22 @@ export const Swap = observer(() => {
         tokenIn.decimals,
       );
 
+      const amountTinyBN = ethers.utils.parseUnits(
+        '0.000001',
+        tokenIn.decimals,
+      );
+
       const encodedPath = encodeSwapPathWithDirection(
         swapRoutePath,
         tokenIn.address,
         tokenOut.address,
       );
 
-      const [amountOut /*, sqrtPriceX96After */]: Array<BigNumberish> =
+      const [_, sqrtPriceX96List] =
+        (await quoter.callStatic.quoteExactInput(encodedPath, amountTinyBN)) ||
+        [];
+
+      const [amountOut, sqrtPriceX96AfterList] =
         (await quoter.callStatic.quoteExactInput(encodedPath, amountBN)) || [];
 
       if (amountOut) {
@@ -516,6 +526,117 @@ export const Swap = observer(() => {
           ethers.utils.formatUnits(amountOut, tokenOut.decimals),
         );
       }
+
+      Logger.log('========================================');
+      const priceImpacts: Array<BigNumber> = [];
+      swapRoutePath.forEach((pool, index) => {
+        Logger.log(
+          `Pool ${index + 1}`,
+          `${pool.token0.symbol}-${pool.token1.symbol}`,
+        );
+        const sqrtPriceX96 = sqrtPriceX96List[index];
+        const sqrtPriceX96After = sqrtPriceX96AfterList[index];
+        const priceToken0 = sqrtToPrice(
+          new BigNumber(sqrtPriceX96._hex),
+          pool.token0.decimals,
+          pool.token1.decimals,
+          true,
+        );
+        const priceAfterToken0 = sqrtToPrice(
+          new BigNumber(sqrtPriceX96After._hex),
+          pool.token0.decimals,
+          pool.token1.decimals,
+          true,
+        );
+        const priceToken1 = new BigNumber(1).div(priceToken0);
+        const priceAfterToken1 = new BigNumber(1).div(priceAfterToken0);
+        Logger.log('\n');
+        Logger.log('token0', pool.token0.symbol);
+        Logger.log('token1', pool.token1.symbol);
+        Logger.log('\n');
+        Logger.log('[price before swap]');
+        Logger.log(
+          'price for 1',
+          pool.token0.symbol,
+          priceToken0.toString(),
+          pool.token1.symbol,
+        );
+        Logger.log(
+          'price for 1',
+          pool.token1.symbol,
+          priceToken1.toString(),
+          pool.token0.symbol,
+        );
+        Logger.log('\n');
+        Logger.log('[price after swap]');
+        Logger.log(
+          'price for 1',
+          pool.token0.symbol,
+          priceAfterToken0.toString(),
+          pool.token1.symbol,
+        );
+        Logger.log(
+          'price for 1',
+          pool.token1.symbol,
+          priceAfterToken1.toString(),
+          pool.token0.symbol,
+        );
+        Logger.log('\n');
+
+        const pi0 = priceAfterToken0
+          .minus(priceToken0)
+          .div(priceToken0)
+          .multipliedBy(100);
+
+        const pi1 = priceAfterToken1
+          .minus(priceToken1)
+          .div(priceToken1)
+          .multipliedBy(100);
+
+        if (
+          pool.token0.address === tokenIn.address ||
+          pool.token0.address === tokenOut.address
+        ) {
+          priceImpacts.push(pi0.abs());
+          Logger.log('1');
+        }
+
+        if (
+          pool.token1.address === tokenIn.address ||
+          pool.token1.address === tokenOut.address
+        ) {
+          priceImpacts.push(pi1.abs());
+          Logger.log('2');
+        }
+
+        Logger.log(
+          'price impact for',
+          pool.token0.symbol,
+          pi0.toString().substring(0, 6),
+          '%',
+        );
+        Logger.log(
+          'price impact for',
+          pool.token1.symbol,
+          pi1.toString().substring(0, 6),
+          '%',
+        );
+        Logger.log('--------------------------------');
+      });
+
+      let totalPriceImpact = priceImpacts.reduce(
+        (prev, curr) => prev.plus(curr),
+        new BigNumber(0),
+      );
+
+      if (swapRoutePath.length > 1) {
+        totalPriceImpact = totalPriceImpact.div(swapRoutePath.length);
+      } else {
+        totalPriceImpact = totalPriceImpact.div(2);
+      }
+
+      setPriceImpact(totalPriceImpact);
+      Logger.log('total price impact', totalPriceImpact.toString(), '%');
     } catch (err) {
       Logger.error('quoteSwapTransaction err', JSON.stringify(err, null, 2));
       Toast.show({
@@ -701,7 +822,11 @@ export const Swap = observer(() => {
 
       <Spacer height={10} />
 
-      {/* {!!priceImpact && <Text>Price impact: {priceImpact?.toString()}%</Text>} */}
+      {!!priceImpact && (
+        <Text variant={TextVariant.t11}>
+          Price impact: {priceImpact?.toString().substring(0, 6)}%
+        </Text>
+      )}
 
       <Spacer />
 
