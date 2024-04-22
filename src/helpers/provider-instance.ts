@@ -2,8 +2,8 @@ import {ProviderBaseError, ProviderInterface} from '@haqq/provider-base';
 import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
 import {ProviderKeystoneReactNative} from '@haqq/provider-keystone-react-native';
 import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
-import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native/src';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native/src';
 
 import {app} from '@app/contexts';
 import {awaitForLedger} from '@app/helpers/await-for-ledger';

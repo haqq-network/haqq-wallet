@@ -1,0 +1,164 @@
+diff --git a/node_modules/@haqq/provider-mnemonic-react-native/dist/provider.js b/node_modules/@haqq/provider-mnemonic-react-native/dist/provider.js
+index 86e7ffb..25dbfcf 100644
+--- a/node_modules/@haqq/provider-mnemonic-react-native/dist/provider.js
++++ b/node_modules/@haqq/provider-mnemonic-react-native/dist/provider.js
+@@ -253,6 +253,7 @@ var ProviderMnemonicReactNative = /** @class */ (function (_super) {
+         });
+     };
+     ProviderMnemonicReactNative.prototype.signTransaction = function (hdPath, transaction) {
++        console.log('signTransaction', JSON.stringify(transaction, null, 2));
+         return __awaiter(this, void 0, void 0, function () {
+             var resp, share, seed, privateKey, signature, sig, e_4;
+             return __generator(this, function (_a) {
+diff --git a/node_modules/@haqq/provider-mnemonic-react-native/src/provider.ts b/node_modules/@haqq/provider-mnemonic-react-native/src/provider.ts
+index 8160e24..5d0285d 100644
+--- a/node_modules/@haqq/provider-mnemonic-react-native/src/provider.ts
++++ b/node_modules/@haqq/provider-mnemonic-react-native/src/provider.ts
+@@ -167,36 +167,44 @@ export class ProviderMnemonicReactNative
+   ): Promise<string> {
+     let resp = '';
+     try {
++      console.error('MnemonicReactNative signPersonalMessage');
++      console.error('🟢 signTransaction', JSON.stringify(transaction, null, 2));
+       const share = await getMnemonic(
+-        this._options.account,
+-        this._options.getPassword,
++      this._options.account,
++      this._options.getPassword,
+       );
+ 
+       if (!share) {
+-        throw new Error('seed_not_found');
++      throw new Error('seed_not_found');
+       }
+ 
+       const seed = await ProviderMnemonicReactNative.shareToSeed(share);
++      console.error('🟢 seed', JSON.stringify({ seed }, null, 2));
+ 
+       const privateKey = await derive(seed, hdPath);
++      console.error('🟢 privateKey', JSON.stringify({ privateKey }, null, 2));
+ 
+       if (!privateKey) {
+-        throw new Error('private_key_not_found');
++      throw new Error('private_key_not_found');
+       }
+ 
+       const signature = await sign(
+-        privateKey,
+-        serialize(transaction as UnsignedTransaction),
++      privateKey,
++      serialize(transaction as UnsignedTransaction),
+       );
++      console.error('🟢 signature', JSON.stringify({ signature }, null, 2));
+ 
+       const sig = hexStringToByteArray(signature);
++      console.error('🟢 sig', JSON.stringify({ sig }, null, 2));
+       
+       resp = serialize(transaction as UnsignedTransaction, sig);
++      console.error('🟢 resp', JSON.stringify({ resp }, null, 2));
++      console.error('🟢 setialize', JSON.stringify({ serialize: serialize(transaction as UnsignedTransaction) }, null, 2));
+ 
+       this.emit('signTransaction', true);
+     } catch (e) {
+       if (e instanceof Error) {
+-        this.catchError(e, 'signTransaction');
++      this.catchError(e, 'signTransaction');
+       }
+     }
+ 
+@@ -209,18 +217,22 @@ export class ProviderMnemonicReactNative
+   ): Promise<string> {
+     let resp = '';
+     try {
++      console.error('MnemonicReactNative signPersonalMessage');
+       const share = await getMnemonic(
+         this._options.account,
+         this._options.getPassword,
+       );
++      console.error('1. share:', JSON.stringify({ share }, null, 2));
+ 
+       if (!share) {
+         throw new Error('seed_not_found');
+       }
+ 
+       const seed = await ProviderMnemonicReactNative.shareToSeed(share);
++      console.error('2. seed:', JSON.stringify({ seed }, null, 2));
+ 
+       const privateKey = await derive(seed, hdPath);
++      console.error('3. privateKey:', JSON.stringify({ privateKey }, null, 2));
+ 
+       if (!privateKey) {
+         throw new Error('private_key_not_found');
+@@ -229,6 +241,7 @@ export class ProviderMnemonicReactNative
+       const m = Array.from(
+         typeof message === 'string' ? stringToUtf8Bytes(message) : message,
+       );
++      console.error('4. m:', JSON.stringify({ m }, null, 2));
+ 
+       const hash = Buffer.from(
+         [
+@@ -236,8 +249,14 @@ export class ProviderMnemonicReactNative
+           100, 32, 77, 101, 115, 115, 97, 103, 101, 58, 10,
+         ].concat(stringToUtf8Bytes(String(message.length)), m),
+       ).toString('hex');
++      console.error('5. hash:', JSON.stringify({ hash }, null, 2));
++
+       const signature = await sign(privateKey, hash);
++      console.error('6. signature:', JSON.stringify({ signature }, null, 2));
++
+       resp = '0x' + joinSignature(signature);
++      console.error('7. resp:', JSON.stringify({ resp }, null, 2));
++
+       this.emit('signTransaction', true);
+     } catch (e) {
+       if (e instanceof Error) {
+@@ -251,31 +270,48 @@ export class ProviderMnemonicReactNative
+   async signTypedData(hdPath: string, typedData: TypedData): Promise<string> {
+     let response = '';
+     try {
++      console.error('MnemonicReactNative signTypedData');
+       const share = await getMnemonic(
+         this._options.account,
+         this._options.getPassword,
+       );
++      console.error('1. share:', JSON.stringify({ share }, null, 2));
+ 
+       if (!share) {
+         throw new Error('seed_not_found');
+       }
+ 
+       const seed = await ProviderMnemonicReactNative.shareToSeed(share);
++      console.error('2. seed:', JSON.stringify({ seed }, null, 2));
+ 
+       const privateKey = await derive(seed, hdPath);
++      console.error('3. privateKey:', JSON.stringify({ privateKey }, null, 2));
+ 
+       if (!privateKey) {
+         throw new Error('private_key_not_found');
+       }
+ 
+-      const {domainSeparatorHex, hashStructMessageHex} =
++      const { domainSeparatorHex, hashStructMessageHex } =
+         prepareHashedEip712Data(typedData);
++      console.error(
++        '4. domainSeparatorHex:',
++        JSON.stringify({ domainSeparatorHex }, null, 2)
++      );
++      console.error(
++        '4. hashStructMessageHex:',
++        JSON.stringify({ hashStructMessageHex }, null, 2)
++      );
++
+       const concatHash = hexConcat([
+         '0x1901',
+         domainSeparatorHex,
+         hashStructMessageHex,
+       ]);
++      console.error('5. concatHash:', JSON.stringify({ concatHash }, null, 2));
++
+       response = await sign(privateKey, concatHash);
++      console.error('6. response:', JSON.stringify({ response }, null, 2));
++
+       this.emit('signTypedData', true);
+     } catch (e) {
+       if (e instanceof Error) {
