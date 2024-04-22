@@ -1,3 +1,4 @@
+import {cosmosAddress} from '@haqq/provider-base';
 import {decryptPassworder, encryptPassworder} from '@haqq/shared-react-native';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
@@ -28,6 +29,7 @@ import {Token} from '@app/models/tokens';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
 import {VestingMetadataType} from '@app/models/vesting-metadata';
+import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
@@ -48,6 +50,7 @@ import {
   ModalType,
 } from '../types';
 import {
+  COSMOS_PREFIX,
   LIGHT_GRAPHIC_GREEN_1,
   MAINNET_ETH_CHAIN_ID,
   MAIN_NETWORK_ID,
@@ -91,6 +94,7 @@ class App extends AsyncEventEmitter {
       ios: appleAuth.isSupported,
     }) || false;
   private _systemTheme: AppTheme = Appearance.getColorScheme() as AppTheme;
+  private ws: WebSocket | null;
 
   constructor() {
     super();
@@ -409,6 +413,7 @@ class App extends AsyncEventEmitter {
 
     await this.auth();
 
+    this.subscribeToUpdates();
     await awaitForEventDone(Events.onWalletsBalanceCheck);
 
     this.authenticated = true;
@@ -416,6 +421,52 @@ class App extends AsyncEventEmitter {
     this.appStatus = getAppStatus();
 
     return Promise.resolve();
+  }
+
+  subscribeToUpdates() {
+    this.ws = new WebSocket('wss://websocket.wallet.testedge2.haqq.network/ws');
+
+    this.ws.onopen = () => {
+      Logger.log('opened');
+      Wallet.getAllVisible().map(wallet => {
+        if (this.ws) {
+          this.ws.send(
+            JSON.stringify({
+              jsonrpc: '2.0',
+              id: 1,
+              method: 'subscribe',
+              params: [cosmosAddress(wallet.address, COSMOS_PREFIX)],
+            }),
+          );
+        }
+      });
+
+      setInterval(() => {
+        this.ws?.send(
+          JSON.stringify({
+            jsonrpc: '2.0',
+            id: 1,
+            method: 'ping',
+            params: [],
+          }),
+        );
+      }, 15000);
+    };
+
+    this.ws.onmessage = e => {
+      // a message was received
+      Logger.log(JSON.parse(e.data));
+    };
+
+    this.ws.onerror = e => {
+      // an error occurred
+      Logger.log(e.message);
+    };
+
+    this.ws.onclose = e => {
+      // connection closed
+      Logger.log(e.code, e.reason);
+    };
   }
 
   async getPassword() {
