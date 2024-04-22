@@ -15,6 +15,7 @@ export type NftCollectionIndexer = {
 
 export type NftItemIndexer = {
   address: HaqqCosmosAddress;
+  attributes: NftAttribute[] | null;
   block: number;
   cached_url: string | null;
   contract: HaqqCosmosAddress;
@@ -35,7 +36,13 @@ export type NftItemIndexer = {
 };
 
 type NftMetadata = {
-  attributes: Record<string, string> | null;
+  attributes: NftAttribute[] | null;
+};
+
+export type NftAttribute = {
+  display_type: string;
+  trait_type: string;
+  value: string;
 };
 
 // TODO Reset image as not null when default image will be provided

@@ -53,7 +53,7 @@ export const NftItemDetails = ({item, onPressSend}: NftItemDetailsProps) => {
         <NftItemDetailsDescription description={item.description} />
         <NftItemDetailsPrice price={item.price} />
         <NftItemDetailsTokenId tokenId={item.tokenId} />
-        <NftItemDetailsAttributes attributes={item.metadata?.attributes} />
+        <NftItemDetailsAttributes attributes={item.attributes} />
       </ScrollView>
       {!item.is_transfer_prohibinden && (
         <View>
