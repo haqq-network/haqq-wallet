@@ -24,7 +24,7 @@ import {splitAddress} from '@app/utils';
 interface TransactionConfirmationProps {
   to: string;
   item: NftItem;
-  fee: Balance;
+  fee?: Balance | null;
   contact: Contact | null;
   disabled?: boolean;
   onConfirmTransaction: () => void;
@@ -88,15 +88,17 @@ export const TransactionNftConfirmation = ({
       </Text>
       <View style={styles.info}>
         <DataView label="Network Fee">
-          <Text variant={TextVariant.t11} color={Color.textBase1}>
-            {fee.toBalanceString()}
-          </Text>
+          {fee && (
+            <Text variant={TextVariant.t11} color={Color.textBase1}>
+              {fee.toBalanceString()}
+            </Text>
+          )}
         </DataView>
       </View>
       <Spacer />
       {!item.is_transfer_prohibinden && (
         <Button
-          disabled={!fee.isPositive() && !disabled}
+          disabled={!fee?.isPositive() && !disabled}
           variant={ButtonVariant.contained}
           i18n={I18N.transactionConfirmationSend}
           onPress={onConfirmTransaction}

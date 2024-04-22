@@ -30,7 +30,6 @@ import {EthSignErrorDataDetails} from '@app/services/eth-sign';
 import {EventTracker} from '@app/services/event-tracker';
 import {MarketingEvents, ModalType, TransactionResponse} from '@app/types';
 import {makeID} from '@app/utils';
-import {FEE_ESTIMATING_TIMEOUT_MS} from '@app/variables/common';
 
 export const TransactionNftConfirmationScreen = observer(() => {
   const navigation = useTypedNavigation<TransactionStackParamList>();
@@ -52,14 +51,9 @@ export const TransactionNftConfirmationScreen = observer(() => {
 
   const showError = useError();
   const [disabled, setDisabled] = useState(false);
-  const [fee, setFee] = useState(route.params.fee ?? Balance.Empty);
+  const [fee, setFee] = useState<Balance | null>();
 
   useLayoutEffectAsync(async () => {
-    const timer = setTimeout(
-      () => setFee(route.params.fee ?? Balance.Empty),
-      FEE_ESTIMATING_TIMEOUT_MS,
-    );
-
     let feeWei = Balance.Empty;
 
     if (nft.contractType === ContractType.erc721) {
@@ -80,12 +74,7 @@ export const TransactionNftConfirmationScreen = observer(() => {
       feeWei = result.feeWei;
     }
 
-    clearTimeout(timer);
     setFee(feeWei);
-
-    return () => {
-      clearTimeout(timer);
-    };
   }, []);
 
   const onConfirmTransaction = useCallback(async () => {
@@ -133,6 +122,8 @@ export const TransactionNftConfirmationScreen = observer(() => {
           navigation.navigate(TransactionStackRoutes.TransactionNftFinish, {
             nft: route.params.nft,
             transaction,
+            to: route.params.to,
+            fee,
           });
         }
       } catch (e) {
