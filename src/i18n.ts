@@ -942,6 +942,10 @@ export enum I18N {
   walletConnectErrorTitle = 'walletConnectErrorTitle',
   walletConnectErrorClose = 'walletConnectErrorClose',
   walletConnectInvalidUri = 'walletConnectInvalidUri',
+  tokensLowBalance = 'tokensLowBalance',
+  feeCalculatingRpcErrorTitle = 'feeCalculatingRpcErrorTitle',
+  feeCalculatingRpcErrorDescription = 'feeCalculatingRpcErrorDescription',
+  feeCalculatingRpcErrorClose = 'feeCalculatingRpcErrorClose',
 }
 
 const languages = {en, ru, tr, ar};

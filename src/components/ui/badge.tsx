@@ -3,7 +3,7 @@ import React, {useMemo} from 'react';
 import {StyleProp, View, ViewStyle} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
-import {Icon, IconsName, Spacer, Text} from '@app/components/ui';
+import {Icon, IconsName, Spacer, Text, TextVariant} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {ColorType} from '@app/types';
@@ -18,6 +18,7 @@ export type BadgeProps = {
   textColor?: ColorType;
   style?: StyleProp<ViewStyle>;
   center?: boolean;
+  textVariant?: TextVariant;
 } & BadgeValue;
 export const Badge = ({
   text,
@@ -28,6 +29,7 @@ export const Badge = ({
   labelColor,
   textColor = Color.textBase3,
   style,
+  textVariant = TextVariant.t13,
 }: BadgeProps) => {
   const container = useMemo(
     () => [
@@ -47,7 +49,11 @@ export const Badge = ({
         </>
       )}
       {/* @ts-expect-error */}
-      <Text t13 color={textColor} i18n={i18n} i18params={i18params}>
+      <Text
+        variant={textVariant}
+        color={textColor}
+        i18n={i18n}
+        i18params={i18params}>
         {text}
       </Text>
     </View>

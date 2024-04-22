@@ -20,12 +20,11 @@ import {Contact} from '@app/models/contact';
 import {NftItem} from '@app/models/nft';
 import {Balance} from '@app/services/balance';
 import {splitAddress} from '@app/utils';
-import {CURRENCY_NAME, WEI} from '@app/variables/common';
 
 interface TransactionConfirmationProps {
   to: string;
   item: NftItem;
-  fee: Balance;
+  fee?: Balance | null;
   contact: Contact | null;
   disabled?: boolean;
   onConfirmTransaction: () => void;
@@ -89,21 +88,24 @@ export const TransactionNftConfirmation = ({
       </Text>
       <View style={styles.info}>
         <DataView label="Network Fee">
-          <Text variant={TextVariant.t11} color={Color.textBase1}>
-            {/* TODO: Migrate to fee.toWeiString() */}
-            {`${+fee * WEI} a${CURRENCY_NAME}`}
-          </Text>
+          {fee && (
+            <Text variant={TextVariant.t11} color={Color.textBase1}>
+              {fee.toBalanceString()}
+            </Text>
+          )}
         </DataView>
       </View>
       <Spacer />
-      <Button
-        disabled={!fee.isPositive() && !disabled}
-        variant={ButtonVariant.contained}
-        i18n={I18N.transactionConfirmationSend}
-        onPress={onConfirmTransaction}
-        style={styles.submit}
-        loading={disabled}
-      />
+      {!item.is_transfer_prohibinden && (
+        <Button
+          disabled={!fee?.isPositive() && !disabled}
+          variant={ButtonVariant.contained}
+          i18n={I18N.transactionConfirmationSend}
+          onPress={onConfirmTransaction}
+          style={styles.submit}
+          loading={disabled}
+        />
+      )}
     </PopupContainer>
   );
 };

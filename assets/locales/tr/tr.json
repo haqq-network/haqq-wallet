@@ -1,5 +1,9 @@
 {
+  "feeCalculatingRpcErrorClose": "",
+  "feeCalculatingRpcErrorDescription": "",
+  "feeCalculatingRpcErrorTitle": "",
   "testui": "Test testi kullanıcı arayüzü",
+  "tokensLowBalance": "",
   "StakingInfoUnDelegationDay": "",
   "StakingInfoUnDelegationDays": "",
   "accept": "",

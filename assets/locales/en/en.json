@@ -1,5 +1,9 @@
 {
+  "feeCalculatingRpcErrorClose": "Try again",
+  "feeCalculatingRpcErrorDescription": "Estimate gas request failed",
+  "feeCalculatingRpcErrorTitle": "Something went wrong",
   "testui": "Test test ui",
+  "tokensLowBalance": " Low Balance",
   "StakingInfoUnDelegationDay": " ({{day}} day left)",
   "StakingInfoUnDelegationDays": " ({{days}} days left)",
   "accept": "Accept",

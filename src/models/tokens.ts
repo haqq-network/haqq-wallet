@@ -197,13 +197,12 @@ class TokensStore implements MobXStore<IToken> {
     const updates = await Indexer.instance.updates(accounts, this.lastUpdate);
     let result = await this.parseIndexerTokens(updates);
     result = await getHardcodedTokens(result);
-    // Logger.log('TokensStore fetchTokens', JSON.stringify(result, null, 2));
     // this.lastUpdate = new Date();
     this.recalculateCommulativeSum(result);
 
     runInAction(() => {
-      if (app.isTesterMode || app.isDeveloper) {
-        // Logger.log('TokensStore fetchTokens', JSON.stringify(result, null, 2));
+      if (app.isTesterMode) {
+        Logger.log('TokensStore fetchTokens', JSON.stringify(result, null, 2));
       }
       this.tokens = result;
       this._isLoading = false;
@@ -262,7 +261,9 @@ class TokensStore implements MobXStore<IToken> {
       const addressTokens: IToken[] = tokensAndContracts
         .filter(
           ({token}) =>
-            !!token.contract && AddressUtils.toEth(token.address) === w.address,
+            !!token.contract &&
+            new Balance(token.value).isPositive() &&
+            AddressUtils.toEth(token.address) === w.address,
         )
         .map(({token, contract}) => {
           const hasCache = this.hasContractCache(token.contract);

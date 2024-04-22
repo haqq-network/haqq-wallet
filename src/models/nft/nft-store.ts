@@ -1,25 +1,24 @@
 import {makeAutoObservable, runInAction} from 'mobx';
-import {makePersistable} from 'mobx-persist-store';
 
-import {NftCollection, NftCollectionIndexer, NftItem} from '@app/models/nft';
+import {AddressUtils} from '@app/helpers/address-utils';
+import {Whitelist} from '@app/helpers/whitelist';
+import {Contracts} from '@app/models/contracts';
+import {
+  ContractType,
+  NftCollection,
+  NftCollectionIndexer,
+  NftItem,
+} from '@app/models/nft';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
-import {storage} from '@app/services/mmkv';
-import {HaqqCosmosAddress} from '@app/types';
+import {HaqqCosmosAddress, IContract} from '@app/types';
 
 class NftStore {
   data: Record<HaqqCosmosAddress, NftCollection> = {};
 
-  constructor(shouldSkipPersisting: boolean = false) {
+  constructor() {
     makeAutoObservable(this);
-    if (!shouldSkipPersisting) {
-      makePersistable(this, {
-        name: this.constructor.name,
-        properties: ['data'],
-        storage: storage,
-      });
-    }
   }
 
   create(item: NftItem) {
@@ -45,6 +44,24 @@ class NftStore {
     return this.data[contractAddress] ?? null;
   }
 
+  getCollectionsByWallet(address: HaqqCosmosAddress): NftCollection[] {
+    return Object.keys(this.data).reduce((acc, key) => {
+      const collection = this.data[key as HaqqCosmosAddress];
+      const filteredNfts = collection.nfts.filter(
+        nft => nft.address === address,
+      );
+
+      if (filteredNfts.length) {
+        acc.push({
+          ...collection,
+          nfts: filteredNfts,
+        });
+      }
+
+      return acc;
+    }, [] as NftCollection[]);
+  }
+
   getNftById(nftAddress: HaqqCosmosAddress): NftItem | null {
     let nftItem: NftItem | null = null;
 
@@ -64,6 +81,7 @@ class NftStore {
   }
 
   getAll() {
+    Logger.log('NFTs', JSON.stringify(this.data, null, 2));
     return Object.values(this.data).reduce(
       (acc: NftItem[], item) => [...acc, ...item.nfts],
       [],
@@ -116,27 +134,63 @@ class NftStore {
 
     runInAction(() => {
       this.parseIndexerNft(nfts);
-      Logger.log('nfts', JSON.stringify(this.data, null, 2));
     });
   };
 
   private parseIndexerNft = (data: NftCollectionIndexer[]): void => {
-    data.forEach(item => {
-      this.data[item.id] = {
-        ...item,
-        description: item.description || '',
-        created_at: Date.now(),
-        nfts: item.nfts.map(nft => ({
-          ...nft,
-          name: nft.name || 'Unknown',
-          description: nft.description || '-',
-          tokenId: Number(nft.token_id),
-          price: nft.price ? new Balance(nft.price) : Balance.getEmpty(),
-        })),
-      };
+    this.data = {};
+
+    runInAction(() => {
+      data.forEach(async item => {
+        const contractAddress = AddressUtils.toHaqq(item.address);
+        const contract = (this.getContract(contractAddress) ||
+          (await Whitelist.verifyAddress(item.address)) ||
+          {}) as IContract;
+        const hasCache = this.hasContractCache(contractAddress);
+        if (!hasCache) {
+          this.saveContract(contract);
+        }
+
+        const contractType = contract.is_erc721
+          ? ContractType.erc721
+          : ContractType.erc1155;
+
+        this.data[item.id] = {
+          ...item,
+          description: item.description || '',
+          created_at: Date.now(),
+          contractType: contractType,
+          is_transfer_prohibinden: Boolean(contract.is_transfer_prohibinden),
+          nfts: item.nfts.map(nft => ({
+            ...nft,
+            contractType: contractType,
+            name: nft.name || 'Unknown',
+            description: nft.description || '-',
+            tokenId: Number(nft.token_id),
+            price: nft.price ? new Balance(nft.price) : Balance.getEmpty(),
+            is_transfer_prohibinden: Boolean(contract.is_transfer_prohibinden),
+          })),
+        };
+      });
     });
+  };
+
+  private hasContractCache = (id: HaqqCosmosAddress) => {
+    return !!Contracts.getById(id);
+  };
+
+  private saveContract = (contract: IContract | undefined) => {
+    if (!contract) {
+      return;
+    }
+
+    Contracts.create(contract.id, contract);
+  };
+
+  private getContract = (id: HaqqCosmosAddress) => {
+    return Contracts.getById(id);
   };
 }
 
-const instance = new NftStore(Boolean(process.env.JEST_WORKER_ID));
+const instance = new NftStore();
 export {instance as Nft};

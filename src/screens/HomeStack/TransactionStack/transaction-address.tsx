@@ -12,7 +12,6 @@ import {
   TransactionStackParamList,
   TransactionStackRoutes,
 } from '@app/route-types';
-import {Balance} from '@app/services/balance';
 
 const logger = Logger.create('TransactionAddressScreen');
 
@@ -86,14 +85,12 @@ export const TransactionAddressScreen = observer(() => {
         setLoading(true);
         const nft = route.params.nft;
         if (nft) {
-          const fee = new Balance(1);
           navigation.navigate(
             TransactionStackRoutes.TransactionNftConfirmation,
             {
               from: AddressUtils.toEth(route.params.from),
               to: AddressUtils.toEth(result),
               nft,
-              fee,
             },
           );
         } else {

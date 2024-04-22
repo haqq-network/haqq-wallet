@@ -41,7 +41,7 @@ export const BalanceInfoTotal = observer(
         {isBalancesFirstSync && (
           <>
             <Placeholder opacity={0.6}>
-              <Placeholder.Item width={110} height={35} />
+              <Placeholder.Item width={110} height={38} />
             </Placeholder>
             <Spacer height={10} />
           </>

@@ -6,7 +6,7 @@ import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
-import {Text} from './text';
+import {Text, TextVariant} from './text';
 
 export type DataViewProps = {
   label?: string;
@@ -20,7 +20,7 @@ export const DataView = ({label, i18n, children, style}: DataViewProps) => {
   return (
     <View style={containerStyle}>
       {/* @ts-expect-error */}
-      <Text i18n={i18n} t11 color={Color.textBase2}>
+      <Text i18n={i18n} variant={TextVariant.t11} color={Color.textBase2}>
         {label}
       </Text>
       {children}

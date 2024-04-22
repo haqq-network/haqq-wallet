@@ -4,6 +4,7 @@ import {Image, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {useNftCollectionImage} from '@app/hooks/nft';
 import {NftCollection} from '@app/models/nft';
 
 import {MenuNavigationButton, Spacer, Text} from '../ui';
@@ -19,13 +20,14 @@ export const NftViewerSectionHeader = ({
   onPress,
 }: NftViewerSectionHeaderProps) => {
   const handlePress = useCallback(() => onPress?.(item), [onPress, item]);
+  const collectionImageUri = useNftCollectionImage(item.nfts);
 
   return (
     <MenuNavigationButton onPress={handlePress} style={styles.headerContainer}>
       <Image
         resizeMode="cover"
         style={styles.headerImage}
-        source={{uri: item.image}}
+        source={collectionImageUri}
       />
       <Spacer width={12} />
       <View>

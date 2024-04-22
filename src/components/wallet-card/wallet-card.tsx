@@ -46,7 +46,7 @@ export const WalletCard = ({
 }: BalanceProps) => {
   const {locked, total} = balance ?? {};
   const [cardState, setCardState] = useState('loading');
-  const {isBalaceLoadingError, isBalancesFirstSync} = useIsBalancesFirstSync();
+  const {isBalanceLoadingError, isBalancesFirstSync} = useIsBalancesFirstSync();
   const screenWidth = useWindowDimensions().width;
 
   const showPlaceholder = useMemo(() => {
@@ -54,12 +54,12 @@ export const WalletCard = ({
       return true;
     }
 
-    if (isBalaceLoadingError) {
+    if (isBalanceLoadingError) {
       return !total?.isPositive();
     }
 
     return false;
-  }, [isBalaceLoadingError, isBalancesFirstSync]);
+  }, [isBalanceLoadingError, isBalancesFirstSync]);
 
   const onAccountInfo = () => {
     onPressAccountInfo(wallet?.address);

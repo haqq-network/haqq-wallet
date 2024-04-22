@@ -18,6 +18,7 @@ import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useLayoutEffectAsync} from '@app/hooks/use-effect-async';
 import {useError} from '@app/hooks/use-error';
 import {Contact} from '@app/models/contact';
+import {ContractType} from '@app/models/nft';
 import {Wallet} from '@app/models/wallet';
 import {
   TransactionStackParamList,
@@ -27,9 +28,8 @@ import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {EthSignErrorDataDetails} from '@app/services/eth-sign';
 import {EventTracker} from '@app/services/event-tracker';
-import {MarketingEvents, ModalType} from '@app/types';
+import {MarketingEvents, ModalType, TransactionResponse} from '@app/types';
 import {makeID} from '@app/utils';
-import {FEE_ESTIMATING_TIMEOUT_MS} from '@app/variables/common';
 
 export const TransactionNftConfirmationScreen = observer(() => {
   const navigation = useTypedNavigation<TransactionStackParamList>();
@@ -51,30 +51,30 @@ export const TransactionNftConfirmationScreen = observer(() => {
 
   const showError = useError();
   const [disabled, setDisabled] = useState(false);
-  const [fee, setFee] = useState(route.params.fee ?? Balance.Empty);
+  const [fee, setFee] = useState<Balance | null>();
 
   useLayoutEffectAsync(async () => {
-    const timer = setTimeout(
-      () => setFee(route.params.fee ?? Balance.Empty),
-      FEE_ESTIMATING_TIMEOUT_MS,
-    );
-
     let feeWei = Balance.Empty;
 
-    const result = await EthNetwork.estimateERC721Transfer(
-      wallet?.address!,
-      route.params.to,
-      nft.tokenId,
-      AddressUtils.toEth(nft.contract),
-    );
-    feeWei = result.feeWei;
+    if (nft.contractType === ContractType.erc721) {
+      const result = await EthNetwork.estimateERC721Transfer(
+        wallet?.address!,
+        route.params.to,
+        nft.tokenId,
+        AddressUtils.toEth(nft.contract),
+      );
+      feeWei = result.feeWei;
+    } else {
+      const result = await EthNetwork.estimateERC1155Transfer(
+        wallet?.address!,
+        route.params.to,
+        nft.tokenId,
+        AddressUtils.toEth(nft.contract),
+      );
+      feeWei = result.feeWei;
+    }
 
-    clearTimeout(timer);
     setFee(feeWei);
-
-    return () => {
-      clearTimeout(timer);
-    };
   }, []);
 
   const onConfirmTransaction = useCallback(async () => {
@@ -90,13 +90,24 @@ export const TransactionNftConfirmationScreen = observer(() => {
           true,
         );
 
-        const transaction = await ethNetworkProvider.transferERC721(
-          provider,
-          wallet,
-          route.params.to,
-          nft.tokenId,
-          AddressUtils.toEth(nft.contract),
-        );
+        let transaction: TransactionResponse | null = null;
+        if (nft.contractType === ContractType.erc721) {
+          transaction = await ethNetworkProvider.transferERC721(
+            provider,
+            wallet,
+            route.params.to,
+            nft.tokenId,
+            AddressUtils.toEth(nft.contract),
+          );
+        } else {
+          transaction = await ethNetworkProvider.transferERC1155(
+            provider,
+            wallet,
+            route.params.to,
+            nft.tokenId,
+            AddressUtils.toEth(nft.contract),
+          );
+        }
 
         if (transaction) {
           EventTracker.instance.trackEvent(MarketingEvents.sendFund);
@@ -111,6 +122,8 @@ export const TransactionNftConfirmationScreen = observer(() => {
           navigation.navigate(TransactionStackRoutes.TransactionNftFinish, {
             nft: route.params.nft,
             transaction,
+            to: route.params.to,
+            fee,
           });
         }
       } catch (e) {

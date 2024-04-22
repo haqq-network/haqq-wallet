@@ -1,5 +1,9 @@
 {
+  "feeCalculatingRpcErrorClose": "",
+  "feeCalculatingRpcErrorDescription": "",
+  "feeCalculatingRpcErrorTitle": "Что-то пошло не так",
   "testui": "Тестовый тест пользовательского интерфейса",
+  "tokensLowBalance": " Недостаточный баланс",
   "StakingInfoUnDelegationDay": "",
   "StakingInfoUnDelegationDays": "",
   "accept": "",

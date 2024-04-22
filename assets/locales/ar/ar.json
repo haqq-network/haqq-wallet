@@ -1,5 +1,9 @@
 {
+  "feeCalculatingRpcErrorClose": "حاول ثانية",
+  "feeCalculatingRpcErrorDescription": "فشل طلب تقدير الغاز",
+  "feeCalculatingRpcErrorTitle": "هناك خطأ ما",
   "testui": "اختبار اختبار واجهة المستخدم",
+  "tokensLowBalance": "رصيد منخفض",
   "StakingInfoUnDelegationDay": " ({{day}} يوم متبقي)",
   "StakingInfoUnDelegationDays": " (بقي {{days}} يوم)",
   "accept": "قبول",

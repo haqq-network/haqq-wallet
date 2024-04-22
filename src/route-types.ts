@@ -234,7 +234,6 @@ export type SecurityStackParamList = HomeStackParamList &
 export enum HomeFeedStackRoutes {
   HomeFeed = 'homeFeed_',
   Governance = 'governance',
-  NftDetails = 'nftDetails',
   HomeEarn = 'homeEarn',
   HomeStories = 'homeStories',
 }
@@ -242,12 +241,6 @@ export enum HomeFeedStackRoutes {
 export type HomeFeedStackParamList = HomeStackParamList & {
   [HomeFeedStackRoutes.HomeFeed]: undefined;
   [HomeFeedStackRoutes.Governance]: undefined;
-  [HomeFeedStackRoutes.NftDetails]:
-    | {
-        type: 'nft';
-        item: NftItem;
-      }
-    | {type: 'collection'; item: NftCollection};
   [HomeFeedStackRoutes.HomeEarn]: undefined;
   [HomeFeedStackRoutes.HomeStories]: {id: IStory['id']};
 };
@@ -350,6 +343,7 @@ export enum HomeStackRoutes {
   SignIn = '_signin',
   AccountInfo = 'accountInfo',
   Transaction = 'transaction',
+  Nft = 'Nft',
   AccountDetail = 'accountDetail',
   Backup = 'backup',
   WalletProtectionPopup = 'walletProtectionPopup',
@@ -385,6 +379,15 @@ export type HomeStackParamList = {
     to?: string;
     nft?: NftItem;
   };
+  [HomeStackRoutes.Nft]:
+    | {
+        initScreen: NftStackRoutes.NftItemDetails;
+        item: NftItem;
+      }
+    | {
+        initScreen: NftStackRoutes.NftCollectionDetails;
+        item: NftCollection;
+      };
   [HomeStackRoutes.AccountDetail]: {address: string};
   [HomeStackRoutes.Backup]: {
     wallet: Wallet;
@@ -454,14 +457,14 @@ export type HomeStackParamList = {
   };
 };
 
-export enum NftDetailsStackRoutes {
+export enum NftStackRoutes {
   NftItemDetails = 'nftItemDetails',
   NftCollectionDetails = 'nftCollectionDetails',
 }
 
-export type NftDetailsStackParamList = HomeFeedStackParamList & {
-  [NftDetailsStackRoutes.NftItemDetails]: {item: NftItem};
-  [NftDetailsStackRoutes.NftCollectionDetails]: {item: NftCollection};
+export type NftStackParamList = HomeFeedStackParamList & {
+  [NftStackRoutes.NftItemDetails]: {item: NftItem};
+  [NftStackRoutes.NftCollectionDetails]: {item: NftCollection};
 };
 
 export enum ProposalDepositStackRoutes {
@@ -525,7 +528,6 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
     from: string;
     to: string;
     nft: NftItem;
-    fee?: Balance;
   };
   [TransactionStackRoutes.TransactionFinish]: {
     transaction: TransactionResponse;
@@ -536,6 +538,8 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
   [TransactionStackRoutes.TransactionNftFinish]: {
     nft: NftItem;
     transaction: TransactionResponse;
+    to: string;
+    fee?: Balance | null;
   };
   [TransactionStackRoutes.TransactionAccount]: {
     from: string;

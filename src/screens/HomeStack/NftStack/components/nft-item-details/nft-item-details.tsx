@@ -55,15 +55,17 @@ export const NftItemDetails = ({item, onPressSend}: NftItemDetailsProps) => {
         <NftItemDetailsTokenId tokenId={item.tokenId} />
         <NftItemDetailsAttributes attributes={item.attributes} />
       </ScrollView>
-      <View>
-        <Spacer height={16} />
-        <Button
-          i18n={I18N.nftDetailsSend}
-          variant={ButtonVariant.contained}
-          onPress={onPressSend}
-        />
-        <Spacer height={16} />
-      </View>
+      {!item.is_transfer_prohibinden && (
+        <View>
+          <Spacer height={16} />
+          <Button
+            i18n={I18N.nftDetailsSend}
+            variant={ButtonVariant.contained}
+            onPress={onPressSend}
+          />
+          <Spacer height={16} />
+        </View>
+      )}
     </SafeAreaView>
   );
 };

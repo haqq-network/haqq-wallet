@@ -25,6 +25,7 @@ import {CreateStack} from '@app/screens/HomeStack/HomeFeedStack/create';
 import {TransactionDetailScreen} from '@app/screens/HomeStack/HomeFeedStack/transaction-detail';
 import {InAppBrowserScreen} from '@app/screens/HomeStack/in-app-browser';
 import {JsonRpcSignPopupStack} from '@app/screens/HomeStack/JsonRpcSignPopupStack';
+import {NftStack} from '@app/screens/HomeStack/NftStack';
 import {SssMigrateStack} from '@app/screens/HomeStack/SssMigrate';
 import {TransactionStack} from '@app/screens/HomeStack/TransactionStack';
 import {WalletProtectionPopupScreen} from '@app/screens/HomeStack/wallet-protection-popup';
@@ -145,6 +146,12 @@ const HomeStack = memo(() => {
         name={HomeStackRoutes.TransactionDetail}
         component={themeUpdaterHOC(TransactionDetailScreen)}
         options={fullScreenModalOptions}
+      />
+
+      <Stack.Screen
+        name={HomeStackRoutes.Nft}
+        component={NftStack}
+        options={modalOptions}
       />
 
       <Stack.Screen

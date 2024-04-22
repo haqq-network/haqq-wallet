@@ -8,7 +8,6 @@ import {First, PopupContainer, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {I18N} from '@app/i18n';
-import {Nft} from '@app/models/nft';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {HaqqEthereumAddress, IToken, IndexerTransaction} from '@app/types';
@@ -61,8 +60,6 @@ export const AccountInfo = observer(
     onPressTxRow,
     tokens,
   }: AccountInfoProps) => {
-    const nftCollections = Nft.getAllCollections();
-
     const [activeTab, setActiveTab] = useState(TabNames.tokens);
 
     const hideTransactionsContent = useMemo(
@@ -162,7 +159,7 @@ export const AccountInfo = observer(
             <>
               <Spacer height={24} />
               <NftViewer
-                data={nftCollections}
+                wallet={wallet}
                 scrollEnabled={false}
                 style={styles.nftViewerContainer}
               />
@@ -170,7 +167,7 @@ export const AccountInfo = observer(
           )}
         </First>
       ),
-      [activeTab, nftCollections],
+      [activeTab],
     );
 
     return (

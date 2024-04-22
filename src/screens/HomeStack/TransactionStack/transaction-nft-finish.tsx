@@ -10,6 +10,7 @@ import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {I18N, getText} from '@app/i18n';
 import {Contact, ContactType} from '@app/models/contact';
 import {
+  HomeFeedStackRoutes,
   TransactionStackParamList,
   TransactionStackRoutes,
 } from '@app/route-types';
@@ -17,13 +18,12 @@ import {sendNotification} from '@app/services';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
 export const TransactionNftFinishScreen = observer(() => {
-  const {navigate, getParent, goBack} =
-    useTypedNavigation<TransactionStackParamList>();
+  const {navigate, goBack} = useTypedNavigation<TransactionStackParamList>();
   useAndroidBackHandler(() => {
     goBack();
     return true;
   }, [goBack]);
-  const {nft, transaction} = useTypedRoute<
+  const {nft, transaction, to, fee} = useTypedRoute<
     TransactionStackParamList,
     TransactionStackRoutes.TransactionNftFinish
   >().params;
@@ -38,17 +38,14 @@ export const TransactionNftFinishScreen = observer(() => {
     }
   }, [contact?.account, transaction?.to]);
 
-  const short = useMemo(
-    () => shortAddress(transaction?.to ?? ''),
-    [transaction?.to],
-  );
+  const short = useMemo(() => shortAddress(to ?? ''), [to]);
 
   const onSubmit = () => {
-    getParent()?.goBack();
+    navigate(HomeFeedStackRoutes.HomeFeed);
   };
 
   const onPressContact = useCallback(() => {
-    if (transaction?.to) {
+    if (to) {
       prompt(
         getText(
           contact
@@ -56,7 +53,7 @@ export const TransactionNftFinishScreen = observer(() => {
             : I18N.transactionFinishAddContact,
         ),
         getText(I18N.transactionFinishContactMessage, {
-          address: transaction?.to,
+          address: to,
         }),
         value => {
           if (contact) {
@@ -65,13 +62,13 @@ export const TransactionNftFinishScreen = observer(() => {
             });
             sendNotification(I18N.transactionFinishContactUpdated);
           } else {
-            Contact.create(transaction.to!, {
+            Contact.create(to, {
               name: value,
               type: ContactType.address,
               visible: true,
             });
             sendNotification(I18N.transactionFinishContactAdded);
-            setContact(Contact.getById(transaction?.to ?? ''));
+            setContact(Contact.getById(to ?? ''));
           }
         },
         {
@@ -80,7 +77,7 @@ export const TransactionNftFinishScreen = observer(() => {
         },
       );
     }
-  }, [transaction?.to, contact]);
+  }, [to, contact]);
 
   useEffect(() => {
     vibrate(HapticEffects.success);
@@ -94,6 +91,7 @@ export const TransactionNftFinishScreen = observer(() => {
       transaction={transaction}
       contact={contact}
       short={short}
+      fee={fee}
     />
   );
 });

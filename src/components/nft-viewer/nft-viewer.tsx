@@ -16,7 +16,9 @@ import {createTheme} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
 import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {I18N, getText} from '@app/i18n';
-import {NftCollection, NftItem} from '@app/models/nft';
+import {Nft, NftCollection, NftItem} from '@app/models/nft';
+import {Wallet} from '@app/models/wallet';
+import {HomeStackRoutes, NftStackRoutes} from '@app/route-types';
 import {NftWidgetSize} from '@app/types';
 import {SortDirectionEnum, arraySortUtil} from '@app/utils';
 
@@ -35,8 +37,8 @@ import {
 } from '../ui';
 
 export interface NftViewerProps {
-  data: NftCollection[];
   scrollEnabled?: boolean;
+  wallet?: Wallet;
   style?: StyleProp<ViewStyle>;
 }
 
@@ -66,8 +68,8 @@ const ViewModeIconsMap = {
 };
 
 export const NftViewer = ({
-  data,
   style,
+  wallet,
   scrollEnabled = true,
 }: NftViewerProps) => {
   const navigation = useTypedNavigation();
@@ -86,13 +88,15 @@ export const NftViewer = ({
   const [sortFieldName, setSortFieldName] =
     useState<keyof NftCollection>('created_at');
 
-  const sections = useMemo(
-    () =>
-      data
-        ?.map?.(it => ({...it, data: [it]}) as SectionElement)
-        ?.sort?.(arraySortUtil(sortDirection, sortFieldName)),
-    [data, sortDirection, sortFieldName],
-  );
+  const sections = useMemo(() => {
+    const data = wallet
+      ? Nft.getCollectionsByWallet(wallet.cosmosAddress)
+      : Nft.getAllCollections();
+
+    return data
+      ?.map?.(it => ({...it, data: [it]}) as SectionElement)
+      ?.sort?.(arraySortUtil(sortDirection, sortFieldName));
+  }, [sortDirection, sortFieldName]);
 
   const onPressSort = useCallback(() => {
     showActionSheetWithOptions(
@@ -132,14 +136,20 @@ export const NftViewer = ({
 
   const onNftCollectionPress = useCallback(
     (item: NftCollection) => {
-      navigation.navigate('nftDetails', {type: 'collection', item});
+      navigation.navigate(HomeStackRoutes.Nft, {
+        initScreen: NftStackRoutes.NftCollectionDetails,
+        item,
+      });
     },
     [navigation],
   );
 
   const onNftItemPress = useCallback(
     (item: NftItem) => {
-      navigation.navigate('nftDetails', {type: 'nft', item});
+      navigation.navigate(HomeStackRoutes.Nft, {
+        initScreen: NftStackRoutes.NftItemDetails,
+        item,
+      });
     },
     [navigation],
   );
@@ -172,7 +182,7 @@ export const NftViewer = ({
     [],
   );
 
-  if (!data?.length) {
+  if (!sections?.length) {
     return (
       <View style={styles.empty}>
         <Image
