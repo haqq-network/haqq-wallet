@@ -8,17 +8,17 @@ import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
 type Props = {
-  properties: Record<string, string> | null;
+  attributes?: Record<string, string> | null;
 };
 
-export const NftItemDetailsAttributes = ({properties}: Props) => {
+export const NftItemDetailsAttributes = ({attributes}: Props) => {
   return (
     <>
       <Text variant={TextVariant.t12} i18n={I18N.nftDetailsAttributes} />
       <Spacer height={8} />
       <View style={styles.attributeListContainer}>
-        {properties
-          ? Object.entries(properties).map(([key, value]) => {
+        {attributes
+          ? Object.entries(attributes).map(([key, value]) => {
               return (
                 <View key={key} style={styles.attributeContainer}>
                   <View style={styles.attributeValueContainer}>
