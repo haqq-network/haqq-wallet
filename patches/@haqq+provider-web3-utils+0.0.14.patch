@@ -1,0 +1,1016 @@
+diff --git a/node_modules/@haqq/provider-web3-utils/.DS_Store b/node_modules/@haqq/provider-web3-utils/.DS_Store
+new file mode 100644
+index 0000000..36d39ae
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/.DS_Store differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/results.bin b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/results.bin
+new file mode 100644
+index 0000000..5ff383e
+--- /dev/null
++++ b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/results.bin
+@@ -0,0 +1 @@
++o/debug
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/we3utilsrn/BuildConfig.dex b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/we3utilsrn/BuildConfig.dex
+new file mode 100644
+index 0000000..e2fa63b
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/we3utilsrn/BuildConfig.dex differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/we3utilsrn/HaqqWeb3UtilsRNModule$Companion.dex b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/we3utilsrn/HaqqWeb3UtilsRNModule$Companion.dex
+new file mode 100644
+index 0000000..5d9407e
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/we3utilsrn/HaqqWeb3UtilsRNModule$Companion.dex differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/we3utilsrn/HaqqWeb3UtilsRNModule.dex b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/we3utilsrn/HaqqWeb3UtilsRNModule.dex
+new file mode 100644
+index 0000000..145d4a4
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/we3utilsrn/HaqqWeb3UtilsRNModule.dex differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/we3utilsrn/HaqqWeb3UtilsRNPackage.dex b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/we3utilsrn/HaqqWeb3UtilsRNPackage.dex
+new file mode 100644
+index 0000000..ea62222
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/we3utilsrn/HaqqWeb3UtilsRNPackage.dex differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/we3utilsrn/UtilsKt.dex b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/we3utilsrn/UtilsKt.dex
+new file mode 100644
+index 0000000..d319750
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/we3utilsrn/UtilsKt.dex differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/AccountInfoResponse$$serializer.dex b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/AccountInfoResponse$$serializer.dex
+new file mode 100644
+index 0000000..34c5d56
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/AccountInfoResponse$$serializer.dex differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/AccountInfoResponse$Companion.dex b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/AccountInfoResponse$Companion.dex
+new file mode 100644
+index 0000000..87fe1ba
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/AccountInfoResponse$Companion.dex differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/AccountInfoResponse.dex b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/AccountInfoResponse.dex
+new file mode 100644
+index 0000000..c031810
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/AccountInfoResponse.dex differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/ExtensionsKt$toBits$1.dex b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/ExtensionsKt$toBits$1.dex
+new file mode 100644
+index 0000000..83a5b43
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/ExtensionsKt$toBits$1.dex differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/ExtensionsKt$toHex$1.dex b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/ExtensionsKt$toHex$1.dex
+new file mode 100644
+index 0000000..64639ee
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/ExtensionsKt$toHex$1.dex differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/ExtensionsKt.dex b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/ExtensionsKt.dex
+new file mode 100644
+index 0000000..fa4f0f1
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/ExtensionsKt.dex differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/HDKey.dex b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/HDKey.dex
+new file mode 100644
+index 0000000..27464bb
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/HDKey.dex differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/HelpersKt.dex b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/HelpersKt.dex
+new file mode 100644
+index 0000000..b3cf9f4
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/HelpersKt.dex differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/Mnemonic$Companion.dex b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/Mnemonic$Companion.dex
+new file mode 100644
+index 0000000..1529dfb
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/Mnemonic$Companion.dex differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/Mnemonic.dex b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/Mnemonic.dex
+new file mode 100644
+index 0000000..02dc02e
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/Mnemonic.dex differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/MnemonicWordlistKt.dex b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/MnemonicWordlistKt.dex
+new file mode 100644
+index 0000000..e2695b1
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/MnemonicWordlistKt.dex differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/Wallet.dex b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/Wallet.dex
+new file mode 100644
+index 0000000..82bf9a8
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/debug_dex/haqq/web3utilsrn/Wallet.dex differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/desugar_graph.bin b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/desugar_graph.bin
+new file mode 100644
+index 0000000..601f245
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/3f29350fbf7769c3bb3a53ca303f9701/transformed/debug/desugar_graph.bin differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/.transforms/7e54950df2b0591023d9a54b53474ae9/results.bin b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/7e54950df2b0591023d9a54b53474ae9/results.bin
+new file mode 100644
+index 0000000..1ed65e0
+--- /dev/null
++++ b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/7e54950df2b0591023d9a54b53474ae9/results.bin
+@@ -0,0 +1 @@
++i/
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/.transforms/814b0ce2ab6b27908f7feb2c5e9bed4b/results.bin b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/814b0ce2ab6b27908f7feb2c5e9bed4b/results.bin
+new file mode 100644
+index 0000000..e3f0ff0
+--- /dev/null
++++ b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/814b0ce2ab6b27908f7feb2c5e9bed4b/results.bin
+@@ -0,0 +1 @@
++i/classes_global-synthetics
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/.transforms/b8069ae013d4a8625891c357e8de4c3f/results.bin b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/b8069ae013d4a8625891c357e8de4c3f/results.bin
+new file mode 100644
+index 0000000..0d259dd
+--- /dev/null
++++ b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/b8069ae013d4a8625891c357e8de4c3f/results.bin
+@@ -0,0 +1 @@
++o/classes
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/.transforms/b8069ae013d4a8625891c357e8de4c3f/transformed/classes/classes_dex/classes.dex b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/b8069ae013d4a8625891c357e8de4c3f/transformed/classes/classes_dex/classes.dex
+new file mode 100644
+index 0000000..dcca25b
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/b8069ae013d4a8625891c357e8de4c3f/transformed/classes/classes_dex/classes.dex differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/.transforms/cf32fdf67c7d609006928f84cfae0f8b/results.bin b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/cf32fdf67c7d609006928f84cfae0f8b/results.bin
+new file mode 100644
+index 0000000..4c288ce
+--- /dev/null
++++ b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/cf32fdf67c7d609006928f84cfae0f8b/results.bin
+@@ -0,0 +1 @@
++i/debug_dex
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/.transforms/f38101de9918019f5566e0126bb0b44d/results.bin b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/f38101de9918019f5566e0126bb0b44d/results.bin
+new file mode 100644
+index 0000000..1ed65e0
+--- /dev/null
++++ b/node_modules/@haqq/provider-web3-utils/android/build/.transforms/f38101de9918019f5566e0126bb0b44d/results.bin
+@@ -0,0 +1 @@
++i/
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/generated/source/buildConfig/debug/haqq/we3utilsrn/BuildConfig.java b/node_modules/@haqq/provider-web3-utils/android/build/generated/source/buildConfig/debug/haqq/we3utilsrn/BuildConfig.java
+new file mode 100644
+index 0000000..50ab05b
+--- /dev/null
++++ b/node_modules/@haqq/provider-web3-utils/android/build/generated/source/buildConfig/debug/haqq/we3utilsrn/BuildConfig.java
+@@ -0,0 +1,12 @@
++/**
++ * Automatically generated file. DO NOT MODIFY
++ */
++package haqq.we3utilsrn;
++
++public final class BuildConfig {
++  public static final boolean DEBUG = Boolean.parseBoolean("true");
++  public static final String LIBRARY_PACKAGE_NAME = "haqq.we3utilsrn";
++  public static final String BUILD_TYPE = "debug";
++  // Field from default config.
++  public static final boolean IS_NEW_ARCHITECTURE_ENABLED = false;
++}
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/AndroidManifest.xml b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/AndroidManifest.xml
+new file mode 100644
+index 0000000..174c17c
+--- /dev/null
++++ b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/AndroidManifest.xml
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    package="haqq.we3utilsrn" >
++
++    <uses-sdk android:minSdkVersion="26" />
++
++</manifest>
+\ No newline at end of file
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/output-metadata.json b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/output-metadata.json
+new file mode 100644
+index 0000000..a49134c
+--- /dev/null
++++ b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/output-metadata.json
+@@ -0,0 +1,18 @@
++{
++  "version": 3,
++  "artifactType": {
++    "type": "AAPT_FRIENDLY_MERGED_MANIFESTS",
++    "kind": "Directory"
++  },
++  "applicationId": "haqq.we3utilsrn",
++  "variantName": "debug",
++  "elements": [
++    {
++      "type": "SINGLE",
++      "filters": [],
++      "attributes": [],
++      "outputFile": "AndroidManifest.xml"
++    }
++  ],
++  "elementType": "File"
++}
+\ No newline at end of file
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/aar_main_jar/debug/classes.jar b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/aar_main_jar/debug/classes.jar
+new file mode 100644
+index 0000000..890152a
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/aar_main_jar/debug/classes.jar differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/aar_metadata/debug/aar-metadata.properties b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/aar_metadata/debug/aar-metadata.properties
+new file mode 100644
+index 0000000..776557e
+--- /dev/null
++++ b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/aar_metadata/debug/aar-metadata.properties
+@@ -0,0 +1,5 @@
++aarFormatVersion=1.0
++aarMetadataVersion=1.0
++minCompileSdk=1
++minCompileSdkExtension=0
++minAndroidGradlePluginVersion=1.0.0
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/annotation_processor_list/debug/annotationProcessors.json b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/annotation_processor_list/debug/annotationProcessors.json
+new file mode 100644
+index 0000000..9e26dfe
+--- /dev/null
++++ b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/annotation_processor_list/debug/annotationProcessors.json
+@@ -0,0 +1 @@
++{}
+\ No newline at end of file
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/annotations_typedef_file/debug/typedefs.txt b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/annotations_typedef_file/debug/typedefs.txt
+new file mode 100644
+index 0000000..e69de29
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/compile_library_classes_jar/debug/classes.jar b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/compile_library_classes_jar/debug/classes.jar
+new file mode 100644
+index 0000000..80b3d96
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/compile_library_classes_jar/debug/classes.jar differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/compile_r_class_jar/debug/R.jar b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/compile_r_class_jar/debug/R.jar
+new file mode 100644
+index 0000000..d5b124e
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/compile_r_class_jar/debug/R.jar differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/compile_symbol_list/debug/R.txt b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/compile_symbol_list/debug/R.txt
+new file mode 100644
+index 0000000..e69de29
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/incremental/debug-mergeJavaRes/merge-state b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/incremental/debug-mergeJavaRes/merge-state
+new file mode 100644
+index 0000000..9f74a30
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/incremental/debug-mergeJavaRes/merge-state differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties
+new file mode 100644
+index 0000000..d93db16
+--- /dev/null
++++ b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties
+@@ -0,0 +1 @@
++#Mon Mar 25 20:35:16 KRAT 2024
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/incremental/debug/packageDebugResources/merger.xml b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/incremental/debug/packageDebugResources/merger.xml
+new file mode 100644
+index 0000000..8479f3f
+--- /dev/null
++++ b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/incremental/debug/packageDebugResources/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/igroza/dev/projects/@haqq/haqq-wallet/node_modules/@haqq/provider-web3-utils/android/src/main/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main" generated-set="main$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/igroza/dev/projects/@haqq/haqq-wallet/node_modules/@haqq/provider-web3-utils/android/src/main/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/igroza/dev/projects/@haqq/haqq-wallet/node_modules/@haqq/provider-web3-utils/android/src/debug/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug" generated-set="debug$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/igroza/dev/projects/@haqq/haqq-wallet/node_modules/@haqq/provider-web3-utils/android/src/debug/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/igroza/dev/projects/@haqq/haqq-wallet/node_modules/@haqq/provider-web3-utils/android/build/generated/res/resValues/debug"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated" generated-set="generated$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/igroza/dev/projects/@haqq/haqq-wallet/node_modules/@haqq/provider-web3-utils/android/build/generated/res/resValues/debug"/></dataSet><mergedItems/></merger>
+\ No newline at end of file
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/java_res/debug/out/META-INF/haqq_provider-web3-utils_debug.kotlin_module b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/java_res/debug/out/META-INF/haqq_provider-web3-utils_debug.kotlin_module
+new file mode 100644
+index 0000000..33d9c9b
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/java_res/debug/out/META-INF/haqq_provider-web3-utils_debug.kotlin_module differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/javac/debug/classes/haqq/we3utilsrn/BuildConfig.class b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/javac/debug/classes/haqq/we3utilsrn/BuildConfig.class
+new file mode 100644
+index 0000000..ca021b0
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/javac/debug/classes/haqq/we3utilsrn/BuildConfig.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/local_only_symbol_list/debug/R-def.txt b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/local_only_symbol_list/debug/R-def.txt
+new file mode 100644
+index 0000000..78ac5b8
+--- /dev/null
++++ b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/local_only_symbol_list/debug/R-def.txt
+@@ -0,0 +1,2 @@
++R_DEF: Internal format may change without notice
++local
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/manifest_merge_blame_file/debug/manifest-merger-blame-debug-report.txt b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/manifest_merge_blame_file/debug/manifest-merger-blame-debug-report.txt
+new file mode 100644
+index 0000000..7e7f87e
+--- /dev/null
++++ b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/manifest_merge_blame_file/debug/manifest-merger-blame-debug-report.txt
+@@ -0,0 +1,7 @@
++1<?xml version="1.0" encoding="utf-8"?>
++2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++3    package="haqq.we3utilsrn" >
++4
++5    <uses-sdk android:minSdkVersion="26" />
++6
++7</manifest>
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/merged_java_res/debug/feature-haqq_provider-web3-utils.jar b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/merged_java_res/debug/feature-haqq_provider-web3-utils.jar
+new file mode 100644
+index 0000000..c77aedb
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/merged_java_res/debug/feature-haqq_provider-web3-utils.jar differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml
+new file mode 100644
+index 0000000..174c17c
+--- /dev/null
++++ b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    package="haqq.we3utilsrn" >
++
++    <uses-sdk android:minSdkVersion="26" />
++
++</manifest>
+\ No newline at end of file
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/navigation_json/debug/navigation.json b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/navigation_json/debug/navigation.json
+new file mode 100644
+index 0000000..0637a08
+--- /dev/null
++++ b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/navigation_json/debug/navigation.json
+@@ -0,0 +1 @@
++[]
+\ No newline at end of file
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/META-INF/haqq_provider-web3-utils_debug.kotlin_module b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/META-INF/haqq_provider-web3-utils_debug.kotlin_module
+new file mode 100644
+index 0000000..33d9c9b
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/META-INF/haqq_provider-web3-utils_debug.kotlin_module differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/we3utilsrn/BuildConfig.class b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/we3utilsrn/BuildConfig.class
+new file mode 100644
+index 0000000..ca021b0
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/we3utilsrn/BuildConfig.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/we3utilsrn/HaqqWeb3UtilsRNModule$Companion.class b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/we3utilsrn/HaqqWeb3UtilsRNModule$Companion.class
+new file mode 100644
+index 0000000..69555a4
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/we3utilsrn/HaqqWeb3UtilsRNModule$Companion.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/we3utilsrn/HaqqWeb3UtilsRNModule.class b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/we3utilsrn/HaqqWeb3UtilsRNModule.class
+new file mode 100644
+index 0000000..6acaacf
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/we3utilsrn/HaqqWeb3UtilsRNModule.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/we3utilsrn/HaqqWeb3UtilsRNPackage.class b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/we3utilsrn/HaqqWeb3UtilsRNPackage.class
+new file mode 100644
+index 0000000..c628d94
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/we3utilsrn/HaqqWeb3UtilsRNPackage.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/we3utilsrn/UtilsKt.class b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/we3utilsrn/UtilsKt.class
+new file mode 100644
+index 0000000..eec68d2
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/we3utilsrn/UtilsKt.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/AccountInfoResponse$$serializer.class b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/AccountInfoResponse$$serializer.class
+new file mode 100644
+index 0000000..934e514
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/AccountInfoResponse$$serializer.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/AccountInfoResponse$Companion.class b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/AccountInfoResponse$Companion.class
+new file mode 100644
+index 0000000..83d37bc
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/AccountInfoResponse$Companion.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/AccountInfoResponse.class b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/AccountInfoResponse.class
+new file mode 100644
+index 0000000..2048428
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/AccountInfoResponse.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/ExtensionsKt$toBits$1.class b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/ExtensionsKt$toBits$1.class
+new file mode 100644
+index 0000000..233fba4
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/ExtensionsKt$toBits$1.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/ExtensionsKt$toHex$1.class b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/ExtensionsKt$toHex$1.class
+new file mode 100644
+index 0000000..eae134a
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/ExtensionsKt$toHex$1.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/ExtensionsKt.class b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/ExtensionsKt.class
+new file mode 100644
+index 0000000..2602449
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/ExtensionsKt.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/HDKey.class b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/HDKey.class
+new file mode 100644
+index 0000000..eca8b1c
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/HDKey.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/HelpersKt.class b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/HelpersKt.class
+new file mode 100644
+index 0000000..8e6a28d
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/HelpersKt.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/Mnemonic$Companion.class b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/Mnemonic$Companion.class
+new file mode 100644
+index 0000000..e5aca12
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/Mnemonic$Companion.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/Mnemonic.class b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/Mnemonic.class
+new file mode 100644
+index 0000000..2c05ace
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/Mnemonic.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/MnemonicWordlistKt.class b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/MnemonicWordlistKt.class
+new file mode 100644
+index 0000000..ea7eee5
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/MnemonicWordlistKt.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/Wallet.class b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/Wallet.class
+new file mode 100644
+index 0000000..afd693f
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_dir/debug/haqq/web3utilsrn/Wallet.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_jar/debug/classes.jar b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_jar/debug/classes.jar
+new file mode 100644
+index 0000000..c7ab485
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/runtime_library_classes_jar/debug/classes.jar differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/intermediates/symbol_list_with_package_name/debug/package-aware-r.txt b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/symbol_list_with_package_name/debug/package-aware-r.txt
+new file mode 100644
+index 0000000..7632e3f
+--- /dev/null
++++ b/node_modules/@haqq/provider-web3-utils/android/build/intermediates/symbol_list_with_package_name/debug/package-aware-r.txt
+@@ -0,0 +1 @@
++haqq.we3utilsrn
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/inputs/source-to-output.tab b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/inputs/source-to-output.tab
+new file mode 100644
+index 0000000..9f289a2
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/inputs/source-to-output.tab differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/inputs/source-to-output.tab.keystream b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/inputs/source-to-output.tab.keystream
+new file mode 100644
+index 0000000..e5525d6
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/inputs/source-to-output.tab.keystream differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/inputs/source-to-output.tab.keystream.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/inputs/source-to-output.tab.keystream.len
+new file mode 100644
+index 0000000..9cd8516
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/inputs/source-to-output.tab.keystream.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/inputs/source-to-output.tab.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/inputs/source-to-output.tab.len
+new file mode 100644
+index 0000000..fd5292d
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/inputs/source-to-output.tab.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/inputs/source-to-output.tab.values.at b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/inputs/source-to-output.tab.values.at
+new file mode 100644
+index 0000000..72b386f
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/inputs/source-to-output.tab.values.at differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/inputs/source-to-output.tab_i b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/inputs/source-to-output.tab_i
+new file mode 100644
+index 0000000..86fa617
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/inputs/source-to-output.tab_i differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/inputs/source-to-output.tab_i.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/inputs/source-to-output.tab_i.len
+new file mode 100644
+index 0000000..131e265
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/inputs/source-to-output.tab_i.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab
+new file mode 100644
+index 0000000..bfae808
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab.keystream b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab.keystream
+new file mode 100644
+index 0000000..c5ae253
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab.keystream differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab.keystream.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab.keystream.len
+new file mode 100644
+index 0000000..55af719
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab.keystream.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab.len
+new file mode 100644
+index 0000000..fd5292d
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab.values.at b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab.values.at
+new file mode 100644
+index 0000000..9e593fa
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab.values.at differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab_i b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab_i
+new file mode 100644
+index 0000000..e400940
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab_i differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab_i.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab_i.len
+new file mode 100644
+index 0000000..131e265
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab_i.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab
+new file mode 100644
+index 0000000..1f3653b
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab.keystream b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab.keystream
+new file mode 100644
+index 0000000..c5ae253
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab.keystream differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab.keystream.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab.keystream.len
+new file mode 100644
+index 0000000..55af719
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab.keystream.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab.len
+new file mode 100644
+index 0000000..fd5292d
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab.values.at b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab.values.at
+new file mode 100644
+index 0000000..b1bc2bf
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab.values.at differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab_i b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab_i
+new file mode 100644
+index 0000000..e400940
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab_i differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab_i.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab_i.len
+new file mode 100644
+index 0000000..131e265
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab_i.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/constants.tab b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/constants.tab
+new file mode 100644
+index 0000000..b0b3939
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/constants.tab differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/constants.tab.keystream b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/constants.tab.keystream
+new file mode 100644
+index 0000000..d3c74d8
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/constants.tab.keystream differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/constants.tab.keystream.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/constants.tab.keystream.len
+new file mode 100644
+index 0000000..6645728
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/constants.tab.keystream.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/constants.tab.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/constants.tab.len
+new file mode 100644
+index 0000000..2a17e6e
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/constants.tab.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/constants.tab.values.at b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/constants.tab.values.at
+new file mode 100644
+index 0000000..b58c8ba
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/constants.tab.values.at differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/constants.tab_i b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/constants.tab_i
+new file mode 100644
+index 0000000..2ec48b2
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/constants.tab_i differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/constants.tab_i.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/constants.tab_i.len
+new file mode 100644
+index 0000000..131e265
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/constants.tab_i.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab
+new file mode 100644
+index 0000000..5c42223
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab.keystream b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab.keystream
+new file mode 100644
+index 0000000..229636b
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab.keystream differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab.keystream.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab.keystream.len
+new file mode 100644
+index 0000000..f3f2aad
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab.keystream.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab.len
+new file mode 100644
+index 0000000..9911af5
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab.values.at b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab.values.at
+new file mode 100644
+index 0000000..013b6d3
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab.values.at differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab_i b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab_i
+new file mode 100644
+index 0000000..0e71d97
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab_i differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab_i.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab_i.len
+new file mode 100644
+index 0000000..131e265
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab_i.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab
+new file mode 100644
+index 0000000..5f852a7
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab.keystream b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab.keystream
+new file mode 100644
+index 0000000..3f7a545
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab.keystream differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab.keystream.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab.keystream.len
+new file mode 100644
+index 0000000..64b3741
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab.keystream.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab.len
+new file mode 100644
+index 0000000..93a595b
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab.values.at b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab.values.at
+new file mode 100644
+index 0000000..1d49f50
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab.values.at differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab_i b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab_i
+new file mode 100644
+index 0000000..de669ad
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab_i differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab_i.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab_i.len
+new file mode 100644
+index 0000000..131e265
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab_i.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab
+new file mode 100644
+index 0000000..ec4dc95
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab.keystream b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab.keystream
+new file mode 100644
+index 0000000..633b44e
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab.keystream differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab.keystream.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab.keystream.len
+new file mode 100644
+index 0000000..5cc3309
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab.keystream.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab.len
+new file mode 100644
+index 0000000..cf8a30a
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab.values.at b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab.values.at
+new file mode 100644
+index 0000000..dd94de3
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab.values.at differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab_i b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab_i
+new file mode 100644
+index 0000000..60e518f
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab_i differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab_i.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab_i.len
+new file mode 100644
+index 0000000..131e265
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab_i.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab
+new file mode 100644
+index 0000000..7ce1f58
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab.keystream b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab.keystream
+new file mode 100644
+index 0000000..77f45f1
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab.keystream differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab.keystream.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab.keystream.len
+new file mode 100644
+index 0000000..9cd8516
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab.keystream.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab.len
+new file mode 100644
+index 0000000..fd5292d
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab.values.at b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab.values.at
+new file mode 100644
+index 0000000..ba00cb7
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab.values.at differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab_i b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab_i
+new file mode 100644
+index 0000000..43d6324
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab_i differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab_i.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab_i.len
+new file mode 100644
+index 0000000..131e265
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab_i.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab
+new file mode 100644
+index 0000000..8d0ab34
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab.keystream b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab.keystream
+new file mode 100644
+index 0000000..eadb89e
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab.keystream differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab.keystream.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab.keystream.len
+new file mode 100644
+index 0000000..2a17e6e
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab.keystream.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab.len
+new file mode 100644
+index 0000000..a9f80ae
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab.values.at b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab.values.at
+new file mode 100644
+index 0000000..e784967
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab.values.at differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab_i b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab_i
+new file mode 100644
+index 0000000..418bf2e
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab_i differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab_i.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab_i.len
+new file mode 100644
+index 0000000..131e265
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab_i.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab
+new file mode 100644
+index 0000000..e9c8f8a
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab.keystream b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab.keystream
+new file mode 100644
+index 0000000..878fde4
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab.keystream differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab.keystream.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab.keystream.len
+new file mode 100644
+index 0000000..812d25b
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab.keystream.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab.len
+new file mode 100644
+index 0000000..a9f80ae
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab.values.at b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab.values.at
+new file mode 100644
+index 0000000..b88c067
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab.values.at differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab_i b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab_i
+new file mode 100644
+index 0000000..e047bdb
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab_i differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab_i.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab_i.len
+new file mode 100644
+index 0000000..131e265
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab_i.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/counters.tab b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/counters.tab
+new file mode 100644
+index 0000000..0737472
+--- /dev/null
++++ b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/counters.tab
+@@ -0,0 +1,2 @@
++10
++0
+\ No newline at end of file
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/file-to-id.tab b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/file-to-id.tab
+new file mode 100644
+index 0000000..187afc2
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/file-to-id.tab differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/file-to-id.tab.keystream b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/file-to-id.tab.keystream
+new file mode 100644
+index 0000000..77f45f1
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/file-to-id.tab.keystream differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/file-to-id.tab.keystream.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/file-to-id.tab.keystream.len
+new file mode 100644
+index 0000000..9cd8516
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/file-to-id.tab.keystream.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/file-to-id.tab.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/file-to-id.tab.len
+new file mode 100644
+index 0000000..fd5292d
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/file-to-id.tab.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/file-to-id.tab.values.at b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/file-to-id.tab.values.at
+new file mode 100644
+index 0000000..263bcd3
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/file-to-id.tab.values.at differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/file-to-id.tab_i b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/file-to-id.tab_i
+new file mode 100644
+index 0000000..43d6324
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/file-to-id.tab_i differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/file-to-id.tab_i.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/file-to-id.tab_i.len
+new file mode 100644
+index 0000000..131e265
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/file-to-id.tab_i.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/id-to-file.tab b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/id-to-file.tab
+new file mode 100644
+index 0000000..02f47db
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/id-to-file.tab differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/id-to-file.tab.keystream b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/id-to-file.tab.keystream
+new file mode 100644
+index 0000000..8ad02ff
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/id-to-file.tab.keystream differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/id-to-file.tab.keystream.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/id-to-file.tab.keystream.len
+new file mode 100644
+index 0000000..c15663d
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/id-to-file.tab.keystream.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/id-to-file.tab.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/id-to-file.tab.len
+new file mode 100644
+index 0000000..fd5292d
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/id-to-file.tab.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/id-to-file.tab.values.at b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/id-to-file.tab.values.at
+new file mode 100644
+index 0000000..c229711
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/id-to-file.tab.values.at differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/id-to-file.tab_i b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/id-to-file.tab_i
+new file mode 100644
+index 0000000..5f2acb4
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/id-to-file.tab_i differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/id-to-file.tab_i.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/id-to-file.tab_i.len
+new file mode 100644
+index 0000000..131e265
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/id-to-file.tab_i.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/lookups.tab b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/lookups.tab
+new file mode 100644
+index 0000000..4e286ad
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/lookups.tab differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/lookups.tab.keystream b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/lookups.tab.keystream
+new file mode 100644
+index 0000000..7bc75da
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/lookups.tab.keystream differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/lookups.tab.keystream.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/lookups.tab.keystream.len
+new file mode 100644
+index 0000000..c4ee606
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/lookups.tab.keystream.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/lookups.tab.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/lookups.tab.len
+new file mode 100644
+index 0000000..7b65e32
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/lookups.tab.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/lookups.tab.values.at b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/lookups.tab.values.at
+new file mode 100644
+index 0000000..f681471
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/lookups.tab.values.at differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/lookups.tab_i b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/lookups.tab_i
+new file mode 100644
+index 0000000..d50e2f5
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/lookups.tab_i differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/lookups.tab_i.len b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/lookups.tab_i.len
+new file mode 100644
+index 0000000..131e265
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/lookups.tab_i.len differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/last-build.bin b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/last-build.bin
+new file mode 100644
+index 0000000..1becf0b
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/cacheable/last-build.bin differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/classpath-snapshot/shrunk-classpath-snapshot.bin b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/classpath-snapshot/shrunk-classpath-snapshot.bin
+new file mode 100644
+index 0000000..5d716b1
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/classpath-snapshot/shrunk-classpath-snapshot.bin differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/local-state/build-history.bin b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/local-state/build-history.bin
+new file mode 100644
+index 0000000..d31cf60
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/kotlin/compileDebugKotlin/local-state/build-history.bin differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/outputs/aar/haqq_provider-web3-utils-debug.aar b/node_modules/@haqq/provider-web3-utils/android/build/outputs/aar/haqq_provider-web3-utils-debug.aar
+new file mode 100644
+index 0000000..779e0e6
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/outputs/aar/haqq_provider-web3-utils-debug.aar differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/outputs/logs/manifest-merger-debug-report.txt b/node_modules/@haqq/provider-web3-utils/android/build/outputs/logs/manifest-merger-debug-report.txt
+new file mode 100644
+index 0000000..e05db88
+--- /dev/null
++++ b/node_modules/@haqq/provider-web3-utils/android/build/outputs/logs/manifest-merger-debug-report.txt
+@@ -0,0 +1,17 @@
++-- Merging decision tree log ---
++manifest
++ADDED from /Users/igroza/dev/projects/@haqq/haqq-wallet/node_modules/@haqq/provider-web3-utils/android/src/main/AndroidManifest.xml:1:1-4:12
++INJECTED from /Users/igroza/dev/projects/@haqq/haqq-wallet/node_modules/@haqq/provider-web3-utils/android/src/main/AndroidManifest.xml:1:1-4:12
++	package
++		ADDED from /Users/igroza/dev/projects/@haqq/haqq-wallet/node_modules/@haqq/provider-web3-utils/android/src/main/AndroidManifest.xml:2:11-36
++		INJECTED from /Users/igroza/dev/projects/@haqq/haqq-wallet/node_modules/@haqq/provider-web3-utils/android/src/main/AndroidManifest.xml
++	xmlns:android
++		ADDED from /Users/igroza/dev/projects/@haqq/haqq-wallet/node_modules/@haqq/provider-web3-utils/android/src/main/AndroidManifest.xml:1:11-69
++uses-sdk
++INJECTED from /Users/igroza/dev/projects/@haqq/haqq-wallet/node_modules/@haqq/provider-web3-utils/android/src/main/AndroidManifest.xml reason: use-sdk injection requested
++INJECTED from /Users/igroza/dev/projects/@haqq/haqq-wallet/node_modules/@haqq/provider-web3-utils/android/src/main/AndroidManifest.xml
++INJECTED from /Users/igroza/dev/projects/@haqq/haqq-wallet/node_modules/@haqq/provider-web3-utils/android/src/main/AndroidManifest.xml
++	android:targetSdkVersion
++		INJECTED from /Users/igroza/dev/projects/@haqq/haqq-wallet/node_modules/@haqq/provider-web3-utils/android/src/main/AndroidManifest.xml
++	android:minSdkVersion
++		INJECTED from /Users/igroza/dev/projects/@haqq/haqq-wallet/node_modules/@haqq/provider-web3-utils/android/src/main/AndroidManifest.xml
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/tmp/compileDebugJavaWithJavac/previous-compilation-data.bin b/node_modules/@haqq/provider-web3-utils/android/build/tmp/compileDebugJavaWithJavac/previous-compilation-data.bin
+new file mode 100644
+index 0000000..3dfa9db
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/tmp/compileDebugJavaWithJavac/previous-compilation-data.bin differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/META-INF/haqq_provider-web3-utils_debug.kotlin_module b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/META-INF/haqq_provider-web3-utils_debug.kotlin_module
+new file mode 100644
+index 0000000..33d9c9b
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/META-INF/haqq_provider-web3-utils_debug.kotlin_module differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/we3utilsrn/HaqqWeb3UtilsRNModule$Companion.class b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/we3utilsrn/HaqqWeb3UtilsRNModule$Companion.class
+new file mode 100644
+index 0000000..69555a4
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/we3utilsrn/HaqqWeb3UtilsRNModule$Companion.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/we3utilsrn/HaqqWeb3UtilsRNModule.class b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/we3utilsrn/HaqqWeb3UtilsRNModule.class
+new file mode 100644
+index 0000000..6acaacf
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/we3utilsrn/HaqqWeb3UtilsRNModule.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/we3utilsrn/HaqqWeb3UtilsRNPackage.class b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/we3utilsrn/HaqqWeb3UtilsRNPackage.class
+new file mode 100644
+index 0000000..c628d94
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/we3utilsrn/HaqqWeb3UtilsRNPackage.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/we3utilsrn/UtilsKt.class b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/we3utilsrn/UtilsKt.class
+new file mode 100644
+index 0000000..eec68d2
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/we3utilsrn/UtilsKt.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/AccountInfoResponse$$serializer.class b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/AccountInfoResponse$$serializer.class
+new file mode 100644
+index 0000000..934e514
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/AccountInfoResponse$$serializer.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/AccountInfoResponse$Companion.class b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/AccountInfoResponse$Companion.class
+new file mode 100644
+index 0000000..83d37bc
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/AccountInfoResponse$Companion.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/AccountInfoResponse.class b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/AccountInfoResponse.class
+new file mode 100644
+index 0000000..2048428
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/AccountInfoResponse.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/ExtensionsKt$toBits$1.class b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/ExtensionsKt$toBits$1.class
+new file mode 100644
+index 0000000..233fba4
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/ExtensionsKt$toBits$1.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/ExtensionsKt$toHex$1.class b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/ExtensionsKt$toHex$1.class
+new file mode 100644
+index 0000000..eae134a
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/ExtensionsKt$toHex$1.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/ExtensionsKt.class b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/ExtensionsKt.class
+new file mode 100644
+index 0000000..2602449
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/ExtensionsKt.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/HDKey.class b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/HDKey.class
+new file mode 100644
+index 0000000..eca8b1c
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/HDKey.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/HelpersKt.class b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/HelpersKt.class
+new file mode 100644
+index 0000000..8e6a28d
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/HelpersKt.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/Mnemonic$Companion.class b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/Mnemonic$Companion.class
+new file mode 100644
+index 0000000..e5aca12
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/Mnemonic$Companion.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/Mnemonic.class b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/Mnemonic.class
+new file mode 100644
+index 0000000..2c05ace
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/Mnemonic.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/MnemonicWordlistKt.class b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/MnemonicWordlistKt.class
+new file mode 100644
+index 0000000..ea7eee5
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/MnemonicWordlistKt.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/Wallet.class b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/Wallet.class
+new file mode 100644
+index 0000000..afd693f
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/android/build/tmp/kotlin-classes/debug/haqq/web3utilsrn/Wallet.class differ
+diff --git a/node_modules/@haqq/provider-web3-utils/example/package.json b/node_modules/@haqq/provider-web3-utils/example/package.json
+index dc11b40..66bb3fd 100644
+--- a/node_modules/@haqq/provider-web3-utils/example/package.json
++++ b/node_modules/@haqq/provider-web3-utils/example/package.json
+@@ -34,5 +34,31 @@
+   },
+   "jest": {
+     "preset": "react-native"
++  },
++  "react-native": {
++    "crypto": "react-native-crypto",
++    "http": "@tradle/react-native-http",
++    "https": "https-browserify",
++    "os": "react-native-os",
++    "_stream_transform": "readable-stream/transform",
++    "_stream_readable": "readable-stream/readable",
++    "_stream_writable": "readable-stream/writable",
++    "_stream_duplex": "readable-stream/duplex",
++    "_stream_passthrough": "readable-stream/passthrough",
++    "stream": "stream-browserify",
++    "vm": "vm-browserify"
++  },
++  "browser": {
++    "crypto": "react-native-crypto",
++    "http": "@tradle/react-native-http",
++    "https": "https-browserify",
++    "os": "react-native-os",
++    "_stream_transform": "readable-stream/transform",
++    "_stream_readable": "readable-stream/readable",
++    "_stream_writable": "readable-stream/writable",
++    "_stream_duplex": "readable-stream/duplex",
++    "_stream_passthrough": "readable-stream/passthrough",
++    "stream": "stream-browserify",
++    "vm": "vm-browserify"
+   }
+ }
+diff --git a/node_modules/@haqq/provider-web3-utils/ios/.DS_Store b/node_modules/@haqq/provider-web3-utils/ios/.DS_Store
+new file mode 100644
+index 0000000..4f8577e
+Binary files /dev/null and b/node_modules/@haqq/provider-web3-utils/ios/.DS_Store differ
+diff --git a/node_modules/@haqq/provider-web3-utils/ios/Wallet.swift b/node_modules/@haqq/provider-web3-utils/ios/Wallet.swift
+index d81e769..ba95185 100644
+--- a/node_modules/@haqq/provider-web3-utils/ios/Wallet.swift
++++ b/node_modules/@haqq/provider-web3-utils/ios/Wallet.swift
+@@ -72,46 +72,62 @@ public class Wallet {
+   }
+     
+   public func sign(_ message: [UInt8]) throws -> [UInt8] {
+-    let hash = Digest.sha3(message, variant: .keccak256)
++      let hash = Digest.sha3(message, variant: .keccak256)
++      print("🟢 message hash: \(hash)")
+ 
+-    var pk = privateKey
+-    guard hash.count == 32 else {
+-        throw Web3UtilsError.private_key_invalid
+-    }
++      var pk = privateKey
++      print("🟢 private key: \(pk)")
+ 
+-    guard let ctx = secp256k1_context_create(UInt32(SECP256K1_CONTEXT_SIGN | SECP256K1_CONTEXT_VERIFY)) else {
+-        throw Web3UtilsError.wallet_context_invalid
+-    }
++      guard hash.count == 32 else {
++          print("🔻 Wallet.sign invalid hash.count \(hash.count)")
++          throw Web3UtilsError.private_key_invalid
++      }
+ 
+-    defer {
+-        secp256k1_context_destroy(ctx)
+-    }
++      guard let ctx = secp256k1_context_create(UInt32(SECP256K1_CONTEXT_SIGN | SECP256K1_CONTEXT_VERIFY)) else {
++          print("🔻 Wallet.sign invalid context")
++          print("🔻 SECP256K1_CONTEXT_SIGN: \(SECP256K1_CONTEXT_SIGN)")
++          print("🔻 SECP256K1_CONTEXT_VERIFY: \(SECP256K1_CONTEXT_VERIFY)")
++          throw Web3UtilsError.wallet_context_invalid
++      }
+ 
+-    let signaturePtr = UnsafeMutablePointer<secp256k1_ecdsa_recoverable_signature>.allocate(capacity: 1)
+-    defer {
+-        signaturePtr.deallocate()
+-    }
++      defer {
++          secp256k1_context_destroy(ctx)
++      }
+ 
+-    guard secp256k1_ecdsa_sign_recoverable(ctx, signaturePtr, hash, pk, nil, nil) == 1 else {
+-        throw Web3UtilsError.wallet_signature_failed
+-    }
++      let signaturePtr = UnsafeMutablePointer<secp256k1_ecdsa_recoverable_signature>.allocate(capacity: 1)
++      defer {
++          signaturePtr.deallocate()
++      }
++      print("🟢 signaturePtr: \(signaturePtr)")
+ 
+-    let outputPtr = UnsafeMutablePointer<UInt8>.allocate(capacity: 64)
+-    defer {
+-        outputPtr.deallocate()
+-    }
+-    var recid: Int32 = 0
+-    secp256k1_ecdsa_recoverable_signature_serialize_compact(ctx, outputPtr, &recid, signaturePtr)
++      guard secp256k1_ecdsa_sign_recoverable(ctx, signaturePtr, hash, pk, nil, nil) == 1 else {
++          print("🔻 Wallet.sign signature failed")
++          throw Web3UtilsError.wallet_signature_failed
++      }
+ 
+-    let outputWithRecidPtr = UnsafeMutablePointer<UInt8>.allocate(capacity: 65)
+-    defer {
+-        outputWithRecidPtr.deallocate()
+-    }
+-    outputWithRecidPtr.assign(from: outputPtr, count: 64)
+-    outputWithRecidPtr.advanced(by: 64).pointee = UInt8(recid)
++      let outputPtr = UnsafeMutablePointer<UInt8>.allocate(capacity: 64)
++      defer {
++          outputPtr.deallocate()
++      }
++      print("🟢 outputPtr: \(outputPtr)")
+       
+-    let signature = Data(bytes: outputWithRecidPtr, count: 65)
++      var recid: Int32 = 0
++      print("🟢 recid before \(recid)")
++      secp256k1_ecdsa_recoverable_signature_serialize_compact(ctx, outputPtr, &recid, signaturePtr)
++      print("🟢 recid after \(recid)")
+ 
+-    return signature.bytes
+-  }
++      let outputWithRecidPtr = UnsafeMutablePointer<UInt8>.allocate(capacity: 65)
++      defer {
++          outputWithRecidPtr.deallocate()
++      }
++      print("🟢 1 outputWithRecidPtr \(outputWithRecidPtr)")
++      outputWithRecidPtr.assign(from: outputPtr, count: 64)
++      print("🟢 2 outputWithRecidPtr \(outputWithRecidPtr)")
++      outputWithRecidPtr.advanced(by: 64).pointee = UInt8(recid)
++      print("🟢 3 outputWithRecidPtr \(outputWithRecidPtr)")
++
++      let signature = Data(bytes: outputWithRecidPtr, count: 65)
++      print("🟢 signature \(signature.bytes)")
++      return signature.bytes
++    }
+ }
+diff --git a/node_modules/@haqq/provider-web3-utils/src/native-modules.ts b/node_modules/@haqq/provider-web3-utils/src/native-modules.ts
+index 5932ed3..7924ddd 100644
+--- a/node_modules/@haqq/provider-web3-utils/src/native-modules.ts
++++ b/node_modules/@haqq/provider-web3-utils/src/native-modules.ts
+@@ -91,9 +91,12 @@ export function accountInfo(privateKey: string): Promise<{
+   address: string;
+   publicKeyUncompressed: string;
+ }> {
+-  return HaqqWeb3UtilsRN.accountInfo(privateKey).then((r: string) =>
++  console.error('🔴 accountInfo privateKey:', privateKey)
++  const result = HaqqWeb3UtilsRN.accountInfo(privateKey).then((r: string) =>
+     JSON.parse(r),
+   );
++  console.error('🔴 accountInfo result:', JSON.stringify(result, null, 2))
++  return result;
+ }
+ 
+ /**

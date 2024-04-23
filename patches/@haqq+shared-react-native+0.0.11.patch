@@ -1,0 +1,59 @@
+diff --git a/node_modules/@haqq/shared-react-native/src/share.ts b/node_modules/@haqq/shared-react-native/src/share.ts
+index 1d21257..4846047 100644
+--- a/node_modules/@haqq/shared-react-native/src/share.ts
++++ b/node_modules/@haqq/shared-react-native/src/share.ts
+@@ -2,7 +2,7 @@ import {Share, ShareEncrypted} from './types';
+ import BN from 'bn.js';
+ import {curveN} from './constants';
+ import {hashPasswordToBN} from './hash-password-to-bn';
+-import {accountInfo} from '@haqq/provider-web3-utils';
++import {accountInfo} from '@haqq/provider-web3-utils/src';
+ 
+ /**
+  * encrypt private key with password
+@@ -13,16 +13,21 @@ export async function encryptShare(
+   share: Share,
+   password: string,
+ ): Promise<ShareEncrypted> {
++  console.error('.0 encryptShare', JSON.stringify({share, password}))
+   const hash = await hashPasswordToBN(password);
++  console.error('1.encryptShare hash:', JSON.stringify({hash}, null, 2));
++
+   const nonce = new BN(share.share, 'hex').sub(hash).umod(curveN);
++  console.error('2.encryptShare nonce:', JSON.stringify({nonce}, null, 2));
+ 
+   const {publicKey} = await accountInfo(share.share);
++  console.error('3.encryptShare publicKey:', JSON.stringify({publicKey}, null, 2));
+ 
+   return {
+-    nonce: nonce.toString('hex'),
+-    publicShare: publicKey,
+-    shareIndex: share.shareIndex,
+-    polynomialID: share.polynomialID,
++    nonce: JSON.stringify({nonce: nonce.toString('hex')}, null, 2),
++    publicShare: JSON.stringify({publicShare: publicKey}, null, 2),
++    shareIndex: JSON.stringify({shareIndex: share.shareIndex}, null, 2),
++    polynomialID: JSON.stringify({polynomialID: share.polynomialID}, null, 2),
+   };
+ }
+ 
+@@ -35,14 +40,19 @@ export async function decryptShare(
+   shareEncrypted: ShareEncrypted,
+   password: string,
+ ): Promise<Share> {
++  console.error('0. decryptShare:', JSON.stringify({shareEncrypted,password}, null, 2));
+   const userInputHash = await hashPasswordToBN(password);
++  console.error('1.decryptShare userInputHash:', JSON.stringify({userInputHash}, null, 2));
++
+   const share = new BN(shareEncrypted.nonce, 'hex')
+     .add(userInputHash)
+     .umod(curveN)
+     .toString('hex')
+     .padStart(64, '0');
++  console.error('2.decryptShare share:', JSON.stringify({share}, null, 2));
+ 
+   const info = await accountInfo(share);
++  console.error('3.decryptShare info:', JSON.stringify({info}, null, 2));
+ 
+   if (info.publicKey !== shareEncrypted.publicShare) {
+     throw new Error('Incorrect password');

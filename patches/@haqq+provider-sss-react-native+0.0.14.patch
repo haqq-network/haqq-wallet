@@ -51,7 +51,7 @@ index f2614e4..41a127a 100644
    return {seed, mnemonic};
  }
 diff --git a/node_modules/@haqq/provider-sss-react-native/src/provider.ts b/node_modules/@haqq/provider-sss-react-native/src/provider.ts
-index eff020a..62ecea4 100644
+index eff020a..69cc598 100644
 --- a/node_modules/@haqq/provider-sss-react-native/src/provider.ts
 +++ b/node_modules/@haqq/provider-sss-react-native/src/provider.ts
 @@ -1,5 +1,5 @@
@@ -62,8 +62,12 @@ index eff020a..62ecea4 100644
  import {
    calcTypedDataSignatureV,
    compressPublicKey,
-@@ -31,16 +31,15 @@ import {
- } from '@haqq/shared-react-native';
+@@ -28,19 +28,18 @@ import {
+   setMetadataValue,
+   SharesResponse,
+   ShareCreateResponse,
+-} from '@haqq/shared-react-native';
++} from '@haqq/shared-react-native/src';
  import BN from 'bn.js';
  import EncryptedStorage from 'react-native-encrypted-storage';
 -import {ITEM_KEY} from './constants';
@@ -229,7 +233,25 @@ index eff020a..62ecea4 100644
        this.emit('signTypedData', true);
      } catch (e) {
        if (e instanceof Error) {
-@@ -505,7 +528,7 @@ export class ProviderSSSReactNative
+@@ -414,6 +437,7 @@ export class ProviderSSSReactNative
+ 
+   async updatePin(pin: string) {
+     try {
++      console.error('SSS updatePin', {pin})
+       const share1 = await EncryptedStorage.getItem(
+         `${ITEM_KEY}_${this._options.account.toLowerCase()}`,
+       );
+@@ -423,7 +447,8 @@ export class ProviderSSSReactNative
+ 
+         const share = await decryptShare(JSON.parse(share1), password);
+         const share2 = await encryptShare(share, pin);
+-
++        console.log('-> share1', share1)
++        console.log('-> share2', JSON.stringify(share2, null, 2))
+         await EncryptedStorage.setItem(
+           `${ITEM_KEY}_${this.getIdentifier().toLowerCase()}`,
+           JSON.stringify(share2),
+@@ -505,7 +530,7 @@ export class ProviderSSSReactNative
     * @returns mnemonic
     */
    async getMnemonicPhrase(): Promise<string> {
