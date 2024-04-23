@@ -1,6 +1,6 @@
 import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
-import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native/src';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native/src';
 import {decryptPassworder, encryptPassworder} from '@haqq/shared-react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
