@@ -88,7 +88,7 @@ export const TransactionNftConfirmation = ({
         </Text>
         <Text variant={TextVariant.t11}>{splittedTo[2]}</Text>
       </Text>
-      {soulboundTokenHint && (
+      {Boolean(soulboundTokenHint) && (
         <>
           <View style={styles.info}>
             <DataView
