@@ -23,6 +23,7 @@ import {splitAddress} from '@app/utils';
 
 interface TransactionConfirmationProps {
   to: string;
+  soulboundTokenHint: string;
   item: NftItem;
   fee?: Balance | null;
   contact: Contact | null;
@@ -37,6 +38,7 @@ export const TransactionNftConfirmation = ({
   item,
   fee,
   onConfirmTransaction,
+  soulboundTokenHint,
 }: TransactionConfirmationProps) => {
   const splittedTo = useMemo(() => splitAddress(to), [to]);
   const imageUri = useNftImage(item.cached_url);
@@ -86,26 +88,36 @@ export const TransactionNftConfirmation = ({
         </Text>
         <Text variant={TextVariant.t11}>{splittedTo[2]}</Text>
       </Text>
-      <View style={styles.info}>
-        <DataView label="Network Fee">
-          {fee && (
+      {soulboundTokenHint && (
+        <>
+          <View style={styles.info}>
+            <DataView
+              style={styles.soulboundTokenHint}
+              labelStyles={styles.soulboundTokenHintLabel}
+              label={soulboundTokenHint}
+            />
+          </View>
+          <Spacer />
+        </>
+      )}
+      {fee && (
+        <View style={styles.info}>
+          <DataView label={soulboundTokenHint || 'Network Fee'}>
             <Text variant={TextVariant.t11} color={Color.textBase1}>
               {fee.toBalanceString()}
             </Text>
-          )}
-        </DataView>
-      </View>
-      <Spacer />
-      {!item.is_transfer_prohibinden && (
-        <Button
-          disabled={!fee?.isPositive() && !disabled}
-          variant={ButtonVariant.contained}
-          i18n={I18N.transactionConfirmationSend}
-          onPress={onConfirmTransaction}
-          style={styles.submit}
-          loading={disabled}
-        />
+          </DataView>
+        </View>
       )}
+      <Spacer />
+      <Button
+        disabled={(!fee?.isPositive() && !disabled) || !!soulboundTokenHint}
+        variant={ButtonVariant.contained}
+        i18n={I18N.transactionConfirmationSend}
+        onPress={onConfirmTransaction}
+        style={styles.submit}
+        loading={disabled}
+      />
     </PopupContainer>
   );
 };
@@ -114,6 +126,12 @@ const styles = createTheme({
   container: {
     paddingTop: 24,
     paddingHorizontal: 20,
+  },
+  soulboundTokenHintLabel: {
+    textAlign: 'center',
+  },
+  soulboundTokenHint: {
+    justifyContent: 'center',
   },
   contact: {
     marginHorizontal: 27.5,
