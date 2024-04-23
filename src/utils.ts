@@ -21,6 +21,7 @@ import {
 import {Adjust} from 'react-native-adjust';
 import Config from 'react-native-config';
 import prompt, {PromptOptions} from 'react-native-prompt-android';
+import RNRestart from 'react-native-restart';
 
 import {app} from '@app/contexts';
 import {RemoteConfig} from '@app/services/remote-config';
@@ -1042,7 +1043,7 @@ export const setRTL = (lang: AppLanguage) => {
   const isRTL = rtlLanguages.includes(lang);
   I18nManager.forceRTL(isRTL);
 
-  // if (isRTL !== I18nManager.isRTL) {
-  //   RNRestart.restart();
-  // }
+  if (isRTL !== I18nManager.isRTL) {
+    RNRestart.restart();
+  }
 };

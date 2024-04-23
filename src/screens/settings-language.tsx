@@ -1,22 +1,24 @@
 import React, {useState} from 'react';
 
 import {useNavigation} from '@react-navigation/native';
-import RNRestart from 'react-native-restart';
 
 import {SettingsLanguage} from '@app/components/settings-language';
 import {app} from '@app/contexts';
+import {setLanguage} from '@app/i18n';
 import {AppLanguage} from '@app/types';
-import {setRTL} from '@app/utils';
 
 export const SettingsLanguageScreen = () => {
   const navigation = useNavigation();
-  const [language, setLanguage] = useState(app.language);
+
+  // Language field for local screen state
+  const [language, updateLanguage] = useState(app.language);
 
   const onUpdateLanguage = (lang: AppLanguage) => {
     app.language = lang;
-    setRTL(lang);
     setLanguage(lang);
-    RNRestart.restart();
+
+    // Update local state
+    updateLanguage(lang);
   };
 
   const goBack = () => navigation.goBack();
