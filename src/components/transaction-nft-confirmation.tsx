@@ -100,7 +100,7 @@ export const TransactionNftConfirmation = ({
           <Spacer />
         </>
       )}
-      {fee && (
+      {Boolean(fee) && (
         <View style={styles.info}>
           <DataView label={soulboundTokenHint || 'Network Fee'}>
             <Text variant={TextVariant.t11} color={Color.textBase1}>
