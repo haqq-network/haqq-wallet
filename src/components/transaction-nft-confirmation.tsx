@@ -104,7 +104,7 @@ export const TransactionNftConfirmation = ({
         <View style={styles.info}>
           <DataView label={soulboundTokenHint || 'Network Fee'}>
             <Text variant={TextVariant.t11} color={Color.textBase1}>
-              {fee.toBalanceString()}
+              {fee!.toBalanceString()}
             </Text>
           </DataView>
         </View>
