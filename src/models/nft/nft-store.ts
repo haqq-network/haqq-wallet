@@ -82,10 +82,13 @@ class NftStore {
 
   getAll() {
     Logger.log('NFTs', JSON.stringify(this.data, null, 2));
-    return Object.values(this.data).reduce(
-      (acc: NftItem[], item) => [...acc, ...item.nfts],
-      [],
-    );
+    return Object.values(this.data)
+      .reduce((acc: NftItem[], item) => [...acc, ...item.nfts], [])
+      .sort(
+        (nft1, nft2) =>
+          new Date(nft2.created_at).getTime() -
+          new Date(nft1.created_at).getTime(),
+      );
   }
 
   getAllCollections() {

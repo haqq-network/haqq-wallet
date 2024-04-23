@@ -33,6 +33,7 @@ export const NftViewerItemPreviewLarge = ({
       <ImageBackground
         imageStyle={styles.imageContainer}
         style={layout}
+        resizeMode="contain"
         source={{uri: item.cached_url || undefined}}>
         <View style={[styles.itemText, itemTextStyle]}>
           <Text

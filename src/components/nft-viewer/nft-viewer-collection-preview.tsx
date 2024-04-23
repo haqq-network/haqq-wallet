@@ -42,6 +42,7 @@ export const NftViewerCollectionPreview = ({
       <ImageBackground
         imageStyle={styles.imageContainer}
         style={layout}
+        resizeMode="contain"
         source={collectionImageUri}>
         <View style={[styles.itemText, itemTextStyle]}>
           <Text
