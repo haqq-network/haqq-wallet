@@ -71,44 +71,8 @@ export const AccountInfo = observer(
       setActiveTab(tabName);
     }, []);
 
-    const Tabs = useCallback(
-      () => (
-        <TopTabNavigator
-          contentContainerStyle={styles.tabsContentContainerStyle}
-          tabHeaderStyle={styles.tabHeaderStyle}
-          variant={TopTabNavigatorVariant.large}
-          onTabChange={onTabChange}
-          activeTabIndex={TAB_INDEX_MAP[activeTab]}
-          initialTabIndex={TAB_INDEX_MAP[TabNames.tokens]}>
-          {isFeatureEnabled(Feature.tokens) && (
-            <TopTabNavigator.Tab
-              testID="accountInfoTabTokens"
-              name={TabNames.tokens}
-              title={I18N.accountInfoTokensTabTitle}
-              component={null}
-            />
-          )}
-          <TopTabNavigator.Tab
-            testID="accountInfoTabTransactions"
-            name={TabNames.transactions}
-            title={I18N.accountInfoTransactionTabTitle}
-            component={null}
-          />
-          {isFeatureEnabled(Feature.nft) && (
-            <TopTabNavigator.Tab
-              testID="accountInfoTabNft"
-              name={TabNames.nft}
-              title={I18N.accountInfoNftTabTitle}
-              component={null}
-            />
-          )}
-        </TopTabNavigator>
-      ),
-      [activeTab],
-    );
-
-    const renderListHeader = useCallback(
-      () => (
+    const renderListHeader = useMemo(() => {
+      return (
         <>
           <AccountInfoHeader
             wallet={wallet}
@@ -122,24 +86,39 @@ export const AccountInfo = observer(
             onSend={onSend}
             onReceive={onReceive}
           />
-          <Tabs />
+          <TopTabNavigator
+            contentContainerStyle={styles.tabsContentContainerStyle}
+            tabHeaderStyle={styles.tabHeaderStyle}
+            variant={TopTabNavigatorVariant.large}
+            onTabChange={onTabChange}
+            activeTabIndex={TAB_INDEX_MAP[activeTab]}
+            initialTabIndex={TAB_INDEX_MAP[TabNames.tokens]}>
+            {isFeatureEnabled(Feature.tokens) && (
+              <TopTabNavigator.Tab
+                testID="accountInfoTabTokens"
+                name={TabNames.tokens}
+                title={I18N.accountInfoTokensTabTitle}
+                component={null}
+              />
+            )}
+            <TopTabNavigator.Tab
+              testID="accountInfoTabTransactions"
+              name={TabNames.transactions}
+              title={I18N.accountInfoTransactionTabTitle}
+              component={null}
+            />
+            {isFeatureEnabled(Feature.nft) && (
+              <TopTabNavigator.Tab
+                testID="accountInfoTabNft"
+                name={TabNames.nft}
+                title={I18N.accountInfoNftTabTitle}
+                component={null}
+              />
+            )}
+          </TopTabNavigator>
         </>
-      ),
-      [
-        wallet,
-        available,
-        locked,
-        staked,
-        total,
-        unlock,
-        vested,
-        onPressInfo,
-        onSend,
-        onReceive,
-        onTabChange,
-        Tabs,
-      ],
-    );
+      );
+    }, [activeTab]);
 
     const renderListEmptyComponent = useCallback(
       () => (
