@@ -1,4 +1,4 @@
-import {StorageInterface} from '@haqq/provider-sss-react-native';
+import {StorageInterface} from '@haqq/provider-sss-react-native/src';
 
 import {getGoogleTokens, hasGoogleToken} from '@app/helpers/get-google-tokens';
 import {getHttpResponse, makeID} from '@app/utils';

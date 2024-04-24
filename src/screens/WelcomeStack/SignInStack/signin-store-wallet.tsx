@@ -2,7 +2,7 @@ import {useEffect} from 'react';
 
 import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native/src';
 import {observer} from 'mobx-react';
 import Config from 'react-native-config';
 

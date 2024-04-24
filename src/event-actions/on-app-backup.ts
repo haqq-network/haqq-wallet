@@ -1,5 +1,5 @@
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native/src';
 import {isAfter} from 'date-fns';
 
 import {app} from '@app/contexts';

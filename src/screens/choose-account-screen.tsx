@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native/src';
 import {observer} from 'mobx-react';
 
 import {

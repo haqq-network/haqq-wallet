@@ -1,7 +1,7 @@
 import React, {memo, useCallback, useRef, useState} from 'react';
 
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native/src';
 
 import {BackupVerify} from '@app/components/backup-verify';
 import {Loading} from '@app/components/ui';

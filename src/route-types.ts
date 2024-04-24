@@ -1,7 +1,7 @@
 import {Proposal as ProposalProvider} from '@evmos/provider';
 import {Proposal as ProposalGovProvider} from '@evmos/provider/dist/rest/gov';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native/src';
 import {SessionTypes} from '@walletconnect/types';
 
 import {TotalValueTabNames} from '@app/components/total-value-info';

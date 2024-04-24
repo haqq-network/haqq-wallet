@@ -1,4 +1,4 @@
-import {lagrangeInterpolation} from '@haqq/provider-sss-react-native';
+import {lagrangeInterpolation} from '@haqq/provider-sss-react-native/src';
 import {generateEntropy} from '@haqq/provider-web3-utils';
 import {jsonrpcRequest} from '@haqq/shared-react-native';
 import {appleAuth} from '@invertase/react-native-apple-authentication';

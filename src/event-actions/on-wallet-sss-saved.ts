@@ -1,4 +1,4 @@
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native/src';
 
 import {app} from '@app/contexts';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';

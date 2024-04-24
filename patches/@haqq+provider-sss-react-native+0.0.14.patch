@@ -1,7 +1,16 @@
 diff --git a/node_modules/@haqq/provider-sss-react-native/src/get-seed.ts b/node_modules/@haqq/provider-sss-react-native/src/get-seed.ts
-index f2614e4..4b853f0 100644
+index f2614e4..6b74bc4 100644
 --- a/node_modules/@haqq/provider-sss-react-native/src/get-seed.ts
 +++ b/node_modules/@haqq/provider-sss-react-native/src/get-seed.ts
+@@ -2,7 +2,7 @@ import {
+   generateMnemonicFromEntropy,
+   seedFromMnemonic,
+ } from '@haqq/provider-web3-utils';
+-import {decryptShare} from '@haqq/shared-react-native';
++import {decryptShare} from '@haqq/shared-react-native/src';
+ import BN from 'bn.js';
+ import EncryptedStorage from 'react-native-encrypted-storage';
+ import {ITEM_KEY} from './constants';
 @@ -17,27 +17,38 @@ export async function getSeed(
    let shares = [];
  

@@ -4,8 +4,8 @@ import {
   ProviderSSSReactNative,
   StorageInterface,
   lagrangeInterpolation,
-} from '@haqq/provider-sss-react-native';
-import {ITEM_KEY} from '@haqq/provider-sss-react-native/dist/constants';
+} from '@haqq/provider-sss-react-native/src';
+import {ITEM_KEY} from '@haqq/provider-sss-react-native/src/constants';
 import {accountInfo, generateEntropy} from '@haqq/provider-web3-utils';
 import {
   encryptShare,

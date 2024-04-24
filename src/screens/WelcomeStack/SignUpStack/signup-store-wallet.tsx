@@ -1,6 +1,6 @@
 import {useCallback, useEffect} from 'react';
 
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native/src';
 import {observer} from 'mobx-react';
 
 import {app} from '@app/contexts';

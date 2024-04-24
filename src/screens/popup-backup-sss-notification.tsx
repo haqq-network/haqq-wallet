@@ -1,6 +1,6 @@
 import React, {memo, useCallback} from 'react';
 
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native/src';
 import {addMinutes} from 'date-fns';
 
 import {

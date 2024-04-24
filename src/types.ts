@@ -11,7 +11,7 @@ import {
 } from '@haqq/provider-base';
 import {KeystoneAwaitForSignParams} from '@haqq/provider-keystone-react-native';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native/src';
 import {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
 import {NativeStackNavigationOptions} from '@react-navigation/native-stack';
 import {SessionTypes} from '@walletconnect/types';

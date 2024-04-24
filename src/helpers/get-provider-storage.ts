@@ -1,7 +1,7 @@
 import {
   ProviderSSSReactNative,
   StorageInterface,
-} from '@haqq/provider-sss-react-native';
+} from '@haqq/provider-sss-react-native/src';
 
 import {AsyncLocalStorage} from '@app/services/async-local-storage';
 import {Cloud} from '@app/services/cloud';

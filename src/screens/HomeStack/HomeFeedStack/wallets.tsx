@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react';
 
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native/src';
 import {observer} from 'mobx-react';
 
 import {Wallets} from '@app/components/wallets';

@@ -1,6 +1,6 @@
 import React, {memo, useCallback} from 'react';
 
-import {ITEM_KEY} from '@haqq/provider-sss-react-native/dist/constants';
+import {ITEM_KEY} from '@haqq/provider-sss-react-native/src/constants';
 import {accountInfo} from '@haqq/provider-web3-utils';
 import {Alert} from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';

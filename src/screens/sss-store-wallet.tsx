@@ -1,7 +1,7 @@
 //@ts-nocheck
 import React, {useEffect} from 'react';
 
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native/src';
 import Config from 'react-native-config';
 
 import {app} from '@app/contexts';
