@@ -42,9 +42,11 @@ export const NftViewerItemPreviewLarge = ({
             color={Color.textBase3}>
             {item.name}
           </Text>
-          <Text variant={TextVariant.t17} color={Color.textSecond2}>
-            {item.price?.toBalanceString()}
-          </Text>
+          {item.price && (
+            <Text variant={TextVariant.t17} color={Color.textSecond2}>
+              {item.price.toBalanceString()}
+            </Text>
+          )}
         </View>
       </ImageBackground>
     </TouchableOpacity>

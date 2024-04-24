@@ -170,7 +170,7 @@ class NftStore {
             name: nft.name || 'Unknown',
             description: nft.description || '-',
             tokenId: Number(nft.token_id),
-            price: nft.price ? new Balance(nft.price) : Balance.getEmpty(),
+            price: nft.price ? new Balance(nft.price) : undefined,
             is_transfer_prohibinden: Boolean(contract.is_transfer_prohibinden),
           })),
         };

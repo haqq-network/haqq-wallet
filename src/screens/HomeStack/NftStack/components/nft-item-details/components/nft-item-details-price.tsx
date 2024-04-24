@@ -10,12 +10,16 @@ type Props = {
 };
 
 export const NftItemDetailsPrice = ({price}: Props) => {
+  if (!price) {
+    return null;
+  }
+
   return (
     <>
       <Text variant={TextVariant.t12} i18n={I18N.nftDetailsLastSalePrice} />
       <Spacer height={8} />
       <Text variant={TextVariant.t14} color={Color.textBase1}>
-        {(price || Balance.getEmpty())?.toBalanceString()}
+        {price.toBalanceString()}
       </Text>
       <Spacer height={20} />
     </>
