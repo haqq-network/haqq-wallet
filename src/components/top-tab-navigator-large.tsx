@@ -51,17 +51,20 @@ export const TopTabNavigatorLarge = memo(
       [],
     );
 
-    const animate = useCallback((index: number, cb: () => void) => {
-      offset.value = withTiming(
-        calcOffset(index, tabLayout.width),
-        {
-          duration: 190,
-          easing: Easing.inOut(Easing.quad),
-          reduceMotion: ReduceMotion.System,
-        },
-        () => runOnJS(cb)(),
-      );
-    }, []);
+    const animate = useCallback(
+      (index: number, cb: () => void) => {
+        offset.value = withTiming(
+          calcOffset(index, tabLayout.width),
+          {
+            duration: 190,
+            easing: Easing.inOut(Easing.quad),
+            reduceMotion: ReduceMotion.System,
+          },
+          () => runOnJS(cb)(),
+        );
+      },
+      [tabLayout],
+    );
 
     const activeTabIndicatorStyle = useAnimatedStyle(() => {
       return {
