@@ -190,7 +190,11 @@ export const NftViewer = ({
           source={require('@assets/images/none-nft.png')}
         />
         <Spacer height={12} />
-        <Text t13 color={Color.textSecond1} i18n={I18N.nftViewerNoNFTs} />
+        <Text
+          variant={TextVariant.t13}
+          color={Color.textSecond1}
+          i18n={I18N.nftViewerNoNFTs}
+        />
       </View>
     );
   }
