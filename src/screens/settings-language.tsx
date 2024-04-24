@@ -43,7 +43,7 @@ export const SettingsLanguageScreen = () => {
           text: getText(I18N.localeChangeModalDecline),
         },
         {
-          style: 'destructive',
+          style: 'cancel',
           text: getText(I18N.localeChangeModalAccept),
           onPress: action,
         },
