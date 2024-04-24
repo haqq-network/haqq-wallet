@@ -4,7 +4,7 @@ import Config from 'react-native-config';
 import {Easing} from 'react-native-reanimated';
 
 import {PushNotificationTopicsEnum} from '@app/services/push-notifications';
-import {HexNumber, JsonRpcMetadata, Link} from '@app/types';
+import {AppLanguage, HexNumber, JsonRpcMetadata, Link} from '@app/types';
 
 export const LIGHT_TEXT_BASE_1 = '#2E312D';
 export const DARK_TEXT_BASE_1 = '#FFFFFF';
@@ -338,3 +338,5 @@ export const SUPPORTED_UR_TYPE = {
 };
 
 export const KEYSTONE_NAME = 'Keystone';
+
+export const RTL_LANGUAGES = [AppLanguage.ar];

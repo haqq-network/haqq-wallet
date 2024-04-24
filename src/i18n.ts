@@ -945,6 +945,10 @@ export enum I18N {
   feeCalculatingRpcErrorTitle = 'feeCalculatingRpcErrorTitle',
   feeCalculatingRpcErrorDescription = 'feeCalculatingRpcErrorDescription',
   feeCalculatingRpcErrorClose = 'feeCalculatingRpcErrorClose',
+  localeChangeModalTitle = 'localeChangeModalTitle',
+  localeChangeModalDescription = 'localeChangeModalDescription',
+  localeChangeModalAccept = 'localeChangeModalAccept',
+  localeChangeModalDecline = 'localeChangeModalDecline',
 }
 
 const defaultTranslation = {en};
