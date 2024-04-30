@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react';
 
 import {observer} from 'mobx-react';
-import {TouchableWithoutFeedback, View} from 'react-native';
+import {View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -21,11 +21,10 @@ import {CARD_ACTION_CONTAINER_BG} from '@app/variables/common';
 type BalanceInfoTotalProps = {
   isBalancesFirstSync: boolean;
   total?: Balance;
-  onAccountInfo: () => void;
 };
 
 export const BalanceInfoTotal = observer(
-  ({total, isBalancesFirstSync, onAccountInfo}: BalanceInfoTotalProps) => {
+  ({total, isBalancesFirstSync}: BalanceInfoTotalProps) => {
     const parsedTotal = useMemo(() => {
       let result = total;
 
@@ -53,22 +52,18 @@ export const BalanceInfoTotal = observer(
             color={Color.textBase3}
             numberOfLines={1}
             adjustsFontSizeToFit
-            onPress={onAccountInfo}
             suppressHighlighting={true}>
             {parsedTotal}
           </Text>
-          <TouchableWithoutFeedback
-            testID="accountInfoButton"
-            onPress={onAccountInfo}>
-            <View style={styles.openDetailsIconContainer}>
-              <Icon
-                i16
-                name={IconsName.arrow_forward}
-                color={Color.graphicBase3}
-                style={styles.openDetailsIcon}
-              />
-            </View>
-          </TouchableWithoutFeedback>
+
+          <View style={styles.openDetailsIconContainer}>
+            <Icon
+              i16
+              name={IconsName.arrow_forward}
+              color={Color.graphicBase3}
+              style={styles.openDetailsIcon}
+            />
+          </View>
         </View>
       </First>
     );

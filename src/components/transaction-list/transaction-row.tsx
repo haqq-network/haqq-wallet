@@ -1,7 +1,7 @@
 import React, {memo, useCallback, useMemo} from 'react';
 
 import {toJS} from 'mobx';
-import {TouchableWithoutFeedback, View} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {CardSmall, DataContent, Icon, Spacer, Text} from '@app/components/ui';
@@ -97,7 +97,7 @@ export const TransactionRow = memo(
     }, []);
 
     return (
-      <TouchableWithoutFeedback onPress={handlePress}>
+      <TouchableOpacity onPress={handlePress}>
         <View
           style={[styles.container, withPadding && styles.containerPadding]}>
           <View style={styles.iconWrapper}>
@@ -167,7 +167,7 @@ export const TransactionRow = memo(
             </View>
           )}
         </View>
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
     );
   },
 );
