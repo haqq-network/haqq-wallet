@@ -16,6 +16,9 @@ import {ModalType} from '@app/types';
 export const SettingsSecurityScreen = memo(() => {
   const navigation = useTypedNavigation<SecurityStackParamList>();
   const [biometry, setBiometry] = useState(app.biometry);
+  const [blindSignEnabled, setBlindSignEnabled] = useState(
+    app.blindSignEnabled,
+  );
 
   const onSubmit = () => {
     navigation.navigate(SecurityStackRoutes.SettingsSecurityPin);
@@ -92,6 +95,12 @@ export const SettingsSecurityScreen = memo(() => {
     [setRecoveryPin],
   );
 
+  const onToggleBlindSign = useCallback(() => {
+    const next = !app.blindSignEnabled;
+    setBlindSignEnabled(next);
+    app.blindSignEnabled = next;
+  }, []);
+
   return (
     <PinGuardScreen enabled title={I18N.settingsSecurity}>
       <CustomHeader
@@ -108,6 +117,8 @@ export const SettingsSecurityScreen = memo(() => {
         isRecoveryButtonDisabled={isRecoveryButtonDisabled}
         onRecoveryPress={onRecoveryPress}
         onRecoveryPinChange={onRecoveryPinChange}
+        blindSignEnabled={blindSignEnabled}
+        onToggleBlindSign={onToggleBlindSign}
       />
     </PinGuardScreen>
   );

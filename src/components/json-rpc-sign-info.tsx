@@ -1,10 +1,21 @@
 import React, {useMemo} from 'react';
 
+import {Transaction} from 'ethers';
 import {ScrollView, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {First, Spacer, Text} from '@app/components/ui';
+import {
+  Button,
+  ButtonVariant,
+  First,
+  Icon,
+  InfoBlock,
+  Spacer,
+  Text,
+  TextVariant,
+} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {JsonRpcMetadata, PartialJsonRpcRequest} from '@app/types';
@@ -26,6 +37,10 @@ interface WalletConnectSignInfoProps {
   request: PartialJsonRpcRequest;
   metadata: JsonRpcMetadata;
   wallet: Wallet;
+  phishingTxRequest: Transaction | null;
+  messageIsHex: boolean;
+  blindSignEnabled: boolean;
+  onPressGoToSecuritySettings: () => void;
 }
 
 const getMessageByRequest = (request: PartialJsonRpcRequest) => {
@@ -33,20 +48,28 @@ const getMessageByRequest = (request: PartialJsonRpcRequest) => {
     case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
     case EIP155_SIGNING_METHODS.ETH_SIGN:
       const ethSignMessage: string = getSignParamsMessage(request.params) || '';
+      const original: string = request.params.filter(
+        (p: string) => !AddressUtils.isEthAddress(p) && !!p,
+      )[0];
 
       if (isValidJSON(ethSignMessage)) {
         return {
           text: JSON.parse(ethSignMessage),
           json: true,
+          original,
         };
       }
 
       if (ethSignMessage?.startsWith?.('0x')) {
         return {
           text: Buffer.from(ethSignMessage?.slice(2), 'hex').toString('utf8'),
+          original,
         };
       }
-      return {text: ethSignMessage};
+      return {
+        text: ethSignMessage,
+        original,
+      };
     case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA:
     case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V3:
     case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V4:
@@ -68,6 +91,10 @@ export const JsonRpcSignInfo = ({
   wallet,
   metadata,
   request,
+  phishingTxRequest,
+  messageIsHex,
+  blindSignEnabled,
+  onPressGoToSecuritySettings,
 }: WalletConnectSignInfoProps) => {
   const message = useMemo(() => getMessageByRequest(request), [request]);
   const url = useMemo(() => getHostnameFromUrl(metadata?.url), [metadata]);
@@ -104,30 +131,84 @@ export const JsonRpcSignInfo = ({
       <First>
         {isSupportedConsmosTx && <TypedDataViewer data={message.text} />}
         <>
-          <Text
-            style={styles.messageTitle}
-            t9
-            i18n={I18N.walletConnectSignMessage}
-          />
-          <Spacer height={4} />
           <ScrollView style={styles.json} showsVerticalScrollIndicator={false}>
-            {!message?.json && (
-              <Text color={Color.textBase2} style={styles.message} t11>
-                {message.text}
-              </Text>
+            <View style={styles.infoBlockContainer}>
+              <First>
+                {!!phishingTxRequest && (
+                  <InfoBlock
+                    border
+                    error
+                    icon={<Icon name={'warning'} color={Color.textRed1} />}
+                    i18n={I18N.jsonRpcSignPhihsingWarning}
+                    bottomContainerStyle={styles.infoBlock}
+                  />
+                )}
+                {!!messageIsHex && blindSignEnabled === false && (
+                  <InfoBlock
+                    border
+                    warning
+                    icon={<Icon name={'warning'} color={Color.textYellow1} />}
+                    i18n={I18N.jsonRpcSignBlidSignWarning}
+                    bottomContainerStyle={styles.infoBlock}
+                    bottom={
+                      <Button
+                        i18n={I18N.jsonRpcSignBlidGoToSettings}
+                        variant={ButtonVariant.warning}
+                        onPress={onPressGoToSecuritySettings}
+                      />
+                    }
+                  />
+                )}
+              </First>
+            </View>
+
+            <Text
+              style={styles.messageTitle}
+              t9
+              i18n={I18N.walletConnectSignMessage}
+            />
+            <Spacer height={4} />
+
+            {!!message?.original && (
+              <>
+                <Text color={Color.textBase2} style={styles.message} t11>
+                  {message.original}
+                </Text>
+                <Spacer height={4} />
+                <Text
+                  variant={TextVariant.t10}
+                  i18n={I18N.jsonRpcSignParsedMsg}
+                />
+                <Spacer height={4} />
+              </>
             )}
-            {!!message?.json && (
-              <ScrollView
-                horizontal
-                style={styles.json}
-                showsHorizontalScrollIndicator={false}>
+
+            <First>
+              {!!phishingTxRequest && (
                 <JsonViewer
                   autoexpand={false}
                   style={styles.json}
-                  data={message.text}
+                  data={phishingTxRequest as Record<string, any>}
                 />
-              </ScrollView>
-            )}
+              )}
+              {!message?.json && (
+                <Text color={Color.textBase2} style={styles.message} t11>
+                  {message.text}
+                </Text>
+              )}
+              {!!message?.json && (
+                <ScrollView
+                  horizontal
+                  style={styles.json}
+                  showsHorizontalScrollIndicator={false}>
+                  <JsonViewer
+                    autoexpand={false}
+                    style={styles.json}
+                    data={message.text}
+                  />
+                </ScrollView>
+              )}
+            </First>
           </ScrollView>
         </>
       </First>
@@ -158,5 +239,11 @@ const styles = createTheme({
     height: 18,
     borderRadius: 5,
     marginHorizontal: 4,
+  },
+  infoBlock: {
+    width: '100%',
+  },
+  infoBlockContainer: {
+    width: '100%',
   },
 });
