@@ -62,4 +62,5 @@ export type RemoteConfigTypes = RemoteConfigBalanceTypes &
     welcome_screen: keyof RootStackParamList;
     tx_timestamp_headers: boolean;
     indexer_sentry_capture_exeption_throttle_ms: number;
+    ws_updates: string;
   };

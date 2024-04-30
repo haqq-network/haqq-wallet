@@ -150,4 +150,5 @@ export const REMOTE_CONFIG_DEFAULT_VALUES: Required<RemoteConfigTypes> = {
   tx_timestamp_headers: true,
   enable_eth_commission_multiplier: false,
   indexer_sentry_capture_exeption_throttle_ms: 2 * 60 * 1000, // 2 min,
+  ws_updates: '',
 };
