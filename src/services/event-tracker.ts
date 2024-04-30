@@ -77,11 +77,7 @@ export class EventTracker extends Initializable {
     params: Record<string, string> = {},
   ) {
     if (DISABLED) {
-      return logger.warn(
-        'EventTracker is disabled for development',
-        event,
-        params,
-      );
+      return;
     }
     await this.awaitForInitialization();
     this._trackAdjustEvent(event, params);
