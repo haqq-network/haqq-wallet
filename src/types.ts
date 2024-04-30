@@ -177,6 +177,14 @@ export type RootStackParamList = {
           | 'browserEditBookmarksScreen'
           | 'browserHomePage';
       };
+  homeNews:
+    | undefined
+    | {
+        id: string;
+        openEvent: MarketingEvents;
+        linkEvent: MarketingEvents;
+        scrollEvent: MarketingEvents;
+      };
   homeSettings:
     | undefined
     | {

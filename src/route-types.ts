@@ -209,7 +209,7 @@ export enum NewsStackRoutes {
   OurNews = 'ourNews',
 }
 
-export type NewsStackParamList = HomeStackParamList & {
+export type NewsStackParamList = {
   [NewsStackRoutes.News]: undefined;
   [NewsStackRoutes.NewsDetail]: {
     id: string;

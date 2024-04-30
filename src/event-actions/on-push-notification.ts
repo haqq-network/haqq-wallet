@@ -51,13 +51,15 @@ export async function onPushNotification(message: RemoteMessage<Data>) {
 
         VariablesBool.set('isNewNews', true);
       }
-
-      navigator.navigate(NewsStackRoutes.NewsDetail, {
-        id: message.data.id,
+      navigator.navigate('homeNews', {
         // @ts-ignore
-        openEvent: MarketingEvents.newsOpenPushItem,
-        linkEvent: MarketingEvents.newsOpenPushLink,
-        scrollEvent: MarketingEvents.newsScrolledPushItem,
+        screen: NewsStackRoutes.NewsDetail,
+        params: {
+          id: id,
+          openEvent: MarketingEvents.newsOpenPushItem,
+          linkEvent: MarketingEvents.newsOpenPushLink,
+          scrollEvent: MarketingEvents.newsScrolledPushItem,
+        },
       });
       break;
     case PushNotificationTypes.raffle:
