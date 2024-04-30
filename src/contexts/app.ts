@@ -346,7 +346,7 @@ class App extends AsyncEventEmitter {
     return VariablesBool.get('blindSignEnabled') ?? false;
   }
 
-  set blindSignEnabled(value) {
+  set blindSignEnabled(value: boolean) {
     VariablesBool.set('blindSignEnabled', value);
   }
 

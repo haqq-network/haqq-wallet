@@ -151,13 +151,11 @@ export const JsonRpcSignInfo = ({
                     i18n={I18N.jsonRpcSignBlidSignWarning}
                     bottomContainerStyle={styles.infoBlock}
                     bottom={
-                      <>
-                        <Button
-                          i18n={I18N.jsonRpcSignBlidGoToSettings}
-                          variant={ButtonVariant.warning}
-                          onPress={onPressGoToSecuritySettings}
-                        />
-                      </>
+                      <Button
+                        i18n={I18N.jsonRpcSignBlidGoToSettings}
+                        variant={ButtonVariant.warning}
+                        onPress={onPressGoToSecuritySettings}
+                      />
                     }
                   />
                 )}
@@ -187,13 +185,11 @@ export const JsonRpcSignInfo = ({
 
             <First>
               {!!phishingTxRequest && (
-                <>
-                  <JsonViewer
-                    autoexpand={false}
-                    style={styles.json}
-                    data={phishingTxRequest as Record<string, any>}
-                  />
-                </>
+                <JsonViewer
+                  autoexpand={false}
+                  style={styles.json}
+                  data={phishingTxRequest as Record<string, any>}
+                />
               )}
               {!message?.json && (
                 <Text color={Color.textBase2} style={styles.message} t11>

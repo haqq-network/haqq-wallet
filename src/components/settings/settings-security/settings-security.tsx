@@ -73,7 +73,7 @@ export const SettingsSecurity = ({
           <Switch value={biometry} onChange={onToggleBiometry} />
         </MenuNavigationButton>
       )}
-      <MenuNavigationButton hideArrow onPress={() => {}}>
+      <MenuNavigationButton hideArrow>
         <DataContent
           titleI18n={I18N.settingsSecurityHexBlindSign}
           subtitleI18n={I18N.settingsSecurityHexBlindSignDescription}

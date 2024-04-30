@@ -14,8 +14,6 @@ export class PhishingMessageChecker {
         const message: string = request.params.filter(
           (p: string) => !AddressUtils.isEthAddress(p) && !!p,
         )[0];
-        // const message =
-        //   '0xee82015585066720b30082520894682c67f2f01bc14eb64f280c2c51524f737b1acd8609184e72a0008082d3c38080';
 
         const hexString = message.replace(/^0x/, '');
 
