@@ -32,12 +32,14 @@ const biometryName = {
 interface SettingsSecurityProps {
   biometry: boolean;
   biometryType: BiometryType | null;
-  onSubmit: () => void;
-  onToggleBiometry: () => void;
   recoveryPin: string;
   isRecoveryButtonDisabled: boolean;
+  blindSignEnabled: boolean;
+  onSubmit: () => void;
+  onToggleBiometry: () => void;
   onRecoveryPress: () => void;
   onRecoveryPinChange: (value: string) => void;
+  onToggleBlindSign: () => void;
 }
 
 export const SettingsSecurity = ({
@@ -45,10 +47,12 @@ export const SettingsSecurity = ({
   biometry,
   recoveryPin,
   isRecoveryButtonDisabled,
+  blindSignEnabled,
   onSubmit,
   onToggleBiometry,
   onRecoveryPress,
   onRecoveryPinChange,
+  onToggleBlindSign,
 }: SettingsSecurityProps) => {
   return (
     <View style={page.container}>
@@ -69,6 +73,14 @@ export const SettingsSecurity = ({
           <Switch value={biometry} onChange={onToggleBiometry} />
         </MenuNavigationButton>
       )}
+      <MenuNavigationButton hideArrow onPress={() => {}}>
+        <DataContent
+          titleI18n={I18N.settingsSecurityHexBlindSign}
+          subtitleI18n={I18N.settingsSecurityHexBlindSignDescription}
+        />
+        <Spacer />
+        <Switch value={blindSignEnabled} onChange={onToggleBlindSign} />
+      </MenuNavigationButton>
       <Spacer height={8} />
       {(app.isTesterMode || app.isDeveloper) && (
         <View>
