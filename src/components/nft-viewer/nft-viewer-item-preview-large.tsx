@@ -1,6 +1,6 @@
 import React, {useCallback, useMemo} from 'react';
 
-import {ImageBackground, TouchableOpacity, View} from 'react-native';
+import {ImageBackground, TouchableOpacity, View, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
@@ -24,15 +24,23 @@ export const NftViewerItemPreviewLarge = ({
     [layout.width],
   );
 
+  const containerStyle: ViewStyle = useMemo(
+    () => ({
+      height: layout.width,
+    }),
+    [layout.width],
+  );
+
   return (
     <TouchableOpacity
       disabled={!onPress}
       onPress={handlePress}
-      style={styles.container}
+      style={[styles.container, containerStyle]}
       onLayout={onLayout}>
       <ImageBackground
         imageStyle={styles.imageContainer}
         style={layout}
+        resizeMode="contain"
         source={{uri: item.cached_url || undefined}}>
         <View style={[styles.itemText, itemTextStyle]}>
           <Text
@@ -41,9 +49,11 @@ export const NftViewerItemPreviewLarge = ({
             color={Color.textBase3}>
             {item.name}
           </Text>
-          <Text variant={TextVariant.t17} color={Color.textSecond2}>
-            {item.price?.toBalanceString()}
-          </Text>
+          {item.price && (
+            <Text variant={TextVariant.t17} color={Color.textSecond2}>
+              {item.price.toBalanceString()}
+            </Text>
+          )}
         </View>
       </ImageBackground>
     </TouchableOpacity>

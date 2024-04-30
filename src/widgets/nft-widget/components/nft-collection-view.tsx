@@ -58,9 +58,11 @@ export const NftCollectionView = observer(() => {
             {item.name}
           </Text>
           <Spacer width={6} />
-          <Text variant={TextVariant.t17} color={Color.textSecond2}>
-            {item.price?.toBalanceString()}
-          </Text>
+          {item.price && (
+            <Text variant={TextVariant.t17} color={Color.textSecond2}>
+              {item.price.toBalanceString()}
+            </Text>
+          )}
         </View>
       </ImageBackground>
     </View>

@@ -20,7 +20,6 @@ type BalanceInfoDetailsProps = {
   isBalancesFirstSync: boolean;
   total?: Balance;
   locked?: Balance;
-  onAccountInfo: () => void;
   showLockedTokens: boolean;
 };
 
@@ -28,7 +27,6 @@ export const BalanceInfoDetails = ({
   isBalancesFirstSync,
   total,
   locked,
-  onAccountInfo,
   showLockedTokens,
 }: BalanceInfoDetailsProps) => {
   return (
@@ -47,7 +45,6 @@ export const BalanceInfoDetails = ({
             variant={TextVariant.t15}
             color={Color.textSecond2}
             children={total?.toFiat()}
-            onPress={onAccountInfo}
             suppressHighlighting={true}
           />
         </View>
@@ -73,7 +70,6 @@ export const BalanceInfoDetails = ({
                 color={Color.textBase3}
                 i18n={I18N.walletCardLocked}
                 i18params={{count: locked?.toEtherString() ?? '0'}}
-                onPress={onAccountInfo}
                 suppressHighlighting={true}
               />
             </View>

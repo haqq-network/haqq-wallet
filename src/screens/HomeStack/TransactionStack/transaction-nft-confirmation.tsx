@@ -28,8 +28,15 @@ import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {EthSignErrorDataDetails} from '@app/services/eth-sign';
 import {EventTracker} from '@app/services/event-tracker';
-import {MarketingEvents, ModalType, TransactionResponse} from '@app/types';
+import {
+  MarketingEvents,
+  ModalType,
+  SendTransactionError,
+  TransactionResponse,
+} from '@app/types';
 import {makeID} from '@app/utils';
+
+const UNPREDICTABLE_GAS_LIMIT = 'UNPREDICTABLE_GAS_LIMIT';
 
 export const TransactionNftConfirmationScreen = observer(() => {
   const navigation = useTypedNavigation<TransactionStackParamList>();
@@ -50,31 +57,42 @@ export const TransactionNftConfirmationScreen = observer(() => {
   );
 
   const showError = useError();
+  const [soulboundTokenHint, setSoulboundTokenHint] = useState<string>('');
   const [disabled, setDisabled] = useState(false);
   const [fee, setFee] = useState<Balance | null>();
 
   useLayoutEffectAsync(async () => {
     let feeWei = Balance.Empty;
+    setSoulboundTokenHint('');
 
-    if (nft.contractType === ContractType.erc721) {
-      const result = await EthNetwork.estimateERC721Transfer(
-        wallet?.address!,
-        route.params.to,
-        nft.tokenId,
-        AddressUtils.toEth(nft.contract),
-      );
-      feeWei = result.feeWei;
-    } else {
-      const result = await EthNetwork.estimateERC1155Transfer(
-        wallet?.address!,
-        route.params.to,
-        nft.tokenId,
-        AddressUtils.toEth(nft.contract),
-      );
-      feeWei = result.feeWei;
+    try {
+      if (nft.contractType === ContractType.erc721) {
+        const result = await EthNetwork.estimateERC721Transfer(
+          wallet?.address!,
+          route.params.to,
+          nft.tokenId,
+          AddressUtils.toEth(nft.contract),
+        );
+        feeWei = result.feeWei;
+      } else {
+        const result = await EthNetwork.estimateERC1155Transfer(
+          wallet?.address!,
+          route.params.to,
+          nft.tokenId,
+          AddressUtils.toEth(nft.contract),
+        );
+        feeWei = result.feeWei;
+      }
+
+      setFee(feeWei);
+    } catch (err) {
+      const e = err as SendTransactionError;
+      if (e.code === UNPREDICTABLE_GAS_LIMIT) {
+        const idx = e.reason.lastIndexOf(': ');
+        const errorText = idx !== -1 ? e.reason.substring(idx + 1) : '';
+        setSoulboundTokenHint(errorText);
+      }
     }
-
-    setFee(feeWei);
   }, []);
 
   const onConfirmTransaction = useCallback(async () => {
@@ -184,6 +202,7 @@ export const TransactionNftConfirmationScreen = observer(() => {
       contact={contact}
       to={route.params.to}
       item={route.params.nft}
+      soulboundTokenHint={soulboundTokenHint}
       fee={fee}
       onConfirmTransaction={onConfirmTransaction}
     />

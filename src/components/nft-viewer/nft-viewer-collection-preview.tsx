@@ -1,6 +1,6 @@
 import React, {useCallback, useMemo} from 'react';
 
-import {ImageBackground, TouchableOpacity, View} from 'react-native';
+import {ImageBackground, TouchableOpacity, View, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
@@ -32,16 +32,24 @@ export const NftViewerCollectionPreview = ({
     [layout.width],
   );
 
+  const containerStyle: ViewStyle = useMemo(
+    () => ({
+      height: layout.width,
+    }),
+    [layout.width],
+  );
+
   const collectionImageUri = useNftCollectionImage(item.nfts);
 
   return (
     <TouchableOpacity
       onPress={handlePress}
-      style={styles.container}
+      style={[styles.container, containerStyle]}
       onLayout={onLayout}>
       <ImageBackground
         imageStyle={styles.imageContainer}
         style={layout}
+        resizeMode="contain"
         source={collectionImageUri}>
         <View style={[styles.itemText, itemTextStyle]}>
           <Text

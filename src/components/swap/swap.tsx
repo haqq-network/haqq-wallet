@@ -632,7 +632,7 @@ export const Swap = observer(() => {
       if (swapRoutePath.length > 1) {
         totalPriceImpact = totalPriceImpact.div(swapRoutePath.length);
       } else {
-        totalPriceImpact = totalPriceImpact.div(2);
+        totalPriceImpact = totalPriceImpact.sqrt();
       }
 
       setPriceImpact(totalPriceImpact);

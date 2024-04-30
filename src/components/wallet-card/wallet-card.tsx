@@ -1,7 +1,11 @@
 import React, {useMemo, useState} from 'react';
 
 import {SessionTypes} from '@walletconnect/types';
-import {useWindowDimensions} from 'react-native';
+import {
+  TouchableWithoutFeedback,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Card, Spacer} from '@app/components/ui';
@@ -90,18 +94,22 @@ export const WalletCard = ({
         onPressProtection={onPressProtection}
         onPressWalletConnect={onPressWalletConnect}
       />
-      <BalanceInfoTotal
-        isBalancesFirstSync={showPlaceholder}
-        total={total}
-        onAccountInfo={onAccountInfo}
-      />
-      <BalanceInfoDetails
-        isBalancesFirstSync={showPlaceholder}
-        showLockedTokens={showLockedTokens}
-        total={total}
-        locked={locked}
-        onAccountInfo={onAccountInfo}
-      />
+      <TouchableWithoutFeedback
+        testID="accountInfoButton"
+        onPress={onAccountInfo}>
+        <View>
+          <BalanceInfoTotal
+            isBalancesFirstSync={showPlaceholder}
+            total={total}
+          />
+          <BalanceInfoDetails
+            isBalancesFirstSync={showPlaceholder}
+            showLockedTokens={showLockedTokens}
+            total={total}
+            locked={locked}
+          />
+        </View>
+      </TouchableWithoutFeedback>
       <Spacer height={12} />
       <CardButtons
         testID={testID}

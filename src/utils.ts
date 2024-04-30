@@ -1039,3 +1039,8 @@ export function isSupportedCosmosTxForRender(
 export const setRTL = (isRTL: boolean) => {
   I18nManager.forceRTL(isRTL);
 };
+
+const hexRegExp = /^(0[xX])?[0-9A-Fa-f]+$/;
+export function isValidHex(hexString: string) {
+  return hexRegExp.test(hexString);
+}
