@@ -9,6 +9,8 @@ import {app} from './contexts';
 import en from '../assets/locales/en/en.json';
 
 export enum I18N {
+  // Hash of current local file
+  _hash = '_hash',
   empty = 'empty',
   numericKeyboard0 = 'numericKeyboard0',
   numericKeyboard1 = 'numericKeyboard1',
@@ -969,16 +971,20 @@ export function getText(key: I18N, params?: Record<string, string>): string {
     hasLang = true;
   }
 
+  // FIXME: Make sure that we have 100% translations
+  //@ts-ignore
   if (!translations[key]) {
     return `[${key}]`;
   }
 
   if (params) {
     return translations.formatString(
+      //@ts-ignore
       fixLocalise(translations[key]),
       params,
     ) as string;
   }
+  //@ts-ignore
   return fixLocalise(translations[key]);
 }
 
