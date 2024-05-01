@@ -1,26 +1,28 @@
 #!/usr/bin/env zx
 require('dotenv').config();
-import {$, fs, path, spinner} from 'zx';
+import {$, fs, spinner} from 'zx';
 
-await spinner(
-  'Installing lozalise2 and jq',
-  () => $`brew tap lokalise/cli-2 && brew install lokalise2 && brew install jq`,
-);
-await spinner(
-  'Downloading locales',
-  () =>
-    $`lokalise2 --token ${process.env.LOCALISE_KEY} --project-id ${process.env.LOCALISE_PROJECT_ID} file download --format json --unzip-to ./assets/locales`,
-);
-await spinner('Run linter', () => $`yarn lint:assets`);
+let languagesList;
 
-const localesDir = './assets/locales';
-const folders = await fs.readdir(localesDir).then(result => result);
-for await (const localeFolder of folders) {
-  const localeFolderPath = path.join(localesDir, localeFolder);
-  const noFileNamePath = `${localeFolderPath}/no_filename.json`;
-  const localePath = `${localeFolderPath}/${localeFolder}.json`;
-  const combinedPath = `${localeFolderPath}/temp.json`;
-  await $`jq -s '.[0] * .[1]' ${noFileNamePath} ${localePath} > ${combinedPath}`.quiet();
-  await $`mv ${combinedPath} ${localePath}`.quiet();
-  await $`rm ${noFileNamePath}`.quiet();
+const fetchLanguagesList = async () => {
+  languagesList = await fetch(
+    `${process.env.HAQQ_BACKEND_DEFAULT}languages`,
+  ).then(data => data.json());
+};
+
+const fetchLocaleAndSave = async (id, hash) => {
+  const keys = await fetch(
+    `${process.env.HAQQ_BACKEND_DEFAULT}languages/${id}.json`,
+  ).then(data => data.json());
+  const assetPath = `./assets/locales/${id}/${id}.json`;
+  await fs.writeFile(assetPath, JSON.stringify({_hash: hash, ...keys}));
+};
+
+await spinner('Downloading locales list', fetchLanguagesList);
+
+for (let language of languagesList) {
+  const {id, hash} = language;
+  await spinner(`Saving ${id}`, () => fetchLocaleAndSave(id, hash));
 }
+
+await spinner('Run linter', () => $`yarn lint:assets`);
