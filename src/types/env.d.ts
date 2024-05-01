@@ -42,8 +42,6 @@ declare module 'react-native-config' {
     DETOX_CHAIN_ID: string;
 
     APP_VERSION: string;
-    LOCALIZE_KEY: string;
-    LOCALISE_PROJECT_ID: string;
   }
 
   export const Config: NativeConfig;
