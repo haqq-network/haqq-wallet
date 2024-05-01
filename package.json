@@ -208,6 +208,7 @@
     "metro-minify-terser": "0.80.6",
     "metro-react-native-babel-preset": "0.77.0",
     "prettier": "3.0.0",
+    "prettier-plugin-sort-json": "4.0.0",
     "react-test-renderer": "18.2.0",
     "rn-nodeify": "10.3.0",
     "ts-jest": "29.1.1",
