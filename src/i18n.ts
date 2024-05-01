@@ -1,6 +1,7 @@
 import LocalizedStrings from 'react-native-localization';
 
 import {Events} from '@app/events';
+import {Language} from '@app/models/language';
 import {AppLanguage} from '@app/types';
 import {setRTL} from '@app/utils';
 
@@ -967,7 +968,7 @@ const fixLocalise = (value: string) => {
 
 export function getText(key: I18N, params?: Record<string, string>): string {
   if (!hasLang) {
-    translations.setLanguage(app.language);
+    translations.setLanguage(Language.current);
     hasLang = true;
   }
 
@@ -988,17 +989,23 @@ export function getText(key: I18N, params?: Record<string, string>): string {
   return fixLocalise(translations[key]);
 }
 
-const supportedTranslationsMap: {[key in AppLanguage]: NodeRequire} = {
+export const supportedTranslationsMap: {[key in AppLanguage]: NodeRequire} = {
   en: require('../assets/locales/en/en.json'),
   ar: require('../assets/locales/ar/ar.json'),
   ru: require('../assets/locales/ru/ru.json'),
   tr: require('../assets/locales/tr/tr.json'),
 };
 
-export function setLanguage(lang: AppLanguage) {
-  translations.setContent({[lang]: supportedTranslationsMap[lang]});
+/**
+ * Update LocalizedStrings object and change RTL layout
+ *
+ * @export
+ * @param {AppLanguage} lang Language to change
+ * @param {?Object} [keys] Optional keys object
+ */
+export function setLanguage(lang: AppLanguage, keys?: Object) {
+  translations.setContent({[lang]: keys ?? supportedTranslationsMap[lang]});
   translations.setLanguage(lang);
-  app.language = lang;
   app.emit(Events.onLocaleChanged, lang);
   setRTL(lang);
 }

@@ -24,8 +24,8 @@ import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {trackEvent} from '@app/helpers/track-event';
 import {useTheme} from '@app/hooks';
 import {useToast} from '@app/hooks/use-toast';
-import {setLanguage} from '@app/i18n';
 import {Contact} from '@app/models/contact';
+import {Language} from '@app/models/language';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
@@ -103,9 +103,9 @@ export const App = () => {
       hideModal(ModalType.splash);
     }, SPLASH_TIMEOUT_MS);
     sleep(150)
-      .then(() => setLanguage(app.language))
       .then(() => SplashScreen.hide())
       .then(() => awaitForEventDone(Events.onAppInitialized))
+      .then(async () => await Language.init())
       .then(async () => {
         if (app.onboarded) {
           await app.init();

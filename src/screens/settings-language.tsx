@@ -1,21 +1,26 @@
-import React, {memo, useCallback, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 
 import {useNavigation} from '@react-navigation/native';
+import {observer} from 'mobx-react';
 import {Alert, I18nManager} from 'react-native';
 
 import {SettingsLanguage} from '@app/components/settings-language';
-import {app} from '@app/contexts';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
-import {I18N, getText, setLanguage} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
+import {Language} from '@app/models/language';
 import {Backend} from '@app/services/backend';
-import {AppLanguage, Language, LanguagesResponse} from '@app/types';
+import {
+  AppLanguage,
+  Language as LanguageType,
+  LanguagesResponse,
+} from '@app/types';
 import {RTL_LANGUAGES} from '@app/variables/common';
 
-export const SettingsLanguageScreen = memo(() => {
+export const SettingsLanguageScreen = observer(() => {
   const navigation = useNavigation();
 
   // Language field for local screen state
-  const [language, updateLanguage] = useState(app.language);
+  const [language, updateLanguage] = useState(Language.current);
 
   // Fetched languages
   const [languages, setLanguages] = useState<LanguagesResponse>([]);
@@ -31,11 +36,10 @@ export const SettingsLanguageScreen = memo(() => {
     return isAppInRTL !== isLangRTL;
   }, []);
 
-  const onUpdateLanguage = async (lang: Language) => {
+  const onUpdateLanguage = async (lang: LanguageType) => {
     const restartNeeded = shouldRestart(lang.id);
-    const action = () => {
-      app.language = lang.id;
-      setLanguage(lang.id);
+    const action = async () => {
+      await Language.update(lang);
 
       // Update local state
       updateLanguage(lang.id);
