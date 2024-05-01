@@ -341,6 +341,14 @@ class App extends AsyncEventEmitter {
     VariablesBool.set('isTesterMode', value);
   }
 
+  get blindSignEnabled() {
+    return VariablesBool.get('blindSignEnabled') ?? false;
+  }
+
+  set blindSignEnabled(value: boolean) {
+    VariablesBool.set('blindSignEnabled', value);
+  }
+
   get currentTheme() {
     return this.theme === AppTheme.system
       ? this._systemTheme ?? AppTheme.light

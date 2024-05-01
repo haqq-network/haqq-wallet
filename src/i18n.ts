@@ -942,6 +942,12 @@ export enum I18N {
   feeCalculatingRpcErrorDescription,
   feeCalculatingRpcErrorTitle,
   tokensLowBalance,
+  jsonRpcSignBlidSignWarning,
+  jsonRpcSignPhihsingWarning,
+  jsonRpcSignBlidGoToSettings,
+  settingsSecurityHexBlindSign,
+  settingsSecurityHexBlindSignDescription,
+  jsonRpcSignParsedMsg,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -2058,4 +2064,13 @@ const en: Record<I18N, string> = {
   [I18N.feeCalculatingRpcErrorTitle]: 'Something went wrong',
   [I18N.feeCalculatingRpcErrorDescription]: 'Estimate gas request failed',
   [I18N.feeCalculatingRpcErrorClose]: 'Try again',
+  [I18N.jsonRpcSignBlidSignWarning]:
+    "For your security, hex string signing is disabled by default. Malicious transactions can potentially be encoded within hex strings. However, if you wish to enable hex message signing, you can do so in the settings by toggling 'Blind Sign Hex Messages.' Please proceed with caution, as this may expose your wallet to potential risks.",
+  [I18N.jsonRpcSignPhihsingWarning]:
+    'We regret to inform you that a malicious transaction has been detected within the message you attempted to sign. As a precautionary measure, message signing has been disabled to safeguard your funds and data. Please review the contents of the message and ensure its integrity before attempting to sign again. If you believe this to be an error, please contact our support team immediately for further assistance.',
+  [I18N.jsonRpcSignBlidGoToSettings]: 'Go to Security settings',
+  [I18N.settingsSecurityHexBlindSign]: 'Enable Blind Sign',
+  [I18N.jsonRpcSignParsedMsg]: 'Parsed:',
+  [I18N.settingsSecurityHexBlindSignDescription]:
+    'Enable Blind Sign for HEX messages',
 };

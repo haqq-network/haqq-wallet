@@ -1,17 +1,31 @@
-import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+
+import {ethers} from 'ethers';
 
 import {JsonRpcSign} from '@app/components/json-rpc-sign';
 import {Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {ModalStore, showModal} from '@app/helpers';
+import {PhishingMessageChecker} from '@app/helpers/phishing-message-checker';
 import {getHost} from '@app/helpers/web3-browser-utils';
 import {Whitelist} from '@app/helpers/whitelist';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useRemoteConfigVar} from '@app/hooks/use-remote-config';
 import {Wallet} from '@app/models/wallet';
-import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
+import {
+  HomeStackParamList,
+  HomeStackRoutes,
+  SettingsStackRoutes,
+} from '@app/route-types';
 import {Balance} from '@app/services/balance';
 import {EthSignErrorDataDetails} from '@app/services/eth-sign';
 import {SignJsonRpcRequest} from '@app/services/sign-json-rpc-request';
@@ -30,6 +44,11 @@ export const JsonRpcSignScreen = memo(() => {
   const [verifyAddressResponse, setVerifyAddressResponse] =
     useState<VerifyAddressResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [phishingTxRequest, setPhisingTxRequest] =
+    useState<ethers.Transaction | null>(null);
+  const [messageIsHex, setMessageIsHex] = useState<boolean>(false);
+  const blindSignEnabled = useRef(app.blindSignEnabled).current;
+
   const navigation = useTypedNavigation<HomeStackParamList>();
   const {
     metadata,
@@ -64,8 +83,33 @@ export const JsonRpcSignScreen = memo(() => {
     [navigation],
   );
 
+  const onPressGoToSecuritySettings = useCallback(() => {
+    onPressReject();
+    // @ts-ignore
+    navigation.navigate('homeSettings', {
+      screen: SettingsStackRoutes.SettingsSecurity,
+    });
+  }, [navigation, onPressReject]);
+
   const onPressSign = useCallback(async () => {
     try {
+      if (phishingTxRequest && Object.values(phishingTxRequest).length) {
+        return Logger.error('JsonRpcSignScreen:onPressSign tx is phishing', {
+          request,
+          phishingTxRequest,
+        });
+      }
+
+      if (messageIsHex && blindSignEnabled === false) {
+        return Logger.error(
+          'JsonRpcSignScreen:onPressSign hex blind sign does not allowed',
+          {
+            request,
+            messageIsHex,
+          },
+        );
+      }
+
       if (
         !isAllowed &&
         !(DEBUG_VARS.disableWeb3DomainBlocking || app.isTesterMode)
@@ -110,7 +154,17 @@ export const JsonRpcSignScreen = memo(() => {
         chainId,
       });
     }
-  }, [chainId, isAllowed, navigation, onPressReject, request, wallet]);
+  }, [
+    chainId,
+    isAllowed,
+    navigation,
+    onPressReject,
+    request,
+    wallet,
+    phishingTxRequest,
+    messageIsHex,
+    blindSignEnabled,
+  ]);
 
   const checkContractAddress = useCallback(async () => {
     if (isTransaction) {
@@ -124,6 +178,12 @@ export const JsonRpcSignScreen = memo(() => {
       }
     }
   }, [isTransaction, request]);
+
+  useEffect(() => {
+    const {isHex, parsedTx} = PhishingMessageChecker.check(request);
+    setPhisingTxRequest(parsedTx);
+    setMessageIsHex(isHex);
+  }, [request]);
 
   useEffectAsync(async () => {
     try {
@@ -178,8 +238,12 @@ export const JsonRpcSignScreen = memo(() => {
       verifyAddressResponse={verifyAddressResponse}
       hideContractAttention={hideContractAttention}
       isAllowedDomain={isAllowed}
+      phishingTxRequest={phishingTxRequest}
+      messageIsHex={messageIsHex}
+      blindSignEnabled={blindSignEnabled}
       onPressReject={onPressReject}
       onPressSign={onPressSign}
+      onPressGoToSecuritySettings={onPressGoToSecuritySettings}
     />
   );
 });
