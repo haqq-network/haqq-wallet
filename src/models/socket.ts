@@ -1,13 +1,12 @@
-import {cosmosAddress} from '@haqq/provider-base';
 import {makeAutoObservable, runInAction} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {Wallet} from '@app/models/wallet';
 import {storage} from '@app/services/mmkv';
 import {RPCMessage} from '@app/types/rpc';
-import {COSMOS_PREFIX} from '@app/variables/common';
 
 const HEARTBEAT_INTERVAL_MS = 10_000;
 
@@ -126,13 +125,13 @@ class SocketStore {
     },
     subscribe: (address: string) => {
       const message = this.createMessage('subscribe', [
-        cosmosAddress(address, COSMOS_PREFIX),
+        AddressUtils.toHaqq(address),
       ]);
       this.instance?.send(message);
     },
     unsubscribe: (address: string) => {
       const message = this.createMessage('unsubscribe', [
-        cosmosAddress(address, COSMOS_PREFIX),
+        AddressUtils.toHaqq(address),
       ]);
       this.instance?.send(message);
     },

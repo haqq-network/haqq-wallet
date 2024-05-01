@@ -38,11 +38,7 @@ import {
   signatureToWeb3Extension,
 } from '@evmos/transactions';
 import {Sender} from '@evmos/transactions/dist/messages/common';
-import {
-  ProviderInterface,
-  base64PublicKey,
-  cosmosAddress,
-} from '@haqq/provider-base';
+import {ProviderInterface, base64PublicKey} from '@haqq/provider-base';
 import {normalize0x} from '@haqq/provider-keystone-react-native';
 import Decimal from 'decimal.js';
 
@@ -62,7 +58,7 @@ import {
   EvmosVestingV1BalancesResponse,
 } from '@app/types/cosmos';
 import {decimalToHex, getHttpResponse} from '@app/utils';
-import {COSMOS_PREFIX, WEI} from '@app/variables/common';
+import {WEI} from '@app/variables/common';
 
 import {EthSign} from './eth-sign';
 
@@ -293,9 +289,7 @@ export class Cosmos {
       transport.getAccountInfo(hdPath),
     );
 
-    const accInfo = await this.getAccountInfo(
-      cosmosAddress(address, COSMOS_PREFIX),
-    );
+    const accInfo = await this.getAccountInfo(AddressUtils.toHaqq(address));
     const account: AccountResponse['account'] =
       //@ts-ignore
       accInfo?.account?.base_vesting_account || accInfo?.account;
