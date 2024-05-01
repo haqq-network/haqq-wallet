@@ -16,6 +16,7 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
+import {EthereumSignInMessage} from '@app/helpers/ethereum-message-checker';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {JsonRpcMetadata, PartialJsonRpcRequest} from '@app/types';
@@ -40,7 +41,9 @@ interface WalletConnectSignInfoProps {
   phishingTxRequest: Transaction | null;
   messageIsHex: boolean;
   blindSignEnabled: boolean;
-  onPressGoToSecuritySettings: () => void;
+  isAllowedDomain: boolean;
+  ethereumSignInMessage: EthereumSignInMessage | null;
+  onPressAllowOnceSignDangerousTx: () => void;
 }
 
 const getMessageByRequest = (request: PartialJsonRpcRequest) => {
@@ -94,11 +97,12 @@ export const JsonRpcSignInfo = ({
   phishingTxRequest,
   messageIsHex,
   blindSignEnabled,
-  onPressGoToSecuritySettings,
+  ethereumSignInMessage,
+  onPressAllowOnceSignDangerousTx,
 }: WalletConnectSignInfoProps) => {
   const message = useMemo(() => getMessageByRequest(request), [request]);
   const url = useMemo(() => getHostnameFromUrl(metadata?.url), [metadata]);
-  const isSupportedConsmosTx = useMemo(
+  const isSupportedCosmosTx = useMemo(
     () => message?.json && isSupportedCosmosTxForRender(message.text),
     [message],
   );
@@ -129,11 +133,12 @@ export const JsonRpcSignInfo = ({
       <Spacer height={12} />
 
       <First>
-        {isSupportedConsmosTx && <TypedDataViewer data={message.text} />}
+        {isSupportedCosmosTx && <TypedDataViewer data={message.text} />}
         <>
           <ScrollView style={styles.json} showsVerticalScrollIndicator={false}>
             <View style={styles.infoBlockContainer}>
               <First>
+                {!!ethereumSignInMessage && <></>}
                 {!!phishingTxRequest && (
                   <InfoBlock
                     border
@@ -143,7 +148,7 @@ export const JsonRpcSignInfo = ({
                     bottomContainerStyle={styles.infoBlock}
                   />
                 )}
-                {!!messageIsHex && blindSignEnabled === false && (
+                {!!messageIsHex && (
                   <InfoBlock
                     border
                     warning
@@ -151,11 +156,13 @@ export const JsonRpcSignInfo = ({
                     i18n={I18N.jsonRpcSignBlidSignWarning}
                     bottomContainerStyle={styles.infoBlock}
                     bottom={
-                      <Button
-                        i18n={I18N.jsonRpcSignBlidGoToSettings}
-                        variant={ButtonVariant.warning}
-                        onPress={onPressGoToSecuritySettings}
-                      />
+                      blindSignEnabled ? null : (
+                        <Button
+                          i18n={I18N.browserPermissionPromptAllowOnce}
+                          variant={ButtonVariant.warning}
+                          onPress={onPressAllowOnceSignDangerousTx}
+                        />
+                      )
                     }
                   />
                 )}
@@ -169,19 +176,21 @@ export const JsonRpcSignInfo = ({
             />
             <Spacer height={4} />
 
-            {!!message?.original && (
-              <>
-                <Text color={Color.textBase2} style={styles.message} t11>
-                  {message.original}
-                </Text>
-                <Spacer height={4} />
-                <Text
-                  variant={TextVariant.t10}
-                  i18n={I18N.jsonRpcSignParsedMsg}
-                />
-                <Spacer height={4} />
-              </>
-            )}
+            {!!message?.original &&
+              !ethereumSignInMessage &&
+              (messageIsHex || phishingTxRequest) && (
+                <>
+                  <Text color={Color.textBase2} style={styles.message} t11>
+                    {message.original}
+                  </Text>
+                  <Spacer height={4} />
+                  <Text
+                    variant={TextVariant.t10}
+                    i18n={I18N.jsonRpcSignParsedMsg}
+                  />
+                  <Spacer height={4} />
+                </>
+              )}
 
             <First>
               {!!phishingTxRequest && (
