@@ -2,6 +2,8 @@ import {app} from '@app/contexts';
 import {AppInfo} from '@app/helpers/get-app-info';
 import {Currency} from '@app/models/types';
 import {
+  AppLanguage,
+  LanguagesResponse,
   MarkupResponse,
   NewsRow,
   NewsUpdatesResponse,
@@ -388,5 +390,22 @@ export class Backend {
     });
 
     return await getHttpResponse<any>(response);
+  }
+
+  async languages(): Promise<LanguagesResponse> {
+    const response = await fetch(`${this.getRemoteUrl()}languages`, {
+      headers: Backend.headers,
+    });
+    return await getHttpResponse<LanguagesResponse>(response);
+  }
+
+  async language(language: AppLanguage): Promise<Object> {
+    const response = await fetch(
+      `${this.getRemoteUrl()}languages/${language}.json`,
+      {
+        headers: Backend.headers,
+      },
+    );
+    return await getHttpResponse<Object>(response);
   }
 }

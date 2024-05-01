@@ -1,19 +1,29 @@
-import React, {useCallback, useState} from 'react';
+import React, {memo, useCallback, useState} from 'react';
 
 import {useNavigation} from '@react-navigation/native';
 import {Alert, I18nManager} from 'react-native';
 
 import {SettingsLanguage} from '@app/components/settings-language';
 import {app} from '@app/contexts';
+import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N, getText, setLanguage} from '@app/i18n';
-import {AppLanguage} from '@app/types';
+import {Backend} from '@app/services/backend';
+import {AppLanguage, Language, LanguagesResponse} from '@app/types';
 import {RTL_LANGUAGES} from '@app/variables/common';
 
-export const SettingsLanguageScreen = () => {
+export const SettingsLanguageScreen = memo(() => {
   const navigation = useNavigation();
 
   // Language field for local screen state
   const [language, updateLanguage] = useState(app.language);
+
+  // Fetched languages
+  const [languages, setLanguages] = useState<LanguagesResponse>([]);
+
+  useEffectAsync(async () => {
+    const data = await Backend.instance.languages();
+    setLanguages(data);
+  }, []);
 
   const shouldRestart = useCallback((lang: AppLanguage) => {
     const isAppInRTL = I18nManager.isRTL;
@@ -21,14 +31,14 @@ export const SettingsLanguageScreen = () => {
     return isAppInRTL !== isLangRTL;
   }, []);
 
-  const onUpdateLanguage = (lang: AppLanguage) => {
-    const restartNeeded = shouldRestart(lang);
+  const onUpdateLanguage = async (lang: Language) => {
+    const restartNeeded = shouldRestart(lang.id);
     const action = () => {
-      app.language = lang;
-      setLanguage(lang);
+      app.language = lang.id;
+      setLanguage(lang.id);
 
       // Update local state
-      updateLanguage(lang);
+      updateLanguage(lang.id);
     };
 
     if (!restartNeeded) {
@@ -58,6 +68,7 @@ export const SettingsLanguageScreen = () => {
       language={language}
       onUpdatelanguage={onUpdateLanguage}
       goBack={goBack}
+      languages={languages}
     />
   );
-};
+});

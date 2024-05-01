@@ -10396,6 +10396,7 @@ __metadata:
     pbkdf2: 3.1.2
     posthog-react-native: 3.0.0
     prettier: 3.0.0
+    prettier-plugin-sort-json: 4.0.0
     pump: 3.0.0
     randombytes: 2.1.0
     react: 18.2.0
@@ -15023,6 +15024,15 @@ __metadata:
   dependencies:
     fast-diff: ^1.1.2
   checksum: 00ce8011cf6430158d27f9c92cfea0a7699405633f7f1d4a45f07e21bf78e99895911cbcdc3853db3a824201a7c745bd49bfea8abd5fb9883e765a90f74f8392
+  languageName: node
+  linkType: hard
+
+"prettier-plugin-sort-json@npm:4.0.0":
+  version: 4.0.0
+  resolution: "prettier-plugin-sort-json@npm:4.0.0"
+  peerDependencies:
+    prettier: ^3.0.0
+  checksum: 06497ba44d04083c785d196e658bbdc267239857de6ca4925d55a888b2be4ffd6c2603af3d53d37f8e15ff8db25c0d2c90410adc6c150d73df6d56130ddc3404
   languageName: node
   linkType: hard
 
