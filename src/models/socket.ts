@@ -42,15 +42,19 @@ class SocketStore {
     }
   };
 
+  private fallbackToFetch = () => {
+    if (this.fallbackIntervalTimer) {
+      clearInterval(this.fallbackIntervalTimer);
+    }
+    this.fallbackIntervalTimer = setInterval(() => {
+      app.emit(Events.onWalletsBalanceCheck);
+    }, 6000);
+  };
+
   attach = (url?: string) => {
     // Fallback to default interval if there is no url
     if (!url) {
-      if (this.fallbackIntervalTimer) {
-        clearInterval(this.fallbackIntervalTimer);
-      }
-      this.fallbackIntervalTimer = setInterval(() => {
-        app.emit(Events.onWalletsBalanceCheck);
-      }, 6000);
+      this.fallbackToFetch();
       return;
     }
 
@@ -76,6 +80,8 @@ class SocketStore {
 
     this.instance.onerror = e => {
       Logger.log('Socket.onError', e.message);
+      this.detach();
+      this.fallbackToFetch();
     };
 
     this.instance.onclose = () => {
