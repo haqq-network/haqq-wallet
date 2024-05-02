@@ -9,6 +9,7 @@ import {JsonRpcSignInfo} from '@app/components/json-rpc-sign-info';
 import {JsonRpcTransactionInfo} from '@app/components/json-rpc-transaction-info';
 import {Button, ButtonVariant, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {EthereumSignInMessage} from '@app/helpers/ethereum-message-checker';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {
@@ -31,9 +32,10 @@ export interface JsonRpcSignProps {
   phishingTxRequest: Transaction | null;
   messageIsHex: boolean;
   blindSignEnabled: boolean;
+  ethereumSignInMessage: EthereumSignInMessage | null;
   onPressSign(): void;
   onPressReject(): void;
-  onPressGoToSecuritySettings(): void;
+  onPressAllowOnceSignDangerousTx(): void;
 }
 
 export const JsonRpcSign = ({
@@ -50,14 +52,19 @@ export const JsonRpcSign = ({
   phishingTxRequest,
   messageIsHex,
   blindSignEnabled,
+  ethereumSignInMessage,
   onPressReject,
   onPressSign,
-  onPressGoToSecuritySettings,
+  onPressAllowOnceSignDangerousTx,
 }: JsonRpcSignProps) => {
   const insets = useSafeAreaInsets();
   const signButtonDisabled = useMemo(() => {
     if (rejectLoading || !isAllowedDomain) {
       return true;
+    }
+
+    if (ethereumSignInMessage && Object.values(ethereumSignInMessage).length) {
+      return false;
     }
 
     if (messageIsHex && blindSignEnabled === false) {
@@ -98,7 +105,9 @@ export const JsonRpcSign = ({
             phishingTxRequest={phishingTxRequest}
             messageIsHex={messageIsHex}
             blindSignEnabled={blindSignEnabled}
-            onPressGoToSecuritySettings={onPressGoToSecuritySettings}
+            isAllowedDomain={isAllowedDomain}
+            ethereumSignInMessage={ethereumSignInMessage}
+            onPressAllowOnceSignDangerousTx={onPressAllowOnceSignDangerousTx}
           />
         )}
       </View>

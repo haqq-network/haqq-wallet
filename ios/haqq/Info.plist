@@ -24,7 +24,7 @@
 	<array>
 		<dict>
 			<key>CFBundleIdentifier</key>
-			<string/>
+			<string></string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
@@ -35,7 +35,7 @@
 		</dict>
 		<dict>
 			<key>CFBundleIdentifier</key>
-			<string/>
+			<string></string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
@@ -93,11 +93,6 @@
 	<dict>
 		<key>NSExceptionDomains</key>
 		<dict>
-			<key>45.77.65.60</key>
-			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-			</dict>
 			<key>localhost</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
@@ -115,6 +110,10 @@
 	<true/>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Allow $(PRODUCT_NAME) to use FaceID</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>"Haqq Wallet" does not store your location data and will only share it with the website after obtaining your consent.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>"Haqq Wallet" does not store your location data and will only share it with the website after obtaining your consent.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Allow $(PRODUCT_NAME) to use the photo library.</string>
 	<key>NSUbiquitousContainers</key>
@@ -129,10 +128,6 @@
 			<string>None</string>
 		</dict>
 	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>"Haqq Wallet" does not store your location data and will only share it with the website after obtaining your consent.</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>"Haqq Wallet" does not store your location data and will only share it with the website after obtaining your consent.</string>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>Your data will be used to track the source of the installation. We won't get access to any of your private information.</string>
 	<key>UIAppFonts</key>
