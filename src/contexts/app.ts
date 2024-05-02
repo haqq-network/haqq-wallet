@@ -495,12 +495,15 @@ class App extends AsyncEventEmitter {
         await this.biometryAuth();
         vibrate(HapticEffects.success);
         this.authenticated = true;
+        return true;
       } catch (error) {
         Logger.error('app.auth', error);
         await awaitForEventDone(Events.enterPinSuccess);
+        return false;
       }
     } else {
       await awaitForEventDone(Events.enterPinSuccess);
+      return false;
     }
   }
 
@@ -516,14 +519,14 @@ class App extends AsyncEventEmitter {
   }
 
   pinAuth() {
-    return new Promise<void>(async (resolve, _reject) => {
+    return new Promise<boolean>(async (resolve, _reject) => {
       const password = await this.getPassword();
 
       const callback = (value: string) => {
         if (password === value) {
           this.off('enterPin', callback);
           this.emit(Events.enterPinSuccess);
-          resolve();
+          resolve(true);
         } else {
           this.emit('errorPin', 'not match');
         }
@@ -531,6 +534,16 @@ class App extends AsyncEventEmitter {
 
       this.on('enterPin', callback);
     });
+  }
+
+  async requsetPinConfirmation(): Promise<boolean> {
+    const close = showModal('pin');
+    const confirmed = await Promise.race([
+      this.makeBiometryAuth(),
+      this.pinAuth(),
+    ]);
+    close();
+    return confirmed;
   }
 
   successEnter() {
