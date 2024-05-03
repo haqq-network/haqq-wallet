@@ -10384,7 +10384,7 @@ __metadata:
     js-sha3: 0.8.0
     json-rpc-engine: 6.1.0
     json-stable-stringify: 1.0.2
-    lottie-react-native: 6.6.0
+    lottie-react-native: 6.7.2
     markdown-it: 13.0.1
     metro-minify-terser: 0.80.6
     metro-react-native-babel-preset: 0.77.0
@@ -12765,9 +12765,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lottie-react-native@npm:6.6.0":
-  version: 6.6.0
-  resolution: "lottie-react-native@npm:6.6.0"
+"lottie-react-native@npm:6.7.2":
+  version: 6.7.2
+  resolution: "lottie-react-native@npm:6.7.2"
   peerDependencies:
     "@dotlottie/react-player": ^1.6.1
     "@lottiefiles/react-lottie-player": ^3.5.3
@@ -12781,7 +12781,7 @@ __metadata:
       optional: true
     react-native-windows:
       optional: true
-  checksum: c989a1765caf7d6a80d72eb1c4702648cc744b07c13f1085f6f4233992264686191d84ff88233b6083ae2548261fccd9375cb9de1f81364f3f2477928d6f5c3b
+  checksum: 8b14ca10f4f0e75505ee5485b47c31db2146baea1634e66f0d485abb8a44ba2019930239970015cedaad627e306828be977b4797256aa2cc143b476ed31585fa
   languageName: node
   linkType: hard
 
