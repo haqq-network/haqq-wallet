@@ -1,9 +1,9 @@
-import React, {useMemo} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
-import {Switch, View} from 'react-native';
+import Clipboard from '@react-native-clipboard/clipboard';
+import {Switch, TouchableOpacity, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {AddressInfo} from '@app/components/address-info/address-info';
 import {
   Button,
   ButtonSize,
@@ -18,13 +18,15 @@ import {
   PopupContainer,
   Spacer,
   Text,
+  TextVariant,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {sendNotification} from '@app/services';
 import {WalletType} from '@app/types';
 
 type SettingsAccountDetailProps = {
@@ -64,6 +66,13 @@ export const SettingsAccountDetail = ({
     [cardMaskWidth],
   );
 
+  const onCopy = useCallback((copyValue: string) => {
+    if (copyValue) {
+      Clipboard.setString(copyValue);
+      sendNotification(I18N.notificationCopied);
+    }
+  }, []);
+
   return (
     <PopupContainer style={styles.container} testID="account_details">
       <View style={[styles.header, wallet.isHidden && styles.opacity]}>
@@ -82,19 +91,48 @@ export const SettingsAccountDetail = ({
             ]}
           />
         </Card>
-        <Text t10 style={styles.headerName}>
-          {wallet.name}
-        </Text>
-        <AddressInfo copyValue={wallet?.address}>
-          <Text t14>{wallet?.address}</Text>
-        </AddressInfo>
+        <TouchableOpacity
+          onPress={() => {
+            onCopy(wallet?.address);
+          }}>
+          <View style={[styles.row, styles.alignItemsCenter]}>
+            <Text variant={TextVariant.t10} style={styles.headerName}>
+              {wallet.name}
+            </Text>
+            <Text
+              variant={TextVariant.t14}
+              color={Color.textBase2}
+              style={styles.copyText}
+              i18n={I18N.copy}
+            />
+            <Icon name="copy" color={Color.textBase2} i16 />
+          </View>
+
+          <Text variant={TextVariant.t14}>{wallet?.address}</Text>
+        </TouchableOpacity>
         <View style={styles.hDevider} />
-        <AddressInfo copyValue={AddressUtils.toHaqq(wallet?.address)}>
-          <Text t14 color={Color.textBase2}>
-            {`${getText(I18N.bech32Title)}: `}
+        <TouchableOpacity
+          onPress={() => {
+            onCopy(AddressUtils.toHaqq(wallet?.address));
+          }}>
+          <View style={styles.row}>
+            <Text
+              variant={TextVariant.t14}
+              color={Color.textBase2}
+              i18n={I18N.bech32Title}
+            />
+            <Text
+              variant={TextVariant.t14}
+              color={Color.textBase2}
+              style={styles.copyText}
+              i18n={I18N.copy}
+            />
+            <Icon name="copy" color={Color.textBase2} i16 />
+          </View>
+          <Text variant={TextVariant.t14}>
+            {AddressUtils.toHaqq(wallet?.address)}
           </Text>
-          <Text t14>{AddressUtils.toHaqq(wallet?.address)}</Text>
-        </AddressInfo>
+        </TouchableOpacity>
       </View>
       {isFeatureEnabled(Feature.sss) && (
         <First>
@@ -210,6 +248,9 @@ export const SettingsAccountDetail = ({
 };
 
 const styles = createTheme({
+  alignItemsCenter: {
+    alignItems: 'center',
+  },
   row: {
     flexDirection: 'row',
   },
@@ -238,5 +279,9 @@ const styles = createTheme({
   opacity: {opacity: 0.5},
   hDevider: {
     height: 8,
+  },
+  copyText: {
+    marginLeft: 6,
+    marginRight: 4,
   },
 });
