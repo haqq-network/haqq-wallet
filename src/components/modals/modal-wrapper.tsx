@@ -28,6 +28,7 @@ import {ProvidersBottomSheet} from '@app/components/modals/providers-bottom-shee
 import {RaffleAgreement} from '@app/components/modals/raffle-agreement';
 import {SSSLimitReached} from '@app/components/modals/sss-limit-reached';
 import {TransactionError} from '@app/components/modals/transaction-error';
+import {TurnOnPushNotificationsModal} from '@app/components/modals/turn-on-push-notifications';
 import {ViewErrorDetails} from '@app/components/modals/view-error-details';
 import {WalletsBottomSheet} from '@app/components/modals/wallets-bottom-sheet';
 import {createTheme, hideModal} from '@app/helpers';
@@ -57,6 +58,7 @@ const AUTO_CLOSE_DISABLED = [
   ModalType.qr,
   ModalType.keystoneScanner,
   ModalType.keystoneQR,
+  ModalType.turnOnPushNotifications,
 ];
 
 export const ModalWrapper = ({
@@ -154,6 +156,13 @@ export const ModalWrapper = ({
         return <SSSLimitReached {...modal} onClose={onCloseModalPress} />;
       case ModalType.pinError:
         return <PinErrorModal {...modal} onClose={onCloseModalPress} />;
+      case ModalType.turnOnPushNotifications:
+        return (
+          <TurnOnPushNotificationsModal
+            {...modal}
+            onClose={onCloseModalPress}
+          />
+        );
       default:
         return null;
     }

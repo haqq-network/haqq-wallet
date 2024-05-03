@@ -948,6 +948,10 @@ export enum I18N {
   settingsSecurityHexBlindSign,
   settingsSecurityHexBlindSignDescription,
   jsonRpcSignParsedMsg,
+  turnOnPushNotificationsTitle,
+  turnOnPushNotificationsDescription,
+  turnOnPushNotificationsActionButton,
+  turnOnPushNotificationsSkip,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -2073,4 +2077,9 @@ const en: Record<I18N, string> = {
   [I18N.jsonRpcSignParsedMsg]: 'Parsed:',
   [I18N.settingsSecurityHexBlindSignDescription]:
     'Enable Blind Sign for HEX messages',
+  [I18N.turnOnPushNotificationsTitle]: 'Turn on push notifications',
+  [I18N.turnOnPushNotificationsDescription]:
+    'We can notify you when something important happens, such as: The transaction was successfully sent. Funds have arrived in the account. We detect any risks for the security of your account',
+  [I18N.turnOnPushNotificationsActionButton]: 'Turn on notifications',
+  [I18N.turnOnPushNotificationsSkip]: 'Not now',
 };

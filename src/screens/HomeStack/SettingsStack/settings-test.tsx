@@ -232,6 +232,11 @@ const getTestModals = (): TestModals => {
     pinError: {
       details: 'test error',
     },
+    turnOnPushNotifications: {
+      onClose: () => logger.log('turnOnPushNotifications closed'),
+      onSuccess: () => logger.log('turnOnPushNotifications onSuccess'),
+      onFailed: () => logger.log('turnOnPushNotifications onFailed'),
+    },
   };
 
   if (wallets.length) {
