@@ -8,7 +8,7 @@ import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
-import {SHADOW_COLOR_1} from '@app/variables/common';
+import {SHADOW_L} from '@app/variables/shadows';
 
 import {DataContent, First, Icon, IconButton, IconsName} from '../ui';
 
@@ -214,18 +214,10 @@ const styles = createTheme({
   },
   actionMenu: {
     position: 'absolute',
-    backgroundColor: Color.bg1,
     width: ACTION_MENU_WIDTH,
     borderRadius: 12,
     paddingHorizontal: ACTION_MENU_PADDING_HORIZONTAL,
-    shadowColor: SHADOW_COLOR_1,
-    shadowOpacity: 1,
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowRadius: 24,
-    elevation: 13,
+    ...SHADOW_L,
   },
   actionMenuOverlay: {
     width: '100%',
