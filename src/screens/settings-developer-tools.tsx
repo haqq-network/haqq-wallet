@@ -197,7 +197,8 @@ export const SettingsDeveloperTools = observer(() => {
       <Input
         placeholder="{ method: 'eth_sendTransactrion', params: [...] }"
         value={rawSignData}
-        error={!isValidRawSignData}
+        error={!!rawSignData && !isValidRawSignData}
+        multiline
         onChangeText={data => {
           setRawSignData(data);
           try {
@@ -218,10 +219,18 @@ export const SettingsDeveloperTools = observer(() => {
               title: I18N.selectAccount,
               wallets: Wallet.getAllVisible(),
             });
+            const providers = Provider.getAll();
+            const initialProviderId = app.provider.id;
+            const providerId = await awaitForProvider({
+              providers,
+              initialProviderId: initialProviderId!,
+              title: I18N.networks,
+            });
             const result = await awaitForJsonRpcSign({
               metadata: HAQQ_METADATA,
               request: signData!,
               selectedAccount: address,
+              chainId: Provider.getById(providerId)?.ethChainId,
             });
             Alert.alert('Result', result, [
               {text: 'Close'},
@@ -232,6 +241,13 @@ export const SettingsDeveloperTools = observer(() => {
           }
         }}
         variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Button
+        title="Clear"
+        disabled={!rawSignData}
+        onPress={() => setRawSignData('')}
+        variant={ButtonVariant.second}
       />
       <Spacer height={8} />
       <Title text="WalletConnect" />
