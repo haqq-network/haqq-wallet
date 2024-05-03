@@ -14,7 +14,7 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {SHADOW_COLOR_1} from '@app/variables/common';
+import {SHADOW_L} from '@app/variables/shadows';
 
 export type TrackActivityProps = {
   onClickContinue: () => void;
@@ -120,21 +120,13 @@ const styles = createTheme({
     marginBottom: 4,
   },
   imageWrapper: {
-    backgroundColor: Color.bg1,
     marginBottom: 20,
     borderColor: Color.graphicSecond1,
     borderWidth: 1,
     borderRadius: 12,
-    shadowColor: SHADOW_COLOR_1,
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowRadius: 8,
-    shadowOpacity: 1,
-    elevation: 13,
     paddingHorizontal: 16,
     paddingVertical: 10,
+    ...SHADOW_L,
   },
   lottie: {
     width: '100%',

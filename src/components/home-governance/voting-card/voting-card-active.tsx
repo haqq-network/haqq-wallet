@@ -24,7 +24,7 @@ import {
 import {useTimer} from '@app/hooks/use-timer';
 import {I18N} from '@app/i18n';
 import {TimerUpdateInterval, VoteNamesType} from '@app/types';
-import {SHADOW_COLOR_1} from '@app/variables/common';
+import {SHADOW_L} from '@app/variables/shadows';
 
 type VotingCardActiveProps = {
   item: Proposal;
@@ -191,14 +191,7 @@ const styles = createTheme({
   backgroundContainer: {
     borderRadius: 12,
     paddingTop: 6,
-    shadowColor: SHADOW_COLOR_1,
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowRadius: 8,
-    shadowOpacity: 1,
-    elevation: 13,
+    ...SHADOW_L,
   },
   container: {
     backgroundColor: Color.bg1,

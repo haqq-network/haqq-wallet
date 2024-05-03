@@ -8,7 +8,7 @@ import {cleanNumber, createTheme} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Raffle} from '@app/types';
-import {SHADOW_COLOR_1} from '@app/variables/common';
+import {SHADOW_L} from '@app/variables/shadows';
 
 import {
   Button,
@@ -207,19 +207,11 @@ const styles = createTheme({
   },
   stakingCard: {
     borderRadius: 12,
-    backgroundColor: Color.bg1,
     marginBottom: 20,
     borderColor: Color.graphicSecond1,
     borderWidth: 1,
-    shadowColor: SHADOW_COLOR_1,
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowRadius: 8,
-    shadowOpacity: 1,
-    elevation: 13,
     padding: 16,
+    ...SHADOW_L,
   },
   earnStakingAnimation: {
     width: 62,
