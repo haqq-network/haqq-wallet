@@ -13,7 +13,7 @@ import {sleep} from '@app/utils';
 import {ANIMATION_DURATION} from '@app/variables/common';
 
 type Props = {
-  onCloseProp: () => void;
+  onCloseProp?: () => void;
 };
 
 export const PopupNotificationScreen = memo(({onCloseProp}: Props) => {
@@ -23,7 +23,7 @@ export const PopupNotificationScreen = memo(({onCloseProp}: Props) => {
     async (close: () => void) => {
       close();
       await sleep(ANIMATION_DURATION);
-      onCloseProp();
+      onCloseProp?.();
       goBack();
       await onBannerNotificationsTurnOn(
         PopupNotificationBannerTypes.notification,
@@ -36,7 +36,7 @@ export const PopupNotificationScreen = memo(({onCloseProp}: Props) => {
     async (close: () => void) => {
       close();
       await sleep(ANIMATION_DURATION);
-      onCloseProp();
+      onCloseProp?.();
       goBack();
       await onBannerNotificationsSnooze(
         PopupNotificationBannerTypes.notification,
