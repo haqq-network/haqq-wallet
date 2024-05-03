@@ -141,7 +141,7 @@ export const TransactionSum = ({
       <Spacer centered>
         <SumBlock
           value={amounts.amount}
-          error={amounts.error.replace('ISLM', token.symbol || CURRENCY_NAME)}
+          error={amounts.error}
           currency={token.symbol || ''}
           balance={token.value}
           onChange={amounts.setAmount}
