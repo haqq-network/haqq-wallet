@@ -10,7 +10,7 @@ import {VotingLine} from '@app/components/voting-line';
 import {createTheme} from '@app/helpers';
 import {proposalVotes} from '@app/helpers/governance';
 import {I18N} from '@app/i18n';
-import {SHADOW_COLOR_1} from '@app/variables/common';
+import {SHADOW_L} from '@app/variables/shadows';
 
 export enum VotingCompletedStatuses {
   passed = I18N.homeGovernanceVotingCardPassed,
@@ -104,14 +104,7 @@ const styles = createTheme({
     paddingTop: 6,
     borderWidth: 1,
     borderColor: Color.graphicSecond1,
-    shadowColor: SHADOW_COLOR_1,
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    backgroundColor: Color.bg1,
-    shadowRadius: 24,
-    elevation: 13,
+    ...SHADOW_L,
   },
   container: {
     borderRadius: 12,

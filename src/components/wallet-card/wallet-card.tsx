@@ -7,13 +7,12 @@ import {
   useWindowDimensions,
 } from 'react-native';
 
-import {Color} from '@app/colors';
 import {Card, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useIsBalancesFirstSync} from '@app/hooks/use-is-balances-sync';
 import {Wallet} from '@app/models/wallet';
 import {BalanceData} from '@app/types';
-import {SHADOW_COLOR_1} from '@app/variables/common';
+import {SHADOW_L} from '@app/variables/shadows';
 
 import {BalanceInfoDetails} from './balance-info-details';
 import {BalanceInfoTotal} from './balance-info-total';
@@ -125,14 +124,6 @@ export const WalletCard = ({
 const styles = createTheme({
   container: {
     justifyContent: 'space-between',
-    backgroundColor: Color.bg1,
-    shadowColor: SHADOW_COLOR_1,
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowRadius: 8,
-    shadowOpacity: 1,
-    elevation: 13,
+    ...SHADOW_L,
   },
 });

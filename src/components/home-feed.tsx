@@ -1,6 +1,6 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 
-import {useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect, useScrollToTop} from '@react-navigation/native';
 import {isAfter} from 'date-fns';
 import {observer} from 'mobx-react';
 import {RefreshControl, ScrollView} from 'react-native';
@@ -23,6 +23,8 @@ import {ModalType} from '@app/types';
 import {WidgetRoot} from '@app/widgets';
 
 export const HomeFeed = observer(() => {
+  const ref = useRef(null);
+  useScrollToTop(ref);
   const [lastUpdateTimestamp, setLastUpdate] = useState(Date.now());
   const [refreshing, setRefreshing] = useState(false);
   const navigation = useTypedNavigation<HomeFeedStackParamList>();
@@ -66,6 +68,7 @@ export const HomeFeed = observer(() => {
 
   return (
     <ScrollView
+      ref={ref}
       testID="home-feed-container"
       contentContainerStyle={styles.contentContainerStyle}
       style={styles.container}

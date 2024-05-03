@@ -32,6 +32,7 @@ import {
 import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForCaptcha} from '@app/helpers/await-for-captcha';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
+import {awaitForProvider} from '@app/helpers/await-for-provider';
 import {
   QRScannerTypeEnum,
   awaitForScanQr,
@@ -580,7 +581,7 @@ export const SettingsTestScreen = observer(() => {
               Clipboard.setString(pushToken);
               toastMessage('Copied to clipboard');
             }}>
-            {uid}
+            {pushToken}
           </Text>
           <Spacer height={8} />
         </>
@@ -699,7 +700,8 @@ export const SettingsTestScreen = observer(() => {
       <Input
         placeholder="{ method: 'eth_sendTransactrion', params: [...] }"
         value={rawSignData}
-        error={!isValidRawSignData}
+        error={!!rawSignData && !isValidRawSignData}
+        multiline
         onChangeText={data => {
           setRawSignData(data);
           try {
@@ -714,13 +716,41 @@ export const SettingsTestScreen = observer(() => {
       <Button
         title="sign request"
         disabled={!isValidRawSignData}
-        onPress={() => {
-          awaitForJsonRpcSign({
-            metadata: HAQQ_METADATA,
-            request: signData!,
-          });
+        onPress={async () => {
+          try {
+            const address = await awaitForWallet({
+              title: I18N.selectAccount,
+              wallets: Wallet.getAllVisible(),
+            });
+            const providers = Provider.getAll();
+            const initialProviderId = app.provider.id;
+            const providerId = await awaitForProvider({
+              providers,
+              initialProviderId: initialProviderId!,
+              title: I18N.networks,
+            });
+            const result = await awaitForJsonRpcSign({
+              metadata: HAQQ_METADATA,
+              request: signData!,
+              selectedAccount: address,
+              chainId: Provider.getById(providerId)?.ethChainId,
+            });
+            Alert.alert('Result', result, [
+              {text: 'Close'},
+              {text: 'Copy', onPress: () => Clipboard.setString(result)},
+            ]);
+          } catch (err) {
+            Alert.alert('error', JSON.stringify(err, null, 2));
+          }
         }}
         variant={ButtonVariant.contained}
+      />
+      <Spacer height={8} />
+      <Button
+        title="Clear"
+        disabled={!rawSignData}
+        onPress={() => setRawSignData('')}
+        variant={ButtonVariant.second}
       />
       <Spacer height={8} />
       <Title text="WalletConnect" />

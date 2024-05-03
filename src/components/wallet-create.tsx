@@ -15,7 +15,8 @@ import {
 } from '@app/components/ui';
 import {createTheme, getWindowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {MAGIC_CARD_HEIGHT, SHADOW_COLOR_1} from '@app/variables/common';
+import {MAGIC_CARD_HEIGHT} from '@app/variables/common';
+import {SHADOW_L} from '@app/variables/shadows';
 
 export type BalanceProps = {
   testID?: string;
@@ -86,18 +87,9 @@ const styles = createTheme({
     borderRadius: 16,
     paddingHorizontal: 20,
     paddingVertical: 28,
-    backgroundColor: Color.bg1,
-    shadowColor: SHADOW_COLOR_1,
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowRadius: 8,
-    shadowOpacity: 1,
-    elevation: 13,
-
     width: () => getWindowWidth() - 40,
     height: () => Math.max((getWindowWidth() - 40) * MAGIC_CARD_HEIGHT, 212),
+    ...SHADOW_L,
   },
   title: {
     marginBottom: 4,

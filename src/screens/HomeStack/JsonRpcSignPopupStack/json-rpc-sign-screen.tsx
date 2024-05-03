@@ -1,11 +1,4 @@
-import React, {
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {ethers} from 'ethers';
 
@@ -14,18 +7,18 @@ import {Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {ModalStore, showModal} from '@app/helpers';
-import {PhishingMessageChecker} from '@app/helpers/phishing-message-checker';
+import {
+  EthereumMessageChecker,
+  EthereumSignInMessage,
+} from '@app/helpers/ethereum-message-checker';
 import {getHost} from '@app/helpers/web3-browser-utils';
 import {Whitelist} from '@app/helpers/whitelist';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
+import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {useRemoteConfigVar} from '@app/hooks/use-remote-config';
 import {Wallet} from '@app/models/wallet';
-import {
-  HomeStackParamList,
-  HomeStackRoutes,
-  SettingsStackRoutes,
-} from '@app/route-types';
+import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {Balance} from '@app/services/balance';
 import {EthSignErrorDataDetails} from '@app/services/eth-sign';
 import {SignJsonRpcRequest} from '@app/services/sign-json-rpc-request';
@@ -47,8 +40,13 @@ export const JsonRpcSignScreen = memo(() => {
   const [phishingTxRequest, setPhisingTxRequest] =
     useState<ethers.Transaction | null>(null);
   const [messageIsHex, setMessageIsHex] = useState<boolean>(false);
-  const blindSignEnabled = useRef(app.blindSignEnabled).current;
+  const [ethereumSignInMessage, setEthereumSignInMessage] =
+    useState<EthereumSignInMessage | null>(null);
+  const [blindSignEnabled, setBlindSignEnabled] = useState(
+    app.blindSignEnabled,
+  );
 
+  const {animate} = useLayoutAnimation();
   const navigation = useTypedNavigation<HomeStackParamList>();
   const {
     metadata,
@@ -83,13 +81,11 @@ export const JsonRpcSignScreen = memo(() => {
     [navigation],
   );
 
-  const onPressGoToSecuritySettings = useCallback(() => {
-    onPressReject();
-    // @ts-ignore
-    navigation.navigate('homeSettings', {
-      screen: SettingsStackRoutes.SettingsSecurity,
-    });
-  }, [navigation, onPressReject]);
+  const onPressAllowOnceSignDangerousTx = useCallback(async () => {
+    const confirmed = await app.requsetPinConfirmation();
+    animate();
+    setBlindSignEnabled(confirmed);
+  }, [setBlindSignEnabled, animate]);
 
   const onPressSign = useCallback(async () => {
     try {
@@ -100,7 +96,7 @@ export const JsonRpcSignScreen = memo(() => {
         });
       }
 
-      if (messageIsHex && blindSignEnabled === false) {
+      if (messageIsHex && blindSignEnabled === false && isAllowed === false) {
         return Logger.error(
           'JsonRpcSignScreen:onPressSign hex blind sign does not allowed',
           {
@@ -180,9 +176,12 @@ export const JsonRpcSignScreen = memo(() => {
   }, [isTransaction, request]);
 
   useEffect(() => {
-    const {isHex, parsedTx} = PhishingMessageChecker.check(request);
+    const {isHex, parsedTx, signInMessage} =
+      EthereumMessageChecker.checkRequest(request);
+
     setPhisingTxRequest(parsedTx);
     setMessageIsHex(isHex);
+    setEthereumSignInMessage(signInMessage);
   }, [request]);
 
   useEffectAsync(async () => {
@@ -241,9 +240,10 @@ export const JsonRpcSignScreen = memo(() => {
       phishingTxRequest={phishingTxRequest}
       messageIsHex={messageIsHex}
       blindSignEnabled={blindSignEnabled}
+      ethereumSignInMessage={ethereumSignInMessage}
       onPressReject={onPressReject}
       onPressSign={onPressSign}
-      onPressGoToSecuritySettings={onPressGoToSecuritySettings}
+      onPressAllowOnceSignDangerousTx={onPressAllowOnceSignDangerousTx}
     />
   );
 });
