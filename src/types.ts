@@ -1075,10 +1075,8 @@ export type Modals = {
     details?: string;
     onClose?: () => void;
   };
-  turnOnPushNotifications: {
-    onClose?: () => void;
-    onSuccess: () => void;
-    onFailed: () => void;
+  popupNotification: {
+    onCloseProp?: () => void;
   };
 };
 
@@ -1115,7 +1113,7 @@ export enum ModalType {
   keystoneQR = 'keystoneQR',
   sssLimitReached = 'sssLimitReached',
   pinError = 'pinError',
-  turnOnPushNotifications = 'turnOnPushNotifications',
+  popupNotification = 'popupNotification',
 }
 
 export interface BaseNewsItem {

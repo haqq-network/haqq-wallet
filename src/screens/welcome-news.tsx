@@ -1,13 +1,13 @@
 import React, {memo, useCallback, useEffect, useState} from 'react';
 
 import {WelcomeNews} from '@app/components/welcome-news';
-import {onBannerNotificationsTurnOn} from '@app/event-actions/on-banner-notifications-turn-on';
 import {onNewsSync} from '@app/event-actions/on-news-sync';
+import {showModal} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
 import {News} from '@app/models/news';
 import {VariablesBool} from '@app/models/variables-bool';
 import {WelcomeStackParamList, WelcomeStackRoutes} from '@app/route-types';
-import {MarketingEvents, PopupNotificationBannerTypes} from '@app/types';
+import {MarketingEvents, ModalType} from '@app/types';
 
 export const WelcomeNewsScreen = memo(() => {
   const navigation = useTypedNavigation<WelcomeStackParamList>();
@@ -18,7 +18,7 @@ export const WelcomeNewsScreen = memo(() => {
 
   useEffect(() => {
     if (!VariablesBool.exists('notifications')) {
-      onBannerNotificationsTurnOn(PopupNotificationBannerTypes.notification);
+      showModal(ModalType.popupNotification);
     }
 
     onNewsSync().then(() => {
