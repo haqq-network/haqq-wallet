@@ -601,6 +601,12 @@ export type RootStackParamList = {
   nftItemDetails: {
     item: NftItem;
   };
+  newsDetailsPushNotification: {
+    id: string;
+    openEvent: MarketingEvents;
+    linkEvent: MarketingEvents;
+    scrollEvent: MarketingEvents;
+  };
 };
 
 export type StackPresentationTypes =

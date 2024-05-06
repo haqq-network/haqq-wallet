@@ -16,7 +16,9 @@ export const DismissPopupButton = () => {
       style={page.container}
       testID="dismissPopupButton"
       onPress={() => {
-        if (navigation.canGoBack()) {
+        try {
+          navigation.pop();
+        } catch (e) {
           navigation.goBack();
         }
       }}>

@@ -4,7 +4,7 @@ import {News} from '@app/models/news';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
-import {NewsStackRoutes} from '@app/route-types';
+import {HomeStackRoutes} from '@app/route-types';
 import {Backend} from '@app/services/backend';
 import {MarketingEvents, RaffleStatus, RemoteMessage} from '@app/types';
 import {WEI} from '@app/variables/common';
@@ -51,15 +51,12 @@ export async function onPushNotification(message: RemoteMessage<Data>) {
 
         VariablesBool.set('isNewNews', true);
       }
-      navigator.navigate('homeNews', {
-        // @ts-ignore
-        screen: NewsStackRoutes.NewsDetail,
-        params: {
-          id: id,
-          openEvent: MarketingEvents.newsOpenPushItem,
-          linkEvent: MarketingEvents.newsOpenPushLink,
-          scrollEvent: MarketingEvents.newsScrolledPushItem,
-        },
+
+      navigator.navigate(HomeStackRoutes.NewsDetailPushNotification, {
+        id: id,
+        openEvent: MarketingEvents.newsOpenPushItem,
+        linkEvent: MarketingEvents.newsOpenPushLink,
+        scrollEvent: MarketingEvents.newsScrolledPushItem,
       });
       break;
     case PushNotificationTypes.raffle:

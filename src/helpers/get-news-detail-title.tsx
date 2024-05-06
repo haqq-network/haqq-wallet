@@ -25,7 +25,10 @@ export function getNewsDetailTitle(props: {
 }
 
 export function getNewsDetailAppTitle(props: {
-  route: RouteProp<RootStackParamList, 'newsDetail'>;
+  route: RouteProp<
+    RootStackParamList,
+    'newsDetail' | 'newsDetailsPushNotification'
+  >;
   navigation: any;
 }): NativeStackNavigationOptions {
   const news = News.getById(props.route.params.id);

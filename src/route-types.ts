@@ -363,6 +363,7 @@ export enum HomeStackRoutes {
   ValueSelector = 'valueSelector',
   BrowserPrivacyPopupStack = 'browserPrivacyPopupStack',
   Device = '_device',
+  NewsDetailPushNotification = 'newsDetailsPushNotification',
 }
 
 export type HomeStackParamList = {
@@ -452,6 +453,12 @@ export type HomeStackParamList = {
   [HomeStackRoutes.BrowserPrivacyPopupStack]: {
     screen: 'browserPrivacyDetails' | 'browserPrivacy';
     params?: RootStackParamList[RootStackParamList['browserPrivacyPopupStack']['screen']];
+  };
+  [HomeStackRoutes.NewsDetailPushNotification]: {
+    id: string;
+    openEvent: MarketingEvents;
+    linkEvent: MarketingEvents;
+    scrollEvent: MarketingEvents;
   };
 };
 
