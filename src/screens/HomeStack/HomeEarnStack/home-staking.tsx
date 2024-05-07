@@ -7,7 +7,6 @@ import {HomeStaking} from '@app/components/home-staking';
 import {app} from '@app/contexts';
 import {onStakingRewards} from '@app/event-actions/on-staking-rewards';
 import {Events} from '@app/events';
-import {abortProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {reduceAmounts} from '@app/helpers/staking';
 import {useTypedNavigation} from '@app/hooks';
 import {
@@ -94,12 +93,6 @@ export const HomeStakingScreen = observer(() => {
     const interval = setInterval(sync, 15000);
     return () => {
       clearInterval(interval);
-    };
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      visible.map(w => abortProviderInstanceForWallet(w));
     };
   }, []);
 

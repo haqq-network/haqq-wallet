@@ -4,10 +4,7 @@ import {observer} from 'mobx-react';
 
 import {StakingUnDelegatePreview} from '@app/components/staking-undelegate-preview';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
-import {
-  abortProviderInstanceForWallet,
-  getProviderInstanceForWallet,
-} from '@app/helpers/provider-instance';
+import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useError} from '@app/hooks/use-error';
 import {Wallet} from '@app/models/wallet';
@@ -101,12 +98,6 @@ export const StakingUnDelegatePreviewScreen = observer(() => {
       }
     }
   }, [wallet, cosmos, validator, amount, navigation, fee]);
-
-  useEffect(() => {
-    return () => {
-      wallet && abortProviderInstanceForWallet(wallet);
-    };
-  }, [wallet]);
 
   return (
     <StakingUnDelegatePreview
