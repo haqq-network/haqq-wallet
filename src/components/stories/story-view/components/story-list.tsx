@@ -90,7 +90,11 @@ const StoryList: FC<StoryListProps> = memo(
             active={isActive}
             activeStory={activeStory}
           />
-          <StoryOverlay stories={stories} activeStory={activeStory} />
+          <StoryOverlay
+            onClose={props.onClose}
+            stories={stories}
+            activeStory={activeStory}
+          />
         </Animated.View>
       </StoryAnimation>
     );
