@@ -675,7 +675,7 @@ PODS:
     - React-Core
   - RNCMaskedView (0.3.0):
     - React-Core
-  - RNDeviceInfo (10.13.1):
+  - RNDeviceInfo (10.13.2):
     - React-Core
   - RNFBAnalytics (19.0.1):
     - Firebase/Analytics (= 10.22.0)
@@ -707,7 +707,7 @@ PODS:
     - React
   - RNPermissions (3.10.0):
     - React-Core
-  - RNReanimated (3.7.1):
+  - RNReanimated (3.10.0):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
     - ReactCommon/turbomodule/core
@@ -1058,7 +1058,7 @@ SPEC CHECKSUMS:
   Adjust: 41d0d5c031409aebe7fb1f5703ff0d3306133439
   AppAuth: a13994980c1ec792f7e2e665acd4d4aa6be43240
   BlastedImage: 7dd925da7db9dcf1120efc0009bad5492e843b1e
-  boost: 7dcd2de282d72e344012f7d6564d024930a6a440
+  boost: 0a937fbcfdd646fca221c4f1d9750d7ccfdfc2dc
   BVLinearGradient: fbe308a1d19a8133f69e033abc85d8008644f5e3
   CryptoSwift: c4f2debceb38bf44c80659afe009f71e23e4a082
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
@@ -1155,7 +1155,7 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: 4b98ac3c64efa4e35c1197cb0c5ca5e9f5d4c666
   RNCClipboard: 3f0451a8100393908bea5c5c5b16f96d45f30bfc
   RNCMaskedView: f7c74478c83c4fdfc5cf4df51f80c0dd5cf125c6
-  RNDeviceInfo: 4f9c7cfd6b9db1b05eb919620a001cf35b536423
+  RNDeviceInfo: 42aadf1282ffa0a88dc38a504a7be145eb010dfa
   RNFBAnalytics: 3a162279c2a881c56c2cdf142b9851d4015f97a6
   RNFBApp: d0be9224f318cfd6501f1f83809453800cd04868
   RNFBDynamicLinks: 146890093923bcbdbd4efc0e0e30f75476d14490
@@ -1166,7 +1166,7 @@ SPEC CHECKSUMS:
   RNKeychain: ff836453cba46938e0e9e4c22e43d43fa2c90333
   RNOS: bba50dcae32026943877b163e93d4e1e0eca48eb
   RNPermissions: 81b4a5e0f9fdb3b145e9622c199df8f629c51f51
-  RNReanimated: 43675f1f0e704abe8ebf953fd79b00e66302cda2
+  RNReanimated: 93610716991840cff571fd75e3b61e97ae0d7919
   RNScreens: 3c5b9f4a9dcde752466854b6109b79c0e205dad3
   RNSentry: 4e4fc87b53002c015f644cb7207d4b598bc3703f
   RNSVG: 80584470ff1ffc7994923ea135a3e5ad825546b9
