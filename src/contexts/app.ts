@@ -49,7 +49,6 @@ import {
 } from '../types';
 import {
   LIGHT_GRAPHIC_GREEN_1,
-  MAINNET_ETH_CHAIN_ID,
   MAIN_NETWORK_ID,
   TEST_NETWORK_ID,
 } from '../variables/common';
@@ -331,10 +330,7 @@ class App extends AsyncEventEmitter {
   }
 
   get isTesterMode() {
-    return (
-      (VariablesBool.get('isTesterMode') ?? false) &&
-      this.provider.ethChainId !== MAINNET_ETH_CHAIN_ID
-    );
+    return VariablesBool.get('isTesterMode') ?? false;
   }
 
   set isTesterMode(value) {
