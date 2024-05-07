@@ -6,8 +6,10 @@ import {SharedValue} from 'react-native-reanimated';
 import {StoryItemProps} from '@app/components/stories/story-view/core/dto/storiesViewDTO';
 import {Button, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {openURL} from '@app/helpers/url';
 import {ArrayElement} from '@app/types';
-import {generateUUID} from '@app/utils';
+import {generateUUID, sleep} from '@app/utils';
+import {ANIMATION_DURATION} from '@app/variables/common';
 
 type MarkupItem = ArrayElement<StoryItemProps['markup']>;
 
@@ -24,16 +26,29 @@ const OverlayMap: IOverlayItemMap = {
 type Props = {
   stories: StoryItemProps[];
   activeStory: SharedValue<string | undefined>;
+  onClose: () => void;
 };
 
-const StoryOverlay = memo(({stories, activeStory}: Props) => {
+const StoryOverlay = memo(({stories, activeStory, onClose}: Props) => {
   const markup = stories.find(item => item.id === activeStory?.value)?.markup;
 
   const renderItem = useCallback((item: MarkupItem): ReactNode => {
     const Element = OverlayMap[item.row.type];
-    const props = item.row;
+    let props = item.row;
     if (!Element) {
       return null;
+    }
+    if (item.row.type === 'button') {
+      props = {
+        ...props,
+        onPress: async () => {
+          onClose();
+          await sleep(ANIMATION_DURATION * 3);
+          if (item.row.target) {
+            openURL(item.row.target);
+          }
+        },
+      };
     }
     return <Element key={generateUUID()} {...props} />;
   }, []);

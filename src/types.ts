@@ -1817,6 +1817,8 @@ export type IStory = {
         event?: MarketingEvents;
         text: string;
         type: 'button' | 'text' | 'spacer';
+        onPress?: () => void;
+        target?: string;
       };
     }[];
     attachment: {
