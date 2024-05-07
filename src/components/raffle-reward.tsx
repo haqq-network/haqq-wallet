@@ -34,9 +34,12 @@ export const RaffleReward = ({item, onPressUnderstood}: RaffleRewardProps) => {
   return (
     <SafeAreaView style={styles.container}>
       <Spacer flex={1} />
-      <View style={styles.animation}>
-        <LottieWrap source={animation} autoPlay loop={false} />
-      </View>
+      <LottieWrap
+        style={styles.animation}
+        source={animation}
+        autoPlay
+        loop={false}
+      />
       <Spacer height={80} />
       <Text i18n={I18N.raffleRewardСongratulations} t4 />
       <Spacer height={13} />
