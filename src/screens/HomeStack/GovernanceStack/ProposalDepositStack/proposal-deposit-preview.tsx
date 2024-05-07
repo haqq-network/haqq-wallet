@@ -1,13 +1,10 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 
 import {observer} from 'mobx-react';
 
 import {ProposalDepositPreview} from '@app/components/proposal-deposit-preview';
 import {app} from '@app/contexts';
-import {
-  abortProviderInstanceForWallet,
-  getProviderInstanceForWallet,
-} from '@app/helpers/provider-instance';
+import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {Wallet} from '@app/models/wallet';
 import {
@@ -62,12 +59,6 @@ export const ProposalDepositPreviewScreen = observer(() => {
       }
     }
   }, [wallet, amount, fee, navigation, proposal]);
-
-  useEffect(() => {
-    return () => {
-      wallet && abortProviderInstanceForWallet(wallet);
-    };
-  }, [wallet]);
 
   return (
     <ProposalDepositPreview

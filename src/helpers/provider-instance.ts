@@ -14,38 +14,6 @@ import {LEDGER_APP} from '@app/variables/common';
 
 import {awaitForQRSign} from './await-for-qr-sign';
 
-const cache = new Map();
-
-function getId(wallet: Wallet) {
-  switch (wallet.type) {
-    case WalletType.mnemonic:
-    case WalletType.hot:
-    case WalletType.ledgerBt:
-    case WalletType.sss:
-      return wallet.accountId ?? '';
-  }
-}
-
-export function hasProviderInstanceForWallet(wallet: Wallet) {
-  return cache.has(getId(wallet));
-}
-
-export function abortProviderInstanceForWallet(wallet: Wallet) {
-  if (hasProviderInstanceForWallet(wallet)) {
-    cache.get(getId(wallet)).abort();
-  }
-}
-
-export function removeProviderInstanceForWallet(wallet: Wallet) {
-  let id = getId(wallet);
-  let instance = cache.get(id);
-  if (instance) {
-    instance.abort();
-    instance = null;
-    cache.delete(id);
-  }
-}
-
 /**
  * getProviderInstanceForWallet helper
  * @param {Wallet} wallet
@@ -54,14 +22,7 @@ export function removeProviderInstanceForWallet(wallet: Wallet) {
 export async function getProviderInstanceForWallet(
   wallet: Wallet,
   skipAwaitForLedgerCall: boolean = false,
-  forceUpdate: boolean = false,
 ): Promise<ProviderInterface> {
-  const id = getId(wallet);
-
-  if (cache.has(id) && !forceUpdate) {
-    return cache.get(id);
-  }
-
   let provider: ProviderInterface;
   switch (wallet.type) {
     case WalletType.mnemonic:
@@ -84,7 +45,6 @@ export async function getProviderInstanceForWallet(
       });
       if (!skipAwaitForLedgerCall) {
         awaitForLedger(provider);
-        cache.set(id, provider);
       }
       break;
     }
@@ -113,12 +73,10 @@ export async function getProviderInstanceForWallet(
       Logger.captureException(error, 'provider-catch-error', {
         wallet,
         skipAwaitForLedgerCall,
-        forceUpdate,
         source: source,
         error: error,
       });
     }
   });
-  cache.set(id, provider);
   return provider;
 }
