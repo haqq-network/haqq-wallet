@@ -26,6 +26,7 @@ import {CustomProviderEmail} from '@app/components/modals/custom-provider-email'
 import {LocationUnauthorized} from '@app/components/modals/location-unauthorized';
 import {ProvidersBottomSheet} from '@app/components/modals/providers-bottom-sheet';
 import {RaffleAgreement} from '@app/components/modals/raffle-agreement';
+import {RemoveSSS} from '@app/components/modals/remove-sss';
 import {SSSLimitReached} from '@app/components/modals/sss-limit-reached';
 import {TransactionError} from '@app/components/modals/transaction-error';
 import {ViewErrorDetails} from '@app/components/modals/view-error-details';
@@ -58,6 +59,7 @@ const AUTO_CLOSE_DISABLED = [
   ModalType.keystoneScanner,
   ModalType.keystoneQR,
   ModalType.cloudShareNotFound,
+  ModalType.removeSSS,
 ];
 
 export const ModalWrapper = ({
@@ -155,6 +157,8 @@ export const ModalWrapper = ({
         return <SSSLimitReached {...modal} onClose={onCloseModalPress} />;
       case ModalType.pinError:
         return <PinErrorModal {...modal} onClose={onCloseModalPress} />;
+      case ModalType.removeSSS:
+        return <RemoveSSS {...modal} onClose={onCloseModalPress} />;
       default:
         return null;
     }

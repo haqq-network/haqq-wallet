@@ -1103,6 +1103,9 @@ export type Modals = {
     details?: string;
     onClose?: () => void;
   };
+  removeSSS: {
+    onClose?: () => void;
+  };
 };
 
 export enum ModalType {
@@ -1138,6 +1141,7 @@ export enum ModalType {
   keystoneQR = 'keystoneQR',
   sssLimitReached = 'sssLimitReached',
   pinError = 'pinError',
+  removeSSS = 'removeSSS',
 }
 
 export interface BaseNewsItem {

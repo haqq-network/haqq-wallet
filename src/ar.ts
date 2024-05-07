@@ -1092,4 +1092,14 @@ export const ar = {
   [I18N.jsonRpcSignParsedMsg]: 'تم التحليل:',
   [I18N.settingsSecurityHexBlindSignDescription]:
     'تمكين التوقيع الأعمى لرسائل الهكس',
+  [I18N.removeSSSTitle]: 'Do you want to delete your social login?',
+  [I18N.removeSSSDescription]:
+    'Be careful! A social login will allow you to restore your accounts.',
+  [I18N.removeSSSDescriptionImportant]:
+    ' Deleting it may lead to the loss of accounts. Make sure you have a Backup Phrase',
+  [I18N.removeSSSSecondary]: 'Keep social login',
+  [I18N.removeSSSPrimary]: 'Delete',
+  [I18N.removeSSSAlertTitle]: 'Are you sure you want to delete social login?',
+  [I18N.removeSSSAlertDescription]:
+    'Take note! Social login allows you to easily restore your accounts. Deleting it may lead to the loss of your accounts. Make sure you have your Backup Phrase intact',
 };

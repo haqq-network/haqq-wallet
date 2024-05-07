@@ -233,6 +233,9 @@ const getTestModals = (): TestModals => {
     pinError: {
       details: 'test error',
     },
+    removeSSS: {
+      onClose: () => logger.log('removeSSS closed'),
+    },
   };
 
   if (wallets.length) {
