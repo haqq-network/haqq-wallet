@@ -325,7 +325,7 @@ const StoryContainer = forwardRef<
                     startAnimation(
                       undefined,
                       value !== undefined
-                        ? videoDuration ?? value
+                        ? videoDuration ?? current?.duration ?? value
                         : current?.duration ?? duration,
                     );
                   }}
