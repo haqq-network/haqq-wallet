@@ -129,6 +129,7 @@ const styles = createTheme({
     ...SHADOW_L,
   },
   lottie: {
-    width: '100%',
+    width: 295,
+    height: 64,
   },
 });

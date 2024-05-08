@@ -52,7 +52,8 @@ export const LedgerAttention = ({
 
 const page = createTheme({
   animation: {
-    width: '100%',
+    height: 200,
+    width: 296,
   },
   modalView: {
     backgroundColor: Color.bg1,

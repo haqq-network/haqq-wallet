@@ -34,7 +34,12 @@ export const Finish = ({onFinish, testID, title}: FinishProps) => {
   return (
     <PopupContainer testID={testID}>
       <Spacer>
-        <LottieWrap source={animation} autoPlay={true} loop={false} />
+        <LottieWrap
+          style={styles.animation}
+          source={animation}
+          autoPlay={true}
+          loop={false}
+        />
       </Spacer>
       <Text t4 i18n={title} style={styles.title} testID={`${testID}_title`} />
       <Button
@@ -49,6 +54,10 @@ export const Finish = ({onFinish, testID, title}: FinishProps) => {
 };
 
 const styles = StyleSheet.create({
+  animation: {
+    height: 380,
+    width: 380,
+  },
   title: {
     marginBottom: 76,
     textAlign: 'center',
