@@ -246,7 +246,9 @@ const StoryContainer = forwardRef<
         }
       } else if (locationX > (WIDTH * 2) / 3) {
         paused.value = false;
-        EventTracker.instance.trackEvent(MarketingEvents.storySkip);
+        EventTracker.instance.trackEvent(MarketingEvents.storySkip, {
+          id: currentStory.value!,
+        });
         toNextStory();
       }
     };
@@ -299,8 +301,10 @@ const StoryContainer = forwardRef<
     );
 
     const fireOpenEvent = useCallback(() => {
-      EventTracker.instance.trackEvent(MarketingEvents.storyOpen);
-    }, []);
+      EventTracker.instance.trackEvent(MarketingEvents.storyOpen, {
+        id: currentStory.value!,
+      });
+    }, [currentStory.value]);
     const debouncedOpenEvent = _.debounce(fireOpenEvent, 1000, {
       leading: true,
       trailing: false,

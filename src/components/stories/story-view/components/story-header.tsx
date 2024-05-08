@@ -11,26 +11,30 @@ import {MarketingEvents} from '@app/types';
 import {WIDTH} from '../core/constants';
 import {StoryHeaderProps} from '../core/dto/componentsDTO';
 
-const StoryHeader: FC<StoryHeaderProps> = memo(({onClose}) => {
-  const width = WIDTH - styles.container.left * 2;
+const StoryHeader: FC<StoryHeaderProps & {storyID: string}> = memo(
+  ({onClose, storyID}) => {
+    const width = WIDTH - styles.container.left * 2;
 
-  const onClosePress = useCallback(() => {
-    EventTracker.instance.trackEvent(MarketingEvents.storyFinished);
-    onClose();
-  }, [onClose]);
+    const onClosePress = useCallback(() => {
+      EventTracker.instance.trackEvent(MarketingEvents.storyFinished, {
+        id: storyID,
+      });
+      onClose();
+    }, [onClose]);
 
-  return (
-    <View style={[styles.container, {width}]}>
-      <View style={styles.left} />
-      <TouchableOpacity
-        onPress={onClosePress}
-        hitSlop={16}
-        testID="storyCloseButton">
-        <Icon name="close_circle" color={Color.graphicSecond2} i24 />
-      </TouchableOpacity>
-    </View>
-  );
-});
+    return (
+      <View style={[styles.container, {width}]}>
+        <View style={styles.left} />
+        <TouchableOpacity
+          onPress={onClosePress}
+          hitSlop={16}
+          testID="storyCloseButton">
+          <Icon name="close_circle" color={Color.graphicSecond2} i24 />
+        </TouchableOpacity>
+      </View>
+    );
+  },
+);
 
 const styles = createTheme({
   container: {
