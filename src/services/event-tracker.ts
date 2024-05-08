@@ -47,6 +47,10 @@ const EventsNameMap: Record<MarketingEvents, string> = {
   [MarketingEvents.stakingDelegate]: 'staking delegate',
   [MarketingEvents.stakingValidators]: 'staking validators',
   [MarketingEvents.jailed]: 'jailed',
+  [MarketingEvents.storyOpen]: 'story opened',
+  [MarketingEvents.storySkip]: 'story skipped',
+  [MarketingEvents.storyFinished]: 'story finished',
+  [MarketingEvents.storyAction]: 'story button pressed',
 };
 
 export class EventTracker extends Initializable {

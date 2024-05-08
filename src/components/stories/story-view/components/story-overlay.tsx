@@ -7,7 +7,8 @@ import {StoryItemProps} from '@app/components/stories/story-view/core/dto/storie
 import {Button, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {openURL} from '@app/helpers/url';
-import {ArrayElement} from '@app/types';
+import {EventTracker} from '@app/services/event-tracker';
+import {ArrayElement, MarketingEvents} from '@app/types';
 import {generateUUID, sleep} from '@app/utils';
 import {ANIMATION_DURATION} from '@app/variables/common';
 
@@ -42,6 +43,7 @@ const StoryOverlay = memo(({stories, activeStory, onClose}: Props) => {
       props = {
         ...props,
         onPress: async () => {
+          EventTracker.instance.trackEvent(MarketingEvents.storyAction);
           onClose();
           await sleep(ANIMATION_DURATION * 3);
           if (item.row.target) {
