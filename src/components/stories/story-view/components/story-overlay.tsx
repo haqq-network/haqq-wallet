@@ -33,27 +33,32 @@ type Props = {
 const StoryOverlay = memo(({stories, activeStory, onClose}: Props) => {
   const markup = stories.find(item => item.id === activeStory?.value)?.markup;
 
-  const renderItem = useCallback((item: MarkupItem): ReactNode => {
-    const Element = OverlayMap[item.row.type];
-    let props = item.row;
-    if (!Element) {
-      return null;
-    }
-    if (item.row.type === 'button') {
-      props = {
-        ...props,
-        onPress: async () => {
-          EventTracker.instance.trackEvent(MarketingEvents.storyAction);
-          onClose();
-          await sleep(ANIMATION_DURATION * 3);
-          if (item.row.target) {
-            openURL(item.row.target);
-          }
-        },
-      };
-    }
-    return <Element key={generateUUID()} {...props} />;
-  }, []);
+  const renderItem = useCallback(
+    (item: MarkupItem): ReactNode => {
+      const Element = OverlayMap[item.row.type];
+      let props = item.row;
+      if (!Element) {
+        return null;
+      }
+      if (item.row.type === 'button') {
+        props = {
+          ...props,
+          onPress: async () => {
+            EventTracker.instance.trackEvent(MarketingEvents.storyAction, {
+              id: activeStory.value!,
+            });
+            onClose();
+            await sleep(ANIMATION_DURATION * 3);
+            if (item.row.target) {
+              openURL(item.row.target);
+            }
+          },
+        };
+      }
+      return <Element key={generateUUID()} {...props} />;
+    },
+    [activeStory.value],
+  );
 
   if (!markup) {
     return null;

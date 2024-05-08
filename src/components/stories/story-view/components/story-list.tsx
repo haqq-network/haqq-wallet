@@ -84,7 +84,7 @@ const StoryList: FC<StoryListProps> = memo(
             progressColor={progressColor}
             progressActiveColor={progressActiveColor}
           />
-          <StoryHeader {...props} />
+          <StoryHeader {...props} storyID={activeStory.value!} />
           <StoryContent
             stories={stories}
             active={isActive}

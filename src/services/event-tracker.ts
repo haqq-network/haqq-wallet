@@ -81,7 +81,7 @@ export class EventTracker extends Initializable {
     params: Record<string, string> = {},
   ) {
     if (DISABLED) {
-      return logger.warn(
+      return logger.log(
         'EventTracker is disabled for development',
         event,
         params,
