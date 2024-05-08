@@ -1,10 +1,12 @@
-import React, {FC, memo} from 'react';
+import React, {FC, memo, useCallback} from 'react';
 
 import {TouchableOpacity, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Icon} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {EventTracker} from '@app/services/event-tracker';
+import {MarketingEvents} from '@app/types';
 
 import {WIDTH} from '../core/constants';
 import {StoryHeaderProps} from '../core/dto/componentsDTO';
@@ -12,11 +14,16 @@ import {StoryHeaderProps} from '../core/dto/componentsDTO';
 const StoryHeader: FC<StoryHeaderProps> = memo(({onClose}) => {
   const width = WIDTH - styles.container.left * 2;
 
+  const onClosePress = useCallback(() => {
+    EventTracker.instance.trackEvent(MarketingEvents.storyFinished);
+    onClose();
+  }, [onClose]);
+
   return (
     <View style={[styles.container, {width}]}>
       <View style={styles.left} />
       <TouchableOpacity
-        onPress={onClose}
+        onPress={onClosePress}
         hitSlop={16}
         testID="storyCloseButton">
         <Icon name="close_circle" color={Color.graphicSecond2} i24 />
