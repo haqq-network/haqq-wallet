@@ -19,7 +19,7 @@ import {
 import {sendNotification} from '@app/services';
 import {EventTracker} from '@app/services/event-tracker';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {MarketingEvents, ModalType} from '@app/types';
+import {MarketingEvents, ModalType, WalletType} from '@app/types';
 
 export const SettingsAccountDetailScreen = observer(() => {
   const navigation = useTypedNavigation<ManageAccountsStackParamList>();
@@ -83,10 +83,17 @@ export const SettingsAccountDetailScreen = observer(() => {
           onPress: () => {
             showModal(ModalType.loading);
             requestAnimationFrame(async () => {
+              const sssWalletsCountBefore = Wallet.count(WalletType.sss);
               await Wallet.remove(address);
               hideModal(ModalType.loading);
               navigation.goBack();
               sendNotification(I18N.notificationAccountDeleted);
+              const sssWalletsCountAfter = Wallet.count(WalletType.sss);
+
+              // If it was last SSS wallet show RemoveSSS modal
+              if (sssWalletsCountBefore > 0 && sssWalletsCountAfter === 0) {
+                showModal(ModalType.removeSSS);
+              }
             });
           },
         },

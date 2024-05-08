@@ -314,6 +314,10 @@ class WalletStore implements MobXStoreFromRealm {
   setCardStyle(address: string = '', params: Partial<WalletCardStyleT>) {
     this.update(address, params);
   }
+
+  count(type: WalletType) {
+    return this.wallets.filter(item => item.type === type).length;
+  }
 }
 
 const instance = new WalletStore(Boolean(process.env.JEST_WORKER_ID));
