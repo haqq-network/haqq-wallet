@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {Image, View} from 'react-native';
 
@@ -7,6 +7,8 @@ import {
   Button,
   ButtonVariant,
   DataView,
+  Icon,
+  IconsName,
   PopupContainer,
   Spacer,
   Text,
@@ -15,8 +17,13 @@ import {
 } from '@app/components/ui';
 import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
+import {useTypedNavigation} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
+import {
+  TransactionStackParamList,
+  TransactionStackRoutes,
+} from '@app/route-types';
 import {Balance} from '@app/services/balance';
 import {IToken} from '@app/types';
 import {splitAddress} from '@app/utils';
@@ -43,6 +50,7 @@ export const TransactionConfirmation = ({
   onConfirmTransaction,
   token,
 }: TransactionConfirmationProps) => {
+  const navigation = useTypedNavigation<TransactionStackParamList>();
   const splittedTo = useMemo(() => splitAddress(to), [to]);
 
   const transactionSum = useMemo(() => {
@@ -72,6 +80,13 @@ export const TransactionConfirmation = ({
 
     return transactionSum.toFiat();
   }, [transactionSum]);
+
+  const onFeePress = useCallback(() => {
+    fee &&
+      navigation.navigate(TransactionStackRoutes.FeeSettings, {
+        fee,
+      });
+  }, [fee, navigation]);
 
   return (
     <PopupContainer style={styles.container} testID={testID}>
@@ -148,11 +163,21 @@ export const TransactionConfirmation = ({
             </Text>
           </DataView>
           <DataView label="Network Fee">
-            <Text variant={TextVariant.t11} color={Color.textBase1}>
-              {fee === null
-                ? getText(I18N.estimatingGas)
-                : fee.toBalanceString(LONG_NUM_PRECISION, WEI_PRECISION)}
-            </Text>
+            {fee === null ? (
+              <Text variant={TextVariant.t11} color={Color.textBase1}>
+                {getText(I18N.estimatingGas)}
+              </Text>
+            ) : (
+              <View style={styles.feeContainer}>
+                <Text
+                  variant={TextVariant.t11}
+                  color={Color.textGreen1}
+                  onPress={onFeePress}>
+                  {fee.toBalanceString(LONG_NUM_PRECISION, WEI_PRECISION)}
+                </Text>
+                <Icon name={IconsName.tune} color={Color.textGreen1} />
+              </View>
+            )}
           </DataView>
         </View>
       </Spacer>
@@ -206,5 +231,8 @@ const styles = createTheme({
   },
   spacer: {
     justifyContent: 'center',
+  },
+  feeContainer: {
+    flexDirection: 'row',
   },
 });

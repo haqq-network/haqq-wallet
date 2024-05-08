@@ -79,6 +79,7 @@ export enum ButtonVariant {
   second = 'second',
   third = 'third',
   warning = 'warning',
+  light = 'light',
 }
 
 export enum ButtonSize {
@@ -182,6 +183,7 @@ export const Button = ({
         variant === ButtonVariant.second && styles.secondContainer,
         variant === ButtonVariant.contained && styles.containedContainer,
         variant === ButtonVariant.warning && styles.warningContainer,
+        variant === ButtonVariant.light && styles.lightContainer,
         size === ButtonSize.small && styles.smallContainer,
         size === ButtonSize.middle && styles.middleContainer,
         size === ButtonSize.large && styles.largeContainer,
@@ -222,6 +224,7 @@ export const Button = ({
         variant === ButtonVariant.second && styles.secondText,
         variant === ButtonVariant.contained && styles.containedText,
         variant === ButtonVariant.warning && styles.warningText,
+        variant === ButtonVariant.light && styles.lightText,
         error && styles.errorText,
         disabled &&
           variant === ButtonVariant.second &&
@@ -322,6 +325,11 @@ const styles = createTheme({
     borderRadius: 12,
     height: 54,
   },
+  lightContainer: {
+    backgroundColor: Color.bg8,
+    borderRadius: 6,
+    height: 24,
+  },
   containedDisabledContainer: {
     backgroundColor: Color.graphicSecond1,
   },
@@ -346,6 +354,9 @@ const styles = createTheme({
   },
   warningText: {
     color: Color.textYellow1,
+  },
+  lightText: {
+    color: Color.textBase1,
   },
   containedDisabledText: {
     color: Color.textSecond1,

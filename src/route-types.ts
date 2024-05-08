@@ -509,6 +509,7 @@ export enum TransactionStackRoutes {
   TransactionSumAddress = 'transactionSumAddress',
   TransactionContactEdit = 'transactionContactEdit',
   TransactionSelectCrypto = 'transactionSelectCrypto',
+  FeeSettings = 'feeSettings',
 }
 
 export type TransactionStackParamList = HomeFeedStackParamList & {
@@ -568,6 +569,9 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
   [TransactionStackRoutes.TransactionSelectCrypto]: {
     from: string;
     to: string;
+  };
+  [TransactionStackRoutes.FeeSettings]: {
+    fee: Balance;
   };
 };
 

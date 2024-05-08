@@ -948,6 +948,11 @@ export enum I18N {
   settingsSecurityHexBlindSign,
   settingsSecurityHexBlindSignDescription,
   jsonRpcSignParsedMsg,
+  feeSettingsHeader,
+  gasLimit,
+  gasPrice,
+  reset,
+  apply,
 }
 
 export function getText(key: I18N, params?: Record<string, string>): string {
@@ -2073,4 +2078,9 @@ const en: Record<I18N, string> = {
   [I18N.jsonRpcSignParsedMsg]: 'Parsed:',
   [I18N.settingsSecurityHexBlindSignDescription]:
     'Enable Blind Sign for HEX messages',
+  [I18N.feeSettingsHeader]: 'Fee settings',
+  [I18N.gasLimit]: 'Gas limit',
+  [I18N.gasPrice]: 'Gas price',
+  [I18N.reset]: 'Reset',
+  [I18N.apply]: 'Apply',
 };

@@ -1092,4 +1092,9 @@ export const ar = {
   [I18N.jsonRpcSignParsedMsg]: 'تم التحليل:',
   [I18N.settingsSecurityHexBlindSignDescription]:
     'تمكين التوقيع الأعمى لرسائل الهكس',
+  [I18N.feeSettingsHeader]: 'Fee settings',
+  [I18N.gasLimit]: 'Gas limit',
+  [I18N.gasPrice]: 'Gas price',
+  [I18N.reset]: 'Reset',
+  [I18N.apply]: 'Apply',
 };

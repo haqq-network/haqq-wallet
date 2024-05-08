@@ -116,6 +116,7 @@ export enum IconsName {
   staking_redelegation = 'staking_redelegation',
   staking_delegation = 'staking_delegation',
   staking_undelegation = 'staking_undelegation',
+  tune = 'tune',
 }
 
 export type IconSize =

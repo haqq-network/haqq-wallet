@@ -12,7 +12,7 @@ import {
 
 import {Color, getColor} from '@app/colors';
 import {Button, ButtonSize, ButtonVariant} from '@app/components/ui/button';
-import {Text} from '@app/components/ui/text';
+import {Text, TextPosition, TextVariant} from '@app/components/ui/text';
 import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {Balance} from '@app/services/balance';
@@ -75,7 +75,11 @@ export const SumBlock = ({
 
   return (
     <View style={styles.container} testID={testID}>
-      <Text t8 center style={styles.subtitle} color={Color.textBase2}>
+      <Text
+        variant={TextVariant.t8}
+        position={TextPosition.center}
+        style={styles.subtitle}
+        color={Color.textBase2}>
         {currency}
       </Text>
       <View style={styles.sum}>
@@ -115,19 +119,27 @@ export const SumBlock = ({
       </View>
       {!!value && (
         <View style={styles.amount}>
-          <Text t15 color={Color.textBase2}>
+          <Text variant={TextVariant.t15} color={Color.textBase2}>
             {new Balance(Number(value)).toFiat()}
           </Text>
         </View>
       )}
       {error ? (
-        <Text center color={Color.textRed1} t14 testID={`${testID}_error`}>
+        <Text
+          position={TextPosition.center}
+          color={Color.textRed1}
+          variant={TextVariant.t14}
+          testID={`${testID}_error`}>
           {error}
         </Text>
       ) : (
-        <Text center color={Color.textBase2} t14 testID={`${testID}_hint`}>
+        <Text
+          position={TextPosition.center}
+          color={Color.textBase2}
+          variant={TextVariant.t14}
+          testID={`${testID}_hint`}>
           {getText(I18N.sumBlockAvailable)}:{' '}
-          <Text t14 color={Color.textGreen1}>
+          <Text variant={TextVariant.t14} color={Color.textGreen1}>
             {balance.toBalanceString()}
           </Text>
         </Text>
