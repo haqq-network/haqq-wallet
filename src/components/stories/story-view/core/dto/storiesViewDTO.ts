@@ -12,6 +12,7 @@ export interface StoryItemProps {
   renderFooter?: () => ReactNode;
   duration?: number;
   markup: ArrayElement<IStory['attachments']>['markup'];
+  story_id: string;
 }
 
 export interface StoriesViewStoryProps {

@@ -23,6 +23,7 @@ export const HomeStoriesScreen = observer(() => {
         mediaType: item.attachment.type,
         duration: item.attachment.duration * 1000,
         markup: toJS(item.markup),
+        story_id: item.story_id,
       };
     });
 
