@@ -100,10 +100,16 @@ const StoryContainer = forwardRef<
         ? stories[userIndex.value]?.stories[storyIndex.value + 1]?.id
         : undefined,
     );
+    const analyticID = useDerivedValue(
+      () => stories[userIndex.value]?.stories[storyIndex.value]?.story_id,
+    );
 
     const onClose = () => {
       'worklet';
 
+      EventTracker.instance.trackEvent(MarketingEvents.storyFinished, {
+        id: analyticID.value!,
+      });
       y.value = withTiming(HEIGHT, {duration: ANIMATION_DURATION}, () =>
         runOnJS(setVisible)(false),
       );
@@ -247,7 +253,7 @@ const StoryContainer = forwardRef<
       } else if (locationX > (WIDTH * 2) / 3) {
         paused.value = false;
         EventTracker.instance.trackEvent(MarketingEvents.storySkip, {
-          id: currentStory.value!,
+          id: analyticID.value!,
         });
         toNextStory();
       }
@@ -302,9 +308,9 @@ const StoryContainer = forwardRef<
 
     const fireOpenEvent = useCallback(() => {
       EventTracker.instance.trackEvent(MarketingEvents.storyOpen, {
-        id: currentStory.value!,
+        id: analyticID.value!,
       });
-    }, [currentStory.value]);
+    }, [analyticID.value]);
     const debouncedOpenEvent = _.debounce(fireOpenEvent, 1000, {
       leading: true,
       trailing: false,
@@ -353,6 +359,7 @@ const StoryContainer = forwardRef<
                   videoProps={videoProps}
                   closeColor={closeIconColor}
                   key={story.id}
+                  analyticID={analyticID.value}
                   {...props}
                 />
               ))}
