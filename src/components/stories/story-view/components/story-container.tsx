@@ -104,15 +104,18 @@ const StoryContainer = forwardRef<
       () => stories[userIndex.value]?.stories[storyIndex.value]?.story_id,
     );
 
-    const onClose = () => {
-      'worklet';
-
+    const trackFinish = () =>
       EventTracker.instance.trackEvent(MarketingEvents.storyFinished, {
         id: analyticID.value!,
       });
-      y.value = withTiming(HEIGHT, {duration: ANIMATION_DURATION}, () =>
-        runOnJS(setVisible)(false),
-      );
+
+    const onClose = () => {
+      'worklet';
+
+      y.value = withTiming(HEIGHT, {duration: ANIMATION_DURATION}, () => {
+        runOnJS(setVisible)(false);
+        runOnJS(trackFinish)();
+      });
     };
 
     const stopAnimation = () => {
