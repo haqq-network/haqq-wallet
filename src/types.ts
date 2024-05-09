@@ -80,10 +80,10 @@ export enum MarketingEvents {
   stakingValidators = 'ejspf6',
   jailed = 'k13htx',
 
-  storyOpen = 'storyOpen',
-  storySkip = 'storySkip',
-  storyFinished = 'storyFinished',
-  storyAction = 'storyAction',
+  storyOpen = '1axuz5',
+  storySkip = 'iejfyw',
+  storyFinished = 'p3q1wh',
+  storyAction = 'soh778',
 }
 
 export enum PopupNotificationBannerTypes {
