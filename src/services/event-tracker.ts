@@ -52,9 +52,13 @@ const EventsNameMap: Record<MarketingEvents, string> = {
   [MarketingEvents.storySkip]: 'story skipped',
   [MarketingEvents.storyFinished]: 'story finished',
   [MarketingEvents.storyAction]: 'story button pressed',
-  [MarketingEvents.signTransaction]: 'sign transaction',
-  [MarketingEvents.signPersonalMessage]: 'sign personal message',
-  [MarketingEvents.signTypedData]: 'sign typed data',
+  [MarketingEvents.signTxStart]: 'sign tx start',
+  [MarketingEvents.signTxSuccess]: 'sign tx success',
+  [MarketingEvents.signTxFail]: 'sign tx fail',
+  [MarketingEvents.sendTxStart]: 'send tx start',
+  [MarketingEvents.sendTxSuccess]: 'send tx success',
+  [MarketingEvents.sendTxFail]: 'send tx fail',
+  [MarketingEvents.appStarted]: 'app started',
 };
 
 export class EventTracker extends Initializable {
