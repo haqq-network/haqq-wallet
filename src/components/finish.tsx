@@ -33,7 +33,7 @@ export const Finish = ({onFinish, testID, title}: FinishProps) => {
 
   return (
     <PopupContainer testID={testID}>
-      <Spacer>
+      <Spacer centered>
         <LottieWrap
           style={styles.animation}
           source={animation}

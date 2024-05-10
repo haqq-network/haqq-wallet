@@ -156,8 +156,8 @@ export const SigninNetworks = observer(
 
 const styles = createTheme({
   logo: {
-    width: 148,
-    height: 148,
+    width: 375,
+    height: 160,
   },
   container: {
     flex: 1,
