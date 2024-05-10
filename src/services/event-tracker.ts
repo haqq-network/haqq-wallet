@@ -6,6 +6,7 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 
 import {app} from '@app/contexts';
 import {Initializable} from '@app/helpers/initializable';
+import {Wallet} from '@app/models/wallet';
 import {MarketingEvents} from '@app/types';
 import {getAppTrackingAuthorizationStatus} from '@app/utils';
 import {IS_ANDROID} from '@app/variables/common';
@@ -51,6 +52,9 @@ const EventsNameMap: Record<MarketingEvents, string> = {
   [MarketingEvents.storySkip]: 'story skipped',
   [MarketingEvents.storyFinished]: 'story finished',
   [MarketingEvents.storyAction]: 'story button pressed',
+  [MarketingEvents.signTransaction]: 'sign transaction',
+  [MarketingEvents.signPersonalMessage]: 'sign personal message',
+  [MarketingEvents.signTypedData]: 'sign typed data',
 };
 
 export class EventTracker extends Initializable {
@@ -141,6 +145,7 @@ export class EventTracker extends Initializable {
     this.adjust.setPushToken(token);
     this.posthog?.identify(this.posthog.getDistinctId(), {
       push_token: token,
+      wallets: Wallet.addressList(),
     });
   }
 

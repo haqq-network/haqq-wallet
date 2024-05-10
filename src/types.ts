@@ -84,6 +84,10 @@ export enum MarketingEvents {
   storySkip = 'iejfyw',
   storyFinished = 'p3q1wh',
   storyAction = 'soh778',
+
+  signTransaction = 'a7z7x4',
+  signPersonalMessage = 'v2z7x4',
+  signTypedData = '6zax5x',
 }
 
 export enum PopupNotificationBannerTypes {
