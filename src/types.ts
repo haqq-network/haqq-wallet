@@ -85,9 +85,14 @@ export enum MarketingEvents {
   storyFinished = 'p3q1wh',
   storyAction = 'soh778',
 
-  signTransaction = 'a7z7x4',
-  signPersonalMessage = 'v2z7x4',
-  signTypedData = '6zax5x',
+  signTxStart = 'p4ddyo',
+  signTxSuccess = 'qn67qh',
+  signTxFail = 'u8jbr8',
+  sendTxStart = '2u2yjy',
+  sendTxSuccess = '31hbyi',
+  sendTxFail = 'svkvy9',
+
+  appStarted = 'w8hbt0',
 }
 
 export enum PopupNotificationBannerTypes {

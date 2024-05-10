@@ -54,7 +54,12 @@ import {
 import {ledgerTransportCbWrapper} from '@app/helpers/ledger-transport-wrapper';
 import {Provider} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
-import {DepositResponse, EIPTypedData, StakingParamsResponse} from '@app/types';
+import {
+  DepositResponse,
+  EIPTypedData,
+  MarketingEvents,
+  StakingParamsResponse,
+} from '@app/types';
 import {
   CosmosTxV1beta1GetTxResponse,
   CosmosTxV1beta1TxResponse,
@@ -65,6 +70,7 @@ import {decimalToHex, getHttpResponse} from '@app/utils';
 import {COSMOS_PREFIX, WEI} from '@app/variables/common';
 
 import {EthSign} from './eth-sign';
+import {EventTracker} from './event-tracker';
 
 export type GetValidatorResponse = {
   validator: Validator;
@@ -121,14 +127,27 @@ export class Cosmos {
   }
 
   async postQuery<T>(path: string, data: string): Promise<T> {
-    Logger.log('cosmos postQuery', path, {data});
-    const resp = await fetch(this.getPath(path), {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: data,
-    });
-
-    return await getHttpResponse<T>(resp);
+    try {
+      EventTracker.instance.trackEvent(MarketingEvents.sendTxStart, {
+        type: 'cosmos',
+      });
+      Logger.log('cosmos postQuery', path, {data});
+      const resp = await fetch(this.getPath(path), {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: data,
+      });
+      EventTracker.instance.trackEvent(MarketingEvents.sendTxSuccess, {
+        type: 'cosmos',
+      });
+      return await getHttpResponse<T>(resp);
+    } catch (error) {
+      EventTracker.instance.trackEvent(MarketingEvents.sendTxFail, {
+        type: 'cosmos',
+      });
+      Logger.captureException(error, 'cosmos postQuery');
+      throw error;
+    }
   }
 
   async getVestingBalances(

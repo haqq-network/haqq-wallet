@@ -15,6 +15,8 @@ import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {I18N, getText} from '@app/i18n';
 import {Banner} from '@app/models/banner';
 import {Refferal} from '@app/models/refferal';
+import {EventTracker} from '@app/services/event-tracker';
+import {MarketingEvents} from '@app/types';
 
 import {onUpdatesSync} from './on-updates-sync';
 
@@ -22,6 +24,8 @@ import {onUpdatesSync} from './on-updates-sync';
  * @description Called when app started (after logged in). Check banners, sync staking and updates
  */
 export async function onAppStarted() {
+  await EventTracker.instance.awaitForInitialization();
+  EventTracker.instance.trackEvent(MarketingEvents.appStarted, {type: 'cold'});
   messaging()
     .getInitialNotification()
     .then(remoteMessage => {

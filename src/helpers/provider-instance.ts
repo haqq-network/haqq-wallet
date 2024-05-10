@@ -44,29 +44,56 @@ class ProviderWrapper implements ProviderInterface {
     hdPath: string,
     transaction: TransactionRequest,
   ) => Promise<string> = async (hdPath, transaction) => {
-    const result = await this.provider.signTransaction(hdPath, transaction);
-    const wallet = await this.provider.getAccountInfo(hdPath);
-    EventTracker.instance.trackEvent(MarketingEvents.signTransaction, wallet);
-    return result;
+    const type = 'signTransaction';
+    try {
+      EventTracker.instance.trackEvent(MarketingEvents.signTxStart, {type});
+      const result = await this.provider.signTransaction(hdPath, transaction);
+      const wallet = await this.provider.getAccountInfo(hdPath);
+      EventTracker.instance.trackEvent(MarketingEvents.signTxSuccess, {
+        ...wallet,
+        type,
+      });
+      return result;
+    } catch (error) {
+      EventTracker.instance.trackEvent(MarketingEvents.signTxFail, {type});
+      throw error;
+    }
   };
 
   signPersonalMessage: (hdPath: string, message: BytesLike) => Promise<string> =
     async (hdPath, message) => {
-      const result = await this.provider.signPersonalMessage(hdPath, message);
-      const wallet = await this.provider.getAccountInfo(hdPath);
-      EventTracker.instance.trackEvent(
-        MarketingEvents.signPersonalMessage,
-        wallet,
-      );
-      return result;
+      const type = 'signPersonalMessage';
+      try {
+        EventTracker.instance.trackEvent(MarketingEvents.signTxFail, {type});
+        const result = await this.provider.signPersonalMessage(hdPath, message);
+        const wallet = await this.provider.getAccountInfo(hdPath);
+        EventTracker.instance.trackEvent(MarketingEvents.signTxSuccess, {
+          ...wallet,
+          type,
+        });
+        return result;
+      } catch (error) {
+        EventTracker.instance.trackEvent(MarketingEvents.signTxFail, {type});
+        throw error;
+      }
     };
 
   signTypedData: (hdPath: string, typedData: TypedData) => Promise<string> =
     async (hdPath, typedData) => {
-      const result = await this.provider.signTypedData(hdPath, typedData);
-      const wallet = await this.provider.getAccountInfo(hdPath);
-      EventTracker.instance.trackEvent(MarketingEvents.signTypedData, wallet);
-      return result;
+      const type = 'signTypedData';
+      try {
+        EventTracker.instance.trackEvent(MarketingEvents.signTxStart, {type});
+        const result = await this.provider.signTypedData(hdPath, typedData);
+        const wallet = await this.provider.getAccountInfo(hdPath);
+        EventTracker.instance.trackEvent(MarketingEvents.signTxSuccess, {
+          ...wallet,
+          type,
+        });
+        return result;
+      } catch (error) {
+        EventTracker.instance.trackEvent(MarketingEvents.signTxFail, {type});
+        throw error;
+      }
     };
 
   abort: () => void = () => {

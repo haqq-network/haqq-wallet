@@ -19,6 +19,8 @@ import { DEBUG_VARS } from '@app/debug-vars';
 import { Feature, isFeatureEnabled } from '@app/helpers/is-feature-enabled';
 import { enableFreeze, enableScreens } from 'react-native-screens';
 import { enableBatchedStateUpdates } from '@app/hooks/batched-set-state';
+import { EventTracker } from '@app/services/event-tracker';
+import { MarketingEvents } from '@app/types';
 
 if (!global.BigInt) {
   const BigInt = require('big-integer');
@@ -86,29 +88,45 @@ JsonRpcProvider.prototype.send = async function (method, params) {
     jsonrpc: '2.0',
   };
 
+  const isSendMethod = ['eth_sendRawTransaction', 'eth_sendTransaction'].indexOf(method) >= 0;
+
   const cache = ['eth_chainId', 'eth_blockNumber'].indexOf(method) >= 0;
   if (cache && this._cache[method]) {
     return this._cache[method];
   }
 
-  const req = await fetch(`${this.connection.url}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(request),
-  });
+  try {
+    if (isSendMethod) {
+      EventTracker.instance.trackEvent(MarketingEvents.sendTxStart, { type: 'EVM' })
+    }
+    const req = await fetch(`${this.connection.url}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(request),
+    });
 
-  const resp = await req.json();
-  const result = getResult(resp);
-  if (cache) {
-    this._cache[method] = result;
-    setTimeout(() => {
-      this._cache[method] = null;
-    }, 0);
+    if (isSendMethod) {
+      EventTracker.instance.trackEvent(MarketingEvents.sendTxSuccess, { type: 'EVM' })
+    }
+
+    const resp = await req.json();
+    const result = getResult(resp);
+    if (cache) {
+      this._cache[method] = result;
+      setTimeout(() => {
+        this._cache[method] = null;
+      }, 0);
+    }
+
+    return result;
+  } catch (error) {
+    if (isSendMethod) {
+      EventTracker.instance.trackEvent(MarketingEvents.sendTxFail, { type: 'EVM' })
+    }
+    throw error;
   }
-
-  return result;
 };
 
 const Wrapped = Sentry.wrap(App);

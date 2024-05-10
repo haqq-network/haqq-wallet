@@ -31,6 +31,7 @@ import {VestingMetadataType} from '@app/models/vesting-metadata';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
+import {EventTracker} from '@app/services/event-tracker';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {RemoteConfig} from '@app/services/remote-config';
 
@@ -45,6 +46,7 @@ import {
   DynamicLink,
   HaqqEthereumAddress,
   IndexerBalanceData,
+  MarketingEvents,
   ModalType,
 } from '../types';
 import {
@@ -561,6 +563,9 @@ class App extends AsyncEventEmitter {
 
       switch (appStatus) {
         case AppStatus.active:
+          EventTracker.instance.trackEvent(MarketingEvents.appStarted, {
+            type: 'background',
+          });
           if (this.user?.isOutdatedLastActivity() && this.authenticated) {
             this.authenticated = false;
             this._authInProgress = true;
