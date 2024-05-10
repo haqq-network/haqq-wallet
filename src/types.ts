@@ -93,6 +93,7 @@ export enum MarketingEvents {
   sendTxFail = 'svkvy9',
 
   appStarted = 'w8hbt0',
+  navigation = '68gzdc',
 }
 
 export enum PopupNotificationBannerTypes {

@@ -21,6 +21,7 @@ import { enableFreeze, enableScreens } from 'react-native-screens';
 import { enableBatchedStateUpdates } from '@app/hooks/batched-set-state';
 import { EventTracker } from '@app/services/event-tracker';
 import { MarketingEvents } from '@app/types';
+import { app } from '@app/contexts';
 
 if (!global.BigInt) {
   const BigInt = require('big-integer');
@@ -95,9 +96,15 @@ JsonRpcProvider.prototype.send = async function (method, params) {
     return this._cache[method];
   }
 
+  const eventParams = {
+    type: 'EVM',
+    network: app.provider.name,
+    chainId: `${app.provider.ethChainId}`,
+  };
+
   try {
     if (isSendMethod) {
-      EventTracker.instance.trackEvent(MarketingEvents.sendTxStart, { type: 'EVM' })
+      EventTracker.instance.trackEvent(MarketingEvents.sendTxStart, eventParams)
     }
     const req = await fetch(`${this.connection.url}`, {
       method: 'POST',
@@ -108,7 +115,7 @@ JsonRpcProvider.prototype.send = async function (method, params) {
     });
 
     if (isSendMethod) {
-      EventTracker.instance.trackEvent(MarketingEvents.sendTxSuccess, { type: 'EVM' })
+      EventTracker.instance.trackEvent(MarketingEvents.sendTxSuccess, eventParams)
     }
 
     const resp = await req.json();
@@ -123,7 +130,7 @@ JsonRpcProvider.prototype.send = async function (method, params) {
     return result;
   } catch (error) {
     if (isSendMethod) {
-      EventTracker.instance.trackEvent(MarketingEvents.sendTxFail, { type: 'EVM' })
+      EventTracker.instance.trackEvent(MarketingEvents.sendTxFail, eventParams)
     }
     throw error;
   }
