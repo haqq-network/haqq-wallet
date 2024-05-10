@@ -84,6 +84,7 @@ export const SettingsAccountDetailScreen = observer(() => {
             showModal(ModalType.loading);
             requestAnimationFrame(async () => {
               const sssWalletsCountBefore = Wallet.count(WalletType.sss);
+              const accountID = wallet?.accountId;
               await Wallet.remove(address);
               hideModal(ModalType.loading);
               navigation.goBack();
@@ -91,8 +92,12 @@ export const SettingsAccountDetailScreen = observer(() => {
               const sssWalletsCountAfter = Wallet.count(WalletType.sss);
 
               // If it was last SSS wallet show RemoveSSS modal
-              if (sssWalletsCountBefore > 0 && sssWalletsCountAfter === 0) {
-                showModal(ModalType.removeSSS);
+              if (
+                sssWalletsCountBefore > 0 &&
+                sssWalletsCountAfter === 0 &&
+                accountID
+              ) {
+                showModal(ModalType.removeSSS, {accountID});
               }
             });
           },

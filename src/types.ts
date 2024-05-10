@@ -1105,6 +1105,7 @@ export type Modals = {
   };
   removeSSS: {
     onClose?: () => void;
+    accountID: string;
   };
 };
 
