@@ -8,6 +8,8 @@ import {
   PopupContainer,
   Spacer,
   Text,
+  TextPosition,
+  TextVariant,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
@@ -113,13 +115,18 @@ export const SssMigrateNetworks = ({
         </>
       )}
 
-      <Spacer height={10} />
-      <Text
-        t15
-        center
-        i18n={I18N.sssNetworkWeb3AuthDescription}
-        color={Color.textBase2}
-      />
+      {/* If there is at least one button on the screen then show Social Login description */}
+      {(isCustomSupported || isGoogleSupported || isAppleSupported) && (
+        <>
+          <Spacer height={10} />
+          <Text
+            variant={TextVariant.t15}
+            position={TextPosition.center}
+            i18n={I18N.sssNetworkWeb3AuthDescription}
+            color={Color.textBase2}
+          />
+        </>
+      )}
     </PopupContainer>
   );
 };

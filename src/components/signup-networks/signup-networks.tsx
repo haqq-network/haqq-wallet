@@ -8,6 +8,7 @@ import {
   PopupContainer,
   Spacer,
   Text,
+  TextPosition,
   TextVariant,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
@@ -117,12 +118,18 @@ export const SignupNetworks = ({
           />
         </>
       )}
-      <Spacer height={10} />
-      <Text
-        variant={TextVariant.t15}
-        i18n={I18N.sssNetworkWeb3AuthDescription}
-        color={Color.textBase2}
-      />
+      {/* If there is at least one button on the screen then show Social Login description */}
+      {(isCustomSupported || isGoogleSupported || isAppleSupported) && (
+        <>
+          <Spacer height={10} />
+          <Text
+            variant={TextVariant.t15}
+            position={TextPosition.center}
+            i18n={I18N.sssNetworkWeb3AuthDescription}
+            color={Color.textBase2}
+          />
+        </>
+      )}
       <Spacer height={8} />
       <Button
         onPress={onLoginLaterPress}
