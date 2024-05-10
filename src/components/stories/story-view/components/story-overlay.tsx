@@ -1,7 +1,11 @@
-import React, {ReactNode, memo, useCallback} from 'react';
+import React, {ReactNode, memo, useCallback, useState} from 'react';
 
 import {View} from 'react-native';
-import {SharedValue} from 'react-native-reanimated';
+import {
+  SharedValue,
+  runOnJS,
+  useAnimatedReaction,
+} from 'react-native-reanimated';
 
 import {StoryItemProps} from '@app/components/stories/story-view/core/dto/storiesViewDTO';
 import {Button, Spacer, Text} from '@app/components/ui';
@@ -33,7 +37,21 @@ type Props = {
 
 const StoryOverlay = memo(
   ({stories, activeStory, onClose, analyticID}: Props) => {
-    const markup = stories.find(item => item.id === activeStory?.value)?.markup;
+    const initialMarkup = stories.find(item => item.id === activeStory.value)
+      ?.markup;
+    const [markup, setMarkup] = useState(initialMarkup ?? []);
+
+    const onActiveStoryChange = useCallback((currentStoryID?: string) => {
+      const newMarkup = stories.find(item => item.id === currentStoryID)
+        ?.markup;
+      setMarkup(newMarkup ?? []);
+    }, []);
+
+    useAnimatedReaction(
+      () => activeStory.value,
+      (res, prev) => res !== prev && runOnJS(onActiveStoryChange)(res),
+      [activeStory.value],
+    );
 
     const renderItem = useCallback(
       (item: MarkupItem): ReactNode => {
