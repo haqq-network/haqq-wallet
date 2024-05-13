@@ -5,6 +5,7 @@ import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {Whitelist} from '@app/helpers/whitelist';
 import {I18N, getText} from '@app/i18n';
+import {Currencies} from '@app/models/currencies';
 import {NftCollectionIndexer} from '@app/models/nft';
 import {Provider} from '@app/models/provider';
 import {
@@ -18,7 +19,13 @@ import {
   RatesResponse,
 } from '@app/types';
 
-import {RemoteConfig} from './remote-config';
+import {
+  SushiPoolEstimateRequest,
+  SushiPoolEstimateResponse,
+  SushiPoolResponse,
+} from './indexer.types';
+
+import {RemoteConfig} from '../remote-config';
 
 export type IndexerUpdatesResponse = {
   addresses: IContract[];
@@ -210,6 +217,60 @@ export class Indexer {
     } catch (err) {
       if (err instanceof JSONRPCError) {
         this.captureException(err, 'Indexer:getNfts', err.meta);
+      }
+      throw err;
+    }
+  }
+
+  async sushiPools(): Promise<SushiPoolResponse> {
+    try {
+      if (!app.provider.indexer) {
+        throw new Error('Indexer is not configured');
+      }
+
+      const response = await jsonrpcRequest<SushiPoolResponse>(
+        app.provider.indexer,
+        'sushiPools',
+        [],
+      );
+
+      return response || {};
+    } catch (err) {
+      if (err instanceof JSONRPCError) {
+        this.captureException(err, 'Indexer:sushiPools', err.meta);
+      }
+      throw err;
+    }
+  }
+
+  async sushiPoolEstimate({
+    amount,
+    sender,
+    token_in,
+    token_out,
+    currency_id = Currencies.currency?.id,
+  }: SushiPoolEstimateRequest): Promise<SushiPoolEstimateResponse> {
+    try {
+      if (!app.provider.indexer) {
+        throw new Error('Indexer is not configured');
+      }
+
+      const response = await jsonrpcRequest<SushiPoolEstimateResponse>(
+        app.provider.indexer,
+        'sushiPoolEstimate',
+        [
+          AddressUtils.toHaqq(token_in),
+          AddressUtils.toHaqq(token_out),
+          AddressUtils.toHaqq(sender),
+          amount.toWeiString(),
+          currency_id,
+        ],
+      );
+
+      return response || {};
+    } catch (err) {
+      if (err instanceof JSONRPCError) {
+        this.captureException(err, 'Indexer:sushiPoolEstimate', err.meta);
       }
       throw err;
     }
