@@ -486,11 +486,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
 
     const wallet = Wallet.getById(address);
     if (wallet) {
-      const walletProvider = await getProviderInstanceForWallet(
-        wallet,
-        false,
-        true,
-      );
+      const walletProvider = await getProviderInstanceForWallet(wallet, false);
       const {publicKey} = await walletProvider.getAccountInfo(wallet.path!);
 
       return {

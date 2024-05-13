@@ -80,5 +80,6 @@ const page = createTheme({
   },
   image: {
     height: () => Math.min(getWindowWidth(), 330) - 20,
+    width: 310,
   },
 });

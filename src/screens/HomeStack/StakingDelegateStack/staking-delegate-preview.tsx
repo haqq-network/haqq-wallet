@@ -4,10 +4,7 @@ import {observer} from 'mobx-react';
 
 import {StakingDelegatePreview} from '@app/components/staking-delegate-preview';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
-import {
-  abortProviderInstanceForWallet,
-  getProviderInstanceForWallet,
-} from '@app/helpers/provider-instance';
+import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useCosmos, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useError} from '@app/hooks/use-error';
 import {Wallet} from '@app/models/wallet';
@@ -104,12 +101,6 @@ export const StakingDelegatePreviewScreen = observer(() => {
       }
     }
   }, [cosmos, wallet, validator, amount, fee, navigation]);
-
-  useEffect(() => {
-    return () => {
-      wallet && abortProviderInstanceForWallet(wallet);
-    };
-  }, [wallet]);
 
   return (
     <StakingDelegatePreview

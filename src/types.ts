@@ -79,6 +79,21 @@ export enum MarketingEvents {
   stakingDelegate = 'xh19jh',
   stakingValidators = 'ejspf6',
   jailed = 'k13htx',
+
+  storyOpen = '1axuz5',
+  storySkip = 'iejfyw',
+  storyFinished = 'p3q1wh',
+  storyAction = 'soh778',
+
+  signTxStart = 'p4ddyo',
+  signTxSuccess = 'qn67qh',
+  signTxFail = 'u8jbr8',
+  sendTxStart = '2u2yjy',
+  sendTxSuccess = '31hbyi',
+  sendTxFail = 'svkvy9',
+
+  appStarted = 'w8hbt0',
+  navigation = '68gzdc',
 }
 
 export enum PopupNotificationBannerTypes {
@@ -176,6 +191,14 @@ export type RootStackParamList = {
           | 'browserSearchPage'
           | 'browserEditBookmarksScreen'
           | 'browserHomePage';
+      };
+  homeNews:
+    | undefined
+    | {
+        id: string;
+        openEvent: MarketingEvents;
+        linkEvent: MarketingEvents;
+        scrollEvent: MarketingEvents;
       };
   homeSettings:
     | undefined
@@ -592,6 +615,12 @@ export type RootStackParamList = {
   };
   nftItemDetails: {
     item: NftItem;
+  };
+  newsDetailsPushNotification: {
+    id: string;
+    openEvent: MarketingEvents;
+    linkEvent: MarketingEvents;
+    scrollEvent: MarketingEvents;
   };
 };
 
@@ -1808,6 +1837,8 @@ export type IStory = {
         event?: MarketingEvents;
         text: string;
         type: 'button' | 'text' | 'spacer';
+        onPress?: () => void;
+        target?: string;
       };
     }[];
     attachment: {

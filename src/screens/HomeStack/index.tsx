@@ -11,6 +11,7 @@ import {Color} from '@app/colors';
 import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
 import {Spacer} from '@app/components/ui';
 import {popupScreenOptionsWithMargin} from '@app/helpers';
+import {getNewsDetailAppTitle} from '@app/helpers/get-news-detail-title';
 import {getWalletTitle} from '@app/helpers/get-wallet-title';
 import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {I18N, getText} from '@app/i18n';
@@ -42,6 +43,8 @@ import {ValueSelectorScreen} from '@app/screens/value-selector-screen';
 import {WalletSelectorScreen} from '@app/screens/wallet-selector-screen';
 import {Web3BrowserPopup as Web3BrowserPopupScreen} from '@app/screens/web3-browser-popup';
 import {SignInStack} from '@app/screens/WelcomeStack/SignInStack';
+
+import {NewsDetailScreen} from './HomeNewsStack/news-detail';
 
 import {SwapStack} from '../SwapStack';
 
@@ -253,6 +256,14 @@ const HomeStack = memo(() => {
         name={HomeStackRoutes.Swap}
         component={SwapStack}
         options={modalOptions}
+      />
+      <Stack.Screen
+        name={HomeStackRoutes.NewsDetailPushNotification}
+        component={themeUpdaterHOC(NewsDetailScreen)}
+        options={props => ({
+          ...getNewsDetailAppTitle(props),
+          disableMargin: false,
+        })}
       />
     </Stack.Navigator>
   );

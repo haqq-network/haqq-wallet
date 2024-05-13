@@ -31,6 +31,7 @@ import {VestingMetadataType} from '@app/models/vesting-metadata';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
+import {EventTracker} from '@app/services/event-tracker';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {RemoteConfig} from '@app/services/remote-config';
 
@@ -45,11 +46,11 @@ import {
   DynamicLink,
   HaqqEthereumAddress,
   IndexerBalanceData,
+  MarketingEvents,
   ModalType,
 } from '../types';
 import {
   LIGHT_GRAPHIC_GREEN_1,
-  MAINNET_ETH_CHAIN_ID,
   MAIN_NETWORK_ID,
   TEST_NETWORK_ID,
 } from '../variables/common';
@@ -331,10 +332,7 @@ class App extends AsyncEventEmitter {
   }
 
   get isTesterMode() {
-    return (
-      (VariablesBool.get('isTesterMode') ?? false) &&
-      this.provider.ethChainId !== MAINNET_ETH_CHAIN_ID
-    );
+    return VariablesBool.get('isTesterMode') ?? false;
   }
 
   set isTesterMode(value) {
@@ -565,6 +563,9 @@ class App extends AsyncEventEmitter {
 
       switch (appStatus) {
         case AppStatus.active:
+          EventTracker.instance.trackEvent(MarketingEvents.appStarted, {
+            type: 'background',
+          });
           if (this.user?.isOutdatedLastActivity() && this.authenticated) {
             this.authenticated = false;
             this._authInProgress = true;

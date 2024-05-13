@@ -33,6 +33,7 @@ const styles = createTheme({
     alignItems: 'center',
   },
   lottie: {
+    height: 200,
     width: () => getWindowWidth(),
   },
 });

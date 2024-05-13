@@ -1,11 +1,13 @@
 import React, {
   forwardRef,
   memo,
+  useCallback,
   useEffect,
   useImperativeHandle,
   useState,
 } from 'react';
 
+import _ from 'lodash';
 import {GestureResponderEvent, Pressable, StyleSheet} from 'react-native';
 import {
   Directions,
@@ -23,6 +25,8 @@ import Animated, {
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {EventTracker} from '@app/services/event-tracker';
+import {MarketingEvents} from '@app/types';
 import {ANIMATION_DURATION} from '@app/variables/common';
 
 import {StoryList} from './story-list';
@@ -96,13 +100,22 @@ const StoryContainer = forwardRef<
         ? stories[userIndex.value]?.stories[storyIndex.value + 1]?.id
         : undefined,
     );
+    const analyticID = useDerivedValue(
+      () => stories[userIndex.value]?.stories[storyIndex.value]?.story_id,
+    );
+
+    const trackFinish = () =>
+      EventTracker.instance.trackEvent(MarketingEvents.storyFinished, {
+        id: analyticID.value!,
+      });
 
     const onClose = () => {
       'worklet';
 
-      y.value = withTiming(HEIGHT, {duration: ANIMATION_DURATION}, () =>
-        runOnJS(setVisible)(false),
-      );
+      y.value = withTiming(HEIGHT, {duration: ANIMATION_DURATION}, () => {
+        runOnJS(setVisible)(false);
+        runOnJS(trackFinish)();
+      });
     };
 
     const stopAnimation = () => {
@@ -242,6 +255,9 @@ const StoryContainer = forwardRef<
         }
       } else if (locationX > (WIDTH * 2) / 3) {
         paused.value = false;
+        EventTracker.instance.trackEvent(MarketingEvents.storySkip, {
+          id: analyticID.value!,
+        });
         toNextStory();
       }
     };
@@ -293,6 +309,16 @@ const StoryContainer = forwardRef<
       [animation.value],
     );
 
+    const fireOpenEvent = useCallback(() => {
+      EventTracker.instance.trackEvent(MarketingEvents.storyOpen, {
+        id: analyticID.value!,
+      });
+    }, [analyticID.value]);
+    const debouncedOpenEvent = _.debounce(fireOpenEvent, 1000, {
+      leading: true,
+      trailing: false,
+    });
+
     const swipeDown = Gesture.Fling()
       .direction(Directions.DOWN)
       .onEnd(() => onClose());
@@ -322,10 +348,11 @@ const StoryContainer = forwardRef<
                       item => item.id === currentStory.value,
                     );
                     onLoad?.();
+                    debouncedOpenEvent();
                     startAnimation(
                       undefined,
                       value !== undefined
-                        ? videoDuration ?? value
+                        ? videoDuration ?? current?.duration ?? value
                         : current?.duration ?? duration,
                     );
                   }}
@@ -335,6 +362,7 @@ const StoryContainer = forwardRef<
                   videoProps={videoProps}
                   closeColor={closeIconColor}
                   key={story.id}
+                  analyticID={analyticID.value}
                   {...props}
                 />
               ))}

@@ -1,5 +1,6 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useRef} from 'react';
 
+import {useScrollToTop} from '@react-navigation/native';
 import {FlatList, FlatListProps, ListRenderItem, View} from 'react-native';
 
 import {NewsRow} from '@app/components/news/news-row';
@@ -18,6 +19,8 @@ export const NewsRowList = ({
   popupContainerEnabled = true,
   ...props
 }: NewsRowListProps) => {
+  const ref = useRef(null);
+  useScrollToTop(ref);
   const ContainerComponent = popupContainerEnabled ? PopupContainer : View;
   const renderItem: ListRenderItem<BaseNewsItem> = useCallback(
     ({item}) => <NewsRow item={item} onPress={onPress} />,
@@ -30,6 +33,7 @@ export const NewsRowList = ({
   return (
     <ContainerComponent plain>
       <FlatList
+        ref={ref}
         data={data}
         keyExtractor={keyExtractor}
         renderItem={renderItem}

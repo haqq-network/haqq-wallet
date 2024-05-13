@@ -209,7 +209,7 @@ export enum NewsStackRoutes {
   OurNews = 'ourNews',
 }
 
-export type NewsStackParamList = HomeStackParamList & {
+export type NewsStackParamList = {
   [NewsStackRoutes.News]: undefined;
   [NewsStackRoutes.NewsDetail]: {
     id: string;
@@ -364,6 +364,7 @@ export enum HomeStackRoutes {
   BrowserPrivacyPopupStack = 'browserPrivacyPopupStack',
   Device = '_device',
   Swap = '_swap',
+  NewsDetailPushNotification = 'newsDetailsPushNotification',
 }
 
 export type HomeStackParamList = {
@@ -456,6 +457,12 @@ export type HomeStackParamList = {
   };
   [HomeStackRoutes.Swap]: {
     address: string;
+  };
+  [HomeStackRoutes.NewsDetailPushNotification]: {
+    id: string;
+    openEvent: MarketingEvents;
+    linkEvent: MarketingEvents;
+    scrollEvent: MarketingEvents;
   };
 };
 
