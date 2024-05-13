@@ -21,51 +21,40 @@ import {LEDGER_APP} from '@app/variables/common';
 
 import {awaitForQRSign} from './await-for-qr-sign';
 
-class ProviderWrapper implements ProviderInterface {
-  constructor(private provider: ProviderInterface) {
-    this.provider = provider;
-  }
+function getProviderWrapper(provider: ProviderInterface) {
+  const signTransactionOriginal = provider.signTransaction.bind(provider);
+  const signPersonalMessageOriginal =
+    provider.signPersonalMessage.bind(provider);
+  const signTypedDataOriginal = provider.signTypedData.bind(provider);
 
-  getIdentifier: () => string = () => {
-    return this.provider.getIdentifier();
-  };
-
-  getAccountInfo: (
-    hdPath: string,
-  ) => Promise<{publicKey: string; address: string}> = hdPath => {
-    return this.provider.getAccountInfo(hdPath);
-  };
-
-  getPrivateKey: (hdPath: string) => Promise<string> = hdPath => {
-    return this.provider.getPrivateKey(hdPath);
-  };
-
-  signTransaction: (
-    hdPath: string,
-    transaction: TransactionRequest,
-  ) => Promise<string> = async (hdPath, transaction) => {
-    const params = {
-      type: 'signTransaction',
-      network: app.provider.name,
-      chainId: `${app.provider.ethChainId}`,
-    };
-    try {
-      EventTracker.instance.trackEvent(MarketingEvents.signTxStart, params);
-      const result = await this.provider.signTransaction(hdPath, transaction);
-      const wallet = await this.provider.getAccountInfo(hdPath);
-      EventTracker.instance.trackEvent(MarketingEvents.signTxSuccess, {
-        ...wallet,
-        ...params,
-      });
-      return result;
-    } catch (error) {
-      EventTracker.instance.trackEvent(MarketingEvents.signTxFail, params);
-      throw error;
-    }
-  };
-
-  signPersonalMessage: (hdPath: string, message: BytesLike) => Promise<string> =
-    async (hdPath, message) => {
+  const wrapped = {
+    async signTransaction(
+      hdPath: string,
+      transaction: TransactionRequest,
+    ): Promise<string> {
+      const params = {
+        type: 'signTransaction',
+        network: app.provider.name,
+        chainId: `${app.provider.ethChainId}`,
+      };
+      try {
+        EventTracker.instance.trackEvent(MarketingEvents.signTxStart, params);
+        const result = await signTransactionOriginal(hdPath, transaction);
+        const wallet = await provider.getAccountInfo(hdPath);
+        EventTracker.instance.trackEvent(MarketingEvents.signTxSuccess, {
+          ...wallet,
+          ...params,
+        });
+        return result;
+      } catch (error) {
+        EventTracker.instance.trackEvent(MarketingEvents.signTxFail, params);
+        throw error;
+      }
+    },
+    async signPersonalMessage(
+      hdPath: string,
+      message: BytesLike,
+    ): Promise<string> {
       const params = {
         type: 'signPersonalMessage',
         network: app.provider.name,
@@ -73,8 +62,8 @@ class ProviderWrapper implements ProviderInterface {
       };
       try {
         EventTracker.instance.trackEvent(MarketingEvents.signTxFail, params);
-        const result = await this.provider.signPersonalMessage(hdPath, message);
-        const wallet = await this.provider.getAccountInfo(hdPath);
+        const result = await signPersonalMessageOriginal(hdPath, message);
+        const wallet = await provider.getAccountInfo(hdPath);
         EventTracker.instance.trackEvent(MarketingEvents.signTxSuccess, {
           ...wallet,
           ...params,
@@ -84,10 +73,8 @@ class ProviderWrapper implements ProviderInterface {
         EventTracker.instance.trackEvent(MarketingEvents.signTxFail, params);
         throw error;
       }
-    };
-
-  signTypedData: (hdPath: string, typedData: TypedData) => Promise<string> =
-    async (hdPath, typedData) => {
+    },
+    async signTypedData(hdPath: string, typedData: TypedData): Promise<string> {
       const params = {
         type: 'signTypedData',
         network: app.provider.name,
@@ -95,8 +82,8 @@ class ProviderWrapper implements ProviderInterface {
       };
       try {
         EventTracker.instance.trackEvent(MarketingEvents.signTxStart, params);
-        const result = await this.provider.signTypedData(hdPath, typedData);
-        const wallet = await this.provider.getAccountInfo(hdPath);
+        const result = await signTypedDataOriginal(hdPath, typedData);
+        const wallet = await provider.getAccountInfo(hdPath);
         EventTracker.instance.trackEvent(MarketingEvents.signTxSuccess, {
           ...wallet,
           ...params,
@@ -106,104 +93,10 @@ class ProviderWrapper implements ProviderInterface {
         EventTracker.instance.trackEvent(MarketingEvents.signTxFail, params);
         throw error;
       }
-    };
-
-  abort: () => void = () => {
-    this.provider.abort();
+    },
   };
 
-  updatePin: (pin: string) => Promise<void> = pin => {
-    return this.provider.updatePin(pin);
-  };
-
-  clean: () => Promise<void> = () => {
-    return this.provider.clean();
-  };
-
-  /**
-   * EVENT EMITTER METHODS
-   */
-
-  on(eventName: string | symbol, listener: (...args: any[]) => void): this {
-    this.provider.on(eventName, listener);
-    return this;
-  }
-
-  once(eventName: string | symbol, listener: (...args: any[]) => void): this {
-    this.provider.once(eventName, listener);
-    return this;
-  }
-
-  off(eventName: string | symbol, listener: (...args: any[]) => void): this {
-    this.provider.off(eventName, listener);
-    return this;
-  }
-
-  addListener(
-    eventName: string | symbol,
-    listener: (...args: any[]) => void,
-  ): this {
-    this.provider.addListener(eventName, listener);
-    return this;
-  }
-
-  removeAllListeners(event?: string | symbol | undefined): this {
-    this.provider.removeAllListeners(event);
-    return this;
-  }
-
-  removeListener(
-    eventName: string | symbol,
-    listener: (...args: any[]) => void,
-  ): this {
-    this.provider.removeListener(eventName, listener);
-    return this;
-  }
-
-  emit(eventName: string | symbol, ...args: any[]): boolean {
-    return this.provider.emit(eventName, ...args);
-  }
-
-  eventNames(): (string | symbol)[] {
-    return this.provider.eventNames();
-  }
-
-  getMaxListeners(): number {
-    return this.provider.getMaxListeners();
-  }
-
-  listenerCount(eventName: string | symbol): number {
-    return this.provider.listenerCount(eventName);
-  }
-
-  listeners(eventName: string | symbol): Function[] {
-    return this.provider.listeners(eventName);
-  }
-
-  prependListener(
-    eventName: string | symbol,
-    listener: (...args: any[]) => void,
-  ): this {
-    this.provider.prependListener(eventName, listener);
-    return this;
-  }
-
-  prependOnceListener(
-    eventName: string | symbol,
-    listener: (...args: any[]) => void,
-  ): this {
-    this.provider.prependOnceListener(eventName, listener);
-    return this;
-  }
-
-  rawListeners(eventName: string | symbol): Function[] {
-    return this.provider.rawListeners(eventName);
-  }
-
-  setMaxListeners(n: number): this {
-    this.provider.setMaxListeners(n);
-    return this;
-  }
+  return Object.assign(provider, wrapped) as unknown as ProviderInterface;
 }
 
 /**
@@ -270,5 +163,6 @@ export async function getProviderInstanceForWallet(
       });
     }
   });
-  return new ProviderWrapper(provider);
+
+  return getProviderWrapper(provider);
 }
