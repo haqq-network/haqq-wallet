@@ -59,6 +59,7 @@ const EventsNameMap: Record<MarketingEvents, string> = {
   [MarketingEvents.sendTxSuccess]: 'send tx success',
   [MarketingEvents.sendTxFail]: 'send tx fail',
   [MarketingEvents.appStarted]: 'app started',
+  [MarketingEvents.navigation]: 'navigation',
 };
 
 export class EventTracker extends Initializable {
@@ -75,9 +76,6 @@ export class EventTracker extends Initializable {
   }
 
   initialize() {
-    if (DISABLED) {
-      return;
-    }
     this.startInitialization();
     this._configureAdjust();
     this._configurePosthog();
@@ -89,11 +87,7 @@ export class EventTracker extends Initializable {
     params: Record<string, string> = {},
   ) {
     if (DISABLED) {
-      return logger.log(
-        'EventTracker is disabled for development',
-        event,
-        params,
-      );
+      return;
     }
     await this.awaitForInitialization();
     this._trackAdjustEvent(event, params);
@@ -154,9 +148,6 @@ export class EventTracker extends Initializable {
   }
 
   dispose() {
-    if (DISABLED) {
-      return;
-    }
     this.adjust.componentWillUnmount();
     this._posthog = null;
     this.rejectInitialization();
@@ -180,7 +171,7 @@ export class EventTracker extends Initializable {
     params: Record<string, string> = {},
   ) {
     const eventName = EventsNameMap[event] ?? event ?? 'unknown';
-    this._posthog?.capture(eventName, {$set: params});
+    this._posthog?.capture(eventName, {...params});
   }
 
   private _configureAdjust() {

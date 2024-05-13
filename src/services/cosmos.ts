@@ -46,6 +46,7 @@ import {
 import {normalize0x} from '@haqq/provider-keystone-react-native';
 import Decimal from 'decimal.js';
 
+import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {
   getRemoteBalanceValue,
@@ -127,24 +128,23 @@ export class Cosmos {
   }
 
   async postQuery<T>(path: string, data: string): Promise<T> {
+    const params = {
+      type: 'cosmos',
+      network: app.provider.name,
+      chainId: `${app.provider.ethChainId}`,
+    };
     try {
-      EventTracker.instance.trackEvent(MarketingEvents.sendTxStart, {
-        type: 'cosmos',
-      });
+      EventTracker.instance.trackEvent(MarketingEvents.sendTxStart, params);
       Logger.log('cosmos postQuery', path, {data});
       const resp = await fetch(this.getPath(path), {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: data,
       });
-      EventTracker.instance.trackEvent(MarketingEvents.sendTxSuccess, {
-        type: 'cosmos',
-      });
+      EventTracker.instance.trackEvent(MarketingEvents.sendTxSuccess, params);
       return await getHttpResponse<T>(resp);
     } catch (error) {
-      EventTracker.instance.trackEvent(MarketingEvents.sendTxFail, {
-        type: 'cosmos',
-      });
+      EventTracker.instance.trackEvent(MarketingEvents.sendTxFail, params);
       Logger.captureException(error, 'cosmos postQuery');
       throw error;
     }
