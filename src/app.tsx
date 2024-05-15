@@ -18,6 +18,7 @@ import SplashScreen from 'react-native-splash-screen';
 
 import {Color} from '@app/colors';
 import {AppScreenSecurityOverview} from '@app/components/app-screen-security-overview';
+import {SocketHandler} from '@app/components/socket-handler';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {createTheme, hideModal, showModal} from '@app/helpers';
@@ -264,6 +265,7 @@ export const App = () => {
           </MenuProvider>
         </ActionSheetProvider>
       </SafeAreaProvider>
+      <SocketHandler />
     </GestureHandlerRootView>
   );
 };

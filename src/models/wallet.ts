@@ -3,12 +3,15 @@ import {isHydrated, makePersistable} from 'mobx-persist-store';
 
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
+import {onWalletsBalanceCheckRPC} from '@app/event-actions/on-wallets-balance-check';
 import {Events} from '@app/events';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {awaitForRealm} from '@app/helpers/await-for-realm';
 import {WalletRealmObject} from '@app/models/realm-object-for-migration';
+import {Socket} from '@app/models/socket';
 import {storage} from '@app/services/mmkv';
+import {RPCMessage, RPCObserver} from '@app/types/rpc';
 import {generateFlatColors, generateGradientColors, makeID} from '@app/utils';
 import {
   CARD_CIRCLE_TOTAL,
@@ -79,12 +82,17 @@ function getMockWallets(): Wallet[] {
   }));
 }
 
-class WalletStore implements MobXStoreFromRealm {
+class WalletStore implements MobXStoreFromRealm, RPCObserver {
   realmSchemaName = WalletRealmObject.schema.name;
   wallets: Wallet[] = [];
 
   constructor(shouldSkipPersisting: boolean = false) {
     makeAutoObservable(this);
+
+    when(
+      () => Socket.lastMessage.type === 'balance',
+      () => this.onMessage(Socket.lastMessage),
+    );
 
     if (!shouldSkipPersisting) {
       const isMockEnabled =
@@ -314,6 +322,14 @@ class WalletStore implements MobXStoreFromRealm {
   setCardStyle(address: string = '', params: Partial<WalletCardStyleT>) {
     this.update(address, params);
   }
+
+  onMessage = (message: RPCMessage) => {
+    if (message.type !== 'balance') {
+      return;
+    }
+
+    onWalletsBalanceCheckRPC(message.data);
+  };
 }
 
 const instance = new WalletStore(Boolean(process.env.JEST_WORKER_ID));

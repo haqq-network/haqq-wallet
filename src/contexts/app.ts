@@ -127,7 +127,6 @@ class App extends AsyncEventEmitter {
 
     this.checkBalance = this.checkBalance.bind(this);
     this.checkBalance();
-    setInterval(this.checkBalance, 6000);
 
     this.handleDynamicLink = this.handleDynamicLink.bind(this);
 
