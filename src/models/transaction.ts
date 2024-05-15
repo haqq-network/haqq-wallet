@@ -75,13 +75,16 @@ class TransactionStore implements RPCObserver {
     return this._isLoading;
   }
 
-  create(transaction: Transaction) {
+  create(transaction: IndexerTransaction) {
     const existingTransaction = this.getById(transaction.id);
 
-    const newTransaction: Transaction = {
-      ...existingTransaction,
-      ...transaction,
-    };
+    const newTransaction: Transaction = parseTransaction(
+      {
+        ...existingTransaction,
+        ...transaction,
+      },
+      Wallet.addressList(),
+    );
 
     if (existingTransaction) {
       this.update(newTransaction.id, newTransaction);
