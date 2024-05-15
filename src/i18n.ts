@@ -952,6 +952,12 @@ export enum I18N {
   localeChangeModalDescription = 'localeChangeModalDescription',
   localeChangeModalAccept = 'localeChangeModalAccept',
   localeChangeModalDecline = 'localeChangeModalDecline',
+  jsonRpcSignBlidSignWarning = 'jsonRpcSignBlidSignWarning',
+  jsonRpcSignPhihsingWarning = 'jsonRpcSignPhihsingWarning',
+  jsonRpcSignBlidGoToSettings = 'jsonRpcSignBlidGoToSettings',
+  settingsSecurityHexBlindSign = 'settingsSecurityHexBlindSign',
+  settingsSecurityHexBlindSignDescription = 'settingsSecurityHexBlindSignDescription',
+  jsonRpcSignParsedMsg = 'jsonRpcSignParsedMsg',
 }
 
 const defaultTranslation = {en};

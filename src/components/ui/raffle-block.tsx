@@ -214,6 +214,7 @@ export const RaffleBlock = ({
                         />
                       )}
                       <LottieWrap
+                        style={styles.ticket}
                         progress={0}
                         source={ticketAnimation}
                         onAnimationFinish={onTicketAnimationFinish}
@@ -233,6 +234,7 @@ export const RaffleBlock = ({
 };
 
 const styles = createTheme({
+  ticket: {height: 34, width: 34},
   forwardIcon: {
     transform: [{translateX: -10}],
   },

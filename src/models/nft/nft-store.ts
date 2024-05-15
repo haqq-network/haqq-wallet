@@ -10,7 +10,6 @@ import {
   NftItem,
 } from '@app/models/nft';
 import {Wallet} from '@app/models/wallet';
-import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
 import {HaqqCosmosAddress, IContract} from '@app/types';
 
@@ -82,10 +81,13 @@ class NftStore {
 
   getAll() {
     Logger.log('NFTs', JSON.stringify(this.data, null, 2));
-    return Object.values(this.data).reduce(
-      (acc: NftItem[], item) => [...acc, ...item.nfts],
-      [],
-    );
+    return Object.values(this.data)
+      .reduce((acc: NftItem[], item) => [...acc, ...item.nfts], [])
+      .sort(
+        (nft1, nft2) =>
+          new Date(nft2.created_at).getTime() -
+          new Date(nft1.created_at).getTime(),
+      );
   }
 
   getAllCollections() {
@@ -167,7 +169,7 @@ class NftStore {
             name: nft.name || 'Unknown',
             description: nft.description || '-',
             tokenId: Number(nft.token_id),
-            price: nft.price ? new Balance(nft.price) : Balance.getEmpty(),
+            price: undefined, // FIXME Calculate price by token
             is_transfer_prohibinden: Boolean(contract.is_transfer_prohibinden),
           })),
         };

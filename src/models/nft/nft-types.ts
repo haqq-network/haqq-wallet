@@ -1,3 +1,4 @@
+import {CurrencyRate} from '@app/models/types';
 import {Balance} from '@app/services/balance';
 import {HaqqCosmosAddress, HaqqEthereumAddress} from '@app/types';
 
@@ -31,7 +32,7 @@ export type NftItemIndexer = {
   original_url: string | null;
   token_id: string;
   updated_at: string;
-  price?: string;
+  price?: CurrencyRate;
   properties: Record<string, string> | null;
 };
 

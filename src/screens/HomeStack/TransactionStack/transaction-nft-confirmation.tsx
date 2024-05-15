@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import {observer} from 'mobx-react';
 
@@ -8,11 +8,7 @@ import {Events} from '@app/events';
 import {showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
-import {
-  abortProviderInstanceForWallet,
-  getProviderInstanceForWallet,
-  removeProviderInstanceForWallet,
-} from '@app/helpers/provider-instance';
+import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useLayoutEffectAsync} from '@app/hooks/use-effect-async';
@@ -28,8 +24,15 @@ import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {EthSignErrorDataDetails} from '@app/services/eth-sign';
 import {EventTracker} from '@app/services/event-tracker';
-import {MarketingEvents, ModalType, TransactionResponse} from '@app/types';
+import {
+  MarketingEvents,
+  ModalType,
+  SendTransactionError,
+  TransactionResponse,
+} from '@app/types';
 import {makeID} from '@app/utils';
+
+const UNPREDICTABLE_GAS_LIMIT = 'UNPREDICTABLE_GAS_LIMIT';
 
 export const TransactionNftConfirmationScreen = observer(() => {
   const navigation = useTypedNavigation<TransactionStackParamList>();
@@ -50,31 +53,42 @@ export const TransactionNftConfirmationScreen = observer(() => {
   );
 
   const showError = useError();
+  const [soulboundTokenHint, setSoulboundTokenHint] = useState<string>('');
   const [disabled, setDisabled] = useState(false);
   const [fee, setFee] = useState<Balance | null>();
 
   useLayoutEffectAsync(async () => {
     let feeWei = Balance.Empty;
+    setSoulboundTokenHint('');
 
-    if (nft.contractType === ContractType.erc721) {
-      const result = await EthNetwork.estimateERC721Transfer(
-        wallet?.address!,
-        route.params.to,
-        nft.tokenId,
-        AddressUtils.toEth(nft.contract),
-      );
-      feeWei = result.feeWei;
-    } else {
-      const result = await EthNetwork.estimateERC1155Transfer(
-        wallet?.address!,
-        route.params.to,
-        nft.tokenId,
-        AddressUtils.toEth(nft.contract),
-      );
-      feeWei = result.feeWei;
+    try {
+      if (nft.contractType === ContractType.erc721) {
+        const result = await EthNetwork.estimateERC721Transfer(
+          wallet?.address!,
+          route.params.to,
+          nft.tokenId,
+          AddressUtils.toEth(nft.contract),
+        );
+        feeWei = result.feeWei;
+      } else {
+        const result = await EthNetwork.estimateERC1155Transfer(
+          wallet?.address!,
+          route.params.to,
+          nft.tokenId,
+          AddressUtils.toEth(nft.contract),
+        );
+        feeWei = result.feeWei;
+      }
+
+      setFee(feeWei);
+    } catch (err) {
+      const e = err as SendTransactionError;
+      if (e.code === UNPREDICTABLE_GAS_LIMIT) {
+        const idx = e.reason.lastIndexOf(': ');
+        const errorText = idx !== -1 ? e.reason.substring(idx + 1) : '';
+        setSoulboundTokenHint(errorText);
+      }
     }
-
-    setFee(feeWei);
   }, []);
 
   const onConfirmTransaction = useCallback(async () => {
@@ -84,11 +98,7 @@ export const TransactionNftConfirmationScreen = observer(() => {
 
         const ethNetworkProvider = new EthNetwork();
 
-        const provider = await getProviderInstanceForWallet(
-          wallet,
-          false,
-          true,
-        );
+        const provider = await getProviderInstanceForWallet(wallet, false);
 
         let transaction: TransactionResponse | null = null;
         if (nft.contractType === ContractType.erc721) {
@@ -167,16 +177,9 @@ export const TransactionNftConfirmationScreen = observer(() => {
         }
       } finally {
         setDisabled(false);
-        removeProviderInstanceForWallet(wallet);
       }
     }
   }, [fee, navigation, nft, route.params.from, route.params.to, wallet]);
-
-  useEffect(() => {
-    return () => {
-      wallet && abortProviderInstanceForWallet(wallet);
-    };
-  }, [wallet]);
 
   return (
     <TransactionNftConfirmation
@@ -184,6 +187,7 @@ export const TransactionNftConfirmationScreen = observer(() => {
       contact={contact}
       to={route.params.to}
       item={route.params.nft}
+      soulboundTokenHint={soulboundTokenHint}
       fee={fee}
       onConfirmTransaction={onConfirmTransaction}
     />

@@ -99,7 +99,7 @@ export class SignJsonRpcRequest {
       throw new Error(getText(I18N.jsonRpcErrorInvalidWallet));
     }
 
-    const instanceProvider = await getProviderInstanceForWallet(wallet);
+    const instanceProvider = await getProviderInstanceForWallet(wallet, false);
 
     if (!instanceProvider) {
       throw new Error(getText(I18N.jsonRpcErrorInvalidProvider));

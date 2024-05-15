@@ -14,7 +14,7 @@ import {
 import {createTheme, getWindowWidth} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks/use-theme-selector';
 import {I18N, getText} from '@app/i18n';
-import {SHADOW_COLOR_1} from '@app/variables/common';
+import {SHADOW_L} from '@app/variables/shadows';
 
 export type PopupNotificationTopicProps = {
   onClickSubscribe: () => Promise<void>;
@@ -110,21 +110,13 @@ const styles = createTheme({
   margin: {marginVertical: 8},
   image: {
     width: () => getWindowWidth() - 80,
+    height: 64,
   },
   imageWrapper: {
-    backgroundColor: Color.bg1,
-
     marginBottom: 20,
     borderColor: Color.graphicSecond1,
     borderWidth: 1,
     borderRadius: 12,
-    shadowColor: SHADOW_COLOR_1,
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowRadius: 8,
-    shadowOpacity: 1,
-    elevation: 13,
+    ...SHADOW_L,
   },
 });

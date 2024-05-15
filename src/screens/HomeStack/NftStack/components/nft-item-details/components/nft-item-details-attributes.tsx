@@ -13,7 +13,7 @@ type Props = {
 };
 
 export const NftItemDetailsAttributes = ({attributes}: Props) => {
-  if (!attributes) {
+  if (!attributes?.length) {
     return null;
   }
 

@@ -134,6 +134,7 @@ export interface StoryListProps
   mediaContainerStyle?: ViewStyle;
   imageStyles?: ImageStyle;
   onLoad: (duration?: number) => void;
+  analyticID: string;
 }
 
 export interface StoryVideoProps {

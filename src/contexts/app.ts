@@ -31,6 +31,7 @@ import {VestingMetadataType} from '@app/models/vesting-metadata';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
+import {EventTracker} from '@app/services/event-tracker';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {RemoteConfig} from '@app/services/remote-config';
 
@@ -44,11 +45,11 @@ import {
   DynamicLink,
   HaqqEthereumAddress,
   IndexerBalanceData,
+  MarketingEvents,
   ModalType,
 } from '../types';
 import {
   LIGHT_GRAPHIC_GREEN_1,
-  MAINNET_ETH_CHAIN_ID,
   MAIN_NETWORK_ID,
   TEST_NETWORK_ID,
 } from '../variables/common';
@@ -323,15 +324,20 @@ class App extends AsyncEventEmitter {
   }
 
   get isTesterMode() {
-    return (
-      (VariablesBool.get('isTesterMode') ?? false) &&
-      this.provider.ethChainId !== MAINNET_ETH_CHAIN_ID
-    );
+    return VariablesBool.get('isTesterMode') ?? false;
   }
 
   set isTesterMode(value) {
     this.onTesterModeChange(value);
     VariablesBool.set('isTesterMode', value);
+  }
+
+  get blindSignEnabled() {
+    return VariablesBool.get('blindSignEnabled') ?? false;
+  }
+
+  set blindSignEnabled(value: boolean) {
+    VariablesBool.set('blindSignEnabled', value);
   }
 
   get currentTheme() {
@@ -479,12 +485,15 @@ class App extends AsyncEventEmitter {
         await this.biometryAuth();
         vibrate(HapticEffects.success);
         this.authenticated = true;
+        return true;
       } catch (error) {
         Logger.error('app.auth', error);
         await awaitForEventDone(Events.enterPinSuccess);
+        return false;
       }
     } else {
       await awaitForEventDone(Events.enterPinSuccess);
+      return false;
     }
   }
 
@@ -500,14 +509,14 @@ class App extends AsyncEventEmitter {
   }
 
   pinAuth() {
-    return new Promise<void>(async (resolve, _reject) => {
+    return new Promise<boolean>(async (resolve, _reject) => {
       const password = await this.getPassword();
 
       const callback = (value: string) => {
         if (password === value) {
           this.off('enterPin', callback);
           this.emit(Events.enterPinSuccess);
-          resolve();
+          resolve(true);
         } else {
           this.emit('errorPin', 'not match');
         }
@@ -515,6 +524,16 @@ class App extends AsyncEventEmitter {
 
       this.on('enterPin', callback);
     });
+  }
+
+  async requsetPinConfirmation(): Promise<boolean> {
+    const close = showModal('pin');
+    const confirmed = await Promise.race([
+      this.makeBiometryAuth(),
+      this.pinAuth(),
+    ]);
+    close();
+    return confirmed;
   }
 
   successEnter() {
@@ -536,6 +555,9 @@ class App extends AsyncEventEmitter {
 
       switch (appStatus) {
         case AppStatus.active:
+          EventTracker.instance.trackEvent(MarketingEvents.appStarted, {
+            type: 'background',
+          });
           if (this.user?.isOutdatedLastActivity() && this.authenticated) {
             this.authenticated = false;
             this._authInProgress = true;

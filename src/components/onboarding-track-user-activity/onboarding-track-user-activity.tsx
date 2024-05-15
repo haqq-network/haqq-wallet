@@ -31,6 +31,7 @@ export const OnboardingTrackUserActivity = ({
       testID="onboarding_track_user_activity">
       <Spacer style={style.animation}>
         <LottieWrap
+          style={style.lottie}
           loop
           autoPlay
           source={require('@assets/animations/track-activity.json')}
@@ -86,6 +87,10 @@ export const OnboardingTrackUserActivity = ({
 };
 
 const style = createTheme({
+  lottie: {
+    width: 295,
+    height: 64,
+  },
   container: {
     marginHorizontal: 20,
     justifyContent: 'center',

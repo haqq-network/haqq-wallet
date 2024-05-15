@@ -1046,3 +1046,8 @@ export const setRTL = (lang: AppLanguage) => {
     RNRestart.restart();
   }
 };
+
+const hexRegExp = /^(0[xX])?[0-9A-Fa-f]+$/;
+export function isValidHex(hexString: string) {
+  return hexRegExp.test(hexString);
+}

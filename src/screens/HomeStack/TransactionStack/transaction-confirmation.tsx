@@ -1,17 +1,14 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import {observer} from 'mobx-react';
 
 import {TransactionConfirmation} from '@app/components/transaction-confirmation';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
-import {removeProviderInstanceForWallet, showModal} from '@app/helpers';
+import {showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
-import {
-  abortProviderInstanceForWallet,
-  getProviderInstanceForWallet,
-} from '@app/helpers/provider-instance';
+import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useLayoutEffectAsync} from '@app/hooks/use-effect-async';
@@ -91,11 +88,7 @@ export const TransactionConfirmationScreen = observer(() => {
 
         const ethNetworkProvider = new EthNetwork();
 
-        const provider = await getProviderInstanceForWallet(
-          wallet,
-          false,
-          true,
-        );
+        const provider = await getProviderInstanceForWallet(wallet, false);
 
         let transaction;
         if (token.is_erc20) {
@@ -174,7 +167,6 @@ export const TransactionConfirmationScreen = observer(() => {
         }
       } finally {
         setDisabled(false);
-        removeProviderInstanceForWallet(wallet);
       }
     }
   }, [
@@ -185,12 +177,6 @@ export const TransactionConfirmationScreen = observer(() => {
     route.params.to,
     wallet,
   ]);
-
-  useEffect(() => {
-    return () => {
-      wallet && abortProviderInstanceForWallet(wallet);
-    };
-  }, [wallet]);
 
   return (
     <TransactionConfirmation

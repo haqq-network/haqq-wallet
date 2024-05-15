@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
+import {Transaction} from 'ethers';
 import {View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
@@ -8,6 +9,7 @@ import {JsonRpcSignInfo} from '@app/components/json-rpc-sign-info';
 import {JsonRpcTransactionInfo} from '@app/components/json-rpc-transaction-info';
 import {Button, ButtonVariant, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {EthereumSignInMessage} from '@app/helpers/ethereum-message-checker';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {
@@ -27,9 +29,13 @@ export interface JsonRpcSignProps {
   chainId?: number;
   hideContractAttention?: boolean;
   isAllowedDomain: boolean;
+  phishingTxRequest: Transaction | null;
+  messageIsHex: boolean;
+  blindSignEnabled: boolean;
+  ethereumSignInMessage: EthereumSignInMessage | null;
   onPressSign(): void;
-
   onPressReject(): void;
+  onPressAllowOnceSignDangerousTx(): void;
 }
 
 export const JsonRpcSign = ({
@@ -43,10 +49,40 @@ export const JsonRpcSign = ({
   hideContractAttention,
   chainId,
   isAllowedDomain,
+  phishingTxRequest,
+  messageIsHex,
+  blindSignEnabled,
+  ethereumSignInMessage,
   onPressReject,
   onPressSign,
+  onPressAllowOnceSignDangerousTx,
 }: JsonRpcSignProps) => {
   const insets = useSafeAreaInsets();
+  const signButtonDisabled = useMemo(() => {
+    if (rejectLoading || !isAllowedDomain) {
+      return true;
+    }
+
+    if (ethereumSignInMessage && Object.values(ethereumSignInMessage).length) {
+      return false;
+    }
+
+    if (messageIsHex && blindSignEnabled === false) {
+      return true;
+    }
+
+    if (phishingTxRequest && Object.values(phishingTxRequest).length) {
+      return true;
+    }
+
+    return false;
+  }, [
+    blindSignEnabled,
+    messageIsHex,
+    phishingTxRequest,
+    rejectLoading,
+    isAllowedDomain,
+  ]);
 
   return (
     <View style={styles.container}>
@@ -66,6 +102,12 @@ export const JsonRpcSign = ({
             metadata={metadata}
             request={request}
             wallet={wallet!}
+            phishingTxRequest={phishingTxRequest}
+            messageIsHex={messageIsHex}
+            blindSignEnabled={blindSignEnabled}
+            isAllowedDomain={isAllowedDomain}
+            ethereumSignInMessage={ethereumSignInMessage}
+            onPressAllowOnceSignDangerousTx={onPressAllowOnceSignDangerousTx}
           />
         )}
       </View>
@@ -74,7 +116,7 @@ export const JsonRpcSign = ({
         <Spacer height={4} />
         <Button
           loading={signLoading}
-          disabled={rejectLoading || !isAllowedDomain}
+          disabled={signButtonDisabled}
           variant={ButtonVariant.contained}
           onPress={onPressSign}
           i18n={I18N.walletConnectSignApproveButton}

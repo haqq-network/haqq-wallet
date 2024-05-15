@@ -6,6 +6,7 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 
 import {app} from '@app/contexts';
 import {Initializable} from '@app/helpers/initializable';
+import {Wallet} from '@app/models/wallet';
 import {MarketingEvents} from '@app/types';
 import {getAppTrackingAuthorizationStatus} from '@app/utils';
 import {IS_ANDROID} from '@app/variables/common';
@@ -47,6 +48,18 @@ const EventsNameMap: Record<MarketingEvents, string> = {
   [MarketingEvents.stakingDelegate]: 'staking delegate',
   [MarketingEvents.stakingValidators]: 'staking validators',
   [MarketingEvents.jailed]: 'jailed',
+  [MarketingEvents.storyOpen]: 'story opened',
+  [MarketingEvents.storySkip]: 'story skipped',
+  [MarketingEvents.storyFinished]: 'story finished',
+  [MarketingEvents.storyAction]: 'story button pressed',
+  [MarketingEvents.signTxStart]: 'sign tx start',
+  [MarketingEvents.signTxSuccess]: 'sign tx success',
+  [MarketingEvents.signTxFail]: 'sign tx fail',
+  [MarketingEvents.sendTxStart]: 'send tx start',
+  [MarketingEvents.sendTxSuccess]: 'send tx success',
+  [MarketingEvents.sendTxFail]: 'send tx fail',
+  [MarketingEvents.appStarted]: 'app started',
+  [MarketingEvents.navigation]: 'navigation',
 };
 
 export class EventTracker extends Initializable {
@@ -63,9 +76,6 @@ export class EventTracker extends Initializable {
   }
 
   initialize() {
-    if (DISABLED) {
-      return;
-    }
     this.startInitialization();
     this._configureAdjust();
     this._configurePosthog();
@@ -133,13 +143,11 @@ export class EventTracker extends Initializable {
     this.adjust.setPushToken(token);
     this.posthog?.identify(this.posthog.getDistinctId(), {
       push_token: token,
+      wallets: Wallet.addressList(),
     });
   }
 
   dispose() {
-    if (DISABLED) {
-      return;
-    }
     this.adjust.componentWillUnmount();
     this._posthog = null;
     this.rejectInitialization();
@@ -163,7 +171,7 @@ export class EventTracker extends Initializable {
     params: Record<string, string> = {},
   ) {
     const eventName = EventsNameMap[event] ?? event ?? 'unknown';
-    this._posthog?.capture(eventName, {$set: params});
+    this._posthog?.capture(eventName, {...params});
   }
 
   private _configureAdjust() {

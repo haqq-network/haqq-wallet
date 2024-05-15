@@ -1,10 +1,11 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
-import {Image, TouchableOpacity} from 'react-native';
+import {Image, TouchableOpacity, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {useNftImage} from '@app/hooks/nft/use-nft-image';
+import {useLayout} from '@app/hooks/use-layout';
 
 import {NftViewerItemPreviewExtendedProps} from './nft-viewer-item-preview';
 
@@ -14,12 +15,21 @@ export const NftViewerItemPreviewSmall = ({
 }: NftViewerItemPreviewExtendedProps) => {
   const handlePress = useCallback(() => onPress?.(item), [onPress, item]);
   const imageUri = useNftImage(item.cached_url);
+  const [layout, onLayout] = useLayout();
+
+  const containerStyle: ViewStyle = useMemo(
+    () => ({
+      height: layout.width,
+    }),
+    [layout.width],
+  );
 
   return (
     <TouchableOpacity
       disabled={!onPress}
       onPress={handlePress}
-      style={styles.container}>
+      style={[styles.container, containerStyle]}
+      onLayout={onLayout}>
       <Image style={styles.image} source={imageUri} resizeMode="contain" />
     </TouchableOpacity>
   );

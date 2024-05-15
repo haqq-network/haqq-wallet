@@ -6,7 +6,6 @@ import {observer} from 'mobx-react';
 import {StakingInfo} from '@app/components/staking-info';
 import {app} from '@app/contexts';
 import {
-  abortProviderInstanceForWallet,
   awaitForPopupClosed,
   awaitForWallet,
   getProviderInstanceForWallet,
@@ -73,12 +72,6 @@ export const StakingInfoScreen = observer(() => {
       disposer();
     };
   }, [operator_address]);
-
-  useEffect(() => {
-    return () => {
-      visible.map(w => abortProviderInstanceForWallet(w));
-    };
-  }, [visible]);
 
   const onPressGetReward = useCallback(async () => {
     if (canGetRewards) {

@@ -33,6 +33,7 @@ const StoryList: FC<StoryListProps> = memo(
     progressActiveColor,
     mediaContainerStyle,
     imageStyles,
+    analyticID,
     ...props
   }) => {
     const imageHeight = useSharedValue(HEIGHT);
@@ -90,7 +91,12 @@ const StoryList: FC<StoryListProps> = memo(
             active={isActive}
             activeStory={activeStory}
           />
-          <StoryOverlay stories={stories} activeStory={activeStory} />
+          <StoryOverlay
+            onClose={props.onClose}
+            stories={stories}
+            activeStory={activeStory}
+            analyticID={analyticID}
+          />
         </Animated.View>
       </StoryAnimation>
     );
