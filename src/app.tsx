@@ -9,6 +9,7 @@ import {
   Theme,
 } from '@react-navigation/native';
 import * as Sentry from '@sentry/react-native';
+import PostHog, {PostHogProvider} from 'posthog-react-native';
 import {AppState, Dimensions, Linking, StyleSheet} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {MenuProvider} from 'react-native-popup-menu';
@@ -17,11 +18,11 @@ import SplashScreen from 'react-native-splash-screen';
 
 import {Color} from '@app/colors';
 import {AppScreenSecurityOverview} from '@app/components/app-screen-security-overview';
+import {SocketHandler} from '@app/components/socket-handler';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {createTheme, hideModal, showModal} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
-import {trackEvent} from '@app/helpers/track-event';
 import {useTheme} from '@app/hooks';
 import {useToast} from '@app/hooks/use-toast';
 import {Contact} from '@app/models/contact';
@@ -29,10 +30,12 @@ import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 import {
+  HomeStackRoutes,
   KeystoneStackRoutes,
   LedgerStackRoutes,
   OnboardingStackRoutes,
   SssMigrateStackRoutes,
+  WelcomeStackRoutes,
 } from '@app/route-types';
 import {RootStack} from '@app/screens/RootStack';
 import {AppTheme, ModalType} from '@app/types';
@@ -74,12 +77,28 @@ const SAFE_AREA_INTIAL_METRICS: Metrics = {
   },
 };
 
+// We need to log some screens with params
+// be careful with this list to avoid capturing sensitive data
+const ALLOWED_SCREEN_TO_LOG_PARAMS = [
+  HomeStackRoutes.TransactionDetail,
+  HomeStackRoutes.Web3BrowserPopup,
+  HomeStackRoutes.InAppBrowser,
+  WelcomeStackRoutes.InAppBrowser,
+];
+
 export const App = () => {
   const [initialized, setInitialized] = useState(false);
   const [isPinReseted, setPinReseted] = useState(false);
+  const [posthog, setPosthog] = useState<PostHog | null>(null);
   const [onboarded, setOnboarded] = useState(app.onboarded);
   const theme = useTheme();
   const toast = useToast();
+
+  useEffect(() => {
+    EventTracker.instance.awaitForInitialization().then(() => {
+      setPosthog(EventTracker.instance.posthog!);
+    });
+  }, []);
 
   const navTheme = useMemo(
     () => ({dark: theme === AppTheme.dark, colors: appTheme.colors}) as Theme,
@@ -187,11 +206,8 @@ export const App = () => {
       level: 'info',
     });
 
-    await trackEvent('navigation', {
-      path: navigator.getCurrentRoute()?.name,
-    });
+    const currentRouteName = navigator.getCurrentRoute()?.name;
 
-    const currentRouteName = navigator?.getCurrentRoute?.()?.name;
     if (
       !!currentRouteName &&
       CREATE_WALLET_FINISH_SCREENS.includes(currentRouteName)
@@ -206,6 +222,10 @@ export const App = () => {
     }
   }, []);
 
+  if (!posthog) {
+    return null;
+  }
+
   return (
     <GestureHandlerRootView style={styles.rootView}>
       <SafeAreaProvider initialMetrics={SAFE_AREA_INTIAL_METRICS}>
@@ -216,18 +236,36 @@ export const App = () => {
               ref={navigator}
               theme={navTheme}
               onStateChange={onStateChange}>
-              <RootStack
-                onboarded={onboarded}
-                isPinReseted={isPinReseted}
-                isReady={initialized}
-              />
-              <AppScreenSecurityOverview />
-              {toast}
-              <AppVersionAbsoluteView />
+              <PostHogProvider
+                client={posthog}
+                autocapture={{
+                  captureTouches: true,
+                  captureLifecycleEvents: true,
+                  captureScreens: true,
+                  navigation: {
+                    routeToProperties: (name, params) => {
+                      // @ts-ignore
+                      if (ALLOWED_SCREEN_TO_LOG_PARAMS.includes(name)) {
+                        return params;
+                      }
+                      return undefined;
+                    },
+                  },
+                }}>
+                <RootStack
+                  onboarded={onboarded}
+                  isPinReseted={isPinReseted}
+                  isReady={initialized}
+                />
+                <AppScreenSecurityOverview />
+                {toast}
+                <AppVersionAbsoluteView />
+              </PostHogProvider>
             </NavigationContainer>
           </MenuProvider>
         </ActionSheetProvider>
       </SafeAreaProvider>
+      <SocketHandler />
     </GestureHandlerRootView>
   );
 };

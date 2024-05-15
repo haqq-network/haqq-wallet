@@ -27,11 +27,9 @@ export const BackupVerifyScreen = memo(() => {
   const [mnemonic, setMnemonic] = useState<string | null>(null);
 
   useEffectAsync(async () => {
-    provider.current = (await getProviderInstanceForWallet(
-      wallet,
-      true,
-      true,
-    )) as ProviderMnemonicReactNative | ProviderSSSReactNative;
+    provider.current = (await getProviderInstanceForWallet(wallet, true)) as
+      | ProviderMnemonicReactNative
+      | ProviderSSSReactNative;
 
     if (
       provider.current instanceof ProviderMnemonicReactNative ||

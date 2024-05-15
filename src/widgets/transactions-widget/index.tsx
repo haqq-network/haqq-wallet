@@ -17,7 +17,7 @@ export const TransactionsWidgetWrapper = observer(() => {
 
   const lastThreeTransactions = useMemo(
     () => transactions.slice(0, 3),
-    [transactions],
+    [transactions[0]?.hash],
   );
 
   const openTotalInfo = useCallback(() => {

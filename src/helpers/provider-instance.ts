@@ -1,4 +1,10 @@
-import {ProviderBaseError, ProviderInterface} from '@haqq/provider-base';
+import {
+  BytesLike,
+  ProviderBaseError,
+  ProviderInterface,
+  TransactionRequest,
+  TypedData,
+} from '@haqq/provider-base';
 import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
 import {ProviderKeystoneReactNative} from '@haqq/provider-keystone-react-native';
 import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
@@ -9,41 +15,88 @@ import {app} from '@app/contexts';
 import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {Wallet} from '@app/models/wallet';
-import {WalletType} from '@app/types';
+import {EventTracker} from '@app/services/event-tracker';
+import {MarketingEvents, WalletType} from '@app/types';
 import {LEDGER_APP} from '@app/variables/common';
 
 import {awaitForQRSign} from './await-for-qr-sign';
 
-const cache = new Map();
+function getProviderWrapper(provider: ProviderInterface) {
+  const signTransactionOriginal = provider.signTransaction.bind(provider);
+  const signPersonalMessageOriginal =
+    provider.signPersonalMessage.bind(provider);
+  const signTypedDataOriginal = provider.signTypedData.bind(provider);
 
-function getId(wallet: Wallet) {
-  switch (wallet.type) {
-    case WalletType.mnemonic:
-    case WalletType.hot:
-    case WalletType.ledgerBt:
-    case WalletType.sss:
-      return wallet.accountId ?? '';
-  }
-}
+  const wrapped = {
+    async signTransaction(
+      hdPath: string,
+      transaction: TransactionRequest,
+    ): Promise<string> {
+      const params = {
+        type: 'signTransaction',
+        network: app.provider.name,
+        chainId: `${app.provider.ethChainId}`,
+      };
+      try {
+        EventTracker.instance.trackEvent(MarketingEvents.signTxStart, params);
+        const result = await signTransactionOriginal(hdPath, transaction);
+        const wallet = await provider.getAccountInfo(hdPath);
+        EventTracker.instance.trackEvent(MarketingEvents.signTxSuccess, {
+          ...wallet,
+          ...params,
+        });
+        return result;
+      } catch (error) {
+        EventTracker.instance.trackEvent(MarketingEvents.signTxFail, params);
+        throw error;
+      }
+    },
+    async signPersonalMessage(
+      hdPath: string,
+      message: BytesLike,
+    ): Promise<string> {
+      const params = {
+        type: 'signPersonalMessage',
+        network: app.provider.name,
+        chainId: `${app.provider.ethChainId}`,
+      };
+      try {
+        EventTracker.instance.trackEvent(MarketingEvents.signTxFail, params);
+        const result = await signPersonalMessageOriginal(hdPath, message);
+        const wallet = await provider.getAccountInfo(hdPath);
+        EventTracker.instance.trackEvent(MarketingEvents.signTxSuccess, {
+          ...wallet,
+          ...params,
+        });
+        return result;
+      } catch (error) {
+        EventTracker.instance.trackEvent(MarketingEvents.signTxFail, params);
+        throw error;
+      }
+    },
+    async signTypedData(hdPath: string, typedData: TypedData): Promise<string> {
+      const params = {
+        type: 'signTypedData',
+        network: app.provider.name,
+        chainId: `${app.provider.ethChainId}`,
+      };
+      try {
+        EventTracker.instance.trackEvent(MarketingEvents.signTxStart, params);
+        const result = await signTypedDataOriginal(hdPath, typedData);
+        const wallet = await provider.getAccountInfo(hdPath);
+        EventTracker.instance.trackEvent(MarketingEvents.signTxSuccess, {
+          ...wallet,
+          ...params,
+        });
+        return result;
+      } catch (error) {
+        EventTracker.instance.trackEvent(MarketingEvents.signTxFail, params);
+        throw error;
+      }
+    },
+  };
 
-export function hasProviderInstanceForWallet(wallet: Wallet) {
-  return cache.has(getId(wallet));
-}
-
-export function abortProviderInstanceForWallet(wallet: Wallet) {
-  if (hasProviderInstanceForWallet(wallet)) {
-    cache.get(getId(wallet)).abort();
-  }
-}
-
-export function removeProviderInstanceForWallet(wallet: Wallet) {
-  let id = getId(wallet);
-  let instance = cache.get(id);
-  if (instance) {
-    instance.abort();
-    instance = null;
-    cache.delete(id);
-  }
+  return Object.assign(provider, wrapped) as unknown as ProviderInterface;
 }
 
 /**
@@ -54,14 +107,7 @@ export function removeProviderInstanceForWallet(wallet: Wallet) {
 export async function getProviderInstanceForWallet(
   wallet: Wallet,
   skipAwaitForLedgerCall: boolean = false,
-  forceUpdate: boolean = false,
 ): Promise<ProviderInterface> {
-  const id = getId(wallet);
-
-  if (cache.has(id) && !forceUpdate) {
-    return cache.get(id);
-  }
-
   let provider: ProviderInterface;
   switch (wallet.type) {
     case WalletType.mnemonic:
@@ -84,7 +130,6 @@ export async function getProviderInstanceForWallet(
       });
       if (!skipAwaitForLedgerCall) {
         awaitForLedger(provider);
-        cache.set(id, provider);
       }
       break;
     }
@@ -113,12 +158,11 @@ export async function getProviderInstanceForWallet(
       Logger.captureException(error, 'provider-catch-error', {
         wallet,
         skipAwaitForLedgerCall,
-        forceUpdate,
         source: source,
         error: error,
       });
     }
   });
-  cache.set(id, provider);
-  return provider;
+
+  return getProviderWrapper(provider);
 }

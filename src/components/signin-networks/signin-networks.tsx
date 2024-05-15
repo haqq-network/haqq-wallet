@@ -134,13 +134,19 @@ export const SigninNetworks = observer(
             />
           </>
         )}
-        <Spacer height={10} />
-        <Text
-          variant={TextVariant.t15}
-          position={TextPosition.center}
-          i18n={I18N.sssNetworkWeb3AuthDescription}
-          color={Color.textBase2}
-        />
+        {/* If there is at least one button on the screen then show Social Login description */}
+        {(isCustomSupported || isGoogleSupported || isAppleSupported) &&
+          !isSSSDisabled && (
+            <>
+              <Spacer height={10} />
+              <Text
+                variant={TextVariant.t15}
+                position={TextPosition.center}
+                i18n={I18N.sssNetworkWeb3AuthDescription}
+                color={Color.textBase2}
+              />
+            </>
+          )}
         <Spacer height={28} />
         <Button
           onPress={onSkip}
@@ -156,8 +162,8 @@ export const SigninNetworks = observer(
 
 const styles = createTheme({
   logo: {
-    width: 148,
-    height: 148,
+    width: 375,
+    height: 160,
   },
   container: {
     flex: 1,

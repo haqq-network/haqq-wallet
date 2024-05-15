@@ -11,3 +11,213 @@ index b343dc8..96cede0 100644
    //noinspection GradleDependency
    androidTestImplementation 'org.mockito:mockito-android:3.4.6'
    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+diff --git a/node_modules/react-native-encrypted-storage/lib/commonjs/EncryptedStorage.js b/node_modules/react-native-encrypted-storage/lib/commonjs/EncryptedStorage.js
+index a79e26f..dd6fb74 100644
+--- a/node_modules/react-native-encrypted-storage/lib/commonjs/EncryptedStorage.js
++++ b/node_modules/react-native-encrypted-storage/lib/commonjs/EncryptedStorage.js
+@@ -13,6 +13,52 @@ const {
+ if (!RNEncryptedStorage) {
+   throw new Error('RNEncryptedStorage is undefined');
+ }
++
++function parse(data) {
++  if (typeof data === 'string') {
++    try {
++      // Attempt to parse the string as JSON
++      const result = JSON.parse(data);
++      // If the result is a string, retry parsing
++      if (typeof result === 'string') {
++        return parse(result);
++      }
++      return parse(result); // If it's an object or array, parse their elements
++    } catch (e) {
++      // In case of parsing error, return the original data
++      return data;
++    }
++  }
++
++  if (Array.isArray(data)) {
++    return data.map(item => parse(item)); // Recursive call for each array element
++  } else if (data !== null && typeof data === 'object') {
++    // Recursive call for object values
++    Object.keys(data).forEach(key => {
++      data[key] = parse(data[key]);
++    });
++    return data;
++  }
++
++  // For primitive types (not objects or arrays), return the value unchanged
++  return data;
++}
++
++function parseIncorrectJsonString(data) {
++  try {
++    if (!data) {
++      return data;
++    }
++    const parsed = parse(data);
++    if (typeof parsed === 'string') {
++      return parsed;
++    }
++    return JSON.stringify(parsed);
++  } catch (err) {
++    return data;
++  }
++}
++
+ class EncryptedStorage {
+   /**
+    * Writes data to the disk, using SharedPreferences or KeyChain, depending on the platform.
+@@ -42,10 +88,10 @@ class EncryptedStorage {
+ 
+   static getItem(key, cb) {
+     if (cb) {
+-      RNEncryptedStorage.getItem(key).then(cb).catch(cb);
++      RNEncryptedStorage.getItem(key).then(cb).then(parseIncorrectJsonString).catch(cb);
+       return;
+     }
+-    return RNEncryptedStorage.getItem(key);
++    return RNEncryptedStorage.getItem(key).then(parseIncorrectJsonString);
+   }
+ 
+   /**
+diff --git a/node_modules/react-native-encrypted-storage/lib/module/EncryptedStorage.js b/node_modules/react-native-encrypted-storage/lib/module/EncryptedStorage.js
+index 29a5249..b543efb 100644
+--- a/node_modules/react-native-encrypted-storage/lib/module/EncryptedStorage.js
++++ b/node_modules/react-native-encrypted-storage/lib/module/EncryptedStorage.js
+@@ -7,6 +7,52 @@ const {
+ if (!RNEncryptedStorage) {
+   throw new Error('RNEncryptedStorage is undefined');
+ }
++
++function parse(data) {
++  if (typeof data === 'string') {
++    try {
++      // Attempt to parse the string as JSON
++      const result = JSON.parse(data);
++      // If the result is a string, retry parsing
++      if (typeof result === 'string') {
++        return parse(result);
++      }
++      return parse(result); // If it's an object or array, parse their elements
++    } catch (e) {
++      // In case of parsing error, return the original data
++      return data;
++    }
++  }
++
++  if (Array.isArray(data)) {
++    return data.map(item => parse(item)); // Recursive call for each array element
++  } else if (data !== null && typeof data === 'object') {
++    // Recursive call for object values
++    Object.keys(data).forEach(key => {
++      data[key] = parse(data[key]);
++    });
++    return data;
++  }
++
++  // For primitive types (not objects or arrays), return the value unchanged
++  return data;
++}
++
++function parseIncorrectJsonString(data) {
++  try {
++    if (!data) {
++      return data;
++    }
++    const parsed = parse(data);
++    if (typeof parsed === 'string') {
++      return parsed;
++    }
++    return JSON.stringify(parsed);
++  } catch (err) {
++    return data;
++  }
++}
++
+ export default class EncryptedStorage {
+   /**
+    * Writes data to the disk, using SharedPreferences or KeyChain, depending on the platform.
+@@ -36,10 +82,10 @@ export default class EncryptedStorage {
+ 
+   static getItem(key, cb) {
+     if (cb) {
+-      RNEncryptedStorage.getItem(key).then(cb).catch(cb);
++      RNEncryptedStorage.getItem(key).then(cb).then(parseIncorrectJsonString).catch(cb);
+       return;
+     }
+-    return RNEncryptedStorage.getItem(key);
++    return RNEncryptedStorage.getItem(key).then(parseIncorrectJsonString);
+   }
+ 
+   /**
+diff --git a/node_modules/react-native-encrypted-storage/src/EncryptedStorage.ts b/node_modules/react-native-encrypted-storage/src/EncryptedStorage.ts
+index f354019..5cdc7b1 100644
+--- a/node_modules/react-native-encrypted-storage/src/EncryptedStorage.ts
++++ b/node_modules/react-native-encrypted-storage/src/EncryptedStorage.ts
+@@ -10,6 +10,51 @@ if (!RNEncryptedStorage) {
+ export type StorageErrorCallback = (error?: Error) => void;
+ export type StorageValueCallback = (error?: Error, value?: string) => void;
+ 
++function parse(data: any): any {
++  if (typeof data === 'string') {
++    try {
++      // Attempt to parse the string as JSON
++      const result = JSON.parse(data);
++      // If the result is a string, retry parsing
++      if (typeof result === 'string') {
++        return parse(result);
++      }
++      return parse(result); // If it's an object or array, parse their elements
++    } catch (e) {
++      // In case of parsing error, return the original data
++      return data;
++    }
++  }
++
++  if (Array.isArray(data)) {
++    return data.map(item => parse(item)); // Recursive call for each array element
++  } else if (data !== null && typeof data === 'object') {
++    // Recursive call for object values
++    Object.keys(data).forEach(key => {
++      data[key] = parse(data[key]);
++    });
++    return data;
++  }
++
++  // For primitive types (not objects or arrays), return the value unchanged
++  return data;
++}
++
++function parseIncorrectJsonString(data: string): string {
++  try {
++    if (!data) {
++      return data;
++    }
++    const parsed = parse(data);
++    if (typeof parsed === 'string') {
++      return parsed;
++    }
++    return JSON.stringify(parsed);
++  } catch (err) {
++    return data;
++  }
++}
++
+ export default class EncryptedStorage {
+   /**
+    * Writes data to the disk, using SharedPreferences or KeyChain, depending on the platform.
+@@ -55,11 +100,11 @@ export default class EncryptedStorage {
+     cb?: StorageValueCallback
+   ): void | Promise<string | null> {
+     if (cb) {
+-      RNEncryptedStorage.getItem(key).then(cb).catch(cb);
++      RNEncryptedStorage.getItem(key).then(cb).then(parseIncorrectJsonString).catch(cb);
+       return;
+     }
+ 
+-    return RNEncryptedStorage.getItem(key);
++    return RNEncryptedStorage.getItem(key).then(parseIncorrectJsonString);
+   }
+ 
+   /**

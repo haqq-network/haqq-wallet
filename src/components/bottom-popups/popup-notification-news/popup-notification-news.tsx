@@ -110,6 +110,7 @@ const styles = createTheme({
   margin: {marginVertical: 8},
   image: {
     width: () => getWindowWidth() - 80,
+    height: 64,
   },
   imageWrapper: {
     marginBottom: 20,

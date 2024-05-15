@@ -59,6 +59,7 @@ const AUTO_CLOSE_DISABLED = [
   ModalType.keystoneScanner,
   ModalType.keystoneQR,
   ModalType.popupNotification,
+  ModalType.cloudShareNotFound,
 ];
 
 export const ModalWrapper = ({
