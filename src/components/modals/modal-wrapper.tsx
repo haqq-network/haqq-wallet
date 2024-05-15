@@ -33,6 +33,7 @@ import {ViewErrorDetails} from '@app/components/modals/view-error-details';
 import {WalletsBottomSheet} from '@app/components/modals/wallets-bottom-sheet';
 import {createTheme, hideModal} from '@app/helpers';
 import {useTheme} from '@app/hooks';
+import {PopupNotificationScreen} from '@app/screens/popup-notification';
 import {ModalType, Modals, ModalsListBase} from '@app/types';
 
 import {DomainBlocked} from './domain-blocked';
@@ -58,6 +59,7 @@ const AUTO_CLOSE_DISABLED = [
   ModalType.qr,
   ModalType.keystoneScanner,
   ModalType.keystoneQR,
+  ModalType.popupNotification,
   ModalType.cloudShareNotFound,
   ModalType.removeSSS,
 ];
@@ -159,6 +161,8 @@ export const ModalWrapper = ({
         return <PinErrorModal {...modal} onClose={onCloseModalPress} />;
       case ModalType.removeSSS:
         return <RemoveSSS {...modal} onClose={onCloseModalPress} />;
+      case ModalType.popupNotification:
+        return <PopupNotificationScreen onCloseProp={onCloseModalPress} />;
       default:
         return null;
     }

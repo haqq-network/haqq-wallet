@@ -104,7 +104,10 @@ export class EthereumMessageChecker {
     msg: string,
   ): EthereumSignInMessage | null {
     try {
-      const parts = msg.split('\n').filter(p => p?.trim().length > 0);
+      const parts = msg
+        .split('\n')
+        .map(p => p?.trim())
+        .filter(p => p?.length > 0);
       const [message, address, statement, ...keyValues] = parts;
 
       if (!message || !address || !statement || keyValues?.length === 0) {

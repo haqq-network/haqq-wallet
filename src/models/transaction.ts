@@ -7,10 +7,12 @@ import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {parseTransaction} from '@app/helpers/indexer-transaction-utils';
 import {TransactionRealmObject} from '@app/models/realm-object-for-migration';
+import {Socket} from '@app/models/socket';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
 import {IndexerTransaction, IndexerTxParsedTokenInfo} from '@app/types';
+import {RPCMessage, RPCObserver} from '@app/types/rpc';
 
 import {Token} from './tokens';
 
@@ -43,7 +45,7 @@ type AccountsHash = string;
 type BlockNumber = 'latest' | `${number}`;
 type CacheKey = `${AccountsHash}:${BlockNumber}`;
 
-class TransactionStore {
+class TransactionStore implements RPCObserver {
   realmSchemaName = TransactionRealmObject.schema.name;
   private _transactions: Array<Transaction> = [];
   private _lastSyncedAccountsHash: AccountsHash = '';
@@ -53,6 +55,12 @@ class TransactionStore {
 
   constructor() {
     makeAutoObservable(this);
+
+    when(
+      () => Socket.lastMessage.type === 'transaction',
+      () => this.onMessage(Socket.lastMessage),
+    );
+
     app.on(Events.onProviderChanged, () => {
       this.removeAll();
       this.fetchLatestTransactions(Wallet.addressList());
@@ -215,6 +223,20 @@ class TransactionStore {
       });
       return [];
     }
+  };
+
+  onMessage = (message: RPCMessage) => {
+    if (message.type !== 'transaction') {
+      return;
+    }
+
+    const result = message.data.txs;
+    const accounts = Wallet.addressList();
+    const parsed = result
+      .map(tx => parseTransaction(tx, accounts))
+      .filter(tx => !!tx.parsed);
+
+    parsed.forEach(transaction => this.create(transaction));
   };
 }
 

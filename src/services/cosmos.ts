@@ -38,14 +38,11 @@ import {
   signatureToWeb3Extension,
 } from '@evmos/transactions';
 import {Sender} from '@evmos/transactions/dist/messages/common';
-import {
-  ProviderInterface,
-  base64PublicKey,
-  cosmosAddress,
-} from '@haqq/provider-base';
+import {ProviderInterface, base64PublicKey} from '@haqq/provider-base';
 import {normalize0x} from '@haqq/provider-keystone-react-native';
 import Decimal from 'decimal.js';
 
+import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {
   getRemoteBalanceValue,
@@ -67,7 +64,7 @@ import {
   EvmosVestingV1BalancesResponse,
 } from '@app/types/cosmos';
 import {decimalToHex, getHttpResponse} from '@app/utils';
-import {COSMOS_PREFIX, WEI} from '@app/variables/common';
+import {WEI} from '@app/variables/common';
 
 import {EthSign} from './eth-sign';
 import {EventTracker} from './event-tracker';
@@ -127,24 +124,23 @@ export class Cosmos {
   }
 
   async postQuery<T>(path: string, data: string): Promise<T> {
+    const params = {
+      type: 'cosmos',
+      network: app.provider.name,
+      chainId: `${app.provider.ethChainId}`,
+    };
     try {
-      EventTracker.instance.trackEvent(MarketingEvents.sendTxStart, {
-        type: 'cosmos',
-      });
+      EventTracker.instance.trackEvent(MarketingEvents.sendTxStart, params);
       Logger.log('cosmos postQuery', path, {data});
       const resp = await fetch(this.getPath(path), {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: data,
       });
-      EventTracker.instance.trackEvent(MarketingEvents.sendTxSuccess, {
-        type: 'cosmos',
-      });
+      EventTracker.instance.trackEvent(MarketingEvents.sendTxSuccess, params);
       return await getHttpResponse<T>(resp);
     } catch (error) {
-      EventTracker.instance.trackEvent(MarketingEvents.sendTxFail, {
-        type: 'cosmos',
-      });
+      EventTracker.instance.trackEvent(MarketingEvents.sendTxFail, params);
       Logger.captureException(error, 'cosmos postQuery');
       throw error;
     }
@@ -312,9 +308,7 @@ export class Cosmos {
       transport.getAccountInfo(hdPath),
     );
 
-    const accInfo = await this.getAccountInfo(
-      cosmosAddress(address, COSMOS_PREFIX),
-    );
+    const accInfo = await this.getAccountInfo(AddressUtils.toHaqq(address));
     const account: AccountResponse['account'] =
       //@ts-ignore
       accInfo?.account?.base_vesting_account || accInfo?.account;

@@ -15,7 +15,6 @@ import {
   HomeStackRoutes,
   ManageAccountsStackParamList,
   ManageAccountsStackRoutes,
-  SettingsStackRoutes,
 } from '@app/route-types';
 import {sendNotification} from '@app/services';
 import {EventTracker} from '@app/services/event-tracker';
@@ -129,8 +128,7 @@ export const SettingsAccountDetailScreen = observer(() => {
   }, [navigation, wallet?.accountId]);
 
   const onPressSocial = useCallback(() => {
-    //FIXME: Test this
-    navigation.navigate(SettingsStackRoutes.BackupSssSuggestion, {
+    navigation.navigate(HomeStackRoutes.SssMigrate, {
       accountId: wallet?.accountId!,
     });
   }, [navigation, wallet?.accountId]);

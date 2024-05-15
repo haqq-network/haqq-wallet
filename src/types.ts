@@ -93,6 +93,7 @@ export enum MarketingEvents {
   sendTxFail = 'svkvy9',
 
   appStarted = 'w8hbt0',
+  navigation = '68gzdc',
 }
 
 export enum PopupNotificationBannerTypes {
@@ -735,6 +736,8 @@ export type FontT = TextStyle | ViewStyle | ImageStyle | undefined;
 
 export enum AppLanguage {
   en = 'en',
+  tr = 'tr',
+  ru = 'ru',
   ar = 'ar',
 }
 
@@ -1110,6 +1113,9 @@ export type Modals = {
     accountID: string;
     provider: 'cloud' | 'googleDrive';
   };
+  popupNotification: {
+    onCloseProp?: () => void;
+  };
 };
 
 export enum ModalType {
@@ -1146,6 +1152,7 @@ export enum ModalType {
   sssLimitReached = 'sssLimitReached',
   pinError = 'pinError',
   removeSSS = 'removeSSS',
+  popupNotification = 'popupNotification',
 }
 
 export interface BaseNewsItem {
@@ -1857,3 +1864,14 @@ export type IStory = {
 export type StoriesResponse = IStory[];
 
 export type ArrayElement<A> = A extends readonly (infer T)[] ? T : never;
+
+export type Language = {
+  id: AppLanguage;
+  title: string;
+  local_title: string;
+  status: 'published';
+  created_at: string;
+  updated_at: string;
+  hash: string;
+};
+export type LanguagesResponse = Language[];

@@ -107,6 +107,12 @@ export class PushNotifications extends EventEmitter {
     );
   }
 
+  async hasPermissionsBlocked() {
+    const authStatus = await messaging().hasPermission();
+
+    return authStatus === messaging.AuthorizationStatus.DENIED;
+  }
+
   async subscribeToTopic(topic: string) {
     if (!this.isAvailable) {
       throw new Error('push messages unavailable');

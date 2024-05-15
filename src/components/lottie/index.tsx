@@ -1,8 +1,9 @@
 import React, {useEffect, useRef} from 'react';
 
+import {useAppState} from '@react-native-community/hooks';
 import type AnimatedLottieView from 'lottie-react-native';
 import Lottie, {LottieViewProps} from 'lottie-react-native';
-import {AppState, StyleProp, ViewStyle} from 'react-native';
+import {StyleProp, ViewStyle} from 'react-native';
 import Config from 'react-native-config';
 
 export type LottieWrapRef = {
@@ -22,6 +23,7 @@ type AnimatedLottie = LottieViewProps & {
 export const LottieWrap = React.forwardRef<LottieWrapRef, AnimatedLottie>(
   (props, ref) => {
     const lottieRef = useRef<AnimatedLottieView>(null);
+    const appState = useAppState();
 
     React.useImperativeHandle(ref, () => ({
       play: async () => lottieRef.current?.play?.(),
@@ -31,18 +33,13 @@ export const LottieWrap = React.forwardRef<LottieWrapRef, AnimatedLottie>(
     }));
 
     useEffect(() => {
-      const listener = AppState.addEventListener('change', state => {
-        if (Config.FOR_DETOX) {
-          return;
-        }
-        if (state === 'active') {
-          lottieRef?.current?.resume();
-        }
-      });
-      return () => {
-        listener.remove();
-      };
-    }, []);
+      if (Config.FOR_DETOX) {
+        return;
+      }
+      if (appState === 'active') {
+        lottieRef?.current?.resume();
+      }
+    }, [appState]);
 
     return (
       <Lottie
