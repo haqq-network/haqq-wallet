@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {accountInfo} from '@haqq/provider-web3-utils';
 import {jsonrpcRequest} from '@haqq/shared-react-native';
@@ -19,7 +19,7 @@ import {createTheme} from '@app/helpers';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {I18N, getText} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {onLoginApple, onLoginGoogle} from '@app/services/provider-sss';
+import {Creds, onLoginApple, onLoginGoogle} from '@app/services/provider-sss';
 import {
   ShareCreateResponse,
   SharesResponse,
@@ -29,6 +29,7 @@ import {ModalType, Modals} from '@app/types';
 
 export const RemoveSSS = observer(
   ({onClose, accountID, provider}: Modals[ModalType.removeSSS]) => {
+    const [isLoading, setLoading] = useState(false);
     useEffect(() => {
       vibrate(HapticEffects.warning);
     }, []);
@@ -40,16 +41,8 @@ export const RemoveSSS = observer(
       return provider === 'cloud' ? onLoginApple : onLoginGoogle;
     }, [provider]);
 
-    const onPressDelete = async (close: () => void) => {
+    const removeChainShare = async (creds: Creds) => {
       try {
-        const creds = await ProviderAction();
-
-        if (!creds.privateKey) {
-          Logger.error('No Private Key Detected RemoveSSS');
-          close();
-          return;
-        }
-
         const generateSharesUrl = RemoteConfig.get('sss_generate_shares_url')!;
 
         const nodeDetailsRequest = await jsonrpcRequest<SharesResponse>(
@@ -57,7 +50,7 @@ export const RemoveSSS = observer(
           'shares',
           [creds.verifier, creds.token, true],
         );
-        const info = await accountInfo(creds.privateKey);
+        const info = await accountInfo(creds.privateKey!);
 
         await Promise.all(
           nodeDetailsRequest.shares.map(s =>
@@ -71,7 +64,15 @@ export const RemoveSSS = observer(
               .catch(() => [null, s[1]]),
           ),
         );
+      } catch (err) {
+        if (err instanceof Error) {
+          Logger.warn('RemoveSSS Error (Chain Share): ', err.message);
+        }
+      }
+    };
 
+    const removeCloudShare = async () => {
+      try {
         const storage = await getProviderStorage(accountID, provider);
         const shareKey = `haqq_${accountID.toLowerCase()}`;
         await storage.removeItem(shareKey).catch(err => {
@@ -81,9 +82,29 @@ export const RemoveSSS = observer(
         });
       } catch (err) {
         if (err instanceof Error) {
+          Logger.warn('RemoveSSS Error (Cloud Share): ', err.message);
+        }
+      }
+    };
+
+    const onPressDelete = async (close: () => void) => {
+      try {
+        setLoading(true);
+        const creds = await ProviderAction();
+
+        if (!creds.privateKey) {
+          Logger.error('No Private Key Detected RemoveSSS');
+          close();
+          return;
+        }
+
+        await Promise.allSettled([removeChainShare(creds), removeCloudShare()]);
+      } catch (err) {
+        if (err instanceof Error) {
           Logger.warn('RemoveSSS Error: ', err.message);
         }
       } finally {
+        setLoading(false);
         close();
       }
     };
@@ -150,6 +171,8 @@ export const RemoveSSS = observer(
                 textColor={Color.textRed1}
                 i18n={I18N.removeSSSPrimary}
                 onPress={() => showAlert(onClosePopup)}
+                loading={isLoading}
+                loadingColor={Color.textRed1}
               />
             </View>
           </View>
