@@ -5,7 +5,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import messaging from '@react-native-firebase/messaging';
 import {utils} from 'ethers';
 import {observer} from 'mobx-react';
-import {Alert, I18nManager, Platform, ScrollView} from 'react-native';
+import {Alert, Platform, ScrollView} from 'react-native';
 import Config from 'react-native-config';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {
@@ -13,7 +13,6 @@ import {
   PlayInstallReferrerError,
   PlayInstallReferrerInfo,
 } from 'react-native-play-install-referrer';
-import RNRestart from 'react-native-restart';
 import shajs from 'sha.js';
 
 import {CaptchaType} from '@app/components/captcha';
@@ -81,7 +80,6 @@ import {
   makeID,
   openInAppBrowser,
   openWeb3Browser,
-  setRTL,
 } from '@app/utils';
 import {MIN_GAS_LIMIT} from '@app/variables/balance';
 import {HAQQ_METADATA, STRINGS, TEST_URLS} from '@app/variables/common';
@@ -652,17 +650,6 @@ export const SettingsTestScreen = observer(() => {
 
           Logger.log('tx result', JSON.stringify(result, null, 2));
           setTxList(txListOld => [...txListOld, ...result]);
-        }}
-        variant={ButtonVariant.contained}
-      />
-
-      <Title text="Localization" />
-      <Button
-        title={`Switch to ${I18nManager.isRTL ? 'LTR' : 'RTL'}`}
-        onPress={() => {
-          const isRTL = I18nManager.isRTL;
-          setRTL(!isRTL);
-          RNRestart.restart();
         }}
         variant={ButtonVariant.contained}
       />

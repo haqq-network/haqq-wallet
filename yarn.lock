@@ -10405,8 +10405,9 @@ __metadata:
     obj-multiplex: 1.0.0
     patch-package: 8.0.0
     pbkdf2: 3.1.2
-    posthog-react-native: ^3.0.0
+    posthog-react-native: 3.0.0
     prettier: 3.0.0
+    prettier-plugin-sort-json: 4.0.0
     pump: 3.0.0
     randombytes: 2.1.0
     react: 18.2.0
@@ -10421,7 +10422,7 @@ __metadata:
     react-native-config: 1.5.1
     react-native-crypto: 2.2.0
     react-native-detector: 0.2.3
-    react-native-device-info: ^10.13.1
+    react-native-device-info: 10.13.1
     react-native-draggable-flatlist: 4.0.1
     react-native-encrypted-storage: 4.0.3
     react-native-fs: 2.20.0
@@ -10433,6 +10434,7 @@ __metadata:
     react-native-keyboard-aware-scroll-view: 0.9.5
     react-native-keychain: 8.1.1
     react-native-linear-gradient: 2.7.3
+    react-native-localization: 2.3.2
     react-native-markdown-display: 7.0.0-alpha.2
     react-native-markdown-package: 1.8.2
     react-native-mmkv: 2.11.0
@@ -12627,6 +12629,13 @@ __metadata:
   dependencies:
     lie: 3.1.1
   checksum: f2978b434dafff9bcb0d9498de57d97eba165402419939c944412e179cab1854782830b5ec196212560b22712d1dd03918939f59cf1d4fc1d756fca7950086cf
+  languageName: node
+  linkType: hard
+
+"localized-strings@npm:^0.2.0":
+  version: 0.2.4
+  resolution: "localized-strings@npm:0.2.4"
+  checksum: 678e4c8aa72ca6d2aeb836231a7c3f6c75ff3f12a3241089e237ed86d17e8b987fe563d236de39760f21f31d6b3351655e9f035308f601f748f5f6447698b00b
   languageName: node
   linkType: hard
 
@@ -14958,7 +14967,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"posthog-react-native@npm:^3.0.0":
+"posthog-react-native@npm:3.0.0":
   version: 3.0.0
   resolution: "posthog-react-native@npm:3.0.0"
   peerDependencies:
@@ -15026,6 +15035,15 @@ __metadata:
   dependencies:
     fast-diff: ^1.1.2
   checksum: 00ce8011cf6430158d27f9c92cfea0a7699405633f7f1d4a45f07e21bf78e99895911cbcdc3853db3a824201a7c745bd49bfea8abd5fb9883e765a90f74f8392
+  languageName: node
+  linkType: hard
+
+"prettier-plugin-sort-json@npm:4.0.0":
+  version: 4.0.0
+  resolution: "prettier-plugin-sort-json@npm:4.0.0"
+  peerDependencies:
+    prettier: ^3.0.0
+  checksum: 06497ba44d04083c785d196e658bbdc267239857de6ca4925d55a888b2be4ffd6c2603af3d53d37f8e15ff8db25c0d2c90410adc6c150d73df6d56130ddc3404
   languageName: node
   linkType: hard
 
@@ -15470,6 +15488,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-localization@npm:^1.0.17":
+  version: 1.0.19
+  resolution: "react-localization@npm:1.0.19"
+  dependencies:
+    localized-strings: ^0.2.0
+  peerDependencies:
+    react: ^18.0.0 || ^17.0.0 || ^16.0.0 || ^15.6.0
+  checksum: 0a2ee446223d653f2116226e92e1d401d07614b62820678d4d33d2c88b2486246e1c9b0d0b6464d16022ec8e1d6d1cf8f7f1bb55571de136387f9355d2a174a8
+  languageName: node
+  linkType: hard
+
 "react-native-adjust-oaid@npm:4.33.0":
   version: 4.33.0
   resolution: "react-native-adjust-oaid@npm:4.33.0"
@@ -15565,7 +15594,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-device-info@npm:^10.13.1":
+"react-native-device-info@npm:10.13.1":
   version: 10.13.1
   resolution: "react-native-device-info@npm:10.13.1"
   peerDependencies:
@@ -15723,6 +15752,22 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 3b224e5f0a844e385f9010816e141d0903cd2a7e2c59fef9f67c7ef563ce6acb52b35f9ddaec3c6afb9560492d8513a15e4bf5e9dfc867fc3afb519ed9a9d693
+  languageName: node
+  linkType: hard
+
+"react-native-localization@npm:2.3.2":
+  version: 2.3.2
+  resolution: "react-native-localization@npm:2.3.2"
+  dependencies:
+    react-localization: ^1.0.17
+  peerDependencies:
+    react: ">15.6.0"
+    react-native: ">0.64"
+    react-native-windows: ">0.64"
+  peerDependenciesMeta:
+    react-native-windows:
+      optional: true
+  checksum: ec349d16fb2a97ecba471410f383feaa78b56880337e11750f99fa0ede678d6372e40a809b75ac8dee256ad47e9916687ef259999805e085e286d66af10fb24e
   languageName: node
   linkType: hard
 

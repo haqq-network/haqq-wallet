@@ -39,7 +39,6 @@ import {showModal} from '../helpers';
 import {Provider} from '../models/provider';
 import {User} from '../models/user';
 import {
-  AppLanguage,
   AppTheme,
   BalanceData,
   BiometryType,
@@ -95,6 +94,7 @@ class App extends AsyncEventEmitter {
 
   constructor() {
     super();
+    this.setMaxListeners(1000);
     this._startUpTime = Date.now();
 
     seedData();
@@ -255,14 +255,6 @@ class App extends AsyncEventEmitter {
 
   set biometry(value) {
     VariablesBool.set('biometry', value);
-  }
-
-  get language() {
-    return (VariablesString.get('language') as AppLanguage) || AppLanguage.en;
-  }
-
-  set language(value) {
-    VariablesString.set('language', value);
   }
 
   get isUnlocked() {

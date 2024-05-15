@@ -281,6 +281,7 @@ export enum SettingsStackRoutes {
   WalletConnectWalletList = 'walletConnectWalletList',
   BackupSssSuggestion = 'backupSssSuggestion',
   SettingsDeveloperTools = 'settingsDeveloperTools',
+  SettingsLanguage = 'settingsLanguage',
 }
 
 export type SettingsStackParamList = HomeStackParamList & {
@@ -293,6 +294,7 @@ export type SettingsStackParamList = HomeStackParamList & {
   };
   [SettingsStackRoutes.SettingsAccounts]: undefined;
   [SettingsStackRoutes.SettingsAddressBook]: undefined;
+  [SettingsStackRoutes.SettingsLanguage]: undefined;
   [SettingsStackRoutes.SettingsCurrency]: undefined;
   [SettingsStackRoutes.SettingsTheme]: undefined;
   [SettingsStackRoutes.SettingsNotification]: undefined;

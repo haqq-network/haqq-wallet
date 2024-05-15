@@ -1,9 +1,10 @@
-import React, {memo} from 'react';
+import React from 'react';
 
 import {
   NativeStackNavigationOptions,
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
+import {observer} from 'mobx-react';
 
 import {QrScannerButton} from '@app/components/qr-scanner-button';
 import {Spacer} from '@app/components/ui';
@@ -18,25 +19,23 @@ import {HomeStoriesScreen} from '@app/screens/HomeStack/HomeFeedStack/home-stori
 
 const Stack = createNativeStackNavigator<HomeFeedStackParamList>();
 
-const screenOptions: NativeStackNavigationOptions = {
-  ...popupScreenOptionsWithMargin,
-  headerShown: true,
-  title: getText(I18N.homeWalletTitle),
-  headerRight: QrScannerButton,
-  headerLeft: () => <Spacer width={20} />,
-};
-
 const fullScreenModal: NativeStackNavigationOptions = {
   presentation: 'fullScreenModal',
 };
 
-const HomeFeedStack = memo(() => {
+const HomeFeedStack = observer(() => {
   return (
     <Stack.Navigator screenOptions={basicScreenOptions}>
       <Stack.Screen
         name={HomeFeedStackRoutes.HomeFeed}
         component={HomeFeedScreen}
-        options={screenOptions}
+        options={{
+          ...popupScreenOptionsWithMargin,
+          headerShown: true,
+          title: getText(I18N.homeWalletTitle),
+          headerRight: QrScannerButton,
+          headerLeft: () => <Spacer width={20} />,
+        }}
       />
       <Stack.Screen
         name={HomeFeedStackRoutes.Governance}
