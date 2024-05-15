@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 /** @type {Detox.DetoxConfig} */
 module.exports = {
   testRunner: {
@@ -11,6 +13,11 @@ module.exports = {
     },
   },
   apps: {
+    'android.cloud.release': {
+      type: 'android.cloud',
+      app: process.env.BS_BUNDLE_URL,
+      appClient: process.env.BS_CLIENT_URL
+    },
     'ios.debug': {
       type: 'ios.app',
       binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/haqq.app',
@@ -38,6 +45,13 @@ module.exports = {
     },
   },
   devices: {
+    cloud: {
+      type: 'android.cloud',
+      device: {
+        name: 'OnePlus 8',
+        osVersion: '10.0'
+      }
+    },
     simulator: {
       type: 'ios.simulator',
       device: {
@@ -85,5 +99,19 @@ module.exports = {
       device: 'emulator',
       app: 'android.release',
     },
+    'android.cloud.release': {
+      device: 'cloud',
+      app: 'android.cloud.release',
+      cloudAuthentication: {
+        username: process.env.BS_USERNAME,
+        accessKey: process.env.BS_ACCESS_KEY
+      },
+      'session': {
+        server: 'wss://detox.browserstack.com/init',
+        name: 'Haqq Wallet Session',
+        build: process.env.APP_VERSION,
+        project: 'Haqq Wallet'
+      }
+    }
   },
 };

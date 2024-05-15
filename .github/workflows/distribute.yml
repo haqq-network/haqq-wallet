@@ -38,6 +38,9 @@ on:
       BUILD_DESCRIPTION:
         required: true
         type: string
+      IS_DEVELOPMENT:
+        required: false
+        type: string
 
 jobs:
   test:
