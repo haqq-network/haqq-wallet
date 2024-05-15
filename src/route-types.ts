@@ -713,7 +713,10 @@ export type SignInStackParamList = WelcomeStackParamList & {
   [SignInStackRoutes.SigninPin]: WalletInitialData;
   [SignInStackRoutes.SigninSharesNotFound]: undefined;
   [SignInStackRoutes.OnboardingSetupPin]: WalletInitialData & {
-    provider?: ProviderMnemonicReactNative | ProviderSSSReactNative;
+    provider?:
+      | ProviderMnemonicReactNative
+      | ProviderSSSReactNative
+      | SssProviders;
     biometryType?: BiometryType;
   };
   [SignInStackRoutes.SigninStoreWallet]: WalletInitialData & {

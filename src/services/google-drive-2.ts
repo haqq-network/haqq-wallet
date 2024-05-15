@@ -18,7 +18,8 @@ export class GoogleDrive2 implements StorageInterface {
   }
 
   async getItem(key: string): Promise<string> {
-    return this.instance.getItem(key);
+    const value = await this.instance.getItem(key);
+    return value ?? '';
   }
 
   async hasItem(key: string): Promise<boolean> {
