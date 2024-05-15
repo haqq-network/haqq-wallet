@@ -22,21 +22,19 @@ export async function onWalletSssCheck(snoozeBackup: Date) {
     );
 
     for (const accountId of accounts) {
-      if (cloudAvailable) {
-        const storage = await getProviderStorage(accountId);
-        const provider = new ProviderSSSReactNative({
-          storage,
-          account: accountId,
-          getPassword: app.getPassword.bind(app),
-        });
+      const storage = await getProviderStorage(accountId);
+      const provider = new ProviderSSSReactNative({
+        storage,
+        account: accountId,
+        getPassword: app.getPassword.bind(app),
+      });
 
-        const isShareSaved = provider.isShareSaved();
+      const isShareSaved = provider.isShareSaved();
 
-        if (!isShareSaved) {
-          await sleep(1000);
-          app.emit(Events.onAppProviderSssBackup, accountId);
-          return;
-        }
+      if (!isShareSaved) {
+        await sleep(1000);
+        app.emit(Events.onAppProviderSssBackup, accountId);
+        return;
       }
     }
   }

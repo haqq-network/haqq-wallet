@@ -125,6 +125,8 @@ export type WalletInitialData =
       sssLocalShare: string | null;
       verifier: string;
       token: string;
+      action?: 'restore' | 'replace';
+      provider: SssProviders;
     }
   | {type: 'empty'}
   | LedgerWalletInitialData;
@@ -1106,6 +1108,7 @@ export type Modals = {
   removeSSS: {
     onClose?: () => void;
     accountID: string;
+    provider: 'cloud' | 'googleDrive';
   };
 };
 

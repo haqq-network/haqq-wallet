@@ -1,10 +1,9 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 
 import {accountInfo} from '@haqq/provider-web3-utils';
 import {jsonrpcRequest} from '@haqq/shared-react-native';
 import {observer} from 'mobx-react';
 import {Alert, Image, Platform, View} from 'react-native';
-import Config from 'react-native-config';
 
 import {Color} from '@app/colors';
 import {BottomPopupContainer} from '@app/components/bottom-popups';
@@ -17,11 +16,8 @@ import {
   TextVariant,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {removeLocalShare} from '@app/helpers/remove-local-share';
+import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {I18N, getText} from '@app/i18n';
-import {Wallet} from '@app/models/wallet';
-import {Cloud} from '@app/services/cloud';
-import {GoogleDrive} from '@app/services/google-drive';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {onLoginApple, onLoginGoogle} from '@app/services/provider-sss';
 import {
@@ -29,24 +25,24 @@ import {
   SharesResponse,
 } from '@app/services/provider-sss-initialize';
 import {RemoteConfig} from '@app/services/remote-config';
-import {ModalType, Modals, WalletType} from '@app/types';
+import {ModalType, Modals} from '@app/types';
 
 export const RemoveSSS = observer(
-  ({onClose, accountID}: Modals[ModalType.removeSSS]) => {
+  ({onClose, accountID, provider}: Modals[ModalType.removeSSS]) => {
     useEffect(() => {
       vibrate(HapticEffects.warning);
     }, []);
 
+    const ProviderAction = useMemo(() => {
+      if (Platform.OS === 'android') {
+        return onLoginGoogle;
+      }
+      return provider === 'cloud' ? onLoginApple : onLoginGoogle;
+    }, [provider]);
+
     const onPressDelete = async (close: () => void) => {
       try {
-        const sssWallets = Wallet.getForAccount(accountID).filter(
-          item => item.type === WalletType.sss,
-        );
-
-        const provider =
-          Platform.OS === 'android' ? onLoginGoogle : onLoginApple;
-
-        const creds = await provider();
+        const creds = await ProviderAction();
 
         if (!creds.privateKey) {
           Logger.error('No Private Key Detected RemoveSSS');
@@ -54,10 +50,7 @@ export const RemoveSSS = observer(
           return;
         }
 
-        const generateSharesUrl = RemoteConfig.get_env(
-          'sss_generate_shares_url',
-          Config.GENERATE_SHARES_URL,
-        ) as string;
+        const generateSharesUrl = RemoteConfig.get('sss_generate_shares_url')!;
 
         const nodeDetailsRequest = await jsonrpcRequest<SharesResponse>(
           generateSharesUrl,
@@ -79,25 +72,13 @@ export const RemoveSSS = observer(
           ),
         );
 
-        await removeLocalShare(creds.privateKey);
-
-        const cloudEnabled = await Cloud.isEnabled();
-        const googleEnabled = await GoogleDrive.isEnabled();
-
-        if (googleEnabled) {
-          const _storage = new GoogleDrive();
-          sssWallets.forEach(item => {
-            const shareKey = `haqq_${item.accountId?.toLowerCase()}`;
-            _storage.removeItem(shareKey);
-          });
-        }
-        if (cloudEnabled) {
-          const _storage = new Cloud();
-          sssWallets.forEach(item => {
-            const shareKey = `haqq_${item.accountId?.toLowerCase()}`;
-            _storage.removeItem(shareKey);
-          });
-        }
+        const storage = await getProviderStorage(accountID, provider);
+        const shareKey = `haqq_${accountID.toLowerCase()}`;
+        await storage.removeItem(shareKey).catch(err => {
+          if (err instanceof Error) {
+            Logger.warn('Remove SSS Remove Error:', err.message);
+          }
+        });
       } catch (err) {
         if (err instanceof Error) {
           Logger.warn('RemoveSSS Error: ', err.message);

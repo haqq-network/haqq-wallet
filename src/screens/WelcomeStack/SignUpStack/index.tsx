@@ -100,7 +100,7 @@ const SignUpStack = memo(() => {
       <Stack.Screen
         name={SignUpStackRoutes.SignupStoreWallet}
         component={SignUpStoreWalletScreen}
-        options={{...screenOptionsSignupStoreWallet, animation: 'none'}}
+        options={screenOptionsSignupStoreWallet}
       />
       <Stack.Screen
         name={SignUpStackRoutes.SignupCloudProblems}

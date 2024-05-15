@@ -5,7 +5,7 @@ import {
 
 import {AsyncLocalStorage} from '@app/services/async-local-storage';
 import {Cloud} from '@app/services/cloud';
-import {GoogleDrive} from '@app/services/google-drive';
+import {GoogleDrive2} from '@app/services/google-drive-2';
 
 export async function getProviderStorage(
   accountId?: string,
@@ -16,14 +16,18 @@ export async function getProviderStorage(
     : await ProviderSSSReactNative.getStoragesForAccount(accountId);
 
   const cloudEnabled = await Cloud.isEnabled();
-  const googleEnabled = await GoogleDrive.isEnabled();
-
-  if (storages.includes('cloud') && cloudEnabled) {
+  if (
+    (storages.includes('cloud') || storages.includes('apple')) &&
+    cloudEnabled
+  ) {
     return new Cloud();
   }
 
-  if (storages.includes('googleDrive') && googleEnabled) {
-    return new GoogleDrive();
+  if (
+    storages.includes('googleDrive') ||
+    (storages.includes('google') && cloudEnabled)
+  ) {
+    return new GoogleDrive2();
   }
 
   if (storages.includes('local')) {
@@ -32,10 +36,6 @@ export async function getProviderStorage(
 
   if (cloudEnabled) {
     return new Cloud();
-  }
-
-  if (googleEnabled) {
-    return new GoogleDrive();
   }
 
   return new AsyncLocalStorage();

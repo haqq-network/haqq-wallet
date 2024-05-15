@@ -3,7 +3,6 @@ import React, {useCallback, useEffect} from 'react';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {observer} from 'mobx-react';
 import {Image, Platform, View} from 'react-native';
-import Config from 'react-native-config';
 
 import {Color} from '@app/colors';
 import {BottomPopupContainer} from '@app/components/bottom-popups';
@@ -48,10 +47,7 @@ export const CloudShareNotFound = observer(
         }
 
         const walletInfo = await await getMetadataValueWrapped(
-          RemoteConfig.get_env(
-            'sss_metadata_url',
-            Config.METADATA_URL,
-          ) as string,
+          RemoteConfig.get('sss_metadata_url')!,
           creds.privateKey,
           'socialShareIndex',
         );
@@ -73,14 +69,8 @@ export const CloudShareNotFound = observer(
           getPasswordPromise,
           storage,
           {
-            metadataUrl: RemoteConfig.get_env(
-              'sss_metadata_url',
-              Config.METADATA_URL,
-            ) as string,
-            generateSharesUrl: RemoteConfig.get_env(
-              'sss_generate_shares_url',
-              Config.GENERATE_SHARES_URL,
-            ) as string,
+            metadataUrl: RemoteConfig.get('sss_metadata_url')!,
+            generateSharesUrl: RemoteConfig.get('sss_generate_shares_url')!,
           },
         ).catch(err => ErrorHandler.handle('sssLimitReached', err));
 

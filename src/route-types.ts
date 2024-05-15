@@ -736,6 +736,7 @@ export type SignInStackParamList = WelcomeStackParamList & {
     | {
         provider: ProviderSSSReactNative;
         nextScreen?: SignInStackRoutes;
+        sssProvider: string;
       };
 };
 

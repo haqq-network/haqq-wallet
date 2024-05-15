@@ -2,15 +2,16 @@ import React, {memo, useCallback} from 'react';
 
 import {ITEM_KEY} from '@haqq/provider-sss-react-native/dist/constants';
 import {accountInfo} from '@haqq/provider-web3-utils';
-import Config from 'react-native-config';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
 import {SigninNetworks} from '@app/components/signin-networks';
 import {app} from '@app/contexts';
+import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {SssError} from '@app/helpers/sss-error';
 import {verifyCloud} from '@app/helpers/verify-cloud';
 import {getMetadataValueWrapped} from '@app/helpers/wrappers/get-metadata-value';
 import {useTypedNavigation} from '@app/hooks';
+import {ErrorHandler} from '@app/models/error-handler';
 import {SignInStackParamList, SignInStackRoutes} from '@app/route-types';
 import {Cloud} from '@app/services/cloud';
 import {
@@ -27,16 +28,21 @@ export const SignInNetworksScreen = memo(() => {
   const onLogin = useCallback(
     async (provider: SssProviders, skipCheck: boolean = false) => {
       let creds;
-      switch (provider) {
-        case SssProviders.apple:
-          creds = await onLoginApple();
-          break;
-        case SssProviders.google:
-          creds = await onLoginGoogle();
-          break;
-        case SssProviders.custom:
-          creds = await onLoginCustom();
-          break;
+      try {
+        switch (provider) {
+          case SssProviders.apple:
+            creds = await onLoginApple();
+            break;
+          case SssProviders.google:
+            creds = await onLoginGoogle();
+            break;
+          case SssProviders.custom:
+            creds = await onLoginCustom();
+            break;
+        }
+      } catch (err) {
+        ErrorHandler.handle('sssLimitReached', err);
+        return;
       }
 
       try {
@@ -45,10 +51,7 @@ export const SignInNetworksScreen = memo(() => {
         }
 
         const walletInfo = await getMetadataValueWrapped(
-          RemoteConfig.get_env(
-            'sss_metadata_url',
-            Config.METADATA_URL,
-          ) as string,
+          RemoteConfig.get('sss_metadata_url')!,
           creds.privateKey,
           'socialShareIndex',
         );
@@ -57,12 +60,12 @@ export const SignInNetworksScreen = memo(() => {
           throw new SssError('signinNotExists');
         }
 
+        const cloud = await getProviderStorage('', provider);
         const supported = await Cloud.isEnabled();
+
         if (!supported) {
           throw new SssError('signinNotExists');
         }
-
-        const cloud = new Cloud();
 
         const account = await accountInfo(creds.privateKey as string);
 
@@ -96,6 +99,7 @@ export const SignInNetworksScreen = memo(() => {
           ? SignInStackRoutes.SigninStoreWallet
           : SignInStackRoutes.OnboardingSetupPin;
 
+        //@ts-ignore
         navigation.navigate(nextScreen, {
           type: 'sss',
           sssPrivateKey: creds.privateKey,
@@ -103,11 +107,11 @@ export const SignInNetworksScreen = memo(() => {
           verifier: creds.verifier,
           sssCloudShare: cloudShare,
           sssLocalShare: null,
+          sssProvider: provider,
         });
       } catch (e) {
         Logger.log('error', e, e instanceof SssError);
         if (e instanceof SssError) {
-          // TODO: Missing screens
           // @ts-ignore
           navigation.navigate(e.message, {
             type: 'sss',
@@ -116,6 +120,7 @@ export const SignInNetworksScreen = memo(() => {
             verifier: creds.verifier,
             sssCloudShare: null,
             sssLocalShare: null,
+            provider,
           });
         }
       }

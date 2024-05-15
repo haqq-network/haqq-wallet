@@ -1,7 +1,8 @@
 import React, {useCallback, useEffect} from 'react';
 
+import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {observer} from 'mobx-react';
-import {Alert} from 'react-native';
+import {Alert, Platform} from 'react-native';
 
 import {SettingsAccountDetail} from '@app/components/settings/settings-account-detail';
 import {CustomHeader, IconsName} from '@app/components/ui';
@@ -85,6 +86,8 @@ export const SettingsAccountDetailScreen = observer(() => {
             requestAnimationFrame(async () => {
               const sssWalletsCountBefore = Wallet.count(WalletType.sss);
               const accountID = wallet?.accountId;
+              const providerArray =
+                await ProviderSSSReactNative.getStoragesForAccount(accountID!);
               await Wallet.remove(address);
               hideModal(ModalType.loading);
               navigation.goBack();
@@ -97,7 +100,18 @@ export const SettingsAccountDetailScreen = observer(() => {
                 sssWalletsCountAfter === 0 &&
                 accountID
               ) {
-                showModal(ModalType.removeSSS, {accountID});
+                const defaultProviderIfCurrentMissing =
+                  Platform.OS === 'android' ? 'googleDrive' : 'cloud';
+                const provider =
+                  providerArray.length === 0
+                    ? defaultProviderIfCurrentMissing
+                    : providerArray.includes('cloud')
+                    ? 'cloud'
+                    : 'googleDrive';
+                showModal(ModalType.removeSSS, {
+                  accountID,
+                  provider,
+                });
               }
             });
           },
