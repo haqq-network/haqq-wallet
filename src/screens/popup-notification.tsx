@@ -6,32 +6,43 @@ import {
 } from '@app/components/bottom-popups';
 import {onBannerNotificationsSnooze} from '@app/event-actions/on-banner-notifications-snooze';
 import {onBannerNotificationsTurnOn} from '@app/event-actions/on-banner-notifications-turn-on';
-import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
+import {useTypedNavigation} from '@app/hooks';
+import {HomeStackParamList} from '@app/route-types';
+import {PopupNotificationBannerTypes} from '@app/types';
+import {sleep} from '@app/utils';
+import {ANIMATION_DURATION} from '@app/variables/common';
 
-export const PopupNotificationScreen = memo(() => {
-  const route = useTypedRoute<
-    HomeStackParamList,
-    HomeStackRoutes.PopupNotification
-  >();
+type Props = {
+  onCloseProp?: () => void;
+};
+
+export const PopupNotificationScreen = memo(({onCloseProp}: Props) => {
   const {goBack} = useTypedNavigation<HomeStackParamList>();
 
   const onClickTurnOn = useCallback(
     async (close: () => void) => {
       close();
+      await sleep(ANIMATION_DURATION);
+      onCloseProp?.();
       goBack();
-      await onBannerNotificationsTurnOn(route.params.bannerId);
+      await onBannerNotificationsTurnOn(
+        PopupNotificationBannerTypes.notification,
+      );
     },
-    [goBack, route.params.bannerId],
+    [goBack],
   );
 
   const onClickNotNow = useCallback(
     async (close: () => void) => {
       close();
+      await sleep(ANIMATION_DURATION);
+      onCloseProp?.();
       goBack();
-      await onBannerNotificationsSnooze(route.params.bannerId);
+      await onBannerNotificationsSnooze(
+        PopupNotificationBannerTypes.notification,
+      );
     },
-    [goBack, route.params.bannerId],
+    [goBack],
   );
 
   return (

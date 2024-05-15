@@ -1106,6 +1106,9 @@ export type Modals = {
     details?: string;
     onClose?: () => void;
   };
+  popupNotification: {
+    onCloseProp?: () => void;
+  };
 };
 
 export enum ModalType {
@@ -1141,6 +1144,7 @@ export enum ModalType {
   keystoneQR = 'keystoneQR',
   sssLimitReached = 'sssLimitReached',
   pinError = 'pinError',
+  popupNotification = 'popupNotification',
 }
 
 export interface BaseNewsItem {

@@ -231,6 +231,9 @@ const getTestModals = (): TestModals => {
     pinError: {
       details: 'test error',
     },
+    popupNotification: {
+      onCloseProp: () => logger.log('popupNotification closed'),
+    },
   };
 
   if (wallets.length) {
