@@ -92,6 +92,7 @@ export const SettingsAccountDetail = ({
           />
         </Card>
         <TouchableOpacity
+          activeOpacity={0.7}
           onPress={() => {
             onCopy(wallet?.address);
           }}>
@@ -112,6 +113,7 @@ export const SettingsAccountDetail = ({
         </TouchableOpacity>
         <View style={styles.hDevider} />
         <TouchableOpacity
+          activeOpacity={0.7}
           onPress={() => {
             onCopy(AddressUtils.toHaqq(wallet?.address));
           }}>
