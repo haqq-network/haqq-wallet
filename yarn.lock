@@ -4234,13 +4234,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native/normalize-color@npm:*":
-  version: 2.1.0
-  resolution: "@react-native/normalize-color@npm:2.1.0"
-  checksum: 8ccbd40b3c7629f1dc97b3e9aadd95fd3507fcf2e37535a6299a70436ab891c34cbdc4240b07380553d6e85dd909e23d5773b5be1da2906b026312e0b0768838
-  languageName: node
-  linkType: hard
-
 "@react-native/normalize-colors@npm:*":
   version: 0.74.1
   resolution: "@react-native/normalize-colors@npm:0.74.1"
@@ -8099,17 +8092,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"deprecated-react-native-prop-types@npm:^2.2.0":
-  version: 2.3.0
-  resolution: "deprecated-react-native-prop-types@npm:2.3.0"
-  dependencies:
-    "@react-native/normalize-color": "*"
-    invariant: "*"
-    prop-types: "*"
-  checksum: d14f4be1dfe780a7fa9197a31b4a9a2b409c8cf1bf677713fd92d06733dee1043578662d1a8858541cf06164ae91d295db6e595f29bf13e808d9fb37bc58c90b
-  languageName: node
-  linkType: hard
-
 "deprecated-react-native-prop-types@npm:^4.2.3":
   version: 4.2.3
   resolution: "deprecated-react-native-prop-types@npm:4.2.3"
@@ -8437,13 +8419,6 @@ __metadata:
     minimalistic-assert: ^1.0.1
     minimalistic-crypto-utils: ^1.0.1
   checksum: d56d21fd04e97869f7ffcc92e18903b9f67f2d4637a23c860492fbbff5a3155fd9ca0184ce0c865dd6eb2487d234ce9551335c021c376cd2d3b7cb749c7d10f4
-  languageName: node
-  linkType: hard
-
-"eme-encryption-scheme-polyfill@npm:^2.0.1":
-  version: 2.1.1
-  resolution: "eme-encryption-scheme-polyfill@npm:2.1.1"
-  checksum: 5d67fac0f95cc7e2066c68a15d8ecfb508d0c3774d3b8a37013da1a3a6a25ce86d6f8e185d885aa802c1fca48a3348f13dd310e54966fb96faba833a1e62000b
   languageName: node
   linkType: hard
 
@@ -10458,7 +10433,8 @@ __metadata:
     react-native-system-navigation-bar: 2.6.1
     react-native-toast-message: 2.2.0
     react-native-touch-id: 4.4.1
-    react-native-video: 5.2.1
+    react-native-video: 6.0.0
+    react-native-video-cache-control: 1.2.2
     react-native-webview: 13.8.1
     react-test-renderer: 18.2.0
     react-timer-mixin: 0.13.4
@@ -12450,13 +12426,6 @@ __metadata:
   version: 1.1.0
   resolution: "keyboard-key@npm:1.1.0"
   checksum: 8bf7c0d796820a0d4802930ef103339e2ffddf369f441d8e19f0a1d3b841da71a0a4da8c7a5270f4814da54300434f5fc5b3489aae4ae3ba47418ac106b71a64
-  languageName: node
-  linkType: hard
-
-"keymirror@npm:^0.1.1":
-  version: 0.1.1
-  resolution: "keymirror@npm:0.1.1"
-  checksum: be8f0bc5ff7d561d729f935ef55b4dbbea7b56a4714f044a2212088730f4d52f73935c38c5a9604e0f1157611725ee493cb7d08d1f3eb34151c0aa999236206a
   languageName: node
   linkType: hard
 
@@ -16033,15 +16002,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-video@npm:5.2.1":
-  version: 5.2.1
-  resolution: "react-native-video@npm:5.2.1"
-  dependencies:
-    deprecated-react-native-prop-types: ^2.2.0
-    keymirror: ^0.1.1
-    prop-types: ^15.7.2
-    shaka-player: ^2.5.9
-  checksum: efbc09a47e3080dde2986a3a1ea3f32b815317f99013c015522fd2e6ed937ed02244761f4dd5c8f5bf0260bf8a1d518315025cae499c16a6c3b1cd0fa6935d2d
+"react-native-video-cache-control@npm:1.2.2":
+  version: 1.2.2
+  resolution: "react-native-video-cache-control@npm:1.2.2"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 5857343635fa476f089d0850ccb5e2f678c54be309eafd3df7e5a537d442052a100b1a4cdf5137eb1183932aba0da1f2774d45fb19898e8a43a9009fed2cf6ff
+  languageName: node
+  linkType: hard
+
+"react-native-video@npm:6.0.0":
+  version: 6.0.0
+  resolution: "react-native-video@npm:6.0.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 3320cf9b5d5845dd72d6fef3cf7d8d5cf543f6bcb78d8d1ea5a8eb6bb90d62bd43e467aa14f6d6e1b2170e3a95c3f739556c26deebe0239f1d45be152eb719a2
   languageName: node
   linkType: hard
 
@@ -17052,15 +17029,6 @@ __metadata:
   dependencies:
     buffer: 6.0.3
   checksum: fb49c8e18143cc46babc0e5d83d5f5d0149e645f26633a0e6a9aa2514df2ef91f10b6ece20da229e7ead8b8002d8e9514dcc747ef96a25b749294d6385c6f29f
-  languageName: node
-  linkType: hard
-
-"shaka-player@npm:^2.5.9":
-  version: 2.5.23
-  resolution: "shaka-player@npm:2.5.23"
-  dependencies:
-    eme-encryption-scheme-polyfill: ^2.0.1
-  checksum: 219c5ab073edd0f70582809df533d29f0369a5d8e31507ea76ddc71f3c8e11e9b63b61671ce19d7d3c464d7f3035581a4820903535ce24d4d5da7a94a98ca064
   languageName: node
   linkType: hard
 
