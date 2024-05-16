@@ -39,14 +39,9 @@ export const WalletCard = ({wallet, tokens, tokensOnly}: Props) => {
   );
 
   if (tokensOnly) {
-    return (
-      <>
-        <Spacer height={10} />
-        {tokens.map(token => {
-          return <TokenRow key={generateUUID()} item={token} />;
-        })}
-      </>
-    );
+    return tokens.map(token => {
+      return <TokenRow key={generateUUID()} item={token} />;
+    });
   }
 
   return (

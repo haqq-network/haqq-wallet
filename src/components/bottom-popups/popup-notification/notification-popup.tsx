@@ -43,7 +43,7 @@ export const NotificationPopup = ({
           style={styles.lottie}
           source={lottieAnimation}
           autoPlay
-          loop={false}
+          loop={true}
         />
       </View>
       <Text t7 center style={styles.title} i18n={I18N.popupNotificationTitle} />

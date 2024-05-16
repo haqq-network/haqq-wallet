@@ -19,12 +19,14 @@ export const SigninNotExistsScreen = memo(() => {
 
   const onPressCreate = useCallback(() => {
     if (app.onboarded) {
+      //@ts-ignore
       navigation.replace(WelcomeStackRoutes.SignUp, {
         screen: SignUpStackRoutes.SignupStoreWallet,
         params,
       });
       return;
     }
+    //@ts-ignore
     navigation.replace(SignInStackRoutes.OnboardingSetupPin, {
       ...params,
       provider,

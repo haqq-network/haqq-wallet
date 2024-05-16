@@ -4,7 +4,7 @@ import Config from 'react-native-config';
 import {Easing} from 'react-native-reanimated';
 
 import {PushNotificationTopicsEnum} from '@app/services/push-notifications';
-import {HexNumber, JsonRpcMetadata, Link} from '@app/types';
+import {AppLanguage, HexNumber, JsonRpcMetadata, Link} from '@app/types';
 
 export const LIGHT_TEXT_BASE_1 = '#2E312D';
 export const DARK_TEXT_BASE_1 = '#FFFFFF';
@@ -205,6 +205,10 @@ export const NUM_DELIMITER = ' ';
 export const ANIMATION_DURATION = 300;
 export const ANIMATION_TYPE = Easing.bezierFn(0.42, 0, 0.58, 0);
 
+export const APP_NAME = 'HAQQ Wallet';
+export const NETWORK_NAME = 'HAQQ Network';
+export const ASSET_NAME = 'ISLM';
+export const ASSET_WEI_NAME = 'aISLM';
 export const LEDGER_APP = 'Ethereum';
 export const PLATFORM_COMPANY = Platform.select({
   ios: 'Apple',
@@ -343,3 +347,4 @@ export const SUSHISWAP_MAINNET_ADDRESSES = {
 
 export const WETH_MAINNET_ADDRESS =
   '0xeC8CC083787c6e5218D86f9FF5f28d4cC377Ac54';
+export const RTL_LANGUAGES = [AppLanguage.ar];

@@ -18,6 +18,7 @@ import SplashScreen from 'react-native-splash-screen';
 
 import {Color} from '@app/colors';
 import {AppScreenSecurityOverview} from '@app/components/app-screen-security-overview';
+import {SocketHandler} from '@app/components/socket-handler';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {createTheme, hideModal, showModal} from '@app/helpers';
@@ -25,6 +26,7 @@ import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {useTheme} from '@app/hooks';
 import {useToast} from '@app/hooks/use-toast';
 import {Contact} from '@app/models/contact';
+import {Language} from '@app/models/language';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
@@ -122,6 +124,7 @@ export const App = () => {
     sleep(150)
       .then(() => SplashScreen.hide())
       .then(() => awaitForEventDone(Events.onAppInitialized))
+      .then(async () => await Language.init())
       .then(async () => {
         if (app.onboarded) {
           await app.init();
@@ -264,6 +267,7 @@ export const App = () => {
           </MenuProvider>
         </ActionSheetProvider>
       </SafeAreaProvider>
+      <SocketHandler />
     </GestureHandlerRootView>
   );
 };

@@ -21,6 +21,7 @@ import {
 import {Adjust} from 'react-native-adjust';
 import Config from 'react-native-config';
 import prompt, {PromptOptions} from 'react-native-prompt-android';
+import RNRestart from 'react-native-restart';
 
 import {app} from '@app/contexts';
 import {RemoteConfig} from '@app/services/remote-config';
@@ -42,6 +43,7 @@ import {Balance} from './services/balance';
 import {EthSignError} from './services/eth-sign';
 import {
   AdjustTrackingAuthorizationStatus,
+  AppLanguage,
   BalanceData,
   EIPTypedData,
   EthType,
@@ -56,7 +58,7 @@ import {
   WalletConnectParsedAccount,
 } from './types';
 import {ERC20_ABI} from './variables/abi';
-import {IS_ANDROID, STORE_PAGE_URL} from './variables/common';
+import {IS_ANDROID, RTL_LANGUAGES, STORE_PAGE_URL} from './variables/common';
 import {EIP155_SIGNING_METHODS} from './variables/EIP155';
 
 export function isHexString(value: any, length?: number): boolean {
@@ -1036,8 +1038,13 @@ export function isSupportedCosmosTxForRender(
   return false;
 }
 
-export const setRTL = (isRTL: boolean) => {
+export const setRTL = (lang: AppLanguage) => {
+  const isRTL = RTL_LANGUAGES.includes(lang);
   I18nManager.forceRTL(isRTL);
+
+  if (isRTL !== I18nManager.isRTL) {
+    RNRestart.restart();
+  }
 };
 
 const hexRegExp = /^(0[xX])?[0-9A-Fa-f]+$/;

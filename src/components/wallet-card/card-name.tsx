@@ -28,7 +28,7 @@ export const CardName = ({
   );
 
   return (
-    <View style={[styles.topNav, styles.marginBottom]}>
+    <View style={styles.topNav}>
       <Text
         variant={TextVariant.t12}
         style={styles.name}
@@ -68,10 +68,9 @@ const styles = createTheme({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    marginBottom: 0,
+    marginBottom: 6,
   },
   marginLeft: {marginLeft: 4},
-  marginBottom: {marginBottom: 4},
   name: {
     flex: 1,
     color: Color.textSecond2,

@@ -1,28 +1,32 @@
 import {Events} from '@app/events';
 import {getUid} from '@app/helpers/get-uid';
 import {News} from '@app/models/news';
+import {Transaction} from '@app/models/transaction';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 import {HomeStackRoutes} from '@app/route-types';
 import {Backend} from '@app/services/backend';
+import {Indexer} from '@app/services/indexer';
 import {MarketingEvents, RaffleStatus, RemoteMessage} from '@app/types';
 import {WEI} from '@app/variables/common';
 
 enum PushNotificationTypes {
   news = 'news',
   raffle = 'raffle',
+  transaction = 'tx',
 }
 
 type Data = {
   type: PushNotificationTypes;
   id: string;
+  hash: string;
 };
 
 const logger = Logger.create(Events.onPushNotification);
 
 export async function onPushNotification(message: RemoteMessage<Data>) {
-  const {id, type} = message.data || {};
+  const {id, type, hash} = message.data || {};
 
   if (!(id && type)) {
     return logger.warn(
@@ -36,7 +40,7 @@ export async function onPushNotification(message: RemoteMessage<Data>) {
       const newsItem = News.getById(id);
 
       if (!newsItem) {
-        const row = await Backend.instance.news_row(message.data.id);
+        const row = await Backend.instance.news_row(id);
 
         News.create(row.id, {
           title: row.title,
@@ -91,6 +95,21 @@ export async function onPushNotification(message: RemoteMessage<Data>) {
         });
       }
 
+      break;
+    case PushNotificationTypes.transaction:
+      const transaction = await Indexer.instance.getTransaction(
+        Wallet.addressList(),
+        hash,
+      );
+      if (transaction) {
+        Transaction.create(transaction);
+        navigator.navigate(HomeStackRoutes.TransactionDetail, {
+          // FIXME: For some reason navigator doesn't understand routing types correctly
+          // @ts-ignore
+          txId: transaction.id,
+          addresses: Wallet.addressList(),
+        });
+      }
       break;
     default:
       logger.warn(

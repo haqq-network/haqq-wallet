@@ -1,9 +1,6 @@
 import React, {useCallback, useEffect} from 'react';
 
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-
 import {BottomSheet} from '@app/components/bottom-sheet';
-import {Spacer} from '@app/components/ui';
 import {WalletRow, WalletRowTypes} from '@app/components/wallet-row';
 import {app} from '@app/contexts';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
@@ -19,7 +16,6 @@ export function WalletsBottomSheet({
   successEventName,
   onClose,
 }: Modals[ModalType.walletsBottomSheet]) {
-  const {bottom} = useSafeAreaInsets();
   const closeDistanceCalculated = useCalculatedDimensionsValue(
     () => closeDistance?.(),
     [closeDistance],
@@ -69,7 +65,6 @@ export function WalletsBottomSheet({
           />
         );
       })}
-      <Spacer height={bottom} />
     </BottomSheet>
   );
 }

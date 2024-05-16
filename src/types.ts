@@ -126,6 +126,8 @@ export type WalletInitialData =
       sssLocalShare: string | null;
       verifier: string;
       token: string;
+      action?: 'restore' | 'replace';
+      provider: SssProviders;
     }
   | {type: 'empty'}
   | LedgerWalletInitialData;
@@ -734,6 +736,8 @@ export type FontT = TextStyle | ViewStyle | ImageStyle | undefined;
 
 export enum AppLanguage {
   en = 'en',
+  tr = 'tr',
+  ru = 'ru',
   ar = 'ar',
 }
 
@@ -1104,6 +1108,14 @@ export type Modals = {
     details?: string;
     onClose?: () => void;
   };
+  removeSSS: {
+    onClose?: () => void;
+    accountID: string;
+    provider: 'cloud' | 'googleDrive';
+  };
+  popupNotification: {
+    onCloseProp?: () => void;
+  };
 };
 
 export enum ModalType {
@@ -1139,6 +1151,8 @@ export enum ModalType {
   keystoneQR = 'keystoneQR',
   sssLimitReached = 'sssLimitReached',
   pinError = 'pinError',
+  removeSSS = 'removeSSS',
+  popupNotification = 'popupNotification',
 }
 
 export interface BaseNewsItem {
@@ -1855,3 +1869,14 @@ export type IStory = {
 export type StoriesResponse = IStory[];
 
 export type ArrayElement<A> = A extends readonly (infer T)[] ? T : never;
+
+export type Language = {
+  id: AppLanguage;
+  title: string;
+  local_title: string;
+  status: 'published';
+  created_at: string;
+  updated_at: string;
+  hash: string;
+};
+export type LanguagesResponse = Language[];

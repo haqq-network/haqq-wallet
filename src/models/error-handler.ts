@@ -45,7 +45,7 @@ class ErrorHandlerStore {
   };
 
   handle = (type: ErrorType, error: unknown) => {
-    Logger.log('SSS_ERROR', error);
+    Logger.log('SSS_ERROR', type, error);
     switch (type) {
       case 'sssLimitReached': {
         showModal(ModalType.sssLimitReached);

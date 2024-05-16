@@ -17,6 +17,8 @@ import {
   Inline,
   Spacer,
   Text,
+  TextPosition,
+  TextVariant,
 } from '@app/components/ui';
 import {createTheme, openURL} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
@@ -107,12 +109,15 @@ export const StakingInfo = ({
         <Spacer height={24} />
         <ValidatorAvatar identity={identity} />
         <Spacer height={16} />
-        <Text t5 center style={styles.title}>
+        <Text
+          variant={TextVariant.t5}
+          position={TextPosition.center}
+          style={styles.title}>
           {moniker}
         </Text>
         <Badge
           center
-          i18n={localStatus as number}
+          i18n={localStatus as unknown as I18N}
           labelColor={labelColor}
           textColor={textColor}
         />
@@ -145,31 +150,34 @@ export const StakingInfo = ({
         <Spacer height={12} />
         <View style={styles.infoBlock}>
           <Block name={I18N.stakingInfoVotingPower}>
-            <Text t11>{cleanNumber(votingPower)}</Text>
+            <Text variant={TextVariant.t11}>{cleanNumber(votingPower)}</Text>
           </Block>
           <Block name={I18N.stakingInfoCommission}>
             <View style={styles.infoBlockCommissions}>
               <View style={styles.infoBlockCommission}>
-                <Text i18n={I18N.stakingInfoCommissionCurrent} t14 />
-                <Text t10>{commission.current}%</Text>
+                <Text
+                  i18n={I18N.stakingInfoCommissionCurrent}
+                  variant={TextVariant.t14}
+                />
+                <Text variant={TextVariant.t10}>{commission.current}%</Text>
               </View>
               <View style={styles.infoBlockCommission}>
                 <Text
                   i18n={I18N.stakingInfoCommissionMax}
-                  t14
+                  variant={TextVariant.t14}
                   color={Color.textBase2}
                 />
-                <Text t11 color={Color.textBase2}>
+                <Text variant={TextVariant.t11} color={Color.textBase2}>
                   {commission.max}%
                 </Text>
               </View>
               <View style={styles.infoBlockCommission}>
                 <Text
                   i18n={I18N.stakingInfoCommissionMaxChange}
-                  t14
+                  variant={TextVariant.t14}
                   color={Color.textBase2}
                 />
-                <Text t11 color={Color.textBase2}>
+                <Text variant={TextVariant.t11} color={Color.textBase2}>
                   {commission.maxChange}%
                 </Text>
               </View>
@@ -177,7 +185,10 @@ export const StakingInfo = ({
           </Block>
           {website && (
             <Block name={I18N.stakingInfoWebsite}>
-              <Text t11 color={Color.textGreen1} onPress={onPressWebsite}>
+              <Text
+                variant={TextVariant.t11}
+                color={Color.textGreen1}
+                onPress={onPressWebsite}>
                 {website}
               </Text>
             </Block>
@@ -186,7 +197,7 @@ export const StakingInfo = ({
         <View style={styles.blockContainer}>
           <Block name={I18N.stakingInfoAddress}>
             <CopyButton value={operator_address} activeOpacity={0.7}>
-              <Text t14 color={Color.textBase2}>
+              <Text variant={TextVariant.t14} color={Color.textBase2}>
                 {operator_address}
                 <Spacer width={3} />
                 <Icon name="copy" i16 color={Color.graphicGreen1} />

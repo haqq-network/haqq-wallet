@@ -165,6 +165,37 @@ export class Indexer {
     }
   }
 
+  async getTransaction(
+    accounts: string[],
+    tx_hash: string,
+    providerId = app.providerId,
+  ): Promise<IndexerTransaction | null> {
+    try {
+      const provider = Provider.getById(providerId);
+
+      if (!provider?.indexer) {
+        throw new Error('Indexer is not configured');
+      }
+
+      if (!accounts.length) {
+        return null;
+      }
+
+      const haqqAddresses = accounts.filter(a => !!a).map(AddressUtils.toHaqq);
+      const response = await jsonrpcRequest<IndexerTransactionResponse>(
+        provider.indexer,
+        'transaction',
+        [haqqAddresses, tx_hash],
+      );
+      return response?.txs[0] || {};
+    } catch (err) {
+      if (err instanceof JSONRPCError) {
+        this.captureException(err, 'Indexer:getTransactions', err.meta);
+      }
+      throw err;
+    }
+  }
+
   async getTransactions(
     accounts: string[],
     latestBlock: string = 'latest',

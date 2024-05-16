@@ -171,6 +171,7 @@ export const Web3BrowserActionMenu = ({
               <DataContent short titleI18n={I18N.browserActionMenuShare} />
               <Icon name={IconsName.share} color={Color.graphicBase1} />
             </IconButton>
+            <View style={styles.moreButtonSeparator} />
             <IconButton
               style={styles.actionMenuButton}
               onPress={onPressPrivacy}>
@@ -206,7 +207,8 @@ const styles = createTheme({
     width: ACTION_MENU_WIDTH,
     transform: [{translateX: -ACTION_MENU_PADDING_HORIZONTAL}],
     backgroundColor: Color.graphicSecond2,
-    height: 0.5,
+    height: 1,
+    opacity: 0.5,
   },
   actionMenuButton: {
     flexDirection: 'row',
