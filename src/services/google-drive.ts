@@ -12,6 +12,15 @@ type FilesResp = {
   }>;
 };
 
+/**
+ * Google Drive storage for SSS
+ *
+ * @export
+ * @class GoogleDrive
+ * @typedef {GoogleDrive}
+ * @implements {StorageInterface}
+ * @deprecated Please use GoogleDrive2
+ */
 export class GoogleDrive implements StorageInterface {
   private _token = '';
 
