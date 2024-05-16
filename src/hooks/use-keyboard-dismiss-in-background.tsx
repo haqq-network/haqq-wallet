@@ -1,19 +1,13 @@
 import {useEffect} from 'react';
 
-import {AppState, AppStateStatus, Keyboard} from 'react-native';
+import {useAppState} from '@react-native-community/hooks';
+import {Keyboard} from 'react-native';
 
 export function useKeyboardDismissInBackground() {
+  const appState = useAppState();
   useEffect(() => {
-    const subscription = (status: AppStateStatus) => {
-      if (status === 'background' || status === 'inactive') {
-        Keyboard.dismiss();
-      }
-    };
-
-    const sub = AppState.addEventListener('change', subscription);
-
-    return () => {
-      sub.remove();
-    };
-  }, []);
+    if (appState === 'background' || appState === 'inactive') {
+      Keyboard.dismiss();
+    }
+  }, [appState]);
 }

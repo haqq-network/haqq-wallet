@@ -1,6 +1,5 @@
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
-import Config from 'react-native-config';
 
 import {app} from '@app/contexts';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
@@ -12,9 +11,8 @@ export async function getProviderForNewWallet(params?: WalletInitialData) {
   const getPassword = app.getPassword.bind(app);
 
   if (params && params.type === 'sss') {
-    const storage = await getProviderStorage('', 'cloud');
+    const storage = await getProviderStorage('', params.provider);
     return await ProviderSSSReactNative.initialize(
-      //@ts-ignore
       params.action === 'restore' ? params.sssPrivateKey || null : null,
       params.sssCloudShare || null,
       params.sssLocalShare || null,
@@ -24,14 +22,8 @@ export async function getProviderForNewWallet(params?: WalletInitialData) {
       app.getPassword.bind(app),
       storage,
       {
-        metadataUrl: RemoteConfig.get_env(
-          'sss_metadata_url',
-          Config.METADATA_URL,
-        ) as string,
-        generateSharesUrl: RemoteConfig.get_env(
-          'sss_generate_shares_url',
-          Config.GENERATE_SHARES_URL,
-        ) as string,
+        metadataUrl: RemoteConfig.get('sss_metadata_url')!,
+        generateSharesUrl: RemoteConfig.get('sss_generate_shares_url')!,
       },
     ).catch(err => ErrorHandler.handle('sssLimitReached', err));
   }

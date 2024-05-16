@@ -15,11 +15,10 @@ import {
   Text,
 } from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
-import {onDeepLink} from '@app/event-actions/on-deep-link';
+import {openURL} from '@app/helpers/url';
 import {BannerButtonEvent} from '@app/models/banner';
 import {EventTracker} from '@app/services/event-tracker';
 import {IBannerWidget} from '@app/types';
-import {openWeb3Browser} from '@app/utils';
 import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
 
 export interface HomeBannerProps {
@@ -50,14 +49,7 @@ export const BannerWidget = ({banner, style}: HomeBannerProps) => {
     if (!link) {
       return;
     }
-    if (link.startsWith('haqq:')) {
-      const isHandled = onDeepLink(link);
-      if (!isHandled) {
-        openWeb3Browser(link);
-      }
-    } else {
-      openWeb3Browser(link);
-    }
+    openURL(link);
     setLoading(false);
   }, [banner]);
 

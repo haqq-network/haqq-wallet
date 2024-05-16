@@ -31,6 +31,7 @@ import {VestingMetadataType} from '@app/models/vesting-metadata';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
+import {EventTracker} from '@app/services/event-tracker';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {RemoteConfig} from '@app/services/remote-config';
 
@@ -38,13 +39,13 @@ import {showModal} from '../helpers';
 import {Provider} from '../models/provider';
 import {User} from '../models/user';
 import {
-  AppLanguage,
   AppTheme,
   BalanceData,
   BiometryType,
   DynamicLink,
   HaqqEthereumAddress,
   IndexerBalanceData,
+  MarketingEvents,
   ModalType,
 } from '../types';
 import {
@@ -93,6 +94,7 @@ class App extends AsyncEventEmitter {
 
   constructor() {
     super();
+    this.setMaxListeners(1000);
     this._startUpTime = Date.now();
 
     seedData();
@@ -125,7 +127,6 @@ class App extends AsyncEventEmitter {
 
     this.checkBalance = this.checkBalance.bind(this);
     this.checkBalance();
-    setInterval(this.checkBalance, 6000);
 
     this.handleDynamicLink = this.handleDynamicLink.bind(this);
 
@@ -254,14 +255,6 @@ class App extends AsyncEventEmitter {
 
   set biometry(value) {
     VariablesBool.set('biometry', value);
-  }
-
-  get language() {
-    return (VariablesString.get('language') as AppLanguage) || AppLanguage.en;
-  }
-
-  set language(value) {
-    VariablesString.set('language', value);
   }
 
   get isUnlocked() {
@@ -561,6 +554,9 @@ class App extends AsyncEventEmitter {
 
       switch (appStatus) {
         case AppStatus.active:
+          EventTracker.instance.trackEvent(MarketingEvents.appStarted, {
+            type: 'background',
+          });
           if (this.user?.isOutdatedLastActivity() && this.authenticated) {
             this.authenticated = false;
             this._authInProgress = true;
@@ -588,6 +584,9 @@ class App extends AsyncEventEmitter {
   }
 
   onWalletsBalance(balances: IndexerBalanceData) {
+    if (!this.onboarded) {
+      return;
+    }
     let changed = false;
 
     const balancesEntries = Object.entries(balances) as unknown as [

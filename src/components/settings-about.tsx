@@ -7,6 +7,7 @@ import {Color} from '@app/colors';
 import {LottieWrap, Spacer, Text} from '@app/components/ui';
 import {createTheme, getWindowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {getAppVersion, getBuildNumber} from '@app/services/version';
 import {PRIVACY_POLICY, TERMS_OF_CONDITIONS} from '@app/variables/common';
 
 import {SettingsAboutButton} from './settings-about-button';
@@ -81,6 +82,10 @@ export const SettingsAbout = memo(
             center
             color={Color.textBase1}
             i18n={I18N.settingsAboutRights}
+            i18params={{
+              appVersion: getAppVersion(),
+              buildNumber: getBuildNumber(),
+            }}
             style={styles.terms}
           />
         </MulticlickTouchable>

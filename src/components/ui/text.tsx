@@ -1,5 +1,4 @@
-import * as React from 'react';
-import {useMemo} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 
 import {
   Platform,
@@ -11,6 +10,8 @@ import {
 } from 'react-native';
 
 import {Color, getColor} from '@app/colors';
+import {app} from '@app/contexts';
+import {Events} from '@app/events';
 import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {ColorType, FontT} from '@app/types';
@@ -148,9 +149,23 @@ export const Text = ({
   position,
   ...props
 }: TextProps) => {
+  const [update, forceUpdate] = useState({});
+
+  useEffect(() => {
+    const subscription = () => {
+      forceUpdate({});
+    };
+
+    app.on(Events.onLocaleChanged, subscription);
+
+    return () => {
+      app.off(Events.onLocaleChanged, subscription);
+    };
+  }, []);
+
   const value = useMemo(
     () => (typeof i18n !== 'undefined' ? getText(i18n, i18params) : children),
-    [children, i18n, i18params],
+    [children, i18n, i18params, update],
   );
 
   const variantStyle = useMemo(() => {

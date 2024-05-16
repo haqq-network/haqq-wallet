@@ -43,6 +43,9 @@ const parseIndexerBalances = (
 
 export async function onWalletsBalanceCheck() {
   try {
+    if (app.onboarded === false) {
+      return;
+    }
     const wallets = Wallet.getAllVisible();
     const lastBalanceUpdates = VariablesDate.get(
       `indexer_${app.provider.cosmosChainId}`,
@@ -85,6 +88,41 @@ export async function onWalletsBalanceCheck() {
     if (balancesRaw) {
       const updates = JSON.parse(balancesRaw) as IndexerUpdatesResponse;
       const result = parseIndexerBalances(updates);
+      app.onWalletsBalance(result);
+    }
+  }
+}
+
+export async function onWalletsBalanceCheckRPC(
+  updates: IndexerUpdatesResponse,
+) {
+  try {
+    VariablesDate.set(
+      `indexer_${app.provider.cosmosChainId}`,
+      new Date(updates.last_update),
+    );
+
+    const result = parseIndexerBalances(updates);
+
+    //Caching balances
+    const value = JSON.stringify(updates);
+    storage.setItem(BALANCE_CACHE_KEY, value);
+
+    app.onWalletsBalance(result);
+
+    Currencies.setRates(updates.rates);
+    app.emit(Events.onWalletsBalanceCheckError, null);
+  } catch (e) {
+    Logger.error(Events.onWalletsBalanceCheck, e);
+    app.emit(Events.onWalletsBalanceCheckError, e);
+
+    // Trying to find cached balances
+    const balancesRaw = storage.getItem(BALANCE_CACHE_KEY) as
+      | string
+      | undefined;
+    if (balancesRaw) {
+      const _updates = JSON.parse(balancesRaw) as IndexerUpdatesResponse;
+      const result = parseIndexerBalances(_updates);
       app.onWalletsBalance(result);
     }
   }

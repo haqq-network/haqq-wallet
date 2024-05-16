@@ -2,46 +2,54 @@ import React from 'react';
 
 import {Color} from '@app/colors';
 import {
+  CustomHeader,
   DataContent,
   Icon,
   IconButton,
   PopupContainer,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {AppLanguage} from '@app/types';
+import {I18N} from '@app/i18n';
+import {AppLanguage, Language} from '@app/types';
 
 type SettingsLanguageProps = {
-  onUpdatelanguage: (lang: AppLanguage) => void;
+  onUpdatelanguage: (lang: Language) => void;
   language: AppLanguage;
+  goBack: () => void;
+  languages: Language[];
 };
 
 export const SettingsLanguage = ({
   onUpdatelanguage,
   language,
+  goBack,
+  languages,
 }: SettingsLanguageProps) => {
   return (
-    <PopupContainer style={styles.container}>
-      <IconButton
-        style={styles.button}
-        onPress={() => {
-          onUpdatelanguage(AppLanguage.ar);
-        }}>
-        <DataContent title="Arabic" subtitle="العربية" />
-        {language === AppLanguage.ar && (
-          <Icon name="check" color={Color.graphicGreen1} i24 />
-        )}
-      </IconButton>
-      <IconButton
-        style={styles.button}
-        onPress={() => {
-          onUpdatelanguage(AppLanguage.en);
-        }}>
-        <DataContent title="English" subtitle="English" />
-        {language === AppLanguage.en && (
-          <Icon name="check" color={Color.graphicGreen1} i24 />
-        )}
-      </IconButton>
-    </PopupContainer>
+    <>
+      <CustomHeader
+        onPressLeft={goBack}
+        iconLeft="arrow_back"
+        title={I18N.homeSettingsLanguage}
+      />
+      <PopupContainer style={styles.container}>
+        {languages.map(item => {
+          return (
+            <IconButton
+              key={item.id}
+              style={styles.button}
+              onPress={() => {
+                onUpdatelanguage(item);
+              }}>
+              <DataContent title={item.title} subtitle={item.local_title} />
+              {language === item.id && (
+                <Icon name="check" color={Color.graphicGreen1} i24 />
+              )}
+            </IconButton>
+          );
+        })}
+      </PopupContainer>
+    </>
   );
 };
 

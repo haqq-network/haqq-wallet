@@ -37,7 +37,9 @@ const StoryVideo: FC<StoryVideoProps> = memo(
           paused={!pausedValue}
           controls={false}
           repeat={false}
-          onLoad={({duration}: {duration: number}) => onLoad(duration * 1000)}
+          onLoad={({duration}: {duration: number}) => {
+            onLoad(Math.ceil(duration * 1000));
+          }}
           onLayout={e => onLayout(e.nativeEvent.layout.height)}
           resizeMode="cover"
           automaticallyWaitsToMinimizeStalling

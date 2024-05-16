@@ -5,15 +5,21 @@ import {app} from '@app/contexts';
 import {hideModal} from '@app/helpers/modal';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {LedgerStackParamList} from '@app/route-types';
+import {
+  HomeStackParamList,
+  HomeStackRoutes,
+  LedgerStackParamList,
+} from '@app/route-types';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {ModalType} from '@app/types';
 
 export const LedgerFinishScreen = memo(() => {
-  const navigation = useTypedNavigation<LedgerStackParamList>();
+  const navigation = useTypedNavigation<
+    LedgerStackParamList & HomeStackParamList
+  >();
   const onEnd = useCallback(() => {
     if (app.onboarded) {
-      navigation.getParent()?.goBack();
+      navigation.navigate(HomeStackRoutes.Home);
     } else {
       app.onboarded = true;
     }

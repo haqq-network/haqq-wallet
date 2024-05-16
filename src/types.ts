@@ -79,6 +79,21 @@ export enum MarketingEvents {
   stakingDelegate = 'xh19jh',
   stakingValidators = 'ejspf6',
   jailed = 'k13htx',
+
+  storyOpen = '1axuz5',
+  storySkip = 'iejfyw',
+  storyFinished = 'p3q1wh',
+  storyAction = 'soh778',
+
+  signTxStart = 'p4ddyo',
+  signTxSuccess = 'qn67qh',
+  signTxFail = 'u8jbr8',
+  sendTxStart = '2u2yjy',
+  sendTxSuccess = '31hbyi',
+  sendTxFail = 'svkvy9',
+
+  appStarted = 'w8hbt0',
+  navigation = '68gzdc',
 }
 
 export enum PopupNotificationBannerTypes {
@@ -111,6 +126,8 @@ export type WalletInitialData =
       sssLocalShare: string | null;
       verifier: string;
       token: string;
+      action?: 'restore' | 'replace';
+      provider: SssProviders;
     }
   | {type: 'empty'}
   | LedgerWalletInitialData;
@@ -719,6 +736,8 @@ export type FontT = TextStyle | ViewStyle | ImageStyle | undefined;
 
 export enum AppLanguage {
   en = 'en',
+  tr = 'tr',
+  ru = 'ru',
   ar = 'ar',
 }
 
@@ -1089,6 +1108,14 @@ export type Modals = {
     details?: string;
     onClose?: () => void;
   };
+  removeSSS: {
+    onClose?: () => void;
+    accountID: string;
+    provider: 'cloud' | 'googleDrive';
+  };
+  popupNotification: {
+    onCloseProp?: () => void;
+  };
 };
 
 export enum ModalType {
@@ -1124,6 +1151,8 @@ export enum ModalType {
   keystoneQR = 'keystoneQR',
   sssLimitReached = 'sssLimitReached',
   pinError = 'pinError',
+  removeSSS = 'removeSSS',
+  popupNotification = 'popupNotification',
 }
 
 export interface BaseNewsItem {
@@ -1817,6 +1846,8 @@ export type IStory = {
         event?: MarketingEvents;
         text: string;
         type: 'button' | 'text' | 'spacer';
+        onPress?: () => void;
+        target?: string;
       };
     }[];
     attachment: {
@@ -1833,3 +1864,14 @@ export type IStory = {
 export type StoriesResponse = IStory[];
 
 export type ArrayElement<A> = A extends readonly (infer T)[] ? T : never;
+
+export type Language = {
+  id: AppLanguage;
+  title: string;
+  local_title: string;
+  status: 'published';
+  created_at: string;
+  updated_at: string;
+  hash: string;
+};
+export type LanguagesResponse = Language[];

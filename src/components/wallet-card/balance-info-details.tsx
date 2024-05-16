@@ -50,7 +50,7 @@ export const BalanceInfoDetails = ({
         </View>
       </First>
 
-      <Spacer width={10} />
+      {!!total?.toFiat() && <Spacer width={10} />}
       {showLockedTokens && (
         <First>
           {isBalancesFirstSync && (
@@ -86,6 +86,6 @@ const styles = createTheme({
     alignItems: 'center',
   },
   lockedTokensContainer: {
-    transform: [{translateY: -8}],
+    transform: [{translateY: -2}],
   },
 });

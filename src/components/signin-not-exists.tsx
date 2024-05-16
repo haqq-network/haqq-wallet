@@ -6,6 +6,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Color} from '@app/colors';
 import {I18N} from '@app/i18n';
 import {SssProviders} from '@app/services/provider-sss';
+import {capitalize} from '@app/utils';
 
 import {Button, ButtonVariant, Spacer, Text} from './ui';
 
@@ -37,7 +38,10 @@ export const SigninNotExists = ({
           t4
           center
           i18n={I18N.signNotExitsTitle}
-          i18params={{provider, email: email || ''}}
+          i18params={{
+            provider: capitalize(provider),
+            email: email || '',
+          }}
         />
         <Spacer height={5} />
         <Text

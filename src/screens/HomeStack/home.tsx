@@ -1,4 +1,4 @@
-import React, {memo, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {
   BottomTabNavigationOptions,
@@ -7,6 +7,7 @@ import {
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 import {NavigationAction} from '@react-navigation/routers';
 import {TransitionPresets} from '@react-navigation/stack';
+import {observer} from 'mobx-react';
 import {StatusBar} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -101,16 +102,17 @@ const navigationOptions = {
   unmountOnBlur: true,
 };
 
-export const HomeScreen = memo(() => {
+export const HomeScreen = observer(() => {
   const [isAppUnlocked, setIsAppUnlocked] = useState(app.isUnlocked);
   const navigation = useTypedNavigation();
+  const walletToCheck = Wallet.getAllVisible().find(
+    item => item.type === WalletType.sss && !!item.socialLinkEnabled,
+  );
 
-  useEffectAsync(async () => {
-    const walletToCheck = Wallet.getAllVisible().find(
-      item => item.type === WalletType.sss && !!item.socialLinkEnabled,
-    );
+  const check = async () => {
     if (walletToCheck && walletToCheck.accountId) {
       const storage = await getProviderStorage(walletToCheck.accountId);
+      //TODO: Verify cloud share
       const cloudShare = await storage.getItem(
         `haqq_${walletToCheck.accountId.toLowerCase()}`,
       );
@@ -119,6 +121,10 @@ export const HomeScreen = memo(() => {
         showModal(ModalType.cloudShareNotFound, {wallet: walletToCheck});
       }
     }
+  };
+
+  useEffectAsync(async () => {
+    await check();
 
     const subscription = (e: {
       preventDefault: () => void;
@@ -132,7 +138,7 @@ export const HomeScreen = memo(() => {
     return () => {
       navigation.removeListener('beforeRemove', subscription);
     };
-  }, [navigation]);
+  }, [walletToCheck]);
 
   useEffect(() => {
     const sub = (unlocked: boolean) => {

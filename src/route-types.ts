@@ -281,6 +281,7 @@ export enum SettingsStackRoutes {
   WalletConnectWalletList = 'walletConnectWalletList',
   BackupSssSuggestion = 'backupSssSuggestion',
   SettingsDeveloperTools = 'settingsDeveloperTools',
+  SettingsLanguage = 'settingsLanguage',
 }
 
 export type SettingsStackParamList = HomeStackParamList & {
@@ -293,6 +294,7 @@ export type SettingsStackParamList = HomeStackParamList & {
   };
   [SettingsStackRoutes.SettingsAccounts]: undefined;
   [SettingsStackRoutes.SettingsAddressBook]: undefined;
+  [SettingsStackRoutes.SettingsLanguage]: undefined;
   [SettingsStackRoutes.SettingsCurrency]: undefined;
   [SettingsStackRoutes.SettingsTheme]: undefined;
   [SettingsStackRoutes.SettingsNotification]: undefined;
@@ -717,7 +719,10 @@ export type SignInStackParamList = WelcomeStackParamList & {
   [SignInStackRoutes.SigninPin]: WalletInitialData;
   [SignInStackRoutes.SigninSharesNotFound]: undefined;
   [SignInStackRoutes.OnboardingSetupPin]: WalletInitialData & {
-    provider?: ProviderMnemonicReactNative | ProviderSSSReactNative;
+    provider?:
+      | ProviderMnemonicReactNative
+      | ProviderSSSReactNative
+      | SssProviders;
     biometryType?: BiometryType;
   };
   [SignInStackRoutes.SigninStoreWallet]: WalletInitialData & {
@@ -740,6 +745,7 @@ export type SignInStackParamList = WelcomeStackParamList & {
     | {
         provider: ProviderSSSReactNative;
         nextScreen?: SignInStackRoutes;
+        sssProvider: string;
       };
 };
 

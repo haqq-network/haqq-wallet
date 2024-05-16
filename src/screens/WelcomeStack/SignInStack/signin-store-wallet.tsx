@@ -4,7 +4,6 @@ import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {observer} from 'mobx-react';
-import Config from 'react-native-config';
 
 import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
@@ -88,7 +87,8 @@ export const SignInStoreWalletScreen = observer(() => {
             // Wallets were created on previous step
             break;
           case 'sss':
-            const storage = await getProviderStorage();
+            //@ts-ignore
+            const storage = await getProviderStorage('', params.provider);
             const password = await getPassword();
 
             const sssProvider = await ProviderSSSReactNative.initialize(
@@ -101,14 +101,8 @@ export const SignInStoreWalletScreen = observer(() => {
               app.getPassword.bind(app),
               storage,
               {
-                metadataUrl: RemoteConfig.get_env(
-                  'sss_metadata_url',
-                  Config.METADATA_URL,
-                ) as string,
-                generateSharesUrl: RemoteConfig.get_env(
-                  'sss_generate_shares_url',
-                  Config.GENERATE_SHARES_URL,
-                ) as string,
+                metadataUrl: RemoteConfig.get('sss_metadata_url')!,
+                generateSharesUrl: RemoteConfig.get('sss_generate_shares_url')!,
               },
             ).catch(err => ErrorHandler.handle('sssLimitReached', err));
 
@@ -120,6 +114,7 @@ export const SignInStoreWalletScreen = observer(() => {
             await sssProvider.updatePin(password);
 
             navigation.navigate(SignInStackRoutes.SigninChooseAccount, {
+              sssProvider: params.provider,
               provider: sssProvider,
             });
             break;

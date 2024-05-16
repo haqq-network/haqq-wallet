@@ -92,5 +92,6 @@ const styles = createTheme({
   image: {
     height: () => calculateHeight() - 20,
     top: -10,
+    width: 200,
   },
 });

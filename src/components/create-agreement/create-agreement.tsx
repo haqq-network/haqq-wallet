@@ -67,6 +67,7 @@ const styles = createTheme({
   },
   animationInner: {
     height: () => calculateHeight() - 20,
+    width: 346,
   },
   title: {
     marginBottom: 4,
