@@ -584,6 +584,9 @@ class App extends AsyncEventEmitter {
   }
 
   onWalletsBalance(balances: IndexerBalanceData) {
+    if (!this.onboarded) {
+      return;
+    }
     let changed = false;
 
     const balancesEntries = Object.entries(balances) as unknown as [

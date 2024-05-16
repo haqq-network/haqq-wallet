@@ -4,7 +4,6 @@ import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native'
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {mnemonicToEntropy} from 'ethers/lib/utils';
 import {observer} from 'mobx-react';
-import Config from 'react-native-config';
 
 import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
@@ -34,7 +33,7 @@ export const SssMigrateStoreScreen = observer(() => {
   useEffect(() => {
     setTimeout(async () => {
       try {
-        const storage = await getProviderStorage();
+        const storage = await getProviderStorage('', route.params.provider);
         const getPassword = app.getPassword.bind(app);
 
         const mnemonicProvider = new ProviderMnemonicReactNative({
@@ -62,14 +61,8 @@ export const SssMigrateStoreScreen = observer(() => {
           getPassword,
           storage,
           {
-            metadataUrl: RemoteConfig.get_env(
-              'sss_metadata_url',
-              Config.METADATA_URL,
-            ) as string,
-            generateSharesUrl: RemoteConfig.get_env(
-              'sss_generate_shares_url',
-              Config.GENERATE_SHARES_URL,
-            ) as string,
+            metadataUrl: RemoteConfig.get('sss_metadata_url')!,
+            generateSharesUrl: RemoteConfig.get('sss_generate_shares_url')!,
           },
         ).catch(err => ErrorHandler.handle('sssLimitReached', err));
 
@@ -85,11 +78,16 @@ export const SssMigrateStoreScreen = observer(() => {
             wallet.accountId === route.params.accountId &&
             wallet.type === WalletType.mnemonic
           ) {
+            const accountId = provider.getIdentifier();
             Wallet.update(wallet.address, {
               type: WalletType.sss,
-              accountId: provider.getIdentifier(),
+              accountId,
               socialLinkEnabled: true,
             });
+            await ProviderSSSReactNative.setStorageForAccount(
+              accountId,
+              storage,
+            );
           }
         }
 

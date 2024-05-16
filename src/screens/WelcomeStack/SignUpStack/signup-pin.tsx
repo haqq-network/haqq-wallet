@@ -1,7 +1,6 @@
 import React, {memo, useCallback, useRef} from 'react';
 
 import {decryptShare} from '@haqq/shared-react-native';
-import Config from 'react-native-config';
 
 import {PinInterface} from '@app/components/pin';
 import {SssPin} from '@app/components/sss-pin';
@@ -40,10 +39,7 @@ export const SignupPinScreen = memo(() => {
           }
 
           const securityQuestion = await getMetadataValueWrapped(
-            RemoteConfig.get_env(
-              'sss_metadata_url',
-              Config.METADATA_URL,
-            ) as string,
+            RemoteConfig.get('sss_metadata_url')!,
             route.params.sssPrivateKey,
             'socialShareIndex',
           );

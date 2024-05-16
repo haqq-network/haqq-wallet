@@ -7,6 +7,7 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 
 import {SignupNetworkExists} from '@app/components/signup-network-exists';
 import {app} from '@app/contexts';
+import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {
@@ -16,6 +17,7 @@ import {
   WelcomeStackRoutes,
 } from '@app/route-types';
 import {Cloud} from '@app/services/cloud';
+import {GoogleDrive} from '@app/services/google-drive';
 import {WalletInitialData} from '@app/types';
 
 export const SignupNetworkExistsScreen = memo(() => {
@@ -32,13 +34,15 @@ export const SignupNetworkExistsScreen = memo(() => {
       return;
     }
 
-    const supported = await Cloud.isEnabled();
+    //@ts-ignore
+    const provider = nextParams.provider === 'apple' ? Cloud : GoogleDrive;
+    //@ts-ignore
+    const cloud = await getProviderStorage('', nextParams.provider);
+    const supported = await provider.isEnabled();
 
     if (!supported) {
       nextScreen = SignUpStackRoutes.SignUpPin;
     }
-
-    const cloud = new Cloud();
 
     const account = await accountInfo(nextParams.sssPrivateKey);
 

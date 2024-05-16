@@ -231,6 +231,11 @@ const getTestModals = (): TestModals => {
     pinError: {
       details: 'test error',
     },
+    removeSSS: {
+      accountID: '',
+      onClose: () => logger.log('removeSSS closed'),
+      provider: 'cloud',
+    },
     popupNotification: {
       onCloseProp: () => logger.log('popupNotification closed'),
     },

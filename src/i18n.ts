@@ -958,6 +958,13 @@ export enum I18N {
   settingsSecurityHexBlindSign = 'settingsSecurityHexBlindSign',
   settingsSecurityHexBlindSignDescription = 'settingsSecurityHexBlindSignDescription',
   jsonRpcSignParsedMsg = 'jsonRpcSignParsedMsg',
+  removeSSSTitle = 'removeSSSTitle',
+  removeSSSDescription = 'removeSSSDescription',
+  removeSSSDescriptionImportant = 'removeSSSDescriptionImportant',
+  removeSSSSecondary = 'removeSSSSecondary',
+  removeSSSPrimary = 'removeSSSPrimary',
+  removeSSSAlertTitle = 'removeSSSAlertTitle',
+  removeSSSAlertDescription = 'removeSSSAlertDescription',
 }
 
 const defaultTranslation = {en};

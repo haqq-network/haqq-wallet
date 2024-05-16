@@ -43,6 +43,9 @@ const parseIndexerBalances = (
 
 export async function onWalletsBalanceCheck() {
   try {
+    if (app.onboarded === false) {
+      return;
+    }
     const wallets = Wallet.getAllVisible();
     const lastBalanceUpdates = VariablesDate.get(
       `indexer_${app.provider.cosmosChainId}`,

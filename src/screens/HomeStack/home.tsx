@@ -112,6 +112,7 @@ export const HomeScreen = observer(() => {
   const check = async () => {
     if (walletToCheck && walletToCheck.accountId) {
       const storage = await getProviderStorage(walletToCheck.accountId);
+      //TODO: Verify cloud share
       const cloudShare = await storage.getItem(
         `haqq_${walletToCheck.accountId.toLowerCase()}`,
       );

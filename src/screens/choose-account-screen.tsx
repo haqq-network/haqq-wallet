@@ -11,6 +11,7 @@ import {
 import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
+import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {getWalletsFromProvider} from '@app/helpers/get-wallets-from-provider';
 import {safeLoadBalances} from '@app/helpers/safe-load-balances';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
@@ -64,9 +65,7 @@ export const ChooseAccountScreen = observer(() => {
   }, []);
 
   const goBack = useCallback(() => {
-    if (isMnemonicProvider) {
-      navigation.goBack();
-    }
+    navigation.goBack();
   }, [navigation]);
 
   const createWalletGenerator = (mnemonicType: ChooseAccountTabNames) => {
@@ -201,6 +200,13 @@ export const ChooseAccountScreen = observer(() => {
           });
         }
       });
+
+    if (isSSSProvider) {
+      const accountID = walletsToCreate[0].accountId;
+      //@ts-ignore
+      const storage = await getProviderStorage(accountID, params.sssProvider);
+      await ProviderSSSReactNative.setStorageForAccount(accountID, storage);
+    }
 
     if (isMnemonicProvider && !app.onboarded) {
       //@ts-ignore

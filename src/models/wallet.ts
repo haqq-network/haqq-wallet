@@ -323,6 +323,10 @@ class WalletStore implements MobXStoreFromRealm, RPCObserver {
     this.update(address, params);
   }
 
+  count(type: WalletType) {
+    return this.wallets.filter(item => item.type === type).length;
+  }
+
   onMessage = (message: RPCMessage) => {
     if (message.type !== 'balance') {
       return;

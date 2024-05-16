@@ -9,7 +9,6 @@ export async function onWalletSssSaved(accountId: string) {
   const wallets = Wallet.getAll();
 
   const storage = await getProviderStorage(accountId);
-
   const provider = new ProviderSSSReactNative({
     account: accountId,
     storage,

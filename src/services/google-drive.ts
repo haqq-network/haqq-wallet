@@ -12,6 +12,15 @@ type FilesResp = {
   }>;
 };
 
+/**
+ * Google Drive storage for SSS
+ *
+ * @export
+ * @class GoogleDrive
+ * @typedef {GoogleDrive}
+ * @implements {StorageInterface}
+ * @deprecated Please use GoogleDrive2
+ */
 export class GoogleDrive implements StorageInterface {
   private _token = '';
 
@@ -103,7 +112,7 @@ export class GoogleDrive implements StorageInterface {
     const files = await getHttpResponse<FilesResp>(filesResp);
 
     if (!files?.files.length) {
-      throw new Error('share_not_found');
+      return '';
     }
 
     return files.files[0].id;
@@ -111,6 +120,9 @@ export class GoogleDrive implements StorageInterface {
 
   async getItem(key: string): Promise<string> {
     const fileId = await this.getSavedFileId(key);
+    if (!fileId) {
+      return '';
+    }
     const headers = await this.getHeaders();
     const resp = await fetch(
       `${GOOGLE_API}drive/v3/files/${fileId}?alt=media`,

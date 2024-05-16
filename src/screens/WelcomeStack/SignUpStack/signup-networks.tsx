@@ -1,7 +1,6 @@
 import React, {memo, useCallback} from 'react';
 
 import {Alert} from 'react-native';
-import Config from 'react-native-config';
 
 import {SignupNetworks} from '@app/components/signup-networks';
 import {app} from '@app/contexts';
@@ -61,10 +60,7 @@ export const SignupNetworksScreen = memo(() => {
 
         if (creds.privateKey) {
           const walletInfo = await getMetadataValueWrapped(
-            RemoteConfig.get_env(
-              'sss_metadata_url',
-              Config.METADATA_URL,
-            ) as string,
+            RemoteConfig.get('sss_metadata_url')!,
             creds.privateKey,
             'socialShareIndex',
           );

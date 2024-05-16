@@ -126,6 +126,8 @@ export type WalletInitialData =
       sssLocalShare: string | null;
       verifier: string;
       token: string;
+      action?: 'restore' | 'replace';
+      provider: SssProviders;
     }
   | {type: 'empty'}
   | LedgerWalletInitialData;
@@ -1106,6 +1108,11 @@ export type Modals = {
     details?: string;
     onClose?: () => void;
   };
+  removeSSS: {
+    onClose?: () => void;
+    accountID: string;
+    provider: 'cloud' | 'googleDrive';
+  };
   popupNotification: {
     onCloseProp?: () => void;
   };
@@ -1144,6 +1151,7 @@ export enum ModalType {
   keystoneQR = 'keystoneQR',
   sssLimitReached = 'sssLimitReached',
   pinError = 'pinError',
+  removeSSS = 'removeSSS',
   popupNotification = 'popupNotification',
 }
 

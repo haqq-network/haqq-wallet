@@ -27,8 +27,6 @@ export const SignUpStoreWalletScreen = observer(() => {
     SignUpStackRoutes.SignupStoreWallet
   >();
 
-  Logger.log('SignUpStoreWalletScreen', route.params);
-
   const goBack = useCallback(() => {
     hideModal(ModalType.loading);
     navigation.replace(WelcomeStackRoutes.SignUp);
@@ -86,12 +84,17 @@ export const SignUpStoreWalletScreen = observer(() => {
           return;
         }
 
-        if (getWalletType() === WalletType.sss && app.onboarded === false) {
+        if (
+          getWalletType() === WalletType.sss &&
+          app.onboarded === false &&
+          route.params.type === 'sss'
+        ) {
           hideModal('loading');
+          const sssProvider = route.params.provider;
           //@ts-ignore
           navigation.navigate(WelcomeStackRoutes.SignIn, {
             screen: SignInStackRoutes.SigninChooseAccount,
-            params: {provider},
+            params: {provider, sssProvider},
           });
           return;
         }
