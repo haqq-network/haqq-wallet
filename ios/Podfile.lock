@@ -14,6 +14,7 @@ PODS:
   - boost (1.76.0)
   - BVLinearGradient (2.7.3):
     - React-Core
+  - CocoaAsyncSocket (7.6.5)
   - CryptoSwift (1.5.1)
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.72.10)
@@ -170,6 +171,10 @@ PODS:
   - hermes-engine (0.72.10):
     - hermes-engine/Pre-built (= 0.72.10)
   - hermes-engine/Pre-built (0.72.10)
+  - KTVCocoaHTTPServer (1.0.0):
+    - CocoaAsyncSocket
+  - KTVHTTPCache (2.0.1):
+    - KTVCocoaHTTPServer
   - libevent (2.1.12)
   - lottie-ios (4.4.1)
   - lottie-react-native (6.7.2):
@@ -543,10 +548,15 @@ PODS:
     - React-Core
   - react-native-splash-screen (3.3.0):
     - React-Core
-  - react-native-video (5.2.1):
+  - react-native-video (6.0.0):
+    - RCT-Folly (= 2021.07.22.00)
     - React-Core
-    - react-native-video/Video (= 5.2.1)
-  - react-native-video/Video (5.2.1):
+    - react-native-video/Video (= 6.0.0)
+  - react-native-video-cache-control (1.2.2):
+    - KTVHTTPCache (~> 2.0.0)
+    - React-Core
+  - react-native-video/Video (6.0.0):
+    - RCT-Folly (= 2021.07.22.00)
     - React-Core
   - react-native-webview (13.8.1):
     - RCT-Folly (= 2021.07.22.00)
@@ -792,6 +802,7 @@ DEPENDENCIES:
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - react-native-video (from `../node_modules/react-native-video`)
+  - react-native-video-cache-control (from `../node_modules/react-native-video-cache-control`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -841,6 +852,7 @@ SPEC REPOS:
   trunk:
     - Adjust
     - AppAuth
+    - CocoaAsyncSocket
     - CryptoSwift
     - Firebase
     - FirebaseAnalytics
@@ -857,6 +869,8 @@ SPEC REPOS:
     - GoogleUtilities
     - GTMAppAuth
     - GTMSessionFetcher
+    - KTVCocoaHTTPServer
+    - KTVHTTPCache
     - libevent
     - lottie-ios
     - MMKV
@@ -974,6 +988,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-splash-screen"
   react-native-video:
     :path: "../node_modules/react-native-video"
+  react-native-video-cache-control:
+    :path: "../node_modules/react-native-video-cache-control"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   React-NativeModulesApple:
@@ -1065,6 +1081,7 @@ SPEC CHECKSUMS:
   BlastedImage: 7dd925da7db9dcf1120efc0009bad5492e843b1e
   boost: 7dcd2de282d72e344012f7d6564d024930a6a440
   BVLinearGradient: fbe308a1d19a8133f69e033abc85d8008644f5e3
+  CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   CryptoSwift: c4f2debceb38bf44c80659afe009f71e23e4a082
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   FBLazyVector: f91d538f197fa71a7d5b77ec2069d49550c0eb96
@@ -1088,6 +1105,8 @@ SPEC CHECKSUMS:
   HaqqEncryptionRN: 0b1b18442e88e6dabd57571165f2d31b6cd6d12d
   HaqqWeb3UtilsRN: 11382dee42720f20dfa8790752e2d8eb5ebe3cff
   hermes-engine: 90e4033deb00bee33330a9f15eff0f874bd82f6d
+  KTVCocoaHTTPServer: df8d7b861e603ff8037e9b2138aca2563a6b768d
+  KTVHTTPCache: 588c3eb16f6bd1e6fde1e230dabfb7bd4e490a4d
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   lottie-ios: e047b1d2e6239b787cc5e9755b988869cf190494
   lottie-react-native: 17547b2f3c7034e2ae8672833fdb63262164d18a
@@ -1134,7 +1153,8 @@ SPEC CHECKSUMS:
   react-native-restart: 7595693413fe3ca15893702f2c8306c62a708162
   react-native-safe-area-context: b97eb6f9e3b7f437806c2ce5983f479f8eb5de4b
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
-  react-native-video: c26780b224543c62d5e1b2a7244a5cd1b50e8253
+  react-native-video: fc60911540a69935cc7950829163f6f41259cb0d
+  react-native-video-cache-control: e5631162b59daa9120551cf2145242484bf64357
   react-native-webview: bdc091de8cf7f8397653e30182efcd9f772e03b3
   React-NativeModulesApple: c3e696ff867e4bc212266cbdf7e862e48a0166fd
   React-perflogger: 43287389ea08993c300897a46f95cfac04bb6c1a

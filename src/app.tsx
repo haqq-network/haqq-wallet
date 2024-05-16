@@ -27,6 +27,7 @@ import {useTheme} from '@app/hooks';
 import {useToast} from '@app/hooks/use-toast';
 import {Contact} from '@app/models/contact';
 import {Language} from '@app/models/language';
+import {Stories} from '@app/models/stories';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
@@ -126,6 +127,7 @@ export const App = () => {
       .then(() => awaitForEventDone(Events.onAppInitialized))
       .then(async () => await Language.init())
       .then(async () => {
+        await Stories.fetch(true);
         if (app.onboarded) {
           await app.init();
           await migrationWallets();
