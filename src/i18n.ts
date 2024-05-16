@@ -965,11 +965,18 @@ export enum I18N {
   removeSSSPrimary = 'removeSSSPrimary',
   removeSSSAlertTitle = 'removeSSSAlertTitle',
   removeSSSAlertDescription = 'removeSSSAlertDescription',
-  gasLimit = 'Gas limit',
-  gasPrice = 'Gas Price',
-  reset = 'Reset',
-  apply = 'Apply',
-  feeSettingsHeader = 'Fee Settings',
+  gasLimit = 'gasLimit',
+  gasPrice = 'gasPrice',
+  adjustment = 'adjustment',
+  moreAbout = 'moreAbout',
+  expectedFee = 'expectedFee',
+  reset = 'reset',
+  apply = 'apply',
+  feeSettingsHeader = 'feeSettingsHeader',
+  low = 'low',
+  average = 'average',
+  high = 'high',
+  custom = 'custom',
 }
 
 const defaultTranslation = {en};
