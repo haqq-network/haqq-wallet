@@ -1,6 +1,8 @@
 import {makeAutoObservable, runInAction} from 'mobx';
 import {isHydrated, makePersistable} from 'mobx-persist-store';
+import {ImageURISource} from 'react-native';
 import BlastedImage from 'react-native-blasted-image';
+import convertToProxyURL from 'react-native-video-cache-control';
 
 import {Backend} from '@app/services/backend';
 import {storage} from '@app/services/mmkv';
@@ -29,16 +31,45 @@ class StoriesStore {
       });
     }
     const stories = await Backend.instance.stories();
-    BlastedImage.preload(stories.map(story => ({uri: story.preview})));
+
+    const sources: ImageURISource[] = [];
     if (Array.isArray(stories)) {
       const normalizedStories = stories.reduce(
         (prev, cur) => {
           const existingValue = this.data[cur.id];
-          prev[cur.id] = {...cur, seen: existingValue?.seen ?? false};
+          // Cache Preview of the story
+          sources.push({uri: cur.preview});
+          const value = {
+            ...cur,
+            attachments: cur.attachments.map(item => {
+              const {attachment} = item;
+              if (!attachment) {
+                return item;
+              }
+              if (attachment.type === 'image') {
+                // Cache Image Content of the story
+                sources.push({uri: attachment.source});
+                return item;
+              }
+              if (attachment.type === 'video') {
+                // Cache Video Content of the story
+                const proxyPath = convertToProxyURL({url: attachment.source});
+                return {
+                  ...item,
+                  attachment: {...item.attachment, source: proxyPath},
+                };
+              }
+              return item;
+            }),
+            seen: existingValue?.seen ?? false,
+          };
+          prev[cur.id] = value;
           return prev;
         },
         {} as Record<IStory['id'], IStory>,
       );
+      // Preload all images
+      BlastedImage.preload(sources);
       runInAction(() => {
         this.data = normalizedStories;
       });

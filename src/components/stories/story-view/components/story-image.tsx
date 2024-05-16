@@ -1,6 +1,7 @@
 import React, {FC, memo, useState} from 'react';
 
 import {Image, View} from 'react-native';
+import BlastedImage from 'react-native-blasted-image';
 import {
   runOnJS,
   useAnimatedReaction,
@@ -109,9 +110,11 @@ const StoryImage: FC<StoryImageProps> = memo(
                 {...videoProps}
               />
             ) : (
-              <Image
+              <BlastedImage
                 source={{uri: data.uri}}
-                style={[{width: WIDTH, height: HEIGHT}, imageStyles]}
+                height={HEIGHT}
+                width={WIDTH}
+                style={imageStyles ?? {}}
                 resizeMode="cover"
                 testID="storyImageComponent"
                 onLayout={e =>

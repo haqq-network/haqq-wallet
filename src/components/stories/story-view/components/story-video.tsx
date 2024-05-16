@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, {FC, memo, useRef, useState} from 'react';
+import React, {FC, memo, useMemo, useRef, useState} from 'react';
 
 import {runOnJS, useAnimatedReaction} from 'react-native-reanimated';
 import Video from 'react-native-video';
@@ -11,8 +11,8 @@ const StoryVideo: FC<StoryVideoProps> = memo(
   ({uri, paused, isActive, onLoad, onLayout, ...props}) => {
     try {
       const ref = useRef<any>(null);
-
-      const [pausedValue, setPausedValue] = useState(!paused.value);
+      const source = useMemo(() => ({uri}), [uri]);
+      const [pausedValue, setPausedValue] = useState<boolean | null>(null);
 
       const start = () => ref.current?.seek(0);
 
@@ -28,12 +28,16 @@ const StoryVideo: FC<StoryVideoProps> = memo(
         [isActive.value],
       );
 
+      if (pausedValue === null) {
+        return null;
+      }
+
       return (
         <Video
           ref={ref}
           style={{width: WIDTH, height: HEIGHT}}
           {...props}
-          source={{uri}}
+          source={source}
           paused={!pausedValue}
           controls={false}
           repeat={false}
@@ -42,8 +46,9 @@ const StoryVideo: FC<StoryVideoProps> = memo(
           }}
           onLayout={e => onLayout(e.nativeEvent.layout.height)}
           resizeMode="cover"
-          automaticallyWaitsToMinimizeStalling
+          automaticallyWaitsToMinimizeStalling={false}
           ignoreSilentSwitch="ignore"
+          allowsExternalPlayback={false}
         />
       );
     } catch (error) {
