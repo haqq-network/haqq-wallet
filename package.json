@@ -153,7 +153,7 @@
     "react-native-toast-message": "2.2.0",
     "react-native-touch-id": "4.4.1",
     "react-native-video": "6.0.0",
-    "react-native-video-cache-control": "1.2.2",
+    "react-native-video-cache": "2.7.4",
     "react-native-webview": "13.8.1",
     "react-timer-mixin": "0.13.4",
     "readable-stream": "4.4.2",
