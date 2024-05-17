@@ -178,6 +178,10 @@ dependencies {
   androidTestImplementation('com.wix:detox:+') {
       exclude module: "protobuf-lite"
   }
+  // Fix for react-native-video-cache
+  implementation('com.danikula:videocache:2.7.1')
+  implementation("org.slf4j:slf4j-api:2.0.9")
+
   implementation 'com.facebook.soloader:soloader:0.10.4+'
   implementation 'androidx.appcompat:appcompat:1.1.0'
   implementation "com.facebook.react:react-android"
