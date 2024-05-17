@@ -137,7 +137,13 @@ class SocketStore {
     },
     ping: () => {
       const message = this.createMessage('ping', []);
-      this.instance?.send(message);
+      if (this.pingTimer) {
+        try {
+          this.instance?.send(message);
+        } catch (err) {
+          //
+        }
+      }
     },
   };
 }
