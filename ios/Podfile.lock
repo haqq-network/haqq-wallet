@@ -552,9 +552,9 @@ PODS:
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
     - react-native-video/Video (= 6.0.0)
-  - react-native-video-cache-control (1.2.2):
+  - react-native-video-cache (2.7.4):
     - KTVHTTPCache (~> 2.0.0)
-    - React-Core
+    - React
   - react-native-video/Video (6.0.0):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
@@ -802,7 +802,7 @@ DEPENDENCIES:
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - react-native-video (from `../node_modules/react-native-video`)
-  - react-native-video-cache-control (from `../node_modules/react-native-video-cache-control`)
+  - react-native-video-cache (from `../node_modules/react-native-video-cache`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -988,8 +988,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-splash-screen"
   react-native-video:
     :path: "../node_modules/react-native-video"
-  react-native-video-cache-control:
-    :path: "../node_modules/react-native-video-cache-control"
+  react-native-video-cache:
+    :path: "../node_modules/react-native-video-cache"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   React-NativeModulesApple:
@@ -1154,7 +1154,7 @@ SPEC CHECKSUMS:
   react-native-safe-area-context: b97eb6f9e3b7f437806c2ce5983f479f8eb5de4b
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   react-native-video: fc60911540a69935cc7950829163f6f41259cb0d
-  react-native-video-cache-control: e5631162b59daa9120551cf2145242484bf64357
+  react-native-video-cache: 8300762bd3fd1c3dd19b76ba5236ca35de1f4bf7
   react-native-webview: bdc091de8cf7f8397653e30182efcd9f772e03b3
   React-NativeModulesApple: c3e696ff867e4bc212266cbdf7e862e48a0166fd
   React-perflogger: 43287389ea08993c300897a46f95cfac04bb6c1a
