@@ -6,6 +6,7 @@ import {app} from '@app/contexts';
 import {getLeadingAccount} from '@app/helpers/get-leading-account';
 import {getUid} from '@app/helpers/get-uid';
 import {Currencies} from '@app/models/currencies';
+import {Language} from '@app/models/language';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
@@ -36,7 +37,8 @@ export type AppInfo = {
     raffle: boolean;
   };
   buildNumber: string;
-  currentCurrency: string | null;
+  currency: string | null;
+  locale: string;
 };
 
 export async function getAppInfo(): Promise<AppInfo> {
@@ -47,7 +49,8 @@ export async function getAppInfo(): Promise<AppInfo> {
   const ipAddress = await NetworkInfo.getIPAddress();
   const leadingAccount = getLeadingAccount();
   const buildNumber = getBuildNumber();
-  const currentCurrency = Currencies.currency?.id ?? null;
+  const currency = Currencies.currency?.id ?? null;
+  const locale = Language.current;
 
   const token = await PushNotifications.instance.getToken();
   return {
@@ -68,6 +71,7 @@ export async function getAppInfo(): Promise<AppInfo> {
       raffle: VariablesBool.get(RAFFLE_TOPIC_VARIABLE_NAME),
     },
     buildNumber,
-    currentCurrency,
+    currency,
+    locale,
   };
 }
