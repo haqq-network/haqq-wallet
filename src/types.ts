@@ -1551,6 +1551,9 @@ export type IContract = {
   symbol: string | null;
   updated_at: string;
   icon: string | null;
+  eth_address: string | null;
+  min_input_amount: string | null;
+  is_skip_eth_tx: boolean | null;
 };
 
 export type IndexerTokensData = Record<HaqqEthereumAddress, IToken[]>;

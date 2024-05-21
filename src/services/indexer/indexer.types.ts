@@ -1,7 +1,5 @@
 import {IContract} from '@app/types';
 
-import {Balance} from '../balance';
-
 export type SushiPool = {
   from: string; // input token
   to: string; // out token
@@ -9,7 +7,7 @@ export type SushiPool = {
 };
 
 export type SushiPoolResponse = {
-  contrat: IContract[];
+  contracts: IContract[];
   pools: SushiPool[];
 };
 
@@ -38,6 +36,6 @@ export type SushiPoolEstimateRequest = {
   token_in: string; // The input token address
   token_out: string; // The output token address
   sender: string; // The sender address
-  amount: Balance; // The amount to swap
+  amount: string; // The hex amount to swap
   currency_id?: string; // The currency id
 };

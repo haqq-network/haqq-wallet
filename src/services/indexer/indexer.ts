@@ -293,7 +293,7 @@ export class Indexer {
           AddressUtils.toHaqq(token_in),
           AddressUtils.toHaqq(token_out),
           AddressUtils.toHaqq(sender),
-          amount.toWeiString(),
+          amount,
           currency_id,
         ],
       );
