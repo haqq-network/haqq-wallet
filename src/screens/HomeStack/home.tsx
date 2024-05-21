@@ -161,7 +161,13 @@ export const HomeScreen = observer(() => {
 
       try {
         shareParsed = JSON.parse(shareRaw);
-      } catch {}
+      } catch (err) {
+        Logger.error(
+          'checkMnemonicLocalShare cant parse share:',
+          shareRaw,
+          err,
+        );
+      }
 
       if (shareParsed && typeof shareParsed === 'object') {
         //Verify required keys
@@ -175,7 +181,7 @@ export const HomeScreen = observer(() => {
         const hasRequiredKeys = requiredKeys.every(k => shareKeys.includes(k));
 
         if (!hasRequiredKeys) {
-          Logger.warn('checkMnemonicLocalShare:', shareParsed);
+          Logger.error('checkMnemonicLocalShare:', shareParsed);
           return;
         }
 
