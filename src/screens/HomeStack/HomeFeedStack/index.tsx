@@ -5,10 +5,13 @@ import {
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
 import {observer} from 'mobx-react';
+import {View} from 'react-native';
 
+import {Color} from '@app/colors';
 import {QrScannerButton} from '@app/components/qr-scanner-button';
-import {Spacer} from '@app/components/ui';
-import {popupScreenOptionsWithMargin} from '@app/helpers';
+import {Spacer, Text, TextPosition, TextVariant} from '@app/components/ui';
+import {ProviderMenu} from '@app/components/ui/provider-menu';
+import {createTheme, popupScreenOptionsWithMargin} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {HomeFeedStackParamList, HomeFeedStackRoutes} from '@app/route-types';
 import {basicScreenOptions} from '@app/screens';
@@ -32,7 +35,22 @@ const HomeFeedStack = observer(() => {
         options={{
           ...popupScreenOptionsWithMargin,
           headerShown: true,
-          title: getText(I18N.homeWalletTitle),
+          headerTitle: () => {
+            return (
+              <View>
+                <Text
+                  variant={TextVariant.t8}
+                  position={TextPosition.center}
+                  color={Color.textBase1}
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                  style={styles.text}>
+                  {getText(I18N.homeWalletTitle)}
+                </Text>
+                <ProviderMenu />
+              </View>
+            );
+          },
           headerRight: QrScannerButton,
           headerLeft: () => <Spacer width={20} />,
         }}
@@ -52,6 +70,12 @@ const HomeFeedStack = observer(() => {
       />
     </Stack.Navigator>
   );
+});
+
+const styles = createTheme({
+  text: {
+    marginHorizontal: 8,
+  },
 });
 
 export {HomeFeedStack};

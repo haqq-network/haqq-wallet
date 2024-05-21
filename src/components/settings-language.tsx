@@ -58,7 +58,6 @@ const styles = createTheme({
     marginHorizontal: 20,
   },
   button: {
-    paddingVertical: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },

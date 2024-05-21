@@ -131,7 +131,7 @@ class RNCloud: NSObject {
     let fileUrl = nestedFolderURL.appendingPathComponent(key)
     
     do {
-      try fileManager.createDirectory(atPath: nestedFolderURL.path, withIntermediateDirectories: false);
+      try fileManager.createDirectory(atPath: nestedFolderURL.path, withIntermediateDirectories: true);
     } catch {
       // Directory already exist, nothing to do here
     }

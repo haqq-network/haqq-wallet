@@ -2,7 +2,7 @@ import {makeAutoObservable, runInAction} from 'mobx';
 import {isHydrated, makePersistable} from 'mobx-persist-store';
 import {ImageURISource} from 'react-native';
 import BlastedImage from 'react-native-blasted-image';
-import convertToProxyURL from 'react-native-video-cache-control';
+import convertToProxyURL from 'react-native-video-cache';
 
 import {Backend} from '@app/services/backend';
 import {storage} from '@app/services/mmkv';
@@ -53,7 +53,7 @@ class StoriesStore {
               }
               if (attachment.type === 'video') {
                 // Cache Video Content of the story
-                const proxyPath = convertToProxyURL({url: attachment.source});
+                const proxyPath = convertToProxyURL(attachment.source);
                 return {
                   ...item,
                   attachment: {...item.attachment, source: proxyPath},
