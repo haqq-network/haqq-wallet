@@ -45,6 +45,7 @@ export const PopupHeader = ({options, back, navigation}: PopupHeaderProps) => {
       navigation.removeListener('beforeRemove', subscription);
     };
   }, [canGoBack, navigation]);
+  const HeaderCustomComponent = options.headerTitle;
 
   return (
     <View
@@ -65,15 +66,18 @@ export const PopupHeader = ({options, back, navigation}: PopupHeaderProps) => {
         {!!options.titleIcon && (
           <Image source={options.titleIcon} style={page.titleIcon} />
         )}
-        <Text
-          t8
-          center
-          color={Color.textBase1}
-          numberOfLines={1}
-          ellipsizeMode="tail"
-          style={page.text}>
-          {options.title}
-        </Text>
+        {!!HeaderCustomComponent && <HeaderCustomComponent children={''} />}
+        {!!options.title && (
+          <Text
+            t8
+            center
+            color={Color.textBase1}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={page.text}>
+            {options.title}
+          </Text>
+        )}
       </View>
       {options.headerRight ? (
         options.headerRight({canGoBack: canGoBack || false})
