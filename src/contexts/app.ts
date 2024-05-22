@@ -436,16 +436,15 @@ class App extends AsyncEventEmitter {
   }
 
   private getWalletForPinRestore = () => {
-    const impossibleToRestoreWalletTypes = [
-      WalletType.ledgerBt,
-      WalletType.keystone,
+    const possibleToRestoreWalletTypes = [
+      WalletType.hot,
+      WalletType.mnemonic,
+      WalletType.sss,
     ];
-    const isPossibleToRestore = Wallet.getAll().find(
-      wallet => !impossibleToRestoreWalletTypes.includes(wallet.type),
+    const possibleToRestoreWallet = Wallet.getAll().find(wallet =>
+      possibleToRestoreWalletTypes.includes(wallet.type),
     );
-    const isMain = Wallet.getAll().find(wallet => wallet.isMain);
-    const firstVisible = Wallet.getAllVisible()[0];
-    return isPossibleToRestore || isMain || firstVisible;
+    return possibleToRestoreWallet;
   };
 
   async getPassword(pinCandidate?: string): Promise<string> {
@@ -469,11 +468,7 @@ class App extends AsyncEventEmitter {
         this.biometry = false;
 
         // Reset app if we have main Hardware Wallet
-        if (
-          [WalletType.keystone, WalletType.ledgerBt].includes(
-            walletToCheck?.type,
-          )
-        ) {
+        if (!walletToCheck) {
           this.onboarded = false;
           await onAppReset();
           hideAll();
