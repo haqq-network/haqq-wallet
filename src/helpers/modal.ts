@@ -64,11 +64,19 @@ class ModalStore {
       this.modals = [...newModals];
     }
   };
+
+  hideAll = () => {
+    this.modals.map(item => {
+      hideModal(item.type);
+    });
+    this.modals = [];
+  };
 }
 
 const instance = new ModalStore();
 
 export const showModal = instance.showModal;
 export const hideModal = instance.hideModal;
+export const hideAll = instance.hideAll;
 export const setCollapsedModal = instance.setCollapsed;
 export {instance as ModalStore};
