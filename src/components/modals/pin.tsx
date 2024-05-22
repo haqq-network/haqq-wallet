@@ -24,6 +24,10 @@ export const PinModal = () => {
   }, []);
 
   useEffect(() => {
+    if (app.passwordCorrupted) {
+      pinRef?.current?.reset(getText(I18N.keychainCorrupted));
+      return;
+    }
     if (app.pinBanned) {
       pinRef?.current?.locked(app.pinBanned);
     }
