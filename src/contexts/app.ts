@@ -436,9 +436,16 @@ class App extends AsyncEventEmitter {
   }
 
   private getWalletForPinRestore = () => {
+    const impossibleToRestoreWalletTypes = [
+      WalletType.ledgerBt,
+      WalletType.keystone,
+    ];
+    const isPossibleToRestore = Wallet.getAll().find(
+      wallet => !impossibleToRestoreWalletTypes.includes(wallet.type),
+    );
     const isMain = Wallet.getAll().find(wallet => wallet.isMain);
     const firstVisible = Wallet.getAllVisible()[0];
-    return isMain || firstVisible;
+    return isPossibleToRestore || isMain || firstVisible;
   };
 
   async getPassword(pinCandidate?: string): Promise<string> {
