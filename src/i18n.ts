@@ -966,6 +966,7 @@ export enum I18N {
   removeSSSAlertTitle = 'removeSSSAlertTitle',
   removeSSSAlertDescription = 'removeSSSAlertDescription',
   keychainCorrupted = 'keychainCorrupted',
+  keychainMigrationNotPossible = 'keychainMigrationNotPossible',
 }
 
 const defaultTranslation = {en};

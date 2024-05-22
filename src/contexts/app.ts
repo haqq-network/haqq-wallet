@@ -3,7 +3,7 @@ import {appleAuth} from '@invertase/react-native-apple-authentication';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {subMinutes} from 'date-fns';
-import {AppState, Appearance, Platform, StatusBar} from 'react-native';
+import {Alert, AppState, Appearance, Platform, StatusBar} from 'react-native';
 import Config from 'react-native-config';
 import Keychain, {
   STORAGE_TYPE,
@@ -23,6 +23,7 @@ import {checkNeedUpdate} from '@app/helpers/check-app-version';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {getUid} from '@app/helpers/get-uid';
 import {SecurePinUtils} from '@app/helpers/secure-pin-utils';
+import {I18N, getText} from '@app/i18n';
 import {Currencies} from '@app/models/currencies';
 import {seedData} from '@app/models/seed-data';
 import {Token} from '@app/models/tokens';
@@ -469,6 +470,7 @@ class App extends AsyncEventEmitter {
           this.onboarded = false;
           await onAppReset();
           hideAll();
+          Alert.alert(getText(I18N.keychainMigrationNotPossible));
           return Promise.reject('password_migration_not_possible');
         }
 
