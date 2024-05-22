@@ -8,6 +8,10 @@ import {observer} from 'mobx-react';
 import {Alert, Platform, ScrollView} from 'react-native';
 import Config from 'react-native-config';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import Keychain, {
+  STORAGE_TYPE,
+  setGenericPassword,
+} from 'react-native-keychain';
 import {
   PlayInstallReferrer,
   PlayInstallReferrerError,
@@ -1124,6 +1128,17 @@ export const SettingsTestScreen = observer(() => {
           News.removeAll();
           setRssNewsCount(0);
           setNewsCount(0);
+        }}
+        variant={ButtonVariant.contained}
+      />
+      <Title text="Corrupt Keychain" />
+      <Button
+        title={'Corrupt Keychain'}
+        onPress={async () => {
+          await setGenericPassword('abcd', '1', {
+            storage: STORAGE_TYPE.AES,
+            accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+          });
         }}
         variant={ButtonVariant.contained}
       />
