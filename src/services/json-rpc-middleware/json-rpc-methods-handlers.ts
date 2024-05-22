@@ -600,6 +600,8 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
       hexSignature = hexSignature.slice(0, 128);
     }
 
+    Logger.log('account.base_account.pub_key', account.base_account.pub_key);
+
     return {
       signature: {
         pub_key: account.base_account.pub_key,

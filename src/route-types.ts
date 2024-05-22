@@ -365,6 +365,7 @@ export enum HomeStackRoutes {
   ValueSelector = 'valueSelector',
   BrowserPrivacyPopupStack = 'browserPrivacyPopupStack',
   Device = '_device',
+  Swap = '_swap',
   NewsDetailPushNotification = 'newsDetailsPushNotification',
 }
 
@@ -455,6 +456,9 @@ export type HomeStackParamList = {
   [HomeStackRoutes.BrowserPrivacyPopupStack]: {
     screen: 'browserPrivacyDetails' | 'browserPrivacy';
     params?: RootStackParamList[RootStackParamList['browserPrivacyPopupStack']['screen']];
+  };
+  [HomeStackRoutes.Swap]: {
+    address: string;
   };
   [HomeStackRoutes.NewsDetailPushNotification]: {
     id: string;
@@ -835,3 +839,19 @@ export type DeviceStackParamList = {
   DeviceKeystone: undefined;
   DeviceLedger: undefined;
 };
+
+export type SwapStackParamList = {
+  Swap: {
+    address: string;
+  };
+  Preview: {
+    address: string;
+  };
+  Finish: undefined;
+};
+
+export enum SwapStackRoutes {
+  Swap = 'Swap',
+  Preview = 'Preview',
+  Finish = 'Finish',
+}

@@ -965,6 +965,8 @@ export enum I18N {
   removeSSSPrimary = 'removeSSSPrimary',
   removeSSSAlertTitle = 'removeSSSAlertTitle',
   removeSSSAlertDescription = 'removeSSSAlertDescription',
+  swapWidgetDescription = 'swapWidgetDescription',
+  swapWidgetTitle = 'swapWidgetTitle',
   keychainCorrupted = 'keychainCorrupted',
   keychainMigrationNotPossible = 'keychainMigrationNotPossible',
 }

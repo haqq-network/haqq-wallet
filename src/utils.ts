@@ -57,7 +57,7 @@ import {
   SendTransactionError,
   WalletConnectParsedAccount,
 } from './types';
-import {ERC20_TOKEN_ABI} from './variables/abi';
+import {ERC20_ABI} from './variables/abi';
 import {IS_ANDROID, RTL_LANGUAGES, STORE_PAGE_URL} from './variables/common';
 import {EIP155_SIGNING_METHODS} from './variables/EIP155';
 
@@ -993,7 +993,7 @@ export function parseERC20TxDataFromHexInput(hex?: string) {
       data = `0x${hex}`;
     }
     if (data) {
-      const erc20Interface = new ethers.utils.Interface(ERC20_TOKEN_ABI);
+      const erc20Interface = new ethers.utils.Interface(ERC20_ABI);
       return erc20Interface.parseTransaction({data: data});
     }
   } catch (e) {}
