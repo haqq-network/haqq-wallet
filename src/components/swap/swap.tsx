@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import {observer} from 'mobx-react';
 import {View} from 'react-native';
@@ -49,7 +49,6 @@ export const Swap = observer(
     amountsOut,
     estimateData,
     isEstimating,
-    // poolData,
     tokenIn,
     tokenOut,
     isApproveInProgress,
@@ -60,71 +59,95 @@ export const Swap = observer(
     onPressApprove,
     onPressSwap,
   }: SwapProps) => {
-    const needApproveTokenIn = estimateData?.need_approve;
-    const isLoading = isEstimating;
+    const t0 = useMemo(() => {
+      if (!amountsIn.amount || !tokenIn?.decimals) {
+        return Balance.Empty;
+      }
+      return new Balance(amountsIn.amount, tokenIn.decimals!, tokenIn.symbol!);
+    }, [amountsIn.amount, tokenIn]);
+
+    const t1 = useMemo(() => {
+      if (!amountsOut.amount || !tokenOut?.decimals) {
+        return Balance.Empty;
+      }
+      return new Balance(
+        amountsOut.amount,
+        tokenOut.decimals!,
+        tokenOut.symbol!,
+      );
+    }, [amountsOut.amount, tokenOut]);
+
+    const exchangeRate = useMemo(() => {
+      return t1.toFloat() / t0.toFloat();
+    }, [t1, t0]);
 
     return (
       <View style={styles.container}>
-        <View style={styles.amountContainer}>
-          <TextField
-            label={I18N.transactionDetailAmount}
-            placeholder={I18N.transactionInfoFunctionValue}
-            value={amountsIn.amount}
-            onChangeText={amountsIn.setAmount}
-            style={styles.amountInput}
-            // error={!!amountsIn.error}
-            // errorText={amountsIn.error}
-            keyboardType="numeric"
-            inputMode="decimal"
-            returnKeyType="done"
-            editable={!isLoading}
-            onBlur={estimate}
-          />
-          <Spacer width={10} />
-          <Button
-            size={ButtonSize.small}
-            style={styles.tokenButton}
-            variant={ButtonVariant.second}
-            title={tokenIn.symbol!}
-            onPress={onPressChangeTokenIn}
-          />
+        <View>
+          <View style={styles.amountContainer}>
+            <TextField
+              label={I18N.transactionDetailAmount}
+              placeholder={I18N.transactionInfoFunctionValue}
+              value={amountsIn.amount}
+              onChangeText={amountsIn.setAmount}
+              style={styles.amountInput}
+              // error={!!amountsIn.error}
+              // errorText={amountsIn.error}
+              keyboardType="numeric"
+              inputMode="decimal"
+              returnKeyType="done"
+              editable={!isEstimating}
+              onBlur={estimate}
+            />
+            <Spacer width={10} />
+            <Button
+              size={ButtonSize.small}
+              style={styles.tokenButton}
+              variant={ButtonVariant.second}
+              title={tokenIn.symbol!}
+              onPress={onPressChangeTokenIn}
+            />
+          </View>
+          <Text>{t0.toFiat({fixed: 18})}</Text>
         </View>
 
         <Spacer height={10} />
 
-        <View style={styles.amountContainer}>
-          <First>
-            {isLoading && (
-              <View style={styles.amountInput}>
-                <Placeholder opacity={0.7}>
-                  <Placeholder.Item width={'100%'} height={58} />
-                </Placeholder>
-              </View>
-            )}
-            <TextField
-              label={I18N.transactionDetailAmount}
-              placeholder={I18N.transactionInfoFunctionValue}
-              value={amountsOut.amount}
-              onChangeText={amountsOut.setAmount}
-              style={styles.amountInput}
-              // error={!!amountsOut.error}
-              // errorText={amountsOut.error}
-              keyboardType="numeric"
-              inputMode="decimal"
-              returnKeyType="done"
-              editable={false}
+        <View>
+          <View style={styles.amountContainer}>
+            <First>
+              {isEstimating && (
+                <View style={styles.amountInput}>
+                  <Placeholder opacity={0.7}>
+                    <Placeholder.Item width={'100%'} height={58} />
+                  </Placeholder>
+                </View>
+              )}
+              <TextField
+                label={I18N.transactionDetailAmount}
+                placeholder={I18N.transactionInfoFunctionValue}
+                value={amountsOut.amount}
+                onChangeText={amountsOut.setAmount}
+                style={styles.amountInput}
+                // error={!!amountsOut.error}
+                // errorText={amountsOut.error}
+                keyboardType="numeric"
+                inputMode="decimal"
+                returnKeyType="done"
+                editable={false}
+              />
+            </First>
+            <Spacer width={10} />
+            <Button
+              size={ButtonSize.small}
+              style={styles.tokenButton}
+              variant={ButtonVariant.second}
+              title={tokenOut.symbol!}
+              onPress={onPressChangeTokenOut}
             />
-          </First>
-          <Spacer width={10} />
-          <Button
-            size={ButtonSize.small}
-            style={styles.tokenButton}
-            variant={ButtonVariant.second}
-            title={tokenOut.symbol!}
-            onPress={onPressChangeTokenOut}
-          />
+          </View>
+          <Text>{t1.toFiat({fixed: 18})}</Text>
         </View>
-
         <Spacer height={10} />
 
         {!!estimateData && (
@@ -138,13 +161,14 @@ export const Swap = observer(
               Price impact: {estimateData.s_price_impact}%
             </Text>
             <Text variant={TextVariant.t11}>Routing source: SwapRouterV3</Text>
+            <Text variant={TextVariant.t11}>Exchange rate: {exchangeRate}</Text>
           </View>
         )}
 
         <Spacer />
 
         <First>
-          {needApproveTokenIn && (
+          {!!estimateData?.need_approve && (
             <Button
               variant={ButtonVariant.contained}
               title={`Approve ${amountsIn.amount} ${tokenIn.symbol}`}
@@ -156,8 +180,8 @@ export const Swap = observer(
           <Button
             variant={ButtonVariant.contained}
             title="Swap"
-            loading={isLoading || isSwapInProgress}
-            disabled={isLoading || isSwapInProgress}
+            loading={isEstimating || isSwapInProgress}
+            disabled={isEstimating || isSwapInProgress}
             onPress={onPressSwap}
           />
         </First>

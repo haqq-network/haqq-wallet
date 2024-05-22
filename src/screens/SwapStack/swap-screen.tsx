@@ -73,7 +73,7 @@ export const SwapScreen = observer(() => {
       );
       logger.log('estimate', amount);
       const response = await Indexer.instance.sushiPoolEstimate({
-        amount: amount.toHex(),
+        amount: amount.toWei().toString(),
         sender: params.address,
         token_in: tokenIn?.eth_address!,
         token_out: tokenOut?.eth_address!,

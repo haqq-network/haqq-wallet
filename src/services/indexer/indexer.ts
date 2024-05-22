@@ -5,7 +5,6 @@ import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {Whitelist} from '@app/helpers/whitelist';
 import {I18N, getText} from '@app/i18n';
-import {Currencies} from '@app/models/currencies';
 import {NftCollectionIndexer} from '@app/models/nft';
 import {Provider} from '@app/models/provider';
 import {
@@ -279,7 +278,7 @@ export class Indexer {
     sender,
     token_in,
     token_out,
-    currency_id = Currencies.currency?.id,
+    currency_id,
   }: SushiPoolEstimateRequest): Promise<SushiPoolEstimateResponse> {
     try {
       if (!app.provider.indexer) {

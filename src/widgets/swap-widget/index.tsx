@@ -26,9 +26,10 @@ export const SwapWidget = observer(() => {
 
   return (
     <ShadowCard style={styles.wrapper} onPress={onPress}>
-      <View style={styles.image}>
-        <Image source={require('@assets/images/swap-tokens.png')} />
-      </View>
+      <Image
+        style={styles.image}
+        source={require('@assets/images/swap-tokens.png')}
+      />
       <Spacer width={10} />
       <View style={styles.textWrapper}>
         <WidgetHeader title={getText(I18N.swapWidgetTitle)} />

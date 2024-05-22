@@ -35,39 +35,43 @@ type IWidgetMap = {
   ) => ReactNode;
 };
 
+function getUUIDForWidget(widget: {id?: string}): string {
+  return widget.id ?? generateUUID();
+}
+
 const WidgetMap: IWidgetMap = {
   Transactions: params => (
-    <TransactionsWidgetWrapper key={params.id ?? generateUUID()} {...params} />
+    <TransactionsWidgetWrapper key={getUUIDForWidget(params)} {...params} />
   ),
   TransactionsShort: () => null,
   Raffles: params => (
-    <RafflesWidgetWrapper key={params.id ?? generateUUID()} {...params} />
+    <RafflesWidgetWrapper key={getUUIDForWidget(params)} {...params} />
   ),
   Staking: params => (
-    <StakingWidgetWrapper key={params.id ?? generateUUID()} {...params} />
+    <StakingWidgetWrapper key={getUUIDForWidget(params)} {...params} />
   ),
   Governance: params => (
-    <GovernanceWidgetWrapper key={params.id ?? generateUUID()} {...params} />
+    <GovernanceWidgetWrapper key={getUUIDForWidget(params)} {...params} />
   ),
   Layout: params => (
     <LayoutWidgetWrapper
-      key={params.id ?? generateUUID()}
+      key={getUUIDForWidget(params)}
       deep={false}
       children={[]}
       {...params}
     />
   ),
-  Ad: params => <AdWidget key={params.id ?? generateUUID()} banner={params} />,
+  Ad: params => <AdWidget key={getUUIDForWidget(params)} banner={params} />,
   Banner: params => (
-    <BannerWidget key={params.id ?? generateUUID()} banner={params} />
+    <BannerWidget key={getUUIDForWidget(params)} banner={params} />
   ),
   TokenList: params => (
-    <TokensWidgetWrapper key={params.id ?? generateUUID()} {...params} />
+    <TokensWidgetWrapper key={getUUIDForWidget(params)} {...params} />
   ),
   Nft: params => (
-    <NftWidgetWrapper key={params.id ?? generateUUID()} {...params} />
+    <NftWidgetWrapper key={getUUIDForWidget(params)} {...params} />
   ),
-  Swap: params => <SwapWidget key={params.id ?? generateUUID()} {...params} />,
+  Swap: params => <SwapWidget key={getUUIDForWidget(params)} {...params} />,
 };
 
 export const WidgetRoot = memo(({lastUpdate}: {lastUpdate: number}) => {
