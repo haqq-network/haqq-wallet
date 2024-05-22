@@ -28,6 +28,7 @@ import {Token} from '@app/models/tokens';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
 import {VestingMetadataType} from '@app/models/vesting-metadata';
+import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
@@ -415,8 +416,52 @@ class App extends AsyncEventEmitter {
     return Promise.resolve();
   }
 
-  async getPassword() {
+  async getPassword(pinCandidate?: string): Promise<string> {
     const creds = await getGenericPassword();
+
+    // Detect keychain migration
+    if (creds) {
+      let passwordEntity = null;
+      try {
+        passwordEntity = JSON.parse(creds.password);
+      } catch {}
+      // If we can't parse entity or we have invalid fiedls
+      if (
+        passwordEntity === null ||
+        !passwordEntity?.cipher ||
+        !passwordEntity?.iv ||
+        !passwordEntity?.salt
+      ) {
+        Logger.error('iOS Keychain Migration Error Found:', creds);
+        if (!pinCandidate) {
+          return Promise.reject('password_not_migrated');
+        }
+
+        // Try to verify old pin
+        try {
+          const walletToCheck = Wallet.getAllVisible()[0];
+          const isValid = await SecurePinUtils.checkPinCorrect(
+            walletToCheck,
+            pinCandidate,
+          );
+          if (isValid) {
+            creds.password = await this.setPin(pinCandidate);
+            const uid = await getUid();
+            const resp = await decryptPassworder<{password: string}>(
+              uid,
+              creds.password,
+            );
+
+            return resp.password;
+          } else {
+            app.failureEnter();
+          }
+        } catch (err) {
+          Logger.error('iOS Keychain Migration Error:', err);
+        }
+      }
+    }
+
     if (!creds || !creds.password || creds.username !== this.user.uuid) {
       return Promise.reject('password_not_found');
     }
@@ -451,7 +496,7 @@ class App extends AsyncEventEmitter {
 
   async comparePin(pin: string) {
     if (this.canEnter) {
-      const password = await this.getPassword();
+      const password = await this.getPassword(pin);
       return password === pin ? Promise.resolve() : Promise.reject();
     }
 
@@ -509,9 +554,8 @@ class App extends AsyncEventEmitter {
 
   pinAuth() {
     return new Promise<boolean>(async (resolve, _reject) => {
-      const password = await this.getPassword();
-
-      const callback = (value: string) => {
+      const callback = async (value: string) => {
+        const password = await this.getPassword();
         if (password === value) {
           this.off('enterPin', callback);
           this.emit(Events.enterPinSuccess);
