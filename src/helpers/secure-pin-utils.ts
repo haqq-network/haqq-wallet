@@ -233,4 +233,5 @@ export const SecurePinUtils = {
   // recovery pin for frovider when get `incorrect password` error
   recoveryPin,
   simulateIncorrectPasswordError,
+  checkPinCorrect,
 };
