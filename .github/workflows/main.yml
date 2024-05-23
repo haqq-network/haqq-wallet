@@ -1,4 +1,10 @@
-name: CI
+# Overview
+# This GitHub Action runs for every PR.
+
+# Note: 
+# e2e tests can be run for PR. Please use e2e tag.
+
+name: CI [TRIGGER]
 
 on:
   push:
@@ -11,20 +17,22 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
+  build_and_test:
     runs-on: self-hosted
     steps:
-      - name: Checkout
+      - name: Show self-hosted machine infomation
+        run: uname -a
+
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup node
+      - name: Setup NodeJS@18
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: yarn
 
       - name: Install dependencies
-        run: yarn install
+        run: yarn packages
 
       - name: Run linters
         run: |
@@ -32,27 +40,7 @@ jobs:
           yarn typescript:check
           yarn prettier:check
 
-  build:
-    runs-on: self-hosted
-    needs:
-      - test
-    steps:
-      - name: Show self-hosted machine infomation
-        run: uname -a
-
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          cache: yarn
-
-      - name: Install dependencies
-        run: yarn install
-
-      - name: Build ios bundle
+      - name: Build iOS JS Bundle
         run: yarn react-native bundle --platform ios --dev false --entry-file index.js --bundle-output ./index.ios.bundle
 
   e2e:
@@ -64,4 +52,4 @@ jobs:
       IS_DEVELOPMENT: false
       IS_SSS_ENABLED: true
       STORIES_ENABLED: true
-      IS_NFT_ENABLED: false
+      IS_NFT_ENABLED: true

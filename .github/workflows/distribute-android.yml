@@ -1,4 +1,8 @@
-name: Distribute Android app
+# Overview
+# This GitHub Action automates the build and distribution process for the Haqq Wallet Android application.
+# It builds the project and distributes the APK to Google Play.
+
+name: Distribute Android
 
 on:
   workflow_dispatch:
@@ -49,25 +53,25 @@ on:
       STORIES_ENABLED:
         required: true
         type: string
-      # DEFAULT_BACKEND:
-      #   required: true
-      #   type: string
       BUILD_DESCRIPTION:
         required: true
         type: string
 
 jobs:
   build:
-    name: Distribute Android app
+    name: Distribute Android
     runs-on: ubuntu-cpu16-ram64
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup NodeJS@18
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - uses: ruby/setup-ruby@v1
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2.0'
           bundler-cache: true
@@ -127,7 +131,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
-      - name: Execute Fastlane command
+      - name: Build and Send the app to Google Play
         run: bundle exec fastlane android distribute
         env:
           HAQQ_UPLOAD_STORE_FILE: ${{ secrets.HAQQ_UPLOAD_STORE_FILE }}

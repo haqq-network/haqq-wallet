@@ -1,4 +1,9 @@
-name: Run e2e tests for both platforms
+# Overview
+# This GitHub Action automates the end-to-end (E2E) testing process of the Haqq Wallet application
+# for both (Android and iOS) platforms.
+# It is designed to run E2E tests using Detox on a specified Android/iOS Device.
+
+name: e2e All
 
 on:
   workflow_dispatch:

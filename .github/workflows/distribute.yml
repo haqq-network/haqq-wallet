@@ -1,4 +1,8 @@
-name: Distribute apps
+# Overview
+# This GitHub Action automates the build and distribution process of the Haqq Wallet application for both (Android and iOS) platforms.
+# It builds the project and distributes the builds to TestFlight and Google Play.
+
+name: Distribute All
 
 on:
   workflow_dispatch:
@@ -44,9 +48,11 @@ jobs:
     name: Tests
     runs-on: ubuntu-cpu16-ram64
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup NodeJS@18
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
@@ -58,8 +64,8 @@ jobs:
     uses: ./.github/workflows/distribute-android.yml
     secrets: inherit
     with:
-      IS_DEVELOPMENT: ${{github.event.inputs.IS_DEVELOPMENT || inputs.IS_DEVELOPMENT || 'false'}}
-      IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED || inputs.IS_SSS_ENABLED || 'true'}}
+      IS_DEVELOPMENT: false
+      IS_SSS_ENABLED: true
       IS_NFT_ENABLED: ${{github.event.inputs.IS_NFT_ENABLED || inputs.IS_NFT_ENABLED || 'true'}}
       STORIES_ENABLED: ${{github.event.inputs.STORIES_ENABLED || inputs.STORIES_ENABLED || 'true'}}
       BUILD_DESCRIPTION: ${{inputs.BUILD_DESCRIPTION || github.event.inputs.BUILD_DESCRIPTION || 'Action for Merged PR'}}
@@ -71,8 +77,8 @@ jobs:
     uses: ./.github/workflows/distribute-ios.yml
     secrets: inherit
     with:
-      IS_DEVELOPMENT: ${{github.event.inputs.IS_DEVELOPMENT || inputs.IS_DEVELOPMENT || 'false'}}
-      IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED || inputs.IS_SSS_ENABLED || 'true'}}
+      IS_DEVELOPMENT: false
+      IS_SSS_ENABLED: true
       IS_NFT_ENABLED: ${{github.event.inputs.IS_NFT_ENABLED || inputs.IS_NFT_ENABLED || 'true'}}
       STORIES_ENABLED: ${{github.event.inputs.STORIES_ENABLED || inputs.STORIES_ENABLED || 'true'}}
       BUILD_DESCRIPTION: ${{inputs.BUILD_DESCRIPTION || github.event.inputs.BUILD_DESCRIPTION || 'Action for Merged PR'}}
@@ -83,14 +89,14 @@ jobs:
     needs:
       - build_ios
       - build_android
-    name: Create changelogs
+    name: Create changelog
     uses: ./.github/workflows/slack-notify.yml
     secrets: inherit
     with:
       BUILD_DESCRIPTION: ${{inputs.BUILD_DESCRIPTION || github.event.inputs.BUILD_DESCRIPTION || 'Action for Merged PR'}}
 
   patch_build:
-    name: Patch build versions
+    name: Patch build version
     uses: ./.github/workflows/patch-build-versions.yml
     secrets: inherit
     needs:

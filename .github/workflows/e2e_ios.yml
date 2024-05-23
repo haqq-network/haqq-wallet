@@ -1,3 +1,7 @@
+# Overview
+# This GitHub Action automates the end-to-end (E2E) testing process for the Haqq Wallet iOS application.
+# It is designed to run E2E tests using Detox on a specified iOS Device.
+
 name: e2e iOS
 
 on:
@@ -54,12 +58,13 @@ jobs:
       - name: Show macOS machine infomation
         run: uname -a
 
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup NodeJS@18
+        uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: yarn
 
       - name: Install packages
         run: yarn install
@@ -111,7 +116,7 @@ jobs:
           echo "POSTHOG_API_KEY=${{secrets.POSTHOG_API_KEY}}" >> .env
           echo "POSTHOG_HOST=${{secrets.POSTHOG_HOST}}" >> .env
 
-      - name: Build apps
+      - name: Build iOS app
         run: |
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${MATCH_DEPLOY_KEY}"
@@ -132,7 +137,7 @@ jobs:
           DEVELOPER_APP_ID: ${{ secrets.DEVELOPER_APP_ID }}
           PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}
 
-      - name: Run tests
+      - name: Run e2e tests
         run: yarn detox:ios:test
 
       - name: Upload artifacts

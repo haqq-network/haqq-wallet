@@ -1,4 +1,9 @@
-name: Patch build versions
+# Overview
+# This GitHub Action automates build number updating for the Haqq Wallet project on GitHub.
+
+# Note: Build Number !== App Version
+
+name: Patch Build Number [AUTOMATIC]
 
 on:
   workflow_dispatch:
@@ -11,7 +16,8 @@ jobs:
       - name: Show self-hosted machine infomation
         run: uname -a
 
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.SERVICE_TOKEN }}
 
@@ -19,11 +25,11 @@ jobs:
         run: |
           echo ${{secrets.GOOGLE_SERVICE_ACCOUNT}} | base64 -d > android/app/google-account.json
 
-      - name: Install Fastlane
+      - name: Setup Fastlane
         run: |
           bundle install
 
-      - name: Execute Fastlane command
+      - name: Patch iOS and Android build numbers
         run: |
           bundle exec fastlane ios patch_build
           bundle exec fastlane android patch_build
@@ -33,7 +39,7 @@ jobs:
           APPLE_KEY_CONTENT: ${{ secrets.APPLE_KEY_CONTENT }}
           DEVELOPER_APP_IDENTIFIER: ${{ secrets.IOS_IDENTIFIER }}
 
-      - name: Amend the last commit
+      - name: Create and push a commit
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "Build"
