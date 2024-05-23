@@ -969,6 +969,7 @@ export enum I18N {
   swapWidgetTitle = 'swapWidgetTitle',
   keychainCorrupted = 'keychainCorrupted',
   keychainMigrationNotPossible = 'keychainMigrationNotPossible',
+  settingsOutdatedApp = 'settingsOutdatedApp',
 }
 
 const defaultTranslation = {en};

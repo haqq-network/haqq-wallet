@@ -1,6 +1,7 @@
 import React, {useMemo} from 'react';
 
 import {Color} from '@app/colors';
+import {SettingsButton} from '@app/components/settings-button';
 import {Icon, IconsName} from '@app/components/ui';
 
 import {NewsButton} from '../news-button';
@@ -39,6 +40,10 @@ export const HomeScreenTabBarIcon = ({
 
   if (route === 'homeNews') {
     return <NewsButton focused={focused} />;
+  }
+
+  if (route === 'homeSettings') {
+    return <SettingsButton focused={focused} />;
   }
 
   return (

@@ -1,5 +1,6 @@
 import {Platform} from 'react-native';
 
+import {VariablesString} from '@app/models/variables-string';
 import {RemoteConfig} from '@app/services/remote-config';
 import {getAppVersion} from '@app/services/version';
 
@@ -77,12 +78,13 @@ export function compareVersions(
 }
 
 export function checkNeedUpdate() {
+  const versionToIgnore = VariablesString.get('version_to_ignore');
   try {
     const appVersion = getAppVersion();
-    const remoteVersion = Platform.select({
-      ios: RemoteConfig.get('ios_version'),
-      android: RemoteConfig.get('android_version'),
-    });
+    const remoteVersion = getRemoteVersion();
+    if (versionToIgnore === remoteVersion) {
+      return false;
+    }
     const result = compareVersions(appVersion, remoteVersion!);
     return result === VersionComparisonResult.Newer;
   } catch (err) {
@@ -90,3 +92,10 @@ export function checkNeedUpdate() {
     return false;
   }
 }
+
+export const getRemoteVersion = () => {
+  return Platform.select({
+    ios: RemoteConfig.get('ios_version'),
+    android: RemoteConfig.get('android_version'),
+  });
+};
