@@ -667,7 +667,6 @@
   "sssLoginLaterDescription": "This will help to keep access to the account in case it is lost. You can always enable this feature in your account settings",
   "sssLoginLaterTitle": "Are you sure you don't want to enable social login?",
   "sssMigrateAgreementAgree": "Understood",
-  "sssMigrateAgrementDescription": "To enable Social Login HAQQ wallet collects user’s email but only store the email hash.",
   "sssMigrateAgrementTitle": "Important Information",
   "sssMigrateAgrementWarning1": "By enabling Social Account, your wallet account will be linked to the chosen Social Login. If you lose access to your Social Login, you can restore your wallet account using the backup phrase, provided you have saved one before.\n\nFor the Social Account functionality, we collect users' email addresses but store only the hashed versions of them.",
   "sssMigrateAgrementWarning2": "Please note that restoring a wallet account using a Social Account only works with our wallet application.",

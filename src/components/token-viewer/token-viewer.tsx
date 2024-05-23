@@ -64,6 +64,7 @@ export const TokenViewer = observer(
           ],
           cancelButtonIndex: 2,
           message: getText(I18N.tokensSorting),
+          containerStyle: {paddingBottom: 16},
         },
         selectedIndex => {
           switch (selectedIndex) {
@@ -112,6 +113,10 @@ export const TokenViewer = observer(
       [balances, wallet],
     );
 
+    const list = (Object.keys(data) as HaqqEthereumAddress[])
+      .filter(filter)
+      .sort(sort);
+
     if (!Object.keys(data)) {
       return null;
     }
@@ -134,43 +139,41 @@ export const TokenViewer = observer(
             />
           </IconButton>
         </View>
-        {(Object.keys(data) as HaqqEthereumAddress[])
-          .filter(filter)
-          .sort(sort)
-          .map(address => {
-            const _wallet = Wallet.getById(address);
-            const tokens = data[address].filter(token => {
-              if (showLowBalance) {
-                return true;
-              }
-              const fiatString = token.value.toFiat();
-              const fiat = parseFloat(fiatString);
+        {list.map((address, index) => {
+          const _wallet = Wallet.getById(address);
+          const tokens = data[address].filter(token => {
+            if (showLowBalance) {
+              return true;
+            }
+            const fiatString = token.value.toFiat();
+            const fiat = parseFloat(fiatString);
 
-              if (!fiatString || Number.isNaN(fiat)) {
-                return token.value.raw.gte(MIN_LOW_AMOUNT);
-              }
-
-              return fiat >= MIN_LOW_AMOUNT;
-            });
-
-            if (!_wallet) {
-              return null;
+            if (!fiatString || Number.isNaN(fiat)) {
+              return token.value.raw.gte(MIN_LOW_AMOUNT);
             }
 
-            return (
-              <WalletCard
-                key={address}
-                wallet={_wallet}
-                tokens={tokens.filter(
-                  item =>
-                    item.is_in_white_list &&
-                    // FIXME: only erc20 tokens or native currency (ISLM)
-                    (item.is_erc20 || item.symbol === CURRENCY_NAME),
-                )}
-                tokensOnly={!!wallet}
-              />
-            );
-          })}
+            return fiat >= MIN_LOW_AMOUNT;
+          });
+
+          if (!_wallet) {
+            return null;
+          }
+
+          return (
+            <WalletCard
+              key={address}
+              wallet={_wallet}
+              tokens={tokens.filter(
+                item =>
+                  item.is_in_white_list &&
+                  // FIXME: only erc20 tokens or native currency (ISLM)
+                  (item.is_erc20 || item.symbol === CURRENCY_NAME),
+              )}
+              tokensOnly={!!wallet}
+              isLast={index === list.length - 1}
+            />
+          );
+        })}
       </View>
     );
   },
