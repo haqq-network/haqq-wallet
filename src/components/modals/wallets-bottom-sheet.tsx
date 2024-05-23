@@ -1,6 +1,9 @@
 import React, {useCallback, useEffect} from 'react';
 
+import {Platform} from 'react-native';
+
 import {BottomSheet} from '@app/components/bottom-sheet';
+import {Spacer} from '@app/components/ui';
 import {WalletRow, WalletRowTypes} from '@app/components/wallet-row';
 import {app} from '@app/contexts';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
@@ -65,6 +68,7 @@ export function WalletsBottomSheet({
           />
         );
       })}
+      <Spacer height={Platform.OS === 'android' ? 16 : 0} />
     </BottomSheet>
   );
 }

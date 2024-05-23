@@ -30,6 +30,7 @@ export type Props = {
   onPressToken?: (wallet: Wallet, token: IToken) => void;
   checkTokenSelected?: (wallet: Wallet, token: IToken) => boolean;
   onPressWallet?: (wallet: Wallet) => void;
+  isLast?: boolean;
 };
 const CARD_WIDTH = 57.78;
 const CARD_RADIUS = 8;
@@ -42,6 +43,7 @@ export const WalletCard = ({
   onPressToken,
   onPressWallet,
   checkTokenSelected,
+  isLast,
 }: Props) => {
   const {width} = useWindowDimensions();
   const balances = useWalletsBalance([wallet]);
@@ -135,11 +137,11 @@ export const WalletCard = ({
           />
         );
       })}
-      {tokens.length > 0 ? (
+      {tokens.length > 0 && !isLast ? (
         <SolidLine
           style={styles.line}
           width={width - 40}
-          color={Color.graphicSecond2}
+          color={Color.graphicSecond1}
         />
       ) : (
         <View style={styles.footer}>
