@@ -31,8 +31,8 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install dependencies
-        run: yarn packages
+      - name: Install packages
+        run: yarn install
 
       - name: Run linters
         run: |
