@@ -1,5 +1,19 @@
 {
-  "_hash": "88354a9a521723314cc4f8b03f41df68ffee93890796d60b7100e619c2635d83",
+  "StakingInfoUnDelegationDay": " ({{day}} день остался)",
+  "StakingInfoUnDelegationDays": " ({{days}} дней осталось)",
+  "_hash": "68ea5c78e20c6e05d58d3f057a3c1de9db8a95e57657aeb76ef658d6aefadea8",
+  "accept": "Принять",
+  "accountInfoTokensTabTitle": "Токены",
+  "accountInfoTransactionTabTitle": "Транзакции",
+  "actionSheetDiscard": "Отменить изменения",
+  "actionSheetKeepEditing": "Продолжить редактирование",
+  "actionSheetMessage": "Вы уверены, что хотите отменить изменения?",
+  "address": "Адрес",
+  "apply": "Применить",
+  "backupCreateRecoveryAgreement": "Я понимаю, что если я потеряю фразу восстановления, я не смогу восстановить доступ к своей учетной записи",
+  "backupFinishCongratulation": "Поздравляем!",
+  "backupFinishFinish": "Продолжить",
+  "backupSssSuggestionCancel": "Подключить позднее",
   "empty": " ",
   "erase": "Стереть",
   "feeCalculatingRpcErrorClose": "Попробуйте еще раз",
@@ -73,6 +87,9 @@
   "signupImportantInfoDesc4": "**Если вы когда-нибудь удалите какую-либо часть мнемонической фразы**, хранящейся в облачном хранилище, приложение уведомит вас и обеспечит исправление.",
   "signupImportantInfoDesc5": "Очень важно хранить данные для входа в Google или Apple в безопасности. Если вы их потеряете и потеряете телефон, вы не сможете вернуть свой кошелек, используя логин в социальной сети.",
   "signupImportantInfoPrimaryButton": "Продолжать",
+  "stakingUnDelegateFormCommission": "Комиссия",
+  "stakingUnDelegatePreviewCommission": "Комиссия",
+  "stakingValidators": "Список валидаторов",
   "transactionInfoFunctionValue": "Сумма токена",
   "walletCardConnectedApps": "{{count}} подключиться",
   "walletCardFullProtection": "Защищено",
@@ -86,5 +103,6 @@
   "walletConnectConnectionLost": "сервер подключения к кошельку потерян",
   "walletConnectErrorClose": "Закрывать",
   "walletConnectErrorTitle": "Ошибка подключения к кошельку",
-  "walletConnectInvalidUri": "Неверный URI WalletConnect"
+  "walletConnectInvalidUri": "Неверный URI WalletConnect",
+  "yes": "Да"
 }
