@@ -11,36 +11,38 @@ import {ImageWrapper} from './image-wrapper';
 
 export interface TokenRowProps {
   item: IToken;
+  checked?: boolean | undefined;
   onPress?: () => void;
 }
 
-export const TokenRow = ({item, onPress}: TokenRowProps) => {
+export const TokenRow = ({item, checked = false, onPress}: TokenRowProps) => {
   const priceInUSD = useMemo(() => {
-    return item.value.toFiat({fixed: 4});
+    return item?.value?.toFiat?.({fixed: 4});
   }, [item]);
+
   return (
     <TouchableOpacity
-      testID={String(item.symbol)?.toUpperCase()}
-      disabled={!onPress}
+      testID={String(item?.symbol)?.toUpperCase()}
+      disabled={!onPress || checked === true}
       onPress={onPress}
-      style={styles.container}>
+      style={[styles.container, checked && styles.checked]}>
       <ImageWrapper
         style={styles.icon}
-        source={item.image || require('@assets/images/empty-icon.png')}
+        source={item?.image || require('@assets/images/empty-icon.png')}
         resizeMode="cover"
       />
       <Spacer width={12} />
       <View style={styles.textContainer}>
         <View style={styles.row}>
           <Text t11 numberOfLines={1} style={styles.tokenName}>
-            {item.symbol}
+            {item?.symbol}
           </Text>
           <Spacer />
-          <Text t11>{item.value.toBalanceString('auto')}</Text>
+          <Text t11>{item?.value?.toBalanceString?.('auto')}</Text>
         </View>
         <View style={styles.row}>
           <Text t14 color={Color.textBase2}>
-            {item.name}
+            {item?.name}
           </Text>
           <Spacer />
           <Text t14 color={Color.textBase2}>
@@ -70,5 +72,8 @@ const styles = createTheme({
   textContainer: {
     flex: 1,
     alignItems: 'center',
+  },
+  checked: {
+    opacity: 0.5,
   },
 });

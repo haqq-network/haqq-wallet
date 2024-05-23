@@ -1,15 +1,16 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 
 import validate from 'validate.js';
 
 import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {I18N, getText} from '@app/i18n';
 import {Balance} from '@app/services/balance';
+import {WEI_PRECISION} from '@app/variables/common';
 
 export function useSumAmount(
   initialSum = Balance.Empty,
   initialMaxSum = Balance.Empty,
-  minAmount = getRemoteBalanceValue('transfer_min_amount'),
+  initialMinAmount = getRemoteBalanceValue('transfer_min_amount'),
   customCheck?: (amount: Balance) => string,
 ) {
   const [{amount, amountText, changed}, setAmount] = useState({
@@ -18,7 +19,9 @@ export function useSumAmount(
     changed: false,
   });
   const [maxAmount, setMaxAmount] = useState(initialMaxSum);
-  const minimumAmountConst = getRemoteBalanceValue('transfer_min_amount');
+  const maxAmountRef = useRef(initialMaxSum);
+  const [minAmount, setMinAmount] = useState(initialMinAmount);
+  const minAmountRef = useRef(initialMinAmount);
 
   useEffect(() => {
     setMaxAmount(initialMaxSum);
@@ -27,30 +30,38 @@ export function useSumAmount(
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (!customCheck) {
-      return;
-    }
-    const result = customCheck(amount);
-    if (result) {
-      setError(result);
-    }
-  }, [customCheck]);
-
-  useEffect(() => {
     if (amount && changed) {
-      const errorArray = validate.single(amount.toFloat(), {
-        numericality: {
-          notValid: 'Invalid number',
-          greaterThanOrEqualTo: minAmount.toFloat(),
-          lessThanOrEqualTo: maxAmount.toFloat(),
-          notGreaterThan: getText(I18N.sumAmountTooLow, {
-            amount: maxAmount.toString(),
-          }),
-          notLessThanOrEqualTo: getText(I18N.sumAmountNotEnough),
-        },
-      });
-      const newString = errorArray?.length > 0 ? errorArray.join(' ') : '';
-      setError(newString);
+      if (typeof customCheck === 'function') {
+        const result = customCheck(amount);
+        setError(result);
+      } else {
+        const errorArray = validate.single(amount.toFloat(), {
+          numericality: {
+            notValid: 'Invalid number',
+            greaterThanOrEqualTo: minAmountRef.current.toFloat(),
+            lessThanOrEqualTo: maxAmountRef.current.toFloat(),
+            notGreaterThan: getText(I18N.sumAmountTooLow, {
+              amount: maxAmountRef.current.toBalanceString('auto'),
+            }),
+            notLessThanOrEqualTo: getText(I18N.sumAmountNotEnough, {
+              symbol: maxAmountRef.current.getSymbol(),
+            }),
+          },
+        });
+        const newString = errorArray?.length > 0 ? errorArray.join(' ') : '';
+        setError(
+          newString
+            .replace('ISLM', maxAmountRef.current.getSymbol())
+            .replace(
+              maxAmountRef.current.toFloat(),
+              maxAmountRef.current.toBalanceString('auto'),
+            )
+            .replace(
+              minAmountRef.current.toFloat(),
+              minAmountRef.current.toBalanceString('auto'),
+            ),
+        );
+      }
     }
   }, [changed, amount, minAmount, maxAmount]);
 
@@ -63,12 +74,19 @@ export function useSumAmount(
     amount: amountText,
     error,
     setMaxAmount(value = Balance.Empty) {
+      maxAmountRef.current = value;
       setMaxAmount(value);
     },
-    setMax() {
+    setMinAmount(value = Balance.Empty) {
+      minAmountRef.current = value;
+      setMinAmount(value);
+    },
+    setMax: () => {
+      Logger.log('set max', maxAmountRef.current);
       const a =
-        Math.floor(maxAmount.toFloat() / minimumAmountConst.toFloat()) *
-        minimumAmountConst.toFloat();
+        Math.floor(
+          maxAmountRef.current.toFloat() / minAmountRef.current.toFloat(),
+        ) * minAmountRef.current.toFloat();
       setAmount(({changed: _changed}) => ({
         amountText: String(a),
         amount: maxAmount,
@@ -88,7 +106,12 @@ export function useSumAmount(
           })
           .replace(/\D&[^.]/g, '')
           .replace(/^0[0-9]/gm, '0')
-          .substring(0, 20);
+          .substring(
+            0,
+            (minAmountRef?.current?.getPrecission() ||
+              maxAmountRef?.current?.getPrecission() ||
+              WEI_PRECISION) + 1,
+          );
 
         setAmount({
           amountText: textFormatted,

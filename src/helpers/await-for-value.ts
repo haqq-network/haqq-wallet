@@ -1,3 +1,5 @@
+import React from 'react';
+
 import {makeID} from '@haqq/shared-react-native';
 
 import {app} from '@app/contexts';
@@ -9,12 +11,19 @@ export type AwaitValue<ExtendsType = {}> = {
   id: string;
   title: string;
   subtitle?: string;
+  value?: any;
 } & ExtendsType;
 
 export interface AwaitForValueParams<Value extends AwaitValue> {
   title: I18N | string;
   values: Value[];
   initialIndex?: number;
+  closeOnSelect?: boolean;
+  renderCell?: (
+    value: any,
+    checked: boolean,
+    onPress: (value: any) => void,
+  ) => React.ReactNode;
 }
 
 export class AwaitForValueError {
@@ -97,6 +106,8 @@ export async function awaitForValue<Value extends AwaitValue>({
   title,
   values,
   initialIndex,
+  closeOnSelect,
+  renderCell,
 }: AwaitForValueParams<Value>): Promise<
   Value & {
     index: number;
@@ -108,9 +119,9 @@ export async function awaitForValue<Value extends AwaitValue>({
       app.removeListener('value-selected-reject', onReject);
     };
 
-    const onAction = (index: number) => {
+    const onAction = (index: number, value: any) => {
       removeAllListeners();
-      resolve({...values[index], index});
+      resolve({...values[index], index, value});
     };
 
     const onReject = (err: Error | string) => {
@@ -125,6 +136,8 @@ export async function awaitForValue<Value extends AwaitValue>({
       values: JSON.parse(JSON.stringify(values)),
       title: typeof title === 'string' ? title : getText(title),
       initialIndex,
+      closeOnSelect,
+      renderCell,
     });
   });
 }

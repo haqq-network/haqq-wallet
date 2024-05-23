@@ -3,15 +3,20 @@ import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {observer} from 'mobx-react';
 
 import {TransactionAddress} from '@app/components/transaction-address';
+import {Events} from '@app/events';
+import {showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
+import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {Contact} from '@app/models/contact';
+import {Token} from '@app/models/tokens';
 import {Wallet} from '@app/models/wallet';
 import {
   TransactionStackParamList,
   TransactionStackRoutes,
 } from '@app/route-types';
+import {ModalType} from '@app/types';
 
 const logger = Logger.create('TransactionAddressScreen');
 
@@ -94,6 +99,19 @@ export const TransactionAddressScreen = observer(() => {
             },
           );
         } else {
+          const hide = showModal(ModalType.loading, {
+            text: 'Loading token balances',
+          });
+          try {
+            await Promise.all([
+              Token.fetchTokens(true, true),
+              awaitForEventDone(Events.onBalanceSync),
+            ]);
+          } catch {
+          } finally {
+            hide();
+          }
+
           navigation.navigate(TransactionStackRoutes.TransactionSelectCrypto, {
             from: AddressUtils.toEth(route.params.from),
             to: AddressUtils.toEth(result),

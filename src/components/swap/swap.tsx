@@ -1,32 +1,45 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 
 import {observer} from 'mobx-react';
 import {View} from 'react-native';
 
+import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {useSumAmount} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {
   SushiPoolEstimateResponse,
   SushiPoolResponse,
 } from '@app/services/indexer';
 import {IContract} from '@app/types';
+import {formatNumberString} from '@app/utils';
 import {STRINGS} from '@app/variables/common';
 
-import {
-  Button,
-  ButtonSize,
-  ButtonVariant,
-  First,
-  Spacer,
-  Text,
-  TextField,
-  TextVariant,
-} from '../ui';
-import {Placeholder} from '../ui/placeholder';
+import {SwapInput} from './swap-input';
+
+import {Button, ButtonVariant, First, Spacer, Text, TextVariant} from '../ui';
+import {WalletRow, WalletRowTypes} from '../wallet-row';
+
+const EstimatedValue = observer(
+  ({title, value}: {title: string; value: string}) => {
+    return (
+      <View style={styles.estimatedValueContainer}>
+        <Text variant={TextVariant.t14} color={Color.textBase2}>
+          {title}
+        </Text>
+        <Spacer />
+        <Text variant={TextVariant.t14} color={Color.textBase1}>
+          {value}
+        </Text>
+      </View>
+    );
+  },
+);
 
 export interface SwapProps {
+  currentWallet: Wallet;
   poolData: SushiPoolResponse;
   estimateData: SushiPoolEstimateResponse | null;
   tokenIn: IContract;
@@ -36,11 +49,21 @@ export interface SwapProps {
   isEstimating: boolean;
   isSwapInProgress: boolean;
   isApproveInProgress: boolean;
+  isWrapTx: boolean;
+  isUnwrapTx: boolean;
+  t0Current: Balance;
+  t1Current: Balance;
+  t0Available: Balance;
+  t1Available: Balance;
+  onPressWrap(): Promise<void>;
+  onPressUnrap(): Promise<void>;
   estimate(): Promise<void>;
+  onPressMax(): Promise<void>;
   onPressChangeTokenIn(): Promise<void>;
   onPressChangeTokenOut(): Promise<void>;
   onPressSwap(): Promise<void>;
   onPressApprove(): Promise<void>;
+  onPressChangeWallet(): void;
 }
 
 export const Swap = observer(
@@ -53,127 +76,118 @@ export const Swap = observer(
     tokenOut,
     isApproveInProgress,
     isSwapInProgress,
+    isUnwrapTx,
+    isWrapTx,
+    t0Current,
+    t1Current,
+    t0Available,
+    t1Available,
+    currentWallet,
+    onPressWrap,
+    onPressUnrap,
     estimate,
     onPressChangeTokenIn,
     onPressChangeTokenOut,
     onPressApprove,
+    onPressChangeWallet,
     onPressSwap,
+    onPressMax,
   }: SwapProps) => {
-    const t0 = useMemo(() => {
-      if (!amountsIn.amount || !tokenIn?.decimals) {
-        return Balance.Empty;
-      }
-      return new Balance(amountsIn.amount, tokenIn.decimals!, tokenIn.symbol!);
-    }, [amountsIn.amount, tokenIn]);
-
-    const t1 = useMemo(() => {
-      if (!amountsOut.amount || !tokenOut?.decimals) {
-        return Balance.Empty;
-      }
-      return new Balance(
-        amountsOut.amount,
-        tokenOut.decimals!,
-        tokenOut.symbol!,
-      );
-    }, [amountsOut.amount, tokenOut]);
-
-    const exchangeRate = useMemo(() => {
-      return t1.toFloat() / t0.toFloat();
-    }, [t1, t0]);
-
     return (
       <View style={styles.container}>
-        <View>
-          <View style={styles.amountContainer}>
-            <TextField
-              label={I18N.transactionDetailAmount}
-              placeholder={I18N.transactionInfoFunctionValue}
-              value={amountsIn.amount}
-              onChangeText={amountsIn.setAmount}
-              style={styles.amountInput}
-              // error={!!amountsIn.error}
-              // errorText={amountsIn.error}
-              keyboardType="numeric"
-              inputMode="decimal"
-              returnKeyType="done"
-              editable={!isEstimating}
-              onBlur={estimate}
-            />
-            <Spacer width={10} />
-            <Button
-              size={ButtonSize.small}
-              style={styles.tokenButton}
-              variant={ButtonVariant.second}
-              title={tokenIn.symbol!}
-              onPress={onPressChangeTokenIn}
-            />
-          </View>
-          <Text>{t0.toFiat({fixed: 18})}</Text>
-        </View>
+        <WalletRow
+          item={currentWallet}
+          hideArrow
+          type={WalletRowTypes.variant2}
+          onPress={onPressChangeWallet}
+        />
 
         <Spacer height={10} />
 
-        <View>
-          <View style={styles.amountContainer}>
-            <First>
-              {isEstimating && (
-                <View style={styles.amountInput}>
-                  <Placeholder opacity={0.7}>
-                    <Placeholder.Item width={'100%'} height={58} />
-                  </Placeholder>
-                </View>
-              )}
-              <TextField
-                label={I18N.transactionDetailAmount}
-                placeholder={I18N.transactionInfoFunctionValue}
-                value={amountsOut.amount}
-                onChangeText={amountsOut.setAmount}
-                style={styles.amountInput}
-                // error={!!amountsOut.error}
-                // errorText={amountsOut.error}
-                keyboardType="numeric"
-                inputMode="decimal"
-                returnKeyType="done"
-                editable={false}
-              />
-            </First>
-            <Spacer width={10} />
-            <Button
-              size={ButtonSize.small}
-              style={styles.tokenButton}
-              variant={ButtonVariant.second}
-              title={tokenOut.symbol!}
-              onPress={onPressChangeTokenOut}
-            />
-          </View>
-          <Text>{t1.toFiat({fixed: 18})}</Text>
-        </View>
+        <SwapInput
+          label={I18N.transactionDetailAmount}
+          placeholder={I18N.transactionInfoFunctionValue}
+          amounts={amountsIn}
+          isLoading={isEstimating}
+          currentBalance={t0Current}
+          availableBalance={t0Available}
+          token={tokenIn}
+          disableTextFieldLoader={true}
+          autoFocus={true}
+          showMaxButton={true}
+          onPressMax={onPressMax}
+          onBlur={estimate}
+          onPressChangeToken={onPressChangeTokenIn}
+        />
+
+        <Spacer height={10} />
+
+        <SwapInput
+          label={I18N.transactionDetailAmount}
+          placeholder={I18N.transactionInfoFunctionValue}
+          amounts={amountsOut}
+          editable={false}
+          currentBalance={t1Current}
+          availableBalance={t1Available}
+          isLoading={isEstimating}
+          token={tokenOut}
+          onBlur={estimate}
+          onPressChangeToken={onPressChangeTokenOut}
+        />
+
         <Spacer height={10} />
 
         {!!estimateData && (
           <View>
-            <Text variant={TextVariant.t11}>
-              Provider fee: {new Balance(estimateData.fee.amount).toFloat()}
-              {STRINGS.NBSP}
-              {estimateData.fee.denom}
-            </Text>
-            <Text variant={TextVariant.t11}>
-              Price impact: {estimateData.s_price_impact}%
-            </Text>
-            <Text variant={TextVariant.t11}>Routing source: SwapRouterV3</Text>
-            <Text variant={TextVariant.t11}>Exchange rate: {exchangeRate}</Text>
+            <EstimatedValue
+              title="Rate"
+              value={`1${STRINGS.NBSP}${t0Current.getSymbol()}${STRINGS.NBSP}≈${
+                STRINGS.NBSP
+              }${formatNumberString(estimateData.s_swap_price)}${
+                STRINGS.NBSP
+              }${t1Current.getSymbol()}`}
+            />
+            <EstimatedValue
+              title="Provider Fee"
+              value={`${new Balance(estimateData.fee.amount).toFloat()}${
+                STRINGS.NBSP
+              }${estimateData.fee.denom}`}
+            />
+            <EstimatedValue
+              title="Price impact"
+              value={`${formatNumberString(estimateData.s_price_impact)}%`}
+            />
+            <EstimatedValue title="Routing source" value={'SwapRouterV3'} />
           </View>
         )}
 
         <Spacer />
 
         <First>
+          {isUnwrapTx && (
+            <Button
+              variant={ButtonVariant.contained}
+              title="Unwrap"
+              loading={isEstimating || isSwapInProgress}
+              disabled={isEstimating || isSwapInProgress || !!amountsIn.error}
+              onPress={onPressUnrap}
+            />
+          )}
+          {isWrapTx && (
+            <Button
+              variant={ButtonVariant.contained}
+              title="Wrap"
+              loading={isEstimating || isSwapInProgress}
+              disabled={isEstimating || isSwapInProgress || !!amountsIn.error}
+              onPress={onPressWrap}
+            />
+          )}
           {!!estimateData?.need_approve && (
             <Button
               variant={ButtonVariant.contained}
               title={`Approve ${amountsIn.amount} ${tokenIn.symbol}`}
               loading={isApproveInProgress}
-              disabled={isApproveInProgress}
+              disabled={isApproveInProgress || !!amountsIn.error}
               onPress={onPressApprove}
             />
           )}
@@ -181,7 +195,7 @@ export const Swap = observer(
             variant={ButtonVariant.contained}
             title="Swap"
             loading={isEstimating || isSwapInProgress}
-            disabled={isEstimating || isSwapInProgress}
+            disabled={isEstimating || isSwapInProgress || !!amountsIn.error}
             onPress={onPressSwap}
           />
         </First>
@@ -196,15 +210,8 @@ const styles = createTheme({
     marginHorizontal: 20,
     flex: 1,
   },
-  amountContainer: {
+  estimatedValueContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  amountInput: {
-    flex: 3.8,
-  },
-  tokenButton: {
-    flex: 1,
-    height: '100%',
   },
 });

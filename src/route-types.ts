@@ -452,6 +452,12 @@ export type HomeStackParamList = {
     values: AwaitValue[];
     initialIndex?: number;
     eventSuffix?: string;
+    closeOnSelect?: boolean;
+    renderCell?: (
+      value: any,
+      checked: boolean,
+      onPress: (value: any) => void,
+    ) => React.ReactNode;
   };
   [HomeStackRoutes.BrowserPrivacyPopupStack]: {
     screen: 'browserPrivacyDetails' | 'browserPrivacy';

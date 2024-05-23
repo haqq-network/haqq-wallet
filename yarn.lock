@@ -2356,6 +2356,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@haqq/format-number-with-subscript-zeros@https://github.com/haqq-network/format-number-with-subscript-zeros":
+  version: 1.0.0
+  resolution: "@haqq/format-number-with-subscript-zeros@https://github.com/haqq-network/format-number-with-subscript-zeros.git#commit=a8f3189daf8ecd3c599c3c641f1657b9781f9dee"
+  checksum: b42c26b949f94dd4a5861c9d2cdd1f86023f588135a7aec71b32017b44e3411dc8b2cc93625f15ea2a855378d321acbbb306384c0a1493027e3b3277549f6977
+  languageName: node
+  linkType: hard
+
 "@haqq/provider-base@npm:0.0.23":
   version: 0.0.23
   resolution: "@haqq/provider-base@npm:0.0.23"
@@ -10287,6 +10294,7 @@ __metadata:
     "@evmos/transactions": 0.2.13
     "@expo/react-native-action-sheet": 4.0.1
     "@haqq/encryption-react-native": 0.0.4
+    "@haqq/format-number-with-subscript-zeros": "https://github.com/haqq-network/format-number-with-subscript-zeros"
     "@haqq/provider-base": 0.0.23
     "@haqq/provider-hot-react-native": 0.0.10
     "@haqq/provider-keystone-react-native": 0.0.7

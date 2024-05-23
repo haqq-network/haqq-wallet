@@ -7,7 +7,7 @@ import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
 import {ValueSelector} from '@app/components/value-selector';
 import {app} from '@app/contexts';
 import {createTheme, popupScreenOptions} from '@app/helpers';
-import {useTypedRoute} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 
 const ValueSelectorStack = createNativeStackNavigator();
@@ -23,14 +23,26 @@ export const ValueSelectorScreen = () => {
     HomeStackParamList,
     HomeStackRoutes.ValueSelector
   >();
-  const {title, values, initialIndex = -1, eventSuffix = ''} = params;
+  const {
+    title,
+    values,
+    initialIndex = -1,
+    eventSuffix = '',
+    closeOnSelect = false,
+    renderCell,
+  } = params;
   const selectedIndex = useRef(initialIndex);
+  const navigation = useTypedNavigation();
 
   useFocusEffect(
     useCallback(() => {
       return () => {
         if (selectedIndex.current > -1 && values[selectedIndex.current]) {
-          app.emit(`value-selected${eventSuffix}`, selectedIndex.current);
+          app.emit(
+            `value-selected${eventSuffix}`,
+            selectedIndex.current,
+            values[selectedIndex.current],
+          );
         } else {
           app.emit(`value-selected-reject${eventSuffix}`);
         }
@@ -39,10 +51,18 @@ export const ValueSelectorScreen = () => {
   );
 
   const onValueSelected = useCallback(
-    (index: number) => {
+    (index: number, value: any) => {
       selectedIndex.current = index;
+      values[index] = value;
+      Logger.log('ValueSelectorScreen', 'onValueSelected', {
+        index,
+        closeOnSelect,
+      });
+      if (closeOnSelect) {
+        navigation.goBack();
+      }
     },
-    [selectedIndex],
+    [selectedIndex, closeOnSelect, eventSuffix, navigation],
   );
 
   const Component = useCallback(
@@ -51,10 +71,11 @@ export const ValueSelectorScreen = () => {
         values={values}
         initialIndex={initialIndex}
         onValueSelected={onValueSelected}
+        renderCell={renderCell}
         style={styles.valueSelector}
       />
     ),
-    [initialIndex, onValueSelected, values],
+    [initialIndex, onValueSelected, values, renderCell],
   );
 
   return (

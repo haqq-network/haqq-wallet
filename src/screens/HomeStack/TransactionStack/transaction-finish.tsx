@@ -32,6 +32,7 @@ export const TransactionFinishScreen = observer(() => {
     TransactionStackParamList,
     TransactionStackRoutes.TransactionFinish
   >().params;
+  Logger.log('TransactionFinishScreen', {hash, transaction, token, amount});
   const contact = Contact.getById(transaction?.to ?? '');
   const [fee, setFee] = useState(Balance.Empty);
 

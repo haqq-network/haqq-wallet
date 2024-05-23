@@ -36,7 +36,7 @@ import {I18N} from '@app/i18n';
 import {sleep} from '@app/utils';
 import {IS_ANDROID, IS_IOS} from '@app/variables/common';
 
-type Props = Omit<TextInputProps, 'placeholder'> & {
+export type TextFieldProps = Omit<TextInputProps, 'placeholder'> & {
   label: I18N;
   placeholder: I18N;
   hint?: I18N | undefined;
@@ -50,7 +50,7 @@ type Props = Omit<TextInputProps, 'placeholder'> & {
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-export const TextField: React.FC<Props> = memo(
+export const TextField: React.FC<TextFieldProps> = memo(
   ({
     autoFocus = false,
     lines = 1,

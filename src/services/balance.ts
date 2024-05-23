@@ -12,6 +12,7 @@ import {
   IBalance,
   ISerializable,
 } from '@app/types';
+import {formatNumberString} from '@app/utils';
 import {
   CURRENCY_NAME,
   LONG_NUM_PRECISION,
@@ -136,7 +137,8 @@ export class Balance implements IBalance, ISerializable {
     fixed = NUM_PRECISION,
     precission: number = this.precission,
   ) => {
-    return cleanNumber(this.toFloat(precission), NUM_DELIMITER, fixed);
+    const cleaned = cleanNumber(this.toFloat(precission), NUM_DELIMITER, fixed);
+    return formatNumberString(cleaned);
   };
 
   /**
@@ -176,7 +178,7 @@ export class Balance implements IBalance, ISerializable {
 
     const getStringWithSymbol = (value: string) => {
       const currency = Currencies.currency;
-      const result = [value];
+      const result = [formatNumberString(value)];
       currency?.prefix && result.unshift(currency.prefix);
       currency?.postfix && result.push(currency.postfix);
       return result.join(' ');

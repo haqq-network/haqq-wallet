@@ -17,7 +17,7 @@ import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {useSumAmount} from '@app/hooks';
 import {useKeyboard} from '@app/hooks/use-keyboard';
-import {I18N, getText} from '@app/i18n';
+import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Balance} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
@@ -58,15 +58,7 @@ export const TransactionSum = ({
       : Balance.Empty;
   }, [fee]);
 
-  const amounts = useSumAmount(undefined, undefined, undefined, () => {
-    if (token.symbol === CURRENCY_NAME) {
-      return '';
-    }
-    if (balance.compare(fee, 'lt')) {
-      return getText(I18N.sumAmountNotEnough);
-    }
-    return '';
-  });
+  const amounts = useSumAmount(undefined, undefined, undefined);
 
   useEffect(() => {
     if (token.symbol === CURRENCY_NAME) {

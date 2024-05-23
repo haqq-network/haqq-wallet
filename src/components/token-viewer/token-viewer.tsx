@@ -25,6 +25,8 @@ export interface TokenViewerProps {
   data: Record<HaqqEthereumAddress, IToken[]>;
   style?: StyleProp<ViewStyle>;
   wallet?: Wallet;
+  hideFilter?: boolean;
+  onPressToken?: (wallet: Wallet, token: IToken) => void;
 }
 
 const SortingNamesMap = {
@@ -35,7 +37,13 @@ const SortingNamesMap = {
 const MIN_LOW_AMOUNT = 0.01;
 
 export const TokenViewer = observer(
-  ({data: _data, style, wallet}: TokenViewerProps) => {
+  ({
+    data: _data,
+    style,
+    wallet,
+    hideFilter = false,
+    onPressToken,
+  }: TokenViewerProps) => {
     const data = useMemo(() => computed(() => _data), [_data]).get();
     const wallets = useMemo(
       () =>
@@ -118,22 +126,24 @@ export const TokenViewer = observer(
 
     return (
       <View style={style}>
-        <View style={styles.row}>
-          <IconButton onPress={onPressSort} style={styles.sortWrapper}>
-            <Icon color={Color.graphicBase1} name={IconsName.arrow_sort} />
-            <Text color={Color.graphicBase1} variant={TextVariant.t13}>
-              {sorting}
-            </Text>
-          </IconButton>
-          <IconButton onPress={onChangeViewModePress} style={styles.button}>
-            <Icon color={Color.graphicBase1} name={lowBalanceIcon} />
-            <Text
-              variant={TextVariant.t13}
-              color={Color.graphicBase1}
-              i18n={I18N.tokensLowBalance}
-            />
-          </IconButton>
-        </View>
+        {hideFilter === false && (
+          <View style={styles.row}>
+            <IconButton onPress={onPressSort} style={styles.sortWrapper}>
+              <Icon color={Color.graphicBase1} name={IconsName.arrow_sort} />
+              <Text color={Color.graphicBase1} variant={TextVariant.t13}>
+                {sorting}
+              </Text>
+            </IconButton>
+            <IconButton onPress={onChangeViewModePress} style={styles.button}>
+              <Icon color={Color.graphicBase1} name={lowBalanceIcon} />
+              <Text
+                variant={TextVariant.t13}
+                color={Color.graphicBase1}
+                i18n={I18N.tokensLowBalance}
+              />
+            </IconButton>
+          </View>
+        )}
         {(Object.keys(data) as HaqqEthereumAddress[])
           .filter(filter)
           .sort(sort)
@@ -168,6 +178,7 @@ export const TokenViewer = observer(
                     (item.is_erc20 || item.symbol === CURRENCY_NAME),
                 )}
                 tokensOnly={!!wallet}
+                onPressToken={onPressToken}
               />
             );
           })}

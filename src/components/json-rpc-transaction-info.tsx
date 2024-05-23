@@ -246,7 +246,7 @@ export const JsonRpcTransactionInfo = ({
           <First>
             {isFeeLoading && <ActivityIndicator />}
             <Text t11 color={Color.textBase1}>
-              {calculatedFee.toBalanceString(LONG_NUM_PRECISION)}
+              {calculatedFee.toBalanceString('auto')}
             </Text>
           </First>
         </DataView>
