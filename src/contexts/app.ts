@@ -457,6 +457,8 @@ class App extends AsyncEventEmitter {
         passwordEntity = JSON.parse(creds.password);
       } catch {}
       // If we can't parse entity or we have invalid fiedls
+
+      const oldBiometry = this.biometry;
       if (
         passwordEntity === null ||
         !passwordEntity?.cipher ||
@@ -494,6 +496,7 @@ class App extends AsyncEventEmitter {
               creds.password,
             );
 
+            this.biometry = oldBiometry;
             return resp.password;
           } else {
             app.failureEnter();
