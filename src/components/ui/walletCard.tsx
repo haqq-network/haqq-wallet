@@ -26,11 +26,12 @@ export type Props = {
   wallet: Wallet;
   tokens: IToken[];
   tokensOnly?: boolean;
+  isLast?: boolean;
 };
 const CARD_WIDTH = 57.78;
 const CARD_RADIUS = 8;
 
-export const WalletCard = ({wallet, tokens, tokensOnly}: Props) => {
+export const WalletCard = ({wallet, tokens, tokensOnly, isLast}: Props) => {
   const {width} = useWindowDimensions();
   const balances = useWalletsBalance([wallet]);
   const {available, locked} = useMemo(
@@ -101,11 +102,11 @@ export const WalletCard = ({wallet, tokens, tokensOnly}: Props) => {
       {tokens.map(token => {
         return <TokenRow key={generateUUID()} item={token} />;
       })}
-      {tokens.length > 0 ? (
+      {tokens.length > 0 && !isLast ? (
         <SolidLine
           style={styles.line}
           width={width - 40}
-          color={Color.graphicSecond2}
+          color={Color.graphicSecond1}
         />
       ) : (
         <View style={styles.footer}>
