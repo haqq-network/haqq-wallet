@@ -14,13 +14,11 @@ type WelcomeProps = {
   news: Results<NewsModel>;
   onPress: (id: string) => void;
   onPressSignup: () => void;
-  onPressHardwareWallet: () => void;
   onPressSignIn: () => void;
 };
 
 export const WelcomeNews = ({
   onPressSignup,
-  onPressHardwareWallet,
   onPressSignIn,
   news,
   onPress,
@@ -44,14 +42,6 @@ export const WelcomeNews = ({
           testID="welcome_signup"
           variant={ButtonVariant.contained}
           onPress={onPressSignup}
-          size={ButtonSize.large}
-        />
-        <Spacer height={16} />
-        <Button
-          testID="welcome_connect_hardware_wallet"
-          i18n={I18N.welcomeConnectHardwareWallet}
-          variant={ButtonVariant.second}
-          onPress={onPressHardwareWallet}
           size={ButtonSize.large}
         />
         <Spacer height={16} />
