@@ -40,8 +40,6 @@ export const WelcomeNewsScreen = memo(() => {
   }, []);
 
   const onPressSignup = () => navigation.navigate(WelcomeStackRoutes.SignUp);
-  const onPressHardwareWallet = () =>
-    navigation.navigate(WelcomeStackRoutes.Device);
   const onPressSignIn = () => navigation.navigate(WelcomeStackRoutes.SignIn);
 
   const onPressRow = useCallback(
@@ -59,7 +57,6 @@ export const WelcomeNewsScreen = memo(() => {
   return (
     <WelcomeNews
       onPressSignup={onPressSignup}
-      onPressHardwareWallet={onPressHardwareWallet}
       onPressSignIn={onPressSignIn}
       news={news}
       onPress={onPressRow}

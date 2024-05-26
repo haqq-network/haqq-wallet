@@ -5,25 +5,32 @@ import {View} from 'react-native';
 import {Color} from '@app/colors';
 import {
   Button,
+  ButtonSize,
   ButtonVariant,
   LottieWrap,
   PopupContainer,
   Spacer,
   Text,
 } from '@app/components/ui';
+import {HardwareWalletButton} from '@app/components/ui/hardware-wallet-button';
 import {Terms} from '@app/components/ui/terms';
 import {createTheme, getWindowHeight, getWindowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
 export type CreateAgreementProps = {
-  onDone: () => void;
+  onPressRegularWallet: () => void;
+  onPressHardwareWallet: () => void;
   testID?: string;
 };
 
 const calculateHeight = () =>
   Math.min(getWindowWidth(), getWindowHeight() * 0.355);
 
-export const CreateAgreement = ({onDone, testID}: CreateAgreementProps) => {
+export const CreateAgreement = ({
+  onPressRegularWallet,
+  onPressHardwareWallet,
+  testID,
+}: CreateAgreementProps) => {
   return (
     <PopupContainer style={styles.container} testID={testID}>
       <View pointerEvents="none" style={styles.animation}>
@@ -46,11 +53,19 @@ export const CreateAgreement = ({onDone, testID}: CreateAgreementProps) => {
       <Spacer />
       <Button
         testID={`${testID}_agree`}
-        style={styles.submit}
+        style={styles.button}
         variant={ButtonVariant.contained}
         i18n={I18N.createAgreementAgree}
-        onPress={onDone}
+        onPress={onPressRegularWallet}
       />
+      <Spacer height={16} />
+      <HardwareWalletButton
+        onPress={onPressHardwareWallet}
+        testID="welcome_connect_hardware_wallet"
+        size={ButtonSize.large}
+        style={styles.button}
+      />
+      <Spacer height={16} />
       <Terms style={styles.agreement} />
     </PopupContainer>
   );
@@ -77,8 +92,7 @@ const styles = createTheme({
     marginHorizontal: 20,
     marginBottom: 20,
   },
-  submit: {
-    marginBottom: 16,
+  button: {
     marginHorizontal: 20,
   },
   agreement: {
