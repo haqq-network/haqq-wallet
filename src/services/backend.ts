@@ -13,7 +13,7 @@ import {
 } from '@app/types';
 import {getHttpResponse} from '@app/utils';
 
-import {RemoteConfigTypes} from './remote-config';
+import {RemoteConfig, RemoteConfigTypes} from './remote-config';
 
 export type CaptchaRequestResponse = {
   id: string;
@@ -64,7 +64,7 @@ export class Backend {
   }
 
   async contests(accounts: string[], uid: string): Promise<Raffle[]> {
-    const request = await fetch(`${this.getRemoteUrl()}contests`, {
+    const request = await fetch(`${RemoteConfig.get('contests_url')}`, {
       method: 'POST',
       headers: Backend.headers,
       body: JSON.stringify({
@@ -89,17 +89,20 @@ export class Backend {
     signature: string,
     address: string,
   ): Promise<Raffle> {
-    const request = await fetch(`${this.getRemoteUrl()}contests/${contest}`, {
-      method: 'POST',
-      headers: Backend.headers,
-      body: JSON.stringify({
-        ts: Math.floor(Date.now() / 1000),
-        uid,
-        signature,
-        session,
-        address,
-      }),
-    });
+    const request = await fetch(
+      `${RemoteConfig.get('contests_url')}/${contest}`,
+      {
+        method: 'POST',
+        headers: Backend.headers,
+        body: JSON.stringify({
+          ts: Math.floor(Date.now() / 1000),
+          uid,
+          signature,
+          session,
+          address,
+        }),
+      },
+    );
 
     const resp = await getHttpResponse(request);
 
@@ -123,7 +126,7 @@ export class Backend {
     tx_hash: string;
   }> {
     const request = await fetch(
-      `${this.getRemoteUrl()}contests/${contest}/participate`,
+      `${RemoteConfig.get('contests_url')}/${contest}/participate`,
       {
         method: 'POST',
         headers: Backend.headers,
@@ -152,7 +155,7 @@ export class Backend {
     tx_hash: string | null,
   ): Promise<{signature: string; participant: string; deadline: number}> {
     const request = await fetch(
-      `${this.getRemoteUrl()}contests/${contest}/result`,
+      `${RemoteConfig.get('contests_url')}/${contest}/result`,
       {
         method: 'POST',
         headers: Backend.headers,

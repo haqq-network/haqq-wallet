@@ -12,7 +12,11 @@ import {verifyCloud} from '@app/helpers/verify-cloud';
 import {getMetadataValueWrapped} from '@app/helpers/wrappers/get-metadata-value';
 import {useTypedNavigation} from '@app/hooks';
 import {ErrorHandler} from '@app/models/error-handler';
-import {SignInStackParamList, SignInStackRoutes} from '@app/route-types';
+import {
+  SignInStackParamList,
+  SignInStackRoutes,
+  WelcomeStackRoutes,
+} from '@app/route-types';
 import {Cloud} from '@app/services/cloud';
 import {
   SssProviders,
@@ -132,6 +136,10 @@ export const SignInNetworksScreen = memo(() => {
     navigation.navigate(SignInStackRoutes.SigninAgreement);
   }, [navigation]);
 
+  const onPressHardwareWallet = useCallback(() => {
+    navigation.navigate(WelcomeStackRoutes.Device);
+  }, [navigation]);
+
   return (
     <SigninNetworks
       onLogin={onLogin}
@@ -139,6 +147,7 @@ export const SignInNetworksScreen = memo(() => {
       isAppleSupported={app.isAppleSigninSupported}
       isGoogleSupported={app.isGoogleSigninSupported}
       isCustomSupported={app.isCustomSigninSupported}
+      onPressHardwareWallet={onPressHardwareWallet}
     />
   );
 });
