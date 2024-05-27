@@ -38,4 +38,5 @@ export type SushiPoolEstimateRequest = {
   sender: string; // The sender address
   amount: string; // The hex amount to swap
   currency_id?: string; // The currency id
+  abortSignal?: AbortSignal;
 };

@@ -21,8 +21,8 @@ export interface AwaitForValueParams<Value extends AwaitValue> {
   closeOnSelect?: boolean;
   renderCell?: (
     value: any,
-    checked: boolean,
-    onPress: (value: any) => void,
+    idx: number,
+    onPress: (value: any, idx: number) => void,
   ) => React.ReactNode;
 }
 

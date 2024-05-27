@@ -67,29 +67,40 @@ export function useSumAmount(
 
   return {
     isValid:
-      amount.toEther() >= minAmount.toEther() &&
-      amount.toEther() <= maxAmount.toEther() &&
+      amount.toEther() >= minAmountRef.current?.toEther?.() &&
+      amount.toEther() <= maxAmountRef?.current.toEther?.() &&
       !error,
     maxAmount: maxAmount,
     amount: amountText,
     error,
     setMaxAmount(value = Balance.Empty) {
+      Logger.log('setMaxAmount', value);
       maxAmountRef.current = value;
       setMaxAmount(value);
     },
     setMinAmount(value = Balance.Empty) {
+      Logger.log('setMinAmount', value);
       minAmountRef.current = value;
       setMinAmount(value);
     },
-    setMax: () => {
+    setMax() {
       Logger.log('set max', maxAmountRef.current);
-      const a =
-        Math.floor(
-          maxAmountRef.current.toFloat() / minAmountRef.current.toFloat(),
-        ) * minAmountRef.current.toFloat();
+
       setAmount(({changed: _changed}) => ({
-        amountText: String(a),
-        amount: maxAmount,
+        amountText:
+          maxAmountRef?.current?.toFloatString?.() ||
+          maxAmount?.toFloatString?.(),
+        amount: maxAmountRef?.current || maxAmount,
+        changed: _changed,
+      }));
+    },
+    setMin: () => {
+      Logger.log('set min', minAmountRef.current);
+      setAmount(({changed: _changed}) => ({
+        amountText:
+          minAmountRef?.current?.toFloatString?.() ||
+          minAmount?.toFloatString?.(),
+        amount: minAmountRef?.current || minAmount,
         changed: _changed,
       }));
     },
@@ -108,8 +119,8 @@ export function useSumAmount(
           .replace(/^0[0-9]/gm, '0')
           .substring(
             0,
-            (minAmountRef?.current?.getPrecission() ||
-              maxAmountRef?.current?.getPrecission() ||
+            (minAmountRef?.current?.getPrecission?.() ||
+              maxAmountRef?.current?.getPrecission?.() ||
               WEI_PRECISION) + 1,
           );
 

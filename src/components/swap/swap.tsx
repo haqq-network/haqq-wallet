@@ -57,7 +57,7 @@ export interface SwapProps {
   t1Available: Balance;
   onPressWrap(): Promise<void>;
   onPressUnrap(): Promise<void>;
-  estimate(): Promise<void>;
+  estimate(token?: Balance): Promise<void>;
   onPressMax(): Promise<void>;
   onPressChangeTokenIn(): Promise<void>;
   onPressChangeTokenOut(): Promise<void>;
@@ -97,7 +97,6 @@ export const Swap = observer(
       <View style={styles.container}>
         <WalletRow
           item={currentWallet}
-          hideArrow
           type={WalletRowTypes.variant2}
           onPress={onPressChangeWallet}
         />
@@ -116,7 +115,7 @@ export const Swap = observer(
           autoFocus={true}
           showMaxButton={true}
           onPressMax={onPressMax}
-          onBlur={estimate}
+          onBlur={() => estimate(t0Current)}
           onPressChangeToken={onPressChangeTokenIn}
         />
 
@@ -131,7 +130,6 @@ export const Swap = observer(
           availableBalance={t1Available}
           isLoading={isEstimating}
           token={tokenOut}
-          onBlur={estimate}
           onPressChangeToken={onPressChangeTokenOut}
         />
 

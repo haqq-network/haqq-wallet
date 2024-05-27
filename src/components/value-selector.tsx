@@ -2,7 +2,7 @@ import React, {useCallback, useState} from 'react';
 
 import {StyleProp, ViewStyle} from 'react-native';
 
-import {PopupContainer} from '@app/components/ui';
+import {PopupContainer, Text, TextVariant} from '@app/components/ui';
 import {AwaitValue} from '@app/helpers/await-for-value';
 
 import {ValueRow} from './value-row';
@@ -13,8 +13,8 @@ interface Props {
   style?: StyleProp<ViewStyle>;
   renderCell?: (
     value: any,
-    checked: boolean,
-    onPress: (value: any) => void,
+    idx: number,
+    onPress: (value: any, idx: number) => void,
   ) => React.ReactNode;
   onValueSelected?(index: number, value: any): void;
 }
@@ -29,8 +29,7 @@ export const ValueSelector = ({
   const [selected, setSelected] = useState(initialIndex);
 
   const handleValuePress = useCallback(
-    (value: AwaitValue) => {
-      const idx = values.indexOf(value);
+    (value: AwaitValue, idx: number) => {
       Logger.log('ValueSelector', 'handleValuePress', idx, {value});
       if (idx > -1) {
         setSelected(idx);
@@ -44,14 +43,17 @@ export const ValueSelector = ({
     <PopupContainer style={style}>
       {values?.map?.((value, idx) => {
         return typeof renderCell === 'function' ? (
-          renderCell(value, idx === selected, v => handleValuePress(v))
+          <React.Fragment key={value.id}>
+            <Text variant={TextVariant.t13}>idx: {idx}</Text>
+            {renderCell(value, idx, (v, i) => handleValuePress(v, i))}
+          </React.Fragment>
         ) : (
           <ValueRow
             key={value.id}
             item={value}
             hideArrow
             checked={idx === selected}
-            onPress={handleValuePress}
+            onPress={v => handleValuePress(v, idx)}
           />
         );
       })}

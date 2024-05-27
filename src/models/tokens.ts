@@ -222,7 +222,7 @@ class TokensStore implements MobXStore<IToken> {
     const balance = app.getAvailableBalance(wallet.address);
 
     return {
-      id: wallet.address as HaqqCosmosAddress,
+      id: WETH_MAINNET_ADDRESS as HaqqCosmosAddress,
       contract_created_at: '',
       contract_updated_at: '',
       value: balance,

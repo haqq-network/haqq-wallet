@@ -27,8 +27,8 @@ export type Props = {
   tokens: IToken[];
   tokensOnly?: boolean;
   hideWalletSummary?: boolean;
-  onPressToken?: (wallet: Wallet, token: IToken) => void;
-  checkTokenSelected?: (wallet: Wallet, token: IToken) => boolean;
+  onPressToken?: (wallet: Wallet, token: IToken, idx: number) => void;
+  checkTokenSelected?: (wallet: Wallet, token: IToken, idx: number) => boolean;
   onPressWallet?: (wallet: Wallet) => void;
   isLast?: boolean;
 };
@@ -53,16 +53,16 @@ export const WalletCard = ({
   );
 
   if (tokensOnly) {
-    return tokens.map(token => {
+    return tokens.map((token, idx) => {
       if (!token || !wallet) {
         return null;
       }
       return (
         <TokenRow
           key={generateUUID()}
-          onPress={() => onPressToken?.(wallet, token)}
+          onPress={() => onPressToken?.(wallet, token, idx)}
           item={token}
-          checked={checkTokenSelected?.(wallet, token)}
+          checked={checkTokenSelected?.(wallet, token, idx)}
         />
       );
     });
@@ -124,7 +124,7 @@ export const WalletCard = ({
         </>
       )}
 
-      {tokens.map(token => {
+      {tokens.map((token, idx) => {
         if (!token || !wallet) {
           return null;
         }
@@ -132,8 +132,8 @@ export const WalletCard = ({
           <TokenRow
             key={generateUUID()}
             item={token}
-            onPress={() => onPressToken?.(wallet, token)}
-            checked={checkTokenSelected?.(wallet, token)}
+            onPress={() => onPressToken?.(wallet, token, idx)}
+            checked={checkTokenSelected?.(wallet, token, idx)}
           />
         );
       })}

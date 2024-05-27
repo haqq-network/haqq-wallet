@@ -37,6 +37,7 @@ export const ValueSelectorScreen = () => {
   useFocusEffect(
     useCallback(() => {
       return () => {
+        Logger.log('✅ ValueSelectorScreen', 'useFocusEffect', {selectedIndex});
         if (selectedIndex.current > -1 && values[selectedIndex.current]) {
           app.emit(
             `value-selected${eventSuffix}`,

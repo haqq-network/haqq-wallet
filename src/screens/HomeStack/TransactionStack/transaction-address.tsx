@@ -99,19 +99,20 @@ export const TransactionAddressScreen = observer(() => {
             },
           );
         } else {
-          const hide = showModal(ModalType.loading, {
-            text: 'Loading token balances',
-          });
-          try {
-            await Promise.all([
-              Token.fetchTokens(true, true),
-              awaitForEventDone(Events.onBalanceSync),
-            ]);
-          } catch {
-          } finally {
-            hide();
+          if (!Token.tokens?.[AddressUtils.toEth(route.params.from)]) {
+            const hide = showModal(ModalType.loading, {
+              text: 'Loading token balances',
+            });
+            try {
+              await Promise.all([
+                Token.fetchTokens(true, true),
+                awaitForEventDone(Events.onBalanceSync),
+              ]);
+            } catch {
+            } finally {
+              hide();
+            }
           }
-
           navigation.navigate(TransactionStackRoutes.TransactionSelectCrypto, {
             from: AddressUtils.toEth(route.params.from),
             to: AddressUtils.toEth(result),
