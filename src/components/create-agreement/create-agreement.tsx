@@ -86,17 +86,17 @@ const styles = createTheme({
   },
   title: {
     marginBottom: 4,
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
   disclaimer: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
     marginBottom: 20,
   },
   button: {
     marginHorizontal: 20,
   },
   agreement: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
     marginBottom: 16,
   },
 });

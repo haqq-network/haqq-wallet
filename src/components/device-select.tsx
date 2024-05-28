@@ -46,7 +46,7 @@ export const DeviceSelect = memo(
 
 const styles = createTheme({
   container: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
     paddingVertical: 10,
     alignItems: 'center',
   },

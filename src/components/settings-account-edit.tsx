@@ -75,7 +75,7 @@ export const SettingsAccountEdit = ({
 const page = StyleSheet.create({
   container: {
     flex: 1,
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
     marginTop: 12,
   },
 });

@@ -20,7 +20,7 @@ export const AddressHeader = () => {
 
 const page = StyleSheet.create({
   container: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
     marginVertical: 12,
   },
 });

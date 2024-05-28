@@ -156,7 +156,7 @@ export function StackedVestedTokens({
 
 const styles = createTheme({
   container: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
     paddingVertical: 12,
     marginVertical: 12,
     borderTopWidth: 1,

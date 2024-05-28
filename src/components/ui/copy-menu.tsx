@@ -1,7 +1,12 @@
 import React, {useCallback, useMemo} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
-import {TouchableWithoutFeedback, View, ViewProps} from 'react-native';
+import {
+  I18nManager,
+  TouchableWithoutFeedback,
+  View,
+  ViewProps,
+} from 'react-native';
 import {
   Menu,
   MenuOption,
@@ -13,6 +18,7 @@ import {Color} from '@app/colors';
 import {SolidLine} from '@app/components/solid-line';
 import {Icon, IconsName} from '@app/components/ui/icon';
 import Popover from '@app/components/ui/popover';
+import {RTLReverse} from '@app/components/ui/rtl-reverse';
 import {Spacer} from '@app/components/ui/spacer';
 import {Text, TextVariant} from '@app/components/ui/text';
 import {createTheme} from '@app/helpers';
@@ -77,21 +83,27 @@ export const CopyMenu = ({
         optionsContainerStyle={styles.optionsContainer}
         customStyles={optionCustomStyles}>
         <MenuOption onSelect={onCopyPress} style={styles.option}>
-          <Text variant={TextVariant.t11} i18n={I18N.copyAddress} />
-          <Icon i22 name={IconsName.copy} color={Color.textBase1} />
+          <RTLReverse>
+            <Text variant={TextVariant.t11} i18n={I18N.copyAddress} />
+            <Icon i22 name={IconsName.copy} color={Color.textBase1} />
+          </RTLReverse>
         </MenuOption>
         <SolidLine width="100%" color={Color.graphicSecond2} />
         <MenuOption onSelect={onBech32CopyPress} style={styles.option}>
-          <Text variant={TextVariant.t11} i18n={I18N.copyBech32Address} />
-          <Spacer width={16} />
-          <Icon i22 name={IconsName.copy} color={Color.textBase1} />
+          <RTLReverse>
+            <Text variant={TextVariant.t11} i18n={I18N.copyBech32Address} />
+            <Spacer width={16} />
+            <Icon i22 name={IconsName.copy} color={Color.textBase1} />
+          </RTLReverse>
         </MenuOption>
         {withSettings && (
           <>
             <SolidLine width="100%" color={Color.graphicSecond2} />
             <MenuOption onSelect={onPressSettings} style={styles.option}>
-              <Text variant={TextVariant.t11} i18n={I18N.homeSettingsTitle} />
-              <Icon i22 name={IconsName.settings} color={Color.textBase1} />
+              <RTLReverse>
+                <Text variant={TextVariant.t11} i18n={I18N.homeSettingsTitle} />
+                <Icon i22 name={IconsName.settings} color={Color.textBase1} />
+              </RTLReverse>
             </MenuOption>
           </>
         )}
@@ -108,7 +120,7 @@ const styles = createTheme({
   optionsContainer: {
     borderRadius: 12,
     backgroundColor: Color.graphicSecond1,
-    transform: [{translateX: -32}],
+    transform: [{translateX: I18nManager.isRTL ? +32 : -32}],
   },
   option: {
     flexDirection: 'row',

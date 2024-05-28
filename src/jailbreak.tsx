@@ -58,7 +58,7 @@ const styles = createTheme({
   },
   content: {
     flex: 1,
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
     alignItems: 'center',
     justifyContent: 'center',
   },

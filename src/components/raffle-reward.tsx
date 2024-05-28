@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
   button: {
     width: '100%',
