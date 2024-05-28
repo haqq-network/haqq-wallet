@@ -346,7 +346,7 @@ export const BackupVerify = ({
 
 const styles = createTheme({
   container: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
   title: {marginTop: 20, marginBottom: 4},
   textStyle: {

@@ -50,6 +50,6 @@ export const SettingsTheme = ({
 
 const styles = createTheme({
   container: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
 });

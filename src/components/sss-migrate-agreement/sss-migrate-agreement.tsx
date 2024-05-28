@@ -65,7 +65,7 @@ const page = StyleSheet.create({
   },
   container: {
     alignItems: 'center',
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
   content: {
     width: '100%',

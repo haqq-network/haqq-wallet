@@ -99,7 +99,7 @@ export const OnboardingBiometry = ({
 };
 
 const style = StyleSheet.create({
-  container: {marginHorizontal: 20},
+  container: {paddingHorizontal: 20},
   title: {marginBottom: 12},
   space: {justifyContent: 'center', alignItems: 'center'},
   icon: {marginBottom: 40},

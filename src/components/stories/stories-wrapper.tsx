@@ -34,8 +34,10 @@ export const StoriesWrapper = observer(({onStoryPress}: Props) => {
 
   return (
     <ScrollView
+      bounces={false}
       horizontal
-      contentContainerStyle={styles.container}
+      contentContainerStyle={styles.scrollViewContentContainer}
+      style={styles.container}
       showsHorizontalScrollIndicator={false}
       scrollEnabled={!Stories.isLoading}>
       {content()}
@@ -45,7 +47,11 @@ export const StoriesWrapper = observer(({onStoryPress}: Props) => {
 
 const styles = createTheme({
   container: {
-    paddingLeft: 8,
+    paddingHorizontal: 8,
     marginBottom: 6,
+  },
+  scrollViewContentContainer: {
+    flexGrow: 1,
+    justifyContent: 'flex-start',
   },
 });

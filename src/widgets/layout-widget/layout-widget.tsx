@@ -31,7 +31,7 @@ export const LayoutWidget = ({direction, children, deep}: Props) => {
 
 const styles = StyleSheet.create({
   removeMargin: {marginHorizontal: 0},
-  wrapper: {flex: 1, marginHorizontal: 20},
+  wrapper: {flex: 1, paddingHorizontal: 20},
   row: {flexDirection: 'row'},
   column: {flexDirection: 'column'},
 });

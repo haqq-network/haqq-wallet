@@ -2,7 +2,11 @@ import React, {memo, useCallback} from 'react';
 
 import {CreateAgreement} from '@app/components/create-agreement';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {SignUpStackParamList, SignUpStackRoutes} from '@app/route-types';
+import {
+  SignUpStackParamList,
+  SignUpStackRoutes,
+  WelcomeStackRoutes,
+} from '@app/route-types';
 
 export const SignUpAgreementScreen = memo(() => {
   const navigation = useTypedNavigation<SignUpStackParamList>();
@@ -10,7 +14,7 @@ export const SignUpAgreementScreen = memo(() => {
     SignUpStackParamList,
     SignUpStackRoutes.SignUpAgreement
   >().params;
-  const onPressAgree = useCallback(() => {
+  const onPressRegularWallet = useCallback(() => {
     //@ts-ignore
     return navigation.navigate(params.nextScreen, {
       //@ts-ignore
@@ -20,5 +24,15 @@ export const SignUpAgreementScreen = memo(() => {
     });
   }, [navigation, params.nextScreen]);
 
-  return <CreateAgreement testID="signup_agreement" onDone={onPressAgree} />;
+  const onPressHardwareWallet = () => {
+    navigation.navigate(WelcomeStackRoutes.Device);
+  };
+
+  return (
+    <CreateAgreement
+      testID="signup_agreement"
+      onPressHardwareWallet={onPressHardwareWallet}
+      onPressRegularWallet={onPressRegularWallet}
+    />
+  );
 });

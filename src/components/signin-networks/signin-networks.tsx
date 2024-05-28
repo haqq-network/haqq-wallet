@@ -13,6 +13,7 @@ import {
   TextPosition,
   TextVariant,
 } from '@app/components/ui';
+import {HardwareWalletButton} from '@app/components/ui/hardware-wallet-button';
 import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
@@ -28,6 +29,7 @@ export type SssNetworksProps = {
   isCustomSupported: boolean;
   onLogin: (provider: SssProviders) => Promise<void>;
   onSkip: () => void;
+  onPressHardwareWallet: () => void;
 };
 
 export const SigninNetworks = observer(
@@ -37,6 +39,7 @@ export const SigninNetworks = observer(
     isAppleSupported,
     isGoogleSupported,
     isCustomSupported,
+    onPressHardwareWallet,
   }: SssNetworksProps) => {
     const [isApple, setIsApple] = useState(false);
     const [isGoogle, setIsGoogle] = useState(false);
@@ -152,6 +155,11 @@ export const SigninNetworks = observer(
           onPress={onSkip}
           i18n={I18N.signinNetworksSkip}
           variant={ButtonVariant.contained}
+          testID="signin_network_skip"
+        />
+        <Spacer height={16} />
+        <HardwareWalletButton
+          onPress={onPressHardwareWallet}
           testID="signin_network_skip"
         />
         <Spacer height={16} />

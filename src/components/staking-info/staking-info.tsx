@@ -274,7 +274,7 @@ const styles = createTheme({
     marginBottom: 8,
   },
   withHorizontalPadding: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
   footer: {
     bottom: 0,

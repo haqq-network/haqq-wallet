@@ -73,7 +73,7 @@ const styles = createTheme({
   },
   container: {
     flex: 1,
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
     backgroundColor: getColor(Color.bg1),
   },
   input: {

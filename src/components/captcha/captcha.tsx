@@ -7,6 +7,7 @@ import {WebViewMessageEvent} from 'react-native-webview';
 import {Color, getColor} from '@app/colors';
 import {createTheme, getWindowHeight, getWindowWidth} from '@app/helpers';
 import {useTheme} from '@app/hooks';
+import {RemoteConfig} from '@app/services/remote-config';
 import {AppTheme} from '@app/types';
 
 import {Hcaptcha, Ocaptcha, ReCaptchaV2, SliderCaptcha, Turnstile} from './';
@@ -64,7 +65,7 @@ export const Captcha = ({
             <View style={styles.whiteBox} />
             <Hcaptcha
               siteKey={Config.HCAPTCHA_SITE_KEY}
-              url={Config.HCAPTCHA_URL}
+              url={RemoteConfig.get('local_captcha_url') ?? Config.HCAPTCHA_URL}
               showLoading
               size={'compact'}
               onMessage={onMessage}

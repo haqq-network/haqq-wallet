@@ -193,7 +193,7 @@ export const Swap = observer(
 
 const styles = createTheme({
   container: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
     flex: 1,
   },
   amountContainer: {

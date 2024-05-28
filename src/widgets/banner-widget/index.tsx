@@ -1,6 +1,13 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
-import {Image, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
+import {
+  I18nManager,
+  Image,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import {Color, getColor} from '@app/colors';
@@ -145,10 +152,10 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: 16,
     padding: 16,
-    flex: 1,
   },
   inner: {
     borderRadius: 16,
+    transform: [{rotateY: I18nManager.isRTL ? '180deg' : '0deg'}],
     ...StyleSheet.absoluteFillObject,
   },
   closeButton: {

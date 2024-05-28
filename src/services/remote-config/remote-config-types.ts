@@ -63,4 +63,6 @@ export type RemoteConfigTypes = RemoteConfigBalanceTypes &
     tx_timestamp_headers: boolean;
     indexer_sentry_capture_exeption_throttle_ms: number;
     ws_updates: string;
+    contests_url: string;
+    local_captcha_url: string;
   };

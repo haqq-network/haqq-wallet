@@ -239,7 +239,7 @@ export const SettingsAccountStyle = ({
 
 const styles = createTheme({
   container: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
   card: {
     marginHorizontal: 16,

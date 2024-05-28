@@ -169,12 +169,23 @@ export const Icon = ({name, style, color, ...props}: IconProps) => {
     [color, props, style],
   );
   const icon = useMemo(() => ({uri: name}), [name]);
+  const rtlSupportedIcons = useMemo(
+    () => [
+      IconsName.arrow_back,
+      IconsName.arrow_forward,
+      IconsName.arrow_forward_small,
+      IconsName.arrow_sort,
+    ],
+    [],
+  );
   return (
     <Image
       source={icon}
       style={[
+        I18nManager.isRTL &&
+          rtlSupportedIcons.includes(name as IconsName) &&
+          styles.rtl,
         container,
-        I18nManager.isRTL && name.includes('arrow') && styles.rtl,
       ]}
     />
   );

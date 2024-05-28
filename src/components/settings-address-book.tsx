@@ -77,7 +77,7 @@ export const SettingsAddressBook = ({
 const styles = createTheme({
   input: {
     marginBottom: 12,
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
   badge: {
     marginRight: 12,
