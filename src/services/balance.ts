@@ -1,5 +1,6 @@
 import Decimal from 'decimal.js';
 import {BigNumber, BigNumberish} from 'ethers';
+import {I18nManager} from 'react-native';
 
 import {cleanNumber} from '@app/helpers/clean-number';
 import {Currencies} from '@app/models/currencies';
@@ -157,6 +158,10 @@ export class Balance implements IBalance, ISerializable {
       fixedNum = fixed;
     }
 
+    const isRTL = I18nManager.isRTL;
+    if (isRTL) {
+      return `${this.symbol} ${this.toFloatString(fixedNum, precission)}`;
+    }
     return this.toFloatString(fixedNum, precission) + ` ${this.symbol}`;
   };
 
@@ -285,6 +290,10 @@ export class Balance implements IBalance, ISerializable {
   toWei = () => this.toNumber();
 
   toWeiString = () => {
+    const isRTL = I18nManager.isRTL;
+    if (isRTL) {
+      return `a${this.symbol} ${this.toWei()}`;
+    }
     return this.toWei() + ` a${this.symbol}`;
   };
 

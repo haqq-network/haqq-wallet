@@ -91,10 +91,10 @@ const page = createTheme({
   },
   title: {
     marginBottom: 4,
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
   disclaimer: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
   submit: {
     marginBottom: 16,

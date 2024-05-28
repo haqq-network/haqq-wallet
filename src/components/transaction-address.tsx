@@ -261,7 +261,7 @@ const styles = createTheme({
     marginHorizontal: 20,
   },
   marginHorizontal: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
   keyboardSafeArea: {
     flex: 1,

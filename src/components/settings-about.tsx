@@ -97,7 +97,7 @@ const calculateImageSize = () => getWindowWidth() * 0.8;
 
 const styles = createTheme({
   content: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
     flexGrow: 1,
   },
   title: {

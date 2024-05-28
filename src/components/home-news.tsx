@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   flexOne: {flex: 1},
   row: {
     flexDirection: 'row',
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
     alignItems: 'center',
   },
 });

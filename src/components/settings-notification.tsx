@@ -81,7 +81,7 @@ export const SettingsNotification = ({
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
     flex: 1,
     alignItems: 'center',
   },

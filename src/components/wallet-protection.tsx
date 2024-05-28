@@ -129,7 +129,7 @@ const styles = createTheme({
   container: {
     alignItems: 'center',
     flex: 1,
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
     justifyContent: 'space-around',
   },
   shield: {

@@ -68,6 +68,6 @@ export const WalletSelectorScreen = memo(() => {
 
 const styles = createTheme({
   walletSelector: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
 });

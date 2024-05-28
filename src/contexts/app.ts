@@ -457,8 +457,6 @@ class App extends AsyncEventEmitter {
         passwordEntity = JSON.parse(creds.password);
       } catch {}
       // If we can't parse entity or we have invalid fiedls
-
-      const oldBiometry = this.biometry;
       if (
         passwordEntity === null ||
         !passwordEntity?.cipher ||
@@ -467,6 +465,11 @@ class App extends AsyncEventEmitter {
       ) {
         Logger.error('iOS Keychain Migration Error Found:', creds);
         const walletToCheck = this.getWalletForPinRestore();
+        // Save old biometry
+        const biomentryMigrationKey = 'biometry_before_migration';
+        if (!VariablesBool.exists(biomentryMigrationKey)) {
+          VariablesBool.set(biomentryMigrationKey, this.biometry);
+        }
         this.biometry = false;
 
         // Reset app if we have main Hardware Wallet
@@ -496,7 +499,8 @@ class App extends AsyncEventEmitter {
               creds.password,
             );
 
-            this.biometry = oldBiometry;
+            this.biometry = VariablesBool.get(biomentryMigrationKey);
+            VariablesBool.remove(biomentryMigrationKey);
             return resp.password;
           } else {
             app.failureEnter();

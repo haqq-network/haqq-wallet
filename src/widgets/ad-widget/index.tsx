@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react';
 
 import {
+  I18nManager,
   Image,
   LayoutChangeEvent,
   StyleProp,
@@ -20,6 +21,7 @@ import {
   Inline,
   Spacer,
   Text,
+  TextPosition,
 } from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
 import {onDeepLink} from '@app/event-actions/on-deep-link';
@@ -114,11 +116,15 @@ export const AdWidget = ({banner, style}: HomeBannerProps) => {
             source={{uri: banner.backgroundImage}}
           />
         )}
-        <Text color={getColor(banner.titleColor ?? Color.textBase1)} t8>
+        <Text
+          position={TextPosition.left}
+          color={getColor(banner.titleColor ?? Color.textBase1)}
+          t8>
           {banner.title}
         </Text>
         {banner.description && (
           <Text
+            position={TextPosition.left}
             style={styles.description}
             color={getColor(banner.descriptionColor ?? Color.textBase2)}
             t15>
@@ -181,6 +187,7 @@ const styles = StyleSheet.create({
     minHeight: 111,
   },
   inner: {
+    transform: [{rotateY: I18nManager.isRTL ? '180deg' : '0deg'}],
     borderRadius: 13,
     ...StyleSheet.absoluteFillObject,
   },

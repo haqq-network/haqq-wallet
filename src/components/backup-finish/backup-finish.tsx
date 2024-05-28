@@ -60,7 +60,7 @@ export const BackupFinish = ({onSubmit, testID}: BackupFinishProps) => {
 };
 
 const page = createTheme({
-  popupContainer: {marginHorizontal: 20},
+  popupContainer: {paddingHorizontal: 20},
   container: {justifyContent: 'center', alignItems: 'center'},
   title: {marginBottom: 40},
   button: {marginVertical: 16},
