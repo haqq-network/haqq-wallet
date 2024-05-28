@@ -1139,6 +1139,7 @@ export const SettingsTestScreen = observer(() => {
             storage: STORAGE_TYPE.AES,
             accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
           });
+          Alert.alert('Done! Please restart the app');
         }}
         variant={ButtonVariant.contained}
       />
