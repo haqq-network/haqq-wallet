@@ -92,7 +92,7 @@ const style = createTheme({
     height: 64,
   },
   container: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -187,7 +187,7 @@ const page = createTheme({
     flex: 1,
   },
   container: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
   button: {
     marginBottom: 20,

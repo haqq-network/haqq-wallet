@@ -28,6 +28,6 @@ export const TransactionAccount = ({
 
 const styles = createTheme({
   container: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
 });

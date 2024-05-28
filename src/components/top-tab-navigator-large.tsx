@@ -1,6 +1,6 @@
 import React, {memo, useCallback} from 'react';
 
-import {View} from 'react-native';
+import {I18nManager, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Animated, {
   Easing,
@@ -45,11 +45,12 @@ export const TopTabNavigatorLarge = memo(
     );
     const offset = useSharedValue(activeTabIndex * tabLayout.width);
 
-    const calcOffset = useCallback(
-      (index: number, width: number) =>
-        index * width + TAB_PADDING * 2 * (index + 1) - TAB_PADDING,
-      [],
-    );
+    const calcOffset = useCallback((index: number, width: number) => {
+      const result =
+        index * width + TAB_PADDING * 2 * (index + 1) - TAB_PADDING;
+      const isRTL = I18nManager.isRTL;
+      return isRTL ? -result : result;
+    }, []);
 
     const animate = useCallback(
       (index: number, cb: () => void) => {

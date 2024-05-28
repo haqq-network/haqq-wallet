@@ -263,7 +263,7 @@ const styles = createTheme({
     marginBottom: 12,
   },
   container: {
-    marginHorizontal: CONTAINER_MARGIN,
+    paddingHorizontal: CONTAINER_MARGIN,
   },
   header: {
     marginTop: 15,

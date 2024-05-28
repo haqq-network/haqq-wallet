@@ -133,7 +133,7 @@ const styles = createTheme({
   container: {
     flex: 1,
     alignItems: 'center',
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
   spacer: {
     justifyContent: 'center',

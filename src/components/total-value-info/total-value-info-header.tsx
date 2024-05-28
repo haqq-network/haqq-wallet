@@ -55,6 +55,6 @@ const styles = createTheme({
     borderRadius: 4,
   },
   header: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
 });

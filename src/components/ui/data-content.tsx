@@ -3,7 +3,7 @@ import React from 'react';
 import {TextProps, View, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Text} from '@app/components/ui/text';
+import {Text, TextPosition} from '@app/components/ui/text';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
@@ -61,17 +61,15 @@ export const DataContent = ({
         </Text>
       </View>
       {(subtitleI18n || subtitle) && (
-        <>
-          {/* @ts-expect-error */}
-          <Text
-            t14
-            i18n={subtitleI18n}
-            i18params={subtitleI18nParams}
-            color={Color.textBase2}
-            {...(subtitleProps || {})}>
-            {subtitle}
-          </Text>
-        </>
+        <Text
+          t14
+          i18n={subtitleI18n!}
+          i18params={subtitleI18nParams}
+          color={Color.textBase2}
+          position={TextPosition.left}
+          {...(subtitleProps || {})}>
+          {subtitle}
+        </Text>
       )}
     </View>
   );

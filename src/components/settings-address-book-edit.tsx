@@ -104,7 +104,7 @@ export const SettingsAddressBookEdit = memo(
 const styles = createTheme({
   container: {
     flex: 1,
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
     marginTop: 12,
   },
   spaceInput: {height: 24},

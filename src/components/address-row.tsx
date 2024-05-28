@@ -40,7 +40,7 @@ const page = createTheme({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
   badge: {
     marginRight: 12,

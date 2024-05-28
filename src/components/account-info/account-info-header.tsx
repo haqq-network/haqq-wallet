@@ -112,7 +112,7 @@ export const AccountInfoHeader = ({
 
 const styles = createTheme({
   header: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
     flexDirection: 'row',
   },
   headerContent: {

@@ -1,12 +1,18 @@
 import * as React from 'react';
 import {useCallback, useMemo} from 'react';
 
-import {StyleSheet, TouchableOpacity, ViewProps} from 'react-native';
+import {
+  I18nManager,
+  StyleSheet,
+  TouchableOpacity,
+  ViewProps,
+} from 'react-native';
 import Config from 'react-native-config';
 
 export type IconButtonProps = ViewProps & {
   onPress?: () => void | Promise<void>;
   disabled?: boolean;
+  fixed?: boolean;
 };
 
 export const IconButton = ({
@@ -14,6 +20,7 @@ export const IconButton = ({
   children,
   disabled,
   onPress,
+  fixed = false,
   ...props
 }: IconButtonProps) => {
   const containerStyle = useMemo(
@@ -27,6 +34,17 @@ export const IconButton = ({
     }
   }, [disabled, onPress]);
 
+  const content = useMemo(() => {
+    const isRTL = I18nManager.isRTL;
+    if (isRTL && !fixed) {
+      if (Array.isArray(children)) {
+        const copy = [...children];
+        return copy.reverse();
+      }
+    }
+    return children;
+  }, [children, fixed]);
+
   return (
     <TouchableOpacity
       style={containerStyle}
@@ -34,7 +52,7 @@ export const IconButton = ({
       {...props}
       disabled={disabled || !onPress}
       onPress={onPressButton}>
-      {children}
+      {content}
     </TouchableOpacity>
   );
 };

@@ -67,7 +67,7 @@ export const NftCollectionDetails = ({
 const styles = createTheme({
   container: {
     flex: 1,
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
   scroll: {
     flex: 1,

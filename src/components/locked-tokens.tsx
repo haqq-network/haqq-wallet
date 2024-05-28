@@ -120,7 +120,7 @@ export function LockedTokens({balance, onForwardPress}: LockedTokensProps) {
 
 const styles = createTheme({
   container: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
   row: {
     flexDirection: 'row',

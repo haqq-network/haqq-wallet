@@ -66,6 +66,6 @@ export const ValueSelectorScreen = () => {
 
 const styles = createTheme({
   valueSelector: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
 });

@@ -67,15 +67,15 @@ const page = createTheme({
   },
   title: {
     marginBottom: 4,
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
   disclaimer: {
     marginBottom: 20,
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
   submit: {marginBottom: 16, marginHorizontal: 20},
   agreement: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
     marginBottom: 16,
   },
   image: {

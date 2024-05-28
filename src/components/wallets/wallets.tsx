@@ -90,7 +90,8 @@ export const Wallets = ({
         showsHorizontalScrollIndicator={false}
         scrollEventThrottle={16}
         onScroll={scrollHandler}
-        style={styles.scroll}>
+        style={styles.scroll}
+        contentContainerStyle={styles.content}>
         {wallets.map((w, i) => {
           let isSecondMnemonic =
             w.isImported ||
@@ -180,7 +181,13 @@ export const Wallets = ({
 };
 
 const styles = createTheme({
-  scroll: {overflow: 'hidden'},
+  content: {
+    flexGrow: 1,
+    flexDirection: 'row',
+  },
+  scroll: {
+    overflow: 'hidden',
+  },
   sub: {
     justifyContent: 'center',
     alignItems: 'center',
