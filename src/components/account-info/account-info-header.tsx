@@ -18,6 +18,7 @@ import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
+import {HaqqEthereumAddress, IToken} from '@app/types';
 
 import {StackedVestedTokens} from '../stacked-vested-tokens';
 
@@ -35,6 +36,7 @@ export type AccountInfoProps = {
   onPressInfo: () => void;
   onSend: () => void;
   onReceive: () => void;
+  tokens: Record<HaqqEthereumAddress, IToken[]>;
 };
 
 export const AccountInfoHeader = ({
@@ -48,10 +50,21 @@ export const AccountInfoHeader = ({
   onSend,
   onReceive,
   unlock,
+  tokens,
 }: AccountInfoProps) => {
   const formattedAddress = useMemo(
     () => shortAddress(wallet.address, '•'),
     [wallet.address],
+  );
+  const fiatBalance = useMemo(
+    () =>
+      tokens[wallet.address]
+        .map(item => item.value)
+        .reduce((prev, cur) => {
+          return prev.operate(cur, 'add');
+        }, Balance.Empty)
+        .toFiat({fixed: 4}),
+    [tokens, wallet?.address],
   );
 
   return (
@@ -67,6 +80,9 @@ export const AccountInfoHeader = ({
         />
         <View style={styles.headerContent}>
           <Text t3 children={total.toFiat({useDefaultCurrency: true})} />
+          <View style={styles.usdWrapper}>
+            <Text style={styles.usdText} t13 children={fiatBalance} />
+          </View>
           <CopyMenu
             value={wallet.address}
             style={styles.copyButton}
@@ -111,6 +127,16 @@ export const AccountInfoHeader = ({
 };
 
 const styles = createTheme({
+  usdText: {
+    alignSelf: 'flex-start',
+  },
+  usdWrapper: {
+    backgroundColor: Color.graphicSecond1,
+    alignSelf: 'flex-start',
+    paddingHorizontal: 4,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
   header: {
     marginHorizontal: 20,
     flexDirection: 'row',
