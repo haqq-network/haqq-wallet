@@ -10,6 +10,7 @@ import {
   IconButton,
   IconsName,
   Text,
+  TextPosition,
   TextVariant,
 } from '@app/components/ui';
 import {SearchLine} from '@app/components/ui/custom-header/search-line';
@@ -55,17 +56,21 @@ export const SettingsCurrency = observer(() => {
     ({item}) => {
       return (
         <IconButton
+          fixed
           testID={item.id}
           onPress={setSelectedCurrency(item.id)}
           style={styles.listItemContainer}>
           <View style={styles.currencyInfoContainer}>
             <ImageWrapper source={{uri: item.icon}} style={styles.icon} />
             <View style={styles.descriptionContainer}>
-              <Text variant={TextVariant.t11} style={styles.currencyTitle}>
+              <Text
+                position={TextPosition.left}
+                variant={TextVariant.t11}
+                style={styles.currencyTitle}>
                 {item.title}
               </Text>
               <View>
-                <Text color={Color.textBase2}>
+                <Text position={TextPosition.left} color={Color.textBase2}>
                   {getCurrencyDescription(item)}
                 </Text>
               </View>

@@ -42,7 +42,7 @@ export const SettingsAccounts = ({onPressRow, rows}: SettingsAccountsProps) => {
 };
 
 const styles = createTheme({
-  container: {paddingHorizontal: 20, flex: 1},
+  container: {marginHorizontal: 20, flex: 1},
   emptyContainer: {
     justifyContent: 'center',
     alignItems: 'center',

@@ -1218,6 +1218,6 @@ export const SettingsTestScreen = observer(() => {
 
 const styles = createTheme({
   container: {
-    paddingHorizontal: 20,
+    marginHorizontal: 20,
   },
 });
