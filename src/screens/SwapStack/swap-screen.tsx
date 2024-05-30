@@ -19,6 +19,7 @@ import {AwaitValue, awaitForValue} from '@app/helpers/await-for-value';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {useSumAmount, useTypedRoute} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {Contracts} from '@app/models/contracts';
 import {Currencies} from '@app/models/currencies';
 import {Token} from '@app/models/tokens';
 import {Wallet} from '@app/models/wallet';
@@ -35,6 +36,7 @@ import {
   Indexer,
   SushiPoolEstimateResponse,
   SushiPoolResponse,
+  SushiRoute,
 } from '@app/services/indexer';
 import {
   HaqqCosmosAddress,
@@ -77,13 +79,55 @@ export const SwapScreen = observer(() => {
   const [isEstimating, setIsEstimating] = useState(false);
   const [isSwapInProgress, setSwapInProgress] = useState(false);
   const [isApproveInProgress, setApproveInProgress] = useState(false);
-  const [tokenIn, setTokenIn] = useState<IContract | null>(null);
-  const [tokenOut, setTokenOut] = useState<IContract | null>(null);
+  const [currentRoute, setCurrentRoute] = useState<SushiRoute | null>(null);
+  const [poolsData, setPoolsData] = useState<SushiPoolResponse>({
+    contracts: [],
+    routes: [],
+  });
+  const [estimateData, setEstimateData] =
+    useState<SushiPoolEstimateResponse | null>(null);
+  // const [tokenIn, setTokenIn] = useState<IContract | null>(null);
+  // const [tokenOut, setTokenOut] = useState<IContract | null>(null);
   const [currentWallet, setCurrentWallet] = useState(
     Wallet.getById(params.address)!,
   );
-  const [estimateData, setEstimateData] =
-    useState<SushiPoolEstimateResponse | null>(null);
+
+  const tokenIn = useMemo(
+    () =>
+      poolsData.contracts?.find?.(it =>
+        AddressUtils.equals(
+          it.eth_address!,
+          (currentRoute || poolsData.routes[0])?.token0!,
+        ),
+      ) ||
+      Contracts.getAll().find(it =>
+        AddressUtils.equals(
+          it.eth_address!,
+          (currentRoute || poolsData.routes[0])?.token0!,
+        ),
+      ),
+    [currentRoute, poolsData],
+  );
+  const tokenOut = useMemo(
+    () =>
+      poolsData.contracts?.find?.(it =>
+        AddressUtils.equals(
+          it.eth_address!,
+          (currentRoute || poolsData.routes[0])?.token1!,
+        ),
+      ) ||
+      Contracts.getAll().find(it =>
+        AddressUtils.equals(
+          it.eth_address!,
+          (currentRoute || poolsData.routes[0])?.token1!,
+        ),
+      ),
+    [currentRoute, poolsData, estimateData],
+  );
+  logger.log('tokenIn', tokenIn);
+  logger.log('tokenOut', tokenOut);
+  logger.log('currentRoute', currentRoute);
+  logger.log('poolsData.contracts', poolsData.contracts);
   const amountsOut = useSumAmount(
     undefined,
     undefined,
@@ -95,14 +139,10 @@ export const SwapScreen = observer(() => {
     app.getAvailableBalance(currentWallet.address),
     MIN_SWAP_AMOUNT,
   );
-  const [poolsData, setPoolsData] = useState<SushiPoolResponse>({
-    contracts: [],
-    pools: [],
-  });
   const isLoading = useMemo(
     () =>
       !poolsData?.contracts?.length ||
-      !poolsData?.pools?.length ||
+      !poolsData?.routes?.length ||
       !tokenIn ||
       !tokenOut,
     [tokenIn, tokenOut, poolsData],
@@ -197,11 +237,10 @@ export const SwapScreen = observer(() => {
       setIsEstimating(true);
       setEstimateData(null);
 
-      if (
-        t0Current?.getSymbol?.() !== tokenIn?.symbol ||
-        !t0Current?.compare?.('0x0', 'gte')
-      ) {
+      if (t0Current?.compare?.('0x0', 'lte')) {
         setEstimateData(null);
+        vibrate(HapticEffects.impactLight);
+        Keyboard.dismiss();
         return amountsOut.setAmount('0');
       }
 
@@ -240,8 +279,9 @@ export const SwapScreen = observer(() => {
       const response = await Indexer.instance.sushiPoolEstimate({
         amount: t0Current.toHex(),
         sender: currentWallet.address,
-        token_in: tokenIn?.eth_address!,
-        token_out: tokenOut?.eth_address!,
+        // token_in: tokenIn?.eth_address!,
+        // token_out: tokenOut?.eth_address!,
+        route: currentRoute?.route_hex!,
         currency_id: Currencies.currency?.id,
         abortSignal: estimateAbortController.current.signal,
       });
@@ -287,33 +327,74 @@ export const SwapScreen = observer(() => {
           }
         }
 
-        // can be used for showing multiply wallet ERC20 token balances
-        const values = [currentWallet].map(it => ({
-          id: it.address,
-          wallet: it,
-          tokens: poolsData?.contracts
-            ?.map(
-              c =>
-                (Token.tokens[AddressUtils.toEth(it.address)]?.find(
-                  i => i.id === c.id,
-                ) as IToken) ||
-                ({
-                  ...c,
-                  image: c.icon,
-                  value: new Balance(0, 0, c?.symbol!),
-                } as unknown as IToken),
-            )
-            .map(t => ({
-              ...t,
-              id: `${it.address}_${t.id}` as HaqqCosmosAddress,
-            })),
-          title: it.name,
-          subtitle: it.address,
-        })) as AwaitValue<{wallet: Wallet; tokens: IToken[]}>[];
+        const isToken0 = AddressUtils.equals(
+          currentRoute?.token0!,
+          initialValue.eth_address!,
+        );
+
+        const possibleRoutesForSwap = poolsData.routes
+          .filter(it =>
+            isToken0
+              ? AddressUtils.equals(it.token1, tokenOut?.eth_address!) &&
+                !AddressUtils.equals(it.token0, tokenOut?.eth_address!)
+              : AddressUtils.equals(it.token0, tokenIn?.eth_address!) &&
+                !AddressUtils.equals(it.token1, tokenIn?.eth_address!),
+          )
+          .map(it => {
+            const tokenAddress = isToken0 ? it.token0 : it.token1;
+            const tokens =
+              Token.tokens[AddressUtils.toEth(currentWallet.address)] || [];
+            const tokenContract = tokens.find(token =>
+              AddressUtils.equals(token.id, tokenAddress),
+            );
+
+            if (tokenContract) {
+              return {
+                ...tokenContract,
+                id: `${currentWallet.address}_${tokenAddress}` as HaqqCosmosAddress,
+                eth_address: AddressUtils.toEth(tokenAddress),
+              };
+            }
+
+            const contract =
+              poolsData.contracts?.find(c =>
+                AddressUtils.equals(
+                  c?.eth_address!,
+                  isToken0 ? it.token0 : it.token1,
+                ),
+              ) ||
+              Contracts.getAll().find(c =>
+                AddressUtils.equals(
+                  c?.eth_address!,
+                  isToken0 ? it.token0 : it.token1,
+                ),
+              );
+
+            if (contract) {
+              return {
+                ...contract,
+                id: `${currentWallet.address}_${tokenAddress}` as HaqqCosmosAddress,
+                image: contract.icon,
+                value: new Balance(0, 0, contract?.symbol!),
+                eth_address: AddressUtils.toEth(tokenAddress),
+              } as unknown as IToken;
+            }
+
+            return undefined;
+          })
+          .filter(Boolean) as IToken[];
 
         const {value, index} = await awaitForValue({
           title: 'Select token',
-          values: values,
+          values: [
+            {
+              id: currentWallet.address,
+              wallet: currentWallet,
+              tokens: possibleRoutesForSwap,
+              title: currentWallet.name,
+              subtitle: currentWallet.address,
+            },
+          ] as AwaitValue<{wallet: Wallet; tokens: IToken[]}>[],
           closeOnSelect: true,
           renderCell: (
             // eslint-disable-next-line @typescript-eslint/no-shadow
@@ -446,6 +527,8 @@ export const SwapScreen = observer(() => {
       if (!token || !wallet || !tokenIn || !tokenOut) {
         return;
       }
+      vibrate(HapticEffects.impactLight);
+      Keyboard.dismiss();
       setIsEstimating(() => true);
       amountsOut.setAmount('0');
       logger.log('onPressChangeTokenIn', token.symbol);
@@ -453,14 +536,27 @@ export const SwapScreen = observer(() => {
         setCurrentWallet(() => wallet);
       }
       logger.log('token', token);
-      if (
+
+      const needChangeTokenOut =
         AddressUtils.equals(token.eth_address!, tokenOut?.eth_address!) &&
-        token.symbol === tokenOut.symbol
-      ) {
-        setTokenOut(() => tokenIn);
+        token.symbol === tokenOut.symbol;
+
+      const filteredRoutes = poolsData.routes.filter(r =>
+        AddressUtils.equals(r.token0!, token?.eth_address!),
+      );
+      if (needChangeTokenOut) {
+        const route = filteredRoutes.find(r =>
+          AddressUtils.equals(r.token1!, tokenIn?.eth_address!),
+        );
+        setCurrentRoute(route || filteredRoutes[0]);
+      } else {
+        const route = filteredRoutes.find(r =>
+          AddressUtils.equals(r.token1!, tokenOut?.eth_address!),
+        );
+        setCurrentRoute(route! || filteredRoutes[0]);
       }
-      setTokenIn(() => token);
       const {value} = await refreshTokenBalances(wallet.address, token);
+
       amountsIn.setMin();
       return await estimate(
         value || new Balance(token.value, token?.decimals!, token?.symbol!),
@@ -479,22 +575,35 @@ export const SwapScreen = observer(() => {
       if (!token || !wallet || !tokenIn || !tokenOut) {
         return;
       }
-      setIsEstimating(() => true);
+
+      vibrate(HapticEffects.impactLight);
+      Keyboard.dismiss();
       amountsOut.setAmount('0');
-      setTokenOut(() => token);
+      setIsEstimating(() => true);
       setCurrentWallet(() => wallet);
 
-      if (
+      const needChangeTokenIn =
         AddressUtils.equals(token.eth_address!, tokenIn?.eth_address!) &&
-        token.symbol === tokenIn.symbol
-      ) {
-        setTokenIn(() => tokenOut);
-        const {value} = await refreshTokenBalances(wallet.address, tokenOut);
-        return await estimate(value);
+        token.symbol === tokenIn.symbol;
+
+      const filteredRoutes = poolsData.routes.filter(r =>
+        AddressUtils.equals(r.token1!, token?.eth_address!),
+      );
+
+      if (needChangeTokenIn) {
+        const route = filteredRoutes.find(r =>
+          AddressUtils.equals(r.token0!, tokenOut?.eth_address!),
+        );
+        setCurrentRoute(route || filteredRoutes[0]);
       } else {
-        const {value} = await refreshTokenBalances(wallet.address, tokenIn);
-        return await estimate(value);
+        const route = filteredRoutes.find(r =>
+          AddressUtils.equals(r.token0!, tokenIn?.eth_address!),
+        );
+        setCurrentRoute(route! || filteredRoutes[0]);
       }
+      const {value} = await refreshTokenBalances(wallet.address, tokenIn);
+
+      return await estimate(value);
     } catch (err) {
       Logger.error(err, 'onPressChangeTokenOut');
       logger.captureException(err, 'onPressChangeTokenOut');
@@ -809,36 +918,44 @@ export const SwapScreen = observer(() => {
     setCurrentWallet(() => Wallet.getById(address)!);
   }, [currentWallet, refreshTokenBalances, tokenIn]);
 
+  const onInputBlur = useCallback(async () => {
+    vibrate(HapticEffects.impactLight);
+    Keyboard.dismiss();
+    setIsEstimating(() => true);
+    await estimate();
+  }, [estimate, setIsEstimating]);
+
   useEffect(() => {
-    if (tokenIn && tokenOut) {
+    if (currentRoute) {
       logger.log('useEffect estimate()');
       refreshTokenBalances(currentWallet.address, tokenIn).then(({value}) =>
         estimate(value),
       );
     }
-  }, [tokenIn, tokenOut, currentWallet]);
+  }, [tokenIn, tokenOut, currentWallet, currentRoute]);
 
   useFocusEffect(
     useCallback(() => {
-      if (!poolsData.contracts.length && !poolsData.pools.length) {
+      if (!poolsData.contracts.length && !poolsData.routes.length) {
         logger.log('useFocusEffect');
         Indexer.instance
           .sushiPools()
           .then(async data => {
             data.contracts.unshift(Token.generateIslamicTokenContract());
             setPoolsData(() => data);
-            setTokenIn(
-              () => ({...data.contracts[0], value: Balance.Empty}) as IContract,
+            setCurrentRoute(
+              () =>
+                data.routes.find(r =>
+                  AddressUtils.equals(r.token0, WETH_MAINNET_ADDRESS),
+                ) || data.routes[1],
             );
-            setTokenOut(
-              () => ({...data.contracts[1], value: Balance.Empty}) as IContract,
-            );
+            return estimate();
           })
           .catch(err =>
             logger.captureException(err, 'useFocusEffect:Indexer.sushiPools'),
           );
       }
-    }, [setTokenIn, setTokenOut, poolsData]),
+    }, [poolsData, setCurrentRoute, estimate]),
   );
 
   if (isLoading) {
@@ -872,6 +989,7 @@ export const SwapScreen = observer(() => {
       estimate={estimate}
       onPressChangeWallet={onPressChangeWallet}
       onPressMax={onPressMax}
+      onInputBlur={onInputBlur}
     />
   );
 });

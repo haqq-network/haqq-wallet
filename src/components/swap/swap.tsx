@@ -59,6 +59,7 @@ export interface SwapProps {
   onPressUnrap(): Promise<void>;
   estimate(token?: Balance): Promise<void>;
   onPressMax(): Promise<void>;
+  onInputBlur(): Promise<void>;
   onPressChangeTokenIn(): Promise<void>;
   onPressChangeTokenOut(): Promise<void>;
   onPressSwap(): Promise<void>;
@@ -85,12 +86,13 @@ export const Swap = observer(
     currentWallet,
     onPressWrap,
     onPressUnrap,
-    estimate,
+    // estimate,
     onPressChangeTokenIn,
     onPressChangeTokenOut,
     onPressApprove,
     onPressChangeWallet,
     onPressSwap,
+    onInputBlur,
     onPressMax,
   }: SwapProps) => {
     return (
@@ -115,7 +117,7 @@ export const Swap = observer(
           autoFocus={true}
           showMaxButton={true}
           onPressMax={onPressMax}
-          onBlur={() => estimate(t0Current)}
+          onBlur={onInputBlur}
           onPressChangeToken={onPressChangeTokenIn}
         />
 

@@ -48,7 +48,7 @@
     "@haqq/provider-mnemonic-react-native": "0.0.14",
     "@haqq/provider-sss-react-native": "0.0.14",
     "@haqq/provider-web3-utils": "0.0.14",
-    "@haqq/shared-react-native": "0.0.11",
+    "@haqq/shared-react-native": "0.0.12",
     "@invertase/react-native-apple-authentication": "2.2.2",
     "@keystonehq/bc-ur-registry-eth": "0.7.7",
     "@keystonehq/ur-decoder": "0.12.2",

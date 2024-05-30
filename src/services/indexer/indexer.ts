@@ -279,8 +279,9 @@ export class Indexer {
   async sushiPoolEstimate({
     amount,
     sender,
-    token_in,
-    token_out,
+    // token_in,
+    // token_out,
+    route,
     currency_id,
     abortSignal,
   }: SushiPoolEstimateRequest): Promise<SushiPoolEstimateResponse> {
@@ -293,8 +294,9 @@ export class Indexer {
         app.provider.indexer,
         'sushiPoolEstimate',
         [
-          AddressUtils.toHaqq(token_in),
-          AddressUtils.toHaqq(token_out),
+          route,
+          // AddressUtils.toHaqq(token_in),
+          // AddressUtils.toHaqq(token_out),
           AddressUtils.toHaqq(sender),
           amount,
           currency_id,
