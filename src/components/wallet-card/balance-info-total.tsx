@@ -61,7 +61,6 @@ export const BalanceInfoTotal = observer(
               i16
               name={IconsName.arrow_forward}
               color={Color.graphicBase3}
-              style={styles.openDetailsIcon}
             />
           </View>
         </View>
@@ -84,8 +83,6 @@ const styles = createTheme({
     borderRadius: 8,
     transform: [{translateY: -4}],
     backgroundColor: CARD_ACTION_CONTAINER_BG,
-  },
-  openDetailsIcon: {
-    transform: [{translateX: -4}],
+    paddingRight: 7,
   },
 });

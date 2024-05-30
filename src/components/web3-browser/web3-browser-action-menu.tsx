@@ -80,7 +80,7 @@ export const Web3BrowserActionMenu = ({
   }, [isRTL]);
   return (
     <>
-      {!showActionMenu && (
+      {!!showActionMenu && (
         <>
           <View
             onTouchEnd={toggleActionMenu}
