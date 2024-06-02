@@ -40,7 +40,8 @@ export const SettingsLanguage = ({
               style={styles.button}
               onPress={() => {
                 onUpdatelanguage(item);
-              }}>
+              }}
+              fixed>
               <DataContent title={item.title} subtitle={item.local_title} />
               {language === item.id && (
                 <Icon name="check" color={Color.graphicGreen1} i24 />
@@ -55,10 +56,9 @@ export const SettingsLanguage = ({
 
 const styles = createTheme({
   container: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
   button: {
-    paddingVertical: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },

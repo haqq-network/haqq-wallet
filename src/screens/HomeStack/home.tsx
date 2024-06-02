@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {
   BottomTabNavigationOptions,
@@ -7,8 +7,10 @@ import {
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 import {NavigationAction} from '@react-navigation/routers';
 import {TransitionPresets} from '@react-navigation/stack';
+import _ from 'lodash';
 import {observer} from 'mobx-react';
 import {StatusBar} from 'react-native';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 import {Color} from '@app/colors';
 import {HomeScreenLabel} from '@app/components/home-screen/label';
@@ -18,6 +20,7 @@ import {Loading, Spacer} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {showModal} from '@app/helpers';
+import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
@@ -109,7 +112,24 @@ export const HomeScreen = observer(() => {
     item => item.type === WalletType.sss && !!item.socialLinkEnabled,
   );
 
-  const check = async () => {
+  const findDeepestValues = useCallback((obj: Record<string, unknown>) => {
+    const rootKeys = Object.keys(obj);
+    const result = {};
+
+    for (let key of rootKeys) {
+      let deepestValue = obj[key];
+      while (typeof deepestValue === 'object') {
+        //@ts-expect-error
+        deepestValue = deepestValue[key];
+      }
+      //@ts-expect-error
+      result[key] = deepestValue;
+    }
+
+    return result;
+  }, []);
+
+  const checkSSSCloudShare = async () => {
     if (walletToCheck && walletToCheck.accountId) {
       const storage = await getProviderStorage(walletToCheck.accountId);
       //TODO: Verify cloud share
@@ -123,8 +143,65 @@ export const HomeScreen = observer(() => {
     }
   };
 
+  const checkMnemonicLocalShare = async () => {
+    const mnemonicWallets = Wallet.getAllVisible().filter(
+      wallet => wallet.type === WalletType.mnemonic,
+    );
+
+    mnemonicWallets.forEach(async wallet => {
+      const storageKey = `mnemonic_${wallet.accountId}`;
+      const shareRaw = await EncryptedStorage.getItem(storageKey);
+      let shareParsed = null;
+      if (!shareRaw) {
+        const address = wallet.address.toLowerCase();
+        await Wallet.remove(address);
+        await awaitForEventDone(Events.onWalletRemove, address);
+        return;
+      }
+
+      try {
+        shareParsed = JSON.parse(shareRaw);
+      } catch (err) {
+        Logger.error(
+          'checkMnemonicLocalShare cant parse share:',
+          shareRaw,
+          err,
+        );
+      }
+
+      if (shareParsed && typeof shareParsed === 'object') {
+        //Verify required keys
+        const requiredKeys = [
+          'nonce',
+          'polynomialID',
+          'publicShare',
+          'shareIndex',
+        ];
+        const shareKeys = Object.keys(shareParsed);
+        const hasRequiredKeys = requiredKeys.every(k => shareKeys.includes(k));
+
+        if (!hasRequiredKeys) {
+          Logger.error('checkMnemonicLocalShare:', shareParsed);
+          return;
+        }
+
+        // Fix deep values
+        const valueRaw = findDeepestValues(shareParsed);
+
+        // Do we have changes?
+        const isEqual = _.isEqual(valueRaw, shareParsed);
+
+        if (!isEqual) {
+          const value = JSON.stringify(valueRaw);
+          await EncryptedStorage.setItem(storageKey, value);
+        }
+      }
+    });
+  };
+
   useEffectAsync(async () => {
-    await check();
+    await checkSSSCloudShare();
+    await checkMnemonicLocalShare();
 
     const subscription = (e: {
       preventDefault: () => void;

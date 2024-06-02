@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import {observer} from 'mobx-react';
 
 import {
@@ -42,6 +43,7 @@ export const ChooseAccountScreen = observer(() => {
   const [walletsToCreate, updateWalletsToCreate] = useState<
     ChooseAccountItem[]
   >([]);
+  const [focus, setFocus] = useState(false);
 
   const generator = useRef<ReturnType<typeof getWalletsFromProvider> | null>(
     null,
@@ -100,6 +102,7 @@ export const ChooseAccountScreen = observer(() => {
         index += 1;
       }
       const wallets = result.map(item => item.address);
+
       const balances = await safeLoadBalances(wallets);
 
       const resultWithBalances = result.map(item => ({
@@ -115,6 +118,9 @@ export const ChooseAccountScreen = observer(() => {
   );
 
   useEffectAsync(async () => {
+    if (!focus) {
+      return;
+    }
     setLoading(true);
     try {
       walletProvider.current = params.provider;
@@ -140,7 +146,7 @@ export const ChooseAccountScreen = observer(() => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [focus]);
 
   const onTabChanged = useCallback((item: ChooseAccountTabNames) => {
     setAddresses([]);
@@ -228,6 +234,16 @@ export const ChooseAccountScreen = observer(() => {
     walletProvider.current,
     Wallet.getAll().length,
   ]);
+
+  useFocusEffect(
+    useCallback(() => {
+      setFocus(true);
+    }, []),
+  );
+
+  if (!focus) {
+    return null;
+  }
 
   return (
     <ChooseAccount

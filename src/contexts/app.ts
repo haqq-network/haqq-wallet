@@ -3,7 +3,7 @@ import {appleAuth} from '@invertase/react-native-apple-authentication';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {subMinutes} from 'date-fns';
-import {AppState, Appearance, Platform, StatusBar} from 'react-native';
+import {Alert, AppState, Appearance, Platform, StatusBar} from 'react-native';
 import Config from 'react-native-config';
 import Keychain, {
   STORAGE_TYPE,
@@ -13,6 +13,7 @@ import Keychain, {
 import TouchID from 'react-native-touch-id';
 
 import {DEBUG_VARS} from '@app/debug-vars';
+import {onAppReset} from '@app/event-actions/on-app-reset';
 import {onUpdatesSync} from '@app/event-actions/on-updates-sync';
 import {Events} from '@app/events';
 import {AddressUtils} from '@app/helpers/address-utils';
@@ -22,12 +23,14 @@ import {checkNeedUpdate} from '@app/helpers/check-app-version';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {getUid} from '@app/helpers/get-uid';
 import {SecurePinUtils} from '@app/helpers/secure-pin-utils';
+import {I18N, getText} from '@app/i18n';
 import {Currencies} from '@app/models/currencies';
 import {seedData} from '@app/models/seed-data';
 import {Token} from '@app/models/tokens';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
 import {VestingMetadataType} from '@app/models/vesting-metadata';
+import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
@@ -35,7 +38,7 @@ import {EventTracker} from '@app/services/event-tracker';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {RemoteConfig} from '@app/services/remote-config';
 
-import {showModal} from '../helpers';
+import {hideAll, showModal} from '../helpers';
 import {Provider} from '../models/provider';
 import {User} from '../models/user';
 import {
@@ -47,6 +50,7 @@ import {
   IndexerBalanceData,
   MarketingEvents,
   ModalType,
+  WalletType,
 } from '../types';
 import {
   LIGHT_GRAPHIC_GREEN_1,
@@ -91,6 +95,7 @@ class App extends AsyncEventEmitter {
       ios: appleAuth.isSupported,
     }) || false;
   private _systemTheme: AppTheme = Appearance.getColorScheme() as AppTheme;
+  public passwordCorrupted: boolean = false;
 
   constructor() {
     super();
@@ -404,7 +409,22 @@ class App extends AsyncEventEmitter {
       return Promise.resolve();
     }
 
-    await this.auth();
+    let shouldSkipAuth = false;
+    try {
+      await this.getPassword();
+    } catch (err) {
+      if (err === 'password_migration_not_possible') {
+        shouldSkipAuth = true;
+      }
+      if (err === 'password_not_migrated') {
+        app.successEnter();
+        app.passwordCorrupted = true;
+      }
+    } finally {
+      if (!shouldSkipAuth) {
+        await this.auth();
+      }
+    }
 
     await awaitForEventDone(Events.onWalletsBalanceCheck);
 
@@ -415,8 +435,83 @@ class App extends AsyncEventEmitter {
     return Promise.resolve();
   }
 
-  async getPassword() {
+  private getWalletForPinRestore = () => {
+    const possibleToRestoreWalletTypes = [
+      WalletType.hot,
+      WalletType.mnemonic,
+      WalletType.sss,
+    ];
+    const possibleToRestoreWallet = Wallet.getAll().find(wallet =>
+      possibleToRestoreWalletTypes.includes(wallet.type),
+    );
+    return possibleToRestoreWallet;
+  };
+
+  async getPassword(pinCandidate?: string): Promise<string> {
     const creds = await getGenericPassword();
+
+    // Detect keychain migration
+    if (creds) {
+      let passwordEntity = null;
+      try {
+        passwordEntity = JSON.parse(creds.password);
+      } catch {}
+      // If we can't parse entity or we have invalid fiedls
+      if (
+        passwordEntity === null ||
+        !passwordEntity?.cipher ||
+        !passwordEntity?.iv ||
+        !passwordEntity?.salt
+      ) {
+        Logger.error('iOS Keychain Migration Error Found:', creds);
+        const walletToCheck = this.getWalletForPinRestore();
+        // Save old biometry
+        const biomentryMigrationKey = 'biometry_before_migration';
+        if (!VariablesBool.exists(biomentryMigrationKey)) {
+          VariablesBool.set(biomentryMigrationKey, this.biometry);
+        }
+        this.biometry = false;
+
+        // Reset app if we have main Hardware Wallet
+        if (!walletToCheck) {
+          this.onboarded = false;
+          await onAppReset();
+          hideAll();
+          Alert.alert(getText(I18N.keychainMigrationNotPossible));
+          return Promise.reject('password_migration_not_possible');
+        }
+
+        if (!pinCandidate) {
+          return Promise.reject('password_not_migrated');
+        }
+
+        // Try to verify old pin
+        try {
+          const isValid = await SecurePinUtils.checkPinCorrect(
+            walletToCheck,
+            pinCandidate,
+          );
+          if (isValid) {
+            creds.password = await this.setPin(pinCandidate);
+            const uid = await getUid();
+            const resp = await decryptPassworder<{password: string}>(
+              uid,
+              creds.password,
+            );
+
+            this.biometry = VariablesBool.get(biomentryMigrationKey);
+            VariablesBool.remove(biomentryMigrationKey);
+            return resp.password;
+          } else {
+            app.failureEnter();
+            return Promise.reject('password_migration_not_matched');
+          }
+        } catch (err) {
+          Logger.error('iOS Keychain Migration Error:', err);
+        }
+      }
+    }
+
     if (!creds || !creds.password || creds.username !== this.user.uuid) {
       return Promise.reject('password_not_found');
     }
@@ -450,17 +545,24 @@ class App extends AsyncEventEmitter {
   }
 
   async comparePin(pin: string) {
+    const passwordsDoNotMatch = new Error('password_do_not_match');
     if (this.canEnter) {
-      const password = await this.getPassword();
-      return password === pin ? Promise.resolve() : Promise.reject();
+      try {
+        const password = await this.getPassword(pin);
+        return password === pin
+          ? Promise.resolve()
+          : Promise.reject(passwordsDoNotMatch);
+      } catch (err) {
+        return Promise.reject(err);
+      }
     }
 
-    return Promise.reject();
+    return Promise.reject(passwordsDoNotMatch);
   }
 
   async auth() {
     this.resetAuth();
-    const close = showModal('pin');
+    const close = showModal(ModalType.pin);
     if (SecurePinUtils.isPinChangedWithFail()) {
       try {
         await SecurePinUtils.rollbackPin();
@@ -509,9 +611,8 @@ class App extends AsyncEventEmitter {
 
   pinAuth() {
     return new Promise<boolean>(async (resolve, _reject) => {
-      const password = await this.getPassword();
-
-      const callback = (value: string) => {
+      const callback = async (value: string) => {
+        const password = await this.getPassword();
         if (password === value) {
           this.off('enterPin', callback);
           this.emit(Events.enterPinSuccess);
@@ -526,7 +627,7 @@ class App extends AsyncEventEmitter {
   }
 
   async requsetPinConfirmation(): Promise<boolean> {
-    const close = showModal('pin');
+    const close = showModal(ModalType.pin);
     const confirmed = await Promise.race([
       this.makeBiometryAuth(),
       this.pinAuth(),

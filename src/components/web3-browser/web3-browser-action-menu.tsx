@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
-import {LayoutRectangle, StyleSheet, View} from 'react-native';
+import {I18nManager, LayoutRectangle, StyleSheet, View} from 'react-native';
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
@@ -68,9 +68,19 @@ export const Web3BrowserActionMenu = ({
   onPressPrivacy,
 }: Web3BrowserActionMenuProps) => {
   const insets = useSafeAreaInsets();
+  const isRTL = useMemo(() => I18nManager.isRTL, []);
+  const actionMenuStyle = useMemo(() => {
+    const x = moreIconLayout.x! - ACTION_MENU_WIDTH + moreIconLayout.width! * 2;
+    const y = moreIconLayout.height! + moreIconLayout.y! + 5 + insets.top;
+
+    return {
+      left: isRTL ? -x : x,
+      top: isRTL ? y + 5 : y,
+    };
+  }, [isRTL]);
   return (
     <>
-      {showActionMenu && (
+      {!!showActionMenu && (
         <>
           <View
             onTouchEnd={toggleActionMenu}
@@ -81,17 +91,7 @@ export const Web3BrowserActionMenu = ({
             ]}
           />
           <Animated.View
-            style={[
-              styles.actionMenu,
-              {
-                left:
-                  moreIconLayout.x! -
-                  ACTION_MENU_WIDTH +
-                  moreIconLayout.width! * 2,
-                top:
-                  moreIconLayout.height! + moreIconLayout.y! + 5 + insets.top,
-              },
-            ]}
+            style={[styles.actionMenu, actionMenuStyle]}
             entering={FadeIn}
             exiting={FadeOut}>
             {!!currentSessionOrigin && (

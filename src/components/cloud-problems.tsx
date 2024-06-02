@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   container: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
     alignItems: 'center',
     flex: 1,
     justifyContent: 'space-between',

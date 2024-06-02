@@ -1,7 +1,7 @@
 {
   "StakingInfoUnDelegationDay": " ({{day}} يوم متبقي)",
   "StakingInfoUnDelegationDays": " (بقي {{days}} يوم)",
-  "_hash": "074120e3c7a48107dd0154648a07b2362c33fd2a9b8f9f697831f6a4929a0e96",
+  "_hash": "2da541ebb892ef88faaa7620b67c3d77572e0d31a8e6c772b2cb6d69421d891b",
   "accept": "قبول",
   "accountInfoNftTabTitle": "NFTs",
   "accountInfoTokensTabTitle": "الرموز المميزة",
@@ -495,7 +495,7 @@
   "settingsAboutDiscord": "الخلاف",
   "settingsAboutDocuments": "المستندات القانونية",
   "settingsAboutPrivacyPolicy": "سياسة الخصوصية",
-  "settingsAboutRights": "الإصدار ${getAppVersion()} (${getBuildNumber()})",
+  "settingsAboutRights": "الإصدار {{appVersion}} ({{buildNumber}})",
   "settingsAboutSocials": "شبكاتنا الاجتماعية",
   "settingsAboutTerms": "الشروط والأحكام",
   "settingsAboutTitle": "حول التطبيق",

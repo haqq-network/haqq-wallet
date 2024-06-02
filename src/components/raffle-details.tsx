@@ -209,7 +209,7 @@ const styles = createTheme({
     width: '100%',
   },
   container: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
     alignItems: 'center',
     flex: 0,
   },

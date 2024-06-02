@@ -125,6 +125,7 @@ export const SssMigrateNetworks = ({
             i18n={I18N.sssNetworkWeb3AuthDescription}
             color={Color.textBase2}
           />
+          <Spacer height={16} />
         </>
       )}
     </PopupContainer>
@@ -133,8 +134,8 @@ export const SssMigrateNetworks = ({
 
 const styles = createTheme({
   logo: {
-    width: 148,
-    height: 148,
+    width: 375,
+    height: 160,
   },
   container: {
     flex: 1,

@@ -75,7 +75,6 @@ export function LockedTokens({balance, onForwardPress}: LockedTokensProps) {
               i12
               color={Color.graphicSecond4}
               name={IconsName.arrow_forward}
-              style={styles.icon}
             />
           </IconButton>
         </View>
@@ -120,7 +119,7 @@ export function LockedTokens({balance, onForwardPress}: LockedTokensProps) {
 
 const styles = createTheme({
   container: {
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
   row: {
     flexDirection: 'row',
@@ -134,8 +133,6 @@ const styles = createTheme({
     justifyContent: 'center',
     backgroundColor: Color.graphicSecond1,
     borderRadius: 8,
-  },
-  icon: {
-    transform: [{translateX: -2.5}],
+    paddingRight: 5,
   },
 });

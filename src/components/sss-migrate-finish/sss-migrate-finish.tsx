@@ -57,7 +57,7 @@ const page = createTheme({
   },
   popupContainer: {
     alignItems: 'center',
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
     flex: 1,
   },
   button: {

@@ -87,7 +87,7 @@ const styles = createTheme({
     alignItems: 'center',
     marginTop: () => verticalScale(40),
     paddingBottom: 16,
-    marginHorizontal: 20,
+    paddingHorizontal: 20,
   },
   spacer: {justifyContent: 'center', alignItems: 'center'},
   dots: {

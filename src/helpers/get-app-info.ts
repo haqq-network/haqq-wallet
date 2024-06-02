@@ -5,12 +5,14 @@ import {NetworkInfo} from 'react-native-network-info';
 import {app} from '@app/contexts';
 import {getLeadingAccount} from '@app/helpers/get-leading-account';
 import {getUid} from '@app/helpers/get-uid';
+import {Currencies} from '@app/models/currencies';
+import {Language} from '@app/models/language';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
 import {EventTracker} from '@app/services/event-tracker';
 import {PushNotifications} from '@app/services/push-notifications';
-import {getAppVersion} from '@app/services/version';
+import {getAppVersion, getBuildNumber} from '@app/services/version';
 import {
   NEWS_TOPIC_VARIABLE_NAME,
   RAFFLE_TOPIC_VARIABLE_NAME,
@@ -34,6 +36,9 @@ export type AppInfo = {
     news: boolean;
     raffle: boolean;
   };
+  buildNumber: string;
+  currency: string | null;
+  locale: string;
 };
 
 export async function getAppInfo(): Promise<AppInfo> {
@@ -43,6 +48,9 @@ export async function getAppInfo(): Promise<AppInfo> {
   const adjust_id = await EventTracker.instance.getAdid('adjust');
   const ipAddress = await NetworkInfo.getIPAddress();
   const leadingAccount = getLeadingAccount();
+  const buildNumber = getBuildNumber();
+  const currency = Currencies.currency?.id ?? null;
+  const locale = Language.current;
 
   const token = await PushNotifications.instance.getToken();
   return {
@@ -62,5 +70,8 @@ export async function getAppInfo(): Promise<AppInfo> {
       news: VariablesBool.get(NEWS_TOPIC_VARIABLE_NAME),
       raffle: VariablesBool.get(RAFFLE_TOPIC_VARIABLE_NAME),
     },
+    buildNumber,
+    currency,
+    locale,
   };
 }

@@ -10434,7 +10434,7 @@ __metadata:
     react-native-toast-message: 2.2.0
     react-native-touch-id: 4.4.1
     react-native-video: 6.0.0
-    react-native-video-cache-control: 1.2.2
+    react-native-video-cache: 2.7.4
     react-native-webview: 13.8.1
     react-test-renderer: 18.2.0
     react-timer-mixin: 0.13.4
@@ -16002,13 +16002,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-video-cache-control@npm:1.2.2":
-  version: 1.2.2
-  resolution: "react-native-video-cache-control@npm:1.2.2"
+"react-native-video-cache@npm:2.7.4":
+  version: 2.7.4
+  resolution: "react-native-video-cache@npm:2.7.4"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 5857343635fa476f089d0850ccb5e2f678c54be309eafd3df7e5a537d442052a100b1a4cdf5137eb1183932aba0da1f2774d45fb19898e8a43a9009fed2cf6ff
+  checksum: 9e737f12ea68de156f45f0d7eecfa9b68bacb8a6131c9d21a5a7289faf01e3ae8dd61e6e2aa3a5f0d02894c40253c6d86aa2c5523f7fa6736a7d819497be7be1
   languageName: node
   linkType: hard
 

@@ -46,6 +46,8 @@ import {SignInStack} from '@app/screens/WelcomeStack/SignInStack';
 
 import {NewsDetailScreen} from './HomeNewsStack/news-detail';
 
+import {SwapStack} from '../SwapStack';
+
 const navigatorOptions: NativeStackNavigationOptions = {
   gestureEnabled: false,
   freezeOnBlur: true,
@@ -250,7 +252,11 @@ const HomeStack = memo(() => {
         component={themeUpdaterHOC(InAppBrowserScreen)}
         options={inAppBrowserOptions}
       />
-
+      <Stack.Screen
+        name={HomeStackRoutes.Swap}
+        component={SwapStack}
+        options={modalOptions}
+      />
       <Stack.Screen
         name={HomeStackRoutes.NewsDetailPushNotification}
         component={themeUpdaterHOC(NewsDetailScreen)}

@@ -19,7 +19,7 @@ import {
   IndexerTokensData,
   MobXStore,
 } from '@app/types';
-import {ERC20_TOKEN_ABI} from '@app/variables/abi';
+import {ERC20_ABI} from '@app/variables/abi';
 import {CURRENCY_NAME, WEI, WEI_PRECISION} from '@app/variables/common';
 
 class TokensStore implements MobXStore<IToken> {
@@ -361,7 +361,7 @@ async function getHardcodedTokens(tokensDataToMerge: IndexerTokensData = {}) {
                           );
                         const contractInterface = new ethers.Contract(
                           contract,
-                          ERC20_TOKEN_ABI,
+                          ERC20_ABI,
                           etherProvider,
                         );
 

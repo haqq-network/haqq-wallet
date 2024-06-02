@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {I18nManager, Platform} from 'react-native';
 import Animated, {
   SharedValue,
   interpolate,
@@ -22,7 +23,8 @@ export const CarouselItem = ({
   noScale,
 }: CarouselItemProps) => {
   const animatedStyles = useAnimatedStyle(() => {
-    if (noScale) {
+    const isAndroidRTL = I18nManager.isRTL && Platform.OS === 'android';
+    if (noScale || isAndroidRTL) {
       return {
         transform: [
           {

@@ -85,6 +85,7 @@ export const AccountInfo = observer(
             onPressInfo={onPressInfo}
             onSend={onSend}
             onReceive={onReceive}
+            tokens={tokens}
           />
           <TopTabNavigator
             contentContainerStyle={styles.tabsContentContainerStyle}

@@ -575,7 +575,6 @@ export enum I18N {
   backupSssSuggestionTitle = 'backupSssSuggestionTitle',
   backupSssSuggestionDescription = 'backupSssSuggestionDescription',
   sssMigrateAgrementTitle = 'sssMigrateAgrementTitle',
-  sssMigrateAgrementDescription = 'sssMigrateAgrementDescription',
   sssMigrateAgrementWarning2 = 'sssMigrateAgrementWarning2',
   sssMigrateAgrementWarning1 = 'sssMigrateAgrementWarning1',
   sssMigrateFinishText = 'sssMigrateFinishText',
@@ -977,6 +976,11 @@ export enum I18N {
   average = 'average',
   high = 'high',
   custom = 'custom',
+  swapWidgetDescription = 'swapWidgetDescription',
+  swapWidgetTitle = 'swapWidgetTitle',
+  keychainCorrupted = 'keychainCorrupted',
+  keychainMigrationNotPossible = 'keychainMigrationNotPossible',
+  settingsOutdatedApp = 'settingsOutdatedApp',
 }
 
 const defaultTranslation = {en};
