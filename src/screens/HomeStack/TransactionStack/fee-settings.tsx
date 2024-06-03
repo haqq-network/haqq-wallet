@@ -1,6 +1,12 @@
+import {useCallback, useState} from 'react';
+
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
+import {
+  TopTabNavigator,
+  TopTabNavigatorVariant,
+} from '@app/components/top-tab-navigator';
 import {
   Button,
   ButtonVariant,
@@ -11,11 +17,14 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useTypedRoute} from '@app/hooks';
-import {I18N} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
 import {
   TransactionStackParamList,
   TransactionStackRoutes,
 } from '@app/route-types';
+
+const TABS = [I18N.low, I18N.average, I18N.high, I18N.custom];
+const INIT_TAB_INDEX = 1;
 
 export const FeeSettingsScreen = () => {
   const {params} = useTypedRoute<
@@ -23,12 +32,57 @@ export const FeeSettingsScreen = () => {
     TransactionStackRoutes.FeeSettings
   >();
 
+  const [activeTabIndex, setActiveTabIndex] = useState(INIT_TAB_INDEX);
+
+  const [gasLimit, setGasLimit] = useState('');
+  const [gasPrice, setGasPrice] = useState('');
+  const [adjustment, setAdjustment] = useState('');
+
+  const onTabChange = useCallback((tabName: string) => {
+    setActiveTabIndex(Number(tabName));
+  }, []);
+
   return (
     <View style={styles.container}>
       <View>
-        <TextField label={I18N.gasLimit} placeholder={I18N.empty} />
+        <View style={styles.tabs}>
+          <TopTabNavigator
+            contentContainerStyle={styles.tabsContentContainerStyle}
+            variant={TopTabNavigatorVariant.large}
+            onTabChange={onTabChange}
+            activeTabIndex={activeTabIndex}
+            initialTabIndex={INIT_TAB_INDEX}>
+            {TABS.map((tab, index) => (
+              <TopTabNavigator.Tab
+                key={index}
+                testID={`FeeSettings${getText(tab)}Tab`}
+                name={String(index)}
+                title={tab}
+                component={null}
+              />
+            ))}
+          </TopTabNavigator>
+        </View>
+        <TextField
+          label={I18N.gasLimit}
+          placeholder={I18N.empty}
+          value={gasLimit}
+          onChangeText={setGasLimit}
+        />
         <Spacer height={24} />
-        <TextField label={I18N.gasPrice} placeholder={I18N.empty} />
+        <TextField
+          label={I18N.gasPrice}
+          placeholder={I18N.empty}
+          value={gasPrice}
+          onChangeText={setGasPrice}
+        />
+        <Spacer height={24} />
+        <TextField
+          label={I18N.adjustment}
+          placeholder={I18N.empty}
+          value={adjustment}
+          onChangeText={setAdjustment}
+        />
         <Spacer height={28} />
         <View style={styles.fee}>
           <Text variant={TextVariant.t11}>Expected Fee</Text>
@@ -58,35 +112,10 @@ const styles = createTheme({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  // address: {
-  //   marginBottom: 40,
-  //   marginHorizontal: 27.5,
-  // },
-  // subtitle: {
-  //   marginBottom: 4,
-  // },
-  // icon: {
-  //   marginBottom: 16,
-  //   alignSelf: 'center',
-  //   width: 64,
-  //   height: 64,
-  // },
-  // info: {
-  //   borderRadius: 16,
-  //   backgroundColor: Color.bg3,
-  // },
-  // sum: {
-  //   fontWeight: '700',
-  //   fontSize: 28,
-  //   lineHeight: 38,
-  // },
-  // submit: {
-  //   marginVertical: 16,
-  // },
-  // spacer: {
-  //   justifyContent: 'center',
-  // },
-  // feeContainer: {
-  //   flexDirection: 'row',
-  // },
+  tabs: {
+    height: 64,
+  },
+  tabsContentContainerStyle: {
+    flex: 1,
+  },
 });
