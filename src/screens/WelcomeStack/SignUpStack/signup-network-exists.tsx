@@ -104,7 +104,7 @@ export const SignupNetworkExistsScreen = memo(() => {
             //@ts-ignore
             const account = await accountInfo(route.params.sssPrivateKey);
             const cloud = await getProviderStorage('', route.params.provider);
-            await cloud.removeItem(`haqq_${account.address.toLowerCase()}`);
+            await cloud.removeItem(`haqq_${account?.address?.toLowerCase()}`);
 
             const nextScreen = app.onboarded
               ? SignUpStackRoutes.SignupStoreWallet
