@@ -17,7 +17,7 @@ import {storage} from '@app/services/mmkv';
 import {applyEthTxMultiplier} from '@app/utils';
 
 import {getERC20TransferData} from './erc20';
-import {BALANCE_CACHE_KEY, FeeValues} from './types';
+import {BALANCE_CACHE_KEY, CalculatedFees} from './types';
 
 import {RemoteConfig} from '../remote-config';
 
@@ -149,11 +149,7 @@ export class EthNetwork {
     to: string,
     value: Balance,
     data = '0x',
-  ): Promise<{
-    gasLimit: Balance;
-    gasPrice: FeeValues;
-    fee: FeeValues;
-  }> {
+  ): Promise<CalculatedFees> {
     try {
       const rpcProvider = await getRpcProvider(app.provider);
       const {maxFeePerGas, maxPriorityFeePerGas} =

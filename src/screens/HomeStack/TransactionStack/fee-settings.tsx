@@ -1,4 +1,4 @@
-import {useCallback, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 
 import {View} from 'react-native';
 
@@ -24,7 +24,7 @@ import {
   TransactionStackRoutes,
 } from '@app/route-types';
 import {EthNetwork} from '@app/services';
-import {FeeValues} from '@app/services/eth-network/types';
+import {CalculatedFees} from '@app/services/eth-network/types';
 
 const TABS = [I18N.low, I18N.average, I18N.high, I18N.custom];
 const INIT_TAB_INDEX = 2;
@@ -36,49 +36,38 @@ export const FeeSettingsScreen = () => {
   >();
 
   const [activeTabIndex, setActiveTabIndex] = useState(INIT_TAB_INDEX);
+  const [feeData, setFeeData] = useState<CalculatedFees | null>(null);
 
   const [gasLimit, setGasLimit] = useState('');
   const [gasPrice, setGasPrice] = useState('');
   const [adjustment, setAdjustment] = useState('1');
   const [expectedFee, setExpectedFee] = useState('');
 
-  const _setGasPrice = useCallback(
-    (price: FeeValues) => {
+  useEffect(() => {
+    if (feeData) {
       switch (activeTabIndex) {
         case 0:
-          setGasPrice(String(price.low.toWei()));
+          setGasLimit(String(feeData.gasLimit.toWei()));
+          setGasPrice(String(feeData.gasPrice.low.toWei()));
+          setExpectedFee(String(feeData.fee.low.toBalanceString(4)));
           break;
         case 1:
-          setGasPrice(String(price.average.toWei()));
+          setGasLimit(String(feeData.gasLimit.toWei()));
+          setGasPrice(String(feeData.gasPrice.average.toWei()));
+          setExpectedFee(String(feeData.fee.average.toBalanceString(4)));
           break;
         case 2:
-          setGasPrice(String(price.high.toWei()));
+          setGasLimit(String(feeData.gasLimit.toWei()));
+          setGasPrice(String(feeData.gasPrice.high.toWei()));
+          setExpectedFee(String(feeData.fee.high.toBalanceString(4)));
           break;
         default:
+          setGasLimit('');
           setGasPrice('');
-      }
-    },
-    [activeTabIndex],
-  );
-
-  const _setExpectedFee = useCallback(
-    (fee: FeeValues) => {
-      switch (activeTabIndex) {
-        case 0:
-          setExpectedFee(String(fee.low.toBalanceString(4)));
-          break;
-        case 1:
-          setExpectedFee(String(fee.average.toBalanceString(4)));
-          break;
-        case 2:
-          setExpectedFee(String(fee.high.toBalanceString(4)));
-          break;
-        default:
           setExpectedFee('');
       }
-    },
-    [activeTabIndex],
-  );
+    }
+  }, [feeData, activeTabIndex]);
 
   useEffectAsync(async () => {
     const data = await EthNetwork.estimate(
@@ -86,9 +75,7 @@ export const FeeSettingsScreen = () => {
       params.to,
       params.amount,
     );
-    setGasLimit(String(data.gasLimit.toWei()));
-    _setGasPrice(data.gasPrice);
-    _setExpectedFee(data.fee);
+    setFeeData(data);
   }, []);
 
   const onTabChange = useCallback((tabName: string) => {
@@ -107,7 +94,7 @@ export const FeeSettingsScreen = () => {
             initialTabIndex={INIT_TAB_INDEX}>
             {TABS.map((tab, index) => (
               <TopTabNavigator.Tab
-                key={index}
+                key={getText(tab)}
                 testID={`FeeSettings${getText(tab)}Tab`}
                 name={String(index)}
                 title={tab}
@@ -121,13 +108,15 @@ export const FeeSettingsScreen = () => {
           placeholder={I18N.empty}
           value={gasLimit}
           onChangeText={setGasLimit}
+          editable={activeTabIndex === 3}
         />
         <Spacer height={24} />
         <TextField
-          label={I18N.gasPrice}
+          label={`${getText(I18N.gasPrice)} (${feeData?.gasLimit.currency})`}
           placeholder={I18N.empty}
           value={gasPrice}
           onChangeText={setGasPrice}
+          editable={activeTabIndex === 3}
         />
         <Spacer height={24} />
         <TextField
@@ -135,6 +124,7 @@ export const FeeSettingsScreen = () => {
           placeholder={I18N.empty}
           value={adjustment}
           onChangeText={setAdjustment}
+          editable={activeTabIndex === 3}
         />
         <Spacer height={28} />
         <View style={styles.fee}>

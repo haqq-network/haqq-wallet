@@ -85,3 +85,9 @@ export type FeeValues = {
   average: Balance;
   high: Balance;
 };
+
+export type CalculatedFees = {
+  gasLimit: Balance;
+  gasPrice: FeeValues;
+  fee: FeeValues;
+};
