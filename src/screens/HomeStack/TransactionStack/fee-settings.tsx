@@ -17,14 +17,17 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useTypedRoute} from '@app/hooks';
+import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N, getText} from '@app/i18n';
 import {
   TransactionStackParamList,
   TransactionStackRoutes,
 } from '@app/route-types';
+import {EthNetwork} from '@app/services';
+import {FeeValues} from '@app/services/eth-network/types';
 
 const TABS = [I18N.low, I18N.average, I18N.high, I18N.custom];
-const INIT_TAB_INDEX = 1;
+const INIT_TAB_INDEX = 2;
 
 export const FeeSettingsScreen = () => {
   const {params} = useTypedRoute<
@@ -36,7 +39,57 @@ export const FeeSettingsScreen = () => {
 
   const [gasLimit, setGasLimit] = useState('');
   const [gasPrice, setGasPrice] = useState('');
-  const [adjustment, setAdjustment] = useState('');
+  const [adjustment, setAdjustment] = useState('1');
+  const [expectedFee, setExpectedFee] = useState('');
+
+  const _setGasPrice = useCallback(
+    (price: FeeValues) => {
+      switch (activeTabIndex) {
+        case 0:
+          setGasPrice(String(price.low.toWei()));
+          break;
+        case 1:
+          setGasPrice(String(price.average.toWei()));
+          break;
+        case 2:
+          setGasPrice(String(price.high.toWei()));
+          break;
+        default:
+          setGasPrice('');
+      }
+    },
+    [activeTabIndex],
+  );
+
+  const _setExpectedFee = useCallback(
+    (fee: FeeValues) => {
+      switch (activeTabIndex) {
+        case 0:
+          setExpectedFee(String(fee.low.toBalanceString(4)));
+          break;
+        case 1:
+          setExpectedFee(String(fee.average.toBalanceString(4)));
+          break;
+        case 2:
+          setExpectedFee(String(fee.high.toBalanceString(4)));
+          break;
+        default:
+          setExpectedFee('');
+      }
+    },
+    [activeTabIndex],
+  );
+
+  useEffectAsync(async () => {
+    const data = await EthNetwork.estimate(
+      params.from,
+      params.to,
+      params.amount,
+    );
+    setGasLimit(String(data.gasLimit.toWei()));
+    _setGasPrice(data.gasPrice);
+    _setExpectedFee(data.fee);
+  }, []);
 
   const onTabChange = useCallback((tabName: string) => {
     setActiveTabIndex(Number(tabName));
@@ -87,7 +140,7 @@ export const FeeSettingsScreen = () => {
         <View style={styles.fee}>
           <Text variant={TextVariant.t11}>Expected Fee</Text>
           <Text variant={TextVariant.t11} color={Color.textBase2}>
-            {params.fee.toBalanceString(4)}
+            {expectedFee}
           </Text>
         </View>
       </View>

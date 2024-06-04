@@ -178,6 +178,15 @@ export const TransactionConfirmationScreen = observer(() => {
     wallet,
   ]);
 
+  const onFeePress = useCallback(() => {
+    const {from, to, amount} = route.params;
+    navigation.navigate(TransactionStackRoutes.FeeSettings, {
+      from,
+      to,
+      amount,
+    });
+  }, [fee, navigation]);
+
   return (
     <TransactionConfirmation
       disabled={disabled}
@@ -186,6 +195,7 @@ export const TransactionConfirmationScreen = observer(() => {
       amount={route.params.amount}
       fee={fee}
       onConfirmTransaction={onConfirmTransaction}
+      onFeePress={onFeePress}
       testID="transaction_confirmation"
       token={route.params.token}
     />

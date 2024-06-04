@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useMemo} from 'react';
 
 import {Image, View} from 'react-native';
 
@@ -17,13 +17,8 @@ import {
 } from '@app/components/ui';
 import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
-import {useTypedNavigation} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
-import {
-  TransactionStackParamList,
-  TransactionStackRoutes,
-} from '@app/route-types';
 import {Balance} from '@app/services/balance';
 import {IToken} from '@app/types';
 import {splitAddress} from '@app/utils';
@@ -37,6 +32,7 @@ interface TransactionConfirmationProps {
   contact: Contact | null;
   disabled?: boolean;
   onConfirmTransaction: () => void;
+  onFeePress: () => void;
   token: IToken;
 }
 
@@ -48,9 +44,9 @@ export const TransactionConfirmation = ({
   amount,
   fee,
   onConfirmTransaction,
+  onFeePress,
   token,
 }: TransactionConfirmationProps) => {
-  const navigation = useTypedNavigation<TransactionStackParamList>();
   const splittedTo = useMemo(() => splitAddress(to), [to]);
 
   const transactionSum = useMemo(() => {
@@ -80,13 +76,6 @@ export const TransactionConfirmation = ({
 
     return transactionSum.toFiat();
   }, [transactionSum]);
-
-  const onFeePress = useCallback(() => {
-    fee &&
-      navigation.navigate(TransactionStackRoutes.FeeSettings, {
-        fee,
-      });
-  }, [fee, navigation]);
 
   return (
     <PopupContainer style={styles.container} testID={testID}>

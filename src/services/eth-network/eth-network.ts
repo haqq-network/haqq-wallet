@@ -17,7 +17,7 @@ import {storage} from '@app/services/mmkv';
 import {applyEthTxMultiplier} from '@app/utils';
 
 import {getERC20TransferData} from './erc20';
-import {BALANCE_CACHE_KEY} from './types';
+import {BALANCE_CACHE_KEY, FeeValues} from './types';
 
 import {RemoteConfig} from '../remote-config';
 
@@ -142,6 +142,86 @@ export class EthNetwork {
   static init(provider: Provider) {
     EthNetwork.chainId = provider.ethChainId;
     EthNetwork.explorer = provider.explorer;
+  }
+
+  static async estimate(
+    from: string,
+    to: string,
+    value: Balance,
+    data = '0x',
+  ): Promise<{
+    gasLimit: Balance;
+    gasPrice: FeeValues;
+    fee: FeeValues;
+  }> {
+    try {
+      const rpcProvider = await getRpcProvider(app.provider);
+      const {maxFeePerGas, maxPriorityFeePerGas} =
+        await rpcProvider.getFeeData();
+      const block = await rpcProvider.getBlock('latest');
+
+      if (!block) {
+        throw new Error(
+          "Tx estimation failed: Can't get latest block in chain",
+        );
+      }
+
+      if (!block.baseFeePerGas) {
+        throw new Error(
+          "Tx estimation failed: Can't get baseFeePerGas from latest block in chain",
+        );
+      }
+
+      if (!maxFeePerGas) {
+        throw new Error("Tx estimation failed: Can't get maxFeePerGas");
+      }
+
+      if (!maxPriorityFeePerGas) {
+        throw new Error("Tx estimation failed: Can't get maxPriorityFeePerGas");
+      }
+
+      const estimateGasLimit = await rpcProvider.estimateGas({
+        from,
+        to,
+        data,
+        value: value.toHex(),
+      } as Deferrable<TransactionRequest>);
+
+      const baseFeePerGas = new Balance(block.baseFeePerGas);
+      const gasLimit = new Balance(estimateGasLimit);
+
+      const effectiveGasPrice = maxPriorityFeePerGas.lte(
+        maxFeePerGas.sub(block.baseFeePerGas),
+      )
+        ? maxPriorityFeePerGas
+        : maxFeePerGas.sub(block.baseFeePerGas);
+
+      const lowGasPrice = new Balance(estimateGasLimit);
+      const expectedLowFee = gasLimit.operate(baseFeePerGas, 'mul');
+      const averageGasPrice = new Balance(effectiveGasPrice);
+      const expectedAverageFee = gasLimit.operate(effectiveGasPrice, 'mul');
+      const highGasPrice = new Balance(
+        effectiveGasPrice.add(effectiveGasPrice),
+      );
+      const expectedHighFee = gasLimit.operate(highGasPrice, 'mul');
+
+      return {
+        gasLimit,
+        gasPrice: {
+          low: lowGasPrice,
+          average: averageGasPrice,
+          high: highGasPrice,
+        },
+        fee: {
+          low: expectedLowFee,
+          average: expectedAverageFee,
+          high: expectedHighFee,
+        },
+      };
+    } catch (error) {
+      Logger.captureException(error, 'EthNetwork.estimateTransaction error');
+      throw error;
+    }
   }
 
   static async estimateTransaction(

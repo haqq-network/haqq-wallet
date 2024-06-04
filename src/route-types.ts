@@ -577,7 +577,9 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
     to: string;
   };
   [TransactionStackRoutes.FeeSettings]: {
-    fee: Balance;
+    from: string;
+    to: string;
+    amount: Balance;
   };
 };
 

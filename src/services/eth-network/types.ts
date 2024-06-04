@@ -1,3 +1,5 @@
+import {Balance} from '../balance';
+
 export const ABI_ERC721_TRANSFER_FROM_ACTION = {
   name: 'safeTransferFrom',
   type: 'function',
@@ -77,3 +79,9 @@ export const ABI_ERC20_TRANSFER_ACTION = {
 };
 
 export const BALANCE_CACHE_KEY = 'balance_storage';
+
+export type FeeValues = {
+  low: Balance;
+  average: Balance;
+  high: Balance;
+};
