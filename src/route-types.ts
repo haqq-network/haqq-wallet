@@ -849,6 +849,8 @@ export type DeviceStackParamList = {
 export type SwapStackParamList = {
   Swap: {
     address: string;
+    slippage?: number;
+    deadline?: number;
   };
   Preview: {
     address: string;

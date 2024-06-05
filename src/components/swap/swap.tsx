@@ -19,7 +19,18 @@ import {STRINGS} from '@app/variables/common';
 
 import {SwapInput} from './swap-input';
 
-import {Button, ButtonVariant, First, Spacer, Text, TextVariant} from '../ui';
+import {DismissPopupButton} from '../popup/dismiss-popup-button';
+import {
+  Button,
+  ButtonVariant,
+  First,
+  Icon,
+  IconButton,
+  IconsName,
+  Spacer,
+  Text,
+  TextVariant,
+} from '../ui';
 import {WalletRow, WalletRowTypes} from '../wallet-row';
 
 const EstimatedValue = observer(
@@ -65,6 +76,8 @@ export interface SwapProps {
   onPressSwap(): Promise<void>;
   onPressApprove(): Promise<void>;
   onPressChangeWallet(): void;
+  onPressChangeDirection(): void;
+  onPressSettings(): void;
 }
 
 export const Swap = observer(
@@ -94,16 +107,46 @@ export const Swap = observer(
     onPressSwap,
     onInputBlur,
     onPressMax,
+    onPressChangeDirection,
+    onPressSettings,
   }: SwapProps) => {
+    const isHeaderButtonsDisabled =
+      isEstimating || isSwapInProgress || isApproveInProgress;
     return (
       <View style={styles.container}>
+        <View style={styles.header}>
+          <View style={styles.headerButtonsContainer}>
+            <IconButton
+              onPress={onPressChangeDirection}
+              disabled={isHeaderButtonsDisabled}>
+              <Icon
+                i24
+                name={IconsName.swap_vertical}
+                color={Color.graphicGreen1}
+              />
+            </IconButton>
+            <Spacer width={10} />
+            <IconButton
+              onPress={onPressSettings}
+              disabled={isHeaderButtonsDisabled}>
+              <Icon i24 name={IconsName.settings} color={Color.graphicGreen1} />
+            </IconButton>
+          </View>
+          <Spacer flex={1} />
+          <Text variant={TextVariant.t8}>Swap</Text>
+          {/* width of buttons */}
+          <Spacer width={34} />
+          <Spacer flex={1} />
+          <DismissPopupButton />
+        </View>
+
         <WalletRow
           item={currentWallet}
           type={WalletRowTypes.variant2}
           onPress={onPressChangeWallet}
         />
 
-        <Spacer height={10} />
+        <Spacer height={12} />
 
         <SwapInput
           label={I18N.transactionDetailAmount}
@@ -121,7 +164,7 @@ export const Swap = observer(
           onPressChangeToken={onPressChangeTokenIn}
         />
 
-        <Spacer height={10} />
+        <Spacer height={12} />
 
         <SwapInput
           label={I18N.transactionDetailAmount}
@@ -135,7 +178,7 @@ export const Swap = observer(
           onPressChangeToken={onPressChangeTokenOut}
         />
 
-        <Spacer height={10} />
+        <Spacer height={12} />
 
         {!!estimateData && (
           <View>
@@ -213,5 +256,12 @@ const styles = createTheme({
   estimatedValueContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  header: {
+    flexDirection: 'row',
+    marginVertical: 16,
+  },
+  headerButtonsContainer: {
+    flexDirection: 'row',
   },
 });

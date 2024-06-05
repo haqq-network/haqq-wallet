@@ -958,6 +958,18 @@ export const SwapScreen = observer(() => {
     }, [poolsData, setCurrentRoute, estimate]),
   );
 
+  const onPressChangeDirection = useCallback(async () => {
+    setCurrentRoute(
+      () =>
+        poolsData.routes.find(
+          r =>
+            AddressUtils.equals(r.token0, currentRoute?.token1!) &&
+            AddressUtils.equals(r.token1, currentRoute?.token0!),
+        )!,
+    );
+  }, [currentRoute, setCurrentRoute, poolsData]);
+  const onPressSettings = useCallback(async () => {}, []);
+
   if (isLoading) {
     return <Loading />;
   }
@@ -990,6 +1002,8 @@ export const SwapScreen = observer(() => {
       onPressChangeWallet={onPressChangeWallet}
       onPressMax={onPressMax}
       onInputBlur={onInputBlur}
+      onPressChangeDirection={onPressChangeDirection}
+      onPressSettings={onPressSettings}
     />
   );
 });
