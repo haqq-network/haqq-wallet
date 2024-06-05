@@ -1757,6 +1757,14 @@ export type IndexerCoin = {
   contract_address?: HaqqCosmosAddress;
 };
 
+export type IndexerTxMsgApproval = {
+  type: IndexerTxMsgType.msgEthereumApprovalTx;
+  amount: string;
+  contract_address: HaqqCosmosAddress;
+  owner: HaqqCosmosAddress;
+  spender: HaqqCosmosAddress;
+};
+
 export enum IndexerTxMsgType {
   unknown = 'unknown',
   msgVote = 'msgVote',
@@ -1776,6 +1784,7 @@ export enum IndexerTxMsgType {
   msgUnjail = 'msgUnjail',
   msgCreateValidator = 'msgCreateValidator',
   msgEditValidator = 'msgEditValidator',
+  msgEthereumApprovalTx = 'msgEthereumApprovalTx',
 }
 
 export type IndexerTxMsgUnion =
@@ -1795,7 +1804,8 @@ export type IndexerTxMsgUnion =
   | {msg: IndexerTxMsgBeginRedelegateTx}
   | {msg: IndexerTxMsgUnjailTx}
   | {msg: IndexerTxMsgCreateValidatorTx}
-  | {msg: IndexerTxMsgEditValidatorTx};
+  | {msg: IndexerTxMsgEditValidatorTx}
+  | {msg: IndexerTxMsgApproval};
 
 export enum IndexerTransactionStatus {
   inProgress = -1,
