@@ -91,6 +91,10 @@ export const TransactionRow = memo(
         address = item.parsed.from;
       }
 
+      if (!address && item.parsed.isContractInteraction) {
+        address = item.parsed.from;
+      }
+
       if (address.length) {
         return Wallet.getById(AddressUtils.toEth(address));
       }
