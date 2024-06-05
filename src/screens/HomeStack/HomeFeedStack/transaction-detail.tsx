@@ -2,11 +2,11 @@ import React, {useCallback, useEffect, useMemo} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
 import {format} from 'date-fns';
-import {Linking} from 'react-native';
 
 import {TransactionDetail} from '@app/components/transaction-detail';
 import {Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {getExplorerUrlForTxHash} from '@app/helpers/get-explorer-url-for-tx-hash';
 import {shortAddress} from '@app/helpers/short-address';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
@@ -15,7 +15,7 @@ import {I18N} from '@app/i18n';
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {sendNotification} from '@app/services';
 import {Balance} from '@app/services/balance';
-import {splitAddress} from '@app/utils';
+import {openInAppBrowser, splitAddress} from '@app/utils';
 
 export const TransactionDetailScreen = () => {
   const navigation = useTypedNavigation<HomeStackParamList>();
@@ -45,7 +45,7 @@ export const TransactionDetailScreen = () => {
   const onPressInfo = useCallback(async () => {
     const url = getExplorerUrlForTxHash(tx?.hash);
     if (url) {
-      Linking.openURL(url);
+      openInAppBrowser(url);
     }
   }, [tx]);
 
@@ -57,6 +57,13 @@ export const TransactionDetailScreen = () => {
   const onCloseBottomSheet = useCallback(() => {
     navigation.canGoBack() && navigation.goBack();
   }, [navigation]);
+
+  const onPressSpenderAddress = useCallback((address: string) => {
+    const url = `${app.provider.explorer}/address/${AddressUtils.toEth(
+      address,
+    )}`;
+    return openInAppBrowser(url);
+  }, []);
 
   useEffect(() => {
     if (app.isTesterMode || app.isDeveloper) {
@@ -86,6 +93,7 @@ export const TransactionDetailScreen = () => {
       onPressAddress={onPressAddress}
       onCloseBottomSheet={onCloseBottomSheet}
       onPressInfo={onPressInfo}
+      onPressSpenderAddress={onPressSpenderAddress}
     />
   );
 };
