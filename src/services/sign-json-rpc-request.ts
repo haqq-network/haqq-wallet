@@ -167,18 +167,20 @@ export class SignJsonRpcRequest {
         const {address} = await instanceProvider.getAccountInfo(path);
         const nonce = await rpcProvider.getTransactionCount(address, 'latest');
 
-        const {gasLimit, maxFeePerGas, maxPriorityFeePerGas} =
-          await EthNetwork.estimate(
-            signTransactionRequest.from!,
-            signTransactionRequest.to!,
-            new Balance(signTransactionRequest.value! || Balance.Empty),
-            signTransactionRequest.data?.toString()!,
-          );
+        const {gasLimit, maxBaseFee, maxFeePerGas} = await EthNetwork.estimate(
+          'average',
+          {
+            from: signTransactionRequest.from!,
+            to: signTransactionRequest.to!,
+            value: new Balance(signTransactionRequest.value! || Balance.Empty),
+            data: signTransactionRequest.data?.toString()!,
+          },
+        );
 
-        const maxPriorityFeePerGasCalculated = maxPriorityFeePerGas.max(
+        const maxPriorityFeePerGasCalculated = maxFeePerGas.max(
           signTransactionRequest.maxPriorityFeePerGas || 0,
         );
-        const maxFeePerGasCalculated = maxFeePerGas.max(
+        const maxFeePerGasCalculated = maxBaseFee.max(
           signTransactionRequest.maxFeePerGas || 0,
         );
 

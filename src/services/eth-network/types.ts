@@ -88,8 +88,16 @@ export type FeeValues = {
 
 export type CalculatedFees = {
   gasLimit: Balance;
-  maxPriorityFeePerGas: Balance;
+  maxBaseFee: Balance;
   maxFeePerGas: Balance;
-  gasPrice: FeeValues;
-  fee: FeeValues;
+  expectedFee: Balance;
 };
+
+export type TxEstimationParams = {
+  from: string;
+  to: string;
+  value: Balance;
+  data?: string;
+};
+
+export type EstimationVariant = 'low' | 'average' | 'high';

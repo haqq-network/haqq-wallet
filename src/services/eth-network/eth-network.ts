@@ -17,7 +17,12 @@ import {storage} from '@app/services/mmkv';
 import {applyEthTxMultiplier} from '@app/utils';
 
 import {getERC20TransferData} from './erc20';
-import {BALANCE_CACHE_KEY, CalculatedFees} from './types';
+import {
+  BALANCE_CACHE_KEY,
+  CalculatedFees,
+  EstimationVariant,
+  TxEstimationParams,
+} from './types';
 
 import {RemoteConfig} from '../remote-config';
 
@@ -47,15 +52,20 @@ export class EthNetwork {
       }
       const rpcProvider = await getRpcProvider(provider);
       const nonce = await rpcProvider.getTransactionCount(from, 'latest');
-      const estimate = await EthNetwork.estimate(from, to, value, data);
+      const estimate = await EthNetwork.estimate('average', {
+        from,
+        to,
+        value,
+        data,
+      });
 
       const transaction = {
         to: to,
         value: value.toHex(),
         nonce,
         type: 2,
-        maxFeePerGas: estimate.maxFeePerGas.toHex(),
-        maxPriorityFeePerGas: estimate.maxPriorityFeePerGas.toHex(),
+        maxFeePerGas: estimate.maxBaseFee.toHex(),
+        maxPriorityFeePerGas: estimate.maxFeePerGas.toHex(),
         gasLimit: estimate.gasLimit.toHex(),
         data,
         chainId: provider.ethChainId,
@@ -138,11 +148,25 @@ export class EthNetwork {
     return await rpcProvider.getTransactionReceipt(txHash);
   }
 
+  /**
+   *
+   * @description Calculation formula for expectedFee gasLimit * (baseFee + priorityFee)
+   * gasLimit = estimatedGasLimit
+   * baseFee = (block.baseFeePerGas / 10^9) GWEI
+   * priorityFee must be always lte to baseFee and calculated like
+   * lowPriorityFee = 1 GWEI
+   * averagePriorityFee = priorityFee / 2
+   * highPriorityFee = priorityFee
+   *
+   * @param from Wallet address
+   * @param to Wallet address
+   * @param value coins amount
+   * @param data aditional data if needed
+   * @returns fee data
+   */
   static async estimate(
-    from: string,
-    to: string,
-    value: Balance,
-    data = '0x',
+    calculationType: EstimationVariant,
+    {from, to, value, data}: TxEstimationParams,
   ): Promise<CalculatedFees> {
     try {
       const rpcProvider = await getRpcProvider(app.provider);
@@ -177,42 +201,28 @@ export class EthNetwork {
         value: value.toHex(),
       } as Deferrable<TransactionRequest>);
 
-      // const gasLimit = getRemoteBalanceValue('eth_min_gas_limit').max(
-      //   new Balance(signTransactionRequest.gasLimit || '0'),
-      // );
-
-      const baseFeePerGas = new Balance(block.baseFeePerGas);
+      const baseFeeBigNumber = block.baseFeePerGas; //.div(Math.pow(10, 9));
       const gasLimit = new Balance(estimateGasLimit);
+      const maxBaseFee = baseFeeBigNumber;
 
-      const effectiveGasPrice = maxPriorityFeePerGas.lte(
-        maxFeePerGas.sub(block.baseFeePerGas),
-      )
-        ? maxPriorityFeePerGas
-        : maxFeePerGas.sub(block.baseFeePerGas);
+      let priorityFee = maxBaseFee;
 
-      const lowGasPrice = new Balance(estimateGasLimit);
-      const expectedLowFee = gasLimit.operate(baseFeePerGas, 'mul');
-      const averageGasPrice = new Balance(effectiveGasPrice);
-      const expectedAverageFee = gasLimit.operate(effectiveGasPrice, 'mul');
-      const highGasPrice = new Balance(
-        effectiveGasPrice.add(effectiveGasPrice),
-      );
-      const expectedHighFee = gasLimit.operate(highGasPrice, 'mul');
+      switch (calculationType) {
+        case 'average':
+          priorityFee = baseFeeBigNumber.div(2);
+          break;
+        case 'low':
+          priorityFee = BigNumber.from(1);
+          break;
+      }
 
       return {
         gasLimit,
-        maxFeePerGas: new Balance(maxFeePerGas),
-        maxPriorityFeePerGas: new Balance(maxPriorityFeePerGas),
-        gasPrice: {
-          low: lowGasPrice,
-          average: averageGasPrice,
-          high: highGasPrice,
-        },
-        fee: {
-          low: expectedLowFee,
-          average: expectedAverageFee,
-          high: expectedHighFee,
-        },
+        maxBaseFee: new Balance(maxBaseFee),
+        maxFeePerGas: new Balance(priorityFee),
+        expectedFee: new Balance(
+          estimateGasLimit.mul(baseFeeBigNumber.add(priorityFee)),
+        ),
       };
     } catch (error) {
       Logger.captureException(error, 'EthNetwork.estimateTransaction error');

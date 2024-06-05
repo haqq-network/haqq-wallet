@@ -17,14 +17,13 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useTypedRoute} from '@app/hooks';
-import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N, getText} from '@app/i18n';
 import {
   TransactionStackParamList,
   TransactionStackRoutes,
 } from '@app/route-types';
 import {EthNetwork} from '@app/services';
-import {CalculatedFees} from '@app/services/eth-network/types';
+import {EstimationVariant} from '@app/services/eth-network/types';
 
 const TABS = [I18N.low, I18N.average, I18N.high, I18N.custom];
 const INIT_TAB_INDEX = 2;
@@ -36,47 +35,42 @@ export const FeeSettingsScreen = () => {
   >();
 
   const [activeTabIndex, setActiveTabIndex] = useState(INIT_TAB_INDEX);
-  const [feeData, setFeeData] = useState<CalculatedFees | null>(null);
 
   const [gasLimit, setGasLimit] = useState('');
-  const [gasPrice, setGasPrice] = useState('');
-  const [adjustment, setAdjustment] = useState('1');
+  const [maxBaseFee, setMaxBaseFee] = useState('');
+  const [priorityFee, setPriorityFee] = useState('');
   const [expectedFee, setExpectedFee] = useState('');
 
   useEffect(() => {
-    if (feeData) {
+    if (activeTabIndex !== 3) {
       switch (activeTabIndex) {
         case 0:
-          setGasLimit(String(feeData.gasLimit.toWei()));
-          setGasPrice(String(feeData.gasPrice.low.toWei()));
-          setExpectedFee(String(feeData.fee.low.toBalanceString(4)));
+          estimate('low');
           break;
         case 1:
-          setGasLimit(String(feeData.gasLimit.toWei()));
-          setGasPrice(String(feeData.gasPrice.average.toWei()));
-          setExpectedFee(String(feeData.fee.average.toBalanceString(4)));
+          estimate('average');
           break;
         case 2:
-          setGasLimit(String(feeData.gasLimit.toWei()));
-          setGasPrice(String(feeData.gasPrice.high.toWei()));
-          setExpectedFee(String(feeData.fee.high.toBalanceString(4)));
+          estimate('high');
           break;
-        default:
-          setGasLimit('');
-          setGasPrice('');
-          setExpectedFee('');
       }
     }
-  }, [feeData, activeTabIndex]);
+  }, [activeTabIndex]);
 
-  useEffectAsync(async () => {
-    const data = await EthNetwork.estimate(
-      params.from,
-      params.to,
-      params.amount,
-    );
-    setFeeData(data);
-  }, []);
+  const estimate = useCallback(
+    async (txEstimationVariant: EstimationVariant) => {
+      const data = await EthNetwork.estimate(txEstimationVariant, {
+        from: params.from,
+        to: params.to,
+        value: params.amount,
+      });
+      setGasLimit(String(data.gasLimit.toWei()));
+      setMaxBaseFee(String(data.maxBaseFee.toWei()));
+      setPriorityFee(String(data.maxFeePerGas.toWei()));
+      setExpectedFee(String(data.expectedFee.toBalanceString(6)));
+    },
+    [],
+  );
 
   const onTabChange = useCallback((tabName: string) => {
     setActiveTabIndex(Number(tabName));
@@ -112,20 +106,18 @@ export const FeeSettingsScreen = () => {
         />
         <Spacer height={24} />
         <TextField
-          label={`${getText(
-            I18N.gasPrice,
-          )} (${feeData?.gasLimit.getWeiSymbol()})`}
+          label={`${getText(I18N.gasPrice)} (aISLM)`}
           placeholder={I18N.empty}
-          value={gasPrice}
-          onChangeText={setGasPrice}
+          value={maxBaseFee}
+          onChangeText={setMaxBaseFee}
           editable={activeTabIndex === 3}
         />
         <Spacer height={24} />
         <TextField
           label={I18N.adjustment}
           placeholder={I18N.empty}
-          value={adjustment}
-          onChangeText={setAdjustment}
+          value={priorityFee}
+          onChangeText={setPriorityFee}
           editable={activeTabIndex === 3}
         />
         <Spacer height={28} />

@@ -80,15 +80,13 @@ export const JsonRpcTransactionInfo = ({
     }
 
     try {
-      const {
-        fee: {average: averageFee},
-      } = await EthNetwork.estimate(
-        tx.from!,
-        tx.to!,
-        new Balance(tx.value! || Balance.Empty),
-        tx.data,
-      );
-      return averageFee;
+      const {expectedFee} = await EthNetwork.estimate('average', {
+        from: tx.from!,
+        to: tx.to!,
+        value: new Balance(tx.value! || Balance.Empty),
+        data: tx.data,
+      });
+      return expectedFee;
     } catch {
       return Balance.Empty;
     }

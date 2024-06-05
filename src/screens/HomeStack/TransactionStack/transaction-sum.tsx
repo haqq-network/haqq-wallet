@@ -59,14 +59,12 @@ export const TransactionSumScreen = memo(() => {
           );
           return feeWei;
         } else {
-          const {
-            fee: {average: averageFee},
-          } = await EthNetwork.estimate(
-            route.params.from,
-            route.params.to,
-            amount,
-          );
-          return averageFee;
+          const {expectedFee} = await EthNetwork.estimate('average', {
+            from: route.params.from,
+            to: route.params.to,
+            value: amount,
+          });
+          return expectedFee;
         }
       } catch {
         return null;
@@ -128,10 +126,12 @@ export const TransactionSumScreen = memo(() => {
 
   useEffectAsync(async () => {
     const b = app.getAvailableBalance(route.params.from);
-    const {
-      fee: {average: averageFee},
-    } = await EthNetwork.estimate(route.params.from, to, b);
-    setFee(averageFee);
+    const {expectedFee} = await EthNetwork.estimate('average', {
+      from: route.params.from,
+      to,
+      value: b,
+    });
+    setFee(expectedFee);
   }, [to]);
 
   return (
