@@ -65,12 +65,12 @@ export const TransactionConfirmationScreen = observer(() => {
       );
       feeWei = result.feeWei;
     } else {
-      const result = await EthNetwork.estimateTransaction(
+      const result = await EthNetwork.estimate(
         route.params.from,
         route.params.to,
         route.params.amount,
       );
-      feeWei = result.feeWei;
+      feeWei = result.fee.average;
     }
 
     clearTimeout(timer);

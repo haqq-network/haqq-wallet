@@ -163,13 +163,13 @@ export class EthSign {
       const gasPrice = await rpcProvider.getGasPrice();
       return new Balance(estimatedGas).operate(new Balance(gasPrice), 'mul');
     } catch {
-      const {feeWei} = await EthNetwork.estimateTransaction(
+      const {fee} = await EthNetwork.estimate(
         tx.from!,
         tx.to!,
         new Balance(tx.value!),
         tx.data?.toString(),
       );
-      return feeWei;
+      return fee.average;
     }
   }
 

@@ -112,7 +112,9 @@ export const FeeSettingsScreen = () => {
         />
         <Spacer height={24} />
         <TextField
-          label={`${getText(I18N.gasPrice)} (${feeData?.gasLimit.currency})`}
+          label={`${getText(
+            I18N.gasPrice,
+          )} (${feeData?.gasLimit.getWeiSymbol()})`}
           placeholder={I18N.empty}
           value={gasPrice}
           onChangeText={setGasPrice}

@@ -25,6 +25,11 @@ export class EthNetwork {
   static chainId: number = getDefaultChainId();
   static explorer: string | undefined;
 
+  static init(provider: Provider) {
+    EthNetwork.chainId = provider.ethChainId;
+    EthNetwork.explorer = provider.explorer;
+  }
+
   static async populateTransaction(
     from: string,
     to: string,
@@ -42,13 +47,7 @@ export class EthNetwork {
       }
       const rpcProvider = await getRpcProvider(provider);
       const nonce = await rpcProvider.getTransactionCount(from, 'latest');
-      const estimate = await EthNetwork.estimateTransaction(
-        from,
-        to,
-        value,
-        data,
-        minGas,
-      );
+      const estimate = await EthNetwork.estimate(from, to, value, data);
 
       const transaction = {
         to: to,
@@ -57,7 +56,7 @@ export class EthNetwork {
         type: 2,
         maxFeePerGas: estimate.maxFeePerGas.toHex(),
         maxPriorityFeePerGas: estimate.maxPriorityFeePerGas.toHex(),
-        gasLimit: estimate.estimateGas.toHex(),
+        gasLimit: estimate.gasLimit.toHex(),
         data,
         chainId: provider.ethChainId,
       };
@@ -139,11 +138,6 @@ export class EthNetwork {
     return await rpcProvider.getTransactionReceipt(txHash);
   }
 
-  static init(provider: Provider) {
-    EthNetwork.chainId = provider.ethChainId;
-    EthNetwork.explorer = provider.explorer;
-  }
-
   static async estimate(
     from: string,
     to: string,
@@ -183,6 +177,10 @@ export class EthNetwork {
         value: value.toHex(),
       } as Deferrable<TransactionRequest>);
 
+      // const gasLimit = getRemoteBalanceValue('eth_min_gas_limit').max(
+      //   new Balance(signTransactionRequest.gasLimit || '0'),
+      // );
+
       const baseFeePerGas = new Balance(block.baseFeePerGas);
       const gasLimit = new Balance(estimateGasLimit);
 
@@ -203,6 +201,8 @@ export class EthNetwork {
 
       return {
         gasLimit,
+        maxFeePerGas: new Balance(maxFeePerGas),
+        maxPriorityFeePerGas: new Balance(maxPriorityFeePerGas),
         gasPrice: {
           low: lowGasPrice,
           average: averageGasPrice,
@@ -242,8 +242,8 @@ export class EthNetwork {
       throw new Error('Gas price not found');
     }
 
-    const gasPrice = new Balance(feeData.gasPrice, 18);
-    const maxFeePerGas = new Balance(feeData.maxFeePerGas || gasPrice, 18);
+    const gasPrice = new Balance(feeData.gasPrice);
+    const maxFeePerGas = new Balance(feeData.maxFeePerGas || gasPrice);
     const maxPriorityFeePerGas = new Balance(
       feeData.maxPriorityFeePerGas || gasPrice,
       18,

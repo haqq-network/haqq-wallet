@@ -97,6 +97,10 @@ export class Balance implements IBalance, ISerializable {
     return this.symbol;
   }
 
+  getWeiSymbol() {
+    return `a${this.symbol}`;
+  }
+
   static getEmpty = (precision = WEI_PRECISION, symbol = CURRENCY_NAME) => {
     return new Balance(zeroBN, precision, symbol);
   };
