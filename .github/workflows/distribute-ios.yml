@@ -59,7 +59,7 @@ on:
 jobs:
   build:
     name: Distribute iOS app
-    runs-on: macOS
+    runs-on: macos-latest
     steps:
       - name: Show macOS machine infomation
         run: uname -a
