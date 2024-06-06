@@ -1,7 +1,7 @@
 {
   "StakingInfoUnDelegationDay": " ({{day}} يوم متبقي)",
   "StakingInfoUnDelegationDays": " (بقي {{days}} يوم)",
-  "_hash": "2da541ebb892ef88faaa7620b67c3d77572e0d31a8e6c772b2cb6d69421d891b",
+  "_hash": "e91a2fe512c209f70249a27f1562ada2bf0c807fbfd5e8e98ff1f430180315c7",
   "accept": "قبول",
   "accountInfoNftTabTitle": "NFTs",
   "accountInfoTokensTabTitle": "الرموز المميزة",
@@ -84,8 +84,8 @@
   "browserToastLinkCopied": "تم نسخ الرابط",
   "browserToastRemoveFromBookmarks": "إزالة من الإشارات المرجعية",
   "cancel": "إلغاء",
-  "chooseAccountAddManyAccountsText": "أضف حسابات {{قيمة}}",
-  "chooseAccountAddOneAccountText": "أضف حساب {{قيمة}}",
+  "chooseAccountAddManyAccountsText": "أضف حسابات {{value}}",
+  "chooseAccountAddOneAccountText": "أضف حساب {{value}}",
   "chooseAccountBasicTab": "أساسي",
   "chooseAccountLedgerTab": "دفتر الأستاذ",
   "chooseAccountLoadInfo": "في المرة الأولى, نعرض أول 5 حسابات فقط. إذا كنت تريد رؤية الحسابات الخمسة التالية, فانقر فوق الزر \"تحميل المزيد",
@@ -97,13 +97,13 @@
   "cloudProblemsActionButton": "تحقق من الوصول إلى {{قيمة}}",
   "cloudProblemsDescription": "لم نتمكن من الاتصال بـ {{value}} الخاص بك حيث يتم تخزين ملف النسخ الاحتياطي لحسابك. يرجى التأكد من أن {{value}} الخاصة بك تعمل بشكل صحيح أو قم باستعادة حسابك باستخدام العبارة التذكيرية الخاصة بك.",
   "cloudProblemsSecondaryButton": "الاستعادة باستخدام العبارة التذكيرية",
-  "cloudProblemsTitle": "لم نتمكن من الوصول إلى {{القيمة}}",
+  "cloudProblemsTitle": "لم نتمكن من الوصول إلى {{value}}",
   "cloudShareNotFoundDescription": "من الممكن أن يكون الملف قد تم حذفه من وحدة التخزين السحابية لديك أو أن هناك مشكلات في المزامنة. نوصي بحفظ ملف النسخة الاحتياطية مرة أخرى",
   "cloudShareNotFoundPrimaryButton": "الحفظ في مساحة التخزين السحابية الخاصة بك",
   "cloudShareNotFoundSecondaryButton": "تخطي",
   "cloudShareNotFoundTitle": "لم نتمكن من العثور على ملف النسخ الاحتياطي الخاص بك في التخزين السحابي",
   "cloudVerificationDescription": "سيستغرق الأمر بضع ثوانٍ",
-  "cloudVerificationTitle": "محاولة الوصول إلى {{القيمة}}",
+  "cloudVerificationTitle": "محاولة الوصول إلى {{value}}",
   "continue": "استمر",
   "copy": "نسخ",
   "copyAddress": "نسخ العنوان",
@@ -259,7 +259,7 @@
   "keystoneQrStep2": "بعد التوقيع باستخدام Keystone, اضغط على Get Signature",
   "keystoneScannerScanning": "جارٍ المسح...",
   "keystoneStoreWalletSaving": "جاري حفظ الحساب",
-  "keystoneUnknownError": "خطأ غير معروف\n{{خطأ}}",
+  "keystoneUnknownError": "خطأ غير معروف\n{{error}}",
   "keystoneWalletAccountNumber": "{{deviceName}}${STRINGS.NBSP}#{{walletCount}}",
   "keystoneWalletEnterDeviceNameMessage": "أدخل اسم الجهاز لـ Keystone الجديد",
   "keystoneWalletEnterDeviceNameTitle": "إنشاء اسم الجهاز",
@@ -313,11 +313,11 @@
   "lockedTokensVested": "مُخوَّل: {{count}}",
   "lockedTokensVestedAvailableIn": "(سيكون متاحًا في: {{value}})",
   "modalDetailsQRReceive": "استلام",
-  "modalDetailsQRWarning": "يتم دعم الأصول المتعلقة بـ ISLM فقط على شبكة HAQQ.",
+  "modalDetailsQRWarning": "يتم دعم الأصول المتعلقة بـ {assetName} فقط على شبكة {networkName}.",
   "modalDontHaveFeeClose": "إغلاق",
-  "modalDontHaveFeeError": "ليس لديك ما يكفي من AISLM لدفع الرسوم",
+  "modalDontHaveFeeError": "ليس لديك ما يكفي من {assetWeiName} لدفع الرسوم",
   "modalPinForgotCode": "نسيت\nالرمز",
-  "modalPinTitle": "مرحبًا بك في محفظة HAQQ",
+  "modalPinTitle": "مرحبًا بك في محفظة {appName}",
   "modalQRNoAccessDescription": "لا يستطيع التطبيق الوصول إلى الكاميرا الخاصة بك. يرجى الانتقال إلى إعدادات هاتفك والسماح للتطبيق باستخدام الكاميرا.وبدون ذلك, لن نتمكن من مسح رمز الاستجابة السريعة ضوئيًا.",
   "modalQRNoAccessTitle": "لا يمكن الوصول إلى الكاميرا",
   "modalQRSendFunds": "إرسال أموال من",
@@ -373,7 +373,7 @@
   "numericKeyboard7": "7",
   "numericKeyboard8": "8",
   "numericKeyboard9": "9",
-  "onboardingBiometryEnable": "تمكين {{القياسات الحيوية}}",
+  "onboardingBiometryEnable": "تمكين {{biometry}}",
   "onboardingBiometrySafeFast": "آمن وسريع",
   "onboardingBiometrySkip": "تخطي",
   "onboardingFinishCreate": "تهانينا!\nلقد قمت بإضافة حساب جديد بنجاح",
@@ -391,13 +391,13 @@
   "onboardingTrackingUserActivityNotNow": "ليس الآن",
   "onboardingTrackingUserActivityTitle": "ساعدنا على التحسين: سنقوم بتحسين الميزات التي تستخدمها فعليًا",
   "ourNewsTitle": "أخبارنا",
-  "pinAttempts": "دبوس خاطئ {{قيمة}} يسار",
-  "pinCodeWrongPin": "يتبقى {{محاولات}} محاولات خاطئة",
+  "pinAttempts": "دبوس خاطئ {{value}} يسار",
+  "pinCodeWrongPin": "يتبقى {{attempts}} محاولات خاطئة",
   "pinErrorModalClose": "إغلاق",
   "pinErrorModalDescription": "لقد حاولنا تحديث الرمز السري, ولكن لسوء الحظ حدث خطأ أثناء التحديث. يرجى استخدام الرقم السري القديم",
   "pinErrorModalRecoveryFail": "فشل رقم التعريف الشخصي للاسترداد",
   "pinErrorModalTitle": "مشكلة في تحديث رمز PIN",
-  "pinManyAttempts": "محاولات كثيرة جدًا, يرجى الانتظار {{محاولات}}",
+  "pinManyAttempts": "محاولات كثيرة جدًا, يرجى الانتظار {{attempts}}",
   "plusOtherToken": "+ {{value}} رمز مميز آخر",
   "plusOtherTokens": "+ {{value}} رموز مميزة أخرى",
   "popupNotificationDescription": "يمكننا إعلامك عند حدوث شيء مهم, مثل: تم إرسال المعاملة بنجاح. وصلت الأموال إلى المحفظة. لقد اكتشفنا أي مخاطر تتعلق بأمان حسابك",
@@ -476,7 +476,7 @@
   "recoveryPinSamePin": "لا يمكن أن يكون دبوس الاسترداد هو نفس الدبوس الحالي",
   "recoveryPinSuccess": "تم استرداد رمز PIN الخاص بك بنجاح",
   "recoveryPinTitle": "رقم التعريف الشخصي للاسترداد",
-  "remoteAppVersion": "الإصدار المتاح: {{الإصدار}}",
+  "remoteAppVersion": "الإصدار المتاح: {{version}}",
   "restoreAgreementAgree": "'أوافق'",
   "restoreAgreementText": "عبارة الاسترداد عبارة عن عبارة مكونة من 12 كلمة تلقيتها عند إنشاء الحساب. المفتاح الخاص هو المفتاح الذي قمت بإنشائه في التطبيق",
   "restoreAgreementTitle": "هل لديك عبارة الاسترداد أو المفتاح الخاص؟",
@@ -567,7 +567,7 @@
   "settingsProvidersTitle": "مقدمو الخدمات",
   "settingsProvidersTitleRight": "إضافة",
   "settingsSecurity": "الأمان",
-  "settingsSecurityBiometry": "استخدم {{القياسات الحيوية}} لفتح التطبيق",
+  "settingsSecurityBiometry": "استخدم {{biometry}} لفتح التطبيق",
   "settingsSecurityChangePin": "تغيير رقم التعريف الشخصي",
   "settingsSecurityEnterPin": "أدخل رقم التعريف الشخصي الجديد",
   "settingsSecurityHexBlindSign": "تمكين التوقيع الأعمى",
@@ -579,10 +579,10 @@
   "settingsSecurityPinSet": "تعيين رمز التعريف الشخصي المكون من 6 أرقام",
   "settingsSecurityWalletPin": "أدخل رقم التعريف الشخصي لمحفظة HAQQ",
   "settingsTestDelegate": "مندوب",
-  "settingsTestReward": "المكافأة: {{مكافأة}}",
+  "settingsTestReward": "المكافأة: {{reward}}",
   "settingsTestShareCopied": "تم نسخ المشاركة",
-  "settingsTestStaked": "حصان: {{حصان}}",
-  "settingsTestUnbounded": "غير محدود: {{غير محدود}}",
+  "settingsTestStaked": "حصان: {{staked}}",
+  "settingsTestUnbounded": "غير محدود: {{unbounded}}",
   "settingsTestUndelegate": "إلغاء التفويض",
   "settingsThemeDark": "مظلم",
   "settingsThemeLight": "الضوء",
@@ -616,7 +616,7 @@
   "signinRestoreWalletTextFieldError": "عنوان غير صحيح",
   "signinRestoreWalletTextFieldLabel": "عبارة احتياطية",
   "signinRestoreWalletTextFieldPlaceholder": "اكتب عبارة الاسترداد أو الصقها",
-  "signinStoreWalletAccountNumber": "الحساب رقم {{رقم}}",
+  "signinStoreWalletAccountNumber": "الحساب رقم {{number}}",
   "signinStoreWalletText": "جاري استرداد الحساب",
   "signupImportantInfoDesc1": "**سيتم تقسيم العبارة التذكيرية الخاصة بك إلى ثلاثة أجزاء, ** مخزنة على جهازك المحلي, وفي وحدة تخزين سحابية من اختيارك, وعلى السلسلة. أنت وحدك من يستطيع الوصول إلى هذه الأجزاء, مما يجعلها آمنة للغاية.",
   "signupImportantInfoDesc2": "لاستخدام العبارة التذكيرية الخاصة بك, تحتاج فقط إلى اثنين من هذه الأجزاء الثلاثة. **لا يستطيع أي شخص آخر الوصول إلى هذه الأجزاء من العبارة التذكيرية الخاصة بك.**",
@@ -634,7 +634,7 @@
   "signupNetworkExitsDescription2": "في حالة الاستبدال, سيتم فقدان جميع بيانات الحساب",
   "signupNetworkExitsTitle": "لديك بالفعل حساب على {{provider}} تسجيل الدخول {{email}}",
   "signupNetworkExitsTitleWithoutEmail": "لديك بالفعل حساب على {{provider}} تسجيل الدخول",
-  "signupStoreWalletAccountNumber": "الحساب رقم {{رقم}}",
+  "signupStoreWalletAccountNumber": "الحساب رقم {{number}}",
   "signupStoreWalletCreatingAccount": "إنشاء حسابك",
   "sliderCaptchaDragText": "اسحب شريط التمرير",
   "sliderCaptchaErrorToast": "غير صحيح. حاول مرة اخرى",
@@ -647,9 +647,9 @@
   "sortByAdding": "بالإضافة",
   "sortByName": "بالاسم",
   "sortDesc": "z-a",
-  "sortValidatorOptionCommission": "العمولة ({{مفتاح}})",
-  "sortValidatorOptionName": "الاسم ({{مفتاح}})",
-  "sortValidatorOptionPower": "الطاقة ({{مفتاح}})",
+  "sortValidatorOptionCommission": "العمولة ({{key}})",
+  "sortValidatorOptionName": "الاسم ({{key}})",
+  "sortValidatorOptionPower": "الطاقة ({{key}})",
   "sortValidatorOptionRandom": "عشوائي",
   "sortValidatorTitle": "بواسطة {{sortTitle}}",
   "splashDescription": "🌙 صبر...\nمحفظتك تستيقظ",
@@ -733,8 +733,8 @@
   "stakingUnDelegatePreviewWithdrawFrom": "الانسحاب من",
   "stakingUnDelegateSumWarning": "سيتم إلغاء تفويض الأموال خلال {{time}}",
   "stakingValidators": "قائمة أدوات التحقق من الصحة",
-  "stakingValidatorsRowPower": "الطاقة: {{الطاقة}}",
-  "stakingValidatorsRowReward": "المكافأة: {{مكافأة}}",
+  "stakingValidatorsRowPower": "الطاقة: {{power}}",
+  "stakingValidatorsRowReward": "المكافأة: {{reward}}",
   "stakingValidatorsRowStaked": "Staked: {{staked}}",
   "stakingValidatorsRowWithdrawal": "السحب قيد المعالجة",
   "stakingValidatorsStaked": "Staked",
@@ -753,7 +753,7 @@
   "timerHour": "ساعة",
   "timerMin": "الحد الأدنى",
   "timerSec": "ثانية",
-  "to": "إلى {{عنوان}}",
+  "to": "إلى {{address}}",
   "tokensSorting": "فرز الرموز المميزة",
   "tokensSortingByAmount": "حسب المبلغ",
   "tokensSortingByAvailable": "حسب المتاح",
@@ -786,7 +786,7 @@
   "transactionConfirmationTotalAmount": "المبلغ الإجمالي",
   "transactionContactEditHeaderTitle": "تحرير جهة الاتصال",
   "transactionContractDefaultName": "عقد شبكة HAQQ",
-  "transactionContractNamePrefix": "الاسم: {{القيمة}}",
+  "transactionContractNamePrefix": "الاسم: {{value}}",
   "transactionContractTitle": "تفاعل العقد",
   "transactionCrypto": "تشفير",
   "transactionDelegationTitle": "المفوض",
@@ -808,7 +808,7 @@
   "transactionFailed": "حدث خطأ ما\nالرمز: {{id}}",
   "transactionFinishAddContact": "إضافة جهة اتصال",
   "transactionFinishContactAdded": "تمت إضافة جهة الاتصال",
-  "transactionFinishContactMessage": "العنوان:\n{{عنوان}}",
+  "transactionFinishContactMessage": "العنوان:\n{{address}}",
   "transactionFinishContactMessagePlaceholder": "اسم جهة الاتصال",
   "transactionFinishContactUpdated": "تم تحديث جهة الاتصال",
   "transactionFinishDone": "تم",
@@ -831,9 +831,9 @@
   "transactionLedgerConfirmationTitle": "تأكيد",
   "transactionMyAccounts": "حساباتي",
   "transactionMyContacts": "جهات الاتصال الخاصة بي",
-  "transactionNegativeAmountText": "- {{قيمة}}",
+  "transactionNegativeAmountText": "- {{value}}",
   "transactionNftFinishSendingComplete": "اكتمل الإرسال",
-  "transactionPositiveAmountText": "+ {{قيمة}}",
+  "transactionPositiveAmountText": "+ {{value}}",
   "transactionPushNotification": "إشعارات الدفع للمعاملات",
   "transactionPushNotificationsDescription": "احصل على إشعارات بشأن عمليات الإيداع والسحب والمعاملات الناجحة",
   "transactionRaffleRewardTitle": "مكافأة السحب",
@@ -841,7 +841,7 @@
   "transactionRedelegationTitle": "إعادة التفويض",
   "transactionSelectCryptoTitle": "حدد التشفير",
   "transactionSendTitle": "تم الإرسال",
-  "transactionSendTo": "إلى {{عنوان}}",
+  "transactionSendTo": "إلى {{address}}",
   "transactionStatusFailed": "فشل",
   "transactionStatusInProgress": "قيد التقدم",
   "transactionStatusSuccess": "نجاح",
@@ -850,9 +850,9 @@
   "transactionSumSend": "إرسال إلى",
   "transactionSumSendTitle": "إرسال",
   "transactionUndelegationTitle": "إلغاء التفويض",
-  "transactionWidgetReceiveTitle": "تم استلام {{القيمة}}",
+  "transactionWidgetReceiveTitle": "تم استلام {{value}}",
   "transactionWidgetShortTitle": "المعاملات الأخيرة",
-  "transactionWidgetSpendTitle": "إنفاق {{قيمة}}",
+  "transactionWidgetSpendTitle": "إنفاق {{value}}",
   "transactionWidgetTitle": "المعاملات",
   "transactions": "المعاملات",
   "transactionsEmpty": "لا توجد معاملات",
@@ -886,7 +886,7 @@
   "walletCardSend": "إرسال",
   "walletCardWithoutBackup": "بدون نسخة احتياطية",
   "walletCardWithoutProtection": "لا توجد نسخة احتياطية",
-  "walletConnectApplicationListTitle": "حساب {{حساب}} متصل",
+  "walletConnectApplicationListTitle": "حساب {{account}} متصل",
   "walletConnectApprovalConnected": "متصل",
   "walletConnectApprovalDescription": "islamiccoin.net",
   "walletConnectApprovalExpired": "تاريخ انتهاء الصلاحية",

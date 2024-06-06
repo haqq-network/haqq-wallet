@@ -969,6 +969,8 @@ export enum I18N {
   keychainCorrupted = 'keychainCorrupted',
   keychainMigrationNotPossible = 'keychainMigrationNotPossible',
   settingsOutdatedApp = 'settingsOutdatedApp',
+  transactionDetailApproveSpenderTitle = 'transactionDetailApproveSpenderTitle',
+  transactionApproveERC20Title = 'transactionApproveERC20Title',
 }
 
 const defaultTranslation = {en};

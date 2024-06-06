@@ -2,6 +2,7 @@ import {useEffect} from 'react';
 
 import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
 import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import {mnemonicToEntropy} from 'ethers/lib/utils';
 import {observer} from 'mobx-react';
 
@@ -30,7 +31,7 @@ export const SssMigrateStoreScreen = observer(() => {
     showModal(ModalType.loading, {text: getText(I18N.sssStoreWalletSaving)});
   }, []);
 
-  useEffect(() => {
+  useFocusEffect(() => {
     setTimeout(async () => {
       try {
         const storage = await getProviderStorage('', route.params.provider);
@@ -102,7 +103,7 @@ export const SssMigrateStoreScreen = observer(() => {
         hideModal(ModalType.loading);
       }
     }, 350);
-  }, [navigation, route]);
+  });
 
   return null;
 });

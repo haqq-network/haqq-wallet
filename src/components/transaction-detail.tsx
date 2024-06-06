@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {View} from 'react-native';
 
@@ -7,11 +7,14 @@ import {BottomSheet} from '@app/components/bottom-sheet';
 import {TransactionStatus} from '@app/components/transaction-status/transaction-status';
 import {DataContent, Icon, IconButton, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
-import {I18N} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
+import {Contracts} from '@app/models/contracts';
 import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
 import {Balance} from '@app/services/balance';
+import {IndexerTxMsgType} from '@app/types';
 import {IS_IOS, LONG_NUM_PRECISION, STRINGS} from '@app/variables/common';
 
 import {ImageWrapper} from './image-wrapper';
@@ -26,6 +29,7 @@ type TransactionDetailProps = {
   onPressAddress: () => void;
   onCloseBottomSheet: () => void;
   onPressInfo: () => void;
+  onPressSpenderAddress: (address: string) => void;
 };
 
 export const TransactionDetail = ({
@@ -38,8 +42,21 @@ export const TransactionDetail = ({
   onPressAddress,
   onPressInfo,
   onCloseBottomSheet,
+  onPressSpenderAddress,
 }: TransactionDetailProps) => {
   const closeDistance = useCalculatedDimensionsValue(({height}) => height / 4);
+  const contractTo = useMemo(() => {
+    if (tx.parsed.isContractInteraction) {
+      return Contracts.getById(AddressUtils.toHaqq(tx.parsed.to));
+    }
+    return null;
+  }, [tx]);
+
+  const handlePressSpenderAddress = useCallback(() => {
+    if (tx.msg.type === IndexerTxMsgType.msgEthereumApprovalTx) {
+      onPressSpenderAddress?.(tx.msg.spender);
+    }
+  }, [tx]);
 
   return (
     <BottomSheet
@@ -104,12 +121,22 @@ export const TransactionDetail = ({
             onPress={onPressAddress}
           />
         )}
-        {tx.parsed.isContractInteraction && (
+        {!!contractTo && (
           <DataContent
             subtitleI18n={I18N.transactionDetailContractName}
-            title={tx.parsed.subtitle}
+            title={contractTo.name}
             numberOfLines={2}
             reversed
+          />
+        )}
+        {tx.msg.type === IndexerTxMsgType.msgEthereumApprovalTx && (
+          <DataContent
+            subtitle={getText(I18N.transactionDetailApproveSpenderTitle)}
+            title={AddressUtils.toEth(tx.msg.spender)}
+            numberOfLines={2}
+            onPress={handlePressSpenderAddress}
+            reversed
+            titleColor={Color.textBlue1}
           />
         )}
         {!!provider?.id && (
@@ -154,7 +181,6 @@ export const TransactionDetail = ({
             </React.Fragment>
           );
         })}
-
         {fee.isPositive() && (
           <DataContent
             title={fee.toBalanceString(LONG_NUM_PRECISION)}
