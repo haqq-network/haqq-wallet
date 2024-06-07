@@ -1371,20 +1371,7 @@ export enum AddressType {
   unknown = 'unknown',
 }
 
-export interface VerifyAddressResponse {
-  id: string;
-  address_type: AddressType;
-  name?: string | null;
-  symbol?: string | null;
-  icon?: string | null;
-  decimals?: number | null;
-  is_erc20?: boolean | null;
-  is_erc721?: boolean | null;
-  is_erc1155?: boolean | null;
-  is_in_white_list?: boolean | null;
-  updated_at: string;
-  created_at: string;
-}
+export type VerifyAddressResponse = IContract;
 
 export interface MobXStoreFromRealm {
   realmSchemaName: string;
