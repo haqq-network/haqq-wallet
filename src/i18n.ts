@@ -981,6 +981,8 @@ export enum I18N {
   keychainCorrupted = 'keychainCorrupted',
   keychainMigrationNotPossible = 'keychainMigrationNotPossible',
   settingsOutdatedApp = 'settingsOutdatedApp',
+  maxBaseFee = 'maxBaseFee',
+  maxPriorityFee = 'maxPriorityFee',
 }
 
 const defaultTranslation = {en};

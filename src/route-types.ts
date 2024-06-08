@@ -30,6 +30,8 @@ import {
 } from '@app/types';
 import {WalletConnectApproveConnectionEvent} from '@app/types/wallet-connect';
 
+import {CalculatedFees} from './services/eth-network/types';
+
 export type AnyRouteFromParent =
   | SignInStackRoutes
   | SignUpStackRoutes
@@ -533,7 +535,8 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
     from: string;
     to: string;
     amount: Balance;
-    fee?: Balance;
+    estimatedFee?: CalculatedFees;
+    calculatedFees?: CalculatedFees;
     token: IToken;
   };
   [TransactionStackRoutes.TransactionNftConfirmation]: {
@@ -551,7 +554,7 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
     nft: NftItem;
     transaction: TransactionResponse;
     to: string;
-    fee?: Balance | null;
+    fee?: CalculatedFees | null;
   };
   [TransactionStackRoutes.TransactionAccount]: {
     from: string;
@@ -580,6 +583,7 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
     from: string;
     to: string;
     amount: Balance;
+    token: IToken;
   };
 };
 

@@ -290,6 +290,7 @@ export class Balance implements IBalance, ISerializable {
   toEtherString = () => this.toBalanceString();
 
   toWei = () => this.toNumber();
+  toGWei = () => this.toNumber() / Math.pow(10, 9);
 
   toWeiString = () => {
     const isRTL = I18nManager.isRTL;

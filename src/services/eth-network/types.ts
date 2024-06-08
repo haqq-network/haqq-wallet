@@ -89,7 +89,7 @@ export type FeeValues = {
 export type CalculatedFees = {
   gasLimit: Balance;
   maxBaseFee: Balance;
-  maxFeePerGas: Balance;
+  maxPriorityFee: Balance;
   expectedFee: Balance;
 };
 

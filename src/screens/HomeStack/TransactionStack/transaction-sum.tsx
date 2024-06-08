@@ -51,20 +51,18 @@ export const TransactionSumScreen = memo(() => {
       try {
         const token = route.params.token;
         if (token.is_erc20) {
-          const {feeWei} = await EthNetwork.estimateERC20Transfer(
-            wallet?.address!,
-            route.params.to,
+          return await EthNetwork.estimateERC20Transfer('average', {
+            from: wallet?.address!,
+            to: route.params.to,
             amount,
-            AddressUtils.toEth(token.id),
-          );
-          return feeWei;
+            contractAddress: AddressUtils.toEth(token.id),
+          });
         } else {
-          const {expectedFee} = await EthNetwork.estimate('average', {
+          return await EthNetwork.estimate('average', {
             from: route.params.from,
             to: route.params.to,
             value: amount,
           });
-          return expectedFee;
         }
       } catch {
         return null;
@@ -87,10 +85,10 @@ export const TransactionSumScreen = memo(() => {
   const onAmount = useCallback(
     async (amount: Balance) => {
       setLoading(true);
-      const feeWei = await getFee(amount);
-      if (feeWei?.isPositive()) {
+      const estimate = await getFee(amount);
+      if (estimate?.expectedFee.isPositive()) {
         navigation.navigate(TransactionStackRoutes.TransactionConfirmation, {
-          fee: feeWei,
+          calculatedFees: estimate,
           from: route.params.from,
           to,
           amount,

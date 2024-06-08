@@ -4,10 +4,8 @@ import {observer} from 'mobx-react';
 
 import {TransactionConfirmation} from '@app/components/transaction-confirmation';
 import {app} from '@app/contexts';
-import {Events} from '@app/events';
 import {showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
-import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
@@ -21,11 +19,11 @@ import {
 } from '@app/route-types';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
+import {CalculatedFees} from '@app/services/eth-network/types';
 import {EthSignErrorDataDetails} from '@app/services/eth-sign';
 import {EventTracker} from '@app/services/event-tracker';
 import {MarketingEvents, ModalType} from '@app/types';
 import {makeID} from '@app/utils';
-import {FEE_ESTIMATING_TIMEOUT_MS} from '@app/variables/common';
 
 export const TransactionConfirmationScreen = observer(() => {
   const navigation = useTypedNavigation<TransactionStackParamList>();
@@ -46,39 +44,31 @@ export const TransactionConfirmationScreen = observer(() => {
   );
   const showError = useError();
   const [disabled, setDisabled] = useState(false);
-  const [fee, setFee] = useState<Balance | null>(null);
+  const [fee, setFee] = useState<CalculatedFees | null>(null);
 
   useLayoutEffectAsync(async () => {
-    const timer = setTimeout(
-      () => setFee(route.params.fee ?? Balance.Empty),
-      FEE_ESTIMATING_TIMEOUT_MS,
-    );
-
-    let feeWei = Balance.Empty;
-
-    if (token.is_erc20) {
-      const result = await EthNetwork.estimateERC20Transfer(
-        wallet?.address!,
-        route.params.to,
-        route.params.amount,
-        AddressUtils.toEth(token.id),
-      );
-      feeWei = result.feeWei;
+    if (route.params.calculatedFees) {
+      setFee(route.params.calculatedFees);
     } else {
-      const result = await EthNetwork.estimate('average', {
-        from: route.params.from,
-        to: route.params.to,
-        value: route.params.amount,
-      });
-      feeWei = result.expectedFee;
+      let estimateFee;
+
+      if (token.is_erc20) {
+        estimateFee = await EthNetwork.estimateERC20Transfer('average', {
+          from: wallet?.address!,
+          to: route.params.to,
+          amount: route.params.amount,
+          contractAddress: AddressUtils.toEth(token.id),
+        });
+      } else {
+        estimateFee = await EthNetwork.estimate('average', {
+          from: route.params.from,
+          to: route.params.to,
+          value: route.params.amount,
+        });
+      }
+
+      setFee(estimateFee);
     }
-
-    clearTimeout(timer);
-    setFee(feeWei);
-
-    return () => {
-      clearTimeout(timer);
-    };
   }, []);
 
   const onConfirmTransaction = useCallback(async () => {
@@ -91,32 +81,29 @@ export const TransactionConfirmationScreen = observer(() => {
         const provider = await getProviderInstanceForWallet(wallet, false);
 
         let transaction;
-        if (token.is_erc20) {
-          transaction = await ethNetworkProvider.transferERC20(
-            provider,
-            wallet,
-            route.params.to,
-            route.params.amount,
-            AddressUtils.toEth(token.id),
-          );
-        } else {
-          transaction = await ethNetworkProvider.transferTransaction(
-            provider,
-            wallet,
-            route.params.to,
-            route.params.amount,
-          );
+        if (fee) {
+          if (token.is_erc20) {
+            transaction = await ethNetworkProvider.transferERC20(
+              fee,
+              provider,
+              wallet,
+              route.params.to,
+              route.params.amount,
+              AddressUtils.toEth(token.id),
+            );
+          } else {
+            transaction = await ethNetworkProvider.transferTransaction(
+              fee,
+              provider,
+              wallet,
+              route.params.to,
+              route.params.amount,
+            );
+          }
         }
 
         if (transaction) {
           EventTracker.instance.trackEvent(MarketingEvents.sendFund);
-
-          await awaitForEventDone(
-            Events.onTransactionCreate,
-            transaction,
-            app.providerId,
-            fee,
-          );
 
           navigation.navigate(TransactionStackRoutes.TransactionFinish, {
             transaction,
@@ -184,6 +171,7 @@ export const TransactionConfirmationScreen = observer(() => {
       from,
       to,
       amount,
+      token: route.params.token,
     });
   }, [fee, navigation]);
 
@@ -193,7 +181,7 @@ export const TransactionConfirmationScreen = observer(() => {
       contact={contact}
       to={route.params.to}
       amount={route.params.amount}
-      fee={fee}
+      fee={fee?.expectedFee}
       onConfirmTransaction={onConfirmTransaction}
       onFeePress={onFeePress}
       testID="transaction_confirmation"

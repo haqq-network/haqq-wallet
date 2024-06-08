@@ -16,19 +16,23 @@ import {
   TextVariant,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useTypedRoute} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {
   TransactionStackParamList,
   TransactionStackRoutes,
 } from '@app/route-types';
 import {EthNetwork} from '@app/services';
-import {EstimationVariant} from '@app/services/eth-network/types';
+import {
+  CalculatedFees,
+  EstimationVariant,
+} from '@app/services/eth-network/types';
 
 const TABS = [I18N.low, I18N.average, I18N.high, I18N.custom];
 const INIT_TAB_INDEX = 2;
 
 export const FeeSettingsScreen = () => {
+  const navigation = useTypedNavigation<TransactionStackParamList>();
   const {params} = useTypedRoute<
     TransactionStackParamList,
     TransactionStackRoutes.FeeSettings
@@ -39,7 +43,10 @@ export const FeeSettingsScreen = () => {
   const [gasLimit, setGasLimit] = useState('');
   const [maxBaseFee, setMaxBaseFee] = useState('');
   const [priorityFee, setPriorityFee] = useState('');
-  const [expectedFee, setExpectedFee] = useState('');
+
+  const [calculatedFees, setCalculatedFees] = useState<CalculatedFees | null>(
+    null,
+  );
 
   useEffect(() => {
     if (activeTabIndex !== 3) {
@@ -65,9 +72,9 @@ export const FeeSettingsScreen = () => {
         value: params.amount,
       });
       setGasLimit(String(data.gasLimit.toWei()));
-      setMaxBaseFee(String(data.maxBaseFee.toWei()));
-      setPriorityFee(String(data.maxFeePerGas.toWei()));
-      setExpectedFee(String(data.expectedFee.toBalanceString(6)));
+      setMaxBaseFee(String(data.maxBaseFee.toGWei()));
+      setPriorityFee(String(data.maxPriorityFee.toGWei()));
+      setCalculatedFees(data);
     },
     [],
   );
@@ -106,7 +113,7 @@ export const FeeSettingsScreen = () => {
         />
         <Spacer height={24} />
         <TextField
-          label={`${getText(I18N.gasPrice)} (aISLM)`}
+          label={`${getText(I18N.maxBaseFee)} (GWei)`}
           placeholder={I18N.empty}
           value={maxBaseFee}
           onChangeText={setMaxBaseFee}
@@ -114,7 +121,7 @@ export const FeeSettingsScreen = () => {
         />
         <Spacer height={24} />
         <TextField
-          label={I18N.adjustment}
+          label={`${getText(I18N.maxPriorityFee)} (GWei)`}
           placeholder={I18N.empty}
           value={priorityFee}
           onChangeText={setPriorityFee}
@@ -124,14 +131,29 @@ export const FeeSettingsScreen = () => {
         <View style={styles.fee}>
           <Text variant={TextVariant.t11}>Expected Fee</Text>
           <Text variant={TextVariant.t11} color={Color.textBase2}>
-            {expectedFee}
+            {calculatedFees?.expectedFee.toBalanceString(6) ?? '-'}
           </Text>
         </View>
       </View>
       <View>
         <Button variant={ButtonVariant.second} i18n={I18N.reset} />
         <Spacer height={16} />
-        <Button variant={ButtonVariant.contained} i18n={I18N.apply} />
+        <Button
+          variant={ButtonVariant.contained}
+          i18n={I18N.apply}
+          onPress={() => {
+            navigation.navigate(
+              TransactionStackRoutes.TransactionConfirmation,
+              {
+                from: params.from,
+                to: params.to,
+                amount: params.amount,
+                token: params.token,
+                calculatedFees: calculatedFees ?? undefined,
+              },
+            );
+          }}
+        />
         <Spacer height={16} />
       </View>
     </View>
