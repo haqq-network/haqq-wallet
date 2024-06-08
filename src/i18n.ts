@@ -981,6 +981,8 @@ export enum I18N {
   keychainCorrupted = 'keychainCorrupted',
   keychainMigrationNotPossible = 'keychainMigrationNotPossible',
   settingsOutdatedApp = 'settingsOutdatedApp',
+  transactionDetailApproveSpenderTitle = 'transactionDetailApproveSpenderTitle',
+  transactionApproveERC20Title = 'transactionApproveERC20Title',
   maxBaseFee = 'maxBaseFee',
   maxPriorityFee = 'maxPriorityFee',
 }

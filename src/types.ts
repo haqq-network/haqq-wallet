@@ -1371,20 +1371,7 @@ export enum AddressType {
   unknown = 'unknown',
 }
 
-export interface VerifyAddressResponse {
-  id: string;
-  address_type: AddressType;
-  name?: string | null;
-  symbol?: string | null;
-  icon?: string | null;
-  decimals?: number | null;
-  is_erc20?: boolean | null;
-  is_erc721?: boolean | null;
-  is_erc1155?: boolean | null;
-  is_in_white_list?: boolean | null;
-  updated_at: string;
-  created_at: string;
-}
+export type VerifyAddressResponse = IContract;
 
 export interface MobXStoreFromRealm {
   realmSchemaName: string;
@@ -1757,6 +1744,14 @@ export type IndexerCoin = {
   contract_address?: HaqqCosmosAddress;
 };
 
+export type IndexerTxMsgApproval = {
+  type: IndexerTxMsgType.msgEthereumApprovalTx;
+  amount: string;
+  contract_address: HaqqCosmosAddress;
+  owner: HaqqCosmosAddress;
+  spender: HaqqCosmosAddress;
+};
+
 export enum IndexerTxMsgType {
   unknown = 'unknown',
   msgVote = 'msgVote',
@@ -1776,6 +1771,7 @@ export enum IndexerTxMsgType {
   msgUnjail = 'msgUnjail',
   msgCreateValidator = 'msgCreateValidator',
   msgEditValidator = 'msgEditValidator',
+  msgEthereumApprovalTx = 'msgEthereumApprovalTx',
 }
 
 export type IndexerTxMsgUnion =
@@ -1795,7 +1791,8 @@ export type IndexerTxMsgUnion =
   | {msg: IndexerTxMsgBeginRedelegateTx}
   | {msg: IndexerTxMsgUnjailTx}
   | {msg: IndexerTxMsgCreateValidatorTx}
-  | {msg: IndexerTxMsgEditValidatorTx};
+  | {msg: IndexerTxMsgEditValidatorTx}
+  | {msg: IndexerTxMsgApproval};
 
 export enum IndexerTransactionStatus {
   inProgress = -1,

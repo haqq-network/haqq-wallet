@@ -117,7 +117,7 @@ export const HomeSettings = observer(({theme}: Props) => {
       />
 
       <SettingsButton
-        rightTitle={Language.current}
+        rightTitle={Language.current.toUpperCase()}
         next={SettingsStackRoutes.SettingsLanguage}
         icon={IconsName.language}
         title={I18N.homeSettingsLanguage}

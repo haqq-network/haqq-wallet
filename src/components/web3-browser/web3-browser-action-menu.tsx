@@ -77,7 +77,11 @@ export const Web3BrowserActionMenu = ({
       left: isRTL ? -x : x,
       top: isRTL ? y + 5 : y,
     };
-  }, [isRTL]);
+  }, [isRTL, moreIconLayout]);
+
+  if (!showActionMenu) {
+    return null;
+  }
   return (
     <>
       {!!showActionMenu && (
