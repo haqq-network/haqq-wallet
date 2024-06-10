@@ -6,6 +6,7 @@ import {ImageWrapper} from '@app/components/image-wrapper';
 import {
   Button,
   ButtonVariant,
+  Inline,
   Spacer,
   Text,
   TextVariant,
@@ -16,12 +17,11 @@ import {useLayout} from '@app/hooks/use-layout';
 import {I18N} from '@app/i18n';
 import {NftItem} from '@app/models/nft';
 
-import {
-  NftItemDetailsAttributes,
-  NftItemDetailsDescription,
-  NftItemDetailsPrice,
-  NftItemDetailsTokenId,
-} from './components';
+import {NftItemDetailsAttributes} from './nft-item-details-attributes';
+import {NftItemDetailsDescription} from './nft-item-details-description';
+import {NftItemDetailsNumberOfCopies} from './nft-item-details-nimber-of-copies';
+import {NftItemDetailsPrice} from './nft-item-details-price';
+import {NftItemDetailsTokenId} from './nft-item-details-token-id';
 
 export interface NftItemDetailsProps {
   item: NftItem;
@@ -52,7 +52,10 @@ export const NftItemDetails = ({item, onPressSend}: NftItemDetailsProps) => {
         <Spacer height={16} />
         <NftItemDetailsDescription description={item.description} />
         <NftItemDetailsPrice price={item.price} />
-        <NftItemDetailsTokenId tokenId={item.tokenId} />
+        <Inline>
+          <NftItemDetailsTokenId tokenId={item.tokenId} />
+          {item.amount && <NftItemDetailsNumberOfCopies amount={item.amount} />}
+        </Inline>
         <NftItemDetailsAttributes attributes={item.attributes} />
       </ScrollView>
       {!item.is_transfer_prohibinden && (

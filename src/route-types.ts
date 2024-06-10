@@ -6,7 +6,7 @@ import {SessionTypes} from '@walletconnect/types';
 
 import {TotalValueTabNames} from '@app/components/total-value-info';
 import {AwaitValue} from '@app/helpers/await-for-value';
-import {NftCollection, NftItem} from '@app/models/nft';
+import {NftItem} from '@app/models/nft';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
@@ -14,6 +14,7 @@ import {SssProviders} from '@app/services/provider-sss';
 import {
   BiometryType,
   Eventable,
+  HaqqCosmosAddress,
   IStory,
   IToken,
   JsonRpcMetadata,
@@ -379,17 +380,12 @@ export type HomeStackParamList = {
   [HomeStackRoutes.Transaction]: {
     from?: string;
     to?: string;
-    nft?: NftItem;
+    nft?: NftItem | null;
   };
-  [HomeStackRoutes.Nft]:
-    | {
-        initScreen: NftStackRoutes.NftItemDetails;
-        item: NftItem;
-      }
-    | {
-        initScreen: NftStackRoutes.NftCollectionDetails;
-        item: NftCollection;
-      };
+  [HomeStackRoutes.Nft]: {
+    initScreen: NftStackRoutes;
+    address: HaqqCosmosAddress;
+  };
   [HomeStackRoutes.AccountDetail]: {address: string};
   [HomeStackRoutes.Backup]: {
     wallet: Wallet;
@@ -474,8 +470,8 @@ export enum NftStackRoutes {
 }
 
 export type NftStackParamList = HomeFeedStackParamList & {
-  [NftStackRoutes.NftItemDetails]: {item: NftItem};
-  [NftStackRoutes.NftCollectionDetails]: {item: NftCollection};
+  [NftStackRoutes.NftItemDetails]: {address: HaqqCosmosAddress};
+  [NftStackRoutes.NftCollectionDetails]: {address: HaqqCosmosAddress};
 };
 
 export enum ProposalDepositStackRoutes {
@@ -521,7 +517,7 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
   [TransactionStackRoutes.TransactionAddress]: {
     from: string;
     to?: string;
-    nft?: NftItem;
+    nft?: NftItem | null;
   };
   [TransactionStackRoutes.TransactionSum]: {
     from: string;

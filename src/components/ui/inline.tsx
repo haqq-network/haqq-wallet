@@ -5,11 +5,11 @@ import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {createTheme} from '@app/helpers';
 
 export type InlineProps = {
-  gap: number;
+  gap?: number;
   children: React.ReactNode;
   style?: StyleProp<ViewStyle>;
 };
-export const Inline = ({gap, children, style = {}}: InlineProps) => {
+export const Inline = ({children, gap = 0, style = {}}: InlineProps) => {
   const container = useMemo(() => {
     const {margin, marginHorizontal, marginLeft, marginRight, ...s} =
       StyleSheet.flatten(style);

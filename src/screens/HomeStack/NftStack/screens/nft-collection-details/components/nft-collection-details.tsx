@@ -4,16 +4,14 @@ import {SafeAreaView, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 
 import {Color} from '@app/colors';
+import {ImageWrapper} from '@app/components/image-wrapper';
+import {NftViewerItemPreviewList} from '@app/components/nft-viewer/nft-viewer-item-preview-list';
+import {Spacer, Text, TextVariant, TrimmedText} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useNftCollectionImage} from '@app/hooks/nft';
 import {I18N} from '@app/i18n';
 import {NftCollection, NftItem} from '@app/models/nft';
 import {NftWidgetSize} from '@app/types';
-
-import {ImageWrapper} from './image-wrapper';
-import {NftViewerItemPreviewList} from './nft-viewer/nft-viewer-item-preview-list';
-import {Spacer, Text, TextVariant} from './ui';
-import {TrimmedText} from './ui/trimmed-text';
 
 export interface NftCollectionDetailsProps {
   item: NftCollection;

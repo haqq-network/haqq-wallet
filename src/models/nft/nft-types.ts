@@ -16,6 +16,7 @@ export type NftCollectionIndexer = {
 
 export type NftItemIndexer = {
   address: HaqqCosmosAddress;
+  amount?: number;
   attributes: NftAttribute[] | null;
   block: number;
   cached_url: string | null;

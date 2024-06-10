@@ -37,10 +37,6 @@ export const NftItemDetailsAttributes = ({attributes}: Props) => {
                 <Text variant={TextVariant.t13}>
                   {valueConverter(attribute)}
                 </Text>
-                {/*<Text variant={TextVariant.t13}>*/}
-                {/*  {value}*/}
-                {/*  /!*{prop.frequency * 100}%*!/*/}
-                {/*</Text>*/}
               </View>
               <Text variant={TextVariant.t15} color={Color.textBase2}>
                 {attribute.trait_type}
