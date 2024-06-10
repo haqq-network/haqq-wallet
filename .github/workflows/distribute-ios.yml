@@ -62,8 +62,8 @@ on:
 
 jobs:
   build:
-    name: Distribute iOS
-    runs-on: macOS
+    name: Distribute iOS app
+    runs-on: macos-latest
     steps:
       - name: Show macOS machine infomation
         run: uname -a
@@ -75,6 +75,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
+
+      - name: Set up Ruby 3.2.0
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2.0
+          bundler-cache: true
 
       - name: Cache XCode build
         uses: mikehardy/buildcache-action@v2

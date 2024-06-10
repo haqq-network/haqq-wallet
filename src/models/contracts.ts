@@ -1,6 +1,8 @@
 import {makeAutoObservable} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
+import {AddressUtils} from '@app/helpers/address-utils';
+import {Whitelist} from '@app/helpers/whitelist';
 import {storage} from '@app/services/mmkv';
 import {IContract, IToken, MobXStore} from '@app/types';
 
@@ -11,6 +13,7 @@ class ContractsStore implements MobXStore<IContract> {
    * @value IContract
    */
   data: Record<string, IContract> = {};
+  private _fetchInProgressMap: Record<string, boolean> = {};
 
   constructor(shouldSkipPersisting: boolean = false) {
     makeAutoObservable(this);
@@ -72,7 +75,13 @@ class ContractsStore implements MobXStore<IContract> {
   }
 
   getById(id: string) {
-    return this.data[id];
+    const result = this.data[id];
+
+    if (!result) {
+      this._fetchContractData(id);
+    }
+
+    return result;
   }
 
   update(id: string | undefined, item: Omit<Partial<IToken>, 'id'>) {
@@ -92,6 +101,27 @@ class ContractsStore implements MobXStore<IContract> {
       },
     };
     return true;
+  }
+
+  private async _fetchContractData(address: string) {
+    try {
+      const isFetching = this._fetchInProgressMap[address];
+      if (isFetching || !AddressUtils.isValidAddress(address)) {
+        return;
+      }
+      this._fetchInProgressMap[address] = true;
+      const haqqAddress = AddressUtils.toHaqq(address);
+      const data = await Whitelist.verifyAddress(haqqAddress);
+
+      if (!data) {
+        return;
+      }
+
+      this.create(haqqAddress, data);
+    } catch (err) {
+    } finally {
+      this._fetchInProgressMap[address] = false;
+    }
   }
 }
 
