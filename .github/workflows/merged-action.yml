@@ -1,4 +1,14 @@
-name: Action for Merged PR
+# Overview
+# This GitHub Action manages actions to be taken upon the merging of pull requests. 
+# It triggers automatically upon the merging of a pull request into the main branch, 
+# facilitating streamlined post-merge processes such as deployment.
+
+# Example:
+# 1. Mark PR with releaseAfterMerge tag
+# 2. Provide short description in description of the PR (instead of template)
+# 3. Build will be sended to Play Store/TestFlight with provided description for internal testing
+
+name: Action for Merged PR [TRIGGER]
 
 on:
   pull_request:
