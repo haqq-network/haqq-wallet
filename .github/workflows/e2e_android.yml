@@ -1,3 +1,7 @@
+# Overview
+# This GitHub Action automates the end-to-end (E2E) testing process for the Haqq Wallet Android application.
+# It is designed to run E2E tests using Detox on a specified Android Device.
+
 name: e2e Android
 
 on:
@@ -51,13 +55,15 @@ jobs:
     name: e2e Android
     runs-on: ubuntu-cpu16-ram64
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup NodeJS@18
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: AVD cache
+      - name: Cache AVD instance
         uses: actions/cache@v4
         id: avd-cache
         with:
@@ -69,7 +75,7 @@ jobs:
       - name: Install packages
         run: yarn install
 
-      - name: Install Zulu17
+      - name: Setup Zulu@17
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
@@ -124,7 +130,7 @@ jobs:
           echo "POSTHOG_API_KEY=${{secrets.POSTHOG_API_KEY}}" >> .env
           echo "POSTHOG_HOST=${{secrets.POSTHOG_HOST}}" >> .env
 
-      - name: Build android app
+      - name: Build Android app
         run: |
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${MATCH_DEPLOY_KEY}"

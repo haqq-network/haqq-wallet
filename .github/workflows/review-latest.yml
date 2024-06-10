@@ -1,4 +1,7 @@
-name: Submit latest to Review
+# Overview
+# This GitHub Action automates the process of sending a new build for an review in Play Market/App Store.
+
+name: Submit Latest Build to Review [NOT_TESTED]
 
 on:
   workflow_dispatch:
@@ -11,36 +14,37 @@ jobs:
       - name: Show self-hosted machine infomation
         run: uname -a
 
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.SERVICE_TOKEN }}
 
-      - uses: actions/setup-node@v4
+      - name: Setup NodeJS@18
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
       - name: Install packages
         run: yarn install
 
-      - name: Verify env file
+      - name: Verify .env
         run: yarn env:verify
 
       - name: Decode secrets
         run: |
           echo ${{secrets.GOOGLE_SERVICE_ACCOUNT}} | base64 -d > android/app/google-account.json
 
-      - name: Install Fastlane
+      - name: Setup Fastlane
         run: |
           bundle install
 
-      - name: Execute Fastlane command
-        run: |
-          bundle exec fastlane ios submit_latest_to_review
-          bundle exec fastlane android submit_latest_to_review
+      - name: Send Latest Android To Review
+        run: bundle exec fastlane android submit_latest_to_review
+
+      - name: Send Latest iOS To Review
+        run: bundle exec fastlane ios submit_latest_to_review
         env:
           APPLE_KEY_ID: ${{ secrets.APPLE_KEY_ID }}
           APPLE_ISSUER_ID: ${{ secrets.APPLE_ISSUER_ID }}
           APPLE_KEY_CONTENT: ${{ secrets.APPLE_KEY_CONTENT }}
           DEVELOPER_APP_IDENTIFIER: ${{ secrets.IOS_IDENTIFIER }}
-
-      
