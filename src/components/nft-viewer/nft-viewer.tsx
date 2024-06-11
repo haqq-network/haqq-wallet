@@ -18,7 +18,11 @@ import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {I18N, getText} from '@app/i18n';
 import {Nft, NftCollection, NftItem} from '@app/models/nft';
 import {Wallet} from '@app/models/wallet';
-import {HomeStackRoutes, NftStackRoutes} from '@app/route-types';
+import {
+  HomeStackParamList,
+  HomeStackRoutes,
+  NftStackRoutes,
+} from '@app/route-types';
 import {NftWidgetSize} from '@app/types';
 import {SortDirectionEnum, arraySortUtil} from '@app/utils';
 
@@ -72,7 +76,7 @@ export const NftViewer = ({
   wallet,
   scrollEnabled = true,
 }: NftViewerProps) => {
-  const navigation = useTypedNavigation();
+  const navigation = useTypedNavigation<HomeStackParamList>();
   const {showActionSheetWithOptions} = useActionSheet();
   const {animate} = useLayoutAnimation();
 
@@ -138,7 +142,7 @@ export const NftViewer = ({
     (item: NftCollection) => {
       navigation.navigate(HomeStackRoutes.Nft, {
         initScreen: NftStackRoutes.NftCollectionDetails,
-        item,
+        address: item.id,
       });
     },
     [navigation],
@@ -148,7 +152,7 @@ export const NftViewer = ({
     (item: NftItem) => {
       navigation.navigate(HomeStackRoutes.Nft, {
         initScreen: NftStackRoutes.NftItemDetails,
-        item,
+        address: item.address,
       });
     },
     [navigation],

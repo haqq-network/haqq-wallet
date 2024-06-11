@@ -32,7 +32,7 @@ export const TransactionAddressScreen = observer(() => {
 
   const [address, setAddress] = useState(route.params?.to || '');
   const filteredWallets = useMemo(() => {
-    if (!wallets || !wallets.length) {
+    if (!wallets?.length) {
       return [];
     }
 
@@ -54,7 +54,7 @@ export const TransactionAddressScreen = observer(() => {
   }, [address, wallets]);
 
   const filteredContacts = useMemo(() => {
-    if (!contacts || !contacts.length) {
+    if (!contacts?.length) {
       return [];
     }
 
