@@ -139,6 +139,15 @@ export const SwapScreen = observer(() => {
     app.getAvailableBalance(currentWallet.address),
     MIN_SWAP_AMOUNT,
   );
+  const providerFee = useMemo(() => {
+    const symbol = tokenIn?.symbol!;
+    const decimals = tokenIn?.decimals!;
+    if (!estimateData?.fee) {
+      return new Balance(Balance.Empty, decimals, symbol);
+    }
+    return new Balance(estimateData?.fee.amount || '0', decimals, symbol);
+  }, [tokenIn, estimateData]);
+  logger.log('providerFee', {providerFee}, estimateData?.fee);
   const isLoading = useMemo(
     () =>
       !poolsData?.contracts?.length ||
@@ -992,6 +1001,7 @@ export const SwapScreen = observer(() => {
       t1Available={t1Available}
       isWrapTx={isWrapTx}
       isUnwrapTx={isUnwrapTx}
+      providerFee={providerFee}
       onPressWrap={onPressWrap}
       onPressUnrap={onPressUnrap}
       onPressSwap={onPressSwap}

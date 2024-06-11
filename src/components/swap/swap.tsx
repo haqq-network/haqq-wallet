@@ -66,6 +66,7 @@ export interface SwapProps {
   t1Current: Balance;
   t0Available: Balance;
   t1Available: Balance;
+  providerFee: Balance;
   onPressWrap(): Promise<void>;
   onPressUnrap(): Promise<void>;
   estimate(token?: Balance): Promise<void>;
@@ -97,6 +98,7 @@ export const Swap = observer(
     t0Available,
     t1Available,
     currentWallet,
+    providerFee,
     onPressWrap,
     onPressUnrap,
     // estimate,
@@ -192,9 +194,7 @@ export const Swap = observer(
             />
             <EstimatedValue
               title="Provider Fee"
-              value={`${new Balance(estimateData.fee.amount).toFloat()}${
-                STRINGS.NBSP
-              }${estimateData.fee.denom}`}
+              value={providerFee.toFiat({useDefaultCurrency: true})}
             />
             <EstimatedValue
               title="Price impact"
