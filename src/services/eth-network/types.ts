@@ -98,6 +98,7 @@ export type TxEstimationParams = {
   to: string;
   value: Balance;
   data?: string;
+  minGas?: Balance;
 };
 
 export type EstimationVariant = 'low' | 'average' | 'high';

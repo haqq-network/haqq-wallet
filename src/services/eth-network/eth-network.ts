@@ -151,7 +151,7 @@ export class EthNetwork {
    * @returns fee data
    */
   static async estimate(
-    {from, to, value, data}: TxEstimationParams,
+    {from, to, value, data, minGas}: TxEstimationParams,
     calculationType: EstimationVariant = 'average',
   ): Promise<CalculatedFees> {
     try {
@@ -180,7 +180,7 @@ export class EthNetwork {
         throw new Error("Tx estimation failed: Can't get maxPriorityFeePerGas");
       }
 
-      const estimateGasLimit = await rpcProvider.estimateGas({
+      const gasLimit = await rpcProvider.estimateGas({
         from,
         to,
         data,
@@ -188,7 +188,6 @@ export class EthNetwork {
       } as Deferrable<TransactionRequest>);
 
       const maxBaseFee = block.baseFeePerGas;
-      const gasLimit = new Balance(estimateGasLimit);
 
       let priorityFee = maxBaseFee;
 
@@ -202,12 +201,10 @@ export class EthNetwork {
       }
 
       return {
-        gasLimit,
+        gasLimit: new Balance(gasLimit).max(minGas),
         maxBaseFee: new Balance(maxBaseFee),
         maxPriorityFee: new Balance(priorityFee),
-        expectedFee: new Balance(
-          estimateGasLimit.mul(maxBaseFee.add(priorityFee)),
-        ),
+        expectedFee: new Balance(gasLimit.mul(maxBaseFee.add(priorityFee))),
       };
     } catch (error) {
       Logger.captureException(error, 'EthNetwork.estimateTransaction error');
