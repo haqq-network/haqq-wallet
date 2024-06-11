@@ -25,7 +25,7 @@ import {ShadowCard} from '@app/components/ui/shadow-card';
 import {openURL} from '@app/helpers/url';
 import {BannerButtonEvent} from '@app/models/banner';
 import {EventTracker} from '@app/services/event-tracker';
-import {IBannerWidget} from '@app/types';
+import {IBannerWidget, MarketingEvents} from '@app/types';
 import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
 
 export interface HomeBannerProps {
@@ -47,9 +47,15 @@ export const BannerWidget = ({banner, style}: HomeBannerProps) => {
   }, []);
 
   const onPressBanner = useCallback(async () => {
+    const eventParams = JSON.parse(JSON.stringify(banner));
     if (banner.event) {
-      EventTracker.instance.trackEvent(banner.event);
+      EventTracker.instance.trackEvent(banner.event, eventParams);
     }
+
+    EventTracker.instance.trackEvent(
+      MarketingEvents.bannerClicked,
+      eventParams,
+    );
 
     setLoading(true);
     const link = banner.target;

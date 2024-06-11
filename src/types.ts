@@ -94,6 +94,8 @@ export enum MarketingEvents {
 
   appStarted = 'w8hbt0',
   navigation = '68gzdc',
+
+  bannerClicked = '9zjcys',
 }
 
 export enum PopupNotificationBannerTypes {
