@@ -1,4 +1,7 @@
-name: Slack notify
+# Overview
+# This GitHub Action send Slack notification about the new Haqq Wallet build on GitHub.
+
+name: Slack Notification Hook [TRIGGER]
 
 on:
   workflow_dispatch:
@@ -14,18 +17,20 @@ on:
 
 jobs:
   slack_notify:
-    name: Slack notify
+    name: Slack notification
     runs-on: ubuntu-cpu16-ram64
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v4
+      - name: Setup NodeJS@18
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: Install Ruby
+      - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2.0'
@@ -56,7 +61,7 @@ jobs:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           FIREBASE_TESTERS: ${{ secrets.FIREBASE_TESTERS }}
 
-      - name: Send GitHub Action trigger data to Slack workflow
+      - name: Send Slack notification
         uses: slackapi/slack-github-action@v1
         with:
           payload: |

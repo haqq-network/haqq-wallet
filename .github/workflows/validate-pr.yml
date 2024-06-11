@@ -1,4 +1,9 @@
-name: Check PR title
+# Overview
+# This GitHub Action workflow is designed to validate pull requests (PRs) for the Haqq Wallet project.
+
+# Examples: https://www.conventionalcommits.org/en/v1.0.0/
+
+name: Check PR Title [TRIGGER]
 on:
   pull_request_target:
     types:
@@ -10,6 +15,7 @@ jobs:
   lint:
     runs-on: ubuntu-cpu16-ram64
     steps:
-      - uses: aslafy-z/conventional-pr-title-action@v3
+      - name: Validate PR title
+        uses: aslafy-z/conventional-pr-title-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
