@@ -28,7 +28,7 @@ import {onDeepLink} from '@app/event-actions/on-deep-link';
 import {getWindowDimensions} from '@app/helpers';
 import {BannerButtonEvent} from '@app/models/banner';
 import {EventTracker} from '@app/services/event-tracker';
-import {IAdWidget} from '@app/types';
+import {IAdWidget, MarketingEvents} from '@app/types';
 import {openWeb3Browser} from '@app/utils';
 import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
 
@@ -54,9 +54,15 @@ export const AdWidget = ({banner, style}: HomeBannerProps) => {
   }, []);
 
   const onPressBanner = useCallback(async () => {
+    const eventParams = JSON.parse(JSON.stringify(banner));
     if (banner.event) {
-      EventTracker.instance.trackEvent(banner.event);
+      EventTracker.instance.trackEvent(banner.event, eventParams);
     }
+
+    EventTracker.instance.trackEvent(
+      MarketingEvents.bannerClicked,
+      eventParams,
+    );
 
     setLoading(true);
     const link = banner.target;
