@@ -1,6 +1,14 @@
 import {Alert, Linking} from 'react-native';
 
+import {openInAppBrowser} from '@app/utils';
+
 export const openURL = async (url: string) => {
+  const isWebLink = /^http/.test(url?.trim?.());
+
+  if (isWebLink) {
+    return openInAppBrowser(url);
+  }
+
   // Checking if the link is supported for links with custom URL scheme.
   const openAlert = () => {
     Alert.alert('Sorry, We could not open that link:', url);
