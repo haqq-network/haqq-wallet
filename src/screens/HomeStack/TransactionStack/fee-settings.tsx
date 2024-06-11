@@ -66,11 +66,14 @@ export const FeeSettingsScreen = () => {
 
   const estimate = useCallback(
     async (txEstimationVariant: EstimationVariant) => {
-      const data = await EthNetwork.estimate(txEstimationVariant, {
-        from: params.from,
-        to: params.to,
-        value: params.amount,
-      });
+      const data = await EthNetwork.estimate(
+        {
+          from: params.from,
+          to: params.to,
+          value: params.amount,
+        },
+        txEstimationVariant,
+      );
       setGasLimit(String(data.gasLimit.toWei()));
       setMaxBaseFee(String(data.maxBaseFee.toGWei()));
       setPriorityFee(String(data.maxPriorityFee.toGWei()));

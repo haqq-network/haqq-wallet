@@ -487,7 +487,7 @@ export const SettingsTestScreen = observer(() => {
 
     const transport = await getProviderInstanceForWallet(wallet);
 
-    const estimate = await EthNetwork.estimate('average', {
+    const estimate = await EthNetwork.estimate({
       from: wallet.address,
       to: contract,
       value: new Balance(100000000000000, 0),

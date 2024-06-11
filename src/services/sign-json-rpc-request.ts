@@ -168,7 +168,7 @@ export class SignJsonRpcRequest {
         const nonce = await rpcProvider.getTransactionCount(address, 'latest');
 
         const {gasLimit, maxBaseFee, maxPriorityFee} =
-          await EthNetwork.estimate('average', {
+          await EthNetwork.estimate({
             from: signTransactionRequest.from!,
             to: signTransactionRequest.to!,
             value: new Balance(signTransactionRequest.value! || Balance.Empty),

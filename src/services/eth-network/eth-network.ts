@@ -151,8 +151,8 @@ export class EthNetwork {
    * @returns fee data
    */
   static async estimate(
-    calculationType: EstimationVariant,
     {from, to, value, data}: TxEstimationParams,
+    calculationType: EstimationVariant = 'average',
   ): Promise<CalculatedFees> {
     try {
       const rpcProvider = await getRpcProvider(app.provider);
@@ -254,7 +254,6 @@ export class EthNetwork {
   }
 
   static async estimateERC20Transfer(
-    estimationVariant: EstimationVariant,
     {
       from,
       to,
@@ -266,14 +265,18 @@ export class EthNetwork {
       amount: Balance;
       contractAddress: string;
     },
+    estimationVariant: EstimationVariant = 'average',
   ) {
     const data = getERC20TransferData(to, amount, contractAddress);
-    return await EthNetwork.estimate(estimationVariant, {
-      from,
-      to: contractAddress,
-      value: Balance.Empty,
-      data,
-    });
+    return await EthNetwork.estimate(
+      {
+        from,
+        to: contractAddress,
+        value: Balance.Empty,
+        data,
+      },
+      estimationVariant,
+    );
   }
 
   async transferERC20(
@@ -315,7 +318,7 @@ export class EthNetwork {
     contractAddress: string,
   ) {
     const data = getERC721TransferData(from, to, tokenId);
-    return await EthNetwork.estimate('average', {
+    return await EthNetwork.estimate({
       from,
       to: contractAddress,
       value: Balance.Empty,
@@ -362,7 +365,7 @@ export class EthNetwork {
     contractAddress: string,
   ) {
     const data = getERC1155TransferData(from, to, tokenId);
-    return await EthNetwork.estimate('average', {
+    return await EthNetwork.estimate({
       from,
       to: contractAddress,
       value: Balance.Empty,

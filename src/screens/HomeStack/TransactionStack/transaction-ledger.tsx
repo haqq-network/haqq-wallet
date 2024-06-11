@@ -54,7 +54,7 @@ export const TransactionLedgerScreen = memo(() => {
         transport.current = await getProviderInstanceForWallet(wallet);
 
         const ethNetworkProvider = new EthNetwork();
-        const calculatedFees = await EthNetwork.estimate('average', {
+        const calculatedFees = await EthNetwork.estimate({
           from: wallet.address,
           to: route.params.to,
           value: route.params.amount,

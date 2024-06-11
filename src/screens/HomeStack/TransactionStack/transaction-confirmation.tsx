@@ -53,14 +53,14 @@ export const TransactionConfirmationScreen = observer(() => {
       let estimateFee;
 
       if (token.is_erc20) {
-        estimateFee = await EthNetwork.estimateERC20Transfer('average', {
+        estimateFee = await EthNetwork.estimateERC20Transfer({
           from: wallet?.address!,
           to: route.params.to,
           amount: route.params.amount,
           contractAddress: AddressUtils.toEth(token.id),
         });
       } else {
-        estimateFee = await EthNetwork.estimate('average', {
+        estimateFee = await EthNetwork.estimate({
           from: route.params.from,
           to: route.params.to,
           value: route.params.amount,

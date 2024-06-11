@@ -51,14 +51,14 @@ export const TransactionSumScreen = memo(() => {
       try {
         const token = route.params.token;
         if (token.is_erc20) {
-          return await EthNetwork.estimateERC20Transfer('average', {
+          return await EthNetwork.estimateERC20Transfer({
             from: wallet?.address!,
             to: route.params.to,
             amount,
             contractAddress: AddressUtils.toEth(token.id),
           });
         } else {
-          return await EthNetwork.estimate('average', {
+          return await EthNetwork.estimate({
             from: route.params.from,
             to: route.params.to,
             value: amount,
@@ -124,7 +124,7 @@ export const TransactionSumScreen = memo(() => {
 
   useEffectAsync(async () => {
     const b = app.getAvailableBalance(route.params.from);
-    const {expectedFee} = await EthNetwork.estimate('average', {
+    const {expectedFee} = await EthNetwork.estimate({
       from: route.params.from,
       to,
       value: b,
