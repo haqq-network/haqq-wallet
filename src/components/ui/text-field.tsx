@@ -31,15 +31,24 @@ import Animated, {
 import {Color, getColor} from '@app/colors';
 import {Spacer} from '@app/components/ui/spacer';
 import {Text, TextProps, TextVariant} from '@app/components/ui/text';
-import {createTheme} from '@app/helpers';
+import {createTheme, showModal} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {sleep} from '@app/utils';
 import {IS_ANDROID, IS_IOS} from '@app/variables/common';
+
+import {Button, ButtonSize} from './button';
+
+type InfoBlock = {
+  label: string;
+  title: string;
+  description?: string;
+};
 
 type Props = Omit<TextInputProps, 'placeholder'> & {
   label: I18N | string;
   placeholder: I18N;
   hint?: I18N | undefined;
+  infoBlock?: InfoBlock;
   errorText?: TextProps['children'] | undefined;
   errorTextI18n?: TextProps['i18n'] | undefined;
   error?: boolean;
@@ -56,6 +65,7 @@ export const TextField: React.FC<Props> = memo(
     lines = 1,
     label,
     hint,
+    infoBlock,
     error,
     errorText,
     errorTextI18n,
@@ -244,6 +254,21 @@ export const TextField: React.FC<Props> = memo(
             <Text variant={TextVariant.t14} i18n={hint} style={styles.error} />
           </>
         )}
+        {Boolean(infoBlock) && (
+          <Button
+            size={ButtonSize.small}
+            style={styles.infoButton}
+            onPress={() => {
+              showModal('info', {
+                title: infoBlock!.title,
+                description: infoBlock!.description,
+              });
+            }}>
+            <Text color={Color.textGreen1} variant={TextVariant.t11}>
+              {infoBlock!.label}
+            </Text>
+          </Button>
+        )}
       </View>
     );
   },
@@ -292,5 +317,9 @@ const styles = createTheme({
     position: 'absolute',
     height: 28,
     top: 18,
+  },
+  infoButton: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 0,
   },
 });

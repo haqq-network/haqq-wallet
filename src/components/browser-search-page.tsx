@@ -14,7 +14,6 @@ import {Link} from '@app/types';
 import {LinkPreview, LinkPreviewVariant} from './link-preview';
 import {
   Button,
-  ButtonVariant,
   First,
   Icon,
   IconsName,
@@ -22,6 +21,7 @@ import {
   MenuNavigationButton,
   Spacer,
   Text,
+  TextVariant,
 } from './ui';
 
 import {onUrlSubmit, showPhishingAlert} from '../helpers/web3-browser-utils';
@@ -125,13 +125,12 @@ export const BrowserSearchPage = ({
         )}
         {!!recentLinks?.length && (
           <View style={styles.historyContainer}>
-            <Text t10 i18n={I18N.browserSearchHistory} />
+            <Text variant={TextVariant.t10} i18n={I18N.browserSearchHistory} />
             <Spacer flex={1} />
             <Button
               i18n={I18N.clear}
               onPress={onPressClearHistory}
               textColor={Color.textGreen1}
-              variant={ButtonVariant.text}
             />
           </View>
         )}

@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react';
 
 import {Color} from '@app/colors';
-import {Text} from '@app/components/ui/text';
+import {Text, TextPosition, TextVariant} from '@app/components/ui/text';
 import {I18N, getText} from '@app/i18n';
 import {Balance} from '@app/services/balance';
 import {LONG_NUM_PRECISION} from '@app/variables/common';
@@ -26,10 +26,10 @@ export const NetworkFee = ({fee, currency = 'aISLM'}: NetworkFeeProps) => {
 
   return (
     <Text
-      t15
+      variant={TextVariant.t15}
       i18n={I18N.networkFee}
       i18params={{value}}
-      center
+      position={TextPosition.center}
       color={Color.textBase2}
     />
   );

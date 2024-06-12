@@ -549,6 +549,7 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
     hash: string;
     token: IToken;
     amount?: Balance;
+    fee?: CalculatedFees;
   };
   [TransactionStackRoutes.TransactionNftFinish]: {
     nft: NftItem;

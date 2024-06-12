@@ -80,8 +80,8 @@ export const TransactionConfirmationScreen = observer(() => {
 
         const provider = await getProviderInstanceForWallet(wallet, false);
 
-        let transaction;
         if (fee) {
+          let transaction;
           if (token.is_erc20) {
             transaction = await ethNetworkProvider.transferERC20(
               fee,
@@ -100,17 +100,18 @@ export const TransactionConfirmationScreen = observer(() => {
               route.params.amount,
             );
           }
-        }
 
-        if (transaction) {
-          EventTracker.instance.trackEvent(MarketingEvents.sendFund);
+          if (transaction) {
+            EventTracker.instance.trackEvent(MarketingEvents.sendFund);
 
-          navigation.navigate(TransactionStackRoutes.TransactionFinish, {
-            transaction,
-            hash: transaction.hash,
-            token: route.params.token,
-            amount: token.is_erc20 ? route.params.amount : undefined,
-          });
+            navigation.navigate(TransactionStackRoutes.TransactionFinish, {
+              transaction,
+              hash: transaction.hash,
+              token: route.params.token,
+              amount: token.is_erc20 ? route.params.amount : undefined,
+              fee,
+            });
+          }
         }
       } catch (e) {
         const errorId = makeID(4);

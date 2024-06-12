@@ -33,6 +33,7 @@ import {ViewErrorDetails} from '@app/components/modals/view-error-details';
 import {WalletsBottomSheet} from '@app/components/modals/wallets-bottom-sheet';
 import {createTheme, hideModal} from '@app/helpers';
 import {useTheme} from '@app/hooks';
+import {PopupInfoScreen} from '@app/screens/popup-info';
 import {PopupNotificationScreen} from '@app/screens/popup-notification';
 import {ModalType, Modals, ModalsListBase} from '@app/types';
 
@@ -163,6 +164,8 @@ export const ModalWrapper = ({
         return <RemoveSSS {...modal} onClose={onCloseModalPress} />;
       case ModalType.popupNotification:
         return <PopupNotificationScreen onCloseProp={onCloseModalPress} />;
+      case ModalType.info:
+        return <PopupInfoScreen {...modal} onCloseProp={onCloseModalPress} />;
       default:
         return null;
     }

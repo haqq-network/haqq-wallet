@@ -172,6 +172,10 @@ export const FeeSettingsScreen = () => {
           value={gasLimit}
           onChangeText={setGasLimit}
           editable={activeTabIndex === 3}
+          infoBlock={{
+            label: 'Test label',
+            title: 'Test title',
+          }}
         />
         <Spacer height={24} />
         <TextField

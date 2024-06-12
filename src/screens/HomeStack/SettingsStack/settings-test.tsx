@@ -243,6 +243,10 @@ const getTestModals = (): TestModals => {
     popupNotification: {
       onCloseProp: () => logger.log('popupNotification closed'),
     },
+    info: {
+      title: 'Test title',
+      onClose: () => logger.log('popupInfo closed'),
+    },
   };
 
   if (wallets.length) {
