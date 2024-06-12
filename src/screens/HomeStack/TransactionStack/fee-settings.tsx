@@ -173,8 +173,9 @@ export const FeeSettingsScreen = () => {
           onChangeText={setGasLimit}
           editable={activeTabIndex === 3}
           infoBlock={{
-            label: 'Test label',
-            title: 'Test title',
+            label: getText(I18N.moreAbout, {item: getText(I18N.gasLimit)}),
+            title: I18N.gasLimit,
+            description: I18N.gasLimitDescription,
           }}
         />
         <Spacer height={24} />
@@ -184,6 +185,11 @@ export const FeeSettingsScreen = () => {
           value={maxBaseFee}
           onChangeText={setMaxBaseFee}
           editable={activeTabIndex === 3}
+          infoBlock={{
+            label: getText(I18N.moreAbout, {item: getText(I18N.maxBaseFee)}),
+            title: I18N.maxBaseFee,
+            description: I18N.maxBaseFeeDescription,
+          }}
         />
         <Spacer height={24} />
         <TextField
@@ -192,6 +198,13 @@ export const FeeSettingsScreen = () => {
           value={priorityFee}
           onChangeText={setPriorityFee}
           editable={activeTabIndex === 3}
+          infoBlock={{
+            label: getText(I18N.moreAbout, {
+              item: getText(I18N.maxPriorityFee),
+            }),
+            title: I18N.maxPriorityFee,
+            description: I18N.maxPriorityFeeDescription,
+          }}
         />
         <Spacer height={28} />
         <View style={styles.fee}>

@@ -965,6 +965,7 @@ export enum I18N {
   removeSSSAlertTitle = 'removeSSSAlertTitle',
   removeSSSAlertDescription = 'removeSSSAlertDescription',
   gasLimit = 'gasLimit',
+  gasLimitDescription = 'gasLimitDescription',
   gasPrice = 'gasPrice',
   adjustment = 'adjustment',
   moreAbout = 'moreAbout',
@@ -984,7 +985,9 @@ export enum I18N {
   transactionDetailApproveSpenderTitle = 'transactionDetailApproveSpenderTitle',
   transactionApproveERC20Title = 'transactionApproveERC20Title',
   maxBaseFee = 'maxBaseFee',
+  maxBaseFeeDescription = 'maxBaseFeeDescription',
   maxPriorityFee = 'maxPriorityFee',
+  maxPriorityFeeDescription = 'maxPriorityFeeDescription',
 }
 
 const defaultTranslation = {en};

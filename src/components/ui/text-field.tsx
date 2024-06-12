@@ -32,7 +32,7 @@ import {Color, getColor} from '@app/colors';
 import {Spacer} from '@app/components/ui/spacer';
 import {Text, TextProps, TextVariant} from '@app/components/ui/text';
 import {createTheme, showModal} from '@app/helpers';
-import {I18N} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
 import {sleep} from '@app/utils';
 import {IS_ANDROID, IS_IOS} from '@app/variables/common';
 
@@ -40,8 +40,8 @@ import {Button, ButtonSize} from './button';
 
 type InfoBlock = {
   label: string;
-  title: string;
-  description?: string;
+  title: I18N;
+  description?: I18N;
 };
 
 type Props = Omit<TextInputProps, 'placeholder'> & {
@@ -260,8 +260,10 @@ export const TextField: React.FC<Props> = memo(
             style={styles.infoButton}
             onPress={() => {
               showModal('info', {
-                title: infoBlock!.title,
-                description: infoBlock!.description,
+                title: getText(infoBlock!.title),
+                description: infoBlock!.description
+                  ? getText(infoBlock!.description)
+                  : '',
               });
             }}>
             <Text color={Color.textGreen1} variant={TextVariant.t11}>
