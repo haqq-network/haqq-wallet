@@ -19,6 +19,7 @@ import {
   BALANCE_CACHE_KEY,
   CalculatedFees,
   EstimationVariant,
+  TxCustomEstimationParams,
   TxEstimationParams,
 } from './types';
 
@@ -132,6 +133,56 @@ export class EthNetwork {
     const rpcProvider = await getRpcProvider(app.provider);
 
     return await rpcProvider.getTransactionReceipt(txHash);
+  }
+
+  static async customEstimate(
+    {from, to, value, data}: TxEstimationParams,
+    {gasLimit, maxBaseFee, maxPriorityFee}: TxCustomEstimationParams,
+  ): Promise<CalculatedFees> {
+    try {
+      const rpcProvider = await getRpcProvider(app.provider);
+      const block = await rpcProvider.getBlock('latest');
+      const estimateGasLimit = await rpcProvider.estimateGas({
+        from,
+        to,
+        data,
+        value: value.toHex(),
+      } as Deferrable<TransactionRequest>);
+
+      let resultGasLimit = gasLimit;
+      if (resultGasLimit.lt(estimateGasLimit)) {
+        resultGasLimit = estimateGasLimit;
+      }
+
+      let resultMaxBaseFee = maxBaseFee;
+      if (resultMaxBaseFee.lt(block.baseFeePerGas!)) {
+        resultMaxBaseFee = block.baseFeePerGas!;
+      }
+
+      // console.log('entered numbers', {gasLimit, maxBaseFee, maxPriorityFee});
+      // console.log('estimated numbers', {
+      //   gasLimit: estimateGasLimit,
+      //   maxBaseFee: block.baseFeePerGas,
+      //   maxPriorityFee,
+      // });
+      // console.log('result numbers', {
+      //   gasLimit: new Balance(gasLimit).max(estimateGasLimit),
+      //   maxBaseFee: estimateMaxBaseFee,
+      //   maxPriorityFee,
+      // });
+
+      return {
+        gasLimit: new Balance(resultGasLimit),
+        maxBaseFee: new Balance(resultMaxBaseFee),
+        maxPriorityFee: new Balance(maxPriorityFee),
+        expectedFee: new Balance(
+          resultGasLimit.mul(resultMaxBaseFee.add(maxPriorityFee)),
+        ),
+      };
+    } catch (error) {
+      Logger.captureException(error, 'EthNetwork.estimateTransaction error');
+      throw error;
+    }
   }
 
   /**

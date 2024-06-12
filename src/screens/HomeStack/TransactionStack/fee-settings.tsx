@@ -1,5 +1,6 @@
 import {useCallback, useEffect, useState} from 'react';
 
+import {BigNumber} from 'ethers';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -48,43 +49,60 @@ export const FeeSettingsScreen = () => {
     null,
   );
 
-  useEffect(() => {
-    if (activeTabIndex !== 3) {
-      switch (activeTabIndex) {
-        case 0:
-          estimate('low');
-          break;
-        case 1:
-          estimate('average');
-          break;
-        case 2:
-          estimate('high');
-          break;
-      }
-    }
-  }, [activeTabIndex]);
-
   const estimate = useCallback(
     async (txEstimationVariant: EstimationVariant) => {
-      const data = await EthNetwork.estimate(
-        {
-          from: params.from,
-          to: params.to,
-          value: params.amount,
-        },
-        txEstimationVariant,
-      );
-      setGasLimit(String(data.gasLimit.toWei()));
-      setMaxBaseFee(String(data.maxBaseFee.toGWei()));
-      setPriorityFee(String(data.maxPriorityFee.toGWei()));
-      setCalculatedFees(data);
+      if (txEstimationVariant === 'custom') {
+        const data = await EthNetwork.customEstimate(
+          {
+            from: params.from,
+            to: params.to,
+            value: params.amount,
+          },
+          {
+            gasLimit: BigNumber.from(gasLimit),
+            maxBaseFee: BigNumber.from(+maxBaseFee * Math.pow(10, 9)),
+            maxPriorityFee: BigNumber.from(+priorityFee * Math.pow(10, 9)),
+          },
+        );
+
+        setCalculatedFees(data);
+      } else {
+        const data = await EthNetwork.estimate(
+          {
+            from: params.from,
+            to: params.to,
+            value: params.amount,
+          },
+          txEstimationVariant,
+        );
+        setGasLimit(String(data.gasLimit.toWei()));
+        setMaxBaseFee(String(data.maxBaseFee.toGWei()));
+        setPriorityFee(String(data.maxPriorityFee.toGWei()));
+        setCalculatedFees(data);
+      }
     },
-    [],
+    [gasLimit, maxBaseFee, priorityFee],
   );
 
   const onTabChange = useCallback((tabName: string) => {
     setActiveTabIndex(Number(tabName));
   }, []);
+
+  useEffect(() => {
+    switch (activeTabIndex) {
+      case 0:
+        estimate('low');
+        break;
+      case 1:
+        estimate('average');
+        break;
+      case 2:
+        estimate('high');
+        break;
+      case 3:
+        estimate('custom');
+    }
+  }, [activeTabIndex, estimate]);
 
   return (
     <View style={styles.container}>
