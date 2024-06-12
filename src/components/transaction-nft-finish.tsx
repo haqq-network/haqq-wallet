@@ -21,8 +21,8 @@ import {useNftImage} from '@app/hooks/nft';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {NftItem} from '@app/models/nft';
-import {Balance} from '@app/services/balance';
 import {EthNetwork} from '@app/services/eth-network/eth-network';
+import {CalculatedFees} from '@app/services/eth-network/types';
 import {TransactionResponse} from '@app/types';
 
 type TransactionFinishProps = {
@@ -32,7 +32,7 @@ type TransactionFinishProps = {
   onPressContact: () => void;
   contact: Contact | null;
   short: string;
-  fee?: Balance | null;
+  fee?: CalculatedFees | null;
 };
 
 export const TransactionNftFinish = ({
@@ -90,7 +90,7 @@ export const TransactionNftFinish = ({
         </Text>
       </View>
 
-      <NetworkFee fee={fee} currency="ISLM" />
+      <NetworkFee fee={fee?.expectedFee} currency="ISLM" />
 
       <Spacer />
 

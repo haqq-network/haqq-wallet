@@ -243,6 +243,10 @@ const getTestModals = (): TestModals => {
     popupNotification: {
       onCloseProp: () => logger.log('popupNotification closed'),
     },
+    info: {
+      title: 'Test title',
+      onClose: () => logger.log('popupInfo closed'),
+    },
   };
 
   if (wallets.length) {
@@ -487,13 +491,18 @@ export const SettingsTestScreen = observer(() => {
 
     const transport = await getProviderInstanceForWallet(wallet);
 
-    const unsignedTx = await EthNetwork.populateTransaction(
-      wallet.address,
-      contract,
-      new Balance(100000000000000, 0),
+    const estimate = await EthNetwork.estimate({
+      from: wallet.address,
+      to: contract,
+      value: new Balance(100000000000000, 0),
       data,
-      new Balance(250000, 0),
-    );
+    });
+    const unsignedTx = await EthNetwork.populateTransaction(estimate, {
+      from: wallet.address,
+      to: contract,
+      value: new Balance(100000000000000, 0),
+      data,
+    });
 
     const signedTx = await transport.signTransaction(wallet.path!, unsignedTx);
     Logger.log('signedTx', signedTx);

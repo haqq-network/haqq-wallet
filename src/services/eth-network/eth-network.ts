@@ -5,7 +5,6 @@ import {BigNumber, utils} from 'ethers';
 
 import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
-import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
@@ -14,24 +13,28 @@ import {Balance} from '@app/services/balance';
 import {getERC1155TransferData} from '@app/services/eth-network/erc1155';
 import {getERC721TransferData} from '@app/services/eth-network/erc721';
 import {storage} from '@app/services/mmkv';
-import {applyEthTxMultiplier} from '@app/utils';
 
 import {getERC20TransferData} from './erc20';
-import {BALANCE_CACHE_KEY} from './types';
-
-import {RemoteConfig} from '../remote-config';
+import {
+  BALANCE_CACHE_KEY,
+  CalculatedFees,
+  EstimationVariant,
+  TxCustomEstimationParams,
+  TxEstimationParams,
+} from './types';
 
 export class EthNetwork {
   static chainId: number = getDefaultChainId();
   static explorer: string | undefined;
 
+  static init(provider: Provider) {
+    EthNetwork.chainId = provider.ethChainId;
+    EthNetwork.explorer = provider.explorer;
+  }
+
   static async populateTransaction(
-    from: string,
-    to: string,
-    value: Balance,
-    data: string = '0x',
-    minGas = getRemoteBalanceValue('eth_min_gas_limit'),
-    provider = app.provider,
+    estimate: CalculatedFees,
+    {from, to, value, data}: TxEstimationParams,
   ) {
     try {
       if (!AddressUtils.isEthAddress(to)) {
@@ -40,26 +43,19 @@ export class EthNetwork {
       if (!AddressUtils.isEthAddress(from)) {
         throw new Error('Invalid "to" address');
       }
-      const rpcProvider = await getRpcProvider(provider);
+      const rpcProvider = await getRpcProvider(app.provider);
       const nonce = await rpcProvider.getTransactionCount(from, 'latest');
-      const estimate = await EthNetwork.estimateTransaction(
-        from,
-        to,
-        value,
-        data,
-        minGas,
-      );
 
       const transaction = {
         to: to,
         value: value.toHex(),
         nonce,
         type: 2,
-        maxFeePerGas: estimate.maxFeePerGas.toHex(),
-        maxPriorityFeePerGas: estimate.maxPriorityFeePerGas.toHex(),
-        gasLimit: estimate.estimateGas.toHex(),
+        maxFeePerGas: estimate.maxBaseFee.toHex(),
+        maxPriorityFeePerGas: estimate.maxPriorityFee.toHex(),
+        gasLimit: estimate.gasLimit.toHex(),
         data,
-        chainId: provider.ethChainId,
+        chainId: app.provider.ethChainId,
       };
 
       const tx = await utils.resolveProperties(transaction);
@@ -81,8 +77,8 @@ export class EthNetwork {
         to,
         value,
         data,
-        minGas,
-        provider: provider.name,
+        ...estimate,
+        provider: app.provider.name,
       });
       throw error;
     }
@@ -139,84 +135,150 @@ export class EthNetwork {
     return await rpcProvider.getTransactionReceipt(txHash);
   }
 
-  static init(provider: Provider) {
-    EthNetwork.chainId = provider.ethChainId;
-    EthNetwork.explorer = provider.explorer;
-  }
-
-  static async estimateTransaction(
-    from: string,
-    to: string,
-    value: Balance,
-    data = '0x',
-    minGas: Balance = getRemoteBalanceValue('eth_min_gas_limit'),
-    provider = app.provider,
-  ): Promise<{
-    feeWei: Balance;
-    gasPrice: Balance;
-    estimateGas: Balance;
-    maxFeePerGas: Balance;
-    maxPriorityFeePerGas: Balance;
-  }> {
-    const rpcProvider = await getRpcProvider(provider);
-
-    const feeData = await rpcProvider.getFeeData();
-
-    if (!feeData?.gasPrice) {
-      throw new Error('Gas price not found');
-    }
-
-    const gasPrice = new Balance(feeData.gasPrice, 18);
-    const maxFeePerGas = new Balance(feeData.maxFeePerGas || gasPrice, 18);
-    const maxPriorityFeePerGas = new Balance(
-      feeData.maxPriorityFeePerGas || gasPrice,
-      18,
-    );
-
-    let estimateGas = minGas;
-
+  static async customEstimate(
+    {from, to, value, data}: TxEstimationParams,
+    {gasLimit, maxBaseFee, maxPriorityFee}: TxCustomEstimationParams,
+  ): Promise<CalculatedFees> {
     try {
-      const estGas = await rpcProvider.estimateGas({
+      const rpcProvider = await getRpcProvider(app.provider);
+      const block = await rpcProvider.getBlock('latest');
+      const estimateGasLimit = await rpcProvider.estimateGas({
         from,
         to,
         data,
         value: value.toHex(),
       } as Deferrable<TransactionRequest>);
 
-      if (RemoteConfig.get('enable_eth_commission_multiplier')) {
-        estimateGas = applyEthTxMultiplier(new Balance(estGas)).max(minGas);
-      } else {
-        estimateGas = new Balance(estGas).max(minGas);
+      let resultGasLimit = gasLimit;
+      if (resultGasLimit.lt(estimateGasLimit)) {
+        resultGasLimit = estimateGasLimit;
       }
-    } catch (err) {
-      Logger.captureException(err, 'EthNetwork.estimateTransaction error');
-      throw err;
-    }
 
-    return {
-      feeWei: estimateGas.operate(gasPrice, 'mul'),
-      gasPrice,
-      estimateGas,
-      maxFeePerGas,
-      maxPriorityFeePerGas,
-    };
+      let resultMaxBaseFee = maxBaseFee;
+      if (resultMaxBaseFee.lt(block.baseFeePerGas!)) {
+        resultMaxBaseFee = block.baseFeePerGas!;
+      }
+
+      // console.log('entered numbers', {gasLimit, maxBaseFee, maxPriorityFee});
+      // console.log('estimated numbers', {
+      //   gasLimit: estimateGasLimit,
+      //   maxBaseFee: block.baseFeePerGas,
+      //   maxPriorityFee,
+      // });
+      // console.log('result numbers', {
+      //   gasLimit: new Balance(gasLimit).max(estimateGasLimit),
+      //   maxBaseFee: estimateMaxBaseFee,
+      //   maxPriorityFee,
+      // });
+
+      return {
+        gasLimit: new Balance(resultGasLimit),
+        maxBaseFee: new Balance(resultMaxBaseFee),
+        maxPriorityFee: new Balance(maxPriorityFee),
+        expectedFee: new Balance(
+          resultGasLimit.mul(resultMaxBaseFee.add(maxPriorityFee)),
+        ),
+      };
+    } catch (error) {
+      Logger.captureException(error, 'EthNetwork.estimateTransaction error');
+      throw error;
+    }
+  }
+
+  /**
+   *
+   * @description Calculation formula for expectedFee gasLimit * (baseFee + priorityFee)
+   * gasLimit = estimatedGasLimit
+   * baseFee = (block.baseFeePerGas / 10^9) GWEI
+   * priorityFee must be always lte to baseFee and calculated like
+   * lowPriorityFee = 1 GWEI
+   * averagePriorityFee = priorityFee / 2
+   * highPriorityFee = priorityFee
+   *
+   * @param from Wallet address
+   * @param to Wallet address
+   * @param value coins amount
+   * @param data aditional data if needed
+   * @returns fee data
+   */
+  static async estimate(
+    {from, to, value, data, minGas}: TxEstimationParams,
+    calculationType: EstimationVariant = 'average',
+  ): Promise<CalculatedFees> {
+    try {
+      const rpcProvider = await getRpcProvider(app.provider);
+      const {maxFeePerGas, maxPriorityFeePerGas} =
+        await rpcProvider.getFeeData();
+      const block = await rpcProvider.getBlock('latest');
+
+      if (!block) {
+        throw new Error(
+          "Tx estimation failed: Can't get latest block in chain",
+        );
+      }
+
+      if (!block.baseFeePerGas) {
+        throw new Error(
+          "Tx estimation failed: Can't get baseFeePerGas from latest block in chain",
+        );
+      }
+
+      if (!maxFeePerGas) {
+        throw new Error("Tx estimation failed: Can't get maxFeePerGas");
+      }
+
+      if (!maxPriorityFeePerGas) {
+        throw new Error("Tx estimation failed: Can't get maxPriorityFeePerGas");
+      }
+
+      const gasLimit = await rpcProvider.estimateGas({
+        from,
+        to,
+        data,
+        value: value.toHex(),
+      } as Deferrable<TransactionRequest>);
+
+      const maxBaseFee = block.baseFeePerGas;
+
+      let priorityFee = maxBaseFee;
+
+      switch (calculationType) {
+        case 'average':
+          priorityFee = maxBaseFee.div(2);
+          break;
+        case 'low':
+          priorityFee = maxBaseFee.div(20);
+          break;
+      }
+
+      return {
+        gasLimit: new Balance(gasLimit).max(minGas),
+        maxBaseFee: new Balance(maxBaseFee),
+        maxPriorityFee: new Balance(priorityFee),
+        expectedFee: new Balance(gasLimit.mul(maxBaseFee.add(priorityFee))),
+      };
+    } catch (error) {
+      Logger.captureException(error, 'EthNetwork.estimateTransaction error');
+      throw error;
+    }
   }
 
   private static getBalanceCacheKey = (address: string) =>
     BALANCE_CACHE_KEY + address.toLowerCase();
 
   async transferTransaction(
+    estimate: CalculatedFees,
     transport: ProviderInterface,
     wallet: Wallet,
     to: string,
-    amount: Balance,
+    value: Balance,
   ) {
     try {
-      const transaction = await EthNetwork.populateTransaction(
-        wallet.address,
+      const transaction = await EthNetwork.populateTransaction(estimate, {
+        from: wallet.address,
         to,
-        amount,
-      );
+        value,
+      });
       const signedTx = await transport.signTransaction(
         wallet.path!,
         transaction,
@@ -229,10 +291,10 @@ export class EthNetwork {
       return await EthNetwork.sendTransaction(signedTx);
     } catch (error) {
       Logger.captureException(error, 'EthNetwork.transferTransaction', {
-        amount,
+        value,
         walletType: wallet.type,
         from: wallet.address,
-        hdPath: wallet.path || 'null',
+        hdPath: wallet.path ?? 'null',
         to,
       });
       throw error;
@@ -240,24 +302,33 @@ export class EthNetwork {
   }
 
   static async estimateERC20Transfer(
-    from: string,
-    to: string,
-    amount: Balance,
-    contractAddress: string,
-    provider = app.provider,
+    {
+      from,
+      to,
+      amount,
+      contractAddress,
+    }: {
+      from: string;
+      to: string;
+      amount: Balance;
+      contractAddress: string;
+    },
+    estimationVariant: EstimationVariant = 'average',
   ) {
     const data = getERC20TransferData(to, amount, contractAddress);
-    return await EthNetwork.estimateTransaction(
-      from,
-      contractAddress,
-      Balance.Empty,
-      data,
-      getRemoteBalanceValue('eth_min_gas_limit'),
-      provider,
+    return await EthNetwork.estimate(
+      {
+        from,
+        to: contractAddress,
+        value: Balance.Empty,
+        data,
+      },
+      estimationVariant,
     );
   }
 
   async transferERC20(
+    estimate: CalculatedFees,
     transport: ProviderInterface,
     from: Wallet,
     to: string,
@@ -266,12 +337,12 @@ export class EthNetwork {
   ) {
     try {
       const data = getERC20TransferData(to, amount, contractAddress);
-      const unsignedTx = await EthNetwork.populateTransaction(
-        from.address,
-        contractAddress,
-        Balance.Empty,
+      const unsignedTx = await EthNetwork.populateTransaction(estimate, {
+        from: from.address,
+        to: contractAddress,
+        value: Balance.Empty,
         data,
-      );
+      });
 
       const signedTx = await transport.signTransaction(from.path!, unsignedTx);
 
@@ -282,7 +353,7 @@ export class EthNetwork {
         contractAddress,
         from: from.address,
         to,
-        hdPath: from.path || 'null',
+        hdPath: from.path ?? 'null',
       });
       throw error;
     }
@@ -295,17 +366,16 @@ export class EthNetwork {
     contractAddress: string,
   ) {
     const data = getERC721TransferData(from, to, tokenId);
-    return await EthNetwork.estimateTransaction(
+    return await EthNetwork.estimate({
       from,
-      contractAddress,
-      Balance.Empty,
+      to: contractAddress,
+      value: Balance.Empty,
       data,
-      getRemoteBalanceValue('eth_min_gas_limit'),
-      app.provider,
-    );
+    });
   }
 
   async transferERC721(
+    estimate: CalculatedFees,
     transport: ProviderInterface,
     from: Wallet,
     to: string,
@@ -314,12 +384,12 @@ export class EthNetwork {
   ) {
     try {
       const data = getERC721TransferData(from.address, to, tokenId);
-      const unsignedTx = await EthNetwork.populateTransaction(
-        from.address,
-        contractAddress,
-        Balance.Empty,
+      const unsignedTx = await EthNetwork.populateTransaction(estimate, {
+        from: from.address,
+        to: contractAddress,
+        value: Balance.Empty,
         data,
-      );
+      });
 
       const signedTx = await transport.signTransaction(from.path!, unsignedTx);
 
@@ -330,7 +400,7 @@ export class EthNetwork {
         contractAddress,
         from: from.address,
         to,
-        hdPath: from.path || 'null',
+        hdPath: from.path ?? 'null',
       });
       throw error;
     }
@@ -343,17 +413,16 @@ export class EthNetwork {
     contractAddress: string,
   ) {
     const data = getERC1155TransferData(from, to, tokenId);
-    return await EthNetwork.estimateTransaction(
+    return await EthNetwork.estimate({
       from,
-      contractAddress,
-      Balance.Empty,
+      to: contractAddress,
+      value: Balance.Empty,
       data,
-      getRemoteBalanceValue('eth_min_gas_limit'),
-      app.provider,
-    );
+    });
   }
 
   async transferERC1155(
+    estimate: CalculatedFees,
     transport: ProviderInterface,
     from: Wallet,
     to: string,
@@ -362,12 +431,12 @@ export class EthNetwork {
   ) {
     try {
       const data = getERC1155TransferData(from.address, to, tokenId);
-      const unsignedTx = await EthNetwork.populateTransaction(
-        from.address,
-        contractAddress,
-        Balance.Empty,
+      const unsignedTx = await EthNetwork.populateTransaction(estimate, {
+        from: from.address,
+        to: contractAddress,
+        value: Balance.Empty,
         data,
-      );
+      });
 
       const signedTx = await transport.signTransaction(from.path!, unsignedTx);
 
@@ -378,7 +447,7 @@ export class EthNetwork {
         contractAddress,
         from: from.address,
         to,
-        hdPath: from.path || 'null',
+        hdPath: from.path ?? 'null',
       });
       throw error;
     }

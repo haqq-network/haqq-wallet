@@ -12,6 +12,7 @@ import {
   Spacer,
   SumBlock,
   Text,
+  TextVariant,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
@@ -112,7 +113,7 @@ export const TransactionSum = ({
           i18nLabel={I18N.transactionSumSend}
           style={styles.sumblock}>
           <Text
-            t11
+            variant={TextVariant.t11}
             color={Color.textBase1}
             numberOfLines={1}
             ellipsizeMode="middle">
@@ -129,7 +130,7 @@ export const TransactionSum = ({
             )}
             <Text
               style={styles.cryptoBlockTitle}
-              t11
+              variant={TextVariant.t11}
               color={Color.textBase1}
               numberOfLines={1}
               ellipsizeMode="middle">
@@ -149,6 +150,13 @@ export const TransactionSum = ({
           testID={`${testID}_form`}
         />
       </Spacer>
+      {/* <Button
+        variant={ButtonVariant.light}
+        size={ButtonSize.small}
+        i18n={I18N.transactionSumPreview}
+        onPress={() => console.log('open fee screen')}
+        testID={`${testID}_enter_fee`}
+      /> */}
       <Spacer minHeight={16} />
       <Button
         loading={isLoading}

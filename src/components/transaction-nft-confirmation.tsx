@@ -18,14 +18,14 @@ import {useNftImage} from '@app/hooks/nft/use-nft-image';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {NftItem} from '@app/models/nft';
-import {Balance} from '@app/services/balance';
+import {CalculatedFees} from '@app/services/eth-network/types';
 import {splitAddress} from '@app/utils';
 
 interface TransactionConfirmationProps {
   to: string;
   soulboundTokenHint: string;
   item: NftItem;
-  fee?: Balance | null;
+  fee?: CalculatedFees | null;
   contact: Contact | null;
   disabled?: boolean;
   onConfirmTransaction: () => void;
@@ -104,14 +104,16 @@ export const TransactionNftConfirmation = ({
         <View style={styles.info}>
           <DataView label={soulboundTokenHint || 'Network Fee'}>
             <Text variant={TextVariant.t11} color={Color.textBase1}>
-              {fee!.toBalanceString()}
+              {fee!.expectedFee.toBalanceString()}
             </Text>
           </DataView>
         </View>
       )}
       <Spacer />
       <Button
-        disabled={(!fee?.isPositive() && !disabled) || !!soulboundTokenHint}
+        disabled={
+          (!fee?.expectedFee.isPositive() && !disabled) || !!soulboundTokenHint
+        }
         variant={ButtonVariant.contained}
         i18n={I18N.transactionConfirmationSend}
         onPress={onConfirmTransaction}
