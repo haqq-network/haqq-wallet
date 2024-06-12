@@ -88,6 +88,16 @@ export const FeeSettingsScreen = () => {
     setActiveTabIndex(Number(tabName));
   }, []);
 
+  const handleApply = useCallback(() => {
+    navigation.navigate(TransactionStackRoutes.TransactionConfirmation, {
+      from: params.from,
+      to: params.to,
+      amount: params.amount,
+      token: params.token,
+      calculatedFees: calculatedFees ?? undefined,
+    });
+  }, [params, calculatedFees]);
+
   useEffect(() => {
     switch (activeTabIndex) {
       case 0:
@@ -162,18 +172,7 @@ export const FeeSettingsScreen = () => {
         <Button
           variant={ButtonVariant.contained}
           i18n={I18N.apply}
-          onPress={() => {
-            navigation.navigate(
-              TransactionStackRoutes.TransactionConfirmation,
-              {
-                from: params.from,
-                to: params.to,
-                amount: params.amount,
-                token: params.token,
-                calculatedFees: calculatedFees ?? undefined,
-              },
-            );
-          }}
+          onPress={handleApply}
         />
         <Spacer height={16} />
       </View>
