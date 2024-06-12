@@ -30,7 +30,7 @@ import {
 } from '@app/services/eth-network/types';
 
 const TABS = [I18N.low, I18N.average, I18N.high, I18N.custom];
-const INIT_TAB_INDEX = 2;
+const INIT_TAB_INDEX = 1;
 
 export const FeeSettingsScreen = () => {
   const navigation = useTypedNavigation<TransactionStackParamList>();
@@ -45,8 +45,30 @@ export const FeeSettingsScreen = () => {
   const [maxBaseFee, setMaxBaseFee] = useState('');
   const [priorityFee, setPriorityFee] = useState('');
 
-  const [calculatedFees, setCalculatedFees] = useState<CalculatedFees | null>(
+  const [resetData, _setResetData] = useState<{
+    calculatedFees: CalculatedFees;
+    gasLimit: string;
+    maxBaseFee: string;
+    priorityFee: string;
+  } | null>(null);
+  const [calculatedFees, _setCalculatedFees] = useState<CalculatedFees | null>(
     null,
+  );
+
+  const setCalculatedFees = useCallback(
+    (data: CalculatedFees) => {
+      if (activeTabIndex !== 3) {
+        _setResetData({
+          calculatedFees: data,
+          gasLimit,
+          maxBaseFee,
+          priorityFee,
+        });
+      }
+
+      _setCalculatedFees(data);
+    },
+    [activeTabIndex, gasLimit, maxBaseFee, priorityFee],
   );
 
   const estimate = useCallback(
@@ -97,6 +119,15 @@ export const FeeSettingsScreen = () => {
       calculatedFees: calculatedFees ?? undefined,
     });
   }, [params, calculatedFees]);
+
+  const handleReset = useCallback(() => {
+    if (activeTabIndex === 3 && resetData) {
+      _setCalculatedFees(resetData.calculatedFees);
+      setGasLimit(resetData.gasLimit);
+      setMaxBaseFee(resetData.maxBaseFee);
+      setPriorityFee(resetData.priorityFee);
+    }
+  }, [activeTabIndex, resetData]);
 
   useEffect(() => {
     switch (activeTabIndex) {
@@ -167,7 +198,11 @@ export const FeeSettingsScreen = () => {
         </View>
       </View>
       <View>
-        <Button variant={ButtonVariant.second} i18n={I18N.reset} />
+        <Button
+          variant={ButtonVariant.second}
+          i18n={I18N.reset}
+          onPress={handleReset}
+        />
         <Spacer height={16} />
         <Button
           variant={ButtonVariant.contained}
