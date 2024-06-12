@@ -165,7 +165,7 @@ export const ModalWrapper = ({
       case ModalType.popupNotification:
         return <PopupNotificationScreen onCloseProp={onCloseModalPress} />;
       case ModalType.info:
-        return <PopupInfoScreen {...modal} onCloseProp={onCloseModalPress} />;
+        return <PopupInfoScreen {...modal} onClose={onCloseModalPress} />;
       default:
         return null;
     }

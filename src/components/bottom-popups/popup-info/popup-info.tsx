@@ -3,19 +3,27 @@ import React from 'react';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
+import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
 import {Text, TextPosition, TextVariant} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {ModalType, Modals} from '@app/types';
 
-export const InfoPopup = ({title, description}: Modals[ModalType.info]) => {
+export const InfoPopup = ({
+  title,
+  description,
+  onClose,
+}: Modals[ModalType.info]) => {
   return (
     <View style={styles.sub}>
-      <Text
-        variant={TextVariant.t7}
-        position={TextPosition.left}
-        style={styles.title}>
-        {title}
-      </Text>
+      <View style={styles.row}>
+        <Text
+          variant={TextVariant.t7}
+          position={TextPosition.left}
+          style={styles.title}>
+          {title}
+        </Text>
+        <DismissPopupButton onClose={onClose} />
+      </View>
       <Text
         variant={TextVariant.t14}
         position={TextPosition.left}
@@ -34,9 +42,12 @@ const styles = createTheme({
     backgroundColor: Color.bg1,
     flex: 0,
     paddingHorizontal: 24,
-    paddingVertical: 32,
+    paddingVertical: 16,
     borderRadius: 16,
-    paddingBottom: 16,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   title: {
     marginBottom: 8,
