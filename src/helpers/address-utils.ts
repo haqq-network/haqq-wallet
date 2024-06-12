@@ -108,6 +108,26 @@ export class AddressUtils {
   };
 
   static equals = (a: string, b: string) => {
-    return AddressUtils.toEth(a) === AddressUtils.toEth(b);
+    const aEth = AddressUtils.toEth(a);
+    const bEth = AddressUtils.toEth(b);
+
+    const isAISLM =
+      aEth === NATIVE_TOKEN_ADDRESS || aEth === WRAPPED_TOKEN_ADDRESS;
+    const isBISLM =
+      bEth === NATIVE_TOKEN_ADDRESS || bEth === WRAPPED_TOKEN_ADDRESS;
+
+    if (isAISLM && isBISLM) {
+      return true;
+    }
+
+    return aEth === bEth;
   };
 }
+
+export const NATIVE_TOKEN_ADDRESS = AddressUtils.toEth(
+  '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+);
+
+export const WRAPPED_TOKEN_ADDRESS = AddressUtils.toEth(
+  '0xeC8CC083787c6e5218D86f9FF5f28d4cC377Ac54',
+);

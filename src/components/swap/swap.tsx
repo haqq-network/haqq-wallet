@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import {observer} from 'mobx-react';
 import {View} from 'react-native';
@@ -18,6 +18,11 @@ import {formatNumberString} from '@app/utils';
 import {STRINGS} from '@app/variables/common';
 
 import {SwapInput} from './swap-input';
+import {
+  SwapSettingBottomSheet,
+  SwapSettingBottomSheetRef,
+  SwapTransactionSettings,
+} from './swap-settings-bottom-sheet';
 
 import {DismissPopupButton} from '../popup/dismiss-popup-button';
 import {
@@ -27,6 +32,7 @@ import {
   Icon,
   IconButton,
   IconsName,
+  KeyboardSafeArea,
   Spacer,
   Text,
   TextVariant,
@@ -34,14 +40,22 @@ import {
 import {WalletRow, WalletRowTypes} from '../wallet-row';
 
 const EstimatedValue = observer(
-  ({title, value}: {title: string; value: string}) => {
+  ({
+    title,
+    value,
+    valueColor = Color.textBase1,
+  }: {
+    title: string;
+    value: string;
+    valueColor?: Color;
+  }) => {
     return (
       <View style={styles.estimatedValueContainer}>
         <Text variant={TextVariant.t14} color={Color.textBase2}>
           {title}
         </Text>
         <Spacer />
-        <Text variant={TextVariant.t14} color={Color.textBase1}>
+        <Text variant={TextVariant.t14} color={valueColor}>
           {value}
         </Text>
       </View>
@@ -67,6 +81,10 @@ export interface SwapProps {
   t0Available: Balance;
   t1Available: Balance;
   providerFee: Balance;
+  minReceivedAmount: Balance;
+  swapSettingsRef: React.RefObject<SwapSettingBottomSheetRef>;
+  swapSettings: SwapTransactionSettings;
+  onSettingsChange: (settings: SwapTransactionSettings) => void;
   onPressWrap(): Promise<void>;
   onPressUnrap(): Promise<void>;
   estimate(token?: Balance): Promise<void>;
@@ -99,6 +117,10 @@ export const Swap = observer(
     t1Available,
     currentWallet,
     providerFee,
+    swapSettingsRef,
+    swapSettings,
+    minReceivedAmount,
+    onSettingsChange,
     onPressWrap,
     onPressUnrap,
     // estimate,
@@ -114,8 +136,26 @@ export const Swap = observer(
   }: SwapProps) => {
     const isHeaderButtonsDisabled =
       isEstimating || isSwapInProgress || isApproveInProgress;
+
+    const priceImpactColor = useMemo(() => {
+      if (!estimateData?.s_price_impact) {
+        return Color.textBase1;
+      }
+
+      const PI = parseFloat(estimateData.s_price_impact);
+
+      if (PI >= 5) {
+        return Color.textRed1;
+      }
+
+      if (PI >= 1) {
+        return Color.textYellow1;
+      }
+
+      return Color.textBase1;
+    }, [estimateData]);
     return (
-      <View style={styles.container}>
+      <KeyboardSafeArea style={styles.container}>
         <View style={styles.header}>
           <View style={styles.headerButtonsContainer}>
             <IconButton
@@ -198,9 +238,14 @@ export const Swap = observer(
             />
             <EstimatedValue
               title="Price impact"
+              valueColor={priceImpactColor}
               value={`${formatNumberString(estimateData.s_price_impact)}%`}
             />
             <EstimatedValue title="Routing source" value={'SwapRouterV3'} />
+            <EstimatedValue
+              title="Min received"
+              value={minReceivedAmount.toBalanceString('auto')}
+            />
           </View>
         )}
 
@@ -243,7 +288,13 @@ export const Swap = observer(
           />
         </First>
         <Spacer height={50} />
-      </View>
+
+        <SwapSettingBottomSheet
+          ref={swapSettingsRef}
+          value={swapSettings}
+          onSettingsChange={onSettingsChange}
+        />
+      </KeyboardSafeArea>
     );
   },
 );

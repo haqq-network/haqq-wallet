@@ -6,7 +6,10 @@ import {
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {StatusBar} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
+import {Spacer} from '@app/components/ui';
 import {hideHeader, popupScreenOptions} from '@app/helpers';
 import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {useTypedRoute} from '@app/hooks';
@@ -16,6 +19,7 @@ import {
   SwapStackParamList,
   SwapStackRoutes,
 } from '@app/route-types';
+import {IS_IOS} from '@app/variables/common';
 
 import {SwapFinishScreen} from './swap-finish-screen';
 import {SwapPreviewScreen} from './swap-preview-screen';
@@ -31,7 +35,14 @@ type RouteOptions =
 const Stack = createNativeStackNavigator<SwapStackParamList>();
 
 export const SwapStacScreenParams: Record<SwapStackRoutes, RouteOptions> = {
-  [SwapStackRoutes.Swap]: hideHeader,
+  [SwapStackRoutes.Swap]: {
+    header: () =>
+      IS_IOS ? (
+        <Spacer height={StatusBar.currentHeight} />
+      ) : (
+        <SafeAreaView edges={['top']} />
+      ),
+  },
   [SwapStackRoutes.Preview]: hideHeader,
   [SwapStackRoutes.Finish]: hideHeader,
 };

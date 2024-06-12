@@ -971,6 +971,10 @@ export enum I18N {
   settingsOutdatedApp = 'settingsOutdatedApp',
   transactionDetailApproveSpenderTitle = 'transactionDetailApproveSpenderTitle',
   transactionApproveERC20Title = 'transactionApproveERC20Title',
+  swapSettingsDeadlineLabel = 'swapSettingsDeadlineLabel',
+  swapSettingsDeadlinePlaceholder = 'swapSettingsDeadlinePlaceholder',
+  swapSettingsSlippageLabel = 'swapSettingsSlippageLabel',
+  swapSettingsSlippagePlaceholder = 'swapSettingsSlippagePlaceholder',
 }
 
 const defaultTranslation = {en};

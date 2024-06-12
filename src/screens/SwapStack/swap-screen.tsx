@@ -1,12 +1,16 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
-import {useFocusEffect} from '@react-navigation/native';
 import {ethers} from 'ethers';
 import {toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import {Alert, Keyboard, View} from 'react-native';
 
-import {Swap} from '@app/components/swap';
+import {
+  SWAP_SETTINGS_DEFAULT,
+  Swap,
+  SwapSettingBottomSheetRef,
+  SwapTransactionSettings,
+} from '@app/components/swap';
 import {Loading} from '@app/components/ui';
 import {WalletCard} from '@app/components/ui/walletCard';
 import {app} from '@app/contexts';
@@ -76,6 +80,9 @@ const getMinAmountForDecimals = (d: number | null, symbol: string | null) => {
 
 export const SwapScreen = observer(() => {
   const {params} = useTypedRoute<SwapStackParamList, SwapStackRoutes.Swap>();
+  const [swapSettings, setSwapSettings] = useState<SwapTransactionSettings>(
+    SWAP_SETTINGS_DEFAULT,
+  );
   const [isEstimating, setIsEstimating] = useState(false);
   const [isSwapInProgress, setSwapInProgress] = useState(false);
   const [isApproveInProgress, setApproveInProgress] = useState(false);
@@ -86,11 +93,12 @@ export const SwapScreen = observer(() => {
   });
   const [estimateData, setEstimateData] =
     useState<SushiPoolEstimateResponse | null>(null);
-  // const [tokenIn, setTokenIn] = useState<IContract | null>(null);
-  // const [tokenOut, setTokenOut] = useState<IContract | null>(null);
   const [currentWallet, setCurrentWallet] = useState(
     Wallet.getById(params.address)!,
   );
+
+  const estimateAbortController = useRef(new AbortController());
+  const swapSettingsRef = useRef<SwapSettingBottomSheetRef>(null);
 
   const tokenIn = useMemo(
     () =>
@@ -124,10 +132,11 @@ export const SwapScreen = observer(() => {
       ),
     [currentRoute, poolsData, estimateData],
   );
-  logger.log('tokenIn', tokenIn);
-  logger.log('tokenOut', tokenOut);
-  logger.log('currentRoute', currentRoute);
-  logger.log('poolsData.contracts', poolsData.contracts);
+  // logger.log('providerFee', {providerFee}, estimateData?.fee);
+  // logger.log('tokenIn', tokenIn);
+  // logger.log('tokenOut', tokenOut);
+  // logger.log('currentRoute', currentRoute);
+  // logger.log('poolsData.contracts', poolsData.contracts);
   const amountsOut = useSumAmount(
     undefined,
     undefined,
@@ -139,6 +148,18 @@ export const SwapScreen = observer(() => {
     app.getAvailableBalance(currentWallet.address),
     MIN_SWAP_AMOUNT,
   );
+  const minReceivedAmount = useMemo(() => {
+    if (!estimateData || !tokenOut) {
+      return new Balance(0, 0, tokenOut?.symbol!);
+    }
+
+    const slippage = parseFloat(swapSettings.slippage) / 100;
+    const amountOut = parseFloat(amountsOut.amount);
+
+    const result = (amountOut - amountOut * slippage).toString();
+    return new Balance(result, 0, tokenOut.symbol!);
+  }, [estimateData, tokenOut, swapSettings, amountsOut.amount]);
+
   const providerFee = useMemo(() => {
     const symbol = tokenIn?.symbol!;
     const decimals = tokenIn?.decimals!;
@@ -147,7 +168,6 @@ export const SwapScreen = observer(() => {
     }
     return new Balance(estimateData?.fee.amount || '0', decimals, symbol);
   }, [tokenIn, estimateData]);
-  logger.log('providerFee', {providerFee}, estimateData?.fee);
   const isLoading = useMemo(
     () =>
       !poolsData?.contracts?.length ||
@@ -176,15 +196,15 @@ export const SwapScreen = observer(() => {
   }, [amountsIn.amount, tokenIn]);
 
   const t1Current = useMemo(() => {
-    if (!amountsOut.amount || !tokenOut?.decimals) {
+    if (!estimateData?.amount_out || !tokenOut?.decimals) {
       return Balance.Empty;
     }
     return new Balance(
-      parseFloat(amountsOut.amount),
+      estimateData?.amount_out,
       tokenOut.decimals!,
       tokenOut.symbol!,
     );
-  }, [amountsOut.amount, tokenOut]);
+  }, [estimateData, tokenOut]);
 
   const t0Available = useMemo(() => {
     if (!tokenIn) {
@@ -227,8 +247,6 @@ export const SwapScreen = observer(() => {
 
     return new Balance(0, 0, tokenOut.symbol!);
   }, [currentWallet, tokenOut]);
-
-  const estimateAbortController = useRef(new AbortController());
 
   const estimate = async (_: any = {}) => {
     try {
@@ -303,9 +321,16 @@ export const SwapScreen = observer(() => {
       ).toString();
       logger.log('estimate resp', response);
       setEstimateData(response);
-      const amountOut =
-        parseInt(response.amount_out, 16) / Math.pow(10, tokenOut?.decimals!);
-      amountsOut.setAmount(amountOut.toString());
+
+      const amountOut = new Balance(
+        response.amount_out,
+        tokenOut?.decimals!,
+        tokenOut?.symbol!,
+      );
+
+      amountsOut.setAmount(
+        amountOut.toBalanceString('auto', tokenOut?.decimals!, false),
+      );
     } catch (err) {
       if (err instanceof Error && err.name !== 'AbortError') {
         Alert.alert('estimate error', err?.message);
@@ -456,6 +481,8 @@ export const SwapScreen = observer(() => {
         });
 
         const [walletAddres, tokenAddress] = value?.id.split('_');
+        const wallet = Wallet.getById(AddressUtils.toEth(walletAddres))!;
+        const generatedISLMContract = Token.generateIslamicToken(wallet);
         logger.log('awaitForToken', {
           walletAddres,
           tokenAddress,
@@ -463,10 +490,10 @@ export const SwapScreen = observer(() => {
           tokens: value.tokens,
         });
         const result = {
-          token: (tokenAddress === WETH_MAINNET_ADDRESS
-            ? Token.generateIslamicTokenContract()
+          wallet,
+          token: (AddressUtils.equals(tokenAddress, generatedISLMContract.id)
+            ? generatedISLMContract
             : value?.tokens?.[index]) as IContract & {value: Balance},
-          wallet: Wallet.getById(AddressUtils.toEth(walletAddres))!,
         };
         logger.log('awaitForToken', result);
         return result;
@@ -634,7 +661,8 @@ export const SwapScreen = observer(() => {
         V3SWAPROUTER_ABI,
       );
 
-      const deadline = Math.floor(Date.now() / 1000) + 60 * 10;
+      const deadline =
+        Math.floor(Date.now() / 1000) + 60 * parseFloat(swapSettings.deadline);
 
       const tokenInIsISLM = tokenIn?.symbol === 'ISLM';
 
@@ -649,7 +677,7 @@ export const SwapScreen = observer(() => {
         //  amountIn
         estimateData.amount_in,
         //  amountOutMinimum
-        0,
+        minReceivedAmount?.toHex() || 0,
       ];
 
       logger.log({tokenIn});
@@ -714,7 +742,15 @@ export const SwapScreen = observer(() => {
     } finally {
       setSwapInProgress(() => false);
     }
-  }, [estimateData, tokenIn, currentWallet, estimate, amountsIn]);
+  }, [
+    estimateData,
+    tokenIn,
+    currentWallet,
+    estimate,
+    amountsIn,
+    swapSettings,
+    minReceivedAmount,
+  ]);
 
   const onPressApprove = useCallback(async () => {
     try {
@@ -905,7 +941,9 @@ export const SwapScreen = observer(() => {
   const onPressMax = useCallback(async () => {
     vibrate(HapticEffects.impactLight);
     await refreshTokenBalances(currentWallet.address, tokenIn);
-    amountsIn.setMax();
+    amountsIn.setAmount(
+      t0Available.toBalanceString('auto', tokenIn?.decimals!, false),
+    );
     Keyboard.dismiss();
     await estimate(t0Available);
   }, [
@@ -943,29 +981,85 @@ export const SwapScreen = observer(() => {
     }
   }, [tokenIn, tokenOut, currentWallet, currentRoute]);
 
-  useFocusEffect(
-    useCallback(() => {
-      if (!poolsData.contracts.length && !poolsData.routes.length) {
-        logger.log('useFocusEffect');
-        Indexer.instance
-          .sushiPools()
-          .then(async data => {
-            data.contracts.unshift(Token.generateIslamicTokenContract());
-            setPoolsData(() => data);
-            setCurrentRoute(
-              () =>
-                data.routes.find(r =>
-                  AddressUtils.equals(r.token0, WETH_MAINNET_ADDRESS),
-                ) || data.routes[1],
-            );
-            return estimate();
-          })
-          .catch(err =>
-            logger.captureException(err, 'useFocusEffect:Indexer.sushiPools'),
+  useEffect(() => {
+    const fetchData = () => {
+      logger.log('useFocusEffect fetchData');
+      Indexer.instance
+        .sushiPools()
+        .then(async data => {
+          // data.contracts.unshift(Token.generateIslamicTokenContract());
+          // setPoolsData(() => data);
+
+          // const wislmPreparedAddress =
+          //   WETH_MAINNET_ADDRESS.toLowerCase().slice(2);
+          // const nativeTokenPreparedAddress =
+          //   NATIVE_TOKEN_ADDRESS.toLowerCase().slice(2);
+
+          // const islmRoutes = data.routes
+          //   .filter(
+          //     r =>
+          //       AddressUtils.equals(r.token0, WETH_MAINNET_ADDRESS) ||
+          //       AddressUtils.equals(r.token1, WETH_MAINNET_ADDRESS),
+          //   )
+          //   .map(r => {
+          //     const route = r.route.map(address =>
+          //       AddressUtils.equals(address, WETH_MAINNET_ADDRESS)
+          //         ? AddressUtils.toHaqq(NATIVE_TOKEN_ADDRESS)
+          //         : address,
+          //     );
+          //     const token0 = route[0];
+          //     const token1 = route[route.length - 1];
+          //     const route_hex = r.route_hex.replace(
+          //       wislmPreparedAddress,
+          //       nativeTokenPreparedAddress,
+          //     );
+
+          //     return {
+          //       ...r,
+          //       route,
+          //       token0,
+          //       token1,
+          //       route_hex,
+          //     } as SushiRoute;
+          //   });
+
+          // logger.log('islmRoutes', islmRoutes);
+
+          const tokens = Array.from(
+            new Set([
+              ...data.routes.map(r => r.token0),
+              ...data.routes.map(r => r.token1),
+            ]),
+          )
+            .map(token => Contracts.getById(token))
+            .filter(Boolean) as IContract[];
+          setPoolsData(() => ({
+            ...data,
+            // routes: [...data.routes],
+            contracts: [
+              Token.generateIslamicTokenContract(),
+              ...tokens,
+              // ...data.contracts,
+            ],
+          }));
+          setCurrentRoute(
+            () =>
+              data.routes.find(r =>
+                AddressUtils.equals(r.token0, WETH_MAINNET_ADDRESS),
+              ) || data.routes[1],
           );
-      }
-    }, [poolsData, setCurrentRoute, estimate]),
-  );
+        })
+        .catch(err => {
+          logger.captureException(err, 'useFocusEffect:Indexer.sushiPools');
+          setTimeout(fetchData, 1000);
+        });
+    };
+
+    if (!poolsData?.contracts?.length || !poolsData?.routes?.length) {
+      fetchData();
+    }
+    // , [poolsData, setCurrentRoute, estimate]),
+  }, [poolsData]);
 
   const onPressChangeDirection = useCallback(async () => {
     setCurrentRoute(
@@ -976,8 +1070,15 @@ export const SwapScreen = observer(() => {
             AddressUtils.equals(r.token1, currentRoute?.token0!),
         )!,
     );
+    await refreshTokenBalances();
+    await estimate();
   }, [currentRoute, setCurrentRoute, poolsData]);
-  const onPressSettings = useCallback(async () => {}, []);
+
+  const onPressSettings = useCallback(async () => {
+    vibrate(HapticEffects.impactLight);
+    Keyboard.dismiss();
+    swapSettingsRef?.current?.open?.();
+  }, []);
 
   if (isLoading) {
     return <Loading />;
@@ -1002,6 +1103,10 @@ export const SwapScreen = observer(() => {
       isWrapTx={isWrapTx}
       isUnwrapTx={isUnwrapTx}
       providerFee={providerFee}
+      swapSettingsRef={swapSettingsRef}
+      swapSettings={swapSettings}
+      minReceivedAmount={minReceivedAmount}
+      onSettingsChange={setSwapSettings}
       onPressWrap={onPressWrap}
       onPressUnrap={onPressUnrap}
       onPressSwap={onPressSwap}

@@ -21,12 +21,7 @@ import {
   MobXStore,
 } from '@app/types';
 import {ERC20_ABI} from '@app/variables/abi';
-import {
-  CURRENCY_NAME,
-  WEI,
-  WEI_PRECISION,
-  WETH_MAINNET_ADDRESS,
-} from '@app/variables/common';
+import {CURRENCY_NAME, WEI, WEI_PRECISION} from '@app/variables/common';
 
 class TokensStore implements MobXStore<IToken> {
   /**
@@ -222,7 +217,7 @@ class TokensStore implements MobXStore<IToken> {
     const balance = app.getAvailableBalance(wallet.address);
 
     return {
-      id: WETH_MAINNET_ADDRESS as HaqqCosmosAddress,
+      id: AddressUtils.toHaqq('0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'),
       contract_created_at: '',
       contract_updated_at: '',
       value: balance,
@@ -241,8 +236,10 @@ class TokensStore implements MobXStore<IToken> {
 
   public generateIslamicTokenContract = (): IContract => {
     return {
-      id: WETH_MAINNET_ADDRESS as HaqqCosmosAddress,
-      eth_address: WETH_MAINNET_ADDRESS,
+      id: AddressUtils.toHaqq('0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'),
+      eth_address: AddressUtils.toEth(
+        '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+      ),
       address_type: AddressType.contract,
       is_skip_eth_tx: false,
       min_input_amount: '18',

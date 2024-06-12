@@ -5,7 +5,6 @@ import validate from 'validate.js';
 import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {I18N, getText} from '@app/i18n';
 import {Balance} from '@app/services/balance';
-import {WEI_PRECISION} from '@app/variables/common';
 
 export function useSumAmount(
   initialSum = Balance.Empty,
@@ -116,13 +115,7 @@ export function useSumAmount(
             return match.match(/[.,]/g) ? match : '';
           })
           .replace(/\D&[^.]/g, '')
-          .replace(/^0[0-9]/gm, '0')
-          .substring(
-            0,
-            (minAmountRef?.current?.getPrecission?.() ||
-              maxAmountRef?.current?.getPrecission?.() ||
-              WEI_PRECISION) + 1,
-          );
+          .replace(/^0[0-9]/gm, '0');
 
         setAmount({
           amountText: textFormatted,
