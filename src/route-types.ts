@@ -30,6 +30,8 @@ import {
 } from '@app/types';
 import {WalletConnectApproveConnectionEvent} from '@app/types/wallet-connect';
 
+import {CalculatedFees} from './services/eth-network/types';
+
 export type AnyRouteFromParent =
   | SignInStackRoutes
   | SignUpStackRoutes
@@ -521,6 +523,7 @@ export enum TransactionStackRoutes {
   TransactionSumAddress = 'transactionSumAddress',
   TransactionContactEdit = 'transactionContactEdit',
   TransactionSelectCrypto = 'transactionSelectCrypto',
+  FeeSettings = 'feeSettings',
 }
 
 export type TransactionStackParamList = HomeFeedStackParamList & {
@@ -538,7 +541,8 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
     from: string;
     to: string;
     amount: Balance;
-    fee?: Balance;
+    estimatedFee?: CalculatedFees;
+    calculatedFees?: CalculatedFees;
     token: IToken;
   };
   [TransactionStackRoutes.TransactionNftConfirmation]: {
@@ -551,12 +555,13 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
     hash: string;
     token: IToken;
     amount?: Balance;
+    fee?: CalculatedFees;
   };
   [TransactionStackRoutes.TransactionNftFinish]: {
     nft: NftItem;
     transaction: TransactionResponse;
     to: string;
-    fee?: Balance | null;
+    fee?: CalculatedFees | null;
   };
   [TransactionStackRoutes.TransactionAccount]: {
     from: string;
@@ -580,6 +585,12 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
   [TransactionStackRoutes.TransactionSelectCrypto]: {
     from: string;
     to: string;
+  };
+  [TransactionStackRoutes.FeeSettings]: {
+    from: string;
+    to: string;
+    amount: Balance;
+    token: IToken;
   };
 };
 

@@ -4,10 +4,15 @@ import {StyleSheet} from 'react-native';
 
 import {Color} from '@app/colors';
 import {useTypedNavigation} from '@app/hooks';
+import {HeaderButtonProps} from '@app/types';
 
 import {Icon, IconButton} from '../ui';
 
-export const DismissPopupButton = () => {
+type DismissPopupButtonProps = HeaderButtonProps & {
+  onClose?: () => void;
+};
+
+export const DismissPopupButton = ({onClose}: DismissPopupButtonProps) => {
   //TODO: What type should be used here?
   // onPress should be prop
   const navigation = useTypedNavigation();
@@ -17,7 +22,11 @@ export const DismissPopupButton = () => {
       testID="dismissPopupButton"
       onPress={() => {
         try {
-          navigation.pop();
+          if (onClose) {
+            onClose();
+          } else {
+            navigation.pop();
+          }
         } catch (e) {
           navigation.goBack();
         }

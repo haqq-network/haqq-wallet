@@ -4,10 +4,8 @@ import {observer} from 'mobx-react';
 
 import {TransactionNftConfirmation} from '@app/components/transaction-nft-confirmation';
 import {app} from '@app/contexts';
-import {Events} from '@app/events';
 import {showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
-import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
@@ -22,6 +20,7 @@ import {
 } from '@app/route-types';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
+import {CalculatedFees} from '@app/services/eth-network/types';
 import {EthSignErrorDataDetails} from '@app/services/eth-sign';
 import {EventTracker} from '@app/services/event-tracker';
 import {
@@ -55,32 +54,29 @@ export const TransactionNftConfirmationScreen = observer(() => {
   const showError = useError();
   const [soulboundTokenHint, setSoulboundTokenHint] = useState<string>('');
   const [disabled, setDisabled] = useState(false);
-  const [fee, setFee] = useState<Balance | null>();
+  const [fee, setFee] = useState<CalculatedFees | null>();
 
   useLayoutEffectAsync(async () => {
-    let feeWei = Balance.Empty;
     setSoulboundTokenHint('');
 
     try {
       if (nft.contractType === ContractType.erc721) {
-        const result = await EthNetwork.estimateERC721Transfer(
+        const calculatedFees = await EthNetwork.estimateERC721Transfer(
           wallet?.address!,
           route.params.to,
           nft.tokenId,
           AddressUtils.toEth(nft.contract),
         );
-        feeWei = result.feeWei;
+        setFee(calculatedFees);
       } else {
-        const result = await EthNetwork.estimateERC1155Transfer(
+        const calculatedFees = await EthNetwork.estimateERC1155Transfer(
           wallet?.address!,
           route.params.to,
           nft.tokenId,
           AddressUtils.toEth(nft.contract),
         );
-        feeWei = result.feeWei;
+        setFee(calculatedFees);
       }
-
-      setFee(feeWei);
     } catch (err) {
       const e = err as SendTransactionError;
       if (e.code === UNPREDICTABLE_GAS_LIMIT) {
@@ -101,33 +97,30 @@ export const TransactionNftConfirmationScreen = observer(() => {
         const provider = await getProviderInstanceForWallet(wallet, false);
 
         let transaction: TransactionResponse | null = null;
-        if (nft.contractType === ContractType.erc721) {
-          transaction = await ethNetworkProvider.transferERC721(
-            provider,
-            wallet,
-            route.params.to,
-            nft.tokenId,
-            AddressUtils.toEth(nft.contract),
-          );
-        } else {
-          transaction = await ethNetworkProvider.transferERC1155(
-            provider,
-            wallet,
-            route.params.to,
-            nft.tokenId,
-            AddressUtils.toEth(nft.contract),
-          );
+        if (fee) {
+          if (nft.contractType === ContractType.erc721) {
+            transaction = await ethNetworkProvider.transferERC721(
+              fee,
+              provider,
+              wallet,
+              route.params.to,
+              nft.tokenId,
+              AddressUtils.toEth(nft.contract),
+            );
+          } else {
+            transaction = await ethNetworkProvider.transferERC1155(
+              fee,
+              provider,
+              wallet,
+              route.params.to,
+              nft.tokenId,
+              AddressUtils.toEth(nft.contract),
+            );
+          }
         }
 
         if (transaction) {
           EventTracker.instance.trackEvent(MarketingEvents.sendFund);
-
-          await awaitForEventDone(
-            Events.onTransactionCreate,
-            transaction,
-            app.providerId,
-            fee,
-          );
 
           navigation.navigate(TransactionStackRoutes.TransactionNftFinish, {
             nft: route.params.nft,

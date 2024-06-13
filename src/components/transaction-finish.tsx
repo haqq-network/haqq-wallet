@@ -22,6 +22,7 @@ import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Balance} from '@app/services/balance';
 import {EthNetwork} from '@app/services/eth-network/eth-network';
+import {CalculatedFees} from '@app/services/eth-network/types';
 import {IToken, TransactionResponse} from '@app/types';
 import {CURRENCY_NAME} from '@app/variables/common';
 
@@ -34,7 +35,7 @@ type TransactionFinishProps = {
   testID?: string;
   token: IToken;
   amount?: Balance;
-  fee: Balance;
+  fee?: CalculatedFees;
 };
 
 export const TransactionFinish = ({
@@ -116,7 +117,7 @@ export const TransactionFinish = ({
         </Text>
       </View>
 
-      <NetworkFee fee={fee} currency="ISLM" />
+      <NetworkFee fee={fee?.expectedFee} currency="ISLM" />
 
       <View style={styles.providerContainer}>
         <Text

@@ -7,7 +7,6 @@ import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {showModal} from '@app/helpers';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
-import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
@@ -55,7 +54,13 @@ export const TransactionLedgerScreen = memo(() => {
         transport.current = await getProviderInstanceForWallet(wallet);
 
         const ethNetworkProvider = new EthNetwork();
+        const calculatedFees = await EthNetwork.estimate({
+          from: wallet.address,
+          to: route.params.to,
+          value: route.params.amount,
+        });
         const transaction = await ethNetworkProvider.transferTransaction(
+          calculatedFees,
           transport.current!,
           wallet,
           route.params.to,
@@ -64,13 +69,6 @@ export const TransactionLedgerScreen = memo(() => {
 
         if (transaction) {
           EventTracker.instance.trackEvent(MarketingEvents.sendFund);
-
-          await awaitForEventDone(
-            Events.onTransactionCreate,
-            transaction,
-            app.providerId,
-            route.params.fee ?? 0,
-          );
 
           navigation.navigate(TransactionStackRoutes.TransactionFinish, {
             transaction,
@@ -91,13 +89,7 @@ export const TransactionLedgerScreen = memo(() => {
         }
       }
     }
-  }, [
-    navigation,
-    route.params.amount,
-    route.params.from,
-    route.params.to,
-    route.params.fee,
-  ]);
+  }, [navigation, route.params.amount, route.params.from, route.params.to]);
 
   useEffect(() => {
     requestAnimationFrame(async () => {

@@ -7,6 +7,8 @@ import {
   Button,
   ButtonVariant,
   DataView,
+  Icon,
+  IconsName,
   PopupContainer,
   Spacer,
   Text,
@@ -26,10 +28,11 @@ interface TransactionConfirmationProps {
   testID?: string;
   to: string;
   amount: Balance;
-  fee: Balance | null;
+  fee?: Balance | null;
   contact: Contact | null;
   disabled?: boolean;
   onConfirmTransaction: () => void;
+  onFeePress: () => void;
   token: IToken;
 }
 
@@ -41,12 +44,13 @@ export const TransactionConfirmation = ({
   amount,
   fee,
   onConfirmTransaction,
+  onFeePress,
   token,
 }: TransactionConfirmationProps) => {
   const splittedTo = useMemo(() => splitAddress(to), [to]);
 
   const transactionSum = useMemo(() => {
-    if (fee === null) {
+    if (!fee) {
       return null;
     }
 
@@ -148,11 +152,21 @@ export const TransactionConfirmation = ({
             </Text>
           </DataView>
           <DataView label="Network Fee">
-            <Text variant={TextVariant.t11} color={Color.textBase1}>
-              {fee === null
-                ? getText(I18N.estimatingGas)
-                : fee.toBalanceString(LONG_NUM_PRECISION, WEI_PRECISION)}
-            </Text>
+            {!fee ? (
+              <Text variant={TextVariant.t11} color={Color.textBase1}>
+                {getText(I18N.estimatingGas)}
+              </Text>
+            ) : (
+              <View style={styles.feeContainer}>
+                <Text
+                  variant={TextVariant.t11}
+                  color={Color.textGreen1}
+                  onPress={onFeePress}>
+                  {fee.toBalanceString(LONG_NUM_PRECISION, WEI_PRECISION)}
+                </Text>
+                <Icon name={IconsName.tune} color={Color.textGreen1} />
+              </View>
+            )}
           </DataView>
         </View>
       </Spacer>
@@ -206,5 +220,8 @@ const styles = createTheme({
   },
   spacer: {
     justifyContent: 'center',
+  },
+  feeContainer: {
+    flexDirection: 'row',
   },
 });

@@ -1,34 +1,17 @@
-import {Events} from '@app/events';
 import {calcFee} from '@app/helpers';
-import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {getExplorerInstanceForProvider} from '@app/helpers/explorer-instance';
 import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
-import {Balance} from '@app/services/balance';
 import {ExplorerTransaction, IndexerTransactionStatus} from '@app/types';
 
 export async function onTransactionsLoad(address: string) {
   const providers = Provider.getAll().filter(p => !!p.explorer);
 
-  const rows = (
-    await Promise.all(
-      providers.map(provider =>
-        loadTransactionsFromExplorerWithProvider(address, provider.id),
-      ),
-    )
-  )
-    .flat()
-    .sort((a, b) => b.timeStamp - a.timeStamp)
-    .slice(0, 30);
-
-  for (const row of rows) {
-    await awaitForEventDone(
-      Events.onTransactionCreate,
-      row.row,
-      row.providerId,
-      new Balance(row.fee),
-    );
-  }
+  await Promise.all(
+    providers.map(provider =>
+      loadTransactionsFromExplorerWithProvider(address, provider.id),
+    ),
+  );
 }
 
 async function loadTransactionsFromExplorerWithProvider(

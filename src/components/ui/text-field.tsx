@@ -30,16 +30,25 @@ import Animated, {
 
 import {Color, getColor} from '@app/colors';
 import {Spacer} from '@app/components/ui/spacer';
-import {Text, TextProps} from '@app/components/ui/text';
-import {createTheme} from '@app/helpers';
-import {I18N} from '@app/i18n';
+import {Text, TextProps, TextVariant} from '@app/components/ui/text';
+import {createTheme, showModal} from '@app/helpers';
+import {I18N, getText} from '@app/i18n';
 import {sleep} from '@app/utils';
 import {IS_ANDROID, IS_IOS} from '@app/variables/common';
 
+import {Button, ButtonSize} from './button';
+
+type InfoBlock = {
+  label: string;
+  title: I18N;
+  description?: I18N;
+};
+
 export type TextFieldProps = Omit<TextInputProps, 'placeholder'> & {
-  label: I18N;
+  label: I18N | string;
   placeholder: I18N;
   hint?: I18N | undefined;
+  infoBlock?: InfoBlock;
   errorText?: TextProps['children'] | undefined;
   errorTextI18n?: TextProps['i18n'] | undefined;
   error?: boolean;
@@ -56,6 +65,7 @@ export const TextField: React.FC<TextFieldProps> = memo(
     lines = 1,
     label,
     hint,
+    infoBlock,
     error,
     errorText,
     errorTextI18n,
@@ -180,7 +190,9 @@ export const TextField: React.FC<TextFieldProps> = memo(
     }));
 
     return (
-      <View onLayout={onLayout} style={style}>
+      <View
+        onLayout={onLayout}
+        style={[!restOfProps.editable && styles.disabled, style]}>
         <Animated.View
           style={[
             styles.container,
@@ -189,11 +201,17 @@ export const TextField: React.FC<TextFieldProps> = memo(
           ]}>
           <View style={styles.inputContainer}>
             <AnimatedPressable style={labelAnimStyle} onPress={onLabel}>
-              <Text t14 color={color} i18n={label} />
+              {typeof label === 'string' ? (
+                <Text variant={TextVariant.t14} color={color}>
+                  {label}
+                </Text>
+              ) : (
+                <Text variant={TextVariant.t14} color={color} i18n={label} />
+              )}
             </AnimatedPressable>
             {!value && isFocused && (
               <Text
-                t11
+                variant={TextVariant.t11}
                 color={Color.textBase2}
                 style={styles.placeholder}
                 i18n={placeholder}
@@ -222,7 +240,7 @@ export const TextField: React.FC<TextFieldProps> = memo(
             <Spacer height={8} />
             {/* @ts-expect-error */}
             <Text
-              t14
+              variant={TextVariant.t14}
               i18n={errorTextI18n}
               color={Color.textRed1}
               style={styles.error}>
@@ -233,8 +251,25 @@ export const TextField: React.FC<TextFieldProps> = memo(
         {!error && hint && (
           <>
             <Spacer height={8} />
-            <Text t14 i18n={hint} style={styles.error} />
+            <Text variant={TextVariant.t14} i18n={hint} style={styles.error} />
           </>
+        )}
+        {Boolean(infoBlock) && (
+          <Button
+            size={ButtonSize.small}
+            style={styles.infoButton}
+            onPress={() => {
+              showModal('info', {
+                title: getText(infoBlock!.title),
+                description: infoBlock!.description
+                  ? getText(infoBlock!.description)
+                  : '',
+              });
+            }}>
+            <Text color={Color.textGreen1} variant={TextVariant.t11}>
+              {infoBlock!.label}
+            </Text>
+          </Button>
         )}
       </View>
     );
@@ -256,6 +291,9 @@ const styles = createTheme({
   },
   inputContainer: {
     flex: 1,
+  },
+  disabled: {
+    opacity: 0.5,
   },
   input: {
     fontFamily: 'SF Pro Display',
@@ -281,5 +319,9 @@ const styles = createTheme({
     position: 'absolute',
     height: 28,
     top: 18,
+  },
+  infoButton: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 0,
   },
 });

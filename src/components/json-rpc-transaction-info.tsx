@@ -13,7 +13,6 @@ import {
 } from '@app/components/ui';
 import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
-import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
@@ -81,18 +80,13 @@ export const JsonRpcTransactionInfo = ({
     }
 
     try {
-      const gasLimit = getRemoteBalanceValue('eth_min_gas_limit').max(
-        new Balance(tx.gasLimit || '0'),
-      );
-      const {feeWei} = await EthNetwork.estimateTransaction(
-        tx.from!,
-        tx.to!,
-        new Balance(tx.value! || Balance.Empty),
-        tx.data,
-        gasLimit,
-        provider,
-      );
-      return feeWei;
+      const {expectedFee} = await EthNetwork.estimate({
+        from: tx.from!,
+        to: tx.to!,
+        value: new Balance(tx.value! || Balance.Empty),
+        data: tx.data,
+      });
+      return expectedFee;
     } catch {
       return Balance.Empty;
     }

@@ -98,6 +98,10 @@ export class Balance implements IBalance, ISerializable {
     return this.symbol;
   }
 
+  getWeiSymbol() {
+    return `a${this.symbol}`;
+  }
+
   static getEmpty = (precision = WEI_PRECISION, symbol = CURRENCY_NAME) => {
     return new Balance(zeroBN, precision, symbol);
   };
@@ -297,6 +301,7 @@ export class Balance implements IBalance, ISerializable {
   toEtherString = () => this.toBalanceString();
 
   toWei = () => this.toNumber();
+  toGWei = () => this.toNumber() / Math.pow(10, 9);
 
   toWeiString = () => {
     const isRTL = I18nManager.isRTL;

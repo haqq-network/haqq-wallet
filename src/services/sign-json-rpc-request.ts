@@ -5,7 +5,6 @@ import {getSdkError} from '@walletconnect/utils';
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {getProviderInstanceForWallet, hideModal} from '@app/helpers';
-import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {I18N, getText} from '@app/i18n';
 import {Provider} from '@app/models/provider';
@@ -168,23 +167,21 @@ export class SignJsonRpcRequest {
         const {address} = await instanceProvider.getAccountInfo(path);
         const nonce = await rpcProvider.getTransactionCount(address, 'latest');
 
-        const gasLimit = getRemoteBalanceValue('eth_min_gas_limit').max(
-          new Balance(signTransactionRequest.gasLimit || '0'),
-        );
-        const {estimateGas, maxFeePerGas, maxPriorityFeePerGas} =
-          await EthNetwork.estimateTransaction(
-            signTransactionRequest.from!,
-            signTransactionRequest.to!,
-            new Balance(signTransactionRequest.value! || Balance.Empty),
-            signTransactionRequest.data?.toString()!,
-            gasLimit,
-            provider,
-          );
+        const minGas = new Balance(signTransactionRequest.gasLimit ?? 0);
 
-        const maxPriorityFeePerGasCalculated = maxPriorityFeePerGas.max(
+        const {gasLimit, maxBaseFee, maxPriorityFee} =
+          await EthNetwork.estimate({
+            from: signTransactionRequest.from!,
+            to: signTransactionRequest.to!,
+            value: new Balance(signTransactionRequest.value! || Balance.Empty),
+            data: signTransactionRequest.data?.toString()!,
+            minGas,
+          });
+
+        const maxPriorityFeePerGasCalculated = maxPriorityFee.max(
           signTransactionRequest.maxPriorityFeePerGas || 0,
         );
-        const maxFeePerGasCalculated = maxFeePerGas.max(
+        const maxFeePerGasCalculated = maxBaseFee.max(
           signTransactionRequest.maxFeePerGas || 0,
         );
 
@@ -192,7 +189,7 @@ export class SignJsonRpcRequest {
           ...signTransactionRequest,
           nonce,
           type: 2,
-          gasLimit: estimateGas.toHex(),
+          gasLimit: gasLimit.toHex(),
           maxFeePerGas: maxFeePerGasCalculated.toHex(),
           maxPriorityFeePerGas: maxPriorityFeePerGasCalculated.toHex(),
         };

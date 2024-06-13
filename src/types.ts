@@ -1124,6 +1124,11 @@ export type Modals = {
   popupNotification: {
     onCloseProp?: () => void;
   };
+  info: {
+    title: string;
+    description?: string;
+    onClose?: () => void;
+  };
 };
 
 export enum ModalType {
@@ -1161,6 +1166,7 @@ export enum ModalType {
   pinError = 'pinError',
   removeSSS = 'removeSSS',
   popupNotification = 'popupNotification',
+  info = 'info',
 }
 
 export interface BaseNewsItem {
