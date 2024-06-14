@@ -9,6 +9,7 @@ import React, {
 import {useKeyboard} from '@react-native-community/hooks';
 import {Dimensions, View} from 'react-native';
 
+import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {useSumAmount} from '@app/hooks';
 import {I18N} from '@app/i18n';
@@ -20,6 +21,8 @@ import {
   Button,
   ButtonVariant,
   First,
+  Icon,
+  InfoBlock,
   KeyboardSafeArea,
   Spacer,
   TextField,
@@ -149,9 +152,8 @@ export const SwapSettingBottomSheet = React.forwardRef<
   return (
     <BottomSheet
       ref={bottomSheetRef}
-      title={'Transaction setting'}
+      i18nTitle={I18N.swapTransactionSettingsTitle}
       fullscreen
-      // closeDistance={closeDistance}
       contentContainerStyle={styles.contentContainerStyle}
       scrollable={false}
       onClose={onClose}>
@@ -168,7 +170,12 @@ export const SwapSettingBottomSheet = React.forwardRef<
             inputMode="decimal"
             returnKeyType="done"
           />
-          <Spacer height={24} />
+          <Spacer height={20} />
+          <InfoBlock
+            warning
+            icon={<Icon name={'warning'} color={Color.textYellow1} />}
+            i18n={I18N.swapSettingsSlippageWarning}
+          />
           <TextField
             value={deadline.amount}
             onChangeText={deadline.setAmount}

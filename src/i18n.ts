@@ -992,6 +992,8 @@ export enum I18N {
   maxBaseFeeDescription = 'maxBaseFeeDescription',
   maxPriorityFee = 'maxPriorityFee',
   maxPriorityFeeDescription = 'maxPriorityFeeDescription',
+  swapSettingsSlippageWarning = 'swapSettingsSlippageWarning',
+  swapTransactionSettingsTitle = 'swapTransactionSettingsTitle',
 }
 
 const defaultTranslation = {en};

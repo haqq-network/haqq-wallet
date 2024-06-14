@@ -1084,6 +1084,7 @@ export const SwapScreen = observer(() => {
       swapSettingsRef={swapSettingsRef}
       swapSettings={swapSettings}
       minReceivedAmount={minReceivedAmount}
+      currentRoute={currentRoute!}
       onSettingsChange={setSwapSettings}
       onPressWrap={onPressWrap}
       onPressUnrap={onPressUnrap}

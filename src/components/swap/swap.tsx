@@ -7,11 +7,13 @@ import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {useSumAmount} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {Contracts} from '@app/models/contracts';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {
   SushiPoolEstimateResponse,
   SushiPoolResponse,
+  SushiRoute,
 } from '@app/services/indexer';
 import {IContract} from '@app/types';
 import {formatNumberString} from '@app/utils';
@@ -24,6 +26,7 @@ import {
   SwapTransactionSettings,
 } from './swap-settings-bottom-sheet';
 
+import {ImageWrapper} from '../image-wrapper';
 import {DismissPopupButton} from '../popup/dismiss-popup-button';
 import {
   Button,
@@ -84,6 +87,7 @@ export interface SwapProps {
   minReceivedAmount: Balance;
   swapSettingsRef: React.RefObject<SwapSettingBottomSheetRef>;
   swapSettings: SwapTransactionSettings;
+  currentRoute: SushiRoute;
   onSettingsChange: (settings: SwapTransactionSettings) => void;
   onPressWrap(): Promise<void>;
   onPressUnrap(): Promise<void>;
@@ -120,10 +124,10 @@ export const Swap = observer(
     swapSettingsRef,
     swapSettings,
     minReceivedAmount,
+    currentRoute,
     onSettingsChange,
     onPressWrap,
     onPressUnrap,
-    // estimate,
     onPressChangeTokenIn,
     onPressChangeTokenOut,
     onPressApprove,
@@ -246,6 +250,38 @@ export const Swap = observer(
               title="Min received"
               value={minReceivedAmount.toBalanceString('auto')}
             />
+
+            <View style={styles.estimatedValueContainer}>
+              <Text variant={TextVariant.t14} color={Color.textBase2}>
+                Route
+              </Text>
+              <Spacer />
+              <View style={styles.route}>
+                {currentRoute?.route.map((address, i, arr) => {
+                  const contract = Contracts.getById(address);
+                  const isLast = arr.length - 1 === i;
+
+                  if (!contract) {
+                    return null;
+                  }
+                  return (
+                    <>
+                      <ImageWrapper
+                        style={styles.routeIcon}
+                        source={{uri: contract.icon!}}
+                      />
+                      {!isLast && (
+                        <Text>
+                          {STRINGS.NBSP}
+                          {'↔'}
+                          {STRINGS.NBSP}
+                        </Text>
+                      )}
+                    </>
+                  );
+                })}
+              </View>
+            </View>
           </View>
         )}
 
@@ -315,4 +351,8 @@ const styles = createTheme({
   headerButtonsContainer: {
     flexDirection: 'row',
   },
+  route: {
+    flexDirection: 'row',
+  },
+  routeIcon: {width: 16, height: 16},
 });
