@@ -201,12 +201,16 @@ export const TextField: React.FC<TextFieldProps> = memo(
           ]}>
           <View style={styles.inputContainer}>
             <AnimatedPressable style={labelAnimStyle} onPress={onLabel}>
-              {typeof label === 'string' ? (
+              {I18N[label as keyof typeof I18N] ? (
+                <Text
+                  variant={TextVariant.t14}
+                  color={color}
+                  i18n={label as I18N}
+                />
+              ) : (
                 <Text variant={TextVariant.t14} color={color}>
                   {label}
                 </Text>
-              ) : (
-                <Text variant={TextVariant.t14} color={color} i18n={label} />
               )}
             </AnimatedPressable>
             {!value && isFocused && (
