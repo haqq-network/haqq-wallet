@@ -108,19 +108,7 @@ export class AddressUtils {
   };
 
   static equals = (a: string, b: string) => {
-    const aEth = AddressUtils.toEth(a);
-    const bEth = AddressUtils.toEth(b);
-
-    const isAISLM =
-      aEth === NATIVE_TOKEN_ADDRESS || aEth === WRAPPED_TOKEN_ADDRESS;
-    const isBISLM =
-      bEth === NATIVE_TOKEN_ADDRESS || bEth === WRAPPED_TOKEN_ADDRESS;
-
-    if (isAISLM && isBISLM) {
-      return true;
-    }
-
-    return aEth === bEth;
+    return AddressUtils.toEth(a) === AddressUtils.toEth(b);
   };
 }
 

@@ -279,8 +279,6 @@ export class Indexer {
   async sushiPoolEstimate({
     amount,
     sender,
-    // token_in,
-    // token_out,
     route,
     currency_id,
     abortSignal,
@@ -293,14 +291,7 @@ export class Indexer {
       const response = await jsonrpcRequest<SushiPoolEstimateResponse>(
         app.provider.indexer,
         'sushiPoolEstimate',
-        [
-          route,
-          // AddressUtils.toHaqq(token_in),
-          // AddressUtils.toHaqq(token_out),
-          AddressUtils.toHaqq(sender),
-          amount,
-          currency_id,
-        ],
+        [route, AddressUtils.toHaqq(sender), amount, currency_id],
         abortSignal,
       );
 

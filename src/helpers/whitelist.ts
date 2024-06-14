@@ -2,11 +2,12 @@ import {JSONRPCError, jsonrpcRequest} from '@haqq/shared-react-native';
 
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
+import {Token} from '@app/models/tokens';
 import {VariablesString} from '@app/models/variables-string';
 import {RemoteConfig} from '@app/services/remote-config';
 import {VerifyAddressResponse} from '@app/types';
 
-import {AddressUtils} from './address-utils';
+import {AddressUtils, NATIVE_TOKEN_ADDRESS} from './address-utils';
 import {Url} from './url';
 
 const CACHE_KEY = 'whitelist';
@@ -101,12 +102,16 @@ export class Whitelist {
   }
 
   static async verifyAddress(
-    address: string | string[],
+    address: string,
     provider = app.provider,
     force = false,
   ) {
     if (!provider.indexer || !address) {
       return null;
+    }
+
+    if (AddressUtils.equals(address, NATIVE_TOKEN_ADDRESS)) {
+      return Token.generateIslamicTokenContract();
     }
 
     const key = `${CACHE_KEY}:${JSON.stringify(address)}:${provider.id}`;

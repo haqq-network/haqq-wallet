@@ -4,14 +4,22 @@ export type SushiRoute = {
   fee: number;
   liquidity: string; // number liquidity for the pool
   route: HaqqCosmosAddress[];
+  pools: HaqqCosmosAddress[];
   route_hex: string; // hex route for SwapRouterV3
   token0: HaqqCosmosAddress;
   token1: HaqqCosmosAddress;
 };
 
+export type SushiPool = {
+  fee: string;
+  name: string;
+  pool: HaqqCosmosAddress;
+};
+
 export type SushiPoolResponse = {
   contracts: IContract[];
   routes: SushiRoute[];
+  pools: SushiPool[];
 };
 
 export type SushiPoolEstimateResponse = {

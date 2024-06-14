@@ -90,7 +90,11 @@ export const SwapScreen = observer(() => {
   const [poolsData, setPoolsData] = useState<SushiPoolResponse>({
     contracts: [],
     routes: [],
+    pools: [],
   });
+  const routesByToken0 = useRef<Record<HaqqCosmosAddress, SushiRoute[]>>({});
+  const routesByToken1 = useRef<Record<HaqqCosmosAddress, SushiRoute[]>>({});
+
   const [estimateData, setEstimateData] =
     useState<SushiPoolEstimateResponse | null>(null);
   const [currentWallet, setCurrentWallet] = useState(
@@ -366,14 +370,15 @@ export const SwapScreen = observer(() => {
           initialValue.eth_address!,
         );
 
-        const possibleRoutesForSwap = poolsData.routes
-          .filter(it =>
-            isToken0
-              ? AddressUtils.equals(it.token1, tokenOut?.eth_address!) &&
-                !AddressUtils.equals(it.token0, tokenOut?.eth_address!)
-              : AddressUtils.equals(it.token0, tokenIn?.eth_address!) &&
-                !AddressUtils.equals(it.token1, tokenIn?.eth_address!),
-          )
+        const routes = isToken0
+          ? routesByToken1.current[
+              AddressUtils.toHaqq(initialValue.eth_address!)
+            ]
+          : routesByToken0.current[
+              AddressUtils.toHaqq(initialValue.eth_address!)
+            ];
+
+        const possibleRoutesForSwap = routes
           .map(it => {
             const tokenAddress = isToken0 ? it.token0 : it.token1;
             const tokens =
@@ -482,7 +487,10 @@ export const SwapScreen = observer(() => {
 
         const [walletAddres, tokenAddress] = value?.id.split('_');
         const wallet = Wallet.getById(AddressUtils.toEth(walletAddres))!;
-        const generatedISLMContract = Token.generateIslamicToken(wallet);
+        const generatedISLMContract = {
+          ...Token.generateIslamicTokenContract(),
+          ...Token.generateIslamicToken(wallet),
+        };
         logger.log('awaitForToken', {
           walletAddres,
           tokenAddress,
@@ -972,95 +980,6 @@ export const SwapScreen = observer(() => {
     await estimate();
   }, [estimate, setIsEstimating]);
 
-  useEffect(() => {
-    if (currentRoute) {
-      logger.log('useEffect estimate()');
-      refreshTokenBalances(currentWallet.address, tokenIn).then(({value}) =>
-        estimate(value),
-      );
-    }
-  }, [tokenIn, tokenOut, currentWallet, currentRoute]);
-
-  useEffect(() => {
-    const fetchData = () => {
-      logger.log('useFocusEffect fetchData');
-      Indexer.instance
-        .sushiPools()
-        .then(async data => {
-          // data.contracts.unshift(Token.generateIslamicTokenContract());
-          // setPoolsData(() => data);
-
-          // const wislmPreparedAddress =
-          //   WETH_MAINNET_ADDRESS.toLowerCase().slice(2);
-          // const nativeTokenPreparedAddress =
-          //   NATIVE_TOKEN_ADDRESS.toLowerCase().slice(2);
-
-          // const islmRoutes = data.routes
-          //   .filter(
-          //     r =>
-          //       AddressUtils.equals(r.token0, WETH_MAINNET_ADDRESS) ||
-          //       AddressUtils.equals(r.token1, WETH_MAINNET_ADDRESS),
-          //   )
-          //   .map(r => {
-          //     const route = r.route.map(address =>
-          //       AddressUtils.equals(address, WETH_MAINNET_ADDRESS)
-          //         ? AddressUtils.toHaqq(NATIVE_TOKEN_ADDRESS)
-          //         : address,
-          //     );
-          //     const token0 = route[0];
-          //     const token1 = route[route.length - 1];
-          //     const route_hex = r.route_hex.replace(
-          //       wislmPreparedAddress,
-          //       nativeTokenPreparedAddress,
-          //     );
-
-          //     return {
-          //       ...r,
-          //       route,
-          //       token0,
-          //       token1,
-          //       route_hex,
-          //     } as SushiRoute;
-          //   });
-
-          // logger.log('islmRoutes', islmRoutes);
-
-          const tokens = Array.from(
-            new Set([
-              ...data.routes.map(r => r.token0),
-              ...data.routes.map(r => r.token1),
-            ]),
-          )
-            .map(token => Contracts.getById(token))
-            .filter(Boolean) as IContract[];
-          setPoolsData(() => ({
-            ...data,
-            // routes: [...data.routes],
-            contracts: [
-              Token.generateIslamicTokenContract(),
-              ...tokens,
-              // ...data.contracts,
-            ],
-          }));
-          setCurrentRoute(
-            () =>
-              data.routes.find(r =>
-                AddressUtils.equals(r.token0, WETH_MAINNET_ADDRESS),
-              ) || data.routes[1],
-          );
-        })
-        .catch(err => {
-          logger.captureException(err, 'useFocusEffect:Indexer.sushiPools');
-          setTimeout(fetchData, 1000);
-        });
-    };
-
-    if (!poolsData?.contracts?.length || !poolsData?.routes?.length) {
-      fetchData();
-    }
-    // , [poolsData, setCurrentRoute, estimate]),
-  }, [poolsData]);
-
   const onPressChangeDirection = useCallback(async () => {
     setCurrentRoute(
       () =>
@@ -1079,6 +998,65 @@ export const SwapScreen = observer(() => {
     Keyboard.dismiss();
     swapSettingsRef?.current?.open?.();
   }, []);
+
+  useEffect(() => {
+    if (currentRoute) {
+      logger.log('useEffect estimate()');
+      refreshTokenBalances(currentWallet.address, tokenIn).then(({value}) =>
+        estimate(value),
+      );
+    }
+  }, [tokenIn, tokenOut, currentWallet, currentRoute]);
+
+  useEffect(() => {
+    const fetchData = () => {
+      Indexer.instance
+        .sushiPools()
+        .then(async data => {
+          const tokens = Array.from(
+            new Set([
+              ...data.routes.map(r => r.token0),
+              ...data.routes.map(r => r.token1),
+            ]),
+          )
+            .map(token => Contracts.getById(token))
+            .filter(Boolean) as IContract[];
+
+          setPoolsData(() => ({
+            ...data,
+            contracts: tokens,
+          }));
+
+          routesByToken0.current = {};
+          routesByToken1.current = {};
+          data.routes.forEach(route => {
+            if (!routesByToken0.current[route.token0]) {
+              routesByToken0.current[route.token0] = [];
+            }
+            routesByToken0.current[route.token0].push(route);
+
+            if (!routesByToken1.current[route.token1]) {
+              routesByToken1.current[route.token1] = [];
+            }
+            routesByToken1.current[route.token1].push(route);
+          });
+          setCurrentRoute(
+            () =>
+              data.routes.find(r =>
+                AddressUtils.equals(r.token0, WETH_MAINNET_ADDRESS),
+              ) || data.routes[1],
+          );
+        })
+        .catch(err => {
+          logger.captureException(err, 'useFocusEffect:Indexer.sushiPools');
+          setTimeout(fetchData, 1000);
+        });
+    };
+
+    if (!poolsData?.contracts?.length || !poolsData?.routes?.length) {
+      fetchData();
+    }
+  }, [poolsData]);
 
   if (isLoading) {
     return <Loading />;
