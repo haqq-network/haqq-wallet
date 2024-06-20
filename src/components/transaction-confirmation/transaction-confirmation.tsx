@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 
-import {Image, View} from 'react-native';
+import {View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -23,6 +23,8 @@ import {Balance} from '@app/services/balance';
 import {IToken} from '@app/types';
 import {splitAddress} from '@app/utils';
 import {LONG_NUM_PRECISION, WEI_PRECISION} from '@app/variables/common';
+
+import {ImageWrapper} from '../image-wrapper';
 
 interface TransactionConfirmationProps {
   testID?: string;
@@ -79,7 +81,7 @@ export const TransactionConfirmation = ({
 
   return (
     <PopupContainer style={styles.container} testID={testID}>
-      <Image source={token.image} style={styles.icon} />
+      <ImageWrapper source={token.image} style={styles.icon} />
       <Text
         variant={TextVariant.t11}
         color={Color.textBase2}

@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 
 import {useFocusEffect} from '@react-navigation/native';
-import {Image, TextInput, View} from 'react-native';
+import {TextInput, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -25,6 +25,8 @@ import {HapticEffects, vibrate} from '@app/services/haptic';
 import {IToken} from '@app/types';
 import {BALANCE_MULTIPLIER, FEE_AMOUNT} from '@app/variables/balance';
 import {CURRENCY_NAME} from '@app/variables/common';
+
+import {ImageWrapper} from '../image-wrapper';
 
 export type TransactionSumProps = {
   balance: Balance;
@@ -126,7 +128,10 @@ export const TransactionSum = ({
           onPress={onToken}>
           <View style={styles.cryptoBlockWrapper}>
             {!!token.image && (
-              <Image style={styles.cryptoBlockImage} source={token.image} />
+              <ImageWrapper
+                style={styles.cryptoBlockImage}
+                source={token.image}
+              />
             )}
             <Text
               style={styles.cryptoBlockTitle}
