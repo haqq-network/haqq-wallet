@@ -4,8 +4,9 @@ import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {Token} from '@app/models/tokens';
 import {VariablesString} from '@app/models/variables-string';
+import {Wallet} from '@app/models/wallet';
 import {RemoteConfig} from '@app/services/remote-config';
-import {VerifyAddressResponse} from '@app/types';
+import {AddressType, VerifyAddressResponse} from '@app/types';
 
 import {AddressUtils, NATIVE_TOKEN_ADDRESS} from './address-utils';
 import {Url} from './url';
@@ -106,6 +107,17 @@ export class Whitelist {
     provider = app.provider,
     force = false,
   ) {
+    const isWallet = Wallet.getAll().some(wallet =>
+      AddressUtils.equals(wallet.address, address),
+    );
+
+    if (isWallet) {
+      return {
+        address_type: AddressType.wallet,
+        id: AddressUtils.toHaqq(address),
+      } as VerifyAddressResponse;
+    }
+
     if (!provider.indexer || !address) {
       return null;
     }

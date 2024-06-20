@@ -2,7 +2,7 @@ import React, {useCallback, useState} from 'react';
 
 import {StyleProp, ViewStyle} from 'react-native';
 
-import {PopupContainer, Text, TextVariant} from '@app/components/ui';
+import {PopupContainer} from '@app/components/ui';
 import {AwaitValue} from '@app/helpers/await-for-value';
 
 import {ValueRow} from './value-row';
@@ -44,7 +44,6 @@ export const ValueSelector = ({
       {values?.map?.((value, idx) => {
         return typeof renderCell === 'function' ? (
           <React.Fragment key={value.id}>
-            <Text variant={TextVariant.t13}>idx: {idx}</Text>
             {renderCell(value, idx, (v, i) => handleValuePress(v, i))}
           </React.Fragment>
         ) : (

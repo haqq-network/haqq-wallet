@@ -91,7 +91,6 @@ export interface SwapProps {
   onSettingsChange: (settings: SwapTransactionSettings) => void;
   onPressWrap(): Promise<void>;
   onPressUnrap(): Promise<void>;
-  estimate(token?: Balance): Promise<void>;
   onPressMax(): Promise<void>;
   onInputBlur(): Promise<void>;
   onPressChangeTokenIn(): Promise<void>;
@@ -238,7 +237,7 @@ export const Swap = observer(
             />
             <EstimatedValue
               title="Provider Fee"
-              value={providerFee.toFiat({useDefaultCurrency: true})}
+              value={providerFee.toFiat({useDefaultCurrency: true, fixed: 6})}
             />
             <EstimatedValue
               title="Price impact"
@@ -265,7 +264,7 @@ export const Swap = observer(
                     return null;
                   }
                   return (
-                    <>
+                    <React.Fragment key={`swap-route-path-item-${contract.id}`}>
                       <ImageWrapper
                         style={styles.routeIcon}
                         source={{uri: contract.icon!}}
@@ -277,7 +276,7 @@ export const Swap = observer(
                           {STRINGS.NBSP}
                         </Text>
                       )}
-                    </>
+                    </React.Fragment>
                   );
                 })}
               </View>

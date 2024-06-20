@@ -4,6 +4,7 @@ import {ethers} from 'ethers';
 import {toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import {Alert, Keyboard, View} from 'react-native';
+import Toast from 'react-native-toast-message';
 
 import {
   SWAP_SETTINGS_DEFAULT,
@@ -42,6 +43,7 @@ import {
   SushiPoolResponse,
   SushiRoute,
 } from '@app/services/indexer';
+import {message} from '@app/services/toast';
 import {
   HaqqCosmosAddress,
   HaqqEthereumAddress,
@@ -252,7 +254,7 @@ export const SwapScreen = observer(() => {
     return new Balance(0, 0, tokenOut.symbol!);
   }, [currentWallet, tokenOut]);
 
-  const estimate = async (_: any = {}) => {
+  const estimate = async (force = false) => {
     try {
       estimateAbortController?.current?.abort();
       estimateAbortController.current = new AbortController();
@@ -337,9 +339,13 @@ export const SwapScreen = observer(() => {
       );
     } catch (err) {
       if (err instanceof Error && err.name !== 'AbortError') {
-        Alert.alert('estimate error', err?.message);
         Logger.error(err, 'estimate');
         logger.captureException(err, 'estimate');
+        if (!force) {
+          await estimate(true);
+        } else {
+          Alert.alert('estimate error', err?.message);
+        }
       }
     } finally {
       setIsEstimating(false);
@@ -530,7 +536,7 @@ export const SwapScreen = observer(() => {
     const availableIslm = app.getAvailableBalance(wallet);
 
     const symbol = t0.symbol || CURRENCY_NAME;
-    const isNativeCurrency = symbol === CURRENCY_NAME;
+    const isNativeCurrency = symbol.toUpperCase() === CURRENCY_NAME;
     const decimals = t0.decimals || WEI_PRECISION;
     const zeroBalance = new Balance('0x0', decimals, symbol);
     const value = new Balance(
@@ -542,24 +548,12 @@ export const SwapScreen = observer(() => {
       ? getMinAmountForDecimals(decimals, symbol)
       : zeroBalance;
 
-    logger.log('refreshTokenBalances', {
-      wallet,
-      t0,
-      value,
-      minAmount,
-      availableIslm,
-      isNativeCurrency,
-      symbol,
-    });
-
     if (minAmount?.compare?.('0x0', 'gte')) {
-      logger.log('0 🔴🟢🟣 setMinAmount is Positive');
       amountsIn.setMinAmount(minAmount);
     }
 
     logger.log('value', value);
     if (value?.compare?.('0x0', 'gte')) {
-      logger.log('1 🔴🟢🟣 setMaxAmount is Positive');
       amountsIn.setMaxAmount(value);
     }
     return {value, minAmount};
@@ -599,12 +593,9 @@ export const SwapScreen = observer(() => {
         );
         setCurrentRoute(route! || filteredRoutes[0]);
       }
-      const {value} = await refreshTokenBalances(wallet.address, token);
-
+      await refreshTokenBalances(wallet.address, token);
       amountsIn.setMin();
-      return await estimate(
-        value || new Balance(token.value, token?.decimals!, token?.symbol!),
-      );
+      return await estimate();
     } catch (err) {
       Logger.error(err, 'onPressChangeTokenIn');
       logger.captureException(err, 'onPressChangeTokenIn');
@@ -645,9 +636,8 @@ export const SwapScreen = observer(() => {
         );
         setCurrentRoute(route! || filteredRoutes[0]);
       }
-      const {value} = await refreshTokenBalances(wallet.address, tokenIn);
-
-      return await estimate(value);
+      await refreshTokenBalances(wallet.address, tokenIn);
+      return await estimate();
     } catch (err) {
       Logger.error(err, 'onPressChangeTokenOut');
       logger.captureException(err, 'onPressChangeTokenOut');
@@ -800,10 +790,15 @@ export const SwapScreen = observer(() => {
       const txHandler = await provider.sendTransaction(rawTx);
       const txResp = await txHandler.wait();
       logger.log('txResp', txResp);
-      Alert.alert(
-        'Success',
-        `${tokenIn?.symbol} approved for amount ${amountsIn.amount}`,
-      );
+      vibrate(HapticEffects.success);
+      Toast.show({
+        type: 'success',
+        text1: 'ERC20 Token Approved',
+        text2: `for amount ${amountsIn.amount} ${tokenIn?.symbol}`,
+        position: 'bottom',
+        autoHide: false,
+      });
+      message(`${tokenIn?.symbol} approved for amount ${amountsIn.amount}`);
       await estimate();
     } catch (err) {
       logger.captureException(err, 'onPressApprove');
@@ -946,22 +941,16 @@ export const SwapScreen = observer(() => {
     estimate,
   ]);
 
-  const onPressMax = useCallback(async () => {
-    vibrate(HapticEffects.impactLight);
-    await refreshTokenBalances(currentWallet.address, tokenIn);
-    amountsIn.setAmount(
-      t0Available.toBalanceString('auto', tokenIn?.decimals!, false),
-    );
+  const onPressMax = async () => {
     Keyboard.dismiss();
-    await estimate(t0Available);
-  }, [
-    amountsIn,
-    refreshTokenBalances,
-    estimate,
-    t0Available,
-    currentWallet,
-    tokenIn,
-  ]);
+    vibrate(HapticEffects.impactLight);
+    const {value} = await refreshTokenBalances(currentWallet.address, tokenIn);
+    const balance = value || t0Available;
+    amountsIn.setAmount(
+      balance.toBalanceString('auto', tokenIn?.decimals!, false),
+    );
+    await estimate();
+  };
 
   const onPressChangeWallet = useCallback(async () => {
     const address = await awaitForWallet({
@@ -1002,8 +991,8 @@ export const SwapScreen = observer(() => {
   useEffect(() => {
     if (currentRoute) {
       logger.log('useEffect estimate()');
-      refreshTokenBalances(currentWallet.address, tokenIn).then(({value}) =>
-        estimate(value),
+      refreshTokenBalances(currentWallet.address, tokenIn).then(() =>
+        estimate(),
       );
     }
   }, [tokenIn, tokenOut, currentWallet, currentRoute]);
@@ -1092,7 +1081,6 @@ export const SwapScreen = observer(() => {
       onPressApprove={onPressApprove}
       onPressChangeTokenIn={onPressChangeTokenIn}
       onPressChangeTokenOut={onPressChangeTokenOut}
-      estimate={estimate}
       onPressChangeWallet={onPressChangeWallet}
       onPressMax={onPressMax}
       onInputBlur={onInputBlur}
@@ -1101,9 +1089,3 @@ export const SwapScreen = observer(() => {
     />
   );
 });
-
-// const styles = createTheme({
-//   nftViewerContainer: {
-//     marginHorizontal: 20,
-//   },
-// });
