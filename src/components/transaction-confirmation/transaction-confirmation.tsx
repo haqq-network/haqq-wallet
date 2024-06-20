@@ -1,5 +1,6 @@
 import React, {useMemo} from 'react';
 
+import {observer} from 'mobx-react';
 import {Image, View} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -19,16 +20,16 @@ import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
+import {Fee} from '@app/models/fee';
 import {Balance} from '@app/services/balance';
 import {IToken} from '@app/types';
 import {splitAddress} from '@app/utils';
-import {LONG_NUM_PRECISION, WEI_PRECISION} from '@app/variables/common';
+import {LONG_NUM_PRECISION} from '@app/variables/common';
 
 interface TransactionConfirmationProps {
   testID?: string;
   to: string;
   amount: Balance;
-  fee?: Balance | null;
   contact: Contact | null;
   disabled?: boolean;
   onConfirmTransaction: () => void;
@@ -36,152 +37,153 @@ interface TransactionConfirmationProps {
   token: IToken;
 }
 
-export const TransactionConfirmation = ({
-  testID,
-  disabled,
-  contact,
-  to,
-  amount,
-  fee,
-  onConfirmTransaction,
-  onFeePress,
-  token,
-}: TransactionConfirmationProps) => {
-  const splittedTo = useMemo(() => splitAddress(to), [to]);
+export const TransactionConfirmation = observer(
+  ({
+    testID,
+    disabled,
+    contact,
+    to,
+    amount,
+    onConfirmTransaction,
+    onFeePress,
+    token,
+  }: TransactionConfirmationProps) => {
+    const splittedTo = useMemo(() => splitAddress(to), [to]);
 
-  const transactionSum = useMemo(() => {
-    if (!fee) {
-      return null;
-    }
+    const transactionSum = useMemo(() => {
+      if (!Fee.calculatedFees) {
+        return null;
+      }
 
-    if (amount.isIslamic) {
-      return fee.operate(amount, 'add');
-    }
+      if (amount.isIslamic) {
+        return Fee.calculatedFees.expectedFee.operate(amount, 'add');
+      }
 
-    return amount;
-  }, [fee, amount]);
+      return amount;
+    }, [amount, Fee.calculatedFees]);
 
-  const sumText = useMemo(() => {
-    if (transactionSum === null) {
-      return getText(I18N.estimatingGas);
-    }
+    const sumText = useMemo(() => {
+      if (transactionSum === null) {
+        return getText(I18N.estimatingGas);
+      }
 
-    return transactionSum.toBalanceString(LONG_NUM_PRECISION);
-  }, [transactionSum]);
+      return transactionSum.toBalanceString(LONG_NUM_PRECISION);
+    }, [transactionSum]);
 
-  const usdText = useMemo(() => {
-    if (transactionSum === null) {
-      return '';
-    }
+    const usdText = useMemo(() => {
+      if (transactionSum === null) {
+        return '';
+      }
 
-    return transactionSum.toFiat();
-  }, [transactionSum]);
+      return transactionSum.toFiat();
+    }, [transactionSum]);
 
-  return (
-    <PopupContainer style={styles.container} testID={testID}>
-      <Image source={token.image} style={styles.icon} />
-      <Text
-        variant={TextVariant.t11}
-        color={Color.textBase2}
-        position={TextPosition.center}
-        style={styles.subtitle}
-        i18n={I18N.transactionConfirmationTotalAmount}
-      />
-      <Text
-        variant={TextVariant.t11}
-        color={Color.textBase1}
-        position={TextPosition.center}
-        style={styles.sum}>
-        {sumText}
-      </Text>
-      <Text
-        variant={TextVariant.t15}
-        color={Color.textBase2}
-        position={TextPosition.center}>
-        {usdText}
-      </Text>
-      <Spacer height={16} />
-      <Text
-        variant={TextVariant.t11}
-        color={Color.textBase2}
-        position={TextPosition.center}
-        style={styles.subtitle}
-        i18n={I18N.transactionConfirmationSendTo}
-      />
-      {contact && (
+    return (
+      <PopupContainer style={styles.container} testID={testID}>
+        <Image source={token.image} style={styles.icon} />
+        <Text
+          variant={TextVariant.t11}
+          color={Color.textBase2}
+          position={TextPosition.center}
+          style={styles.subtitle}
+          i18n={I18N.transactionConfirmationTotalAmount}
+        />
         <Text
           variant={TextVariant.t11}
           color={Color.textBase1}
           position={TextPosition.center}
-          style={styles.contact}>
-          {contact.name}
+          style={styles.sum}>
+          {sumText}
         </Text>
-      )}
-      <Text
-        variant={TextVariant.t11}
-        color={Color.textBase1}
-        position={TextPosition.center}
-        style={styles.address}>
+        <Text
+          variant={TextVariant.t15}
+          color={Color.textBase2}
+          position={TextPosition.center}>
+          {usdText}
+        </Text>
+        <Spacer height={16} />
+        <Text
+          variant={TextVariant.t11}
+          color={Color.textBase2}
+          position={TextPosition.center}
+          style={styles.subtitle}
+          i18n={I18N.transactionConfirmationSendTo}
+        />
+        {contact && (
+          <Text
+            variant={TextVariant.t11}
+            color={Color.textBase1}
+            position={TextPosition.center}
+            style={styles.contact}>
+            {contact.name}
+          </Text>
+        )}
         <Text
           variant={TextVariant.t11}
           color={Color.textBase1}
           position={TextPosition.center}
           style={styles.address}>
-          {splittedTo[0]}
+          <Text
+            variant={TextVariant.t11}
+            color={Color.textBase1}
+            position={TextPosition.center}
+            style={styles.address}>
+            {splittedTo[0]}
+          </Text>
+          <Text variant={TextVariant.t11} color={Color.textBase2}>
+            {splittedTo[1]}
+          </Text>
+          <Text variant={TextVariant.t11}>{splittedTo[2]}</Text>
         </Text>
-        <Text variant={TextVariant.t11} color={Color.textBase2}>
-          {splittedTo[1]}
-        </Text>
-        <Text variant={TextVariant.t11}>{splittedTo[2]}</Text>
-      </Text>
-      <Spacer style={styles.spacer}>
-        <View style={styles.info}>
-          <DataView label="Cryptocurrency">
-            <Text variant={TextVariant.t11} color={Color.textBase1}>
-              {token.name}
-            </Text>
-          </DataView>
-          <DataView label="Network">
-            <Text variant={TextVariant.t11} color={Color.textBase1}>
-              <Text>{app.provider.name}</Text>
-            </Text>
-          </DataView>
-          <DataView label="Amount">
-            <Text variant={TextVariant.t11} color={Color.textBase1}>
-              {amount.toBalanceString(LONG_NUM_PRECISION)}
-            </Text>
-          </DataView>
-          <DataView label="Network Fee">
-            {!fee ? (
+        <Spacer style={styles.spacer}>
+          <View style={styles.info}>
+            <DataView label="Cryptocurrency">
               <Text variant={TextVariant.t11} color={Color.textBase1}>
-                {getText(I18N.estimatingGas)}
+                {token.name}
               </Text>
-            ) : (
-              <View style={styles.feeContainer}>
-                <Text
-                  variant={TextVariant.t11}
-                  color={Color.textGreen1}
-                  onPress={onFeePress}>
-                  {fee.toBalanceString(LONG_NUM_PRECISION, WEI_PRECISION)}
+            </DataView>
+            <DataView label="Network">
+              <Text variant={TextVariant.t11} color={Color.textBase1}>
+                <Text>{app.provider.name}</Text>
+              </Text>
+            </DataView>
+            <DataView label="Amount">
+              <Text variant={TextVariant.t11} color={Color.textBase1}>
+                {amount.toBalanceString(LONG_NUM_PRECISION)}
+              </Text>
+            </DataView>
+            <DataView label="Network Fee">
+              {!Fee.calculatedFees ? (
+                <Text variant={TextVariant.t11} color={Color.textBase1}>
+                  {getText(I18N.estimatingGas)}
                 </Text>
-                <Icon name={IconsName.tune} color={Color.textGreen1} />
-              </View>
-            )}
-          </DataView>
-        </View>
-      </Spacer>
-      <Button
-        disabled={!fee?.isPositive() && !disabled}
-        variant={ButtonVariant.contained}
-        i18n={I18N.transactionConfirmationSend}
-        onPress={onConfirmTransaction}
-        style={styles.submit}
-        loading={disabled}
-        testID={`${testID}_submit`}
-      />
-    </PopupContainer>
-  );
-};
+              ) : (
+                <View style={styles.feeContainer}>
+                  <Text
+                    variant={TextVariant.t11}
+                    color={Color.textGreen1}
+                    onPress={onFeePress}>
+                    {Fee.expectedFeeString}
+                  </Text>
+                  <Icon name={IconsName.tune} color={Color.textGreen1} />
+                </View>
+              )}
+            </DataView>
+          </View>
+        </Spacer>
+        <Button
+          disabled={!Fee.expectedFee?.isPositive() && !disabled}
+          variant={ButtonVariant.contained}
+          i18n={I18N.transactionConfirmationSend}
+          onPress={onConfirmTransaction}
+          style={styles.submit}
+          loading={disabled}
+          testID={`${testID}_submit`}
+        />
+      </PopupContainer>
+    );
+  },
+);
 
 const styles = createTheme({
   container: {

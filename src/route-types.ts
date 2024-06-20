@@ -539,17 +539,16 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
     calculatedFees?: CalculatedFees;
     token: IToken;
   };
-  [TransactionStackRoutes.TransactionNftConfirmation]: {
-    from: string;
-    to: string;
-    nft: NftItem;
-  };
   [TransactionStackRoutes.TransactionFinish]: {
     transaction: TransactionResponse;
     hash: string;
     token: IToken;
     amount?: Balance;
-    fee?: CalculatedFees;
+  };
+  [TransactionStackRoutes.TransactionNftConfirmation]: {
+    from: string;
+    to: string;
+    nft: NftItem;
   };
   [TransactionStackRoutes.TransactionNftFinish]: {
     nft: NftItem;
@@ -583,8 +582,8 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
   [TransactionStackRoutes.FeeSettings]: {
     from: string;
     to: string;
-    amount: Balance;
-    token: IToken;
+    amount?: Balance;
+    data?: string;
   };
 };
 

@@ -25,7 +25,7 @@ export const TransactionFinishScreen = observer(() => {
     goBack();
     return true;
   }, [goBack]);
-  const {hash, transaction, token, amount, fee} = useTypedRoute<
+  const {hash, transaction, token, amount} = useTypedRoute<
     TransactionStackParamList,
     TransactionStackRoutes.TransactionFinish
   >().params;
@@ -89,7 +89,6 @@ export const TransactionFinishScreen = observer(() => {
       testID="transaction_finish"
       token={token}
       amount={amount}
-      fee={fee}
     />
   );
 });
