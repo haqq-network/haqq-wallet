@@ -34,7 +34,7 @@ export class EthNetwork {
 
   static async populateTransaction(
     estimate: CalculatedFees,
-    {from, to, value, data}: TxEstimationParams,
+    {from, to, value = Balance.Empty, data = '0x'}: TxEstimationParams,
   ) {
     try {
       if (!AddressUtils.isEthAddress(to)) {
@@ -136,7 +136,7 @@ export class EthNetwork {
   }
 
   static async customEstimate(
-    {from, to, value, data}: TxEstimationParams,
+    {from, to, value = Balance.Empty, data = '0x'}: TxEstimationParams,
     {gasLimit, maxBaseFee, maxPriorityFee}: TxCustomEstimationParams,
   ): Promise<CalculatedFees> {
     try {
@@ -158,18 +158,6 @@ export class EthNetwork {
       if (resultMaxBaseFee.lt(block.baseFeePerGas!)) {
         resultMaxBaseFee = block.baseFeePerGas!;
       }
-
-      // console.log('entered numbers', {gasLimit, maxBaseFee, maxPriorityFee});
-      // console.log('estimated numbers', {
-      //   gasLimit: estimateGasLimit,
-      //   maxBaseFee: block.baseFeePerGas,
-      //   maxPriorityFee,
-      // });
-      // console.log('result numbers', {
-      //   gasLimit: new Balance(gasLimit).max(estimateGasLimit),
-      //   maxBaseFee: estimateMaxBaseFee,
-      //   maxPriorityFee,
-      // });
 
       return {
         gasLimit: new Balance(resultGasLimit),
@@ -202,7 +190,7 @@ export class EthNetwork {
    * @returns fee data
    */
   static async estimate(
-    {from, to, value, data, minGas}: TxEstimationParams,
+    {from, to, value = Balance.Empty, data = '0x', minGas}: TxEstimationParams,
     calculationType: EstimationVariant = 'average',
   ): Promise<CalculatedFees> {
     try {
