@@ -1,10 +1,12 @@
 import React, {useCallback, useMemo} from 'react';
 
 import {SessionTypes} from '@walletconnect/types';
-import {Image, StyleProp, ViewStyle} from 'react-native';
+import {StyleProp, ViewStyle} from 'react-native';
 
 import {DataContent, MenuNavigationButton} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+
+import {ImageWrapper} from './image-wrapper';
 
 export interface WalletConnectAppRowProps {
   item: SessionTypes.Struct;
@@ -35,7 +37,7 @@ export const WalletConnectAppRow = ({
 
   return (
     <MenuNavigationButton onPress={handlePress} style={style}>
-      <Image style={styles.appIcon} source={imageSource} />
+      <ImageWrapper style={styles.appIcon} source={imageSource} />
       <DataContent
         style={styles.info}
         title={application.name}

@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 
-import {Image, View} from 'react-native';
+import {View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -20,6 +20,8 @@ import {Contact} from '@app/models/contact';
 import {NftItem} from '@app/models/nft';
 import {CalculatedFees} from '@app/services/eth-network/types';
 import {splitAddress} from '@app/utils';
+
+import {ImageWrapper} from './image-wrapper';
 
 interface TransactionConfirmationProps {
   to: string;
@@ -45,7 +47,7 @@ export const TransactionNftConfirmation = ({
 
   return (
     <PopupContainer style={styles.container}>
-      <Image
+      <ImageWrapper
         source={imageUri}
         style={styles.icon}
         borderRadius={12}

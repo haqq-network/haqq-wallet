@@ -104,7 +104,7 @@ export type CalculatedFees = {
 export type TxEstimationParams = {
   from: string;
   to: string;
-  value: Balance;
+  value?: Balance;
   data?: string;
   minGas?: Balance;
 };
