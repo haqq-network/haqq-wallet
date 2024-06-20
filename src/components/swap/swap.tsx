@@ -271,9 +271,9 @@ export const Swap = observer(
                         source={{uri: contract.icon!}}
                       />
                       {!isLast && (
-                        <Text>
+                        <Text variant={TextVariant.t14} color={Color.textBase1}>
                           {STRINGS.NBSP}
-                          {'↔'}
+                          {'→'}
                           {STRINGS.NBSP}
                         </Text>
                       )}
