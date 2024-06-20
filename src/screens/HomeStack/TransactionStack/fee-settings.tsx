@@ -1,6 +1,8 @@
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect} from 'react';
 
 import {BigNumber} from 'ethers';
+import _ from 'lodash';
+import {observer} from 'mobx-react';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -19,131 +21,77 @@ import {
 import {createTheme} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {EstimationVariant, Fee} from '@app/models/fee';
 import {
   TransactionStackParamList,
   TransactionStackRoutes,
 } from '@app/route-types';
 import {EthNetwork} from '@app/services';
-import {
-  CalculatedFees,
-  EstimationVariant,
-} from '@app/services/eth-network/types';
+import {CalculatedFees} from '@app/services/eth-network/types';
 
 const TABS = [I18N.low, I18N.average, I18N.high, I18N.custom];
-const INIT_TAB_INDEX = 1;
 
-export const FeeSettingsScreen = () => {
+export const FeeSettingsScreen = observer(() => {
   const navigation = useTypedNavigation<TransactionStackParamList>();
   const {params} = useTypedRoute<
     TransactionStackParamList,
     TransactionStackRoutes.FeeSettings
   >();
 
-  const [activeTabIndex, setActiveTabIndex] = useState(INIT_TAB_INDEX);
-
-  const [gasLimit, setGasLimit] = useState('');
-  const [maxBaseFee, setMaxBaseFee] = useState('');
-  const [priorityFee, setPriorityFee] = useState('');
-
-  const [resetData, _setResetData] = useState<{
-    calculatedFees: CalculatedFees;
-    gasLimit: string;
-    maxBaseFee: string;
-    priorityFee: string;
-  } | null>(null);
-  const [calculatedFees, _setCalculatedFees] = useState<CalculatedFees | null>(
-    null,
-  );
-
-  const setCalculatedFees = useCallback(
-    (data: CalculatedFees) => {
-      if (activeTabIndex !== 3) {
-        _setResetData({
-          calculatedFees: data,
-          gasLimit,
-          maxBaseFee,
-          priorityFee,
-        });
-      }
-
-      _setCalculatedFees(data);
-    },
-    [activeTabIndex, gasLimit, maxBaseFee, priorityFee],
-  );
-
   const estimate = useCallback(
-    async (txEstimationVariant: EstimationVariant) => {
-      if (txEstimationVariant === 'custom') {
-        const data = await EthNetwork.customEstimate(
-          {
-            from: params.from,
-            to: params.to,
-            value: params.amount,
-          },
-          {
-            gasLimit: BigNumber.from(gasLimit),
-            maxBaseFee: BigNumber.from(+maxBaseFee * Math.pow(10, 9)),
-            maxPriorityFee: BigNumber.from(+priorityFee * Math.pow(10, 9)),
-          },
-        );
-
-        setCalculatedFees(data);
+    _.debounce(async (estimationType: EstimationVariant) => {
+      let data: CalculatedFees | null = null;
+      if (estimationType === EstimationVariant.custom) {
+        if (Fee.gasLimit && Fee.maxBaseFee && Fee.maxPriorityFee) {
+          data = await EthNetwork.customEstimate(
+            {
+              from: params.from,
+              to: params.to,
+              value: params.amount,
+              data: params.data,
+            },
+            {
+              gasLimit: BigNumber.from(Fee.gasLimit.toWei()),
+              maxBaseFee: BigNumber.from(Fee.maxBaseFee.toWei()),
+              maxPriorityFee: BigNumber.from(Fee.maxPriorityFee.toWei()),
+            },
+          );
+        }
       } else {
-        const data = await EthNetwork.estimate(
+        data = await EthNetwork.estimate(
           {
             from: params.from,
             to: params.to,
             value: params.amount,
+            data: params.data,
           },
-          txEstimationVariant,
+          estimationType,
         );
-        setGasLimit(String(data.gasLimit.toWei()));
-        setMaxBaseFee(String(data.maxBaseFee.toGWei()));
-        setPriorityFee(String(data.maxPriorityFee.toGWei()));
-        setCalculatedFees(data);
       }
-    },
-    [gasLimit, maxBaseFee, priorityFee],
+
+      data && Fee.setCalculatedFees(data);
+    }, 500),
+    [],
   );
 
-  const onTabChange = useCallback((tabName: string) => {
-    setActiveTabIndex(Number(tabName));
+  const onTabChange = useCallback((tabName: keyof typeof EstimationVariant) => {
+    Fee.setEstimationType(EstimationVariant[tabName]);
   }, []);
 
-  const handleApply = useCallback(() => {
-    navigation.navigate(TransactionStackRoutes.TransactionConfirmation, {
-      from: params.from,
-      to: params.to,
-      amount: params.amount,
-      token: params.token,
-      calculatedFees: calculatedFees ?? undefined,
-    });
-  }, [params, calculatedFees]);
-
-  const handleReset = useCallback(() => {
-    if (activeTabIndex === 3 && resetData) {
-      _setCalculatedFees(resetData.calculatedFees);
-      setGasLimit(resetData.gasLimit);
-      setMaxBaseFee(resetData.maxBaseFee);
-      setPriorityFee(resetData.priorityFee);
-    }
-  }, [activeTabIndex, resetData]);
+  const handleApply = () => {
+    navigation.goBack();
+  };
 
   useEffect(() => {
-    switch (activeTabIndex) {
-      case 0:
-        estimate('low');
-        break;
-      case 1:
-        estimate('average');
-        break;
-      case 2:
-        estimate('high');
-        break;
-      case 3:
-        estimate('custom');
-    }
-  }, [activeTabIndex, estimate]);
+    estimate(Fee.estimationType);
+  }, [
+    Fee.estimationType,
+    Fee.gasLimitString,
+    Fee.maxBaseFeeString,
+    Fee.maxPriorityFeeString,
+  ]);
+
+  const handleReset = () => Fee.resetCalculatedFees();
 
   return (
     <View style={styles.container}>
@@ -153,13 +101,13 @@ export const FeeSettingsScreen = () => {
             contentContainerStyle={styles.tabsContentContainerStyle}
             variant={TopTabNavigatorVariant.large}
             onTabChange={onTabChange}
-            activeTabIndex={activeTabIndex}
-            initialTabIndex={INIT_TAB_INDEX}>
+            activeTabIndex={Fee.estimationType}
+            initialTabIndex={Fee.estimationType}>
             {TABS.map((tab, index) => (
               <TopTabNavigator.Tab
                 key={getText(tab)}
                 testID={`FeeSettings${getText(tab)}Tab`}
-                name={String(index)}
+                name={EstimationVariant[index]}
                 title={tab}
                 component={null}
               />
@@ -169,9 +117,9 @@ export const FeeSettingsScreen = () => {
         <TextField
           label={I18N.gasLimit}
           placeholder={I18N.empty}
-          value={gasLimit}
-          onChangeText={setGasLimit}
-          editable={activeTabIndex === 3}
+          value={Fee.gasLimitString}
+          onChangeText={Fee.setGasLimit}
+          editable={Fee.estimationType === EstimationVariant.custom}
           infoBlock={{
             label: getText(I18N.moreAbout, {item: getText(I18N.gasLimit)}),
             title: I18N.gasLimit,
@@ -182,9 +130,9 @@ export const FeeSettingsScreen = () => {
         <TextField
           label={`${getText(I18N.maxBaseFee)} (GWei)`}
           placeholder={I18N.empty}
-          value={maxBaseFee}
-          onChangeText={setMaxBaseFee}
-          editable={activeTabIndex === 3}
+          value={Fee.maxBaseFeeString}
+          onChangeText={Fee.setMaxBaseFee}
+          editable={Fee.estimationType === EstimationVariant.custom}
           infoBlock={{
             label: getText(I18N.moreAbout, {item: getText(I18N.maxBaseFee)}),
             title: I18N.maxBaseFee,
@@ -195,9 +143,9 @@ export const FeeSettingsScreen = () => {
         <TextField
           label={`${getText(I18N.maxPriorityFee)} (GWei)`}
           placeholder={I18N.empty}
-          value={priorityFee}
-          onChangeText={setPriorityFee}
-          editable={activeTabIndex === 3}
+          value={Fee.maxPriorityFeeString}
+          onChangeText={Fee.setMaxPriorityFee}
+          editable={Fee.estimationType === EstimationVariant.custom}
           infoBlock={{
             label: getText(I18N.moreAbout, {
               item: getText(I18N.maxPriorityFee),
@@ -210,7 +158,7 @@ export const FeeSettingsScreen = () => {
         <View style={styles.fee}>
           <Text variant={TextVariant.t11}>Expected Fee</Text>
           <Text variant={TextVariant.t11} color={Color.textBase2}>
-            {calculatedFees?.expectedFee.toBalanceString(6) ?? '-'}
+            {Fee.expectedFeeString}
           </Text>
         </View>
       </View>
@@ -230,7 +178,7 @@ export const FeeSettingsScreen = () => {
       </View>
     </View>
   );
-};
+});
 
 const styles = createTheme({
   container: {

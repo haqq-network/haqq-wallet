@@ -6,6 +6,7 @@ import {BigNumber, utils} from 'ethers';
 import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
+import {EstimationVariant} from '@app/models/fee';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {getDefaultChainId} from '@app/network';
@@ -18,7 +19,6 @@ import {getERC20TransferData} from './erc20';
 import {
   BALANCE_CACHE_KEY,
   CalculatedFees,
-  EstimationVariant,
   TxCustomEstimationParams,
   TxEstimationParams,
 } from './types';
@@ -191,7 +191,7 @@ export class EthNetwork {
    */
   static async estimate(
     {from, to, value = Balance.Empty, data = '0x', minGas}: TxEstimationParams,
-    calculationType: EstimationVariant = 'average',
+    calculationType: EstimationVariant = EstimationVariant.average,
   ): Promise<CalculatedFees> {
     try {
       const rpcProvider = await getRpcProvider(app.provider);
@@ -231,10 +231,10 @@ export class EthNetwork {
       let priorityFee = maxBaseFee;
 
       switch (calculationType) {
-        case 'average':
+        case EstimationVariant.average:
           priorityFee = maxBaseFee.div(2);
           break;
-        case 'low':
+        case EstimationVariant.low:
           priorityFee = maxBaseFee.div(20);
           break;
       }
@@ -301,7 +301,7 @@ export class EthNetwork {
       amount: Balance;
       contractAddress: string;
     },
-    estimationVariant: EstimationVariant = 'average',
+    estimationVariant: EstimationVariant = EstimationVariant.average,
   ) {
     const data = getERC20TransferData(to, amount, contractAddress);
     return await EthNetwork.estimate(
@@ -347,21 +347,6 @@ export class EthNetwork {
     }
   }
 
-  static async estimateERC721Transfer(
-    from: string,
-    to: string,
-    tokenId: number,
-    contractAddress: string,
-  ) {
-    const data = getERC721TransferData(from, to, tokenId);
-    return await EthNetwork.estimate({
-      from,
-      to: contractAddress,
-      value: Balance.Empty,
-      data,
-    });
-  }
-
   async transferERC721(
     estimate: CalculatedFees,
     transport: ProviderInterface,
@@ -392,21 +377,6 @@ export class EthNetwork {
       });
       throw error;
     }
-  }
-
-  static async estimateERC1155Transfer(
-    from: string,
-    to: string,
-    tokenId: number,
-    contractAddress: string,
-  ) {
-    const data = getERC1155TransferData(from, to, tokenId);
-    return await EthNetwork.estimate({
-      from,
-      to: contractAddress,
-      value: Balance.Empty,
-      data,
-    });
   }
 
   async transferERC1155(

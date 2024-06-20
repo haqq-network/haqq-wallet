@@ -20,9 +20,9 @@ import {
 import {createTheme, openURL} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
+import {Fee} from '@app/models/fee';
 import {Balance} from '@app/services/balance';
 import {EthNetwork} from '@app/services/eth-network/eth-network';
-import {CalculatedFees} from '@app/services/eth-network/types';
 import {IToken, TransactionResponse} from '@app/types';
 import {CURRENCY_NAME, LONG_NUM_PRECISION} from '@app/variables/common';
 
@@ -35,7 +35,6 @@ type TransactionFinishProps = {
   testID?: string;
   token: IToken;
   amount?: Balance;
-  fee?: CalculatedFees;
 };
 
 export const TransactionFinish = ({
@@ -47,7 +46,6 @@ export const TransactionFinish = ({
   testID,
   token,
   amount,
-  fee,
 }: TransactionFinishProps) => {
   const onPressHash = async () => {
     const url = `${EthNetwork.explorer}tx/${transaction?.hash}`;
@@ -117,7 +115,7 @@ export const TransactionFinish = ({
         </Text>
       </View>
 
-      <NetworkFee fee={fee?.expectedFee} currency="ISLM" />
+      <NetworkFee fee={Fee?.expectedFee} currency="ISLM" />
 
       <View style={styles.providerContainer}>
         <Text
