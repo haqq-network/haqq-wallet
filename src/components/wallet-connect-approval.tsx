@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 
-import {Image, View} from 'react-native';
+import {View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
@@ -21,6 +21,8 @@ import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {WalletConnectApproveConnectionEvent} from '@app/types/wallet-connect';
 import {getHostnameFromUrl} from '@app/utils';
+
+import {ImageWrapper} from './image-wrapper';
 
 interface WalletConnectApprovalProps {
   event: WalletConnectApproveConnectionEvent;
@@ -68,7 +70,7 @@ export const WalletConnectApproval = ({
           <ISLMLogo border />
           <DashedLine width={26} style={styles.dashedLine} />
           <View style={styles.eventImageContainer}>
-            <Image style={styles.eventImage} source={imageSource} />
+            <ImageWrapper style={styles.eventImage} source={imageSource} />
           </View>
         </View>
 
