@@ -4,6 +4,7 @@ import {Balance} from '@app/services/balance';
 
 import {CalculatedFees, EstimationVariant} from './fee.types';
 
+// TODO: Investigate ability to create temporary store. This is will help avoid using clear function
 class Fee {
   private _estimationType: EstimationVariant = EstimationVariant.average;
 
@@ -105,6 +106,13 @@ class Fee {
   };
   setExpectedFee = (value: string) => {
     this._calculatedFee!.expectedFee = new Balance(value);
+  };
+
+  // This is very important to call this function each time when work with fee done
+  clear = () => {
+    this._estimationType = EstimationVariant.average;
+    this._lastSavedFee = null;
+    this._calculatedFee = null;
   };
 }
 

@@ -12,6 +12,7 @@ import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useLayoutEffectAsync} from '@app/hooks/use-effect-async';
 import {useError} from '@app/hooks/use-error';
 import {Contact} from '@app/models/contact';
+import {Fee} from '@app/models/fee';
 import {ContractType} from '@app/models/nft';
 import {Wallet} from '@app/models/wallet';
 import {
@@ -20,7 +21,8 @@ import {
 } from '@app/route-types';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
-import {CalculatedFees} from '@app/services/eth-network/types';
+import {getERC1155TransferData} from '@app/services/eth-network/erc1155';
+import {getERC721TransferData} from '@app/services/eth-network/erc721';
 import {EthSignErrorDataDetails} from '@app/services/eth-sign';
 import {EventTracker} from '@app/services/event-tracker';
 import {
@@ -54,28 +56,34 @@ export const TransactionNftConfirmationScreen = observer(() => {
   const showError = useError();
   const [soulboundTokenHint, setSoulboundTokenHint] = useState<string>('');
   const [disabled, setDisabled] = useState(false);
-  const [fee, setFee] = useState<CalculatedFees | null>();
+  const [feeData, setFeeData] = useState('0x');
 
   useLayoutEffectAsync(async () => {
     setSoulboundTokenHint('');
 
     try {
+      let data;
       if (nft.contractType === ContractType.erc721) {
-        const calculatedFees = await EthNetwork.estimateERC721Transfer(
+        data = getERC721TransferData(
           wallet?.address!,
           route.params.to,
           nft.tokenId,
-          AddressUtils.toEth(nft.contract),
         );
-        setFee(calculatedFees);
       } else {
-        const calculatedFees = await EthNetwork.estimateERC1155Transfer(
+        data = getERC1155TransferData(
           wallet?.address!,
           route.params.to,
           nft.tokenId,
-          AddressUtils.toEth(nft.contract),
         );
-        setFee(calculatedFees);
+      }
+      setFeeData(data);
+      if (!Fee.calculatedFees) {
+        const calculatedFees = await EthNetwork.estimate({
+          from: wallet?.address!,
+          to: AddressUtils.toEth(nft.contract),
+          data,
+        });
+        Fee.setCalculatedFees(calculatedFees);
       }
     } catch (err) {
       const e = err as SendTransactionError;
@@ -97,10 +105,10 @@ export const TransactionNftConfirmationScreen = observer(() => {
         const provider = await getProviderInstanceForWallet(wallet, false);
 
         let transaction: TransactionResponse | null = null;
-        if (fee) {
+        if (Fee.calculatedFees) {
           if (nft.contractType === ContractType.erc721) {
             transaction = await ethNetworkProvider.transferERC721(
-              fee,
+              Fee.calculatedFees,
               provider,
               wallet,
               route.params.to,
@@ -109,7 +117,7 @@ export const TransactionNftConfirmationScreen = observer(() => {
             );
           } else {
             transaction = await ethNetworkProvider.transferERC1155(
-              fee,
+              Fee.calculatedFees,
               provider,
               wallet,
               route.params.to,
@@ -126,7 +134,6 @@ export const TransactionNftConfirmationScreen = observer(() => {
             nft: route.params.nft,
             transaction,
             to: route.params.to,
-            fee,
           });
         }
       } catch (e) {
@@ -172,7 +179,15 @@ export const TransactionNftConfirmationScreen = observer(() => {
         setDisabled(false);
       }
     }
-  }, [fee, navigation, nft, route.params.from, route.params.to, wallet]);
+  }, [navigation, nft, route.params.from, route.params.to, wallet]);
+
+  const onFeePress = useCallback(() => {
+    navigation.navigate(TransactionStackRoutes.FeeSettings, {
+      from: wallet?.address!,
+      to: AddressUtils.toEth(nft.contract),
+      data: feeData,
+    });
+  }, [navigation, wallet?.address, nft.contract, feeData]);
 
   return (
     <TransactionNftConfirmation
@@ -181,7 +196,7 @@ export const TransactionNftConfirmationScreen = observer(() => {
       to={route.params.to}
       item={route.params.nft}
       soulboundTokenHint={soulboundTokenHint}
-      fee={fee}
+      onFeePress={onFeePress}
       onConfirmTransaction={onConfirmTransaction}
     />
   );

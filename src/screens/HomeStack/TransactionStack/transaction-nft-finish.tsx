@@ -9,6 +9,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {I18N, getText} from '@app/i18n';
 import {Contact, ContactType} from '@app/models/contact';
+import {Fee} from '@app/models/fee';
 import {
   HomeFeedStackRoutes,
   TransactionStackParamList,
@@ -23,7 +24,7 @@ export const TransactionNftFinishScreen = observer(() => {
     goBack();
     return true;
   }, [goBack]);
-  const {nft, transaction, to, fee} = useTypedRoute<
+  const {nft, transaction, to} = useTypedRoute<
     TransactionStackParamList,
     TransactionStackRoutes.TransactionNftFinish
   >().params;
@@ -41,6 +42,7 @@ export const TransactionNftFinishScreen = observer(() => {
   const short = useMemo(() => shortAddress(to ?? ''), [to]);
 
   const onSubmit = () => {
+    Fee.clear();
     navigate(HomeFeedStackRoutes.HomeFeed);
   };
 
@@ -91,7 +93,6 @@ export const TransactionNftFinishScreen = observer(() => {
       transaction={transaction}
       contact={contact}
       short={short}
-      fee={fee}
     />
   );
 });

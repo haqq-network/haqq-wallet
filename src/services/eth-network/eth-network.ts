@@ -347,21 +347,6 @@ export class EthNetwork {
     }
   }
 
-  static async estimateERC721Transfer(
-    from: string,
-    to: string,
-    tokenId: number,
-    contractAddress: string,
-  ) {
-    const data = getERC721TransferData(from, to, tokenId);
-    return await EthNetwork.estimate({
-      from,
-      to: contractAddress,
-      value: Balance.Empty,
-      data,
-    });
-  }
-
   async transferERC721(
     estimate: CalculatedFees,
     transport: ProviderInterface,
@@ -392,21 +377,6 @@ export class EthNetwork {
       });
       throw error;
     }
-  }
-
-  static async estimateERC1155Transfer(
-    from: string,
-    to: string,
-    tokenId: number,
-    contractAddress: string,
-  ) {
-    const data = getERC1155TransferData(from, to, tokenId);
-    return await EthNetwork.estimate({
-      from,
-      to: contractAddress,
-      value: Balance.Empty,
-      data,
-    });
   }
 
   async transferERC1155(

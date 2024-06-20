@@ -1,6 +1,7 @@
 import {useCallback, useEffect} from 'react';
 
 import {BigNumber} from 'ethers';
+import _ from 'lodash';
 import {observer} from 'mobx-react';
 import {View} from 'react-native';
 
@@ -37,36 +38,41 @@ export const FeeSettingsScreen = observer(() => {
     TransactionStackRoutes.FeeSettings
   >();
 
-  const estimate = async (estimationType: EstimationVariant) => {
-    let data: CalculatedFees | null = null;
-    if (estimationType === EstimationVariant.custom) {
-      if (Fee.gasLimit && Fee.maxBaseFee && Fee.maxPriorityFee) {
-        data = await EthNetwork.customEstimate(
+  const estimate = useCallback(
+    _.debounce(async (estimationType: EstimationVariant) => {
+      let data: CalculatedFees | null = null;
+      if (estimationType === EstimationVariant.custom) {
+        if (Fee.gasLimit && Fee.maxBaseFee && Fee.maxPriorityFee) {
+          data = await EthNetwork.customEstimate(
+            {
+              from: params.from,
+              to: params.to,
+              value: params.amount,
+              data: params.data,
+            },
+            {
+              gasLimit: BigNumber.from(Fee.gasLimit.toWei()),
+              maxBaseFee: BigNumber.from(Fee.maxBaseFee.toWei()),
+              maxPriorityFee: BigNumber.from(Fee.maxPriorityFee.toWei()),
+            },
+          );
+        }
+      } else {
+        data = await EthNetwork.estimate(
           {
             from: params.from,
             to: params.to,
             value: params.amount,
+            data: params.data,
           },
-          {
-            gasLimit: BigNumber.from(Fee.gasLimit.toWei()),
-            maxBaseFee: BigNumber.from(Fee.maxBaseFee.toWei()),
-            maxPriorityFee: BigNumber.from(Fee.maxPriorityFee.toWei()),
-          },
+          estimationType,
         );
       }
-    } else {
-      data = await EthNetwork.estimate(
-        {
-          from: params.from,
-          to: params.to,
-          value: params.amount,
-        },
-        estimationType,
-      );
-    }
 
-    data && Fee.setCalculatedFees(data);
-  };
+      data && Fee.setCalculatedFees(data);
+    }, 500),
+    [],
+  );
 
   const onTabChange = useCallback((tabName: keyof typeof EstimationVariant) => {
     Fee.setEstimationType(EstimationVariant[tabName]);
