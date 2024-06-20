@@ -34,7 +34,7 @@ export class EthNetwork {
 
   static async populateTransaction(
     estimate: CalculatedFees,
-    {from, to, value, data}: TxEstimationParams,
+    {from, to, value = Balance.Empty, data = '0x'}: TxEstimationParams,
   ) {
     try {
       if (!AddressUtils.isEthAddress(to)) {
@@ -136,7 +136,7 @@ export class EthNetwork {
   }
 
   static async customEstimate(
-    {from, to, value, data}: TxEstimationParams,
+    {from, to, value = Balance.Empty, data = '0x'}: TxEstimationParams,
     {gasLimit, maxBaseFee, maxPriorityFee}: TxCustomEstimationParams,
   ): Promise<CalculatedFees> {
     try {
