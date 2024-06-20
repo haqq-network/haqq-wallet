@@ -20,6 +20,7 @@ import {
 } from '@app/route-types';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
+import {getERC20TransferData} from '@app/services/eth-network/erc20';
 import {EthSignErrorDataDetails} from '@app/services/eth-sign';
 import {EventTracker} from '@app/services/event-tracker';
 import {MarketingEvents, ModalType} from '@app/types';
@@ -45,28 +46,37 @@ export const TransactionConfirmationScreen = observer(() => {
   const showError = useError();
   const [disabled, setDisabled] = useState(false);
 
+  const {from, to, value, data} = useMemo(() => {
+    const contractAddress = AddressUtils.toEth(token.id);
+
+    return {
+      from: token.is_erc20 ? wallet?.address! : route.params.from,
+      to: token.is_erc20 ? contractAddress : route.params.to,
+      value: token.is_erc20 ? undefined : route.params.amount,
+      data: token.is_erc20
+        ? getERC20TransferData(
+            route.params.to,
+            route.params.amount,
+            contractAddress,
+          )
+        : undefined,
+    };
+  }, [token, wallet?.address, route.params]);
+
   useLayoutEffectAsync(async () => {
     if (!Fee.calculatedFees) {
       let estimateFee;
 
-      if (token.is_erc20) {
-        estimateFee = await EthNetwork.estimateERC20Transfer({
-          from: wallet?.address!,
-          to: route.params.to,
-          amount: route.params.amount,
-          contractAddress: AddressUtils.toEth(token.id),
-        });
-      } else {
-        estimateFee = await EthNetwork.estimate({
-          from: route.params.from,
-          to: route.params.to,
-          value: route.params.amount,
-        });
-      }
+      estimateFee = await EthNetwork.estimate({
+        from,
+        to,
+        value,
+        data,
+      });
 
       Fee.setCalculatedFees(estimateFee);
     }
-  }, [Fee.calculatedFees]);
+  }, [Fee.calculatedFees, from, to, value, data]);
 
   const onConfirmTransaction = useCallback(async () => {
     if (wallet) {
@@ -162,11 +172,11 @@ export const TransactionConfirmationScreen = observer(() => {
   ]);
 
   const onFeePress = useCallback(() => {
-    const {from, to, amount} = route.params;
     navigation.navigate(TransactionStackRoutes.FeeSettings, {
       from,
       to,
-      amount,
+      amount: value,
+      data,
     });
   }, [navigation]);
 
