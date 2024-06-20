@@ -3,6 +3,7 @@ import {useEffect, useMemo, useState} from 'react';
 import {isObservable, toJS} from 'mobx';
 import {
   Image,
+  ImageProps,
   ImageSourcePropType,
   ImageStyle,
   StyleProp,
@@ -12,6 +13,8 @@ import BlastedImage, {BlastedImageProps} from 'react-native-blasted-image';
 
 import {isValidUrl} from '@app/utils';
 
+import {First} from './ui';
+
 export type ImageWrapperProps = Omit<BlastedImageProps, 'source' | 'style'> & {
   source: ImageSourcePropType | string;
   style?: StyleProp<ImageStyle>;
@@ -19,12 +22,21 @@ export type ImageWrapperProps = Omit<BlastedImageProps, 'source' | 'style'> & {
 
 export function ImageWrapper({source, style, ...props}: ImageWrapperProps) {
   const [isError, setError] = useState(false);
-  const Component = isError ? Image : BlastedImage;
 
   const fixedSource = useMemo(() => {
     if (typeof source === 'string' && isValidUrl(source)) {
       return {uri: source} as ImageSourcePropType;
     }
+
+    if (
+      typeof source === 'object' &&
+      'uri' in source &&
+      typeof source.uri === 'number'
+    ) {
+      // if source.uri is number, that means it's a `require()` source
+      return source.uri as ImageSourcePropType;
+    }
+
     // fix for error: `property is not configurable`
     if (isObservable(source)) {
       return toJS(source) as ImageSourcePropType;
@@ -40,11 +52,16 @@ export function ImageWrapper({source, style, ...props}: ImageWrapperProps) {
   }, [style]);
 
   return (
-    <Component
-      {...props}
-      style={StyleSheet.flatten(style)}
-      source={fixedSource}
-      onError={() => setError(true)}
-    />
+    <First>
+      {isError && (
+        <Image {...(props as ImageProps)} style={style} source={fixedSource} />
+      )}
+      <BlastedImage
+        {...props}
+        style={StyleSheet.flatten(style)}
+        source={fixedSource}
+        onError={() => setError(true)}
+      />
+    </First>
   );
 }
