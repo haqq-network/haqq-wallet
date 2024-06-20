@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Image, View} from 'react-native';
+import {View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
@@ -24,6 +24,8 @@ import {NftItem} from '@app/models/nft';
 import {EthNetwork} from '@app/services/eth-network/eth-network';
 import {CalculatedFees} from '@app/services/eth-network/types';
 import {TransactionResponse} from '@app/types';
+
+import {ImageWrapper} from './image-wrapper';
 
 type TransactionFinishProps = {
   transaction: TransactionResponse | null;
@@ -68,7 +70,11 @@ export const TransactionNftFinish = ({
         position={TextPosition.center}
         color={Color.textGreen1}
       />
-      <Image source={nftImageUri} style={styles.icon} borderRadius={12} />
+      <ImageWrapper
+        source={nftImageUri}
+        style={styles.icon}
+        borderRadius={12}
+      />
       <Text variant={TextVariant.t5} position={TextPosition.center}>
         {item.name}
       </Text>

@@ -1,12 +1,13 @@
 import React, {useCallback} from 'react';
 
-import {Image, View} from 'react-native';
+import {View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {useNftCollectionImage} from '@app/hooks/nft';
 import {NftCollection} from '@app/models/nft';
 
+import {ImageWrapper} from '../image-wrapper';
 import {MenuNavigationButton, Spacer, Text} from '../ui';
 
 export interface NftViewerSectionHeaderProps {
@@ -24,7 +25,7 @@ export const NftViewerSectionHeader = ({
 
   return (
     <MenuNavigationButton onPress={handlePress} style={styles.headerContainer}>
-      <Image
+      <ImageWrapper
         resizeMode="cover"
         style={styles.headerImage}
         source={collectionImageUri}
