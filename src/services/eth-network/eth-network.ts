@@ -159,18 +159,6 @@ export class EthNetwork {
         resultMaxBaseFee = block.baseFeePerGas!;
       }
 
-      // console.log('entered numbers', {gasLimit, maxBaseFee, maxPriorityFee});
-      // console.log('estimated numbers', {
-      //   gasLimit: estimateGasLimit,
-      //   maxBaseFee: block.baseFeePerGas,
-      //   maxPriorityFee,
-      // });
-      // console.log('result numbers', {
-      //   gasLimit: new Balance(gasLimit).max(estimateGasLimit),
-      //   maxBaseFee: estimateMaxBaseFee,
-      //   maxPriorityFee,
-      // });
-
       return {
         gasLimit: new Balance(resultGasLimit),
         maxBaseFee: new Balance(resultMaxBaseFee),
@@ -202,7 +190,7 @@ export class EthNetwork {
    * @returns fee data
    */
   static async estimate(
-    {from, to, value, data, minGas}: TxEstimationParams,
+    {from, to, value = Balance.Empty, data = '0x', minGas}: TxEstimationParams,
     calculationType: EstimationVariant = 'average',
   ): Promise<CalculatedFees> {
     try {
