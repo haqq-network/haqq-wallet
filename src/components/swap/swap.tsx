@@ -7,7 +7,6 @@ import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {useSumAmount} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {Contracts} from '@app/models/contracts';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {
@@ -19,14 +18,15 @@ import {IContract} from '@app/types';
 import {formatNumberString} from '@app/utils';
 import {STRINGS} from '@app/variables/common';
 
+import {EstimatedValue} from './estimated-value';
 import {SwapInput} from './swap-input';
+import {SwapRoutePathIcons} from './swap-route-path-icons';
 import {
   SwapSettingBottomSheet,
   SwapSettingBottomSheetRef,
   SwapTransactionSettings,
 } from './swap-settings-bottom-sheet';
 
-import {ImageWrapper} from '../image-wrapper';
 import {DismissPopupButton} from '../popup/dismiss-popup-button';
 import {
   Button,
@@ -41,30 +41,6 @@ import {
   TextVariant,
 } from '../ui';
 import {WalletRow, WalletRowTypes} from '../wallet-row';
-
-const EstimatedValue = observer(
-  ({
-    title,
-    value,
-    valueColor = Color.textBase1,
-  }: {
-    title: string;
-    value: string;
-    valueColor?: Color;
-  }) => {
-    return (
-      <View style={styles.estimatedValueContainer}>
-        <Text variant={TextVariant.t14} color={Color.textBase2}>
-          {title}
-        </Text>
-        <Spacer />
-        <Text variant={TextVariant.t14} color={valueColor}>
-          {value}
-        </Text>
-      </View>
-    );
-  },
-);
 
 export interface SwapProps {
   currentWallet: Wallet;
@@ -250,37 +226,10 @@ export const Swap = observer(
               value={minReceivedAmount.toBalanceString('auto')}
             />
 
-            <View style={styles.estimatedValueContainer}>
-              <Text variant={TextVariant.t14} color={Color.textBase2}>
-                Route
-              </Text>
-              <Spacer />
-              <View style={styles.route}>
-                {currentRoute?.route.map((address, i, arr) => {
-                  const contract = Contracts.getById(address);
-                  const isLast = arr.length - 1 === i;
-
-                  if (!contract) {
-                    return null;
-                  }
-                  return (
-                    <React.Fragment key={`swap-route-path-item-${contract.id}`}>
-                      <ImageWrapper
-                        style={styles.routeIcon}
-                        source={{uri: contract.icon!}}
-                      />
-                      {!isLast && (
-                        <Text variant={TextVariant.t14} color={Color.textBase1}>
-                          {STRINGS.NBSP}
-                          {'→'}
-                          {STRINGS.NBSP}
-                        </Text>
-                      )}
-                    </React.Fragment>
-                  );
-                })}
-              </View>
-            </View>
+            <EstimatedValue
+              title="Route"
+              value={<SwapRoutePathIcons route={currentRoute.route} />}
+            />
           </View>
         )}
 
@@ -339,10 +288,6 @@ const styles = createTheme({
     paddingHorizontal: 20,
     flex: 1,
   },
-  estimatedValueContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
   header: {
     flexDirection: 'row',
     marginVertical: 16,
@@ -350,8 +295,4 @@ const styles = createTheme({
   headerButtonsContainer: {
     flexDirection: 'row',
   },
-  route: {
-    flexDirection: 'row',
-  },
-  routeIcon: {width: 16, height: 16},
 });
