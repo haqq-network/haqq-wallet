@@ -117,9 +117,15 @@ export const Swap = observer(
       isEstimating || isSwapInProgress || isApproveInProgress;
 
     const rate = useMemo(() => {
-      const r = t1Current.toFloat() / t0Current.toFloat();
+      const r =
+        t1Current.toFloat() /
+        new Balance(
+          estimateData?.amount_in!,
+          t0Current.getPrecission(),
+          t0Current.getSymbol(),
+        ).toFloat();
       return new Balance(r, 0, t1Current.getSymbol()).toBalanceString('auto');
-    }, [t1Current, t0Current]);
+    }, [t1Current, t0Current, estimateData]);
 
     const priceImpactColor = useMemo(() => {
       if (!estimateData?.s_price_impact) {
