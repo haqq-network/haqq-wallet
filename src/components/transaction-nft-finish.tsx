@@ -20,9 +20,9 @@ import {createTheme, openURL} from '@app/helpers';
 import {useNftImage} from '@app/hooks/nft';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
+import {Fee} from '@app/models/fee';
 import {NftItem} from '@app/models/nft';
 import {EthNetwork} from '@app/services/eth-network/eth-network';
-import {CalculatedFees} from '@app/services/eth-network/types';
 import {TransactionResponse} from '@app/types';
 
 import {ImageWrapper} from './image-wrapper';
@@ -34,7 +34,6 @@ type TransactionFinishProps = {
   onPressContact: () => void;
   contact: Contact | null;
   short: string;
-  fee?: CalculatedFees | null;
 };
 
 export const TransactionNftFinish = ({
@@ -44,7 +43,6 @@ export const TransactionNftFinish = ({
   onPressContact,
   contact,
   short,
-  fee,
 }: TransactionFinishProps) => {
   const onPressHash = async () => {
     const url = `${EthNetwork.explorer}tx/${transaction?.hash}`;
@@ -96,7 +94,7 @@ export const TransactionNftFinish = ({
         </Text>
       </View>
 
-      <NetworkFee fee={fee?.expectedFee} currency="ISLM" />
+      <NetworkFee fee={Fee.expectedFee} currency="ISLM" />
 
       <Spacer />
 

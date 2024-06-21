@@ -11,7 +11,9 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {I18N, getText} from '@app/i18n';
 import {Contact, ContactType} from '@app/models/contact';
+import {Fee} from '@app/models/fee';
 import {
+  HomeFeedStackRoutes,
   TransactionStackParamList,
   TransactionStackRoutes,
 } from '@app/route-types';
@@ -25,7 +27,7 @@ export const TransactionFinishScreen = observer(() => {
     goBack();
     return true;
   }, [goBack]);
-  const {hash, transaction, token, amount, fee} = useTypedRoute<
+  const {hash, transaction, token, amount} = useTypedRoute<
     TransactionStackParamList,
     TransactionStackRoutes.TransactionFinish
   >().params;
@@ -39,7 +41,8 @@ export const TransactionFinishScreen = observer(() => {
 
   const onSubmit = useCallback(async () => {
     await awaitForEventDone(Events.onAppReviewRequest);
-    getParent()?.goBack();
+    Fee.clear();
+    navigate(HomeFeedStackRoutes.HomeFeed);
   }, [getParent]);
 
   const onPressContact = useCallback(() => {
@@ -90,7 +93,6 @@ export const TransactionFinishScreen = observer(() => {
       testID="transaction_finish"
       token={token}
       amount={amount}
-      fee={fee}
     />
   );
 });
