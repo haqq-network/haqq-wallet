@@ -279,7 +279,7 @@ export const SwapScreen = observer(() => {
 
       if (!Token.tokens?.[currentWallet.address]) {
         await Promise.all([
-          Token.fetchTokens(true, true),
+          Token.fetchTokens(true),
           awaitForEventDone(Events.onBalanceSync),
         ]);
       }
@@ -362,7 +362,7 @@ export const SwapScreen = observer(() => {
           });
           try {
             await Promise.all([
-              Token.fetchTokens(true, true),
+              Token.fetchTokens(true),
               awaitForEventDone(Events.onBalanceSync),
             ]);
           } catch {
