@@ -9,6 +9,7 @@ import {AddressUtils} from '@app/helpers/address-utils';
 import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
+import {useBackNavigationHandler} from '@app/hooks/use-back-navigation-handler';
 import {useLayoutEffectAsync} from '@app/hooks/use-effect-async';
 import {useError} from '@app/hooks/use-error';
 import {Contact} from '@app/models/contact';
@@ -188,6 +189,10 @@ export const TransactionNftConfirmationScreen = observer(() => {
       data: feeData,
     });
   }, [navigation, wallet?.address, nft.contract, feeData]);
+
+  useBackNavigationHandler(() => {
+    Fee.clear();
+  });
 
   return (
     <TransactionNftConfirmation
