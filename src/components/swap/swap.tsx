@@ -116,6 +116,11 @@ export const Swap = observer(
     const isHeaderButtonsDisabled =
       isEstimating || isSwapInProgress || isApproveInProgress;
 
+    const rate = useMemo(() => {
+      const r = t1Current.toFloat() / t0Current.toFloat();
+      return new Balance(r, 0, t1Current.getSymbol()).toBalanceString('auto');
+    }, [t1Current, t0Current]);
+
     const priceImpactColor = useMemo(() => {
       if (!estimateData?.s_price_impact) {
         return Color.textBase1;
@@ -207,9 +212,7 @@ export const Swap = observer(
               title="Rate"
               value={`1${STRINGS.NBSP}${t0Current.getSymbol()}${STRINGS.NBSP}≈${
                 STRINGS.NBSP
-              }${formatNumberString(estimateData.s_swap_price)}${
-                STRINGS.NBSP
-              }${t1Current.getSymbol()}`}
+              }${rate}`}
             />
             <EstimatedValue
               title="Provider Fee"
