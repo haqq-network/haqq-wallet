@@ -16,7 +16,7 @@ import {
 } from '@app/services/indexer';
 import {IContract} from '@app/types';
 import {formatNumberString} from '@app/utils';
-import {STRINGS} from '@app/variables/common';
+import {CURRENCY_NAME, STRINGS} from '@app/variables/common';
 
 import {EstimatedValue} from './estimated-value';
 import {SwapInput} from './swap-input';
@@ -116,6 +116,17 @@ export const Swap = observer(
     const isHeaderButtonsDisabled =
       isEstimating || isSwapInProgress || isApproveInProgress;
 
+    const rate = useMemo(() => {
+      const r =
+        t1Current.toFloat() /
+        new Balance(
+          estimateData?.amount_in!,
+          t0Current.getPrecission(),
+          t0Current.getSymbol(),
+        ).toFloat();
+      return new Balance(r, 0, t1Current.getSymbol()).toBalanceString('auto');
+    }, [t1Current, t0Current, estimateData]);
+
     const priceImpactColor = useMemo(() => {
       if (!estimateData?.s_price_impact) {
         return Color.textBase1;
@@ -154,9 +165,9 @@ export const Swap = observer(
             </IconButton>
           </View>
           <Spacer flex={1} />
-          <Text variant={TextVariant.t8}>Swap</Text>
-          {/* width of buttons */}
-          <Spacer width={34} />
+          <Text variant={TextVariant.t8} i18n={I18N.swapScreenTitle} />
+          {/* 24 is width of buttons, 10 is spacing */}
+          <Spacer width={24 + 10} />
           <Spacer flex={1} />
           <DismissPopupButton />
         </View>
@@ -204,30 +215,31 @@ export const Swap = observer(
         {!!estimateData && (
           <View>
             <EstimatedValue
-              title="Rate"
+              title={I18N.swapScreenRate}
               value={`1${STRINGS.NBSP}${t0Current.getSymbol()}${STRINGS.NBSP}≈${
                 STRINGS.NBSP
-              }${formatNumberString(estimateData.s_swap_price)}${
-                STRINGS.NBSP
-              }${t1Current.getSymbol()}`}
+              }${rate}`}
             />
             <EstimatedValue
-              title="Provider Fee"
+              title={I18N.swapScreenProviderFee}
               value={providerFee.toFiat({useDefaultCurrency: true, fixed: 6})}
             />
             <EstimatedValue
-              title="Price impact"
+              title={I18N.swapScreenPriceImpact}
               valueColor={priceImpactColor}
               value={`${formatNumberString(estimateData.s_price_impact)}%`}
             />
-            <EstimatedValue title="Routing source" value={'SwapRouterV3'} />
             <EstimatedValue
-              title="Min received"
+              title={I18N.swapScreenRoutingSource}
+              value={'SwapRouterV3'}
+            />
+            <EstimatedValue
+              title={I18N.swapScreenMinimumReceived}
               value={minReceivedAmount.toBalanceString('auto')}
             />
 
             <EstimatedValue
-              title="Route"
+              title={I18N.swapScreenRoute}
               value={<SwapRoutePathIcons route={currentRoute.route} />}
             />
           </View>
@@ -239,7 +251,7 @@ export const Swap = observer(
           {isUnwrapTx && (
             <Button
               variant={ButtonVariant.contained}
-              title="Unwrap"
+              i18n={I18N.swapScreenUnwrap}
               loading={isEstimating || isSwapInProgress}
               disabled={isEstimating || isSwapInProgress || !!amountsIn.error}
               onPress={onPressUnrap}
@@ -248,7 +260,7 @@ export const Swap = observer(
           {isWrapTx && (
             <Button
               variant={ButtonVariant.contained}
-              title="Wrap"
+              i18n={I18N.swapScreenWrap}
               loading={isEstimating || isSwapInProgress}
               disabled={isEstimating || isSwapInProgress || !!amountsIn.error}
               onPress={onPressWrap}
@@ -257,7 +269,11 @@ export const Swap = observer(
           {!!estimateData?.need_approve && (
             <Button
               variant={ButtonVariant.contained}
-              title={`Approve ${amountsIn.amount} ${tokenIn.symbol}`}
+              i18n={I18N.swapScreenApprove}
+              i18params={{
+                symbol: tokenIn.symbol || CURRENCY_NAME,
+                amount: amountsIn.amount,
+              }}
               loading={isApproveInProgress}
               disabled={isApproveInProgress || !!amountsIn.error}
               onPress={onPressApprove}
@@ -265,7 +281,7 @@ export const Swap = observer(
           )}
           <Button
             variant={ButtonVariant.contained}
-            title="Swap"
+            i18n={I18N.swapScreenSwap}
             loading={isEstimating || isSwapInProgress}
             disabled={isEstimating || isSwapInProgress || !!amountsIn.error}
             onPress={onPressSwap}

@@ -994,6 +994,19 @@ export enum I18N {
   maxPriorityFeeDescription = 'maxPriorityFeeDescription',
   swapSettingsSlippageWarning = 'swapSettingsSlippageWarning',
   swapTransactionSettingsTitle = 'swapTransactionSettingsTitle',
+  swapScreenTitle = 'swapScreenTitle',
+  swapScreenRate = 'swapScreenRate',
+  swapScreenProviderFee = 'swapScreenProviderFee',
+  swapScreenPriceImpact = 'swapScreenPriceImpact',
+  swapScreenRoutingSource = 'swapScreenRoutingSource',
+  swapScreenMinimumReceived = 'swapScreenMinimumReceived',
+  swapScreenRoute = 'swapScreenRoute',
+  swapScreenUnwrap = 'swapScreenUnwrap',
+  swapScreenWrap = 'swapScreenWrap',
+  swapScreenApprove = 'swapScreenApprove',
+  swapScreenSwap = 'swapScreenSwap',
+  swapScreenMax = 'swapScreenMax',
+  swapInputAmountData = 'swapInputAmountData',
 }
 
 const defaultTranslation = {en};

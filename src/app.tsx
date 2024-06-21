@@ -305,7 +305,7 @@ export const App = () => {
     for (let PIN = 0; PIN <= 999999; PIN++) {
       const pinCandidate = PIN.toString().padStart(6, '0');
       setCurrent(pinCandidate);
-      await sleep(50);
+      await sleep(1);
       const pin = await tryPin(pinCandidate);
       if (pin) {
         vibrate(HapticEffects.success);
