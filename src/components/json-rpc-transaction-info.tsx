@@ -21,8 +21,8 @@ import {I18N} from '@app/i18n';
 import {Fee} from '@app/models/fee';
 import {Provider} from '@app/models/provider';
 import {
-  TransactionStackParamList,
-  TransactionStackRoutes,
+  JsonRpcSignPopupStackParamList,
+  JsonRpcSignPopupStackRoutes,
 } from '@app/route-types';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
@@ -57,7 +57,7 @@ export const JsonRpcTransactionInfo = ({
   chainId,
   hideContractAttention,
 }: JsonRpcTransactionInfoProps) => {
-  const navigation = useTypedNavigation<TransactionStackParamList>();
+  const navigation = useTypedNavigation<JsonRpcSignPopupStackParamList>();
 
   const [isFeeLoading, setFeeLoading] = useState(true);
 
@@ -140,6 +140,8 @@ export const JsonRpcTransactionInfo = ({
       } finally {
         setFeeLoading(false);
       }
+    } else {
+      setFeeLoading(false);
     }
   }, [chainId]);
 
@@ -160,7 +162,7 @@ export const JsonRpcTransactionInfo = ({
       return;
     }
 
-    navigation.navigate(TransactionStackRoutes.FeeSettings, {
+    navigation.navigate(JsonRpcSignPopupStackRoutes.JsonRpcSignFeeSettings, {
       from: tx.from!,
       to: tx.to!,
       amount: new Balance(tx.value! || Balance.Empty),

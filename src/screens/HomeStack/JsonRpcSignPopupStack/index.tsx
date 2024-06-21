@@ -14,6 +14,8 @@ import {
 import {JsonRpcSignScreen} from '@app/screens/HomeStack/JsonRpcSignPopupStack/json-rpc-sign-screen';
 import {ScreenOptionType} from '@app/types';
 
+import {FeeSettingsScreen} from '../TransactionStack/fee-settings';
+
 const Stack = createNativeStackNavigator();
 
 const screenOptions: ScreenOptionType = {
@@ -32,6 +34,11 @@ export const JsonRpcSignPopupStack = memo(() => {
       <Stack.Screen
         name={JsonRpcSignPopupStackRoutes.JsonRpcSign}
         component={themeUpdaterHOC(JsonRpcSignScreen)}
+        initialParams={route.params}
+      />
+      <Stack.Screen
+        name={JsonRpcSignPopupStackRoutes.JsonRpcSignFeeSettings}
+        component={themeUpdaterHOC(FeeSettingsScreen)}
         initialParams={route.params}
       />
     </Stack.Navigator>
