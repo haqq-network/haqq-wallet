@@ -183,7 +183,7 @@ export const TransactionConfirmationScreen = observer(() => {
 
   useBackNavigationHandler(() => {
     Fee.clear();
-  });
+  }, []);
 
   return (
     <TransactionConfirmation

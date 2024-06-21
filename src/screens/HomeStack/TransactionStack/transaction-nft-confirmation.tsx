@@ -192,7 +192,7 @@ export const TransactionNftConfirmationScreen = observer(() => {
 
   useBackNavigationHandler(() => {
     Fee.clear();
-  });
+  }, []);
 
   return (
     <TransactionNftConfirmation
