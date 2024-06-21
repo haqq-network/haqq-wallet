@@ -4,7 +4,7 @@ import {makePersistable} from 'mobx-persist-store';
 
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
-import {AddressUtils} from '@app/helpers/address-utils';
+import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
 import {Whitelist} from '@app/helpers/whitelist';
 import {I18N, getText} from '@app/i18n';
 import {Contracts} from '@app/models/contracts';
@@ -217,7 +217,7 @@ class TokensStore implements MobXStore<IToken> {
     const balance = app.getAvailableBalance(wallet.address);
 
     return {
-      id: AddressUtils.toHaqq('0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'),
+      id: AddressUtils.toHaqq(NATIVE_TOKEN_ADDRESS),
       contract_created_at: '',
       contract_updated_at: '',
       value: balance,
@@ -236,10 +236,8 @@ class TokensStore implements MobXStore<IToken> {
 
   public generateIslamicTokenContract = (): IContract => {
     return {
-      id: AddressUtils.toHaqq('0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'),
-      eth_address: AddressUtils.toEth(
-        '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-      ),
+      id: AddressUtils.toHaqq(NATIVE_TOKEN_ADDRESS),
+      eth_address: AddressUtils.toEth(NATIVE_TOKEN_ADDRESS),
       address_type: AddressType.contract,
       is_skip_eth_tx: false,
       min_input_amount: '18',

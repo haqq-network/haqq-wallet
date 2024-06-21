@@ -153,7 +153,6 @@ export const SwapSettingBottomSheet = React.forwardRef<
       ref={bottomSheetRef}
       i18nTitle={I18N.swapTransactionSettingsTitle}
       fullscreen
-      contentContainerStyle={styles.contentContainerStyle}
       scrollable={false}
       onClose={onClose}>
       <KeyboardSafeArea isNumeric style={styles.keyboardContainer}>
@@ -213,11 +212,6 @@ export const SwapSettingBottomSheet = React.forwardRef<
 });
 
 const styles = createTheme({
-  contentContainerStyle: {
-    // bottom: 0,
-    // position: 'absolute',
-    // flex: 1,
-  },
   containerContent: {},
   keyboardContainer: {
     flex: 1,
