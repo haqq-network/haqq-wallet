@@ -126,18 +126,20 @@ export const JsonRpcTransactionInfo = ({
     !hideContractAttention && isContract && !isInWhiteList;
 
   useEffectAsync(async () => {
-    try {
-      if (tx) {
-        setFeeLoading(true);
-        await calculateFee();
+    if (!Fee.calculatedFees) {
+      try {
+        if (tx) {
+          setFeeLoading(true);
+          await calculateFee();
+        }
+      } catch (err) {
+        Logger.captureException(err, 'JsonRpcTransactionInfo:calculateFee', {
+          params: tx,
+          chainId,
+        });
+      } finally {
+        setFeeLoading(false);
       }
-    } catch (err) {
-      Logger.captureException(err, 'JsonRpcTransactionInfo:calculateFee', {
-        params: tx,
-        chainId,
-      });
-    } finally {
-      setFeeLoading(false);
     }
   }, [chainId]);
 
