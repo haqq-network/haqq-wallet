@@ -9,7 +9,6 @@ import {useSumAmount} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Balance} from '@app/services/balance';
 import {IContract} from '@app/types';
-import {STRINGS} from '@app/variables/common';
 
 import {ImageWrapper} from '../image-wrapper';
 import {
@@ -69,7 +68,7 @@ export const SwapInput = observer(
               rightAction={
                 showMaxButton ? (
                   <Button
-                    title="MAX"
+                    i18n={I18N.swapScreenMax}
                     variant={ButtonVariant.text}
                     textColor={
                       isLoading ? Color.textBase2 : Color.graphicGreen1
@@ -118,12 +117,17 @@ export const SwapInput = observer(
 
         <View>
           <Spacer height={4} />
-          <Text variant={TextVariant.t14} color={Color.textBase2}>
-            ≈{STRINGS.NBSP}
-            {currentBalance.toFiat({useDefaultCurrency: true})}
-            {STRINGS.NBSP}•{STRINGS.NBSP}Available:{STRINGS.NBSP}
-            {availableBalance.toBalanceString('auto')}
-          </Text>
+          <Text
+            variant={TextVariant.t14}
+            color={Color.textBase2}
+            i18n={I18N.swapInputAmountData}
+            i18params={{
+              currentFiatAmount: currentBalance.toFiat({
+                useDefaultCurrency: true,
+              }),
+              availableAmount: availableBalance.toBalanceString('auto'),
+            }}
+          />
         </View>
       </View>
     );
