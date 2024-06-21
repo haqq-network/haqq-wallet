@@ -181,7 +181,7 @@ export const Swap = observer(
         <Spacer height={12} />
 
         <SwapInput
-          label={I18N.transactionDetailAmount}
+          label={I18N.transactionDetailAmountIn}
           placeholder={I18N.transactionInfoFunctionValue}
           amounts={amountsIn}
           isLoading={isEstimating}
@@ -199,7 +199,7 @@ export const Swap = observer(
         <Spacer height={12} />
 
         <SwapInput
-          label={I18N.transactionDetailAmount}
+          label={I18N.transactionDetailAmountOut}
           placeholder={I18N.transactionInfoFunctionValue}
           amounts={amountsOut}
           editable={false}
