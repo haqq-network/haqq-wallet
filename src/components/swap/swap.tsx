@@ -166,17 +166,15 @@ export const Swap = observer(
           </View>
           <Spacer flex={1} />
           <Text variant={TextVariant.t8} i18n={I18N.swapScreenTitle} />
-          {/* 24 is width of buttons, 10 is spacing */}
-          <Spacer width={24 + 10} />
           <Spacer flex={1} />
+          <WalletRow
+            item={currentWallet}
+            type={WalletRowTypes.variant3}
+            onPress={onPressChangeWallet}
+          />
+          <Spacer width={10} />
           <DismissPopupButton />
         </View>
-
-        <WalletRow
-          item={currentWallet}
-          type={WalletRowTypes.variant2}
-          onPress={onPressChangeWallet}
-        />
 
         <Spacer height={12} />
 
@@ -306,7 +304,9 @@ const styles = createTheme({
   },
   header: {
     flexDirection: 'row',
-    marginVertical: 16,
+    alignItems: 'center',
+    marginBottom: 16,
+    marginTop: 12,
   },
   headerButtonsContainer: {
     flexDirection: 'row',
