@@ -1,6 +1,8 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {ActionSheetProvider} from '@expo/react-native-action-sheet';
+import Clipboard from '@react-native-clipboard/clipboard';
 import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
 import {
   DefaultTheme,
@@ -10,13 +12,20 @@ import {
 } from '@react-navigation/native';
 import * as Sentry from '@sentry/react-native';
 import PostHog, {PostHogProvider} from 'posthog-react-native';
-import {AppState, Dimensions, Linking, StyleSheet} from 'react-native';
+import {
+  Alert,
+  AppState,
+  Dimensions,
+  Linking,
+  StyleSheet,
+  View,
+} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {MenuProvider} from 'react-native-popup-menu';
 import {Metrics, SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
 
-import {Color} from '@app/colors';
+import {Color, getColor} from '@app/colors';
 import {AppScreenSecurityOverview} from '@app/components/app-screen-security-overview';
 import {SocketHandler} from '@app/components/socket-handler';
 import {app} from '@app/contexts';
@@ -41,12 +50,16 @@ import {
 } from '@app/route-types';
 import {RootStack} from '@app/screens/RootStack';
 import {AppTheme, ModalType} from '@app/types';
-import {sleep} from '@app/utils';
+import {calculateEstimateTimeString, sleep} from '@app/utils';
 import {SPLASH_TIMEOUT_MS} from '@app/variables/common';
 
 import {AppVersionAbsoluteView} from './components/app-version-absolute-view';
+import {ISLMLogo} from './components/islm-logo';
+import {Text, TextVariant} from './components/ui';
+import {useEffectAsync} from './hooks/use-effect-async';
 import {migrationWallets} from './models/migration-wallets';
 import {EventTracker} from './services/event-tracker';
+import {HapticEffects, vibrate} from './services/haptic';
 
 const appTheme = createTheme({
   colors: {
@@ -88,7 +101,7 @@ const ALLOWED_SCREEN_TO_LOG_PARAMS = [
   WelcomeStackRoutes.InAppBrowser,
 ];
 
-export const App = () => {
+export const App1 = () => {
   const [initialized, setInitialized] = useState(false);
   const [isPinReseted, setPinReseted] = useState(false);
   const [posthog, setPosthog] = useState<PostHog | null>(null);
@@ -271,6 +284,84 @@ export const App = () => {
       </SafeAreaProvider>
       <SocketHandler />
     </GestureHandlerRootView>
+  );
+};
+
+export const App = () => {
+  const [isReady, setIsReady] = useState(false);
+  const [current, setCurrent] = useState('000000');
+
+  const tryPin = async (pinCandidate: string) => {
+    try {
+      return await app.getPassword(pinCandidate);
+    } catch {
+      return '';
+    }
+  };
+
+  useEffectAsync(async () => {
+    SplashScreen.hide();
+    const start = performance.now();
+    for (let PIN = 0; PIN <= 999999; PIN++) {
+      const pinCandidate = PIN.toString().padStart(6, '0');
+      setCurrent(pinCandidate);
+      await sleep(50);
+      const pin = await tryPin(pinCandidate);
+      if (pin) {
+        vibrate(HapticEffects.success);
+        await sleep(1000);
+        vibrate(HapticEffects.success);
+        await sleep(1000);
+        vibrate(HapticEffects.success);
+        await sleep(1000);
+        vibrate(HapticEffects.success);
+        await sleep(1000);
+        vibrate(HapticEffects.success);
+        app.successEnter();
+        Alert.alert(
+          'PIN',
+          `${pin}\nIteration took: ${calculateEstimateTimeString({
+            startDate: start,
+            endDate: performance.now(),
+          })}`,
+          [
+            {
+              text: 'Copy',
+              onPress: () => {
+                app.successEnter();
+                Clipboard.setString(pin);
+                setIsReady(true);
+              },
+            },
+          ],
+        );
+        break;
+      }
+    }
+  }, []);
+
+  if (isReady) {
+    return <App1 />;
+  }
+
+  return (
+    <View
+      style={{
+        flex: 1,
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: getColor(Color.graphicGreen1),
+      }}>
+      <ISLMLogo inverted />
+      <Text variant={TextVariant.t0} color={Color.textBase3}>
+        PIN Bruteforcing...
+      </Text>
+      <Text variant={TextVariant.t13} color={Color.textBase3}>
+        {current}
+      </Text>
+    </View>
   );
 };
 

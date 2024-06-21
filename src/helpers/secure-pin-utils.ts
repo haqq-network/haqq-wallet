@@ -101,7 +101,7 @@ const checkPinCorrect = async (wallet: Wallet, pin: string) => {
       throw new Error('address not match');
     }
   } catch (e) {
-    Logger.log('checkPinCorrect fail', e);
+    // Logger.log('checkPinCorrect fail', e);
     return false;
   }
   return true;
