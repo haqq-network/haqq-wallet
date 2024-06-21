@@ -7,15 +7,23 @@ import {
   DataView,
   First,
   Icon,
+  IconsName,
   InfoBlock,
   Spacer,
   Text,
+  TextVariant,
 } from '@app/components/ui';
 import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
+import {useTypedNavigation} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N} from '@app/i18n';
+import {Fee} from '@app/models/fee';
 import {Provider} from '@app/models/provider';
+import {
+  TransactionStackParamList,
+  TransactionStackRoutes,
+} from '@app/route-types';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {
@@ -49,7 +57,8 @@ export const JsonRpcTransactionInfo = ({
   chainId,
   hideContractAttention,
 }: JsonRpcTransactionInfoProps) => {
-  const [calculatedFee, setCalculatedFee] = useState(Balance.Empty);
+  const navigation = useTypedNavigation<TransactionStackParamList>();
+
   const [isFeeLoading, setFeeLoading] = useState(true);
 
   const tx = useMemo(
@@ -74,19 +83,20 @@ export const JsonRpcTransactionInfo = ({
     return new Balance(tx.value);
   }, [tx]);
 
-  const getFee = useCallback(async () => {
+  const calculateFee = useCallback(async () => {
     if (!tx) {
       return Balance.Empty;
     }
 
     try {
-      const {expectedFee} = await EthNetwork.estimate({
+      const data = await EthNetwork.estimate({
         from: tx.from!,
         to: tx.to!,
         value: new Balance(tx.value! || Balance.Empty),
         data: tx.data,
       });
-      return expectedFee;
+      Fee.setCalculatedFees(data);
+      return data.expectedFee;
     } catch {
       return Balance.Empty;
     }
@@ -95,8 +105,10 @@ export const JsonRpcTransactionInfo = ({
   const total = useMemo(() => {
     const float = value.toFloat();
     const fixedNum = float >= 1 ? 3 : LONG_NUM_PRECISION;
-    return value.operate(calculatedFee, 'add').toBalanceString(fixedNum);
-  }, [value, calculatedFee]);
+    return value
+      .operate(Fee.calculatedFees?.expectedFee ?? Balance.Empty, 'add')
+      .toBalanceString(fixedNum);
+  }, [value, Fee.calculatedFees?.expectedFee]);
 
   const isContract = useMemo(
     () =>
@@ -117,8 +129,7 @@ export const JsonRpcTransactionInfo = ({
     try {
       if (tx) {
         setFeeLoading(true);
-        const estimatedGas = await getFee();
-        setCalculatedFee(estimatedGas);
+        await calculateFee();
       }
     } catch (err) {
       Logger.captureException(err, 'JsonRpcTransactionInfo:calculateFee', {
@@ -142,21 +153,41 @@ export const JsonRpcTransactionInfo = ({
     return '';
   }, [txParsedData]);
 
+  const onFeePress = useCallback(() => {
+    if (!tx) {
+      return;
+    }
+
+    navigation.navigate(TransactionStackRoutes.FeeSettings, {
+      from: tx.from!,
+      to: tx.to!,
+      amount: new Balance(tx.value! || Balance.Empty),
+      data: tx.data,
+    });
+  }, [navigation, tx]);
+
   return (
     <View style={styles.container}>
-      <Text t5 i18n={I18N.walletConnectSignTransactionForSignature} />
+      <Text
+        variant={TextVariant.t5}
+        i18n={I18N.walletConnectSignTransactionForSignature}
+      />
 
       <Spacer height={8} />
 
       <View style={styles.fromContainer}>
-        <Text t13 color={Color.textBase2} i18n={I18N.walletConnectSignForm} />
+        <Text
+          variant={TextVariant.t13}
+          color={Color.textBase2}
+          i18n={I18N.walletConnectSignForm}
+        />
         <SiteIconPreview
           url={metadata.url}
           directIconUrl={metadata.iconUrl}
           size={SiteIconPreviewSize.s18}
           style={styles.fromImage}
         />
-        <Text t13 color={Color.textGreen1}>
+        <Text variant={TextVariant.t13} color={Color.textGreen1}>
           {url}
         </Text>
       </View>
@@ -176,22 +207,26 @@ export const JsonRpcTransactionInfo = ({
       )}
 
       <Text
-        t11
+        variant={TextVariant.t11}
         color={Color.textBase2}
         i18n={I18N.walletConnectSignTotalAmount}
       />
 
       <Spacer height={4} />
 
-      <Text t3>{total}</Text>
+      <Text variant={TextVariant.t3}>{total}</Text>
 
       <Spacer height={16} />
 
-      <Text t11 color={Color.textBase2} i18n={I18N.walletConnectSignSendTo} />
+      <Text
+        variant={TextVariant.t11}
+        color={Color.textBase2}
+        i18n={I18N.walletConnectSignSendTo}
+      />
 
       <Spacer height={4} />
 
-      <Text t11 color={Color.textBase2}>
+      <Text variant={TextVariant.t11} color={Color.textBase2}>
         {tx?.from}
       </Text>
 
@@ -199,7 +234,7 @@ export const JsonRpcTransactionInfo = ({
 
       <ScrollView style={styles.info} showsVerticalScrollIndicator={false}>
         <DataView i18n={I18N.transactionInfoTypeOperation}>
-          <Text t11 color={Color.textBase1}>
+          <Text variant={TextVariant.t11} color={Color.textBase1}>
             {functionName?.length ? (
               <Text children={functionName} />
             ) : (
@@ -214,7 +249,7 @@ export const JsonRpcTransactionInfo = ({
           </Text>
         </DataView>
         <DataView i18n={I18N.transactionInfoCryptocurrency}>
-          <Text t11 color={Color.textBase1}>
+          <Text variant={TextVariant.t11} color={Color.textBase1}>
             <Text i18n={I18N.transactionConfirmationIslamicCoin} />{' '}
             <Text
               color={Color.textBase2}
@@ -224,14 +259,14 @@ export const JsonRpcTransactionInfo = ({
         </DataView>
         {!!provider?.id && (
           <DataView i18n={I18N.transactionInfoNetwork}>
-            <Text t11 color={Color.textBase1}>
+            <Text variant={TextVariant.t11} color={Color.textBase1}>
               {provider.name}
             </Text>
           </DataView>
         )}
         <DataView i18n={I18N.transactionInfoAmount}>
           <Text
-            t11
+            variant={TextVariant.t11}
             color={Color.textBase1}
             children={value.toBalanceString('auto')}
           />
@@ -239,9 +274,15 @@ export const JsonRpcTransactionInfo = ({
         <DataView i18n={I18N.transactionInfoNetworkFee}>
           <First>
             {isFeeLoading && <ActivityIndicator />}
-            <Text t11 color={Color.textBase1}>
-              {calculatedFee.toBalanceString(LONG_NUM_PRECISION)}
-            </Text>
+            <View style={styles.feeContainer}>
+              <Text
+                variant={TextVariant.t11}
+                color={Color.textGreen1}
+                onPress={onFeePress}>
+                {Fee.expectedFeeString}
+              </Text>
+              <Icon name={IconsName.tune} color={Color.textGreen1} />
+            </View>
           </First>
         </DataView>
       </ScrollView>
@@ -269,5 +310,8 @@ const styles = createTheme({
     flex: 1,
     width: '100%',
     alignItems: 'center',
+  },
+  feeContainer: {
+    flexDirection: 'row',
   },
 });

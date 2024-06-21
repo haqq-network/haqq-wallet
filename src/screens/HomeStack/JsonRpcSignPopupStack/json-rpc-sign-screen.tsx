@@ -14,9 +14,11 @@ import {
 import {getHost} from '@app/helpers/web3-browser-utils';
 import {Whitelist} from '@app/helpers/whitelist';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useBackNavigationHandler} from '@app/hooks/use-back-navigation-handler';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {useRemoteConfigVar} from '@app/hooks/use-remote-config';
+import {Fee} from '@app/models/fee';
 import {Wallet} from '@app/models/wallet';
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {Balance} from '@app/services/balance';
@@ -220,6 +222,10 @@ export const JsonRpcSignScreen = memo(() => {
       onPressReject(`method not implemented: ${request.method}`);
     }
   }, [onPressReject, request, selectedAccount]);
+
+  useBackNavigationHandler(() => {
+    Fee.clear();
+  }, []);
 
   if (isLoading) {
     return <Loading />;
