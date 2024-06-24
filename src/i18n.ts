@@ -1007,6 +1007,12 @@ export enum I18N {
   swapScreenSwap = 'swapScreenSwap',
   swapScreenMax = 'swapScreenMax',
   swapInputAmountData = 'swapInputAmountData',
+  swapSettingsSlippageError = 'swapSettingsSlippageError',
+  swapSettingsDeadlineError = 'swapSettingsDeadlineError',
+  swapSettingsReset = 'swapSettingsReset',
+  swapSettingsApply = 'swapSettingsApply',
+  transactionDetailAmountIn = 'transactionDetailAmountIn',
+  transactionDetailAmountOut = 'transactionDetailAmountOut',
 }
 
 const defaultTranslation = {en};

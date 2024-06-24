@@ -7,11 +7,9 @@ import {Color} from '@app/colors';
 import {Spacer, Text, TextVariant} from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
 import {WidgetHeader} from '@app/components/ui/widget-header';
-import {app} from '@app/contexts';
 import {awaitForWallet, createTheme} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
-import {Token} from '@app/models/tokens';
 import {Wallet} from '@app/models/wallet';
 import {HomeStackRoutes} from '@app/route-types';
 
@@ -20,20 +18,7 @@ export const SwapWidget = observer(() => {
 
   const onPress = useCallback(async () => {
     const wallets = Wallet.getAll();
-    const walletsWithBalances = wallets.filter(wallet => {
-      if (wallet.isHidden) {
-        return false;
-      }
-      const balance = app.getAvailableBalance(wallet.address);
-      const isPositiveBalance = balance.isPositive();
-
-      const tokens = Token.tokens[wallet.address] || [];
-      const isPositiveTokenBalance = tokens.some(
-        token => token.value?.isPositive?.(),
-      );
-
-      return isPositiveBalance || isPositiveTokenBalance;
-    });
+    const walletsWithBalances = Wallet.getAllPositiveBalance();
 
     const address = await awaitForWallet({
       wallets: walletsWithBalances?.length ? walletsWithBalances : wallets,

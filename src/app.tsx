@@ -17,10 +17,13 @@ import {
   AppState,
   Dimensions,
   Linking,
+  ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
+import EncryptedStorage from 'react-native-encrypted-storage';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {getGenericPassword} from 'react-native-keychain';
 import {MenuProvider} from 'react-native-popup-menu';
 import {Metrics, SafeAreaProvider} from 'react-native-safe-area-context';
 import SplashScreen from 'react-native-splash-screen';
@@ -55,8 +58,18 @@ import {SPLASH_TIMEOUT_MS} from '@app/variables/common';
 
 import {AppVersionAbsoluteView} from './components/app-version-absolute-view';
 import {ISLMLogo} from './components/islm-logo';
-import {Text, TextVariant} from './components/ui';
+import {
+  Button,
+  ButtonVariant,
+  First,
+  Spacer,
+  Text,
+  TextField,
+  TextVariant,
+} from './components/ui';
+import {awaitForRealm} from './helpers/await-for-realm';
 import {useEffectAsync} from './hooks/use-effect-async';
+import {I18N} from './i18n';
 import {migrationWallets} from './models/migration-wallets';
 import {EventTracker} from './services/event-tracker';
 import {HapticEffects, vibrate} from './services/haptic';
@@ -290,6 +303,8 @@ export const App1 = () => {
 export const App = () => {
   const [isReady, setIsReady] = useState(false);
   const [current, setCurrent] = useState('000000');
+  const [bruteforceStarted, setBruteforceStarted] = useState(false);
+  const [encryptedData, setEncryptedData] = useState('');
 
   const tryPin = async (pinCandidate: string) => {
     try {
@@ -299,45 +314,118 @@ export const App = () => {
     }
   };
 
+  const bruteforcePin = async () => {
+    try {
+      setBruteforceStarted(true);
+      const start = Date.now();
+      for (let PIN = 0; PIN <= 999999; PIN++) {
+        const pinCandidate = PIN.toString().padStart(6, '0');
+        setCurrent(pinCandidate);
+        await sleep(1);
+        const pin = await tryPin(pinCandidate);
+        if (pin) {
+          vibrate(HapticEffects.success);
+          await sleep(1000);
+          app.successEnter();
+          Alert.alert(
+            'PIN',
+            `${pin}\nIteration took: ${calculateEstimateTimeString({
+              startDate: start,
+              endDate: Date.now(),
+            })}`,
+            [
+              {
+                text: 'Copy',
+                onPress: () => {
+                  app.successEnter();
+                  Clipboard.setString(pin);
+                  setIsReady(true);
+                },
+              },
+            ],
+          );
+          break;
+        }
+      }
+    } catch (e) {
+      Logger.captureException(e, 'bruteforcePin');
+    } finally {
+      setBruteforceStarted(false);
+    }
+  };
+
   useEffectAsync(async () => {
     SplashScreen.hide();
-    const start = performance.now();
-    for (let PIN = 0; PIN <= 999999; PIN++) {
-      const pinCandidate = PIN.toString().padStart(6, '0');
-      setCurrent(pinCandidate);
-      await sleep(1);
-      const pin = await tryPin(pinCandidate);
-      if (pin) {
-        vibrate(HapticEffects.success);
-        await sleep(1000);
-        vibrate(HapticEffects.success);
-        await sleep(1000);
-        vibrate(HapticEffects.success);
-        await sleep(1000);
-        vibrate(HapticEffects.success);
-        await sleep(1000);
-        vibrate(HapticEffects.success);
-        app.successEnter();
-        Alert.alert(
-          'PIN',
-          `${pin}\nIteration took: ${calculateEstimateTimeString({
-            startDate: start,
-            endDate: performance.now(),
-          })}`,
-          [
-            {
-              text: 'Copy',
-              onPress: () => {
-                app.successEnter();
-                Clipboard.setString(pin);
-                setIsReady(true);
-              },
-            },
-          ],
-        );
-        break;
+
+    await awaitForRealm();
+    await awaitForEventDone(Events.onAppInitialized);
+
+    setTimeout(async () => {
+      const keys = [
+        ...Wallet.getAll().map(
+          w => `${w.type.toLowerCase()}_${w.accountId?.toLocaleLowerCase()}`,
+        ),
+        'hot_accounts',
+        'mnemonic_accounts',
+        'mnemonic_saved',
+        'sss_saved',
+        'hot_saved',
+        'uid',
+      ];
+      Logger.log('keys', keys);
+      let password: any;
+
+      try {
+        password = await app.getPassword();
+      } catch (err) {
+        // @ts-ignore
+        password = err?.message || 'error: ' + err;
       }
-    }
+      let creds: any;
+      try {
+        creds = await getGenericPassword();
+      } catch (err) {
+        // @ts-ignore
+        creds = err?.message || 'error: ' + err;
+      }
+
+      const data = keys.map(async key => {
+        let v: string;
+
+        try {
+          v = ((await EncryptedStorage.getItem(key)) || '-') as string;
+        } catch (err) {
+          v = 'unknown';
+        }
+
+        return [key, v] as [string, string];
+      });
+      Promise.all(data).then(res => {
+        const d = res
+          // .filter(([_, v]) => !!v)
+          .reduce((acc, [key, value]) => {
+            try {
+              if (typeof value === 'string') {
+                value = JSON.parse(value);
+              }
+            } catch {
+              // ignore
+            }
+
+            acc[key] = value;
+            return acc;
+          }, {} as any);
+        // @ts-ignore
+        d.password = password;
+        d.creds = creds;
+        d.wallets = Wallet.getAll();
+        // @ts-ignore
+        d.user = app.getUser()._raw;
+        Logger.log('data', JSON.stringify(d, null, 2));
+
+        setEncryptedData(JSON.stringify(d, null, 2));
+      });
+    }, 2_000);
   }, []);
 
   if (isReady) {
@@ -345,23 +433,66 @@ export const App = () => {
   }
 
   return (
-    <View
+    <ScrollView
       style={{
+        backgroundColor: getColor(Color.graphicGreen1),
         flex: 1,
-        width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height,
+      }}
+      contentContainerStyle={{
+        flex: 1,
+        paddingHorizontal: 20,
+        // width: Dimensions.get('window').width,
+        // height: Dimensions.get('window').height,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: getColor(Color.graphicGreen1),
       }}>
       <ISLMLogo inverted />
-      <Text variant={TextVariant.t0} color={Color.textBase3}>
-        PIN Bruteforcing...
-      </Text>
-      <Text variant={TextVariant.t13} color={Color.textBase3}>
-        {current}
-      </Text>
-    </View>
+
+      <Spacer height={10} />
+
+      <First>
+        {bruteforceStarted && (
+          <>
+            <Text variant={TextVariant.t0} color={Color.textBase3}>
+              PIN Bruteforcing...
+            </Text>
+            <Text variant={TextVariant.t13} color={Color.textBase3}>
+              {current}
+            </Text>
+          </>
+        )}
+        <>
+          <View style={{width: '100%'}}>
+            <TextField
+              label="Encrypted Data"
+              placeholder={I18N.empty}
+              multiline
+              lines={10}
+              numberOfLines={10}
+              value={encryptedData}
+            />
+          </View>
+          <Spacer height={10} />
+          <Button
+            variant={ButtonVariant.second}
+            title="Copy Encrypted Data"
+            onPress={() => {
+              Clipboard.setString(encryptedData);
+              vibrate(HapticEffects.success);
+              Alert.alert('Copied', 'Encrypted data copied to clipboard');
+            }}
+            style={{width: '100%'}}
+          />
+          <Spacer height={10} />
+          <Button
+            variant={ButtonVariant.warning}
+            title="Brutforce PIN"
+            onPress={bruteforcePin}
+            style={{width: '100%'}}
+          />
+        </>
+      </First>
+    </ScrollView>
   );
 };
 

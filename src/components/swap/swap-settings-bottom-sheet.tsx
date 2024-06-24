@@ -12,7 +12,7 @@ import {Dimensions, View} from 'react-native';
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {useSumAmount} from '@app/hooks';
-import {I18N} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
 import {Balance} from '@app/services/balance';
 import {IS_IOS} from '@app/variables/common';
 
@@ -66,7 +66,7 @@ export const SwapSettingBottomSheet = React.forwardRef<
     amount => {
       const num = amount.toEther();
       if (num < SLIPPAGE_MIN || num > SLIPPAGE_MAX) {
-        return 'slippage must be between 0.05% and 50%';
+        return getText(I18N.swapSettingsSlippageError);
       }
       return '';
     },
@@ -78,7 +78,7 @@ export const SwapSettingBottomSheet = React.forwardRef<
     amount => {
       const num = amount.toEther();
       if (num < DEADLINE_MIN || num > DEADLINE_MAX) {
-        return 'deadline must be between 1 min and 60 min';
+        return getText(I18N.swapSettingsDeadlineError);
       }
       return '';
     },
@@ -122,7 +122,6 @@ export const SwapSettingBottomSheet = React.forwardRef<
     }
   }, [slippage, deadline, onSettingsChange]);
   const handleOpen = useCallback(() => {
-    Logger.log('handleOpen');
     setOpen(true);
     bottomSheetRef.current?.open();
   }, []);
@@ -191,14 +190,14 @@ export const SwapSettingBottomSheet = React.forwardRef<
 
         <View style={styles.containerContent}>
           <Button
-            title="Reset"
+            i18n={I18N.swapSettingsReset}
             variant={ButtonVariant.second}
             onPress={onPressReset}
             disabled={isResetDisabled}
           />
           <Spacer height={16} />
           <Button
-            title="Apply"
+            i18n={I18N.swapSettingsApply}
             variant={ButtonVariant.contained}
             onPress={onPressApply}
             disabled={isApplyDisabled}

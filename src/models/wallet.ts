@@ -21,6 +21,8 @@ import {
   STORE_REHYDRATION_TIMEOUT_MS,
 } from '@app/variables/common';
 
+import {Token} from './tokens';
+
 import {realm} from './index';
 import {
   AddWalletParams,
@@ -272,6 +274,24 @@ class WalletStore implements MobXStoreFromRealm, RPCObserver {
 
   getAll() {
     return this.wallets;
+  }
+
+  // returns wallets with positive balance or positive token balance
+  getAllPositiveBalance() {
+    return this.getAll().filter(wallet => {
+      if (wallet.isHidden) {
+        return false;
+      }
+      const balance = app.getAvailableBalance(wallet.address);
+      const isPositiveBalance = balance.isPositive();
+
+      const tokens = Token.tokens[wallet.address] || [];
+      const isPositiveTokenBalance = tokens.some(
+        token => token.value?.isPositive?.(),
+      );
+
+      return isPositiveBalance || isPositiveTokenBalance;
+    });
   }
 
   getAllVisible() {

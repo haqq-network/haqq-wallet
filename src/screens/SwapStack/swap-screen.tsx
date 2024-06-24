@@ -279,7 +279,7 @@ export const SwapScreen = observer(() => {
 
       if (!Token.tokens?.[currentWallet.address]) {
         await Promise.all([
-          Token.fetchTokens(true, true),
+          Token.fetchTokens(true),
           awaitForEventDone(Events.onBalanceSync),
         ]);
       }
@@ -362,7 +362,7 @@ export const SwapScreen = observer(() => {
           });
           try {
             await Promise.all([
-              Token.fetchTokens(true, true),
+              Token.fetchTokens(true),
               awaitForEventDone(Events.onBalanceSync),
             ]);
           } catch {
@@ -953,9 +953,12 @@ export const SwapScreen = observer(() => {
   };
 
   const onPressChangeWallet = useCallback(async () => {
+    const wallets = Wallet.getAll();
+    const walletsWithBalances = Wallet.getAllPositiveBalance();
+
     const address = await awaitForWallet({
       title: I18N.selectAccount,
-      wallets: Wallet.getAllVisible(),
+      wallets: walletsWithBalances?.length ? walletsWithBalances : wallets,
       initialAddress: currentWallet.address,
     });
     await refreshTokenBalances(address as HaqqEthereumAddress, tokenIn);

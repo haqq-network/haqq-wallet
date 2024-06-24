@@ -166,22 +166,20 @@ export const Swap = observer(
           </View>
           <Spacer flex={1} />
           <Text variant={TextVariant.t8} i18n={I18N.swapScreenTitle} />
-          {/* 24 is width of buttons, 10 is spacing */}
-          <Spacer width={24 + 10} />
           <Spacer flex={1} />
+          <WalletRow
+            item={currentWallet}
+            type={WalletRowTypes.variant3}
+            onPress={onPressChangeWallet}
+          />
+          <Spacer width={10} />
           <DismissPopupButton />
         </View>
-
-        <WalletRow
-          item={currentWallet}
-          type={WalletRowTypes.variant2}
-          onPress={onPressChangeWallet}
-        />
 
         <Spacer height={12} />
 
         <SwapInput
-          label={I18N.transactionDetailAmount}
+          label={I18N.transactionDetailAmountIn}
           placeholder={I18N.transactionInfoFunctionValue}
           amounts={amountsIn}
           isLoading={isEstimating}
@@ -199,7 +197,7 @@ export const Swap = observer(
         <Spacer height={12} />
 
         <SwapInput
-          label={I18N.transactionDetailAmount}
+          label={I18N.transactionDetailAmountOut}
           placeholder={I18N.transactionInfoFunctionValue}
           amounts={amountsOut}
           editable={false}
@@ -306,7 +304,9 @@ const styles = createTheme({
   },
   header: {
     flexDirection: 'row',
-    marginVertical: 16,
+    alignItems: 'center',
+    marginBottom: 16,
+    marginTop: 12,
   },
   headerButtonsContainer: {
     flexDirection: 'row',

@@ -30,7 +30,6 @@ export const ValueSelector = ({
 
   const handleValuePress = useCallback(
     (value: AwaitValue, idx: number) => {
-      Logger.log('ValueSelector', 'handleValuePress', idx, {value});
       if (idx > -1) {
         setSelected(idx);
         onValueSelected?.(idx, value);
