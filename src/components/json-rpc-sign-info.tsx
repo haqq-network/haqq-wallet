@@ -9,6 +9,7 @@ import {
   ButtonVariant,
   First,
   Icon,
+  IconsName,
   InfoBlock,
   Spacer,
   Text,
@@ -109,19 +110,23 @@ export const JsonRpcSignInfo = ({
 
   return (
     <View style={styles.container}>
-      <Text t5 i18n={I18N.walletConnectSignSignMessage} />
+      <Text variant={TextVariant.t5} i18n={I18N.walletConnectSignSignMessage} />
 
       <Spacer height={8} />
 
       <View style={styles.fromContainer}>
-        <Text t13 color={Color.textBase2} i18n={I18N.walletConnectSignForm} />
+        <Text
+          variant={TextVariant.t13}
+          color={Color.textBase2}
+          i18n={I18N.walletConnectSignForm}
+        />
         <SiteIconPreview
           url={metadata.url}
           directIconUrl={metadata.iconUrl}
           style={styles.fromImage}
           size={SiteIconPreviewSize.s18}
         />
-        <Text t13 color={Color.textGreen1}>
+        <Text variant={TextVariant.t13} color={Color.textGreen1}>
           {url}
         </Text>
       </View>
@@ -143,7 +148,9 @@ export const JsonRpcSignInfo = ({
                   <InfoBlock
                     border
                     error
-                    icon={<Icon name={'warning'} color={Color.textRed1} />}
+                    icon={
+                      <Icon name={IconsName.warning} color={Color.textRed1} />
+                    }
                     i18n={I18N.jsonRpcSignPhihsingWarning}
                     bottomContainerStyle={styles.infoBlock}
                   />
@@ -152,7 +159,12 @@ export const JsonRpcSignInfo = ({
                   <InfoBlock
                     border
                     warning
-                    icon={<Icon name={'warning'} color={Color.textYellow1} />}
+                    icon={
+                      <Icon
+                        name={IconsName.warning}
+                        color={Color.textYellow1}
+                      />
+                    }
                     i18n={I18N.jsonRpcSignBlidSignWarning}
                     bottomContainerStyle={styles.infoBlock}
                     bottom={
@@ -171,7 +183,7 @@ export const JsonRpcSignInfo = ({
 
             <Text
               style={styles.messageTitle}
-              t9
+              variant={TextVariant.t9}
               i18n={I18N.walletConnectSignMessage}
             />
             <Spacer height={4} />
@@ -201,7 +213,10 @@ export const JsonRpcSignInfo = ({
                 />
               )}
               {!message?.json && (
-                <Text color={Color.textBase2} style={styles.message} t11>
+                <Text
+                  color={Color.textBase2}
+                  style={styles.message}
+                  variant={TextVariant.t11}>
                   {message.text}
                 </Text>
               )}
