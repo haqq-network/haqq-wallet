@@ -2,6 +2,7 @@ import converter from 'bech32-converting';
 import {utils} from 'ethers';
 
 import {AddressType, HaqqCosmosAddress, HaqqEthereumAddress} from '@app/types';
+import {splitAddress} from '@app/utils';
 
 import {Whitelist} from './whitelist';
 
@@ -109,6 +110,10 @@ export class AddressUtils {
 
   static equals = (a: string, b: string) => {
     return AddressUtils.toEth(a) === AddressUtils.toEth(b);
+  };
+
+  static splitAddress = (address: string) => {
+    return splitAddress(address);
   };
 }
 
