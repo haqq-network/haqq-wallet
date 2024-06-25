@@ -168,8 +168,8 @@ export const JsonRpcSignScreen = memo(() => {
     if (isTransaction) {
       const params = getTransactionFromJsonRpcRequest(request);
 
-      if (params?.from) {
-        const info = await Whitelist.verifyAddress(params.from);
+      if (params?.to) {
+        const info = await Whitelist.verifyAddress(params.to);
         if (info) {
           setVerifyAddressResponse(info);
         }
