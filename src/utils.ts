@@ -1,4 +1,5 @@
 /* eslint-disable no-bitwise */
+import {formatNumberWithSubscriptZeros} from '@haqq/format-number-with-subscript-zeros/src';
 import {SessionTypes} from '@walletconnect/types';
 import {
   differenceInDays,
@@ -1051,3 +1052,6 @@ const hexRegExp = /^(0[xX])?[0-9A-Fa-f]+$/;
 export function isValidHex(hexString: string) {
   return hexRegExp.test(hexString);
 }
+
+export const formatNumberString = (value: string, precision = 3) =>
+  formatNumberWithSubscriptZeros(value, precision);

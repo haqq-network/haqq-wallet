@@ -1,7 +1,7 @@
 {
   "StakingInfoUnDelegationDay": " ({{day}} день остался)",
   "StakingInfoUnDelegationDays": " ({{days}} дней осталось)",
-  "_hash": "99bdafd344525d0b6987aa317b103e9b4b8c7e103b1765c03d98a22753344578",
+  "_hash": "7c486ee08f8280e3cdf3cbfba0339b80c12bcc6358441ff4448974dbe9399cd6",
   "accept": "Принять",
   "accountInfoTokensTabTitle": "Токены",
   "accountInfoTransactionTabTitle": "Транзакции",
@@ -13,6 +13,8 @@
   "backupCreateRecoveryAgreement": "Я понимаю, что если я потеряю фразу восстановления, я не смогу восстановить доступ к своей учетной записи",
   "backupFinishCongratulation": "Поздравляем!",
   "backupFinishFinish": "Продолжить",
+  "backupNotificationAlertTitle": "Продолжить без резервной копии? ",
+  "backupNotificationBackup": "Создать резервную копию сейчас",
   "backupSssSuggestionCancel": "Подключить позднее",
   "empty": " ",
   "erase": "Стереть",

@@ -24,7 +24,7 @@ import {Fee} from '@app/models/fee';
 import {Balance} from '@app/services/balance';
 import {EthNetwork} from '@app/services/eth-network/eth-network';
 import {IToken, TransactionResponse} from '@app/types';
-import {CURRENCY_NAME, LONG_NUM_PRECISION} from '@app/variables/common';
+import {CURRENCY_NAME} from '@app/variables/common';
 
 type TransactionFinishProps = {
   transaction: TransactionResponse | null;
@@ -94,7 +94,7 @@ export const TransactionFinish = ({
           variant={TextVariant.t5}
           position={TextPosition.center}
           style={styles.sum}>
-          - {transactionAmount.toBalanceString(LONG_NUM_PRECISION)}
+          - {transactionAmount.toBalanceString('auto')}
         </Text>
       )}
 

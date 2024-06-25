@@ -11,8 +11,12 @@ interface Props {
   values: AwaitValue[];
   initialIndex?: number;
   style?: StyleProp<ViewStyle>;
-
-  onValueSelected?(index: number): void;
+  renderCell?: (
+    value: any,
+    idx: number,
+    onPress: (value: any, idx: number) => void,
+  ) => React.ReactNode;
+  onValueSelected?(index: number, value: any): void;
 }
 
 export const ValueSelector = ({
@@ -20,15 +24,15 @@ export const ValueSelector = ({
   onValueSelected,
   initialIndex = -1,
   style,
+  renderCell,
 }: Props) => {
   const [selected, setSelected] = useState(initialIndex);
 
   const handleValuePress = useCallback(
-    (value: AwaitValue) => {
-      const idx = values.indexOf(value);
+    (value: AwaitValue, idx: number) => {
       if (idx > -1) {
         setSelected(idx);
-        onValueSelected?.(idx);
+        onValueSelected?.(idx, value);
       }
     },
     [onValueSelected, selected],
@@ -37,13 +41,17 @@ export const ValueSelector = ({
   return (
     <PopupContainer style={style}>
       {values?.map?.((value, idx) => {
-        return (
+        return typeof renderCell === 'function' ? (
+          <React.Fragment key={value.id}>
+            {renderCell(value, idx, (v, i) => handleValuePress(v, i))}
+          </React.Fragment>
+        ) : (
           <ValueRow
             key={value.id}
             item={value}
             hideArrow
             checked={idx === selected}
-            onPress={handleValuePress}
+            onPress={v => handleValuePress(v, idx)}
           />
         );
       })}

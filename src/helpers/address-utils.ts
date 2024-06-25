@@ -111,3 +111,11 @@ export class AddressUtils {
     return AddressUtils.toEth(a) === AddressUtils.toEth(b);
   };
 }
+
+export const NATIVE_TOKEN_ADDRESS = AddressUtils.toEth(
+  '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+);
+
+export const WRAPPED_TOKEN_ADDRESS = AddressUtils.toEth(
+  '0xeC8CC083787c6e5218D86f9FF5f28d4cC377Ac54',
+);

@@ -17,8 +17,11 @@ export const SwapWidget = observer(() => {
   const navigation = useTypedNavigation();
 
   const onPress = useCallback(async () => {
+    const wallets = Wallet.getAll();
+    const walletsWithBalances = Wallet.getAllPositiveBalance();
+
     const address = await awaitForWallet({
-      wallets: Wallet.getAll(),
+      wallets: walletsWithBalances?.length ? walletsWithBalances : wallets,
       title: I18N.selectAccount,
     });
     navigation.navigate(HomeStackRoutes.Swap, {address});

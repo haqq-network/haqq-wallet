@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 
 import validate from 'validate.js';
 
@@ -9,7 +9,7 @@ import {Balance} from '@app/services/balance';
 export function useSumAmount(
   initialSum = Balance.Empty,
   initialMaxSum = Balance.Empty,
-  minAmount = getRemoteBalanceValue('transfer_min_amount'),
+  initialMinAmount = getRemoteBalanceValue('transfer_min_amount'),
   customCheck?: (amount: Balance) => string,
 ) {
   const [{amount, amountText, changed}, setAmount] = useState({
@@ -18,7 +18,9 @@ export function useSumAmount(
     changed: false,
   });
   const [maxAmount, setMaxAmount] = useState(initialMaxSum);
-  const minimumAmountConst = getRemoteBalanceValue('transfer_min_amount');
+  const maxAmountRef = useRef(initialMaxSum);
+  const [minAmount, setMinAmount] = useState(initialMinAmount);
+  const minAmountRef = useRef(initialMinAmount);
 
   useEffect(() => {
     setMaxAmount(initialMaxSum);
@@ -27,51 +29,77 @@ export function useSumAmount(
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (!customCheck) {
-      return;
-    }
-    const result = customCheck(amount);
-    if (result) {
-      setError(result);
-    }
-  }, [customCheck]);
-
-  useEffect(() => {
     if (amount && changed) {
-      const errorArray = validate.single(amount.toFloat(), {
-        numericality: {
-          notValid: 'Invalid number',
-          greaterThanOrEqualTo: minAmount.toFloat(),
-          lessThanOrEqualTo: maxAmount.toFloat(),
-          notGreaterThan: getText(I18N.sumAmountTooLow, {
-            amount: maxAmount.toString(),
-          }),
-          notLessThanOrEqualTo: getText(I18N.sumAmountNotEnough),
-        },
-      });
-      const newString = errorArray?.length > 0 ? errorArray.join(' ') : '';
-      setError(newString);
+      if (typeof customCheck === 'function') {
+        const result = customCheck(amount);
+        setError(result);
+      } else {
+        const errorArray = validate.single(amount.toFloat(), {
+          numericality: {
+            notValid: 'Invalid number',
+            greaterThanOrEqualTo: minAmountRef.current.toFloat(),
+            lessThanOrEqualTo: maxAmountRef.current.toFloat(),
+            notGreaterThan: getText(I18N.sumAmountTooLow, {
+              amount: maxAmountRef.current.toBalanceString('auto'),
+            }),
+            notLessThanOrEqualTo: getText(I18N.sumAmountNotEnough, {
+              symbol: maxAmountRef.current.getSymbol(),
+            }),
+          },
+        });
+        const newString = errorArray?.length > 0 ? errorArray.join(' ') : '';
+        setError(
+          newString
+            .replace('ISLM', maxAmountRef.current.getSymbol())
+            .replace(
+              maxAmountRef.current.toFloat(),
+              maxAmountRef.current.toBalanceString('auto'),
+            )
+            .replace(
+              minAmountRef.current.toFloat(),
+              minAmountRef.current.toBalanceString('auto'),
+            ),
+        );
+      }
     }
   }, [changed, amount, minAmount, maxAmount]);
 
   return {
     isValid:
-      amount.toEther() >= minAmount.toEther() &&
-      amount.toEther() <= maxAmount.toEther() &&
+      amount.toEther() >= minAmountRef.current?.toEther?.() &&
+      amount.toEther() <= maxAmountRef?.current.toEther?.() &&
       !error,
     maxAmount: maxAmount,
     amount: amountText,
     error,
     setMaxAmount(value = Balance.Empty) {
+      Logger.log('setMaxAmount', value);
+      maxAmountRef.current = value;
       setMaxAmount(value);
     },
+    setMinAmount(value = Balance.Empty) {
+      Logger.log('setMinAmount', value);
+      minAmountRef.current = value;
+      setMinAmount(value);
+    },
     setMax() {
-      const a =
-        Math.floor(maxAmount.toFloat() / minimumAmountConst.toFloat()) *
-        minimumAmountConst.toFloat();
+      Logger.log('set max', maxAmountRef.current);
+
       setAmount(({changed: _changed}) => ({
-        amountText: String(a),
-        amount: maxAmount,
+        amountText:
+          maxAmountRef?.current?.toFloatString?.() ||
+          maxAmount?.toFloatString?.(),
+        amount: maxAmountRef?.current || maxAmount,
+        changed: _changed,
+      }));
+    },
+    setMin: () => {
+      Logger.log('set min', minAmountRef.current);
+      setAmount(({changed: _changed}) => ({
+        amountText:
+          minAmountRef?.current?.toFloatString?.() ||
+          minAmount?.toFloatString?.(),
+        amount: minAmountRef?.current || minAmount,
         changed: _changed,
       }));
     },
@@ -87,8 +115,7 @@ export function useSumAmount(
             return match.match(/[.,]/g) ? match : '';
           })
           .replace(/\D&[^.]/g, '')
-          .replace(/^0[0-9]/gm, '0')
-          .substring(0, 20);
+          .replace(/^0[0-9]/gm, '0');
 
         setAmount({
           amountText: textFormatted,

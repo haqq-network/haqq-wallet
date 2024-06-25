@@ -44,7 +44,7 @@ type InfoBlock = {
   description?: I18N;
 };
 
-type Props = Omit<TextInputProps, 'placeholder'> & {
+export type TextFieldProps = Omit<TextInputProps, 'placeholder'> & {
   label: I18N | string;
   placeholder: I18N;
   hint?: I18N | undefined;
@@ -59,7 +59,7 @@ type Props = Omit<TextInputProps, 'placeholder'> & {
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-export const TextField: React.FC<Props> = memo(
+export const TextField: React.FC<TextFieldProps> = memo(
   ({
     autoFocus = false,
     lines = 1,

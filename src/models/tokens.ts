@@ -4,7 +4,7 @@ import {makePersistable} from 'mobx-persist-store';
 
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
-import {AddressUtils} from '@app/helpers/address-utils';
+import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
 import {Whitelist} from '@app/helpers/whitelist';
 import {I18N, getText} from '@app/i18n';
 import {Contracts} from '@app/models/contracts';
@@ -13,6 +13,7 @@ import {Balance} from '@app/services/balance';
 import {Indexer, IndexerUpdatesResponse} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
 import {
+  AddressType,
   HaqqCosmosAddress,
   IContract,
   IToken,
@@ -183,7 +184,10 @@ class TokensStore implements MobXStore<IToken> {
     return true;
   }
 
-  fetchTokens = async (force = false) => {
+  fetchTokens = async (
+    force = false,
+    fetchTokensFromRPC = DEBUG_VARS.enableHardcodeERC20TokensContract,
+  ) => {
     if (this.isLoading && !force) {
       return;
     }
@@ -196,7 +200,7 @@ class TokensStore implements MobXStore<IToken> {
     const accounts = wallets.map(w => w.cosmosAddress);
     const updates = await Indexer.instance.updates(accounts, this.lastUpdate);
     let result = await this.parseIndexerTokens(updates);
-    result = await getHardcodedTokens(result);
+    result = await getHardcodedTokens(result, fetchTokensFromRPC);
     // this.lastUpdate = new Date();
     this.recalculateCommulativeSum(result);
 
@@ -209,11 +213,11 @@ class TokensStore implements MobXStore<IToken> {
     });
   };
 
-  private generateIslamicToken = (wallet: Wallet): IToken => {
+  public generateIslamicToken = (wallet: Wallet): IToken => {
     const balance = app.getAvailableBalance(wallet.address);
 
     return {
-      id: wallet.address as HaqqCosmosAddress,
+      id: AddressUtils.toHaqq(NATIVE_TOKEN_ADDRESS),
       contract_created_at: '',
       contract_updated_at: '',
       value: balance,
@@ -227,6 +231,26 @@ class TokensStore implements MobXStore<IToken> {
       created_at: '',
       updated_at: '',
       image: require('@assets/images/islm_icon.png'),
+    };
+  };
+
+  public generateIslamicTokenContract = (): IContract => {
+    return {
+      id: AddressUtils.toHaqq(NATIVE_TOKEN_ADDRESS),
+      eth_address: AddressUtils.toEth(NATIVE_TOKEN_ADDRESS),
+      address_type: AddressType.contract,
+      is_skip_eth_tx: false,
+      min_input_amount: '18',
+      decimals: WEI_PRECISION,
+      is_erc20: false,
+      is_erc721: false,
+      is_erc1155: false,
+      is_in_white_list: true,
+      name: getText(I18N.transactionConfirmationIslamicCoin),
+      symbol: CURRENCY_NAME,
+      created_at: '',
+      updated_at: '',
+      icon: require('@assets/images/islm_icon.png'),
     };
   };
 
@@ -337,9 +361,12 @@ class TokensStore implements MobXStore<IToken> {
 const instance = new TokensStore(Boolean(process.env.JEST_WORKER_ID));
 export {instance as Token};
 
-async function getHardcodedTokens(tokensDataToMerge: IndexerTokensData = {}) {
+async function getHardcodedTokens(
+  tokensDataToMerge: IndexerTokensData = {},
+  enabled = false,
+) {
   const wallets = Wallet.addressList();
-  if (DEBUG_VARS.enableHardcodeERC20TokensContract) {
+  if (enabled) {
     const contracts =
       DEBUG_VARS.hardcodeERC20TokensContract[app.provider.cosmosChainId];
 

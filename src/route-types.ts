@@ -454,6 +454,12 @@ export type HomeStackParamList = {
     values: AwaitValue[];
     initialIndex?: number;
     eventSuffix?: string;
+    closeOnSelect?: boolean;
+    renderCell?: (
+      value: any,
+      idx: number,
+      onPress: (value: any, idx: number) => void,
+    ) => React.ReactNode;
   };
   [HomeStackRoutes.BrowserPrivacyPopupStack]: {
     screen: 'browserPrivacyDetails' | 'browserPrivacy';
@@ -859,6 +865,8 @@ export type DeviceStackParamList = {
 export type SwapStackParamList = {
   Swap: {
     address: string;
+    slippage?: number;
+    deadline?: number;
   };
   Preview: {
     address: string;

@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 
-import {View, useWindowDimensions} from 'react-native';
+import {TouchableOpacity, View, useWindowDimensions} from 'react-native';
 
 import {Color} from '@app/colors';
 import {DashedLine} from '@app/components/dashed-line';
@@ -26,12 +26,25 @@ export type Props = {
   wallet: Wallet;
   tokens: IToken[];
   tokensOnly?: boolean;
+  hideWalletSummary?: boolean;
+  onPressToken?: (wallet: Wallet, token: IToken, idx: number) => void;
+  checkTokenSelected?: (wallet: Wallet, token: IToken, idx: number) => boolean;
+  onPressWallet?: (wallet: Wallet) => void;
   isLast?: boolean;
 };
 const CARD_WIDTH = 57.78;
 const CARD_RADIUS = 8;
 
-export const WalletCard = ({wallet, tokens, tokensOnly, isLast}: Props) => {
+export const WalletCard = ({
+  wallet,
+  tokens,
+  tokensOnly,
+  hideWalletSummary = false,
+  onPressToken,
+  onPressWallet,
+  checkTokenSelected,
+  isLast,
+}: Props) => {
   const {width} = useWindowDimensions();
   const balances = useWalletsBalance([wallet]);
   const {available, locked} = useMemo(
@@ -40,14 +53,26 @@ export const WalletCard = ({wallet, tokens, tokensOnly, isLast}: Props) => {
   );
 
   if (tokensOnly) {
-    return tokens.map(token => {
-      return <TokenRow key={generateUUID()} item={token} />;
+    return tokens.map((token, idx) => {
+      if (!token || !wallet) {
+        return null;
+      }
+      return (
+        <TokenRow
+          key={generateUUID()}
+          onPress={() => onPressToken?.(wallet, token, idx)}
+          item={token}
+          checked={checkTokenSelected?.(wallet, token, idx)}
+        />
+      );
     });
   }
 
   return (
     <View style={styles.column}>
-      <View style={styles.cardWrapper}>
+      <TouchableOpacity
+        style={styles.cardWrapper}
+        onPress={() => onPressWallet?.(wallet)}>
         <CardSmall
           width={CARD_WIDTH}
           borderRadius={CARD_RADIUS}
@@ -62,7 +87,7 @@ export const WalletCard = ({wallet, tokens, tokensOnly, isLast}: Props) => {
           subtitle={wallet.name}
           bold
         />
-      </View>
+      </TouchableOpacity>
 
       <DashedLine
         style={styles.dashedLine}
@@ -70,7 +95,7 @@ export const WalletCard = ({wallet, tokens, tokensOnly, isLast}: Props) => {
         color={Color.graphicSecond2}
       />
 
-      {locked?.isPositive() && (
+      {locked?.isPositive() && hideWalletSummary === false && (
         <>
           <View style={styles.row}>
             <Icon i18 color={Color.graphicBase1} name={IconsName.coin} />
@@ -99,8 +124,18 @@ export const WalletCard = ({wallet, tokens, tokensOnly, isLast}: Props) => {
         </>
       )}
 
-      {tokens.map(token => {
-        return <TokenRow key={generateUUID()} item={token} />;
+      {tokens.map((token, idx) => {
+        if (!token || !wallet) {
+          return null;
+        }
+        return (
+          <TokenRow
+            key={generateUUID()}
+            item={token}
+            onPress={() => onPressToken?.(wallet, token, idx)}
+            checked={checkTokenSelected?.(wallet, token, idx)}
+          />
+        );
       })}
       {tokens.length > 0 && !isLast ? (
         <SolidLine

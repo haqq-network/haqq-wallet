@@ -77,7 +77,7 @@ export class LoggerService {
       this.trace();
       return;
     }
-    this.error('captureException', source, error, context);
+    Logger.error('captureException', source, error, context);
     try {
       Sentry.captureException(error, scope => {
         scope.clear();

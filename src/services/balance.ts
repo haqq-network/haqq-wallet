@@ -13,6 +13,7 @@ import {
   IBalance,
   ISerializable,
 } from '@app/types';
+import {formatNumberString} from '@app/utils';
 import {
   CURRENCY_NAME,
   LONG_NUM_PRECISION,
@@ -140,8 +141,10 @@ export class Balance implements IBalance, ISerializable {
   toFloatString = (
     fixed = NUM_PRECISION,
     precission: number = this.precission,
+    useZeroFormatter = true,
   ) => {
-    return cleanNumber(this.toFloat(precission), NUM_DELIMITER, fixed);
+    const cleaned = cleanNumber(this.toFloat(precission), NUM_DELIMITER, fixed);
+    return useZeroFormatter ? formatNumberString(cleaned) : cleaned;
   };
 
   /**
@@ -151,6 +154,7 @@ export class Balance implements IBalance, ISerializable {
   toBalanceString = (
     fixed: number | 'auto' = NUM_PRECISION,
     precission: number = this.precission,
+    useZeroFormatter = true,
   ) => {
     let fixedNum = 0;
     if (fixed === 'auto') {
@@ -162,9 +166,16 @@ export class Balance implements IBalance, ISerializable {
 
     const isRTL = I18nManager.isRTL;
     if (isRTL) {
-      return `${this.symbol} ${this.toFloatString(fixedNum, precission)}`;
+      return `${this.symbol} ${this.toFloatString(
+        fixedNum,
+        precission,
+        useZeroFormatter,
+      )}`;
     }
-    return this.toFloatString(fixedNum, precission) + ` ${this.symbol}`;
+    return (
+      this.toFloatString(fixedNum, precission, useZeroFormatter) +
+      ` ${this.symbol}`
+    );
   };
 
   /**
@@ -185,7 +196,7 @@ export class Balance implements IBalance, ISerializable {
 
     const getStringWithSymbol = (value: string) => {
       const currency = Currencies.currency;
-      const result = [value];
+      const result = [formatNumberString(value)];
       currency?.prefix && result.unshift(currency.prefix);
       currency?.postfix && result.push(currency.postfix);
       return result.join(' ');
@@ -204,7 +215,7 @@ export class Balance implements IBalance, ISerializable {
   };
 
   toHex = () => {
-    return this.bnRaw.toHex();
+    return this.bnRaw.toHex().split('.')[0];
   };
 
   /**

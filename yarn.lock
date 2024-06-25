@@ -2356,6 +2356,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@haqq/format-number-with-subscript-zeros@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@haqq/format-number-with-subscript-zeros@npm:1.0.0"
+  checksum: 4eacac8d5dd691cb7f3a3789bf8e67399f1958b69e4e91582c400e45836ba27ff507baa2d8af09b56cda2525287abedac028bce7d27460b236c3fd48feb35543
+  languageName: node
+  linkType: hard
+
 "@haqq/provider-base@npm:0.0.23":
   version: 0.0.23
   resolution: "@haqq/provider-base@npm:0.0.23"
@@ -2466,9 +2473,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@haqq/shared-react-native@npm:0.0.11":
-  version: 0.0.11
-  resolution: "@haqq/shared-react-native@npm:0.0.11"
+"@haqq/shared-react-native@npm:0.0.12":
+  version: 0.0.12
+  resolution: "@haqq/shared-react-native@npm:0.0.12"
   dependencies:
     base-64: ^1.0.0
     bn.js: 5.2.1
@@ -2479,7 +2486,7 @@ __metadata:
     "@haqq/provider-web3-utils": 0.0.10
     react: "*"
     react-native: "*"
-  checksum: 636c7c7b684fb369cfc718c9f15b38dcfa9665d1539913005c5edfaa3e4681fc0193d3efba7ce2ed0a4219eea035c2cc33771d0ab68bfb99f22348f4046c48a5
+  checksum: 5d80e551d1f457435d074f0002a5543e8d2a39f0c1e37f35bc9963b551f16f7410741b2c6451a5392e8402252b7531bf2a33ef8cf45b7cf071fc64ff9079cb90
   languageName: node
   linkType: hard
 
@@ -10287,6 +10294,7 @@ __metadata:
     "@evmos/transactions": 0.2.13
     "@expo/react-native-action-sheet": 4.0.1
     "@haqq/encryption-react-native": 0.0.4
+    "@haqq/format-number-with-subscript-zeros": ^1.0.0
     "@haqq/provider-base": 0.0.23
     "@haqq/provider-hot-react-native": 0.0.10
     "@haqq/provider-keystone-react-native": 0.0.7
@@ -10294,7 +10302,7 @@ __metadata:
     "@haqq/provider-mnemonic-react-native": 0.0.14
     "@haqq/provider-sss-react-native": 0.0.14
     "@haqq/provider-web3-utils": 0.0.14
-    "@haqq/shared-react-native": 0.0.11
+    "@haqq/shared-react-native": 0.0.12
     "@invertase/react-native-apple-authentication": 2.2.2
     "@keystonehq/bc-ur-registry-eth": 0.7.7
     "@keystonehq/ur-decoder": 0.12.2

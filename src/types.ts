@@ -560,6 +560,12 @@ export type RootStackParamList = {
     values: AwaitValue[];
     initialIndex?: number;
     eventSuffix?: string;
+    closeOnSelect?: boolean;
+    renderCell?: (
+      value: any,
+      idx: number,
+      onPress: (value: any, idx: number) => void,
+    ) => React.ReactNode;
   };
   walletConnect?: {
     screen: 'walletConnectApproval' | 'walletConnectSign';

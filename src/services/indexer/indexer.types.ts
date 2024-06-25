@@ -1,13 +1,24 @@
-import {IContract} from '@app/types';
+import {HaqqCosmosAddress, IContract} from '@app/types';
+
+export type SushiRoute = {
+  fee: number;
+  liquidity: string; // number liquidity for the pool
+  route: HaqqCosmosAddress[];
+  pools: HaqqCosmosAddress[];
+  route_hex: string; // hex route for SwapRouterV3
+  token0: HaqqCosmosAddress;
+  token1: HaqqCosmosAddress;
+};
 
 export type SushiPool = {
-  from: string; // input token
-  to: string; // out token
-  path: string; // swap path for SwapRouterV3
+  fee: string;
+  name: string;
+  pool: HaqqCosmosAddress;
 };
 
 export type SushiPoolResponse = {
   contracts: IContract[];
+  routes: SushiRoute[];
   pools: SushiPool[];
 };
 
@@ -33,9 +44,11 @@ export type SushiPoolEstimateResponse = {
 };
 
 export type SushiPoolEstimateRequest = {
-  token_in: string; // The input token address
-  token_out: string; // The output token address
+  route: string; // The route for the swap
+  // token_in: string; // The input token address
+  // token_out: string; // The output token address
   sender: string; // The sender address
   amount: string; // The hex amount to swap
   currency_id?: string; // The currency id
+  abortSignal?: AbortSignal;
 };

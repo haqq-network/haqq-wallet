@@ -1,4 +1,7 @@
-import {JSONRPCError, jsonrpcRequest} from '@haqq/shared-react-native';
+import {
+  JSONRPCError,
+  jsonrpcRequest,
+} from '@haqq/shared-react-native/src/jsonrpc-request';
 import _ from 'lodash';
 
 import {app} from '@app/contexts';
@@ -276,9 +279,9 @@ export class Indexer {
   async sushiPoolEstimate({
     amount,
     sender,
-    token_in,
-    token_out,
+    route,
     currency_id,
+    abortSignal,
   }: SushiPoolEstimateRequest): Promise<SushiPoolEstimateResponse> {
     try {
       if (!app.provider.indexer) {
@@ -288,13 +291,8 @@ export class Indexer {
       const response = await jsonrpcRequest<SushiPoolEstimateResponse>(
         app.provider.indexer,
         'sushiPoolEstimate',
-        [
-          AddressUtils.toHaqq(token_in),
-          AddressUtils.toHaqq(token_out),
-          AddressUtils.toHaqq(sender),
-          amount,
-          currency_id,
-        ],
+        [route, AddressUtils.toHaqq(sender), amount, currency_id],
+        abortSignal,
       );
 
       return response || {};

@@ -68,6 +68,7 @@ export enum IconsName {
   staking = 'staking',
   star = 'star',
   swap = 'swap',
+  swap_vertical = 'swap_vertical',
   time = 'time',
   ticket = 'ticket',
   timer_governance = 'timer_governance',

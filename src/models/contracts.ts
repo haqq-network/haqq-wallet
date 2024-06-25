@@ -1,10 +1,12 @@
 import {makeAutoObservable} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
-import {AddressUtils} from '@app/helpers/address-utils';
+import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
 import {Whitelist} from '@app/helpers/whitelist';
 import {storage} from '@app/services/mmkv';
 import {IContract, IToken, MobXStore} from '@app/types';
+
+import {Token} from './tokens';
 
 class ContractsStore implements MobXStore<IContract> {
   /**
@@ -75,6 +77,9 @@ class ContractsStore implements MobXStore<IContract> {
   }
 
   getById(id: string) {
+    if (AddressUtils.equals(id, NATIVE_TOKEN_ADDRESS)) {
+      return Token.generateIslamicTokenContract();
+    }
     const result = this.data[id];
 
     if (!result) {
