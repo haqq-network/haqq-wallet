@@ -18,6 +18,7 @@ export type NftItemIndexer = {
   address: HaqqCosmosAddress;
   attributes: NftAttribute[] | null;
   block: number;
+  amount: number; // number of copies
   cached_url: string | null;
   contract: HaqqCosmosAddress;
   created_at: string;

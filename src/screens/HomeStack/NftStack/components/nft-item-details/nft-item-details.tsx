@@ -1,11 +1,19 @@
-import React from 'react';
+import React, {useCallback, useState} from 'react';
 
-import {SafeAreaView, ScrollView, View} from 'react-native';
+import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
+import {Renderable} from 'react-native-json-tree';
 
+import {Color} from '@app/colors';
 import {ImageWrapper} from '@app/components/image-wrapper';
+import {JsonViewer} from '@app/components/json-viewer';
 import {
   Button,
+  ButtonSize,
   ButtonVariant,
+  First,
+  Icon,
+  IconButton,
+  IconsName,
   Spacer,
   Text,
   TextVariant,
@@ -13,6 +21,7 @@ import {
 import {createTheme} from '@app/helpers';
 import {useNftImage} from '@app/hooks/nft/use-nft-image';
 import {useLayout} from '@app/hooks/use-layout';
+import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {I18N} from '@app/i18n';
 import {NftItem} from '@app/models/nft';
 
@@ -27,11 +36,28 @@ export interface NftItemDetailsProps {
   item: NftItem;
 
   onPressSend(): void;
+  onPressExplorer(): void;
 }
 
-export const NftItemDetails = ({item, onPressSend}: NftItemDetailsProps) => {
+export const NftItemDetails = ({
+  item,
+  onPressSend,
+  onPressExplorer,
+}: NftItemDetailsProps) => {
   const [imageLayout, onImageLayout] = useLayout();
   const imageUri = useNftImage(item.cached_url);
+  const [isJsonHidden, setJsonHidden] = useState(true);
+  const {animate} = useLayoutAnimation();
+
+  const handleShowJsonViewer = useCallback(() => {
+    animate();
+    setJsonHidden(false);
+  }, [animate]);
+
+  const handleHideJsonViewer = useCallback(() => {
+    animate();
+    setJsonHidden(true);
+  }, [animate]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -52,9 +78,53 @@ export const NftItemDetails = ({item, onPressSend}: NftItemDetailsProps) => {
         <Spacer height={16} />
         <NftItemDetailsDescription description={item.description} />
         <NftItemDetailsPrice price={item.price} />
-        <NftItemDetailsTokenId tokenId={item.tokenId} />
+        <NftItemDetailsTokenId amount={item.amount} tokenId={item.tokenId} />
         <NftItemDetailsAttributes attributes={item.attributes} />
+
+        <Spacer height={20} />
+
+        <View style={styles.jsonViewerContainer}>
+          <First>
+            {isJsonHidden && (
+              <Button
+                size={ButtonSize.small}
+                i18n={I18N.nftDetailsShowRawInfo}
+                onPress={handleShowJsonViewer}
+              />
+            )}
+
+            <>
+              <Button
+                size={ButtonSize.small}
+                i18n={I18N.nftDetailsHideRawInfo}
+                onPress={handleHideJsonViewer}
+              />
+              <View style={styles.separator} />
+              <ScrollView
+                horizontal
+                style={styles.json}
+                showsHorizontalScrollIndicator={false}>
+                <JsonViewer
+                  autoexpand={false}
+                  style={styles.json}
+                  data={item as unknown as Renderable}
+                />
+              </ScrollView>
+            </>
+          </First>
+        </View>
       </ScrollView>
+
+      <Spacer height={16} />
+      <IconButton onPress={onPressExplorer} style={styles.iconButton}>
+        <Icon name={IconsName.block} color={Color.graphicBase1} />
+        <Text
+          t9
+          i18n={I18N.transactionDetailViewOnBlock}
+          style={styles.textStyle}
+        />
+      </IconButton>
+
       {!item.is_transfer_prohibinden && (
         <View>
           <Spacer height={16} />
@@ -81,5 +151,27 @@ const styles = createTheme({
   imageContainer: {
     width: '100%',
     borderRadius: 12,
+  },
+  jsonViewerContainer: {
+    width: '100%',
+    flex: 1,
+    borderWidth: 1,
+    borderRadius: 12,
+    borderColor: Color.graphicSecond1,
+    paddingHorizontal: 20,
+  },
+  separator: {
+    width: '100%',
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: Color.graphicSecond2,
+  },
+  json: {
+    width: '100%',
+  },
+  textStyle: {
+    marginLeft: 8,
+  },
+  iconButton: {
+    flexDirection: 'row',
   },
 });

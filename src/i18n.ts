@@ -1013,6 +1013,9 @@ export enum I18N {
   swapSettingsApply = 'swapSettingsApply',
   transactionDetailAmountIn = 'transactionDetailAmountIn',
   transactionDetailAmountOut = 'transactionDetailAmountOut',
+  nftDetailsNumbersOfCopies = 'nftDetailsNumbersOfCopies',
+  nftDetailsHideRawInfo = 'nftDetailsHideRawInfo',
+  nftDetailsShowRawInfo = 'nftDetailsShowRawInfo',
 }
 
 const defaultTranslation = {en};
