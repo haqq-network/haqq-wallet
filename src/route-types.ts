@@ -612,6 +612,7 @@ export type WalletConnectStackParamList = HomeStackParamList & {
 
 export enum JsonRpcSignPopupStackRoutes {
   JsonRpcSign = 'jsonRpcSignScreen',
+  JsonRpcSignFeeSettings = 'jsonRpcSignFeeSettings',
 }
 
 export type JsonRpcSignPopupStackParamList = HomeStackParamList & {
@@ -620,6 +621,12 @@ export type JsonRpcSignPopupStackParamList = HomeStackParamList & {
     metadata: JsonRpcMetadata;
     chainId?: number;
     selectedAccount?: string;
+  };
+  [JsonRpcSignPopupStackRoutes.JsonRpcSignFeeSettings]: {
+    from: string;
+    to: string;
+    amount: Balance;
+    data?: string;
   };
 };
 
