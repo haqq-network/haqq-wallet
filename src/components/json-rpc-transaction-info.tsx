@@ -231,7 +231,7 @@ export const JsonRpcTransactionInfo = ({
       <Spacer height={4} />
 
       <Text variant={TextVariant.t11} color={Color.textBase2}>
-        {tx?.from}
+        {tx?.to}
       </Text>
 
       <Spacer height={28} />
