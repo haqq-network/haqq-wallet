@@ -69,7 +69,7 @@ export const JsonRpcSignScreen = memo(() => {
   const wallet = useMemo(
     () =>
       Wallet.getById(
-        selectedAccount || getUserAddressFromJRPCRequest(request)!,
+        selectedAccount ?? getUserAddressFromJRPCRequest(request)!,
       ),
     [request, selectedAccount],
   );
@@ -208,15 +208,6 @@ export const JsonRpcSignScreen = memo(() => {
   }, [metadata, onPressReject, whitelist]);
 
   useEffect(() => {
-    const onBlur = () => {
-      app.emit('json-rpc-sign-reject');
-    };
-
-    navigation.addListener('blur', onBlur);
-    return () => navigation.removeListener('blur', onBlur);
-  }, [navigation]);
-
-  useEffect(() => {
     const address = selectedAccount || getUserAddressFromJRPCRequest(request);
     if (!address) {
       onPressReject(`method not implemented: ${request.method}`);
@@ -224,6 +215,7 @@ export const JsonRpcSignScreen = memo(() => {
   }, [onPressReject, request, selectedAccount]);
 
   useBackNavigationHandler(() => {
+    app.emit('json-rpc-sign-reject');
     Fee.clear();
   }, []);
 
