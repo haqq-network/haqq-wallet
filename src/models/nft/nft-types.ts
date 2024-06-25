@@ -38,7 +38,9 @@ export type NftItemIndexer = {
 };
 
 type NftMetadata = {
-  attributes: NftAttribute[] | null;
+  description: string;
+  image: string;
+  name: string;
 };
 
 export type NftAttribute = {

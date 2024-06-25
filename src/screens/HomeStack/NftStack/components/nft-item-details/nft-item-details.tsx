@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
 import {Renderable} from 'react-native-json-tree';
@@ -19,6 +19,7 @@ import {
   TextVariant,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {useNftImage} from '@app/hooks/nft/use-nft-image';
 import {useLayout} from '@app/hooks/use-layout';
 import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
@@ -44,10 +45,17 @@ export const NftItemDetails = ({
   onPressSend,
   onPressExplorer,
 }: NftItemDetailsProps) => {
+  const {animate} = useLayoutAnimation();
   const [imageLayout, onImageLayout] = useLayout();
   const imageUri = useNftImage(item.cached_url);
   const [isJsonHidden, setJsonHidden] = useState(true);
-  const {animate} = useLayoutAnimation();
+  const jsonData = useMemo(
+    () => ({
+      contract: AddressUtils.toEth(item.contract),
+      metadata: item.metadata,
+    }),
+    [item],
+  );
 
   const handleShowJsonViewer = useCallback(() => {
     animate();
@@ -107,7 +115,7 @@ export const NftItemDetails = ({
                 <JsonViewer
                   autoexpand={false}
                   style={styles.json}
-                  data={item as unknown as Renderable}
+                  data={jsonData as unknown as Renderable}
                 />
               </ScrollView>
             </>
