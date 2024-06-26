@@ -258,6 +258,11 @@ export const SwapScreen = observer(() => {
     try {
       estimateAbortController?.current?.abort();
       estimateAbortController.current = new AbortController();
+
+      if (!amountsIn.amount) {
+        return;
+      }
+
       logger.log('estimate token', {
         // token,
         tokenOut,
@@ -970,6 +975,11 @@ export const SwapScreen = observer(() => {
   }, [currentWallet, refreshTokenBalances, tokenIn]);
 
   const onInputBlur = useCallback(async () => {
+    if (!amountsIn.amount) {
+      setEstimateData(null);
+      amountsOut.setAmount('0');
+      return amountsIn.setError('');
+    }
     vibrate(HapticEffects.impactLight);
     Keyboard.dismiss();
     setIsEstimating(() => true);
@@ -1002,7 +1012,7 @@ export const SwapScreen = observer(() => {
         estimate(),
       );
     }
-  }, [tokenIn, tokenOut, currentWallet, currentRoute]);
+  }, [tokenIn, tokenOut, currentWallet, currentRoute, amountsIn.amount]);
 
   useEffect(() => {
     const fetchData = () => {
