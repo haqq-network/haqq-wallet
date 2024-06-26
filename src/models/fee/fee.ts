@@ -39,6 +39,19 @@ class Fee {
     }
   };
 
+  setExpectedFee = (expectedFee: Balance, updateLastSaved = true) => {
+    if (this._calculatedFee) {
+      if (updateLastSaved) {
+        this._lastSavedFee = {
+          ...this._calculatedFee,
+          expectedFee,
+        };
+      }
+
+      this._calculatedFee.expectedFee = expectedFee;
+    }
+  };
+
   get calculatedFees() {
     return this._calculatedFee;
   }
@@ -119,9 +132,6 @@ class Fee {
     this._calculatedFee!.maxPriorityFee = new Balance(
       String(+value * Math.pow(10, 9)),
     );
-  };
-  setExpectedFee = (value: string) => {
-    this._calculatedFee!.expectedFee = new Balance(value);
   };
 
   // This is very important to call this function each time when work with fee done
