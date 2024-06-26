@@ -15,8 +15,8 @@ class Fee {
     makeAutoObservable(this);
   }
 
-  setCalculatedFees = (value: CalculatedFees) => {
-    if (this._calculatedFee) {
+  setCalculatedFees = (value: CalculatedFees, updateLastSaved = true) => {
+    if (this._calculatedFee && updateLastSaved) {
       this._lastSavedFee = {
         gasLimit: new Balance(this._calculatedFee.gasLimit),
         maxBaseFee: new Balance(this._calculatedFee.maxBaseFee),
@@ -29,21 +29,37 @@ class Fee {
   };
 
   resetCalculatedFees = () => {
-    if (
-      this._lastSavedFee &&
-      this._estimationType === EstimationVariant.custom
-    ) {
+    if (this.canReset) {
       this._calculatedFee = {
-        gasLimit: new Balance(this._lastSavedFee.gasLimit),
-        maxBaseFee: new Balance(this._lastSavedFee.maxBaseFee),
-        maxPriorityFee: new Balance(this._lastSavedFee.maxPriorityFee),
-        expectedFee: new Balance(this._lastSavedFee.expectedFee),
+        gasLimit: new Balance(this._lastSavedFee!.gasLimit),
+        maxBaseFee: new Balance(this._lastSavedFee!.maxBaseFee),
+        maxPriorityFee: new Balance(this._lastSavedFee!.maxPriorityFee),
+        expectedFee: new Balance(this._lastSavedFee!.expectedFee),
       };
     }
   };
 
   get calculatedFees() {
     return this._calculatedFee;
+  }
+  get canReset() {
+    if (this._estimationType === EstimationVariant.custom) {
+      if (!this._lastSavedFee) {
+        return false;
+      }
+
+      const last = this._lastSavedFee;
+      const calc = this._calculatedFee!;
+
+      const gasChanged = last.gasLimit.toHex() !== calc.gasLimit.toHex();
+      const baseChanged = last.maxBaseFee.toHex() !== calc.maxBaseFee.toHex();
+      const priorityChanged =
+        last.maxPriorityFee.toHex() !== calc.maxPriorityFee.toHex();
+
+      return gasChanged || baseChanged || priorityChanged;
+    }
+
+    return false;
   }
 
   get estimationType() {

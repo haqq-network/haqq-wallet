@@ -39,38 +39,41 @@ export const FeeSettingsScreen = observer(() => {
   >();
 
   const estimate = useCallback(
-    _.debounce(async (estimationType: EstimationVariant) => {
-      let data: CalculatedFees | null = null;
-      if (estimationType === EstimationVariant.custom) {
-        if (Fee.gasLimit && Fee.maxBaseFee && Fee.maxPriorityFee) {
-          data = await EthNetwork.customEstimate(
+    _.debounce(
+      async (estimationType: EstimationVariant, updateLastSavedFee = true) => {
+        let data: CalculatedFees | null = null;
+        if (estimationType === EstimationVariant.custom) {
+          if (Fee.gasLimit && Fee.maxBaseFee && Fee.maxPriorityFee) {
+            data = await EthNetwork.customEstimate(
+              {
+                from: params.from,
+                to: params.to,
+                value: params.amount,
+                data: params.data,
+              },
+              {
+                gasLimit: BigNumber.from(Fee.gasLimit.toWei()),
+                maxBaseFee: BigNumber.from(Fee.maxBaseFee.toWei()),
+                maxPriorityFee: BigNumber.from(Fee.maxPriorityFee.toWei()),
+              },
+            );
+          }
+        } else {
+          data = await EthNetwork.estimate(
             {
               from: params.from,
               to: params.to,
               value: params.amount,
               data: params.data,
             },
-            {
-              gasLimit: BigNumber.from(Fee.gasLimit.toWei()),
-              maxBaseFee: BigNumber.from(Fee.maxBaseFee.toWei()),
-              maxPriorityFee: BigNumber.from(Fee.maxPriorityFee.toWei()),
-            },
+            estimationType,
           );
         }
-      } else {
-        data = await EthNetwork.estimate(
-          {
-            from: params.from,
-            to: params.to,
-            value: params.amount,
-            data: params.data,
-          },
-          estimationType,
-        );
-      }
 
-      data && Fee.setCalculatedFees(data);
-    }, 500),
+        data && Fee.setCalculatedFees(data, updateLastSavedFee);
+      },
+      500,
+    ),
     [],
   );
 
@@ -84,12 +87,11 @@ export const FeeSettingsScreen = observer(() => {
 
   useEffect(() => {
     estimate(Fee.estimationType);
-  }, [
-    Fee.estimationType,
-    Fee.gasLimitString,
-    Fee.maxBaseFeeString,
-    Fee.maxPriorityFeeString,
-  ]);
+  }, [Fee.estimationType]);
+
+  useEffect(() => {
+    estimate(Fee.estimationType, false);
+  }, [Fee.gasLimitString, Fee.maxBaseFeeString, Fee.maxPriorityFeeString]);
 
   const handleReset = () => Fee.resetCalculatedFees();
 
@@ -166,6 +168,7 @@ export const FeeSettingsScreen = observer(() => {
         <Button
           variant={ButtonVariant.second}
           i18n={I18N.reset}
+          disabled={!Fee.canReset}
           onPress={handleReset}
         />
         <Spacer height={16} />
