@@ -31,7 +31,8 @@
     "git:action:restart": "git pull && git commit --amend -n --no-edit && git push -f",
     "env:verify": "yarn zx ./scripts/verify-env.mjs",
     "env:update": "yarn zx ./scripts/update-version.mjs",
-    "locales:update": "yarn zx ./scripts/pull-locales.mjs"
+    "locales:update": "yarn zx ./scripts/pull-locales.mjs",
+    "pin": "sh ./scripts/adb-enter-pin.sh"
   },
   "dependencies": {
     "@birdwingo/react-native-spinning-numbers": "1.0.5",
