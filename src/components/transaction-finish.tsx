@@ -35,6 +35,7 @@ type TransactionFinishProps = {
   testID?: string;
   token: IToken;
   amount?: Balance;
+  hideContact?: boolean;
 };
 
 export const TransactionFinish = ({
@@ -46,6 +47,7 @@ export const TransactionFinish = ({
   testID,
   token,
   amount,
+  hideContact,
 }: TransactionFinishProps) => {
   const onPressHash = async () => {
     const url = `${EthNetwork.explorer}tx/${transaction?.hash}`;
@@ -132,33 +134,35 @@ export const TransactionFinish = ({
 
       <Spacer minHeight={20} />
       <View style={styles.buttons}>
-        <IconButton onPress={onPressContact} style={styles.button}>
-          {contact ? (
-            <Icon
-              name="pen"
-              i24
-              color={Color.graphicBase2}
-              style={styles.buttonIcon}
+        {!hideContact && (
+          <IconButton onPress={onPressContact} style={styles.button}>
+            {contact ? (
+              <Icon
+                name="pen"
+                i24
+                color={Color.graphicBase2}
+                style={styles.buttonIcon}
+              />
+            ) : (
+              <Icon
+                name="user"
+                i24
+                color={Color.graphicBase2}
+                style={styles.buttonIcon}
+              />
+            )}
+            <Text
+              i18n={
+                contact
+                  ? I18N.transactionFinishEditContact
+                  : I18N.transactionFinishAddContact
+              }
+              variant={TextVariant.t15}
+              position={TextPosition.center}
+              color={Color.textBase2}
             />
-          ) : (
-            <Icon
-              name="user"
-              i24
-              color={Color.graphicBase2}
-              style={styles.buttonIcon}
-            />
-          )}
-          <Text
-            i18n={
-              contact
-                ? I18N.transactionFinishEditContact
-                : I18N.transactionFinishAddContact
-            }
-            variant={TextVariant.t15}
-            position={TextPosition.center}
-            color={Color.textBase2}
-          />
-        </IconButton>
+          </IconButton>
+        )}
         <IconButton onPress={onPressHash} style={styles.button}>
           <Icon
             name="block"
