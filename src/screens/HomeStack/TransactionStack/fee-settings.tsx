@@ -57,6 +57,8 @@ export const FeeSettingsScreen = observer(() => {
                 maxPriorityFee: BigNumber.from(Fee.maxPriorityFee.toWei()),
               },
             );
+
+            data && Fee.setExpectedFee(data.expectedFee, updateLastSavedFee);
           }
         } else {
           data = await EthNetwork.estimate(
@@ -68,9 +70,9 @@ export const FeeSettingsScreen = observer(() => {
             },
             estimationType,
           );
-        }
 
-        data && Fee.setCalculatedFees(data, updateLastSavedFee);
+          data && Fee.setCalculatedFees(data, updateLastSavedFee);
+        }
       },
       500,
     ),
