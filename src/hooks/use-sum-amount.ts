@@ -130,5 +130,6 @@ export function useSumAmount(
         });
       }
     },
+    setError,
   };
 }
