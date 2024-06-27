@@ -124,6 +124,9 @@ export const FeeSettingsScreen = observer(() => {
           value={Fee.gasLimitString}
           onChangeText={Fee.setGasLimit}
           editable={Fee.estimationType === EstimationVariant.custom}
+          keyboardType="numeric"
+          inputMode="decimal"
+          returnKeyType="done"
           infoBlock={{
             label: getText(I18N.moreAbout, {item: getText(I18N.gasLimit)}),
             title: I18N.gasLimit,
@@ -137,6 +140,9 @@ export const FeeSettingsScreen = observer(() => {
           value={Fee.maxBaseFeeString}
           onChangeText={Fee.setMaxBaseFee}
           editable={Fee.estimationType === EstimationVariant.custom}
+          keyboardType="numeric"
+          inputMode="decimal"
+          returnKeyType="done"
           infoBlock={{
             label: getText(I18N.moreAbout, {item: getText(I18N.maxBaseFee)}),
             title: I18N.maxBaseFee,
@@ -150,6 +156,9 @@ export const FeeSettingsScreen = observer(() => {
           value={Fee.maxPriorityFeeString}
           onChangeText={Fee.setMaxPriorityFee}
           editable={Fee.estimationType === EstimationVariant.custom}
+          keyboardType="numeric"
+          inputMode="decimal"
+          returnKeyType="done"
           infoBlock={{
             label: getText(I18N.moreAbout, {
               item: getText(I18N.maxPriorityFee),
