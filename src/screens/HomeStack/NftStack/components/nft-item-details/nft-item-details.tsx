@@ -47,7 +47,11 @@ export const NftItemDetails = ({
 }: NftItemDetailsProps) => {
   const {animate} = useLayoutAnimation();
   const [imageLayout, onImageLayout] = useLayout();
-  const imageUri = useNftImage(item.cached_url);
+  const imageUri = useNftImage(
+    typeof item.cached_url === 'string'
+      ? item.cached_url
+      : item.metadata?.image,
+  );
   const [isJsonHidden, setJsonHidden] = useState(true);
   const jsonData = useMemo(
     () => ({

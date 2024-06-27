@@ -21,7 +21,7 @@ export const NftViewerSectionHeader = ({
   onPress,
 }: NftViewerSectionHeaderProps) => {
   const handlePress = useCallback(() => onPress?.(item), [onPress, item]);
-  const collectionImageUri = useNftCollectionImage(item.nfts);
+  const collectionImageUri = useNftCollectionImage(item.nfts, true);
 
   return (
     <MenuNavigationButton onPress={handlePress} style={styles.headerContainer}>

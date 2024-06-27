@@ -4,6 +4,7 @@ import {ImageBackground, TouchableOpacity, View, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {useNftImage} from '@app/hooks/nft';
 import {useLayout} from '@app/hooks/use-layout';
 import {addOpacityToColor} from '@app/utils';
 
@@ -15,6 +16,7 @@ export const NftViewerItemPreviewLarge = ({
   item,
   onPress,
 }: NftViewerItemPreviewExtendedProps) => {
+  const imageUri = useNftImage(item.cached_url);
   const handlePress = useCallback(() => onPress?.(item), [onPress, item]);
   const [layout, onLayout] = useLayout();
   const itemTextStyle = useMemo(
@@ -41,7 +43,7 @@ export const NftViewerItemPreviewLarge = ({
         imageStyle={styles.imageContainer}
         style={layout}
         resizeMode="contain"
-        source={{uri: item.cached_url || undefined}}>
+        source={imageUri}>
         <View style={[styles.itemText, itemTextStyle]}>
           <Text
             numberOfLines={1}
