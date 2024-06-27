@@ -1,5 +1,3 @@
-import {Platform} from 'react-native';
-
 import {VariablesString} from '@app/models/variables-string';
 import {RemoteConfig} from '@app/services/remote-config';
 import {getAppVersion} from '@app/services/version';
@@ -94,8 +92,5 @@ export function checkNeedUpdate() {
 }
 
 export const getRemoteVersion = () => {
-  return Platform.select({
-    ios: RemoteConfig.get('ios_version'),
-    android: RemoteConfig.get('android_version'),
-  });
+  return RemoteConfig.get('version');
 };
