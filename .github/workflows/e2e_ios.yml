@@ -53,7 +53,7 @@ on:
 jobs:
   build:
     name: e2e iOS
-    runs-on: macos-latest
+    runs-on: mac-mini
     steps:
       - name: Show macOS machine infomation
         run: uname -a
