@@ -49,7 +49,11 @@ export const TransactionNftFinish = ({
     await openURL(url);
   };
 
-  const nftImageUri = useNftImage(item.cached_url);
+  const nftImageUri = useNftImage(
+    typeof item.cached_url === 'string'
+      ? item.cached_url
+      : item.metadata?.image,
+  );
 
   return (
     <PopupContainer style={styles.container}>

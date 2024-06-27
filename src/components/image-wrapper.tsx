@@ -10,6 +10,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import BlastedImage, {BlastedImageProps} from 'react-native-blasted-image';
+import WebView from 'react-native-webview';
 
 import {isValidUrl} from '@app/utils';
 
@@ -19,6 +20,8 @@ export type ImageWrapperProps = Omit<BlastedImageProps, 'source' | 'style'> & {
   source: ImageSourcePropType | string;
   style?: StyleProp<ImageStyle>;
 };
+
+const SVG_MIME_TYPE = 'data:image/svg+xml;base64,';
 
 export function ImageWrapper({source, style, ...props}: ImageWrapperProps) {
   const [isError, setError] = useState(false);
@@ -44,6 +47,39 @@ export function ImageWrapper({source, style, ...props}: ImageWrapperProps) {
     return source as ImageSourcePropType;
   }, [source]);
 
+  const isSVG = useMemo(() => {
+    if (Array.isArray(fixedSource)) {
+      return false;
+    }
+
+    if (typeof fixedSource === 'number') {
+      return false;
+    }
+
+    if (typeof fixedSource === 'object' && 'uri' in fixedSource) {
+      return fixedSource.uri?.startsWith?.(SVG_MIME_TYPE);
+    }
+
+    if (typeof fixedSource === 'string') {
+      // @ts-ignore
+      return fixedSource.startsWith(SVG_MIME_TYPE);
+    }
+
+    return false;
+  }, [fixedSource]);
+
+  const svgImageData = useMemo(() => {
+    if (!isSVG) {
+      return null;
+    }
+
+    const svg =
+      //@ts-ignore
+      typeof fixedSource === 'string' ? fixedSource : fixedSource?.uri;
+
+    return svg;
+  }, [fixedSource, isSVG]);
+
   useEffect(() => {
     const {width, height} = StyleSheet.flatten(style);
     if (typeof width === 'string' || typeof height === 'string') {
@@ -53,6 +89,18 @@ export function ImageWrapper({source, style, ...props}: ImageWrapperProps) {
 
   return (
     <First>
+      {isSVG && (
+        <WebView
+          useWebView2
+          cacheEnabled
+          cacheMode="LOAD_CACHE_ONLY"
+          style={StyleSheet.flatten(style)}
+          containerStyle={StyleSheet.flatten(style)}
+          source={{
+            html: `<img src="${svgImageData}" width="100%" height="100%" />`,
+          }}
+        />
+      )}
       {isError && (
         <Image {...(props as ImageProps)} style={style} source={fixedSource} />
       )}

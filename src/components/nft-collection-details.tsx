@@ -25,7 +25,7 @@ export const NftCollectionDetails = ({
   item,
   onPressNftItem,
 }: NftCollectionDetailsProps) => {
-  const collectionImageUri = useNftCollectionImage(item.nfts);
+  const collectionImageUri = useNftCollectionImage(item.nfts, true);
 
   return (
     <SafeAreaView style={styles.container}>
