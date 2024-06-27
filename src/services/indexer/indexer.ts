@@ -33,6 +33,7 @@ export type IndexerUpdatesResponse = {
   addresses: IContract[];
   balance: IndexerBalance;
   staked: IndexerBalance;
+  total_staked: IndexerBalance;
   vested: IndexerBalance;
   available: IndexerBalance;
   locked: IndexerBalance;
