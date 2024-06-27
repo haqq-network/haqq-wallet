@@ -852,7 +852,11 @@ export const SwapScreen = observer(() => {
         screen: TransactionStackRoutes.TransactionFinish,
         params: {
           hash: txResp.transactionHash,
-          transaction: txResp,
+          hideContact: true,
+          transaction: {
+            ...txResp,
+            hash: txResp.transactionHash,
+          },
           token: toJS(
             tokenIn?.symbol === 'ISLM'
               ? Token.generateIslamicToken(currentWallet)
@@ -919,7 +923,11 @@ export const SwapScreen = observer(() => {
         screen: TransactionStackRoutes.TransactionFinish,
         params: {
           hash: txResp.transactionHash,
-          transaction: txResp,
+          hideContact: true,
+          transaction: {
+            ...txResp,
+            hash: txResp.transactionHash,
+          },
           token: toJS(
             tokenIn?.symbol === 'ISLM'
               ? Token.generateIslamicToken(currentWallet)
