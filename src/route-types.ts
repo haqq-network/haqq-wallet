@@ -431,6 +431,7 @@ export type HomeStackParamList = {
     chainId?: number;
     selectedAccount?: string;
     hideContractAttention?: boolean;
+    saveFee?: boolean;
   };
   [HomeStackRoutes.BackupSssNotification]: {accountId: string};
   [HomeStackRoutes.PopupNotificationNews]: {
