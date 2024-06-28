@@ -1,7 +1,7 @@
 import React, {memo, useCallback, useMemo} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
-import {Platform, View} from 'react-native';
+import {View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {BottomPopupContainer} from '@app/components/bottom-popups';
@@ -30,11 +30,7 @@ export const ViewErrorDetails = memo(
     const remoteAppVersion = useMemo(
       () =>
         getText(I18N.remoteAppVersion, {
-          version:
-            Platform.select({
-              ios: RemoteConfig.get('ios_version'),
-              android: RemoteConfig.get('android_version'),
-            }) || appVersion,
+          version: RemoteConfig.get('version') || appVersion,
         }),
       [appVersion],
     );

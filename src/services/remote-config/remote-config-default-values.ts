@@ -91,9 +91,7 @@ export const REMOTE_CONFIG_DEFAULT_VALUES: Required<RemoteConfigTypes> = {
     'haqq_11235-1': 'https://jsonrpc.indexer.haqq.network',
     'haqq_54211-3': 'https://jsonrpc.indexer.testedge2.haqq.network',
   },
-  app_version: getAppVersion(),
-  ios_version: getAppVersion(),
-  android_version: getAppVersion(),
+  version: getAppVersion(),
   welcome_screen: 'welcomeNews',
   sss_google_provider: 'haqq-google-ios',
   sss_apple_provider: 'haqq-apple',
@@ -106,7 +104,6 @@ export const REMOTE_CONFIG_DEFAULT_VALUES: Required<RemoteConfigTypes> = {
   airdrop_gasdrop_secret: 'NX2HLGSlACcc2DWSNfVETLr5OzxxTcv5',
   airdrop_gasdrop_campaign_id: '19851c43f2e9da721e0c8356019190b6',
   pattern_source: 'https://storage.googleapis.com/mobile-static/',
-  version: 1,
   cosmos_min_amount: getDefaultBalanceValue('cosmos_min_amount').toHex(),
   cosmos_min_gas_limit: getDefaultBalanceValue('cosmos_min_gas_limit').toHex(),
   cosmos_commission_multiplier: getDefaultMultiplierValue(

@@ -32,8 +32,6 @@ export type RemoteConfigTypes = RemoteConfigBalanceTypes &
     airdrop_gasdrop_campaign_id: string;
     airdrop_gasdrop_secret: string;
     airdrop_url: string;
-    android_version: string;
-    app_version: string;
     cosmos_commission_multilplier: string | number;
     cosmos_explorer: ExplorerUrlsMap;
     cosmos_min_amount: string;
@@ -46,7 +44,6 @@ export type RemoteConfigTypes = RemoteConfigBalanceTypes &
     evm_endpoints: Record<string, string[]>;
     keystone_tutorial_url: string;
     indexer_endpoints: Record<string, string>;
-    ios_version: string;
     pattern_source: string;
     sss_apple_provider: string;
     sss_custom_provider: string | undefined;
@@ -55,7 +52,7 @@ export type RemoteConfigTypes = RemoteConfigBalanceTypes &
     sss_google_provider: string;
     sss_metadata_url: string;
     tm_endpoints: Record<string, string[]>;
-    version: number;
+    version: string;
     wallet_connect: WalletConnectAllowedNamespaces;
     web3_app_whitelist: string[];
     web3_browser_bookmarks: Omit<Link, 'subtitle' | 'id'>[];

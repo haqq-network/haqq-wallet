@@ -20,6 +20,8 @@ import {
 } from '@app/services/push-notifications';
 import {PopupNotificationBannerTypes} from '@app/types';
 import {
+  IS_ANDROID,
+  IS_IOS,
   NEWS_TOPIC_VARIABLE_NAME,
   RAFFLE_TOPIC_VARIABLE_NAME,
   TRANSACTION_TOPIC_VARIABLE_NAME,
@@ -92,9 +94,10 @@ export const SettingsNotificationScreen = memo(() => {
   useEffect(() => {
     const checkPermission = async () => {
       const hasPermission = await PushNotifications.instance.hasPermission();
+
       if (
         prevHasNotificationPermission !== hasPermission &&
-        hasPermission &&
+        ((hasPermission && IS_ANDROID) || (!hasPermission && IS_IOS)) &&
         !VariablesBool.get('notifications')
       ) {
         await onBannerNotificationsTurnOn(
