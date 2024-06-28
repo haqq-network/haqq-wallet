@@ -1016,6 +1016,8 @@ export enum I18N {
   nftDetailsNumbersOfCopies = 'nftDetailsNumbersOfCopies',
   nftDetailsHideRawInfo = 'nftDetailsHideRawInfo',
   nftDetailsShowRawInfo = 'nftDetailsShowRawInfo',
+  I18N = 'I18N',
+  feeSettingsExpectedFee = 'feeSettingsExpectedFee',
 }
 
 const defaultTranslation = {en};

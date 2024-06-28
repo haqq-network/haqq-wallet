@@ -1,11 +1,10 @@
-import {useCallback, useEffect} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 
 import {BigNumber} from 'ethers';
-import _ from 'lodash';
 import {observer} from 'mobx-react';
-import {View} from 'react-native';
+import {ActivityIndicator, View} from 'react-native';
 
-import {Color} from '@app/colors';
+import {Color, getColor} from '@app/colors';
 import {
   TopTabNavigator,
   TopTabNavigatorVariant,
@@ -13,6 +12,7 @@ import {
 import {
   Button,
   ButtonVariant,
+  First,
   Spacer,
   Text,
   TextField,
@@ -38,7 +38,7 @@ export const FeeSettingsScreen = observer(() => {
     TransactionStackParamList,
     TransactionStackRoutes.FeeSettings
   >();
-
+  const [isEstimating, setEstimating] = useState(false);
   const amountsGasLimit = useSumAmount(
     new Balance(Fee.gasLimitString || Balance.Empty),
     undefined,
@@ -68,43 +68,43 @@ export const FeeSettingsScreen = observer(() => {
   );
 
   const estimate = useCallback(
-    _.debounce(
-      async (estimationType: EstimationVariant, updateLastSavedFee = true) => {
-        let data: CalculatedFees | null = null;
-        if (estimationType === EstimationVariant.custom) {
-          if (Fee.gasLimit && Fee.maxBaseFee && Fee.maxPriorityFee) {
-            data = await EthNetwork.customEstimate(
-              {
-                from: params.from,
-                to: params.to,
-                value: params.amount,
-                data: params.data,
-              },
-              {
-                gasLimit: BigNumber.from(Fee.gasLimit.toWei()),
-                maxBaseFee: BigNumber.from(Fee.maxBaseFee.toWei()),
-                maxPriorityFee: BigNumber.from(Fee.maxPriorityFee.toWei()),
-              },
-            );
-
-            data && Fee.setExpectedFee(data.expectedFee, updateLastSavedFee);
-          }
-        } else {
-          data = await EthNetwork.estimate(
+    async (estimationType: EstimationVariant, updateLastSavedFee = true) => {
+      setEstimating(true);
+      let data: CalculatedFees | null = null;
+      if (estimationType === EstimationVariant.custom) {
+        if (Fee.gasLimit && Fee.maxBaseFee && Fee.maxPriorityFee) {
+          data = await EthNetwork.customEstimate(
             {
               from: params.from,
               to: params.to,
               value: params.amount,
               data: params.data,
             },
-            estimationType,
+            {
+              gasLimit: BigNumber.from(Fee.gasLimit.toWei()),
+              maxBaseFee: BigNumber.from(Fee.maxBaseFee.toWei()),
+              maxPriorityFee: BigNumber.from(Fee.maxPriorityFee.toWei()),
+            },
           );
 
-          data && Fee.setCalculatedFees(data, updateLastSavedFee);
+          data && Fee.setExpectedFee(data.expectedFee, updateLastSavedFee);
+          setEstimating(false);
         }
-      },
-      500,
-    ),
+      } else {
+        data = await EthNetwork.estimate(
+          {
+            from: params.from,
+            to: params.to,
+            value: params.amount,
+            data: params.data,
+          },
+          estimationType,
+        );
+
+        data && Fee.setCalculatedFees(data, updateLastSavedFee);
+        setEstimating(false);
+      }
+    },
     [],
   );
 
@@ -133,6 +133,7 @@ export const FeeSettingsScreen = observer(() => {
           <TopTabNavigator
             contentContainerStyle={styles.tabsContentContainerStyle}
             variant={TopTabNavigatorVariant.large}
+            disabled={isEstimating}
             onTabChange={onTabChange}
             activeTabIndex={Fee.estimationType}
             initialTabIndex={Fee.estimationType}>
@@ -198,22 +199,32 @@ export const FeeSettingsScreen = observer(() => {
         />
         <Spacer height={28} />
         <View style={styles.fee}>
-          <Text variant={TextVariant.t11}>Expected Fee</Text>
-          <Text variant={TextVariant.t11} color={Color.textBase2}>
-            {Fee.expectedFeeString}
-          </Text>
+          <Text variant={TextVariant.t11} i18n={I18N.feeSettingsExpectedFee} />
+          <First>
+            {isEstimating && (
+              <ActivityIndicator
+                size={'small'}
+                color={getColor(Color.graphicGreen1)}
+              />
+            )}
+            <Text variant={TextVariant.t11} color={Color.textBase2}>
+              {Fee.expectedFeeString}
+            </Text>
+          </First>
         </View>
       </View>
       <View>
         <Button
           variant={ButtonVariant.second}
           i18n={I18N.reset}
-          disabled={!Fee.canReset}
+          disabled={!Fee.canReset || isEstimating}
           onPress={handleReset}
         />
         <Spacer height={16} />
         <Button
           variant={ButtonVariant.contained}
+          loading={isEstimating}
+          disabled={isEstimating}
           i18n={I18N.apply}
           onPress={handleApply}
         />

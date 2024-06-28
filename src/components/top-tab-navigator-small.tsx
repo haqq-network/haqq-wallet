@@ -21,6 +21,7 @@ export const TopTabNavigatorSmall = ({
   containerStyle,
   contentContainerStyle,
   tabHeaderStyle,
+  disabled,
   onTabPress,
 }: TopTabNavigatorSmallProps) => {
   const RigntActon = activeTab?.props?.rigntActon;
@@ -32,7 +33,10 @@ export const TopTabNavigatorSmall = ({
         scrollEnabled={scrollHeaderEnabled}
         showsHorizontalScrollIndicator={false}
         style={styles.scrollView}
-        contentContainerStyle={styles.scrollViewContent}>
+        contentContainerStyle={[
+          styles.scrollViewContent,
+          disabled && styles.scrollViewContentDisabled,
+        ]}>
         <View style={[styles.tabsHeader, tabHeaderStyle]}>
           {tabList.map((tab, index) => {
             const isActive = tab?.props?.name === activeTab?.props?.name;
@@ -43,6 +47,7 @@ export const TopTabNavigatorSmall = ({
               : tab.props.title;
             return (
               <TouchableOpacity
+                disabled={disabled}
                 key={`${tab.props.title}_${index}`}
                 testID={tab.props.testID}
                 onPress={() => onTabPress(tab, index)}>
@@ -81,6 +86,9 @@ const styles = StyleSheet.create({
   scrollViewContent: {
     minWidth: '100%',
     minHeight: 22,
+  },
+  scrollViewContentDisabled: {
+    opacity: 0.5,
   },
   container: {
     width: '100%',
