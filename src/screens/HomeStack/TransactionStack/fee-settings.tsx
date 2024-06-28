@@ -19,7 +19,7 @@ import {
   TextVariant,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useSumAmount, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {EstimationVariant, Fee} from '@app/models/fee';
 import {
@@ -27,6 +27,7 @@ import {
   TransactionStackRoutes,
 } from '@app/route-types';
 import {EthNetwork} from '@app/services';
+import {Balance} from '@app/services/balance';
 import {CalculatedFees} from '@app/services/eth-network/types';
 
 const TABS = [I18N.low, I18N.average, I18N.high, I18N.custom];
@@ -37,6 +38,34 @@ export const FeeSettingsScreen = observer(() => {
     TransactionStackParamList,
     TransactionStackRoutes.FeeSettings
   >();
+
+  const amountsGasLimit = useSumAmount(
+    new Balance(Fee.gasLimitString || Balance.Empty),
+    undefined,
+    undefined,
+    undefined,
+    (amount, formattedString) => {
+      Fee.setGasLimit(formattedString);
+    },
+  );
+  const amountsMaxBaseFee = useSumAmount(
+    new Balance(Fee.maxBaseFeeString || Balance.Empty),
+    undefined,
+    undefined,
+    undefined,
+    (amount, formattedString) => {
+      Fee.setMaxBaseFee(formattedString);
+    },
+  );
+  const amountsMaxPriorityFee = useSumAmount(
+    new Balance(Fee.maxPriorityFeeString || Balance.Empty),
+    undefined,
+    undefined,
+    undefined,
+    (amount, formattedString) => {
+      Fee.setMaxPriorityFee(formattedString);
+    },
+  );
 
   const estimate = useCallback(
     _.debounce(
@@ -121,8 +150,8 @@ export const FeeSettingsScreen = observer(() => {
         <TextField
           label={I18N.gasLimit}
           placeholder={I18N.empty}
-          value={Fee.gasLimitString}
-          onChangeText={Fee.setGasLimit}
+          value={amountsGasLimit.amount}
+          onChangeText={amountsGasLimit.setAmount}
           editable={Fee.estimationType === EstimationVariant.custom}
           keyboardType="numeric"
           inputMode="decimal"
@@ -137,8 +166,8 @@ export const FeeSettingsScreen = observer(() => {
         <TextField
           label={`${getText(I18N.maxBaseFee)} (GWei)`}
           placeholder={I18N.empty}
-          value={Fee.maxBaseFeeString}
-          onChangeText={Fee.setMaxBaseFee}
+          value={amountsMaxBaseFee.amount}
+          onChangeText={amountsMaxBaseFee.setAmount}
           editable={Fee.estimationType === EstimationVariant.custom}
           keyboardType="numeric"
           inputMode="decimal"
@@ -153,8 +182,8 @@ export const FeeSettingsScreen = observer(() => {
         <TextField
           label={`${getText(I18N.maxPriorityFee)} (GWei)`}
           placeholder={I18N.empty}
-          value={Fee.maxPriorityFeeString}
-          onChangeText={Fee.setMaxPriorityFee}
+          value={amountsMaxPriorityFee.amount}
+          onChangeText={amountsMaxPriorityFee.setAmount}
           editable={Fee.estimationType === EstimationVariant.custom}
           keyboardType="numeric"
           inputMode="decimal"

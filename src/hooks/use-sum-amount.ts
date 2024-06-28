@@ -11,6 +11,7 @@ export function useSumAmount(
   initialMaxSum = Balance.Empty,
   initialMinAmount = getRemoteBalanceValue('transfer_min_amount'),
   customCheck?: (amount: Balance) => string,
+  onChange?: (amount: Balance, formattedString: string) => void,
 ) {
   const [{amount, amountText, changed}, setAmount] = useState({
     amount: initialSum,
@@ -117,12 +118,19 @@ export function useSumAmount(
           .replace(/\D&[^.]/g, '')
           .replace(/^0[0-9]/gm, '0');
 
+        const newAmount = new Balance(+textFormatted);
+        if (typeof onChange === 'function') {
+          onChange(newAmount, textFormatted);
+        }
         setAmount({
           amountText: textFormatted,
-          amount: new Balance(+textFormatted),
+          amount: newAmount,
           changed: true,
         });
       } else if (text === '') {
+        if (typeof onChange === 'function') {
+          onChange(Balance.Empty, '0');
+        }
         setAmount({
           amountText: '',
           amount: Balance.Empty,
