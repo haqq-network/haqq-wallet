@@ -259,10 +259,6 @@ export const SwapScreen = observer(() => {
       estimateAbortController?.current?.abort();
       estimateAbortController.current = new AbortController();
 
-      if (!amountsIn.amount) {
-        return;
-      }
-
       logger.log('estimate token', {
         // token,
         tokenOut,
@@ -271,6 +267,14 @@ export const SwapScreen = observer(() => {
         t0Current,
         t0Available,
       });
+
+      if (!amountsIn.amount) {
+        return;
+      }
+
+      if (/^0(\.)?(0+)?$/.test(amountsIn.amount)) {
+        return setEstimateData(null);
+      }
 
       setIsEstimating(true);
       setEstimateData(null);
@@ -381,6 +385,17 @@ export const SwapScreen = observer(() => {
           initialValue.eth_address!,
         );
 
+        const tokens =
+          Token.tokens[AddressUtils.toEth(currentWallet.address)] || [];
+        const currentToken = {
+          ...tokens.find(t =>
+            AddressUtils.equals(t.id, initialValue.eth_address!),
+          )!,
+          value: isToken0 ? t0Available : t1Available,
+          id: `${currentWallet.address}_${initialValue.id}` as HaqqCosmosAddress,
+          eth_address: initialValue.eth_address,
+        };
+
         const routes = isToken0
           ? routesByToken1.current[
               AddressUtils.toHaqq(initialValue.eth_address!)
@@ -392,8 +407,7 @@ export const SwapScreen = observer(() => {
         const possibleRoutesForSwap = routes
           .map(it => {
             const tokenAddress = isToken0 ? it.token0 : it.token1;
-            const tokens =
-              Token.tokens[AddressUtils.toEth(currentWallet.address)] || [];
+
             const tokenContract = tokens.find(token =>
               AddressUtils.equals(token.id, tokenAddress),
             );
@@ -440,7 +454,7 @@ export const SwapScreen = observer(() => {
             {
               id: currentWallet.address,
               wallet: currentWallet,
-              tokens: possibleRoutesForSwap,
+              tokens: [currentToken, ...possibleRoutesForSwap],
               title: currentWallet.name,
               subtitle: currentWallet.address,
             },
@@ -570,6 +584,9 @@ export const SwapScreen = observer(() => {
       if (!token || !wallet || !tokenIn || !tokenOut) {
         return;
       }
+      if (token.symbol === tokenIn.symbol) {
+        return estimate();
+      }
       vibrate(HapticEffects.impactLight);
       Keyboard.dismiss();
       setIsEstimating(() => true);
@@ -615,7 +632,9 @@ export const SwapScreen = observer(() => {
       if (!token || !wallet || !tokenIn || !tokenOut) {
         return;
       }
-
+      if (token.symbol === tokenIn.symbol) {
+        return estimate();
+      }
       vibrate(HapticEffects.impactLight);
       Keyboard.dismiss();
       amountsOut.setAmount('0');
@@ -653,7 +672,6 @@ export const SwapScreen = observer(() => {
 
   const onPressSwap = useCallback(async () => {
     try {
-      setSwapInProgress(() => true);
       if (!estimateData?.route?.length) {
         return Alert.alert('Error', 'No swap route found');
       }
