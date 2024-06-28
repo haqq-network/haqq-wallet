@@ -38,6 +38,7 @@ export const TopTabNavigatorLarge = memo(
     showSeparators,
     activeTabIndex,
     tabHeaderStyle,
+    disabled,
     onTabPress,
   }: TopTabNavigatorLargeProps) => {
     const [tabLayout, onTabLayout] = useLayout(
@@ -78,7 +79,12 @@ export const TopTabNavigatorLarge = memo(
     });
 
     return (
-      <View style={[styles.container, containerStyle]}>
+      <View
+        style={[
+          styles.container,
+          containerStyle,
+          disabled && styles.containerDisabled,
+        ]}>
         <View style={[styles.tabsHeader, tabHeaderStyle]}>
           <Animated.View
             style={[
@@ -101,6 +107,7 @@ export const TopTabNavigatorLarge = memo(
             return (
               <React.Fragment key={`${tab.props.title}_${index}`}>
                 <TouchableOpacity
+                  disabled={disabled}
                   onLayout={onTabLayout}
                   containerStyle={styles.tab}
                   style={styles.tabTouchable}
@@ -152,6 +159,9 @@ const styles = createTheme({
   },
   container: {
     flex: 1,
+  },
+  containerDisabled: {
+    opacity: 0.5,
   },
   tabsHeader: {
     flexDirection: 'row',

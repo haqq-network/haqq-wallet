@@ -19,7 +19,7 @@ export interface TopTabNavigatorExtendedProps {
   containerStyle?: StyleProp<ViewStyle>;
   contentContainerStyle?: StyleProp<ViewStyle>;
   tabHeaderStyle?: StyleProp<ViewStyle>;
-
+  disabled?: boolean;
   onTabPress(tab: TabType, index: number): void;
 }
 
@@ -38,6 +38,7 @@ export type TopTabNavigatorProps = {
   contentContainerStyle?: StyleProp<ViewStyle>;
   tabHeaderStyle?: StyleProp<ViewStyle>;
   showSeparators?: boolean;
+  disabled?: boolean;
   onTabChange?(tabName: TabType['props']['name']): void;
 };
 
@@ -85,6 +86,7 @@ const TopTabNavigator: TopTabNavigatorComponent = ({
   contentContainerStyle,
   showSeparators,
   tabHeaderStyle,
+  disabled,
   activeTabIndex: currentIndex,
   onTabChange,
   ...props
@@ -134,6 +136,7 @@ const TopTabNavigator: TopTabNavigatorComponent = ({
           tabHeaderStyle={tabHeaderStyle}
           contentContainerStyle={contentContainerStyle}
           onTabPress={onTabPress}
+          disabled={disabled}
           {...props}
         />
       );
@@ -148,6 +151,7 @@ const TopTabNavigator: TopTabNavigatorComponent = ({
           tabHeaderStyle={tabHeaderStyle}
           contentContainerStyle={contentContainerStyle}
           onTabPress={onTabPress}
+          disabled={disabled}
           {...props}
         />
       );
