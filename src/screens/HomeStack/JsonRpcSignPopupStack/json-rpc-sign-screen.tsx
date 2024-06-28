@@ -56,6 +56,7 @@ export const JsonRpcSignScreen = memo(() => {
     chainId,
     selectedAccount,
     hideContractAttention = false,
+    saveFee = false,
   } = useTypedRoute<HomeStackParamList, HomeStackRoutes.JsonRpcSign>().params ||
   {};
 
@@ -216,8 +217,8 @@ export const JsonRpcSignScreen = memo(() => {
 
   useBackNavigationHandler(() => {
     app.emit('json-rpc-sign-reject');
-    Fee.clear();
-  }, []);
+    !saveFee && Fee.clear();
+  }, [saveFee]);
 
   if (isLoading) {
     return <Loading />;

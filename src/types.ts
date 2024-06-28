@@ -591,6 +591,7 @@ export type RootStackParamList = {
     chainId?: number;
     selectedAccount?: string;
     hideContractAttention?: boolean;
+    saveFee?: boolean;
   };
   sssNetwork: undefined;
   sssBackup: {

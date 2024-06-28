@@ -5,6 +5,7 @@ import {Balance} from '@app/services/balance';
 import {CalculatedFees, EstimationVariant} from './fee.types';
 
 // TODO: Investigate ability to create temporary store. This is will help avoid using clear function
+// FIXME: Replace it using awaitFor
 class Fee {
   private _estimationType: EstimationVariant = EstimationVariant.average;
 
