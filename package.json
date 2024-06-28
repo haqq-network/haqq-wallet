@@ -41,7 +41,7 @@
     "@evmos/transactions": "0.2.13",
     "@expo/react-native-action-sheet": "4.0.1",
     "@haqq/encryption-react-native": "0.0.4",
-    "@haqq/format-number-with-subscript-zeros": "^1.0.0",
+    "@haqq/format-number-with-subscript-zeros": "1.0.1",
     "@haqq/provider-base": "0.0.23",
     "@haqq/provider-hot-react-native": "0.0.10",
     "@haqq/provider-keystone-react-native": "0.0.7",
