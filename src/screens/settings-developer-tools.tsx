@@ -5,7 +5,15 @@ import CookieManager from '@react-native-cookies/cookies';
 import {observer} from 'mobx-react';
 import {Alert, ScrollView} from 'react-native';
 
-import {Button, ButtonVariant, Input, Spacer, Text} from '@app/components/ui';
+import {SettingsButton} from '@app/components/home-settings/settings-button';
+import {
+  Button,
+  ButtonVariant,
+  IconsName,
+  Input,
+  Spacer,
+  Text,
+} from '@app/components/ui';
 import {WebViewEventsEnum} from '@app/components/web3-browser';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
@@ -15,6 +23,7 @@ import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
 import {awaitForProvider} from '@app/helpers/await-for-provider';
 import {Whitelist} from '@app/helpers/whitelist';
 import {I18N} from '@app/i18n';
+import {Language} from '@app/models/language';
 import {Provider} from '@app/models/provider';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
@@ -22,6 +31,7 @@ import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {navigator} from '@app/navigator';
+import {SettingsStackRoutes} from '@app/route-types';
 import {message as toastMessage} from '@app/services/toast';
 import {getUserAgent} from '@app/services/version';
 import {PartialJsonRpcRequest} from '@app/types';
@@ -112,6 +122,14 @@ export const SettingsDeveloperTools = observer(() => {
         }}>
         {getUserAgent()}
       </Text>
+      <Spacer height={8} />
+
+      <SettingsButton
+        rightTitle={Language.current.toUpperCase()}
+        next={SettingsStackRoutes.SettingsLanguage}
+        icon={IconsName.language}
+        title={I18N.homeSettingsLanguage}
+      />
       <Spacer height={8} />
       <Title text="Bench32/hex converter" />
       <Input
