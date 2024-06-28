@@ -2356,10 +2356,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@haqq/format-number-with-subscript-zeros@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@haqq/format-number-with-subscript-zeros@npm:1.0.0"
-  checksum: 4eacac8d5dd691cb7f3a3789bf8e67399f1958b69e4e91582c400e45836ba27ff507baa2d8af09b56cda2525287abedac028bce7d27460b236c3fd48feb35543
+"@haqq/format-number-with-subscript-zeros@npm:1.0.1":
+  version: 1.0.1
+  resolution: "@haqq/format-number-with-subscript-zeros@npm:1.0.1"
+  checksum: 3b7b9d6cb20c3205473db71cf1d7f9fd4d2eef12ca579ac4e9d5440bc30d404ef583f01524f0380a9af3b3e4694b8cfe6ebc7371d9ab0b6da1993de1f1aa2578
   languageName: node
   linkType: hard
 
@@ -10294,7 +10294,7 @@ __metadata:
     "@evmos/transactions": 0.2.13
     "@expo/react-native-action-sheet": 4.0.1
     "@haqq/encryption-react-native": 0.0.4
-    "@haqq/format-number-with-subscript-zeros": ^1.0.0
+    "@haqq/format-number-with-subscript-zeros": 1.0.1
     "@haqq/provider-base": 0.0.23
     "@haqq/provider-hot-react-native": 0.0.10
     "@haqq/provider-keystone-react-native": 0.0.7
