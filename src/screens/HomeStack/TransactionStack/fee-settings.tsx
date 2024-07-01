@@ -39,8 +39,15 @@ export const FeeSettingsScreen = observer(() => {
     TransactionStackRoutes.FeeSettings
   >();
   const [isEstimating, setEstimating] = useState(false);
+
+  const getDefaultBalanceValue = (value: string): Balance => {
+    if (value && value !== '-') {
+      return new Balance(value);
+    }
+    return Balance.Empty;
+  };
   const amountsGasLimit = useSumAmount(
-    new Balance(Fee.gasLimitString || Balance.Empty),
+    getDefaultBalanceValue(Fee.gasLimitString),
     undefined,
     undefined,
     undefined,
@@ -49,7 +56,7 @@ export const FeeSettingsScreen = observer(() => {
     },
   );
   const amountsMaxBaseFee = useSumAmount(
-    new Balance(Fee.maxBaseFeeString || Balance.Empty),
+    getDefaultBalanceValue(Fee.maxBaseFeeString),
     undefined,
     undefined,
     undefined,
@@ -58,7 +65,7 @@ export const FeeSettingsScreen = observer(() => {
     },
   );
   const amountsMaxPriorityFee = useSumAmount(
-    new Balance(Fee.maxPriorityFeeString || Balance.Empty),
+    getDefaultBalanceValue(Fee.maxPriorityFeeString),
     undefined,
     undefined,
     undefined,
@@ -102,6 +109,9 @@ export const FeeSettingsScreen = observer(() => {
         );
 
         data && Fee.setCalculatedFees(data, updateLastSavedFee);
+        amountsGasLimit.setAmount(Fee.gasLimitString);
+        amountsMaxBaseFee.setAmount(Fee.maxBaseFeeString);
+        amountsMaxPriorityFee.setAmount(Fee.maxPriorityFeeString);
         setEstimating(false);
       }
     },
