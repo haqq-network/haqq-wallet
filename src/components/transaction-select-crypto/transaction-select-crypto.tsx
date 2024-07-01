@@ -13,9 +13,7 @@ export type Props = {
 
 export const TransactionSelectCrypto = ({tokens, onItemPress}: Props) => {
   const keyExtractor = useCallback((item: IToken) => item.id, []);
-  Logger.log('TransactionSelectCrypto', {tokens});
   const renderItem = useCallback(({item}: {item: IToken}) => {
-    Logger.log({item});
     if (!item?.id) {
       return null;
     }

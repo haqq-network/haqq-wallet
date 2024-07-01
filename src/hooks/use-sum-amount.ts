@@ -74,7 +74,6 @@ export function useSumAmount(
     amount: amountText,
     error,
     setMaxAmount(value = Balance.Empty) {
-      Logger.log('setMaxAmount', value);
       maxAmountRef.current = value;
       setMaxAmount(value);
     },
