@@ -7,6 +7,7 @@ import {Events} from '@app/events';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {VariablesDate} from '@app/models/variables-date';
 import {navigator} from '@app/navigator';
+import {SettingsStackRoutes} from '@app/route-types';
 
 /**
  * @description Check if mnemonic or sss is not backed up and show backup suggestion
@@ -23,7 +24,9 @@ export async function onAppBackup() {
   if (isFeatureEnabled(Feature.sss)) {
     const sss = await ProviderSSSReactNative.getAccounts();
     if (mnemonics.length && !sss.length) {
-      navigator.navigate('backupSssSuggestion', {accountId: mnemonics[0]});
+      navigator.navigate(SettingsStackRoutes.BackupSssSuggestion, {
+        accountId: mnemonics[0],
+      });
       return;
     }
 
