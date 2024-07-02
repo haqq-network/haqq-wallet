@@ -114,6 +114,7 @@ export const TransactionConfirmationScreen = observer(() => {
 
             navigation.navigate(TransactionStackRoutes.TransactionFinish, {
               transaction,
+              to: route.params.to,
               hash: transaction.hash,
               token: route.params.token,
               amount: token.is_erc20 ? route.params.amount : undefined,

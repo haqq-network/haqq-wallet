@@ -9,6 +9,8 @@ import {
   ButtonVariant,
   Spacer,
   Text,
+  TextPosition,
+  TextVariant,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks/use-theme-selector';
@@ -54,12 +56,16 @@ export const BackupSssSuggestion = ({
     <View style={styles.sub} testID="backup_sss_suggestion">
       <Image source={suggestionImage} style={styles.suggestionImage} />
       <Spacer height={20} />
-      <Text t7 center i18n={I18N.backupSssSuggestionTitle} />
+      <Text
+        variant={TextVariant.t7}
+        position={TextPosition.center}
+        i18n={I18N.backupSssSuggestionTitle}
+      />
       <Spacer height={5} />
       <Text
-        t14
+        variant={TextVariant.t14}
         color={Color.textBase2}
-        center
+        position={TextPosition.center}
         i18n={I18N.backupSssSuggestionDescription}
       />
       <Spacer height={20} />
