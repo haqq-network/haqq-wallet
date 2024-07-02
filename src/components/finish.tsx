@@ -9,6 +9,7 @@ import {
   PopupContainer,
   Spacer,
   Text,
+  TextVariant,
 } from '@app/components/ui';
 import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
@@ -33,15 +34,20 @@ export const Finish = ({onFinish, testID, title}: FinishProps) => {
 
   return (
     <PopupContainer testID={testID}>
-      <Spacer centered>
+      <Spacer>
         <LottieWrap
           style={styles.animation}
           source={animation}
           autoPlay={true}
           loop={false}
         />
+        <Text
+          variant={TextVariant.t4}
+          i18n={title}
+          style={styles.title}
+          testID={`${testID}_title`}
+        />
       </Spacer>
-      <Text t4 i18n={title} style={styles.title} testID={`${testID}_title`} />
       <Button
         style={styles.button}
         variant={ButtonVariant.contained}
@@ -59,7 +65,6 @@ const styles = StyleSheet.create({
     width: 380,
   },
   title: {
-    marginBottom: 76,
     textAlign: 'center',
     width: 300,
     alignSelf: 'center',
