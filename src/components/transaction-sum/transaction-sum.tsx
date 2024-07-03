@@ -145,6 +145,7 @@ export const TransactionSum = ({
           onChange={amounts.setAmount}
           onMax={onPressMax}
           testID={`${testID}_form`}
+          token={token}
         />
       </Spacer>
       {/* <Button

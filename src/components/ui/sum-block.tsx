@@ -17,6 +17,7 @@ import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {Balance} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {IToken} from '@app/types';
 
 export type SumBlockProps = {
   value: string;
@@ -26,6 +27,7 @@ export type SumBlockProps = {
   onChange: (value: string) => void;
   onMax: () => void;
   testID?: string;
+  token?: IToken;
 };
 export const SumBlock = ({
   onChange,
@@ -35,6 +37,7 @@ export const SumBlock = ({
   onMax,
   error,
   testID,
+  token,
 }: SumBlockProps) => {
   const inputSumRef = useRef<TextInput>(null);
   const dimensions = useWindowDimensions();
@@ -72,6 +75,14 @@ export const SumBlock = ({
     vibrate(HapticEffects.impactLight);
     onMax();
   }, [onMax]);
+
+  const fiatString = useMemo(() => {
+    if (token?.decimals && token?.symbol) {
+      return new Balance(Number(value), token.decimals, token.symbol).toFiat();
+    }
+
+    return new Balance(Number(value)).toFiat();
+  }, [token?.decimals, token?.symbol, value]);
 
   return (
     <View style={styles.container} testID={testID}>
@@ -120,7 +131,7 @@ export const SumBlock = ({
       {!!value && (
         <View style={styles.amount}>
           <Text variant={TextVariant.t15} color={Color.textBase2}>
-            {new Balance(Number(value)).toFiat()}
+            {fiatString}
           </Text>
         </View>
       )}
