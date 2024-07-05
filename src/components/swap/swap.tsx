@@ -194,7 +194,7 @@ export const Swap = observer(
           onPressChangeToken={onPressChangeTokenIn}
         />
 
-        <Spacer height={12} />
+        <Spacer height={24} />
 
         <SwapInput
           label={I18N.transactionDetailAmountOut}
@@ -208,7 +208,7 @@ export const Swap = observer(
           onPressChangeToken={onPressChangeTokenOut}
         />
 
-        <Spacer height={12} />
+        <Spacer height={24} />
 
         {!!estimateData && (
           <View>
@@ -285,7 +285,6 @@ export const Swap = observer(
             onPress={onPressSwap}
           />
         </First>
-        <Spacer height={50} />
 
         <SwapSettingBottomSheet
           ref={swapSettingsRef}
@@ -305,7 +304,7 @@ const styles = createTheme({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
+    paddingBottom: 10,
     marginTop: 12,
   },
   headerButtonsContainer: {
