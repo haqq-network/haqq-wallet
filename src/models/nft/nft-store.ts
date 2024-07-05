@@ -110,33 +110,39 @@ class NftStore {
 
   update(item: NftItem) {
     const itemToUpdate = this.getNftById(item.contract, item.tokenId);
-    if (!itemToUpdate) {
-      return false;
-    }
 
     const existingCollection = this.getCollectionById(item.contract);
-    const existingNftIndex =
-      existingCollection?.nfts.findIndex(
-        nft => nft.address === itemToUpdate.address,
-      ) ?? -1;
 
-    const newItem = {
-      ...itemToUpdate,
-      ...item,
-    };
+    if (!existingCollection) {
+      this.fetchNft();
+    } else {
+      const existingNftIndex =
+        existingCollection?.nfts.findIndex(
+          nft => nft.tokenId === itemToUpdate?.tokenId,
+        ) ?? -1;
 
-    const nfts =
-      existingNftIndex !== -1
-        ? (existingCollection?.nfts ?? []).splice(existingNftIndex, 1, newItem)
-        : [newItem];
+      const newItem = {
+        ...(itemToUpdate ?? {}),
+        ...item,
+      };
 
-    this.data = {
-      ...this.data,
-      [item.contract]: {
-        ...(existingCollection ?? {}),
-        nfts,
-      },
-    };
+      const nfts =
+        existingNftIndex !== -1
+          ? (existingCollection?.nfts ?? []).splice(
+              existingNftIndex,
+              1,
+              newItem,
+            )
+          : [newItem];
+
+      this.data = {
+        ...this.data,
+        [item.contract]: {
+          ...(existingCollection ?? {}),
+          nfts,
+        },
+      };
+    }
 
     return true;
   }
@@ -199,19 +205,17 @@ class NftStore {
       ? ContractType.erc721
       : ContractType.erc1155;
 
-    runInAction(() => {
-      const nft: NftItem = {
-        ...data,
-        contractType: contractType,
-        name: data.name || 'Unknown',
-        description: data.description || '-',
-        tokenId: Number(data.token_id),
-        price: undefined, // FIXME Calculate price by token
-        is_transfer_prohibinden: Boolean(contract.is_transfer_prohibinden),
-      };
+    const nft: NftItem = {
+      ...data,
+      contractType: contractType,
+      name: data.name || 'Unknown',
+      description: data.description || '-',
+      tokenId: Number(data.token_id),
+      price: undefined, // FIXME Calculate price by token
+      is_transfer_prohibinden: Boolean(contract.is_transfer_prohibinden),
+    };
 
-      this.update(nft);
-    });
+    this.update(nft);
   };
 
   private hasContractCache = (id: HaqqCosmosAddress) => {

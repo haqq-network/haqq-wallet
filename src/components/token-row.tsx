@@ -3,7 +3,7 @@ import React, {useMemo} from 'react';
 import {TouchableOpacity, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Spacer, Text} from '@app/components/ui';
+import {Spacer, Text, TextVariant} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {IToken} from '@app/types';
 
@@ -34,18 +34,23 @@ export const TokenRow = ({item, checked = false, onPress}: TokenRowProps) => {
       <Spacer width={12} />
       <View style={styles.textContainer}>
         <View style={styles.row}>
-          <Text t11 numberOfLines={1} style={styles.tokenName}>
+          <Text
+            variant={TextVariant.t11}
+            numberOfLines={1}
+            style={styles.tokenName}>
             {item?.symbol}
           </Text>
           <Spacer />
-          <Text t11>{item?.value?.toBalanceString?.('auto')}</Text>
+          <Text variant={TextVariant.t11}>
+            {item?.value?.toBalanceString?.('auto')}
+          </Text>
         </View>
         <View style={styles.row}>
-          <Text t14 color={Color.textBase2}>
+          <Text variant={TextVariant.t14} color={Color.textBase2}>
             {item?.name}
           </Text>
           <Spacer />
-          <Text t14 color={Color.textBase2}>
+          <Text variant={TextVariant.t14} color={Color.textBase2}>
             {priceInUSD}
           </Text>
         </View>

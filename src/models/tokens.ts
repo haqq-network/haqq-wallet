@@ -1,5 +1,5 @@
 import {ethers} from 'ethers';
-import {makeAutoObservable, runInAction, toJS} from 'mobx';
+import {makeAutoObservable, runInAction, toJS, when} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
 import {app} from '@app/contexts';
@@ -8,6 +8,7 @@ import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
 import {Whitelist} from '@app/helpers/whitelist';
 import {I18N, getText} from '@app/i18n';
 import {Contracts} from '@app/models/contracts';
+import {Socket} from '@app/models/socket';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {Indexer, IndexerUpdatesResponse} from '@app/services/indexer';
@@ -20,6 +21,7 @@ import {
   IndexerTokensData,
   MobXStore,
 } from '@app/types';
+import {RPCMessage} from '@app/types/rpc';
 import {ERC20_ABI} from '@app/variables/abi';
 import {CURRENCY_NAME, WEI, WEI_PRECISION} from '@app/variables/common';
 
@@ -91,6 +93,11 @@ class TokensStore implements MobXStore<IToken> {
         // Logger.log('TokensStore data', JSON.stringify(this.data, null, 2));
       });
     }
+
+    when(
+      () => Socket.lastMessage.type === 'token',
+      () => this.onMessage(Socket.lastMessage),
+    );
   }
 
   get isLoading() {
@@ -201,7 +208,6 @@ class TokensStore implements MobXStore<IToken> {
     const updates = await Indexer.instance.updates(accounts, this.lastUpdate);
     let result = await this.parseIndexerTokens(updates);
     result = await getHardcodedTokens(result, fetchTokensFromRPC);
-    // this.lastUpdate = new Date();
     this.recalculateCommulativeSum(result);
 
     runInAction(() => {
@@ -355,6 +361,12 @@ class TokensStore implements MobXStore<IToken> {
     const walletsTokens = Object.values(tokens).flat(2);
     this.removeAll();
     walletsTokens.forEach(token => this.create(token.id, token));
+  };
+
+  onMessage = (message: RPCMessage) => {
+    if (message.type !== 'token') {
+      return;
+    }
   };
 }
 

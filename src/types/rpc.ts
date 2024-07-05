@@ -1,6 +1,6 @@
 import {NftItemIndexer} from '@app/models/nft';
 import {IndexerUpdatesResponse} from '@app/services/indexer';
-import {IndexerTransactionResponse} from '@app/types';
+import {IndexerToken, IndexerTransactionResponse} from '@app/types';
 
 export interface RPCMessageGeneric<Type extends string = '', Data = {}> {
   type: Type;
@@ -11,6 +11,7 @@ export type RPCMessage =
   | RPCBalanceMessage
   | RPCTransactionsMessage
   | RPCNftMessage
+  | RPCTokenMessage
   | RPCEmptyMessage;
 
 export interface RPCObserver {
@@ -39,3 +40,7 @@ export type RPCTransactionsMessage = RPCMessageGeneric<
 // NFTs
 type RPCNftData = NftItemIndexer;
 export type RPCNftMessage = RPCMessageGeneric<'nft', RPCNftData>;
+
+// Tokens
+type RPCTokenData = IndexerToken;
+export type RPCTokenMessage = RPCMessageGeneric<'token', RPCTokenData>;
