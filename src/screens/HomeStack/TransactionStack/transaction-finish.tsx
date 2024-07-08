@@ -27,16 +27,17 @@ export const TransactionFinishScreen = observer(() => {
     goBack();
     return true;
   }, [goBack]);
-  const {hash, transaction, token, amount, hideContact} = useTypedRoute<
+  const {hash, transaction, to, token, amount, hideContact} = useTypedRoute<
     TransactionStackParamList,
     TransactionStackRoutes.TransactionFinish
   >().params;
-  const contact = Contact.getById(transaction?.to ?? '');
-
-  const short = useMemo(
-    () => shortAddress(transaction?.to ?? ''),
-    [transaction?.to],
+  const toAddress = useMemo(
+    () => to ?? transaction?.to ?? '',
+    [to, transaction?.to],
   );
+  const contact = Contact.getById(toAddress);
+
+  const short = useMemo(() => shortAddress(toAddress), [toAddress]);
 
   const onSubmit = useCallback(async () => {
     await awaitForEventDone(Events.onAppReviewRequest);
@@ -45,7 +46,7 @@ export const TransactionFinishScreen = observer(() => {
   }, [getParent]);
 
   const onPressContact = useCallback(() => {
-    if (transaction?.to) {
+    if (toAddress) {
       prompt(
         getText(
           contact
@@ -53,7 +54,7 @@ export const TransactionFinishScreen = observer(() => {
             : I18N.transactionFinishAddContact,
         ),
         getText(I18N.transactionFinishContactMessage, {
-          address: transaction?.to,
+          address: toAddress,
         }),
         value => {
           if (contact) {
@@ -62,7 +63,7 @@ export const TransactionFinishScreen = observer(() => {
             });
             sendNotification(I18N.transactionFinishContactUpdated);
           } else {
-            Contact.create(transaction.to!, {
+            Contact.create(toAddress, {
               name: value,
               type: ContactType.address,
               visible: true,
@@ -76,7 +77,7 @@ export const TransactionFinishScreen = observer(() => {
         },
       );
     }
-  }, [transaction?.to, contact]);
+  }, [toAddress, contact]);
 
   useEffect(() => {
     vibrate(HapticEffects.success);

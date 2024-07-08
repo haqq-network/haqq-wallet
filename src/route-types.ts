@@ -548,6 +548,7 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
   };
   [TransactionStackRoutes.TransactionFinish]: {
     transaction: TransactionResponse;
+    to?: string;
     hash: string;
     hideContact?: boolean;
     token: IToken;
