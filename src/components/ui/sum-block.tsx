@@ -77,7 +77,7 @@ export const SumBlock = ({
   }, [onMax]);
 
   const fiatString = useMemo(() => {
-    if (token?.decimals && token?.symbol) {
+    if (token?.decimals && token?.symbol && token.symbol !== 'ISLM') {
       return new Balance(Number(value), token.decimals, token.symbol).toFiat();
     }
 
