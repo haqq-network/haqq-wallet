@@ -18,6 +18,7 @@ import {
   HaqqCosmosAddress,
   IContract,
   IToken,
+  IndexerToken,
   IndexerTokensData,
   MobXStore,
 } from '@app/types';
@@ -260,6 +261,17 @@ class TokensStore implements MobXStore<IToken> {
     };
   };
 
+  private getTokenContract = async (
+    token: IndexerToken,
+  ): Promise<IContract> => {
+    try {
+      const contract = await Whitelist.verifyAddress(token.contract);
+      return (contract || {}) as IContract;
+    } catch (e) {
+      return {} as IContract;
+    }
+  };
+
   private parseIndexerTokens = async (
     data: IndexerUpdatesResponse,
   ): Promise<IndexerTokensData> => {
@@ -341,6 +353,38 @@ class TokensStore implements MobXStore<IToken> {
     }, {});
   };
 
+  private parseIToken = async (token: IndexerToken) => {
+    const contract = await this.getTokenContract(token);
+    this.saveContract(contract);
+
+    const contractFromCache = this.getContract(token.contract);
+
+    const result: IToken = {
+      id: contractFromCache.id,
+      contract_created_at: contractFromCache.created_at,
+      contract_updated_at: contractFromCache.updated_at,
+      value: new Balance(
+        token.value,
+        contractFromCache.decimals || WEI_PRECISION,
+        contractFromCache.symbol || CURRENCY_NAME,
+      ),
+      decimals: contractFromCache.decimals,
+      is_erc20: contractFromCache.is_erc20,
+      is_erc721: contractFromCache.is_erc721,
+      is_erc1155: contractFromCache.is_erc1155,
+      is_in_white_list: contractFromCache.is_in_white_list,
+      name: contractFromCache.name,
+      symbol: contractFromCache.symbol,
+      created_at: token.created_at,
+      updated_at: token.updated_at,
+      image: contractFromCache.icon
+        ? {uri: contractFromCache.icon}
+        : require('@assets/images/empty-icon.png'),
+    };
+
+    return result;
+  };
+
   private hasContractCache = (id: HaqqCosmosAddress) => {
     return !!Contracts.getById(id);
   };
@@ -363,10 +407,13 @@ class TokensStore implements MobXStore<IToken> {
     walletsTokens.forEach(token => this.create(token.id, token));
   };
 
-  onMessage = (message: RPCMessage) => {
+  onMessage = async (message: RPCMessage) => {
     if (message.type !== 'token') {
       return;
     }
+
+    const token = await this.parseIToken(message.data);
+    this.update(token.id, token);
   };
 }
 
