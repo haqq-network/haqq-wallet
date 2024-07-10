@@ -267,6 +267,7 @@ export enum I18N {
   settingsAccountDetailViewRecoveryPhraseTitle = 'settingsAccountDetailViewRecoveryPhraseTitle',
   settingsAccountDetailViewRecoveryPhraseSubtitle = 'settingsAccountDetailViewRecoveryPhraseSubtitle',
   settingsViewRecoveryPhraseTitle = 'settingsViewRecoveryPhraseTitle',
+  settingsViewRecoveryPhraseSubtitle = 'settingsViewRecoveryPhraseSubtitle',
   stakingValidators = 'stakingValidators',
   stakingValidatorsRowPower = 'stakingValidatorsRowPower',
   stakingValidatorsRowStaked = 'stakingValidatorsRowStaked',
