@@ -133,8 +133,8 @@ const styles = createTheme({
     justifyContent: 'space-around',
   },
   shield: {
-    height: 200,
-    width: 200,
+    height: 400,
+    width: 400,
   },
   headerContainer: {
     alignItems: 'center',
