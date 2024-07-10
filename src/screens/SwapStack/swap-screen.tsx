@@ -138,11 +138,6 @@ export const SwapScreen = observer(() => {
       ),
     [currentRoute, poolsData, estimateData],
   );
-  // logger.log('providerFee', {providerFee}, estimateData?.fee);
-  // logger.log('tokenIn', tokenIn);
-  // logger.log('tokenOut', tokenOut);
-  // logger.log('currentRoute', currentRoute);
-  // logger.log('poolsData.contracts', poolsData.contracts);
   const amountsOut = useSumAmount(
     undefined,
     undefined,
@@ -701,17 +696,11 @@ export const SwapScreen = observer(() => {
         minReceivedAmount?.toHex() || 0,
       ];
 
-      logger.log({tokenIn});
-      logger.log('swapParams', swapParams, {
-        tokenInIsISLM,
-      });
-
       const encodedTxData = swapRouter.interface.encodeFunctionData(
         'exactInput',
         [swapParams],
       ) as string;
 
-      Logger.log('encodedTxData', encodedTxData);
       const rawTx = await awaitForJsonRpcSign({
         metadata: HAQQ_METADATA,
         selectedAccount: currentWallet.address,

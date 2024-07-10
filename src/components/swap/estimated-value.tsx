@@ -45,5 +45,6 @@ const styles = createTheme({
   estimatedValueContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginBottom: 8,
   },
 });
