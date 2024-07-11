@@ -11,6 +11,7 @@ import {
   Inline,
   Spacer,
   Text,
+  TextVariant,
 } from '@app/components/ui';
 import {CopyMenu} from '@app/components/ui/copy-menu';
 import {createTheme} from '@app/helpers';
@@ -66,12 +67,15 @@ export const AccountInfoHeader = ({
           colorPattern={wallet.colorPattern}
         />
         <View style={styles.headerContent}>
-          <Text t3 children={total.toFiat({useDefaultCurrency: true})} />
+          <Text
+            variant={TextVariant.t3}
+            children={total.toFiat({useDefaultCurrency: true})}
+          />
           <CopyMenu
             value={wallet.address}
             style={styles.copyButton}
             withSettings>
-            <Text t14 color={Color.textBase2}>
+            <Text variant={TextVariant.t14} color={Color.textBase2}>
               {formattedAddress}
             </Text>
             <Icon
@@ -98,11 +102,11 @@ export const AccountInfoHeader = ({
       <Inline gap={12} style={styles.iconButtons}>
         <IconButton onPress={onSend} style={styles.iconButton}>
           <Icon i24 name="arrow_send" color={Color.textBase1} />
-          <Text t14 i18n={I18N.walletCardSend} />
+          <Text variant={TextVariant.t14} i18n={I18N.walletCardSend} />
         </IconButton>
         <IconButton onPress={onReceive} style={styles.iconButton}>
           <Icon i24 name="arrow_receive" color={Color.textBase1} />
-          <Text t14 i18n={I18N.modalDetailsQRReceive} />
+          <Text variant={TextVariant.t14} i18n={I18N.modalDetailsQRReceive} />
         </IconButton>
       </Inline>
       <Spacer height={24} />

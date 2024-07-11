@@ -231,9 +231,7 @@ export const SettingsAccountDetail = ({
             onPress={onViewingRecoveryPhrase}>
             <DataContent
               titleI18n={I18N.settingsAccountDetailViewRecoveryPhraseTitle}
-              subtitleI18n={
-                I18N.settingsAccountDetailViewRecoveryPhraseSubtitle
-              }
+              subtitleI18n={I18N.settingsViewRecoveryPhraseSubtitle}
             />
           </MenuNavigationButton>
         )}

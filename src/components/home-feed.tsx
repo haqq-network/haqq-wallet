@@ -86,7 +86,7 @@ export const HomeFeed = observer(() => {
 });
 
 const styles = createTheme({
-  contentContainerStyle: {flex: 0, paddingBottom: 20},
+  contentContainerStyle: {flex: 0, paddingBottom: 20, paddingTop: 8},
   container: {
     flex: 1,
   },

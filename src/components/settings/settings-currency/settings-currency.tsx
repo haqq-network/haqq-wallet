@@ -9,6 +9,7 @@ import {
   Icon,
   IconButton,
   IconsName,
+  Spacer,
   Text,
   TextPosition,
   TextVariant,
@@ -97,6 +98,7 @@ export const SettingsCurrency = observer(() => {
         cancelEnabled={false}
         autoFocus={false}
       />
+      <Spacer height={10} />
       <FlatList
         showsVerticalScrollIndicator={false}
         data={availableCurrencies}

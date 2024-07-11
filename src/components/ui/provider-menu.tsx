@@ -72,7 +72,7 @@ export const ProviderMenu = memo(() => {
         optionsContainerStyle={styles.optionsContainer}
         customStyles={optionCustomStyles}>
         {providers.map((provider, index) => {
-          const isLast = index === providers.length;
+          const isLast = index === providers.length - 1;
           const isSelected = currentProvider?.id === provider.id;
           return (
             <View key={provider.id}>
@@ -86,7 +86,7 @@ export const ProviderMenu = memo(() => {
                     color={Color.textBase1}
                   />
                   <Text
-                    variant={TextVariant.t11}
+                    variant={TextVariant.t14}
                     children={`${provider.name} (${provider.ethChainId})`}
                     color={Color.textBase2}
                   />
