@@ -1,5 +1,5 @@
 import {ethers} from 'ethers';
-import {makeAutoObservable, runInAction, toJS} from 'mobx';
+import {makeAutoObservable, runInAction, toJS, when} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
 import {app} from '@app/contexts';
@@ -8,6 +8,7 @@ import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
 import {Whitelist} from '@app/helpers/whitelist';
 import {I18N, getText} from '@app/i18n';
 import {Contracts} from '@app/models/contracts';
+import {Socket} from '@app/models/socket';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {Indexer, IndexerUpdatesResponse} from '@app/services/indexer';
@@ -17,9 +18,11 @@ import {
   HaqqCosmosAddress,
   IContract,
   IToken,
+  IndexerToken,
   IndexerTokensData,
   MobXStore,
 } from '@app/types';
+import {RPCMessage} from '@app/types/rpc';
 import {ERC20_ABI} from '@app/variables/abi';
 import {CURRENCY_NAME, WEI, WEI_PRECISION} from '@app/variables/common';
 
@@ -91,6 +94,11 @@ class TokensStore implements MobXStore<IToken> {
         // Logger.log('TokensStore data', JSON.stringify(this.data, null, 2));
       });
     }
+
+    when(
+      () => Socket.lastMessage.type === 'token',
+      () => this.onMessage(Socket.lastMessage),
+    );
   }
 
   get isLoading() {
@@ -201,7 +209,6 @@ class TokensStore implements MobXStore<IToken> {
     const updates = await Indexer.instance.updates(accounts, this.lastUpdate);
     let result = await this.parseIndexerTokens(updates);
     result = await getHardcodedTokens(result, fetchTokensFromRPC);
-    // this.lastUpdate = new Date();
     this.recalculateCommulativeSum(result);
 
     runInAction(() => {
@@ -252,6 +259,17 @@ class TokensStore implements MobXStore<IToken> {
       updated_at: '',
       icon: require('@assets/images/islm_icon.png'),
     };
+  };
+
+  private getTokenContract = async (
+    token: IndexerToken,
+  ): Promise<IContract> => {
+    try {
+      const contract = await Whitelist.verifyAddress(token.contract);
+      return (contract || {}) as IContract;
+    } catch (e) {
+      return {} as IContract;
+    }
   };
 
   private parseIndexerTokens = async (
@@ -335,6 +353,38 @@ class TokensStore implements MobXStore<IToken> {
     }, {});
   };
 
+  private parseIToken = async (token: IndexerToken) => {
+    const contract = await this.getTokenContract(token);
+    this.saveContract(contract);
+
+    const contractFromCache = this.getContract(token.contract);
+
+    const result: IToken = {
+      id: contractFromCache.id,
+      contract_created_at: contractFromCache.created_at,
+      contract_updated_at: contractFromCache.updated_at,
+      value: new Balance(
+        token.value,
+        contractFromCache.decimals || WEI_PRECISION,
+        contractFromCache.symbol || CURRENCY_NAME,
+      ),
+      decimals: contractFromCache.decimals,
+      is_erc20: contractFromCache.is_erc20,
+      is_erc721: contractFromCache.is_erc721,
+      is_erc1155: contractFromCache.is_erc1155,
+      is_in_white_list: contractFromCache.is_in_white_list,
+      name: contractFromCache.name,
+      symbol: contractFromCache.symbol,
+      created_at: token.created_at,
+      updated_at: token.updated_at,
+      image: contractFromCache.icon
+        ? {uri: contractFromCache.icon}
+        : require('@assets/images/empty-icon.png'),
+    };
+
+    return result;
+  };
+
   private hasContractCache = (id: HaqqCosmosAddress) => {
     return !!Contracts.getById(id);
   };
@@ -355,6 +405,15 @@ class TokensStore implements MobXStore<IToken> {
     const walletsTokens = Object.values(tokens).flat(2);
     this.removeAll();
     walletsTokens.forEach(token => this.create(token.id, token));
+  };
+
+  onMessage = async (message: RPCMessage) => {
+    if (message.type !== 'token') {
+      return;
+    }
+
+    const token = await this.parseIToken(message.data);
+    this.update(token.id, token);
   };
 }
 

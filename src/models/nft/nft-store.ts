@@ -1,4 +1,4 @@
-import {makeAutoObservable, runInAction} from 'mobx';
+import {makeAutoObservable, runInAction, when} from 'mobx';
 
 import {AddressUtils} from '@app/helpers/address-utils';
 import {Whitelist} from '@app/helpers/whitelist';
@@ -8,21 +8,29 @@ import {
   NftCollection,
   NftCollectionIndexer,
   NftItem,
+  NftItemIndexer,
 } from '@app/models/nft';
+import {Socket} from '@app/models/socket';
 import {Wallet} from '@app/models/wallet';
 import {Indexer} from '@app/services/indexer';
 import {HaqqCosmosAddress, IContract} from '@app/types';
+import {RPCMessage} from '@app/types/rpc';
 
 class NftStore {
   data: Record<HaqqCosmosAddress, NftCollection> = {};
 
   constructor() {
     makeAutoObservable(this);
+
+    when(
+      () => Socket.lastMessage.type === 'nft',
+      () => this.onMessage(Socket.lastMessage),
+    );
   }
 
   create(item: NftItem) {
     const existingCollection = this.getCollectionById(item.contract);
-    const existingNft = this.getNftById(item.contract);
+    const existingNft = this.getNftById(item.contract, item.tokenId);
 
     if (existingNft) {
       this.update(item);
@@ -61,12 +69,15 @@ class NftStore {
     }, [] as NftCollection[]);
   }
 
-  getNftById(nftAddress: HaqqCosmosAddress): NftItem | null {
+  getNftById(
+    nftContractAddress: HaqqCosmosAddress,
+    nftId: number,
+  ): NftItem | null {
     let nftItem: NftItem | null = null;
 
     for (const [_, collection] of Object.entries(this.data)) {
       for (const nft of collection.nfts) {
-        if (nft.address === nftAddress) {
+        if (nft.contract === nftContractAddress && nft.tokenId === nftId) {
           nftItem = nft;
           break;
         }
@@ -97,35 +108,42 @@ class NftStore {
     );
   }
 
-  update(item: NftItem, existingItem?: NftItem | null) {
-    const itemToUpdate = existingItem ?? this.getNftById(item.address);
-    if (!itemToUpdate) {
-      return false;
-    }
+  update(item: NftItem) {
+    const itemToUpdate = this.getNftById(item.contract, item.tokenId);
 
     const existingCollection = this.getCollectionById(item.contract);
-    const existingNftIndex =
-      existingCollection?.nfts.findIndex(
-        nft => nft.address === itemToUpdate.address,
-      ) ?? -1;
 
-    const newItem = {
-      ...itemToUpdate,
-      ...item,
-    };
+    if (!existingCollection) {
+      this.fetchNft();
+    } else {
+      const existingNftIndex =
+        existingCollection?.nfts.findIndex(
+          nft => nft.tokenId === itemToUpdate?.tokenId,
+        ) ?? -1;
 
-    const nfts =
-      existingNftIndex !== -1
-        ? (existingCollection?.nfts ?? []).splice(existingNftIndex, 1, newItem)
-        : [];
+      const newItem = {
+        ...(itemToUpdate ?? {}),
+        ...item,
+      };
 
-    this.data = {
-      ...this.data,
-      [item.contract]: {
-        ...(existingCollection ?? {}),
-        nfts,
-      },
-    };
+      const nfts =
+        existingNftIndex !== -1
+          ? (existingCollection?.nfts ?? []).splice(
+              existingNftIndex,
+              1,
+              newItem,
+            )
+          : [newItem];
+
+      this.data = {
+        ...this.data,
+        [item.contract]: {
+          ...(existingCollection ?? {}),
+          nfts,
+        },
+      };
+    }
+
     return true;
   }
 
@@ -135,11 +153,11 @@ class NftStore {
     const nfts = await Indexer.instance.getNfts(accounts);
 
     runInAction(() => {
-      this.parseIndexerNft(nfts);
+      this.parseIndexerNfts(nfts);
     });
   };
 
-  private parseIndexerNft = (data: NftCollectionIndexer[]): void => {
+  private parseIndexerNfts = (data: NftCollectionIndexer[]): void => {
     this.data = {};
 
     runInAction(() => {
@@ -177,6 +195,29 @@ class NftStore {
     });
   };
 
+  private parseIndexerNft = async (data: NftItemIndexer): Promise<void> => {
+    const contractAddress = AddressUtils.toHaqq(data.contract);
+    const contract = (this.getContract(contractAddress) ||
+      (await Whitelist.verifyAddress(contractAddress)) ||
+      {}) as IContract;
+
+    const contractType = contract.is_erc721
+      ? ContractType.erc721
+      : ContractType.erc1155;
+
+    const nft: NftItem = {
+      ...data,
+      contractType: contractType,
+      name: data.name || 'Unknown',
+      description: data.description || '-',
+      tokenId: Number(data.token_id),
+      price: undefined, // FIXME Calculate price by token
+      is_transfer_prohibinden: Boolean(contract.is_transfer_prohibinden),
+    };
+
+    this.update(nft);
+  };
+
   private hasContractCache = (id: HaqqCosmosAddress) => {
     return !!Contracts.getById(id);
   };
@@ -191,6 +232,14 @@ class NftStore {
 
   private getContract = (id: HaqqCosmosAddress) => {
     return Contracts.getById(id);
+  };
+
+  onMessage = (message: RPCMessage) => {
+    if (message.type !== 'nft') {
+      return;
+    }
+
+    this.parseIndexerNft(message.data);
   };
 }
 
