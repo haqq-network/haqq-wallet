@@ -17,7 +17,7 @@ import {I18N} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
 import {NumericKeyboard} from './pin/numeric-keyboard';
-import {ErrorText, Spacer, Text} from './ui';
+import {ErrorText, Spacer, Text, TextPosition, TextVariant} from './ui';
 
 export type PinProps = {
   onPin: (pin: string) => void;
@@ -120,10 +120,18 @@ export const Pin = forwardRef(
 
     return (
       <View style={[page.container, {paddingBottom: insets.bottom}]}>
-        <Text t4 i18n={title} i18params={i18params} style={page.title} />
+        <Text
+          variant={TextVariant.t4}
+          i18n={title}
+          i18params={i18params}
+          style={page.title}
+        />
         {error && <ErrorText e0>{error}</ErrorText>}
         {subtitle && !error && (
-          <Text t11 color={Color.textBase2} center>
+          <Text
+            variant={TextVariant.t11}
+            color={Color.textBase2}
+            position={TextPosition.center}>
             {subtitle}
           </Text>
         )}

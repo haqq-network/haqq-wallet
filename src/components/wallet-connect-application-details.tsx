@@ -11,6 +11,7 @@ import {
   DataView,
   Spacer,
   Text,
+  TextVariant,
 } from '@app/components/ui';
 import {WalletRow, WalletRowTypes} from '@app/components/wallet-row';
 import {createTheme} from '@app/helpers';
@@ -67,16 +68,19 @@ export const WalletConnectApplicationDetails = ({
         <Image style={styles.image} source={imageSource} />
 
         <Spacer height={16} />
-        <Text t5 children={metadata?.name} />
+        <Text variant={TextVariant.t5}>{metadata?.name}</Text>
 
         <Spacer height={4} />
 
-        <Text t13 color={Color.textGreen1} children={url} />
+        <Text variant={TextVariant.t13} color={Color.textGreen1}>
+          {url}
+        </Text>
 
         <Spacer height={36} />
 
         <WalletRow
           hideArrow
+          disabled
           type={WalletRowTypes.variant2}
           item={linkedWallet!}
         />
@@ -85,13 +89,13 @@ export const WalletConnectApplicationDetails = ({
 
         <View style={styles.info}>
           <DataView i18n={I18N.walletConnectApprovalConnected}>
-            <Text t11 color={Color.textBase1}>
-              <Text children={connectedAt} />
+            <Text variant={TextVariant.t11} color={Color.textBase1}>
+              <Text>{connectedAt}</Text>
             </Text>
           </DataView>
           <DataView i18n={I18N.walletConnectApprovalExpired}>
-            <Text t11 color={Color.textBase1}>
-              <Text children={expiredAt} />
+            <Text variant={TextVariant.t11} color={Color.textBase1}>
+              <Text>{expiredAt}</Text>
             </Text>
           </DataView>
         </View>

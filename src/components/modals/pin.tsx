@@ -5,7 +5,7 @@ import {Keyboard, TouchableOpacity, View} from 'react-native';
 import {Color} from '@app/colors';
 import {Pin, PinInterface} from '@app/components/pin/pin';
 import {RestorePassword} from '@app/components/restore-password';
-import {Text} from '@app/components/ui';
+import {Text, TextPosition, TextVariant} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {useTheme} from '@app/hooks';
@@ -70,8 +70,8 @@ export const PinModal = () => {
             style={page.additionButton}
             onPress={() => setShowRestore(true)}>
             <Text
-              t15
-              center
+              variant={TextVariant.t15}
+              position={TextPosition.center}
               color={Color.textBase2}
               i18n={I18N.modalPinForgotCode}
               style={page.additionButtonText}

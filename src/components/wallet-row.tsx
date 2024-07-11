@@ -24,6 +24,7 @@ export type WalletRowProps = {
   onPress?: (address: string) => void;
   hideArrow?: boolean;
   checked?: boolean;
+  disabled?: boolean;
   type?: WalletRowTypes;
 };
 
