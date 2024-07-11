@@ -3,7 +3,12 @@ import React, {useCallback, useMemo} from 'react';
 import {StyleSheet, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {CardSmall, MenuNavigationButton, Text} from '@app/components/ui';
+import {
+  CardSmall,
+  MenuNavigationButton,
+  Text,
+  TextVariant,
+} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {splitAddress} from '@app/utils';
@@ -19,6 +24,7 @@ export const WalletRowVariant2 = ({
   onPress,
   hideArrow = false,
   checked = false,
+  disabled,
   style,
 }: Omit<WalletRowProps, 'type'>) => {
   const containerStyle = useMemo(
@@ -56,8 +62,14 @@ export const WalletRowVariant2 = ({
         colorPattern={item.colorPattern}
       />
       <View style={styles.textContainer}>
-        <Text t14 color={Color.textBase2} i18n={I18N.walletRowVariant2Title} />
-        <Text t11 color={Color.textBase1}>
+        <Text
+          variant={TextVariant.t14}
+          color={Color.textBase2}
+          i18n={I18N.walletRowVariant2Title}
+        />
+        <Text
+          variant={TextVariant.t11}
+          color={disabled ? Color.textBase2 : Color.textBase1}>
           {item.name}
           {STRINGS.NBSP}
           {addressString}
