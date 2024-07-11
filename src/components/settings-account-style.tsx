@@ -17,6 +17,7 @@ import {
   SegmentedControl,
   Spacer,
   Text,
+  TextVariant,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
@@ -74,9 +75,9 @@ export const SettingsAccountStyle = ({
   wallet,
 }: SettingsAccountStyleProps) => {
   const opacity = useSharedValue(1);
-  const heightCard = 192;
+  const heightCard = 216;
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const cardWidth = useWindowDimensions().width - 72;
+  const cardWidth = useWindowDimensions().width - 40;
   const [loading, setLoading] = useState<boolean>(false);
   const [isStyleChanged, setIsStyleChanged] = useState(false);
 
@@ -192,7 +193,7 @@ export const SettingsAccountStyle = ({
         />
       </Animated.View>
       <Text
-        t10
+        variant={TextVariant.t10}
         i18n={I18N.settingsAccountStyleChoseColor}
         style={styles.title}
       />
@@ -203,8 +204,8 @@ export const SettingsAccountStyle = ({
         style={styles.margin}
       />
       <Text
-        t10
-        i18n={I18N.settingsAccountStyleChoseColor}
+        variant={TextVariant.t10}
+        i18n={I18N.settingsAccountStyleChosePattern}
         style={styles.title}
       />
       <SegmentedControl
@@ -239,10 +240,10 @@ export const SettingsAccountStyle = ({
 
 const styles = createTheme({
   container: {
+    paddingTop: 20,
     paddingHorizontal: 20,
   },
   card: {
-    marginHorizontal: 16,
     marginBottom: 30,
   },
   title: {
