@@ -11,7 +11,7 @@ import {View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
-import {Spacer, Text} from '@app/components/ui';
+import {Spacer, Text, TextPosition, TextVariant} from '@app/components/ui';
 import {createTheme, moderateVerticalScale} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {HapticEffects, vibrate} from '@app/services/haptic';
@@ -99,16 +99,19 @@ export const Pin = forwardRef(
 
     return (
       <View style={[styles.container, {paddingBottom: insets.bottom}]}>
-        <Text t4 style={styles.title}>
+        <Text variant={TextVariant.t4} style={styles.title}>
           {title}
         </Text>
         {error && (
-          <Text t10 color={Color.textRed1}>
+          <Text variant={TextVariant.t10} color={Color.textRed1}>
             {error}
           </Text>
         )}
         {subtitle && !error && (
-          <Text t11 color={Color.textBase2} center>
+          <Text
+            variant={TextVariant.t11}
+            color={Color.textBase2}
+            position={TextPosition.center}>
             {subtitle}
           </Text>
         )}
