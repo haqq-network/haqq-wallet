@@ -12,6 +12,8 @@ import {
   PopupContainer,
   Spacer,
   Text,
+  TextPosition,
+  TextVariant,
 } from '@app/components/ui';
 import {useThemeSelector} from '@app/hooks';
 import {I18N} from '@app/i18n';
@@ -32,14 +34,18 @@ export const SssMigrateAgreement = ({onDone}: SssMigrateAgreementProps) => {
         <LottieWrap style={page.animation} source={animation} autoPlay loop />
       </Spacer>
       <View style={page.content}>
-        <Text center t4 i18n={I18N.sssMigrateAgrementTitle} />
+        <Text
+          position={TextPosition.center}
+          variant={TextVariant.t4}
+          i18n={I18N.sssMigrateAgrementTitle}
+        />
         <Spacer height={20} />
         <InfoBlock
           icon={<Icon name="warning" color={Color.textYellow1} />}
           warning
           i18n={I18N.sssMigrateAgrementWarning1}
         />
-        <Spacer height={20} />
+        <Spacer height={10} />
         <InfoBlock
           icon={<Icon name="warning" color={Color.textYellow1} />}
           warning
