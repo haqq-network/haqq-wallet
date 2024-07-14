@@ -1336,9 +1336,9 @@ export type SendTransactionError = {
 
 export type ContractNameMap = Record<string, {name: string; symbol: string}>;
 
-export type HaqqCosmosAddress = `haqq${string}` & string;
-export type HaqqEthereumAddress = `0x${string}` & string;
-export type HexNumber = `0x${string}` & string;
+export type HaqqCosmosAddress = `haqq${string}`;
+export type HaqqEthereumAddress = `0x${string}`;
+export type HexNumber = `0x${string}`;
 
 export type IndexerBalance = Record<HaqqCosmosAddress, HexNumber>;
 export type IndexerToken = {

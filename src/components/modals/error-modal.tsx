@@ -9,8 +9,12 @@ import {
   ButtonSize,
   ButtonVariant,
   Icon,
+  IconButton,
+  IconsName,
   Spacer,
   Text,
+  TextPosition,
+  TextVariant,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {HapticEffects, vibrate} from '@app/services/haptic';
@@ -31,13 +35,19 @@ export const ErrorModal = ({
     <BottomPopupContainer>
       {onClosePopup => (
         <View style={page.modalView}>
-          <Text t5 center>
+          <View style={page.header}>
+            <IconButton onPress={() => onClosePopup(onClose)}>
+              <Icon name={IconsName.close_circle} color={Color.textBase2} i20 />
+            </IconButton>
+          </View>
+          <Text variant={TextVariant.t5} position={TextPosition.center}>
             {title}
           </Text>
+
           {description && (
             <>
               <Spacer height={8} />
-              <Text t14 center>
+              <Text variant={TextVariant.t14} position={TextPosition.center}>
                 {description}
               </Text>
             </>
@@ -71,6 +81,13 @@ const page = createTheme({
     marginHorizontal: 16,
     marginBottom: 40,
     padding: 24,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignContent: 'center',
+    width: '100%',
+    height: 0,
   },
   button: {
     width: '100%',
