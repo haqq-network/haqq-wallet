@@ -100,6 +100,7 @@ JsonRpcProvider.prototype.send = async function (method, params) {
     type: 'EVM',
     network: app.provider.name,
     chainId: `${app.provider.ethChainId}`,
+    address: params.from ?? 'unknown',
   };
 
   try {

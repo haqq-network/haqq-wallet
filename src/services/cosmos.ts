@@ -123,15 +123,15 @@ export class Cosmos {
     return await getHttpResponse<T>(resp);
   }
 
-  async postQuery<T>(path: string, data: string): Promise<T> {
+  async postQuery<T>(path: string, data: string, account?: Sender): Promise<T> {
     const params = {
       type: 'cosmos',
       network: app.provider.name,
       chainId: `${app.provider.ethChainId}`,
+      address: account?.accountAddress ?? 'unknown',
     };
     try {
       EventTracker.instance.trackEvent(MarketingEvents.sendTxStart, params);
-      Logger.log('cosmos postQuery', path, {data});
       const resp = await fetch(this.getPath(path), {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -229,6 +229,7 @@ export class Cosmos {
     return this.postQuery(
       '/cosmos/tx/v1beta1/simulate',
       this.generatePostSimulate(message, account),
+      account,
     );
   }
 
