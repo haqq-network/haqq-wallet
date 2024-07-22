@@ -633,6 +633,12 @@ export type RootStackParamList = {
     linkEvent: MarketingEvents;
     scrollEvent: MarketingEvents;
   };
+  feeSettings: {
+    from: string;
+    to: string;
+    amount?: Balance;
+    data?: string;
+  };
 };
 
 export type StackPresentationTypes =

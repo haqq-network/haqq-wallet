@@ -587,7 +587,7 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
     from: string;
     to: string;
   };
-  [TransactionStackRoutes.FeeSettings]: {
+  [TransactionStackRoutes.FeeSettings]: Eventable & {
     from: string;
     to: string;
     amount?: Balance;
