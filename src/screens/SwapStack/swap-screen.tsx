@@ -716,7 +716,6 @@ export const SwapScreen = observer(() => {
             },
           ],
         },
-        saveFee: true,
       });
 
       const provider = await getRpcProvider(app.provider);
@@ -850,7 +849,6 @@ export const SwapScreen = observer(() => {
             },
           ],
         },
-        saveFee: true,
       });
 
       const txHandler = await provider.sendTransaction(rawTx);
@@ -922,7 +920,6 @@ export const SwapScreen = observer(() => {
             },
           ],
         },
-        saveFee: true,
       });
 
       const txHandler = await provider.sendTransaction(rawTx);

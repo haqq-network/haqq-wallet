@@ -34,6 +34,7 @@ interface TransactionConfirmationProps {
   disabled?: boolean;
   onConfirmTransaction: () => void;
   onFeePress: () => void;
+  fee: Fee | null;
 }
 
 export const TransactionNftConfirmation = observer(
@@ -45,6 +46,7 @@ export const TransactionNftConfirmation = observer(
     onConfirmTransaction,
     onFeePress,
     soulboundTokenHint,
+    fee,
   }: TransactionConfirmationProps) => {
     const splittedTo = useMemo(() => splitAddress(to), [to]);
     const imageUri = useNftImage(item.metadata?.image || item.cached_url);
@@ -106,10 +108,10 @@ export const TransactionNftConfirmation = observer(
             <Spacer />
           </>
         )}
-        {Fee.expectedFee && (
+        {fee?.expectedFee && (
           <View style={styles.info}>
             <DataView label={soulboundTokenHint || 'Network Fee'}>
-              {!Fee.calculatedFees ? (
+              {!fee.calculatedFees ? (
                 <Text variant={TextVariant.t11} color={Color.textBase1}>
                   {getText(I18N.estimatingGas)}
                 </Text>
@@ -119,7 +121,7 @@ export const TransactionNftConfirmation = observer(
                     variant={TextVariant.t11}
                     color={Color.textGreen1}
                     onPress={onFeePress}>
-                    {Fee.expectedFeeString}
+                    {fee.expectedFeeString}
                   </Text>
                   <Icon name={IconsName.tune} color={Color.textGreen1} />
                 </View>
@@ -130,7 +132,7 @@ export const TransactionNftConfirmation = observer(
         <Spacer />
         <Button
           disabled={
-            (!Fee.expectedFee?.isPositive() && !disabled) ||
+            (!fee?.expectedFee?.isPositive() && !disabled) ||
             !!soulboundTokenHint
           }
           variant={ButtonVariant.contained}

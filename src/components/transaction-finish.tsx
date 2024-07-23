@@ -36,6 +36,7 @@ type TransactionFinishProps = {
   token: IToken;
   amount?: Balance;
   hideContact?: boolean;
+  fee: Fee;
 };
 
 export const TransactionFinish = ({
@@ -48,6 +49,7 @@ export const TransactionFinish = ({
   token,
   amount,
   hideContact,
+  fee,
 }: TransactionFinishProps) => {
   const onPressHash = async () => {
     const url = `${EthNetwork.explorer}tx/${transaction?.hash}`;
@@ -117,7 +119,7 @@ export const TransactionFinish = ({
         </Text>
       </View>
 
-      <NetworkFee fee={Fee?.expectedFee} currency="ISLM" />
+      <NetworkFee fee={fee?.expectedFee} currency="ISLM" />
 
       <View style={styles.providerContainer}>
         <Text

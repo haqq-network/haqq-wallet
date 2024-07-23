@@ -10,6 +10,7 @@ import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
+import {Fee} from '@app/models/fee';
 import {Wallet} from '@app/models/wallet';
 import {
   TransactionStackParamList,
@@ -71,6 +72,7 @@ export const TransactionLedgerScreen = memo(() => {
           EventTracker.instance.trackEvent(MarketingEvents.sendFund);
 
           navigation.navigate(TransactionStackRoutes.TransactionFinish, {
+            fee: new Fee(calculatedFees),
             transaction,
             hash: transaction.hash,
             token: route.params.token,
