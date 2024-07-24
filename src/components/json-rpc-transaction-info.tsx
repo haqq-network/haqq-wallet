@@ -15,15 +15,13 @@ import {
 } from '@app/components/ui';
 import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
+import {awaitForFee} from '@app/helpers/await-for-fee';
 import {useTypedNavigation} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N} from '@app/i18n';
 import {Fee} from '@app/models/fee';
 import {Provider} from '@app/models/provider';
-import {
-  JsonRpcSignPopupStackParamList,
-  JsonRpcSignPopupStackRoutes,
-} from '@app/route-types';
+import {JsonRpcSignPopupStackParamList} from '@app/route-types';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {
@@ -158,18 +156,22 @@ export const JsonRpcTransactionInfo = ({
     return '';
   }, [txParsedData]);
 
-  const onFeePress = useCallback(() => {
+  const onFeePress = useCallback(async () => {
     if (!tx) {
       return;
     }
 
-    navigation.navigate(JsonRpcSignPopupStackRoutes.JsonRpcSignFeeSettings, {
-      from: tx.from!,
-      to: tx.to!,
-      amount: new Balance(tx.value! || Balance.Empty),
-      data: tx.data,
-    });
-  }, [navigation, tx]);
+    if (fee) {
+      const result = await awaitForFee({
+        fee,
+        from: tx.from!,
+        to: tx.to!,
+        value: new Balance(tx.value! || Balance.Empty),
+        data: tx.data,
+      });
+      setFee(result);
+    }
+  }, [navigation, tx, fee]);
 
   return (
     <View style={styles.container}>

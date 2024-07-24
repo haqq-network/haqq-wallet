@@ -10,7 +10,6 @@ import {awaitForFee} from '@app/helpers/await-for-fee';
 import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
-import {useLayoutEffectAsync} from '@app/hooks/use-effect-async';
 import {useError} from '@app/hooks/use-error';
 import {Contact} from '@app/models/contact';
 import {Fee} from '@app/models/fee';
@@ -37,9 +36,10 @@ export const TransactionConfirmationScreen = observer(() => {
     TransactionStackParamList,
     TransactionStackRoutes.TransactionConfirmation
   >();
-  const {token} = route.params;
+  const {token, calculatedFees} = route.params;
 
-  const [fee, setFee] = useState<Fee | null>(null);
+  const [fee] = useState<Fee>(new Fee(calculatedFees!));
+  const [feeSettings, setFeeSettings] = useState<Fee | null>(null);
 
   const wallet = Wallet.getById(route.params.from);
   const contact = useMemo(
@@ -65,21 +65,6 @@ export const TransactionConfirmationScreen = observer(() => {
         : undefined,
     };
   }, [token, wallet?.address, route.params]);
-
-  useLayoutEffectAsync(async () => {
-    if (!fee) {
-      setFee(
-        new Fee(
-          await EthNetwork.estimate({
-            from,
-            to,
-            value,
-            data,
-          }),
-        ),
-      );
-    }
-  }, [from, to, value, data]);
 
   const onConfirmTransaction = useCallback(async () => {
     if (wallet) {
@@ -185,7 +170,8 @@ export const TransactionConfirmationScreen = observer(() => {
         value,
         data,
       });
-      setFee(result);
+
+      setFeeSettings(new Fee(result.calculatedFees!));
     }
   }, [fee, from, to, value, data]);
 
@@ -197,7 +183,7 @@ export const TransactionConfirmationScreen = observer(() => {
       amount={route.params.amount}
       onConfirmTransaction={onConfirmTransaction}
       onFeePress={onFeePress}
-      fee={fee}
+      fee={feeSettings ?? fee}
       testID="transaction_confirmation"
       token={route.params.token}
     />

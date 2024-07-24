@@ -33,6 +33,12 @@ import {CalculatedFees} from '@app/services/eth-network/types';
 
 const TABS = [I18N.low, I18N.average, I18N.high, I18N.custom];
 
+type ResetValues = {
+  gasLimit: Balance;
+  maxBaseFee: Balance;
+  priorityFee: Balance;
+} | null;
+
 export const FeeSettingsScreen = observer(() => {
   const navigation = useTypedNavigation<TransactionStackParamList>();
   const {fee, from, to, value, data, successEventName} = useTypedRoute<
@@ -42,109 +48,96 @@ export const FeeSettingsScreen = observer(() => {
   const [isEstimating, setEstimating] = useState(false);
   const [type, setType] = useState(fee.estimationType);
 
-  const getDefaultBalanceValue = (v: string): Balance => {
-    if (v && v !== '-') {
-      return new Balance(v);
-    }
-    return Balance.Empty;
-  };
-  const amountsGasLimit = useSumAmount(
-    getDefaultBalanceValue(fee.gasLimitString),
-    undefined,
-    undefined,
-    undefined,
-    (amount, formattedString) => {
-      fee.setGasLimit(formattedString);
-    },
-  );
-  const amountsMaxBaseFee = useSumAmount(
-    getDefaultBalanceValue(fee.maxBaseFeeString),
-    undefined,
-    undefined,
-    undefined,
-    (amount, formattedString) => {
-      fee.setMaxBaseFee(formattedString);
-    },
-  );
-  const amountsMaxPriorityFee = useSumAmount(
-    getDefaultBalanceValue(fee.maxPriorityFeeString),
-    undefined,
-    undefined,
-    undefined,
-    (amount, formattedString) => {
-      fee.setMaxPriorityFee(formattedString);
-    },
-  );
+  const [expectedFee, setExpectedFee] = useState<Balance | null>();
+  const [resetValues, setResetValues] = useState<ResetValues>(null);
 
-  const estimate = useCallback(
-    async (estimationType: EstimationVariant, updateLastSavedFee = true) => {
-      setEstimating(true);
-      let calculatedData: CalculatedFees | null = null;
-      if (estimationType === EstimationVariant.custom) {
-        if (amountsGasLimit && amountsMaxBaseFee && amountsMaxPriorityFee) {
-          calculatedData = await EthNetwork.customEstimate(
-            {
-              from,
-              to,
-              value,
-              data,
-            },
-            {
-              gasLimit: BigNumber.from(
-                new Balance(amountsGasLimit.amount).toWei(),
-              ),
-              maxBaseFee: BigNumber.from(
-                new Balance(amountsMaxBaseFee.amount).toWei(),
-              ),
-              maxPriorityFee: BigNumber.from(
-                new Balance(amountsMaxPriorityFee.amount).toWei(),
-              ),
-            },
-          );
+  const amountsGasLimit = useSumAmount(fee.gasLimit!);
+  const amountsMaxBaseFee = useSumAmount(fee.maxBaseFee!);
+  const amountsMaxPriorityFee = useSumAmount(fee.maxPriorityFee!);
 
-          calculatedData &&
-            fee.setExpectedFee(calculatedData.expectedFee, updateLastSavedFee);
-          setEstimating(false);
-        }
-      } else {
-        calculatedData = await EthNetwork.estimate(
+  const estimate = useCallback(async (estimationType: EstimationVariant) => {
+    setEstimating(true);
+    let calculatedData: CalculatedFees | null = null;
+    if (estimationType === EstimationVariant.custom) {
+      if (amountsGasLimit && amountsMaxBaseFee && amountsMaxPriorityFee) {
+        calculatedData = await EthNetwork.customEstimate(
           {
             from,
             to,
             value,
             data,
           },
-          estimationType,
+          {
+            gasLimit: BigNumber.from(
+              new Balance(amountsGasLimit.amount).toWei(),
+            ),
+            maxBaseFee: BigNumber.from(
+              new Balance(amountsMaxBaseFee.amount).toWei(),
+            ),
+            maxPriorityFee: BigNumber.from(
+              new Balance(amountsMaxPriorityFee.amount).toWei(),
+            ),
+          },
         );
 
-        calculatedData &&
-          fee.setCalculatedFees(calculatedData, updateLastSavedFee);
-        amountsGasLimit.setAmount(fee.gasLimitString);
-        amountsMaxBaseFee.setAmount(fee.maxBaseFeeString);
-        amountsMaxPriorityFee.setAmount(fee.maxPriorityFeeString);
+        calculatedData && setExpectedFee(calculatedData.expectedFee);
         setEstimating(false);
       }
-    },
-    [],
-  );
+    } else {
+      calculatedData = await EthNetwork.estimate(
+        {
+          from,
+          to,
+          value,
+          data,
+        },
+        estimationType,
+      );
+
+      setResetValues({
+        gasLimit: calculatedData.gasLimit,
+        maxBaseFee: calculatedData.maxBaseFee,
+        priorityFee: calculatedData.maxPriorityFee,
+      });
+
+      amountsGasLimit.setAmount(String(calculatedData.gasLimit.toWei()), 0);
+      amountsMaxBaseFee.setAmount(String(calculatedData.maxBaseFee.toGWei()));
+      amountsMaxPriorityFee.setAmount(
+        String(calculatedData.maxPriorityFee.toGWei()),
+      );
+      setExpectedFee(calculatedData.expectedFee);
+      setEstimating(false);
+    }
+  }, []);
 
   const onTabChange = useCallback((tabName: keyof typeof EstimationVariant) => {
-    fee.setEstimationType(EstimationVariant[tabName]);
     setType(EstimationVariant[tabName]);
   }, []);
 
   const handleApply = () => {
-    if (fee.calculatedFees) {
-      app.emit(successEventName, new Fee(fee.calculatedFees));
-    }
     navigation.pop();
+    app.emit(
+      successEventName,
+      new Fee({
+        gasLimit: new Balance(amountsGasLimit.amount),
+        maxBaseFee: new Balance(amountsMaxBaseFee.amount),
+        maxPriorityFee: new Balance(amountsMaxPriorityFee.amount),
+        expectedFee: expectedFee!,
+      }),
+    );
   };
 
   useEffect(() => {
     estimate(type);
   }, [type]);
 
-  const handleReset = () => fee.resetCalculatedFees();
+  const handleReset = () => {
+    if (resetValues) {
+      amountsGasLimit.setAmount(String(resetValues.gasLimit.toWei()), 0);
+      amountsMaxBaseFee.setAmount(String(resetValues.maxBaseFee.toGWei()));
+      amountsMaxPriorityFee.setAmount(String(resetValues.priorityFee.toGWei()));
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -155,8 +148,8 @@ export const FeeSettingsScreen = observer(() => {
             variant={TopTabNavigatorVariant.large}
             disabled={isEstimating}
             onTabChange={onTabChange}
-            activeTabIndex={fee.estimationType}
-            initialTabIndex={fee.estimationType}>
+            activeTabIndex={type}
+            initialTabIndex={type}>
             {TABS.map((tab, index) => (
               <TopTabNavigator.Tab
                 key={getText(tab)}
@@ -173,7 +166,7 @@ export const FeeSettingsScreen = observer(() => {
           placeholder={I18N.empty}
           value={amountsGasLimit.amount}
           onChangeText={amountsGasLimit.setAmount}
-          editable={fee.estimationType === EstimationVariant.custom}
+          editable={type === EstimationVariant.custom}
           keyboardType="numeric"
           inputMode="decimal"
           returnKeyType="done"
@@ -189,7 +182,7 @@ export const FeeSettingsScreen = observer(() => {
           placeholder={I18N.empty}
           value={amountsMaxBaseFee.amount}
           onChangeText={amountsMaxBaseFee.setAmount}
-          editable={fee.estimationType === EstimationVariant.custom}
+          editable={type === EstimationVariant.custom}
           keyboardType="numeric"
           inputMode="decimal"
           returnKeyType="done"
@@ -205,7 +198,7 @@ export const FeeSettingsScreen = observer(() => {
           placeholder={I18N.empty}
           value={amountsMaxPriorityFee.amount}
           onChangeText={amountsMaxPriorityFee.setAmount}
-          editable={fee.estimationType === EstimationVariant.custom}
+          editable={type === EstimationVariant.custom}
           keyboardType="numeric"
           inputMode="decimal"
           returnKeyType="done"
@@ -228,7 +221,7 @@ export const FeeSettingsScreen = observer(() => {
               />
             )}
             <Text variant={TextVariant.t11} color={Color.textBase2}>
-              {fee.expectedFeeString}
+              {expectedFee?.toBalanceString(6)}
             </Text>
           </First>
         </View>
@@ -237,7 +230,7 @@ export const FeeSettingsScreen = observer(() => {
         <Button
           variant={ButtonVariant.second}
           i18n={I18N.reset}
-          disabled={!fee.canReset || isEstimating}
+          disabled={isEstimating}
           onPress={handleReset}
         />
         <Spacer height={16} />
