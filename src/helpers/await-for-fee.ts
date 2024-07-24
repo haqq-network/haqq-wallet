@@ -5,12 +5,13 @@ import {TransactionStackRoutes} from '@app/route-types';
 import {Balance} from '@app/services/balance';
 import {Eventable} from '@app/types';
 
-export interface AwaitForWalletParams {
+export interface AwaitForFeeParams {
   fee: Fee;
   from: string;
   to: string;
   value?: Balance;
   data?: string;
+  chainId?: string;
 
   eventSuffix?: string | number;
 }
@@ -25,13 +26,7 @@ const event: Eventable = {
   errorEventName: AwaitForFeeEvents.error,
 };
 
-export async function awaitForFee({
-  fee,
-  from,
-  to,
-  value,
-  data,
-}: AwaitForWalletParams): Promise<Fee> {
+export async function awaitForFee(props: AwaitForFeeParams): Promise<Fee> {
   return new Promise((resolve, reject) => {
     const removeAllListeners = () => {
       app.removeListener(event.successEventName, onAction);
@@ -52,11 +47,7 @@ export async function awaitForFee({
     app.addListener(event.errorEventName, onReject);
 
     return navigator.navigate(TransactionStackRoutes.FeeSettings, {
-      fee,
-      from,
-      to,
-      value,
-      data,
+      ...props,
       ...event,
     });
   });

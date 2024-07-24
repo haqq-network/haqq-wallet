@@ -595,6 +595,7 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
     to: string;
     value?: Balance;
     data?: string;
+    chainId?: string;
   };
 };
 
