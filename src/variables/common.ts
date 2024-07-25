@@ -3,6 +3,7 @@ import {Platform} from 'react-native';
 import Config from 'react-native-config';
 import {Easing} from 'react-native-reanimated';
 
+import {NetworkProviderResponse} from '@app/services/backend';
 import {PushNotificationTopicsEnum} from '@app/services/push-notifications';
 import {AppLanguage, HexNumber, JsonRpcMetadata, Link} from '@app/types';
 
@@ -180,7 +181,8 @@ export const ETH_HD_SHORT_PATH = "44'/60'/0'/0"; // HD derivation path
 export const LEDGER_HD_PATH_TEMPLATE = "44'/60'/index'/0/0"; // HD derivation path
 export const ETH_HD_PATH = `${ETH_HD_SHORT_PATH}/0`; // HD derivation path
 
-export const DEFAULT_PROVIDERS = DefaultProvidersJson;
+export const DEFAULT_PROVIDERS =
+  DefaultProvidersJson as unknown as NetworkProviderResponse;
 export const MAIN_NETWORK_ID = DEFAULT_PROVIDERS[1].id;
 export const TEST_NETWORK_ID = DEFAULT_PROVIDERS[0].id;
 

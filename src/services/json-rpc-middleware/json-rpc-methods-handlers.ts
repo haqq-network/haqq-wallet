@@ -151,7 +151,7 @@ const getNetworkProvier = (helper: JsonRpcHelper) => {
   // };
 
   const session = Web3BrowserSession.getByOrigin(helper.origin);
-  let provider: Provider | null;
+  let provider: Provider | undefined;
   if (session?.isActive) {
     provider = Provider.getByChainIdHex(session?.selectedChainIdHex!);
   } else {
@@ -584,7 +584,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
       },
     });
 
-    const provider = Provider.getByCosmosChainId(cosmosChainId)[0];
+    const provider = Provider.getByCosmosChainId(cosmosChainId);
     const cosmos = new Cosmos(provider!);
     const accountInfo = await cosmos.getAccountInfo(address);
     const account: AccountResponse['account'] =

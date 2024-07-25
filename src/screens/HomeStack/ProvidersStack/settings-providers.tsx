@@ -1,4 +1,6 @@
-import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+
+import {observer} from 'mobx-react';
 
 import {Color} from '@app/colors';
 import {SettingsProviders} from '@app/components/settings/settings-providers';
@@ -10,27 +12,10 @@ import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {ProvidersStackParamList, ProvidersStackRoutes} from '@app/route-types';
 
-export const SettingsProvidersScreen = memo(() => {
+export const SettingsProvidersScreen = observer(() => {
   const navigation = useTypedNavigation<ProvidersStackParamList>();
-  const [providers, setProviders] = useState<Realm.Results<Provider>>(
-    Provider.getAll().snapshot(),
-  );
-
+  const providers = Provider.getAll();
   const [providerId, setProviderId] = useState(app.providerId);
-
-  useEffect(() => {
-    const list = Provider.getAll();
-
-    const callback = () => {
-      setProviders(Provider.getAll().snapshot());
-    };
-
-    list.addListener(callback);
-
-    return () => {
-      list.removeListener(callback);
-    };
-  }, []);
 
   useEffect(() => {
     const callback = () => {

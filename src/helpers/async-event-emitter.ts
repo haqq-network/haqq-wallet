@@ -1,10 +1,9 @@
-import EventEmitter from 'events';
-
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {makeID} from '@app/utils';
 
 import {EventResolverSymbol} from './await-for-event-done';
+import {Initializable} from './initializable';
 
 const logger = Logger.create('AsyncEventEmitter');
 
@@ -37,7 +36,7 @@ const logger = Logger.create('AsyncEventEmitter');
  *    // will be call after 5000ms delay
  *   .then(() => Logger.log('event done'));
  */
-export class AsyncEventEmitter extends EventEmitter {
+export class AsyncEventEmitter extends Initializable {
   off = this.removeListener;
   private listenerMap = new WeakMap<
     (...args: any[]) => void,

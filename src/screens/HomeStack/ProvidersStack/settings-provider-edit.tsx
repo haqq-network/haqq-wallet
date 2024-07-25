@@ -1,5 +1,7 @@
 import React, {memo, useCallback, useMemo} from 'react';
 
+import {Alert} from 'react-native';
+
 import {SettingsProviderEdit} from '@app/components/settings/settings-providers/settings-provider-edit';
 import {app} from '@app/contexts';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
@@ -18,15 +20,20 @@ export const SettingsProviderEditScreen = memo(() => {
   );
 
   const onSubmit = useCallback(
-    (data: Partial<Provider>) => {
-      if (provider) {
-        provider.update(data);
-      } else {
-        let id = Provider.create(data);
-        setParams({
-          id,
-        });
-      }
+    (_: Partial<Provider>) => {
+      // TODO:
+      Alert.alert(
+        'This feature for developer',
+        'Edit providers not yet implemented',
+      );
+      // if (provider) {
+      //   provider.update(data);
+      // } else {
+      //   let id = Provider.create(data);
+      //   setParams({
+      //     id,
+      //   });
+      // }
     },
     [provider, setParams],
   );
