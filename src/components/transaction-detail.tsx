@@ -21,7 +21,7 @@ import {ImageWrapper} from './image-wrapper';
 
 type TransactionDetailProps = {
   tx: Transaction;
-  provider: (Provider & Realm.Object<unknown, never>) | null;
+  provider: Provider | null;
   splitted: string[];
   timestamp: string;
   fee: Balance;

@@ -25,7 +25,6 @@ import {getUid} from '@app/helpers/get-uid';
 import {SecurePinUtils} from '@app/helpers/secure-pin-utils';
 import {I18N, getText} from '@app/i18n';
 import {Currencies} from '@app/models/currencies';
-import {seedData} from '@app/models/seed-data';
 import {Token} from '@app/models/tokens';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
@@ -99,56 +98,58 @@ class App extends AsyncEventEmitter {
 
   constructor() {
     super();
+    this.startInitialization();
     this.setMaxListeners(1000);
     this._startUpTime = Date.now();
 
-    seedData();
+    Provider.init().then(() => {
+      TouchID.isSupported(isSupportedConfig)
+        .then(biometryType => {
+          this._biometryType =
+            Platform.select({
+              ios: biometryType as BiometryType,
+              android: biometryType ? BiometryType.fingerprint : null,
+            }) || null;
+        })
+        .catch(() => {
+          this._biometryType = null;
+        });
 
-    TouchID.isSupported(isSupportedConfig)
-      .then(biometryType => {
-        this._biometryType =
-          Platform.select({
-            ios: biometryType as BiometryType,
-            android: biometryType ? BiometryType.fingerprint : null,
-          }) || null;
-      })
-      .catch(() => {
-        this._biometryType = null;
-      });
+      GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: false}).then(
+        (result: boolean) => {
+          this._googleSigninSupported = result;
+        },
+      );
 
-    GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: false}).then(
-      (result: boolean) => {
-        this._googleSigninSupported = result;
-      },
-    );
+      this.user = User.getOrCreate();
 
-    this.user = User.getOrCreate();
+      this._provider = Provider.getById(this.providerId);
 
-    this._provider = Provider.getById(this.providerId);
+      if (this._provider) {
+        EthNetwork.init(this._provider);
+      }
 
-    if (this._provider) {
-      EthNetwork.init(this._provider);
-    }
+      this.checkBalance = this.checkBalance.bind(this);
+      this.checkBalance();
 
-    this.checkBalance = this.checkBalance.bind(this);
-    this.checkBalance();
+      this.handleDynamicLink = this.handleDynamicLink.bind(this);
 
-    this.handleDynamicLink = this.handleDynamicLink.bind(this);
+      dynamicLinks().onLink(this.handleDynamicLink);
+      dynamicLinks().getInitialLink().then(this.handleDynamicLink);
 
-    dynamicLinks().onLink(this.handleDynamicLink);
-    dynamicLinks().getInitialLink().then(this.handleDynamicLink);
+      this.listenTheme = this.listenTheme.bind(this);
 
-    this.listenTheme = this.listenTheme.bind(this);
+      Appearance.addChangeListener(this.listenTheme);
+      AppState.addEventListener('change', this.listenTheme);
+      this.listenTheme();
+      AppState.addEventListener('change', this.onAppStatusChanged.bind(this));
 
-    Appearance.addChangeListener(this.listenTheme);
-    AppState.addEventListener('change', this.listenTheme);
-    this.listenTheme();
-    AppState.addEventListener('change', this.onAppStatusChanged.bind(this));
-
-    if (!VariablesBool.exists('isDeveloper')) {
-      VariablesBool.set('isDeveloper', Config.IS_DEVELOPMENT === 'true');
-    }
-    this.setEnabledLoggersForTestMode(this.isTesterMode);
+      if (!VariablesBool.exists('isDeveloper')) {
+        VariablesBool.set('isDeveloper', Config.IS_DEVELOPMENT === 'true');
+      }
+      this.setEnabledLoggersForTestMode(this.isTesterMode);
+      this.stopInitialization();
+    });
   }
 
   private _startUpTime: number;
@@ -668,6 +669,7 @@ class App extends AsyncEventEmitter {
           RemoteConfig.init(true);
           await RemoteConfig.awaitForInitialization();
           this._authInProgress = false;
+          await Provider.fetchProviders();
           break;
         case AppStatus.inactive:
           if (this.authenticated) {
