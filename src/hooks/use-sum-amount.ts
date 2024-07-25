@@ -5,7 +5,7 @@ import validate from 'validate.js';
 import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {I18N, getText} from '@app/i18n';
 import {Balance} from '@app/services/balance';
-import {WEI_PRECISION} from '@app/variables/common';
+import {CURRENCY_NAME, WEI_PRECISION} from '@app/variables/common';
 
 export function useSumAmount(
   initialSum = Balance.Empty,
@@ -52,7 +52,7 @@ export function useSumAmount(
         const newString = errorArray?.length > 0 ? errorArray.join(' ') : '';
         setError(
           newString
-            .replace('ISLM', maxAmountRef.current.getSymbol())
+            .replace(CURRENCY_NAME, maxAmountRef.current.getSymbol())
             .replace(
               maxAmountRef.current.toFloat(),
               maxAmountRef.current.toBalanceString('auto'),

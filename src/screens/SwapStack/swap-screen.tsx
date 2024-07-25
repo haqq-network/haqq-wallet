@@ -178,11 +178,11 @@ export const SwapScreen = observer(() => {
     [tokenIn, tokenOut, poolsData],
   );
   const isWrapTx = useMemo(
-    () => tokenIn?.symbol === 'ISLM' && tokenOut?.symbol === 'wISLM',
+    () => tokenIn?.symbol === CURRENCY_NAME && tokenOut?.symbol === 'wISLM',
     [tokenIn, tokenOut],
   );
   const isUnwrapTx = useMemo(
-    () => tokenIn?.symbol === 'wISLM' && tokenOut?.symbol === 'ISLM',
+    () => tokenIn?.symbol === 'wISLM' && tokenOut?.symbol === CURRENCY_NAME,
     [tokenIn, tokenOut],
   );
   const t0Current = useMemo(() => {
@@ -214,7 +214,7 @@ export const SwapScreen = observer(() => {
     }
 
     if (tokenIn.symbol === CURRENCY_NAME) {
-      logger.log('t0 available: currency ISLM');
+      logger.log(`t0 available: currency ${CURRENCY_NAME}`);
       return app.getAvailableBalance(currentWallet.address);
     }
 
@@ -466,7 +466,7 @@ export const SwapScreen = observer(() => {
                 <WalletCard
                   wallet={value.wallet}
                   tokens={value.tokens.map(t => {
-                    if (t.symbol === 'ISLM') {
+                    if (t.symbol === CURRENCY_NAME) {
                       return {
                         ...t,
                         value: app.getAvailableBalance(value?.wallet?.address),
@@ -680,7 +680,7 @@ export const SwapScreen = observer(() => {
       const deadline =
         Math.floor(Date.now() / 1000) + 60 * parseFloat(swapSettings.deadline);
 
-      const tokenInIsISLM = tokenIn?.symbol === 'ISLM';
+      const tokenInIsISLM = tokenIn?.symbol === CURRENCY_NAME;
 
       const encodedPath = `0x${estimateData.route}`;
       const swapParams = [
@@ -733,7 +733,7 @@ export const SwapScreen = observer(() => {
             hash: txResp.transactionHash,
           },
           token: toJS(
-            tokenIn?.symbol === 'ISLM'
+            tokenIn?.symbol === CURRENCY_NAME
               ? Token.generateIslamicToken(currentWallet)
               : Token.tokens[currentWallet.address].find(t =>
                   AddressUtils.equals(t.id, tokenIn?.id!),
@@ -865,7 +865,7 @@ export const SwapScreen = observer(() => {
             hash: txResp.transactionHash,
           },
           token: toJS(
-            tokenIn?.symbol === 'ISLM'
+            tokenIn?.symbol === CURRENCY_NAME
               ? Token.generateIslamicToken(currentWallet)
               : Token.tokens[currentWallet.address].find(t =>
                   AddressUtils.equals(t.id, tokenIn?.id!),
@@ -936,7 +936,7 @@ export const SwapScreen = observer(() => {
             hash: txResp.transactionHash,
           },
           token: toJS(
-            tokenIn?.symbol === 'ISLM'
+            tokenIn?.symbol === CURRENCY_NAME
               ? Token.generateIslamicToken(currentWallet)
               : Token.tokens[currentWallet.address].find(t =>
                   AddressUtils.equals(t.id, tokenIn?.id!),
