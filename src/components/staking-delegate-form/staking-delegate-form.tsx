@@ -11,6 +11,7 @@ import {
   KeyboardSafeArea,
   Spacer,
   Text,
+  TextVariant,
 } from '@app/components/ui';
 import {NetworkFee} from '@app/components/ui/network-fee';
 import {SumBlock} from '@app/components/ui/sum-block';
@@ -81,8 +82,11 @@ export const StakingDelegateForm = ({
   return (
     <KeyboardSafeArea isNumeric style={styles.container}>
       <View style={styles.row}>
-        <Text t14 i18n={I18N.stakingDelegateFormCommission} />
-        <Text t10>{validatorCommission}%</Text>
+        <Text
+          variant={TextVariant.t14}
+          i18n={I18N.stakingDelegateFormCommission}
+        />
+        <Text variant={TextVariant.t10}>{validatorCommission}%</Text>
       </View>
       <Spacer centered>
         <SumBlock
