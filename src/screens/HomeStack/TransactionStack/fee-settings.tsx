@@ -23,10 +23,7 @@ import {createTheme} from '@app/helpers';
 import {useSumAmount, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {EstimationVariant, Fee} from '@app/models/fee';
-import {
-  TransactionStackParamList,
-  TransactionStackRoutes,
-} from '@app/route-types';
+import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {CalculatedFees} from '@app/services/eth-network/types';
@@ -40,10 +37,10 @@ type ResetValues = {
 } | null;
 
 export const FeeSettingsScreen = observer(() => {
-  const navigation = useTypedNavigation<TransactionStackParamList>();
+  const navigation = useTypedNavigation<HomeStackParamList>();
   const {fee, from, to, value, data, successEventName} = useTypedRoute<
-    TransactionStackParamList,
-    TransactionStackRoutes.FeeSettings
+    HomeStackParamList,
+    HomeStackRoutes.FeeSettings
   >().params;
   const [isEstimating, setEstimating] = useState(false);
   const [type, setType] = useState(fee.estimationType);
@@ -55,60 +52,71 @@ export const FeeSettingsScreen = observer(() => {
   const amountsMaxBaseFee = useSumAmount(fee.maxBaseFee!);
   const amountsMaxPriorityFee = useSumAmount(fee.maxPriorityFee!);
 
-  const estimate = useCallback(async (estimationType: EstimationVariant) => {
-    setEstimating(true);
-    let calculatedData: CalculatedFees | null = null;
-    if (estimationType === EstimationVariant.custom) {
-      if (amountsGasLimit && amountsMaxBaseFee && amountsMaxPriorityFee) {
-        calculatedData = await EthNetwork.customEstimate(
+  const estimate = useCallback(
+    async (estimationType: EstimationVariant) => {
+      setEstimating(true);
+      let calculatedData: CalculatedFees | null = null;
+      if (estimationType === EstimationVariant.custom) {
+        if (
+          amountsGasLimit.amount &&
+          amountsMaxBaseFee.amount &&
+          amountsMaxPriorityFee.amount
+        ) {
+          calculatedData = await EthNetwork.customEstimate(
+            {
+              from,
+              to,
+              value,
+              data,
+            },
+            {
+              gasLimit: BigNumber.from(
+                new Balance(amountsGasLimit.amount).toWei(),
+              ),
+              maxBaseFee: BigNumber.from(
+                new Balance(amountsMaxBaseFee.amount).toWei(),
+              ),
+              maxPriorityFee: BigNumber.from(
+                new Balance(amountsMaxPriorityFee.amount).toWei(),
+              ),
+            },
+          );
+
+          calculatedData && setExpectedFee(calculatedData.expectedFee);
+          setEstimating(false);
+        }
+      } else {
+        calculatedData = await EthNetwork.estimate(
           {
             from,
             to,
             value,
             data,
           },
-          {
-            gasLimit: BigNumber.from(
-              new Balance(amountsGasLimit.amount).toWei(),
-            ),
-            maxBaseFee: BigNumber.from(
-              new Balance(amountsMaxBaseFee.amount).toWei(),
-            ),
-            maxPriorityFee: BigNumber.from(
-              new Balance(amountsMaxPriorityFee.amount).toWei(),
-            ),
-          },
+          estimationType,
         );
 
-        calculatedData && setExpectedFee(calculatedData.expectedFee);
+        setResetValues({
+          gasLimit: calculatedData.gasLimit,
+          maxBaseFee: calculatedData.maxBaseFee,
+          priorityFee: calculatedData.maxPriorityFee,
+        });
+
+        amountsGasLimit.setAmount(String(calculatedData.gasLimit.toWei()), 0);
+        amountsMaxBaseFee.setAmount(String(calculatedData.maxBaseFee.toGWei()));
+        amountsMaxPriorityFee.setAmount(
+          String(calculatedData.maxPriorityFee.toGWei()),
+        );
+        setExpectedFee(calculatedData.expectedFee);
         setEstimating(false);
       }
-    } else {
-      calculatedData = await EthNetwork.estimate(
-        {
-          from,
-          to,
-          value,
-          data,
-        },
-        estimationType,
-      );
-
-      setResetValues({
-        gasLimit: calculatedData.gasLimit,
-        maxBaseFee: calculatedData.maxBaseFee,
-        priorityFee: calculatedData.maxPriorityFee,
-      });
-
-      amountsGasLimit.setAmount(String(calculatedData.gasLimit.toWei()), 0);
-      amountsMaxBaseFee.setAmount(String(calculatedData.maxBaseFee.toGWei()));
-      amountsMaxPriorityFee.setAmount(
-        String(calculatedData.maxPriorityFee.toGWei()),
-      );
-      setExpectedFee(calculatedData.expectedFee);
-      setEstimating(false);
-    }
-  }, []);
+    },
+    [
+      amountsGasLimit.amount,
+      amountsMaxBaseFee.amount,
+      amountsMaxPriorityFee.amount,
+    ],
+  );
 
   const onTabChange = useCallback((tabName: keyof typeof EstimationVariant) => {
     setType(EstimationVariant[tabName]);
@@ -130,6 +138,10 @@ export const FeeSettingsScreen = observer(() => {
   useEffect(() => {
     estimate(type);
   }, [type]);
+
+  useEffect(() => {
+    type === EstimationVariant.custom && estimate(type);
+  }, [type, estimate]);
 
   const handleReset = () => {
     if (resetValues) {
@@ -230,7 +242,7 @@ export const FeeSettingsScreen = observer(() => {
         <Button
           variant={ButtonVariant.second}
           i18n={I18N.reset}
-          disabled={isEstimating}
+          disabled={type !== EstimationVariant.custom || isEstimating}
           onPress={handleReset}
         />
         <Spacer height={16} />

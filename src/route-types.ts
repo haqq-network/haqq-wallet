@@ -370,6 +370,7 @@ export enum HomeStackRoutes {
   Device = '_device',
   Swap = '_swap',
   NewsDetailPushNotification = 'newsDetailsPushNotification',
+  FeeSettings = 'feeSettings',
 }
 
 export type HomeStackParamList = {
@@ -475,6 +476,14 @@ export type HomeStackParamList = {
     linkEvent: MarketingEvents;
     scrollEvent: MarketingEvents;
   };
+  [HomeStackRoutes.FeeSettings]: Eventable & {
+    fee: Fee;
+    from: string;
+    to: string;
+    value?: Balance;
+    data?: string;
+    chainId?: string;
+  };
 };
 
 export enum NftStackRoutes {
@@ -524,7 +533,6 @@ export enum TransactionStackRoutes {
   TransactionSumAddress = 'transactionSumAddress',
   TransactionContactEdit = 'transactionContactEdit',
   TransactionSelectCrypto = 'transactionSelectCrypto',
-  FeeSettings = 'feeSettings',
 }
 
 export type TransactionStackParamList = HomeFeedStackParamList & {
@@ -588,14 +596,6 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
   [TransactionStackRoutes.TransactionSelectCrypto]: {
     from: string;
     to: string;
-  };
-  [TransactionStackRoutes.FeeSettings]: Eventable & {
-    fee: Fee;
-    from: string;
-    to: string;
-    value?: Balance;
-    data?: string;
-    chainId?: string;
   };
 };
 

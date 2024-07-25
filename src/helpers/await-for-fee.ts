@@ -1,7 +1,7 @@
 import {app} from '@app/contexts';
 import {Fee} from '@app/models/fee';
 import {navigator} from '@app/navigator';
-import {TransactionStackRoutes} from '@app/route-types';
+import {HomeStackRoutes} from '@app/route-types';
 import {Balance} from '@app/services/balance';
 import {Eventable} from '@app/types';
 
@@ -46,7 +46,7 @@ export async function awaitForFee(props: AwaitForFeeParams): Promise<Fee> {
     app.addListener(event.successEventName, onAction);
     app.addListener(event.errorEventName, onReject);
 
-    return navigator.navigate(TransactionStackRoutes.FeeSettings, {
+    return navigator.navigate(HomeStackRoutes.FeeSettings, {
       ...props,
       ...event,
     });
