@@ -23,6 +23,7 @@ import {createTheme, openURL} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
 import {Balance} from '@app/services/balance';
+import {CURRENCY_NAME} from '@app/variables/common';
 
 export type ProposalDepositFinishProps = {
   amount: number;
@@ -77,7 +78,7 @@ export const ProposalDepositFinish = ({
         style={styles.address}>
         {proposal.content.title}
       </Text>
-      <NetworkFee fee={fee} currency="ISLM" />
+      <NetworkFee fee={fee} currency={CURRENCY_NAME} />
       <Spacer />
       <Inline gap={12}>
         <IconButton onPress={onPressHash} style={styles.button}>

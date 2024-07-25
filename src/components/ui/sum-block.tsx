@@ -18,6 +18,7 @@ import {I18N, getText} from '@app/i18n';
 import {Balance} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {IToken} from '@app/types';
+import {CURRENCY_NAME} from '@app/variables/common';
 
 export type SumBlockProps = {
   value: string;
@@ -77,7 +78,7 @@ export const SumBlock = ({
   }, [onMax]);
 
   const fiatString = useMemo(() => {
-    if (token?.decimals && token?.symbol && token.symbol !== 'ISLM') {
+    if (token?.decimals && token?.symbol && token.symbol !== CURRENCY_NAME) {
       return new Balance(Number(value), token.decimals, token.symbol).toFiat();
     }
 

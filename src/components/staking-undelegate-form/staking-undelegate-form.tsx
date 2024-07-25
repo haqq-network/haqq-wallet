@@ -74,7 +74,7 @@ export const StakingUnDelegateForm = ({
           onMax={onPressMax}
         />
       </Spacer>
-      <NetworkFee fee={fee} currency="ISLM" />
+      <NetworkFee fee={fee} currency={CURRENCY_NAME} />
       <Spacer height={16} />
       <InfoBlock
         warning

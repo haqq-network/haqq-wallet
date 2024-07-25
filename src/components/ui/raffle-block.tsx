@@ -4,6 +4,7 @@ import {ActivityIndicator, Image, TouchableOpacity, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import {Color, getColor} from '@app/colors';
+import {app} from '@app/contexts';
 import {cleanNumber, createTheme, getWindowWidth} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks';
 import {useTimer} from '@app/hooks/use-timer';
@@ -14,7 +15,7 @@ import {WEI} from '@app/variables/common';
 import {Button, ButtonSize, ButtonVariant} from './button';
 import {First} from './first';
 import {Icon, IconsName} from './icon';
-import {Text} from './text';
+import {Text, TextVariant} from './text';
 
 import {LottieWrap} from '../lottie';
 
@@ -136,11 +137,11 @@ export const RaffleBlock = ({
           <View style={styles.textBlock}>
             <View style={[styles.row, styles.flexOne]}>
               <Text
-                t10
+                variant={TextVariant.t10}
                 numberOfLines={1}
-                color={Color.textBase3}
-                children={item.title}
-              />
+                color={Color.textBase3}>
+                {item.title}
+              </Text>
               <Icon
                 style={styles.forwardIcon}
                 color={Color.textBase3}
@@ -149,7 +150,7 @@ export const RaffleBlock = ({
             </View>
             <View style={styles.row}>
               <Text
-                t14
+                variant={TextVariant.t14}
                 numberOfLines={1}
                 color={Color.textBase3}
                 i18n={I18N.rafflePrizePool}
@@ -159,12 +160,12 @@ export const RaffleBlock = ({
                 source={require('@assets/images/islm_icon.png')}
               />
               <Text
-                t13
+                variant={TextVariant.t13}
                 numberOfLines={1}
                 style={styles.flexOne}
                 color={Color.textBase3}
                 ellipsizeMode={'tail'}>
-                {formattedAmount} ISLM
+                {`${formattedAmount} ${app.provider.denom}`}
               </Text>
             </View>
           </View>
