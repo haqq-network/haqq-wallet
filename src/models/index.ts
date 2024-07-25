@@ -1,7 +1,6 @@
 import Realm from 'realm';
 
 import {News} from '@app/models/news';
-import {Provider} from '@app/models/provider';
 import {
   ContactRealmObject,
   TransactionRealmObject,
@@ -17,11 +16,11 @@ import {Balance} from '@app/services/balance';
 import {AppTheme, WalletType} from '@app/types';
 import {
   CARD_DEFAULT_STYLE,
-  DEFAULT_PROVIDERS,
   ETH_HD_PATH,
   TEST_NETWORK_ID,
 } from '@app/variables/common';
 
+import {Provider} from './provider';
 import {RssNews} from './rss-news';
 import {WalletConnectSessionMetadata} from './wallet-connect-session-metadata';
 import {Web3BrowserBookmark} from './web3-browser-bookmark';
@@ -40,7 +39,6 @@ export const realm = new Realm({
     UserSchema,
     TransactionRealmObject,
     ContactRealmObject,
-    Provider,
     Refferal,
     News,
     VariablesDate,
@@ -49,7 +47,7 @@ export const realm = new Realm({
     RssNews,
     VestingMetadata,
   ],
-  schemaVersion: 72,
+  schemaVersion: 73,
   onMigration: (oldRealm, newRealm) => {
     logger.log('onMigration', {
       oldRealmVersion: oldRealm.schemaVersion,
@@ -216,59 +214,6 @@ export const realm = new Realm({
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
         newObject.isMain = false;
-      }
-    }
-
-    if (oldRealm.schemaVersion < 27) {
-      logger.log('migration step #11');
-      const providersList = DEFAULT_PROVIDERS;
-
-      const oldObjects = oldRealm.objects<{id: string}>('Provider');
-      const newObjects = newRealm.objects<{
-        ethChainId: string;
-        ethRpcEndpoint: string;
-        cosmosChainId: string;
-        cosmosRestEndpoint: string;
-        tmRpcEndpoint: string;
-      }>('Provider');
-
-      logger.log({
-        oldObjects: oldObjects.toJSON(),
-        newObjects: newObjects.toJSON(),
-      });
-
-      for (const objectIndex in oldObjects) {
-        const provider = providersList.find(
-          (p: {id: string}) => p.id === oldObjects[objectIndex].id,
-        );
-
-        if (provider) {
-          const newObject = newObjects[objectIndex];
-          // @ts-ignore
-          newObject.ethChainId = provider.ethChainId;
-          newObject.ethRpcEndpoint = provider.ethRpcEndpoint;
-          newObject.cosmosChainId = provider.cosmosChainId;
-          newObject.cosmosRestEndpoint = provider.cosmosRestEndpoint;
-          newObject.tmRpcEndpoint = provider.tmRpcEndpoint;
-        }
-      }
-    }
-
-    if (oldRealm.schemaVersion < 30) {
-      logger.log('migration step #12');
-      const oldObjects = oldRealm.objects<{id: string}>('Provider');
-      const newObjects = newRealm.objects<{
-        isEditable: boolean;
-      }>('Provider');
-
-      logger.log({
-        oldObjects: oldObjects.toJSON(),
-        newObjects: newObjects.toJSON(),
-      });
-
-      for (const objectIndex in oldObjects) {
-        const newObject = newObjects[objectIndex];
-        newObject.isEditable = false;
       }
     }
 
@@ -446,15 +391,12 @@ export const realm = new Realm({
 
       const chainIds = new Map();
 
-      const providers = oldRealm.objects<{
-        id: string;
-        ethChainId: number;
-      }>('Provider');
+      const providers = Provider.getAll();
 
       logger.log({
+        providers,
         oldObjects: oldObjects.toJSON(),
         newObjects: newObjects.toJSON(),
-        providers: providers.toJSON(),
       });
 
       for (const provider of providers) {
@@ -508,25 +450,6 @@ export const realm = new Realm({
           id: 'providerId',
           value: user.providerId,
         });
-      }
-    }
-
-    if (oldRealm.schemaVersion < 64) {
-      logger.log('migration step #21');
-      const oldObjects = oldRealm.objects<{id: string}>('Provider');
-      const newObjects = newRealm.objects<{
-        tmEndpoints: string[];
-        evmEndpoints: string[];
-      }>('Provider');
-      logger.log({
-        oldObjects: oldObjects.toJSON(),
-        newObjects: newObjects.toJSON(),
-      });
-
-      for (const objectIndex in oldObjects) {
-        const newObject = newObjects[objectIndex];
-        newObject.tmEndpoints = [];
-        newObject.evmEndpoints = [];
       }
     }
 

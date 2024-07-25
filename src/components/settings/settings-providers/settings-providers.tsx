@@ -7,7 +7,7 @@ import {Provider} from '@app/models/provider';
 import {SettingsProvidersRow} from './settings-providers-row';
 
 export type SettingsProvidersProps = {
-  providers: Realm.Results<Provider>;
+  providers: Provider[];
   providerId: string;
   onSelect: (providerId: string) => void;
 };
@@ -37,5 +37,6 @@ export const SettingsProviders = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingHorizontal: 20,
   },
 });

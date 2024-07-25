@@ -1596,7 +1596,6 @@ export enum DeeplinkUrlKey {
   browser = 'browser',
   web3browser = 'web3browser',
   back9test = 'back9test',
-  provider = 'provider',
   enableDeveloperMode = 'enableDeveloperMode',
 }
 

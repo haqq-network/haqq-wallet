@@ -3,7 +3,8 @@ import React from 'react';
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {DataContent, Icon} from '@app/components/ui';
+import {ImageWrapper} from '@app/components/image-wrapper';
+import {DataContent, Icon, Spacer} from '@app/components/ui';
 import {Provider} from '@app/models/provider';
 
 export type SettingsProvidersRowProps = {
@@ -22,11 +23,14 @@ export const SettingsProvidersRow = ({
         onPress(item.id);
       }}>
       <View style={styles.container}>
+        <ImageWrapper source={item.icon} style={styles.icon} />
+        <Spacer width={12} />
         <DataContent
           style={styles.info}
           title={item.name}
           subtitle={`${item.name} (${item.ethChainId})`}
         />
+        <Spacer flex={1} />
         {providerId === item.id && (
           <Icon color={Color.graphicGreen1} name="check" i24 />
         )}
@@ -38,9 +42,8 @@ export const SettingsProvidersRow = ({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
   },
   info: {justifyContent: 'space-between'},
+  icon: {width: 42, height: 42},
 });
