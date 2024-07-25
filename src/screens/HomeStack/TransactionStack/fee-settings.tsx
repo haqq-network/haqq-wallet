@@ -42,6 +42,7 @@ export const FeeSettingsScreen = observer(() => {
     HomeStackParamList,
     HomeStackRoutes.FeeSettings
   >().params;
+
   const [isEstimating, setEstimating] = useState(false);
   const [type, setType] = useState(fee.estimationType);
 
@@ -126,12 +127,15 @@ export const FeeSettingsScreen = observer(() => {
     navigation.pop();
     app.emit(
       successEventName,
-      new Fee({
-        gasLimit: new Balance(amountsGasLimit.amount),
-        maxBaseFee: new Balance(amountsMaxBaseFee.amount),
-        maxPriorityFee: new Balance(amountsMaxPriorityFee.amount),
-        expectedFee: expectedFee!,
-      }),
+      new Fee(
+        {
+          gasLimit: new Balance(amountsGasLimit.amount),
+          maxBaseFee: new Balance(amountsMaxBaseFee.amount),
+          maxPriorityFee: new Balance(amountsMaxPriorityFee.amount),
+          expectedFee: expectedFee!,
+        },
+        type,
+      ),
     );
   };
 

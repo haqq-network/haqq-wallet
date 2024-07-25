@@ -38,8 +38,7 @@ export const TransactionConfirmationScreen = observer(() => {
   >();
   const {token, calculatedFees} = route.params;
 
-  const [fee] = useState<Fee>(new Fee(calculatedFees!));
-  const [feeSettings, setFeeSettings] = useState<Fee | null>(null);
+  const [fee, setFee] = useState<Fee>(new Fee(calculatedFees!));
 
   const wallet = Wallet.getById(route.params.from);
   const contact = useMemo(
@@ -171,7 +170,7 @@ export const TransactionConfirmationScreen = observer(() => {
         data,
       });
 
-      setFeeSettings(new Fee(result.calculatedFees!));
+      setFee(result);
     }
   }, [fee, from, to, value, data]);
 
@@ -183,7 +182,7 @@ export const TransactionConfirmationScreen = observer(() => {
       amount={route.params.amount}
       onConfirmTransaction={onConfirmTransaction}
       onFeePress={onFeePress}
-      fee={feeSettings ?? fee}
+      fee={fee}
       testID="transaction_confirmation"
       token={route.params.token}
     />

@@ -10,8 +10,9 @@ class Fee {
   private _lastSavedFee: CalculatedFees | null = null;
   private _calculatedFee: CalculatedFees | null = null;
 
-  constructor(value: CalculatedFees) {
+  constructor(value: CalculatedFees, type = EstimationVariant.average) {
     this._calculatedFee = value;
+    this._estimationType = type;
   }
 
   setCalculatedFees = (value: CalculatedFees, updateLastSaved = true) => {
