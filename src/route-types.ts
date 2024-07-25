@@ -30,6 +30,7 @@ import {
 } from '@app/types';
 import {WalletConnectApproveConnectionEvent} from '@app/types/wallet-connect';
 
+import {Fee} from './models/fee';
 import {CalculatedFees} from './services/eth-network/types';
 
 export type AnyRouteFromParent =
@@ -369,6 +370,7 @@ export enum HomeStackRoutes {
   Device = '_device',
   Swap = '_swap',
   NewsDetailPushNotification = 'newsDetailsPushNotification',
+  FeeSettings = 'feeSettings',
 }
 
 export type HomeStackParamList = {
@@ -431,7 +433,6 @@ export type HomeStackParamList = {
     chainId?: number;
     selectedAccount?: string;
     hideContractAttention?: boolean;
-    saveFee?: boolean;
   };
   [HomeStackRoutes.BackupSssNotification]: {accountId: string};
   [HomeStackRoutes.PopupNotificationNews]: {
@@ -474,6 +475,14 @@ export type HomeStackParamList = {
     openEvent: MarketingEvents;
     linkEvent: MarketingEvents;
     scrollEvent: MarketingEvents;
+  };
+  [HomeStackRoutes.FeeSettings]: Eventable & {
+    fee: Fee;
+    from: string;
+    to: string;
+    value?: Balance;
+    data?: string;
+    chainId?: string;
   };
 };
 
@@ -524,7 +533,6 @@ export enum TransactionStackRoutes {
   TransactionSumAddress = 'transactionSumAddress',
   TransactionContactEdit = 'transactionContactEdit',
   TransactionSelectCrypto = 'transactionSelectCrypto',
-  FeeSettings = 'feeSettings',
 }
 
 export type TransactionStackParamList = HomeFeedStackParamList & {
@@ -547,6 +555,7 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
     token: IToken;
   };
   [TransactionStackRoutes.TransactionFinish]: {
+    fee: Fee;
     transaction: TransactionResponse;
     to?: string;
     hash: string;
@@ -560,6 +569,7 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
     nft: NftItem;
   };
   [TransactionStackRoutes.TransactionNftFinish]: {
+    fee: Fee;
     nft: NftItem;
     transaction: TransactionResponse;
     to: string;
@@ -586,12 +596,6 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
   [TransactionStackRoutes.TransactionSelectCrypto]: {
     from: string;
     to: string;
-  };
-  [TransactionStackRoutes.FeeSettings]: {
-    from: string;
-    to: string;
-    amount?: Balance;
-    data?: string;
   };
 };
 

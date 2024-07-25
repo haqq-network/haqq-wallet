@@ -42,6 +42,7 @@ import {WalletConnectApproveConnectionEvent} from '@app/types/wallet-connect';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 import {AwaitValue} from './helpers/await-for-value';
+import {Fee} from './models/fee';
 
 export enum MarketingEvents {
   accountCreated = 'q3vxmg',
@@ -591,7 +592,6 @@ export type RootStackParamList = {
     chainId?: number;
     selectedAccount?: string;
     hideContractAttention?: boolean;
-    saveFee?: boolean;
   };
   sssNetwork: undefined;
   sssBackup: {
@@ -632,6 +632,13 @@ export type RootStackParamList = {
     openEvent: MarketingEvents;
     linkEvent: MarketingEvents;
     scrollEvent: MarketingEvents;
+  };
+  feeSettings: {
+    fee: Fee;
+    from: string;
+    to: string;
+    value?: Balance;
+    data?: string;
   };
 };
 

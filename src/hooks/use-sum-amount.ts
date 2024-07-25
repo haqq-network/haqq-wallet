@@ -5,6 +5,7 @@ import validate from 'validate.js';
 import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {I18N, getText} from '@app/i18n';
 import {Balance} from '@app/services/balance';
+import {WEI_PRECISION} from '@app/variables/common';
 
 export function useSumAmount(
   initialSum = Balance.Empty,
@@ -103,7 +104,7 @@ export function useSumAmount(
         changed: _changed,
       }));
     },
-    setAmount(text: string) {
+    setAmount(text: string, precision = WEI_PRECISION) {
       if (text.match(/^[0-9].*/)) {
         let i = 0;
         const textFormatted = text
@@ -117,7 +118,7 @@ export function useSumAmount(
           .replace(/\D&[^.]/g, '')
           .replace(/^0[0-9]/gm, '0');
 
-        const newAmount = new Balance(+textFormatted);
+        const newAmount = new Balance(+textFormatted, precision);
         if (typeof onChange === 'function') {
           onChange(newAmount, textFormatted);
         }

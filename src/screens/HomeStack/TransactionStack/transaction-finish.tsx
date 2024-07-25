@@ -11,7 +11,6 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {I18N, getText} from '@app/i18n';
 import {Contact, ContactType} from '@app/models/contact';
-import {Fee} from '@app/models/fee';
 import {
   HomeFeedStackRoutes,
   TransactionStackParamList,
@@ -27,10 +26,11 @@ export const TransactionFinishScreen = observer(() => {
     goBack();
     return true;
   }, [goBack]);
-  const {hash, transaction, to, token, amount, hideContact} = useTypedRoute<
-    TransactionStackParamList,
-    TransactionStackRoutes.TransactionFinish
-  >().params;
+  const {hash, transaction, to, token, amount, hideContact, fee} =
+    useTypedRoute<
+      TransactionStackParamList,
+      TransactionStackRoutes.TransactionFinish
+    >().params;
   const toAddress = useMemo(
     () => to ?? transaction?.to ?? '',
     [to, transaction?.to],
@@ -41,7 +41,6 @@ export const TransactionFinishScreen = observer(() => {
 
   const onSubmit = useCallback(async () => {
     await awaitForEventDone(Events.onAppReviewRequest);
-    Fee.clear();
     navigate(HomeFeedStackRoutes.HomeFeed);
   }, [getParent]);
 
@@ -93,6 +92,7 @@ export const TransactionFinishScreen = observer(() => {
       testID="transaction_finish"
       token={token}
       amount={amount}
+      fee={fee}
       hideContact={hideContact}
     />
   );

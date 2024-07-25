@@ -18,7 +18,6 @@ import {useBackNavigationHandler} from '@app/hooks/use-back-navigation-handler';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {useRemoteConfigVar} from '@app/hooks/use-remote-config';
-import {Fee} from '@app/models/fee';
 import {Wallet} from '@app/models/wallet';
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {Balance} from '@app/services/balance';
@@ -56,7 +55,6 @@ export const JsonRpcSignScreen = memo(() => {
     chainId,
     selectedAccount,
     hideContractAttention = false,
-    saveFee = false,
   } = useTypedRoute<HomeStackParamList, HomeStackRoutes.JsonRpcSign>().params ||
   {};
 
@@ -217,8 +215,7 @@ export const JsonRpcSignScreen = memo(() => {
 
   useBackNavigationHandler(() => {
     app.emit('json-rpc-sign-reject');
-    !saveFee && Fee.clear();
-  }, [saveFee]);
+  }, []);
 
   if (isLoading) {
     return <Loading />;

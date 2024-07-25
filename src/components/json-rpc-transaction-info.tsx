@@ -15,15 +15,13 @@ import {
 } from '@app/components/ui';
 import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
+import {awaitForFee} from '@app/helpers/await-for-fee';
 import {useTypedNavigation} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N} from '@app/i18n';
 import {Fee} from '@app/models/fee';
 import {Provider} from '@app/models/provider';
-import {
-  JsonRpcSignPopupStackParamList,
-  JsonRpcSignPopupStackRoutes,
-} from '@app/route-types';
+import {JsonRpcSignPopupStackParamList} from '@app/route-types';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {
@@ -60,6 +58,7 @@ export const JsonRpcTransactionInfo = ({
   const navigation = useTypedNavigation<JsonRpcSignPopupStackParamList>();
 
   const [isFeeLoading, setFeeLoading] = useState(true);
+  const [fee, setFee] = useState<Fee | null>(null);
 
   const tx = useMemo(
     () => getTransactionFromJsonRpcRequest(request),
@@ -95,7 +94,7 @@ export const JsonRpcTransactionInfo = ({
         value: new Balance(tx.value! || Balance.Empty),
         data: tx.data,
       });
-      Fee.setCalculatedFees(data);
+      setFee(new Fee(data));
       return data.expectedFee;
     } catch {
       return Balance.Empty;
@@ -106,9 +105,9 @@ export const JsonRpcTransactionInfo = ({
     const float = value.toFloat();
     const fixedNum = float >= 1 ? 3 : LONG_NUM_PRECISION;
     return value
-      .operate(Fee.calculatedFees?.expectedFee ?? Balance.Empty, 'add')
+      .operate(fee?.calculatedFees?.expectedFee ?? Balance.Empty, 'add')
       .toBalanceString(fixedNum);
-  }, [value, Fee.calculatedFees?.expectedFee]);
+  }, [value, fee?.calculatedFees?.expectedFee]);
 
   const isContract = useMemo(
     () =>
@@ -126,7 +125,7 @@ export const JsonRpcTransactionInfo = ({
     !hideContractAttention && isContract && !isInWhiteList;
 
   useEffectAsync(async () => {
-    if (!Fee.calculatedFees) {
+    if (!fee?.calculatedFees) {
       try {
         if (tx) {
           setFeeLoading(true);
@@ -157,18 +156,22 @@ export const JsonRpcTransactionInfo = ({
     return '';
   }, [txParsedData]);
 
-  const onFeePress = useCallback(() => {
+  const onFeePress = useCallback(async () => {
     if (!tx) {
       return;
     }
 
-    navigation.navigate(JsonRpcSignPopupStackRoutes.JsonRpcSignFeeSettings, {
-      from: tx.from!,
-      to: tx.to!,
-      amount: new Balance(tx.value! || Balance.Empty),
-      data: tx.data,
-    });
-  }, [navigation, tx]);
+    if (fee) {
+      const result = await awaitForFee({
+        fee,
+        from: tx.from!,
+        to: tx.to!,
+        value: new Balance(tx.value! || Balance.Empty),
+        data: tx.data,
+      });
+      setFee(result);
+    }
+  }, [navigation, tx, fee]);
 
   return (
     <View style={styles.container}>
@@ -283,7 +286,7 @@ export const JsonRpcTransactionInfo = ({
                 variant={TextVariant.t11}
                 color={Color.textGreen1}
                 onPress={onFeePress}>
-                {Fee.expectedFeeString}
+                {fee?.expectedFeeString}
               </Text>
               <Icon name={IconsName.tune} color={Color.textGreen1} />
             </View>

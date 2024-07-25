@@ -1,5 +1,3 @@
-import {makeAutoObservable} from 'mobx';
-
 import {Balance} from '@app/services/balance';
 
 import {CalculatedFees, EstimationVariant} from './fee.types';
@@ -12,8 +10,9 @@ class Fee {
   private _lastSavedFee: CalculatedFees | null = null;
   private _calculatedFee: CalculatedFees | null = null;
 
-  constructor() {
-    makeAutoObservable(this);
+  constructor(value: CalculatedFees, type = EstimationVariant.average) {
+    this._calculatedFee = value;
+    this._estimationType = type;
   }
 
   setCalculatedFees = (value: CalculatedFees, updateLastSaved = true) => {
@@ -134,15 +133,6 @@ class Fee {
       String(+value * Math.pow(10, 9)),
     );
   };
-
-  // This is very important to call this function each time when work with fee done
-  clear = () => {
-    this._estimationType = EstimationVariant.average;
-    this._lastSavedFee = null;
-    this._calculatedFee = null;
-  };
 }
 
-const instance = new Fee();
-
-export {instance as Fee};
+export {Fee};

@@ -34,6 +34,7 @@ type TransactionFinishProps = {
   onPressContact: () => void;
   contact: Contact | null;
   short: string;
+  fee: Fee;
 };
 
 export const TransactionNftFinish = ({
@@ -43,6 +44,7 @@ export const TransactionNftFinish = ({
   onPressContact,
   contact,
   short,
+  fee,
 }: TransactionFinishProps) => {
   const onPressHash = async () => {
     const url = `${EthNetwork.explorer}tx/${transaction?.hash}`;
@@ -98,7 +100,7 @@ export const TransactionNftFinish = ({
         </Text>
       </View>
 
-      <NetworkFee fee={Fee.expectedFee} currency="ISLM" />
+      <NetworkFee fee={fee.expectedFee} currency="ISLM" />
 
       <Spacer />
 
