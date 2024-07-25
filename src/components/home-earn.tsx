@@ -4,6 +4,7 @@ import {RefreshControl, ScrollView, TouchableOpacity, View} from 'react-native';
 import {RiveRef} from 'rive-react-native';
 
 import {Color} from '@app/colors';
+import {app} from '@app/contexts';
 import {cleanNumber, createTheme} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks';
 import {I18N} from '@app/i18n';
@@ -19,6 +20,7 @@ import {
   IconsName,
   Spacer,
   Text,
+  TextVariant,
 } from './ui';
 import {RaffleBlockList} from './ui/raffle-block-list';
 import {RiveWrapper} from './ui/rive-wrapper';
@@ -101,9 +103,9 @@ export const HomeEarn = ({
               />
             </View>
             <View style={styles.stakingCardText}>
-              <Text t8 i18n={I18N.earnStaking} />
+              <Text variant={TextVariant.t8} i18n={I18N.earnStaking} />
               <Text
-                t14
+                variant={TextVariant.t14}
                 color={Color.textBase2}
                 i18n={I18N.earnStakingDescription}
               />
@@ -117,10 +119,10 @@ export const HomeEarn = ({
               <Spacer height={12} />
 
               <View style={styles.row}>
-                <Text t14 i18n={I18N.earnRewards} />
+                <Text variant={TextVariant.t14} i18n={I18N.earnRewards} />
                 <Spacer width={5} />
-                <Text t13 color={Color.textGreen1}>
-                  {formattedRewardAmount} ISLM
+                <Text variant={TextVariant.t13} color={Color.textGreen1}>
+                  {`${formattedRewardAmount} ${app.provider.denom}`}
                 </Text>
                 <Spacer flex={1} />
                 {showStakingGetRewardsButtons && (
@@ -144,13 +146,13 @@ export const HomeEarn = ({
               <Icon name={IconsName.ticket} color={Color.graphicBase2} />
               <Spacer width={3} />
               <Text
-                t8
+                variant={TextVariant.t8}
                 color={Color.textBase2}
                 i18n={I18N.homeEarnEmptyRaffleTitle}
               />
             </View>
             <Text
-              t14
+              variant={TextVariant.t14}
               color={Color.textBase2}
               i18n={I18N.homeEarnEmptyRaffleDescription}
             />
@@ -160,11 +162,11 @@ export const HomeEarn = ({
           <View style={styles.row}>
             <Icon i24 color={Color.graphicBase1} name={IconsName.ticket} />
             <Spacer width={2} />
-            <Text t8 i18n={I18N.earnRaffles} />
+            <Text variant={TextVariant.t8} i18n={I18N.earnRaffles} />
             <Spacer width={4} />
             {!!resultsCount && (
               <Text
-                t15
+                variant={TextVariant.t15}
                 i18n={I18N.earnRafflesResultCount}
                 color={Color.textYellow1}
                 i18params={{count: `${resultsCount}`}}
@@ -172,7 +174,7 @@ export const HomeEarn = ({
             )}
           </View>
           <Text
-            t14
+            variant={TextVariant.t14}
             color={Color.textBase2}
             i18n={I18N.earnRafflesDescription}
           />

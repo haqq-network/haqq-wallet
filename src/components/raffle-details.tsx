@@ -3,6 +3,7 @@ import React, {useCallback, useMemo, useState} from 'react';
 import {Image, View} from 'react-native';
 
 import {Color} from '@app/colors';
+import {app} from '@app/contexts';
 import {cleanNumber, createTheme} from '@app/helpers';
 import {useTimer} from '@app/hooks/use-timer';
 import {I18N} from '@app/i18n';
@@ -18,6 +19,8 @@ import {
   PopupContainer,
   Spacer,
   Text,
+  TextPosition,
+  TextVariant,
 } from './ui';
 import {Separator} from './ui/separator';
 import {Timer} from './ui/timer';
@@ -81,19 +84,26 @@ export const RaffleDetails = ({
   return (
     <PopupContainer style={styles.container}>
       <View style={styles.row}>
-        <Text t8 numberOfLines={1} i18n={I18N.rafflePrizePool} />
+        <Text
+          variant={TextVariant.t8}
+          numberOfLines={1}
+          i18n={I18N.rafflePrizePool}
+        />
         <Image
           style={styles.islmIcon}
           source={require('@assets/images/islm_icon.png')}
         />
-        <Text t8 numberOfLines={1}>
-          {formattedBudget} ISLM
+        <Text variant={TextVariant.t8} numberOfLines={1}>
+          {`${formattedBudget} ${app.provider.denom}`}
         </Text>
       </View>
 
       <Spacer height={12} />
 
-      <Text t14 center color={Color.textBase2}>
+      <Text
+        variant={TextVariant.t14}
+        position={TextPosition.center}
+        color={Color.textBase2}>
         {item.description}
       </Text>
 
@@ -116,7 +126,7 @@ export const RaffleDetails = ({
           <Spacer height={8} />
           <View style={styles.row}>
             <Text
-              t14
+              variant={TextVariant.t14}
               numberOfLines={1}
               i18n={I18N.raffleDetailsPreviousRaffle}
               color={Color.textBase2}
@@ -127,7 +137,7 @@ export const RaffleDetails = ({
               source={require('@assets/images/islm_icon.png')}
             />
             <Text
-              t14
+              variant={TextVariant.t14}
               numberOfLines={1}
               i18n={I18N.raffleDetailsPreviousRaffleDetails}
               i18params={{
@@ -147,7 +157,7 @@ export const RaffleDetails = ({
         <Icon name={IconsName.ticket} color={Color.textYellow1} />
         <Spacer width={4} />
         <Text
-          t12
+          variant={TextVariant.t12}
           i18n={
             item.total_tickets === 1
               ? I18N.raffleDetailsHaveTicket
@@ -189,8 +199,8 @@ export const RaffleDetails = ({
       </First>
       <Spacer height={16} />
       <Text
-        center
-        t17
+        position={TextPosition.center}
+        variant={TextVariant.t17}
         color={Color.textBase2}
         i18n={I18N.earnHint}
         style={styles.hintStyle}
