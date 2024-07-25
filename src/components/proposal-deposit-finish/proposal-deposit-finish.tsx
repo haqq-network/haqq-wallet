@@ -14,8 +14,11 @@ import {
   PopupContainer,
   Spacer,
   Text,
+  TextPosition,
+  TextVariant,
 } from '@app/components/ui';
 import {NetworkFee} from '@app/components/ui/network-fee';
+import {app} from '@app/contexts';
 import {createTheme, openURL} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
@@ -52,8 +55,8 @@ export const ProposalDepositFinish = ({
         />
       </View>
       <Text
-        t4
-        center
+        variant={TextVariant.t4}
+        position={TextPosition.center}
         i18n={I18N.proposalDepositTitle}
         style={styles.title}
         color={Color.textGreen1}
@@ -62,10 +65,16 @@ export const ProposalDepositFinish = ({
         source={require('@assets/images/islm_icon.png')}
         style={styles.icon}
       />
-      <Text t3 center style={styles.sum}>
-        {cleanNumber(amount)} ISLM
+      <Text
+        variant={TextVariant.t3}
+        position={TextPosition.center}
+        style={styles.sum}>
+        {`${cleanNumber(amount)} ${app.provider.denom}`}
       </Text>
-      <Text t13 center style={styles.address}>
+      <Text
+        variant={TextVariant.t13}
+        position={TextPosition.center}
+        style={styles.address}>
         {proposal.content.title}
       </Text>
       <NetworkFee fee={fee} currency="ISLM" />
@@ -79,8 +88,8 @@ export const ProposalDepositFinish = ({
             i22
           />
           <Text
-            t15
-            center
+            variant={TextVariant.t15}
+            position={TextPosition.center}
             i18n={I18N.transactionFinishHash}
             color={Color.textBase2}
           />

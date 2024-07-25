@@ -11,7 +11,10 @@ import {
   PopupContainer,
   Spacer,
   Text,
+  TextPosition,
+  TextVariant,
 } from '@app/components/ui';
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N, getText} from '@app/i18n';
@@ -41,32 +44,38 @@ export const ProposalDepositPreview = ({
         style={styles.icon}
       />
       <Text
-        t11
-        center
+        variant={TextVariant.t11}
+        position={TextPosition.center}
         i18n={I18N.proposalDepositTotalAmount}
         color={Color.textBase2}
         style={styles.subtitle}
       />
-      <Text t3 center style={styles.sum}>
-        {cleanNumber(amount)} ISLM
+      <Text
+        variant={TextVariant.t3}
+        position={TextPosition.center}
+        style={styles.sum}>
+        {`${cleanNumber(amount)} ${app.provider.denom}`}
       </Text>
       <Text
-        t11
-        center
+        variant={TextVariant.t11}
+        position={TextPosition.center}
         i18n={I18N.proposalDepositDepositFrom}
         color={Color.textBase2}
         style={styles.subtitle}
       />
-      <Text t10 center style={styles.contact}>
+      <Text
+        variant={TextVariant.t10}
+        position={TextPosition.center}
+        style={styles.contact}>
         {proposal.content.title}
       </Text>
 
       <View style={styles.info}>
         <DataView i18n={I18N.proposalDepositDepositFrom}>
-          <Text t11>{cleanNumber(amount)}</Text>
+          <Text variant={TextVariant.t11}>{cleanNumber(amount)}</Text>
         </DataView>
         <DataView label={getText(I18N.stakingDelegatePreviewNetworkFee)}>
-          <Text t11 color={getColor(Color.textBase1)}>
+          <Text variant={TextVariant.t11} color={getColor(Color.textBase1)}>
             {fee.toWeiString()}
           </Text>
         </DataView>
