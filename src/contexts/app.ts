@@ -31,6 +31,7 @@ import {VariablesString} from '@app/models/variables-string';
 import {VestingMetadataType} from '@app/models/vesting-metadata';
 import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
+import {Backend} from '@app/services/backend';
 import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
 import {EventTracker} from '@app/services/event-tracker';
@@ -102,27 +103,27 @@ class App extends AsyncEventEmitter {
     this.setMaxListeners(1000);
     this._startUpTime = Date.now();
 
+    TouchID.isSupported(isSupportedConfig)
+      .then(biometryType => {
+        this._biometryType =
+          Platform.select({
+            ios: biometryType as BiometryType,
+            android: biometryType ? BiometryType.fingerprint : null,
+          }) || null;
+      })
+      .catch(() => {
+        this._biometryType = null;
+      });
+
+    GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: false}).then(
+      (result: boolean) => {
+        this._googleSigninSupported = result;
+      },
+    );
+
+    this.user = User.getOrCreate();
+
     Provider.init().then(() => {
-      TouchID.isSupported(isSupportedConfig)
-        .then(biometryType => {
-          this._biometryType =
-            Platform.select({
-              ios: biometryType as BiometryType,
-              android: biometryType ? BiometryType.fingerprint : null,
-            }) || null;
-        })
-        .catch(() => {
-          this._biometryType = null;
-        });
-
-      GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: false}).then(
-        (result: boolean) => {
-          this._googleSigninSupported = result;
-        },
-      );
-
-      this.user = User.getOrCreate();
-
       this._provider = Provider.getById(this.providerId);
 
       if (this._provider) {
@@ -240,15 +241,7 @@ class App extends AsyncEventEmitter {
   }
 
   get backend() {
-    if (!VariablesString.exists('backend')) {
-      return Config.HAQQ_BACKEND_DEFAULT || Config.HAQQ_BACKEND;
-    }
-
-    return (
-      VariablesString.get('backend') ||
-      Config.HAQQ_BACKEND_DEFAULT ||
-      Config.HAQQ_BACKEND
-    );
+    return Backend.instance.getRemoteUrl();
   }
 
   set backend(value) {

@@ -1,6 +1,8 @@
-import {app} from '@app/contexts';
+import Config from 'react-native-config';
+
 import {AppInfo} from '@app/helpers/get-app-info';
 import {Currency} from '@app/models/types';
+import {VariablesString} from '@app/models/variables-string';
 import {
   AppLanguage,
   LanguagesResponse,
@@ -38,7 +40,15 @@ export class Backend {
   };
 
   getRemoteUrl() {
-    return app.backend;
+    if (!VariablesString.exists('backend')) {
+      return Config.HAQQ_BACKEND_DEFAULT || Config.HAQQ_BACKEND;
+    }
+
+    return (
+      VariablesString.get('backend') ||
+      Config.HAQQ_BACKEND_DEFAULT ||
+      Config.HAQQ_BACKEND
+    );
   }
 
   async blockRequest(

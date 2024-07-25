@@ -25,7 +25,7 @@ export class Provider {
   static MMKV_KEY = 'network-providers';
   static PROVIDER_REQUEST_TIMEOUT = 3000;
   static CACHED_VALUE: NetworkProviderResponse = JSON.parse(
-    (storage.getItem(Provider.MMKV_KEY) as string) || '{}',
+    (storage.getItem(Provider.MMKV_KEY) as string) || '[]',
   );
 
   static data: Record<ProviderID, Provider> = observable(
