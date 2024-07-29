@@ -7,13 +7,13 @@ import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {I18N, getText} from '@app/i18n';
 import {Balance} from '@app/services/balance';
 
-export function useSumAmount(
+export const useSumAmount = (
   initialSum = Balance.Empty,
   initialMaxSum = Balance.Empty,
   initialMinAmount = getRemoteBalanceValue('transfer_min_amount'),
   customCheck?: (amount: Balance) => string,
   onChange?: (amount: Balance, formattedString: string) => void,
-) {
+) => {
   const [{amount, amountText, changed}, setAmount] = useState({
     amount: initialSum,
     amountText: initialSum.isPositive() ? initialSum.toString() : '',
@@ -140,4 +140,4 @@ export function useSumAmount(
     },
     setError,
   };
-}
+};

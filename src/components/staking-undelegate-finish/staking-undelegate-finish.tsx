@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {observer} from 'mobx-react';
 import {Image, View} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -32,86 +33,84 @@ export type StakingDelegateFinishProps = {
   onDone: () => void;
 };
 
-export const StakingUnDelegateFinish = ({
-  onDone,
-  validator,
-  amount,
-  fee,
-  txhash,
-}: StakingDelegateFinishProps) => {
-  const onPressHash = async () => {
-    const url = `https://haqq.explorers.guru/transaction/${txhash}`;
-    await openURL(url);
-  };
+export const StakingUnDelegateFinish = observer(
+  ({onDone, validator, amount, fee, txhash}: StakingDelegateFinishProps) => {
+    const onPressHash = async () => {
+      const url = `https://haqq.explorers.guru/transaction/${txhash}`;
+      await openURL(url);
+    };
 
-  return (
-    <PopupContainer testID="staking-undelegate-finish" style={styles.container}>
-      <View style={styles.sub}>
-        <LottieWrap
-          source={require('@assets/animations/transaction-finish.json')}
-          style={styles.image}
-          autoPlay
-          loop={false}
+    return (
+      <PopupContainer
+        testID="staking-undelegate-finish"
+        style={styles.container}>
+        <View style={styles.sub}>
+          <LottieWrap
+            source={require('@assets/animations/transaction-finish.json')}
+            style={styles.image}
+            autoPlay
+            loop={false}
+          />
+        </View>
+        <Text
+          variant={TextVariant.t4}
+          position={TextPosition.center}
+          i18n={I18N.stakingUnDelegateFinishTitle}
+          style={styles.title}
+          color={Color.textGreen1}
         />
-      </View>
-      <Text
-        variant={TextVariant.t4}
-        position={TextPosition.center}
-        i18n={I18N.stakingUnDelegateFinishTitle}
-        style={styles.title}
-        color={Color.textGreen1}
-      />
-      <Image
-        source={require('@assets/images/islm_icon.png')}
-        style={styles.icon}
-      />
-      <Text
-        variant={TextVariant.t11}
-        position={TextPosition.center}
-        i18n={I18N.stakingUnDelegateFinishTotalAmount}
-        color={Color.textBase2}
-        style={styles.totalAmount}
-      />
-      <Text
-        variant={TextVariant.t3}
-        position={TextPosition.center}
-        style={styles.sum}>
-        - {`${cleanNumber(amount)} ${app.provider.denom}`}
-      </Text>
-      <Text
-        variant={TextVariant.t13}
-        position={TextPosition.center}
-        style={styles.address}>
-        {validator.description.moniker}
-      </Text>
-      <NetworkFee fee={fee} />
-      <Spacer />
-      <Inline gap={12}>
-        <IconButton onPress={onPressHash} style={styles.button}>
-          <Icon
-            name="block"
-            color={Color.graphicBase2}
-            style={styles.buttonIcon}
-            i22
-          />
-          <Text
-            variant={TextVariant.t15}
-            position={TextPosition.center}
-            i18n={I18N.transactionFinishHash}
-            color={Color.textBase2}
-          />
-        </IconButton>
-      </Inline>
-      <Spacer height={28} />
-      <Button
-        style={styles.margin}
-        variant={ButtonVariant.contained}
-        i18n={I18N.stakingUnDelegateFinishDone}
-        onPress={onDone}
-      />
-    </PopupContainer>
-  );
-};
+        <Image
+          source={require('@assets/images/islm_icon.png')}
+          style={styles.icon}
+        />
+        <Text
+          variant={TextVariant.t11}
+          position={TextPosition.center}
+          i18n={I18N.stakingUnDelegateFinishTotalAmount}
+          color={Color.textBase2}
+          style={styles.totalAmount}
+        />
+        <Text
+          variant={TextVariant.t3}
+          position={TextPosition.center}
+          style={styles.sum}>
+          - {`${cleanNumber(amount)} ${app.provider.denom}`}
+        </Text>
+        <Text
+          variant={TextVariant.t13}
+          position={TextPosition.center}
+          style={styles.address}>
+          {validator.description.moniker}
+        </Text>
+        <NetworkFee fee={fee} />
+        <Spacer />
+        <Inline gap={12}>
+          <IconButton onPress={onPressHash} style={styles.button}>
+            <Icon
+              name="block"
+              color={Color.graphicBase2}
+              style={styles.buttonIcon}
+              i22
+            />
+            <Text
+              variant={TextVariant.t15}
+              position={TextPosition.center}
+              i18n={I18N.transactionFinishHash}
+              color={Color.textBase2}
+            />
+          </IconButton>
+        </Inline>
+        <Spacer height={28} />
+        <Button
+          style={styles.margin}
+          variant={ButtonVariant.contained}
+          i18n={I18N.stakingUnDelegateFinishDone}
+          onPress={onDone}
+        />
+      </PopupContainer>
+    );
+  },
+);
 
 const styles = createTheme({
   container: {

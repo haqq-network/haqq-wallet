@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {observer} from 'mobx-react';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -20,43 +21,47 @@ interface TextSumProps {
   style?: StyleProp<ViewStyle>;
 }
 
-export function TextSum({
-  sum,
-  rightText,
-  color = Color.textBase1,
-  center,
-  right,
-  suffix = '',
-  style,
-}: TextSumProps) {
-  const hasRightText = typeof rightText !== 'undefined';
-  const text = hasRightText ? getText(rightText) : app.provider.denom + suffix;
-
-  const viewStyles = StyleSheet.flatten([
-    center && styles.center,
-    right && styles.right,
+export const TextSum = observer(
+  ({
+    sum,
+    rightText,
+    color = Color.textBase1,
+    center,
+    right,
+    suffix = '',
     style,
-  ]);
+  }: TextSumProps) => {
+    const hasRightText = typeof rightText !== 'undefined';
+    const text = hasRightText
+      ? getText(rightText)
+      : app.provider.denom + suffix;
 
-  return (
-    <View style={[styles.container, viewStyles]}>
-      <Text
-        variant={TextVariant.t13}
-        position={TextPosition.center}
-        color={color}>
-        {sum}
-      </Text>
-      <Spacer width={2} />
-      <Text
-        variant={TextVariant.t13}
-        position={TextPosition.center}
-        style={styles.opacityText}
-        color={color}>
-        {text}
-      </Text>
-    </View>
-  );
-}
+    const viewStyles = StyleSheet.flatten([
+      center && styles.center,
+      right && styles.right,
+      style,
+    ]);
+
+    return (
+      <View style={[styles.container, viewStyles]}>
+        <Text
+          variant={TextVariant.t13}
+          position={TextPosition.center}
+          color={color}>
+          {sum}
+        </Text>
+        <Spacer width={2} />
+        <Text
+          variant={TextVariant.t13}
+          position={TextPosition.center}
+          style={styles.opacityText}
+          color={color}>
+          {text}
+        </Text>
+      </View>
+    );
+  },
+);
 
 const styles = createTheme({
   container: {

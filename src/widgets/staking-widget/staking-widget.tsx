@@ -1,5 +1,6 @@
-import React, {memo, useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
+import {observer} from 'mobx-react';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -18,7 +19,7 @@ type Props = {
   rewardAmount: Balance;
 };
 
-export const StakingWidget = memo(
+export const StakingWidget = observer(
   ({onPress, onGetReward, rewardAmount}: Props) => {
     const [loading, setLoading] = useState(false);
     const canGetRewards = useMemo(

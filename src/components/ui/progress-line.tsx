@@ -1,5 +1,6 @@
-import React, {forwardRef, memo, useImperativeHandle} from 'react';
+import React, {forwardRef, useImperativeHandle} from 'react';
 
+import {observer} from 'mobx-react';
 import {View} from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -25,7 +26,7 @@ export interface ProgressLineInterface {
   updateProgress: (newVotes: number) => void;
 }
 
-export const ProgressLine = memo(
+export const ProgressLine = observer(
   forwardRef(
     (
       {

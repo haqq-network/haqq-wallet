@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo, useRef} from 'react';
 
 import {useFocusEffect} from '@react-navigation/native';
+import {observer} from 'mobx-react';
 import {
   PixelRatio,
   Pressable,
@@ -30,130 +31,136 @@ export type SumBlockProps = {
   testID?: string;
   token?: IToken;
 };
-export const SumBlock = ({
-  onChange,
-  value,
-  balance,
-  currency,
-  onMax,
-  error,
-  testID,
-  token,
-}: SumBlockProps) => {
-  const inputSumRef = useRef<TextInput>(null);
-  const dimensions = useWindowDimensions();
-  useFocusEffect(
-    useCallback(() => {
-      setTimeout(() => inputSumRef.current?.focus(), 500);
-    }, []),
-  );
+export const SumBlock = observer(
+  ({
+    onChange,
+    value,
+    balance,
+    currency,
+    onMax,
+    error,
+    testID,
+    token,
+  }: SumBlockProps) => {
+    const inputSumRef = useRef<TextInput>(null);
+    const dimensions = useWindowDimensions();
+    useFocusEffect(
+      useCallback(() => {
+        setTimeout(() => inputSumRef.current?.focus(), 500);
+      }, []),
+    );
 
-  const onChangeValue = useCallback(
-    (newValue: string) => {
-      const sum = newValue.replace(/,/g, '.');
-      onChange(sum);
-    },
-    [onChange],
-  );
+    const onChangeValue = useCallback(
+      (newValue: string) => {
+        const sum = newValue.replace(/,/g, '.');
+        onChange(sum);
+      },
+      [onChange],
+    );
 
-  const ratio = useMemo(
-    () => (value.length > 0 ? (dimensions.width - 180) / value.length : 30),
-    [dimensions.width, value.length],
-  );
+    const ratio = useMemo(
+      () => (value.length > 0 ? (dimensions.width - 180) / value.length : 30),
+      [dimensions.width, value.length],
+    );
 
-  const fontSize = Math.max(
-    Math.min(PixelRatio.roundToNearestPixel(ratio / 0.61), 34),
-    18,
-  );
+    const fontSize = Math.max(
+      Math.min(PixelRatio.roundToNearestPixel(ratio / 0.61), 34),
+      18,
+    );
 
-  const lineHeight = PixelRatio.roundToNearestPixel(fontSize / 0.809);
+    const lineHeight = PixelRatio.roundToNearestPixel(fontSize / 0.809);
 
-  const onFocusInput = () => {
-    inputSumRef.current?.focus();
-  };
+    const onFocusInput = () => {
+      inputSumRef.current?.focus();
+    };
 
-  const onPressMax = useCallback(() => {
-    vibrate(HapticEffects.impactLight);
-    onMax();
-  }, [onMax]);
+    const onPressMax = useCallback(() => {
+      vibrate(HapticEffects.impactLight);
+      onMax();
+    }, [onMax]);
 
-  const fiatString = useMemo(() => {
-    if (token?.decimals && token?.symbol && token.is_erc20) {
-      return new Balance(Number(value), token.decimals, token.symbol).toFiat();
-    }
+    const fiatString = useMemo(() => {
+      if (token?.decimals && token?.symbol && token.is_erc20) {
+        return new Balance(
+          Number(value),
+          token.decimals,
+          token.symbol,
+        ).toFiat();
+      }
 
-    return new Balance(Number(value)).toFiat();
-  }, [token?.decimals, token?.symbol, value]);
+      return new Balance(Number(value)).toFiat();
+    }, [token?.decimals, token?.symbol, value]);
 
-  return (
-    <View style={styles.container} testID={testID}>
-      <Text
-        variant={TextVariant.t8}
-        position={TextPosition.center}
-        style={styles.subtitle}
-        color={Color.textBase2}>
-        {currency || app.provider.denom}
-      </Text>
-      <View style={styles.sum}>
-        <Pressable onPress={onFocusInput} style={styles.inputContainer}>
-          <TextInput
-            allowFontScaling={false}
-            style={StyleSheet.compose(styles.input, {
-              fontSize,
-              lineHeight,
-            })}
-            value={value}
-            placeholder="0"
-            onChangeText={onChangeValue}
-            keyboardType="numeric"
-            placeholderTextColor={getColor(Color.textBase2)}
-            ref={inputSumRef}
-            textAlign="left"
-            testID={`${testID}_input`}
-          />
-        </Pressable>
-        <View style={styles.max}>
-          {balance.isPositive() && (
-            <Button
-              title={getText(I18N.sumBlockMax)}
-              onPress={onPressMax}
-              variant={ButtonVariant.second}
-              size={ButtonSize.small}
-              testID={`${testID}_max`}
+    return (
+      <View style={styles.container} testID={testID}>
+        <Text
+          variant={TextVariant.t8}
+          position={TextPosition.center}
+          style={styles.subtitle}
+          color={Color.textBase2}>
+          {currency || app.provider.denom}
+        </Text>
+        <View style={styles.sum}>
+          <Pressable onPress={onFocusInput} style={styles.inputContainer}>
+            <TextInput
+              allowFontScaling={false}
+              style={StyleSheet.compose(styles.input, {
+                fontSize,
+                lineHeight,
+              })}
+              value={value}
+              placeholder="0"
+              onChangeText={onChangeValue}
+              keyboardType="numeric"
+              placeholderTextColor={getColor(Color.textBase2)}
+              ref={inputSumRef}
+              textAlign="left"
+              testID={`${testID}_input`}
             />
-          )}
+          </Pressable>
+          <View style={styles.max}>
+            {balance.isPositive() && (
+              <Button
+                title={getText(I18N.sumBlockMax)}
+                onPress={onPressMax}
+                variant={ButtonVariant.second}
+                size={ButtonSize.small}
+                testID={`${testID}_max`}
+              />
+            )}
+          </View>
         </View>
+        {!!value && (
+          <View style={styles.amount}>
+            <Text variant={TextVariant.t15} color={Color.textBase2}>
+              {fiatString}
+            </Text>
+          </View>
+        )}
+        {error ? (
+          <Text
+            position={TextPosition.center}
+            color={Color.textRed1}
+            variant={TextVariant.t14}
+            testID={`${testID}_error`}>
+            {error}
+          </Text>
+        ) : (
+          <Text
+            position={TextPosition.center}
+            color={Color.textBase2}
+            variant={TextVariant.t14}
+            testID={`${testID}_hint`}>
+            {getText(I18N.sumBlockAvailable)}:{' '}
+            <Text variant={TextVariant.t14} color={Color.textGreen1}>
+              {balance.toBalanceString()}
+            </Text>
+          </Text>
+        )}
       </View>
-      {!!value && (
-        <View style={styles.amount}>
-          <Text variant={TextVariant.t15} color={Color.textBase2}>
-            {fiatString}
-          </Text>
-        </View>
-      )}
-      {error ? (
-        <Text
-          position={TextPosition.center}
-          color={Color.textRed1}
-          variant={TextVariant.t14}
-          testID={`${testID}_error`}>
-          {error}
-        </Text>
-      ) : (
-        <Text
-          position={TextPosition.center}
-          color={Color.textBase2}
-          variant={TextVariant.t14}
-          testID={`${testID}_hint`}>
-          {getText(I18N.sumBlockAvailable)}:{' '}
-          <Text variant={TextVariant.t14} color={Color.textGreen1}>
-            {balance.toBalanceString()}
-          </Text>
-        </Text>
-      )}
-    </View>
-  );
-};
+    );
+  },
+);
 
 const styles = createTheme({
   amount: {alignSelf: 'center', marginBottom: 10},

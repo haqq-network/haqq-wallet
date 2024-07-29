@@ -1,5 +1,6 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
+import {observer} from 'mobx-react';
 import {ActivityIndicator, Image, TouchableOpacity, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -56,183 +57,185 @@ const GRADIENT_COLORS_MAP = {
 
 const checkIsSmallWidth = () => getWindowWidth() < 400;
 
-export const RaffleBlock = ({
-  gradient,
-  item,
-  buttonType,
-  rightAction,
-  onPressGetTicket,
-  onPressShowResult,
-  onPress,
-}: RaffleBlockProps) => {
-  const colors = useMemo(() => GRADIENT_COLORS_MAP[gradient], [gradient]);
-  const formattedAmount = useMemo(
-    () => cleanNumber(parseInt(item.budget, 16) / WEI),
-    [item],
-  );
+export const RaffleBlock = observer(
+  ({
+    gradient,
+    item,
+    buttonType,
+    rightAction,
+    onPressGetTicket,
+    onPressShowResult,
+    onPress,
+  }: RaffleBlockProps) => {
+    const colors = useMemo(() => GRADIENT_COLORS_MAP[gradient], [gradient]);
+    const formattedAmount = useMemo(
+      () => cleanNumber(parseInt(item.budget, 16) / WEI),
+      [item],
+    );
 
-  const [showTicketAnimation, setShowTicketAnimation] = useState(false);
-  const [ticketAnimationFinish, setTicketAnimationFinish] = useState(false);
-  const [loadingSuccess, setLoadingSuccess] = useState(false);
+    const [showTicketAnimation, setShowTicketAnimation] = useState(false);
+    const [ticketAnimationFinish, setTicketAnimationFinish] = useState(false);
+    const [loadingSuccess, setLoadingSuccess] = useState(false);
 
-  const ticketAnimation = useThemeSelector({
-    light: require('@assets/animations/earn-ticket-light.json'),
-    dark: require('@assets/animations/earn-ticket-dark.json'),
-  });
+    const ticketAnimation = useThemeSelector({
+      light: require('@assets/animations/earn-ticket-light.json'),
+      dark: require('@assets/animations/earn-ticket-dark.json'),
+    });
 
-  const {timerString} = useTimer({
-    end: Date.now() + item.locked_duration * 1000,
-    updateInterval: TimerUpdateInterval.minute,
-  });
+    const {timerString} = useTimer({
+      end: Date.now() + item.locked_duration * 1000,
+      updateInterval: TimerUpdateInterval.minute,
+    });
 
-  const state = useMemo(() => {
-    if (item.status === 'closed' || Date.now() > item.close_at * 1000) {
-      return 'result';
-    }
+    const state = useMemo(() => {
+      if (item.status === 'closed' || Date.now() > item.close_at * 1000) {
+        return 'result';
+      }
 
-    if (item.locked_duration > 0) {
-      return 'timer';
-    }
+      if (item.locked_duration > 0) {
+        return 'timer';
+      }
 
-    if (showTicketAnimation || Date.now() > item.locked_until) {
-      return 'getTicket';
-    }
-  }, [
-    item.close_at,
-    item.locked_duration,
-    item.locked_until,
-    item.status,
-    showTicketAnimation,
-  ]);
+      if (showTicketAnimation || Date.now() > item.locked_until) {
+        return 'getTicket';
+      }
+    }, [
+      item.close_at,
+      item.locked_duration,
+      item.locked_until,
+      item.status,
+      showTicketAnimation,
+    ]);
 
-  const handlePress = useCallback(() => {
-    onPress?.(item);
-  }, [item, onPress]);
+    const handlePress = useCallback(() => {
+      onPress?.(item);
+    }, [item, onPress]);
 
-  const handleShowResultPress = useCallback(() => {
-    onPressShowResult?.(item);
-  }, [item, onPressShowResult]);
+    const handleShowResultPress = useCallback(() => {
+      onPressShowResult?.(item);
+    }, [item, onPressShowResult]);
 
-  const handleGetTicketPress = useCallback(async () => {
-    try {
-      setShowTicketAnimation(true);
-      await onPressGetTicket?.(item);
-      setLoadingSuccess(true);
-    } catch (e) {
-      setLoadingSuccess(false);
-    } finally {
-      setTicketAnimationFinish(false);
-      setShowTicketAnimation(false);
-    }
-  }, [item, onPressGetTicket]);
+    const handleGetTicketPress = useCallback(async () => {
+      try {
+        setShowTicketAnimation(true);
+        await onPressGetTicket?.(item);
+        setLoadingSuccess(true);
+      } catch (e) {
+        setLoadingSuccess(false);
+      } finally {
+        setTicketAnimationFinish(false);
+        setShowTicketAnimation(false);
+      }
+    }, [item, onPressGetTicket]);
 
-  const onTicketAnimationFinish = useCallback(() => {
-    setTicketAnimationFinish(true);
-  }, []);
+    const onTicketAnimationFinish = useCallback(() => {
+      setTicketAnimationFinish(true);
+    }, []);
 
-  return (
-    <TouchableOpacity onPress={handlePress}>
-      <LinearGradient colors={colors} style={styles.gradientBlock}>
-        <View style={styles.wrapper}>
-          <View style={styles.textBlock}>
-            <View style={[styles.row, styles.flexOne]}>
-              <Text
-                variant={TextVariant.t10}
-                numberOfLines={1}
-                color={Color.textBase3}>
-                {item.title}
-              </Text>
-              <Icon
-                style={styles.forwardIcon}
-                color={Color.textBase3}
-                name={IconsName.arrow_forward_small}
-              />
-            </View>
-            <View style={styles.row}>
-              <Text
-                variant={TextVariant.t14}
-                numberOfLines={1}
-                color={Color.textBase3}
-                i18n={I18N.rafflePrizePool}
-              />
-              <Image
-                style={styles.islmIcon}
-                source={require('@assets/images/islm_icon.png')}
-              />
-              <Text
-                variant={TextVariant.t13}
-                numberOfLines={1}
-                style={styles.flexOne}
-                color={Color.textBase3}
-                ellipsizeMode={'tail'}>
-                {`${formattedAmount} ${app.provider.denom}`}
-              </Text>
-            </View>
-          </View>
-          {buttonType === RaffleBlocButtonType.ticket && (
-            <View style={styles.buttonWrapper}>
-              {state === 'result' && (
-                <Button
-                  style={styles.resultButton}
-                  size={ButtonSize.small}
-                  variant={ButtonVariant.warning}
-                  i18n={I18N.earnShowResult}
-                  onPress={handleShowResultPress}
+    return (
+      <TouchableOpacity onPress={handlePress}>
+        <LinearGradient colors={colors} style={styles.gradientBlock}>
+          <View style={styles.wrapper}>
+            <View style={styles.textBlock}>
+              <View style={[styles.row, styles.flexOne]}>
+                <Text
+                  variant={TextVariant.t10}
+                  numberOfLines={1}
+                  color={Color.textBase3}>
+                  {item.title}
+                </Text>
+                <Icon
+                  style={styles.forwardIcon}
+                  color={Color.textBase3}
+                  name={IconsName.arrow_forward_small}
                 />
-              )}
-              {state === 'timer' && (
-                <Button
-                  disabled
-                  style={styles.timerButton}
-                  size={ButtonSize.small}
-                  variant={ButtonVariant.second}
-                  title={timerString}
+              </View>
+              <View style={styles.row}>
+                <Text
+                  variant={TextVariant.t14}
+                  numberOfLines={1}
+                  color={Color.textBase3}
+                  i18n={I18N.rafflePrizePool}
                 />
-              )}
-              {state === 'getTicket' &&
-                !showTicketAnimation &&
-                !loadingSuccess && (
+                <Image
+                  style={styles.islmIcon}
+                  source={require('@assets/images/islm_icon.png')}
+                />
+                <Text
+                  variant={TextVariant.t13}
+                  numberOfLines={1}
+                  style={styles.flexOne}
+                  color={Color.textBase3}
+                  ellipsizeMode={'tail'}>
+                  {`${formattedAmount} ${app.provider.denom}`}
+                </Text>
+              </View>
+            </View>
+            {buttonType === RaffleBlocButtonType.ticket && (
+              <View style={styles.buttonWrapper}>
+                {state === 'result' && (
                   <Button
-                    style={styles.ticketButton}
+                    style={styles.resultButton}
                     size={ButtonSize.small}
-                    variant={ButtonVariant.second}
-                    i18n={I18N.earnGetTicket}
-                    onPress={handleGetTicketPress}
+                    variant={ButtonVariant.warning}
+                    i18n={I18N.earnShowResult}
+                    onPress={handleShowResultPress}
                   />
                 )}
-
-              {state === 'getTicket' &&
-                (showTicketAnimation || loadingSuccess) && (
+                {state === 'timer' && (
                   <Button
-                    style={styles.ticketButton}
+                    disabled
+                    style={styles.timerButton}
                     size={ButtonSize.small}
-                    variant={ButtonVariant.second}>
-                    <First>
-                      {(ticketAnimationFinish || loadingSuccess) && (
-                        <ActivityIndicator
-                          size={'small'}
-                          color={getColor(Color.graphicGreen1)}
-                        />
-                      )}
-                      <LottieWrap
-                        style={styles.ticket}
-                        progress={0}
-                        source={ticketAnimation}
-                        onAnimationFinish={onTicketAnimationFinish}
-                        autoPlay={true}
-                        loop={false}
-                      />
-                    </First>
-                  </Button>
+                    variant={ButtonVariant.second}
+                    title={timerString}
+                  />
                 )}
-            </View>
-          )}
-          {buttonType === RaffleBlocButtonType.custom && rightAction}
-        </View>
-      </LinearGradient>
-    </TouchableOpacity>
-  );
-};
+                {state === 'getTicket' &&
+                  !showTicketAnimation &&
+                  !loadingSuccess && (
+                    <Button
+                      style={styles.ticketButton}
+                      size={ButtonSize.small}
+                      variant={ButtonVariant.second}
+                      i18n={I18N.earnGetTicket}
+                      onPress={handleGetTicketPress}
+                    />
+                  )}
+
+                {state === 'getTicket' &&
+                  (showTicketAnimation || loadingSuccess) && (
+                    <Button
+                      style={styles.ticketButton}
+                      size={ButtonSize.small}
+                      variant={ButtonVariant.second}>
+                      <First>
+                        {(ticketAnimationFinish || loadingSuccess) && (
+                          <ActivityIndicator
+                            size={'small'}
+                            color={getColor(Color.graphicGreen1)}
+                          />
+                        )}
+                        <LottieWrap
+                          style={styles.ticket}
+                          progress={0}
+                          source={ticketAnimation}
+                          onAnimationFinish={onTicketAnimationFinish}
+                          autoPlay={true}
+                          loop={false}
+                        />
+                      </First>
+                    </Button>
+                  )}
+              </View>
+            )}
+            {buttonType === RaffleBlocButtonType.custom && rightAction}
+          </View>
+        </LinearGradient>
+      </TouchableOpacity>
+    );
+  },
+);
 
 const styles = createTheme({
   ticket: {height: 34, width: 34},

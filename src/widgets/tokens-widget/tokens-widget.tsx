@@ -1,5 +1,6 @@
 import React, {useMemo} from 'react';
 
+import {observer} from 'mobx-react';
 import {StyleSheet} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -18,7 +19,7 @@ type Props = {
 
 const VISIBLE_ITEM_AMOUNT = 3;
 
-export const TokensWidget = ({onPress, tokens}: Props) => {
+export const TokensWidget = observer(({onPress, tokens}: Props) => {
   const otherTokensAmount = useMemo(() => {
     const leftover = tokens.length - VISIBLE_ITEM_AMOUNT;
     if (leftover < 1) {
@@ -58,7 +59,7 @@ export const TokensWidget = ({onPress, tokens}: Props) => {
       )}
     </ShadowCard>
   );
-};
+});
 
 const styles = StyleSheet.create({
   wrapper: {paddingHorizontal: 16},

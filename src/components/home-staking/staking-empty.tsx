@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {observer} from 'mobx-react';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -19,7 +20,7 @@ interface StakingEmptyProps {
   availableSum: Balance;
 }
 
-export const StakingEmpty = ({availableSum}: StakingEmptyProps) => {
+export const StakingEmpty = observer(({availableSum}: StakingEmptyProps) => {
   return (
     <>
       <Spacer />
@@ -52,7 +53,7 @@ export const StakingEmpty = ({availableSum}: StakingEmptyProps) => {
       <Spacer />
     </>
   );
-};
+});
 
 const styles = createTheme({
   circleIconContainer: {
