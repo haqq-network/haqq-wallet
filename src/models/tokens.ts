@@ -427,7 +427,7 @@ async function getHardcodedTokens(
   const wallets = Wallet.addressList();
   if (enabled) {
     const contracts =
-      DEBUG_VARS.hardcodeERC20TokensContract[app.provider.cosmosChainId];
+      DEBUG_VARS.hardcodeERC20TokensContract[app.provider.ethChainId];
 
     if (contracts.length) {
       const tokens = await Promise.all(

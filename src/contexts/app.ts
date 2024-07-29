@@ -3,6 +3,7 @@ import {appleAuth} from '@invertase/react-native-apple-authentication';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {subMinutes} from 'date-fns';
+import {makeObservable, observable, runInAction} from 'mobx';
 import {Alert, AppState, Appearance, Platform, StatusBar} from 'react-native';
 import Config from 'react-native-config';
 import Keychain, {
@@ -99,6 +100,10 @@ class App extends AsyncEventEmitter {
 
   constructor() {
     super();
+    makeObservable(this, {
+      // @ts-ignore
+      _provider: observable,
+    });
     this.startInitialization();
     this.setMaxListeners(1000);
     this._startUpTime = Date.now();
@@ -124,7 +129,9 @@ class App extends AsyncEventEmitter {
     this.user = User.getOrCreate();
 
     Provider.init().then(() => {
-      this._provider = Provider.getById(this.providerId);
+      runInAction(() => {
+        this._provider = Provider.getById(this.providerId);
+      });
 
       if (this._provider) {
         EthNetwork.init(this._provider);
@@ -208,7 +215,7 @@ class App extends AsyncEventEmitter {
     );
   }
 
-  private _provider: Provider | null;
+  private _provider: Provider | null = null;
 
   get provider() {
     return this._provider as Provider;
@@ -228,7 +235,9 @@ class App extends AsyncEventEmitter {
     const p = Provider.getById(value);
     if (p) {
       VariablesString.set('providerId', value);
-      this._provider = p;
+      runInAction(() => {
+        this._provider = p;
+      });
       EthNetwork.init(p);
       app.emit(Events.onProviderChanged, p.id);
     } else {

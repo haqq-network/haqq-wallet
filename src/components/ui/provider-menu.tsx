@@ -1,5 +1,6 @@
-import React, {memo, useCallback} from 'react';
+import React, {useCallback} from 'react';
 
+import {observer} from 'mobx-react';
 import {TouchableOpacity, View} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -11,8 +12,8 @@ import {awaitForProvider} from '@app/helpers/await-for-provider';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 
-export const ProviderMenu = memo(() => {
-  const currentProvider = Provider.getById(app.providerId);
+export const ProviderMenu = observer(() => {
+  const currentProvider = app.provider;
 
   const open = useCallback(async () => {
     const providerId = await awaitForProvider({
