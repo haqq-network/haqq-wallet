@@ -1,5 +1,6 @@
 import {makeAutoObservable, runInAction} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
+import {NativeModules, Platform} from 'react-native';
 
 import {setLanguage, supportedTranslationsMap} from '@app/i18n';
 import {Backend} from '@app/services/backend';
@@ -7,12 +8,21 @@ import {storage} from '@app/services/mmkv';
 import {AppLanguage, Language as LanguageType} from '@app/types';
 
 class LanguageStore {
-  current: AppLanguage = AppLanguage.en;
-  keys: Object = supportedTranslationsMap[this.current];
-  //@ts-ignore
-  hash: string = supportedTranslationsMap[this.current]._hash;
+  current: AppLanguage;
+  keys: Object;
+  hash: string;
 
   constructor(shouldSkipPersisting: boolean = false) {
+    // Use system language or English as default if user doesn't select another one
+    const current = this.getDeviceLanguage() || AppLanguage.en;
+    if (!this.current) {
+      this.current = current;
+    }
+
+    this.keys = supportedTranslationsMap[this.current];
+    // @ts-ignore
+    this.hash = this.keys._hash;
+
     makeAutoObservable(this);
     if (!shouldSkipPersisting) {
       makePersistable(this, {
@@ -27,6 +37,15 @@ class LanguageStore {
   init = async () => {
     setLanguage(this.current, this.keys);
     await this.verify();
+  };
+
+  private getDeviceLanguage = (): AppLanguage => {
+    return (
+      Platform.OS === 'ios'
+        ? NativeModules.SettingsManager.settings.AppleLocale ||
+          NativeModules.SettingsManager.settings.AppleLanguages[0] //iOS 13
+        : NativeModules.I18nManager.localeIdentifier
+    ).slice(0, 2);
   };
 
   private verify = async () => {
