@@ -4,6 +4,7 @@ import {computed} from 'mobx';
 import {observer} from 'mobx-react';
 
 import {TransactionSelectCrypto} from '@app/components/transaction-select-crypto';
+import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
@@ -13,7 +14,6 @@ import {
   TransactionStackRoutes,
 } from '@app/route-types';
 import {IToken} from '@app/types';
-import {CURRENCY_NAME} from '@app/variables/common';
 
 export const TransactionSelectCryptoScreen = observer(() => {
   const navigation = useTypedNavigation<TransactionStackParamList>();
@@ -30,7 +30,7 @@ export const TransactionSelectCryptoScreen = observer(() => {
             item =>
               !!item.is_in_white_list &&
               // FIXME: only erc20 tokens or native currency (ISLM)
-              (item.is_erc20 || item.symbol === CURRENCY_NAME),
+              (item.is_erc20 || item.symbol === app.provider.denom),
           ) ?? [],
       ),
     [params.from],

@@ -14,12 +14,12 @@ import {
   TextVariant,
 } from '@app/components/ui';
 import {WalletCard} from '@app/components/ui/walletCard';
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {HaqqEthereumAddress, IToken} from '@app/types';
-import {CURRENCY_NAME} from '@app/variables/common';
 
 export interface TokenViewerProps {
   data: Record<HaqqEthereumAddress, IToken[]>;
@@ -177,7 +177,7 @@ export const TokenViewer = observer(
                 item =>
                   item.is_in_white_list &&
                   // FIXME: only erc20 tokens or native currency (ISLM)
-                  (item.is_erc20 || item.symbol === CURRENCY_NAME),
+                  (item.is_erc20 || item.symbol === app.provider.denom),
               )}
               tokensOnly={!!wallet}
               isLast={index === list.length - 1}

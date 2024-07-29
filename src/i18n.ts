@@ -1031,7 +1031,9 @@ const fixLocalise = (value: string) => {
   return value
     .replaceAll('{{', '{')
     .replaceAll('}}', '}')
-    .replaceAll('\\n', '\n');
+    .replaceAll('\\n', '\n')
+    .replaceAll('ISLM', app.provider.denom)
+    .replaceAll('aISLM', app.provider.weiDenom);
 };
 
 export function getText(key: I18N, params?: Record<string, string>): string {

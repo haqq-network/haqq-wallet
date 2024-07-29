@@ -14,6 +14,7 @@ import {
   Text,
   TextVariant,
 } from '@app/components/ui';
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {useSumAmount} from '@app/hooks';
@@ -24,7 +25,6 @@ import {Balance} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {IToken} from '@app/types';
 import {BALANCE_MULTIPLIER, FEE_AMOUNT} from '@app/variables/balance';
-import {CURRENCY_NAME} from '@app/variables/common';
 
 import {ImageWrapper} from '../image-wrapper';
 
@@ -64,7 +64,7 @@ export const TransactionSum = ({
   const amounts = useSumAmount(undefined, undefined, undefined);
 
   useEffect(() => {
-    if (token.symbol === CURRENCY_NAME) {
+    if (token.symbol === app.provider.denom) {
       amounts.setMaxAmount(balance.operate(transactionFee, 'sub'));
     } else {
       amounts.setMaxAmount(token.value);
@@ -140,7 +140,7 @@ export const TransactionSum = ({
         <SumBlock
           value={amounts.amount}
           error={amounts.error}
-          currency={token.symbol || ''}
+          currency={token.symbol}
           balance={token.value}
           onChange={amounts.setAmount}
           onMax={onPressMax}

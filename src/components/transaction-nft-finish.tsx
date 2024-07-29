@@ -24,7 +24,6 @@ import {Fee} from '@app/models/fee';
 import {NftItem} from '@app/models/nft';
 import {EthNetwork} from '@app/services/eth-network/eth-network';
 import {TransactionResponse} from '@app/types';
-import {CURRENCY_NAME} from '@app/variables/common';
 
 import {ImageWrapper} from './image-wrapper';
 
@@ -101,7 +100,7 @@ export const TransactionNftFinish = ({
         </Text>
       </View>
 
-      <NetworkFee fee={fee.expectedFee} currency={CURRENCY_NAME} />
+      <NetworkFee fee={fee.expectedFee} />
 
       <Spacer />
 

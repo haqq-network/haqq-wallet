@@ -53,10 +53,8 @@ import {
 } from '@app/types';
 import {ERC20_ABI, V3SWAPROUTER_ABI, WETH_ABI} from '@app/variables/abi';
 import {
-  CURRENCY_NAME,
   HAQQ_METADATA,
   SUSHISWAP_MAINNET_ADDRESSES,
-  WEI_PRECISION,
   WETH_MAINNET_ADDRESS,
 } from '@app/variables/common';
 
@@ -77,7 +75,7 @@ const getMinAmountForDecimals = (d: number | null, symbol: string | null) => {
     .join('');
   const min = `0.${zero}1`;
   const amountBN = ethers.utils.parseUnits(min, d);
-  return new Balance(amountBN, d, symbol || CURRENCY_NAME);
+  return new Balance(amountBN, d, symbol || app.provider.denom);
 };
 
 export const SwapScreen = observer(() => {
@@ -178,11 +176,13 @@ export const SwapScreen = observer(() => {
     [tokenIn, tokenOut, poolsData],
   );
   const isWrapTx = useMemo(
-    () => tokenIn?.symbol === CURRENCY_NAME && tokenOut?.symbol === 'wISLM',
+    () =>
+      tokenIn?.symbol === app.provider.denom && tokenOut?.symbol === 'wISLM',
     [tokenIn, tokenOut],
   );
   const isUnwrapTx = useMemo(
-    () => tokenIn?.symbol === 'wISLM' && tokenOut?.symbol === CURRENCY_NAME,
+    () =>
+      tokenIn?.symbol === 'wISLM' && tokenOut?.symbol === app.provider.denom,
     [tokenIn, tokenOut],
   );
   const t0Current = useMemo(() => {
@@ -213,8 +213,8 @@ export const SwapScreen = observer(() => {
       return Balance.Empty;
     }
 
-    if (tokenIn.symbol === CURRENCY_NAME) {
-      logger.log(`t0 available: currency ${CURRENCY_NAME}`);
+    if (tokenIn.symbol === app.provider.denom) {
+      logger.log(`t0 available: currency ${app.provider.denom}`);
       return app.getAvailableBalance(currentWallet.address);
     }
 
@@ -235,7 +235,7 @@ export const SwapScreen = observer(() => {
       return Balance.Empty;
     }
 
-    if (tokenOut.symbol === CURRENCY_NAME) {
+    if (tokenOut.symbol === app.provider.denom) {
       return app.getAvailableBalance(currentWallet.address);
     }
 
@@ -323,7 +323,7 @@ export const SwapScreen = observer(() => {
         abortSignal: estimateAbortController.current.signal,
       });
 
-      if (tokenIn?.symbol === CURRENCY_NAME) {
+      if (tokenIn?.symbol === app.provider.denom) {
         response.need_approve = false;
       }
       response.s_price_impact = (
@@ -466,7 +466,7 @@ export const SwapScreen = observer(() => {
                 <WalletCard
                   wallet={value.wallet}
                   tokens={value.tokens.map(t => {
-                    if (t.symbol === CURRENCY_NAME) {
+                    if (t.symbol === app.provider.denom) {
                       return {
                         ...t,
                         value: app.getAvailableBalance(value?.wallet?.address),
@@ -549,9 +549,9 @@ export const SwapScreen = observer(() => {
       )?.value;
     const availableIslm = app.getAvailableBalance(wallet);
 
-    const symbol = t0.symbol || CURRENCY_NAME;
-    const isNativeCurrency = symbol.toUpperCase() === CURRENCY_NAME;
-    const decimals = t0.decimals || WEI_PRECISION;
+    const symbol = t0.symbol || app.provider.denom;
+    const isNativeCurrency = symbol.toUpperCase() === app.provider.denom;
+    const decimals = t0.decimals || app.provider.decimals;
     const zeroBalance = new Balance('0x0', decimals, symbol);
     const value = new Balance(
       (isNativeCurrency ? availableIslm : tokenValue) || zeroBalance,
@@ -680,7 +680,7 @@ export const SwapScreen = observer(() => {
       const deadline =
         Math.floor(Date.now() / 1000) + 60 * parseFloat(swapSettings.deadline);
 
-      const tokenInIsISLM = tokenIn?.symbol === CURRENCY_NAME;
+      const tokenInIsISLM = tokenIn?.symbol === app.provider.denom;
 
       const encodedPath = `0x${estimateData.route}`;
       const swapParams = [
@@ -733,7 +733,7 @@ export const SwapScreen = observer(() => {
             hash: txResp.transactionHash,
           },
           token: toJS(
-            tokenIn?.symbol === CURRENCY_NAME
+            tokenIn?.symbol === app.provider.denom
               ? Token.generateIslamicToken(currentWallet)
               : Token.tokens[currentWallet.address].find(t =>
                   AddressUtils.equals(t.id, tokenIn?.id!),
@@ -865,7 +865,7 @@ export const SwapScreen = observer(() => {
             hash: txResp.transactionHash,
           },
           token: toJS(
-            tokenIn?.symbol === CURRENCY_NAME
+            tokenIn?.symbol === app.provider.denom
               ? Token.generateIslamicToken(currentWallet)
               : Token.tokens[currentWallet.address].find(t =>
                   AddressUtils.equals(t.id, tokenIn?.id!),
@@ -936,7 +936,7 @@ export const SwapScreen = observer(() => {
             hash: txResp.transactionHash,
           },
           token: toJS(
-            tokenIn?.symbol === CURRENCY_NAME
+            tokenIn?.symbol === app.provider.denom
               ? Token.generateIslamicToken(currentWallet)
               : Token.tokens[currentWallet.address].find(t =>
                   AddressUtils.equals(t.id, tokenIn?.id!),

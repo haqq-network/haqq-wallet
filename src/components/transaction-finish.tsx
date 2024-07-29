@@ -17,6 +17,7 @@ import {
   TextPosition,
   TextVariant,
 } from '@app/components/ui';
+import {app} from '@app/contexts';
 import {createTheme, openURL} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
@@ -24,7 +25,6 @@ import {Fee} from '@app/models/fee';
 import {Balance} from '@app/services/balance';
 import {EthNetwork} from '@app/services/eth-network/eth-network';
 import {IToken, TransactionResponse} from '@app/types';
-import {CURRENCY_NAME} from '@app/variables/common';
 
 type TransactionFinishProps = {
   transaction: TransactionResponse | null;
@@ -65,13 +65,13 @@ export const TransactionFinish = ({
       return new Balance(
         (transaction as TransactionResponse)?.value._hex ?? 0,
         undefined,
-        token.symbol ?? CURRENCY_NAME,
+        token.symbol ?? app.provider.denom,
       );
     }
     return new Balance(
       transaction?.value ?? 0,
       undefined,
-      token.symbol ?? CURRENCY_NAME,
+      token.symbol ?? app.provider.denom,
     );
   }, [transaction, token, amount]);
 
@@ -119,7 +119,7 @@ export const TransactionFinish = ({
         </Text>
       </View>
 
-      <NetworkFee fee={fee?.expectedFee} currency={CURRENCY_NAME} />
+      <NetworkFee fee={fee?.expectedFee} />
 
       <View style={styles.providerContainer}>
         <Text

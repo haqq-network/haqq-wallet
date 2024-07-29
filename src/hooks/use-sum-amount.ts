@@ -2,10 +2,10 @@ import {useEffect, useRef, useState} from 'react';
 
 import validate from 'validate.js';
 
+import {app} from '@app/contexts';
 import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {I18N, getText} from '@app/i18n';
 import {Balance} from '@app/services/balance';
-import {CURRENCY_NAME, WEI_PRECISION} from '@app/variables/common';
 
 export function useSumAmount(
   initialSum = Balance.Empty,
@@ -52,7 +52,7 @@ export function useSumAmount(
         const newString = errorArray?.length > 0 ? errorArray.join(' ') : '';
         setError(
           newString
-            .replace(CURRENCY_NAME, maxAmountRef.current.getSymbol())
+            .replace(app.provider.denom, maxAmountRef.current.getSymbol())
             .replace(
               maxAmountRef.current.toFloat(),
               maxAmountRef.current.toBalanceString('auto'),
@@ -104,7 +104,7 @@ export function useSumAmount(
         changed: _changed,
       }));
     },
-    setAmount(text: string, precision = WEI_PRECISION) {
+    setAmount(text: string, precision = app.provider.decimals) {
       if (text.match(/^[0-9].*/)) {
         let i = 0;
         const textFormatted = text

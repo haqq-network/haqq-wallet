@@ -3,11 +3,11 @@ import React, {useMemo} from 'react';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {useIsBalancesFirstSync} from '@app/hooks/use-is-balances-sync';
 import {I18N} from '@app/i18n';
 import {BalanceData} from '@app/types';
-import {CURRENCY_NAME} from '@app/variables/common';
 
 import {
   Badge,
@@ -30,7 +30,7 @@ export interface LockedTokensProps {
 export function LockedTokens({balance, onForwardPress}: LockedTokensProps) {
   const {available, locked, total} = balance ?? {};
   const {isBalanceLoadingError, isBalancesFirstSync} = useIsBalancesFirstSync();
-  const defaultTotalValueISLM = useMemo(() => `0 ${CURRENCY_NAME}`, []);
+  const defaultTotalValueISLM = useMemo(() => `0 ${app.provider.denom}`, []);
   const defaultTotalValueUSD = useMemo(() => '$0', []);
 
   const showPlaceholder = useMemo(() => {

@@ -14,6 +14,8 @@ import {
   PopupContainer,
   Spacer,
   Text,
+  TextPosition,
+  TextVariant,
 } from '@app/components/ui';
 import {cleanNumber, createTheme} from '@app/helpers';
 import {proposalDepositNeeds, yesPercent} from '@app/helpers/governance';
@@ -42,7 +44,7 @@ interface ProposalProps {
 
 export function Proposal({
   item,
-  collectedDeposit /*, onDepositSubmit*/,
+  collectedDeposit,
   vote,
   cardRef,
   modalIsLoading,
@@ -51,18 +53,6 @@ export function Proposal({
   modalIsVisible,
 }: ProposalProps) {
   const {bottom} = useSafeAreaInsets();
-
-  // const onDeposit = () => {
-  //   showModal('wallets-bottom-sheet', {
-  //     wallets: visible,
-  //     closeDistance,
-  //     title: I18N.proposalAccountTitle,
-  //     eventSuffix: '-proposal-deposit',
-  //   });
-  //   if (onDepositSubmit) {
-  //     app.addListener('wallet-selected-proposal-deposit', onDepositSubmit);
-  //   }
-  // };
 
   const yp = useMemo(() => yesPercent(item), [item]);
   const pdn = useMemo(() => proposalDepositNeeds(item), [item]);
@@ -117,11 +107,14 @@ export function Proposal({
           />
         )}
         <Spacer height={16} />
-        <Text center color={Color.textBase2} t14>
+        <Text
+          position={TextPosition.center}
+          color={Color.textBase2}
+          variant={TextVariant.t14}>
           #{item.proposal_id}
         </Text>
         <Spacer height={2} />
-        <Text center t5>
+        <Text position={TextPosition.center} variant={TextVariant.t5}>
           {item.content.title}
         </Text>
         <Spacer height={24} />
@@ -140,36 +133,48 @@ export function Proposal({
           />
         )}
         <Spacer height={24} />
-        <Text t9 i18n={I18N.proposalInfo} />
+        <Text variant={TextVariant.t9} i18n={I18N.proposalInfo} />
         <View style={styles.row}>
           <View style={styles.block}>
-            <Text t14 color={Color.textBase2} i18n={I18N.proposalType} />
+            <Text
+              variant={TextVariant.t14}
+              color={Color.textBase2}
+              i18n={I18N.proposalType}
+            />
             <Spacer height={4} />
-            <Text t14 i18n={type} />
+            <Text variant={TextVariant.t14} i18n={type} />
           </View>
           <Spacer width={16} />
           <View style={styles.block}>
             <Text
-              t14
+              variant={TextVariant.t14}
               color={Color.textBase2}
               i18n={I18N.proposalTotalDeposit}
             />
             <Spacer height={4} />
-            <Text t14 i18n={I18N.amountISLM} i18params={{amount: deposit}} />
+            <Text
+              variant={TextVariant.t14}
+              i18n={I18N.amountISLM}
+              i18params={{amount: deposit}}
+            />
           </View>
         </View>
         <View style={styles.block}>
-          <Text t14 color={Color.textBase2} i18n={I18N.proposalDescription} />
+          <Text
+            variant={TextVariant.t14}
+            color={Color.textBase2}
+            i18n={I18N.proposalDescription}
+          />
           <Spacer height={4} />
-          <Text t14>{item.content.description}</Text>
+          <Text variant={TextVariant.t14}>{item.content.description}</Text>
         </View>
         {'changes' in item.content && (
           <>
             <Spacer height={24} />
-            <Text t9 i18n={I18N.proposalChanges} />
+            <Text variant={TextVariant.t9} i18n={I18N.proposalChanges} />
             <Spacer height={12} />
             <View style={styles.codeBlock}>
-              <Text t14 color={Color.textBase1}>
+              <Text variant={TextVariant.t14} color={Color.textBase1}>
                 {JSON.stringify(item.content.changes, null, 4)}
               </Text>
             </View>
@@ -178,62 +183,67 @@ export function Proposal({
         {'plan' in item.content && (
           <>
             <Spacer height={24} />
-            <Text t9 i18n={I18N.proposalPlan} />
+            <Text variant={TextVariant.t9} i18n={I18N.proposalPlan} />
             <Spacer height={12} />
             <View style={styles.codeBlock}>
-              <Text t14 color={Color.textBase1}>
+              <Text variant={TextVariant.t14} color={Color.textBase1}>
                 {JSON.stringify(item.content.plan, null, 4)}
               </Text>
             </View>
           </>
         )}
         <Spacer height={24} />
-        <Text t9 i18n={I18N.proposalDate} />
+        <Text variant={TextVariant.t9} i18n={I18N.proposalDate} />
         <View style={styles.row}>
           <View style={styles.block}>
-            <Text t14 color={Color.textBase2} i18n={I18N.proposalCreatedAt} />
+            <Text
+              variant={TextVariant.t14}
+              color={Color.textBase2}
+              i18n={I18N.proposalCreatedAt}
+            />
             <Spacer height={4} />
-            <Text t14>
+            <Text variant={TextVariant.t14}>
               {item.submit_time &&
                 format(new Date(item.submit_time), 'dd MMM yyyy, H:mm')}
             </Text>
             <Spacer height={8} />
-            <Text t14 color={Color.textBase2} i18n={I18N.proposalVoteStart} />
+            <Text
+              variant={TextVariant.t14}
+              color={Color.textBase2}
+              i18n={I18N.proposalVoteStart}
+            />
             <Spacer height={4} />
-            <Text t14>
+            <Text variant={TextVariant.t14}>
               {item.voting_start_time &&
                 format(new Date(item.voting_start_time), 'dd MMM yyyy, H:mm')}
             </Text>
           </View>
           <Spacer width={16} />
           <View style={styles.block}>
-            <Text t14 color={Color.textBase2} i18n={I18N.proposalDepositEnd} />
+            <Text
+              variant={TextVariant.t14}
+              color={Color.textBase2}
+              i18n={I18N.proposalDepositEnd}
+            />
             <Spacer height={4} />
-            <Text t14>
+            <Text variant={TextVariant.t14}>
               {item.deposit_end_time &&
                 format(new Date(item.deposit_end_time), 'dd MMM yyyy, H:mm')}
             </Text>
             <Spacer height={8} />
-            <Text t14 color={Color.textBase2} i18n={I18N.proposalVoteEnd} />
+            <Text
+              variant={TextVariant.t14}
+              color={Color.textBase2}
+              i18n={I18N.proposalVoteEnd}
+            />
             <Spacer height={4} />
-            <Text t14>
+            <Text variant={TextVariant.t14}>
               {item.voting_end_time &&
                 format(new Date(item.voting_end_time), 'dd MMM yyyy, H:mm')}
             </Text>
           </View>
         </View>
         <Spacer height={(isDeposited ? 0 : bottom) + 28} />
-
-        {/* {isDeposited && (
-        <View style={styles.depositButtonContainer}>
-          <Button
-            variant={ButtonVariant.contained}
-            onPress={onDeposit}
-            i18n={I18N.proposalDeposit}
-          />
-          <Spacer height={bottom} />
-        </View>
-      )} */}
       </PopupContainer>
       <ProposalVote
         isLoading={modalIsLoading}
@@ -267,7 +277,4 @@ const styles = createTheme({
     marginTop: 8,
   },
   voting: {paddingBottom: 120},
-  // depositButtonContainer: {
-  //   padding: 20,
-  // },
 });

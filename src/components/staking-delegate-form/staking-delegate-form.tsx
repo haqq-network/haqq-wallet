@@ -22,7 +22,6 @@ import {I18N} from '@app/i18n';
 import {Balance} from '@app/services/balance';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
 import {FEE_AMOUNT} from '@app/variables/balance';
-import {CURRENCY_NAME} from '@app/variables/common';
 
 export type StakingDelegateFormProps = {
   validator: ValidatorItem;
@@ -92,13 +91,12 @@ export const StakingDelegateForm = ({
         <SumBlock
           value={amounts.amount}
           error={amounts.error}
-          currency={CURRENCY_NAME}
           balance={balance}
           onChange={amounts.setAmount}
           onMax={onPressMax}
         />
       </Spacer>
-      <NetworkFee fee={fee} currency={CURRENCY_NAME} />
+      <NetworkFee fee={fee} />
       {localStatus === ValidatorStatus.inactive ||
         (localStatus === ValidatorStatus.jailed && (
           <>

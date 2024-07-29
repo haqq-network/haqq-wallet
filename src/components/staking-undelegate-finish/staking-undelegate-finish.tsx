@@ -23,7 +23,6 @@ import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
 import {Balance} from '@app/services/balance';
 import {ValidatorItem} from '@app/types';
-import {CURRENCY_NAME} from '@app/variables/common';
 
 export type StakingDelegateFinishProps = {
   validator: ValidatorItem;
@@ -85,7 +84,7 @@ export const StakingUnDelegateFinish = ({
         style={styles.address}>
         {validator.description.moniker}
       </Text>
-      <NetworkFee fee={fee} currency={CURRENCY_NAME} />
+      <NetworkFee fee={fee} />
       <Spacer />
       <Inline gap={12}>
         <IconButton onPress={onPressHash} style={styles.button}>

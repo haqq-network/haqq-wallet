@@ -13,17 +13,17 @@ import {
 import {Color, getColor} from '@app/colors';
 import {Button, ButtonSize, ButtonVariant} from '@app/components/ui/button';
 import {Text, TextPosition, TextVariant} from '@app/components/ui/text';
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {Balance} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {IToken} from '@app/types';
-import {CURRENCY_NAME} from '@app/variables/common';
 
 export type SumBlockProps = {
   value: string;
   error: string;
-  currency: string;
+  currency?: string | null;
   balance: Balance;
   onChange: (value: string) => void;
   onMax: () => void;
@@ -78,7 +78,7 @@ export const SumBlock = ({
   }, [onMax]);
 
   const fiatString = useMemo(() => {
-    if (token?.decimals && token?.symbol && token.symbol !== CURRENCY_NAME) {
+    if (token?.decimals && token?.symbol && token.is_erc20) {
       return new Balance(Number(value), token.decimals, token.symbol).toFiat();
     }
 
@@ -92,14 +92,9 @@ export const SumBlock = ({
         position={TextPosition.center}
         style={styles.subtitle}
         color={Color.textBase2}>
-        {currency}
+        {currency || app.provider.denom}
       </Text>
       <View style={styles.sum}>
-        <View style={styles.swap}>
-          {/*<IconButton onPress={onPressSwap} style={page.swapButton}>*/}
-          {/*  <SwapVerticalIcon color={GRAPHIC_GREEN_1} />*/}
-          {/*</IconButton>*/}
-        </View>
         <Pressable onPress={onFocusInput} style={styles.inputContainer}>
           <TextInput
             allowFontScaling={false}
@@ -172,12 +167,6 @@ const styles = createTheme({
     justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  swap: {
-    height: 46,
-    width: 60,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
   },
   max: {
     height: 46,
