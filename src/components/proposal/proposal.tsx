@@ -17,6 +17,7 @@ import {
   TextPosition,
   TextVariant,
 } from '@app/components/ui';
+import {app} from '@app/contexts';
 import {cleanNumber, createTheme} from '@app/helpers';
 import {proposalDepositNeeds, yesPercent} from '@app/helpers/governance';
 import {I18N} from '@app/i18n';
@@ -154,8 +155,8 @@ export function Proposal({
             <Spacer height={4} />
             <Text
               variant={TextVariant.t14}
-              i18n={I18N.amountISLM}
-              i18params={{amount: deposit}}
+              i18n={I18N.amount}
+              i18params={{amount: deposit, symbol: app.provider.denom}}
             />
           </View>
         </View>

@@ -14,6 +14,7 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {formatPercents} from '@app/helpers/format-percents';
@@ -64,9 +65,10 @@ export const StakingDelegatePreview = ({
         t3
         center
         style={styles.sum}
-        i18n={I18N.amountISLM}
+        i18n={I18N.amount}
         i18params={{
           amount: cleanNumber(amount),
+          symbol: app.provider.denom,
         }}
       />
       <Text

@@ -6,6 +6,7 @@ import {Color} from '@app/colors';
 import {Button, ButtonSize, ButtonVariant, Text} from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
 import {WidgetHeader} from '@app/components/ui/widget-header';
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {I18N, getText} from '@app/i18n';
@@ -48,7 +49,9 @@ export const StakingWidget = memo(
         <WidgetHeader
           icon={'staking_thin'}
           title={getText(I18N.earnStaking)}
-          description={getText(I18N.earnStakingDescription)}
+          description={getText(I18N.earnStakingDescription, {
+            symbol: app.provider.denom,
+          })}
           largeIcon
         />
         <View style={styles.rewardsWrapper}>

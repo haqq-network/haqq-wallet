@@ -11,7 +11,15 @@ import Lottie from 'lottie-react-native';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {InfoBlockAmount, Inline, Spacer, Text} from '@app/components/ui';
+import {
+  InfoBlockAmount,
+  Inline,
+  Spacer,
+  Text,
+  TextPosition,
+  TextVariant,
+} from '@app/components/ui';
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
@@ -91,7 +99,13 @@ export const StakingActive = forwardRef(
     return (
       <View>
         <Spacer height={23} />
-        <Text t14 center color={Color.textBase2} i18n={I18N.homeStakingEmpty} />
+        <Text
+          variant={TextVariant.t14}
+          position={TextPosition.center}
+          color={Color.textBase2}
+          i18n={I18N.homeStakingEmpty}
+          i18params={{symbol: app.provider.denom}}
+        />
         <Spacer height={36} />
         <Lottie
           source={animationFile}
@@ -102,8 +116,16 @@ export const StakingActive = forwardRef(
           style={styles.circleIconContainer}
         />
         <Spacer height={20} />
-        <Text t8 center i18n={I18N.homeStakingRewards} />
-        <Text testID="staking-rewardSum" t3 center color={Color.textGreen1}>
+        <Text
+          variant={TextVariant.t8}
+          position={TextPosition.center}
+          i18n={I18N.homeStakingRewards}
+        />
+        <Text
+          testID="staking-rewardSum"
+          variant={TextVariant.t3}
+          position={TextPosition.center}
+          color={Color.textGreen1}>
           {rewardSum.toBalanceString()}
         </Text>
         <Spacer height={28} />

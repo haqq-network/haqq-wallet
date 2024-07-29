@@ -3,6 +3,7 @@ import React, {useMemo} from 'react';
 import {Image, SafeAreaView, StyleSheet, View} from 'react-native';
 
 import {Color} from '@app/colors';
+import {app} from '@app/contexts';
 import {cleanNumber} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks';
 import {I18N} from '@app/i18n';
@@ -67,7 +68,7 @@ export const RaffleReward = ({item, onPressUnderstood}: RaffleRewardProps) => {
           color={Color.textGreen1}
           numberOfLines={1}
           i18n={I18N.raffleRewardPrize}
-          i18params={{islm: `${budget}`}}
+          i18params={{islm: budget, symbol: app.provider.denom}}
         />
       </View>
       <Spacer flex={1} />

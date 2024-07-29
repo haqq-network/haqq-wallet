@@ -390,14 +390,12 @@ export enum I18N {
   transactionDetailCryptocurrency = 'transactionDetailCryptocurrency',
   transactionDetailTransactionType = 'transactionDetailTransactionType',
   transactionConfirmationSend = 'transactionConfirmationSend',
-  transactionConfirmationAmount = 'transactionConfirmationAmount',
   transactionConfirmationHAQQ = 'transactionConfirmationHAQQ',
   transactionConfirmationHQ = 'transactionConfirmationHQ',
   transactionConfirmationIslamicCoin = 'transactionConfirmationIslamicCoin',
   transactionConfirmationISLM = 'transactionConfirmationISLM',
   transactionConfirmationSendTo = 'transactionConfirmationSendTo',
   transactionConfirmationTotalAmount = 'transactionConfirmationTotalAmount',
-  transactionConfirmationSum = 'transactionConfirmationSum',
   transactionFinishSendingComplete = 'transactionFinishSendingComplete',
   transactionFinishEditContact = 'transactionFinishEditContact',
   transactionFinishAddContact = 'transactionFinishAddContact',
@@ -606,12 +604,10 @@ export enum I18N {
   thereNoRecentSites = 'thereNoRecentSites',
   browserSearchHistory = 'browserSearchHistory',
   modalRewardErrorTitle = 'modalRewardErrorTitle',
-  modalRewardErrorDescription = 'modalRewardErrorDescription',
   modalRewardErrorClose = 'modalRewardErrorClose',
   rewardCreatingFirstAccount = 'rewardCreatingFirstAccount',
   rewardBannerClaim = 'rewardBannerClaim',
-  amountISLM = 'amountISLM',
-  amountAISLM = 'amountAISLM',
+  amount = 'amount',
   editBookmarksTitle = 'editBookmarksTitle',
   editBookmarksRemoveAlert = 'editBookmarksRemoveAlert',
   delete = 'delete',
@@ -675,7 +671,6 @@ export enum I18N {
   timerSec = 'timerSec',
   raffleDetailsTimerFinishTitle = 'raffleDetailsTimerFinishTitle',
   raffleDetailsTimerProgressTitle = 'raffleDetailsTimerProgressTitle',
-  raffleDetailsPrizeByTicketDescription = 'raffleDetailsPrizeByTicketDescription',
   raffleTicketRecieved = 'raffleTicketRecieved',
   earnTicketRecieved = 'earnTicketRecieved',
   raffleRewardСongratulations = 'raffleRewardСongratulations',
@@ -1031,9 +1026,7 @@ const fixLocalise = (value: string) => {
   return value
     .replaceAll('{{', '{')
     .replaceAll('}}', '}')
-    .replaceAll('\\n', '\n')
-    .replaceAll('ISLM', app.provider.denom)
-    .replaceAll('aISLM', app.provider.weiDenom);
+    .replaceAll('\\n', '\n');
 };
 
 export function getText(key: I18N, params?: Record<string, string>): string {

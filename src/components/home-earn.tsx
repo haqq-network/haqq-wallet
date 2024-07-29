@@ -108,6 +108,7 @@ export const HomeEarn = ({
                 variant={TextVariant.t14}
                 color={Color.textBase2}
                 i18n={I18N.earnStakingDescription}
+                i18params={{symbol: app.provider.denom}}
               />
             </View>
           </View>

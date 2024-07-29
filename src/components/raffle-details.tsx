@@ -143,6 +143,7 @@ export const RaffleDetails = ({
               i18params={{
                 islm: cleanNumber(prevIslmCount),
                 tickets: `${prevTicketsCount} `,
+                symbol: app.provider.denom,
               }}
             />
           </View>
