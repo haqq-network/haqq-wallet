@@ -4,6 +4,7 @@ import {observer} from 'mobx-react';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {useSumAmount} from '@app/hooks';
 import {I18N} from '@app/i18n';
@@ -16,7 +17,7 @@ import {
 } from '@app/services/indexer';
 import {IContract} from '@app/types';
 import {formatNumberString} from '@app/utils';
-import {CURRENCY_NAME, STRINGS} from '@app/variables/common';
+import {STRINGS} from '@app/variables/common';
 
 import {EstimatedValue} from './estimated-value';
 import {SwapInput} from './swap-input';
@@ -269,7 +270,7 @@ export const Swap = observer(
               variant={ButtonVariant.contained}
               i18n={I18N.swapScreenApprove}
               i18params={{
-                symbol: tokenIn.symbol || CURRENCY_NAME,
+                symbol: tokenIn.symbol || app.provider.denom,
                 amount: amountsIn.amount,
               }}
               loading={isApproveInProgress}

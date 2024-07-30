@@ -1,5 +1,6 @@
-import React, {forwardRef, memo, useImperativeHandle} from 'react';
+import React, {forwardRef, useImperativeHandle} from 'react';
 
+import {observer} from 'mobx-react';
 import {View} from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -8,7 +9,8 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import {Color, getColor} from '@app/colors';
-import {Spacer, Text} from '@app/components/ui';
+import {Spacer, Text, TextVariant} from '@app/components/ui';
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 
 export type ProgressLineProps = {
@@ -24,7 +26,7 @@ export interface ProgressLineInterface {
   updateProgress: (newVotes: number) => void;
 }
 
-export const ProgressLine = memo(
+export const ProgressLine = observer(
   forwardRef(
     (
       {
@@ -67,8 +69,10 @@ export const ProgressLine = memo(
           </View>
           <Spacer height={8} />
           {showBottomInfo && (
-            <Text t15 color={Color.textBase2}>
-              {total.toFixed(0)} ISLM from {max.toFixed(0)} ISLM
+            <Text variant={TextVariant.t15} color={Color.textBase2}>
+              {`${total.toFixed(0)} ${app.provider.denom} from ${max.toFixed(
+                0,
+              )} ${app.provider.denom}`}
             </Text>
           )}
         </>

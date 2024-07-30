@@ -100,7 +100,7 @@ export const TransactionNftFinish = ({
         </Text>
       </View>
 
-      <NetworkFee fee={fee.expectedFee} currency="ISLM" />
+      <NetworkFee fee={fee.expectedFee} />
 
       <Spacer />
 

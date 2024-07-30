@@ -1,4 +1,5 @@
 import {IconsName} from '@app/components/ui';
+import {app} from '@app/contexts';
 import {I18N, getText} from '@app/i18n';
 import {Contracts} from '@app/models/contracts';
 import {ParsedTransactionData, Transaction} from '@app/models/transaction';
@@ -501,7 +502,7 @@ function getTokensInfo(tx: IndexerTransaction): IndexerTxParsedTokenInfo[] {
         icon: contractInfo.icon
           ? {uri: contractInfo.icon}
           : require('@assets/images/empty-icon.png'),
-        decimals: contractInfo?.decimals || WEI_PRECISION,
+        decimals: contractInfo?.decimals || app.provider.decimals,
         contract_address: contractInfo.id,
       },
     ];
