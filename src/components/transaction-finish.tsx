@@ -75,7 +75,7 @@ export const TransactionFinish = observer(
         undefined,
         token.symbol ?? app.provider.denom,
       );
-    }, [transaction, token, amount]);
+    }, [transaction, token, amount, app.provider.denom]);
 
     return (
       <PopupContainer style={styles.container} testID={testID}>

@@ -33,7 +33,7 @@ export const TransactionSelectCryptoScreen = observer(() => {
               (item.is_erc20 || item.symbol === app.provider.denom),
           ) ?? [],
       ),
-    [params.from],
+    [params.from, app.provider.denom],
   ).get();
 
   useAndroidBackHandler(() => {

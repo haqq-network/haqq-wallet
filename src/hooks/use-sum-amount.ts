@@ -64,7 +64,7 @@ export const useSumAmount = (
         );
       }
     }
-  }, [changed, amount, minAmount, maxAmount]);
+  }, [changed, amount, minAmount, maxAmount, app.provider.denom]);
 
   return {
     isValid:

@@ -5,7 +5,7 @@ import {StyleSheet} from 'react-native';
 
 import {Color} from '@app/colors';
 import {TokenRow} from '@app/components/token-row';
-import {Spacer, Text} from '@app/components/ui';
+import {Spacer, Text, TextVariant} from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
 import {WidgetHeader} from '@app/components/ui/widget-header';
 import {app} from '@app/contexts';
@@ -52,7 +52,7 @@ export const TokensWidget = observer(({onPress, tokens}: Props) => {
       {otherTokensAmount !== null && (
         <>
           <Spacer height={4} />
-          <Text t14 color={Color.textBase2}>
+          <Text variant={TextVariant.t14} color={Color.textBase2}>
             {otherTokensAmount}
           </Text>
         </>

@@ -71,7 +71,7 @@ export const TransactionSum = observer(
       } else {
         amounts.setMaxAmount(token.value);
       }
-    }, [balance, transactionFee]);
+    }, [balance, transactionFee, app.provider.denom]);
 
     const inputSumRef = useRef<TextInput>(null);
 

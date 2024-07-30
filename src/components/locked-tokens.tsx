@@ -33,7 +33,10 @@ export const LockedTokens = observer(
     const {available, locked, total} = balance ?? {};
     const {isBalanceLoadingError, isBalancesFirstSync} =
       useIsBalancesFirstSync();
-    const defaultTotalValueISLM = useMemo(() => `0 ${app.provider.denom}`, []);
+    const defaultTotalValueISLM = useMemo(
+      () => `0 ${app.provider.denom}`,
+      [app.provider.denom],
+    );
     const defaultTotalValueUSD = useMemo(() => '$0', []);
 
     const showPlaceholder = useMemo(() => {

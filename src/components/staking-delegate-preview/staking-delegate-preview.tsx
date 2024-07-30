@@ -14,6 +14,8 @@ import {
   PopupContainer,
   Spacer,
   Text,
+  TextPosition,
+  TextVariant,
 } from '@app/components/ui';
 import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
@@ -59,15 +61,15 @@ export const StakingDelegatePreview = observer(
           style={styles.icon}
         />
         <Text
-          t11
-          center
+          variant={TextVariant.t11}
+          position={TextPosition.center}
           i18n={I18N.stakingDelegatePreviewTotalAmount}
           color={Color.textBase2}
           style={styles.subtitle}
         />
         <Text
-          t3
-          center
+          variant={TextVariant.t3}
+          position={TextPosition.center}
           style={styles.sum}
           i18n={I18N.amount}
           i18params={{
@@ -76,26 +78,29 @@ export const StakingDelegatePreview = observer(
           }}
         />
         <Text
-          t11
-          center
+          variant={TextVariant.t11}
+          position={TextPosition.center}
           i18n={I18N.stakingDelegatePreviewStakeTo}
           color={Color.textBase2}
           style={styles.subtitle}
         />
-        <Text t10 center style={styles.contact}>
+        <Text
+          variant={TextVariant.t10}
+          position={TextPosition.center}
+          style={styles.contact}>
           {validator.description.moniker}
         </Text>
         <View style={styles.info}>
           <DataView label={getText(I18N.stakingDelegatePreviewCommission)}>
-            <Text t11 color={getColor(Color.textBase1)}>
+            <Text variant={TextVariant.t11} color={getColor(Color.textBase1)}>
               {validatorCommission}%
             </Text>
           </DataView>
           <DataView label={getText(I18N.stakingDelegatePreviewAmount)}>
-            <Text t11>{cleanNumber(amount)}</Text>
+            <Text variant={TextVariant.t11}>{cleanNumber(amount)}</Text>
           </DataView>
           <DataView label={getText(I18N.stakingDelegatePreviewNetworkFee)}>
-            <Text t11 color={getColor(Color.textBase1)}>
+            <Text variant={TextVariant.t11} color={getColor(Color.textBase1)}>
               {fee.toBalanceString(8)}
             </Text>
           </DataView>

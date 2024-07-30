@@ -12,7 +12,15 @@ import {Raffle} from '@app/types';
 import {WEI} from '@app/variables/common';
 
 import {LottieWrap} from './lottie';
-import {Button, ButtonVariant, Icon, IconsName, Spacer, Text} from './ui';
+import {
+  Button,
+  ButtonVariant,
+  Icon,
+  IconsName,
+  Spacer,
+  Text,
+  TextVariant,
+} from './ui';
 
 export interface RaffleRewardProps {
   item: Raffle;
@@ -51,7 +59,7 @@ export const RaffleReward = observer(
           <Icon name={IconsName.ticket} color={Color.textYellow1} />
           <Spacer width={4} />
           <Text
-            t12
+            variant={TextVariant.t12}
             i18n={I18N.raffleRewardWonTickets}
             i18params={{
               winner_tickets: `${item.winner_tickets}`,
@@ -67,7 +75,7 @@ export const RaffleReward = observer(
             source={require('@assets/images/islm_icon.png')}
           />
           <Text
-            t10
+            variant={TextVariant.t10}
             color={Color.textGreen1}
             numberOfLines={1}
             i18n={I18N.raffleRewardPrize}

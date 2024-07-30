@@ -178,12 +178,12 @@ export const SwapScreen = observer(() => {
   const isWrapTx = useMemo(
     () =>
       tokenIn?.symbol === app.provider.denom && tokenOut?.symbol === 'wISLM',
-    [tokenIn, tokenOut],
+    [tokenIn, tokenOut, app.provider.denom],
   );
   const isUnwrapTx = useMemo(
     () =>
       tokenIn?.symbol === 'wISLM' && tokenOut?.symbol === app.provider.denom,
-    [tokenIn, tokenOut],
+    [tokenIn, tokenOut, app.provider.denom],
   );
   const t0Current = useMemo(() => {
     if (!amountsIn.amount || !tokenIn?.decimals) {
@@ -228,7 +228,7 @@ export const SwapScreen = observer(() => {
 
     logger.log('t0 available: tokenData is empty, symbol: ', tokenIn.symbol);
     return new Balance(0, 0, tokenIn.symbol!);
-  }, [currentWallet, tokenIn, Token.tokens]);
+  }, [currentWallet, tokenIn, Token.tokens, app.provider.denom]);
 
   const t1Available = useMemo(() => {
     if (!tokenOut) {
@@ -247,7 +247,7 @@ export const SwapScreen = observer(() => {
     }
 
     return new Balance(0, 0, tokenOut.symbol!);
-  }, [currentWallet, tokenOut]);
+  }, [currentWallet, tokenOut, app.provider.denom]);
 
   const estimate = async (force = false) => {
     try {
@@ -764,6 +764,7 @@ export const SwapScreen = observer(() => {
     amountsIn,
     swapSettings,
     minReceivedAmount,
+    app.provider.denom,
   ]);
 
   const onPressApprove = useCallback(async () => {
@@ -886,7 +887,13 @@ export const SwapScreen = observer(() => {
     } finally {
       setSwapInProgress(() => false);
     }
-  }, [currentWallet, t0Current, estimate, amountsIn.amount]);
+  }, [
+    currentWallet,
+    t0Current,
+    estimate,
+    amountsIn.amount,
+    app.provider.denom,
+  ]);
   const onPressUnrap = useCallback(async () => {
     // withdraw
     try {
@@ -963,6 +970,7 @@ export const SwapScreen = observer(() => {
     tokenIn?.symbol,
     currentWallet,
     estimate,
+    app.provider.denom,
   ]);
 
   const onPressMax = async () => {

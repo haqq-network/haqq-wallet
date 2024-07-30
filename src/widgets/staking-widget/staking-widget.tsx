@@ -4,7 +4,13 @@ import {observer} from 'mobx-react';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Button, ButtonSize, ButtonVariant, Text} from '@app/components/ui';
+import {
+  Button,
+  ButtonSize,
+  ButtonVariant,
+  Text,
+  TextVariant,
+} from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
 import {WidgetHeader} from '@app/components/ui/widget-header';
 import {app} from '@app/contexts';
@@ -57,8 +63,10 @@ export const StakingWidget = observer(
         />
         <View style={styles.rewardsWrapper}>
           <View style={styles.row}>
-            <Text t14>{`${getText(I18N.earnRewards)} `}</Text>
-            <Text t13 color={Color.textGreen1}>
+            <Text variant={TextVariant.t14}>{`${getText(
+              I18N.earnRewards,
+            )} `}</Text>
+            <Text variant={TextVariant.t13} color={Color.textGreen1}>
               {rewardAmount.toBalanceString()}
             </Text>
           </View>
