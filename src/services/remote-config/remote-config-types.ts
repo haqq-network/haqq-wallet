@@ -41,9 +41,7 @@ export type RemoteConfigTypes = RemoteConfigBalanceTypes &
     eth_explorer: ExplorerUrlsMap;
     eth_min_amount: string;
     eth_min_gas_limit: string;
-    evm_endpoints: Record<string, string[]>;
     keystone_tutorial_url: string;
-    indexer_endpoints: Record<string, string>;
     pattern_source: string;
     sss_apple_provider: string;
     sss_custom_provider: string | undefined;
@@ -51,7 +49,6 @@ export type RemoteConfigTypes = RemoteConfigBalanceTypes &
     sss_generate_shares_url: string;
     sss_google_provider: string;
     sss_metadata_url: string;
-    tm_endpoints: Record<string, string[]>;
     version: string;
     wallet_connect: WalletConnectAllowedNamespaces;
     web3_app_whitelist: string[];

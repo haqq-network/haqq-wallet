@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {Proposal} from '@evmos/provider/dist/rest/gov';
+import {observer} from 'mobx-react';
 import {Image, View} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -14,8 +15,11 @@ import {
   PopupContainer,
   Spacer,
   Text,
+  TextPosition,
+  TextVariant,
 } from '@app/components/ui';
 import {NetworkFee} from '@app/components/ui/network-fee';
+import {app} from '@app/contexts';
 import {createTheme, openURL} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
@@ -29,73 +33,75 @@ export type ProposalDepositFinishProps = {
   onDone: () => void;
 };
 
-export const ProposalDepositFinish = ({
-  onDone,
-  amount,
-  fee,
-  proposal,
-  txhash,
-}: ProposalDepositFinishProps) => {
-  const onPressHash = async () => {
-    const url = `https://haqq.explorers.guru/transaction/${txhash}`;
-    await openURL(url);
-  };
+export const ProposalDepositFinish = observer(
+  ({onDone, amount, fee, proposal, txhash}: ProposalDepositFinishProps) => {
+    const onPressHash = async () => {
+      const url = `https://haqq.explorers.guru/transaction/${txhash}`;
+      await openURL(url);
+    };
 
-  return (
-    <PopupContainer style={styles.container}>
-      <View style={styles.sub}>
-        <LottieWrap
-          source={require('@assets/animations/transaction-finish.json')}
-          style={styles.image}
-          autoPlay
-          loop={false}
+    return (
+      <PopupContainer style={styles.container}>
+        <View style={styles.sub}>
+          <LottieWrap
+            source={require('@assets/animations/transaction-finish.json')}
+            style={styles.image}
+            autoPlay
+            loop={false}
+          />
+        </View>
+        <Text
+          variant={TextVariant.t4}
+          position={TextPosition.center}
+          i18n={I18N.proposalDepositTitle}
+          style={styles.title}
+          color={Color.textGreen1}
         />
-      </View>
-      <Text
-        t4
-        center
-        i18n={I18N.proposalDepositTitle}
-        style={styles.title}
-        color={Color.textGreen1}
-      />
-      <Image
-        source={require('@assets/images/islm_icon.png')}
-        style={styles.icon}
-      />
-      <Text t3 center style={styles.sum}>
-        {cleanNumber(amount)} ISLM
-      </Text>
-      <Text t13 center style={styles.address}>
-        {proposal.content.title}
-      </Text>
-      <NetworkFee fee={fee} currency="ISLM" />
-      <Spacer />
-      <Inline gap={12}>
-        <IconButton onPress={onPressHash} style={styles.button}>
-          <Icon
-            name="block"
-            color={Color.graphicBase2}
-            style={styles.buttonIcon}
-            i22
-          />
-          <Text
-            t15
-            center
-            i18n={I18N.transactionFinishHash}
-            color={Color.textBase2}
-          />
-        </IconButton>
-      </Inline>
-      <Spacer height={28} />
-      <Button
-        style={styles.margin}
-        variant={ButtonVariant.contained}
-        i18n={I18N.proposalDepositFinishDone}
-        onPress={onDone}
-      />
-    </PopupContainer>
-  );
-};
+        <Image
+          source={require('@assets/images/islm_icon.png')}
+          style={styles.icon}
+        />
+        <Text
+          variant={TextVariant.t3}
+          position={TextPosition.center}
+          style={styles.sum}>
+          {`${cleanNumber(amount)} ${app.provider.denom}`}
+        </Text>
+        <Text
+          variant={TextVariant.t13}
+          position={TextPosition.center}
+          style={styles.address}>
+          {proposal.content.title}
+        </Text>
+        <NetworkFee fee={fee} />
+        <Spacer />
+        <Inline gap={12}>
+          <IconButton onPress={onPressHash} style={styles.button}>
+            <Icon
+              name="block"
+              color={Color.graphicBase2}
+              style={styles.buttonIcon}
+              i22
+            />
+            <Text
+              variant={TextVariant.t15}
+              position={TextPosition.center}
+              i18n={I18N.transactionFinishHash}
+              color={Color.textBase2}
+            />
+          </IconButton>
+        </Inline>
+        <Spacer height={28} />
+        <Button
+          style={styles.margin}
+          variant={ButtonVariant.contained}
+          i18n={I18N.proposalDepositFinishDone}
+          onPress={onDone}
+        />
+      </PopupContainer>
+    );
+  },
+);
 
 const styles = createTheme({
   container: {

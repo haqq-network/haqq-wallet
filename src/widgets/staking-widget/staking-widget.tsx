@@ -1,11 +1,19 @@
-import React, {memo, useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
+import {observer} from 'mobx-react';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Button, ButtonSize, ButtonVariant, Text} from '@app/components/ui';
+import {
+  Button,
+  ButtonSize,
+  ButtonVariant,
+  Text,
+  TextVariant,
+} from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
 import {WidgetHeader} from '@app/components/ui/widget-header';
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {I18N, getText} from '@app/i18n';
@@ -17,7 +25,7 @@ type Props = {
   rewardAmount: Balance;
 };
 
-export const StakingWidget = memo(
+export const StakingWidget = observer(
   ({onPress, onGetReward, rewardAmount}: Props) => {
     const [loading, setLoading] = useState(false);
     const canGetRewards = useMemo(
@@ -48,13 +56,17 @@ export const StakingWidget = memo(
         <WidgetHeader
           icon={'staking_thin'}
           title={getText(I18N.earnStaking)}
-          description={getText(I18N.earnStakingDescription)}
+          description={getText(I18N.earnStakingDescription, {
+            symbol: app.provider.denom,
+          })}
           largeIcon
         />
         <View style={styles.rewardsWrapper}>
           <View style={styles.row}>
-            <Text t14>{`${getText(I18N.earnRewards)} `}</Text>
-            <Text t13 color={Color.textGreen1}>
+            <Text variant={TextVariant.t14}>{`${getText(
+              I18N.earnRewards,
+            )} `}</Text>
+            <Text variant={TextVariant.t13} color={Color.textGreen1}>
               {rewardAmount.toBalanceString()}
             </Text>
           </View>

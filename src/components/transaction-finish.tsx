@@ -1,6 +1,7 @@
 import React, {useMemo} from 'react';
 
 import {BigNumber} from '@ethersproject/bignumber';
+import {observer} from 'mobx-react';
 import {Image, View} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -17,6 +18,7 @@ import {
   TextPosition,
   TextVariant,
 } from '@app/components/ui';
+import {app} from '@app/contexts';
 import {createTheme, openURL} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
@@ -24,7 +26,6 @@ import {Fee} from '@app/models/fee';
 import {Balance} from '@app/services/balance';
 import {EthNetwork} from '@app/services/eth-network/eth-network';
 import {IToken, TransactionResponse} from '@app/types';
-import {CURRENCY_NAME} from '@app/variables/common';
 
 type TransactionFinishProps = {
   transaction: TransactionResponse | null;
@@ -39,157 +40,159 @@ type TransactionFinishProps = {
   fee: Fee;
 };
 
-export const TransactionFinish = ({
-  transaction,
-  onSubmit,
-  onPressContact,
-  contact,
-  short,
-  testID,
-  token,
-  amount,
-  hideContact,
-  fee,
-}: TransactionFinishProps) => {
-  const onPressHash = async () => {
-    const url = `${EthNetwork.explorer}tx/${transaction?.hash}`;
-    await openURL(url);
-  };
+export const TransactionFinish = observer(
+  ({
+    transaction,
+    onSubmit,
+    onPressContact,
+    contact,
+    short,
+    testID,
+    token,
+    amount,
+    hideContact,
+    fee,
+  }: TransactionFinishProps) => {
+    const onPressHash = async () => {
+      const url = `${EthNetwork.explorer}tx/${transaction?.hash}`;
+      await openURL(url);
+    };
 
-  const transactionAmount = useMemo(() => {
-    if (amount) {
-      return amount;
-    }
+    const transactionAmount = useMemo(() => {
+      if (amount) {
+        return amount;
+      }
 
-    if (transaction?.value instanceof BigNumber) {
+      if (transaction?.value instanceof BigNumber) {
+        return new Balance(
+          (transaction as TransactionResponse)?.value._hex ?? 0,
+          undefined,
+          token.symbol ?? app.provider.denom,
+        );
+      }
       return new Balance(
-        (transaction as TransactionResponse)?.value._hex ?? 0,
+        transaction?.value ?? 0,
         undefined,
-        token.symbol ?? CURRENCY_NAME,
+        token.symbol ?? app.provider.denom,
       );
-    }
-    return new Balance(
-      transaction?.value ?? 0,
-      undefined,
-      token.symbol ?? CURRENCY_NAME,
-    );
-  }, [transaction, token, amount]);
+    }, [transaction, token, amount, app.provider.denom]);
 
-  return (
-    <PopupContainer style={styles.container} testID={testID}>
-      <View style={styles.sub}>
-        <LottieWrap
-          source={require('@assets/animations/transaction-finish.json')}
-          style={styles.image}
-          autoPlay={true}
-          loop={false}
-        />
-      </View>
-      <Text
-        variant={TextVariant.t4}
-        i18n={I18N.transactionFinishSendingComplete}
-        style={styles.title}
-        position={TextPosition.center}
-        color={Color.textGreen1}
-      />
-      <Image source={token.image} style={styles.icon} />
-      {transaction && (
+    return (
+      <PopupContainer style={styles.container} testID={testID}>
+        <View style={styles.sub}>
+          <LottieWrap
+            source={require('@assets/animations/transaction-finish.json')}
+            style={styles.image}
+            autoPlay={true}
+            loop={false}
+          />
+        </View>
         <Text
-          variant={TextVariant.t5}
+          variant={TextVariant.t4}
+          i18n={I18N.transactionFinishSendingComplete}
+          style={styles.title}
           position={TextPosition.center}
-          style={styles.sum}>
-          - {transactionAmount.toBalanceString('auto')}
-        </Text>
-      )}
-
-      <View style={styles.contactLine}>
-        {contact?.name && (
+          color={Color.textGreen1}
+        />
+        <Image source={token.image} style={styles.icon} />
+        {transaction && (
           <Text
-            variant={TextVariant.t13}
+            variant={TextVariant.t5}
             position={TextPosition.center}
-            style={styles.address}>
-            {contact.name + ' '}
+            style={styles.sum}>
+            - {transactionAmount.toBalanceString('auto')}
           </Text>
         )}
-        <Text
-          variant={TextVariant.t14}
-          position={TextPosition.center}
-          style={styles.address}>
-          {short}
-        </Text>
-      </View>
 
-      <NetworkFee fee={fee?.expectedFee} currency="ISLM" />
-
-      <View style={styles.providerContainer}>
-        <Text
-          variant={TextVariant.t14}
-          color={Color.textBase2}
-          i18n={I18N.transactionConfirmationHAQQ}
-        />
-        <Text
-          variant={TextVariant.t14}
-          color={Color.textBase2}
-          i18n={I18N.transactionConfirmationHQ}
-        />
-      </View>
-
-      <Spacer minHeight={20} />
-      <View style={styles.buttons}>
-        {!hideContact && (
-          <IconButton onPress={onPressContact} style={styles.button}>
-            {contact ? (
-              <Icon
-                name="pen"
-                i24
-                color={Color.graphicBase2}
-                style={styles.buttonIcon}
-              />
-            ) : (
-              <Icon
-                name="user"
-                i24
-                color={Color.graphicBase2}
-                style={styles.buttonIcon}
-              />
-            )}
+        <View style={styles.contactLine}>
+          {contact?.name && (
             <Text
-              i18n={
-                contact
-                  ? I18N.transactionFinishEditContact
-                  : I18N.transactionFinishAddContact
-              }
+              variant={TextVariant.t13}
+              position={TextPosition.center}
+              style={styles.address}>
+              {contact.name + ' '}
+            </Text>
+          )}
+          <Text
+            variant={TextVariant.t14}
+            position={TextPosition.center}
+            style={styles.address}>
+            {short}
+          </Text>
+        </View>
+
+        <NetworkFee fee={fee?.expectedFee} />
+
+        <View style={styles.providerContainer}>
+          <Text
+            variant={TextVariant.t14}
+            color={Color.textBase2}
+            i18n={I18N.transactionConfirmationHAQQ}
+          />
+          <Text
+            variant={TextVariant.t14}
+            color={Color.textBase2}
+            i18n={I18N.transactionConfirmationHQ}
+          />
+        </View>
+
+        <Spacer minHeight={20} />
+        <View style={styles.buttons}>
+          {!hideContact && (
+            <IconButton onPress={onPressContact} style={styles.button}>
+              {contact ? (
+                <Icon
+                  name="pen"
+                  i24
+                  color={Color.graphicBase2}
+                  style={styles.buttonIcon}
+                />
+              ) : (
+                <Icon
+                  name="user"
+                  i24
+                  color={Color.graphicBase2}
+                  style={styles.buttonIcon}
+                />
+              )}
+              <Text
+                i18n={
+                  contact
+                    ? I18N.transactionFinishEditContact
+                    : I18N.transactionFinishAddContact
+                }
+                variant={TextVariant.t15}
+                position={TextPosition.center}
+                color={Color.textBase2}
+              />
+            </IconButton>
+          )}
+          <IconButton onPress={onPressHash} style={styles.button}>
+            <Icon
+              name="block"
+              color={Color.graphicBase2}
+              style={styles.buttonIcon}
+              i24
+            />
+            <Text
               variant={TextVariant.t15}
               position={TextPosition.center}
+              i18n={I18N.transactionFinishHash}
               color={Color.textBase2}
             />
           </IconButton>
-        )}
-        <IconButton onPress={onPressHash} style={styles.button}>
-          <Icon
-            name="block"
-            color={Color.graphicBase2}
-            style={styles.buttonIcon}
-            i24
-          />
-          <Text
-            variant={TextVariant.t15}
-            position={TextPosition.center}
-            i18n={I18N.transactionFinishHash}
-            color={Color.textBase2}
-          />
-        </IconButton>
-      </View>
-      <Button
-        style={styles.margin}
-        variant={ButtonVariant.contained}
-        i18n={I18N.transactionFinishDone}
-        onPress={onSubmit}
-        testID={`${testID}_finish`}
-      />
-    </PopupContainer>
-  );
-};
+        </View>
+        <Button
+          style={styles.margin}
+          variant={ButtonVariant.contained}
+          i18n={I18N.transactionFinishDone}
+          onPress={onSubmit}
+          testID={`${testID}_finish`}
+        />
+      </PopupContainer>
+    );
+  },
+);
 
 const styles = createTheme({
   container: {

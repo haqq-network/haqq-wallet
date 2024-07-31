@@ -70,27 +70,6 @@ export const REMOTE_CONFIG_DEFAULT_VALUES: Required<RemoteConfigTypes> = {
     'https://chainlist.org/',
     'https://tfm.com',
   ],
-  evm_endpoints: {
-    'haqq_54211-3': [
-      'https://rpc.eth.testedge2.haqq.network',
-      'https://te2-s1-evm-rpc.haqq.sh',
-    ],
-    'haqq_11235-1': [
-      'https://rpc.eth.haqq.network',
-      'https://m-s1-evm-rpc.haqq.sh',
-    ],
-  },
-  tm_endpoints: {
-    'haqq_11235-1': ['https://rpc.tm.haqq.network', 'https://m-s1-tm.haqq.sh'],
-    'haqq_54211-3': [
-      'https://rpc.tm.testedge2.haqq.network',
-      'https://te2-s1-tm.haqq.sh',
-    ],
-  },
-  indexer_endpoints: {
-    'haqq_11235-1': 'https://jsonrpc.indexer.haqq.network',
-    'haqq_54211-3': 'https://jsonrpc.indexer.testedge2.haqq.network',
-  },
   version: getAppVersion(),
   welcome_screen: 'welcomeNews',
   sss_google_provider: 'haqq-google-ios',

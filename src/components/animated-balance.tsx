@@ -1,13 +1,12 @@
 import React, {Component} from 'react';
 
-// import SpinningNumbers from '@birdwingo/react-native-spinning-numbers';
 import {View} from 'react-native';
 import Timer from 'react-timer-mixin';
 
 import {Color, getColor} from '@app/colors';
-import {Text} from '@app/components/ui';
+import {Text, TextVariant} from '@app/components/ui';
+import {app} from '@app/contexts';
 import {cleanNumber, createTheme} from '@app/helpers';
-import {CURRENCY_NAME} from '@app/variables/common';
 
 type Props = {
   value: number;
@@ -78,19 +77,15 @@ export class AnimateNumber extends Component<Props, State> {
   render() {
     return (
       <View style={styles.wrapper}>
-        <Text
-          t0
-          // duration={0} // CONFIG.Interval
-          // autoMeasure
-          style={styles.currencyText}>
+        <Text variant={TextVariant.t0} style={styles.currencyText}>
           {cleanNumber(this.state.value)}
         </Text>
         <Text
-          t0
+          variant={TextVariant.t0}
           color={Color.textBase3}
           numberOfLines={1}
           style={styles.currencySuffixText}>
-          {` ${CURRENCY_NAME}`}
+          {` ${app.provider.denom}`}
         </Text>
       </View>
     );

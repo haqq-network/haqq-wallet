@@ -1,6 +1,7 @@
 import React, {useMemo} from 'react';
 
 import {formatDistance} from 'date-fns';
+import {observer} from 'mobx-react';
 import {Image, View} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
@@ -13,7 +14,10 @@ import {
   PopupContainer,
   Spacer,
   Text,
+  TextPosition,
+  TextVariant,
 } from '@app/components/ui';
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {formatPercents} from '@app/helpers/format-percents';
@@ -30,101 +34,109 @@ export type StakingDelegatePreviewProps = {
   onSend: () => void;
 };
 
-export const StakingDelegatePreview = ({
-  amount,
-  fee,
-  validator,
-  disabled,
-  unboundingTime,
-  onSend,
-}: StakingDelegatePreviewProps) => {
-  const validatorCommission = useMemo(() => {
-    return formatPercents(validator.commission.commission_rates.rate);
-  }, [validator.commission.commission_rates]);
+export const StakingDelegatePreview = observer(
+  ({
+    amount,
+    fee,
+    validator,
+    disabled,
+    unboundingTime,
+    onSend,
+  }: StakingDelegatePreviewProps) => {
+    const validatorCommission = useMemo(() => {
+      return formatPercents(validator.commission.commission_rates.rate);
+    }, [validator.commission.commission_rates]);
 
-  const time = useMemo(
-    () => formatDistance(new Date(unboundingTime), new Date(0)),
-    [unboundingTime],
-  );
+    const time = useMemo(
+      () => formatDistance(new Date(unboundingTime), new Date(0)),
+      [unboundingTime],
+    );
 
-  return (
-    <PopupContainer testID="staking-preview-container" style={styles.container}>
-      <Image
-        source={require('@assets/images/islm_icon.png')}
-        style={styles.icon}
-      />
-      <Text
-        t11
-        center
-        i18n={I18N.stakingDelegatePreviewTotalAmount}
-        color={Color.textBase2}
-        style={styles.subtitle}
-      />
-      <Text
-        t3
-        center
-        style={styles.sum}
-        i18n={I18N.amountISLM}
-        i18params={{
-          amount: cleanNumber(amount),
-        }}
-      />
-      <Text
-        t11
-        center
-        i18n={I18N.stakingDelegatePreviewStakeTo}
-        color={Color.textBase2}
-        style={styles.subtitle}
-      />
-      <Text t10 center style={styles.contact}>
-        {validator.description.moniker}
-      </Text>
-      <View style={styles.info}>
-        <DataView label={getText(I18N.stakingDelegatePreviewCommission)}>
-          <Text t11 color={getColor(Color.textBase1)}>
-            {validatorCommission}%
-          </Text>
-        </DataView>
-        <DataView label={getText(I18N.stakingDelegatePreviewAmount)}>
-          <Text t11>{cleanNumber(amount)}</Text>
-        </DataView>
-        <DataView label={getText(I18N.stakingDelegatePreviewNetworkFee)}>
-          <Text t11 color={getColor(Color.textBase1)}>
-            {fee.toBalanceString(8)}
-          </Text>
-        </DataView>
-      </View>
-      <Spacer />
-      <Spacer height={24} />
-      <InfoBlock
-        warning
-        i18n={I18N.stakingUnDelegatePreviewAttention}
-        i18params={{time}}
-        icon={<Icon name="warning" color={Color.textYellow1} />}
-      />
-      {validator.localStatus === ValidatorStatus.inactive ||
-        (validator.localStatus === ValidatorStatus.jailed && (
-          <>
-            <Spacer height={16} />
-            <InfoBlock
-              warning
-              i18n={I18N.stakingDelegateFormJailedAttention}
-              icon={<Icon name="warning" color={Color.textYellow1} />}
-            />
-          </>
-        ))}
-      <Spacer minHeight={16} />
-      <Button
-        variant={ButtonVariant.contained}
-        title={getText(I18N.stakingDelegatePreviewDelegate)}
-        onPress={onSend}
-        style={styles.submit}
-        loading={disabled}
-        testID="staking-preview"
-      />
-    </PopupContainer>
-  );
-};
+    return (
+      <PopupContainer
+        testID="staking-preview-container"
+        style={styles.container}>
+        <Image
+          source={require('@assets/images/islm_icon.png')}
+          style={styles.icon}
+        />
+        <Text
+          variant={TextVariant.t11}
+          position={TextPosition.center}
+          i18n={I18N.stakingDelegatePreviewTotalAmount}
+          color={Color.textBase2}
+          style={styles.subtitle}
+        />
+        <Text
+          variant={TextVariant.t3}
+          position={TextPosition.center}
+          style={styles.sum}
+          i18n={I18N.amount}
+          i18params={{
+            amount: cleanNumber(amount),
+            symbol: app.provider.denom,
+          }}
+        />
+        <Text
+          variant={TextVariant.t11}
+          position={TextPosition.center}
+          i18n={I18N.stakingDelegatePreviewStakeTo}
+          color={Color.textBase2}
+          style={styles.subtitle}
+        />
+        <Text
+          variant={TextVariant.t10}
+          position={TextPosition.center}
+          style={styles.contact}>
+          {validator.description.moniker}
+        </Text>
+        <View style={styles.info}>
+          <DataView label={getText(I18N.stakingDelegatePreviewCommission)}>
+            <Text variant={TextVariant.t11} color={getColor(Color.textBase1)}>
+              {validatorCommission}%
+            </Text>
+          </DataView>
+          <DataView label={getText(I18N.stakingDelegatePreviewAmount)}>
+            <Text variant={TextVariant.t11}>{cleanNumber(amount)}</Text>
+          </DataView>
+          <DataView label={getText(I18N.stakingDelegatePreviewNetworkFee)}>
+            <Text variant={TextVariant.t11} color={getColor(Color.textBase1)}>
+              {fee.toBalanceString(8)}
+            </Text>
+          </DataView>
+        </View>
+        <Spacer />
+        <Spacer height={24} />
+        <InfoBlock
+          warning
+          i18n={I18N.stakingUnDelegatePreviewAttention}
+          i18params={{time}}
+          icon={<Icon name="warning" color={Color.textYellow1} />}
+        />
+        {validator.localStatus === ValidatorStatus.inactive ||
+          (validator.localStatus === ValidatorStatus.jailed && (
+            <>
+              <Spacer height={16} />
+              <InfoBlock
+                warning
+                i18n={I18N.stakingDelegateFormJailedAttention}
+                icon={<Icon name="warning" color={Color.textYellow1} />}
+              />
+            </>
+          ))}
+        <Spacer minHeight={16} />
+        <Button
+          variant={ButtonVariant.contained}
+          title={getText(I18N.stakingDelegatePreviewDelegate)}
+          onPress={onSend}
+          style={styles.submit}
+          loading={disabled}
+          testID="staking-preview"
+        />
+      </PopupContainer>
+    );
+  },
+);
 
 const styles = createTheme({
   container: {

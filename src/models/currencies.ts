@@ -12,10 +12,7 @@ import {Indexer} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
 import {RemoteConfig} from '@app/services/remote-config';
 import {RatesResponse} from '@app/types';
-import {
-  STORE_REHYDRATION_TIMEOUT_MS,
-  WEI_PRECISION,
-} from '@app/variables/common';
+import {STORE_REHYDRATION_TIMEOUT_MS} from '@app/variables/common';
 
 // optimization for `convert()` method
 const convertedCache = new Map<string, Balance>();
@@ -77,7 +74,7 @@ class CurrenciesStore {
           ...prev,
           [tokenKey?.toLocaleLowerCase()]: {
             amount: rate?.amount
-              ? parseFloat(rate.amount) / 10 ** WEI_PRECISION
+              ? parseFloat(rate.amount) / 10 ** app.provider.decimals
               : 0,
             denom: rate?.denom,
           } as CurrencyRate,

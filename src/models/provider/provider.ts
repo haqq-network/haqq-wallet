@@ -207,6 +207,18 @@ export class Provider {
     return app.isDeveloper ? true : false;
   }
 
+  get decimals() {
+    return this.model.decimals;
+  }
+
+  get weiDenom() {
+    return this.model.wei_denom;
+  }
+
+  get denom() {
+    return this.model.denom;
+  }
+
   toJSON() {
     return {
       ethChainIdHex: this.ethChainIdHex,

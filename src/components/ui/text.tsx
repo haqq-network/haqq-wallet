@@ -149,7 +149,7 @@ export const Text = ({
   position,
   ...props
 }: TextProps) => {
-  const [update, forceUpdate] = useState({});
+  const [, forceUpdate] = useState({});
 
   useEffect(() => {
     const subscription = () => {
@@ -163,10 +163,8 @@ export const Text = ({
     };
   }, []);
 
-  const value = useMemo(
-    () => (typeof i18n !== 'undefined' ? getText(i18n, i18params) : children),
-    [children, i18n, i18params, update],
-  );
+  const value =
+    typeof i18n !== 'undefined' ? getText(i18n, i18params) : children;
 
   const variantStyle = useMemo(() => {
     if (!variant) {

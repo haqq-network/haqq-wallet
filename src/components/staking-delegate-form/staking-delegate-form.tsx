@@ -11,6 +11,7 @@ import {
   KeyboardSafeArea,
   Spacer,
   Text,
+  TextVariant,
 } from '@app/components/ui';
 import {NetworkFee} from '@app/components/ui/network-fee';
 import {SumBlock} from '@app/components/ui/sum-block';
@@ -21,7 +22,6 @@ import {I18N} from '@app/i18n';
 import {Balance} from '@app/services/balance';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
 import {FEE_AMOUNT} from '@app/variables/balance';
-import {CURRENCY_NAME} from '@app/variables/common';
 
 export type StakingDelegateFormProps = {
   validator: ValidatorItem;
@@ -81,20 +81,22 @@ export const StakingDelegateForm = ({
   return (
     <KeyboardSafeArea isNumeric style={styles.container}>
       <View style={styles.row}>
-        <Text t14 i18n={I18N.stakingDelegateFormCommission} />
-        <Text t10>{validatorCommission}%</Text>
+        <Text
+          variant={TextVariant.t14}
+          i18n={I18N.stakingDelegateFormCommission}
+        />
+        <Text variant={TextVariant.t10}>{validatorCommission}%</Text>
       </View>
       <Spacer centered>
         <SumBlock
           value={amounts.amount}
           error={amounts.error}
-          currency={CURRENCY_NAME}
           balance={balance}
           onChange={amounts.setAmount}
           onMax={onPressMax}
         />
       </Spacer>
-      <NetworkFee fee={fee} currency="ISLM" />
+      <NetworkFee fee={fee} />
       {localStatus === ValidatorStatus.inactive ||
         (localStatus === ValidatorStatus.jailed && (
           <>

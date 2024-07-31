@@ -2,6 +2,7 @@ import Decimal from 'decimal.js';
 import {BigNumber, BigNumberish} from 'ethers';
 import {I18nManager} from 'react-native';
 
+import {app} from '@app/contexts';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {Currencies} from '@app/models/currencies';
 import {Wallet} from '@app/models/wallet';
@@ -19,7 +20,6 @@ import {
   LONG_NUM_PRECISION,
   NUM_DELIMITER,
   NUM_PRECISION,
-  WEI_PRECISION,
 } from '@app/variables/common';
 
 const zeroBN = new Decimal(0);
@@ -33,12 +33,12 @@ export class Balance implements IBalance, ISerializable {
 
   constructor(
     balance: BalanceConstructor,
-    precission = WEI_PRECISION,
-    symbol = CURRENCY_NAME,
+    precission = app.provider.decimals,
+    symbol = app.provider.denom,
   ) {
     this.originalValue = balance;
-    this.precission = precission ?? WEI_PRECISION;
-    this.symbol = symbol || CURRENCY_NAME;
+    this.precission = precission ?? app.provider.decimals;
+    this.symbol = symbol || app.provider.denom;
 
     if (BigNumber.isBigNumber(balance)) {
       const {_hex} = BigNumber.from(balance);
@@ -102,7 +102,10 @@ export class Balance implements IBalance, ISerializable {
     return `a${this.symbol}`;
   }
 
-  static getEmpty = (precision = WEI_PRECISION, symbol = CURRENCY_NAME) => {
+  static getEmpty = (
+    precision = app.provider.decimals,
+    symbol = app.provider.denom,
+  ) => {
     return new Balance(zeroBN, precision, symbol);
   };
 
