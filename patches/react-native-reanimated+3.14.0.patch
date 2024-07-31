@@ -1,0 +1,43 @@
+diff --git a/node_modules/react-native-reanimated/src/mutables.ts b/node_modules/react-native-reanimated/src/mutables.ts
+index 1d247a9..426a47b 100644
+--- a/node_modules/react-native-reanimated/src/mutables.ts
++++ b/node_modules/react-native-reanimated/src/mutables.ts
+@@ -75,7 +75,7 @@ export function makeMutable<Value>(initial: Value): Mutable<Value> {
+         valueSetter(mutable, newValue);
+       } else {
+         runOnUI(() => {
+-          mutable.value = newValue;
++          if (typeof mutable !== "undefined") mutable.value = newValue;
+         })();
+       }
+     },
+@@ -84,7 +84,7 @@ export function makeMutable<Value>(initial: Value): Mutable<Value> {
+         return value;
+       }
+       const uiValueGetter = executeOnUIRuntimeSync((sv: Mutable<Value>) => {
+-        return sv.value;
++        if (typeof sv !== "undefined") return sv.value;
+       });
+       return uiValueGetter(mutable);
+     },
+diff --git a/node_modules/react-native-reanimated/src/valueUnpacker.ts b/node_modules/react-native-reanimated/src/valueUnpacker.ts
+index 26e8dbe..2c5c012 100644
+--- a/node_modules/react-native-reanimated/src/valueUnpacker.ts
++++ b/node_modules/react-native-reanimated/src/valueUnpacker.ts
+@@ -70,11 +70,11 @@ See https://docs.swmansion.com/react-native-reanimated/docs/guides/troubleshooti
+     fun.__remoteFunction = objectToUnpack;
+     return fun;
+   } else {
+-    throw new Error(
+-      `[Reanimated] Data type in category "${category}" not recognized by value unpacker: "${_toString(
+-        objectToUnpack
+-      )}".`
+-    );
++    // throw new Error(
++    //   `[Reanimated] Data type in category "${category}" not recognized by value unpacker: "${_toString(
++    //     objectToUnpack
++    //   )}".`
++    // );
+   }
+ }
+ 
