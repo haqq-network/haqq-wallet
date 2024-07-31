@@ -1,0 +1,42 @@
+diff --git a/node_modules/bson/dist/bson.browser.umd.js b/node_modules/bson/dist/bson.browser.umd.js
+index 761e5db..c64fbde 100644
+--- a/node_modules/bson/dist/bson.browser.umd.js
++++ b/node_modules/bson/dist/bson.browser.umd.js
+@@ -2157,7 +2157,7 @@
+ 	    var insecureWarning = isReactNative()
+ 	        ? 'BSON: For React Native please polyfill crypto.getRandomValues, e.g. using: https://www.npmjs.com/package/react-native-get-random-values.'
+ 	        : 'BSON: No cryptographic implementation for random bytes present, falling back to a less secure implementation.';
+-	    console.warn(insecureWarning);
++	    // console.warn(insecureWarning);
+ 	    var result = buffer_1.alloc(size);
+ 	    for (var i = 0; i < size; ++i)
+ 	        result[i] = Math.floor(Math.random() * 256);
+@@ -2165,17 +2165,17 @@
+ 	};
+ 	var detectRandomBytes = function () {
+ 	    {
+-	        if (typeof window !== 'undefined') {
+-	            // browser crypto implementation(s)
+-	            var target_1 = window.crypto || window.msCrypto; // allow for IE11
+-	            if (target_1 && target_1.getRandomValues) {
+-	                return function (size) { return target_1.getRandomValues(buffer_1.alloc(size)); };
+-	            }
+-	        }
+-	        if (typeof global !== 'undefined' && global.crypto && global.crypto.getRandomValues) {
+-	            // allow for RN packages such as https://www.npmjs.com/package/react-native-get-random-values to populate global
+-	            return function (size) { return global.crypto.getRandomValues(buffer_1.alloc(size)); };
+-	        }
++	        // if (typeof window !== 'undefined') {
++	        //     // browser crypto implementation(s)
++	        //     var target_1 = window.crypto || window.msCrypto; // allow for IE11
++	        //     if (target_1 && target_1.getRandomValues) {
++	        //         return function (size) { return target_1.getRandomValues(buffer_1.alloc(size)); };
++	        //     }
++	        // }
++	        // if (typeof global !== 'undefined' && global.crypto && global.crypto.getRandomValues) {
++	        //     // allow for RN packages such as https://www.npmjs.com/package/react-native-get-random-values to populate global
++	        //     return function (size) { return global.crypto.getRandomValues(buffer_1.alloc(size)); };
++	        // }
+ 	        return insecureRandomBytes;
+ 	    }
+ 	};

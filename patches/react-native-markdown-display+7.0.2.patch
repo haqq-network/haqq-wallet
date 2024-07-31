@@ -1,5 +1,5 @@
 diff --git a/node_modules/react-native-markdown-display/src/index.d.ts b/node_modules/react-native-markdown-display/src/index.d.ts
-index f0daf4a..ae8e8e0 100644
+index e03f08e..5faa60e 100644
 --- a/node_modules/react-native-markdown-display/src/index.d.ts
 +++ b/node_modules/react-native-markdown-display/src/index.d.ts
 @@ -82,6 +82,7 @@ export function stringToTokens(

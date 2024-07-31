@@ -1,9 +1,9 @@
 diff --git a/node_modules/react-native-svg/src/lib/extract/extractTransform.ts b/node_modules/react-native-svg/src/lib/extract/extractTransform.ts
-index 3961868..f19e351 100644
+index 3805f3a..484a488 100644
 --- a/node_modules/react-native-svg/src/lib/extract/extractTransform.ts
 +++ b/node_modules/react-native-svg/src/lib/extract/extractTransform.ts
-@@ -68,6 +68,7 @@ export function transformsArrayToProps(
-   transformObjectsArray: TransformsStyle['transform'],
+@@ -70,6 +70,7 @@ export function transformsArrayToProps(
+   transformObjectsArray: TransformsStyleArray
  ) {
    const props: TransformProps = {};
 +  // @ts-ignore
