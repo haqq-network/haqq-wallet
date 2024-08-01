@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 
 import {useFocusEffect} from '@react-navigation/native';
+import {observer} from 'mobx-react';
 import {TextInput, View} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -25,7 +26,6 @@ import {Balance} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {IToken} from '@app/types';
 import {BALANCE_MULTIPLIER, FEE_AMOUNT} from '@app/variables/balance';
-import {CURRENCY_NAME} from '@app/variables/common';
 
 import {ImageWrapper} from '../image-wrapper';
 
@@ -44,143 +44,144 @@ export type TransactionSumProps = {
   isLoading: boolean;
 };
 
-export const TransactionSum = ({
-  to,
-  balance,
-  fee,
-  contact,
-  onAmount,
-  onContact,
-  onToken,
-  onNetworkPress,
-  testID,
-  token,
-  isLoading,
-}: TransactionSumProps) => {
-  const {keyboardShown} = useKeyboard();
-  const transactionFee = useMemo(() => {
-    return fee !== null
-      ? fee.operate(BALANCE_MULTIPLIER, 'mul').max(FEE_AMOUNT)
-      : Balance.Empty;
-  }, [fee]);
+export const TransactionSum = observer(
+  ({
+    to,
+    balance,
+    fee,
+    contact,
+    onAmount,
+    onContact,
+    onToken,
+    onNetworkPress,
+    testID,
+    token,
+    isLoading,
+  }: TransactionSumProps) => {
+    const {keyboardShown} = useKeyboard();
+    const transactionFee = useMemo(() => {
+      return fee !== null
+        ? fee.operate(BALANCE_MULTIPLIER, 'mul').max(FEE_AMOUNT)
+        : Balance.Empty;
+    }, [fee]);
 
-  const amounts = useSumAmount(undefined, undefined, undefined);
+    const amounts = useSumAmount(undefined, undefined, undefined);
 
-  useEffect(() => {
-    if (token.symbol === CURRENCY_NAME) {
-      amounts.setMaxAmount(balance.operate(transactionFee, 'sub'));
-    } else {
-      amounts.setMaxAmount(token.value);
-    }
-  }, [balance, transactionFee]);
+    useEffect(() => {
+      if (token.symbol === app.provider.denom) {
+        amounts.setMaxAmount(balance.operate(transactionFee, 'sub'));
+      } else {
+        amounts.setMaxAmount(token.value);
+      }
+    }, [balance, transactionFee, app.provider.denom]);
 
-  const inputSumRef = useRef<TextInput>(null);
+    const inputSumRef = useRef<TextInput>(null);
 
-  const formattedAddress = useMemo(
-    () => (contact ? `${contact.name} ${shortAddress(to)}` : to),
-    [contact, to],
-  );
-
-  useFocusEffect(
-    useCallback(() => {
-      setTimeout(() => inputSumRef.current?.focus(), 500);
-    }, []),
-  );
-
-  const onDone = useCallback(() => {
-    onAmount(
-      new Balance(
-        parseFloat(amounts.amount),
-        undefined,
-        token.symbol ?? undefined,
-      ),
+    const formattedAddress = useMemo(
+      () => (contact ? `${contact.name} ${shortAddress(to)}` : to),
+      [contact, to],
     );
-  }, [amounts, onAmount]);
 
-  const onPressMax = useCallback(() => {
-    vibrate(HapticEffects.impactLight);
-    amounts.setMax();
-  }, [amounts]);
+    const onDone = useCallback(() => {
+      onAmount(
+        new Balance(
+          parseFloat(amounts.amount),
+          undefined,
+          token.symbol ?? undefined,
+        ),
+      );
+    }, [amounts, onAmount]);
 
-  return (
-    <KeyboardSafeArea isNumeric style={styles.container} testID={testID}>
-      <View style={styles.row}>
-        <LabeledBlock
-          onPress={onContact}
-          i18nLabel={I18N.transactionSumSend}
-          style={styles.labeledBlock}>
-          <Text
-            variant={TextVariant.t11}
-            color={Color.textBase1}
-            numberOfLines={1}
-            ellipsizeMode="middle">
-            {formattedAddress}
-          </Text>
-        </LabeledBlock>
-        <Spacer width={8} />
-        <LabeledBlock
-          i18nLabel={I18N.transactionCrypto}
-          style={styles.labeledBlock}
-          onPress={onToken}>
-          <View style={styles.cryptoBlockWrapper}>
-            {!!token.image && (
-              <ImageWrapper
-                style={styles.cryptoBlockImage}
-                source={token.image}
-              />
-            )}
+    const onPressMax = useCallback(() => {
+      vibrate(HapticEffects.impactLight);
+      amounts.setMax();
+    }, [amounts]);
+
+    useFocusEffect(
+      useCallback(() => {
+        setTimeout(() => inputSumRef.current?.focus(), 500);
+      }, []),
+    );
+
+    return (
+      <KeyboardSafeArea isNumeric style={styles.container} testID={testID}>
+        <View style={styles.row}>
+          <LabeledBlock
+            onPress={onContact}
+            i18nLabel={I18N.transactionSumSend}
+            style={styles.labeledBlock}>
             <Text
-              style={styles.cryptoBlockTitle}
               variant={TextVariant.t11}
               color={Color.textBase1}
               numberOfLines={1}
               ellipsizeMode="middle">
-              {token.symbol}
+              {formattedAddress}
             </Text>
-          </View>
-        </LabeledBlock>
-        <Spacer width={8} />
-        <LabeledBlock
-          i18nLabel={I18N.transactionNetwork}
-          style={styles.labeledBlock}
-          onPress={onNetworkPress}>
-          <View style={styles.cryptoBlockWrapper}>
-            <Text
-              style={styles.cryptoBlockTitle}
-              variant={TextVariant.t11}
-              color={Color.textBase1}
-              numberOfLines={1}
-              ellipsizeMode="middle">
-              {app.provider.name}
-            </Text>
-          </View>
-        </LabeledBlock>
-      </View>
-      <Spacer centered>
-        <SumBlock
-          value={amounts.amount}
-          error={amounts.error}
-          currency={token.symbol || ''}
-          balance={token.value}
-          onChange={amounts.setAmount}
-          onMax={onPressMax}
-          testID={`${testID}_form`}
-          token={token}
+          </LabeledBlock>
+          <Spacer width={8} />
+          <LabeledBlock
+            i18nLabel={I18N.transactionCrypto}
+            style={styles.labeledBlock}
+            onPress={onToken}>
+            <View style={styles.cryptoBlockWrapper}>
+              {!!token.image && (
+                <ImageWrapper
+                  style={styles.cryptoBlockImage}
+                  source={token.image}
+                />
+              )}
+              <Text
+                variant={TextVariant.t11}
+                color={Color.textBase1}
+                numberOfLines={1}
+                ellipsizeMode="middle">
+                {formattedAddress}
+              </Text>
+            </View>
+          </LabeledBlock>
+          <Spacer width={8} />
+          <LabeledBlock
+            i18nLabel={I18N.transactionNetwork}
+            style={styles.labeledBlock}
+            onPress={onNetworkPress}>
+            <View style={styles.cryptoBlockWrapper}>
+              <Text
+                style={styles.cryptoBlockTitle}
+                variant={TextVariant.t11}
+                color={Color.textBase1}
+                numberOfLines={1}
+                ellipsizeMode="middle">
+                {app.provider.name}
+              </Text>
+            </View>
+          </LabeledBlock>
+        </View>
+        <Spacer centered>
+          <SumBlock
+            value={amounts.amount}
+            error={amounts.error}
+            currency={token.symbol || ''}
+            balance={token.value}
+            onChange={amounts.setAmount}
+            onMax={onPressMax}
+            testID={`${testID}_form`}
+            token={token}
+          />
+        </Spacer>
+        <Spacer minHeight={16} />
+        <Button
+          loading={isLoading}
+          disabled={!amounts.isValid || isLoading}
+          variant={ButtonVariant.contained}
+          i18n={I18N.transactionSumPreview}
+          onPress={onDone}
+          testID={`${testID}_next`}
         />
-      </Spacer>
-      <Spacer minHeight={16} />
-      <Button
-        loading={isLoading}
-        disabled={!amounts.isValid || isLoading}
-        variant={ButtonVariant.contained}
-        i18n={I18N.transactionSumPreview}
-        onPress={onDone}
-        testID={`${testID}_next`}
-      />
-      <Spacer height={keyboardShown ? 26 : 16} />
-    </KeyboardSafeArea>
-  );
-};
+        <Spacer height={keyboardShown ? 26 : 16} />
+      </KeyboardSafeArea>
+    );
+  },
+);
 
 const styles = createTheme({
   row: {

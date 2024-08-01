@@ -17,7 +17,6 @@ import {createTheme} from '@app/helpers';
 import {useSumAmount} from '@app/hooks/use-sum-amount';
 import {I18N} from '@app/i18n';
 import {Balance} from '@app/services/balance';
-import {CURRENCY_NAME} from '@app/variables/common';
 
 export type StakingDelegateFormProps = {
   balance: Balance;
@@ -68,13 +67,12 @@ export const StakingUnDelegateForm = ({
         <SumBlock
           value={amounts.amount}
           error={amounts.error}
-          currency={CURRENCY_NAME}
           balance={balance}
           onChange={amounts.setAmount}
           onMax={onPressMax}
         />
       </Spacer>
-      <NetworkFee fee={fee} currency="ISLM" />
+      <NetworkFee fee={fee} />
       <Spacer height={16} />
       <InfoBlock
         warning

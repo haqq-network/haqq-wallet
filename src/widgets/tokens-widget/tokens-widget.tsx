@@ -1,15 +1,16 @@
 import React, {useMemo} from 'react';
 
+import {observer} from 'mobx-react';
 import {StyleSheet} from 'react-native';
 
 import {Color} from '@app/colors';
 import {TokenRow} from '@app/components/token-row';
-import {Spacer, Text} from '@app/components/ui';
+import {Spacer, Text, TextVariant} from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
 import {WidgetHeader} from '@app/components/ui/widget-header';
+import {app} from '@app/contexts';
 import {I18N, getText} from '@app/i18n';
 import {IToken} from '@app/types';
-import {CURRENCY_NAME} from '@app/variables/common';
 
 type Props = {
   onPress: () => void;
@@ -18,7 +19,7 @@ type Props = {
 
 const VISIBLE_ITEM_AMOUNT = 3;
 
-export const TokensWidget = ({onPress, tokens}: Props) => {
+export const TokensWidget = observer(({onPress, tokens}: Props) => {
   const otherTokensAmount = useMemo(() => {
     const leftover = tokens.length - VISIBLE_ITEM_AMOUNT;
     if (leftover < 1) {
@@ -42,7 +43,7 @@ export const TokensWidget = ({onPress, tokens}: Props) => {
           item =>
             !!item.is_in_white_list &&
             // FIXME: only erc20 tokens or native currency (ISLM)
-            (item.is_erc20 || item.symbol === CURRENCY_NAME),
+            (item.is_erc20 || item.symbol === app.provider.denom),
         )
         .slice(0, VISIBLE_ITEM_AMOUNT)
         .map(item => {
@@ -51,14 +52,14 @@ export const TokensWidget = ({onPress, tokens}: Props) => {
       {otherTokensAmount !== null && (
         <>
           <Spacer height={4} />
-          <Text t14 color={Color.textBase2}>
+          <Text variant={TextVariant.t14} color={Color.textBase2}>
             {otherTokensAmount}
           </Text>
         </>
       )}
     </ShadowCard>
   );
-};
+});
 
 const styles = StyleSheet.create({
   wrapper: {paddingHorizontal: 16},

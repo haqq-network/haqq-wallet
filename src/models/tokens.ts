@@ -326,8 +326,8 @@ class TokensStore implements MobXStore<IToken> {
             contract_updated_at: contractFromCache.updated_at,
             value: new Balance(
               token.value,
-              contractFromCache.decimals || WEI_PRECISION,
-              contractFromCache.symbol || CURRENCY_NAME,
+              contractFromCache.decimals || app.provider.decimals,
+              contractFromCache.symbol || app.provider.denom,
             ),
             decimals: contractFromCache.decimals,
             is_erc20: contractFromCache.is_erc20,
@@ -365,8 +365,8 @@ class TokensStore implements MobXStore<IToken> {
       contract_updated_at: contractFromCache.updated_at,
       value: new Balance(
         token.value,
-        contractFromCache.decimals || WEI_PRECISION,
-        contractFromCache.symbol || CURRENCY_NAME,
+        contractFromCache.decimals || app.provider.decimals,
+        contractFromCache.symbol || app.provider.denom,
       ),
       decimals: contractFromCache.decimals,
       is_erc20: contractFromCache.is_erc20,

@@ -13,7 +13,6 @@ import {useSumAmount} from '@app/hooks/use-sum-amount';
 import {I18N} from '@app/i18n';
 import {Balance} from '@app/services/balance';
 import {FEE_AMOUNT} from '@app/variables/balance';
-import {CURRENCY_NAME} from '@app/variables/common';
 
 export type ProposalDepositFormProps = {
   account: string;
@@ -63,13 +62,12 @@ export const ProposalDepositForm = ({
       <SumBlock
         value={amounts.amount}
         error={amounts.error}
-        currency={CURRENCY_NAME}
         balance={balance}
         onChange={amounts.setAmount}
         onMax={onPressMax}
       />
       <Spacer />
-      <NetworkFee fee={fee} currency="ISLM" />
+      <NetworkFee fee={fee} />
       <Button
         i18n={I18N.stakingDelegateFormPreview}
         style={styles.submit}
