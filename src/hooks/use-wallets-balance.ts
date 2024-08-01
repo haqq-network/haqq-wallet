@@ -36,5 +36,9 @@ export function useWalletsBalance(wallets: Wallet[]): WalletBalance {
     };
   }, [prevWalletsLength, wallets]);
 
+  useEffect(() => {
+    setBalance(getBalance(wallets));
+  }, [app.provider.denom]);
+
   return balance;
 }
