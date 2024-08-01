@@ -59,7 +59,7 @@ export const TransactionConfirmation = observer(
         return null;
       }
 
-      if (amount.isIslamic) {
+      if (amount.isNativeCoin) {
         return fee.calculatedFees.expectedFee.operate(amount, 'add');
       }
 

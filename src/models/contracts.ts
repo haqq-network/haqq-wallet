@@ -78,7 +78,7 @@ class ContractsStore implements MobXStore<IContract> {
 
   getById(id: string) {
     if (AddressUtils.equals(id, NATIVE_TOKEN_ADDRESS)) {
-      return Token.generateIslamicTokenContract();
+      return Token.generateNativeTokenContract();
     }
     const result = this.data[id];
 

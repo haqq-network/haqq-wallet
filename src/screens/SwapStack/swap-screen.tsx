@@ -508,8 +508,8 @@ export const SwapScreen = observer(() => {
         const [walletAddres, tokenAddress] = value?.id.split('_');
         const wallet = Wallet.getById(AddressUtils.toEth(walletAddres))!;
         const generatedISLMContract = {
-          ...Token.generateIslamicTokenContract(),
-          ...Token.generateIslamicToken(wallet),
+          ...Token.generateNativeTokenContract(),
+          ...Token.generateNativeToken(wallet),
         };
         logger.log('awaitForToken', {
           walletAddres,
@@ -734,7 +734,7 @@ export const SwapScreen = observer(() => {
           },
           token: toJS(
             tokenIn?.symbol === app.provider.denom
-              ? Token.generateIslamicToken(currentWallet)
+              ? Token.generateNativeToken(currentWallet)
               : Token.tokens[currentWallet.address].find(t =>
                   AddressUtils.equals(t.id, tokenIn?.id!),
                 ),
@@ -867,7 +867,7 @@ export const SwapScreen = observer(() => {
           },
           token: toJS(
             tokenIn?.symbol === app.provider.denom
-              ? Token.generateIslamicToken(currentWallet)
+              ? Token.generateNativeToken(currentWallet)
               : Token.tokens[currentWallet.address].find(t =>
                   AddressUtils.equals(t.id, tokenIn?.id!),
                 ),
@@ -944,7 +944,7 @@ export const SwapScreen = observer(() => {
           },
           token: toJS(
             tokenIn?.symbol === app.provider.denom
-              ? Token.generateIslamicToken(currentWallet)
+              ? Token.generateNativeToken(currentWallet)
               : Token.tokens[currentWallet.address].find(t =>
                   AddressUtils.equals(t.id, tokenIn?.id!),
                 ),
