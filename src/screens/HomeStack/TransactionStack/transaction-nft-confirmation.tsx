@@ -183,7 +183,7 @@ export const TransactionNftConfirmationScreen = observer(() => {
         setDisabled(false);
       }
     }
-  }, [navigation, nft, route.params.from, route.params.to, wallet]);
+  }, [navigation, nft, route.params.from, route.params.to, wallet, fee]);
 
   const onFeePress = useCallback(async () => {
     if (fee) {

@@ -158,6 +158,7 @@ export const TransactionConfirmationScreen = observer(() => {
     route.params.from,
     route.params.to,
     wallet,
+    fee,
   ]);
 
   const onFeePress = useCallback(async () => {

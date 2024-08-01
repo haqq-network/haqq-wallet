@@ -46,6 +46,8 @@ interface JsonRpcTransactionInfoProps {
   verifyAddressResponse: VerifyAddressResponse | null;
   chainId?: number;
   hideContractAttention?: boolean;
+  fee?: Fee | null;
+  setFee: React.Dispatch<React.SetStateAction<Fee | null>>;
 }
 
 export const JsonRpcTransactionInfo = ({
@@ -54,11 +56,12 @@ export const JsonRpcTransactionInfo = ({
   verifyAddressResponse,
   chainId,
   hideContractAttention,
+  fee,
+  setFee,
 }: JsonRpcTransactionInfoProps) => {
   const navigation = useTypedNavigation<JsonRpcSignPopupStackParamList>();
 
   const [isFeeLoading, setFeeLoading] = useState(true);
-  const [fee, setFee] = useState<Fee | null>(null);
 
   const tx = useMemo(
     () => getTransactionFromJsonRpcRequest(request),
