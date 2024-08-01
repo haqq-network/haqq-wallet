@@ -1222,7 +1222,7 @@ export interface IBalance {
   toFloatString: () => string;
   toString: () => string;
   toHex: () => string;
-  isPositive: () => this is IBalance;
+  isPositive: () => boolean;
   toBalanceString: () => string;
   operate: (
     value: BalanceConstructor,

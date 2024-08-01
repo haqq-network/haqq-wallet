@@ -38,6 +38,7 @@ export type TransactionSumProps = {
   onAmount: (amount: Balance) => void;
   onContact: () => void;
   onToken: () => void;
+  onNetworkPress: () => void;
   testID?: string;
   token: IToken;
   isLoading: boolean;
@@ -52,6 +53,7 @@ export const TransactionSum = observer(
     onAmount,
     onContact,
     onToken,
+    onNetworkPress,
     testID,
     token,
     isLoading,
@@ -80,12 +82,6 @@ export const TransactionSum = observer(
       [contact, to],
     );
 
-    useFocusEffect(
-      useCallback(() => {
-        setTimeout(() => inputSumRef.current?.focus(), 500);
-      }, []),
-    );
-
     const onDone = useCallback(() => {
       onAmount(
         new Balance(
@@ -101,13 +97,19 @@ export const TransactionSum = observer(
       amounts.setMax();
     }, [amounts]);
 
+    useFocusEffect(
+      useCallback(() => {
+        setTimeout(() => inputSumRef.current?.focus(), 500);
+      }, []),
+    );
+
     return (
       <KeyboardSafeArea isNumeric style={styles.container} testID={testID}>
         <View style={styles.row}>
           <LabeledBlock
             onPress={onContact}
             i18nLabel={I18N.transactionSumSend}
-            style={styles.sumblock}>
+            style={styles.labeledBlock}>
             <Text
               variant={TextVariant.t11}
               color={Color.textBase1}
@@ -116,9 +118,10 @@ export const TransactionSum = observer(
               {formattedAddress}
             </Text>
           </LabeledBlock>
+          <Spacer width={8} />
           <LabeledBlock
             i18nLabel={I18N.transactionCrypto}
-            style={styles.cryptoBlock}
+            style={styles.labeledBlock}
             onPress={onToken}>
             <View style={styles.cryptoBlockWrapper}>
               {!!token.image && (
@@ -128,12 +131,27 @@ export const TransactionSum = observer(
                 />
               )}
               <Text
+                variant={TextVariant.t11}
+                color={Color.textBase1}
+                numberOfLines={1}
+                ellipsizeMode="middle">
+                {formattedAddress}
+              </Text>
+            </View>
+          </LabeledBlock>
+          <Spacer width={8} />
+          <LabeledBlock
+            i18nLabel={I18N.transactionNetwork}
+            style={styles.labeledBlock}
+            onPress={onNetworkPress}>
+            <View style={styles.cryptoBlockWrapper}>
+              <Text
                 style={styles.cryptoBlockTitle}
                 variant={TextVariant.t11}
                 color={Color.textBase1}
                 numberOfLines={1}
                 ellipsizeMode="middle">
-                {token.symbol}
+                {app.provider.name}
               </Text>
             </View>
           </LabeledBlock>
@@ -142,7 +160,7 @@ export const TransactionSum = observer(
           <SumBlock
             value={amounts.amount}
             error={amounts.error}
-            currency={token.symbol}
+            currency={token.symbol || ''}
             balance={token.value}
             onChange={amounts.setAmount}
             onMax={onPressMax}
@@ -150,13 +168,6 @@ export const TransactionSum = observer(
             token={token}
           />
         </Spacer>
-        {/* <Button
-        variant={ButtonVariant.light}
-        size={ButtonSize.small}
-        i18n={I18N.transactionSumPreview}
-        onPress={() => console.log('open fee screen')}
-        testID={`${testID}_enter_fee`}
-      /> */}
         <Spacer minHeight={16} />
         <Button
           loading={isLoading}
@@ -173,7 +184,11 @@ export const TransactionSum = observer(
 );
 
 const styles = createTheme({
-  row: {flexDirection: 'row'},
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingBottom: 8,
+  },
   cryptoBlockImage: {
     maxHeight: 12,
     maxWidth: 12,
@@ -192,14 +207,10 @@ const styles = createTheme({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  cryptoBlock: {
-    flex: 1,
+
+  labeledBlock: {
     alignItems: 'center',
-  },
-  sumblock: {
-    flex: 3,
-    paddingBottom: 8,
-    marginRight: 8,
+    flex: 1,
   },
   container: {
     justifyContent: 'space-between',
