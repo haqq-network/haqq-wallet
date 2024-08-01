@@ -13,9 +13,10 @@ class LanguageStore {
   hash: string;
 
   constructor(shouldSkipPersisting: boolean = false) {
-    // Use system language or English as default if user doesn't select another one
-    const current = this.getDeviceLanguage() || AppLanguage.en;
     if (!this.current) {
+      // Use system language or English as default if user doesn't select another one
+      let current = this.getDeviceLanguage();
+      if (!supportedTranslationsMap[current]) current = AppLanguage.en;
       this.current = current;
     }
 
