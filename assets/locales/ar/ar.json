@@ -1,7 +1,7 @@
 {
   "StakingInfoUnDelegationDay": " ({{day}} يوم متبقي)",
   "StakingInfoUnDelegationDays": " (بقي {{days}} يوم)",
-  "_hash": "e91a2fe512c209f70249a27f1562ada2bf0c807fbfd5e8e98ff1f430180315c7",
+  "_hash": "499224e0419e057a92cae379b604969fe8fec0ed89ed6ebd10c99b1c5398e540",
   "accept": "قبول",
   "accountInfoNftTabTitle": "NFTs",
   "accountInfoTokensTabTitle": "الرموز المميزة",
@@ -10,6 +10,7 @@
   "actionSheetKeepEditing": "مواصلة التحرير",
   "actionSheetMessage": "هل أنت متأكد من رغبتك في تجاهل تغييراتك؟",
   "address": "العنوان",
+  "amount": "{{amount}} ISLM",
   "amountAISLM": "{{amount}} aISLM",
   "amountISLM": "{{amount}} ISLM",
   "backupCreateRecoveryAgreement": "أدرك أنه إذا فقدت عبارة الاسترداد, فلن أتمكن من استعادة الوصول إلى حسابي",

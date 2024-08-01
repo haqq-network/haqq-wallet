@@ -1020,6 +1020,7 @@ export enum I18N {
   nftDetailsShowRawInfo = 'nftDetailsShowRawInfo',
   I18N = 'I18N',
   feeSettingsExpectedFee = 'feeSettingsExpectedFee',
+  transactionNetwork = 'transactionNetwork',
 }
 
 const defaultTranslation = {en};
