@@ -2,7 +2,7 @@ import Decimal from 'decimal.js';
 import {BigNumber} from 'ethers';
 
 import {Balance} from '@app/services/balance';
-import {CURRENCY_NAME, WEI} from '@app/variables/common';
+import {ISLM_DENOM, WEI} from '@app/variables/common';
 
 const randomNumber = (
   min: number = Number.MIN_SAFE_INTEGER / 2,
@@ -133,7 +133,7 @@ describe('Balance Test Suite', () => {
         const balance = new Balance(hex);
         const hexString = '242.0370638288085';
         expect(balance.toBalanceString()).toEqual(
-          hexString.slice(0, 6) + ' ' + CURRENCY_NAME,
+          hexString.slice(0, 6) + ' ' + ISLM_DENOM,
         );
       });
       it('should return a valid balance string (long) with fixed', () => {
@@ -141,7 +141,7 @@ describe('Balance Test Suite', () => {
         const balance = new Balance(hex);
         const hexString = '242.0370638288085';
         expect(balance.toBalanceString(4)).toEqual(
-          hexString.slice(0, 7) + ' ' + CURRENCY_NAME,
+          hexString.slice(0, 7) + ' ' + ISLM_DENOM,
         );
       });
       it('should return a valid balance string (short)', () => {
@@ -150,7 +150,7 @@ describe('Balance Test Suite', () => {
         const hexString = '0.567';
 
         expect(balance.toBalanceString()).toEqual(
-          hexString.slice(0, 4) + ' ' + CURRENCY_NAME,
+          hexString.slice(0, 4) + ' ' + ISLM_DENOM,
         );
       });
     });
@@ -401,7 +401,7 @@ describe('Balance Test Suite', () => {
     describe('.toWeiString()', () => {
       it('should return a valid balance string (long)', () => {
         const balance = new Balance(5000 / WEI);
-        expect(balance.toWeiString()).toEqual('5000 a' + CURRENCY_NAME);
+        expect(balance.toWeiString()).toEqual('5000 a' + ISLM_DENOM);
       });
     });
 
