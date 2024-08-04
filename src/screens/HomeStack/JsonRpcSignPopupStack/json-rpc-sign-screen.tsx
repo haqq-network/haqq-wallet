@@ -90,7 +90,7 @@ export const JsonRpcSignScreen = memo(() => {
   }, [setBlindSignEnabled, animate]);
 
   const onPressSign = useCallback(
-    async (_?: Fee | null) => {
+    async (fee?: Fee | null) => {
       try {
         if (phishingTxRequest && Object.values(phishingTxRequest).length) {
           return Logger.error('JsonRpcSignScreen:onPressSign tx is phishing', {
@@ -121,12 +121,22 @@ export const JsonRpcSignScreen = memo(() => {
           wallet!,
           {
             ...request,
-            params: isTransaction
-              ? getTransactionFromJsonRpcRequest(request)
-              : request.params,
+            params: {
+              ...(isTransaction
+                ? getTransactionFromJsonRpcRequest(request)
+                : request.params),
+              ...(fee
+                ? {
+                    gasLimit: fee.gasLimit?.toHex(),
+                    maxPriorityFeePerGas: fee.maxPriorityFee?.toHex(),
+                    maxFeePerGas: fee.maxBaseFee?.toHex(),
+                  }
+                : {}),
+            },
           },
           chainId,
         );
+
         app.emit('json-rpc-sign-success', result);
         navigation.goBack();
       } catch (e) {
@@ -139,12 +149,12 @@ export const JsonRpcSignScreen = memo(() => {
           errCode === 'INSUFFICIENT_FUNDS'
         ) {
           err.handled = true;
-          const fee = new Balance(txInfo.gasLimit).operate(
+          const gasLimit = new Balance(txInfo.gasLimit).operate(
             new Balance(txInfo.maxFeePerGas),
             'mul',
           );
           showModal(ModalType.notEnoughGas, {
-            gasLimit: fee,
+            gasLimit,
             currentAmount: app.getAvailableBalance(wallet!.address),
           });
         }
