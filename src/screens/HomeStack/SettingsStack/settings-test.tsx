@@ -507,12 +507,13 @@ export const SettingsTestScreen = observer(() => {
     const signedTx = await transport.signTransaction(wallet.path!, unsignedTx);
     Logger.log('signedTx', signedTx);
 
-    const resp = await EthNetwork.sendTransaction(signedTx);
-
+    const resp = await EthNetwork.sendTransaction(signedTx, wallet.address);
     logger.log('resp', resp);
-    const r = iface.decodeFunctionData('mintNFTs', resp.data);
 
-    logger.log(JSON.stringify(r));
+    if (resp) {
+      const r = iface.decodeFunctionData('mintNFTs', resp.data);
+      logger.log(JSON.stringify(r));
+    }
   };
 
   const onCheckContract = useCallback(async () => {

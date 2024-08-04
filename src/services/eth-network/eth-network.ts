@@ -14,6 +14,7 @@ import {Balance} from '@app/services/balance';
 import {getERC1155TransferData} from '@app/services/eth-network/erc1155';
 import {getERC721TransferData} from '@app/services/eth-network/erc721';
 import {storage} from '@app/services/mmkv';
+import {MarketingEvents} from '@app/types';
 
 import {getERC20TransferData} from './erc20';
 import {
@@ -22,6 +23,8 @@ import {
   TxCustomEstimationParams,
   TxEstimationParams,
 } from './types';
+
+import {EventTracker} from '../event-tracker';
 
 export class EthNetwork {
   static chainId: number = getDefaultChainId();
@@ -123,10 +126,31 @@ export class EthNetwork {
     }
   }
 
-  static async sendTransaction(signedTx: string) {
+  static async sendTransaction(signedTx: string, fromAddress: string) {
     const rpcProvider = await getRpcProvider(app.provider);
 
-    return await rpcProvider.sendTransaction(signedTx);
+    const eventParams = {
+      type: 'EVM',
+      network: app.provider.name,
+      chainId: `${app.provider.ethChainId}`,
+      address: fromAddress,
+    };
+
+    try {
+      EventTracker.instance.trackEvent(
+        MarketingEvents.sendTxStart,
+        eventParams,
+      );
+      const result = await rpcProvider.sendTransaction(signedTx);
+      EventTracker.instance.trackEvent(
+        MarketingEvents.sendTxSuccess,
+        eventParams,
+      );
+
+      return result;
+    } catch (error) {
+      EventTracker.instance.trackEvent(MarketingEvents.sendTxFail, eventParams);
+    }
   }
 
   static async getTransactionReceipt(txHash: string) {
@@ -276,7 +300,7 @@ export class EthNetwork {
         throw new Error('signedTx not found');
       }
 
-      return await EthNetwork.sendTransaction(signedTx);
+      return await EthNetwork.sendTransaction(signedTx, wallet.address);
     } catch (error) {
       Logger.captureException(error, 'EthNetwork.transferTransaction', {
         value,
@@ -334,7 +358,7 @@ export class EthNetwork {
 
       const signedTx = await transport.signTransaction(from.path!, unsignedTx);
 
-      return await EthNetwork.sendTransaction(signedTx);
+      return await EthNetwork.sendTransaction(signedTx, from.address);
     } catch (error) {
       Logger.captureException(error, 'EthNetwork.transferERC20', {
         amount,
@@ -366,7 +390,7 @@ export class EthNetwork {
 
       const signedTx = await transport.signTransaction(from.path!, unsignedTx);
 
-      return await EthNetwork.sendTransaction(signedTx);
+      return await EthNetwork.sendTransaction(signedTx, from.address);
     } catch (error) {
       Logger.captureException(error, 'EthNetwork.transferERC721', {
         tokenId,
@@ -398,7 +422,7 @@ export class EthNetwork {
 
       const signedTx = await transport.signTransaction(from.path!, unsignedTx);
 
-      return await EthNetwork.sendTransaction(signedTx);
+      return await EthNetwork.sendTransaction(signedTx, from.address);
     } catch (error) {
       Logger.captureException(error, 'EthNetwork.transferERC1155', {
         tokenId,
