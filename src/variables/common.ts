@@ -216,7 +216,7 @@ export const PLATFORM_COMPANY = Platform.select({
 });
 
 export const COSMOS_PREFIX = 'haqq';
-export const CURRENCY_NAME = 'ISLM';
+export const ISLM_DENOM = 'ISLM';
 export const aISLM_DENOM = 'aISLM';
 export const IBC_DENOM = 'IBC';
 export const MULTICOIN_DENOM = 'multicoin';

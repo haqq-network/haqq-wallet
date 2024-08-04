@@ -8,7 +8,7 @@ import {
 } from '@app/services/backend';
 import {storage} from '@app/services/mmkv';
 import {sleep} from '@app/utils';
-import {DEFAULT_PROVIDERS} from '@app/variables/common';
+import {DEFAULT_PROVIDERS, ISLM_DENOM} from '@app/variables/common';
 
 import {ProviderID} from './provider.types';
 
@@ -161,7 +161,8 @@ export class Provider {
   }
 
   get networkVersion() {
-    return this.cosmosChainId.split('-')[1];
+    const splitted = this.cosmosChainId.split('-');
+    return splitted[1] ?? splitted.shift();
   }
 
   get id() {
@@ -186,7 +187,7 @@ export class Provider {
 
   get cosmosChainId() {
     if (!this.model.cosmos_chain_id) {
-      return '0-1';
+      return this.model.chain_id.toString();
     }
     return this.model.cosmos_chain_id;
   }
@@ -217,6 +218,10 @@ export class Provider {
 
   get denom() {
     return this.model.denom;
+  }
+
+  get isHaqqNetwork() {
+    return this.model.denom.toLowerCase() === ISLM_DENOM.toLowerCase();
   }
 
   toJSON() {

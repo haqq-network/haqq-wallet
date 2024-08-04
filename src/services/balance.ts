@@ -16,7 +16,6 @@ import {
 } from '@app/types';
 import {formatNumberString} from '@app/utils';
 import {
-  CURRENCY_NAME,
   LONG_NUM_PRECISION,
   NUM_DELIMITER,
   NUM_PRECISION,
@@ -84,10 +83,10 @@ export class Balance implements IBalance, ISerializable {
   }
 
   /**
-   * Is current Balance instance is Islamic Coin
+   * Is current Balance instance is native network Coin
    */
-  get isIslamic() {
-    return this.symbol === CURRENCY_NAME;
+  get isNativeCoin() {
+    return this.symbol === app.provider.denom;
   }
 
   getPrecission() {

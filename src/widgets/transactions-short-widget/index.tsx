@@ -27,7 +27,7 @@ export const TransactionsShortWidgetWrapper = observer(() => {
         if (curr.parsed.isIncoming) {
           const amounts = curr.parsed.amount;
           // if greater than 1, it's a multi coin IBC transaction, ignore it
-          if (amounts.length === 1 && amounts[0].isIslamic) {
+          if (amounts.length === 1 && amounts[0].isNativeCoin) {
             return prev.operate(amounts[0], 'add');
           }
         }
@@ -43,7 +43,7 @@ export const TransactionsShortWidgetWrapper = observer(() => {
         if (curr.parsed.isOutcoming) {
           const amounts = curr.parsed.amount;
           // if greater than 1, it's a multi coin IBC transaction, ignore it
-          if (amounts.length === 1 && amounts[0].isIslamic) {
+          if (amounts.length === 1 && amounts[0].isNativeCoin) {
             return prev.operate(amounts[0], 'add');
           }
         }

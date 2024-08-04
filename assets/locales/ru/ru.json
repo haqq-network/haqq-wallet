@@ -1,7 +1,7 @@
 {
   "StakingInfoUnDelegationDay": " ({{day}} день остался)",
   "StakingInfoUnDelegationDays": " ({{days}} дней осталось)",
-  "_hash": "7c486ee08f8280e3cdf3cbfba0339b80c12bcc6358441ff4448974dbe9399cd6",
+  "_hash": "ecc3fde1ff572bdd3b4058c9b7d45556085b2190592b6dc0b9624e40108324c8",
   "accept": "Принять",
   "accountInfoTokensTabTitle": "Токены",
   "accountInfoTransactionTabTitle": "Транзакции",
@@ -61,6 +61,7 @@
   "modalQRSendFunds": "Отправьте средства из",
   "modalQRTitle": "Сканировать QR-код",
   "modalRewardErrorClose": "Закрывать",
+  "modalRewardErrorDescription": "Мы даем ISLM за создание первой учетной записи. Ежедневный пул вознаграждений составляет 100 ISLM. К сожалению, все награды за сегодня были забраны, но повторите попытку завтра!",
   "modalRewardErrorTitle": "Что-то пошло не так",
   "moreAbout": "Подробнее",
   "nftDetailsTokenId": "Идентификатор токена",

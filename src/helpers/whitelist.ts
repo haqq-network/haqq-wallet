@@ -123,7 +123,7 @@ export class Whitelist {
     }
 
     if (AddressUtils.equals(address, NATIVE_TOKEN_ADDRESS)) {
-      return Token.generateIslamicTokenContract();
+      return Token.generateNativeTokenContract();
     }
 
     const key = `${CACHE_KEY}:${JSON.stringify(address)}:${provider.id}`;
