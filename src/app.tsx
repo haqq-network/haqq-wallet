@@ -123,6 +123,7 @@ export const App = () => {
       hideModal(ModalType.splash);
     }, SPLASH_TIMEOUT_MS);
     sleep(150)
+      .then(async () => await app.awaitForInitialization())
       .then(() => SplashScreen.hide())
       .then(() => awaitForEventDone(Events.onAppInitialized))
       .then(async () => await Language.init())

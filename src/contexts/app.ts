@@ -3,6 +3,7 @@ import {appleAuth} from '@invertase/react-native-apple-authentication';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {subMinutes} from 'date-fns';
+import {makeObservable, observable, runInAction} from 'mobx';
 import {Alert, AppState, Appearance, Platform, StatusBar} from 'react-native';
 import Config from 'react-native-config';
 import Keychain, {
@@ -25,13 +26,13 @@ import {getUid} from '@app/helpers/get-uid';
 import {SecurePinUtils} from '@app/helpers/secure-pin-utils';
 import {I18N, getText} from '@app/i18n';
 import {Currencies} from '@app/models/currencies';
-import {seedData} from '@app/models/seed-data';
 import {Token} from '@app/models/tokens';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
 import {VestingMetadataType} from '@app/models/vesting-metadata';
 import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
+import {Backend} from '@app/services/backend';
 import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
 import {EventTracker} from '@app/services/event-tracker';
@@ -99,10 +100,13 @@ class App extends AsyncEventEmitter {
 
   constructor() {
     super();
+    makeObservable(this, {
+      // @ts-ignore
+      _provider: observable,
+    });
+    this.startInitialization();
     this.setMaxListeners(1000);
     this._startUpTime = Date.now();
-
-    seedData();
 
     TouchID.isSupported(isSupportedConfig)
       .then(biometryType => {
@@ -124,31 +128,36 @@ class App extends AsyncEventEmitter {
 
     this.user = User.getOrCreate();
 
-    this._provider = Provider.getById(this.providerId);
+    Provider.init().then(() => {
+      runInAction(() => {
+        this._provider = Provider.getById(this.providerId);
+      });
 
-    if (this._provider) {
-      EthNetwork.init(this._provider);
-    }
+      if (this._provider) {
+        EthNetwork.init(this._provider);
+      }
 
-    this.checkBalance = this.checkBalance.bind(this);
-    this.checkBalance();
+      this.checkBalance = this.checkBalance.bind(this);
+      this.checkBalance();
 
-    this.handleDynamicLink = this.handleDynamicLink.bind(this);
+      this.handleDynamicLink = this.handleDynamicLink.bind(this);
 
-    dynamicLinks().onLink(this.handleDynamicLink);
-    dynamicLinks().getInitialLink().then(this.handleDynamicLink);
+      dynamicLinks().onLink(this.handleDynamicLink);
+      dynamicLinks().getInitialLink().then(this.handleDynamicLink);
 
-    this.listenTheme = this.listenTheme.bind(this);
+      this.listenTheme = this.listenTheme.bind(this);
 
-    Appearance.addChangeListener(this.listenTheme);
-    AppState.addEventListener('change', this.listenTheme);
-    this.listenTheme();
-    AppState.addEventListener('change', this.onAppStatusChanged.bind(this));
+      Appearance.addChangeListener(this.listenTheme);
+      AppState.addEventListener('change', this.listenTheme);
+      this.listenTheme();
+      AppState.addEventListener('change', this.onAppStatusChanged.bind(this));
 
-    if (!VariablesBool.exists('isDeveloper')) {
-      VariablesBool.set('isDeveloper', Config.IS_DEVELOPMENT === 'true');
-    }
-    this.setEnabledLoggersForTestMode(this.isTesterMode);
+      if (!VariablesBool.exists('isDeveloper')) {
+        VariablesBool.set('isDeveloper', Config.IS_DEVELOPMENT === 'true');
+      }
+      this.setEnabledLoggersForTestMode(this.isTesterMode);
+      this.stopInitialization();
+    });
   }
 
   private _startUpTime: number;
@@ -206,7 +215,7 @@ class App extends AsyncEventEmitter {
     );
   }
 
-  private _provider: Provider | null;
+  private _provider: Provider | null = null;
 
   get provider() {
     return this._provider as Provider;
@@ -226,7 +235,9 @@ class App extends AsyncEventEmitter {
     const p = Provider.getById(value);
     if (p) {
       VariablesString.set('providerId', value);
-      this._provider = p;
+      runInAction(() => {
+        this._provider = p;
+      });
       EthNetwork.init(p);
       app.emit(Events.onProviderChanged, p.id);
     } else {
@@ -239,15 +250,7 @@ class App extends AsyncEventEmitter {
   }
 
   get backend() {
-    if (!VariablesString.exists('backend')) {
-      return Config.HAQQ_BACKEND_DEFAULT || Config.HAQQ_BACKEND;
-    }
-
-    return (
-      VariablesString.get('backend') ||
-      Config.HAQQ_BACKEND_DEFAULT ||
-      Config.HAQQ_BACKEND
-    );
+    return Backend.instance.getRemoteUrl();
   }
 
   set backend(value) {
@@ -668,6 +671,7 @@ class App extends AsyncEventEmitter {
           RemoteConfig.init(true);
           await RemoteConfig.awaitForInitialization();
           this._authInProgress = false;
+          await Provider.fetchProviders();
           break;
         case AppStatus.inactive:
           if (this.authenticated) {

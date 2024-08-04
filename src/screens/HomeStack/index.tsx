@@ -45,6 +45,7 @@ import {Web3BrowserPopup as Web3BrowserPopupScreen} from '@app/screens/web3-brow
 import {SignInStack} from '@app/screens/WelcomeStack/SignInStack';
 
 import {NewsDetailScreen} from './HomeNewsStack/news-detail';
+import {FeeSettingsScreen} from './TransactionStack/fee-settings';
 
 import {SwapStack} from '../SwapStack';
 
@@ -245,6 +246,16 @@ const HomeStack = memo(() => {
         name={HomeStackRoutes.WalletSelector}
         component={themeUpdaterHOC(WalletSelectorScreen)}
         options={modalOptions}
+      />
+
+      <Stack.Screen
+        name={HomeStackRoutes.FeeSettings}
+        component={themeUpdaterHOC(FeeSettingsScreen)}
+        options={{
+          ...modalOptions,
+          headerShown: true,
+          title: getText(I18N.feeSettingsHeader),
+        }}
       />
 
       <Stack.Screen

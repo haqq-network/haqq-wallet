@@ -64,7 +64,7 @@ import {
   EvmosVestingV1BalancesResponse,
 } from '@app/types/cosmos';
 import {decimalToHex, getHttpResponse} from '@app/utils';
-import {WEI} from '@app/variables/common';
+import {WEI, aISLM_DENOM} from '@app/variables/common';
 
 import {EthSign} from './eth-sign';
 import {EventTracker} from './event-tracker';
@@ -89,7 +89,7 @@ export class Cosmos {
   static fee: Fee = {
     amount: getRemoteBalanceValue('cosmos_min_amount').toString(),
     gas: getRemoteBalanceValue('cosmos_min_gas_limit').toString(),
-    denom: 'aISLM',
+    denom: aISLM_DENOM,
   };
 
   public stop = false;
@@ -456,7 +456,7 @@ export class Cosmos {
       proposalId: parseInt(proposalId.toString(), 10),
       deposit: {
         amount: strAmount.toFixed(),
-        denom: 'aISLM',
+        denom: aISLM_DENOM,
       },
     };
 
@@ -522,7 +522,7 @@ export class Cosmos {
     const params = {
       validatorAddress: address,
       amount: strAmount.toFixed(),
-      denom: 'aISLM',
+      denom: aISLM_DENOM,
     };
 
     const fee = await this.getFee(
@@ -562,7 +562,7 @@ export class Cosmos {
     const params = {
       validatorAddress: address,
       amount: amount.raw.toFixed(),
-      denom: 'aISLM',
+      denom: aISLM_DENOM,
     };
 
     return this.getFee(
@@ -590,7 +590,7 @@ export class Cosmos {
     const params = {
       validatorAddress: address,
       amount: strAmount.toFixed(),
-      denom: 'aISLM',
+      denom: aISLM_DENOM,
     };
 
     const fee = await this.getFee(
@@ -623,7 +623,7 @@ export class Cosmos {
     const params = {
       validatorAddress: address,
       amount: amount.raw.toFixed(),
-      denom: 'aISLM',
+      denom: aISLM_DENOM,
     };
 
     return this.getFee(

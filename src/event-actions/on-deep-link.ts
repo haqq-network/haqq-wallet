@@ -1,5 +1,4 @@
 import {Alert} from 'react-native';
-import base64 from 'react-native-base64';
 
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
@@ -10,7 +9,6 @@ import {Whitelist} from '@app/helpers/whitelist';
 import {I18N} from '@app/i18n';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
-import {navigator} from '@app/navigator';
 import {sendNotification} from '@app/services/toast';
 import {DeeplinkProtocol, DeeplinkUrlKey, ModalType} from '@app/types';
 import {openInAppBrowser, openWeb3Browser} from '@app/utils';
@@ -135,12 +133,6 @@ export async function onDeepLink(
           return true;
         case DeeplinkUrlKey.enableDeveloperMode:
           app.isDeveloper = true;
-          return true;
-        case DeeplinkUrlKey.provider:
-          navigator.navigate('homeSettings', {
-            screen: 'settingsProviderForm',
-            params: {data: JSON.parse(base64.decode(params[0]))},
-          });
           return true;
       }
     }

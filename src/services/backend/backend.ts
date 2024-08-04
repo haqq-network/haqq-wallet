@@ -1,6 +1,8 @@
-import {app} from '@app/contexts';
+import Config from 'react-native-config';
+
 import {AppInfo} from '@app/helpers/get-app-info';
 import {Currency} from '@app/models/types';
+import {VariablesString} from '@app/models/variables-string';
 import {
   AppLanguage,
   LanguagesResponse,
@@ -13,7 +15,9 @@ import {
 } from '@app/types';
 import {getHttpResponse} from '@app/utils';
 
-import {RemoteConfig, RemoteConfigTypes} from './remote-config';
+import {NetworkProviderResponse} from './backend.types';
+
+import {RemoteConfig, RemoteConfigTypes} from '../remote-config';
 
 export type CaptchaRequestResponse = {
   id: string;
@@ -29,14 +33,22 @@ export class Backend {
   static instance = new Backend();
 
   static headers = {
-    accept: 'application/json, text/plain, */*',
+    accept: 'application/json',
     'accept-language': 'en-US,en;q=0.9,ru;q=0.8',
     connection: 'keep-alive',
     'content-type': 'application/json;charset=UTF-8',
   };
 
   getRemoteUrl() {
-    return app.backend;
+    if (!VariablesString.exists('backend')) {
+      return Config.HAQQ_BACKEND_DEFAULT || Config.HAQQ_BACKEND;
+    }
+
+    return (
+      VariablesString.get('backend') ||
+      Config.HAQQ_BACKEND_DEFAULT ||
+      Config.HAQQ_BACKEND
+    );
   }
 
   async blockRequest(
@@ -410,5 +422,12 @@ export class Backend {
       },
     );
     return await getHttpResponse<Object>(response);
+  }
+
+  async providers() {
+    const response = await fetch(`${this.getRemoteUrl()}provider`, {
+      headers: Backend.headers,
+    });
+    return await getHttpResponse<NetworkProviderResponse>(response);
   }
 }

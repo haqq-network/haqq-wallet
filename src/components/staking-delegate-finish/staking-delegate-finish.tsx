@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {observer} from 'mobx-react';
 import {Image, View} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -10,8 +11,11 @@ import {
   PopupContainer,
   Spacer,
   Text,
+  TextPosition,
+  TextVariant,
 } from '@app/components/ui';
 import {NetworkFee} from '@app/components/ui/network-fee';
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
@@ -26,60 +30,63 @@ export type StakingDelegateFinishProps = {
   onDone: () => void;
 };
 
-export const StakingDelegateFinish = ({
-  onDone,
-  validator,
-  amount,
-  fee,
-}: StakingDelegateFinishProps) => {
-  return (
-    <PopupContainer
-      testID={'staking-finish-container'}
-      style={styles.container}>
-      <View style={styles.sub}>
-        <LottieWrap
-          source={require('@assets/animations/transaction-finish.json')}
-          style={styles.image}
-          autoPlay
-          loop={false}
+export const StakingDelegateFinish = observer(
+  ({onDone, validator, amount, fee}: StakingDelegateFinishProps) => {
+    return (
+      <PopupContainer
+        testID={'staking-finish-container'}
+        style={styles.container}>
+        <View style={styles.sub}>
+          <LottieWrap
+            source={require('@assets/animations/transaction-finish.json')}
+            style={styles.image}
+            autoPlay
+            loop={false}
+          />
+        </View>
+        <Text
+          variant={TextVariant.t4}
+          position={TextPosition.center}
+          i18n={I18N.stakingDelegateFinishTitle}
+          style={styles.title}
+          color={Color.textGreen1}
         />
-      </View>
-      <Text
-        t4
-        center
-        i18n={I18N.stakingDelegateFinishTitle}
-        style={styles.title}
-        color={Color.textGreen1}
-      />
-      <Image
-        source={require('@assets/images/islm_icon.png')}
-        style={styles.icon}
-      />
-      <Text
-        t11
-        center
-        i18n={I18N.stakingDelegateFinishTotalAmount}
-        color={Color.textBase2}
-        style={styles.totalAmount}
-      />
-      <Text t3 center style={styles.sum}>
-        - {cleanNumber(amount)} ISLM
-      </Text>
-      <Text t13 center style={styles.address}>
-        {validator.description.moniker}
-      </Text>
-      <NetworkFee fee={fee} currency="ISLM" />
-      <Spacer minHeight={28} />
-      <Button
-        style={styles.margin}
-        variant={ButtonVariant.contained}
-        i18n={I18N.stakingDelegateFinishDone}
-        onPress={onDone}
-        testID="staking-finish"
-      />
-    </PopupContainer>
-  );
-};
+        <Image
+          source={require('@assets/images/islm_icon.png')}
+          style={styles.icon}
+        />
+        <Text
+          variant={TextVariant.t11}
+          position={TextPosition.center}
+          i18n={I18N.stakingDelegateFinishTotalAmount}
+          color={Color.textBase2}
+          style={styles.totalAmount}
+        />
+        <Text
+          variant={TextVariant.t3}
+          position={TextPosition.center}
+          style={styles.sum}>
+          - {`${cleanNumber(amount)} ${app.provider.denom}`}
+        </Text>
+        <Text
+          variant={TextVariant.t13}
+          position={TextPosition.center}
+          style={styles.address}>
+          {validator.description.moniker}
+        </Text>
+        <NetworkFee fee={fee} />
+        <Spacer minHeight={28} />
+        <Button
+          style={styles.margin}
+          variant={ButtonVariant.contained}
+          i18n={I18N.stakingDelegateFinishDone}
+          onPress={onDone}
+          testID="staking-finish"
+        />
+      </PopupContainer>
+    );
+  },
+);
 
 const styles = createTheme({
   container: {

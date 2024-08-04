@@ -36,6 +36,7 @@ interface TransactionConfirmationProps {
   disabled?: boolean;
   onConfirmTransaction: () => void;
   onFeePress: () => void;
+  fee: Fee | null;
   token: IToken;
 }
 
@@ -48,21 +49,22 @@ export const TransactionConfirmation = observer(
     amount,
     onConfirmTransaction,
     onFeePress,
+    fee,
     token,
   }: TransactionConfirmationProps) => {
     const splittedTo = useMemo(() => splitAddress(to), [to]);
 
     const transactionSum = useMemo(() => {
-      if (!Fee.calculatedFees) {
+      if (!fee?.calculatedFees) {
         return null;
       }
 
-      if (amount.isIslamic) {
-        return Fee.calculatedFees.expectedFee.operate(amount, 'add');
+      if (amount.isNativeCoin) {
+        return fee.calculatedFees.expectedFee.operate(amount, 'add');
       }
 
       return amount;
-    }, [amount, Fee.calculatedFees]);
+    }, [amount, fee?.calculatedFees]);
 
     const sumText = useMemo(() => {
       if (transactionSum === null) {
@@ -155,7 +157,7 @@ export const TransactionConfirmation = observer(
               </Text>
             </DataView>
             <DataView label="Network Fee">
-              {!Fee.calculatedFees ? (
+              {!fee?.calculatedFees ? (
                 <Text variant={TextVariant.t11} color={Color.textBase1}>
                   {getText(I18N.estimatingGas)}
                 </Text>
@@ -165,7 +167,7 @@ export const TransactionConfirmation = observer(
                     variant={TextVariant.t11}
                     color={Color.textGreen1}
                     onPress={onFeePress}>
-                    {Fee.expectedFeeString}
+                    {fee.expectedFeeString}
                   </Text>
                   <Icon name={IconsName.tune} color={Color.textGreen1} />
                 </View>
@@ -174,7 +176,7 @@ export const TransactionConfirmation = observer(
           </View>
         </Spacer>
         <Button
-          disabled={!Fee.expectedFee?.isPositive() && !disabled}
+          disabled={!fee?.expectedFee?.isPositive() && !disabled}
           variant={ButtonVariant.contained}
           i18n={I18N.transactionConfirmationSend}
           onPress={onConfirmTransaction}

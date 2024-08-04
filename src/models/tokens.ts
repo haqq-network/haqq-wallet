@@ -24,7 +24,6 @@ import {
 } from '@app/types';
 import {RPCMessage} from '@app/types/rpc';
 import {ERC20_ABI} from '@app/variables/abi';
-import {CURRENCY_NAME, WEI, WEI_PRECISION} from '@app/variables/common';
 
 class TokensStore implements MobXStore<IToken> {
   /**
@@ -220,7 +219,7 @@ class TokensStore implements MobXStore<IToken> {
     });
   };
 
-  public generateIslamicToken = (wallet: Wallet): IToken => {
+  public generateNativeToken = (wallet: Wallet): IToken => {
     const balance = app.getAvailableBalance(wallet.address);
 
     return {
@@ -228,36 +227,48 @@ class TokensStore implements MobXStore<IToken> {
       contract_created_at: '',
       contract_updated_at: '',
       value: balance,
-      decimals: WEI,
+      decimals: app.provider.decimals,
       is_erc20: false,
       is_erc721: false,
       is_erc1155: false,
       is_in_white_list: true,
-      name: getText(I18N.transactionConfirmationIslamicCoin),
-      symbol: CURRENCY_NAME,
+      name: app.provider.isHaqqNetwork
+        ? getText(I18N.transactionConfirmationIslamicCoin)
+        : app.provider.name,
+      symbol: app.provider.denom,
       created_at: '',
       updated_at: '',
-      image: require('@assets/images/islm_icon.png'),
+      image: app.provider.isHaqqNetwork
+        ? require('@assets/images/islm_icon.png')
+        : {
+            uri: app.provider.icon,
+          },
     };
   };
 
-  public generateIslamicTokenContract = (): IContract => {
+  public generateNativeTokenContract = (): IContract => {
     return {
       id: AddressUtils.toHaqq(NATIVE_TOKEN_ADDRESS),
       eth_address: AddressUtils.toEth(NATIVE_TOKEN_ADDRESS),
       address_type: AddressType.contract,
       is_skip_eth_tx: false,
       min_input_amount: '18',
-      decimals: WEI_PRECISION,
+      decimals: app.provider.decimals,
       is_erc20: false,
       is_erc721: false,
       is_erc1155: false,
       is_in_white_list: true,
-      name: getText(I18N.transactionConfirmationIslamicCoin),
-      symbol: CURRENCY_NAME,
+      name: app.provider.isHaqqNetwork
+        ? getText(I18N.transactionConfirmationIslamicCoin)
+        : app.provider.name,
+      symbol: app.provider.denom,
       created_at: '',
       updated_at: '',
-      icon: require('@assets/images/islm_icon.png'),
+      icon: app.provider.isHaqqNetwork
+        ? require('@assets/images/islm_icon.png')
+        : {
+            uri: app.provider.icon,
+          },
     };
   };
 
@@ -296,7 +307,7 @@ class TokensStore implements MobXStore<IToken> {
       if (!Array.isArray(data.tokens)) {
         return {
           ...acc,
-          [w.address]: [this.generateIslamicToken(w)],
+          [w.address]: [this.generateNativeToken(w)],
         };
       }
 
@@ -326,8 +337,8 @@ class TokensStore implements MobXStore<IToken> {
             contract_updated_at: contractFromCache.updated_at,
             value: new Balance(
               token.value,
-              contractFromCache.decimals || WEI_PRECISION,
-              contractFromCache.symbol || CURRENCY_NAME,
+              contractFromCache.decimals || app.provider.decimals,
+              contractFromCache.symbol || app.provider.denom,
             ),
             decimals: contractFromCache.decimals,
             is_erc20: contractFromCache.is_erc20,
@@ -348,7 +359,7 @@ class TokensStore implements MobXStore<IToken> {
 
       return {
         ...acc,
-        [w.address]: [this.generateIslamicToken(w), ...addressTokens],
+        [w.address]: [this.generateNativeToken(w), ...addressTokens],
       };
     }, {});
   };
@@ -365,8 +376,8 @@ class TokensStore implements MobXStore<IToken> {
       contract_updated_at: contractFromCache.updated_at,
       value: new Balance(
         token.value,
-        contractFromCache.decimals || WEI_PRECISION,
-        contractFromCache.symbol || CURRENCY_NAME,
+        contractFromCache.decimals || app.provider.decimals,
+        contractFromCache.symbol || app.provider.denom,
       ),
       decimals: contractFromCache.decimals,
       is_erc20: contractFromCache.is_erc20,
@@ -427,7 +438,7 @@ async function getHardcodedTokens(
   const wallets = Wallet.addressList();
   if (enabled) {
     const contracts =
-      DEBUG_VARS.hardcodeERC20TokensContract[app.provider.cosmosChainId];
+      DEBUG_VARS.hardcodeERC20TokensContract[app.provider.ethChainId];
 
     if (contracts.length) {
       const tokens = await Promise.all(

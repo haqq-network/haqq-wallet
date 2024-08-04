@@ -2,17 +2,18 @@ import {useEffect, useRef, useState} from 'react';
 
 import validate from 'validate.js';
 
+import {app} from '@app/contexts';
 import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {I18N, getText} from '@app/i18n';
 import {Balance} from '@app/services/balance';
 
-export function useSumAmount(
+export const useSumAmount = (
   initialSum = Balance.Empty,
   initialMaxSum = Balance.Empty,
   initialMinAmount = getRemoteBalanceValue('transfer_min_amount'),
   customCheck?: (amount: Balance) => string,
   onChange?: (amount: Balance, formattedString: string) => void,
-) {
+) => {
   const [{amount, amountText, changed}, setAmount] = useState({
     amount: initialSum,
     amountText: initialSum.isPositive() ? initialSum.toString() : '',
@@ -51,7 +52,7 @@ export function useSumAmount(
         const newString = errorArray?.length > 0 ? errorArray.join(' ') : '';
         setError(
           newString
-            .replace('ISLM', maxAmountRef.current.getSymbol())
+            .replace(app.provider.denom, maxAmountRef.current.getSymbol())
             .replace(
               maxAmountRef.current.toFloat(),
               maxAmountRef.current.toBalanceString('auto'),
@@ -63,7 +64,7 @@ export function useSumAmount(
         );
       }
     }
-  }, [changed, amount, minAmount, maxAmount]);
+  }, [changed, amount, minAmount, maxAmount, app.provider.denom]);
 
   return {
     isValid:
@@ -103,7 +104,7 @@ export function useSumAmount(
         changed: _changed,
       }));
     },
-    setAmount(text: string) {
+    setAmount(text: string, precision = app.provider.decimals) {
       if (text.match(/^[0-9].*/)) {
         let i = 0;
         const textFormatted = text
@@ -117,7 +118,7 @@ export function useSumAmount(
           .replace(/\D&[^.]/g, '')
           .replace(/^0[0-9]/gm, '0');
 
-        const newAmount = new Balance(+textFormatted);
+        const newAmount = new Balance(+textFormatted, precision);
         if (typeof onChange === 'function') {
           onChange(newAmount, textFormatted);
         }
@@ -139,4 +140,4 @@ export function useSumAmount(
     },
     setError,
   };
-}
+};

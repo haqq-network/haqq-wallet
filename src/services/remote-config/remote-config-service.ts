@@ -1,4 +1,3 @@
-import {onRemoteConfigSync} from '@app/event-actions/on-remote-config-sync';
 import {getAppInfo} from '@app/helpers/get-app-info';
 import {Initializable} from '@app/helpers/initializable';
 import {VariablesString} from '@app/models/variables-string';
@@ -58,7 +57,6 @@ export class RemoteConfigService extends Initializable {
       );
     }
 
-    await onRemoteConfigSync();
     this.stopInitialization();
     return getCachedConfig();
   }

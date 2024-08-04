@@ -27,8 +27,6 @@ import {TransactionSumAddressScreen} from '@app/screens/HomeStack/TransactionSta
 import {TransactionSelectCryptoScreen} from '@app/screens/transaction-select-crypto';
 import {ScreenOptionType} from '@app/types';
 
-import {FeeSettingsScreen} from './fee-settings';
-
 const Stack = createNativeStackNavigator<TransactionStackParamList>();
 
 const screenOptions: ScreenOptionType = {title: '', headerBackHidden: true};
@@ -58,10 +56,6 @@ const screenOptionsLedger: ScreenOptionType = {
 
 const screenOptionsConfirmation: ScreenOptionType = {
   title: getText(I18N.transactionConfirmationPreviewTitle),
-};
-
-const screenOptionsFeeSettings: ScreenOptionType = {
-  title: getText(I18N.feeSettingsHeader),
 };
 
 const screenOptionsSelectCrypto: ScreenOptionType = {
@@ -115,11 +109,6 @@ export const TransactionStack = memo(() => {
         name={TransactionStackRoutes.TransactionNftConfirmation}
         component={themeUpdaterHOC(TransactionNftConfirmationScreen)}
         options={screenOptionsConfirmation}
-      />
-      <Stack.Screen
-        name={TransactionStackRoutes.FeeSettings}
-        component={themeUpdaterHOC(FeeSettingsScreen)}
-        options={screenOptionsFeeSettings}
       />
       <Stack.Screen
         name={TransactionStackRoutes.TransactionFinish}

@@ -42,6 +42,7 @@ import {WalletConnectApproveConnectionEvent} from '@app/types/wallet-connect';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 import {AwaitValue} from './helpers/await-for-value';
+import {Fee} from './models/fee';
 
 export enum MarketingEvents {
   accountCreated = 'q3vxmg',
@@ -591,7 +592,6 @@ export type RootStackParamList = {
     chainId?: number;
     selectedAccount?: string;
     hideContractAttention?: boolean;
-    saveFee?: boolean;
   };
   sssNetwork: undefined;
   sssBackup: {
@@ -632,6 +632,13 @@ export type RootStackParamList = {
     openEvent: MarketingEvents;
     linkEvent: MarketingEvents;
     scrollEvent: MarketingEvents;
+  };
+  feeSettings: {
+    fee: Fee;
+    from: string;
+    to: string;
+    value?: Balance;
+    data?: string;
   };
 };
 
@@ -1215,7 +1222,7 @@ export interface IBalance {
   toFloatString: () => string;
   toString: () => string;
   toHex: () => string;
-  isPositive: () => this is IBalance;
+  isPositive: () => boolean;
   toBalanceString: () => string;
   operate: (
     value: BalanceConstructor,
@@ -1336,9 +1343,9 @@ export type SendTransactionError = {
 
 export type ContractNameMap = Record<string, {name: string; symbol: string}>;
 
-export type HaqqCosmosAddress = `haqq${string}` & string;
-export type HaqqEthereumAddress = `0x${string}` & string;
-export type HexNumber = `0x${string}` & string;
+export type HaqqCosmosAddress = `haqq${string}`;
+export type HaqqEthereumAddress = `0x${string}`;
+export type HexNumber = `0x${string}`;
 
 export type IndexerBalance = Record<HaqqCosmosAddress, HexNumber>;
 export type IndexerToken = {
@@ -1596,7 +1603,6 @@ export enum DeeplinkUrlKey {
   browser = 'browser',
   web3browser = 'web3browser',
   back9test = 'back9test',
-  provider = 'provider',
   enableDeveloperMode = 'enableDeveloperMode',
 }
 

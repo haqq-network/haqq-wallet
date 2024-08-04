@@ -2,14 +2,18 @@ import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {TransactionSum} from '@app/components/transaction-sum';
 import {app} from '@app/contexts';
+import {Events} from '@app/events';
 import {showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
+import {awaitForEventDone} from '@app/helpers/await-for-event-done';
+import {awaitForProvider} from '@app/helpers/await-for-provider';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
+import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {
   TransactionStackParamList,
@@ -120,7 +124,18 @@ export const TransactionSumScreen = memo(() => {
 
   const onToken = useCallback(() => {
     navigation.goBack();
-  }, []);
+  }, [navigation]);
+
+  const onNetworkPress = useCallback(async () => {
+    const providerId = await awaitForProvider({
+      providers: Provider.getAll(),
+      initialProviderId: app.providerId!,
+      title: I18N.networks,
+    });
+    app.providerId = providerId;
+    await awaitForEventDone(Events.onProviderChanged);
+    navigation.goBack();
+  }, [navigation]);
 
   useEffectAsync(async () => {
     const b = app.getAvailableBalance(route.params.from);
@@ -142,6 +157,7 @@ export const TransactionSumScreen = memo(() => {
       onAmount={onAmount}
       onContact={onContact}
       onToken={onToken}
+      onNetworkPress={onNetworkPress}
       testID="transaction_sum"
       token={route.params.token}
       isLoading={isLoading}

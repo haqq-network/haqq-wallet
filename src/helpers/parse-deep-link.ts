@@ -1,8 +1,6 @@
-import base64 from 'react-native-base64';
 import Url from 'url-parse';
 
 import {ParsedQuery} from '@app/event-actions/on-deep-link';
-import {Provider as ChainProvider} from '@app/models/provider';
 import {DeeplinkProtocol, DeeplinkUrlKey} from '@app/types';
 
 import {AddressUtils} from './address-utils';
@@ -14,7 +12,6 @@ export enum LinkType {
   Haqq = 'haqq',
   Unrecognized = 'unrecognized',
   Browser = 'browser',
-  Provider = 'provider',
   EnableDeveloperMode = 'enableDeveloperMode',
   Back9test = 'back9test',
 }
@@ -60,12 +57,6 @@ export type LinkParseResult = CommonResultData &
         params: {
           url: string;
           key: DeeplinkUrlKey.browser | DeeplinkUrlKey.web3browser;
-        };
-      }
-    | {
-        type: LinkType.Provider;
-        params: {
-          provider: Partial<ChainProvider>;
         };
       }
     | {
@@ -146,14 +137,6 @@ export const parseDeepLink = (link: string): LinkParseResult => {
           return {
             type: LinkType.EnableDeveloperMode,
             params: {},
-            rawData: link,
-          };
-        case DeeplinkUrlKey.provider:
-          return {
-            type: LinkType.Provider,
-            params: {
-              provider: JSON.parse(base64.decode(params[0])),
-            },
             rawData: link,
           };
       }
