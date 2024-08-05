@@ -12,10 +12,13 @@ import {
   PopupContainer,
   Spacer,
   Text,
+  TextPosition,
+  TextVariant,
 } from '@app/components/ui';
 import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {AppTheme} from '@app/types';
+import {Wallet} from '@app/models/wallet';
+import {AppTheme, WalletType} from '@app/types';
 
 interface BackupWarningProps {
   onPressBackup: () => void;
@@ -24,6 +27,9 @@ interface BackupWarningProps {
 
 export function BackupWarning({onPressBackup, testID}: BackupWarningProps) {
   const theme = useTheme();
+  const isSSSWallet = Boolean(
+    Wallet.getAll().find(w => w.type === WalletType.sss),
+  );
 
   const animation = useMemo(() => {
     if (theme === AppTheme.dark) {
@@ -32,30 +38,51 @@ export function BackupWarning({onPressBackup, testID}: BackupWarningProps) {
     return require('@assets/animations/backup-start-light.json');
   }, [theme]);
 
+  const paragraph = useMemo(() => {
+    return isSSSWallet
+      ? I18N.backupSSSWarningParagraph
+      : I18N.backupWarningParagraph;
+  }, [isSSSWallet]);
+  const infoBlock1 = useMemo(() => {
+    return isSSSWallet
+      ? I18N.backupSSSWarningInfoBlock1
+      : I18N.backupWarningInfoBlock1;
+  }, [isSSSWallet]);
+  const infoBlock2 = useMemo(() => {
+    return isSSSWallet
+      ? I18N.backupSSSWarningInfoBlock2
+      : I18N.backupWarningInfoBlock2;
+  }, [isSSSWallet]);
+
   return (
     <PopupContainer style={styles.container} testID={testID}>
       <Spacer style={styles.imageContainer}>
         <LottieWrap source={animation} style={styles.image} autoPlay loop />
       </Spacer>
-      <Text t4 style={styles.title} i18n={I18N.backupWarningTitle} center />
       <Text
-        t11
+        variant={TextVariant.t4}
+        style={styles.title}
+        i18n={I18N.backupWarningTitle}
+        position={TextPosition.center}
+      />
+      <Text
+        variant={TextVariant.t11}
         style={styles.paragraph}
         color={Color.textBase2}
-        i18n={I18N.backupWarningParagraph}
-        center
+        i18n={paragraph}
+        position={TextPosition.center}
       />
       <InfoBlock
         warning
         style={styles.infoBlock1}
         icon={<Icon name="warning" color={Color.textYellow1} i24 />}
-        i18n={I18N.backupWarningInfoBlock1}
+        i18n={infoBlock1}
       />
       <InfoBlock
         warning
         style={styles.infoBlock2}
         icon={<Icon name="warning" color={Color.textYellow1} i24 />}
-        i18n={I18N.backupWarningInfoBlock2}
+        i18n={infoBlock2}
       />
       <Button
         variant={ButtonVariant.contained}
