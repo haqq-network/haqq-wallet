@@ -91,7 +91,6 @@ class NftStore {
   }
 
   getAll() {
-    Logger.log('NFTs', JSON.stringify(this.data, null, 2));
     return Object.values(this.data)
       .reduce((acc: NftItem[], item) => [...acc, ...item.nfts], [])
       .sort(

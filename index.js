@@ -4,23 +4,24 @@
 import './global';
 import '@ethersproject/shims';
 import '@walletconnect/react-native-compat';
-import { AppRegistry, I18nManager, LogBox } from 'react-native';
+import {AppRegistry, I18nManager, LogBox} from 'react-native';
 
 import Config from 'react-native-config';
-import { JsonRpcProvider } from '@ethersproject/providers';
+import {JsonRpcProvider} from '@ethersproject/providers';
 import * as Sentry from '@sentry/react-native';
-import { name as appName } from './app.json';
-import { App } from './src/app';
+import {name as appName} from './app.json';
+import {App} from './src/app';
 import './src/event-actions';
-import { Jailbreak } from './src/jailbreak';
+import {Jailbreak} from './src/jailbreak';
 import messaging from '@react-native-firebase/messaging';
-import { IS_IOS } from '@app/variables/common';
-import { DEBUG_VARS } from '@app/debug-vars';
-import { enableFreeze, enableScreens } from 'react-native-screens';
-import { enableBatchedStateUpdates } from '@app/hooks/batched-set-state';
-import { EventTracker } from '@app/services/event-tracker';
-import { MarketingEvents } from '@app/types';
-import { app } from '@app/contexts';
+import {IS_IOS} from '@app/variables/common';
+import {DEBUG_VARS} from '@app/debug-vars';
+import {enableFreeze, enableScreens} from 'react-native-screens';
+import {enableBatchedStateUpdates} from '@app/hooks/batched-set-state';
+import {EventTracker} from '@app/services/event-tracker';
+import {MarketingEvents} from '@app/types';
+import {app} from '@app/contexts';
+import {ethers} from 'ethers';
 
 if (!global.BigInt) {
   const BigInt = require('big-integer');
@@ -32,7 +33,7 @@ if (!global.BigInt) {
 
 enableScreens();
 enableFreeze(true);
-enableBatchedStateUpdates()
+enableBatchedStateUpdates();
 
 LogBox.ignoreLogs(["The 'navigation' object hasn't been initialized"]);
 
@@ -40,8 +41,7 @@ try {
   const isRTLEnabled = true;
   I18nManager.allowRTL(isRTLEnabled);
   I18nManager.swapLeftAndRightInRTL(isRTLEnabled);
-} catch (e) {
-}
+} catch (e) {}
 
 if (__DEV__ && IS_IOS) {
   messaging().setAPNSToken('dev-apns-token', 'sandbox');
@@ -63,7 +63,7 @@ if (Config.SENTRY_DSN && DEBUG_VARS.enableSentry) {
           delete hint.attachments;
         }
         return event;
-      }
+      },
     });
   } catch (e) {
     console.log('sentry init failed');
@@ -88,22 +88,33 @@ JsonRpcProvider.prototype.send = async function (method, params) {
     jsonrpc: '2.0',
   };
 
-  const isSendMethod = ['eth_sendRawTransaction', 'eth_sendTransaction'].indexOf(method) >= 0;
+  const isSendMethod =
+    ['eth_sendRawTransaction', 'eth_sendTransaction'].indexOf(method) >= 0;
 
   const cache = ['eth_chainId', 'eth_blockNumber'].indexOf(method) >= 0;
   if (cache && this._cache[method]) {
     return this._cache[method];
   }
 
+  let parsedAddressFrom = 'unknown';
+  try {
+    const hexString = params[0].replace(/^0x/, '');
+    parsedAddressFrom = ethers.utils.parseTransaction(Buffer.from(hexString, 'hex'))?.from;
+  } catch (e) {}
+  
   const eventParams = {
     type: 'EVM',
     network: app.provider.name,
     chainId: `${app.provider.ethChainId}`,
+    address: parsedAddressFrom,
   };
 
   try {
     if (isSendMethod) {
-      EventTracker.instance.trackEvent(MarketingEvents.sendTxStart, eventParams)
+      EventTracker.instance.trackEvent(
+        MarketingEvents.sendTxStart,
+        eventParams,
+      );
     }
     const req = await fetch(`${this.connection.url}`, {
       method: 'POST',
@@ -114,7 +125,10 @@ JsonRpcProvider.prototype.send = async function (method, params) {
     });
 
     if (isSendMethod) {
-      EventTracker.instance.trackEvent(MarketingEvents.sendTxSuccess, eventParams)
+      EventTracker.instance.trackEvent(
+        MarketingEvents.sendTxSuccess,
+        eventParams,
+      );
     }
 
     const resp = await req.json();
@@ -129,7 +143,7 @@ JsonRpcProvider.prototype.send = async function (method, params) {
     return result;
   } catch (error) {
     if (isSendMethod) {
-      EventTracker.instance.trackEvent(MarketingEvents.sendTxFail, eventParams)
+      EventTracker.instance.trackEvent(MarketingEvents.sendTxFail, eventParams);
     }
     throw error;
   }
@@ -139,4 +153,6 @@ const Wrapped = Sentry.wrap(App);
 
 AppRegistry.registerComponent(appName, () => Wrapped);
 
-AppRegistry.registerComponent('jailbreak', () => Config.FOR_DETOX ? Wrapped : Jailbreak);
+AppRegistry.registerComponent('jailbreak', () =>
+  Config.FOR_DETOX ? Wrapped : Jailbreak,
+);

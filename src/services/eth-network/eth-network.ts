@@ -125,7 +125,6 @@ export class EthNetwork {
 
   static async sendTransaction(signedTx: string) {
     const rpcProvider = await getRpcProvider(app.provider);
-
     return await rpcProvider.sendTransaction(signedTx);
   }
 

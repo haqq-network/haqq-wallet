@@ -508,10 +508,9 @@ export const SettingsTestScreen = observer(() => {
     Logger.log('signedTx', signedTx);
 
     const resp = await EthNetwork.sendTransaction(signedTx);
-
     logger.log('resp', resp);
-    const r = iface.decodeFunctionData('mintNFTs', resp.data);
 
+    const r = iface.decodeFunctionData('mintNFTs', resp.data);
     logger.log(JSON.stringify(r));
   };
 
