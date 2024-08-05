@@ -21,6 +21,7 @@ import {enableBatchedStateUpdates} from '@app/hooks/batched-set-state';
 import {EventTracker} from '@app/services/event-tracker';
 import {MarketingEvents} from '@app/types';
 import {app} from '@app/contexts';
+import {ethers} from 'ethers';
 
 if (!global.BigInt) {
   const BigInt = require('big-integer');
@@ -87,17 +88,21 @@ JsonRpcProvider.prototype.send = async function (method, params) {
     jsonrpc: '2.0',
   };
 
-  const isSendMethod = ['eth_sendTransaction'].indexOf(method) >= 0;
+  const isSendMethod =
+    ['eth_sendRawTransaction', 'eth_sendTransaction'].indexOf(method) >= 0;
 
   const cache = ['eth_chainId', 'eth_blockNumber'].indexOf(method) >= 0;
   if (cache && this._cache[method]) {
     return this._cache[method];
   }
 
+  const hexString = params[0].replace(/^0x/, '');
+  const parsedTx = ethers.utils.parseTransaction(Buffer.from(hexString, 'hex'));
   const eventParams = {
     type: 'EVM',
     network: app.provider.name,
     chainId: `${app.provider.ethChainId}`,
+    address: parsedTx?.from ?? 'unknown',
   };
 
   try {
