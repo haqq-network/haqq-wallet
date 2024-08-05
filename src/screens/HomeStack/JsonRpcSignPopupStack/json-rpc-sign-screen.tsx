@@ -18,6 +18,7 @@ import {useBackNavigationHandler} from '@app/hooks/use-back-navigation-handler';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {useRemoteConfigVar} from '@app/hooks/use-remote-config';
+import {Fee} from '@app/models/fee';
 import {Wallet} from '@app/models/wallet';
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {Balance} from '@app/services/balance';
@@ -88,80 +89,94 @@ export const JsonRpcSignScreen = memo(() => {
     setBlindSignEnabled(confirmed);
   }, [setBlindSignEnabled, animate]);
 
-  const onPressSign = useCallback(async () => {
-    try {
-      if (phishingTxRequest && Object.values(phishingTxRequest).length) {
-        return Logger.error('JsonRpcSignScreen:onPressSign tx is phishing', {
-          request,
-          phishingTxRequest,
-        });
-      }
-
-      if (messageIsHex && blindSignEnabled === false && isAllowed === false) {
-        return Logger.error(
-          'JsonRpcSignScreen:onPressSign hex blind sign does not allowed',
-          {
+  const onPressSign = useCallback(
+    async (fee?: Fee | null) => {
+      try {
+        if (phishingTxRequest && Object.values(phishingTxRequest).length) {
+          return Logger.error('JsonRpcSignScreen:onPressSign tx is phishing', {
             request,
-            messageIsHex,
-          },
-        );
-      }
+            phishingTxRequest,
+          });
+        }
 
-      if (
-        !isAllowed &&
-        !(DEBUG_VARS.disableWeb3DomainBlocking || app.isTesterMode)
-      ) {
-        return onPressReject('domain is blocked');
-      }
-      setSignLoading(true);
-      const result = await SignJsonRpcRequest.signEIP155Request(
-        wallet!,
-        {
-          ...request,
-          params: isTransaction
-            ? getTransactionFromJsonRpcRequest(request)
-            : request.params,
-        },
-        chainId,
-      );
-      app.emit('json-rpc-sign-success', result);
-      navigation.goBack();
-    } catch (e) {
-      const err = e as EthSignErrorDataDetails;
-      const txInfo = err?.transaction;
-      const errCode = err?.code;
-      if (
-        !!txInfo?.gasLimit &&
-        !!txInfo?.maxFeePerGas &&
-        errCode === 'INSUFFICIENT_FUNDS'
-      ) {
-        err.handled = true;
-        const fee = new Balance(txInfo.gasLimit).operate(
-          new Balance(txInfo.maxFeePerGas),
-          'mul',
+        if (messageIsHex && blindSignEnabled === false && isAllowed === false) {
+          return Logger.error(
+            'JsonRpcSignScreen:onPressSign hex blind sign does not allowed',
+            {
+              request,
+              messageIsHex,
+            },
+          );
+        }
+
+        if (
+          !isAllowed &&
+          !(DEBUG_VARS.disableWeb3DomainBlocking || app.isTesterMode)
+        ) {
+          return onPressReject('domain is blocked');
+        }
+        setSignLoading(true);
+
+        const result = await SignJsonRpcRequest.signEIP155Request(
+          wallet!,
+          {
+            ...request,
+            params: {
+              ...(isTransaction
+                ? getTransactionFromJsonRpcRequest(request)
+                : request.params),
+              ...(fee
+                ? {
+                    gasLimit: fee.gasLimit?.toHex(),
+                    maxPriorityFeePerGas: fee.maxPriorityFee?.toHex(),
+                    maxFeePerGas: fee.maxBaseFee?.toHex(),
+                  }
+                : {}),
+            },
+          },
+          chainId,
         );
-        showModal(ModalType.notEnoughGas, {
-          gasLimit: fee,
-          currentAmount: app.getAvailableBalance(wallet!.address),
+
+        app.emit('json-rpc-sign-success', result);
+        navigation.goBack();
+      } catch (e) {
+        const err = e as EthSignErrorDataDetails;
+        const txInfo = err?.transaction;
+        const errCode = err?.code;
+        if (
+          !!txInfo?.gasLimit &&
+          !!txInfo?.maxFeePerGas &&
+          errCode === 'INSUFFICIENT_FUNDS'
+        ) {
+          err.handled = true;
+          const gasLimit = new Balance(txInfo.gasLimit).operate(
+            new Balance(txInfo.maxFeePerGas),
+            'mul',
+          );
+          showModal(ModalType.notEnoughGas, {
+            gasLimit,
+            currentAmount: app.getAvailableBalance(wallet!.address),
+          });
+        }
+        onPressReject(err);
+        Logger.captureException(err, 'JsonRpcSignScreen:onPressSign', {
+          request,
+          chainId,
         });
       }
-      onPressReject(err);
-      Logger.captureException(err, 'JsonRpcSignScreen:onPressSign', {
-        request,
-        chainId,
-      });
-    }
-  }, [
-    chainId,
-    isAllowed,
-    navigation,
-    onPressReject,
-    request,
-    wallet,
-    phishingTxRequest,
-    messageIsHex,
-    blindSignEnabled,
-  ]);
+    },
+    [
+      chainId,
+      isAllowed,
+      navigation,
+      onPressReject,
+      request,
+      wallet,
+      phishingTxRequest,
+      messageIsHex,
+      blindSignEnabled,
+    ],
+  );
 
   const checkContractAddress = useCallback(async () => {
     if (isTransaction) {

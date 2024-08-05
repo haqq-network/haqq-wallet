@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import {Transaction} from 'ethers';
 import {View} from 'react-native';
@@ -11,6 +11,7 @@ import {Button, ButtonVariant, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {EthereumSignInMessage} from '@app/helpers/ethereum-message-checker';
 import {I18N} from '@app/i18n';
+import {Fee} from '@app/models/fee';
 import {Wallet} from '@app/models/wallet';
 import {
   JsonRpcMetadata,
@@ -33,7 +34,7 @@ export interface JsonRpcSignProps {
   messageIsHex: boolean;
   blindSignEnabled: boolean;
   ethereumSignInMessage: EthereumSignInMessage | null;
-  onPressSign(): void;
+  onPressSign(fee?: Fee | null): void;
   onPressReject(): void;
   onPressAllowOnceSignDangerousTx(): void;
 }
@@ -58,6 +59,9 @@ export const JsonRpcSign = ({
   onPressAllowOnceSignDangerousTx,
 }: JsonRpcSignProps) => {
   const insets = useSafeAreaInsets();
+
+  const [fee, setFee] = useState<Fee | null>(null);
+
   const signButtonDisabled = useMemo(() => {
     if (rejectLoading || !isAllowedDomain) {
       return true;
@@ -84,6 +88,10 @@ export const JsonRpcSign = ({
     isAllowedDomain,
   ]);
 
+  const handleSignPress = useCallback(() => {
+    onPressSign(fee);
+  }, [fee]);
+
   return (
     <View style={styles.container}>
       <View style={styles.txContainer}>
@@ -94,6 +102,8 @@ export const JsonRpcSign = ({
             chainId={chainId}
             verifyAddressResponse={verifyAddressResponse}
             hideContractAttention={hideContractAttention}
+            fee={fee}
+            setFee={setFee}
           />
         )}
 
@@ -118,7 +128,7 @@ export const JsonRpcSign = ({
           loading={signLoading}
           disabled={signButtonDisabled}
           variant={ButtonVariant.contained}
-          onPress={onPressSign}
+          onPress={handleSignPress}
           i18n={I18N.walletConnectSignApproveButton}
           testID={'wc-sign'}
         />
