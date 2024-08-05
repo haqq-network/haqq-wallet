@@ -96,13 +96,17 @@ JsonRpcProvider.prototype.send = async function (method, params) {
     return this._cache[method];
   }
 
-  const hexString = params[0].replace(/^0x/, '');
-  const parsedTx = ethers.utils.parseTransaction(Buffer.from(hexString, 'hex'));
+  let parsedAddressFrom = 'unknown';
+  try {
+    const hexString = params[0].replace(/^0x/, '');
+    parsedAddressFrom = ethers.utils.parseTransaction(Buffer.from(hexString, 'hex'))?.from;
+  } catch (e) {}
+  
   const eventParams = {
     type: 'EVM',
     network: app.provider.name,
     chainId: `${app.provider.ethChainId}`,
-    address: parsedTx?.from ?? 'unknown',
+    address: parsedAddressFrom,
   };
 
   try {
