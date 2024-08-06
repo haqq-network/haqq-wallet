@@ -19,6 +19,7 @@ export interface NetworkProvider {
   chain_id: number;
   decimals: number;
   wei_denom: string;
+  coin_name: string;
   explorer_url: string | undefined;
   cosmos_explorer_url: string | undefined;
   indexer_url: string;

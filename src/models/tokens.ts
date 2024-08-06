@@ -6,7 +6,6 @@ import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
 import {Whitelist} from '@app/helpers/whitelist';
-import {I18N, getText} from '@app/i18n';
 import {Contracts} from '@app/models/contracts';
 import {Socket} from '@app/models/socket';
 import {Wallet} from '@app/models/wallet';
@@ -232,9 +231,7 @@ class TokensStore implements MobXStore<IToken> {
       is_erc721: false,
       is_erc1155: false,
       is_in_white_list: true,
-      name: app.provider.isHaqqNetwork
-        ? getText(I18N.transactionConfirmationIslamicCoin)
-        : app.provider.name,
+      name: app.provider.coinName,
       symbol: app.provider.denom,
       created_at: '',
       updated_at: '',
@@ -258,9 +255,7 @@ class TokensStore implements MobXStore<IToken> {
       is_erc721: false,
       is_erc1155: false,
       is_in_white_list: true,
-      name: app.provider.isHaqqNetwork
-        ? getText(I18N.transactionConfirmationIslamicCoin)
-        : app.provider.name,
+      name: app.provider.coinName,
       symbol: app.provider.denom,
       created_at: '',
       updated_at: '',
