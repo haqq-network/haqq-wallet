@@ -235,6 +235,10 @@ export class Provider {
     return HAQQ_BENCH_32_PREFIX;
   }
 
+  get coinName() {
+    return this.model.coin_name;
+  }
+
   toJSON() {
     return {
       ethChainIdHex: this.ethChainIdHex,
