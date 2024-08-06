@@ -1,9 +1,14 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
+import {FlatList} from 'react-native';
+
+import {Color} from '@app/colors';
 import {BottomSheet} from '@app/components/bottom-sheet';
-import {Spacer} from '@app/components/ui';
+import {Icon, IconsName, Spacer, TextField} from '@app/components/ui';
 import {app} from '@app/contexts';
+import {createTheme} from '@app/helpers';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
+import {I18N} from '@app/i18n';
 import {ModalType, Modals} from '@app/types';
 
 import {SettingsProvidersRow} from '../settings/settings-providers/settings-providers-row';
@@ -16,6 +21,8 @@ export function ProvidersBottomSheet({
   eventSuffix = '',
   onClose,
 }: Modals[ModalType.providersBottomSheet]) {
+  const [searchProviderValue, setSearchProviderValue] = useState('');
+
   const closeDistanceCalculated = useCalculatedDimensionsValue(
     () => closeDistance?.(),
     [closeDistance],
@@ -39,20 +46,62 @@ export function ProvidersBottomSheet({
     };
   }, [onPressProvider, eventSuffix]);
 
+  const visibleProviders = useMemo(() => {
+    if (!searchProviderValue) {
+      return providers;
+    }
+
+    return providers.filter(provider => {
+      const providerName = provider.name.toLowerCase();
+      const providerCoinName = provider.coinName.toLowerCase();
+      const providerDenom = provider.denom.toLowerCase();
+      const providerChainId = provider.ethChainId
+        .toString()
+        .toLocaleLowerCase();
+
+      const searchValue = searchProviderValue.toLocaleLowerCase();
+
+      return (
+        providerName.includes(searchValue) ||
+        providerCoinName.includes(searchValue) ||
+        providerDenom.includes(searchValue) ||
+        providerChainId.includes(searchValue)
+      );
+    });
+  }, [providers, searchProviderValue]);
+
   return (
     <BottomSheet
       onClose={onCloseModal}
+      contentContainerStyle={styles.container}
       closeDistance={closeDistanceCalculated}
       i18nTitle={title}>
-      {providers.map((item, id) => (
-        <SettingsProvidersRow
-          providerId={initialProvider}
-          key={id}
-          item={item}
-          onPress={onPressProvider}
-        />
-      ))}
+      <TextField
+        label={I18N.browserSearch}
+        value={searchProviderValue}
+        onChangeText={setSearchProviderValue}
+        leading={
+          <Icon i24 name={IconsName.search} color={Color.graphicBase2} />
+        }
+      />
+      <FlatList
+        data={visibleProviders}
+        keyExtractor={item => item.id}
+        renderItem={({item}) => (
+          <SettingsProvidersRow
+            providerId={initialProvider}
+            item={item}
+            onPress={onPressProvider}
+          />
+        )}
+      />
       <Spacer height={50} />
     </BottomSheet>
   );
 }
+
+const styles = createTheme({
+  container: {
+    height: '50%',
+  },
+});

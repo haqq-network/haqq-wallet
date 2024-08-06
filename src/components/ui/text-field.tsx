@@ -46,13 +46,14 @@ type InfoBlock = {
 
 export type TextFieldProps = Omit<TextInputProps, 'placeholder'> & {
   label: I18N | string;
-  placeholder: I18N;
+  placeholder?: I18N;
   hint?: I18N | undefined;
   infoBlock?: InfoBlock;
   errorText?: TextProps['children'] | undefined;
   errorTextI18n?: TextProps['i18n'] | undefined;
   error?: boolean;
   rightAction?: React.ReactNode;
+  leading?: React.ReactNode;
   multiline?: boolean;
   lines?: number;
 };
@@ -75,6 +76,7 @@ export const TextField: React.FC<TextFieldProps> = memo(
     onFocus,
     placeholder,
     rightAction,
+    leading,
     multiline,
     numberOfLines,
     ...restOfProps
@@ -199,6 +201,7 @@ export const TextField: React.FC<TextFieldProps> = memo(
             error && styles.containerError,
             inputAnimStyle,
           ]}>
+          {leading && <View style={styles.leadingSub}>{leading}</View>}
           <View style={styles.inputContainer}>
             <AnimatedPressable style={labelAnimStyle} onPress={onLabel}>
               {I18N[label as keyof typeof I18N] ? (
@@ -213,7 +216,7 @@ export const TextField: React.FC<TextFieldProps> = memo(
                 </Text>
               )}
             </AnimatedPressable>
-            {!value && isFocused && (
+            {placeholder && !value && isFocused && (
               <Text
                 variant={TextVariant.t11}
                 color={Color.textBase2}
@@ -318,6 +321,11 @@ const styles = createTheme({
     justifyContent: 'center',
     alignSelf: 'center',
     marginLeft: 14,
+  },
+  leadingSub: {
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginRight: 14,
   },
   placeholder: {
     position: 'absolute',
