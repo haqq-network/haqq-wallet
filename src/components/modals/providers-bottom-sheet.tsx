@@ -51,11 +51,23 @@ export function ProvidersBottomSheet({
       return providers;
     }
 
-    return providers.filter(provider =>
-      provider.name
-        .toLowerCase()
-        .includes(searchProviderValue.toLocaleLowerCase()),
-    );
+    return providers.filter(provider => {
+      const providerName = provider.name.toLowerCase();
+      const providerCoinName = provider.coinName.toLowerCase();
+      const providerDenom = provider.denom.toLowerCase();
+      const providerChainId = provider.ethChainId
+        .toString()
+        .toLocaleLowerCase();
+
+      const searchValue = searchProviderValue.toLocaleLowerCase();
+
+      return (
+        providerName.includes(searchValue) ||
+        providerCoinName.includes(searchValue) ||
+        providerDenom.includes(searchValue) ||
+        providerChainId.includes(searchValue)
+      );
+    });
   }, [providers, searchProviderValue]);
 
   return (
