@@ -20,6 +20,7 @@ export interface NetworkProvider {
   decimals: number;
   wei_denom: string;
   explorer_url: string | undefined;
+  cosmos_explorer_url: string | undefined;
   indexer_url: string;
   entry_point: string;
   stage: NetworkProviderStage;

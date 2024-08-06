@@ -1,6 +1,7 @@
 import {observable, runInAction} from 'mobx';
 
 import {app} from '@app/contexts';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {
   Backend,
   NetworkProvider,
@@ -13,6 +14,8 @@ import {DEFAULT_PROVIDERS, ISLM_DENOM} from '@app/variables/common';
 import {ProviderID} from './provider.types';
 
 import {VariablesString} from '../variables-string';
+
+const HAQQ_BENCH_32_PREFIX = 'haqq';
 
 const logger = Logger.create('NetworkProvider:store', {
   stringifyJson: true,
@@ -196,6 +199,10 @@ export class Provider {
     return this.model.cosmos_entry_point;
   }
 
+  get cosmosExplorer() {
+    return this.model.cosmos_explorer_url;
+  }
+
   get explorer() {
     return this.model.explorer_url;
   }
@@ -224,6 +231,10 @@ export class Provider {
     return this.model.denom.toLowerCase() === ISLM_DENOM.toLowerCase();
   }
 
+  get bench32Prefix() {
+    return HAQQ_BENCH_32_PREFIX;
+  }
+
   toJSON() {
     return {
       ethChainIdHex: this.ethChainIdHex,
@@ -237,6 +248,22 @@ export class Provider {
       isEditable: this.isEditable,
       ...this.model,
     };
+  }
+
+  getTxExplorerUrl(txHash: string) {
+    if (!txHash) {
+      return '';
+    }
+
+    if (txHash.startsWith('0x') || txHash.startsWith('0X')) {
+      return `${this.explorer}/tx/${txHash}`;
+    }
+
+    return `${this.cosmosExplorer}/${this.bench32Prefix}/tx/${txHash}`;
+  }
+
+  getAddressExplorerUrl(address: string) {
+    return `${this.explorer}/address/${AddressUtils.toEth(address)}`;
   }
 }
 
