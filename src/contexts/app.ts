@@ -54,9 +54,11 @@ import {
   WalletType,
 } from '../types';
 import {
+  ISLM_DENOM,
   LIGHT_GRAPHIC_GREEN_1,
   MAIN_NETWORK_ID,
   TEST_NETWORK_ID,
+  WEI_PRECISION,
 } from '../variables/common';
 
 const optionalConfigObject = {
@@ -218,7 +220,11 @@ class App extends AsyncEventEmitter {
   private _provider: Provider | null = null;
 
   get provider() {
-    return this._provider as Provider;
+    return (this._provider || {
+      // used as default value while first provider initialization
+      denom: ISLM_DENOM,
+      decimals: WEI_PRECISION,
+    }) as Provider;
   }
 
   get providerId() {
