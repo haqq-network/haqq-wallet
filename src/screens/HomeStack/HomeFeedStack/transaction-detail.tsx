@@ -7,7 +7,6 @@ import {TransactionDetail} from '@app/components/transaction-detail';
 import {Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
-import {getExplorerUrlForTxHash} from '@app/helpers/get-explorer-url-for-tx-hash';
 import {shortAddress} from '@app/helpers/short-address';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useTransaction} from '@app/hooks/use-transaction';
@@ -43,7 +42,7 @@ export const TransactionDetailScreen = () => {
   const total = useMemo(() => Balance.Empty, []);
 
   const onPressInfo = useCallback(async () => {
-    const url = getExplorerUrlForTxHash(tx?.hash);
+    const url = app.provider.getTxExplorerUrl(tx?.hash);
     if (url) {
       openInAppBrowser(url);
     }
