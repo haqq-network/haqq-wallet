@@ -68,6 +68,12 @@ export class Indexer {
     this.init();
   }
 
+  checkIndexerAvailability = (): void => {
+    if (!app.provider.indexer) {
+      throw new Error('Indexer is not configured');
+    }
+  };
+
   async init() {
     await RemoteConfig.awaitForInitialization();
     this.captureException = _.throttle(
@@ -85,9 +91,7 @@ export class Indexer {
     selectedCurrency?: string,
   ): Promise<IndexerUpdatesResponse> {
     try {
-      if (!app.provider.indexer) {
-        throw new Error('Indexer is not configured');
-      }
+      this.checkIndexerAvailability();
 
       const updated = lastUpdated || new Date(0);
 
@@ -113,9 +117,7 @@ export class Indexer {
 
   async getContractNames(addresses: string[]): Promise<ContractNameMap> {
     try {
-      if (!app.provider.indexer) {
-        throw new Error('Indexer is not configured');
-      }
+      this.checkIndexerAvailability();
 
       if (addresses.length === 0) {
         return Promise.reject('Empty addresses');
@@ -151,9 +153,7 @@ export class Indexer {
 
   async getBalances(accounts: string[]): Promise<Record<string, string>> {
     try {
-      if (!app.provider.indexer) {
-        throw new Error('Indexer is not configured');
-      }
+      this.checkIndexerAvailability();
 
       const response = await jsonrpcRequest<IndexerUpdatesResponse>(
         app.provider.indexer,
@@ -233,9 +233,7 @@ export class Indexer {
 
   async getNfts(accounts: string[]): Promise<NftCollectionIndexer[]> {
     try {
-      if (!app.provider.indexer) {
-        throw new Error('Indexer is not configured');
-      }
+      this.checkIndexerAvailability();
 
       if (!accounts.length) {
         return [];
@@ -259,9 +257,7 @@ export class Indexer {
 
   async sushiPools(): Promise<SushiPoolResponse> {
     try {
-      if (!app.provider.indexer) {
-        throw new Error('Indexer is not configured');
-      }
+      this.checkIndexerAvailability();
 
       const response = await jsonrpcRequest<SushiPoolResponse>(
         app.provider.indexer,
@@ -286,9 +282,7 @@ export class Indexer {
     abortSignal,
   }: SushiPoolEstimateRequest): Promise<SushiPoolEstimateResponse> {
     try {
-      if (!app.provider.indexer) {
-        throw new Error('Indexer is not configured');
-      }
+      this.checkIndexerAvailability();
 
       const response = await jsonrpcRequest<SushiPoolEstimateResponse>(
         app.provider.indexer,
@@ -308,9 +302,7 @@ export class Indexer {
 
   async getProviderConfig(): Promise<ProviderConfig> {
     try {
-      if (!app.provider.indexer) {
-        throw new Error('Indexer is not configured');
-      }
+      this.checkIndexerAvailability();
 
       const response = await jsonrpcRequest<ProviderConfig>(
         app.provider.indexer,

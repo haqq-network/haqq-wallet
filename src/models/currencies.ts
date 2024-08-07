@@ -132,10 +132,6 @@ class CurrenciesStore {
     const lastBalanceUpdates =
       VariablesDate.get(`indexer_${app.provider.cosmosChainId}`) || new Date(0);
 
-    if (!app.provider.indexer) {
-      throw new Error('Indexer is not available');
-    }
-
     let accounts = wallets.map(w => w.cosmosAddress);
     const updates = await Indexer.instance.updates(
       accounts,
