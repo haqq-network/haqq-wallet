@@ -26,11 +26,10 @@ import {getUid} from '@app/helpers/get-uid';
 import {SecurePinUtils} from '@app/helpers/secure-pin-utils';
 import {I18N, getText} from '@app/i18n';
 import {Currencies} from '@app/models/currencies';
-import {RemoteProviderConfig} from '@app/models/provider/provider-config';
+import {Provider, RemoteProviderConfig} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
-import {VestingMetadataType} from '@app/models/vesting-metadata';
 import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
 import {Backend} from '@app/services/backend';
@@ -41,7 +40,6 @@ import {HapticEffects, vibrate} from '@app/services/haptic';
 import {RemoteConfig} from '@app/services/remote-config';
 
 import {hideAll, showModal} from '../helpers';
-import {Provider} from '../models/provider';
 import {User} from '../models/user';
 import {
   AppTheme,
@@ -88,10 +86,6 @@ class App extends AsyncEventEmitter {
   private _authenticated: boolean = DEBUG_VARS.enableSkipPinOnLogin;
   private appStatus: AppStatus = AppStatus.inactive;
   private _balances: Map<HaqqEthereumAddress, BalanceData> = new Map();
-  private _balance: Map<string, Balance> = new Map();
-  private _stakingBalance: Map<string, Balance> = new Map();
-  private _vestingBalance: Map<string, Record<VestingMetadataType, Balance>> =
-    new Map();
   private _googleSigninSupported: boolean = false;
   private _appleSigninSupported: boolean =
     Platform.select({
