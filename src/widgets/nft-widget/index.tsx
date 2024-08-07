@@ -1,17 +1,18 @@
 import React, {useCallback} from 'react';
 
+import {observer} from 'mobx-react';
 import {StyleSheet} from 'react-native';
 
 import {TotalValueTabNames} from '@app/components/total-value-info';
 import {ShadowCard} from '@app/components/ui/shadow-card';
-import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useTypedNavigation} from '@app/hooks';
+import {useShowNft} from '@app/hooks/nft';
 import {HomeStackRoutes} from '@app/route-types';
 import {INftWidget, NftWidgetSize} from '@app/types';
 
 import {NftCollectionView, NftListView} from './components';
 
-export const NftWidgetWrapper = ({size}: INftWidget) => {
+export const NftWidgetWrapper = observer(({size}: INftWidget) => {
   const navigation = useTypedNavigation();
 
   const onPress = useCallback(() => {
@@ -20,7 +21,9 @@ export const NftWidgetWrapper = ({size}: INftWidget) => {
     });
   }, []);
 
-  if (!isFeatureEnabled(Feature.nft)) {
+  const showNft = useShowNft();
+
+  if (!showNft) {
     return null;
   }
 
@@ -40,7 +43,7 @@ export const NftWidgetWrapper = ({size}: INftWidget) => {
         </ShadowCard>
       );
   }
-};
+});
 
 const styles = StyleSheet.create({
   paddingLeft: {

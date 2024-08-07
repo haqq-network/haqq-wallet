@@ -11,6 +11,7 @@ import {
   isFeatureEnabled,
   isSomeFeaturesEnabled,
 } from '@app/helpers/is-feature-enabled';
+import {useShowNft} from '@app/hooks/nft';
 import {I18N} from '@app/i18n';
 import {Transaction} from '@app/models/transaction';
 import {BalanceData, HaqqEthereumAddress, IToken} from '@app/types';
@@ -79,6 +80,8 @@ export const TotalValueInfo = observer(
       [activeTab],
     );
 
+    const showNft = useShowNft();
+
     const onTabChange = useCallback((tabName: TotalValueTabNames) => {
       setActiveTab(tabName);
     }, []);
@@ -106,7 +109,7 @@ export const TotalValueInfo = observer(
               title={I18N.accountInfoTransactionTabTitle}
               component={null}
             />
-            {isFeatureEnabled(Feature.nft) && (
+            {showNft && (
               <TopTabNavigator.Tab
                 name={TotalValueTabNames.nft}
                 title={I18N.accountInfoNftTabTitle}

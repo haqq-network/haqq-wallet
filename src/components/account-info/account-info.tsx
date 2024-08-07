@@ -7,6 +7,7 @@ import {TransactionEmpty} from '@app/components/transaction-empty';
 import {First, PopupContainer, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
+import {useShowNft} from '@app/hooks/nft';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
@@ -71,6 +72,8 @@ export const AccountInfo = observer(
       setActiveTab(tabName);
     }, []);
 
+    const showNft = useShowNft();
+
     const renderListHeader = useMemo(() => {
       return (
         <>
@@ -107,7 +110,7 @@ export const AccountInfo = observer(
               title={I18N.accountInfoTransactionTabTitle}
               component={null}
             />
-            {isFeatureEnabled(Feature.nft) && (
+            {showNft && (
               <TopTabNavigator.Tab
                 testID="accountInfoTabNft"
                 name={TabNames.nft}
