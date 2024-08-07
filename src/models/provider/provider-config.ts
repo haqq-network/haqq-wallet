@@ -1,12 +1,19 @@
 import {makeAutoObservable, runInAction} from 'mobx';
+import {makePersistable} from 'mobx-persist-store';
 
 import {Indexer} from '@app/services/indexer';
 import {ProviderConfig} from '@app/services/indexer/indexer.types';
+import {storage} from '@app/services/mmkv';
 
 class ProviderConfigStore {
   config: ProviderConfig | null = null;
   constructor() {
     makeAutoObservable(this);
+    makePersistable(this, {
+      name: this.constructor.name,
+      properties: ['config'],
+      storage: storage,
+    });
   }
 
   init = async () => {

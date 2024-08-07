@@ -125,37 +125,39 @@ class App extends AsyncEventEmitter {
 
     this.user = User.getOrCreate();
 
-    Provider.init().then(() => {
-      runInAction(() => {
-        this._provider = Provider.getById(this.providerId);
+    Provider.init()
+      .then(() => {
+        runInAction(() => {
+          this._provider = Provider.getById(this.providerId);
+        });
+      })
+      .then(RemoteProviderConfig.init)
+      .then(() => {
+        if (this._provider) {
+          EthNetwork.init(this._provider);
+        }
+
+        this.checkBalance = this.checkBalance.bind(this);
+        this.checkBalance();
+
+        this.handleDynamicLink = this.handleDynamicLink.bind(this);
+
+        dynamicLinks().onLink(this.handleDynamicLink);
+        dynamicLinks().getInitialLink().then(this.handleDynamicLink);
+
+        this.listenTheme = this.listenTheme.bind(this);
+
+        Appearance.addChangeListener(this.listenTheme);
+        AppState.addEventListener('change', this.listenTheme);
+        this.listenTheme();
+        AppState.addEventListener('change', this.onAppStatusChanged.bind(this));
+
+        if (!VariablesBool.exists('isDeveloper')) {
+          VariablesBool.set('isDeveloper', Config.IS_DEVELOPMENT === 'true');
+        }
+        this.setEnabledLoggersForTestMode(this.isTesterMode);
+        this.stopInitialization();
       });
-
-      if (this._provider) {
-        EthNetwork.init(this._provider);
-        RemoteProviderConfig.init();
-      }
-
-      this.checkBalance = this.checkBalance.bind(this);
-      this.checkBalance();
-
-      this.handleDynamicLink = this.handleDynamicLink.bind(this);
-
-      dynamicLinks().onLink(this.handleDynamicLink);
-      dynamicLinks().getInitialLink().then(this.handleDynamicLink);
-
-      this.listenTheme = this.listenTheme.bind(this);
-
-      Appearance.addChangeListener(this.listenTheme);
-      AppState.addEventListener('change', this.listenTheme);
-      this.listenTheme();
-      AppState.addEventListener('change', this.onAppStatusChanged.bind(this));
-
-      if (!VariablesBool.exists('isDeveloper')) {
-        VariablesBool.set('isDeveloper', Config.IS_DEVELOPMENT === 'true');
-      }
-      this.setEnabledLoggersForTestMode(this.isTesterMode);
-      this.stopInitialization();
-    });
   }
 
   private _startUpTime: number;
