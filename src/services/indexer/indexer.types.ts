@@ -52,3 +52,7 @@ export type SushiPoolEstimateRequest = {
   currency_id?: string; // The currency id
   abortSignal?: AbortSignal;
 };
+
+export type ProviderConfig = {
+  nft_exists?: boolean;
+};
