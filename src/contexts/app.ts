@@ -26,6 +26,7 @@ import {getUid} from '@app/helpers/get-uid';
 import {SecurePinUtils} from '@app/helpers/secure-pin-utils';
 import {I18N, getText} from '@app/i18n';
 import {Currencies} from '@app/models/currencies';
+import {RemoteProviderConfig} from '@app/models/provider/provider-config';
 import {Token} from '@app/models/tokens';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
@@ -137,6 +138,7 @@ class App extends AsyncEventEmitter {
 
       if (this._provider) {
         EthNetwork.init(this._provider);
+        RemoteProviderConfig.init();
       }
 
       this.checkBalance = this.checkBalance.bind(this);

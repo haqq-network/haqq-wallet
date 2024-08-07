@@ -22,6 +22,7 @@ import {
 } from '@app/types';
 
 import {
+  ProviderConfig,
   SushiPoolEstimateRequest,
   SushiPoolEstimateResponse,
   SushiPoolResponse,
@@ -300,6 +301,27 @@ export class Indexer {
     } catch (err) {
       if (err instanceof JSONRPCError) {
         this.captureException(err, 'Indexer:sushiPoolEstimate', err.meta);
+      }
+      throw err;
+    }
+  }
+
+  async getProviderConfig(): Promise<ProviderConfig> {
+    try {
+      if (!app.provider.indexer) {
+        throw new Error('Indexer is not configured');
+      }
+
+      const response = await jsonrpcRequest<ProviderConfig>(
+        app.provider.indexer,
+        'config',
+        [],
+      );
+
+      return response ?? {};
+    } catch (err) {
+      if (err instanceof JSONRPCError) {
+        this.captureException(err, 'Indexer:getProviderConfig', err.meta);
       }
       throw err;
     }

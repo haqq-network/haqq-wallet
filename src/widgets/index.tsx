@@ -82,7 +82,6 @@ export const WidgetRoot = memo(({lastUpdate}: {lastUpdate: number}) => {
   const [data, setData] = useState<IWidget[]>(JSON.parse(dataCached));
 
   const requestMarkup = useCallback(async () => {
-    // Logger.log('widget requestMarkup', {blockRequest});
     const appInfo = await getAppInfo();
     const response = await Backend.instance.markup('home', appInfo);
 
