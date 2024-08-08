@@ -15,6 +15,19 @@ const BALANCE_CACHE_KEY = 'balance_storage_indexer';
 const parseIndexerBalances = (
   data: IndexerUpdatesResponse,
 ): IndexerBalanceData => {
+  Object.entries(data).forEach(([key, value]) => {
+    if (['addresses', 'tokens', 'nfts'].includes(key)) {
+      return;
+    }
+
+    Object.entries(value).forEach(([key2, value2]) => {
+      if (AddressUtils.isValidAddress(key2)) {
+        // @ts-ignore
+        value[AddressUtils.toHaqq(key2)] = value2;
+      }
+    });
+  });
+
   return Wallet.getAll().reduce((acc, w) => {
     const cosmosAddress = AddressUtils.toHaqq(w.address);
     const staked = data?.total_staked?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
