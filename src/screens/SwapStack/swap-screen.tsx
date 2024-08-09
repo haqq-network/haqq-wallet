@@ -26,6 +26,7 @@ import {useSumAmount, useTypedRoute} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Contracts} from '@app/models/contracts';
 import {Currencies} from '@app/models/currencies';
+import {RemoteProviderConfig} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
@@ -52,11 +53,7 @@ import {
   ModalType,
 } from '@app/types';
 import {ERC20_ABI, V3SWAPROUTER_ABI, WETH_ABI} from '@app/variables/abi';
-import {
-  HAQQ_METADATA,
-  SUSHISWAP_MAINNET_ADDRESSES,
-  WETH_MAINNET_ADDRESS,
-} from '@app/variables/common';
+import {HAQQ_METADATA} from '@app/variables/common';
 
 const logger = Logger.create('SwapScreen', {
   emodjiPrefix: '🟠',
@@ -673,7 +670,7 @@ export const SwapScreen = observer(() => {
       setSwapInProgress(() => true);
 
       const swapRouter = new ethers.Contract(
-        SUSHISWAP_MAINNET_ADDRESSES.SwapRouterV3,
+        RemoteProviderConfig.swapRouterV3,
         V3SWAPROUTER_ABI,
       );
 
@@ -710,7 +707,7 @@ export const SwapScreen = observer(() => {
           params: [
             {
               from: currentWallet.address,
-              to: SUSHISWAP_MAINNET_ADDRESSES.SwapRouterV3,
+              to: RemoteProviderConfig.swapRouterV3,
               value: tokenInIsISLM ? estimateData.amount_in : '0x0',
               data: encodedTxData,
             },
@@ -783,7 +780,7 @@ export const SwapScreen = observer(() => {
       );
 
       const data = erc20Token.interface.encodeFunctionData('approve', [
-        SUSHISWAP_MAINNET_ADDRESSES.SwapRouterV3,
+        RemoteProviderConfig.swapRouterV3,
         amountBN._hex,
       ]);
 
@@ -830,7 +827,7 @@ export const SwapScreen = observer(() => {
       setSwapInProgress(() => true);
       const provider = await getRpcProvider(app.provider);
       const WETH = new ethers.Contract(
-        WETH_MAINNET_ADDRESS,
+        RemoteProviderConfig.wethAddress,
         WETH_ABI,
         provider,
       );
@@ -844,7 +841,7 @@ export const SwapScreen = observer(() => {
           params: [
             {
               from: currentWallet.address,
-              to: WETH_MAINNET_ADDRESS,
+              to: RemoteProviderConfig.wethAddress,
               value: t0Current.toHex(),
               data: txData,
             },
@@ -900,7 +897,7 @@ export const SwapScreen = observer(() => {
       setSwapInProgress(() => true);
       const provider = await getRpcProvider(app.provider);
       const WETH = new ethers.Contract(
-        WETH_MAINNET_ADDRESS,
+        RemoteProviderConfig.wethAddress,
         WETH_ABI,
         provider,
       );
@@ -921,7 +918,7 @@ export const SwapScreen = observer(() => {
           params: [
             {
               from: currentWallet.address,
-              to: WETH_MAINNET_ADDRESS,
+              to: RemoteProviderConfig.wethAddress,
               value: '0x0',
               data: txData,
             },
@@ -1038,6 +1035,9 @@ export const SwapScreen = observer(() => {
   }, [tokenIn, tokenOut, currentWallet, currentRoute, amountsIn.amount]);
 
   useEffect(() => {
+    if (!RemoteProviderConfig.swapEnabled) {
+      return navigator.goBack();
+    }
     const fetchData = () => {
       Indexer.instance
         .sushiPools()
@@ -1072,7 +1072,7 @@ export const SwapScreen = observer(() => {
           setCurrentRoute(
             () =>
               data.routes.find(r =>
-                AddressUtils.equals(r.token0, WETH_MAINNET_ADDRESS),
+                AddressUtils.equals(r.token0, RemoteProviderConfig.wethAddress),
               ) || data.routes[1],
           );
         })
