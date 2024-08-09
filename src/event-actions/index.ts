@@ -28,16 +28,16 @@ import {onWalletSssCheck} from '@app/event-actions/on-wallet-sss-check';
 import {onWalletSssSaved} from '@app/event-actions/on-wallet-sss-saved';
 import {onWalletVisibilityChange} from '@app/event-actions/on-wallet-visibility-change';
 import {onWalletsBalanceCheck} from '@app/event-actions/on-wallets-balance-check';
-import {onWalletsStakingBalanceCheck} from '@app/event-actions/on-wallets-staking-balance-check';
-import {onWalletsVestingBalanceCheck} from '@app/event-actions/on-wallets-vesting-balance-check';
+// import {onWalletsStakingBalanceCheck} from '@app/event-actions/on-wallets-staking-balance-check';
+// import {onWalletsVestingBalanceCheck} from '@app/event-actions/on-wallets-vesting-balance-check';
 import {Events} from '@app/events';
 import {throttle} from '@app/utils';
 
 import {onPushTokenRefresh} from './on-push-token-refresh';
 
 app.on(Events.onWalletsBalanceCheck, throttle(onWalletsBalanceCheck, 1000));
-app.on(Events.onWalletsVestingBalanceCheck, onWalletsVestingBalanceCheck);
-app.on(Events.onWalletsStakingBalanceCheck, onWalletsStakingBalanceCheck);
+// app.on(Events.onWalletsVestingBalanceCheck, onWalletsVestingBalanceCheck);
+// app.on(Events.onWalletsStakingBalanceCheck, onWalletsStakingBalanceCheck);
 app.on(Events.onSyncAppBalances, onSyncAppBalances);
 app.on(Events.onWalletVisibilityChange, onWalletVisibilityChange);
 app.on(Events.onDeepLink, onDeepLink);

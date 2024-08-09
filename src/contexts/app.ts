@@ -237,9 +237,6 @@ class App extends AsyncEventEmitter {
 
   set providerId(value) {
     const p = Provider.getById(value);
-    if (this._provider?.id === p.id) {
-      return;
-    }
     if (p) {
       VariablesString.set('providerId', value);
       runInAction(() => {

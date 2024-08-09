@@ -22,18 +22,15 @@ export async function onProviderChanged() {
     Currencies.clear();
 
     await RemoteProviderConfig.init();
-    // necessary operation loading
-    await Promise.allSettled([
-      awaitForEventDone(Events.onSyncAppBalances),
-      Token.fetchTokens(true),
-      Transaction.fetchLatestTransactions(Wallet.addressList(), true),
-      Currencies.fetchCurrencies(),
-      Provider.fetchProviders(),
-    ]);
+    await awaitForEventDone(Events.onSyncAppBalances);
+    await Token.fetchTokens(true);
+    await Transaction.fetchLatestTransactions(Wallet.addressList(), true);
+    await Currencies.fetchCurrencies();
 
     if (RemoteProviderConfig.isNftEnabled) {
       await Nft.fetchNft();
     }
+    Provider.fetchProviders();
   } finally {
     hideModal(ModalType.loading);
   }
