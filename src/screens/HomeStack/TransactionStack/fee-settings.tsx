@@ -127,11 +127,18 @@ export const FeeSettingsScreen = observer(() => {
     navigation.pop();
     app.emit(
       successEventName,
+      // maxBaseFee & maxPriorityFee multiplied by 10^9 because of this numbers represents GWEI
       new Fee(
         {
           gasLimit: new Balance(amountsGasLimit.amount),
-          maxBaseFee: new Balance(amountsMaxBaseFee.amount),
-          maxPriorityFee: new Balance(amountsMaxPriorityFee.amount),
+          maxBaseFee: new Balance(
+            Number(amountsMaxBaseFee.amount) * 10 ** 9,
+            0,
+          ),
+          maxPriorityFee: new Balance(
+            Number(amountsMaxPriorityFee.amount) * 10 ** 9,
+            0,
+          ),
           expectedFee: expectedFee!,
         },
         type,
