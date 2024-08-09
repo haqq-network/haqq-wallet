@@ -344,7 +344,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   eth_blockNumber: async ({helper}) => {
     try {
       const rpcProvider = await getLocalRpcProvider(helper);
-      return rpcProvider.blockNumber;
+      return await rpcProvider.getBlockNumber();
     } catch (err) {
       if (err instanceof Error) {
         rejectJRpcReq(err.message);
