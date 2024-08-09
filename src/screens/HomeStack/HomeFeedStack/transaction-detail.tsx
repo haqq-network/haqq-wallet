@@ -6,7 +6,6 @@ import {format} from 'date-fns';
 import {TransactionDetail} from '@app/components/transaction-detail';
 import {Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
-import {AddressUtils} from '@app/helpers/address-utils';
 import {shortAddress} from '@app/helpers/short-address';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useTransaction} from '@app/hooks/use-transaction';
@@ -58,9 +57,7 @@ export const TransactionDetailScreen = () => {
   }, [navigation]);
 
   const onPressSpenderAddress = useCallback((address: string) => {
-    const url = `${app.provider.explorer}/address/${AddressUtils.toEth(
-      address,
-    )}`;
+    const url = app.provider.getAddressExplorerUrl(address);
     return openInAppBrowser(url);
   }, []);
 
