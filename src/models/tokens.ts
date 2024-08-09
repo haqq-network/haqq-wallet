@@ -205,6 +205,7 @@ class TokensStore implements MobXStore<IToken> {
     const wallets = Wallet.getAll();
     const accounts = wallets.map(w => w.cosmosAddress);
     const updates = await Indexer.instance.updates(accounts, this.lastUpdate);
+    Logger.log('fetch tokens', app.provider.indexer);
     let result = await this.parseIndexerTokens(updates);
     result = await getHardcodedTokens(result, fetchTokensFromRPC);
     this.recalculateCommulativeSum(result);
@@ -426,6 +427,7 @@ class TokensStore implements MobXStore<IToken> {
     runInAction(() => {
       this.data = {};
       this.tokens = {};
+      this._isLoading = false;
     });
   }
 }

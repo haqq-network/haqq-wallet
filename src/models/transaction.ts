@@ -211,7 +211,6 @@ class TransactionStore implements RPCObserver {
       const result = await Indexer.instance.getTransactions(
         accounts,
         blockNumber,
-        app.providerId,
       );
       await when(() => !Token.isLoading, {});
       const parsed = result
@@ -245,6 +244,7 @@ class TransactionStore implements RPCObserver {
   clear() {
     runInAction(() => {
       this._transactions = [];
+      this._isLoading = false;
     });
   }
 }

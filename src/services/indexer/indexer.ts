@@ -9,7 +9,6 @@ import {AddressUtils} from '@app/helpers/address-utils';
 import {Whitelist} from '@app/helpers/whitelist';
 import {I18N, getText} from '@app/i18n';
 import {NftCollectionIndexer} from '@app/models/nft';
-import {Provider} from '@app/models/provider';
 import {
   ContractNameMap,
   IContract,
@@ -172,23 +171,15 @@ export class Indexer {
   async getTransaction(
     accounts: string[],
     tx_hash: string,
-    providerId = '',
   ): Promise<IndexerTransaction | null> {
-    providerId = app.providerId;
     try {
-      const provider = Provider.getById(providerId);
-
-      if (!provider?.indexer) {
-        throw new Error('Indexer is not configured');
-      }
-
       if (!accounts.length) {
         return null;
       }
 
       const haqqAddresses = accounts.filter(a => !!a).map(AddressUtils.toHaqq);
       const response = await jsonrpcRequest<IndexerTransactionResponse>(
-        provider.indexer,
+        app.provider.indexer,
         'transaction',
         [haqqAddresses, tx_hash],
       );
@@ -204,22 +195,15 @@ export class Indexer {
   async getTransactions(
     accounts: string[],
     latestBlock: string = 'latest',
-    providerId = app.providerId,
   ): Promise<IndexerTransaction[]> {
     try {
-      const provider = Provider.getById(providerId);
-
-      if (!provider?.indexer) {
-        throw new Error('Indexer is not configured');
-      }
-
       if (!accounts.length) {
         return [];
       }
 
       const haqqAddresses = accounts.filter(a => !!a).map(AddressUtils.toHaqq);
       const response = await jsonrpcRequest<IndexerTransactionResponse>(
-        provider.indexer,
+        app.provider.indexer,
         'transactions',
         [haqqAddresses, latestBlock],
       );
