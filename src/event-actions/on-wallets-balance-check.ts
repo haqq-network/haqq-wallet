@@ -21,9 +21,14 @@ const parseIndexerBalances = (
     }
 
     Object.entries(value).forEach(([key2, value2]) => {
-      if (AddressUtils.isValidAddress(key2)) {
+      if (
+        AddressUtils.isValidAddress(key2) &&
+        !AddressUtils.isHaqqAddress(key2)
+      ) {
         // @ts-ignore
         value[AddressUtils.toHaqq(key2)] = value2;
+        // @ts-ignore
+        delete value[key2];
       }
     });
   });

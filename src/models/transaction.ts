@@ -188,7 +188,7 @@ class TransactionStore implements RPCObserver {
   ) => {
     try {
       const accountHash = hashMessage(accounts.join(''));
-      const cacheKey: CacheKey = `${accountHash}:${blockNumber}`;
+      const cacheKey: CacheKey = `${app.providerId}${accountHash}:${blockNumber}`;
 
       runInAction(() => {
         this._isLoading = true;
@@ -241,6 +241,12 @@ class TransactionStore implements RPCObserver {
 
     parsed.forEach(transaction => this.create(transaction));
   };
+
+  clear() {
+    runInAction(() => {
+      this._transactions = [];
+    });
+  }
 }
 
 const instance = new TransactionStore();

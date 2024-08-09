@@ -36,7 +36,7 @@ const loadStatus = async (tx: Transaction) => {
 
     return IndexerTransactionStatus.inProgress;
   } catch (e) {
-    Logger.captureException(e, 'loadTransactionsFromExplorer');
+    Logger.captureException(e, 'loadTransactionsFromExplorer123');
     return IndexerTransactionStatus.inProgress;
   }
 };
