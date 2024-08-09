@@ -191,7 +191,7 @@ class TokensStore implements MobXStore<IToken> {
   }
 
   fetchTokens = async (
-    force = false,
+    force = true,
     fetchTokensFromRPC = DEBUG_VARS.enableHardcodeERC20TokensContract,
   ) => {
     if (this.isLoading && !force) {
@@ -205,7 +205,6 @@ class TokensStore implements MobXStore<IToken> {
     const wallets = Wallet.getAll();
     const accounts = wallets.map(w => w.cosmosAddress);
     const updates = await Indexer.instance.updates(accounts, this.lastUpdate);
-    Logger.log('fetch tokens', app.provider.indexer);
     let result = await this.parseIndexerTokens(updates);
     result = await getHardcodedTokens(result, fetchTokensFromRPC);
     this.recalculateCommulativeSum(result);
