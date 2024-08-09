@@ -74,7 +74,7 @@ const debug: DebugVars = {
     '0x65221cede3abdd03e377e3a4ce84e14fcd497919',
     '0x98ed1f5d1e0ca514c390b7e08cbb8d769fc87ac5',
   ],
-  enableHardcodeERC20TokensContract: true,
+  enableHardcodeERC20TokensContract: false,
   hardcodeERC20TokensContract: {
     // TestEdge2
     54211: [
