@@ -26,6 +26,16 @@ class ProviderConfigStore {
   get isNftEnabled() {
     return Boolean(this.config?.nft_exists);
   }
+
+  get swapEnabled() {
+    return Boolean(this.config?.swap_enabled);
+  }
+  get swapRouterV3() {
+    return this.config?.swap_router_v3 ?? '';
+  }
+  get wethAddress() {
+    return this.config?.weth_address ?? '';
+  }
 }
 
 const instance = new ProviderConfigStore();
