@@ -37,6 +37,7 @@ import {getHost, onUrlSubmit} from './helpers/web3-browser-utils';
 import {WalletBalance} from './hooks/use-wallets-balance';
 import {I18N, getText} from './i18n';
 import {Banner, BannerButtonEvent, BannerType} from './models/banner';
+import {Fee} from './models/fee';
 import {Wallet} from './models/wallet';
 import {navigator} from './navigator';
 import {HomeStackRoutes, WelcomeStackRoutes} from './route-types';
@@ -806,6 +807,7 @@ export const hexToString = (value: string) =>
 
 export const getTransactionFromJsonRpcRequest = (
   request: PartialJsonRpcRequest,
+  fee?: Fee | null,
 ): Partial<JsonRpcTransactionRequest> | undefined => {
   if (
     [
@@ -825,6 +827,12 @@ export const getTransactionFromJsonRpcRequest = (
       params.gasPrice = params.gas;
       // @ts-ignore
       delete params.gas;
+    }
+
+    if (fee) {
+      params.gasLimit = fee.gasLimit?.toHex();
+      params.maxPriorityFeePerGas = fee.maxPriorityFee?.toHex();
+      params.maxFeePerGas = fee.maxBaseFee?.toHex();
     }
 
     return params;

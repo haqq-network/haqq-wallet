@@ -121,18 +121,9 @@ export const JsonRpcSignScreen = memo(() => {
           wallet!,
           {
             ...request,
-            params: {
-              ...(isTransaction
-                ? getTransactionFromJsonRpcRequest(request)
-                : request.params),
-              ...(fee
-                ? {
-                    gasLimit: fee.gasLimit?.toHex(),
-                    maxPriorityFeePerGas: fee.maxPriorityFee?.toHex(),
-                    maxFeePerGas: fee.maxBaseFee?.toHex(),
-                  }
-                : {}),
-            },
+            params: isTransaction
+              ? getTransactionFromJsonRpcRequest(request, fee)
+              : request.params,
           },
           chainId,
         );
