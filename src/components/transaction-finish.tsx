@@ -24,7 +24,6 @@ import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Fee} from '@app/models/fee';
 import {Balance} from '@app/services/balance';
-import {EthNetwork} from '@app/services/eth-network/eth-network';
 import {IToken, TransactionResponse} from '@app/types';
 
 type TransactionFinishProps = {
@@ -54,7 +53,7 @@ export const TransactionFinish = observer(
     fee,
   }: TransactionFinishProps) => {
     const onPressHash = async () => {
-      const url = `${EthNetwork.explorer}tx/${transaction?.hash}`;
+      const url = app.provider.getTxExplorerUrl(transaction?.hash!);
       await openURL(url);
     };
 

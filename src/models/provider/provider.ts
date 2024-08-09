@@ -2,6 +2,7 @@ import {observable, runInAction} from 'mobx';
 
 import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
+import {removeLastSlash} from '@app/helpers/url';
 import {
   Backend,
   NetworkProvider,
@@ -200,11 +201,11 @@ export class Provider {
   }
 
   get cosmosExplorer() {
-    return this.model.cosmos_explorer_url;
+    return removeLastSlash(this.model.cosmos_explorer_url ?? '');
   }
 
   get explorer() {
-    return this.model.explorer_url;
+    return removeLastSlash(this.model.explorer_url ?? '');
   }
 
   get indexer() {

@@ -14,4 +14,6 @@ export const openURL = (url: string) => {
   }
 };
 
+export const removeLastSlash = (url: string) => url.replace(/(!?(\/)+$)/g, '');
+
 export {Url};

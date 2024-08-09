@@ -16,13 +16,13 @@ import {
   TextPosition,
   TextVariant,
 } from '@app/components/ui';
+import {app} from '@app/contexts';
 import {createTheme, openURL} from '@app/helpers';
 import {useNftImage} from '@app/hooks/nft';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Fee} from '@app/models/fee';
 import {NftItem} from '@app/models/nft';
-import {EthNetwork} from '@app/services/eth-network/eth-network';
 import {TransactionResponse} from '@app/types';
 
 import {ImageWrapper} from './image-wrapper';
@@ -47,7 +47,7 @@ export const TransactionNftFinish = ({
   fee,
 }: TransactionFinishProps) => {
   const onPressHash = async () => {
-    const url = `${EthNetwork.explorer}tx/${transaction?.hash}`;
+    const url = app.provider.getTxExplorerUrl(transaction?.hash!);
     await openURL(url);
   };
 
