@@ -174,6 +174,12 @@ class CurrenciesStore {
     convertedCache.set(cacheKey, result);
     return result;
   };
+
+  clear() {
+    runInAction(() => {
+      this._rates = {};
+    });
+  }
 }
 
 const instance = new CurrenciesStore(Boolean(process.env.JEST_WORKER_ID));

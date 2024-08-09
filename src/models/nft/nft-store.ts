@@ -240,6 +240,12 @@ class NftStore {
 
     this.parseIndexerNft(message.data);
   };
+
+  clear() {
+    runInAction(() => {
+      this.data = {};
+    });
+  }
 }
 
 const instance = new NftStore();

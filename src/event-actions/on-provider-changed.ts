@@ -15,16 +15,25 @@ import {ModalType} from '@app/types';
 export async function onProviderChanged() {
   try {
     showModal(ModalType.loading);
+
+    Nft.clear();
+    Token.clear();
+    Transaction.clear();
+    Currencies.clear();
+
+    await RemoteProviderConfig.init();
     // necessary operation loading
     await Promise.allSettled([
       awaitForEventDone(Events.onSyncAppBalances),
       Token.fetchTokens(true),
-      Nft.fetchNft(),
-      RemoteProviderConfig.init(),
       Transaction.fetchLatestTransactions(Wallet.addressList(), true),
       Currencies.fetchCurrencies(),
       Provider.fetchProviders(),
     ]);
+
+    if (RemoteProviderConfig.isNftEnabled) {
+      await Nft.fetchNft();
+    }
   } finally {
     hideModal(ModalType.loading);
   }

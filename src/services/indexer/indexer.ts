@@ -172,8 +172,9 @@ export class Indexer {
   async getTransaction(
     accounts: string[],
     tx_hash: string,
-    providerId = app.providerId,
+    providerId = '',
   ): Promise<IndexerTransaction | null> {
+    providerId = app.providerId;
     try {
       const provider = Provider.getById(providerId);
 

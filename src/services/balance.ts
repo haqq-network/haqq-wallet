@@ -32,9 +32,12 @@ export class Balance implements IBalance, ISerializable {
 
   constructor(
     balance: BalanceConstructor,
-    precission = app.provider.decimals,
-    symbol = app.provider.denom,
+    precission?: number,
+    symbol?: string,
   ) {
+    precission = precission ?? app.provider.decimals;
+    symbol = symbol ?? app.provider.denom;
+
     this.originalValue = balance;
     this.precission = precission ?? app.provider.decimals;
     this.symbol = symbol || app.provider.denom;
@@ -101,11 +104,8 @@ export class Balance implements IBalance, ISerializable {
     return `a${this.symbol}`;
   }
 
-  static getEmpty = (
-    precision = app.provider.decimals,
-    symbol = app.provider.denom,
-  ) => {
-    return new Balance(zeroBN, precision, symbol);
+  static getEmpty = () => {
+    return new Balance(zeroBN, app.provider.decimals, app.provider.denom);
   };
 
   static fromJsonString = (obj: string | Balance) => {

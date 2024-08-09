@@ -421,6 +421,13 @@ class TokensStore implements MobXStore<IToken> {
     const token = await this.parseIToken(message.data);
     this.update(token.id, token);
   };
+
+  clear() {
+    runInAction(() => {
+      this.data = {};
+      this.tokens = {};
+    });
+  }
 }
 
 const instance = new TokensStore(Boolean(process.env.JEST_WORKER_ID));
