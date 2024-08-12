@@ -44,6 +44,8 @@ export type TransactionSumProps = {
   isLoading: boolean;
 };
 
+const START_AMOUNT = new Balance(0, 0);
+
 export const TransactionSum = observer(
   ({
     to,
@@ -65,15 +67,35 @@ export const TransactionSum = observer(
         : Balance.Empty;
     }, [fee]);
 
-    const amounts = useSumAmount(undefined, undefined, undefined);
+    const minAmount = useMemo(() => {
+      // for network native coin
+      if (token.symbol === app.provider.denom) {
+        return new Balance(0.0000001, 0);
+      }
+
+      // for others tokens
+      return new Balance(
+        Number(`0.${'0'.repeat(token.decimals! - 1)}1`),
+        token.decimals!,
+        token.symbol!,
+      );
+    }, [token, app.provider.denom]);
+
+    const maxAmount = useMemo(() => {
+      // for network native coin
+      if (token.symbol === app.provider.denom) {
+        return balance.operate(transactionFee, 'sub');
+      }
+
+      // for others tokens
+      return new Balance(token.value.raw, token.decimals!, token.symbol!);
+    }, [token, balance, transactionFee, app.provider.denom]);
+
+    const amounts = useSumAmount(START_AMOUNT, maxAmount, minAmount);
 
     useEffect(() => {
-      if (token.symbol === app.provider.denom) {
-        amounts.setMaxAmount(balance.operate(transactionFee, 'sub'));
-      } else {
-        amounts.setMaxAmount(token.value);
-      }
-    }, [balance, transactionFee, app.provider.denom]);
+      amounts.setMaxAmount(maxAmount);
+    }, [maxAmount]);
 
     const inputSumRef = useRef<TextInput>(null);
 

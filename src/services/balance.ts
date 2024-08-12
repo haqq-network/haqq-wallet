@@ -350,7 +350,7 @@ export class Balance implements IBalance, ISerializable {
    * Convert balance to fiat currency
    */
   toFiat = (props?: {
-    fixed?: number;
+    fixed?: number | 'auto';
     precission?: number;
     useDefaultCurrency?: boolean;
   }) => {

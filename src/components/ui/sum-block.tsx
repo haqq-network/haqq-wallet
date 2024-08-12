@@ -83,11 +83,9 @@ export const SumBlock = observer(
 
     const fiatString = useMemo(() => {
       if (token?.decimals && token?.symbol && token.is_erc20) {
-        return new Balance(
-          Number(value),
-          token.decimals,
-          token.symbol,
-        ).toFiat();
+        return new Balance(Number(value), token.decimals, token.symbol).toFiat({
+          fixed: 'auto',
+        });
       }
 
       return new Balance(Number(value)).toFiat();
@@ -156,7 +154,7 @@ export const SumBlock = observer(
             testID={`${testID}_hint`}>
             {getText(I18N.sumBlockAvailable)}:{' '}
             <Text variant={TextVariant.t14} color={Color.textGreen1}>
-              {balance.toBalanceString()}
+              {balance.toBalanceString('auto')}
             </Text>
           </Text>
         )}
@@ -194,6 +192,6 @@ const styles = createTheme({
     paddingHorizontal: 0,
   },
   inputContainer: {
-    flex: 1,
+    flex: 5,
   },
 });
