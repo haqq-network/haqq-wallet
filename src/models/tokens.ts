@@ -111,7 +111,7 @@ class TokensStore implements MobXStore<IToken> {
     } else {
       this.data = {
         ...this.data,
-        [id]: params,
+        [AddressUtils.toHaqq(id)]: params,
       };
     }
 
@@ -129,7 +129,7 @@ class TokensStore implements MobXStore<IToken> {
     const newData = {
       ...this.data,
     };
-    delete newData[id];
+    delete newData[AddressUtils.toHaqq(id)];
 
     this.data = newData;
     return true;
@@ -165,7 +165,7 @@ class TokensStore implements MobXStore<IToken> {
   }
 
   getById(id: string) {
-    return this.data[id];
+    return this.data[AddressUtils.toHaqq(id)];
   }
 
   update(id: string | undefined, item: Omit<IToken, 'id'>) {
@@ -181,7 +181,7 @@ class TokensStore implements MobXStore<IToken> {
 
     this.data = {
       ...this.data,
-      [id]: {
+      [AddressUtils.toHaqq(id)]: {
         ...itemToUpdate,
         ...item,
         value: updatedValue,

@@ -68,7 +68,8 @@ export const TransactionSumScreen = memo(() => {
             value: amount,
           });
         }
-      } catch {
+      } catch (err) {
+        Logger.log('err onAmount', err);
         return null;
       }
     },
@@ -90,6 +91,7 @@ export const TransactionSumScreen = memo(() => {
     async (amount: Balance) => {
       setLoading(true);
       const estimate = await getFee(amount);
+
       if (estimate?.expectedFee.isPositive()) {
         navigation.navigate(TransactionStackRoutes.TransactionConfirmation, {
           calculatedFees: estimate,
