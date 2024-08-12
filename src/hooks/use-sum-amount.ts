@@ -79,28 +79,28 @@ export const useSumAmount = (
       setMaxAmount(value);
     },
     setMinAmount(value = Balance.Empty) {
-      Logger.log('setMinAmount', value);
       minAmountRef.current = value;
       setMinAmount(value);
     },
     setMax() {
-      Logger.log('set max', maxAmountRef.current);
-
+      const max = maxAmountRef.current ?? maxAmount;
       setAmount(({changed: _changed}) => ({
-        amountText:
-          maxAmountRef?.current?.toFloatString?.() ||
-          maxAmount?.toFloatString?.(),
-        amount: maxAmountRef?.current || maxAmount,
+        amountText: max
+          ?.toBalanceString('auto', undefined, false)
+          ?.split(max.getSymbol())?.[0]
+          ?.trim(),
+        amount: max,
         changed: _changed,
       }));
     },
     setMin: () => {
-      Logger.log('set min', minAmountRef.current);
+      const min = minAmountRef.current ?? minAmount;
       setAmount(({changed: _changed}) => ({
-        amountText:
-          minAmountRef?.current?.toFloatString?.() ||
-          minAmount?.toFloatString?.(),
-        amount: minAmountRef?.current || minAmount,
+        amountText: min
+          ?.toBalanceString('auto', undefined, false)
+          ?.split(min.getSymbol())?.[0]
+          ?.trim(),
+        amount: min,
         changed: _changed,
       }));
     },
