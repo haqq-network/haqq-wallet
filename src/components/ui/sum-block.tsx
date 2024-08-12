@@ -21,6 +21,8 @@ import {Balance} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {IToken} from '@app/types';
 
+import {Spacer} from './spacer';
+
 export type SumBlockProps = {
   value: string;
   error: string;
@@ -101,6 +103,7 @@ export const SumBlock = observer(
           {currency || app.provider.denom}
         </Text>
         <View style={styles.sum}>
+          <Spacer flex={1} />
           <Pressable onPress={onFocusInput} style={styles.inputContainer}>
             <TextInput
               allowFontScaling={false}
@@ -176,8 +179,7 @@ const styles = createTheme({
     alignItems: 'center',
   },
   max: {
-    height: 46,
-    width: 60,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'flex-end',
   },

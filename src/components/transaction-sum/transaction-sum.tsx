@@ -78,7 +78,7 @@ export const TransactionSum = observer(
     const inputSumRef = useRef<TextInput>(null);
 
     const formattedAddress = useMemo(
-      () => (contact ? `${contact.name} ${shortAddress(to)}` : to),
+      () => (contact?.name ? `${contact.name}` : shortAddress(to, '•', true)),
       [contact, to],
     );
 
@@ -113,8 +113,8 @@ export const TransactionSum = observer(
             <Text
               variant={TextVariant.t11}
               color={Color.textBase1}
-              numberOfLines={1}
-              ellipsizeMode="middle">
+              numberOfLines={2}
+              ellipsizeMode="tail">
               {formattedAddress}
             </Text>
           </LabeledBlock>
@@ -135,7 +135,7 @@ export const TransactionSum = observer(
                 color={Color.textBase1}
                 numberOfLines={1}
                 ellipsizeMode="middle">
-                {formattedAddress}
+                {token.symbol}
               </Text>
             </View>
           </LabeledBlock>
@@ -150,7 +150,7 @@ export const TransactionSum = observer(
                 variant={TextVariant.t11}
                 color={Color.textBase1}
                 numberOfLines={1}
-                ellipsizeMode="middle">
+                ellipsizeMode="tail">
                 {app.provider.name}
               </Text>
             </View>
@@ -207,7 +207,6 @@ const styles = createTheme({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
   labeledBlock: {
     alignItems: 'center',
     flex: 1,
