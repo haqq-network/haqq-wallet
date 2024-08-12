@@ -13,25 +13,29 @@ export const getERC20TransferData = (
   amount: Balance,
   contractAddress: string,
 ) => {
-  const abi = [ABI_ERC20_TRANSFER_ACTION];
-  const iface = new utils.Interface(abi);
+  try {
+    const abi = [ABI_ERC20_TRANSFER_ACTION];
+    const iface = new utils.Interface(abi);
 
-  const haqqContractAddress = AddressUtils.toHaqq(contractAddress);
-  const contractInfo =
-    Contracts.getById(haqqContractAddress) ||
-    Token.getById(haqqContractAddress);
+    const haqqContractAddress = AddressUtils.toHaqq(contractAddress);
+    const contractInfo =
+      Contracts.getById(haqqContractAddress) ||
+      Token.getById(haqqContractAddress);
 
-  const decimals = contractInfo.decimals ?? app.provider.decimals;
+    const decimals = contractInfo.decimals ?? app.provider.decimals;
 
-  const [amountClear] = new Balance(amount.toWei(), 0)
-    .operate(Math.pow(10, amount.getPrecission()), 'div')
-    .operate(Math.pow(10, decimals), 'mul')
-    .toWei()
-    .toString()
-    .split('.');
+    const [amountClear] = new Balance(amount.toWei(), 0)
+      .operate(Math.pow(10, amount.getPrecission()), 'div')
+      .operate(Math.pow(10, decimals), 'mul')
+      .toWei()
+      .toString()
+      .split('.');
 
-  return iface.encodeFunctionData(ABI_ERC20_TRANSFER_ACTION.name, [
-    to,
-    amountClear,
-  ]);
+    return iface.encodeFunctionData(ABI_ERC20_TRANSFER_ACTION.name, [
+      to,
+      amountClear,
+    ]);
+  } catch (err) {
+    Logger.log('estimateERC20Transfer', err);
+  }
 };

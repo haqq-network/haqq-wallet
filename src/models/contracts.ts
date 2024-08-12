@@ -40,7 +40,7 @@ class ContractsStore implements MobXStore<IContract> {
     } else {
       this.data = {
         ...this.data,
-        [id]: newItem,
+        [AddressUtils.toHaqq(id)]: newItem,
       };
     }
 
@@ -58,7 +58,7 @@ class ContractsStore implements MobXStore<IContract> {
     const newData = {
       ...this.data,
     };
-    delete newData[id];
+    delete newData[AddressUtils.toHaqq(id)];
 
     this.data = newData;
     return true;
@@ -80,7 +80,7 @@ class ContractsStore implements MobXStore<IContract> {
     if (AddressUtils.equals(id, NATIVE_TOKEN_ADDRESS)) {
       return Token.generateNativeTokenContract();
     }
-    const result = this.data[id];
+    const result = this.data[AddressUtils.toHaqq(id)];
 
     if (!result) {
       this._fetchContractData(id);
@@ -100,7 +100,7 @@ class ContractsStore implements MobXStore<IContract> {
 
     this.data = {
       ...this.data,
-      [id]: {
+      [AddressUtils.toHaqq(id)]: {
         ...itemToUpdate,
         ...item,
       },
