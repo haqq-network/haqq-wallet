@@ -247,6 +247,7 @@ export enum I18N {
   settingsAddressBookAlertDesc = 'settingsAddressBookAlertDesc',
   settingsAddressBookAlertTitle = 'settingsAddressBookAlertTitle',
   sent = 'sent',
+  transactionSumError = 'transactionSumError',
   signinRestoreWalletPasteClipboard = 'signinRestoreWalletPasteClipboard',
   signinRestoreWalletPhraseOrKey = 'signinRestoreWalletPhraseOrKey',
   signinRestoreWalletRecovery = 'signinRestoreWalletRecovery',
