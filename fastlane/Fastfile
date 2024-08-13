@@ -40,13 +40,16 @@ platform :android do
         gradle_file_path: './android/app/build.gradle',
         version_code: current_build_number
       )
-
-      gradle(task: 'clean bundleRelease', project_dir: './android', print_command: false, properties: {
-        "HAQQ_UPLOAD_STORE_FILE" => ENV["HAQQ_UPLOAD_STORE_FILE"],
-        "HAQQ_UPLOAD_STORE_PASSWORD" => ENV["HAQQ_UPLOAD_STORE_PASSWORD"],
-        "HAQQ_UPLOAD_KEY_ALIAS" => ENV["HAQQ_UPLOAD_KEY_ALIAS"],
-        "HAQQ_UPLOAD_KEY_PASSWORD" => ENV["HAQQ_UPLOAD_KEY_PASSWORD"]
-      })
+      gradle(
+        task: 'bundleRelease',
+        flags: '--no-configuration-cache --stacktrace',
+        project_dir: './android',
+        print_command: false, properties: {
+          "HAQQ_UPLOAD_STORE_FILE" => ENV["HAQQ_UPLOAD_STORE_FILE"],
+          "HAQQ_UPLOAD_STORE_PASSWORD" => ENV["HAQQ_UPLOAD_STORE_PASSWORD"],
+          "HAQQ_UPLOAD_KEY_ALIAS" => ENV["HAQQ_UPLOAD_KEY_ALIAS"],
+          "HAQQ_UPLOAD_KEY_PASSWORD" => ENV["HAQQ_UPLOAD_KEY_PASSWORD"]
+        })
 
       upload_to_play_store(
         skip_upload_metadata: true,
@@ -56,6 +59,12 @@ platform :android do
         skip_upload_apk: true,
         track: 'internal',
         aab: 'android/app/build/outputs/bundle/release/app-release.aab'
+      )
+
+      gradle(
+        task: 'clean',
+        flags: '--no-configuration-cache --stacktrace',
+        project_dir: './android'
       )
   end
 
