@@ -11,6 +11,7 @@ import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useError} from '@app/hooks/use-error';
+import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {Contact} from '@app/models/contact';
 import {Fee} from '@app/models/fee';
 import {Wallet} from '@app/models/wallet';
@@ -23,7 +24,7 @@ import {Balance} from '@app/services/balance';
 import {getERC20TransferData} from '@app/services/eth-network/erc20';
 import {EthSignErrorDataDetails} from '@app/services/eth-sign';
 import {EventTracker} from '@app/services/event-tracker';
-import {MarketingEvents, ModalType} from '@app/types';
+import {HaqqEthereumAddress, MarketingEvents, ModalType} from '@app/types';
 import {makeID} from '@app/utils';
 
 export const TransactionConfirmationScreen = observer(() => {
@@ -37,6 +38,8 @@ export const TransactionConfirmationScreen = observer(() => {
     TransactionStackRoutes.TransactionConfirmation
   >();
   const {token, calculatedFees} = route.params;
+  const visible = Wallet.getAllVisible();
+  const balance = useWalletsBalance(visible);
 
   const [fee, setFee] = useState<Fee>(new Fee(calculatedFees!));
 
@@ -177,6 +180,7 @@ export const TransactionConfirmationScreen = observer(() => {
 
   return (
     <TransactionConfirmation
+      balance={balance[route.params.from as HaqqEthereumAddress]}
       disabled={disabled}
       contact={contact}
       to={route.params.to}

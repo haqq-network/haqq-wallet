@@ -22,7 +22,7 @@ import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Fee} from '@app/models/fee';
 import {Balance} from '@app/services/balance';
-import {IToken} from '@app/types';
+import {BalanceData, IToken} from '@app/types';
 import {splitAddress} from '@app/utils';
 import {LONG_NUM_PRECISION} from '@app/variables/common';
 
@@ -38,6 +38,7 @@ interface TransactionConfirmationProps {
   onFeePress: () => void;
   fee: Fee | null;
   token: IToken;
+  balance: BalanceData;
 }
 
 export const TransactionConfirmation = observer(
@@ -51,6 +52,7 @@ export const TransactionConfirmation = observer(
     onFeePress,
     fee,
     token,
+    balance,
   }: TransactionConfirmationProps) => {
     const splittedTo = useMemo(() => splitAddress(to), [to]);
 
@@ -64,6 +66,19 @@ export const TransactionConfirmation = observer(
       }
 
       return amount;
+    }, [amount, fee?.calculatedFees]);
+
+    const transactionSumError = useMemo(() => {
+      if (!fee?.calculatedFees) {
+        return null;
+      }
+
+      return (
+        fee.calculatedFees.expectedFee
+          .operate(amount, 'add')
+          .operate(balance.available, 'sub')
+          .toFloat() > 0
+      );
     }, [amount, fee?.calculatedFees]);
 
     const sumText = useMemo(() => {
@@ -174,6 +189,13 @@ export const TransactionConfirmation = observer(
               )}
             </DataView>
           </View>
+          {transactionSumError && (
+            <Text
+              color={Color.graphicRed1}
+              i18n={I18N.transactionSumError}
+              i18params={{symbol: app.provider.weiDenom}}
+            />
+          )}
         </Spacer>
         <Button
           disabled={!fee?.expectedFee?.isPositive() && !disabled}
