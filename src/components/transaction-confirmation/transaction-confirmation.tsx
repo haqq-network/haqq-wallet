@@ -180,11 +180,18 @@ export const TransactionConfirmation = observer(
                 <View style={styles.feeContainer}>
                   <Text
                     variant={TextVariant.t11}
-                    color={Color.textGreen1}
+                    color={
+                      transactionSumError ? Color.graphicRed1 : Color.textGreen1
+                    }
                     onPress={onFeePress}>
                     {fee.expectedFeeString}
                   </Text>
-                  <Icon name={IconsName.tune} color={Color.textGreen1} />
+                  <Icon
+                    name={IconsName.tune}
+                    color={
+                      transactionSumError ? Color.graphicRed1 : Color.textGreen1
+                    }
+                  />
                 </View>
               )}
             </DataView>
