@@ -69,11 +69,10 @@ export const JsonRpcTransactionInfo = ({
   );
 
   const provider = useMemo(() => {
-    const _provider = Provider.getByEthChainId(
-      chainId || tx?.chainId || app.provider.ethChainId,
+    return Provider.getByEthChainId(
+      tx?.chainId ?? chainId ?? app.provider.ethChainId,
     );
-    return _provider!;
-  }, [chainId]);
+  }, [chainId, tx]);
 
   const url = useMemo(() => getHostnameFromUrl(metadata?.url), [metadata]);
 
@@ -82,8 +81,8 @@ export const JsonRpcTransactionInfo = ({
       return Balance.Empty;
     }
 
-    return new Balance(tx.value);
-  }, [tx]);
+    return new Balance(tx.value, provider?.decimals, provider?.denom);
+  }, [tx, provider]);
 
   const calculateFee = useCallback(async () => {
     if (!tx) {
@@ -94,7 +93,11 @@ export const JsonRpcTransactionInfo = ({
       const data = await EthNetwork.estimate({
         from: tx.from!,
         to: tx.to!,
-        value: new Balance(tx.value! || Balance.Empty),
+        value: new Balance(
+          tx.value! || Balance.Empty,
+          provider?.decimals,
+          provider?.denom,
+        ),
         data: tx.data,
       });
       setFee(new Fee(data));
@@ -169,12 +172,16 @@ export const JsonRpcTransactionInfo = ({
         fee,
         from: tx.from!,
         to: tx.to!,
-        value: new Balance(tx.value! || Balance.Empty),
+        value: new Balance(
+          tx.value! || Balance.Empty,
+          provider?.decimals,
+          provider?.denom,
+        ),
         data: tx.data,
       });
       setFee(result);
     }
-  }, [navigation, tx, fee]);
+  }, [navigation, tx, fee, provider]);
 
   return (
     <View style={styles.container}>
@@ -260,11 +267,7 @@ export const JsonRpcTransactionInfo = ({
         </DataView>
         <DataView i18n={I18N.transactionInfoCryptocurrency}>
           <Text variant={TextVariant.t11} color={Color.textBase1}>
-            <Text i18n={I18N.transactionConfirmationIslamicCoin} />{' '}
-            <Text
-              color={Color.textBase2}
-              i18n={I18N.transactionConfirmationISLM}
-            />
+            {`${provider?.coinName} ${provider?.denom}`}
           </Text>
         </DataView>
         {!!provider?.id && (

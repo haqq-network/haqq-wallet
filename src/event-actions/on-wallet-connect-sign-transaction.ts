@@ -89,7 +89,7 @@ export async function onWalletConnectSignTransaction(
       const chainIdFromParams = event?.params?.chainId?.split?.(':')?.[1];
 
       const result = await awaitForJsonRpcSign({
-        chainId: Number(chainId || chainIdFromParams),
+        chainId: Number(chainIdFromParams || chainId),
         request: event.params?.request,
         metadata: {
           url: session.peer.metadata.url,
