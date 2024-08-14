@@ -137,9 +137,10 @@ export class EthNetwork {
   static async customEstimate(
     {from, to, value = Balance.Empty, data = '0x'}: TxEstimationParams,
     {gasLimit, maxBaseFee, maxPriorityFee}: TxCustomEstimationParams,
+    provider = app.provider,
   ): Promise<CalculatedFees> {
     try {
-      const rpcProvider = await getRpcProvider(app.provider);
+      const rpcProvider = await getRpcProvider(provider);
       const block = await rpcProvider.getBlock('latest');
       const estimateGasLimit = await rpcProvider.estimateGas({
         from,
@@ -159,11 +160,25 @@ export class EthNetwork {
       }
 
       return {
-        gasLimit: new Balance(resultGasLimit),
-        maxBaseFee: new Balance(resultMaxBaseFee),
-        maxPriorityFee: new Balance(maxPriorityFee),
+        gasLimit: new Balance(
+          resultGasLimit,
+          provider.decimals,
+          provider.denom,
+        ),
+        maxBaseFee: new Balance(
+          resultMaxBaseFee,
+          provider.decimals,
+          provider.denom,
+        ),
+        maxPriorityFee: new Balance(
+          maxPriorityFee,
+          provider.decimals,
+          provider.denom,
+        ),
         expectedFee: new Balance(
           resultGasLimit.mul(resultMaxBaseFee.add(maxPriorityFee)),
+          provider.decimals,
+          provider.denom,
         ),
       };
     } catch (error) {
@@ -191,9 +206,10 @@ export class EthNetwork {
   static async estimate(
     {from, to, value = Balance.Empty, data = '0x', minGas}: TxEstimationParams,
     calculationType: EstimationVariant = EstimationVariant.average,
+    provider = app.provider,
   ): Promise<CalculatedFees> {
     try {
-      const rpcProvider = await getRpcProvider(app.provider);
+      const rpcProvider = await getRpcProvider(provider);
       const {maxFeePerGas, maxPriorityFeePerGas} =
         await rpcProvider.getFeeData();
       const block = await rpcProvider.getBlock('latest');
@@ -239,10 +255,20 @@ export class EthNetwork {
       }
 
       return {
-        gasLimit: new Balance(gasLimit).max(minGas),
-        maxBaseFee: new Balance(maxBaseFee),
-        maxPriorityFee: new Balance(priorityFee),
-        expectedFee: new Balance(gasLimit.mul(maxBaseFee.add(priorityFee))),
+        gasLimit: new Balance(gasLimit, provider.decimals, provider.denom).max(
+          minGas,
+        ),
+        maxBaseFee: new Balance(maxBaseFee, provider.decimals, provider.denom),
+        maxPriorityFee: new Balance(
+          priorityFee,
+          provider.decimals,
+          provider.denom,
+        ),
+        expectedFee: new Balance(
+          gasLimit.mul(maxBaseFee.add(priorityFee)),
+          provider.decimals,
+          provider.denom,
+        ),
       };
     } catch (error) {
       Logger.captureException(error, 'EthNetwork.estimateTransaction error');

@@ -23,6 +23,7 @@ import {createTheme} from '@app/helpers';
 import {useSumAmount, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {EstimationVariant, Fee} from '@app/models/fee';
+import {Provider} from '@app/models/provider';
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
@@ -38,7 +39,7 @@ type ResetValues = {
 
 export const FeeSettingsScreen = observer(() => {
   const navigation = useTypedNavigation<HomeStackParamList>();
-  const {fee, from, to, value, data, successEventName} = useTypedRoute<
+  const {fee, from, to, value, data, successEventName, chainId} = useTypedRoute<
     HomeStackParamList,
     HomeStackRoutes.FeeSettings
   >().params;
@@ -81,6 +82,7 @@ export const FeeSettingsScreen = observer(() => {
                 new Balance(amountsMaxPriorityFee.amount).toWei(),
               ),
             },
+            Provider.getByEthChainId(chainId!),
           );
 
           calculatedData && setExpectedFee(calculatedData.expectedFee);
@@ -95,6 +97,7 @@ export const FeeSettingsScreen = observer(() => {
             data,
           },
           estimationType,
+          Provider.getByEthChainId(chainId!),
         );
 
         setResetValues({

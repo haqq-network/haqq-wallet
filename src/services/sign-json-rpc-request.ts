@@ -7,6 +7,7 @@ import {DEBUG_VARS} from '@app/debug-vars';
 import {getProviderInstanceForWallet, hideModal} from '@app/helpers';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {I18N, getText} from '@app/i18n';
+import {EstimationVariant} from '@app/models/fee';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {getDefaultNetwork} from '@app/network';
@@ -105,7 +106,6 @@ export class SignJsonRpcRequest {
     }
 
     const provider = Provider.getByEthChainId(chainId!) || app.provider;
-
     const rpcProvider = provider
       ? await getRpcProvider(provider)
       : getDefaultNetwork();
@@ -170,13 +170,19 @@ export class SignJsonRpcRequest {
         const minGas = new Balance(signTransactionRequest.gasLimit ?? 0);
 
         const {gasLimit, maxBaseFee, maxPriorityFee} =
-          await EthNetwork.estimate({
-            from: signTransactionRequest.from!,
-            to: signTransactionRequest.to!,
-            value: new Balance(signTransactionRequest.value! || Balance.Empty),
-            data: signTransactionRequest.data?.toString()!,
-            minGas,
-          });
+          await EthNetwork.estimate(
+            {
+              from: signTransactionRequest.from!,
+              to: signTransactionRequest.to!,
+              value: new Balance(
+                signTransactionRequest.value! || Balance.Empty,
+              ),
+              data: signTransactionRequest.data?.toString()!,
+              minGas,
+            },
+            EstimationVariant.average,
+            provider,
+          );
 
         const maxPriorityFeePerGasCalculated = maxPriorityFee.max(
           signTransactionRequest.maxPriorityFeePerGas || 0,
