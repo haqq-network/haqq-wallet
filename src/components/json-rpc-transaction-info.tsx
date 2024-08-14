@@ -183,6 +183,7 @@ export const JsonRpcTransactionInfo = ({
           provider?.denom,
         ),
         data: tx.data,
+        chainId: provider?.ethChainId ? String(provider.ethChainId) : undefined,
       });
       setFee(result);
     }
