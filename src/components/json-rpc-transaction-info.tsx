@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
 import {ActivityIndicator, ScrollView, View} from 'react-native';
+import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 
 import {Color} from '@app/colors';
 import {
@@ -19,7 +20,7 @@ import {awaitForFee} from '@app/helpers/await-for-fee';
 import {useTypedNavigation} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N} from '@app/i18n';
-import {Fee} from '@app/models/fee';
+import {EstimationVariant, Fee} from '@app/models/fee';
 import {Provider} from '@app/models/provider';
 import {JsonRpcSignPopupStackParamList} from '@app/route-types';
 import {EthNetwork} from '@app/services';
@@ -90,16 +91,20 @@ export const JsonRpcTransactionInfo = ({
     }
 
     try {
-      const data = await EthNetwork.estimate({
-        from: tx.from!,
-        to: tx.to!,
-        value: new Balance(
-          tx.value! || Balance.Empty,
-          provider?.decimals,
-          provider?.denom,
-        ),
-        data: tx.data,
-      });
+      const data = await EthNetwork.estimate(
+        {
+          from: tx.from!,
+          to: tx.to!,
+          value: new Balance(
+            tx.value || Balance.Empty,
+            provider?.decimals,
+            provider?.denom,
+          ),
+          data: tx.data,
+        },
+        EstimationVariant.average,
+        provider,
+      );
       setFee(new Fee(data));
       return data.expectedFee;
     } catch {
@@ -287,15 +292,14 @@ export const JsonRpcTransactionInfo = ({
         <DataView i18n={I18N.transactionInfoNetworkFee}>
           <First>
             {isFeeLoading && <ActivityIndicator />}
-            <View style={styles.feeContainer}>
-              <Text
-                variant={TextVariant.t11}
-                color={Color.textGreen1}
-                onPress={onFeePress}>
-                {fee?.expectedFeeString}
-              </Text>
-              <Icon name={IconsName.tune} color={Color.textGreen1} />
-            </View>
+            <TouchableWithoutFeedback onPress={onFeePress}>
+              <View style={styles.feeContainer}>
+                <Text variant={TextVariant.t11} color={Color.textGreen1}>
+                  {fee?.expectedFeeString}
+                </Text>
+                <Icon name={IconsName.tune} color={Color.textGreen1} />
+              </View>
+            </TouchableWithoutFeedback>
           </First>
         </DataView>
       </ScrollView>

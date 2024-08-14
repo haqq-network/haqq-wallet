@@ -29,12 +29,10 @@ export class PushNotifications extends EventEmitter {
     super();
 
     messaging().onMessage(remoteMessage => {
-      // Logger.log('onMessage', remoteMessage);
       app.emit(Events.onPushNotification, remoteMessage);
     });
 
     messaging().onNotificationOpenedApp(remoteMessage => {
-      // Logger.log('onNotificationOpenedApp', remoteMessage);
       app.emit(Events.onPushNotification, remoteMessage);
     });
 

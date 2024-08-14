@@ -191,9 +191,10 @@ export class EthNetwork {
   static async estimate(
     {from, to, value = Balance.Empty, data = '0x', minGas}: TxEstimationParams,
     calculationType: EstimationVariant = EstimationVariant.average,
+    provider = app.provider,
   ): Promise<CalculatedFees> {
     try {
-      const rpcProvider = await getRpcProvider(app.provider);
+      const rpcProvider = await getRpcProvider(provider);
       const {maxFeePerGas, maxPriorityFeePerGas} =
         await rpcProvider.getFeeData();
       const block = await rpcProvider.getBlock('latest');
