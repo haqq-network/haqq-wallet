@@ -88,7 +88,9 @@ export const SumBlock = observer(
         });
       }
 
-      return new Balance(Number(value)).toFiat();
+      return new Balance(Number(value)).toFiat({
+        fixed: 'auto',
+      });
     }, [token?.decimals, token?.symbol, value]);
 
     return (

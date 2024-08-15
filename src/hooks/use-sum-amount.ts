@@ -40,10 +40,10 @@ export const useSumAmount = (
           numericality: {
             notValid: 'Invalid number',
             greaterThanOrEqualTo: minAmountRef.current.toFloat(),
-            lessThanOrEqualTo: maxAmountRef.current.toFloat(),
-            notGreaterThan: getText(I18N.sumAmountTooLow, {
-              amount: maxAmountRef.current.toBalanceString('auto'),
+            notGreaterThanOrEqualTo: getText(I18N.sumAmountTooLow, {
+              amount: minAmountRef.current.toBalanceString('auto'),
             }),
+            lessThanOrEqualTo: maxAmountRef.current.toFloat(),
             notLessThanOrEqualTo: getText(I18N.sumAmountNotEnough, {
               symbol: maxAmountRef.current.getSymbol(),
             }),
@@ -73,6 +73,7 @@ export const useSumAmount = (
       !error,
     maxAmount: maxAmount,
     amount: amountText,
+    amountBalance: amount,
     error,
     setMaxAmount(value = Balance.Empty) {
       maxAmountRef.current = value;
@@ -104,7 +105,7 @@ export const useSumAmount = (
         changed: _changed,
       }));
     },
-    setAmount(text: string, precision = app.provider.decimals) {
+    setAmount(text: string, precision?: number) {
       if (text.match(/^[0-9].*/)) {
         let i = 0;
         const textFormatted = text
@@ -118,7 +119,18 @@ export const useSumAmount = (
           .replace(/\D&[^.]/g, '')
           .replace(/^0[0-9]/gm, '0');
 
-        const newAmount = new Balance(+textFormatted, precision);
+        const decimals =
+          precision ??
+          maxAmountRef.current?.getPrecission?.() ??
+          minAmountRef.current?.getPrecission?.() ??
+          app.provider.decimals;
+
+        const denom =
+          maxAmountRef.current?.getSymbol?.() ??
+          minAmountRef.current?.getSymbol?.() ??
+          app.provider.denom;
+
+        const newAmount = new Balance(+textFormatted, decimals, denom);
         if (typeof onChange === 'function') {
           onChange(newAmount, textFormatted);
         }

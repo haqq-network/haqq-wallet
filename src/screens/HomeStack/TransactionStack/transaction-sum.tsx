@@ -69,7 +69,7 @@ export const TransactionSumScreen = memo(() => {
           });
         }
       } catch (err) {
-        Logger.log('err onAmount', err);
+        Logger.log('tx sum err getFee', err);
         return null;
       }
     },
@@ -87,8 +87,8 @@ export const TransactionSumScreen = memo(() => {
     };
   }, [event, onAddress]);
 
-  const onAmount = useCallback(
-    async (amount: Balance) => {
+  const onPressPreview = useCallback(
+    async (amount: Balance, repeated = false) => {
       setLoading(true);
       const estimate = await getFee(amount);
 
@@ -104,9 +104,13 @@ export const TransactionSumScreen = memo(() => {
         showModal(ModalType.error, {
           title: getText(I18N.feeCalculatingRpcErrorTitle),
           description: getText(I18N.feeCalculatingRpcErrorDescription),
-          close: getText(I18N.feeCalculatingRpcErrorClose),
+          close: getText(
+            repeated ? I18N.cancel : I18N.feeCalculatingRpcErrorClose,
+          ),
           onClose: () => {
-            onAmount(amount);
+            if (!repeated) {
+              onPressPreview(amount, true);
+            }
           },
         });
       }
@@ -156,7 +160,7 @@ export const TransactionSumScreen = memo(() => {
       fee={fee}
       to={to}
       from={route.params.from}
-      onAmount={onAmount}
+      onPressPreview={onPressPreview}
       onContact={onContact}
       onToken={onToken}
       onNetworkPress={onNetworkPress}
