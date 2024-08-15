@@ -73,9 +73,21 @@ export const TransactionConfirmation = observer(
         return null;
       }
 
+      // When sanding native token than calculation includes
+      // amount + fee - availablebalance
+      if (amount.getSymbol() === app.provider.denom) {
+        return (
+          fee.calculatedFees.expectedFee
+            .operate(amount, 'add')
+            .operate(balance.available, 'sub')
+            .toFloat() > 0
+        );
+      }
+
+      // When sanding NOT native token (eg. ERC20) than calculation includes
+      // fee - availablebalance
       return (
         fee.calculatedFees.expectedFee
-          .operate(amount, 'add')
           .operate(balance.available, 'sub')
           .toFloat() > 0
       );
@@ -198,6 +210,7 @@ export const TransactionConfirmation = observer(
           </View>
           {transactionSumError && (
             <Text
+              position={TextPosition.center}
               color={Color.graphicRed1}
               i18n={I18N.transactionSumError}
               i18params={{symbol: app.provider.weiDenom}}
