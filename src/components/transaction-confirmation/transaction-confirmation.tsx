@@ -205,7 +205,9 @@ export const TransactionConfirmation = observer(
           )}
         </Spacer>
         <Button
-          disabled={!fee?.expectedFee?.isPositive() && !disabled}
+          disabled={
+            !fee?.expectedFee?.isPositive() && !disabled && !transactionSumError
+          }
           variant={ButtonVariant.contained}
           i18n={I18N.transactionConfirmationSend}
           onPress={onConfirmTransaction}
