@@ -145,8 +145,14 @@ export class Balance implements IBalance, ISerializable {
     precission: number = this.precission,
     useZeroFormatter = true,
   ) => {
-    const cleaned = cleanNumber(this.toFloat(precission), NUM_DELIMITER, fixed);
-    return useZeroFormatter ? formatNumberString(cleaned) : cleaned;
+    const float = this.toFloat(precission);
+    if (float < 1 && useZeroFormatter) {
+      return formatNumberString(
+        this.bnRaw.div(10 ** precission).toFixed(),
+        fixed,
+      );
+    }
+    return cleanNumber(this.toFloat(precission), NUM_DELIMITER, fixed);
   };
 
   /**
@@ -198,7 +204,7 @@ export class Balance implements IBalance, ISerializable {
 
     const getStringWithSymbol = (value: string) => {
       const currency = Currencies.currency;
-      const result = [formatNumberString(value)];
+      const result = [value];
       currency?.prefix && result.unshift(currency.prefix);
       currency?.postfix && result.push(currency.postfix);
       return result.join(' ');
@@ -209,7 +215,7 @@ export class Balance implements IBalance, ISerializable {
     if (isNegative) {
       return `- ${getStringWithSymbol(floatString.replace('-', ''))}`;
     }
-    return `${getStringWithSymbol(this.toFloatString(fixedNum, precission))}`;
+    return `${getStringWithSymbol(floatString)}`;
   };
 
   toString = () => {

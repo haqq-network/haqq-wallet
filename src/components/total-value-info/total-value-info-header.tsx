@@ -24,7 +24,7 @@ export const TotalValueInfoHeader = ({
       <View style={styles.header}>
         <Text t12 i18n={I18N.totalValueAccount} color={Color.textBase2} />
         <Spacer height={4} />
-        <Text t3 children={balance.total.toBalanceString()} />
+        <Text t3 children={balance.total.toBalanceString('auto')} />
         <View style={styles.usdWrapper}>
           <Text style={styles.usdText} t13 children={balance.total.toFiat()} />
         </View>
