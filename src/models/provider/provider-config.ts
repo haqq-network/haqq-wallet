@@ -27,6 +27,10 @@ class ProviderConfigStore {
     return Boolean(this.config?.nft_exists);
   }
 
+  get isBech32Enabled() {
+    return Boolean(this.config?.bech32_exists);
+  }
+
   get swapEnabled() {
     return Boolean(this.config?.swap_enabled);
   }

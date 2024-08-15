@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
+import {observer} from 'mobx-react';
 import {Share, View, useWindowDimensions} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import QRCode from 'react-native-qrcode-svg';
@@ -22,6 +23,7 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {RemoteProviderConfig} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
@@ -36,107 +38,112 @@ export interface DetailsQrModalProps {
   onClose: () => void;
 }
 
-export const AccountDetail = ({wallet, onClose}: DetailsQrModalProps) => {
-  const svg = useRef();
-  const {width} = useWindowDimensions();
+export const AccountDetail = observer(
+  ({wallet, onClose}: DetailsQrModalProps) => {
+    const svg = useRef();
+    const {width} = useWindowDimensions();
 
-  const [activeTab, setActiveTab] = useState(TabNames.evm);
-  const address = useMemo(
-    () => (activeTab === TabNames.evm ? wallet.address : wallet.cosmosAddress),
-    [activeTab, wallet.address],
-  );
+    const [activeTab, setActiveTab] = useState(TabNames.evm);
+    const address = useMemo(
+      () =>
+        activeTab === TabNames.evm ? wallet.address : wallet.cosmosAddress,
+      [activeTab, wallet.address],
+    );
 
-  const onCopy = useCallback(() => {
-    Clipboard.setString(address);
-    sendNotification(I18N.notificationCopied);
-  }, [address]);
+    const onCopy = useCallback(() => {
+      Clipboard.setString(address);
+      sendNotification(I18N.notificationCopied);
+    }, [address]);
 
-  const onShare = useCallback(() => {
-    Share.share({message: address});
-  }, [address]);
+    const onShare = useCallback(() => {
+      Share.share({message: address});
+    }, [address]);
 
-  const onTabChange = useCallback((tabName: TabNames) => {
-    setActiveTab(tabName);
-  }, []);
+    const onTabChange = useCallback((tabName: TabNames) => {
+      setActiveTab(tabName);
+    }, []);
 
-  return (
-    <BottomSheet onClose={onClose} i18nTitle={I18N.modalDetailsQRReceive}>
-      <View style={styles.tabs}>
-        <TopTabNavigator
-          contentContainerStyle={styles.tabsContentContainerStyle}
-          tabHeaderStyle={styles.tabHeaderStyle}
-          variant={TopTabNavigatorVariant.large}
-          onTabChange={onTabChange}>
-          <TopTabNavigator.Tab
-            name={TabNames.evm}
-            title={I18N.evmTitle}
-            component={null}
+    return (
+      <BottomSheet onClose={onClose} i18nTitle={I18N.modalDetailsQRReceive}>
+        <View style={styles.tabs}>
+          <TopTabNavigator
+            contentContainerStyle={styles.tabsContentContainerStyle}
+            tabHeaderStyle={styles.tabHeaderStyle}
+            variant={TopTabNavigatorVariant.large}
+            onTabChange={onTabChange}>
+            <TopTabNavigator.Tab
+              name={TabNames.evm}
+              title={I18N.evmTitle}
+              component={null}
+            />
+            {RemoteProviderConfig.isBech32Enabled && (
+              <TopTabNavigator.Tab
+                name={TabNames.bech32}
+                title={I18N.bech32Title}
+                component={null}
+              />
+            )}
+          </TopTabNavigator>
+        </View>
+        <InfoBlock
+          warning
+          style={styles.info}
+          i18n={I18N.modalDetailsQRWarning}
+          icon={<Icon name="warning" color={Color.textYellow1} />}
+        />
+        <LinearGradient
+          colors={[wallet?.colorFrom, wallet?.colorTo]}
+          style={styles.qrContainer}
+          start={GRADIENT_START}
+          end={GRADIENT_END}>
+          <View style={styles.card}>
+            <Card
+              transparent
+              width={width - 113}
+              pattern={wallet?.pattern}
+              colorFrom={wallet?.colorFrom}
+              colorTo={wallet?.colorTo}
+              colorPattern={wallet?.colorPattern}
+            />
+          </View>
+          <View style={styles.qrStyle}>
+            <QRCode
+              ecl={'H'}
+              logo={require('@assets/images/qr-logo.png')}
+              value={`haqq:${address}`}
+              size={width - 169}
+              getRef={c => (svg.current = c)}
+              logoSize={width / 5.86}
+              logoBorderRadius={8}
+            />
+          </View>
+          <Text t14 style={styles.title}>
+            {wallet?.name}
+          </Text>
+          <Text t10 style={styles.address}>
+            {address}
+          </Text>
+        </LinearGradient>
+
+        <View style={styles.buttons}>
+          <Button
+            i18n={I18N.share}
+            size={ButtonSize.middle}
+            onPress={onShare}
+            style={styles.button}
           />
-          <TopTabNavigator.Tab
-            name={TabNames.bech32}
-            title={I18N.bech32Title}
-            component={null}
-          />
-        </TopTabNavigator>
-      </View>
-      <InfoBlock
-        warning
-        style={styles.info}
-        i18n={I18N.modalDetailsQRWarning}
-        icon={<Icon name="warning" color={Color.textYellow1} />}
-      />
-      <LinearGradient
-        colors={[wallet?.colorFrom, wallet?.colorTo]}
-        style={styles.qrContainer}
-        start={GRADIENT_START}
-        end={GRADIENT_END}>
-        <View style={styles.card}>
-          <Card
-            transparent
-            width={width - 113}
-            pattern={wallet?.pattern}
-            colorFrom={wallet?.colorFrom}
-            colorTo={wallet?.colorTo}
-            colorPattern={wallet?.colorPattern}
+          <Button
+            size={ButtonSize.middle}
+            style={styles.button}
+            variant={ButtonVariant.second}
+            i18n={I18N.copy}
+            onPress={onCopy}
           />
         </View>
-        <View style={styles.qrStyle}>
-          <QRCode
-            ecl={'H'}
-            logo={require('@assets/images/qr-logo.png')}
-            value={`haqq:${address}`}
-            size={width - 169}
-            getRef={c => (svg.current = c)}
-            logoSize={width / 5.86}
-            logoBorderRadius={8}
-          />
-        </View>
-        <Text t14 style={styles.title}>
-          {wallet?.name}
-        </Text>
-        <Text t10 style={styles.address}>
-          {address}
-        </Text>
-      </LinearGradient>
-
-      <View style={styles.buttons}>
-        <Button
-          i18n={I18N.share}
-          size={ButtonSize.middle}
-          onPress={onShare}
-          style={styles.button}
-        />
-        <Button
-          size={ButtonSize.middle}
-          style={styles.button}
-          variant={ButtonVariant.second}
-          i18n={I18N.copy}
-          onPress={onCopy}
-        />
-      </View>
-    </BottomSheet>
-  );
-};
+      </BottomSheet>
+    );
+  },
+);
 
 const styles = createTheme({
   qrContainer: {
