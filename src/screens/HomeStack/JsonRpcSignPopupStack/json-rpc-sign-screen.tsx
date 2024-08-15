@@ -3,6 +3,7 @@ import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {ethers} from 'ethers';
 
 import {JsonRpcSign} from '@app/components/json-rpc-sign';
+import {getMessageByRequest} from '@app/components/json-rpc-sign-info';
 import {Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
@@ -12,17 +13,16 @@ import {
   EthereumSignInMessage,
 } from '@app/helpers/ethereum-message-checker';
 import {getHost} from '@app/helpers/web3-browser-utils';
-import {Whitelist} from '@app/helpers/whitelist';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useBackNavigationHandler} from '@app/hooks/use-back-navigation-handler';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
-import {useRemoteConfigVar} from '@app/hooks/use-remote-config';
 import {Fee} from '@app/models/fee';
 import {Wallet} from '@app/models/wallet';
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {Balance} from '@app/services/balance';
 import {EthSignErrorDataDetails} from '@app/services/eth-sign';
+import {Indexer} from '@app/services/indexer';
 import {SignJsonRpcRequest} from '@app/services/sign-json-rpc-request';
 import {ModalType, VerifyAddressResponse} from '@app/types';
 import {
@@ -32,7 +32,6 @@ import {
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 export const JsonRpcSignScreen = memo(() => {
-  const whitelist = useRemoteConfigVar('web3_app_whitelist');
   const [isAllowed, setIsAllowed] = useState(false);
   const [rejectLoading, setRejectLoading] = useState(false);
   const [signLoading, setSignLoading] = useState(false);
@@ -169,19 +168,65 @@ export const JsonRpcSignScreen = memo(() => {
     ],
   );
 
-  const checkContractAddress = useCallback(async () => {
-    if (isTransaction) {
-      const params = getTransactionFromJsonRpcRequest(request);
+  useEffectAsync(async () => {
+    try {
+      setIsLoading(true);
+      let toAddress: string | undefined;
+      let message_or_input: string | undefined = '0x0';
 
-      if (params?.to) {
-        const info = await Whitelist.verifyAddress(params.to);
-        if (info) {
-          setVerifyAddressResponse(info);
+      switch (request.method) {
+        case EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION:
+        case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
+          const txParams = getTransactionFromJsonRpcRequest(request)!;
+          toAddress = txParams.to;
+          message_or_input = txParams.data;
+          break;
+        case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
+        case EIP155_SIGNING_METHODS.ETH_SIGN:
+          const message = getMessageByRequest(request);
+          message_or_input = message.original;
+          break;
+      }
+
+      const indexer = new Indexer(chainId);
+      const {
+        contract,
+        domain_in_whitelist,
+        // is_eip4361,
+        // input_is_valid,
+        // message_is_valid,
+      } = await indexer.verifyContract({
+        domain: metadata.url,
+        method_name: request.method,
+        address: toAddress,
+        message_or_input,
+      });
+
+      setVerifyAddressResponse(contract);
+
+      // disable domain validation for developer mode
+      if (app.isTesterMode) {
+        setIsAllowed(true);
+      } else {
+        setIsAllowed(domain_in_whitelist);
+        if (
+          !domain_in_whitelist &&
+          !ModalStore.isExist(ModalType.domainBlocked)
+        ) {
+          showModal(ModalType.domainBlocked, {
+            domain: getHost(metadata.url),
+            onClose: () => onPressReject('domain is blocked'),
+          });
         }
       }
+    } catch (err) {
+      Logger.captureException(err, 'JsonRpcSignScreen:verifyContract');
+    } finally {
+      setIsLoading(false);
     }
-  }, [isTransaction, request]);
+  }, [request, metadata, chainId]);
 
+  // TODO: replace with verifyContract when backend implementation will be ready
   useEffect(() => {
     const {isHex, parsedTx, signInMessage} =
       EthereumMessageChecker.checkRequest(request);
@@ -190,27 +235,6 @@ export const JsonRpcSignScreen = memo(() => {
     setMessageIsHex(isHex);
     setEthereumSignInMessage(signInMessage);
   }, [request]);
-
-  useEffectAsync(async () => {
-    try {
-      await checkContractAddress();
-    } catch (err) {
-      Logger.captureException(err, 'JsonRpcSignScreen:checkContractAddress');
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  useEffectAsync(async () => {
-    const isAllowedDomain = await Whitelist.checkUrl(metadata.url);
-    setIsAllowed(isAllowedDomain);
-    if (!isAllowedDomain && !ModalStore.isExist(ModalType.domainBlocked)) {
-      showModal(ModalType.domainBlocked, {
-        domain: getHost(metadata.url),
-        onClose: () => onPressReject('domain is blocked'),
-      });
-    }
-  }, [metadata, onPressReject, whitelist]);
 
   useEffect(() => {
     const address = selectedAccount || getUserAddressFromJRPCRequest(request);

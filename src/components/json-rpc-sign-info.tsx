@@ -47,7 +47,7 @@ interface WalletConnectSignInfoProps {
   onPressAllowOnceSignDangerousTx: () => void;
 }
 
-const getMessageByRequest = (request: PartialJsonRpcRequest) => {
+export const getMessageByRequest = (request: PartialJsonRpcRequest) => {
   switch (request?.method) {
     case EIP155_SIGNING_METHODS.PERSONAL_SIGN:
     case EIP155_SIGNING_METHODS.ETH_SIGN:
