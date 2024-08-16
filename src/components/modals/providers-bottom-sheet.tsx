@@ -29,7 +29,7 @@ export function ProvidersBottomSheet({
   );
   const onPressProvider = useCallback(
     (providerId: string) => {
-      if (providerId === app.provider.id) {
+      if (providerId === initialProvider) {
         // close if selected same provider
         return onCloseModal();
       }
