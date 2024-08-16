@@ -6,11 +6,10 @@ import {Provider} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
-import {RemoteConfig} from '@app/services/remote-config';
+import {Indexer} from '@app/services/indexer';
 import {AddressType, VerifyAddressResponse} from '@app/types';
 
 import {AddressUtils, NATIVE_TOKEN_ADDRESS} from './address-utils';
-import {Url} from './url';
 
 const CACHE_KEY = 'whitelist';
 const CACHE_LIFE_TIME = 3 * 60 * 60 * 1000; // 3 hours
@@ -57,42 +56,7 @@ export class Whitelist {
       return true;
     }
 
-    await RemoteConfig.awaitForInitialization();
-    const web3_app_whitelist = RemoteConfig.get('web3_app_whitelist');
-
-    if (web3_app_whitelist) {
-      if (web3_app_whitelist.length === 0) {
-        return true;
-      }
-
-      const parsedUrl = new Url(url);
-
-      for (let i = 0; i < web3_app_whitelist.length; i++) {
-        const whitelistUrl = web3_app_whitelist[i];
-
-        if (whitelistUrl.startsWith('*.')) {
-          const domain = whitelistUrl.slice(2);
-          if (parsedUrl.hostname.endsWith(domain)) {
-            return true;
-          }
-        } else {
-          const parsedWhitelistUrl = new Url(whitelistUrl);
-          if (
-            parsedWhitelistUrl.protocol &&
-            parsedUrl.hostname === parsedWhitelistUrl.hostname &&
-            parsedUrl.protocol === parsedWhitelistUrl.protocol
-          ) {
-            return true;
-          }
-
-          if (parsedUrl.hostname === parsedWhitelistUrl.href) {
-            return true;
-          }
-        }
-      }
-    }
-
-    return false;
+    return await Indexer.instance.validateDappDomain(url);
   }
 
   static async checkAddress(

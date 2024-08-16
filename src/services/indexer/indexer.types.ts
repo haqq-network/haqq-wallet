@@ -1,4 +1,5 @@
 import {HaqqCosmosAddress, IContract} from '@app/types';
+import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 export type SushiRoute = {
   fee: number;
@@ -59,4 +60,19 @@ export type ProviderConfig = {
   swap_enabled: boolean;
   swap_router_v3: string;
   weth_address: string;
+};
+
+export type VerifyContractRequest = {
+  method_name: EIP155_SIGNING_METHODS | string;
+  domain: string;
+  message_or_input?: string;
+  address?: string;
+};
+
+export type VerifyContractResponse = {
+  domain_in_whitelist: boolean;
+  message_is_valid: boolean;
+  input_is_valid: boolean;
+  is_eip4361: boolean;
+  contract: IContract | null;
 };

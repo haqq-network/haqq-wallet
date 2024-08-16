@@ -9,6 +9,7 @@ import {AddressUtils} from '@app/helpers/address-utils';
 import {Whitelist} from '@app/helpers/whitelist';
 import {I18N, getText} from '@app/i18n';
 import {NftCollectionIndexer} from '@app/models/nft';
+import {Provider} from '@app/models/provider';
 import {
   ContractNameMap,
   IContract,
@@ -25,6 +26,8 @@ import {
   SushiPoolEstimateRequest,
   SushiPoolEstimateResponse,
   SushiPoolResponse,
+  VerifyContractRequest,
+  VerifyContractResponse,
 } from './indexer.types';
 
 import {RemoteConfig} from '../remote-config';
@@ -63,12 +66,26 @@ export class Indexer {
 
   captureException = logger.captureException;
 
-  constructor() {
+  /**
+   * @param chainId - Chain ID of the network for get endpoint by default get from app.provider
+   */
+  constructor(public chainId?: number | string) {
+    if (chainId && !Provider.getByEthChainId(chainId)) {
+      throw new Error('indexer: invalid chain id');
+    }
     this.init();
   }
 
+  get endpoint() {
+    if (this.chainId) {
+      return Provider.getByEthChainId(this.chainId)?.indexer!;
+    }
+
+    return app.provider.indexer;
+  }
+
   checkIndexerAvailability = (): void => {
-    if (!app.provider.indexer) {
+    if (!this.endpoint) {
       throw new Error('Indexer is not configured');
     }
   };
@@ -95,7 +112,7 @@ export class Indexer {
       const updated = lastUpdated || new Date(0);
 
       const result: IndexerUpdatesResponse = await jsonrpcRequest(
-        app.provider.indexer,
+        this.endpoint,
         'updates',
         [accounts, updated, selectedCurrency].filter(Boolean),
       );
@@ -124,9 +141,7 @@ export class Indexer {
 
       const response = await jsonrpcRequest<
         {name: string; id: string; symbol: string}[]
-      >(app.provider.indexer, 'addresses', [
-        addresses.map(AddressUtils.toHaqq),
-      ]);
+      >(this.endpoint, 'addresses', [addresses.map(AddressUtils.toHaqq)]);
 
       const map = addresses.reduce((acc, item) => {
         const responseExist = Array.isArray(response) && response.length > 0;
@@ -155,7 +170,7 @@ export class Indexer {
       this.checkIndexerAvailability();
 
       const response = await jsonrpcRequest<IndexerUpdatesResponse>(
-        app.provider.indexer,
+        this.endpoint,
         'balances',
         [accounts],
       );
@@ -179,7 +194,7 @@ export class Indexer {
 
       const haqqAddresses = accounts.filter(a => !!a).map(AddressUtils.toHaqq);
       const response = await jsonrpcRequest<IndexerTransactionResponse>(
-        app.provider.indexer,
+        this.endpoint,
         'transaction',
         [haqqAddresses, tx_hash],
       );
@@ -203,7 +218,7 @@ export class Indexer {
 
       const haqqAddresses = accounts.filter(a => !!a).map(AddressUtils.toHaqq);
       const response = await jsonrpcRequest<IndexerTransactionResponse>(
-        app.provider.indexer,
+        this.endpoint,
         'transactions',
         [haqqAddresses, latestBlock],
       );
@@ -226,7 +241,7 @@ export class Indexer {
 
       const haqqAddresses = accounts.filter(a => !!a).map(AddressUtils.toHaqq);
       const response = await jsonrpcRequest<NftCollectionIndexer[]>(
-        app.provider.indexer,
+        this.endpoint,
         'nft',
         [haqqAddresses],
       );
@@ -245,7 +260,7 @@ export class Indexer {
       this.checkIndexerAvailability();
 
       const response = await jsonrpcRequest<SushiPoolResponse>(
-        app.provider.indexer,
+        this.endpoint,
         'sushiPools',
         [],
       );
@@ -270,7 +285,7 @@ export class Indexer {
       this.checkIndexerAvailability();
 
       const response = await jsonrpcRequest<SushiPoolEstimateResponse>(
-        app.provider.indexer,
+        this.endpoint,
         'sushiPoolEstimate',
         [route, AddressUtils.toHaqq(sender), amount, currency_id],
         abortSignal,
@@ -290,7 +305,7 @@ export class Indexer {
       this.checkIndexerAvailability();
 
       const response = await jsonrpcRequest<ProviderConfig>(
-        app.provider.indexer,
+        this.endpoint,
         'config',
         [],
       );
@@ -301,6 +316,47 @@ export class Indexer {
         this.captureException(err, 'Indexer:getProviderConfig', err.meta);
       }
       throw err;
+    }
+  }
+
+  async verifyContract({
+    method_name,
+    domain,
+    message_or_input,
+    address,
+  }: VerifyContractRequest): Promise<VerifyContractResponse> {
+    try {
+      this.checkIndexerAvailability();
+      const params = [method_name, domain, message_or_input ?? '0x0'];
+
+      if (address) {
+        params.push(address);
+      }
+
+      const response = await jsonrpcRequest<VerifyContractResponse>(
+        this.endpoint,
+        'verifyContract',
+        params,
+      );
+
+      return response ?? {};
+    } catch (err) {
+      if (err instanceof JSONRPCError) {
+        this.captureException(err, 'Indexer:verifyContract', err.meta);
+      }
+      throw err;
+    }
+  }
+
+  async validateDappDomain(domain: string): Promise<boolean> {
+    try {
+      const response = await this.verifyContract({
+        method_name: 'eth_signTypedData_v4',
+        domain,
+      });
+      return response.domain_in_whitelist;
+    } catch (err) {
+      return false;
     }
   }
 }
