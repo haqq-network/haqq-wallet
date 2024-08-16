@@ -35,7 +35,7 @@ export type TransactionSumProps = {
   to: string;
   from: string;
   contact: Contact | null;
-  onAmount: (amount: Balance) => void;
+  onPressPreview: (amount: Balance) => void;
   onContact: () => void;
   onToken: () => void;
   onNetworkPress: () => void;
@@ -52,7 +52,7 @@ export const TransactionSum = observer(
     balance,
     fee,
     contact,
-    onAmount,
+    onPressPreview,
     onContact,
     onToken,
     onNetworkPress,
@@ -105,14 +105,8 @@ export const TransactionSum = observer(
     );
 
     const onDone = useCallback(() => {
-      onAmount(
-        new Balance(
-          parseFloat(amounts.amount),
-          undefined,
-          token.symbol ?? undefined,
-        ),
-      );
-    }, [amounts, onAmount]);
+      onPressPreview(amounts.amountBalance);
+    }, [amounts, onPressPreview]);
 
     const onPressMax = useCallback(() => {
       vibrate(HapticEffects.impactLight);
