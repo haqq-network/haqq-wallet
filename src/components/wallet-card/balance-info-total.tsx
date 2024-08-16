@@ -32,7 +32,7 @@ export const BalanceInfoTotal = observer(
         result = Balance.Empty;
       }
 
-      return result.toBalanceString();
+      return result.toBalanceString('auto');
     }, [total, Currencies.selectedCurrency, Currencies.isRatesAvailable]);
 
     return (

@@ -66,7 +66,7 @@ export const LockedTokens = observer(
           )}
           <View style={styles.row}>
             <Text variant={TextVariant.t7}>
-              {total?.toBalanceString(0) ?? defaultTotalValueISLM}
+              {total?.toBalanceString('auto') ?? defaultTotalValueISLM}
             </Text>
             <Spacer width={4} />
             <Badge
