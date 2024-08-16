@@ -1,4 +1,4 @@
-import {HaqqCosmosAddress, IContract} from '@app/types';
+import {HaqqCosmosAddress, IContract, IToken} from '@app/types';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 export type SushiRoute = {
@@ -18,7 +18,7 @@ export type SushiPool = {
 };
 
 export type SushiPoolResponse = {
-  contracts: IContract[];
+  contracts: IToken[];
   routes: SushiRoute[];
   pools: SushiPool[];
 };

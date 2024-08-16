@@ -20,13 +20,13 @@ import {awaitForWallet, showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
+import {awaitForProvider} from '@app/helpers/await-for-provider';
 import {AwaitValue, awaitForValue} from '@app/helpers/await-for-value';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {useSumAmount, useTypedRoute} from '@app/hooks';
-import {I18N} from '@app/i18n';
-import {Contracts} from '@app/models/contracts';
+import {I18N, getText} from '@app/i18n';
 import {Currencies} from '@app/models/currencies';
-import {RemoteProviderConfig} from '@app/models/provider';
+import {Provider, RemoteProviderConfig} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
@@ -48,7 +48,6 @@ import {message} from '@app/services/toast';
 import {
   HaqqCosmosAddress,
   HaqqEthereumAddress,
-  IContract,
   IToken,
   ModalType,
 } from '@app/types';
@@ -105,13 +104,13 @@ export const SwapScreen = observer(() => {
     () =>
       poolsData.contracts?.find?.(it =>
         AddressUtils.equals(
-          it.eth_address!,
+          it.id!,
           (currentRoute || poolsData.routes[0])?.token0!,
         ),
       ) ||
-      Contracts.getAll().find(it =>
+      Token.getAll().find(it =>
         AddressUtils.equals(
-          it.eth_address!,
+          it.id!,
           (currentRoute || poolsData.routes[0])?.token0!,
         ),
       ),
@@ -121,13 +120,13 @@ export const SwapScreen = observer(() => {
     () =>
       poolsData.contracts?.find?.(it =>
         AddressUtils.equals(
-          it.eth_address!,
+          it.id!,
           (currentRoute || poolsData.routes[0])?.token1!,
         ),
       ) ||
-      Contracts.getAll().find(it =>
+      Token.getAll().find(it =>
         AddressUtils.equals(
-          it.eth_address!,
+          it.id!,
           (currentRoute || poolsData.routes[0])?.token1!,
         ),
       ),
@@ -216,7 +215,7 @@ export const SwapScreen = observer(() => {
     }
 
     const tokenData = Token.tokens?.[currentWallet.address]?.find(t =>
-      AddressUtils.equals(t.id, tokenIn.eth_address!),
+      AddressUtils.equals(t.id, tokenIn.id!),
     );
     if (tokenData) {
       logger.log('t0 available: tokenData', tokenData.value);
@@ -237,7 +236,7 @@ export const SwapScreen = observer(() => {
     }
 
     const tokenData = Token.tokens?.[currentWallet.address]?.find(t =>
-      AddressUtils.equals(t.id, tokenOut.eth_address!),
+      AddressUtils.equals(t.id, tokenOut.id!),
     );
     if (tokenData) {
       return tokenData.value;
@@ -313,8 +312,8 @@ export const SwapScreen = observer(() => {
       const response = await Indexer.instance.sushiPoolEstimate({
         amount: t0Current.toHex(),
         sender: currentWallet.address,
-        // token_in: tokenIn?.eth_address!,
-        // token_out: tokenOut?.eth_address!,
+        // token_in: tokenIn?.id!,
+        // token_out: tokenOut?.id!,
         route: currentRoute?.route_hex!,
         currency_id: Currencies.currency?.id,
         abortSignal: estimateAbortController.current.signal,
@@ -354,7 +353,7 @@ export const SwapScreen = observer(() => {
   };
 
   const awaitForToken = useCallback(
-    async (initialValue: IContract) => {
+    async (initialValue: IToken) => {
       try {
         logger.log('awaitForToken', Token.tokens);
         if (!Token.tokens?.[currentWallet.address]) {
@@ -374,27 +373,21 @@ export const SwapScreen = observer(() => {
 
         const isToken0 = AddressUtils.equals(
           currentRoute?.token0!,
-          initialValue.eth_address!,
+          initialValue.id!,
         );
 
         const tokens =
           Token.tokens[AddressUtils.toEth(currentWallet.address)] || [];
         const currentToken = {
-          ...tokens.find(t =>
-            AddressUtils.equals(t.id, initialValue.eth_address!),
-          )!,
+          ...tokens.find(t => AddressUtils.equals(t.id, initialValue.id!))!,
           value: isToken0 ? t0Available : t1Available,
-          id: `${currentWallet.address}_${initialValue.id}` as HaqqCosmosAddress,
-          eth_address: initialValue.eth_address,
+          tag: `${currentWallet.address}_${initialValue.id}` as HaqqCosmosAddress,
+          id: initialValue.id,
         };
 
         const routes = isToken0
-          ? routesByToken1.current[
-              AddressUtils.toHaqq(initialValue.eth_address!)
-            ]
-          : routesByToken0.current[
-              AddressUtils.toHaqq(initialValue.eth_address!)
-            ];
+          ? routesByToken1.current[AddressUtils.toHaqq(initialValue.id!)]
+          : routesByToken0.current[AddressUtils.toHaqq(initialValue.id!)];
 
         const possibleRoutesForSwap = routes
           .map(it => {
@@ -407,32 +400,26 @@ export const SwapScreen = observer(() => {
             if (tokenContract) {
               return {
                 ...tokenContract,
-                id: `${currentWallet.address}_${tokenAddress}` as HaqqCosmosAddress,
-                eth_address: AddressUtils.toEth(tokenAddress),
+                tag: `${currentWallet.address}_${tokenAddress}` as HaqqCosmosAddress,
+                id: AddressUtils.toEth(tokenAddress),
               };
             }
 
             const contract =
               poolsData.contracts?.find(c =>
-                AddressUtils.equals(
-                  c?.eth_address!,
-                  isToken0 ? it.token0 : it.token1,
-                ),
+                AddressUtils.equals(c?.id!, isToken0 ? it.token0 : it.token1),
               ) ||
-              Contracts.getAll().find(c =>
-                AddressUtils.equals(
-                  c?.eth_address!,
-                  isToken0 ? it.token0 : it.token1,
-                ),
+              Token.getAll().find(c =>
+                AddressUtils.equals(c?.id!, isToken0 ? it.token0 : it.token1),
               );
 
             if (contract) {
               return {
                 ...contract,
-                id: `${currentWallet.address}_${tokenAddress}` as HaqqCosmosAddress,
-                image: contract.icon,
+                tag: `${currentWallet.address}_${tokenAddress}` as HaqqCosmosAddress,
+                image: contract.image,
                 value: new Balance(0, 0, contract?.symbol!),
-                eth_address: AddressUtils.toEth(tokenAddress),
+                id: AddressUtils.toEth(tokenAddress),
               } as unknown as IToken;
             }
 
@@ -475,7 +462,8 @@ export const SwapScreen = observer(() => {
                       value:
                         Token.tokens[
                           AddressUtils.toEth(value?.wallet?.address)
-                        ].find(c => c.id === t.id?.split?.('_')[1])?.value ??
+                          // @ts-ignore
+                        ].find(c => c.id === t.tag?.split?.('_')[1])?.value ??
                         new Balance(0, 0, t?.symbol!),
                     };
                   })}
@@ -492,7 +480,7 @@ export const SwapScreen = observer(() => {
                       value,
                       value.tokens.findIndex(
                         // @ts-ignore
-                        t => t.eth_address === initialValue.eth_address,
+                        t => t.id === initialValue.id,
                       ) || 0,
                     );
                   }}
@@ -518,7 +506,7 @@ export const SwapScreen = observer(() => {
           wallet,
           token: (AddressUtils.equals(tokenAddress, generatedISLMContract.id)
             ? generatedISLMContract
-            : value?.tokens?.[index]) as IContract & {value: Balance},
+            : value?.tokens?.[index]) as IToken & {value: Balance},
         };
         logger.log('awaitForToken', result);
         return result;
@@ -541,9 +529,8 @@ export const SwapScreen = observer(() => {
     const tokenValue =
       // @ts-ignore
       t0.value ||
-      Token.tokens?.[wallet]?.find(t =>
-        AddressUtils.equals(t.id, t0.eth_address!),
-      )?.value;
+      Token.tokens?.[wallet]?.find(t => AddressUtils.equals(t.id, t0.id!))
+        ?.value;
     const availableIslm = app.getAvailableBalance(wallet);
 
     const symbol = t0.symbol || app.provider.denom;
@@ -590,20 +577,20 @@ export const SwapScreen = observer(() => {
       logger.log('token', token);
 
       const needChangeTokenOut =
-        AddressUtils.equals(token.eth_address!, tokenOut?.eth_address!) &&
+        AddressUtils.equals(token.id!, tokenOut?.id!) &&
         token.symbol === tokenOut.symbol;
 
       const filteredRoutes = poolsData.routes.filter(r =>
-        AddressUtils.equals(r.token0!, token?.eth_address!),
+        AddressUtils.equals(r.token0!, token?.id!),
       );
       if (needChangeTokenOut) {
         const route = filteredRoutes.find(r =>
-          AddressUtils.equals(r.token1!, tokenIn?.eth_address!),
+          AddressUtils.equals(r.token1!, tokenIn?.id!),
         );
         setCurrentRoute(route || filteredRoutes[0]);
       } else {
         const route = filteredRoutes.find(r =>
-          AddressUtils.equals(r.token1!, tokenOut?.eth_address!),
+          AddressUtils.equals(r.token1!, tokenOut?.id!),
         );
         setCurrentRoute(route! || filteredRoutes[0]);
       }
@@ -634,21 +621,21 @@ export const SwapScreen = observer(() => {
       setCurrentWallet(() => wallet);
 
       const needChangeTokenIn =
-        AddressUtils.equals(token.eth_address!, tokenIn?.eth_address!) &&
+        AddressUtils.equals(token.id!, tokenIn?.id!) &&
         token.symbol === tokenIn.symbol;
 
       const filteredRoutes = poolsData.routes.filter(r =>
-        AddressUtils.equals(r.token1!, token?.eth_address!),
+        AddressUtils.equals(r.token1!, token?.id!),
       );
 
       if (needChangeTokenIn) {
         const route = filteredRoutes.find(r =>
-          AddressUtils.equals(r.token0!, tokenOut?.eth_address!),
+          AddressUtils.equals(r.token0!, tokenOut?.id!),
         );
         setCurrentRoute(route || filteredRoutes[0]);
       } else {
         const route = filteredRoutes.find(r =>
-          AddressUtils.equals(r.token0!, tokenIn?.eth_address!),
+          AddressUtils.equals(r.token0!, tokenIn?.id!),
         );
         setCurrentRoute(route! || filteredRoutes[0]);
       }
@@ -768,11 +755,7 @@ export const SwapScreen = observer(() => {
     try {
       setApproveInProgress(() => true);
       const provider = await getRpcProvider(app.provider);
-      const erc20Token = new ethers.Contract(
-        tokenIn?.eth_address!,
-        ERC20_ABI,
-        provider,
-      );
+      const erc20Token = new ethers.Contract(tokenIn?.id!, ERC20_ABI, provider);
 
       const amountBN = ethers.utils.parseUnits(
         amountsIn.amount,
@@ -793,7 +776,7 @@ export const SwapScreen = observer(() => {
           params: [
             {
               from: currentWallet.address,
-              to: tokenIn?.eth_address,
+              to: tokenIn?.id,
               value: '0x0',
               data: data,
             },
@@ -1042,14 +1025,15 @@ export const SwapScreen = observer(() => {
       Indexer.instance
         .sushiPools()
         .then(async data => {
+          await Token.fetchTokens(true);
           const tokens = Array.from(
             new Set([
               ...data.routes.map(r => r.token0),
               ...data.routes.map(r => r.token1),
             ]),
           )
-            .map(token => Contracts.getById(token))
-            .filter(Boolean) as IContract[];
+            .map(token => Token.getById(token))
+            .filter(Boolean) as IToken[];
 
           setPoolsData(() => ({
             ...data,
@@ -1075,6 +1059,43 @@ export const SwapScreen = observer(() => {
                 AddressUtils.equals(r.token0, RemoteProviderConfig.wethAddress),
               ) || data.routes[1],
           );
+          if (!data.pools?.length) {
+            showModal(ModalType.error, {
+              title: getText(I18N.blockRequestErrorTitle),
+              description: getText(I18N.noSwapRoutesFound),
+              close: getText(I18N.pinErrorModalClose),
+              async onClose() {
+                navigator.goBack();
+                const providersIDsPromises = await Promise.allSettled(
+                  Provider.getAll().map(async p => {
+                    const indexer = new Indexer(p.ethChainId);
+                    const config = await indexer.getProviderConfig();
+                    if (config.swap_enabled) {
+                      return p.id;
+                    }
+                    return null;
+                  }),
+                );
+
+                const providersIDs = providersIDsPromises.map(promiseData => {
+                  if (promiseData.status === 'fulfilled' && promiseData.value) {
+                    return promiseData.value;
+                  }
+                  return null;
+                });
+
+                const providerId = await awaitForProvider({
+                  providers: Provider.getAll().filter(p =>
+                    providersIDs.includes(p.id!),
+                  ),
+                  initialProviderId: app.providerId!,
+                  title: I18N.swapSupportedNetworks,
+                });
+                app.providerId = providerId;
+                await awaitForEventDone(Events.onProviderChanged);
+              },
+            });
+          }
         })
         .catch(err => {
           logger.captureException(err, 'useFocusEffect:Indexer.sushiPools');

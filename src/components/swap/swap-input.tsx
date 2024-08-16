@@ -8,7 +8,7 @@ import {createTheme} from '@app/helpers';
 import {useSumAmount} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Balance} from '@app/services/balance';
-import {IContract} from '@app/types';
+import {IToken} from '@app/types';
 
 import {ImageWrapper} from '../image-wrapper';
 import {
@@ -26,7 +26,7 @@ import {
 import {Placeholder} from '../ui/placeholder';
 
 export type SwapInputProps = {
-  token: IContract;
+  token: IToken;
   currentBalance: Balance;
   availableBalance: Balance;
   amounts: ReturnType<typeof useSumAmount>;
@@ -97,10 +97,10 @@ export const SwapInput = observer(
             style={styles.cryptoBlock}
             onPress={onPressChangeToken}>
             <View style={styles.cryptoBlockWrapper}>
-              {!!token.icon && (
+              {!!token.image && (
                 <ImageWrapper
                   style={styles.cryptoBlockImage}
-                  source={token.icon}
+                  source={token.image}
                 />
               )}
               <Text
