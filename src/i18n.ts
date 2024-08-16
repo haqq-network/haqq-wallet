@@ -1020,6 +1020,8 @@ export enum I18N {
   I18N = 'I18N',
   feeSettingsExpectedFee = 'feeSettingsExpectedFee',
   transactionNetwork = 'transactionNetwork',
+  noSwapRoutesFound = 'noSwapRoutesFound',
+  swapSupportedNetworks = 'swapSupportedNetworks',
 }
 
 const defaultTranslation = {en};

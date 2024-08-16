@@ -15,7 +15,7 @@ import {
   SushiPoolResponse,
   SushiRoute,
 } from '@app/services/indexer';
-import {IContract} from '@app/types';
+import {IToken} from '@app/types';
 import {formatNumberString} from '@app/utils';
 import {STRINGS} from '@app/variables/common';
 
@@ -47,8 +47,8 @@ export interface SwapProps {
   currentWallet: Wallet;
   poolData: SushiPoolResponse;
   estimateData: SushiPoolEstimateResponse | null;
-  tokenIn: IContract;
-  tokenOut: IContract;
+  tokenIn: IToken;
+  tokenOut: IToken;
   amountsIn: ReturnType<typeof useSumAmount>;
   amountsOut: ReturnType<typeof useSumAmount>;
   isEstimating: boolean;
