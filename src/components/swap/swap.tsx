@@ -43,9 +43,13 @@ import {
 } from '../ui';
 import {WalletRow, WalletRowTypes} from '../wallet-row';
 
+export type PoolsData = Omit<SushiPoolResponse, 'contracts'> & {
+  contracts: IToken[];
+};
+
 export interface SwapProps {
   currentWallet: Wallet;
-  poolData: SushiPoolResponse;
+  poolData: PoolsData;
   estimateData: SushiPoolEstimateResponse | null;
   tokenIn: IToken;
   tokenOut: IToken;
