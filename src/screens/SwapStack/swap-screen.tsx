@@ -7,6 +7,7 @@ import {Alert, Keyboard, View} from 'react-native';
 import Toast from 'react-native-toast-message';
 
 import {
+  PoolsData,
   SWAP_SETTINGS_DEFAULT,
   Swap,
   SwapSettingBottomSheetRef,
@@ -41,7 +42,6 @@ import {HapticEffects, vibrate} from '@app/services/haptic';
 import {
   Indexer,
   SushiPoolEstimateResponse,
-  SushiPoolResponse,
   SushiRoute,
 } from '@app/services/indexer';
 import {message} from '@app/services/toast';
@@ -83,7 +83,7 @@ export const SwapScreen = observer(() => {
   const [isSwapInProgress, setSwapInProgress] = useState(false);
   const [isApproveInProgress, setApproveInProgress] = useState(false);
   const [currentRoute, setCurrentRoute] = useState<SushiRoute | null>(null);
-  const [poolsData, setPoolsData] = useState<SushiPoolResponse>({
+  const [poolsData, setPoolsData] = useState<PoolsData>({
     contracts: [],
     routes: [],
     pools: [],
@@ -490,7 +490,8 @@ export const SwapScreen = observer(() => {
           },
         });
 
-        const [walletAddres, tokenAddress] = value?.id.split('_');
+        const token = value?.tokens[index];
+        const [walletAddres, tokenAddress] = token?.tag.split('_');
         const wallet = Wallet.getById(AddressUtils.toEth(walletAddres))!;
         const generatedISLMContract = {
           ...Token.generateNativeTokenContract(),
@@ -1025,6 +1026,7 @@ export const SwapScreen = observer(() => {
       Indexer.instance
         .sushiPools()
         .then(async data => {
+          logger.log('data', data);
           await Token.fetchTokens(true);
           const tokens = Array.from(
             new Set([
@@ -1033,6 +1035,27 @@ export const SwapScreen = observer(() => {
             ]),
           )
             .map(token => Token.getById(token))
+            .concat(
+              data.contracts.map(
+                contract =>
+                  ({
+                    image: contract.icon!,
+                    value: Balance.Empty!,
+                    contract_created_at: contract.created_at!,
+                    created_at: contract.created_at!,
+                    contract_updated_at: contract.updated_at!,
+                    updated_at: contract.updated_at!,
+                    decimals: contract.decimals!,
+                    name: contract.name!,
+                    symbol: contract.symbol!,
+                    id: contract.id!,
+                    is_erc20: true,
+                    is_erc1155: false,
+                    is_erc721: false,
+                    is_in_white_list: true,
+                  }) as IToken,
+              ),
+            )
             .filter(Boolean) as IToken[];
 
           setPoolsData(() => ({
@@ -1059,7 +1082,7 @@ export const SwapScreen = observer(() => {
                 AddressUtils.equals(r.token0, RemoteProviderConfig.wethAddress),
               ) || data.routes[1],
           );
-          if (!data.pools?.length) {
+          if (!data.pools?.length || !data?.routes?.length) {
             showModal(ModalType.error, {
               title: getText(I18N.blockRequestErrorTitle),
               description: getText(I18N.noSwapRoutesFound),
