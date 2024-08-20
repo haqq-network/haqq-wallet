@@ -48,6 +48,7 @@ export const JsonRpcTransactionInfo = ({
   const navigation = useTypedNavigation<JsonRpcSignPopupStackParamList>();
 
   const [isFeeLoading, setFeeLoading] = useState(true);
+  const [isSwapRenderError, setIsSwapRenderError] = useState(false);
 
   const tx = useMemo(
     () => getTransactionFromJsonRpcRequest(request),
@@ -138,7 +139,9 @@ export const JsonRpcTransactionInfo = ({
     }
   }, [navigation, tx, fee, provider]);
 
-  const onSwapRenderError = useCallback(() => {}, []);
+  const onSwapRenderError = useCallback(() => {
+    setIsSwapRenderError(true);
+  }, []);
 
   useEffectAsync(async () => {
     if (!fee?.calculatedFees) {
@@ -162,7 +165,7 @@ export const JsonRpcTransactionInfo = ({
 
   return (
     <First>
-      {isSwapTx && isContract && isInWhiteList && (
+      {!isSwapRenderError && isSwapTx && isContract && isInWhiteList && (
         <JsonRpcSwapTransaction
           verifyAddressResponse={verifyAddressResponse}
           metadata={metadata}
@@ -177,6 +180,7 @@ export const JsonRpcTransactionInfo = ({
           onError={onSwapRenderError}
         />
       )}
+
       <JsonRpcCommonTransaction
         metadata={metadata}
         showSignContratAttention={showSignContratAttention}

@@ -379,7 +379,7 @@ export const SwapScreen = observer(() => {
         );
 
         const tokens =
-          Token.tokens[AddressUtils.toEth(currentWallet.address)] || [];
+          poolsData.contracts || Token.tokens[currentWallet.address] || [];
         const currentToken = {
           ...tokens.find(t => AddressUtils.equals(t.id, initialValue.id!))!,
           value: isToken0 ? t0Available : t1Available,
@@ -722,9 +722,10 @@ export const SwapScreen = observer(() => {
           token: toJS(
             tokenIn?.symbol === app.provider.denom
               ? Token.generateNativeToken(currentWallet)
-              : Token.tokens[currentWallet.address].find(t =>
-                  AddressUtils.equals(t.id, tokenIn?.id!),
-                ),
+              : [
+                  ...poolsData.contracts,
+                  ...Token.tokens[currentWallet.address],
+                ].find(t => AddressUtils.equals(t.id, tokenIn?.id!)),
           ),
           amount: new Balance(
             parseFloat(amountsIn.amount),
@@ -851,9 +852,10 @@ export const SwapScreen = observer(() => {
           token: toJS(
             tokenIn?.symbol === app.provider.denom
               ? Token.generateNativeToken(currentWallet)
-              : Token.tokens[currentWallet.address].find(t =>
-                  AddressUtils.equals(t.id, tokenIn?.id!),
-                ),
+              : [
+                  ...poolsData.contracts,
+                  ...Token.tokens[currentWallet.address],
+                ].find(t => AddressUtils.equals(t.id, tokenIn?.id!)),
           ),
           amount: new Balance(
             parseFloat(amountsIn.amount),
@@ -928,9 +930,10 @@ export const SwapScreen = observer(() => {
           token: toJS(
             tokenIn?.symbol === app.provider.denom
               ? Token.generateNativeToken(currentWallet)
-              : Token.tokens[currentWallet.address].find(t =>
-                  AddressUtils.equals(t.id, tokenIn?.id!),
-                ),
+              : [
+                  ...poolsData.contracts,
+                  ...Token.tokens[currentWallet.address],
+                ].find(t => AddressUtils.equals(t.id, tokenIn?.id!)),
           ),
           amount: new Balance(
             parseFloat(amountsIn.amount),
