@@ -88,8 +88,8 @@ export const SwapScreen = observer(() => {
     routes: [],
     pools: [],
   });
-  const routesByToken0 = useRef<Record<HaqqCosmosAddress, SushiRoute[]>>({});
-  const routesByToken1 = useRef<Record<HaqqCosmosAddress, SushiRoute[]>>({});
+  const routesByToken0 = useRef<Record<HaqqEthereumAddress, SushiRoute[]>>({});
+  const routesByToken1 = useRef<Record<HaqqEthereumAddress, SushiRoute[]>>({});
 
   const [estimateData, setEstimateData] =
     useState<SushiPoolEstimateResponse | null>(null);
@@ -151,8 +151,11 @@ export const SwapScreen = observer(() => {
     const slippage = parseFloat(swapSettings.slippage) / 100;
     const amountOut = parseFloat(amountsOut.amount);
 
-    const result = (amountOut - amountOut * slippage).toString();
-    return new Balance(result, 0, tokenOut.symbol!);
+    const result = (
+      (amountOut - amountOut * slippage) *
+      10 ** tokenOut.decimals!
+    ).toString();
+    return new Balance(result, tokenOut.decimals!, tokenOut.symbol!);
   }, [estimateData, tokenOut, swapSettings, amountsOut.amount]);
 
   const providerFee = useMemo(() => {
@@ -355,7 +358,6 @@ export const SwapScreen = observer(() => {
   const awaitForToken = useCallback(
     async (initialValue: IToken) => {
       try {
-        logger.log('awaitForToken', Token.tokens);
         if (!Token.tokens?.[currentWallet.address]) {
           const hide = showModal(ModalType.loading, {
             text: 'Loading token balances',
@@ -386,8 +388,8 @@ export const SwapScreen = observer(() => {
         };
 
         const routes = isToken0
-          ? routesByToken1.current[AddressUtils.toHaqq(initialValue.id!)]
-          : routesByToken0.current[AddressUtils.toHaqq(initialValue.id!)];
+          ? routesByToken1.current[AddressUtils.toEth(initialValue.id!)]
+          : routesByToken0.current[AddressUtils.toEth(initialValue.id!)];
 
         const possibleRoutesForSwap = routes
           .map(it => {
@@ -777,7 +779,7 @@ export const SwapScreen = observer(() => {
           params: [
             {
               from: currentWallet.address,
-              to: tokenIn?.id,
+              to: AddressUtils.toEth(tokenIn?.id!),
               value: '0x0',
               data: data,
             },
@@ -811,7 +813,7 @@ export const SwapScreen = observer(() => {
       setSwapInProgress(() => true);
       const provider = await getRpcProvider(app.provider);
       const WETH = new ethers.Contract(
-        RemoteProviderConfig.wethAddress,
+        AddressUtils.toEth(RemoteProviderConfig.wethAddress),
         WETH_ABI,
         provider,
       );
@@ -825,7 +827,7 @@ export const SwapScreen = observer(() => {
           params: [
             {
               from: currentWallet.address,
-              to: RemoteProviderConfig.wethAddress,
+              to: AddressUtils.toEth(RemoteProviderConfig.wethAddress),
               value: t0Current.toHex(),
               data: txData,
             },
@@ -881,7 +883,7 @@ export const SwapScreen = observer(() => {
       setSwapInProgress(() => true);
       const provider = await getRpcProvider(app.provider);
       const WETH = new ethers.Contract(
-        RemoteProviderConfig.wethAddress,
+        AddressUtils.toEth(RemoteProviderConfig.wethAddress),
         WETH_ABI,
         provider,
       );
@@ -902,7 +904,7 @@ export const SwapScreen = observer(() => {
           params: [
             {
               from: currentWallet.address,
-              to: RemoteProviderConfig.wethAddress,
+              to: AddressUtils.toEth(RemoteProviderConfig.wethAddress),
               value: '0x0',
               data: txData,
             },
@@ -1056,6 +1058,7 @@ export const SwapScreen = observer(() => {
                   }) as IToken,
               ),
             )
+            .concat([Token.generateNativeToken(currentWallet)!])
             .filter(Boolean) as IToken[];
 
           setPoolsData(() => ({
@@ -1066,15 +1069,19 @@ export const SwapScreen = observer(() => {
           routesByToken0.current = {};
           routesByToken1.current = {};
           data.routes.forEach(route => {
-            if (!routesByToken0.current[route.token0]) {
-              routesByToken0.current[route.token0] = [];
+            if (!routesByToken0.current[AddressUtils.toEth(route.token0)]) {
+              routesByToken0.current[AddressUtils.toEth(route.token0)] = [];
             }
-            routesByToken0.current[route.token0].push(route);
+            routesByToken0.current[AddressUtils.toEth(route.token0)].push(
+              route,
+            );
 
-            if (!routesByToken1.current[route.token1]) {
-              routesByToken1.current[route.token1] = [];
+            if (!routesByToken1.current[AddressUtils.toEth(route.token1)]) {
+              routesByToken1.current[AddressUtils.toEth(route.token1)] = [];
             }
-            routesByToken1.current[route.token1].push(route);
+            routesByToken1.current[AddressUtils.toEth(route.token1)].push(
+              route,
+            );
           });
           setCurrentRoute(
             () =>

@@ -59,7 +59,7 @@ import {
   SendTransactionError,
   WalletConnectParsedAccount,
 } from './types';
-import {ERC20_ABI} from './variables/abi';
+import {ERC20_ABI, V3SWAPROUTER_ABI, WETH_ABI} from './variables/abi';
 import {IS_ANDROID, RTL_LANGUAGES, STORE_PAGE_URL} from './variables/common';
 import {EIP155_SIGNING_METHODS} from './variables/EIP155';
 
@@ -992,20 +992,34 @@ export function applyEthTxMultiplier(toBalance: Balance) {
   );
 }
 
-export function parseERC20TxDataFromHexInput(hex?: string) {
+export function parseTxDataFromHexInput(hex?: string) {
+  if (!hex) {
+    return undefined;
+  }
+  let data = hex;
+  if (!hex.startsWith('0x')) {
+    data = `0x${hex}`;
+  }
+
+  // try to parse as a ERC20 contract call
   try {
-    if (!hex) {
-      return undefined;
-    }
-    let data = hex;
-    if (!hex.startsWith('0x')) {
-      data = `0x${hex}`;
-    }
-    if (data) {
-      const erc20Interface = new ethers.utils.Interface(ERC20_ABI);
-      return erc20Interface.parseTransaction({data: data});
-    }
+    return new ethers.utils.Interface(ERC20_ABI).parseTransaction({data: data});
   } catch (e) {}
+
+  // try to parse as a swap transaction
+  try {
+    return new ethers.utils.Interface(V3SWAPROUTER_ABI).parseTransaction({
+      data: data,
+    });
+  } catch (e) {}
+
+  // try to parse as a wrap/unwrap transaction
+  try {
+    return new ethers.utils.Interface(WETH_ABI).parseTransaction({
+      data: data,
+    });
+  } catch (e) {}
+
   return undefined;
 }
 

@@ -190,6 +190,7 @@ class TokensStore implements MobXStore<IToken> {
     return true;
   }
 
+  _lastFetchedTimestamp = 0;
   fetchTokens = async (
     force = true,
     fetchTokensFromRPC = DEBUG_VARS.enableHardcodeERC20TokensContract,
@@ -197,6 +198,12 @@ class TokensStore implements MobXStore<IToken> {
     if (this.isLoading && !force) {
       return;
     }
+
+    const currentTime = Date.now();
+    if (currentTime - this._lastFetchedTimestamp < 10_000 && !force) {
+      return;
+    }
+    this._lastFetchedTimestamp = currentTime;
 
     runInAction(() => {
       this._isLoading = true;

@@ -2,12 +2,13 @@ import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {ethers} from 'ethers';
 
-import {JsonRpcSign} from '@app/components/json-rpc-sign';
-import {getMessageByRequest} from '@app/components/json-rpc-sign-info';
+import {JsonRpcSign} from '@app/components/json-rpc-sign/json-rpc-sign';
+import {getMessageByRequest} from '@app/components/json-rpc-sign/json-rpc-sign-info';
 import {Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {ModalStore, showModal} from '@app/helpers';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {
   EthereumMessageChecker,
   EthereumSignInMessage,
@@ -198,7 +199,7 @@ export const JsonRpcSignScreen = memo(() => {
       } = await indexer.verifyContract({
         domain: metadata.url,
         method_name: request.method,
-        address: toAddress,
+        address: AddressUtils.toHaqq(toAddress!),
         message_or_input,
       });
 
