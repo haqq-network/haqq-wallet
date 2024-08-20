@@ -1,7 +1,7 @@
 PODS:
-  - Adjust (4.33.3):
-    - Adjust/Core (= 4.33.3)
-  - Adjust/Core (4.33.3)
+  - Adjust (4.38.2):
+    - Adjust/Core (= 4.38.2)
+  - Adjust/Core (4.38.2)
   - AppAuth (1.7.5):
     - AppAuth/Core (= 1.7.5)
     - AppAuth/ExternalUserAgent (= 1.7.5)
@@ -183,7 +183,7 @@ PODS:
   - MMKV (1.3.9):
     - MMKVCore (~> 1.3.9)
   - MMKVCore (1.3.9)
-  - MultiplatformBleAdapter (0.1.9)
+  - MultiplatformBleAdapter (0.2.0)
   - nanopb (2.30910.0):
     - nanopb/decode (= 2.30910.0)
     - nanopb/encode (= 2.30910.0)
@@ -738,9 +738,9 @@ PODS:
     - Sentry/HybridSDK (= 8.31.1)
   - RNSVG (15.4.0):
     - React-Core
-  - SDWebImage (5.19.4):
-    - SDWebImage/Core (= 5.19.4)
-  - SDWebImage/Core (5.19.4)
+  - SDWebImage (5.19.6):
+    - SDWebImage/Core (= 5.19.6)
+  - SDWebImage/Core (5.19.6)
   - secp256k1Swift (0.7.4):
     - secp256k1Wrapper (~> 0.0.5)
   - secp256k1Wrapper (0.0.5)
@@ -1080,7 +1080,7 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  Adjust: 41d0d5c031409aebe7fb1f5703ff0d3306133439
+  Adjust: 5a0f813fe079212bed61404d1f635cc330068b4a
   AppAuth: 501c04eda8a8d11f179dbe8637b7a91bb7e5d2fa
   BlastedImage: 7dd925da7db9dcf1120efc0009bad5492e843b1e
   boost: 7dcd2de282d72e344012f7d6564d024930a6a440
@@ -1090,14 +1090,14 @@ SPEC CHECKSUMS:
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   FBLazyVector: f91d538f197fa71a7d5b77ec2069d49550c0eb96
   FBReactNativeSpec: b13d1c23d6ed82d6b66aad7a253edf8ba76c4a4c
-  Firebase: 797fd7297b7e1be954432743a0b3f90038e45a71
-  FirebaseAnalytics: 8d0ff929c63b7f72260f332b86ccf569776b75d3
-  FirebaseCore: 0326ec9b05fbed8f8716cddbf0e36894a13837f7
-  FirebaseCoreExtension: 6394c00b887d0bebadbc7049c464aa0cbddc5d41
+  Firebase: cec914dab6fd7b1bd8ab56ea07ce4e03dd251c2d
+  FirebaseAnalytics: 23717de130b779aa506e757edb9713d24b6ffeda
+  FirebaseCore: 30e9c1cbe3d38f5f5e75f48bfcea87d7c358ec16
+  FirebaseCoreExtension: 705ca5b14bf71d2564a0ddc677df1fc86ffa600f
   FirebaseCoreInternal: df84dd300b561c27d5571684f389bf60b0a5c934
-  FirebaseDynamicLinks: 25ed0e87b0afb4769cc0ec8e942a532219abac28
+  FirebaseDynamicLinks: 83c278fcae48ac2cf8c3fb10f64f3d469dadcf9b
   FirebaseInstallations: 913cf60d0400ebd5d6b63a28b290372ab44590dd
-  FirebaseMessaging: 9f71037fd9db3376a4caa54e5a3949d1027b4b6e
+  FirebaseMessaging: 7b5d8033e183ab59eb5b852a53201559e976d366
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
   GoogleAppMeasurement: f9de05ee17401e3355f68e8fc8b5064d429f5918
@@ -1116,7 +1116,7 @@ SPEC CHECKSUMS:
   lottie-react-native: 17547b2f3c7034e2ae8672833fdb63262164d18a
   MMKV: 817ba1eea17421547e01e087285606eb270a8dcb
   MMKVCore: af055b00e27d88cd92fad301c5fecd1ff9b26dd9
-  MultiplatformBleAdapter: 5a6a897b006764392f9cef785e4360f54fb9477d
+  MultiplatformBleAdapter: b1fddd0d499b96b607e00f0faa8e60648343dc1d
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   QrCode: 703276888a8e1e5a77606392f82ce758d895a450
@@ -1195,12 +1195,12 @@ SPEC CHECKSUMS:
   RNGoogleSignin: 08dc4ba7eac2096c7fecfe109f0950fa4683c803
   RNKeychain: bfe3d12bf4620fe488771c414530bf16e88f3678
   RNOS: bba50dcae32026943877b163e93d4e1e0eca48eb
-  RNPermissions: 81b4a5e0f9fdb3b145e9622c199df8f629c51f51
-  RNReanimated: 43675f1f0e704abe8ebf953fd79b00e66302cda2
-  RNScreens: 3c5b9f4a9dcde752466854b6109b79c0e205dad3
-  RNSentry: 4e4fc87b53002c015f644cb7207d4b598bc3703f
-  RNSVG: 80584470ff1ffc7994923ea135a3e5ad825546b9
-  SDWebImage: 066c47b573f408f18caa467d71deace7c0f8280d
+  RNPermissions: 64242b5eabc3ca5ed33f6feb38a183cb1d66d277
+  RNReanimated: 158b2f80fdb043ab5a645ba047209badbd7eb9a9
+  RNScreens: 0bd9eec783bed1032e02a4db9976dae1664a5c7b
+  RNSentry: 85fe1023bf60ead12d059d9c845de19de0ed6f0d
+  RNSVG: cb24fb322de8c1ebf59904e7aca0447bb8dbed5a
+  SDWebImage: a79252b60f4678812d94316c91da69ec83089c9f
   secp256k1Swift: ea49d2b06724444a03cf7938a2d3fc7acc4c0f08
   secp256k1Wrapper: 0378417cd06d51187bbc9e178ec318e7902e2120
   Sentry: 9c1188876ea1291d1a9db4b38c3f17ebd8e6985e
