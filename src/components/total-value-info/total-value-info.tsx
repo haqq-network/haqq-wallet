@@ -6,11 +6,7 @@ import {TokenViewer} from '@app/components/token-viewer';
 import {TransactionEmpty} from '@app/components/transaction-empty';
 import {First, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {
-  Feature,
-  isFeatureEnabled,
-  isSomeFeaturesEnabled,
-} from '@app/helpers/is-feature-enabled';
+import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useShowNft} from '@app/hooks/nft';
 import {I18N} from '@app/i18n';
 import {Transaction} from '@app/models/transaction';
@@ -52,6 +48,7 @@ export const TotalValueInfo = observer(
     onPressTxRow,
     onPressInfo,
   }: TotalValueInfoProps) => {
+    const showNft = useShowNft();
     const initialTabName = useMemo(() => {
       if (
         initialTab === TotalValueTabNames.tokens &&
@@ -60,15 +57,12 @@ export const TotalValueInfo = observer(
         return TotalValueTabNames.tokens;
       }
 
-      if (
-        initialTab === TotalValueTabNames.nft &&
-        isFeatureEnabled(Feature.nft)
-      ) {
+      if (showNft) {
         return TotalValueTabNames.nft;
       }
 
       return TotalValueTabNames.transactions;
-    }, []);
+    }, [showNft]);
     const initialTabIndex = useMemo(
       () => TabIndexMap[initialTabName] ?? 0,
       [initialTabName],
@@ -80,44 +74,40 @@ export const TotalValueInfo = observer(
       [activeTab],
     );
 
-    const showNft = useShowNft();
-
     const onTabChange = useCallback((tabName: TotalValueTabNames) => {
       setActiveTab(tabName);
     }, []);
     const renderListHeader = () => (
       <>
         <TotalValueInfoHeader balance={balance} onPressInfo={onPressInfo} />
-        {isSomeFeaturesEnabled([Feature.nft, Feature.tokens]) && (
-          <TopTabNavigator
-            activeTabIndex={TabIndexMap[activeTab]}
-            initialTabIndex={initialTabIndex}
-            showSeparators
-            contentContainerStyle={styles.tabsContentContainerStyle}
-            tabHeaderStyle={styles.tabHeaderStyle}
-            variant={TopTabNavigatorVariant.large}
-            onTabChange={onTabChange}>
-            {isFeatureEnabled(Feature.tokens) && (
-              <TopTabNavigator.Tab
-                name={TotalValueTabNames.tokens}
-                title={I18N.accountInfoTokensTabTitle}
-                component={null}
-              />
-            )}
+        <TopTabNavigator
+          activeTabIndex={TabIndexMap[activeTab]}
+          initialTabIndex={initialTabIndex}
+          showSeparators
+          contentContainerStyle={styles.tabsContentContainerStyle}
+          tabHeaderStyle={styles.tabHeaderStyle}
+          variant={TopTabNavigatorVariant.large}
+          onTabChange={onTabChange}>
+          {isFeatureEnabled(Feature.tokens) && (
             <TopTabNavigator.Tab
-              name={TotalValueTabNames.transactions}
-              title={I18N.accountInfoTransactionTabTitle}
+              name={TotalValueTabNames.tokens}
+              title={I18N.accountInfoTokensTabTitle}
               component={null}
             />
-            {showNft && (
-              <TopTabNavigator.Tab
-                name={TotalValueTabNames.nft}
-                title={I18N.accountInfoNftTabTitle}
-                component={null}
-              />
-            )}
-          </TopTabNavigator>
-        )}
+          )}
+          <TopTabNavigator.Tab
+            name={TotalValueTabNames.transactions}
+            title={I18N.accountInfoTransactionTabTitle}
+            component={null}
+          />
+          {showNft && (
+            <TopTabNavigator.Tab
+              name={TotalValueTabNames.nft}
+              title={I18N.accountInfoNftTabTitle}
+              component={null}
+            />
+          )}
+        </TopTabNavigator>
       </>
     );
     const renderListEmptyComponent = useCallback(

@@ -22,8 +22,6 @@ jobs:
     uses: ./.github/workflows/distribute.yml
     secrets: inherit
     with:
-      IS_SSS_ENABLED: true
-      IS_NFT_ENABLED: true
       STORIES_ENABLED: true
       BUILD_DESCRIPTION: ${{github.event.pull_request.body}}
 
