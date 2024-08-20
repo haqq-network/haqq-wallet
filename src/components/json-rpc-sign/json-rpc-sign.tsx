@@ -5,8 +5,8 @@ import {View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
-import {JsonRpcSignInfo} from '@app/components/json-rpc-sign-info';
-import {JsonRpcTransactionInfo} from '@app/components/json-rpc-transaction-info';
+import {JsonRpcSignInfo} from '@app/components/json-rpc-sign/json-rpc-sign-info';
+import {JsonRpcTransactionInfo} from '@app/components/json-rpc-sign/json-rpc-transaction-info';
 import {Button, ButtonVariant, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {EthereumSignInMessage} from '@app/helpers/ethereum-message-checker';
@@ -96,6 +96,7 @@ export const JsonRpcSign = ({
     <View style={styles.container}>
       <View style={styles.txContainer}>
         {isTransaction && (
+          // it renderns common transaction component for all transactions and custom uni/suhi swap transactions
           <JsonRpcTransactionInfo
             metadata={metadata}
             request={request}
@@ -108,6 +109,7 @@ export const JsonRpcSign = ({
         )}
 
         {!isTransaction && (
+          // it renders: typed data v4 (with custom cosmos stakinkg actions render), personal sign, eth sign
           <JsonRpcSignInfo
             metadata={metadata}
             request={request}

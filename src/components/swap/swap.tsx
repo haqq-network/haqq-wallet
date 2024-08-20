@@ -21,7 +21,10 @@ import {STRINGS} from '@app/variables/common';
 
 import {EstimatedValue} from './estimated-value';
 import {SwapInput} from './swap-input';
-import {SwapRoutePathIcons} from './swap-route-path-icons';
+import {
+  SwapRoutePathIcons,
+  SwapRoutePathIconsType,
+} from './swap-route-path-icons';
 import {
   SwapSettingBottomSheet,
   SwapSettingBottomSheetRef,
@@ -243,7 +246,12 @@ export const Swap = observer(
 
             <EstimatedValue
               title={I18N.swapScreenRoute}
-              value={<SwapRoutePathIcons route={currentRoute.route} />}
+              value={
+                <SwapRoutePathIcons
+                  type={SwapRoutePathIconsType.route}
+                  route={currentRoute.route}
+                />
+              }
             />
           </View>
         )}

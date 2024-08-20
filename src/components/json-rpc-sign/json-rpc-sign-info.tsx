@@ -30,10 +30,10 @@ import {
 } from '@app/utils';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
-import {JsonViewer} from './json-viewer';
-import {SiteIconPreview, SiteIconPreviewSize} from './site-icon-preview';
-import {TypedDataViewer} from './typed-data-viewer';
-import {WalletRow, WalletRowTypes} from './wallet-row';
+import {JsonViewer} from '../json-viewer';
+import {SiteIconPreview, SiteIconPreviewSize} from '../site-icon-preview';
+import {TypedDataViewer} from '../typed-data-viewer';
+import {WalletRow, WalletRowTypes} from '../wallet-row';
 
 interface WalletConnectSignInfoProps {
   request: PartialJsonRpcRequest;
