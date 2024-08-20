@@ -15,8 +15,6 @@ declare module 'react-native-config' {
     GOOGLE_SIGNIN_WEB_CLIENT_ID: string;
     METADATA_URL: string;
     GENERATE_SHARES_URL: string;
-    IS_SSS_ENABLED: string;
-    IS_NFT_ENABLED: string;
     AIRDROP_MAINNET_URL: string;
     HAQQ_BACKEND: string;
     HAQQ_BACKEND_DEV: string;

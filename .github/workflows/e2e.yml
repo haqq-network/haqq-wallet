@@ -15,20 +15,6 @@ on:
           - false
           - true
 
-      IS_SSS_ENABLED:
-        type: choice
-        description: IS_SSS_ENABLED
-        options:
-          - true
-          - false
-
-      IS_NFT_ENABLED:
-        type: choice
-        description: IS_NFT_ENABLED
-        options:
-          - true
-          - false
-
       STORIES_ENABLED:
         type: choice
         description: STORIES_ENABLED
@@ -39,12 +25,6 @@ on:
   workflow_call:
     inputs:
       IS_DEVELOPMENT:
-        required: false
-        type: string
-      IS_SSS_ENABLED:
-        required: false
-        type: string
-      IS_NFT_ENABLED:
         required: false
         type: string
       STORIES_ENABLED:
@@ -58,8 +38,6 @@ jobs:
     secrets: inherit
     with:
       IS_DEVELOPMENT: ${{github.event.inputs.IS_DEVELOPMENT || inputs.IS_DEVELOPMENT || 'false'}}
-      IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED || inputs.IS_SSS_ENABLED || 'true'}}
-      IS_NFT_ENABLED: ${{github.event.inputs.IS_NFT_ENABLED || inputs.IS_NFT_ENABLED || 'true'}}
       STORIES_ENABLED: ${{github.event.inputs.STORIES_ENABLED || inputs.STORIES_ENABLED || 'true'}}
 
   build_ios:
@@ -68,6 +46,4 @@ jobs:
     secrets: inherit
     with:
       IS_DEVELOPMENT: ${{github.event.inputs.IS_DEVELOPMENT || inputs.IS_DEVELOPMENT || 'false'}}
-      IS_SSS_ENABLED: ${{github.event.inputs.IS_SSS_ENABLED || inputs.IS_SSS_ENABLED || 'true'}}
-      IS_NFT_ENABLED: ${{github.event.inputs.IS_NFT_ENABLED || inputs.IS_NFT_ENABLED || 'true'}}
       STORIES_ENABLED: ${{github.event.inputs.STORIES_ENABLED || inputs.STORIES_ENABLED || 'true'}}
