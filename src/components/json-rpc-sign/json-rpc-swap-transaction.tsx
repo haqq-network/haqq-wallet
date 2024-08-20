@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 
 import {BigNumber, ethers} from 'ethers';
 import {observer} from 'mobx-react';
@@ -39,7 +39,7 @@ import {
   JsonRpcTransactionRequest,
   VerifyAddressResponse,
 } from '@app/types';
-import {formatNumberString, openInAppBrowser} from '@app/utils';
+import {formatNumberString, openInAppBrowser, sleep} from '@app/utils';
 import {STRINGS} from '@app/variables/common';
 
 import {ImageWrapper} from '../image-wrapper';
@@ -69,6 +69,8 @@ type Token = {
   image: ImageSourcePropType;
 };
 
+const MAX_ESTIMATE_ATTEMPTS = 3;
+
 export const JsonRpcSwapTransaction = observer(
   ({
     provider,
@@ -81,6 +83,8 @@ export const JsonRpcSwapTransaction = observer(
     onFeePress,
     onError,
   }: JsonRpcSwapTransactionProps) => {
+    const estimateAbortController = useRef(new AbortController());
+    const estimateAttempt = useRef(0);
     const [estimateData, setEstimateData] =
       useState<SushiPoolEstimateResponse | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -136,14 +140,17 @@ export const JsonRpcSwapTransaction = observer(
     }, [provider, tx]);
 
     useEffectAsync(async () => {
-      try {
-        const indexer = new Indexer(chainId);
+      const indexer = new Indexer(chainId);
+      const estimate = async () => {
         let amountOutMinimum = '0x0',
           tokenInAddress = '',
           tokenOutAddress = '',
           response: SushiPoolEstimateResponse | null;
 
         if (functionName === 'exactInput') {
+          estimateAbortController?.current?.abort();
+          estimateAbortController.current = new AbortController();
+
           const [path, recipient, _, amountIn, _amountOutMinimum] = parsedInput
             ?.args[0]! as [
             string, // path
@@ -167,6 +174,7 @@ export const JsonRpcSwapTransaction = observer(
             sender: recipient,
             route: path.slice(2),
             currency_id: Currencies.currency?.id,
+            abortSignal: estimateAbortController.current?.signal,
           });
         }
 
@@ -293,9 +301,22 @@ export const JsonRpcSwapTransaction = observer(
 
         setEstimateData(() => response);
         setIsLoading(() => false);
+      };
+
+      try {
+        await estimate();
       } catch (err) {
-        onError?.();
+        if (estimateAttempt.current < MAX_ESTIMATE_ATTEMPTS) {
+          await sleep(1000);
+          estimateAttempt.current++;
+        } else {
+          onError?.();
+        }
       }
+
+      return () => {
+        estimateAbortController?.current?.abort();
+      };
     }, [onError, chainId]);
 
     if (isLoading) {

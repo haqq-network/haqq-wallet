@@ -189,7 +189,7 @@ export const JsonRpcCommonTransaction = ({
               color={Color.textBlue1}>
               {Contracts.getById(parsedInput?.args?.[0])?.name ?? ''}
               {STRINGS.NBSP}
-              {shortAddress(tx?.to!, '•', true)}
+              {shortAddress(parsedInput?.args?.[0], '•', true)}
             </Text>
           </DataView>
         )}
