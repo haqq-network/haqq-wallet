@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
+import {observer} from 'mobx-react';
 import {
   I18nManager,
   TouchableWithoutFeedback,
@@ -25,6 +26,7 @@ import {createTheme} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {RemoteProviderConfig} from '@app/models/provider';
 import {sendNotification} from '@app/services';
 
 export type CopyMenuProps = ViewProps & {
@@ -32,85 +34,92 @@ export type CopyMenuProps = ViewProps & {
   withSettings?: boolean;
 };
 
-export const CopyMenu = ({
-  children,
-  value,
-  style,
-  withSettings = false,
-}: CopyMenuProps) => {
-  const navigation = useTypedNavigation();
+export const CopyMenu = observer(
+  ({children, value, style, withSettings = false}: CopyMenuProps) => {
+    const navigation = useTypedNavigation();
 
-  const onCopyPress = useCallback(() => {
-    Clipboard.setString(value);
-    sendNotification(I18N.notificationCopied);
-  }, [value]);
+    const onCopyPress = useCallback(() => {
+      Clipboard.setString(value);
+      sendNotification(I18N.notificationCopied);
+    }, [value]);
 
-  const onBech32CopyPress = useCallback(() => {
-    Clipboard.setString(AddressUtils.toHaqq(value));
-    sendNotification(I18N.notificationCopied);
-  }, [value]);
+    const onBech32CopyPress = useCallback(() => {
+      Clipboard.setString(AddressUtils.toHaqq(value));
+      sendNotification(I18N.notificationCopied);
+    }, [value]);
 
-  const onPressSettings = useCallback(() => {
-    navigation.navigate('homeSettings', {
-      screen: 'settingsAccounts',
-      params: {
-        screen: 'settingsAccountDetail',
-        params: {address: value, fromHomePage: true},
-      },
-    });
-  }, [value]);
+    const onPressSettings = useCallback(() => {
+      navigation.navigate('homeSettings', {
+        screen: 'settingsAccounts',
+        params: {
+          screen: 'settingsAccountDetail',
+          params: {address: value, fromHomePage: true},
+        },
+      });
+    }, [value]);
 
-  const containerStyle = useMemo(() => [styles.container, style], [style]);
-  const rendererProps = useMemo(
-    () => ({anchorStyle: {opacity: 0}, placement: 'bottom'}),
-    [],
-  );
-  const menuTriggerCustomStyles = useMemo(
-    () => ({TriggerTouchableComponent: TouchableWithoutFeedback}),
-    [],
-  );
-  const optionCustomStyles = useMemo(
-    () => ({OptionTouchableComponent: TouchableWithoutFeedback}),
-    [],
-  );
+    const containerStyle = useMemo(() => [styles.container, style], [style]);
+    const rendererProps = useMemo(
+      () => ({anchorStyle: {opacity: 0}, placement: 'bottom'}),
+      [],
+    );
+    const menuTriggerCustomStyles = useMemo(
+      () => ({TriggerTouchableComponent: TouchableWithoutFeedback}),
+      [],
+    );
+    const optionCustomStyles = useMemo(
+      () => ({OptionTouchableComponent: TouchableWithoutFeedback}),
+      [],
+    );
 
-  return (
-    <Menu renderer={Popover} rendererProps={rendererProps}>
-      <MenuTrigger customStyles={menuTriggerCustomStyles}>
-        <View style={containerStyle}>{children}</View>
-      </MenuTrigger>
-      <MenuOptions
-        optionsContainerStyle={styles.optionsContainer}
-        customStyles={optionCustomStyles}>
-        <MenuOption onSelect={onCopyPress} style={styles.option}>
-          <RTLReverse>
-            <Text variant={TextVariant.t11} i18n={I18N.copyAddress} />
-            <Icon i22 name={IconsName.copy} color={Color.textBase1} />
-          </RTLReverse>
-        </MenuOption>
-        <SolidLine width="100%" color={Color.graphicSecond2} />
-        <MenuOption onSelect={onBech32CopyPress} style={styles.option}>
-          <RTLReverse>
-            <Text variant={TextVariant.t11} i18n={I18N.copyBech32Address} />
-            <Spacer width={16} />
-            <Icon i22 name={IconsName.copy} color={Color.textBase1} />
-          </RTLReverse>
-        </MenuOption>
-        {withSettings && (
-          <>
-            <SolidLine width="100%" color={Color.graphicSecond2} />
-            <MenuOption onSelect={onPressSettings} style={styles.option}>
-              <RTLReverse>
-                <Text variant={TextVariant.t11} i18n={I18N.homeSettingsTitle} />
-                <Icon i22 name={IconsName.settings} color={Color.textBase1} />
-              </RTLReverse>
-            </MenuOption>
-          </>
-        )}
-      </MenuOptions>
-    </Menu>
-  );
-};
+    return (
+      <Menu renderer={Popover} rendererProps={rendererProps}>
+        <MenuTrigger customStyles={menuTriggerCustomStyles}>
+          <View style={containerStyle}>{children}</View>
+        </MenuTrigger>
+        <MenuOptions
+          optionsContainerStyle={styles.optionsContainer}
+          customStyles={optionCustomStyles}>
+          <MenuOption onSelect={onCopyPress} style={styles.option}>
+            <RTLReverse>
+              <Text variant={TextVariant.t11} i18n={I18N.copyAddress} />
+              <Icon i22 name={IconsName.copy} color={Color.textBase1} />
+            </RTLReverse>
+          </MenuOption>
+          {RemoteProviderConfig.isBech32Enabled && (
+            <>
+              <SolidLine width="100%" color={Color.graphicSecond2} />
+              <MenuOption onSelect={onBech32CopyPress} style={styles.option}>
+                <RTLReverse>
+                  <Text
+                    variant={TextVariant.t11}
+                    i18n={I18N.copyBech32Address}
+                  />
+                  <Spacer width={16} />
+                  <Icon i22 name={IconsName.copy} color={Color.textBase1} />
+                </RTLReverse>
+              </MenuOption>
+            </>
+          )}
+          {withSettings && (
+            <>
+              <SolidLine width="100%" color={Color.graphicSecond2} />
+              <MenuOption onSelect={onPressSettings} style={styles.option}>
+                <RTLReverse>
+                  <Text
+                    variant={TextVariant.t11}
+                    i18n={I18N.homeSettingsTitle}
+                  />
+                  <Icon i22 name={IconsName.settings} color={Color.textBase1} />
+                </RTLReverse>
+              </MenuOption>
+            </>
+          )}
+        </MenuOptions>
+      </Menu>
+    );
+  },
+);
 
 const styles = createTheme({
   container: {
