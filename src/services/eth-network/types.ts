@@ -1,5 +1,3 @@
-import {BigNumber} from 'ethers';
-
 import {Balance} from '../balance';
 
 export const ABI_ERC721_TRANSFER_FROM_ACTION = {
@@ -89,9 +87,9 @@ export type FeeValues = {
 };
 
 export type TxCustomEstimationParams = {
-  gasLimit: BigNumber;
-  maxBaseFee: BigNumber;
-  maxPriorityFee: BigNumber;
+  gasLimit: number;
+  maxBaseFee: number;
+  maxPriorityFee: number;
 };
 
 export type CalculatedFees = {
