@@ -8,6 +8,7 @@ import {Balance} from '@app/services/balance';
 import {Indexer, IndexerUpdatesResponse} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
 import {IndexerBalanceData} from '@app/types';
+import {createAsyncTask} from '@app/utils';
 import {ZERO_HEX_NUMBER} from '@app/variables/common';
 
 const BALANCE_CACHE_KEY = 'balance_storage_indexer';
@@ -59,7 +60,7 @@ const parseIndexerBalances = (
   }, {});
 };
 
-export async function onWalletsBalanceCheck() {
+export const onWalletsBalanceCheck = createAsyncTask(async () => {
   try {
     if (app.onboarded === false) {
       return;
@@ -105,7 +106,7 @@ export async function onWalletsBalanceCheck() {
       app.onWalletsBalance(result);
     }
   }
-}
+});
 
 export async function onWalletsBalanceCheckRPC(
   updates: IndexerUpdatesResponse,
