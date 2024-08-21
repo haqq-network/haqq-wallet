@@ -1,6 +1,5 @@
 import {useCallback, useEffect, useState} from 'react';
 
-import {BigNumber} from 'ethers';
 import {observer} from 'mobx-react';
 import {ActivityIndicator, View} from 'react-native';
 
@@ -72,15 +71,9 @@ export const FeeSettingsScreen = observer(() => {
               data,
             },
             {
-              gasLimit: BigNumber.from(
-                new Balance(amountsGasLimit.amount).toWei(),
-              ),
-              maxBaseFee: BigNumber.from(
-                new Balance(amountsMaxBaseFee.amount).toWei(),
-              ),
-              maxPriorityFee: BigNumber.from(
-                new Balance(amountsMaxPriorityFee.amount).toWei(),
-              ),
+              gasLimit: Number(amountsGasLimit.amount),
+              maxBaseFee: Number(amountsMaxBaseFee.amount),
+              maxPriorityFee: Number(amountsMaxPriorityFee.amount),
             },
             Provider.getByEthChainId(chainId!),
           );
