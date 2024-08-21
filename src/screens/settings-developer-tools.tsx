@@ -1,14 +1,18 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
 import CookieManager from '@react-native-cookies/cookies';
 import {observer} from 'mobx-react';
-import {Alert, ScrollView} from 'react-native';
+import {Alert, ScrollView, StyleSheet, View} from 'react-native';
 
+import {Color} from '@app/colors';
 import {SettingsButton} from '@app/components/home-settings/settings-button';
+import {JsonViewer} from '@app/components/json-viewer';
 import {
   Button,
+  ButtonSize,
   ButtonVariant,
+  First,
   IconsName,
   Input,
   Spacer,
@@ -21,7 +25,9 @@ import {awaitForWallet, createTheme, hideModal, showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
 import {awaitForProvider} from '@app/helpers/await-for-provider';
+import {AppInfo, getAppInfo} from '@app/helpers/get-app-info';
 import {Whitelist} from '@app/helpers/whitelist';
+import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {I18N} from '@app/i18n';
 import {Language} from '@app/models/language';
 import {Provider} from '@app/models/provider';
@@ -51,6 +57,7 @@ const Title = ({text = ''}) => (
 );
 
 export const SettingsDeveloperTools = observer(() => {
+  const {animate} = useLayoutAnimation();
   const [wc, setWc] = useState('');
   const [rawSignData, setRawSignData] = useState('');
   const [signData, setSignData] = useState<PartialJsonRpcRequest>();
@@ -58,6 +65,8 @@ export const SettingsDeveloperTools = observer(() => {
   const [browserUrl, setBrowserUrl] = useState('');
   const [convertAddress, setConvertAddress] = useState('');
   const [verifyAddress, setVerifyAddress] = useState('');
+  const [appInfo, setAppInfo] = useState<AppInfo | null>();
+  const [isAppInfoHidden, setAppInfoHidden] = useState(true);
 
   const isValidConvertAddress = useMemo(
     () => AddressUtils.isValidAddress(convertAddress),
@@ -73,6 +82,16 @@ export const SettingsDeveloperTools = observer(() => {
     app.isTesterMode = false;
     navigator.goBack();
   }, []);
+
+  const handleShowJsonViewer = useCallback(() => {
+    animate();
+    setAppInfoHidden(false);
+  }, [animate]);
+
+  const handleHideJsonViewer = useCallback(() => {
+    animate();
+    setAppInfoHidden(true);
+  }, [animate]);
 
   const onPressWc = () => {
     app.emit(Events.onWalletConnectUri, wc);
@@ -111,8 +130,42 @@ export const SettingsDeveloperTools = observer(() => {
     toastMessage('Cookie cleared');
   };
 
+  useEffect(() => {
+    getAppInfo().then(setAppInfo);
+  });
+
   return (
     <ScrollView style={styles.container}>
+      <View style={styles.jsonViewerContainer}>
+        <First>
+          {isAppInfoHidden && (
+            <Button
+              size={ButtonSize.small}
+              title={'Show application info'}
+              onPress={handleShowJsonViewer}
+            />
+          )}
+
+          <>
+            <Button
+              size={ButtonSize.small}
+              title={'Hide application info'}
+              onPress={handleHideJsonViewer}
+            />
+            <View style={styles.separator} />
+            <ScrollView
+              horizontal
+              style={styles.json}
+              showsHorizontalScrollIndicator={false}>
+              <JsonViewer
+                autoexpand={false}
+                style={styles.json}
+                data={appInfo}
+              />
+            </ScrollView>
+          </>
+        </First>
+      </View>
       <Title text="User agent" />
       <Text
         t11
@@ -365,5 +418,21 @@ export const SettingsDeveloperTools = observer(() => {
 const styles = createTheme({
   container: {
     marginHorizontal: 20,
+  },
+  json: {
+    width: '100%',
+  },
+  jsonViewerContainer: {
+    width: '100%',
+    flex: 1,
+    borderWidth: 1,
+    borderRadius: 12,
+    borderColor: Color.graphicSecond1,
+    paddingHorizontal: 20,
+  },
+  separator: {
+    width: '100%',
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: Color.graphicSecond2,
   },
 });
