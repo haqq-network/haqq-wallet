@@ -2,7 +2,6 @@ import PostHog from 'posthog-react-native';
 import {Adjust, AdjustConfig, AdjustEvent} from 'react-native-adjust';
 import {AdjustOaid} from 'react-native-adjust-oaid';
 import Config from 'react-native-config';
-import EncryptedStorage from 'react-native-encrypted-storage';
 
 import {app} from '@app/contexts';
 import {Initializable} from '@app/helpers/initializable';
@@ -114,26 +113,14 @@ export class EventTracker extends Initializable {
     return this._posthog?.getDistinctId() || '';
   }
 
-  // TODO: change default type to 'posthog' after removing adjust
-  async getAdid(type: 'adjust' | 'posthog' = 'adjust'): Promise<string> {
-    let adid = await EncryptedStorage.getItem('adid');
-
-    if (!adid) {
-      switch (type) {
-        case 'posthog':
-          adid = await this.getPosthogAdid();
-          break;
-        case 'adjust':
-        default:
-          adid = await this.getAdjustAdid();
-      }
-
-      if (adid) {
-        await EncryptedStorage.setItem('adid', adid);
-      }
+  async getAdid(type: 'adjust' | 'posthog' = 'posthog'): Promise<string> {
+    switch (type) {
+      case 'adjust':
+        return await this.getAdjustAdid();
+      case 'posthog':
+      default:
+        return await this.getPosthogAdid();
     }
-
-    return adid;
   }
 
   async setPushToken(token: string) {
