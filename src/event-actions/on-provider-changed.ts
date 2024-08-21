@@ -11,8 +11,9 @@ import {Token} from '@app/models/tokens';
 import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
 import {ModalType} from '@app/types';
+import {createAsyncTask} from '@app/utils';
 
-export async function onProviderChanged() {
+export const onProviderChanged = createAsyncTask(async () => {
   try {
     showModal(ModalType.loading);
 
@@ -41,4 +42,4 @@ export async function onProviderChanged() {
     EthRpcEndpointAvailability.checkEthRpcEndpointAvailability(),
     Stories.fetch(true),
   ]);
-}
+});
