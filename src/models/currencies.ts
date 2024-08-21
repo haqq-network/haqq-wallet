@@ -12,6 +12,7 @@ import {Indexer} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
 import {RemoteConfig} from '@app/services/remote-config';
 import {RatesResponse} from '@app/types';
+import {createAsyncTask} from '@app/utils';
 import {STORE_REHYDRATION_TIMEOUT_MS} from '@app/variables/common';
 
 // optimization for `convert()` method
@@ -39,7 +40,7 @@ class CurrenciesStore {
     this.fetchCurrencies();
   }
 
-  fetchCurrencies = async () => {
+  fetchCurrencies = createAsyncTask(async () => {
     const currencies = await Backend.instance.availableCurrencies();
     if (Array.isArray(currencies)) {
       runInAction(() => {
@@ -49,7 +50,7 @@ class CurrenciesStore {
         );
       });
     }
-  };
+  });
 
   setRates = (rates: RatesResponse) => {
     if (!rates) {

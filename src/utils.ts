@@ -1077,3 +1077,53 @@ export function isValidHex(hexString: string) {
 
 export const formatNumberString = (value: string, precision = 3) =>
   formatNumberWithSubscriptZeros(value, precision);
+
+/**
+ * Represents a function that returns a Promise.
+ *
+ * @template T The type of the value resolved by the promise.
+ * @returns {Promise<T>} A promise that resolves to a value of type T.
+ */
+export type AsyncTaskFunction<T> = (...args: any) => Promise<T>;
+
+/**
+ * Creates a singleton version of an asynchronous task. The task will be
+ * executed only once at a time, even if called multiple times concurrently.
+ *
+ * If multiple calls are made before the task finishes, all calls will return
+ * the same result. Once the task is complete, the next call will execute it again.
+ *
+ * @template T The type of the value resolved by the task's promise.
+ *
+ * @param {AsyncTaskFunction<T>} fn The asynchronous function to be executed.
+ * @returns {AsyncTaskFunction<T>} A new asynchronous function that will only
+ * run once at a time. It resets after the task finishes.
+ *
+ * @example
+ * // Example usage
+ * const task = async () => {
+ *   console.log('Task executed');
+ *   return 'Task Result';
+ * };
+ *
+ * const singletonTask = createSingletonTask(task);
+ *
+ * // Calling multiple times in quick succession will only execute the task once.
+ * singletonTask().then(console.log); // Output: 'Task executed', 'Task Result'
+ * singletonTask().then(console.log); // Output: 'Task Result'
+ *
+ * // After the task finishes, calling it again will execute the task again.
+ * setTimeout(() => {
+ *   singletonTask().then(console.log); // Output: 'Task executed', 'Task Result'
+ * }, 2000);
+ */
+export function createAsyncTask<T>(fn: AsyncTaskFunction<T>) {
+  let instance: Promise<T> | null = null;
+
+  return async function (...args: Parameters<typeof fn>): Promise<T> {
+    if (!instance) {
+      instance = fn(...args);
+    }
+    return instance.finally(() => (instance = null));
+  };
+}

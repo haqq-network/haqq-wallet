@@ -22,6 +22,7 @@ import {
   MobXStore,
 } from '@app/types';
 import {RPCMessage} from '@app/types/rpc';
+import {createAsyncTask} from '@app/utils';
 import {ERC20_ABI} from '@app/variables/abi';
 
 class TokensStore implements MobXStore<IToken> {
@@ -190,33 +191,38 @@ class TokensStore implements MobXStore<IToken> {
     return true;
   }
 
-  fetchTokens = async (
-    force = true,
-    fetchTokensFromRPC = DEBUG_VARS.enableHardcodeERC20TokensContract,
-  ) => {
-    if (this.isLoading && !force) {
-      return;
-    }
-
-    runInAction(() => {
-      this._isLoading = true;
-    });
-
-    const wallets = Wallet.getAll();
-    const accounts = wallets.map(w => w.cosmosAddress);
-    const updates = await Indexer.instance.updates(accounts, this.lastUpdate);
-    let result = await this.parseIndexerTokens(updates);
-    result = await getHardcodedTokens(result, fetchTokensFromRPC);
-    this.recalculateCommulativeSum(result);
-
-    runInAction(() => {
-      if (app.isTesterMode) {
-        Logger.log('TokensStore fetchTokens', JSON.stringify(result, null, 2));
+  fetchTokens = createAsyncTask(
+    async (
+      force = true,
+      fetchTokensFromRPC = DEBUG_VARS.enableHardcodeERC20TokensContract,
+    ) => {
+      if (this.isLoading && !force) {
+        return;
       }
-      this.tokens = result;
-      this._isLoading = false;
-    });
-  };
+
+      runInAction(() => {
+        this._isLoading = true;
+      });
+
+      const wallets = Wallet.getAll();
+      const accounts = wallets.map(w => w.cosmosAddress);
+      const updates = await Indexer.instance.updates(accounts, this.lastUpdate);
+      let result = await this.parseIndexerTokens(updates);
+      result = await getHardcodedTokens(result, fetchTokensFromRPC);
+      this.recalculateCommulativeSum(result);
+
+      runInAction(() => {
+        if (app.isTesterMode) {
+          Logger.log(
+            'TokensStore fetchTokens',
+            JSON.stringify(result, null, 2),
+          );
+        }
+        this.tokens = result;
+        this._isLoading = false;
+      });
+    },
+  );
 
   public generateNativeToken = (wallet: Wallet): IToken => {
     const balance = app.getAvailableBalance(wallet.address);
