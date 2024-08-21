@@ -20,6 +20,7 @@ import {
   IndexerTransactionResponse,
   RatesResponse,
 } from '@app/types';
+import {createAsyncTask} from '@app/utils';
 
 import {
   ProviderConfig,
@@ -101,30 +102,32 @@ export class Indexer {
     );
   }
 
-  async updates(
-    accounts: string[],
-    lastUpdated: Date | undefined,
-    selectedCurrency?: string,
-  ): Promise<IndexerUpdatesResponse> {
-    try {
-      this.checkIndexerAvailability();
+  updates = createAsyncTask(
+    async (
+      accounts: string[],
+      lastUpdated: Date | undefined,
+      selectedCurrency?: string,
+    ) => {
+      try {
+        this.checkIndexerAvailability();
 
-      const updated = lastUpdated || new Date(0);
+        const updated = lastUpdated || new Date(0);
 
-      const result: IndexerUpdatesResponse = await jsonrpcRequest(
-        this.endpoint,
-        'updates',
-        [accounts, updated, selectedCurrency].filter(Boolean),
-      );
+        const result: IndexerUpdatesResponse = await jsonrpcRequest(
+          this.endpoint,
+          'updates',
+          [accounts, updated, selectedCurrency].filter(Boolean),
+        );
 
-      return result;
-    } catch (err) {
-      if (err instanceof JSONRPCError) {
-        this.captureException(err, 'Indexer:updates', err.meta);
+        return result;
+      } catch (err) {
+        if (err instanceof JSONRPCError) {
+          this.captureException(err, 'Indexer:updates', err.meta);
+        }
+        throw err;
       }
-      throw err;
-    }
-  }
+    },
+  );
 
   async getContractName(address: string): Promise<string> {
     const info = await Whitelist.verifyAddress(address);

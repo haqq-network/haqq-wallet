@@ -9,7 +9,7 @@ import {
   NetworkProviderResponse,
 } from '@app/services/backend';
 import {storage} from '@app/services/mmkv';
-import {sleep} from '@app/utils';
+import {createAsyncTask, sleep} from '@app/utils';
 import {DEFAULT_PROVIDERS, ISLM_DENOM} from '@app/variables/common';
 
 import {ProviderID} from './provider.types';
@@ -65,7 +65,7 @@ export class Provider {
     });
   }
 
-  static async fetchProviders() {
+  static fetchProviders = createAsyncTask(async () => {
     let providers = await Backend.instance.providers();
     if (!providers?.length) {
       providers = DEFAULT_PROVIDERS;
@@ -93,7 +93,7 @@ export class Provider {
     runInAction(() => {
       Provider.data = parsed;
     });
-  }
+  });
 
   static getById(id: string) {
     return Provider.data[id];
