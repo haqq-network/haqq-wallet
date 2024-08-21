@@ -731,9 +731,9 @@ PODS:
     - Sentry/HybridSDK (= 8.8.0)
   - RNSVG (13.10.0):
     - React-Core
-  - SDWebImage (5.19.4):
-    - SDWebImage/Core (= 5.19.4)
-  - SDWebImage/Core (5.19.4)
+  - SDWebImage (5.19.6):
+    - SDWebImage/Core (= 5.19.6)
+  - SDWebImage/Core (5.19.6)
   - secp256k1Swift (0.7.4):
     - secp256k1Wrapper (~> 0.0.5)
   - secp256k1Wrapper (0.0.5)
@@ -1196,7 +1196,7 @@ SPEC CHECKSUMS:
   RNScreens: 3c5b9f4a9dcde752466854b6109b79c0e205dad3
   RNSentry: 4e4fc87b53002c015f644cb7207d4b598bc3703f
   RNSVG: 80584470ff1ffc7994923ea135a3e5ad825546b9
-  SDWebImage: 066c47b573f408f18caa467d71deace7c0f8280d
+  SDWebImage: a79252b60f4678812d94316c91da69ec83089c9f
   secp256k1Swift: ea49d2b06724444a03cf7938a2d3fc7acc4c0f08
   secp256k1Wrapper: 0378417cd06d51187bbc9e178ec318e7902e2120
   Sentry: 927dfb29d18a14d924229a59cc2ad149f43349f2

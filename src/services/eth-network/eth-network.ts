@@ -1,6 +1,7 @@
 import {TransactionRequest} from '@ethersproject/abstract-provider';
 import {Deferrable} from '@ethersproject/properties';
 import {ProviderInterface} from '@haqq/provider-base';
+import Decimal from 'decimal.js';
 import {BigNumber, utils} from 'ethers';
 
 import {app} from '@app/contexts';
@@ -149,15 +150,31 @@ export class EthNetwork {
         value: value.toHex(),
       } as Deferrable<TransactionRequest>);
 
-      let resultGasLimit = gasLimit;
-      if (resultGasLimit.lt(estimateGasLimit)) {
-        resultGasLimit = estimateGasLimit;
-      }
+      const resultGasLimit = new Balance(
+        new Decimal(
+          gasLimit < estimateGasLimit.toNumber()
+            ? estimateGasLimit.toNumber()
+            : gasLimit,
+        ),
+      );
 
-      let resultMaxBaseFee = maxBaseFee;
-      if (resultMaxBaseFee.lt(block.baseFeePerGas!)) {
-        resultMaxBaseFee = block.baseFeePerGas!;
-      }
+      const blockBaseFeePerGasGWEI = block.baseFeePerGas!.toNumber() / 10 ** 9;
+      const resultMaxBaseFee = new Balance(
+        new Balance(
+          new Decimal(
+            maxBaseFee < blockBaseFeePerGasGWEI
+              ? blockBaseFeePerGasGWEI
+              : maxBaseFee,
+          ),
+        ).toNumber() /
+          10 ** 9,
+      );
+
+      const resultMaxPriorityFee = new Balance(
+        maxPriorityFee / 10 ** 9,
+        provider.decimals,
+        provider.denom,
+      );
 
       return {
         gasLimit: new Balance(
@@ -176,7 +193,10 @@ export class EthNetwork {
           provider.denom,
         ),
         expectedFee: new Balance(
-          resultGasLimit.mul(resultMaxBaseFee.add(maxPriorityFee)),
+          resultGasLimit.operate(
+            resultMaxBaseFee.operate(resultMaxPriorityFee, 'add'),
+            'mul',
+          ),
           provider.decimals,
           provider.denom,
         ),
