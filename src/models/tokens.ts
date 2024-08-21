@@ -1,16 +1,14 @@
-import {ethers} from 'ethers';
-import {makeAutoObservable, runInAction, toJS, when} from 'mobx';
+import {makeAutoObservable, runInAction, when} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
 import {app} from '@app/contexts';
-import {DEBUG_VARS} from '@app/debug-vars';
 import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
 import {Whitelist} from '@app/helpers/whitelist';
 import {Contracts} from '@app/models/contracts';
 import {Socket} from '@app/models/socket';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
-import {Indexer, IndexerUpdatesResponse} from '@app/services/indexer';
+import {Indexer} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
 import {
   AddressType,
@@ -23,7 +21,6 @@ import {
 } from '@app/types';
 import {RPCMessage} from '@app/types/rpc';
 import {createAsyncTask} from '@app/utils';
-import {ERC20_ABI} from '@app/variables/abi';
 
 class TokensStore implements MobXStore<IToken> {
   /**
@@ -191,38 +188,91 @@ class TokensStore implements MobXStore<IToken> {
     return true;
   }
 
-  fetchTokens = createAsyncTask(
-    async (
-      force = true,
-      fetchTokensFromRPC = DEBUG_VARS.enableHardcodeERC20TokensContract,
-    ) => {
-      if (this.isLoading && !force) {
-        return;
-      }
+  fetchTokens = createAsyncTask(async (force = true) => {
+    if (this.isLoading && !force) {
+      return;
+    }
 
-      runInAction(() => {
-        this._isLoading = true;
-      });
+    runInAction(() => {
+      this._isLoading = true;
+    });
 
-      const wallets = Wallet.getAll();
-      const accounts = wallets.map(w => w.cosmosAddress);
-      const updates = await Indexer.instance.updates(accounts, this.lastUpdate);
-      let result = await this.parseIndexerTokens(updates);
-      result = await getHardcodedTokens(result, fetchTokensFromRPC);
-      this.recalculateCommulativeSum(result);
+    const wallets = Wallet.getAll();
+    const accounts = wallets.map(w => w.cosmosAddress);
+    const updates = await Indexer.instance.updates(accounts, this.lastUpdate);
 
-      runInAction(() => {
-        if (app.isTesterMode) {
-          Logger.log(
-            'TokensStore fetchTokens',
-            JSON.stringify(result, null, 2),
-          );
+    const addressesMap = new Map(
+      updates.addresses.map(address => [address.id, address]),
+    );
+
+    runInAction(() => {
+      this.tokens = {};
+    });
+
+    for (const t of updates.tokens) {
+      try {
+        const isPositive = new Balance(t.value).isPositive();
+        if (!isPositive) {
+          continue;
         }
-        this.tokens = result;
-        this._isLoading = false;
-      });
-    },
-  );
+
+        const contract =
+          addressesMap.get(t.contract) ||
+          this.getContract(t.contract) ||
+          (await Whitelist.verifyAddress(t.contract));
+
+        if (!contract) {
+          Logger.error(
+            'TokensStore.fetchTokens',
+            `contract for token ${t.contract} not found`,
+          );
+          continue;
+        }
+
+        const token = {
+          id: contract.id,
+          contract_created_at: contract.created_at,
+          contract_updated_at: contract.updated_at,
+          value: new Balance(
+            t.value,
+            contract.decimals || app.provider.decimals,
+            contract.symbol || app.provider.denom,
+          ),
+          decimals: contract.decimals,
+          is_erc20: contract.is_erc20,
+          is_erc721: contract.is_erc721,
+          is_erc1155: contract.is_erc1155,
+          is_in_white_list: contract.is_in_white_list,
+          name: contract.name,
+          symbol: contract.symbol,
+          created_at: t.created_at,
+          updated_at: t.updated_at,
+          image: contract.icon
+            ? {uri: contract.icon}
+            : require('@assets/images/empty-icon.png'),
+        };
+
+        const walletAddress = AddressUtils.toEth(t.address);
+
+        runInAction(() => {
+          if (!this.tokens[walletAddress]?.length) {
+            this.tokens[walletAddress] = [
+              this.generateNativeToken(Wallet.getById(walletAddress)!),
+            ];
+          }
+
+          this.tokens[walletAddress].push(token);
+        });
+      } catch (e) {
+        Logger.error(
+          'TokensStore.fetchTokens',
+          `error durning parsing tokens ${e}`,
+        );
+      }
+    }
+
+    this._isLoading = false;
+  });
 
   public generateNativeToken = (wallet: Wallet): IToken => {
     const balance = app.getAvailableBalance(wallet.address);
@@ -284,87 +334,6 @@ class TokensStore implements MobXStore<IToken> {
     }
   };
 
-  private parseIndexerTokens = async (
-    data: IndexerUpdatesResponse,
-  ): Promise<IndexerTokensData> => {
-    const tokensAndContracts = await Promise.all(
-      data.tokens.map(async token => {
-        try {
-          const contract = await Whitelist.verifyAddress(token.contract);
-          return {
-            token,
-            contract: (contract || {}) as IContract,
-          };
-        } catch (e) {
-          return {
-            token,
-            contract: {} as IContract,
-          };
-        }
-      }),
-    );
-
-    return Wallet.getAll().reduce((acc, w) => {
-      if (!Array.isArray(data.tokens)) {
-        return {
-          ...acc,
-          [w.address]: [this.generateNativeToken(w)],
-        };
-      }
-
-      const addressTokens: IToken[] = tokensAndContracts
-        .filter(
-          ({token}) =>
-            !!token.contract &&
-            new Balance(token.value).isPositive() &&
-            AddressUtils.toEth(token.address) === w.address,
-        )
-        .map(({token, contract}) => {
-          const hasCache = this.hasContractCache(token.contract);
-          if (!hasCache) {
-            const contractFromAdresses = data.addresses.find(
-              item => item.id === token.contract,
-            );
-            this.saveContract(contractFromAdresses);
-          } else {
-            this.saveContract(contract);
-          }
-
-          const contractFromCache = this.getContract(token.contract);
-
-          const result: IToken = {
-            id: contractFromCache.id,
-            contract_created_at: contractFromCache.created_at,
-            contract_updated_at: contractFromCache.updated_at,
-            value: new Balance(
-              token.value,
-              contractFromCache.decimals || app.provider.decimals,
-              contractFromCache.symbol || app.provider.denom,
-            ),
-            decimals: contractFromCache.decimals,
-            is_erc20: contractFromCache.is_erc20,
-            is_erc721: contractFromCache.is_erc721,
-            is_erc1155: contractFromCache.is_erc1155,
-            is_in_white_list: contractFromCache.is_in_white_list,
-            name: contractFromCache.name,
-            symbol: contractFromCache.symbol,
-            created_at: token.created_at,
-            updated_at: token.updated_at,
-            image: contractFromCache.icon
-              ? {uri: contractFromCache.icon}
-              : require('@assets/images/empty-icon.png'),
-          };
-
-          return result;
-        });
-
-      return {
-        ...acc,
-        [w.address]: [this.generateNativeToken(w), ...addressTokens],
-      };
-    }, {});
-  };
-
   private parseIToken = async (token: IndexerToken) => {
     const contract = await this.getTokenContract(token);
     this.saveContract(contract);
@@ -397,10 +366,6 @@ class TokensStore implements MobXStore<IToken> {
     return result;
   };
 
-  private hasContractCache = (id: HaqqCosmosAddress) => {
-    return !!Contracts.getById(id);
-  };
-
   private saveContract = (contract: IContract | undefined) => {
     if (!contract) {
       return;
@@ -411,12 +376,6 @@ class TokensStore implements MobXStore<IToken> {
 
   private getContract = (id: HaqqCosmosAddress) => {
     return Contracts.getById(id);
-  };
-
-  private recalculateCommulativeSum = (tokens: TokensStore['tokens']) => {
-    const walletsTokens = Object.values(tokens).flat(2);
-    this.removeAll();
-    walletsTokens.forEach(token => this.create(token.id, token));
   };
 
   onMessage = async (message: RPCMessage) => {
@@ -439,101 +398,3 @@ class TokensStore implements MobXStore<IToken> {
 
 const instance = new TokensStore(Boolean(process.env.JEST_WORKER_ID));
 export {instance as Token};
-
-async function getHardcodedTokens(
-  tokensDataToMerge: IndexerTokensData = {},
-  enabled = false,
-) {
-  const wallets = Wallet.addressList();
-  if (enabled) {
-    const contracts =
-      DEBUG_VARS.hardcodeERC20TokensContract[app.provider.ethChainId];
-
-    if (contracts.length) {
-      const tokens = await Promise.all(
-        wallets
-          .map(async wallet => {
-            return [
-              wallet,
-              [
-                ...toJS(tokensDataToMerge[wallet]),
-                ...(
-                  await Promise.all(
-                    contracts
-                      .map(async contract => {
-                        const etherProvider =
-                          new ethers.providers.JsonRpcProvider(
-                            app.provider.ethRpcEndpoint,
-                          );
-                        const contractInterface = new ethers.Contract(
-                          contract,
-                          ERC20_ABI,
-                          etherProvider,
-                        );
-
-                        const balanceResult = await contractInterface.balanceOf(
-                          wallet,
-                        );
-
-                        const contractInfo = await Whitelist.verifyAddress(
-                          AddressUtils.toHaqq(contract),
-                        );
-
-                        let symbol =
-                          contractInfo?.symbol ||
-                          (await contractInterface.symbol());
-                        let decimals =
-                          contractInfo?.decimals ||
-                          (await contractInterface.decimals());
-                        let name =
-                          contractInfo?.name ||
-                          (await contractInterface.name());
-
-                        const balance = new Balance(
-                          balanceResult,
-                          decimals,
-                          symbol,
-                        );
-
-                        if (!balance.isPositive()) {
-                          return;
-                        }
-
-                        return {
-                          id: AddressUtils.toHaqq(contract),
-                          contract_created_at: '',
-                          contract_updated_at: '',
-                          value: balance,
-                          decimals: decimals,
-                          is_erc20: true,
-                          is_erc721: false,
-                          is_erc1155: false,
-                          is_in_white_list: true,
-                          name: name,
-                          symbol: symbol,
-                          created_at: '',
-                          updated_at: '',
-                          image: contractInfo?.icon
-                            ? {uri: contractInfo?.icon}
-                            : require('@assets/images/empty-icon.png'),
-                        } as IToken;
-                      })
-                      .filter(Boolean),
-                  )
-                ).filter(Boolean),
-              ].filter(
-                // remove duplicates
-                (token, index, self) =>
-                  self.findIndex(t =>
-                    AddressUtils.equals(t?.id!, token?.id!),
-                  ) === index,
-              ),
-            ].filter(Boolean);
-          })
-          .filter(Boolean),
-      );
-      return Object.fromEntries(tokens) as IndexerTokensData;
-    }
-  }
-  return tokensDataToMerge;
-}
