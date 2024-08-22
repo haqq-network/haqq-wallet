@@ -34,6 +34,7 @@ interface TransactionConfirmationProps {
   disabled?: boolean;
   onConfirmTransaction: () => void;
   onFeePress: () => void;
+  onPressToAddress: () => void;
   fee: Fee | null;
 }
 
@@ -45,6 +46,7 @@ export const TransactionNftConfirmation = observer(
     item,
     onConfirmTransaction,
     onFeePress,
+    onPressToAddress,
     soulboundTokenHint,
     fee,
   }: TransactionConfirmationProps) => {
@@ -80,21 +82,22 @@ export const TransactionNftConfirmation = observer(
           </Text>
         )}
         <Text
-          variant={TextVariant.t11}
           color={Color.textBase1}
           position={TextPosition.center}
+          selectable
+          onPress={onPressToAddress}
           style={styles.address}>
           <Text
-            variant={TextVariant.t11}
+            variant={TextVariant.t14}
             color={Color.textBase1}
             position={TextPosition.center}
             style={styles.address}>
             {splittedTo[0]}
           </Text>
-          <Text variant={TextVariant.t11} color={Color.textBase2}>
+          <Text variant={TextVariant.t14} color={Color.textBase2}>
             {splittedTo[1]}
           </Text>
-          <Text variant={TextVariant.t11}>{splittedTo[2]}</Text>
+          <Text variant={TextVariant.t14}>{splittedTo[2]}</Text>
         </Text>
         {Boolean(soulboundTokenHint) && (
           <>
