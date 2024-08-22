@@ -66,12 +66,8 @@ const getMinAmountForDecimals = (d: number | null, symbol: string | null) => {
   if (!d) {
     return MIN_SWAP_AMOUNT;
   }
-  const zero = Array.from({length: d - 1})
-    .fill('0')
-    .join('');
-  const min = `0.${zero}1`;
-  const amountBN = ethers.utils.parseUnits(min, d);
-  return new Balance(amountBN, d, symbol || app.provider.denom);
+
+  return new Balance(Number(`0.${'0'.repeat(d! - 1)}1`), d, symbol!);
 };
 
 export const SwapScreen = observer(() => {
@@ -286,7 +282,7 @@ export const SwapScreen = observer(() => {
           awaitForEventDone(Events.onBalanceSync),
         ]);
       }
-      await refreshTokenBalances(currentWallet.address, tokenIn);
+      await refreshTokenBalances(currentWallet.address, t0Available);
 
       if (isWrapTx || isUnwrapTx) {
         amountsOut.setAmount(amountsIn.amount);
@@ -443,7 +439,10 @@ export const SwapScreen = observer(() => {
           closeOnSelect: true,
           renderCell: (
             // eslint-disable-next-line @typescript-eslint/no-shadow
-            value: AwaitValue<{wallet: Wallet; tokens: IToken[]}>,
+            value: AwaitValue<{
+              wallet: Wallet;
+              tokens: (IToken & {tag: string})[];
+            }>,
             _,
             onPress,
           ) => {
@@ -462,11 +461,8 @@ export const SwapScreen = observer(() => {
                     return {
                       ...t,
                       value:
-                        Token.tokens[
-                          AddressUtils.toEth(value?.wallet?.address)
-                          // @ts-ignore
-                        ].find(c => c.id === t.tag?.split?.('_')[1])?.value ??
-                        new Balance(0, 0, t?.symbol!),
+                        tokens.find(c => c.id === t.tag?.split?.('_')[1])
+                          ?.value ?? new Balance(0, 0, t?.symbol!),
                     };
                   })}
                   onPressToken={(w, newValue, idx) => {
@@ -523,7 +519,7 @@ export const SwapScreen = observer(() => {
 
   const refreshTokenBalances = async (
     wallet = currentWallet.address,
-    t0 = tokenIn,
+    t0 = t0Available,
   ) => {
     if (!t0 || !wallet) {
       return {};
@@ -532,13 +528,13 @@ export const SwapScreen = observer(() => {
     const tokenValue =
       // @ts-ignore
       t0.value ||
-      Token.tokens?.[wallet]?.find(t => AddressUtils.equals(t.id, t0.id!))
+      Token.tokens?.[wallet]?.find(t => AddressUtils.equals(t.id, tokenIn?.id!))
         ?.value;
     const availableIslm = app.getAvailableBalance(wallet);
 
-    const symbol = t0.symbol || app.provider.denom;
-    const isNativeCurrency = symbol.toUpperCase() === app.provider.denom;
-    const decimals = t0.decimals || app.provider.decimals;
+    const symbol = t0.getSymbol() || app.provider.denom;
+    const isNativeCurrency = symbol === app.provider.denom;
+    const decimals = t0.getPrecission() || app.provider.decimals;
     const zeroBalance = new Balance('0x0', decimals, symbol);
     const value = new Balance(
       (isNativeCurrency ? availableIslm : tokenValue) || zeroBalance,
@@ -597,7 +593,7 @@ export const SwapScreen = observer(() => {
         );
         setCurrentRoute(route! || filteredRoutes[0]);
       }
-      await refreshTokenBalances(wallet.address, token);
+      await refreshTokenBalances(wallet.address, t0Available);
       amountsIn.setMin();
       return await estimate();
     } catch (err) {
@@ -642,7 +638,7 @@ export const SwapScreen = observer(() => {
         );
         setCurrentRoute(route! || filteredRoutes[0]);
       }
-      await refreshTokenBalances(wallet.address, tokenIn);
+      await refreshTokenBalances(wallet.address, t0Available);
       return await estimate();
     } catch (err) {
       Logger.error(err, 'onPressChangeTokenOut');
@@ -962,11 +958,12 @@ export const SwapScreen = observer(() => {
   const onPressMax = async () => {
     Keyboard.dismiss();
     vibrate(HapticEffects.impactLight);
-    const {value} = await refreshTokenBalances(currentWallet.address, tokenIn);
-    const balance = value || t0Available;
+    await refreshTokenBalances(currentWallet.address, t0Available);
+
     amountsIn.setAmount(
-      balance.toBalanceString('auto', tokenIn?.decimals!, false),
+      t0Available.toBalanceString('auto', tokenIn?.decimals!, false),
     );
+
     await estimate();
   };
 
@@ -979,7 +976,7 @@ export const SwapScreen = observer(() => {
       wallets: walletsWithBalances?.length ? walletsWithBalances : wallets,
       initialAddress: currentWallet.address,
     });
-    await refreshTokenBalances(address as HaqqEthereumAddress, tokenIn);
+    await refreshTokenBalances(address as HaqqEthereumAddress, t0Available);
     setCurrentWallet(() => Wallet.getById(address)!);
   }, [currentWallet, refreshTokenBalances, tokenIn]);
 
@@ -1017,7 +1014,7 @@ export const SwapScreen = observer(() => {
   useEffect(() => {
     if (currentRoute) {
       logger.log('useEffect estimate()');
-      refreshTokenBalances(currentWallet.address, tokenIn).then(() =>
+      refreshTokenBalances(currentWallet.address, t0Available).then(() =>
         estimate(),
       );
     }

@@ -13,6 +13,7 @@ import {storage} from '@app/services/mmkv';
 import {
   AddressType,
   HaqqCosmosAddress,
+  HaqqEthereumAddress,
   IContract,
   IToken,
   IndexerToken,
@@ -109,7 +110,7 @@ class TokensStore implements MobXStore<IToken> {
     } else {
       this.data = {
         ...this.data,
-        [AddressUtils.toHaqq(id)]: params,
+        [AddressUtils.toEth(id)]: params,
       };
     }
 
@@ -127,7 +128,7 @@ class TokensStore implements MobXStore<IToken> {
     const newData = {
       ...this.data,
     };
-    delete newData[AddressUtils.toHaqq(id)];
+    delete newData[AddressUtils.toEth(id)];
 
     this.data = newData;
     return true;
@@ -163,7 +164,7 @@ class TokensStore implements MobXStore<IToken> {
   }
 
   getById(id: string) {
-    return this.data[AddressUtils.toHaqq(id)];
+    return this.data[AddressUtils.toEth(id)];
   }
 
   update(id: string | undefined, item: Omit<IToken, 'id'>) {
@@ -179,7 +180,7 @@ class TokensStore implements MobXStore<IToken> {
 
     this.data = {
       ...this.data,
-      [AddressUtils.toHaqq(id)]: {
+      [AddressUtils.toEth(id)]: {
         ...itemToUpdate,
         ...item,
         value: updatedValue,
@@ -195,6 +196,7 @@ class TokensStore implements MobXStore<IToken> {
 
     runInAction(() => {
       this._isLoading = true;
+      this.tokens = {};
     });
 
     const wallets = Wallet.getAll();
@@ -202,24 +204,27 @@ class TokensStore implements MobXStore<IToken> {
     const updates = await Indexer.instance.updates(accounts, this.lastUpdate);
 
     const addressesMap = new Map(
-      updates.addresses.map(address => [address.id, address]),
+      updates.addresses.map(address => [
+        AddressUtils.toEth(address.id),
+        address,
+      ]),
     );
 
-    runInAction(() => {
-      this.tokens = {};
-    });
+    const _tokens = {} as Record<HaqqEthereumAddress, IToken[]>;
+    const _data = {} as Record<HaqqEthereumAddress, IToken>;
 
-    for (const t of updates.tokens) {
+    for await (const t of updates.tokens) {
       try {
         const isPositive = new Balance(t.value).isPositive();
         if (!isPositive) {
           continue;
         }
 
+        const contractAddress = AddressUtils.toEth(t.contract);
         const contract =
-          addressesMap.get(t.contract) ||
-          this.getContract(t.contract) ||
-          (await Whitelist.verifyAddress(t.contract));
+          addressesMap.get(contractAddress) ||
+          this.getContract(contractAddress) ||
+          (await Whitelist.verifyAddress(contractAddress));
 
         if (!contract) {
           Logger.error(
@@ -235,8 +240,8 @@ class TokensStore implements MobXStore<IToken> {
           contract_updated_at: contract.updated_at,
           value: new Balance(
             t.value,
-            contract.decimals || app.provider.decimals,
-            contract.symbol || app.provider.denom,
+            contract.decimals ?? app.provider.decimals,
+            contract.symbol ?? app.provider.denom,
           ),
           decimals: contract.decimals,
           is_erc20: contract.is_erc20,
@@ -254,15 +259,14 @@ class TokensStore implements MobXStore<IToken> {
 
         const walletAddress = AddressUtils.toEth(t.address);
 
-        runInAction(() => {
-          if (!this.tokens[walletAddress]?.length) {
-            this.tokens[walletAddress] = [
-              this.generateNativeToken(Wallet.getById(walletAddress)!),
-            ];
-          }
+        if (!_tokens[walletAddress]?.length) {
+          _tokens[walletAddress] = [
+            this.generateNativeToken(Wallet.getById(walletAddress)!),
+          ];
+        }
 
-          this.tokens[walletAddress].push(token);
-        });
+        _tokens[walletAddress].push(token);
+        _data[AddressUtils.toEth(token.id)] = token;
       } catch (e) {
         Logger.error(
           'TokensStore.fetchTokens',
@@ -271,7 +275,14 @@ class TokensStore implements MobXStore<IToken> {
       }
     }
 
-    this._isLoading = false;
+    runInAction(() => {
+      this.tokens = _tokens;
+      this.data = {
+        ...this.data,
+        ..._data,
+      };
+      this._isLoading = false;
+    });
   });
 
   public generateNativeToken = (wallet: Wallet): IToken => {
@@ -341,7 +352,7 @@ class TokensStore implements MobXStore<IToken> {
     const contractFromCache = this.getContract(token.contract);
 
     const result: IToken = {
-      id: contractFromCache.id,
+      id: AddressUtils.toHaqq(contractFromCache.id),
       contract_created_at: contractFromCache.created_at,
       contract_updated_at: contractFromCache.updated_at,
       value: new Balance(
@@ -374,7 +385,7 @@ class TokensStore implements MobXStore<IToken> {
     Contracts.create(contract.id, contract);
   };
 
-  private getContract = (id: HaqqCosmosAddress) => {
+  private getContract = (id: HaqqCosmosAddress | HaqqEthereumAddress) => {
     return Contracts.getById(id);
   };
 
