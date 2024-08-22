@@ -186,7 +186,7 @@ export const JsonRpcCommonTransaction = ({
             <Text
               onPress={onPressApproveSpender}
               variant={TextVariant.t11}
-              color={Color.textBlue1}>
+              color={Color.textGreen1}>
               {Contracts.getById(parsedInput?.args?.[0])?.name ?? ''}
               {STRINGS.NBSP}
               {shortAddress(parsedInput?.args?.[0], '•', true)}
