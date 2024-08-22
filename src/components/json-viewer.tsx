@@ -33,6 +33,7 @@ const CustomNode = ({value}: {value: any}) => {
       <Text
         variant={TextVariant.t13}
         color={Color.textBlue1}
+        selectable
         onPress={handleAddressPress}>
         "{part0}
         <Text variant={TextVariant.t14} color={Color.textBlue1}>
@@ -43,7 +44,11 @@ const CustomNode = ({value}: {value: any}) => {
     );
   }
 
-  return <Text>{value}</Text>;
+  return (
+    <Text onPress={handleAddressPress} selectable>
+      {value}
+    </Text>
+  );
 };
 
 export const JsonViewer = ({

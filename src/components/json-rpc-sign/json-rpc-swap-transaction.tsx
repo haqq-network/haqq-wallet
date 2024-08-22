@@ -414,7 +414,7 @@ export const JsonRpcSwapTransaction = observer(
             <Text
               onPress={onPressRoutingSource}
               variant={TextVariant.t11}
-              color={Color.textBlue1}>
+              color={Color.textGreen1}>
               {Contracts.getById(tx?.to!)?.name}
               {STRINGS.NBSP}
               {shortAddress(tx?.to!, '•', true)}
