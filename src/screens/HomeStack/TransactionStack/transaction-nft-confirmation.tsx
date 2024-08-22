@@ -1,5 +1,6 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
+import Clipboard from '@react-native-clipboard/clipboard';
 import {observer} from 'mobx-react';
 
 import {TransactionNftConfirmation} from '@app/components/transaction-nft-confirmation';
@@ -12,6 +13,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useLayoutEffectAsync} from '@app/hooks/use-effect-async';
 import {useError} from '@app/hooks/use-error';
+import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Fee} from '@app/models/fee';
 import {ContractType} from '@app/models/nft';
@@ -20,7 +22,7 @@ import {
   TransactionStackParamList,
   TransactionStackRoutes,
 } from '@app/route-types';
-import {EthNetwork} from '@app/services';
+import {EthNetwork, sendNotification} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {getERC1155TransferData} from '@app/services/eth-network/erc1155';
 import {getERC721TransferData} from '@app/services/eth-network/erc721';
@@ -197,6 +199,11 @@ export const TransactionNftConfirmationScreen = observer(() => {
     }
   }, [fee, wallet?.address, nft.contract, feeData]);
 
+  const onPressToAddress = useCallback(() => {
+    Clipboard.setString(route.params.to);
+    sendNotification(I18N.notificationCopied);
+  }, [route.params.to]);
+
   return (
     <TransactionNftConfirmation
       disabled={disabled}
@@ -207,6 +214,7 @@ export const TransactionNftConfirmationScreen = observer(() => {
       onFeePress={onFeePress}
       fee={fee}
       onConfirmTransaction={onConfirmTransaction}
+      onPressToAddress={onPressToAddress}
     />
   );
 });
