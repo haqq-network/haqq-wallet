@@ -439,7 +439,10 @@ export const SwapScreen = observer(() => {
           closeOnSelect: true,
           renderCell: (
             // eslint-disable-next-line @typescript-eslint/no-shadow
-            value: AwaitValue<{wallet: Wallet; tokens: IToken[]}>,
+            value: AwaitValue<{
+              wallet: Wallet;
+              tokens: (IToken & {tag: string})[];
+            }>,
             _,
             onPress,
           ) => {
@@ -458,11 +461,8 @@ export const SwapScreen = observer(() => {
                     return {
                       ...t,
                       value:
-                        Token.tokens[
-                          AddressUtils.toEth(value?.wallet?.address)
-                          // @ts-ignore
-                        ].find(c => c.id === t.tag?.split?.('_')[1])?.value ??
-                        new Balance(0, 0, t?.symbol!),
+                        tokens.find(c => c.id === t.tag?.split?.('_')[1])
+                          ?.value ?? new Balance(0, 0, t?.symbol!),
                     };
                   })}
                   onPressToken={(w, newValue, idx) => {
