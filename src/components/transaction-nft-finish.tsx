@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 
+import Clipboard from '@react-native-clipboard/clipboard';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -23,6 +24,7 @@ import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Fee} from '@app/models/fee';
 import {NftItem} from '@app/models/nft';
+import {sendNotification} from '@app/services';
 import {TransactionResponse} from '@app/types';
 
 import {ImageWrapper} from './image-wrapper';
@@ -43,13 +45,17 @@ export const TransactionNftFinish = ({
   onSubmit,
   onPressContact,
   contact,
-  short,
   fee,
 }: TransactionFinishProps) => {
   const onPressHash = async () => {
     const url = app.provider.getTxExplorerUrl(transaction?.hash!);
     await openURL(url);
   };
+
+  const onPressToAddress = useCallback(() => {
+    Clipboard.setString(transaction?.to ?? '');
+    sendNotification(I18N.notificationCopied);
+  }, [transaction]);
 
   const nftImageUri = useNftImage(
     typeof item.cached_url === 'string'
@@ -89,14 +95,16 @@ export const TransactionNftFinish = ({
             variant={TextVariant.t13}
             position={TextPosition.center}
             style={styles.address}>
-            {contact.name + ' '}
+            {contact.name}
           </Text>
         )}
         <Text
           variant={TextVariant.t14}
           position={TextPosition.center}
+          selectable
+          onPress={onPressToAddress}
           style={styles.address}>
-          {short}
+          {transaction?.to}
         </Text>
       </View>
 
@@ -199,7 +207,7 @@ const styles = createTheme({
   },
   margin: {marginBottom: 16},
   contactLine: {
-    flexDirection: 'row',
     alignSelf: 'center',
+    justifyContent: 'center',
   },
 });
