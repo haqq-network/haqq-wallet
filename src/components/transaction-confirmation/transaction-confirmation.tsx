@@ -36,6 +36,7 @@ interface TransactionConfirmationProps {
   disabled?: boolean;
   onConfirmTransaction: () => void;
   onFeePress: () => void;
+  onPressToAddress: () => void;
   fee: Fee | null;
   token: IToken;
   balance: BalanceData;
@@ -50,6 +51,7 @@ export const TransactionConfirmation = observer(
     amount,
     onConfirmTransaction,
     onFeePress,
+    onPressToAddress,
     fee,
     token,
     balance,
@@ -150,21 +152,23 @@ export const TransactionConfirmation = observer(
           </Text>
         )}
         <Text
-          variant={TextVariant.t11}
           color={Color.textBase1}
           position={TextPosition.center}
+          selectable
+          numberOfLines={1}
+          onPress={onPressToAddress}
           style={styles.address}>
           <Text
-            variant={TextVariant.t11}
+            variant={TextVariant.t14}
             color={Color.textBase1}
             position={TextPosition.center}
             style={styles.address}>
             {splittedTo[0]}
           </Text>
-          <Text variant={TextVariant.t11} color={Color.textBase2}>
+          <Text variant={TextVariant.t14} color={Color.textBase2}>
             {splittedTo[1]}
           </Text>
-          <Text variant={TextVariant.t11}>{splittedTo[2]}</Text>
+          <Text variant={TextVariant.t14}>{splittedTo[2]}</Text>
         </Text>
         <Spacer style={styles.spacer}>
           <View style={styles.info}>
@@ -269,7 +273,7 @@ const styles = createTheme({
     marginVertical: 16,
   },
   spacer: {
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
   },
   feeContainer: {
     flexDirection: 'row',

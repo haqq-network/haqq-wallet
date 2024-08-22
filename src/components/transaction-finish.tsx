@@ -1,6 +1,7 @@
-import React, {useMemo} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {BigNumber} from '@ethersproject/bignumber';
+import Clipboard from '@react-native-clipboard/clipboard';
 import {observer} from 'mobx-react';
 import {Image, View} from 'react-native';
 
@@ -23,8 +24,10 @@ import {createTheme, openURL} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Fee} from '@app/models/fee';
+import {sendNotification} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {IToken, TransactionResponse} from '@app/types';
+import {STRINGS} from '@app/variables/common';
 
 type TransactionFinishProps = {
   transaction: TransactionResponse | null;
@@ -45,17 +48,22 @@ export const TransactionFinish = observer(
     onSubmit,
     onPressContact,
     contact,
-    short,
     testID,
     token,
     amount,
     hideContact,
     fee,
   }: TransactionFinishProps) => {
+    const name = token?.name || contact?.name;
     const onPressHash = async () => {
       const url = app.provider.getTxExplorerUrl(transaction?.hash!);
       await openURL(url);
     };
+
+    const onPressToAddress = useCallback(() => {
+      Clipboard.setString(transaction?.to ?? '');
+      sendNotification(I18N.notificationCopied);
+    }, [transaction]);
 
     const transactionAmount = useMemo(() => {
       if (amount) {
@@ -104,19 +112,22 @@ export const TransactionFinish = observer(
         )}
 
         <View style={styles.contactLine}>
-          {contact?.name && (
+          {!!name && (
             <Text
               variant={TextVariant.t13}
               position={TextPosition.center}
               style={styles.address}>
-              {contact.name + ' '}
+              {name}
+              {STRINGS.NBSP}({token.symbol || app.provider.denom})
             </Text>
           )}
           <Text
             variant={TextVariant.t14}
             position={TextPosition.center}
+            selectable
+            onPress={onPressToAddress}
             style={styles.address}>
-            {short}
+            {transaction?.to}
           </Text>
         </View>
 
@@ -238,8 +249,8 @@ const styles = createTheme({
   },
   margin: {marginBottom: 16},
   contactLine: {
-    flexDirection: 'row',
     alignSelf: 'center',
+    justifyContent: 'center',
   },
   providerContainer: {
     backgroundColor: Color.bg8,
