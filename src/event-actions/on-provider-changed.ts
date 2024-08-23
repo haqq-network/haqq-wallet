@@ -34,6 +34,7 @@ export const onProviderChanged = createAsyncTask(async () => {
     Provider.fetchProviders();
   } finally {
     hideModal(ModalType.loading);
+    app.emit(Events.onProviderChangedFinish);
   }
 
   await Promise.allSettled([

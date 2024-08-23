@@ -243,6 +243,7 @@ class App extends AsyncEventEmitter {
         this._provider = p;
       });
       EthNetwork.init(p);
+      this._balances.clear();
       app.emit(Events.onProviderChanged, p.id);
     } else {
       throw new Error('Provider not found');

@@ -31,8 +31,10 @@ export function useWalletsBalance(wallets: Wallet[]): WalletBalance {
     }
 
     app.on(Events.onBalanceSync, onBalance);
+    app.on(Events.onProviderChangedFinish, onBalance);
     return () => {
       app.off(Events.onBalanceSync, onBalance);
+      app.off(Events.onProviderChangedFinish, onBalance);
     };
   }, [prevWalletsLength, wallets]);
 
