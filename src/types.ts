@@ -1345,12 +1345,11 @@ export type ContractNameMap = Record<string, {name: string; symbol: string}>;
 
 export type HaqqCosmosAddress = `haqq${string}`;
 export type HaqqEthereumAddress = `0x${string}`;
+export type WalletAddress = HaqqCosmosAddress | HaqqEthereumAddress;
+
 export type HexNumber = `0x${string}`;
 
-export type IndexerBalance = Record<
-  HaqqCosmosAddress | HaqqEthereumAddress,
-  HexNumber
->;
+export type IndexerBalance = Record<WalletAddress, HexNumber>;
 export type IndexerToken = {
   address: HaqqCosmosAddress;
   contract: HaqqCosmosAddress;
@@ -1358,10 +1357,7 @@ export type IndexerToken = {
   updated_at: string;
   value: string;
 };
-export type IndexerTime = Record<
-  HaqqCosmosAddress | HaqqEthereumAddress,
-  number
->;
+export type IndexerTime = Record<WalletAddress, number>;
 
 export interface BalanceData {
   vested: Balance;

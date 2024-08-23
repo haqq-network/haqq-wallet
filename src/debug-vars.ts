@@ -1,3 +1,5 @@
+import {WalletAddress} from './types';
+
 interface DebugVars {
   enableAwaitJsonRpcSignLogger: boolean;
   enableAsyncEventEmitterLogs: boolean;
@@ -11,7 +13,7 @@ interface DebugVars {
   allowAnySourcesForWalletConnectLogin: boolean;
   disableWeb3DomainBlocking: boolean;
   enableMockWallets: boolean;
-  mockWalletsAddresses: string[];
+  mockWalletsAddresses: WalletAddress[];
   hardcodeERC20TokensContract: Record<number, string[]>;
   enableHardcodeERC20TokensContract: boolean;
 }

@@ -2,7 +2,6 @@ import {makeAutoObservable, when} from 'mobx';
 import {isHydrated, makePersistable} from 'mobx-persist-store';
 
 import {app} from '@app/contexts';
-import {DEBUG_VARS} from '@app/debug-vars';
 import {onWalletsBalanceCheckRPC} from '@app/event-actions/on-wallets-balance-check';
 import {Events} from '@app/events';
 import {AddressUtils} from '@app/helpers/address-utils';
@@ -12,7 +11,7 @@ import {WalletRealmObject} from '@app/models/realm-object-for-migration';
 import {Socket} from '@app/models/socket';
 import {storage} from '@app/services/mmkv';
 import {RPCMessage, RPCObserver} from '@app/types/rpc';
-import {generateFlatColors, generateGradientColors, makeID} from '@app/utils';
+import {generateFlatColors, generateGradientColors} from '@app/utils';
 import {
   CARD_CIRCLE_TOTAL,
   CARD_RHOMBUS_TOTAL,
@@ -21,9 +20,8 @@ import {
   STORE_REHYDRATION_TIMEOUT_MS,
 } from '@app/variables/common';
 
-import {Token} from './tokens';
+import {getMockWallets, isMockEnabled} from './wallet.mock';
 
-import {realm} from './index';
 import {
   AddWalletParams,
   HaqqCosmosAddress,
@@ -33,7 +31,9 @@ import {
   WalletCardStyle,
   WalletCardStyleT,
   WalletType,
-} from '../types';
+} from '../../types';
+import {realm} from '../index';
+import {Token} from '../tokens';
 
 export type Wallet = {
   address: HaqqEthereumAddress;
@@ -60,30 +60,6 @@ export type Wallet = {
   isImported?: boolean;
 };
 
-function getMockWallets(): Wallet[] {
-  return DEBUG_VARS.mockWalletsAddresses.map((address, index) => ({
-    address: AddressUtils.toEth(address),
-    cosmosAddress: AddressUtils.toHaqq(address),
-    accountId: makeID(6),
-    data: '',
-    mnemonicSaved: false,
-    socialLinkEnabled: false,
-    name: `🔴 DEBUG #${index}`,
-    pattern: `card-rhombus-${index + 1}`,
-    cardStyle: WalletCardStyle.gradient,
-    colorFrom: '#2ebf41',
-    colorTo: '#552ebf',
-    colorPattern: '#A6A628',
-    type: WalletType.hot,
-    path: "44'/60'/0'/0/0",
-    version: 2,
-    isHidden: false,
-    isMain: index === 0,
-    position: index,
-    subscription: null,
-  }));
-}
-
 class WalletStore implements MobXStoreFromRealm, RPCObserver {
   realmSchemaName = WalletRealmObject.schema.name;
   wallets: Wallet[] = [];
@@ -97,11 +73,6 @@ class WalletStore implements MobXStoreFromRealm, RPCObserver {
     );
 
     if (!shouldSkipPersisting) {
-      const isMockEnabled =
-        __DEV__ &&
-        DEBUG_VARS.enableMockWallets &&
-        DEBUG_VARS.mockWalletsAddresses.length;
-
       let originalWallets: Wallet[] = [];
 
       makePersistable(this, {
