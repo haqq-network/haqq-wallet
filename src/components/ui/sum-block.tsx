@@ -194,6 +194,6 @@ const styles = createTheme({
     paddingHorizontal: 0,
   },
   inputContainer: {
-    flex: 5,
+    flex: 4,
   },
 });
