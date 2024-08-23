@@ -60,6 +60,7 @@ export type ProviderConfig = {
   swap_enabled: boolean;
   swap_router_v3: string;
   weth_address: string;
+  weth_symbol: string;
 };
 
 export type VerifyContractRequest = {

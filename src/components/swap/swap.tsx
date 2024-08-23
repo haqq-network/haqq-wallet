@@ -6,8 +6,11 @@ import {View} from 'react-native';
 import {Color} from '@app/colors';
 import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
+import {shortAddress} from '@app/helpers/short-address';
 import {useSumAmount} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {Contracts} from '@app/models/contracts';
+import {RemoteProviderConfig} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {
@@ -226,23 +229,44 @@ export const Swap = observer(
                 STRINGS.NBSP
               }${rate}`}
             />
-            <EstimatedValue
-              title={I18N.swapScreenProviderFee}
-              value={providerFee.toFiat({useDefaultCurrency: true, fixed: 6})}
-            />
-            <EstimatedValue
-              title={I18N.swapScreenPriceImpact}
-              valueColor={priceImpactColor}
-              value={`${formatNumberString(estimateData.s_price_impact)}%`}
-            />
-            <EstimatedValue
-              title={I18N.swapScreenRoutingSource}
-              value={'SwapRouterV3'}
-            />
-            <EstimatedValue
-              title={I18N.swapScreenMinimumReceived}
-              value={minReceivedAmount.toBalanceString('auto')}
-            />
+            {!isWrapTx && !isUnwrapTx && (
+              <>
+                <EstimatedValue
+                  title={I18N.swapScreenProviderFee}
+                  value={providerFee.toFiat({
+                    useDefaultCurrency: true,
+                    fixed: 6,
+                  })}
+                />
+                <EstimatedValue
+                  title={I18N.swapScreenPriceImpact}
+                  valueColor={priceImpactColor}
+                  value={`${formatNumberString(estimateData.s_price_impact)}%`}
+                />
+                <EstimatedValue
+                  title={I18N.swapScreenMinimumReceived}
+                  value={minReceivedAmount.toBalanceString('auto')}
+                />
+              </>
+            )}
+
+            <First>
+              {(isWrapTx || isUnwrapTx) && (
+                <EstimatedValue
+                  title={I18N.swapScreenRoutingSource}
+                  value={`${Contracts.getById(RemoteProviderConfig.wethAddress)
+                    ?.name}${STRINGS.NBSP}${shortAddress(
+                    RemoteProviderConfig.wethAddress!,
+                    '•',
+                    true,
+                  )}`}
+                />
+              )}
+              <EstimatedValue
+                title={I18N.swapScreenRoutingSource}
+                value={'SwapRouterV3'}
+              />
+            </First>
 
             <EstimatedValue
               title={I18N.swapScreenRoute}

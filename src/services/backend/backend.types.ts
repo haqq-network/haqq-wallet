@@ -1,5 +1,6 @@
 export enum NetworkProviderTypes {
   EVM = 'evm',
+  HAQQ = 'haqq',
 }
 
 export enum NetworkProviderStage {
