@@ -37,11 +37,11 @@ enableBatchedStateUpdates();
 
 LogBox.ignoreLogs(["The 'navigation' object hasn't been initialized"]);
 
-try {
-  const isRTLEnabled = true;
-  I18nManager.allowRTL(isRTLEnabled);
-  I18nManager.swapLeftAndRightInRTL(isRTLEnabled);
-} catch (e) {}
+// try {
+//   const isRTLEnabled = true;
+//   I18nManager.allowRTL(isRTLEnabled);
+//   I18nManager.swapLeftAndRightInRTL(isRTLEnabled);
+// } catch (e) {}
 
 if (__DEV__ && IS_IOS) {
   messaging().setAPNSToken('dev-apns-token', 'sandbox');
