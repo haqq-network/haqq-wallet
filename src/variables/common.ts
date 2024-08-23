@@ -200,7 +200,7 @@ export const IS_IOS = Platform.OS === 'ios';
 export const WEI_PRECISION = 18;
 export const WEI = 10 ** WEI_PRECISION;
 
-export const LONG_NUM_PRECISION = 8;
+export const LONG_NUM_PRECISION = 6;
 export const NUM_PRECISION = 2;
 export const NUM_DELIMITER = ' ';
 
