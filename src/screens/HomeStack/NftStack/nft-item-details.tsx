@@ -1,7 +1,6 @@
 import React, {memo, useCallback} from 'react';
 
 import {app} from '@app/contexts';
-import {AddressUtils} from '@app/helpers/address-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {
   HomeStackRoutes,
@@ -29,10 +28,10 @@ export const NftItemDetailsScreen = memo(() => {
   }, [params.item, navigation]);
 
   const onPressExplorer = useCallback(() => {
-    // https://explorer.haqq.network/token/0xe5C15B68cfE3182c106f60230A1bE377ceaad483/instance/2998
-    const url = `${app.provider.explorer}/token/${AddressUtils.toEth(
+    const url = app.provider.getTokenExplorerUrl(
       params.item.contract,
-    )}/instance/${params.item.tokenId}`;
+      params.item.tokenId,
+    );
     return openInAppBrowser(url);
   }, [params.item]);
 
