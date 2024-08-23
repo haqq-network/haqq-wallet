@@ -5,7 +5,9 @@ import {View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
 import {Contracts} from '@app/models/contracts';
+import {Token} from '@app/models/tokens';
 import {HaqqCosmosAddress} from '@app/types';
 import {STRINGS} from '@app/variables/common';
 
@@ -58,7 +60,9 @@ export const SwapRoutePathIcons = observer(
     return (
       <View style={styles.route}>
         {adresses.map((address, i, arr) => {
-          const contract = Contracts.getById(address);
+          const contract = AddressUtils.equals(address, NATIVE_TOKEN_ADDRESS)
+            ? Token.generateNativeTokenContract()
+            : Contracts.getById(address);
           const isLast = arr.length - 1 === i;
 
           if (!contract) {

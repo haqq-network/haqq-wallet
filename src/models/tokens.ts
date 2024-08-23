@@ -332,9 +332,7 @@ class TokensStore implements MobXStore<IToken> {
       updated_at: '',
       icon: app.provider.isHaqqNetwork
         ? require('@assets/images/islm_icon.png')
-        : {
-            uri: app.provider.icon,
-          },
+        : app.provider.icon,
     };
   };
 
