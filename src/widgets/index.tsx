@@ -135,6 +135,5 @@ export const WidgetRoot = memo(({lastUpdate}: {lastUpdate: number}) => {
     });
   };
 
-  //@ts-ignore
   return renderWidgetsList(data);
 });

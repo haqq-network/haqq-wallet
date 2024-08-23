@@ -7,6 +7,7 @@ import {TotalValueTabNames} from '@app/components/total-value-info';
 import {ShadowCard} from '@app/components/ui/shadow-card';
 import {useTypedNavigation} from '@app/hooks';
 import {useShowNft} from '@app/hooks/nft';
+import {Nft} from '@app/models/nft';
 import {HomeStackRoutes} from '@app/route-types';
 import {INftWidget, NftWidgetSize} from '@app/types';
 
@@ -23,7 +24,7 @@ export const NftWidgetWrapper = observer(({size}: INftWidget) => {
 
   const showNft = useShowNft();
 
-  if (!showNft) {
+  if (!showNft || !Nft.getAll().length) {
     return null;
   }
 
