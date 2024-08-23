@@ -102,6 +102,7 @@ const requestAccount = async ({helper}: JsonRpcMethodHandlerParams) => {
     title: I18N.selectAccount,
     autoSelectWallet: false,
     initialAddress,
+    hideBalance: true,
   });
   return selectedAccount;
 };

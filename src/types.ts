@@ -1076,6 +1076,7 @@ export type Modals = {
     title: I18N;
     autoSelectWallet?: boolean;
     initialAddress?: string;
+    hideBalance?: boolean;
   };
   transactionError: {
     onClose?: () => void;

@@ -4,7 +4,7 @@ import {StyleSheet, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
 import {Color} from '@app/colors';
-import {CardSmall, Text} from '@app/components/ui';
+import {CardSmall, Text, TextVariant} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 
 import {WalletRowProps} from './wallet-row';
@@ -44,7 +44,7 @@ export const WalletRowVariant3 = ({
         colorPattern={item.colorPattern}
       />
       <View style={styles.textContainer}>
-        <Text t18 color={Color.textBase3}>
+        <Text variant={TextVariant.t18} color={Color.textBase3}>
           {addressString}
         </Text>
       </View>
