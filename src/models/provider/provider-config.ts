@@ -1,49 +1,68 @@
 import {makeAutoObservable, runInAction} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
+import {app} from '@app/contexts';
 import {Indexer} from '@app/services/indexer';
 import {ProviderConfig} from '@app/services/indexer/indexer.types';
 import {storage} from '@app/services/mmkv';
+import {ChainId} from '@app/types';
+
+import {Provider} from './provider';
+import {ProviderConfigModel} from './provider-config-model';
 
 class ProviderConfigStore {
-  config: ProviderConfig | null = null;
+  private _data: Record<ChainId, ProviderConfig> = {};
+
   constructor() {
     makeAutoObservable(this);
     makePersistable(this, {
       name: this.constructor.name,
-      properties: ['config'],
+      properties: ['_data'] as (keyof this)[],
       storage: storage,
     });
   }
 
   init = async () => {
-    const newConfig = await Indexer.instance.getProviderConfig();
-    runInAction(() => {
-      this.config = newConfig;
-    });
+    try {
+      const config = await Indexer.instance.getProviderConfig();
+      runInAction(() => {
+        this._data[app.provider.ethChainId] = config;
+      });
+      this.lazyLoadOtherConfig();
+      return Promise.resolve();
+    } catch (error) {
+      Logger.captureException(error, 'ProviderConfigStore:init');
+    }
   };
 
-  get isNftEnabled() {
-    return Boolean(this.config?.nft_exists);
+  get data() {
+    return this._data;
   }
 
-  get isBech32Enabled() {
-    return Boolean(this.config?.bech32_exists);
-  }
+  lazyLoadOtherConfig = async () => {
+    const providers = Provider.getAll().filter(
+      p => p.ethChainId !== app.provider.ethChainId,
+    );
 
-  get swapEnabled() {
-    return Boolean(this.config?.swap_enabled);
-  }
-  get swapRouterV3() {
-    return this.config?.swap_router_v3 ?? '';
-  }
-  get wethAddress() {
-    return this.config?.weth_address ?? '';
-  }
+    for await (const p of providers) {
+      try {
+        if (this._data[p.ethChainId]) {
+          continue;
+        }
+        const indexer = new Indexer(p.ethChainId);
+        const c = await indexer.getProviderConfig();
+        runInAction(() => {
+          this._data[p.ethChainId] = c;
+        });
+      } catch (error) {
+        Logger.captureException(error, 'failed to initialize provider config:');
+      }
+    }
+  };
 
-  get wethSymbol() {
-    return this.config?.weth_symbol ?? '';
-  }
+  getConfig = (chainId: ChainId) => {
+    return new ProviderConfigModel(this.data[chainId]);
+  };
 }
 
 const instance = new ProviderConfigStore();

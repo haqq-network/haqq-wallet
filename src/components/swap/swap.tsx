@@ -10,7 +10,6 @@ import {shortAddress} from '@app/helpers/short-address';
 import {useSumAmount} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Contracts} from '@app/models/contracts';
-import {RemoteProviderConfig} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {
@@ -254,9 +253,9 @@ export const Swap = observer(
               {(isWrapTx || isUnwrapTx) && (
                 <EstimatedValue
                   title={I18N.swapScreenRoutingSource}
-                  value={`${Contracts.getById(RemoteProviderConfig.wethAddress)
+                  value={`${Contracts.getById(app.provider.config.wethAddress)
                     ?.name}${STRINGS.NBSP}${shortAddress(
-                    RemoteProviderConfig.wethAddress!,
+                    app.provider.config.wethAddress!,
                     '•',
                     true,
                   )}`}
