@@ -1061,9 +1061,9 @@ export function getText(key: I18N, params?: Record<string, string>): string {
 
 export const supportedTranslationsMap: {[key in AppLanguage]: NodeRequire} = {
   en: require('../assets/locales/en/en.json'),
-  ar: require('../assets/locales/ar/ar.json'),
-  ru: require('../assets/locales/ru/ru.json'),
   tr: require('../assets/locales/tr/tr.json'),
+  // ar: require('../assets/locales/ar/ar.json'),
+  // ru: require('../assets/locales/ru/ru.json'),
 };
 
 /**
