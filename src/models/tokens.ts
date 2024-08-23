@@ -213,6 +213,11 @@ class TokensStore implements MobXStore<IToken> {
     const _tokens = {} as Record<HaqqEthereumAddress, IToken[]>;
     const _data = {} as Record<HaqqEthereumAddress, IToken>;
 
+    wallets.forEach(wallet => {
+      _tokens[AddressUtils.toEth(wallet.cosmosAddress)] = [
+        this.generateNativeToken(wallet),
+      ];
+    });
     for await (const t of updates.tokens) {
       try {
         const isPositive = new Balance(t.value).isPositive();
@@ -274,7 +279,6 @@ class TokensStore implements MobXStore<IToken> {
         );
       }
     }
-
     runInAction(() => {
       this.tokens = _tokens;
       this.data = {
