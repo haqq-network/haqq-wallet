@@ -26,6 +26,7 @@ export type WalletRowProps = {
   checked?: boolean;
   disabled?: boolean;
   type?: WalletRowTypes;
+  hideBalance?: boolean;
 };
 
 export const WalletRow = ({
