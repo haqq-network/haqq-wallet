@@ -61,6 +61,11 @@ export type ProviderConfig = {
   swap_router_v3: string;
   weth_address: string;
   weth_symbol: string;
+  explorer_address_url: string;
+  explorer_cosmos_tx_url?: string;
+  explorer_token_url: string;
+  explorer_tx_url: string;
+  explorer_token_id_url: string;
 };
 
 export type VerifyContractRequest = {

@@ -28,7 +28,7 @@ export const onProviderChanged = createAsyncTask(async () => {
     await Transaction.fetchLatestTransactions(Wallet.addressList(), true);
     await Currencies.fetchCurrencies();
 
-    if (RemoteProviderConfig.isNftEnabled) {
+    if (app.provider.config.isNftEnabled) {
       await Nft.fetchNft();
     }
     Provider.fetchProviders();

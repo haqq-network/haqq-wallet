@@ -12,11 +12,17 @@ import {storage} from '@app/services/mmkv';
 import {createAsyncTask, sleep} from '@app/utils';
 import {DEFAULT_PROVIDERS, ISLM_DENOM} from '@app/variables/common';
 
+import {RemoteProviderConfig} from './provider-config';
 import {ProviderID} from './provider.types';
 
 import {VariablesString} from '../variables-string';
 
 const HAQQ_BENCH_32_PREFIX = 'haqq';
+const EXPLORER_URL_TEMPLATES = {
+  ADDRESS: '{{address}}',
+  TOKEN_ID: '{{token_id}}',
+  TX: '{{tx_hash}}',
+};
 
 const logger = Logger.create('NetworkProvider:store', {
   stringifyJson: true,
@@ -240,6 +246,10 @@ export class Provider {
     return this.model.coin_name;
   }
 
+  get config() {
+    return RemoteProviderConfig.getConfig(this.ethChainId);
+  }
+
   toJSON() {
     return {
       ethChainIdHex: this.ethChainIdHex,
@@ -261,14 +271,36 @@ export class Provider {
     }
 
     if (txHash.startsWith('0x') || txHash.startsWith('0X')) {
-      return `${this.explorer}/tx/${txHash}`;
+      return this.config.explorerTxUrl.replace(
+        EXPLORER_URL_TEMPLATES.TX,
+        txHash,
+      );
     }
 
-    return `${this.cosmosExplorer}/${this.bench32Prefix}/tx/${txHash}`;
+    return this.config.explorerCosmosTxUrl.replace(
+      EXPLORER_URL_TEMPLATES.TX,
+      txHash,
+    );
   }
 
   getAddressExplorerUrl(address: string) {
-    return `${this.explorer}/address/${AddressUtils.toEth(address)}`;
+    return this.config.explorerAddressUrl.replace(
+      EXPLORER_URL_TEMPLATES.ADDRESS,
+      AddressUtils.toEth(address),
+    );
+  }
+
+  getCollectionExplorerUrl(address: string) {
+    return this.config.explorerTokenUrl.replace(
+      EXPLORER_URL_TEMPLATES.ADDRESS,
+      AddressUtils.toEth(address),
+    );
+  }
+
+  getTokenExplorerUrl(address: string, tokenId: string | number) {
+    return this.config.explorerTokenIdUrl
+      .replace(EXPLORER_URL_TEMPLATES.ADDRESS, AddressUtils.toEth(address))
+      .replace(EXPLORER_URL_TEMPLATES.TOKEN_ID, tokenId.toString());
   }
 }
 
