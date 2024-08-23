@@ -27,7 +27,7 @@ import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {useSumAmount, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Currencies} from '@app/models/currencies';
-import {Provider, RemoteProviderConfig} from '@app/models/provider';
+import {Provider} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
@@ -174,13 +174,13 @@ export const SwapScreen = observer(() => {
     () =>
       tokenIn?.symbol?.toLowerCase() === app.provider.denom?.toLowerCase() &&
       tokenOut?.symbol?.toLowerCase() ===
-        RemoteProviderConfig.wethSymbol?.toLowerCase(),
+        app.provider.config.wethSymbol?.toLowerCase(),
     [tokenIn, tokenOut, app.provider.denom],
   );
   const isUnwrapTx = useMemo(
     () =>
       tokenIn?.symbol?.toLowerCase() ===
-        RemoteProviderConfig.wethSymbol?.toLowerCase() &&
+        app.provider.config.wethSymbol?.toLowerCase() &&
       tokenOut?.symbol?.toLowerCase() === app.provider.denom?.toLowerCase(),
     [tokenIn, tokenOut, app.provider.denom],
   );
@@ -660,7 +660,7 @@ export const SwapScreen = observer(() => {
       setSwapInProgress(() => true);
 
       const swapRouter = new ethers.Contract(
-        RemoteProviderConfig.swapRouterV3,
+        app.provider.config.swapRouterV3,
         V3SWAPROUTER_ABI,
       );
 
@@ -697,7 +697,7 @@ export const SwapScreen = observer(() => {
           params: [
             {
               from: currentWallet.address,
-              to: RemoteProviderConfig.swapRouterV3,
+              to: app.provider.config.swapRouterV3,
               value: tokenInIsISLM ? estimateData.amount_in : '0x0',
               data: encodedTxData,
             },
@@ -767,7 +767,7 @@ export const SwapScreen = observer(() => {
       );
 
       const data = erc20Token.interface.encodeFunctionData('approve', [
-        RemoteProviderConfig.swapRouterV3,
+        app.provider.config.swapRouterV3,
         amountBN._hex,
       ]);
 
@@ -814,7 +814,7 @@ export const SwapScreen = observer(() => {
       setSwapInProgress(() => true);
       const provider = await getRpcProvider(app.provider);
       const WETH = new ethers.Contract(
-        AddressUtils.toEth(RemoteProviderConfig.wethAddress),
+        AddressUtils.toEth(app.provider.config.wethAddress),
         WETH_ABI,
         provider,
       );
@@ -828,7 +828,7 @@ export const SwapScreen = observer(() => {
           params: [
             {
               from: currentWallet.address,
-              to: AddressUtils.toEth(RemoteProviderConfig.wethAddress),
+              to: AddressUtils.toEth(app.provider.config.wethAddress),
               value: t0Current.toHex(),
               data: txData,
             },
@@ -885,7 +885,7 @@ export const SwapScreen = observer(() => {
       setSwapInProgress(() => true);
       const provider = await getRpcProvider(app.provider);
       const WETH = new ethers.Contract(
-        AddressUtils.toEth(RemoteProviderConfig.wethAddress),
+        AddressUtils.toEth(app.provider.config.wethAddress),
         WETH_ABI,
         provider,
       );
@@ -906,7 +906,7 @@ export const SwapScreen = observer(() => {
           params: [
             {
               from: currentWallet.address,
-              to: AddressUtils.toEth(RemoteProviderConfig.wethAddress),
+              to: AddressUtils.toEth(app.provider.config.wethAddress),
               value: '0x0',
               data: txData,
             },
@@ -1025,7 +1025,7 @@ export const SwapScreen = observer(() => {
   }, [tokenIn, tokenOut, currentWallet, currentRoute, amountsIn.amount]);
 
   useEffect(() => {
-    if (!RemoteProviderConfig.swapEnabled) {
+    if (!app.provider.config.swapEnabled) {
       return navigator.goBack();
     }
     const fetchData = () => {
@@ -1090,7 +1090,7 @@ export const SwapScreen = observer(() => {
           setCurrentRoute(
             () =>
               data.routes.find(r =>
-                AddressUtils.equals(r.token0, RemoteProviderConfig.wethAddress),
+                AddressUtils.equals(r.token0, app.provider.config.wethAddress),
               ) || data.routes[1],
           );
           if (!data.pools?.length || !data?.routes?.length) {

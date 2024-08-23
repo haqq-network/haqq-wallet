@@ -1851,7 +1851,7 @@ export type IndexerTransactionResponse = {
   txs: IndexerTransaction[];
 };
 
-export type ChainId = string;
+export type ChainId = string | number;
 
 export type IndexerTxParsedTokenInfo = {
   name: string;

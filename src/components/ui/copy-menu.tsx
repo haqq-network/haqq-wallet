@@ -22,11 +22,11 @@ import Popover from '@app/components/ui/popover';
 import {RTLReverse} from '@app/components/ui/rtl-reverse';
 import {Spacer} from '@app/components/ui/spacer';
 import {Text, TextVariant} from '@app/components/ui/text';
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {RemoteProviderConfig} from '@app/models/provider';
 import {sendNotification} from '@app/services';
 
 export type CopyMenuProps = ViewProps & {
@@ -86,7 +86,7 @@ export const CopyMenu = observer(
               <Icon i22 name={IconsName.copy} color={Color.textBase1} />
             </RTLReverse>
           </MenuOption>
-          {RemoteProviderConfig.isBech32Enabled && (
+          {app.provider.config.isBech32Enabled && (
             <>
               <SolidLine width="100%" color={Color.graphicSecond2} />
               <MenuOption onSelect={onBech32CopyPress} style={styles.option}>

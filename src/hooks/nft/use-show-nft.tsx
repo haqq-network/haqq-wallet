@@ -2,14 +2,14 @@ import {useEffect, useState} from 'react';
 
 import {autorun} from 'mobx';
 
-import {RemoteProviderConfig} from '@app/models/provider';
+import {app} from '@app/contexts';
 
 export const useShowNft = () => {
-  const [showNft, setShowNft] = useState(RemoteProviderConfig.isNftEnabled);
+  const [showNft, setShowNft] = useState(app.provider.config.isNftEnabled);
 
   useEffect(() => {
     const disposer = autorun(() => {
-      setShowNft(RemoteProviderConfig.isNftEnabled);
+      setShowNft(app.provider.config.isNftEnabled);
     });
 
     return () => {
