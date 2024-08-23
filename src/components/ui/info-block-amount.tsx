@@ -3,7 +3,13 @@ import React, {useState} from 'react';
 import {StyleProp, TouchableOpacity, View, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Spacer, Text, TextSum} from '@app/components/ui';
+import {
+  Spacer,
+  Text,
+  TextPosition,
+  TextSum,
+  TextVariant,
+} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
@@ -52,7 +58,12 @@ export const InfoBlockAmount = ({
   return (
     <View style={[styles.blockContainer, !isLarge && styles.flexOne, style]}>
       <View style={styles.infoBlock}>
-        <Text t15 center color={Color.textBase2} i18n={titleI18N} />
+        <Text
+          variant={TextVariant.t15}
+          position={TextPosition.center}
+          color={Color.textBase2}
+          i18n={titleI18N}
+        />
         <Spacer height={2} />
         {mapValues.slice(0, isShow ? undefined : 2).map((val, id) => (
           <TextSum
@@ -67,7 +78,7 @@ export const InfoBlockAmount = ({
           <TouchableOpacity activeOpacity={0.7} onPress={onPressShow}>
             <Text
               color={Color.textGreen1}
-              center
+              position={TextPosition.center}
               i18n={
                 isShow ? I18N.validatorInfoHide : I18N.validatorInfoShowOther
               }
