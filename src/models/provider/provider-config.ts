@@ -40,6 +40,10 @@ class ProviderConfigStore {
   get wethAddress() {
     return this.config?.weth_address ?? '';
   }
+
+  get wethSymbol() {
+    return this.config?.weth_symbol ?? '';
+  }
 }
 
 const instance = new ProviderConfigStore();

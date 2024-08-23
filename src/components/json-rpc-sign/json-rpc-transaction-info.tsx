@@ -34,6 +34,8 @@ interface JsonRpcTransactionInfoProps {
   hideContractAttention?: boolean;
   fee?: Fee | null;
   setFee: React.Dispatch<React.SetStateAction<Fee | null>>;
+  isFeeLoading: boolean;
+  setFeeLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const JsonRpcTransactionInfo = ({
@@ -44,10 +46,11 @@ export const JsonRpcTransactionInfo = ({
   hideContractAttention,
   fee,
   setFee,
+  isFeeLoading,
+  setFeeLoading,
 }: JsonRpcTransactionInfoProps) => {
   const navigation = useTypedNavigation<JsonRpcSignPopupStackParamList>();
 
-  const [isFeeLoading, setFeeLoading] = useState(true);
   const [isSwapRenderError, setIsSwapRenderError] = useState(false);
 
   const tx = useMemo(

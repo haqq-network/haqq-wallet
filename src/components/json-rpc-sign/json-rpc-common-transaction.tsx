@@ -165,7 +165,10 @@ export const JsonRpcCommonTransaction = ({
 
       <Spacer height={28} />
 
-      <ScrollView style={styles.info} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.info}
+        contentContainerStyle={styles.infoContentContainer}
+        showsVerticalScrollIndicator={false}>
         <DataView i18n={I18N.transactionInfoTypeOperation}>
           <Text variant={TextVariant.t11} color={Color.textBase1}>
             {functionName?.length ? (
@@ -229,6 +232,9 @@ export const JsonRpcCommonTransaction = ({
 const styles = createTheme({
   info: {
     width: '100%',
+    flex: 1,
+  },
+  infoContentContainer: {
     borderRadius: 16,
     backgroundColor: Color.bg3,
   },
