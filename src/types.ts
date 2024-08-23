@@ -753,8 +753,8 @@ export type FontT = TextStyle | ViewStyle | ImageStyle | undefined;
 export enum AppLanguage {
   en = 'en',
   tr = 'tr',
-  ru = 'ru',
-  ar = 'ar',
+  // ar = 'ar',
+  // ru = 'ru',
 }
 
 export enum AppTheme {
