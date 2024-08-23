@@ -45,6 +45,7 @@ export enum Events {
   onAuthenticatedChanged = 'onAuthenticatedChanged',
   onPushTokenRefresh = 'onPushTokenRefresh',
   onLocaleChanged = 'onLocaleChanged',
+  onProviderChangedFinish = 'onProviderChangedFinish',
 }
 
 export enum WalletConnectEvents {

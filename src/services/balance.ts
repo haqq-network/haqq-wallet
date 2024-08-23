@@ -24,11 +24,14 @@ import {
 const zeroBN = new Decimal(0);
 
 export class Balance implements IBalance, ISerializable {
-  static readonly Empty = new Balance(zeroBN);
   public originalValue: BalanceConstructor;
   private bnRaw = zeroBN;
   private precission: number;
   private symbol: string;
+
+  static get Empty() {
+    return new Balance(zeroBN, app.provider.decimals, app.provider.denom);
+  }
 
   constructor(
     balance: BalanceConstructor,
