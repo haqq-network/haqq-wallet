@@ -61,6 +61,7 @@ export const JsonRpcSign = ({
   const insets = useSafeAreaInsets();
 
   const [fee, setFee] = useState<Fee | null>(null);
+  const [isFeeLoading, setFeeLoading] = useState(isTransaction);
 
   const signButtonDisabled = useMemo(() => {
     if (rejectLoading || !isAllowedDomain) {
@@ -105,6 +106,8 @@ export const JsonRpcSign = ({
             hideContractAttention={hideContractAttention}
             fee={fee}
             setFee={setFee}
+            isFeeLoading={isFeeLoading}
+            setFeeLoading={setFeeLoading}
           />
         )}
 
@@ -127,8 +130,8 @@ export const JsonRpcSign = ({
       <View style={[styles.buttonContainer, {marginBottom: insets.bottom}]}>
         <Spacer height={4} />
         <Button
-          loading={signLoading}
-          disabled={signButtonDisabled}
+          loading={signLoading || isFeeLoading}
+          disabled={signButtonDisabled || isFeeLoading}
           variant={ButtonVariant.contained}
           onPress={handleSignPress}
           i18n={I18N.walletConnectSignApproveButton}

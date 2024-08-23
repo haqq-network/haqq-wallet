@@ -22,7 +22,7 @@ import {
   TextVariant,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
+import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
 import {shortAddress} from '@app/helpers/short-address';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N} from '@app/i18n';
@@ -94,6 +94,7 @@ export const JsonRpcSwapTransaction = observer(
     const [minReceivedAmount, setMinReceivedAmount] = useState<Balance | null>(
       null,
     );
+    const [isWETHInteraction, setIsWETHInteraction] = useState(false);
 
     const rate = useMemo(() => {
       const r =
@@ -141,6 +142,7 @@ export const JsonRpcSwapTransaction = observer(
 
     useEffectAsync(async () => {
       const indexer = new Indexer(chainId);
+
       const estimate = async () => {
         let amountOutMinimum = '0x0',
           tokenInAddress = '',
@@ -265,11 +267,18 @@ export const JsonRpcSwapTransaction = observer(
 
         const recipientWallet = Wallet.getById(tx?.from)!;
         const tokenInIsNativeCoin = new Balance(tx?.value!).isPositive();
+        const tokenOutIsNativeCoin = AddressUtils.equals(
+          tokenOutAddress,
+          NATIVE_TOKEN_ADDRESS,
+        );
+
         const tokenInContract = tokenInIsNativeCoin
           ? Token.generateNativeToken(recipientWallet)
           : Token.getById(tokenInAddress)!;
 
-        const tokenOutContract = Token.getById(tokenOutAddress)!;
+        const tokenOutContract = tokenOutIsNativeCoin
+          ? Token.generateNativeToken(recipientWallet)
+          : Token.getById(tokenOutAddress)!;
 
         setTokenIn(() => ({
           address: tokenInAddress,
@@ -278,7 +287,7 @@ export const JsonRpcSwapTransaction = observer(
             tokenInContract?.decimals!,
             tokenInContract?.symbol!,
           ),
-          image: tokenInContract.image,
+          image: tokenInContract?.image,
         }));
 
         setTokenOut(() => ({
@@ -288,7 +297,7 @@ export const JsonRpcSwapTransaction = observer(
             tokenOutContract?.decimals!,
             tokenOutContract?.symbol!,
           ),
-          image: tokenOutContract.image,
+          image: tokenOutContract?.image,
         }));
 
         setMinReceivedAmount(
@@ -314,6 +323,10 @@ export const JsonRpcSwapTransaction = observer(
         }
       }
 
+      const networkConfig = await indexer.getProviderConfig();
+      setIsWETHInteraction(
+        AddressUtils.equals(tx?.to!, networkConfig.weth_address),
+      );
       return () => {
         estimateAbortController?.current?.abort();
       };
@@ -367,7 +380,10 @@ export const JsonRpcSwapTransaction = observer(
 
         <Spacer height={32} />
 
-        <ScrollView style={styles.info} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          style={styles.info}
+          contentContainerStyle={styles.infoContentContainer}
+          showsVerticalScrollIndicator={false}>
           <DataView i18n={I18N.swapScreenRate}>
             <Text variant={TextVariant.t11} color={Color.textBase1}>
               {`1${STRINGS.NBSP}${tokenIn?.amount?.getSymbol()}${
@@ -375,21 +391,27 @@ export const JsonRpcSwapTransaction = observer(
               }≈${STRINGS.NBSP}${rate}`}
             </Text>
           </DataView>
-          <DataView i18n={I18N.swapScreenMinimumReceived}>
-            <Text variant={TextVariant.t11} color={priceImpactColor}>
-              {minReceivedAmount?.toBalanceString('auto')}
-            </Text>
-          </DataView>
-          <DataView i18n={I18N.swapScreenPriceImpact}>
-            <Text variant={TextVariant.t11} color={priceImpactColor}>
-              {`${formatNumberString(estimateData?.s_price_impact ?? '0')}%`}
-            </Text>
-          </DataView>
-          <DataView i18n={I18N.swapScreenProviderFee}>
-            <Text variant={TextVariant.t11} color={Color.textBase1}>
-              {providerFee.toFiat({useDefaultCurrency: true, fixed: 6})}
-            </Text>
-          </DataView>
+          {!isWETHInteraction && (
+            <>
+              <DataView i18n={I18N.swapScreenPriceImpact}>
+                <Text variant={TextVariant.t11} color={priceImpactColor}>
+                  {`${formatNumberString(
+                    estimateData?.s_price_impact ?? '0',
+                  )}%`}
+                </Text>
+              </DataView>
+              <DataView i18n={I18N.swapScreenProviderFee}>
+                <Text variant={TextVariant.t11} color={Color.textBase1}>
+                  {providerFee.toFiat({useDefaultCurrency: true, fixed: 6})}
+                </Text>
+              </DataView>
+              <DataView i18n={I18N.swapScreenMinimumReceived}>
+                <Text variant={TextVariant.t11} color={priceImpactColor}>
+                  {minReceivedAmount?.toBalanceString('auto')}
+                </Text>
+              </DataView>
+            </>
+          )}
           {!!provider?.id && (
             <DataView i18n={I18N.transactionInfoNetwork}>
               <Text variant={TextVariant.t11} color={Color.textBase1}>
@@ -436,6 +458,9 @@ export const JsonRpcSwapTransaction = observer(
 const styles = createTheme({
   info: {
     width: '100%',
+    flex: 1,
+  },
+  infoContentContainer: {
     borderRadius: 16,
     backgroundColor: Color.bg3,
   },

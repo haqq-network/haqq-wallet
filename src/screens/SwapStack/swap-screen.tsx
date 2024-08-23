@@ -172,12 +172,16 @@ export const SwapScreen = observer(() => {
   );
   const isWrapTx = useMemo(
     () =>
-      tokenIn?.symbol === app.provider.denom && tokenOut?.symbol === 'wISLM',
+      tokenIn?.symbol?.toLowerCase() === app.provider.denom?.toLowerCase() &&
+      tokenOut?.symbol?.toLowerCase() ===
+        RemoteProviderConfig.wethSymbol?.toLowerCase(),
     [tokenIn, tokenOut, app.provider.denom],
   );
   const isUnwrapTx = useMemo(
     () =>
-      tokenIn?.symbol === 'wISLM' && tokenOut?.symbol === app.provider.denom,
+      tokenIn?.symbol?.toLowerCase() ===
+        RemoteProviderConfig.wethSymbol?.toLowerCase() &&
+      tokenOut?.symbol?.toLowerCase() === app.provider.denom?.toLowerCase(),
     [tokenIn, tokenOut, app.provider.denom],
   );
   const t0Current = useMemo(() => {
