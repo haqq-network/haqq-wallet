@@ -18,6 +18,7 @@ export function WalletsBottomSheet({
   errorEventName,
   successEventName,
   onClose,
+  hideBalance,
 }: Modals[ModalType.walletsBottomSheet]) {
   const closeDistanceCalculated = useCalculatedDimensionsValue(
     () => closeDistance?.(),
@@ -64,6 +65,7 @@ export function WalletsBottomSheet({
             onPress={onPressWallet}
             type={WalletRowTypes.variant5}
             hideArrow
+            hideBalance={hideBalance}
             checked={checked}
           />
         );

@@ -24,6 +24,7 @@ export const WalletRowVariant5 = ({
   hideArrow = false,
   checked = false,
   style,
+  hideBalance,
 }: Omit<WalletRowProps, 'type'>) => {
   const containerStyle = useMemo(
     () => StyleSheet.flatten([item.isHidden && {opacity: 0.5}, style]),
@@ -62,11 +63,13 @@ export const WalletRowVariant5 = ({
           {addressString}
         </Text>
       </CardSmall>
-      <DataContent
-        style={styles.info}
-        title={item.name}
-        subtitle={balance.toBalanceString()}
-      />
+      {!hideBalance && (
+        <DataContent
+          style={styles.info}
+          title={item.name}
+          subtitle={balance.toBalanceString()}
+        />
+      )}
     </MenuNavigationButton>
   );
 };

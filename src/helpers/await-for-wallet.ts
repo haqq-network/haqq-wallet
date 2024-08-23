@@ -20,6 +20,7 @@ export interface AwaitForWalletParams {
   autoSelectWallet?: boolean;
   suggestedAddress?: string;
   eventSuffix?: string | number;
+  hideBalance?: boolean;
 }
 
 export class AwaitForWalletError {

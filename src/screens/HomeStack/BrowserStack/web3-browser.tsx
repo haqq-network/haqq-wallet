@@ -69,6 +69,7 @@ export const Web3BrowserScreen = memo(() => {
         title: I18N.selectAccount,
         autoSelectWallet: false,
         initialAddress: accountId,
+        hideBalance: true,
       });
       helper.current?.changeAccount?.(selectedAccount);
     },
