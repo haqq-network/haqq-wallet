@@ -56,7 +56,7 @@ export async function getAppInfo(): Promise<AppInfo> {
   return {
     wallets,
     uid,
-    chain_id: app.provider.cosmosChainId,
+    chain_id: app.provider.ethChainId.toString(),
     platform: Platform.OS,
     version: getAppVersion(),
     posthog_id,
