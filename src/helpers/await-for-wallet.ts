@@ -42,6 +42,7 @@ export async function awaitForWallet({
   initialAddress,
   type,
   suggestedAddress,
+  hideBalance,
   autoSelectWallet = true,
   eventSuffix = '',
 }: AwaitForWalletParams): Promise<string> {
@@ -98,6 +99,7 @@ export async function awaitForWallet({
           title,
           autoSelectWallet,
           initialAddress,
+          hideBalance,
           ...event,
         });
     }
