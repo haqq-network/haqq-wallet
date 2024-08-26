@@ -26,6 +26,7 @@ import {awaitForProvider} from '@app/helpers/await-for-provider';
 import {AwaitValue, awaitForValue} from '@app/helpers/await-for-value';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {useSumAmount, useTypedRoute} from '@app/hooks';
+import {usePrevious} from '@app/hooks/use-previous';
 import {I18N, getText} from '@app/i18n';
 import {Currencies} from '@app/models/currencies';
 import {Provider} from '@app/models/provider';
@@ -57,7 +58,7 @@ import {HAQQ_METADATA} from '@app/variables/common';
 
 const logger = Logger.create('SwapScreen', {
   emodjiPrefix: '🟠',
-  stringifyJson: __DEV__,
+  stringifyJson: __DEV__ || app.isDeveloper || app.isTesterMode,
 });
 
 const START_SWAP_AMOUNT = new Balance(0, 0);
@@ -600,7 +601,7 @@ export const SwapScreen = observer(() => {
         return;
       }
       if (token.symbol === tokenIn.symbol) {
-        return estimate();
+        return await estimate();
       }
       vibrate(HapticEffects.impactLight);
       Keyboard.dismiss();
@@ -1055,7 +1056,40 @@ export const SwapScreen = observer(() => {
         estimate(),
       );
     }
-  }, [tokenIn, tokenOut, currentWallet, currentRoute, amountsIn.amount]);
+  }, [tokenIn, tokenOut, currentWallet, currentRoute]);
+
+  const prevTokenIn = usePrevious(tokenIn);
+  const prevTokenOut = usePrevious(tokenOut);
+  const prevCurrentWallet = usePrevious(currentWallet);
+  const prevCurrentRoute = usePrevious(currentRoute);
+  const prevAmountsIn = usePrevious(amountsIn.amount);
+
+  useEffect(() => {
+    if (
+      currentRoute &&
+      (prevTokenIn?.id !== tokenIn?.id ||
+        prevTokenOut?.id !== tokenOut?.id ||
+        prevCurrentWallet?.address !== currentWallet?.address ||
+        prevCurrentRoute?.route_hex !== currentRoute?.route_hex ||
+        prevAmountsIn !== amountsIn.amount)
+    ) {
+      logger.log('useEffect estimate()');
+      refreshTokenBalances(currentWallet.address, t0Available).then(() =>
+        estimate(),
+      );
+    }
+  }, [
+    tokenIn,
+    tokenOut,
+    currentWallet,
+    currentRoute,
+    prevTokenIn,
+    prevTokenOut,
+    prevCurrentWallet,
+    prevCurrentRoute,
+    amountsIn.amount,
+    prevAmountsIn,
+  ]);
 
   useEffect(() => {
     if (!app.provider.config.swapEnabled) {
