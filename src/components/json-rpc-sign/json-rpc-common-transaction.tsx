@@ -58,7 +58,7 @@ export const JsonRpcCommonTransaction = ({
   const url = useMemo(() => getHostnameFromUrl(metadata?.url), [metadata]);
   const value = useMemo(() => {
     if (functionName === 'approve') {
-      const token = Token.getById(tx?.to!);
+      const token = Token.getById(tx?.to!) || Token.UNKNOWN_TOKEN;
       return new Balance(
         parsedInput?.args?.[1] || '0x0',
         token.decimals!,

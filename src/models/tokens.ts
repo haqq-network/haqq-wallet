@@ -102,6 +102,15 @@ class TokensStore implements MobXStore<IToken> {
     return this._isLoading;
   }
 
+  get UNKNOWN_TOKEN() {
+    return {
+      name: 'UNKNOWN',
+      symbol: '?',
+      icon: require('@assets/images/empty-icon.png'),
+      decimals: 0,
+      contract_address: '',
+    };
+  }
   create(id: string, params: IToken) {
     const existingItem = this.getById(params.id);
 

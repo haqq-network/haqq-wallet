@@ -274,11 +274,11 @@ export const JsonRpcSwapTransaction = observer(
 
         const tokenInContract = tokenInIsNativeCoin
           ? Token.generateNativeToken(recipientWallet)
-          : Token.getById(tokenInAddress)!;
+          : Token.getById(tokenInAddress)! || Token.UNKNOWN_TOKEN;
 
         const tokenOutContract = tokenOutIsNativeCoin
           ? Token.generateNativeToken(recipientWallet)
-          : Token.getById(tokenOutAddress)!;
+          : Token.getById(tokenOutAddress)! || Token.UNKNOWN_TOKEN;
 
         setTokenIn(() => ({
           address: tokenInAddress,
