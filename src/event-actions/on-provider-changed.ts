@@ -24,6 +24,7 @@ export const onProviderChanged = createAsyncTask(async () => {
 
     await RemoteProviderConfig.init();
     await awaitForEventDone(Events.onSyncAppBalances);
+    await awaitForEventDone(Events.onRequestMarkup);
     await Token.fetchTokens(true);
     await Transaction.fetchLatestTransactions(Wallet.addressList(), true);
     await Currencies.fetchCurrencies();
