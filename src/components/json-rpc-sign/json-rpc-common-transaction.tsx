@@ -15,6 +15,7 @@ import {
   Text,
   TextVariant,
 } from '@app/components/ui';
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
@@ -59,10 +60,11 @@ export const JsonRpcCommonTransaction = ({
   const value = useMemo(() => {
     if (functionName === 'approve') {
       const token = Token.getById(tx?.to!);
+
       return new Balance(
         parsedInput?.args?.[1] || '0x0',
-        token.decimals!,
-        token.symbol!,
+        token?.decimals ?? app.provider.decimals,
+        token?.symbol ?? app.provider.denom,
       );
     }
 
