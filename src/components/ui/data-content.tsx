@@ -3,7 +3,7 @@ import React from 'react';
 import {TextProps, View, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Text, TextPosition} from '@app/components/ui/text';
+import {Text, TextPosition, TextVariant} from '@app/components/ui/text';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
@@ -49,7 +49,7 @@ export const DataContent = ({
       ]}>
       <View style={styles.titleContainer}>
         <Text
-          t11
+          variant={TextVariant.t11}
           style={[styles.title, bold && styles.boldTitle]}
           color={titleColor}
           ellipsizeMode="tail"
@@ -60,17 +60,15 @@ export const DataContent = ({
           {title}
         </Text>
       </View>
-      {(subtitleI18n || subtitle) && (
-        <Text
-          t14
-          i18n={subtitleI18n!}
-          i18params={subtitleI18nParams}
-          color={Color.textBase2}
-          position={TextPosition.left}
-          {...(subtitleProps || {})}>
-          {subtitle}
-        </Text>
-      )}
+      <Text
+        variant={TextVariant.t14}
+        i18n={subtitleI18n!}
+        i18params={subtitleI18nParams}
+        color={Color.textBase2}
+        position={TextPosition.left}
+        {...(subtitleProps || {})}>
+        {subtitle}
+      </Text>
     </View>
   );
 };
