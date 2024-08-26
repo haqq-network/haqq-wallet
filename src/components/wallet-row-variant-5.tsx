@@ -63,13 +63,11 @@ export const WalletRowVariant5 = ({
           {addressString}
         </Text>
       </CardSmall>
-      {!hideBalance && (
-        <DataContent
-          style={styles.info}
-          title={item.name}
-          subtitle={balance.toBalanceString()}
-        />
-      )}
+      <DataContent
+        style={styles.info}
+        title={item.name}
+        subtitle={!hideBalance ? balance.toBalanceString() : undefined}
+      />
     </MenuNavigationButton>
   );
 };
