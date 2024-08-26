@@ -1,10 +1,3 @@
-import {WalletCardStyle, WalletType} from '@app/types';
-import {
-  CARD_DEFAULT_STYLE,
-  DEFAULT_CARD_BACKGROUND,
-  DEFAULT_CARD_PATTERN,
-} from '@app/variables/common';
-
 export class ContactRealmObject extends Realm.Object {
   static schema = {
     name: 'Contact',
@@ -39,33 +32,5 @@ export class TransactionRealmObject extends Realm.Object {
       input: 'string',
     },
     primaryKey: 'hash',
-  };
-}
-
-export class WalletRealmObject extends Realm.Object {
-  static schema = {
-    name: 'Wallet',
-    properties: {
-      address: 'string',
-      name: {type: 'string', default: ''},
-      data: {type: 'string', default: ''},
-      mnemonicSaved: {type: 'bool', default: false},
-      socialLinkEnabled: {type: 'bool', default: false},
-      cardStyle: {type: 'string', default: WalletCardStyle.flat},
-      isHidden: {type: 'bool', default: false},
-      isMain: {type: 'bool', default: false},
-      colorFrom: {type: 'string', default: DEFAULT_CARD_BACKGROUND},
-      colorTo: {type: 'string', default: DEFAULT_CARD_BACKGROUND},
-      colorPattern: {type: 'string', default: DEFAULT_CARD_PATTERN},
-      pattern: {type: 'string', default: CARD_DEFAULT_STYLE},
-      type: {type: 'string', default: WalletType.hot},
-      path: 'string?',
-      deviceId: 'string?',
-      rootAddress: 'string?',
-      subscription: 'string?',
-      version: 'int',
-      accountId: 'string?',
-    },
-    primaryKey: 'address',
   };
 }

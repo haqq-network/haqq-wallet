@@ -4,7 +4,6 @@ import {News} from '@app/models/news';
 import {
   ContactRealmObject,
   TransactionRealmObject,
-  WalletRealmObject,
 } from '@app/models/realm-object-for-migration';
 import {Refferal} from '@app/models/refferal';
 import {UserSchema, UserType} from '@app/models/user';
@@ -35,7 +34,6 @@ export const realm = new Realm({
     Web3BrowserBookmark,
     Web3BrowserSearchHistory,
     WalletConnectSessionMetadata,
-    WalletRealmObject,
     UserSchema,
     TransactionRealmObject,
     ContactRealmObject,
