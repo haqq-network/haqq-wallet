@@ -60,15 +60,25 @@ export const DataContent = ({
           {title}
         </Text>
       </View>
-      <Text
-        variant={TextVariant.t14}
-        i18n={subtitleI18n!}
-        i18params={subtitleI18nParams}
-        color={Color.textBase2}
-        position={TextPosition.left}
-        {...(subtitleProps || {})}>
-        {subtitle}
-      </Text>
+      {subtitleI18n || subtitle ? (
+        <Text
+          variant={TextVariant.t14}
+          i18n={subtitleI18n!}
+          i18params={subtitleI18nParams}
+          color={Color.textBase2}
+          position={TextPosition.left}
+          {...(subtitleProps || {})}>
+          {subtitle}
+        </Text>
+      ) : (
+        <Text
+          variant={TextVariant.t14}
+          color={Color.textBase2}
+          position={TextPosition.left}
+          {...(subtitleProps || {})}>
+          {''}
+        </Text>
+      )}
     </View>
   );
 };
