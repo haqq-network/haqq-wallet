@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
+import Clipboard from '@react-native-clipboard/clipboard';
 import {ethers} from 'ethers';
 import {toJS} from 'mobx';
 import {observer} from 'mobx-react';
@@ -249,6 +250,7 @@ export const SwapScreen = observer(() => {
   }, [currentWallet, tokenOut, app.provider.denom]);
 
   const estimate = async (force = false) => {
+    const errCtx: Record<string, any> = {};
     try {
       estimateAbortController?.current?.abort();
       estimateAbortController.current = new AbortController();
@@ -312,15 +314,21 @@ export const SwapScreen = observer(() => {
         });
       }
 
-      const response = await Indexer.instance.sushiPoolEstimate({
+      const request = {
         amount: t0Current.toHex(),
         sender: currentWallet.address,
         // token_in: tokenIn?.id!,
         // token_out: tokenOut?.id!,
         route: currentRoute?.route_hex!,
         currency_id: Currencies.currency?.id,
+      };
+
+      errCtx['⭕️sushi-pool-estimate-request'] = request;
+      const response = await Indexer.instance.sushiPoolEstimate({
+        ...request,
         abortSignal: estimateAbortController.current.signal,
       });
+      errCtx['⭕️sushi-pool-estimate-response'] = response;
 
       if (tokenIn?.symbol === app.provider.denom) {
         response.need_approve = false;
@@ -341,13 +349,38 @@ export const SwapScreen = observer(() => {
         amountOut.toBalanceString('auto', tokenOut?.decimals!, false),
       );
     } catch (err) {
+      //@ts-ignore
+      errCtx['⭕️estimate-error'] = err?.meta?.rawBody || err;
       if (err instanceof Error && err.name !== 'AbortError') {
-        Logger.error(err, 'estimate');
-        logger.captureException(err, 'estimate');
+        Logger.error(err, 'estimate', JSON.stringify(errCtx, null, 2));
         if (!force) {
           await estimate(true);
         } else {
-          Alert.alert('estimate error', err?.message);
+          logger.captureException(err, 'estimate', errCtx);
+          Alert.alert('estimate error', err?.message, [
+            {
+              text: 'Ok',
+              onPress() {
+                if (app.isTesterMode) {
+                  Alert.alert(
+                    'error context',
+                    JSON.stringify(errCtx, null, 2),
+                    [
+                      {
+                        text: 'Copy',
+                        onPress() {
+                          Clipboard.setString(JSON.stringify(errCtx, null, 2));
+                        },
+                      },
+                      {
+                        text: 'Cancel',
+                      },
+                    ],
+                  );
+                }
+              },
+            },
+          ]);
         }
       }
     } finally {
