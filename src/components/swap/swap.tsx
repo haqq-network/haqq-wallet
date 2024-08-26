@@ -126,6 +126,21 @@ export const Swap = observer(
     const isHeaderButtonsDisabled =
       isEstimating || isSwapInProgress || isApproveInProgress;
 
+    const isSwapButtonDisabled = useMemo(() => {
+      return (
+        isEstimating ||
+        isSwapInProgress ||
+        !!amountsIn.error ||
+        !t0Current.isPositive()
+      );
+    }, [isEstimating, isSwapInProgress, amountsIn.error, t0Current]);
+
+    const isApproveButtonDisabled = useMemo(() => {
+      return (
+        isApproveInProgress || !!amountsIn.error || !t0Current.isPositive()
+      );
+    }, [isApproveInProgress, amountsIn.error, t0Current]);
+
     const rate = useMemo(() => {
       const r =
         t1Current.toFloat() /
@@ -287,7 +302,7 @@ export const Swap = observer(
               variant={ButtonVariant.contained}
               i18n={I18N.swapScreenUnwrap}
               loading={isEstimating || isSwapInProgress}
-              disabled={isEstimating || isSwapInProgress || !!amountsIn.error}
+              disabled={isSwapButtonDisabled}
               onPress={onPressUnrap}
             />
           )}
@@ -296,7 +311,7 @@ export const Swap = observer(
               variant={ButtonVariant.contained}
               i18n={I18N.swapScreenWrap}
               loading={isEstimating || isSwapInProgress}
-              disabled={isEstimating || isSwapInProgress || !!amountsIn.error}
+              disabled={isSwapButtonDisabled}
               onPress={onPressWrap}
             />
           )}
@@ -309,7 +324,7 @@ export const Swap = observer(
                 amount: amountsIn.amount,
               }}
               loading={isApproveInProgress}
-              disabled={isApproveInProgress || !!amountsIn.error}
+              disabled={isApproveButtonDisabled}
               onPress={onPressApprove}
             />
           )}
@@ -317,7 +332,7 @@ export const Swap = observer(
             variant={ButtonVariant.contained}
             i18n={I18N.swapScreenSwap}
             loading={isEstimating || isSwapInProgress}
-            disabled={isEstimating || isSwapInProgress || !!amountsIn.error}
+            disabled={isSwapButtonDisabled}
             onPress={onPressSwap}
           />
         </First>
