@@ -2,6 +2,7 @@ import {IconsName} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {I18N, getText} from '@app/i18n';
 import {Contracts} from '@app/models/contracts';
+import {Token} from '@app/models/tokens';
 import {ParsedTransactionData, Transaction} from '@app/models/transaction';
 import {Balance} from '@app/services/balance';
 import {
@@ -29,14 +30,6 @@ const getNativeToken = (): IndexerTxParsedTokenInfo => {
     decimals: app.provider.decimals,
     contract_address: '',
   };
-};
-
-const UNKNOW_NTOKEN = {
-  name: 'UNKNOWN',
-  symbol: '?',
-  icon: require('@assets/images/empty-icon.png'),
-  decimals: 0,
-  contract_address: '',
 };
 
 export function parseTransaction(
@@ -449,7 +442,7 @@ function getContractName(tx: IndexerTransaction): string {
 
 function getTokensInfo(tx: IndexerTransaction): IndexerTxParsedTokenInfo[] {
   if (!tx?.msg?.type) {
-    return [UNKNOW_NTOKEN];
+    return [Token.UNKNOWN_TOKEN];
   }
 
   if ('amount' in tx.msg && Array.isArray(tx.msg.amount)) {
@@ -512,7 +505,7 @@ function getTokensInfo(tx: IndexerTransaction): IndexerTxParsedTokenInfo[] {
     ];
   }
 
-  return [UNKNOW_NTOKEN];
+  return [Token.UNKNOWN_TOKEN];
 }
 
 function getFromAndTo(tx: IndexerTransaction, isIncoming: boolean) {
