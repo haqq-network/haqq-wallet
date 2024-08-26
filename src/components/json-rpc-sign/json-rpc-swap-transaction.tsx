@@ -287,7 +287,10 @@ export const JsonRpcSwapTransaction = observer(
             tokenInContract?.decimals!,
             tokenInContract?.symbol!,
           ),
-          image: tokenInContract?.image,
+          image:
+            tokenInContract?.image ??
+            Contracts.getById(tokenInAddress)?.icon ??
+            require('@assets/images/empty-icon.png'),
         }));
 
         setTokenOut(() => ({
@@ -297,7 +300,10 @@ export const JsonRpcSwapTransaction = observer(
             tokenOutContract?.decimals!,
             tokenOutContract?.symbol!,
           ),
-          image: tokenOutContract?.image,
+          image:
+            tokenOutContract?.image ??
+            Contracts.getById(tokenOutAddress)?.icon ??
+            require('@assets/images/empty-icon.png'),
         }));
 
         setMinReceivedAmount(

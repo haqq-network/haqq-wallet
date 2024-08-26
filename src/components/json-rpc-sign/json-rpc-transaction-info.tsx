@@ -168,7 +168,7 @@ export const JsonRpcTransactionInfo = ({
 
   return (
     <First>
-      {!isSwapRenderError && isSwapTx && isContract && isInWhiteList && (
+      {!isSwapRenderError && isSwapTx && isContract && (
         <JsonRpcSwapTransaction
           verifyAddressResponse={verifyAddressResponse}
           metadata={metadata}
