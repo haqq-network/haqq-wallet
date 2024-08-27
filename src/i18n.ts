@@ -3,7 +3,6 @@ import LocalizedStrings from 'react-native-localization';
 import {Events} from '@app/events';
 import {Language} from '@app/models/language';
 import {AppLanguage} from '@app/types';
-import {setRTL} from '@app/utils';
 
 import {app} from './contexts';
 
@@ -1077,5 +1076,5 @@ export function setLanguage(lang: AppLanguage, keys?: Object) {
   translations.setContent({[lang]: keys ?? supportedTranslationsMap[lang]});
   translations.setLanguage(lang);
   app.emit(Events.onLocaleChanged, lang);
-  setRTL(lang);
+  // setRTL(lang);
 }

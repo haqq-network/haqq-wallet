@@ -20,9 +20,10 @@ class LanguageStore {
       this.current = current;
     }
 
-    this.keys =
-      supportedTranslationsMap[this.current] ??
-      supportedTranslationsMap[AppLanguage.en];
+    if (!supportedTranslationsMap[this.current]) {
+      this.current = AppLanguage.en;
+    }
+    this.keys = supportedTranslationsMap[this.current];
     // @ts-ignore
     this.hash = this.keys._hash;
 
