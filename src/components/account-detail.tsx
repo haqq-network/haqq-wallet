@@ -89,6 +89,10 @@ export const AccountDetail = observer(
           warning
           style={styles.info}
           i18n={I18N.modalDetailsQRWarning}
+          i18params={{
+            assetName: app.provider.denom,
+            networkName: app.provider.name,
+          }}
           icon={<Icon name="warning" color={Color.textYellow1} />}
         />
         <LinearGradient
