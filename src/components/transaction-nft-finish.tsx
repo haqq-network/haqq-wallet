@@ -26,6 +26,7 @@ import {Fee} from '@app/models/fee';
 import {NftItem} from '@app/models/nft';
 import {sendNotification} from '@app/services';
 import {TransactionResponse} from '@app/types';
+import {STRINGS} from '@app/variables/common';
 
 import {ImageWrapper} from './image-wrapper';
 
@@ -110,7 +111,14 @@ export const TransactionNftFinish = ({
 
       <NetworkFee fee={fee.expectedFee} />
 
-      <Spacer />
+      <View style={styles.providerContainer}>
+        <Text variant={TextVariant.t14} color={Color.textBase2}>
+          {app.provider.name}
+        </Text>
+        <Text variant={TextVariant.t14} color={Color.textBase2}>
+          {`${STRINGS.NBSP}(${app.provider.denom})`}
+        </Text>
+      </View>
 
       <Spacer minHeight={20} />
       <View style={styles.buttons}>
@@ -209,5 +217,14 @@ const styles = createTheme({
   contactLine: {
     alignSelf: 'center',
     justifyContent: 'center',
+  },
+  providerContainer: {
+    backgroundColor: Color.bg8,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    marginTop: 16,
+    alignSelf: 'center',
+    flexDirection: 'row',
   },
 });
