@@ -50,7 +50,7 @@ export const SettingsButton = ({
         {rightTitle && (
           <Text
             variant={TextVariant.t11}
-            position={TextPosition.center}
+            position={TextPosition.right}
             style={styles.textRight}
             color={Color.textBase2}>
             {rightTitle}
