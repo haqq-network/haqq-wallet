@@ -77,6 +77,7 @@ const OFFSET = 8;
 const styles = createTheme({
   info: {
     marginLeft: 12,
+    marginVertical: 4,
     flex: 1,
   },
   address: {
