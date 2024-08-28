@@ -112,16 +112,12 @@ export const TransactionNftFinish = ({
       <NetworkFee fee={fee.expectedFee} />
 
       <View style={styles.providerContainer}>
-        <Text
-          variant={TextVariant.t14}
-          color={Color.textBase2}
-          children={app.provider.name}
-        />
-        <Text
-          variant={TextVariant.t14}
-          color={Color.textBase2}
-          children={`${STRINGS.NBSP}(${app.provider.denom})`}
-        />
+        <Text variant={TextVariant.t14} color={Color.textBase2}>
+          {app.provider.name}
+        </Text>
+        <Text variant={TextVariant.t14} color={Color.textBase2}>
+          {`${STRINGS.NBSP}(${app.provider.denom})`}
+        </Text>
       </View>
 
       <Spacer minHeight={20} />
