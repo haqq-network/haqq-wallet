@@ -3,6 +3,7 @@ import React, {memo} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {popupScreenOptionsWithMargin} from '@app/helpers';
+import {I18N, getText} from '@app/i18n';
 import {
   ManageAccountsStackParamList,
   ManageAccountsStackRoutes,
@@ -26,7 +27,7 @@ const ManageAccountsStack = memo(() => {
         component={SettingsAccountsScreen}
         options={{
           ...popupScreenOptionsWithMargin,
-          title: 'Manage accounts',
+          title: getText(I18N.homeSettingsAccounts),
           headerShown: true,
         }}
       />
