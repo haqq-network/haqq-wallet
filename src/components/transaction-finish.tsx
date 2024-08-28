@@ -137,12 +137,12 @@ export const TransactionFinish = observer(
           <Text
             variant={TextVariant.t14}
             color={Color.textBase2}
-            i18n={I18N.transactionConfirmationHAQQ}
+            children={app.provider.name}
           />
           <Text
             variant={TextVariant.t14}
             color={Color.textBase2}
-            i18n={I18N.transactionConfirmationHQ}
+            children={`${STRINGS.NBSP}(${app.provider.denom})`}
           />
         </View>
 
