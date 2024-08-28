@@ -8,7 +8,15 @@ import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {SettingsStackParamList, SettingsStackRoutes} from '@app/route-types';
 
-import {DataContent, Icon, IconsName, MenuNavigationButton, Text} from '../ui';
+import {
+  DataContent,
+  Icon,
+  IconsName,
+  MenuNavigationButton,
+  Text,
+  TextPosition,
+  TextVariant,
+} from '../ui';
 
 export type SettingsButtonProps = {
   next: SettingsStackRoutes;
@@ -40,7 +48,11 @@ export const SettingsButton = ({
         <Icon i24 name={icon} color={Color.graphicBase1} />
         <DataContent titleI18n={title} style={styles.text} />
         {rightTitle && (
-          <Text t11 right style={styles.textRight} color={Color.textBase2}>
+          <Text
+            variant={TextVariant.t11}
+            position={TextPosition.center}
+            style={styles.textRight}
+            color={Color.textBase2}>
             {rightTitle}
           </Text>
         )}
