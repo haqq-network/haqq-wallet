@@ -80,15 +80,6 @@ export const inAppBrowserOptions: NativeStackNavigationOptions = {
   presentation: 'fullScreenModal',
 };
 
-const totalInfoOptions: NativeStackNavigationOptions = {
-  ...modalOptions,
-  headerStyle: undefined,
-  headerShown: true,
-  headerLeft: () => null,
-  headerRight: DismissPopupButton,
-  title: getText(I18N.lockedTokensTotalValue),
-};
-
 const web3BrowserOptions: NativeStackNavigationOptions = {
   ...modalOptions,
   gestureEnabled: false,
@@ -239,7 +230,14 @@ const HomeStack = memo(() => {
       <Stack.Screen
         name={HomeStackRoutes.TotalValueInfo}
         component={themeUpdaterHOC(TotalValueInfoScreen)}
-        options={totalInfoOptions}
+        options={{
+          ...modalOptions,
+          headerStyle: undefined,
+          headerShown: true,
+          headerLeft: () => null,
+          headerRight: DismissPopupButton,
+          title: getText(I18N.lockedTokensTotalValue),
+        }}
       />
 
       <Stack.Screen

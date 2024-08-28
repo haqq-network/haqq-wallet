@@ -12,25 +12,11 @@ import {
   NftStackParamList,
   NftStackRoutes,
 } from '@app/route-types';
-import {ScreenOptionType} from '@app/types';
 
 import {NftCollectionDetailsScreen} from './nft-collection-details';
 import {NftItemDetailsScreen} from './nft-item-details';
 
 const Stack = createNativeStackNavigator<NftStackParamList>();
-
-const nftCollectionDetailsOptions: ScreenOptionType = {
-  ...popupScreenOptions,
-  title: getText(I18N.nftCollectionDetailsTitle),
-  headerRight: DismissPopupButton,
-  headerBackHidden: true,
-};
-const nftItemDetailsOptions: ScreenOptionType = {
-  ...popupScreenOptions,
-  title: getText(I18N.nftItemDetailsTitle),
-  headerRight: DismissPopupButton,
-  headerBackHidden: false,
-};
 
 export const NftStack = () => {
   const {
@@ -42,7 +28,13 @@ export const NftStack = () => {
       <Stack.Screen
         name={NftStackRoutes.NftCollectionDetails}
         component={NftCollectionDetailsScreen}
-        options={nftCollectionDetailsOptions}
+        options={{
+          ...popupScreenOptions,
+          title: getText(I18N.nftCollectionDetailsTitle),
+          headerRight: DismissPopupButton,
+          // @ts-ignore
+          headerBackHidden: true,
+        }}
         initialParams={
           {item} as NftStackParamList[NftStackRoutes.NftCollectionDetails]
         }
@@ -50,7 +42,13 @@ export const NftStack = () => {
       <Stack.Screen
         name={NftStackRoutes.NftItemDetails}
         component={NftItemDetailsScreen}
-        options={nftItemDetailsOptions}
+        options={{
+          ...popupScreenOptions,
+          title: getText(I18N.nftItemDetailsTitle),
+          headerRight: DismissPopupButton,
+          // @ts-ignore
+          headerBackHidden: false,
+        }}
         initialParams={
           {item} as NftStackParamList[NftStackRoutes.NftItemDetails]
         }
