@@ -17,6 +17,7 @@ import {
   InfoBlock,
   Text,
 } from '@app/components/ui';
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
@@ -50,6 +51,10 @@ export const DetailsQrModal = observer(
           warning
           style={page.info}
           i18n={I18N.modalDetailsQRWarning}
+          i18params={{
+            assetName: app.provider.denom,
+            networkName: app.provider.name,
+          }}
           icon={<Icon name="warning" color={Color.textYellow1} />}
         />
         <LinearGradient
