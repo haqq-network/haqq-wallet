@@ -134,16 +134,12 @@ export const TransactionFinish = observer(
         <NetworkFee fee={fee?.expectedFee} />
 
         <View style={styles.providerContainer}>
-          <Text
-            variant={TextVariant.t14}
-            color={Color.textBase2}
-            i18n={I18N.transactionConfirmationHAQQ}
-          />
-          <Text
-            variant={TextVariant.t14}
-            color={Color.textBase2}
-            i18n={I18N.transactionConfirmationHQ}
-          />
+          <Text variant={TextVariant.t14} color={Color.textBase2}>
+            {app.provider.name}
+          </Text>
+          <Text variant={TextVariant.t14} color={Color.textBase2}>
+            {`${STRINGS.NBSP}(${app.provider.denom})`}
+          </Text>
         </View>
 
         <Spacer minHeight={20} />
