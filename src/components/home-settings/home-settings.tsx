@@ -14,6 +14,7 @@ import {useTesterModeEnabled} from '@app/hooks/use-tester-mode-enabled';
 import {useWalletConnectAccounts} from '@app/hooks/use-wallet-connect-accounts';
 import {I18N} from '@app/i18n';
 import {Currencies} from '@app/models/currencies';
+import {Language} from '@app/models/language';
 import {VariablesString} from '@app/models/variables-string';
 import {SettingsStackRoutes} from '@app/route-types';
 import {AppTheme} from '@app/types';
@@ -115,12 +116,12 @@ export const HomeSettings = observer(({theme}: Props) => {
         title={I18N.homeSettingsCurrency}
       />
 
-      {/* <SettingsButton
+      <SettingsButton
         rightTitle={Language.current.toUpperCase()}
         next={SettingsStackRoutes.SettingsLanguage}
         icon={IconsName.language}
         title={I18N.homeSettingsLanguage}
-      /> */}
+      />
 
       <SettingsButton
         rightTitle={capitalizedTheme}
