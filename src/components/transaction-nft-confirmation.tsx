@@ -113,7 +113,10 @@ export const TransactionNftConfirmation = observer(
         )}
         {fee?.expectedFee && (
           <View style={styles.info}>
-            <DataView label={soulboundTokenHint || 'Network Fee'}>
+            <DataView
+              label={
+                soulboundTokenHint || getText(I18N.transactionInfoNetworkFee)
+              }>
               {!fee.calculatedFees ? (
                 <Text variant={TextVariant.t11} color={Color.textBase1}>
                   {getText(I18N.estimatingGas)}

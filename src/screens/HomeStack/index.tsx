@@ -14,7 +14,6 @@ import {popupScreenOptionsWithMargin} from '@app/helpers';
 import {getNewsDetailAppTitle} from '@app/helpers/get-news-detail-title';
 import {getWalletTitle} from '@app/helpers/get-wallet-title';
 import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
-import {I18N, getText} from '@app/i18n';
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {basicScreenOptions} from '@app/screens';
 import {DeviceStack} from '@app/screens/DeviceStack';
@@ -78,15 +77,6 @@ export const inAppBrowserOptions: NativeStackNavigationOptions = {
   gestureEnabled: false,
   header: () => <Spacer height={StatusBar.currentHeight} bg={Color.bg1} />,
   presentation: 'fullScreenModal',
-};
-
-const totalInfoOptions: NativeStackNavigationOptions = {
-  ...modalOptions,
-  headerStyle: undefined,
-  headerShown: true,
-  headerLeft: () => null,
-  headerRight: DismissPopupButton,
-  title: getText(I18N.lockedTokensTotalValue),
 };
 
 const web3BrowserOptions: NativeStackNavigationOptions = {
@@ -239,7 +229,13 @@ const HomeStack = memo(() => {
       <Stack.Screen
         name={HomeStackRoutes.TotalValueInfo}
         component={themeUpdaterHOC(TotalValueInfoScreen)}
-        options={totalInfoOptions}
+        options={{
+          ...modalOptions,
+          headerStyle: undefined,
+          headerShown: true,
+          headerLeft: () => null,
+          headerRight: DismissPopupButton,
+        }}
       />
 
       <Stack.Screen
@@ -254,7 +250,6 @@ const HomeStack = memo(() => {
         options={{
           ...modalOptions,
           headerShown: true,
-          title: getText(I18N.feeSettingsHeader),
         }}
       />
 

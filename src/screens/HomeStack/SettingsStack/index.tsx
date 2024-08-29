@@ -35,7 +35,7 @@ const SettingsStack = memo(() => {
         component={HomeSettingsScreen}
         options={{
           ...popupScreenOptionsWithMargin,
-          title: 'Settings',
+          title: getText(I18N.homeSettings),
           headerShown: true,
           headerLeft: () => null,
         }}
@@ -98,7 +98,7 @@ const SettingsStack = memo(() => {
         component={SettingsAboutScreen}
         options={{
           ...popupScreenOptionsWithMargin,
-          title: 'About',
+          title: getText(I18N.homeSettingsAbout),
           headerShown: true,
         }}
       />

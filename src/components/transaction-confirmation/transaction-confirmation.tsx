@@ -172,22 +172,22 @@ export const TransactionConfirmation = observer(
         </Text>
         <Spacer style={styles.spacer}>
           <View style={styles.info}>
-            <DataView label="Cryptocurrency">
+            <DataView i18n={I18N.transactionInfoCryptocurrency}>
               <Text variant={TextVariant.t11} color={Color.textBase1}>
                 {token.name}
               </Text>
             </DataView>
-            <DataView label="Network">
+            <DataView i18n={I18N.transactionNetwork}>
               <Text variant={TextVariant.t11} color={Color.textBase1}>
                 <Text>{app.provider.name}</Text>
               </Text>
             </DataView>
-            <DataView label="Amount">
+            <DataView i18n={I18N.transactionDetailAmount}>
               <Text variant={TextVariant.t11} color={Color.textBase1}>
                 {amount.toBalanceString(LONG_NUM_PRECISION)}
               </Text>
             </DataView>
-            <DataView label="Network Fee">
+            <DataView i18n={I18N.transactionInfoNetworkFee}>
               {!fee?.calculatedFees ? (
                 <Text variant={TextVariant.t11} color={Color.textBase1}>
                   {getText(I18N.estimatingGas)}

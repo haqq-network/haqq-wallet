@@ -30,7 +30,6 @@ const screenOptions: ScreenOptionType = {
   title: '',
   headerBackHidden: true,
 };
-const title = getText(I18N.signInTitle);
 
 const SignInStack = memo(() => {
   const inittialRouteName = useMemo(() => {
@@ -60,7 +59,7 @@ const SignInStack = memo(() => {
             onboarding: true,
           },
         }}
-        title={title}
+        title={getText(I18N.signInTitle)}
       />
     ),
     [],
@@ -102,12 +101,12 @@ const SignInStack = memo(() => {
       <Stack.Screen
         name={SignInStackRoutes.SigninRestoreWallet}
         component={themeUpdaterHOC(SignInRestoreScreen)}
-        options={{title}}
+        options={{title: getText(I18N.signInTitle)}}
       />
       <Stack.Screen
         name={SignInStackRoutes.SigninPin}
         component={themeUpdaterHOC(SignInPinScreen)}
-        options={{title}}
+        options={{title: getText(I18N.signInTitle)}}
       />
       <Stack.Screen
         name={SignInStackRoutes.SigninStoreWallet}

@@ -936,6 +936,7 @@ export enum I18N {
   recoveryPinSamePin = 'recoveryPinSamePin',
   transactionInfoFunctionValue = 'transactionInfoFunctionValue',
   isUsed = 'isUsed',
+  mainAccount = 'mainAccount',
   transactionInfoMemo = 'transactionInfoMemo',
   transactionInforHideRawOperationInfo = 'transactionInforHideRawOperationInfo',
   transactionInforShowRawOperationInfo = 'transactionInforShowRawOperationInfo',
