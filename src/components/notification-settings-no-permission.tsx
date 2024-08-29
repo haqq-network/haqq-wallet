@@ -1,15 +1,9 @@
 import React from 'react';
 
-import {Image} from 'react-native';
+import {Image, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {
-  Button,
-  ButtonVariant,
-  PopupContainer,
-  Spacer,
-  Text,
-} from '@app/components/ui';
+import {Button, ButtonVariant, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
@@ -21,7 +15,7 @@ export const SettingsNotificationNoPermission = ({
   onPressGoToPhoneSettings,
 }: SettingsNotificationNoPermissionProps) => {
   return (
-    <PopupContainer style={styles.container}>
+    <View style={styles.container}>
       <Spacer />
       <Image
         style={styles.image}
@@ -42,13 +36,15 @@ export const SettingsNotificationNoPermission = ({
         variant={ButtonVariant.second}
       />
       <Spacer />
-    </PopupContainer>
+    </View>
   );
 };
 
 const styles = createTheme({
   container: {
     marginHorizontal: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
     flex: 1,
   },
   image: {

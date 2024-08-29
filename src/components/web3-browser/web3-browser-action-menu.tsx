@@ -8,6 +8,7 @@ import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
+import {IS_IOS} from '@app/variables/common';
 import {SHADOW_L} from '@app/variables/shadows';
 
 import {DataContent, First, Icon, IconButton, IconsName} from '../ui';
@@ -70,11 +71,18 @@ export const Web3BrowserActionMenu = ({
   const insets = useSafeAreaInsets();
   const isRTL = useMemo(() => I18nManager.isRTL, []);
   const actionMenuStyle = useMemo(() => {
-    const x = moreIconLayout.x! - ACTION_MENU_WIDTH + moreIconLayout.width! * 2;
+    const x1 =
+      moreIconLayout.x! -
+      ACTION_MENU_WIDTH +
+      moreIconLayout.width! * (IS_IOS ? 2 : 4);
+    const x2 =
+      moreIconLayout.x! +
+      ACTION_MENU_WIDTH -
+      moreIconLayout.width! * (IS_IOS ? 2 : 4);
     const y = moreIconLayout.height! + moreIconLayout.y! + 5 + insets.top;
 
     return {
-      left: isRTL ? -x : x,
+      left: isRTL ? x2 : x1,
       top: isRTL ? y + 5 : y,
     };
   }, [isRTL, moreIconLayout]);

@@ -270,6 +270,7 @@ export const Button = ({
               style={textStyleFlatten}
               color={textColor}
               i18n={isTimerActive ? undefined : i18n}
+              numberOfLines={1}
               i18params={i18params}>
               {isTimerActive ? time : title}
             </Text>
