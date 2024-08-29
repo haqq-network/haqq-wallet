@@ -23,7 +23,7 @@
     "detox:android:test": "detox test --configuration android.sim.release --loglevel warn --cleanup --record-videos failing --take-screenshots failing --record-logs failing",
     "detox:android": "yarn detox:android:build && yarn detox:android:test",
     "clean-ios-app": "sh ./scripts/clean-ios-app.sh",
-    "clean-android-app": "sh ./scripts/clean-android-app.sh",
+    "clean-android-app": "yarn zx ./scripts/clean-android-app.mjs",
     "devmode:ios": "xcrun simctl openurl booted haqq:enableDeveloperMode:true",
     "devmode:android": "adb shell am start -a android.intent.action.VIEW -d haqq:enableDeveloperMode:true",
     "clean": "sh ./scripts/clean.sh",

@@ -754,7 +754,7 @@ export enum AppLanguage {
   en = 'en',
   tr = 'tr',
   id = 'id',
-  // ar = 'ar',
+  ar = 'ar',
   // ru = 'ru',
 }
 
