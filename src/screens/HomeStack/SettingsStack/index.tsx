@@ -98,7 +98,7 @@ const SettingsStack = memo(() => {
         component={SettingsAboutScreen}
         options={{
           ...popupScreenOptionsWithMargin,
-          title: 'About',
+          title: getText(I18N.homeSettingsAbout),
           headerShown: true,
         }}
       />
