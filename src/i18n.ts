@@ -5,6 +5,7 @@ import {Language} from '@app/models/language';
 import {AppLanguage} from '@app/types';
 
 import {app} from './contexts';
+import {setRTL} from './utils';
 
 import en from '../assets/locales/en/en.json';
 
@@ -1062,7 +1063,7 @@ export const supportedTranslationsMap: {[key in AppLanguage]: NodeRequire} = {
   en: require('../assets/locales/en/en.json'),
   tr: require('../assets/locales/tr/tr.json'),
   id: require('../assets/locales/id/id.json'),
-  // ar: require('../assets/locales/ar/ar.json'),
+  ar: require('../assets/locales/ar/ar.json'),
   // ru: require('../assets/locales/ru/ru.json'),
 };
 
@@ -1077,5 +1078,5 @@ export function setLanguage(lang: AppLanguage, keys?: Object) {
   translations.setContent({[lang]: keys ?? supportedTranslationsMap[lang]});
   translations.setLanguage(lang);
   app.emit(Events.onLocaleChanged, lang);
-  // setRTL(lang);
+  setRTL(lang);
 }
