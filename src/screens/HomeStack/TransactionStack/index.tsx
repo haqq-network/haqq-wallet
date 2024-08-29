@@ -31,37 +31,6 @@ const Stack = createNativeStackNavigator<TransactionStackParamList>();
 
 const screenOptions: ScreenOptionType = {title: '', headerBackHidden: true};
 
-const screenOptionsSend: ScreenOptionType = {
-  title: getText(I18N.transactionSumSendTitle),
-  ...hideBack,
-};
-
-const screenOptionsAddress: ScreenOptionType = {
-  title: getText(I18N.transactionSumAddressTitle),
-};
-
-const screenOptionsSendFunds: ScreenOptionType = {
-  title: getText(I18N.transactionAccountSendFundsTitle),
-  ...hideBack,
-};
-
-const screenOptionsEditContact: ScreenOptionType = {
-  title: getText(I18N.transactionContactEditHeaderTitle),
-  headerRight: DismissPopupButton,
-};
-
-const screenOptionsLedger: ScreenOptionType = {
-  title: getText(I18N.transactionLedgerConfirmationTitle),
-};
-
-const screenOptionsConfirmation: ScreenOptionType = {
-  title: getText(I18N.transactionConfirmationPreviewTitle),
-};
-
-const screenOptionsSelectCrypto: ScreenOptionType = {
-  title: getText(I18N.transactionSelectCryptoTitle),
-};
-
 export const TransactionStack = memo(() => {
   const {
     params: {from, to, nft},
@@ -93,22 +62,31 @@ export const TransactionStack = memo(() => {
       <Stack.Screen
         name={TransactionStackRoutes.TransactionSum}
         component={themeUpdaterHOC(TransactionSumScreen)}
-        options={screenOptionsSend}
+        options={{
+          title: getText(I18N.transactionSumSendTitle),
+          ...hideBack,
+        }}
       />
       <Stack.Screen
         name={TransactionStackRoutes.TransactionSelectCrypto}
         component={themeUpdaterHOC(TransactionSelectCryptoScreen)}
-        options={screenOptionsSelectCrypto}
+        options={{
+          title: getText(I18N.transactionSelectCryptoTitle),
+        }}
       />
       <Stack.Screen
         name={TransactionStackRoutes.TransactionConfirmation}
         component={themeUpdaterHOC(TransactionConfirmationScreen)}
-        options={screenOptionsConfirmation}
+        options={{
+          title: getText(I18N.transactionConfirmationPreviewTitle),
+        }}
       />
       <Stack.Screen
         name={TransactionStackRoutes.TransactionNftConfirmation}
         component={themeUpdaterHOC(TransactionNftConfirmationScreen)}
-        options={screenOptionsConfirmation}
+        options={{
+          title: getText(I18N.transactionConfirmationPreviewTitle),
+        }}
       />
       <Stack.Screen
         name={TransactionStackRoutes.TransactionFinish}
@@ -124,22 +102,32 @@ export const TransactionStack = memo(() => {
         name={TransactionStackRoutes.TransactionAccount}
         initialParams={{to}}
         component={themeUpdaterHOC(TransactionAccountScreen)}
-        options={screenOptionsSendFunds}
+        options={{
+          title: getText(I18N.transactionAccountSendFundsTitle),
+          ...hideBack,
+        }}
       />
       <Stack.Screen
         name={TransactionStackRoutes.TransactionLedger}
         component={themeUpdaterHOC(TransactionLedgerScreen)}
-        options={screenOptionsLedger}
+        options={{
+          title: getText(I18N.transactionLedgerConfirmationTitle),
+        }}
       />
       <Stack.Screen
         name={TransactionStackRoutes.TransactionSumAddress}
         component={themeUpdaterHOC(TransactionSumAddressScreen)}
-        options={screenOptionsAddress}
+        options={{
+          title: getText(I18N.transactionSumAddressTitle),
+        }}
       />
       <Stack.Screen
         name={TransactionStackRoutes.TransactionContactEdit}
         component={themeUpdaterHOC(TransactionContactEditScreen)}
-        options={screenOptionsEditContact}
+        options={{
+          title: getText(I18N.transactionContactEditHeaderTitle),
+          headerRight: DismissPopupButton,
+        }}
       />
     </Stack.Navigator>
   );

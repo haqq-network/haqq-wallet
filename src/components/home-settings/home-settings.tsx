@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 
 import {observer} from 'mobx-react';
 import {ScrollView} from 'react-native';
@@ -12,13 +12,13 @@ import {
 } from '@app/helpers/check-app-version';
 import {useTesterModeEnabled} from '@app/hooks/use-tester-mode-enabled';
 import {useWalletConnectAccounts} from '@app/hooks/use-wallet-connect-accounts';
-import {I18N} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
 import {Currencies} from '@app/models/currencies';
 import {Language} from '@app/models/language';
 import {VariablesString} from '@app/models/variables-string';
 import {SettingsStackRoutes} from '@app/route-types';
 import {AppTheme} from '@app/types';
-import {capitalize, openStorePage} from '@app/utils';
+import {openStorePage} from '@app/utils';
 
 import {SettingsButton} from './settings-button';
 
@@ -32,13 +32,8 @@ import {
   Spacer,
 } from '../ui';
 
-type Props = {
-  theme: AppTheme;
-};
-
-export const HomeSettings = observer(({theme}: Props) => {
+export const HomeSettings = observer(() => {
   const [appVersionHidden, setAppVersionHidden] = useState(false);
-  const capitalizedTheme = capitalize(theme);
   const {accounts} = useWalletConnectAccounts();
   const isTesterMode = useTesterModeEnabled();
   const selectedCurrency = Currencies.selectedCurrency;
@@ -47,6 +42,18 @@ export const HomeSettings = observer(({theme}: Props) => {
     setAppVersionHidden(true);
     VariablesString.set('version_to_ignore', getRemoteVersion()!);
   };
+
+  const capitalizedTheme = useMemo(() => {
+    switch (app.theme) {
+      case AppTheme.light:
+        return getText(I18N.settingsThemeLight);
+      case AppTheme.dark:
+        return getText(I18N.settingsThemeDark);
+      case AppTheme.system:
+      default:
+        return getText(I18N.settingsThemeSystem);
+    }
+  }, [app.theme, Language.current]);
 
   return (
     <ScrollView contentContainerStyle={page.container} testID="settings_home">

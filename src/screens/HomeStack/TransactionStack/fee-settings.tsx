@@ -53,6 +53,12 @@ export const FeeSettingsScreen = observer(() => {
   const amountsMaxBaseFee = useSumAmount(fee.maxBaseFee!);
   const amountsMaxPriorityFee = useSumAmount(fee.maxPriorityFee!);
 
+  useEffect(() => {
+    navigation.setOptions({
+      title: getText(I18N.feeSettingsHeader),
+    });
+  }, [navigation]);
+
   const estimate = useCallback(
     async (estimationType: EstimationVariant) => {
       setEstimating(true);
