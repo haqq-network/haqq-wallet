@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 
 import {observer} from 'mobx-react';
 
@@ -8,6 +8,7 @@ import {showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useWalletsAddressList} from '@app/hooks/use-wallets-address-list';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
+import {I18N, getText} from '@app/i18n';
 import {Token} from '@app/models/tokens';
 import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
@@ -28,6 +29,12 @@ export const TotalValueInfoScreen = observer(() => {
     () => calculateBalances(balances, wallets),
     [balances, wallets],
   );
+
+  useEffect(() => {
+    navigation.setOptions({
+      title: getText(I18N.lockedTokensTotalValue),
+    });
+  }, [navigation]);
 
   const onPressTxRow = useCallback(
     (tx: Transaction) => {

@@ -14,7 +14,6 @@ import {popupScreenOptionsWithMargin} from '@app/helpers';
 import {getNewsDetailAppTitle} from '@app/helpers/get-news-detail-title';
 import {getWalletTitle} from '@app/helpers/get-wallet-title';
 import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
-import {I18N, getText} from '@app/i18n';
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {basicScreenOptions} from '@app/screens';
 import {DeviceStack} from '@app/screens/DeviceStack';
@@ -236,7 +235,6 @@ const HomeStack = memo(() => {
           headerShown: true,
           headerLeft: () => null,
           headerRight: DismissPopupButton,
-          title: getText(I18N.lockedTokensTotalValue),
         }}
       />
 
@@ -252,7 +250,6 @@ const HomeStack = memo(() => {
         options={{
           ...modalOptions,
           headerShown: true,
-          title: getText(I18N.feeSettingsHeader),
         }}
       />
 
