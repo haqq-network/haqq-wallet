@@ -1,9 +1,6 @@
 import React, {memo, useCallback, useMemo} from 'react';
 
-import {
-  NativeStackNavigationOptions,
-  createNativeStackNavigator,
-} from '@react-navigation/native-stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Platform} from 'react-native';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
@@ -26,15 +23,6 @@ import {SignUpStoreWalletScreen} from '@app/screens/WelcomeStack/SignUpStack/sig
 import {MarketingEvents} from '@app/types';
 
 const Stack = createNativeStackNavigator<SignUpStackParamList>();
-
-const title = getText(I18N.signUpTitle);
-const screenOptionsTitleOnly: NativeStackNavigationOptions = {
-  title,
-};
-const screenOptionsSignupStoreWallet = {
-  title,
-  headerShown: false,
-};
 
 const SignUpStack = memo(() => {
   const nextScreen = useMemo(() => {
@@ -65,7 +53,7 @@ const SignUpStack = memo(() => {
             onboarding: true,
           },
         }}
-        title={title}
+        title={getText(I18N.signUpTitle)}
       />
     ),
     [],
@@ -95,12 +83,17 @@ const SignUpStack = memo(() => {
       <Stack.Screen
         name={SignUpStackRoutes.SignUpPin}
         component={themeUpdaterHOC(SignupPinScreen)}
-        options={screenOptionsTitleOnly}
+        options={{
+          title: getText(I18N.signUpTitle),
+        }}
       />
       <Stack.Screen
         name={SignUpStackRoutes.SignupStoreWallet}
         component={SignUpStoreWalletScreen}
-        options={screenOptionsSignupStoreWallet}
+        options={{
+          title: getText(I18N.signUpTitle),
+          headerShown: false,
+        }}
       />
       <Stack.Screen
         name={SignUpStackRoutes.SignupCloudProblems}
@@ -115,7 +108,10 @@ const SignUpStack = memo(() => {
       <Stack.Screen
         name={SignUpStackRoutes.OnboardingSetupPin}
         component={OnboardingStackGenerated}
-        options={screenOptionsSignupStoreWallet}
+        options={{
+          title: getText(I18N.signUpTitle),
+          headerShown: false,
+        }}
       />
     </Stack.Navigator>
   );

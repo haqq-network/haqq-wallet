@@ -16,7 +16,9 @@ class LanguageStore {
     if (!this.current) {
       // Use system language or English as default if user doesn't select another one
       let current = this.getDeviceLanguage();
-      if (!supportedTranslationsMap[current]) current = AppLanguage.en;
+      if (!supportedTranslationsMap[current]) {
+        current = AppLanguage.en;
+      }
       this.current = current;
     }
 
