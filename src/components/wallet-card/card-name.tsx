@@ -3,7 +3,7 @@ import React, {useMemo} from 'react';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Icon, IconsName, Text, TextVariant} from '@app/components/ui';
+import {Icon, IconsName, Spacer, Text, TextVariant} from '@app/components/ui';
 import {CopyMenu} from '@app/components/ui/copy-menu';
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
@@ -29,16 +29,19 @@ export const CardName = ({
 
   return (
     <View style={styles.topNav}>
-      <Text
-        variant={TextVariant.t12}
-        style={styles.name}
-        ellipsizeMode="tail"
-        numberOfLines={1}
-        suppressHighlighting={true}
-        disabled={isBalancesFirstSync}
-        onPress={onAccountInfo}>
-        {wallet.name || 'Unknown'}
-      </Text>
+      <View>
+        <Text
+          variant={TextVariant.t12}
+          style={styles.name}
+          ellipsizeMode="tail"
+          numberOfLines={1}
+          suppressHighlighting={true}
+          disabled={isBalancesFirstSync}
+          onPress={onAccountInfo}>
+          {wallet.name || 'Unknown'}
+        </Text>
+      </View>
+      <Spacer flex={1} />
       <CopyMenu style={styles.copyIcon} value={wallet.address} withSettings>
         <Text
           variant={TextVariant.t14}
@@ -66,7 +69,7 @@ export const CardName = ({
 const styles = createTheme({
   topNav: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     marginBottom: 6,
   },
