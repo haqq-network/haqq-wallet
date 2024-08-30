@@ -1,6 +1,7 @@
 import React, {memo, useCallback, useEffect, useRef, useState} from 'react';
 
 import {State, tryToInitBt} from '@haqq/provider-ledger-react-native';
+import {Linking} from 'react-native';
 import {Subscription} from 'rxjs';
 
 import {LedgerBluetooth} from '@app/components/ledger-bluetooth';
@@ -66,9 +67,15 @@ export const LedgerBluetoothScreen = memo(() => {
     });
   }, [onDone]);
 
+  const onPressGoToPhoneSettings = useCallback(() => {
+    Linking.openSettings();
+    setBtState(State.Unknown);
+  }, []);
+
   return (
     <LedgerBluetooth
       onPressAllow={onPressAllow}
+      onPressGoToPhoneSettings={onPressGoToPhoneSettings}
       btState={btState}
       loading={loading}
     />
