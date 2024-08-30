@@ -37,7 +37,7 @@ class MainActivity : ReactActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     SplashScreen.show(this, true)
     val sharedI18nUtilInstance: I18nUtil = I18nUtil.getInstance()
-    sharedI18nUtilInstance.allowRTL(getApplicationContext(),true)
+    sharedI18nUtilInstance.allowRTL(this, sharedI18nUtilInstance.isRTL(this))
     super.onCreate(null)
   }
 

@@ -425,9 +425,18 @@ export class Backend {
   }
 
   async providers() {
-    const response = await fetch(`${this.getRemoteUrl()}provider`, {
-      headers: Backend.headers,
-    });
-    return await getHttpResponse<NetworkProviderResponse>(response);
+    try {
+      const response = await fetch(`${this.getRemoteUrl()}provider`, {
+        headers: Backend.headers,
+      });
+      return await getHttpResponse<NetworkProviderResponse>(response);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        Logger.error('Error fetching providers:', error.message);
+      } else {
+        Logger.error('Unknown error occurred while fetching providers');
+      }
+      throw error;
+    }
   }
 }
