@@ -16,7 +16,7 @@ export function getWalletTitle(props: {
   const wallet = Wallet.getById(props.route.params.accountId);
 
   const translatedWalletName = wallet?.name
-    ? wallet.name == MAIN_ACCOUNT_NAME
+    ? wallet.name === MAIN_ACCOUNT_NAME
       ? getText(I18N.mainAccount)
       : wallet.name
     : 'Account';
