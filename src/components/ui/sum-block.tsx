@@ -129,6 +129,7 @@ export const SumBlock = observer(
                 variant={ButtonVariant.second}
                 size={ButtonSize.small}
                 testID={`${testID}_max`}
+                style={styles.maxButton}
               />
             )}
           </View>
@@ -174,14 +175,13 @@ const styles = createTheme({
     marginBottom: 4,
   },
   sum: {
-    justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',
   },
   max: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'flex-end',
+    alignItems: 'flex-start',
   },
   input: {
     width: 'auto',
@@ -195,5 +195,8 @@ const styles = createTheme({
   },
   inputContainer: {
     flex: 4,
+  },
+  maxButton: {
+    width: '100%',
   },
 });
