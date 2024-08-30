@@ -1,0 +1,11 @@
+diff --git a/node_modules/react-native-restart/android/build.gradle b/node_modules/react-native-restart/android/build.gradle
+index 7eaecbc..7dfced8 100644
+--- a/node_modules/react-native-restart/android/build.gradle
++++ b/node_modules/react-native-restart/android/build.gradle
+@@ -117,5 +117,5 @@ repositories {
+ 
+ dependencies {
+   api 'com.facebook.react:react-native:+'
+-  implementation 'com.jakewharton:process-phoenix:2.1.2'
++  implementation 'com.jakewharton:process-phoenix:3.0.0'
+ }

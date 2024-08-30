@@ -2,6 +2,7 @@ package com.haqq.wallet
 
 import android.app.Application
 import android.content.Context
+import android.os.Build
 import com.facebook.react.*
 import com.facebook.react.config.ReactFeatureFlags
 import com.haqq.wallet.haptic.HapticPackage
@@ -13,8 +14,11 @@ import com.haqq.wallet.MainApplication
 import com.haqq.wallet.toast.ToastPackage
 import java.lang.reflect.InvocationTargetException
 import android.webkit.WebView;
+import androidx.annotation.RequiresApi
+import com.facebook.react.modules.i18nmanager.I18nUtil
 import com.haqq.wallet.appnativeconfig.AppNativeConfigPackage
 import com.haqq.wallet.apputils.AppUtilsPackage
+import com.jakewharton.processphoenix.ProcessPhoenix
 
 class MainApplication : Application(), ReactApplication {
   private val mReactNativeHost: ReactNativeHost = object : ReactNativeHost(this) {
@@ -51,12 +55,20 @@ class MainApplication : Application(), ReactApplication {
 
   override fun onCreate() {
     super.onCreate()
+    // To check if your application is inside the Phoenix process to skip initialization in onCreate:
+    if (ProcessPhoenix.isPhoenixProcess(this)) {
+      return;
+    }
     // If you opted-in for the New Architecture, we enable the TurboModule system
     ReactFeatureFlags.useTurboModules = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED
 
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+      WebView.setDataDirectorySuffix("haqqwebview")
+    }
+
     if (BuildConfig.DEBUG) {
-			WebView.setWebContentsDebuggingEnabled(true);
-		}
+      WebView.setWebContentsDebuggingEnabled(true);
+    }
 
     SoLoader.init(this,  /* native exopackage */false)
     initializeFlipper(this, reactNativeHost.reactInstanceManager)
