@@ -1,27 +1,27 @@
 /**
  * @format
  */
-import './global';
 import '@ethersproject/shims';
 import '@walletconnect/react-native-compat';
-import {AppRegistry, I18nManager, LogBox} from 'react-native';
+import {AppRegistry, LogBox} from 'react-native';
+import './global';
 
-import Config from 'react-native-config';
+import {app} from '@app/contexts';
+import {DEBUG_VARS} from '@app/debug-vars';
+import {enableBatchedStateUpdates} from '@app/hooks/batched-set-state';
+import {EventTracker} from '@app/services/event-tracker';
+import {MarketingEvents} from '@app/types';
+import {IS_IOS} from '@app/variables/common';
 import {JsonRpcProvider} from '@ethersproject/providers';
+import messaging from '@react-native-firebase/messaging';
 import * as Sentry from '@sentry/react-native';
+import {ethers} from 'ethers';
+import Config from 'react-native-config';
+import {enableFreeze, enableScreens} from 'react-native-screens';
 import {name as appName} from './app.json';
 import {App} from './src/app';
 import './src/event-actions';
 import {Jailbreak} from './src/jailbreak';
-import messaging from '@react-native-firebase/messaging';
-import {IS_IOS} from '@app/variables/common';
-import {DEBUG_VARS} from '@app/debug-vars';
-import {enableFreeze, enableScreens} from 'react-native-screens';
-import {enableBatchedStateUpdates} from '@app/hooks/batched-set-state';
-import {EventTracker} from '@app/services/event-tracker';
-import {MarketingEvents} from '@app/types';
-import {app} from '@app/contexts';
-import {ethers} from 'ethers';
 
 if (!global.BigInt) {
   const BigInt = require('big-integer');
@@ -36,12 +36,6 @@ enableFreeze(true);
 enableBatchedStateUpdates();
 
 LogBox.ignoreLogs(["The 'navigation' object hasn't been initialized"]);
-
-// try {
-//   const isRTLEnabled = true;
-//   I18nManager.allowRTL(isRTLEnabled);
-//   I18nManager.swapLeftAndRightInRTL(isRTLEnabled);
-// } catch (e) {}
 
 if (__DEV__ && IS_IOS) {
   messaging().setAPNSToken('dev-apns-token', 'sandbox');
@@ -99,9 +93,11 @@ JsonRpcProvider.prototype.send = async function (method, params) {
   let parsedAddressFrom = 'unknown';
   try {
     const hexString = params[0].replace(/^0x/, '');
-    parsedAddressFrom = ethers.utils.parseTransaction(Buffer.from(hexString, 'hex'))?.from;
+    parsedAddressFrom = ethers.utils.parseTransaction(
+      Buffer.from(hexString, 'hex'),
+    )?.from;
   } catch (e) {}
-  
+
   const eventParams = {
     type: 'EVM',
     network: app.provider.name,

@@ -1,5 +1,6 @@
 /* eslint-disable no-bitwise */
 import {formatNumberWithSubscriptZeros} from '@haqq/format-number-with-subscript-zeros/src';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {SessionTypes} from '@walletconnect/types';
 import {
   differenceInDays,
@@ -1061,15 +1062,23 @@ export function isSupportedCosmosTxForRender(
   return false;
 }
 
-export const setRTL = (lang: AppLanguage) => {
+export const IS_RTL_ENABLED_KEY = 'is_rtl_enabled';
+export const setRTL = async (lang: AppLanguage) => {
   const isRTL = RTL_LANGUAGES.includes(lang);
-  I18nManager.forceRTL(isRTL);
 
-  if (isRTL !== I18nManager.isRTL) {
+  const isRTLenabled =
+    (await AsyncStorage.getItem(IS_RTL_ENABLED_KEY)) === 'true';
+
+  I18nManager.allowRTL(isRTL);
+  I18nManager.forceRTL(isRTL);
+  I18nManager.swapLeftAndRightInRTL(isRTL);
+
+  await AsyncStorage.setItem(IS_RTL_ENABLED_KEY, isRTL.toString());
+
+  if (isRTL !== isRTLenabled) {
     RNRestart.restart();
   }
 };
-
 const hexRegExp = /^(0[xX])?[0-9A-Fa-f]+$/;
 export function isValidHex(hexString: string) {
   return hexRegExp.test(hexString);

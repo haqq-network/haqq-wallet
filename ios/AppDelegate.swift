@@ -52,7 +52,7 @@ class AppDelegate: RCTAppDelegate {
     FirebaseApp.configure()
     let app = super.application(application, didFinishLaunchingWithOptions: launchOptions);
     RNSplashScreen.show();
-    RCTI18nUtil().allowRTL(true);
+    RCTI18nUtil().allowRTL(RCTI18nUtil().isRTLAllowed());
     return app;
   }
 
