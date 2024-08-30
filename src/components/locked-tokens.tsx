@@ -69,12 +69,14 @@ export const LockedTokens = observer(
               {total?.toBalanceString('auto') ?? defaultTotalValueISLM}
             </Text>
             <Spacer width={4} />
-            <Badge
-              text={total?.toFiat() ?? defaultTotalValueUSD}
-              labelColor={Color.graphicSecond1}
-              textColor={Color.textBase1}
-              textVariant={TextVariant.t19}
-            />
+            {!!total?.toFiat() && (
+              <Badge
+                text={total?.toFiat() ?? defaultTotalValueUSD}
+                labelColor={Color.graphicSecond1}
+                textColor={Color.textBase1}
+                textVariant={TextVariant.t19}
+              />
+            )}
             <Spacer width={4} />
             <IconButton onPress={onForwardPress} style={styles.iconButton}>
               <Icon

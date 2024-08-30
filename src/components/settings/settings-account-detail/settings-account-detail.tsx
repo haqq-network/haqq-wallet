@@ -97,28 +97,33 @@ export const SettingsAccountDetail = observer(
               ]}
             />
           </Card>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => {
-              onCopy(wallet?.address);
-            }}>
-            <View style={[styles.row, styles.alignItemsCenter]}>
-              <Text variant={TextVariant.t10} style={styles.headerName}>
-                {wallet.name}
-              </Text>
-              <Text
-                variant={TextVariant.t14}
-                color={Color.textBase2}
-                style={styles.copyText}
-                i18n={I18N.copy}
-              />
-              <Icon name="copy" color={Color.textBase2} i16 />
-            </View>
+          <View style={styles.row}>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => {
+                onCopy(wallet?.address);
+              }}>
+              <View style={[styles.row, styles.alignItemsCenter]}>
+                <Text variant={TextVariant.t10} style={styles.headerName}>
+                  {wallet.name}
+                </Text>
+                <Text
+                  variant={TextVariant.t14}
+                  color={Color.textBase2}
+                  style={styles.copyText}
+                  i18n={I18N.copy}
+                />
+                <Icon name="copy" color={Color.textBase2} i16 />
+              </View>
 
-            <Text variant={TextVariant.t14}>{wallet?.address}</Text>
-          </TouchableOpacity>
+              <Text variant={TextVariant.t14}>{wallet?.address}</Text>
+            </TouchableOpacity>
+          </View>
+
+          <Spacer height={4} />
+
           {app.provider.config.isBech32Enabled && (
-            <>
+            <View style={styles.row}>
               <View style={styles.hDevider} />
               <TouchableOpacity
                 activeOpacity={0.7}
@@ -143,7 +148,7 @@ export const SettingsAccountDetail = observer(
                   {AddressUtils.toHaqq(wallet?.address)}
                 </Text>
               </TouchableOpacity>
-            </>
+            </View>
           )}
         </View>
         {isFeatureEnabled(Feature.sss) && (

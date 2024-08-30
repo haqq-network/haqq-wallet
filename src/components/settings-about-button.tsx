@@ -1,5 +1,7 @@
 import React, {useCallback} from 'react';
 
+import {View} from 'react-native';
+
 import {Color} from '@app/colors';
 import {
   Icon,
@@ -30,11 +32,13 @@ export const SettingsAboutButton = ({
   }, [url]);
 
   return (
-    <IconButton onPress={onPress} style={styles.button}>
-      <Icon i24 name={name} color={color} />
-      <Text variant={TextVariant.t11} i18n={i18n} style={styles.buttonText} />
-      <Spacer />
-      <Icon i12 name="arrow_forward" color={Color.graphicSecond3} />
+    <IconButton onPress={onPress}>
+      <View style={styles.button}>
+        <Icon i24 name={name} color={color} />
+        <Text variant={TextVariant.t11} i18n={i18n} style={styles.buttonText} />
+        <Spacer />
+        <Icon i12 name="arrow_forward" color={Color.graphicSecond3} />
+      </View>
     </IconButton>
   );
 };
@@ -44,6 +48,7 @@ const styles = createTheme({
     paddingHorizontal: 20,
     paddingVertical: 12,
     flexDirection: 'row',
+    alignItems: 'center',
   },
   buttonText: {
     marginLeft: 12,
