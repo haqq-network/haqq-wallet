@@ -112,10 +112,10 @@ export const SignupNetworksScreen = memo(() => {
       getText(I18N.sssLoginLaterDescription),
       [
         {
-          text: 'Cancel',
+          text: getText(I18N.cancel),
         },
         {
-          text: 'Accept',
+          text: getText(I18N.accept),
           style: 'destructive',
           onPress() {
             navigation.navigate(SignUpStackRoutes.OnboardingSetupPin, {
