@@ -1,6 +1,8 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
+import Clipboard from '@react-native-clipboard/clipboard';
 import {
+  Alert,
   I18nManager,
   Image,
   StyleProp,
@@ -22,6 +24,7 @@ import {
   Text,
 } from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
+import {app} from '@app/contexts';
 import {openURL} from '@app/helpers/url';
 import {BannerButtonEvent} from '@app/models/banner';
 import {EventTracker} from '@app/services/event-tracker';
@@ -61,6 +64,22 @@ export const BannerWidget = ({banner, style}: HomeBannerProps) => {
     const link = banner.target;
     if (!link) {
       return;
+    }
+    if (app.isTesterMode) {
+      Alert.alert(
+        'Ad banner link',
+        `${link}\n\n You see this message because you are in developer mode.`,
+        [
+          {
+            text: 'Copy',
+            onPress: () => Clipboard.setString(link),
+          },
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+        ],
+      );
     }
     openURL(link);
     setLoading(false);
