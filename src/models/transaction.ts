@@ -232,7 +232,7 @@ class TransactionStore implements RPCObserver {
       return;
     }
 
-    const result = message.data.txs;
+    const result = message.data.txs || message.data.transactions || [];
     const accounts = Wallet.addressList();
     const parsed = result
       .map(tx => parseTransaction(tx, accounts))

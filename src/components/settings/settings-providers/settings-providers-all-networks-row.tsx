@@ -5,7 +5,7 @@ import {TouchableWithoutFeedback, View} from 'react-native';
 import {Color} from '@app/colors';
 import {DataContent, Icon, IconsName, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {ProviderModel} from '@app/models/provider';
+import {ALL_NETWORKS_ID, ProviderModel} from '@app/models/provider';
 
 export type SettingsProvidersAllNetworksRowProps = {
   item: ProviderModel;
@@ -33,7 +33,7 @@ export const SettingsProvidersAllNetworksRow = ({
         <Spacer width={12} />
         <DataContent style={styles.info} title={item.name} />
         <Spacer flex={1} />
-        {providerId === 'all_networks' && (
+        {providerId === ALL_NETWORKS_ID && (
           <Icon color={Color.graphicGreen1} name="check" i24 />
         )}
       </View>

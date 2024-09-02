@@ -9,7 +9,7 @@ import {AddressUtils} from '@app/helpers/address-utils';
 import {Whitelist} from '@app/helpers/whitelist';
 import {I18N, getText} from '@app/i18n';
 import {NftCollectionIndexer} from '@app/models/nft';
-import {Provider} from '@app/models/provider';
+import {ALL_NETWORKS_ID, Provider} from '@app/models/provider';
 import {
   ContractNameMap,
   IContract,
@@ -108,7 +108,7 @@ export class Indexer {
       lastUpdated: Date | undefined,
       selectedCurrency?: string,
     ) => {
-      if (app.provider.id === 'all_networks') {
+      if (app.provider.id === ALL_NETWORKS_ID) {
         return this.updatesV2(accounts, lastUpdated, selectedCurrency);
       } else {
         return this.updatesV1(accounts, lastUpdated, selectedCurrency);
@@ -159,7 +159,7 @@ export class Indexer {
           'updates_v2',
           [
             Provider.getAll()
-              .filter(item => item.id !== 'all_networks')
+              .filter(item => item.id !== ALL_NETWORKS_ID)
               .reduce(
                 (acc, item) => ({...acc, [item.ethChainId]: accounts}),
                 {},
@@ -233,7 +233,7 @@ export class Indexer {
         'transaction',
         [haqqAddresses, tx_hash],
       );
-      return response?.txs[0] || {};
+      return response?.txs?.[0] || null;
     } catch (err) {
       if (err instanceof JSONRPCError) {
         this.captureException(err, 'Indexer:getTransactions', err.meta);
@@ -244,7 +244,7 @@ export class Indexer {
 
   getTransactions = createAsyncTask(
     async (accounts: string[], latestBlock: string = 'latest') => {
-      if (app.provider.id === 'all_networks') {
+      if (app.provider.id === ALL_NETWORKS_ID) {
         return this.getTransactionsV2(accounts, latestBlock);
       } else {
         return this.getTransactionsV1(accounts, latestBlock);
@@ -267,7 +267,7 @@ export class Indexer {
         'transactions',
         [haqqAddresses, latestBlock],
       );
-      return response?.txs || {};
+      return response?.txs || [];
     } catch (err) {
       if (err instanceof JSONRPCError) {
         this.captureException(err, 'Indexer:getTransactions', err.meta);
@@ -291,7 +291,7 @@ export class Indexer {
         'transactions_by_timestamp',
         [
           Provider.getAll()
-            .filter(item => item.id !== 'all_networks')
+            .filter(item => item.id !== ALL_NETWORKS_ID)
             .reduce(
               (acc, item) => ({...acc, [item.ethChainId]: haqqAddresses}),
               {},
@@ -299,7 +299,8 @@ export class Indexer {
           latestBlock,
         ],
       );
-      return response?.txs || {};
+
+      return response?.transactions || [];
     } catch (err) {
       if (err instanceof JSONRPCError) {
         this.captureException(err, 'Indexer:getTransactions', err.meta);
@@ -309,7 +310,7 @@ export class Indexer {
   }
 
   getNfts = createAsyncTask(async (accounts: string[]) => {
-    if (app.provider.id === 'all_networks') {
+    if (app.provider.id === ALL_NETWORKS_ID) {
       return this.getNftsV2(accounts);
     } else {
       return this.getNftsV1(accounts);
@@ -354,7 +355,7 @@ export class Indexer {
         'nfts',
         [
           Provider.getAll()
-            .filter(item => item.id !== 'all_networks')
+            .filter(item => item.id !== ALL_NETWORKS_ID)
             .reduce(
               (acc, item) => ({...acc, [item.ethChainId]: haqqAddresses}),
               {},

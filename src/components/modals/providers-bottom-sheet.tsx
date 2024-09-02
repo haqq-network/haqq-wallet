@@ -9,6 +9,7 @@ import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N} from '@app/i18n';
+import {ALL_NETWORKS_ID} from '@app/models/provider';
 import {ModalType, Modals} from '@app/types';
 
 import {SettingsProvidersAllNetworksRow} from '../settings/settings-providers/settings-providers-all-networks-row';
@@ -94,7 +95,7 @@ export function ProvidersBottomSheet({
         data={visibleProviders}
         keyExtractor={item => item.id}
         renderItem={({item}) => {
-          if (item.id === 'all_networks') {
+          if (item.id === ALL_NETWORKS_ID) {
             return (
               <SettingsProvidersAllNetworksRow
                 providerId={initialProvider}

@@ -7,8 +7,9 @@ import {
 
 export type ProviderID = string;
 
+export const ALL_NETWORKS_ID = 'all_networks';
 export const ALL_NETWORKS_PROVIDER: NetworkProvider = {
-  id: 'all_networks',
+  id: ALL_NETWORKS_ID,
   name: 'All Networks',
   icon: '',
   chain_id: -1,
@@ -18,10 +19,10 @@ export const ALL_NETWORKS_PROVIDER: NetworkProvider = {
   cosmos_explorer_url: undefined,
   decimals: 0,
   denom: '',
-  entry_point: '',
+  entry_point: 'https://rpc.eth.haqq.network/',
   explorer_url: undefined,
-  indexer_url: '',
-  network_type: NetworkProviderTypes.HAQQ,
+  indexer_url: 'https://proxy.indexer.haqq.network',
+  network_type: NetworkProviderTypes.EVM,
   stage: NetworkProviderStage.MAINNET,
   status: NetworkProviderStatus.PUBLISHED,
   wei_denom: '',

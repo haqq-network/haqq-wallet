@@ -1,13 +1,7 @@
 import {makeAutoObservable, runInAction} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
-import {
-  Backend,
-  NetworkProvider,
-  NetworkProviderStage,
-  NetworkProviderStatus,
-  NetworkProviderTypes,
-} from '@app/services/backend';
+import {Backend, NetworkProvider} from '@app/services/backend';
 import {storage} from '@app/services/mmkv';
 import {createAsyncTask, sleep} from '@app/utils';
 import {
@@ -16,7 +10,7 @@ import {
 } from '@app/variables/common';
 
 import {ProviderModel} from './provider.model';
-import {ProviderID} from './provider.types';
+import {ALL_NETWORKS_PROVIDER, ProviderID} from './provider.types';
 
 import {VariablesString} from '../variables-string';
 
@@ -60,27 +54,7 @@ class ProviderStore {
   }
 
   fetchProviders = createAsyncTask(async () => {
-    const providers = [
-      {
-        id: 'all_networks',
-        name: 'All Networks',
-        icon: '',
-        chain_id: -1,
-        coin_name: 'All Network',
-        cosmos_chain_id: undefined,
-        cosmos_entry_point: undefined,
-        cosmos_explorer_url: undefined,
-        decimals: 0,
-        denom: '',
-        entry_point: 'https://rpc.eth.haqq.network/',
-        explorer_url: undefined,
-        indexer_url: 'https://proxy.indexer.haqq.network',
-        network_type: NetworkProviderTypes.EVM,
-        stage: NetworkProviderStage.MAINNET,
-        status: NetworkProviderStatus.PUBLISHED,
-        wei_denom: '',
-      } as NetworkProvider,
-    ];
+    const providers = [ALL_NETWORKS_PROVIDER];
     const remoteProviders = await Backend.instance.providers();
 
     if (remoteProviders?.length) {

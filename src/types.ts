@@ -1850,7 +1850,8 @@ export type IndexerTransactionWithType<T extends IndexerTxMsgType> = Extract<
 
 export type IndexerTransactionResponse = {
   hash: string;
-  txs: IndexerTransaction[];
+  txs?: IndexerTransaction[];
+  transactions?: IndexerTransaction[];
 };
 
 export type ChainId = string | number;
