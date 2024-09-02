@@ -7,7 +7,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Provider} from '@app/models/provider';
+import {ProviderModel} from '@app/models/provider';
 import {IS_IOS} from '@app/variables/common';
 import {SHADOW_L} from '@app/variables/shadows';
 
@@ -20,7 +20,7 @@ interface Web3BrowserActionMenuProps {
   walletAddress?: string;
   showActionMenu: boolean;
   isSiteInBookmarks: boolean;
-  currentProvider: Provider;
+  currentProvider: ProviderModel;
   currentSessionOrigin?: string;
   moreIconLayout: Partial<LayoutRectangle>;
   popup?: boolean;

@@ -8,7 +8,7 @@ import {storage} from '@app/services/mmkv';
 import {ChainId} from '@app/types';
 
 import {Provider} from './provider';
-import {ProviderConfigModel} from './provider-config-model';
+import {ProviderConfigModel} from './provider-config.model';
 
 class ProviderConfigStore {
   private _data: Record<ChainId, ProviderConfig> = {};

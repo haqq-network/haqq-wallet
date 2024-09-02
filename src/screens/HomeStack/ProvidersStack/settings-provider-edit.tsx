@@ -5,7 +5,7 @@ import {Alert} from 'react-native';
 import {SettingsProviderEdit} from '@app/components/settings/settings-providers/settings-provider-edit';
 import {app} from '@app/contexts';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {Provider} from '@app/models/provider';
+import {Provider, ProviderModel} from '@app/models/provider';
 import {ProvidersStackParamList, ProvidersStackRoutes} from '@app/route-types';
 
 export const SettingsProviderEditScreen = memo(() => {
@@ -20,7 +20,7 @@ export const SettingsProviderEditScreen = memo(() => {
   );
 
   const onSubmit = useCallback(
-    (_: Partial<Provider>) => {
+    (_: Partial<ProviderModel>) => {
       // TODO:
       Alert.alert(
         'This feature for developer',

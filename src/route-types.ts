@@ -7,7 +7,7 @@ import {SessionTypes} from '@walletconnect/types';
 import {TotalValueTabNames} from '@app/components/total-value-info';
 import {AwaitValue} from '@app/helpers/await-for-value';
 import {NftCollection, NftItem} from '@app/models/nft';
-import {Provider} from '@app/models/provider';
+import {ProviderModel} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {SssProviders} from '@app/services/provider-sss';
@@ -292,7 +292,7 @@ export type SettingsStackParamList = HomeStackParamList & {
     screen: SettingsStackRoutes.SettingsProviderForm;
     params: {
       id?: string;
-      data?: Partial<Provider>;
+      data?: Partial<ProviderModel>;
     };
   };
   [SettingsStackRoutes.SettingsAccounts]: undefined;
@@ -320,7 +320,7 @@ export type ProvidersStackParamList = {
   [ProvidersStackRoutes.SettingsProviders]: undefined;
   [ProvidersStackRoutes.SettingsProviderForm]: {
     id?: string;
-    data?: Partial<Provider>;
+    data?: Partial<ProviderModel>;
   };
 };
 

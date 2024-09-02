@@ -2,7 +2,7 @@ import {JSONRPCError, jsonrpcRequest} from '@haqq/shared-react-native';
 
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
-import {Provider} from '@app/models/provider';
+import {ProviderModel} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
@@ -61,7 +61,7 @@ export class Whitelist {
 
   static async checkAddress(
     address: string,
-    provider?: Provider,
+    provider?: ProviderModel,
   ): Promise<boolean> {
     provider = provider ?? app.provider;
     const result = await Whitelist.verifyAddress(address, provider);
@@ -70,7 +70,7 @@ export class Whitelist {
 
   static async verifyAddress(
     address: string,
-    provider?: Provider,
+    provider?: ProviderModel,
     force = false,
   ) {
     provider = provider ?? app.provider;

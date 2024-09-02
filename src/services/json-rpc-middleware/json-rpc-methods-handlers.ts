@@ -25,7 +25,7 @@ import {
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {isEthereumChainParams} from '@app/helpers/web3-browser-utils';
 import {I18N, getText} from '@app/i18n';
-import {Provider} from '@app/models/provider';
+import {Provider, ProviderModel} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {getDefaultNetwork} from '@app/network';
@@ -152,7 +152,7 @@ const getNetworkProvier = (helper: JsonRpcHelper) => {
   // };
 
   const session = Web3BrowserSession.getByOrigin(helper.origin);
-  let provider: Provider | undefined;
+  let provider: ProviderModel | undefined;
   if (session?.isActive) {
     provider = Provider.getByChainIdHex(session?.selectedChainIdHex!);
   } else {

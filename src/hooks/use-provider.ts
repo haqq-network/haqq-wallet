@@ -5,14 +5,12 @@ import {Events} from '@app/events';
 import {Provider} from '@app/models/provider';
 
 export function useProvider() {
-  const [provider, setProvider] = useState(
-    Provider.getById(app.providerId) as Provider,
-  );
+  const [provider, setProvider] = useState(Provider.getById(app.providerId));
 
   useEffect(() => {
     const callback = () => {
       const p = Provider.getById(app.providerId);
-      setProvider(p as Provider);
+      setProvider(p);
     };
 
     app.on(Events.onProviderChanged, callback);

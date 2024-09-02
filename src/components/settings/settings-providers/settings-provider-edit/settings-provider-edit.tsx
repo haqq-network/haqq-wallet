@@ -33,10 +33,10 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
-import {Provider, ProviderKeys} from '@app/models/provider';
+import {ProviderKeys, ProviderModel} from '@app/models/provider';
 
 export type SettingsProviderEditData = Omit<
-  Partial<Provider>,
+  Partial<ProviderModel>,
   'ethChainId' | 'id'
 > & {
   isChanged: boolean;
@@ -45,9 +45,9 @@ export type SettingsProviderEditData = Omit<
 };
 
 export type SettingsProviderEditProps = {
-  provider: Partial<Provider> | null;
+  provider: Partial<ProviderModel> | null;
   buttonType?: 'save' | 'del';
-  onSubmit: (provider: Partial<Provider>) => void;
+  onSubmit: (provider: Partial<ProviderModel>) => void;
   onDelete: () => void;
   onCancel: () => void;
   onSelect: () => void;

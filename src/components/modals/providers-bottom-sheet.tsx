@@ -12,7 +12,7 @@ import {I18N} from '@app/i18n';
 import {
   ALL_NETWORKS_PROVIDER,
   AllNetworksProvider,
-  Provider,
+  ProviderModel,
 } from '@app/models/provider';
 import {ModalType, Modals} from '@app/types';
 
@@ -117,7 +117,7 @@ export function ProvidersBottomSheet({
           return (
             <SettingsProvidersRow
               providerId={initialProvider}
-              item={item as Provider}
+              item={item as ProviderModel}
               onPress={onPressProvider}
             />
           );

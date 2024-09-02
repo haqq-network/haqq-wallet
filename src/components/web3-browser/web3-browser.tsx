@@ -14,7 +14,7 @@ import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useLayout} from '@app/hooks/use-layout';
 import {usePrevious} from '@app/hooks/use-previous';
 import {useWebViewSharedProps} from '@app/hooks/use-webview-shared-props';
-import {Provider} from '@app/models/provider';
+import {Provider, ProviderModel} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
@@ -51,7 +51,7 @@ export interface Web3BrowserProps {
   bookmarks: Realm.Results<Web3BrowserBookmark>;
   showActionMenu: boolean;
   popup?: boolean;
-  userProvider: Provider;
+  userProvider: ProviderModel;
   focused: boolean;
 
   onPressHeaderUrl(event: Web3BrowserPressHeaderEvent): void;

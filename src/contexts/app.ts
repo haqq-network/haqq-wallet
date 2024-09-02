@@ -26,7 +26,11 @@ import {getUid} from '@app/helpers/get-uid';
 import {SecurePinUtils} from '@app/helpers/secure-pin-utils';
 import {I18N, getText} from '@app/i18n';
 import {Currencies} from '@app/models/currencies';
-import {Provider, RemoteProviderConfig} from '@app/models/provider';
+import {
+  Provider,
+  ProviderModel,
+  RemoteProviderConfig,
+} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
@@ -215,14 +219,14 @@ class App extends AsyncEventEmitter {
     );
   }
 
-  private _provider: Provider | null = null;
+  private _provider: ProviderModel | null = null;
 
   get provider() {
     return (this._provider || {
       // used as default value while first provider initialization
       denom: ISLM_DENOM,
       decimals: WEI_PRECISION,
-    }) as Provider;
+    }) as ProviderModel;
   }
 
   get providerId() {

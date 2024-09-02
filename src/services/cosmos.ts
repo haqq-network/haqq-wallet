@@ -49,7 +49,7 @@ import {
   getRemoteMultiplierValue,
 } from '@app/helpers/get-remote-balance-value';
 import {ledgerTransportCbWrapper} from '@app/helpers/ledger-transport-wrapper';
-import {Provider} from '@app/models/provider';
+import {ProviderModel} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
 import {
   DepositResponse,
@@ -93,9 +93,9 @@ export class Cosmos {
   };
 
   public stop = false;
-  private _provider: Provider;
+  private _provider: ProviderModel;
 
-  constructor(provider: Provider) {
+  constructor(provider: ProviderModel) {
     this._provider = provider;
   }
 

@@ -8,7 +8,7 @@ import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {EstimationVariant} from '@app/models/fee';
-import {Provider} from '@app/models/provider';
+import {ProviderModel} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {getDefaultChainId} from '@app/network';
 import {Balance} from '@app/services/balance';
@@ -28,7 +28,7 @@ export class EthNetwork {
   static chainId: number = getDefaultChainId();
   static explorer: string | undefined;
 
-  static init(provider: Provider) {
+  static init(provider: ProviderModel) {
     EthNetwork.chainId = provider.ethChainId;
     EthNetwork.explorer = provider.explorer;
   }
