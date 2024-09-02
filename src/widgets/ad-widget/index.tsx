@@ -1,6 +1,8 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react';
 
+import Clipboard from '@react-native-clipboard/clipboard';
 import {
+  Alert,
   I18nManager,
   Image,
   LayoutChangeEvent,
@@ -24,6 +26,7 @@ import {
   TextPosition,
 } from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
+import {app} from '@app/contexts';
 import {onDeepLink} from '@app/event-actions/on-deep-link';
 import {getWindowDimensions} from '@app/helpers';
 import {BannerButtonEvent} from '@app/models/banner';
@@ -68,6 +71,22 @@ export const AdWidget = ({banner, style}: HomeBannerProps) => {
     const link = banner.target;
     if (!link) {
       return;
+    }
+    if (app.isTesterMode) {
+      Alert.alert(
+        'Banner link',
+        `${link}\n\n You see this message because you are in developer mode.`,
+        [
+          {
+            text: 'Copy',
+            onPress: () => Clipboard.setString(link),
+          },
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+        ],
+      );
     }
     if (link.startsWith('haqq:')) {
       const isHandled = onDeepLink(link);
