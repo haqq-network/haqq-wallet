@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react';
 
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
+import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {BalanceData, HaqqEthereumAddress} from '@app/types';
 
@@ -40,7 +41,7 @@ export function useWalletsBalance(wallets: Wallet[]): WalletBalance {
 
   useEffect(() => {
     setBalance(getBalance(wallets));
-  }, [app.provider.denom]);
+  }, [Provider.selectedProvider.denom]);
 
   return balance;
 }

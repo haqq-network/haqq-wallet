@@ -1,7 +1,7 @@
 import React, {memo, useCallback} from 'react';
 
-import {app} from '@app/contexts';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {Provider} from '@app/models/provider';
 import {
   HomeStackRoutes,
   NftStackParamList,
@@ -28,7 +28,7 @@ export const NftItemDetailsScreen = memo(() => {
   }, [params.item, navigation]);
 
   const onPressExplorer = useCallback(() => {
-    const url = app.provider.getTokenExplorerUrl(
+    const url = Provider.selectedProvider.getTokenExplorerUrl(
       params.item.contract,
       params.item.tokenId,
     );

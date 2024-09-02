@@ -42,14 +42,13 @@ import {ProviderInterface, base64PublicKey} from '@haqq/provider-base';
 import {normalize0x} from '@haqq/provider-keystone-react-native';
 import Decimal from 'decimal.js';
 
-import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {
   getRemoteBalanceValue,
   getRemoteMultiplierValue,
 } from '@app/helpers/get-remote-balance-value';
 import {ledgerTransportCbWrapper} from '@app/helpers/ledger-transport-wrapper';
-import {ProviderModel} from '@app/models/provider';
+import {Provider, ProviderModel} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
 import {
   DepositResponse,
@@ -126,8 +125,8 @@ export class Cosmos {
   async postQuery<T>(path: string, data: string, account?: Sender): Promise<T> {
     const params = {
       type: 'cosmos',
-      network: app.provider.name,
-      chainId: `${app.provider.ethChainId}`,
+      network: Provider.selectedProvider.name,
+      chainId: `${Provider.selectedProvider.ethChainId}`,
       address: account?.accountAddress ?? 'unknown',
     };
     try {

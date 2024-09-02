@@ -156,7 +156,7 @@ const getNetworkProvier = (helper: JsonRpcHelper) => {
   if (session?.isActive) {
     provider = Provider.getByChainIdHex(session?.selectedChainIdHex!);
   } else {
-    provider = Provider.getById(app.providerId);
+    provider = Provider.selectedProvider;
   }
   return provider;
 };

@@ -2,7 +2,6 @@ import {TransactionRequest} from '@haqq/provider-base';
 import {normalize0x} from '@haqq/provider-keystone-react-native';
 import {getSdkError} from '@walletconnect/utils';
 
-import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {getProviderInstanceForWallet, hideModal} from '@app/helpers';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
@@ -105,7 +104,8 @@ export class SignJsonRpcRequest {
       throw new Error(getText(I18N.jsonRpcErrorInvalidProvider));
     }
 
-    const provider = Provider.getByEthChainId(chainId!) || app.provider;
+    const provider =
+      Provider.getByEthChainId(chainId!) || Provider.selectedProvider;
     const rpcProvider = provider
       ? await getRpcProvider(provider)
       : getDefaultNetwork();
@@ -128,7 +128,7 @@ export class SignJsonRpcRequest {
       case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V4:
         const typedData = getSignTypedDataParamsData(request.params);
         if (isEthTypedData(typedData)) {
-          const cosmos = new Cosmos(app.provider!);
+          const cosmos = new Cosmos(Provider.selectedProvider);
           const signTypedDataResult = cosmos.signTypedData(
             path,
             instanceProvider,

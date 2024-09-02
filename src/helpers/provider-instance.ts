@@ -14,6 +14,7 @@ import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
 import {app} from '@app/contexts';
 import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
+import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {EventTracker} from '@app/services/event-tracker';
 import {MarketingEvents, WalletType} from '@app/types';
@@ -34,8 +35,8 @@ function getProviderWrapper(provider: ProviderInterface) {
     ): Promise<string> {
       const params = {
         type: 'signTransaction',
-        network: app.provider.name,
-        chainId: `${app.provider.ethChainId}`,
+        network: Provider.selectedProvider.name,
+        chainId: `${Provider.selectedProvider.ethChainId}`,
       };
       try {
         EventTracker.instance.trackEvent(MarketingEvents.signTxStart, params);
@@ -57,8 +58,8 @@ function getProviderWrapper(provider: ProviderInterface) {
     ): Promise<string> {
       const params = {
         type: 'signPersonalMessage',
-        network: app.provider.name,
-        chainId: `${app.provider.ethChainId}`,
+        network: Provider.selectedProvider.name,
+        chainId: `${Provider.selectedProvider.ethChainId}`,
       };
       try {
         EventTracker.instance.trackEvent(MarketingEvents.signTxFail, params);
@@ -77,8 +78,8 @@ function getProviderWrapper(provider: ProviderInterface) {
     async signTypedData(hdPath: string, typedData: TypedData): Promise<string> {
       const params = {
         type: 'signTypedData',
-        network: app.provider.name,
-        chainId: `${app.provider.ethChainId}`,
+        network: Provider.selectedProvider.name,
+        chainId: `${Provider.selectedProvider.ethChainId}`,
       };
       try {
         EventTracker.instance.trackEvent(MarketingEvents.signTxStart, params);

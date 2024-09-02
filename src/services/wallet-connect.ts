@@ -152,17 +152,6 @@ export class WalletConnect extends Initializable {
         this._emitActiveSessions.bind(this),
       );
 
-      app.on(Events.onProviderChanged, async (providerId: string) => {
-        const provider = Provider.getById(providerId)!;
-        const chainId = provider.ethChainId;
-        await this.awaitForInitialization();
-        for (let session of WalletConnectSessionMetadata.getAll()) {
-          // sleep to avoid frequency requests to wallet connect relay server
-          await sleep(300);
-          await this.emitChainChange(chainId, session.topic);
-        }
-      });
-
       const end = Date.now();
       const initDuration = end - this._initStartTime;
       logger.log(
@@ -389,7 +378,10 @@ export class WalletConnect extends Initializable {
 
     WalletConnectSessionMetadata.create(session.topic);
     // set chain which currently active in app
-    await this.emitChainChange(app.provider.ethChainId, session.topic);
+    await this.emitChainChange(
+      Provider.selectedProvider.ethChainId,
+      session.topic,
+    );
 
     this._emitActiveSessions();
     this.redirect();

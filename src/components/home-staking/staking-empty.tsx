@@ -11,9 +11,9 @@ import {
   TextPosition,
   TextVariant,
 } from '@app/components/ui';
-import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
 
 interface StakingEmptyProps {
@@ -30,7 +30,7 @@ export const StakingEmpty = observer(({availableSum}: StakingEmptyProps) => {
           position={TextPosition.center}
           color={Color.textBase2}
           i18n={I18N.homeStakingEmpty}
-          i18params={{symbol: app.provider.denom}}
+          i18params={{symbol: Provider.selectedProvider.denom}}
         />
         <Spacer height={36} />
         <View style={styles.circleIconContainer}>

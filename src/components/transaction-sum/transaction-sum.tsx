@@ -15,13 +15,13 @@ import {
   Text,
   TextVariant,
 } from '@app/components/ui';
-import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {useSumAmount} from '@app/hooks';
 import {useKeyboard} from '@app/hooks/use-keyboard';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
+import {Provider} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {IToken} from '@app/types';
@@ -69,7 +69,7 @@ export const TransactionSum = observer(
 
     const minAmount = useMemo(() => {
       // for network native coin
-      if (token.symbol === app.provider.denom) {
+      if (token.symbol === Provider.selectedProvider.denom) {
         return new Balance(0.0000001, 0);
       }
 
@@ -79,17 +79,17 @@ export const TransactionSum = observer(
         token.decimals!,
         token.symbol!,
       );
-    }, [token, app.provider.denom]);
+    }, [token, Provider.selectedProvider.denom]);
 
     const maxAmount = useMemo(() => {
       // for network native coin
-      if (token.symbol === app.provider.denom) {
+      if (token.symbol === Provider.selectedProvider.denom) {
         return balance.operate(transactionFee, 'sub');
       }
 
       // for others tokens
       return new Balance(token.value.raw, token.decimals!, token.symbol!);
-    }, [token, balance, transactionFee, app.provider.denom]);
+    }, [token, balance, transactionFee, Provider.selectedProvider.denom]);
 
     const amounts = useSumAmount(START_AMOUNT, maxAmount, minAmount);
 
@@ -167,7 +167,7 @@ export const TransactionSum = observer(
                 color={Color.textBase1}
                 numberOfLines={1}
                 ellipsizeMode="tail">
-                {app.provider.name}
+                {Provider.selectedProvider.name}
               </Text>
             </View>
           </LabeledBlock>

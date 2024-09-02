@@ -3,7 +3,6 @@ import React, {memo, useCallback, useMemo} from 'react';
 import {Alert} from 'react-native';
 
 import {SettingsProviderEdit} from '@app/components/settings/settings-providers/settings-provider-edit';
-import {app} from '@app/contexts';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {Provider, ProviderModel} from '@app/models/provider';
 import {ProvidersStackParamList, ProvidersStackRoutes} from '@app/route-types';
@@ -47,7 +46,7 @@ export const SettingsProviderEditScreen = memo(() => {
 
   const onSelect = useCallback(() => {
     if (provider) {
-      app.providerId = provider.id;
+      Provider.setSelectedProviderId(provider.id);
     }
     goBack();
   }, [goBack, provider]);

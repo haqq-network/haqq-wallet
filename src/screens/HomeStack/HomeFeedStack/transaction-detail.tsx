@@ -10,6 +10,7 @@ import {shortAddress} from '@app/helpers/short-address';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useTransaction} from '@app/hooks/use-transaction';
 import {I18N} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {sendNotification} from '@app/services';
 import {Balance} from '@app/services/balance';
@@ -22,7 +23,6 @@ export const TransactionDetailScreen = () => {
     HomeStackRoutes.TransactionDetail
   >();
   const tx = useTransaction(route.params.txId);
-  const provider = useMemo(() => app.provider, []);
 
   const timestamp = useMemo(
     () => format(new Date(tx.ts), 'dd MMMM yyyy, HH:mm'),
@@ -41,7 +41,7 @@ export const TransactionDetailScreen = () => {
   const total = useMemo(() => Balance.Empty, []);
 
   const onPressInfo = useCallback(async () => {
-    const url = app.provider.getTxExplorerUrl(tx?.hash);
+    const url = Provider.selectedProvider.getTxExplorerUrl(tx?.hash);
     if (url) {
       openInAppBrowser(url);
     }
@@ -57,7 +57,7 @@ export const TransactionDetailScreen = () => {
   }, [navigation]);
 
   const onPressSpenderAddress = useCallback((address: string) => {
-    const url = app.provider.getAddressExplorerUrl(address);
+    const url = Provider.selectedProvider.getAddressExplorerUrl(address);
     return openInAppBrowser(url);
   }, []);
 
@@ -80,7 +80,7 @@ export const TransactionDetailScreen = () => {
 
   return (
     <TransactionDetail
-      provider={provider}
+      provider={Provider.selectedProvider}
       tx={tx}
       timestamp={timestamp}
       splitted={splitted}

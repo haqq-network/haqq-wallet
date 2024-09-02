@@ -1,5 +1,5 @@
-import {app} from '@app/contexts';
 import {Currencies} from '@app/models/currencies';
+import {Provider} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
 import {IndexerBalance} from '@app/types';
@@ -24,7 +24,7 @@ export const safeLoadBalances = async (wallets: string[]) => {
 
   if (!balances) {
     try {
-      const rpcProvider = await getRpcProvider(app.provider);
+      const rpcProvider = await getRpcProvider(Provider.selectedProvider);
       const balancesFromRpc = await Promise.all(
         wallets.map(async w => {
           let balance = '0x00';

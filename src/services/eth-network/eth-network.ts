@@ -4,11 +4,10 @@ import {ProviderInterface} from '@haqq/provider-base';
 import Decimal from 'decimal.js';
 import {BigNumber, utils} from 'ethers';
 
-import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {EstimationVariant} from '@app/models/fee';
-import {ProviderModel} from '@app/models/provider';
+import {Provider, ProviderModel} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {getDefaultChainId} from '@app/network';
 import {Balance} from '@app/services/balance';
@@ -44,7 +43,7 @@ export class EthNetwork {
       if (!AddressUtils.isEthAddress(from)) {
         throw new Error('Invalid "to" address');
       }
-      const rpcProvider = await getRpcProvider(app.provider);
+      const rpcProvider = await getRpcProvider(Provider.selectedProvider);
       const nonce = await rpcProvider.getTransactionCount(from, 'latest');
 
       const transaction = {
@@ -56,7 +55,7 @@ export class EthNetwork {
         maxPriorityFeePerGas: estimate.maxPriorityFee.toHex(),
         gasLimit: estimate.gasLimit.toHex(),
         data,
-        chainId: app.provider.ethChainId,
+        chainId: Provider.selectedProvider.ethChainId,
       };
 
       const tx = await utils.resolveProperties(transaction);
@@ -79,7 +78,7 @@ export class EthNetwork {
         value,
         data,
         ...estimate,
-        provider: app.provider.name,
+        provider: Provider.selectedProvider.name,
       });
       throw error;
     }
@@ -87,7 +86,7 @@ export class EthNetwork {
 
   static async getBalance(address: string): Promise<Balance> {
     try {
-      const rpcProvider = await getRpcProvider(app.provider);
+      const rpcProvider = await getRpcProvider(Provider.selectedProvider);
       const balanceResponse = await rpcProvider.getBalance(address);
       const balanceWithWEI = new Balance(balanceResponse._hex);
       const balance = new Balance(balanceWithWEI);
@@ -108,7 +107,7 @@ export class EthNetwork {
   }
 
   static async call(to: string, data: string) {
-    const rpcProvider = await getRpcProvider(app.provider);
+    const rpcProvider = await getRpcProvider(Provider.selectedProvider);
     return await rpcProvider.call({
       to,
       data,
@@ -117,7 +116,7 @@ export class EthNetwork {
 
   static async getCode(address: string) {
     try {
-      const rpcProvider = await getRpcProvider(app.provider);
+      const rpcProvider = await getRpcProvider(Provider.selectedProvider);
       return await rpcProvider.getCode(address);
     } catch (e) {
       return '0x';
@@ -125,12 +124,12 @@ export class EthNetwork {
   }
 
   static async sendTransaction(signedTx: string) {
-    const rpcProvider = await getRpcProvider(app.provider);
+    const rpcProvider = await getRpcProvider(Provider.selectedProvider);
     return await rpcProvider.sendTransaction(signedTx);
   }
 
   static async getTransactionReceipt(txHash: string) {
-    const rpcProvider = await getRpcProvider(app.provider);
+    const rpcProvider = await getRpcProvider(Provider.selectedProvider);
 
     return await rpcProvider.getTransactionReceipt(txHash);
   }
@@ -138,7 +137,7 @@ export class EthNetwork {
   static async customEstimate(
     {from, to, value = Balance.Empty, data = '0x'}: TxEstimationParams,
     {gasLimit, maxBaseFee, maxPriorityFee}: TxCustomEstimationParams,
-    provider = app.provider,
+    provider = Provider.selectedProvider,
   ): Promise<CalculatedFees> {
     try {
       const rpcProvider = await getRpcProvider(provider);
@@ -226,7 +225,7 @@ export class EthNetwork {
   static async estimate(
     {from, to, value = Balance.Empty, data = '0x', minGas}: TxEstimationParams,
     calculationType: EstimationVariant = EstimationVariant.average,
-    provider = app.provider,
+    provider = Provider.selectedProvider,
   ): Promise<CalculatedFees> {
     try {
       const rpcProvider = await getRpcProvider(provider);

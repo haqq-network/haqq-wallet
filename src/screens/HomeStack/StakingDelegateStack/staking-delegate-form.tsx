@@ -5,12 +5,12 @@ import _ from 'lodash';
 import {observer} from 'mobx-react';
 
 import {StakingDelegateForm} from '@app/components/staking-delegate-form';
-import {app} from '@app/contexts';
 import {getProviderInstanceForWallet} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useLayoutEffectAsync} from '@app/hooks/use-effect-async';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
+import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {
   StakingDelegateStackParamList,
@@ -41,7 +41,7 @@ export const StakingDelegateFormScreen = observer(() => {
 
   const setFee = useCallback(
     _.debounce(async (amount?: string) => {
-      const cosmos = new Cosmos(app.provider);
+      const cosmos = new Cosmos(Provider.selectedProvider);
       const instance = await getProviderInstanceForWallet(wallet!, true);
 
       try {

@@ -21,12 +21,12 @@ import {
   Text,
   TextVariant,
 } from '@app/components/ui';
-import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {WalletType} from '@app/types';
@@ -122,7 +122,7 @@ export const SettingsAccountDetail = observer(
 
           <Spacer height={4} />
 
-          {app.provider.config.isBech32Enabled && (
+          {Provider.selectedProvider.config.isBech32Enabled && (
             <View style={styles.row}>
               <View style={styles.hDevider} />
               <TouchableOpacity

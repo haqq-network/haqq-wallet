@@ -1,6 +1,5 @@
 import {getSdkError} from '@walletconnect/utils';
 
-import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
 import {awaitForProvider} from '@app/helpers/await-for-provider';
@@ -34,12 +33,12 @@ export async function onWalletConnectSignTransaction(
       const providers = Provider.getAll();
       const providerId = await awaitForProvider({
         providers,
-        initialProviderId: app.providerId!,
+        initialProviderId: Provider.selectedProviderId,
         title: I18N.networks,
       });
 
       if (providerId) {
-        app.providerId = providerId;
+        Provider.setSelectedProviderId(providerId);
         await WalletConnect.instance.approveSessionRequest(providerId, event);
       } else {
         await WalletConnect.instance.rejectSessionRequest(

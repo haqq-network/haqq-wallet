@@ -5,10 +5,10 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {Renderable} from 'react-native-json-tree';
 
 import {Color} from '@app/colors';
-import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {I18N} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
 import {EIPMessage, EIPTypedData} from '@app/types';
 
@@ -84,7 +84,7 @@ export function TypedDataViewer({data, style}: TypedDataViewerProps) {
           </DataView>
           <DataView i18n={I18N.transactionInfoCryptocurrency}>
             <Text variant={TextVariant.t11} color={Color.textBase1}>
-              {`${app.provider.coinName} ${app.provider.denom}`}
+              {`${Provider.selectedProvider.coinName} ${Provider.selectedProvider.denom}`}
             </Text>
           </DataView>
           {amount?.isPositive() && (

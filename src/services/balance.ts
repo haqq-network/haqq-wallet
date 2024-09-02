@@ -2,9 +2,9 @@ import Decimal from 'decimal.js';
 import {BigNumber, BigNumberish} from 'ethers';
 import {I18nManager} from 'react-native';
 
-import {app} from '@app/contexts';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {Currencies} from '@app/models/currencies';
+import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {
   BalanceConstructor,
@@ -30,7 +30,11 @@ export class Balance implements IBalance, ISerializable {
   private symbol: string;
 
   static get Empty() {
-    return new Balance(zeroBN, app.provider.decimals, app.provider.denom);
+    return new Balance(
+      zeroBN,
+      Provider.selectedProvider.decimals,
+      Provider.selectedProvider.denom,
+    );
   }
 
   constructor(
@@ -38,12 +42,12 @@ export class Balance implements IBalance, ISerializable {
     precission?: number,
     symbol?: string,
   ) {
-    precission = precission ?? app.provider.decimals;
-    symbol = symbol ?? app.provider.denom;
+    precission = precission ?? Provider.selectedProvider.decimals;
+    symbol = symbol ?? Provider.selectedProvider.denom;
 
     this.originalValue = balance;
-    this.precission = precission ?? app.provider.decimals;
-    this.symbol = symbol || app.provider.denom;
+    this.precission = precission ?? Provider.selectedProvider.decimals;
+    this.symbol = symbol || Provider.selectedProvider.denom;
 
     if (BigNumber.isBigNumber(balance)) {
       const {_hex} = BigNumber.from(balance);
@@ -92,7 +96,7 @@ export class Balance implements IBalance, ISerializable {
    * Is current Balance instance is native network Coin
    */
   get isNativeCoin() {
-    return this.symbol === app.provider.denom;
+    return this.symbol === Provider.selectedProvider.denom;
   }
 
   getPrecission() {
@@ -108,7 +112,11 @@ export class Balance implements IBalance, ISerializable {
   }
 
   static getEmpty = () => {
-    return new Balance(zeroBN, app.provider.decimals, app.provider.denom);
+    return new Balance(
+      zeroBN,
+      Provider.selectedProvider.decimals,
+      Provider.selectedProvider.denom,
+    );
   };
 
   static fromJsonString = (obj: string | Balance) => {

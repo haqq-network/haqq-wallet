@@ -727,7 +727,7 @@ export const SettingsTestScreen = observer(() => {
               wallets: Wallet.getAllVisible(),
             });
             const providers = Provider.getAll();
-            const initialProviderId = app.provider.id;
+            const initialProviderId = Provider.selectedProviderId;
             const providerId = await awaitForProvider({
               providers,
               initialProviderId: initialProviderId!,

@@ -17,13 +17,13 @@ import {
   TextPosition,
   TextVariant,
 } from '@app/components/ui';
-import {app} from '@app/contexts';
 import {createTheme, openURL} from '@app/helpers';
 import {useNftImage} from '@app/hooks/nft';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Fee} from '@app/models/fee';
 import {NftItem} from '@app/models/nft';
+import {Provider} from '@app/models/provider';
 import {sendNotification} from '@app/services';
 import {TransactionResponse} from '@app/types';
 import {STRINGS} from '@app/variables/common';
@@ -49,7 +49,7 @@ export const TransactionNftFinish = ({
   fee,
 }: TransactionFinishProps) => {
   const onPressHash = async () => {
-    const url = app.provider.getTxExplorerUrl(transaction?.hash!);
+    const url = Provider.selectedProvider.getTxExplorerUrl(transaction?.hash!);
     await openURL(url);
   };
 
@@ -113,10 +113,10 @@ export const TransactionNftFinish = ({
 
       <View style={styles.providerContainer}>
         <Text variant={TextVariant.t14} color={Color.textBase2}>
-          {app.provider.name}
+          {Provider.selectedProvider.name}
         </Text>
         <Text variant={TextVariant.t14} color={Color.textBase2}>
-          {`${STRINGS.NBSP}(${app.provider.denom})`}
+          {`${STRINGS.NBSP}(${Provider.selectedProvider.denom})`}
         </Text>
       </View>
 

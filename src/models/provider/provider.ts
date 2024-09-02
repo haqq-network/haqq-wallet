@@ -1,34 +1,114 @@
 import {makeAutoObservable, runInAction} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
+import Config from 'react-native-config';
 
+import {app} from '@app/contexts';
+import {Events} from '@app/events';
+import {hideModal, showModal} from '@app/helpers';
+import {awaitForEventDone} from '@app/helpers/await-for-event-done';
+import {EthRpcEndpointAvailability} from '@app/helpers/eth-rpc-endpoint-availability';
 import {Backend, NetworkProvider} from '@app/services/backend';
 import {storage} from '@app/services/mmkv';
+import {WalletConnect} from '@app/services/wallet-connect';
+import {ModalType} from '@app/types';
 import {createAsyncTask, sleep} from '@app/utils';
 import {
   DEFAULT_PROVIDERS,
+  MAIN_NETWORK_ID,
   STORE_REHYDRATION_TIMEOUT_MS,
+  TEST_NETWORK_ID,
 } from '@app/variables/common';
 
+import {RemoteProviderConfig} from './provider-config';
 import {ProviderModel} from './provider.model';
 import {ALL_NETWORKS_PROVIDER, ProviderID} from './provider.types';
 
-import {VariablesString} from '../variables-string';
+import {Currencies} from '../currencies';
+import {Nft} from '../nft';
+import {Stories} from '../stories';
+import {Token} from '../tokens';
+import {Transaction} from '../transaction';
+import {Wallet} from '../wallet';
+import {WalletConnectSessionMetadata} from '../wallet-connect-session-metadata';
 
 const logger = Logger.create('NetworkProvider:store', {
   stringifyJson: true,
   emodjiPrefix: '🟡',
 });
 class ProviderStore {
-  data: Record<ProviderID, ProviderModel> = {};
+  awaitForInitialization() {
+    throw new Error('Method not implemented.');
+  }
+  private _defaultProviderId =
+    Config.ENVIRONMENT === 'production' || Config.ENVIRONMENT === 'distribution'
+      ? MAIN_NETWORK_ID
+      : TEST_NETWORK_ID;
+
+  _selectedProviderId: ProviderID = this._defaultProviderId;
+  _data: Record<ProviderID, ProviderModel> = {};
 
   constructor() {
     makeAutoObservable(this);
     makePersistable(this, {
       name: this.constructor.name,
-      properties: ['data'],
+      properties: ['_selectedProviderId', '_data'],
       storage: storage,
     });
   }
+
+  get selectedProviderId() {
+    return this._selectedProviderId;
+  }
+
+  get selectedProvider() {
+    return this._data[this._selectedProviderId];
+  }
+
+  setSelectedProviderId = async (id: ProviderID) => {
+    runInAction(() => {
+      this._selectedProviderId = id;
+    });
+    try {
+      showModal(ModalType.loading);
+
+      Nft.clear();
+      Token.clear();
+      Transaction.clear();
+      Currencies.clear();
+
+      await RemoteProviderConfig.init();
+      await awaitForEventDone(Events.onSyncAppBalances);
+      await awaitForEventDone(Events.onRequestMarkup);
+      await Token.fetchTokens(true);
+      await Transaction.fetchLatestTransactions(Wallet.addressList(), true);
+      await Currencies.fetchCurrencies();
+
+      if (this.selectedProvider.config.isNftEnabled) {
+        await Nft.fetchNft();
+      }
+      this.fetchProviders();
+
+      await this.awaitForInitialization();
+      for (let session of WalletConnectSessionMetadata.getAll()) {
+        // sleep to avoid frequency requests to wallet connect relay server
+        await sleep(300);
+        await WalletConnect.instance.emitChainChange(
+          this.selectedProvider.ethChainId,
+          session.topic,
+        );
+      }
+    } finally {
+      hideModal(ModalType.loading);
+      app.emit(Events.onProviderChangedFinish);
+    }
+
+    await Promise.allSettled([
+      Currencies.setSelectedCurrency(),
+      awaitForEventDone(Events.onTesterModeChanged, app.isTesterMode),
+      EthRpcEndpointAvailability.checkEthRpcEndpointAvailability(),
+      Stories.fetch(true),
+    ]);
+  };
 
   init(): Promise<void> {
     return new Promise(async resolve => {
@@ -63,63 +143,55 @@ class ProviderStore {
       providers.push(...DEFAULT_PROVIDERS);
     }
 
-    const providerId = VariablesString.get('providerId');
-
-    if (
-      providerId &&
-      !providers.some(
-        item => item.id.toLowerCase() === providerId.toLowerCase(),
-      )
-    ) {
-      VariablesString.remove('providerId');
-    }
-
     const parsed = providers.reduce(
       (prev, item) => ({
         ...prev,
         [item.id]: new ProviderModel(item),
       }),
-      {},
+      {} as Record<ProviderID, ProviderModel>,
     );
 
     runInAction(() => {
-      this.data = parsed;
+      this._data = parsed;
+      if (!parsed[this._selectedProviderId]) {
+        this._selectedProviderId = this._defaultProviderId;
+      }
     });
   });
 
   getById(id: string) {
-    return this.data[id];
+    return this._data[id];
   }
   getAll() {
-    return Object.values(this.data);
+    return Object.values(this._data);
   }
 
   create(id: string, item: NetworkProvider | ProviderModel) {
     if (item instanceof ProviderModel) {
-      this.data[id] = item;
+      this._data[id] = item;
     } else {
-      this.data[id] = new ProviderModel(item);
+      this._data[id] = new ProviderModel(item);
     }
     return id;
   }
 
   remove(id: string): boolean {
-    if (this.data[id]) {
-      delete this.data[id];
+    if (this._data[id]) {
+      delete this._data[id];
       return true;
     }
     return false;
   }
   removeAll(): void {
-    this.data = {};
+    this._data = {};
   }
 
   getAllIds(): string[] {
-    return Object.keys(this.data);
+    return Object.keys(this._data);
   }
 
   getByCosmosChainId(cosmosChainId: string) {
-    return Object.values(this.data).find(
+    return Object.values(this._data).find(
       provider => provider.model.cosmos_chain_id === cosmosChainId,
     );
   }
@@ -128,7 +200,7 @@ class ProviderStore {
     if (!ethChainId || Number.isNaN(Number(ethChainId))) {
       return undefined;
     }
-    return Object.values(this.data).find(
+    return Object.values(this._data).find(
       provider => provider.model.chain_id === Number(ethChainId),
     );
   }

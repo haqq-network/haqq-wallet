@@ -4,10 +4,10 @@ import {observer} from 'mobx-react';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {useIsBalancesFirstSync} from '@app/hooks/use-is-balances-sync';
 import {I18N} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {BalanceData} from '@app/types';
 
 import {
@@ -34,8 +34,8 @@ export const LockedTokens = observer(
     const {isBalanceLoadingError, isBalancesFirstSync} =
       useIsBalancesFirstSync();
     const defaultTotalValueISLM = useMemo(
-      () => `0 ${app.provider.denom}`,
-      [app.provider.denom],
+      () => `0 ${Provider.selectedProvider.denom}`,
+      [Provider.selectedProvider.denom],
     );
     const defaultTotalValueUSD = useMemo(() => '$0', []);
 

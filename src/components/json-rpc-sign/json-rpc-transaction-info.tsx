@@ -1,6 +1,5 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
-import {app} from '@app/contexts';
 import {awaitForFee} from '@app/helpers/await-for-fee';
 import {useTypedNavigation} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
@@ -60,7 +59,7 @@ export const JsonRpcTransactionInfo = ({
 
   const provider = useMemo(() => {
     return Provider.getByEthChainId(
-      tx?.chainId ?? chainId ?? app.provider.ethChainId,
+      tx?.chainId ?? chainId ?? Provider.selectedProvider.ethChainId,
     );
   }, [chainId, tx]);
 

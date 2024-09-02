@@ -1,7 +1,6 @@
 import {makeAutoObservable, runInAction} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
-import {app} from '@app/contexts';
 import {Indexer} from '@app/services/indexer';
 import {ProviderConfig} from '@app/services/indexer/indexer.types';
 import {storage} from '@app/services/mmkv';
@@ -25,10 +24,10 @@ class ProviderConfigStore {
 
   init = async () => {
     try {
-      if (app.provider.id !== ALL_NETWORKS_ID) {
+      if (Provider.selectedProviderId !== ALL_NETWORKS_ID) {
         const config = await Indexer.instance.getProviderConfig();
         runInAction(() => {
-          this._data[app.provider.ethChainId] = config;
+          this._data[Provider.selectedProvider.ethChainId] = config;
         });
       }
       this.lazyLoadOtherConfig();
@@ -44,7 +43,9 @@ class ProviderConfigStore {
 
   lazyLoadOtherConfig = async () => {
     const providers = Provider.getAll().filter(
-      p => p.ethChainId !== app.provider.ethChainId && p.id !== ALL_NETWORKS_ID,
+      p =>
+        p.ethChainId !== Provider.selectedProvider.ethChainId &&
+        p.id !== ALL_NETWORKS_ID,
     );
 
     for await (const p of providers) {

@@ -8,8 +8,8 @@ import {TokenRow} from '@app/components/token-row';
 import {Spacer, Text, TextVariant} from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
 import {WidgetHeader} from '@app/components/ui/widget-header';
-import {app} from '@app/contexts';
 import {I18N, getText} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {IToken} from '@app/types';
 
 type Props = {
@@ -43,7 +43,7 @@ export const TokensWidget = observer(({onPress, tokens}: Props) => {
           item =>
             !!item.is_in_white_list &&
             // FIXME: only erc20 tokens or native currency (ISLM)
-            (item.is_erc20 || item.symbol === app.provider.denom),
+            (item.is_erc20 || item.symbol === Provider.selectedProvider.denom),
         )
         .slice(0, VISIBLE_ITEM_AMOUNT)
         .map(item => {
