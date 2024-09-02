@@ -9,11 +9,6 @@ import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N} from '@app/i18n';
-import {
-  ALL_NETWORKS_PROVIDER,
-  AllNetworksProvider,
-  ProviderModel,
-} from '@app/models/provider';
 import {ModalType, Modals} from '@app/types';
 
 import {SettingsProvidersAllNetworksRow} from '../settings/settings-providers/settings-providers-all-networks-row';
@@ -28,11 +23,6 @@ export function ProvidersBottomSheet({
   onClose,
 }: Modals[ModalType.providersBottomSheet]) {
   const [searchProviderValue, setSearchProviderValue] = useState('');
-
-  const allProviders = useMemo(
-    () => [ALL_NETWORKS_PROVIDER, ...providers],
-    [providers],
-  );
 
   const closeDistanceCalculated = useCalculatedDimensionsValue(
     () => closeDistance?.(),
@@ -63,10 +53,10 @@ export function ProvidersBottomSheet({
 
   const visibleProviders = useMemo(() => {
     if (!searchProviderValue) {
-      return allProviders;
+      return providers;
     }
 
-    return allProviders.filter(provider => {
+    return providers.filter(provider => {
       const providerName = provider.name.toLowerCase();
       const providerCoinName = provider.coinName.toLowerCase();
       const providerDenom = provider.denom.toLowerCase();
@@ -83,7 +73,7 @@ export function ProvidersBottomSheet({
         providerChainId.includes(searchValue)
       );
     });
-  }, [allProviders, searchProviderValue]);
+  }, [providers, searchProviderValue]);
 
   return (
     <BottomSheet
@@ -108,7 +98,7 @@ export function ProvidersBottomSheet({
             return (
               <SettingsProvidersAllNetworksRow
                 providerId={initialProvider}
-                item={item as AllNetworksProvider}
+                item={item}
                 onPress={onPressProvider}
               />
             );
@@ -117,7 +107,7 @@ export function ProvidersBottomSheet({
           return (
             <SettingsProvidersRow
               providerId={initialProvider}
-              item={item as ProviderModel}
+              item={item}
               onPress={onPressProvider}
             />
           );

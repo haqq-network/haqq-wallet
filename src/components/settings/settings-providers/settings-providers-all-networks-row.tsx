@@ -5,10 +5,10 @@ import {TouchableWithoutFeedback, View} from 'react-native';
 import {Color} from '@app/colors';
 import {DataContent, Icon, IconsName, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {AllNetworksProvider} from '@app/models/provider';
+import {ProviderModel} from '@app/models/provider';
 
 export type SettingsProvidersAllNetworksRowProps = {
-  item: AllNetworksProvider;
+  item: ProviderModel;
   providerId: string;
   onPress: (providerId: string) => void;
 };
