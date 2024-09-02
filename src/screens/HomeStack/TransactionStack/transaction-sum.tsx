@@ -1,4 +1,6 @@
-import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+
+import {observer} from 'mobx-react';
 
 import {TransactionSum} from '@app/components/transaction-sum';
 import {app} from '@app/contexts';
@@ -23,7 +25,7 @@ import {HapticEffects, vibrate} from '@app/services/haptic';
 import {ModalType} from '@app/types';
 import {generateUUID} from '@app/utils';
 
-export const TransactionSumScreen = memo(() => {
+export const TransactionSumScreen = observer(() => {
   const navigation = useTypedNavigation<TransactionStackParamList>();
   useAndroidBackHandler(() => {
     navigation.goBack();

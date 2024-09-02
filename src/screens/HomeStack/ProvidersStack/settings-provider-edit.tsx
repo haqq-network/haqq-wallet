@@ -1,5 +1,6 @@
-import React, {memo, useCallback, useMemo} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
+import {observer} from 'mobx-react';
 import {Alert} from 'react-native';
 
 import {SettingsProviderEdit} from '@app/components/settings/settings-providers/settings-provider-edit';
@@ -7,7 +8,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {Provider, ProviderModel} from '@app/models/provider';
 import {ProvidersStackParamList, ProvidersStackRoutes} from '@app/route-types';
 
-export const SettingsProviderEditScreen = memo(() => {
+export const SettingsProviderEditScreen = observer(() => {
   const {goBack, setParams} = useTypedNavigation<ProvidersStackParamList>();
   const route = useTypedRoute<
     ProvidersStackParamList,
@@ -25,14 +26,6 @@ export const SettingsProviderEditScreen = memo(() => {
         'This feature for developer',
         'Edit providers not yet implemented',
       );
-      // if (provider) {
-      //   provider.update(data);
-      // } else {
-      //   let id = Provider.create(data);
-      //   setParams({
-      //     id,
-      //   });
-      // }
     },
     [provider, setParams],
   );

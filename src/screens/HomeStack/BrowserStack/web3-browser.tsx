@@ -2,6 +2,7 @@ import React, {useCallback, useRef, useState} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
 import {useFocusEffect} from '@react-navigation/native';
+import {observer} from 'mobx-react';
 import {Share} from 'react-native';
 import WebView from 'react-native-webview';
 
@@ -30,7 +31,7 @@ import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {BrowserStackParamList, BrowserStackRoutes} from '@app/route-types';
 import {sendNotification} from '@app/services';
 
-export const Web3BrowserScreen = () => {
+export const Web3BrowserScreen = observer(() => {
   const [focused, setFocused] = useState(false);
   const {url, popup} = useTypedRoute<
     BrowserStackParamList,
@@ -262,4 +263,4 @@ export const Web3BrowserScreen = () => {
       onPressPrivacy={onPressPrivacy}
     />
   );
-};
+});

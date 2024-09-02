@@ -1,4 +1,6 @@
-import React, {memo, useCallback} from 'react';
+import React, {useCallback} from 'react';
+
+import {observer} from 'mobx-react';
 
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {Provider} from '@app/models/provider';
@@ -11,7 +13,7 @@ import {openInAppBrowser} from '@app/utils';
 
 import {NftItemDetails} from './components/nft-item-details/nft-item-details';
 
-export const NftItemDetailsScreen = memo(() => {
+export const NftItemDetailsScreen = observer(() => {
   const navigation = useTypedNavigation<NftStackParamList>();
   const {params} = useTypedRoute<
     NftStackParamList,

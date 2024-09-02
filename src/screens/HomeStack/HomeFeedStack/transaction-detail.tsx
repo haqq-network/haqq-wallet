@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useMemo} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
 import {format} from 'date-fns';
+import {observer} from 'mobx-react';
 
 import {TransactionDetail} from '@app/components/transaction-detail';
 import {Loading} from '@app/components/ui';
@@ -16,7 +17,7 @@ import {sendNotification} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {openInAppBrowser, splitAddress} from '@app/utils';
 
-export const TransactionDetailScreen = () => {
+export const TransactionDetailScreen = observer(() => {
   const navigation = useTypedNavigation<HomeStackParamList>();
   const route = useTypedRoute<
     HomeStackParamList,
@@ -92,4 +93,4 @@ export const TransactionDetailScreen = () => {
       onPressSpenderAddress={onPressSpenderAddress}
     />
   );
-};
+});
