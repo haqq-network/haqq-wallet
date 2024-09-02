@@ -9,8 +9,14 @@ import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N} from '@app/i18n';
+import {
+  ALL_NETWORKS_PROVIDER,
+  AllNetworksProvider,
+  Provider,
+} from '@app/models/provider';
 import {ModalType, Modals} from '@app/types';
 
+import {SettingsProvidersAllNetworksRow} from '../settings/settings-providers/settings-providers-all-networks-row';
 import {SettingsProvidersRow} from '../settings/settings-providers/settings-providers-row';
 
 export function ProvidersBottomSheet({
@@ -22,6 +28,11 @@ export function ProvidersBottomSheet({
   onClose,
 }: Modals[ModalType.providersBottomSheet]) {
   const [searchProviderValue, setSearchProviderValue] = useState('');
+
+  const allProviders = useMemo(
+    () => [ALL_NETWORKS_PROVIDER, ...providers],
+    [providers],
+  );
 
   const closeDistanceCalculated = useCalculatedDimensionsValue(
     () => closeDistance?.(),
@@ -52,10 +63,10 @@ export function ProvidersBottomSheet({
 
   const visibleProviders = useMemo(() => {
     if (!searchProviderValue) {
-      return providers;
+      return allProviders;
     }
 
-    return providers.filter(provider => {
+    return allProviders.filter(provider => {
       const providerName = provider.name.toLowerCase();
       const providerCoinName = provider.coinName.toLowerCase();
       const providerDenom = provider.denom.toLowerCase();
@@ -72,7 +83,7 @@ export function ProvidersBottomSheet({
         providerChainId.includes(searchValue)
       );
     });
-  }, [providers, searchProviderValue]);
+  }, [allProviders, searchProviderValue]);
 
   return (
     <BottomSheet
@@ -87,17 +98,30 @@ export function ProvidersBottomSheet({
         leading={
           <Icon i24 name={IconsName.search} color={Color.graphicBase2} />
         }
+        style={styles.searchField}
       />
       <FlatList
         data={visibleProviders}
         keyExtractor={item => item.id}
-        renderItem={({item}) => (
-          <SettingsProvidersRow
-            providerId={initialProvider}
-            item={item}
-            onPress={onPressProvider}
-          />
-        )}
+        renderItem={({item}) => {
+          if (item.id === 'all_networks') {
+            return (
+              <SettingsProvidersAllNetworksRow
+                providerId={initialProvider}
+                item={item as AllNetworksProvider}
+                onPress={onPressProvider}
+              />
+            );
+          }
+
+          return (
+            <SettingsProvidersRow
+              providerId={initialProvider}
+              item={item as Provider}
+              onPress={onPressProvider}
+            />
+          );
+        }}
       />
       <Spacer height={50} />
     </BottomSheet>
@@ -108,4 +132,5 @@ const styles = createTheme({
   container: {
     height: '50%',
   },
+  searchField: {marginBottom: 16},
 });
