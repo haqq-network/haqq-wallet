@@ -1,12 +1,13 @@
 import React from 'react';
 
-import {Image, View} from 'react-native';
+import {View} from 'react-native';
 import {State} from 'react-native-ble-plx';
 
 import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
+  First,
   LottieWrap,
   PopupContainer,
   Spacer,
@@ -17,6 +18,7 @@ import {I18N} from '@app/i18n';
 
 export type LedgerBluetooth = {
   onPressAllow: () => void;
+  onPressGoToPhoneSettings: () => void;
   btState: State;
   loading: boolean;
 };
@@ -25,25 +27,23 @@ const disabled = [State.PoweredOff, State.Unauthorized];
 
 export const LedgerBluetooth = ({
   onPressAllow,
+  onPressGoToPhoneSettings,
   btState,
   loading,
 }: LedgerBluetooth) => {
   return (
     <PopupContainer style={page.container}>
+      <Spacer />
       <View style={page.animation}>
-        {disabled.includes(btState) ? (
-          <Image
-            style={page.imageStyle}
-            source={require('@assets/images/bluetooth-failed.png')}
-          />
-        ) : (
-          <LottieWrap
-            style={page.imageStyle}
-            source={require('@assets/animations/ledger-bluetooth.json')}
-            autoPlay
-            loop
-          />
-        )}
+        <LottieWrap
+          style={[
+            page.imageStyle,
+            disabled.includes(btState) && page.disabledAnimation,
+          ]}
+          source={require('@assets/animations/ledger-bluetooth.json')}
+          autoPlay
+          loop
+        />
       </View>
       <Text
         t4
@@ -66,15 +66,25 @@ export const LedgerBluetooth = ({
         }
         style={page.disclaimer}
       />
+      <Spacer height={12} />
+      <First>
+        {disabled.includes(btState) && (
+          <Button
+            onPress={onPressGoToPhoneSettings}
+            i18n={I18N.goToPhoneSettings}
+            style={page.submit}
+            variant={ButtonVariant.second}
+          />
+        )}
+        <Button
+          loading={loading}
+          style={page.submit}
+          variant={ButtonVariant.contained}
+          i18n={I18N.ledgerBluetoothAllow}
+          onPress={onPressAllow}
+        />
+      </First>
       <Spacer />
-      <Button
-        disabled={disabled.includes(btState)}
-        loading={loading}
-        style={page.submit}
-        variant={ButtonVariant.contained}
-        i18n={I18N.ledgerBluetoothAllow}
-        onPress={onPressAllow}
-      />
     </PopupContainer>
   );
 };
@@ -106,5 +116,8 @@ const page = createTheme({
     margin: 10,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  disabledAnimation: {
+    opacity: 0.4,
   },
 });
