@@ -51,7 +51,7 @@
     "@haqq/provider-web3-utils": "0.0.14",
     "@haqq/shared-react-native": "0.0.12",
     "@invertase/react-native-apple-authentication": "2.2.2",
-    "@keystonehq/bc-ur-registry-eth": "0.7.7",
+    "@keystonehq/bc-ur-registry-eth": "0.20.1",
     "@keystonehq/ur-decoder": "0.12.2",
     "@metamask/phishing-controller": "3.0.0",
     "@react-native-async-storage/async-storage": "1.19.0",
