@@ -19,8 +19,12 @@ export const LedgerFinishScreen = memo(() => {
   >();
   const onEnd = useCallback(() => {
     if (app.onboarded) {
+      navigation.getParent()?.goBack();
       navigation.navigate(HomeStackRoutes.Home);
     } else {
+      if (navigation.canGoBack()) {
+        navigation.goBack();
+      }
       app.onboarded = true;
     }
   }, [navigation]);
