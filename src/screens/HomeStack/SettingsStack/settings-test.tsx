@@ -204,7 +204,7 @@ const getTestModals = (): TestModals => {
     },
     notEnoughGas: {
       currentAmount: app.getBalanceData(firstWalletAddress).available,
-      gasLimit: MIN_GAS_LIMIT,
+      gasLimit: new Balance(MIN_GAS_LIMIT, 0),
       onClose: () => logger.log('notEnoughGas closed'),
     },
     viewErrorDetails: {

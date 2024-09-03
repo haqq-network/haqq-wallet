@@ -110,7 +110,7 @@ class ProviderStore {
     ]);
   };
 
-  init(): Promise<void> {
+  init = async (): Promise<void> => {
     return new Promise(async resolve => {
       let resolved = false;
 
@@ -131,7 +131,7 @@ class ProviderStore {
         resolve();
       }
     });
-  }
+  };
 
   fetchProviders = createAsyncTask(async () => {
     const providers = [ALL_NETWORKS_PROVIDER];

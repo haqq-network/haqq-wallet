@@ -63,7 +63,9 @@ export const TransactionSum = observer(
     const {keyboardShown} = useKeyboard();
     const transactionFee = useMemo(() => {
       return fee !== null
-        ? fee.operate(BALANCE_MULTIPLIER, 'mul').max(FEE_AMOUNT)
+        ? fee
+            .operate(new Balance(BALANCE_MULTIPLIER, 0), 'mul')
+            .max(new Balance(FEE_AMOUNT))
         : Balance.Empty;
     }, [fee]);
 
