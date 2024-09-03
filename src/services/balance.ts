@@ -42,9 +42,6 @@ export class Balance implements IBalance, ISerializable {
     precission?: number,
     symbol?: string,
   ) {
-    precission = precission ?? Provider.selectedProvider.decimals;
-    symbol = symbol ?? Provider.selectedProvider.denom;
-
     this.originalValue = balance;
     this.precission = precission ?? Provider.selectedProvider.decimals;
     this.symbol = symbol || Provider.selectedProvider.denom;

@@ -3,7 +3,7 @@ import {
   getDefaultMultiplierValue,
 } from '@app/helpers/get-remote-balance-value';
 
-import {RemoteConfigTypes} from './remote-config-types';
+import {RemoteConfigTypes} from './remote-config.types';
 
 import {getAppVersion} from '../version';
 
