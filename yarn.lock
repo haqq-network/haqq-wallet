@@ -5764,13 +5764,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@walletconnect/react-native-compat@npm:2.11.2":
-  version: 2.11.2
-  resolution: "@walletconnect/react-native-compat@npm:2.11.2"
+"@walletconnect/react-native-compat@npm:2.14.0":
+  version: 2.14.0
+  resolution: "@walletconnect/react-native-compat@npm:2.14.0"
   dependencies:
     events: 3.3.0
-    fast-text-encoding: ^1.0.6
-    react-native-url-polyfill: ^2.0.0
+    fast-text-encoding: 1.0.6
+    react-native-url-polyfill: 2.0.0
   peerDependencies:
     "@react-native-async-storage/async-storage": "*"
     "@react-native-community/netinfo": "*"
@@ -5779,7 +5779,7 @@ __metadata:
   peerDependenciesMeta:
     expo-application:
       optional: true
-  checksum: e3e6e5d138630d0a109d17dc474d6548e59e15988fad31a9bce74ebec39b238897a3e2245b5c6852fbef30d877b31e3efea63744d8f46534587e9e7e461e3690
+  checksum: 5a9c7b482fd86fa28d2c1d9a34f58f89484e42de8d2474cf89a208d70157d19111ff29500496a77f2f12d7559bcb9a614857193fbd43fcb318f171958cb0fc10
   languageName: node
   linkType: hard
 
@@ -9727,7 +9727,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-text-encoding@npm:^1.0.6":
+"fast-text-encoding@npm:1.0.6":
   version: 1.0.6
   resolution: "fast-text-encoding@npm:1.0.6"
   checksum: 9d58f694314b3283e785bf61954902536da228607ad246905e30256f9ab8331f780ac987e7222c9f5eafd04168d07e12b8054c85cedb76a2c05af0e82387a903
@@ -10161,7 +10161,7 @@ __metadata:
 
 "fsevents@patch:fsevents@^2.3.2#~builtin<compat/fsevents>, fsevents@patch:fsevents@~2.3.2#~builtin<compat/fsevents>":
   version: 2.3.3
-  resolution: "fsevents@patch:fsevents@npm%3A2.3.3#~builtin<compat/fsevents>::version=2.3.3&hash=df0bf1"
+  resolution: "fsevents@patch:fsevents@npm%3A2.3.3#~builtin<compat/fsevents>::version=2.3.3&hash=18f3a7"
   dependencies:
     node-gyp: latest
   conditions: os=darwin
@@ -10549,7 +10549,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": 6.0.0
     "@typescript-eslint/parser": 6.0.0
     "@walletconnect/core": 2.11.2
-    "@walletconnect/react-native-compat": 2.11.2
+    "@walletconnect/react-native-compat": 2.14.0
     "@walletconnect/sign-client": 2.11.2
     "@walletconnect/types": 2.11.2
     "@walletconnect/utils": 2.11.2
@@ -16230,7 +16230,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-url-polyfill@npm:^2.0.0":
+"react-native-url-polyfill@npm:2.0.0":
   version: 2.0.0
   resolution: "react-native-url-polyfill@npm:2.0.0"
   dependencies:
@@ -16810,7 +16810,7 @@ __metadata:
 
 "resolve@patch:resolve@^1.1.6#~builtin<compat/resolve>, resolve@patch:resolve@^1.14.2#~builtin<compat/resolve>, resolve@patch:resolve@^1.20.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.22.1#~builtin<compat/resolve>, resolve@patch:resolve@^1.22.4#~builtin<compat/resolve>":
   version: 1.22.8
-  resolution: "resolve@patch:resolve@npm%3A1.22.8#~builtin<compat/resolve>::version=1.22.8&hash=c3c19d"
+  resolution: "resolve@patch:resolve@npm%3A1.22.8#~builtin<compat/resolve>::version=1.22.8&hash=07638b"
   dependencies:
     is-core-module: ^2.13.0
     path-parse: ^1.0.7
@@ -16823,7 +16823,7 @@ __metadata:
 
 "resolve@patch:resolve@^2.0.0-next.5#~builtin<compat/resolve>":
   version: 2.0.0-next.5
-  resolution: "resolve@patch:resolve@npm%3A2.0.0-next.5#~builtin<compat/resolve>::version=2.0.0-next.5&hash=c3c19d"
+  resolution: "resolve@patch:resolve@npm%3A2.0.0-next.5#~builtin<compat/resolve>::version=2.0.0-next.5&hash=07638b"
   dependencies:
     is-core-module: ^2.13.0
     path-parse: ^1.0.7
@@ -18537,11 +18537,11 @@ __metadata:
 
 "typescript@patch:typescript@5.1.6#~builtin<compat/typescript>":
   version: 5.1.6
-  resolution: "typescript@patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=5da071"
+  resolution: "typescript@patch:typescript@npm%3A5.1.6#~builtin<compat/typescript>::version=5.1.6&hash=701156"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: f53bfe97f7c8b2b6d23cf572750d4e7d1e0c5fff1c36d859d0ec84556a827b8785077bc27676bf7e71fae538e517c3ecc0f37e7f593be913d884805d931bc8be
+  checksum: 21e88b0a0c0226f9cb9fd25b9626fb05b4c0f3fddac521844a13e1f30beb8f14e90bd409a9ac43c812c5946d714d6e0dee12d5d02dfc1c562c5aacfa1f49b606
   languageName: node
   linkType: hard
 
