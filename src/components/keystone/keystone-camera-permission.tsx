@@ -32,6 +32,7 @@ export const KeystoneCameraPermission = ({
           width={375}
           height={310}
           resourceName={'animated_camera'}
+          style={isPermissionDenied && styles.disabledAnimation}
           autoplay={true}
         />
       </View>
@@ -97,5 +98,8 @@ const styles = createTheme({
   },
   buttonContainer: {
     width: '100%',
+  },
+  disabledAnimation: {
+    opacity: 0.4,
   },
 });
