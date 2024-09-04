@@ -8,7 +8,11 @@ import {AddressUtils} from '@app/helpers/address-utils';
 import {Whitelist} from '@app/helpers/whitelist';
 import {I18N, getText} from '@app/i18n';
 import {NftCollectionIndexer} from '@app/models/nft';
-import {ALL_NETWORKS_ID, Provider} from '@app/models/provider';
+import {
+  ALL_NETWORKS_ID,
+  INDEXER_PROXY_ENDPOINT,
+  Provider,
+} from '@app/models/provider';
 import {
   ContractNameMap,
   IContract,
@@ -107,62 +111,25 @@ export class Indexer {
       lastUpdated: Date | undefined,
       selectedCurrency?: string,
     ) => {
-      if (Provider.selectedProviderId === ALL_NETWORKS_ID) {
-        return this.updatesV2(accounts, lastUpdated, selectedCurrency);
-      } else {
-        return this.updatesV1(accounts, lastUpdated, selectedCurrency);
-      }
-    },
-  );
-
-  updatesV1 = createAsyncTask(
-    async (
-      accounts: string[],
-      lastUpdated: Date | undefined,
-      selectedCurrency?: string,
-    ) => {
       try {
         this.checkIndexerAvailability();
 
         const updated = lastUpdated || new Date(0);
 
         const result: IndexerUpdatesResponse = await jsonrpcRequest(
-          this.endpoint,
-          'updates',
-          [accounts, updated, selectedCurrency].filter(Boolean),
-        );
-
-        return result;
-      } catch (err) {
-        if (err instanceof JSONRPCError) {
-          this.captureException(err, 'Indexer:updates', err.meta);
-        }
-        throw err;
-      }
-    },
-  );
-
-  updatesV2 = createAsyncTask(
-    async (
-      accounts: string[],
-      lastUpdated: Date | undefined,
-      selectedCurrency?: string,
-    ) => {
-      try {
-        this.checkIndexerAvailability();
-
-        const updated = lastUpdated || new Date(0);
-
-        const result: IndexerUpdatesResponse = await jsonrpcRequest(
-          this.endpoint,
+          INDEXER_PROXY_ENDPOINT,
           'updates_v2',
           [
-            Provider.getAll()
-              .filter(item => item.id !== ALL_NETWORKS_ID)
-              .reduce(
-                (acc, item) => ({...acc, [item.ethChainId]: accounts}),
-                {},
-              ),
+            Provider.selectedProviderId === ALL_NETWORKS_ID
+              ? Provider.getAll()
+                  .filter(item => item.id !== ALL_NETWORKS_ID)
+                  .reduce(
+                    (acc, item) => ({...acc, [item.ethChainId]: accounts}),
+                    {},
+                  )
+              : {
+                  [Provider.selectedProvider.ethChainId]: accounts,
+                },
             updated,
             selectedCurrency,
           ].filter(Boolean),

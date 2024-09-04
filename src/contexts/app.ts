@@ -44,6 +44,7 @@ import {
   AppTheme,
   BalanceData,
   BiometryType,
+  ChainId,
   DynamicLink,
   HaqqEthereumAddress,
   IndexerBalanceData,
@@ -78,7 +79,8 @@ class App extends AsyncEventEmitter {
   private user: User;
   private _authenticated: boolean = DEBUG_VARS.enableSkipPinOnLogin;
   private appStatus: AppStatus = AppStatus.inactive;
-  private _balances: Map<HaqqEthereumAddress, BalanceData> = new Map();
+  private _balances: Record<ChainId, Record<HaqqEthereumAddress, BalanceData>> =
+    {};
   private _googleSigninSupported: boolean = false;
   private _appleSigninSupported: boolean =
     Platform.select({
@@ -644,77 +646,65 @@ class App extends AsyncEventEmitter {
     if (!this.onboarded) {
       return;
     }
-    let changed = false;
 
-    const balancesEntries = Object.entries(balances) as unknown as [
-      HaqqEthereumAddress,
-      BalanceData,
-    ][];
-
-    for (const [address, data] of balancesEntries) {
-      const prevBalance = this._balances.get(address);
-
-      if (
-        !prevBalance?.available?.compare(data.available, 'eq') ||
-        !prevBalance?.staked?.compare(data.staked, 'eq') ||
-        !prevBalance?.vested?.compare(data.vested, 'eq') ||
-        !prevBalance?.total?.compare(data.total, 'eq') ||
-        !prevBalance?.locked?.compare(data.locked, 'eq') ||
-        !prevBalance?.availableForStake?.compare(data.availableForStake, 'eq')
-      ) {
-        this._balances.set(address, data);
-        changed = true;
-      }
-    }
-
-    if (changed) {
-      Token.fetchTokens();
-      this.emit(Events.onBalanceSync);
-    }
+    this._balances = balances;
+    Token.fetchTokens();
+    this.emit(Events.onBalanceSync);
   }
 
   getBalanceData(address: string) {
     return (
-      this._balances.get(AddressUtils.toEth(address)) ||
-      Balance.emptyBalances[AddressUtils.toEth(address)]
+      this._balances[Provider.selectedProvider.ethChainId]?.[
+        AddressUtils.toEth(address)
+      ] || Balance.emptyBalances[AddressUtils.toEth(address)]
     );
   }
 
   getAvailableBalance(address: string): Balance {
     return (
-      this._balances.get(AddressUtils.toEth(address))?.available ??
-      Balance.Empty
+      this._balances[Provider.selectedProvider.ethChainId]?.[
+        AddressUtils.toEth(address)
+      ]?.available ?? Balance.Empty
     );
   }
 
   getAvailableForStakeBalance(address: string): Balance {
     return (
-      this._balances.get(AddressUtils.toEth(address))?.availableForStake ??
-      Balance.Empty
+      this._balances[Provider.selectedProvider.ethChainId]?.[
+        AddressUtils.toEth(address)
+      ]?.availableForStake ?? Balance.Empty
     );
   }
 
   getStakingBalance(address: string): Balance {
     return (
-      this._balances.get(AddressUtils.toEth(address))?.staked ?? Balance.Empty
+      this._balances[Provider.selectedProvider.ethChainId]?.[
+        AddressUtils.toEth(address)
+      ]?.staked ?? Balance.Empty
     );
   }
 
   getVestingBalance(address: string): Balance {
     return (
-      this._balances.get(AddressUtils.toEth(address))?.vested ?? Balance.Empty
+      this._balances[Provider.selectedProvider.ethChainId]?.[
+        AddressUtils.toEth(address)
+      ]?.vested ?? Balance.Empty
     );
   }
 
   getTotalBalance(address: string): Balance {
     return (
-      this._balances.get(AddressUtils.toEth(address))?.total ?? Balance.Empty
+      this._balances[Provider.selectedProvider.ethChainId]?.[
+        AddressUtils.toEth(address)
+      ]?.total ?? Balance.Empty
     );
   }
 
   getLockedBalance(address: string): Balance {
     return (
-      this._balances.get(AddressUtils.toEth(address))?.locked ?? Balance.Empty
+      this._balances[Provider.selectedProvider.ethChainId]?.[
+        AddressUtils.toEth(address)
+      ]?.locked ?? Balance.Empty
     );
   }
 

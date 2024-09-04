@@ -7,6 +7,8 @@ import {
 
 export type ProviderID = string;
 
+export const INDEXER_PROXY_ENDPOINT = 'https://proxy.indexer.haqq.network';
+
 export const ALL_NETWORKS_ID = 'all_networks';
 export const ALL_NETWORKS_PROVIDER: NetworkProvider = {
   id: ALL_NETWORKS_ID,
@@ -21,7 +23,7 @@ export const ALL_NETWORKS_PROVIDER: NetworkProvider = {
   denom: '',
   entry_point: 'https://rpc.eth.haqq.network/',
   explorer_url: undefined,
-  indexer_url: 'https://proxy.indexer.haqq.network',
+  indexer_url: INDEXER_PROXY_ENDPOINT,
   network_type: NetworkProviderTypes.EVM,
   stage: NetworkProviderStage.MAINNET,
   status: NetworkProviderStatus.PUBLISHED,

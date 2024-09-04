@@ -1349,10 +1349,12 @@ export type HaqqCosmosAddress = `haqq${string}`;
 export type HaqqEthereumAddress = `0x${string}`;
 export type HexNumber = `0x${string}`;
 
-export type IndexerBalance = Record<
+export type IndexerBalanceItem = [
   HaqqCosmosAddress | HaqqEthereumAddress,
-  HexNumber
->;
+  ChainId,
+  HexNumber,
+];
+export type IndexerBalance = Array<IndexerBalanceItem>;
 export type IndexerToken = {
   address: HaqqCosmosAddress;
   contract: HaqqCosmosAddress;
@@ -1376,7 +1378,10 @@ export interface BalanceData {
   unlock: Date;
 }
 
-export type IndexerBalanceData = Record<HaqqEthereumAddress, BalanceData>;
+export type IndexerBalanceData = Record<
+  ChainId,
+  Record<HaqqEthereumAddress, BalanceData>
+>;
 
 export type JsonRpcTransactionRequest = {
   to?: string;
