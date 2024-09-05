@@ -80,6 +80,16 @@ export class Indexer {
     this.init();
   }
 
+  private getProvidersHeader = (accounts: string[]) => {
+    return Provider.selectedProviderId === ALL_NETWORKS_ID
+      ? Provider.getAll()
+          .filter(item => item.id !== ALL_NETWORKS_ID)
+          .reduce((acc, item) => ({...acc, [item.ethChainId]: accounts}), {})
+      : {
+          [Provider.selectedProvider.ethChainId]: accounts,
+        };
+  };
+
   get endpoint() {
     if (this.chainId) {
       return Provider.getByEthChainId(this.chainId)?.indexer!;
@@ -119,20 +129,9 @@ export class Indexer {
         const result: IndexerUpdatesResponse = await jsonrpcRequest(
           INDEXER_PROXY_ENDPOINT,
           'updates_v2',
-          [
-            Provider.selectedProviderId === ALL_NETWORKS_ID
-              ? Provider.getAll()
-                  .filter(item => item.id !== ALL_NETWORKS_ID)
-                  .reduce(
-                    (acc, item) => ({...acc, [item.ethChainId]: accounts}),
-                    {},
-                  )
-              : {
-                  [Provider.selectedProvider.ethChainId]: accounts,
-                },
-            updated,
-            selectedCurrency,
-          ].filter(Boolean),
+          [this.getProvidersHeader(accounts), updated, selectedCurrency].filter(
+            Boolean,
+          ),
         );
 
         return result;
@@ -209,71 +208,38 @@ export class Indexer {
   }
 
   getTransactions = createAsyncTask(
-    async (accounts: string[], latestBlock: string = 'latest') => {
-      if (Provider.selectedProviderId === ALL_NETWORKS_ID) {
-        return this.getTransactionsV2(accounts, latestBlock);
-      } else {
-        return this.getTransactionsV1(accounts, latestBlock);
+    async (
+      accounts: string[],
+      latestBlock: string = 'latest',
+    ): Promise<IndexerTransaction[]> => {
+      try {
+        if (!accounts.length) {
+          return [];
+        }
+
+        let ts: string | number = latestBlock;
+        if (latestBlock !== 'latest') {
+          const latestTs = new Date(latestBlock).getTime();
+          if (!isNaN(latestTs)) {
+            ts = latestTs;
+          }
+        }
+
+        const response = await jsonrpcRequest<IndexerTransactionResponse>(
+          INDEXER_PROXY_ENDPOINT,
+          'transactions_by_timestamp',
+          [this.getProvidersHeader(accounts), ts],
+        );
+
+        return response?.transactions || [];
+      } catch (err) {
+        if (err instanceof JSONRPCError) {
+          this.captureException(err, 'Indexer:getTransactions', err.meta);
+        }
+        throw err;
       }
     },
   );
-
-  async getTransactionsV1(
-    accounts: string[],
-    latestBlock: string = 'latest',
-  ): Promise<IndexerTransaction[]> {
-    try {
-      if (!accounts.length) {
-        return [];
-      }
-
-      const haqqAddresses = accounts.filter(a => !!a).map(AddressUtils.toHaqq);
-      const response = await jsonrpcRequest<IndexerTransactionResponse>(
-        this.endpoint,
-        'transactions',
-        [haqqAddresses, latestBlock],
-      );
-      return response?.txs || [];
-    } catch (err) {
-      if (err instanceof JSONRPCError) {
-        this.captureException(err, 'Indexer:getTransactions', err.meta);
-      }
-      throw err;
-    }
-  }
-
-  async getTransactionsV2(
-    accounts: string[],
-    latestBlock: string = 'latest',
-  ): Promise<IndexerTransaction[]> {
-    try {
-      if (!accounts.length) {
-        return [];
-      }
-
-      const haqqAddresses = accounts.filter(a => !!a).map(AddressUtils.toHaqq);
-      const response = await jsonrpcRequest<IndexerTransactionResponse>(
-        this.endpoint,
-        'transactions_by_timestamp',
-        [
-          Provider.getAll()
-            .filter(item => item.id !== ALL_NETWORKS_ID)
-            .reduce(
-              (acc, item) => ({...acc, [item.ethChainId]: haqqAddresses}),
-              {},
-            ),
-          latestBlock,
-        ],
-      );
-
-      return response?.transactions || [];
-    } catch (err) {
-      if (err instanceof JSONRPCError) {
-        this.captureException(err, 'Indexer:getTransactions', err.meta);
-      }
-      throw err;
-    }
-  }
 
   getNfts = createAsyncTask(async (accounts: string[]) => {
     if (Provider.selectedProviderId === ALL_NETWORKS_ID) {

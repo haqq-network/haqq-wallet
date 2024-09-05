@@ -41,14 +41,13 @@ export type Transaction = IndexerTransaction & {
 };
 
 type AccountsHash = string;
-type BlockNumber = 'latest' | `${number}`;
-type CacheKey = `${AccountsHash}:${BlockNumber}`;
+type CacheKey = `${AccountsHash}:${string}`;
 
 class TransactionStore implements RPCObserver {
   realmSchemaName = TransactionRealmObject.schema.name;
   private _transactions: Array<Transaction> = [];
   private _lastSyncedAccountsHash: AccountsHash = '';
-  private _lastSyncedBlockNumber: BlockNumber = 'latest';
+  private _lastSyncedBlockNumber: string = 'latest';
   private _isLoading = false;
   private _cache = new Map<CacheKey, Transaction[]>();
 
@@ -141,19 +140,19 @@ class TransactionStore implements RPCObserver {
     if (this.isLoading) {
       return;
     }
+
     const accountHash = hashMessage(accounts.join(''));
     const isHashEquals = this._lastSyncedAccountsHash === accountHash;
 
     const prevTxList = this._transactions;
     const lastTx = prevTxList[prevTxList.length - 1];
-    const blockNumber: BlockNumber =
-      isHashEquals && lastTx ? `${lastTx.block}` : 'latest';
+    const blockTs: string = isHashEquals && lastTx ? lastTx.ts : 'latest';
 
-    if (isHashEquals && blockNumber === this._lastSyncedBlockNumber) {
+    if (isHashEquals && blockTs === this._lastSyncedBlockNumber) {
       return this._transactions;
     }
 
-    const nextTxList = await this._fetch(accounts, blockNumber);
+    const nextTxList = await this._fetch(accounts, blockTs);
 
     runInAction(() => {
       this._transactions = [...prevTxList, ...nextTxList];
@@ -178,7 +177,7 @@ class TransactionStore implements RPCObserver {
 
   private _fetch = async (
     accounts: string[],
-    blockNumber: BlockNumber = 'latest',
+    blockNumber: string = 'latest',
   ) => {
     try {
       const accountHash = hashMessage(accounts.join(''));
