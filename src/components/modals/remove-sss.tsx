@@ -92,13 +92,18 @@ export const RemoveSSS = observer(
         setLoading(true);
         const creds = await ProviderAction();
 
-        if (!creds.privateKey) {
-          Logger.error('No Private Key Detected RemoveSSS');
-          close();
-          return;
-        }
+        if (creds) {
+          if (!creds.privateKey) {
+            Logger.error('No Private Key Detected RemoveSSS');
+            close();
+            return;
+          }
 
-        await Promise.allSettled([removeChainShare(creds), removeCloudShare()]);
+          await Promise.allSettled([
+            removeChainShare(creds),
+            removeCloudShare(),
+          ]);
+        }
       } catch (err) {
         if (err instanceof Error) {
           Logger.warn('RemoveSSS Error: ', err.message);

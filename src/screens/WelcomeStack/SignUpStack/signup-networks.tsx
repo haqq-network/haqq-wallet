@@ -25,7 +25,7 @@ export const SignupNetworksScreen = memo(() => {
   const onLogin = useCallback(
     async (provider: SssProviders, skipCheck: boolean = false) => {
       try {
-        let creds: Creds;
+        let creds: Creds | null | undefined;
         try {
           switch (provider) {
             case SssProviders.apple:
@@ -43,60 +43,61 @@ export const SignupNetworksScreen = memo(() => {
           return;
         }
 
-        let nextScreen = app.onboarded
-          ? SignUpStackRoutes.SignupStoreWallet
-          : SignUpStackRoutes.OnboardingSetupPin;
+        if (creds) {
+          let nextScreen = app.onboarded
+            ? SignUpStackRoutes.SignupStoreWallet
+            : SignUpStackRoutes.OnboardingSetupPin;
 
-        if (!skipCheck) {
-          const hasPermissions = await verifyCloud(provider);
-          if (!hasPermissions) {
-            navigation.navigate(SignUpStackRoutes.SignupCloudProblems, {
-              sssProvider: provider,
-              onNext: () => onLogin(provider, true),
+          if (!skipCheck) {
+            const hasPermissions = await verifyCloud(provider);
+            if (!hasPermissions) {
+              navigation.navigate(SignUpStackRoutes.SignupCloudProblems, {
+                sssProvider: provider,
+                onNext: () => onLogin(provider, true),
+              });
+              return;
+            }
+          }
+
+          if (creds.privateKey) {
+            const walletInfo = await getMetadataValueWrapped(
+              RemoteConfig.get('sss_metadata_url')!,
+              creds.privateKey,
+              'socialShareIndex',
+            );
+
+            if (walletInfo) {
+              nextScreen = SignUpStackRoutes.SignUpNetworkExists;
+            }
+          }
+
+          const onNext = () => {
+            //@ts-ignore
+            navigation.navigate(nextScreen, {
+              type: 'sss',
+              sssPrivateKey: creds?.privateKey,
+              token: creds?.token,
+              verifier: creds?.verifier,
+              sssCloudShare: null,
+              provider: provider,
+              sssLocalShare: null,
             });
-            return;
-          }
-        }
+          };
 
-        if (creds.privateKey) {
-          const walletInfo = await getMetadataValueWrapped(
-            RemoteConfig.get('sss_metadata_url')!,
-            creds.privateKey,
-            'socialShareIndex',
-          );
-
-          if (walletInfo) {
-            nextScreen = SignUpStackRoutes.SignUpNetworkExists;
+          if (
+            [
+              SignUpStackRoutes.SignupStoreWallet,
+              SignUpStackRoutes.OnboardingSetupPin,
+            ].includes(nextScreen)
+          ) {
+            navigation.navigate(SignUpStackRoutes.SignupImportantInfo, {
+              onNext,
+            });
           } else {
-            // Logger.log('SSS_PRIVATE_KEY_NOT_FOUND', creds);
+            onNext();
           }
-        }
-
-        const onNext = () => {
-          //@ts-ignore
-          navigation.navigate(nextScreen, {
-            type: 'sss',
-            sssPrivateKey: creds.privateKey,
-            token: creds.token,
-            verifier: creds.verifier,
-            sssCloudShare: null,
-            provider: provider,
-            sssLocalShare: null,
-          });
-        };
-
-        if (
-          [
-            SignUpStackRoutes.SignupStoreWallet,
-            SignUpStackRoutes.OnboardingSetupPin,
-          ].includes(nextScreen)
-        ) {
-          navigation.navigate(SignUpStackRoutes.SignupImportantInfo, {onNext});
-        } else {
-          onNext();
         }
       } catch (err) {
-        // Logger.log('SSS_ON_LOGIN', err);
         Alert.alert(
           getText(I18N.verifyCloudProblemsTitle),
           getText(I18N.verifyCloudProblemsRestartPhone),
