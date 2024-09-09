@@ -47,7 +47,7 @@ class TransactionStore implements RPCObserver {
   realmSchemaName = TransactionRealmObject.schema.name;
   private _transactions: Array<Transaction> = [];
   private _lastSyncedAccountsHash: AccountsHash = '';
-  private _lastSyncedBlockNumber: string = 'latest';
+  private _lastSyncedTransactionTs: string = 'latest';
   private _isLoading = false;
   private _cache = new Map<CacheKey, Transaction[]>();
 
@@ -132,7 +132,7 @@ class TransactionStore implements RPCObserver {
 
   removeAll() {
     this._lastSyncedAccountsHash = '';
-    this._lastSyncedBlockNumber = 'latest';
+    this._lastSyncedTransactionTs = 'latest';
     this._transactions = [];
   }
 
@@ -141,21 +141,10 @@ class TransactionStore implements RPCObserver {
       return;
     }
 
-    const accountHash = hashMessage(accounts.join(''));
-    const isHashEquals = this._lastSyncedAccountsHash === accountHash;
-
-    const prevTxList = this._transactions;
-    const lastTx = prevTxList[prevTxList.length - 1];
-    const blockTs: string = isHashEquals && lastTx ? lastTx.ts : 'latest';
-
-    if (isHashEquals && blockTs === this._lastSyncedBlockNumber) {
-      return this._transactions;
-    }
-
-    const nextTxList = await this._fetch(accounts, blockTs);
+    const nextTxList = await this._fetch(accounts);
 
     runInAction(() => {
-      this._transactions = [...prevTxList, ...nextTxList];
+      this._transactions = [...this._transactions, ...nextTxList];
       this._isLoading = false;
     });
 
@@ -166,7 +155,7 @@ class TransactionStore implements RPCObserver {
     if (this.isLoading && !force) {
       return;
     }
-    const newTxs = await this._fetch(accounts, 'latest');
+    const newTxs = await this._fetch(accounts);
 
     runInAction(() => {
       this._transactions = newTxs;
@@ -175,18 +164,15 @@ class TransactionStore implements RPCObserver {
     return newTxs;
   };
 
-  private _fetch = async (
-    accounts: string[],
-    blockNumber: string = 'latest',
-  ) => {
+  private _fetch = async (accounts: string[]) => {
     try {
       const accountHash = hashMessage(accounts.join(''));
-      const cacheKey: CacheKey = `${Provider.selectedProviderId}${accountHash}:${blockNumber}`;
+      const cacheKey: CacheKey = `${Provider.selectedProviderId}${accountHash}:${this._lastSyncedTransactionTs}`;
 
       runInAction(() => {
         this._isLoading = true;
         if (
-          blockNumber === 'latest' &&
+          this._lastSyncedTransactionTs === 'latest' &&
           this._lastSyncedAccountsHash !== accountHash
         ) {
           const cahced = this._cache.get(cacheKey);
@@ -198,23 +184,23 @@ class TransactionStore implements RPCObserver {
         }
 
         this._lastSyncedAccountsHash = accountHash;
-        this._lastSyncedBlockNumber = blockNumber;
       });
 
       const result = await Indexer.instance.getTransactions(
         accounts,
-        blockNumber,
+        this._lastSyncedTransactionTs,
       );
       await when(() => !Token.isLoading, {});
       const parsed = result
         .map(tx => parseTransaction(tx, accounts))
         .filter(tx => !!tx.parsed);
       this._cache.set(cacheKey, parsed);
+      this._lastSyncedTransactionTs = parsed[parsed.length - 1].ts;
       return parsed;
     } catch (e) {
       Logger.captureException(e, 'TransactionStore._fetch', {
         accounts,
-        blockNumber,
+        transactionTs: this._lastSyncedTransactionTs,
       });
       return [];
     }
