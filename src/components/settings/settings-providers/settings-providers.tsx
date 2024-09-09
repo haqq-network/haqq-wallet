@@ -2,12 +2,12 @@ import React from 'react';
 
 import {FlatList, StyleSheet} from 'react-native';
 
-import {Provider} from '@app/models/provider';
+import {ProviderModel} from '@app/models/provider';
 
 import {SettingsProvidersRow} from './settings-providers-row';
 
 export type SettingsProvidersProps = {
-  providers: Provider[];
+  providers: ProviderModel[];
   providerId: string;
   onSelect: (providerId: string) => void;
 };

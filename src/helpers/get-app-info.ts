@@ -2,11 +2,11 @@ import {Platform} from 'react-native';
 import {PlatformOSType} from 'react-native/Libraries/Utilities/Platform';
 import {NetworkInfo} from 'react-native-network-info';
 
-import {app} from '@app/contexts';
 import {getLeadingAccount} from '@app/helpers/get-leading-account';
 import {getUid} from '@app/helpers/get-uid';
 import {Currencies} from '@app/models/currencies';
 import {Language} from '@app/models/language';
+import {Provider} from '@app/models/provider';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
@@ -56,7 +56,7 @@ export async function getAppInfo(): Promise<AppInfo> {
   return {
     wallets,
     uid,
-    chain_id: app.provider.ethChainId.toString(),
+    chain_id: Provider.selectedProvider.ethChainId.toString(),
     platform: Platform.OS,
     version: getAppVersion(),
     posthog_id,

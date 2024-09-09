@@ -20,7 +20,7 @@ import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
 import {Contracts} from '@app/models/contracts';
 import {Fee} from '@app/models/fee';
-import {Provider} from '@app/models/provider';
+import {ProviderModel} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {Balance} from '@app/services/balance';
 import {JsonRpcMetadata, JsonRpcTransactionRequest} from '@app/types';
@@ -34,7 +34,7 @@ export interface JsonRpcCommonTransactionProps {
   showSignContratAttention: boolean;
   functionName?: string;
   isContract: boolean;
-  provider: Provider | undefined;
+  provider: ProviderModel | undefined;
   isFeeLoading: boolean;
   fee: Fee | null | undefined;
   tx: Partial<JsonRpcTransactionRequest> | undefined;

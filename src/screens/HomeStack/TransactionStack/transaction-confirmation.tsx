@@ -16,6 +16,7 @@ import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Fee} from '@app/models/fee';
+import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {
   TransactionStackParamList,
@@ -124,7 +125,7 @@ export const TransactionConfirmationScreen = observer(() => {
           walletType: wallet.type,
           token,
           contact,
-          provider: app.provider.name,
+          provider: Provider.selectedProvider.name,
         });
 
         const err = e as EthSignErrorDataDetails;

@@ -10,8 +10,8 @@ import Animated, {
 
 import {Color, getColor} from '@app/colors';
 import {Spacer, Text, TextVariant} from '@app/components/ui';
-import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
+import {Provider} from '@app/models/provider';
 
 export type ProgressLineProps = {
   initialProgress?: number;
@@ -70,9 +70,9 @@ export const ProgressLine = observer(
           <Spacer height={8} />
           {showBottomInfo && (
             <Text variant={TextVariant.t15} color={Color.textBase2}>
-              {`${total.toFixed(0)} ${app.provider.denom} from ${max.toFixed(
-                0,
-              )} ${app.provider.denom}`}
+              {`${total.toFixed(0)} ${
+                Provider.selectedProvider.denom
+              } from ${max.toFixed(0)} ${Provider.selectedProvider.denom}`}
             </Text>
           )}
         </>

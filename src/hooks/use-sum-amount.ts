@@ -2,9 +2,9 @@ import {useEffect, useRef, useState} from 'react';
 
 import validate from 'validate.js';
 
-import {app} from '@app/contexts';
 import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {I18N, getText} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
 
 export const useSumAmount = (
@@ -52,7 +52,10 @@ export const useSumAmount = (
         const newString = errorArray?.length > 0 ? errorArray.join(' ') : '';
         setError(
           newString
-            .replace(app.provider.denom, maxAmountRef.current.getSymbol())
+            .replace(
+              Provider.selectedProvider.denom,
+              maxAmountRef.current.getSymbol(),
+            )
             .replace(
               maxAmountRef.current.toFloat(),
               maxAmountRef.current.toBalanceString('auto'),
@@ -64,7 +67,7 @@ export const useSumAmount = (
         );
       }
     }
-  }, [changed, amount, minAmount, maxAmount, app.provider.denom]);
+  }, [changed, amount, minAmount, maxAmount, Provider.selectedProvider.denom]);
 
   return {
     isValid:
@@ -123,12 +126,12 @@ export const useSumAmount = (
           precision ??
           maxAmountRef.current?.getPrecission?.() ??
           minAmountRef.current?.getPrecission?.() ??
-          app.provider.decimals;
+          Provider.selectedProvider.decimals;
 
         const denom =
           maxAmountRef.current?.getSymbol?.() ??
           minAmountRef.current?.getSymbol?.() ??
-          app.provider.denom;
+          Provider.selectedProvider.denom;
 
         const newAmount = new Balance(+textFormatted, decimals, denom);
         if (typeof onChange === 'function') {

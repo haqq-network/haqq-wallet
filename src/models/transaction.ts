@@ -3,8 +3,6 @@ import {makeAutoObservable, runInAction, when} from 'mobx';
 import {isHydrated} from 'mobx-persist-store';
 
 import {IconProps} from '@app/components/ui';
-import {app} from '@app/contexts';
-import {Events} from '@app/events';
 import {parseTransaction} from '@app/helpers/indexer-transaction-utils';
 import {TransactionRealmObject} from '@app/models/realm-object-for-migration';
 import {Socket} from '@app/models/socket';
@@ -14,6 +12,7 @@ import {Indexer} from '@app/services/indexer';
 import {IndexerTransaction, IndexerTxParsedTokenInfo} from '@app/types';
 import {RPCMessage, RPCObserver} from '@app/types/rpc';
 
+import {Provider} from './provider';
 import {Token} from './tokens';
 
 export enum TransactionStatus {
@@ -60,11 +59,6 @@ class TransactionStore implements RPCObserver {
       () => Socket.lastMessage.type === 'transaction',
       () => this.onMessage(Socket.lastMessage),
     );
-
-    app.on(Events.onProviderChanged, () => {
-      this.removeAll();
-      this.fetchLatestTransactions(Wallet.addressList());
-    });
   }
 
   get isHydrated() {
@@ -188,7 +182,7 @@ class TransactionStore implements RPCObserver {
   ) => {
     try {
       const accountHash = hashMessage(accounts.join(''));
-      const cacheKey: CacheKey = `${app.providerId}${accountHash}:${blockNumber}`;
+      const cacheKey: CacheKey = `${Provider.selectedProviderId}${accountHash}:${blockNumber}`;
 
       runInAction(() => {
         this._isLoading = true;
@@ -232,7 +226,7 @@ class TransactionStore implements RPCObserver {
       return;
     }
 
-    const result = message.data.txs;
+    const result = message.data.txs || message.data.transactions || [];
     const accounts = Wallet.addressList();
     const parsed = result
       .map(tx => parseTransaction(tx, accounts))

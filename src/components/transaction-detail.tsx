@@ -11,7 +11,7 @@ import {AddressUtils} from '@app/helpers/address-utils';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N, getText} from '@app/i18n';
 import {Contracts} from '@app/models/contracts';
-import {Provider} from '@app/models/provider';
+import {ProviderModel} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
 import {Balance} from '@app/services/balance';
 import {IndexerTxMsgType} from '@app/types';
@@ -21,7 +21,7 @@ import {ImageWrapper} from './image-wrapper';
 
 type TransactionDetailProps = {
   tx: Transaction;
-  provider: Provider | null;
+  provider: ProviderModel | null;
   splitted: string[];
   timestamp: string;
   fee: Balance;

@@ -1,7 +1,7 @@
 import {IconsName} from '@app/components/ui';
-import {app} from '@app/contexts';
 import {I18N, getText} from '@app/i18n';
 import {Contracts} from '@app/models/contracts';
+import {Provider} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {ParsedTransactionData, Transaction} from '@app/models/transaction';
 import {Balance} from '@app/services/balance';
@@ -20,14 +20,14 @@ import {shortAddress} from './short-address';
 
 const getNativeToken = (): IndexerTxParsedTokenInfo => {
   return {
-    name: app.provider.isHaqqNetwork
+    name: Provider.selectedProvider.isHaqqNetwork
       ? getText(I18N.transactionConfirmationIslamicCoin)
-      : app.provider.name,
-    symbol: app.provider.denom,
-    icon: app.provider.isHaqqNetwork
+      : Provider.selectedProvider.name,
+    symbol: Provider.selectedProvider.denom,
+    icon: Provider.selectedProvider.isHaqqNetwork
       ? require('@assets/images/islm_icon.png')
-      : {uri: app.provider.icon},
-    decimals: app.provider.decimals,
+      : {uri: Provider.selectedProvider.icon},
+    decimals: Provider.selectedProvider.decimals,
     contract_address: '',
   };
 };
@@ -331,10 +331,12 @@ function parseMsgSend(
     }
 
     const decimals =
-      a.denom === app.provider.weiDenom ? app.provider.decimals : 0;
+      a.denom === Provider.selectedProvider.weiDenom
+        ? Provider.selectedProvider.decimals
+        : 0;
     const symbol =
-      a.denom === app.provider.weiDenom
-        ? app.provider.denom
+      a.denom === Provider.selectedProvider.weiDenom
+        ? Provider.selectedProvider.denom
         : a.denom || IBC_DENOM;
     return new Balance(a.amount, decimals, symbol);
   });
@@ -457,7 +459,7 @@ function getTokensInfo(tx: IndexerTransaction): IndexerTxParsedTokenInfo[] {
   }
 
   // @ts-ignore
-  if (tx.msg?.amount?.denom === app.provider.weiDenom) {
+  if (tx.msg?.amount?.denom === Provider.selectedProvider.weiDenom) {
     return [getNativeToken()];
   }
 
@@ -499,7 +501,7 @@ function getTokensInfo(tx: IndexerTransaction): IndexerTxParsedTokenInfo[] {
         icon: contractInfo.icon
           ? {uri: contractInfo.icon}
           : require('@assets/images/empty-icon.png'),
-        decimals: contractInfo?.decimals || app.provider.decimals,
+        decimals: contractInfo?.decimals || Provider.selectedProvider.decimals,
         contract_address: contractInfo.id,
       },
     ];

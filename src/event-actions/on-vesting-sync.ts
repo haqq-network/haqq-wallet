@@ -1,5 +1,5 @@
-import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
+import {Provider} from '@app/models/provider';
 import {
   VestingMetadata,
   VestingMetadataType,
@@ -9,7 +9,7 @@ import {Cosmos} from '@app/services/cosmos';
 
 export async function onVestingSync() {
   Logger.log('onVestingSync');
-  const cosmos = new Cosmos(app.provider!);
+  const cosmos = new Cosmos(Provider.selectedProvider);
   const addressList = Wallet.getAllVisible().map(w =>
     AddressUtils.toHaqq(w.address),
   );

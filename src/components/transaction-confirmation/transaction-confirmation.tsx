@@ -16,11 +16,11 @@ import {
   TextPosition,
   TextVariant,
 } from '@app/components/ui';
-import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Fee} from '@app/models/fee';
+import {Provider} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
 import {BalanceData, IToken} from '@app/types';
 import {splitAddress} from '@app/utils';
@@ -77,7 +77,7 @@ export const TransactionConfirmation = observer(
 
       // When sanding native token than calculation includes
       // amount + fee - availablebalance
-      if (amount.getSymbol() === app.provider.denom) {
+      if (amount.getSymbol() === Provider.selectedProvider.denom) {
         return (
           fee.calculatedFees.expectedFee
             .operate(amount, 'add')
@@ -179,7 +179,7 @@ export const TransactionConfirmation = observer(
             </DataView>
             <DataView i18n={I18N.transactionDetailNetwork}>
               <Text variant={TextVariant.t11} color={Color.textBase1}>
-                <Text>{app.provider.name}</Text>
+                <Text>{Provider.selectedProvider.name}</Text>
               </Text>
             </DataView>
             <DataView i18n={I18N.transactionDetailAmount}>
@@ -217,7 +217,7 @@ export const TransactionConfirmation = observer(
               position={TextPosition.center}
               color={Color.graphicRed1}
               i18n={I18N.transactionSumError}
-              i18params={{symbol: app.provider.weiDenom}}
+              i18params={{symbol: Provider.selectedProvider.weiDenom}}
             />
           )}
         </Spacer>

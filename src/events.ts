@@ -1,5 +1,4 @@
 export enum Events {
-  onProviderChanged = 'onProviderChanged',
   onWalletsBalanceCheck = 'onWalletsBalanceCheck',
   onWalletsBalanceCheckError = 'onWalletsBalanceCheckError',
   onWalletCreate = 'onWalletCreate',

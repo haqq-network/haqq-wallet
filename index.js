@@ -22,6 +22,7 @@ import {name as appName} from './app.json';
 import {App} from './src/app';
 import './src/event-actions';
 import {Jailbreak} from './src/jailbreak';
+import {Provider} from '@app/models/provider';
 
 if (!global.BigInt) {
   const BigInt = require('big-integer');
@@ -100,8 +101,8 @@ JsonRpcProvider.prototype.send = async function (method, params) {
 
   const eventParams = {
     type: 'EVM',
-    network: app.provider.name,
-    chainId: `${app.provider.ethChainId}`,
+    network: Provider.selectedProvider.name,
+    chainId: `${Provider.selectedProvider.ethChainId}`,
     address: parsedAddressFrom,
   };
 

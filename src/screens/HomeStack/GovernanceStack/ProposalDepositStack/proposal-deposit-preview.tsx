@@ -3,9 +3,9 @@ import React, {useCallback, useState} from 'react';
 import {observer} from 'mobx-react';
 
 import {ProposalDepositPreview} from '@app/components/proposal-deposit-preview';
-import {app} from '@app/contexts';
 import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {
   ProposalDepositStackParamList,
@@ -30,7 +30,7 @@ export const ProposalDepositPreviewScreen = observer(() => {
       try {
         setDisabled(true);
 
-        const cosmos = new Cosmos(app.provider!);
+        const cosmos = new Cosmos(Provider.selectedProvider);
         const provider = await getProviderInstanceForWallet(wallet);
         const resp = await cosmos.deposit(
           provider,

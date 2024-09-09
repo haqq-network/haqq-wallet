@@ -3,6 +3,7 @@ import {TransactionRequest} from '@haqq/provider-base';
 import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
+import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {EIPTypedData} from '@app/types';
 import {stringToHex} from '@app/utils';
@@ -81,7 +82,7 @@ export class EthSign {
     const address = getWalletAddress(wallet);
     return await awaitForJsonRpcSign({
       metadata: HAQQ_METADATA,
-      chainId: app.provider.ethChainId,
+      chainId: Provider.selectedProvider.ethChainId,
       request: {
         method: EIP155_SIGNING_METHODS.PERSONAL_SIGN,
         params: [address, stringToHex(message)],
@@ -106,7 +107,7 @@ export class EthSign {
     try {
       return await awaitForJsonRpcSign({
         metadata: HAQQ_METADATA,
-        chainId: app.provider.ethChainId,
+        chainId: Provider.selectedProvider.ethChainId,
         request: {
           method: EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION,
           params: [preparedTx],
@@ -139,7 +140,7 @@ export class EthSign {
     try {
       return await awaitForJsonRpcSign({
         metadata: HAQQ_METADATA,
-        chainId: app.provider.ethChainId,
+        chainId: Provider.selectedProvider.ethChainId,
         request: {
           method: EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION,
           params: [preparedTx],
@@ -185,7 +186,7 @@ export class EthSign {
     try {
       return await awaitForJsonRpcSign({
         metadata: HAQQ_METADATA,
-        chainId: app.provider.ethChainId,
+        chainId: Provider.selectedProvider.ethChainId,
         request: {
           method: EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA,
           params: [address, typedData],

@@ -1,14 +1,14 @@
 import {makeAutoObservable, runInAction} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
-import {app} from '@app/contexts';
 import {Indexer} from '@app/services/indexer';
 import {ProviderConfig} from '@app/services/indexer/indexer.types';
 import {storage} from '@app/services/mmkv';
 import {ChainId} from '@app/types';
 
 import {Provider} from './provider';
-import {ProviderConfigModel} from './provider-config-model';
+import {ProviderConfigModel} from './provider-config.model';
+import {ALL_NETWORKS_ID} from './provider.types';
 
 class ProviderConfigStore {
   private _data: Record<ChainId, ProviderConfig> = {};
@@ -24,10 +24,12 @@ class ProviderConfigStore {
 
   init = async () => {
     try {
-      const config = await Indexer.instance.getProviderConfig();
-      runInAction(() => {
-        this._data[app.provider.ethChainId] = config;
-      });
+      if (Provider.selectedProviderId !== ALL_NETWORKS_ID) {
+        const config = await Indexer.instance.getProviderConfig();
+        runInAction(() => {
+          this._data[Provider.selectedProvider.ethChainId] = config;
+        });
+      }
       this.lazyLoadOtherConfig();
       return Promise.resolve();
     } catch (error) {
@@ -41,7 +43,9 @@ class ProviderConfigStore {
 
   lazyLoadOtherConfig = async () => {
     const providers = Provider.getAll().filter(
-      p => p.ethChainId !== app.provider.ethChainId,
+      p =>
+        p.ethChainId !== Provider.selectedProvider.ethChainId &&
+        p.id !== ALL_NETWORKS_ID,
     );
 
     for await (const p of providers) {

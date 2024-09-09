@@ -4,10 +4,10 @@ import {observer} from 'mobx-react';
 import {Image, SafeAreaView, StyleSheet, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {app} from '@app/contexts';
 import {cleanNumber} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {Raffle} from '@app/types';
 import {WEI} from '@app/variables/common';
 
@@ -79,7 +79,7 @@ export const RaffleReward = observer(
             color={Color.textGreen1}
             numberOfLines={1}
             i18n={I18N.raffleRewardPrize}
-            i18params={{islm: budget, symbol: app.provider.denom}}
+            i18params={{islm: budget, symbol: Provider.selectedProvider.denom}}
           />
         </View>
         <Spacer flex={1} />
