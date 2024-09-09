@@ -185,18 +185,18 @@ export class Indexer {
 
   async getTransaction(
     accounts: string[],
-    tx_hash: string,
-  ): Promise<IndexerTransaction | null> {
+    latestBlock: string = 'latest',
+  ): Promise<IndexerTransaction[]> {
     try {
       if (!accounts.length) {
-        return null;
+        return [];
       }
 
       const haqqAddresses = accounts.filter(a => !!a).map(AddressUtils.toHaqq);
       const response = await jsonrpcRequest<IndexerTransactionResponse>(
         this.endpoint,
-        'transaction',
-        [haqqAddresses, tx_hash],
+        'transactions',
+        [haqqAddresses, latestBlock],
       );
       return response?.txs?.[0] || null;
     } catch (err) {
@@ -262,6 +262,37 @@ export class Indexer {
         this.endpoint,
         'nft',
         [haqqAddresses],
+      );
+
+      return response || [];
+    } catch (err) {
+      if (err instanceof JSONRPCError) {
+        this.captureException(err, 'Indexer:getNfts', err.meta);
+      }
+      throw err;
+    }
+  }
+
+  async getNftsV2(accounts: string[]): Promise<NftCollectionIndexer[]> {
+    try {
+      this.checkIndexerAvailability();
+
+      if (!accounts.length) {
+        return [];
+      }
+
+      const haqqAddresses = accounts.filter(a => !!a).map(AddressUtils.toHaqq);
+      const response = await jsonrpcRequest<NftCollectionIndexer[]>(
+        this.endpoint,
+        'nfts',
+        [
+          Provider.getAll()
+            .filter(item => item.id !== ALL_NETWORKS_ID)
+            .reduce(
+              (acc, item) => ({...acc, [item.ethChainId]: haqqAddresses}),
+              {},
+            ),
+        ],
       );
 
       return response || [];
