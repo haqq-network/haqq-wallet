@@ -234,67 +234,27 @@ export class Indexer {
   );
 
   getNfts = createAsyncTask(async (accounts: string[]) => {
-    if (Provider.selectedProviderId === ALL_NETWORKS_ID) {
-      return this.getNftsV2(accounts);
-    } else {
-      return this.getNftsV1(accounts);
+    try {
+      this.checkIndexerAvailability();
+
+      if (!accounts.length) {
+        return [];
+      }
+
+      const response = await jsonrpcRequest<NftCollectionIndexer[]>(
+        INDEXER_PROXY_ENDPOINT,
+        'nfts',
+        [this.getProvidersHeader(accounts)],
+      );
+
+      return response || [];
+    } catch (err) {
+      if (err instanceof JSONRPCError) {
+        this.captureException(err, 'Indexer:getNfts', err.meta);
+      }
+      throw err;
     }
   });
-
-  async getNftsV1(accounts: string[]): Promise<NftCollectionIndexer[]> {
-    try {
-      this.checkIndexerAvailability();
-
-      if (!accounts.length) {
-        return [];
-      }
-
-      const haqqAddresses = accounts.filter(a => !!a).map(AddressUtils.toHaqq);
-      const response = await jsonrpcRequest<NftCollectionIndexer[]>(
-        this.endpoint,
-        'nft',
-        [haqqAddresses],
-      );
-
-      return response || [];
-    } catch (err) {
-      if (err instanceof JSONRPCError) {
-        this.captureException(err, 'Indexer:getNfts', err.meta);
-      }
-      throw err;
-    }
-  }
-
-  async getNftsV2(accounts: string[]): Promise<NftCollectionIndexer[]> {
-    try {
-      this.checkIndexerAvailability();
-
-      if (!accounts.length) {
-        return [];
-      }
-
-      const haqqAddresses = accounts.filter(a => !!a).map(AddressUtils.toHaqq);
-      const response = await jsonrpcRequest<NftCollectionIndexer[]>(
-        this.endpoint,
-        'nfts',
-        [
-          Provider.getAll()
-            .filter(item => item.id !== ALL_NETWORKS_ID)
-            .reduce(
-              (acc, item) => ({...acc, [item.ethChainId]: haqqAddresses}),
-              {},
-            ),
-        ],
-      );
-
-      return response || [];
-    } catch (err) {
-      if (err instanceof JSONRPCError) {
-        this.captureException(err, 'Indexer:getNfts', err.meta);
-      }
-      throw err;
-    }
-  }
 
   async sushiPools(): Promise<SushiPoolResponse> {
     try {

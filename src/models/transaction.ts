@@ -195,7 +195,9 @@ class TransactionStore implements RPCObserver {
         .map(tx => parseTransaction(tx, accounts))
         .filter(tx => !!tx.parsed);
       this._cache.set(cacheKey, parsed);
-      this._lastSyncedTransactionTs = parsed[parsed.length - 1].ts;
+
+      this._lastSyncedTransactionTs = parsed[parsed.length - 1]?.ts ?? 'latest';
+
       return parsed;
     } catch (e) {
       Logger.captureException(e, 'TransactionStore._fetch', {
