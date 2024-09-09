@@ -2,7 +2,6 @@ import {hashMessage} from '@walletconnect/utils';
 import {makeAutoObservable, runInAction, when} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
-import {app} from '@app/contexts';
 import {Currency, CurrencyRate} from '@app/models/types';
 import {VariablesDate} from '@app/models/variables-date';
 import {Wallet} from '@app/models/wallet';
@@ -14,6 +13,8 @@ import {RemoteConfig} from '@app/services/remote-config';
 import {RatesResponse} from '@app/types';
 import {createAsyncTask} from '@app/utils';
 import {STORE_REHYDRATION_TIMEOUT_MS} from '@app/variables/common';
+
+import {Provider} from './provider';
 
 // optimization for `convert()` method
 const convertedCache = new Map<string, Balance>();
@@ -75,7 +76,8 @@ class CurrenciesStore {
           ...prev,
           [tokenKey?.toLocaleLowerCase()]: {
             amount: rate?.amount
-              ? parseFloat(rate.amount) / 10 ** app.provider.decimals
+              ? parseFloat(rate.amount) /
+                10 ** Provider.selectedProvider.decimals
               : 0,
             denom: rate?.denom,
           } as CurrencyRate,
@@ -131,7 +133,8 @@ class CurrenciesStore {
     });
     const wallets = Wallet.getAllVisible();
     const lastBalanceUpdates =
-      VariablesDate.get(`indexer_${app.provider.cosmosChainId}`) || new Date(0);
+      VariablesDate.get(`indexer_${Provider.selectedProvider.cosmosChainId}`) ||
+      new Date(0);
 
     let accounts = wallets.map(w => w.cosmosAddress);
     const updates = await Indexer.instance.updates(
@@ -141,7 +144,7 @@ class CurrenciesStore {
     );
 
     VariablesDate.set(
-      `indexer_${app.provider.cosmosChainId}`,
+      `indexer_${Provider.selectedProvider.cosmosChainId}`,
       new Date(updates.last_update),
     );
 
@@ -152,7 +155,7 @@ class CurrenciesStore {
   convert = (balance: Balance): Balance => {
     const currencyId = this.selectedCurrency?.toLocaleLowerCase();
     const serialized = balance.toJsonString();
-    const cacheKey = `${serialized}-${app.providerId}-${currencyId}-${this._prevRatesHash}`;
+    const cacheKey = `${serialized}-${Provider.selectedProviderId}-${currencyId}-${this._prevRatesHash}`;
 
     const cached = convertedCache.get(cacheKey);
     if (cached) {

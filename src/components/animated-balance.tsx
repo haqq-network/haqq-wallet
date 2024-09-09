@@ -5,8 +5,8 @@ import Timer from 'react-timer-mixin';
 
 import {Color, getColor} from '@app/colors';
 import {Text, TextVariant} from '@app/components/ui';
-import {app} from '@app/contexts';
 import {cleanNumber, createTheme} from '@app/helpers';
+import {Provider} from '@app/models/provider';
 
 type Props = {
   value: number;
@@ -85,7 +85,7 @@ export class AnimateNumber extends Component<Props, State> {
           color={Color.textBase3}
           numberOfLines={1}
           style={styles.currencySuffixText}>
-          {` ${app.provider.denom}`}
+          {` ${Provider.selectedProvider.denom}`}
         </Text>
       </View>
     );

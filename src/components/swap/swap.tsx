@@ -4,12 +4,12 @@ import {observer} from 'mobx-react';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {useSumAmount} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Contracts} from '@app/models/contracts';
+import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {
@@ -268,9 +268,10 @@ export const Swap = observer(
               {(isWrapTx || isUnwrapTx) && (
                 <EstimatedValue
                   title={I18N.swapScreenRoutingSource}
-                  value={`${Contracts.getById(app.provider.config.wethAddress)
-                    ?.name}${STRINGS.NBSP}${shortAddress(
-                    app.provider.config.wethAddress!,
+                  value={`${Contracts.getById(
+                    Provider.selectedProvider.config.wethAddress,
+                  )?.name}${STRINGS.NBSP}${shortAddress(
+                    Provider.selectedProvider.config.wethAddress!,
                     '•',
                     true,
                   )}`}
@@ -320,7 +321,7 @@ export const Swap = observer(
               variant={ButtonVariant.contained}
               i18n={I18N.swapScreenApprove}
               i18params={{
-                symbol: tokenIn.symbol || app.provider.denom,
+                symbol: tokenIn.symbol || Provider.selectedProvider.denom,
                 amount: amountsIn.amount,
               }}
               loading={isApproveInProgress}

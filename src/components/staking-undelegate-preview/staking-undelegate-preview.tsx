@@ -17,10 +17,10 @@ import {
   TextPosition,
   TextVariant,
 } from '@app/components/ui';
-import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
 import {ValidatorItem} from '@app/types';
 
@@ -66,7 +66,10 @@ export const StakingUnDelegatePreview = observer(
           position={TextPosition.center}
           style={styles.sum}
           i18n={I18N.amount}
-          i18params={{amount: cleanNumber(amount), symbol: app.provider.denom}}
+          i18params={{
+            amount: cleanNumber(amount),
+            symbol: Provider.selectedProvider.denom,
+          }}
         />
         <Text
           variant={TextVariant.t11}
@@ -88,7 +91,7 @@ export const StakingUnDelegatePreview = observer(
               i18n={I18N.amount}
               i18params={{
                 amount: cleanNumber(amount),
-                symbol: app.provider.denom,
+                symbol: Provider.selectedProvider.denom,
               }}
             />
           </DataView>

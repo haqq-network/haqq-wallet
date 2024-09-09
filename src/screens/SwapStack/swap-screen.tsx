@@ -174,17 +174,19 @@ export const SwapScreen = observer(() => {
   );
   const isWrapTx = useMemo(
     () =>
-      tokenIn?.symbol?.toLowerCase() === app.provider.denom?.toLowerCase() &&
+      tokenIn?.symbol?.toLowerCase() ===
+        Provider.selectedProvider.denom?.toLowerCase() &&
       tokenOut?.symbol?.toLowerCase() ===
-        app.provider.config.wethSymbol?.toLowerCase(),
-    [tokenIn, tokenOut, app.provider.denom],
+        Provider.selectedProvider.config.wethSymbol?.toLowerCase(),
+    [tokenIn, tokenOut, Provider.selectedProvider.denom],
   );
   const isUnwrapTx = useMemo(
     () =>
       tokenIn?.symbol?.toLowerCase() ===
-        app.provider.config.wethSymbol?.toLowerCase() &&
-      tokenOut?.symbol?.toLowerCase() === app.provider.denom?.toLowerCase(),
-    [tokenIn, tokenOut, app.provider.denom],
+        Provider.selectedProvider.config.wethSymbol?.toLowerCase() &&
+      tokenOut?.symbol?.toLowerCase() ===
+        Provider.selectedProvider.denom?.toLowerCase(),
+    [tokenIn, tokenOut, Provider.selectedProvider.denom],
   );
   const t0Current = useMemo(() => {
     if (!amountsIn.amount || !tokenIn?.decimals) {
@@ -214,8 +216,8 @@ export const SwapScreen = observer(() => {
       return Balance.Empty;
     }
 
-    if (tokenIn.symbol === app.provider.denom) {
-      logger.log(`t0 available: currency ${app.provider.denom}`);
+    if (tokenIn.symbol === Provider.selectedProvider.denom) {
+      logger.log(`t0 available: currency ${Provider.selectedProvider.denom}`);
       return app.getAvailableBalance(currentWallet.address);
     }
 
@@ -229,14 +231,14 @@ export const SwapScreen = observer(() => {
 
     logger.log('t0 available: tokenData is empty, symbol: ', tokenIn.symbol);
     return new Balance(0, 0, tokenIn.symbol!);
-  }, [currentWallet, tokenIn, Token.tokens, app.provider.denom]);
+  }, [currentWallet, tokenIn, Token.tokens, Provider.selectedProvider.denom]);
 
   const t1Available = useMemo(() => {
     if (!tokenOut) {
       return Balance.Empty;
     }
 
-    if (tokenOut.symbol === app.provider.denom) {
+    if (tokenOut.symbol === Provider.selectedProvider.denom) {
       return app.getAvailableBalance(currentWallet.address);
     }
 
@@ -248,7 +250,7 @@ export const SwapScreen = observer(() => {
     }
 
     return new Balance(0, 0, tokenOut.symbol!);
-  }, [currentWallet, tokenOut, app.provider.denom]);
+  }, [currentWallet, tokenOut, Provider.selectedProvider.denom]);
 
   const estimate = async (force = false) => {
     const errCtx: Record<string, any> = {};
@@ -331,7 +333,7 @@ export const SwapScreen = observer(() => {
       });
       errCtx['⭕️sushi-pool-estimate-response'] = response;
 
-      if (tokenIn?.symbol === app.provider.denom) {
+      if (tokenIn?.symbol === Provider.selectedProvider.denom) {
         response.need_approve = false;
       }
       response.s_price_impact = (
@@ -489,7 +491,7 @@ export const SwapScreen = observer(() => {
                 <WalletCard
                   wallet={value.wallet}
                   tokens={value.tokens.map(t => {
-                    if (t.symbol === app.provider.denom) {
+                    if (t.symbol === Provider.selectedProvider.denom) {
                       return {
                         ...t,
                         value: app.getAvailableBalance(value?.wallet?.address),
@@ -570,9 +572,9 @@ export const SwapScreen = observer(() => {
         ?.value;
     const availableIslm = app.getAvailableBalance(wallet);
 
-    const symbol = t0.getSymbol() || app.provider.denom;
-    const isNativeCurrency = symbol === app.provider.denom;
-    const decimals = t0.getPrecission() || app.provider.decimals;
+    const symbol = t0.getSymbol() || Provider.selectedProvider.denom;
+    const isNativeCurrency = symbol === Provider.selectedProvider.denom;
+    const decimals = t0.getPrecission() || Provider.selectedProvider.decimals;
     const zeroBalance = new Balance('0x0', decimals, symbol);
     const value = new Balance(
       (isNativeCurrency ? availableIslm : tokenValue) || zeroBalance,
@@ -694,14 +696,14 @@ export const SwapScreen = observer(() => {
       setSwapInProgress(() => true);
 
       const swapRouter = new ethers.Contract(
-        app.provider.config.swapRouterV3,
+        Provider.selectedProvider.config.swapRouterV3,
         V3SWAPROUTER_ABI,
       );
 
       const deadline =
         Math.floor(Date.now() / 1000) + 60 * parseFloat(swapSettings.deadline);
 
-      const tokenInIsISLM = tokenIn?.symbol === app.provider.denom;
+      const tokenInIsISLM = tokenIn?.symbol === Provider.selectedProvider.denom;
 
       const encodedPath = `0x${estimateData.route}`;
       const swapParams = [
@@ -725,13 +727,13 @@ export const SwapScreen = observer(() => {
       const rawTx = await awaitForJsonRpcSign({
         metadata: HAQQ_METADATA,
         selectedAccount: currentWallet.address,
-        chainId: app.provider.ethChainId,
+        chainId: Provider.selectedProvider.ethChainId,
         request: {
           method: 'eth_signTransaction',
           params: [
             {
               from: currentWallet.address,
-              to: app.provider.config.swapRouterV3,
+              to: Provider.selectedProvider.config.swapRouterV3,
               value: tokenInIsISLM ? estimateData.amount_in : '0x0',
               data: encodedTxData,
             },
@@ -739,7 +741,7 @@ export const SwapScreen = observer(() => {
         },
       });
 
-      const provider = await getRpcProvider(app.provider);
+      const provider = await getRpcProvider(Provider.selectedProvider);
       const txHandler = await provider.sendTransaction(rawTx);
       const txResp = await txHandler.wait();
       navigator.goBack();
@@ -754,7 +756,7 @@ export const SwapScreen = observer(() => {
             hash: txResp.transactionHash,
           },
           token: toJS(
-            tokenIn?.symbol === app.provider.denom
+            tokenIn?.symbol === Provider.selectedProvider.denom
               ? Token.generateNativeToken(currentWallet)
               : [
                   ...poolsData.contracts,
@@ -786,13 +788,13 @@ export const SwapScreen = observer(() => {
     amountsIn,
     swapSettings,
     minReceivedAmount,
-    app.provider.denom,
+    Provider.selectedProvider.denom,
   ]);
 
   const onPressApprove = useCallback(async () => {
     try {
       setApproveInProgress(() => true);
-      const provider = await getRpcProvider(app.provider);
+      const provider = await getRpcProvider(Provider.selectedProvider);
       const erc20Token = new ethers.Contract(tokenIn?.id!, ERC20_ABI, provider);
 
       const amountBN = ethers.utils.parseUnits(
@@ -801,14 +803,14 @@ export const SwapScreen = observer(() => {
       );
 
       const data = erc20Token.interface.encodeFunctionData('approve', [
-        app.provider.config.swapRouterV3,
+        Provider.selectedProvider.config.swapRouterV3,
         amountBN._hex,
       ]);
 
       const rawTx = await awaitForJsonRpcSign({
         metadata: HAQQ_METADATA,
         selectedAccount: currentWallet.address,
-        chainId: app.provider.ethChainId,
+        chainId: Provider.selectedProvider.ethChainId,
         request: {
           method: 'eth_signTransaction',
           params: [
@@ -846,9 +848,9 @@ export const SwapScreen = observer(() => {
     // deposit
     try {
       setSwapInProgress(() => true);
-      const provider = await getRpcProvider(app.provider);
+      const provider = await getRpcProvider(Provider.selectedProvider);
       const WETH = new ethers.Contract(
-        AddressUtils.toEth(app.provider.config.wethAddress),
+        AddressUtils.toEth(Provider.selectedProvider.config.wethAddress),
         WETH_ABI,
         provider,
       );
@@ -856,13 +858,15 @@ export const SwapScreen = observer(() => {
       const rawTx = await awaitForJsonRpcSign({
         metadata: HAQQ_METADATA,
         selectedAccount: currentWallet.address,
-        chainId: app.provider.ethChainId,
+        chainId: Provider.selectedProvider.ethChainId,
         request: {
           method: 'eth_signTransaction',
           params: [
             {
               from: currentWallet.address,
-              to: AddressUtils.toEth(app.provider.config.wethAddress),
+              to: AddressUtils.toEth(
+                Provider.selectedProvider.config.wethAddress,
+              ),
               value: t0Current.toHex(),
               data: txData,
             },
@@ -884,7 +888,7 @@ export const SwapScreen = observer(() => {
             hash: txResp.transactionHash,
           },
           token: toJS(
-            tokenIn?.symbol === app.provider.denom
+            tokenIn?.symbol === Provider.selectedProvider.denom
               ? Token.generateNativeToken(currentWallet)
               : [
                   ...poolsData.contracts,
@@ -911,15 +915,15 @@ export const SwapScreen = observer(() => {
     t0Current,
     estimate,
     amountsIn.amount,
-    app.provider.denom,
+    Provider.selectedProvider.denom,
   ]);
   const onPressUnrap = useCallback(async () => {
     // withdraw
     try {
       setSwapInProgress(() => true);
-      const provider = await getRpcProvider(app.provider);
+      const provider = await getRpcProvider(Provider.selectedProvider);
       const WETH = new ethers.Contract(
-        AddressUtils.toEth(app.provider.config.wethAddress),
+        AddressUtils.toEth(Provider.selectedProvider.config.wethAddress),
         WETH_ABI,
         provider,
       );
@@ -934,13 +938,15 @@ export const SwapScreen = observer(() => {
       const rawTx = await awaitForJsonRpcSign({
         metadata: HAQQ_METADATA,
         selectedAccount: currentWallet.address,
-        chainId: app.provider.ethChainId,
+        chainId: Provider.selectedProvider.ethChainId,
         request: {
           method: 'eth_signTransaction',
           params: [
             {
               from: currentWallet.address,
-              to: AddressUtils.toEth(app.provider.config.wethAddress),
+              to: AddressUtils.toEth(
+                Provider.selectedProvider.config.wethAddress,
+              ),
               value: '0x0',
               data: txData,
             },
@@ -962,7 +968,7 @@ export const SwapScreen = observer(() => {
             hash: txResp.transactionHash,
           },
           token: toJS(
-            tokenIn?.symbol === app.provider.denom
+            tokenIn?.symbol === Provider.selectedProvider.denom
               ? Token.generateNativeToken(currentWallet)
               : [
                   ...poolsData.contracts,
@@ -990,7 +996,7 @@ export const SwapScreen = observer(() => {
     tokenIn?.symbol,
     currentWallet,
     estimate,
-    app.provider.denom,
+    Provider.selectedProvider.denom,
   ]);
 
   const onPressMax = async () => {
@@ -1092,7 +1098,7 @@ export const SwapScreen = observer(() => {
   ]);
 
   useEffect(() => {
-    if (!app.provider.config.swapEnabled) {
+    if (!Provider.selectedProvider.config.swapEnabled) {
       return navigator.goBack();
     }
     const fetchData = () => {
@@ -1157,7 +1163,10 @@ export const SwapScreen = observer(() => {
           setCurrentRoute(
             () =>
               data.routes.find(r =>
-                AddressUtils.equals(r.token0, app.provider.config.wethAddress),
+                AddressUtils.equals(
+                  r.token0,
+                  Provider.selectedProvider.config.wethAddress,
+                ),
               ) || data.routes[1],
           );
           if (!data.pools?.length || !data?.routes?.length) {
@@ -1189,11 +1198,10 @@ export const SwapScreen = observer(() => {
                   providers: Provider.getAll().filter(p =>
                     providersIDs.includes(p.id!),
                   ),
-                  initialProviderId: app.providerId!,
+                  initialProviderId: Provider.selectedProviderId,
                   title: I18N.swapSupportedNetworks,
                 });
-                app.providerId = providerId;
-                await awaitForEventDone(Events.onProviderChanged);
+                Provider.setSelectedProviderId(providerId);
               },
             });
           }

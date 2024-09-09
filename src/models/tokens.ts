@@ -23,6 +23,8 @@ import {
 import {RPCMessage} from '@app/types/rpc';
 import {createAsyncTask} from '@app/utils';
 
+import {Provider} from './provider';
+
 class TokensStore implements MobXStore<IToken> {
   /**
    * All tokens available for all wallets with commulative value
@@ -254,8 +256,8 @@ class TokensStore implements MobXStore<IToken> {
           contract_updated_at: contract.updated_at,
           value: new Balance(
             t.value,
-            contract.decimals ?? app.provider.decimals,
-            contract.symbol ?? app.provider.denom,
+            contract.decimals ?? Provider.selectedProvider.decimals,
+            contract.symbol ?? Provider.selectedProvider.denom,
           ),
           decimals: contract.decimals,
           is_erc20: contract.is_erc20,
@@ -306,19 +308,19 @@ class TokensStore implements MobXStore<IToken> {
       contract_created_at: '',
       contract_updated_at: '',
       value: balance,
-      decimals: app.provider.decimals,
+      decimals: Provider.selectedProvider.decimals,
       is_erc20: false,
       is_erc721: false,
       is_erc1155: false,
       is_in_white_list: true,
-      name: app.provider.coinName,
-      symbol: app.provider.denom,
+      name: Provider.selectedProvider.coinName,
+      symbol: Provider.selectedProvider.denom,
       created_at: '',
       updated_at: '',
-      image: app.provider.isHaqqNetwork
+      image: Provider.selectedProvider.isHaqqNetwork
         ? require('@assets/images/islm_icon.png')
         : {
-            uri: app.provider.icon,
+            uri: Provider.selectedProvider.icon,
           },
     };
   };
@@ -330,18 +332,18 @@ class TokensStore implements MobXStore<IToken> {
       address_type: AddressType.contract,
       is_skip_eth_tx: false,
       min_input_amount: '18',
-      decimals: app.provider.decimals,
+      decimals: Provider.selectedProvider.decimals,
       is_erc20: false,
       is_erc721: false,
       is_erc1155: false,
       is_in_white_list: true,
-      name: app.provider.coinName,
-      symbol: app.provider.denom,
+      name: Provider.selectedProvider.coinName,
+      symbol: Provider.selectedProvider.denom,
       created_at: '',
       updated_at: '',
-      icon: app.provider.isHaqqNetwork
+      icon: Provider.selectedProvider.isHaqqNetwork
         ? require('@assets/images/islm_icon.png')
-        : app.provider.icon,
+        : Provider.selectedProvider.icon,
     };
   };
 
@@ -368,8 +370,8 @@ class TokensStore implements MobXStore<IToken> {
       contract_updated_at: contractFromCache.updated_at,
       value: new Balance(
         token.value,
-        contractFromCache.decimals || app.provider.decimals,
-        contractFromCache.symbol || app.provider.denom,
+        contractFromCache.decimals || Provider.selectedProvider.decimals,
+        contractFromCache.symbol || Provider.selectedProvider.denom,
       ),
       decimals: contractFromCache.decimals,
       is_erc20: contractFromCache.is_erc20,

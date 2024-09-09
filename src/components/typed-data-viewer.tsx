@@ -1,14 +1,15 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
+import {observer} from 'mobx-react';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Renderable} from 'react-native-json-tree';
 
 import {Color} from '@app/colors';
-import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {I18N} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
 import {EIPMessage, EIPTypedData} from '@app/types';
 
@@ -28,125 +29,127 @@ export type TypedDataViewerProps = {
   style?: StyleProp<ViewStyle>;
 };
 
-export function TypedDataViewer({data, style}: TypedDataViewerProps) {
-  const {animate} = useLayoutAnimation();
-  const [isJsonHidden, setJsonHidden] = useState(true);
-  const message = data?.message as EIPMessage;
-  const amount = useMemo(() => {
-    return message?.msgs.reduce((prev: Balance, {value}) => {
-      if (value?.amount?.amount) {
-        return prev.operate(new Balance(value?.amount?.amount), 'add');
+export const TypedDataViewer = observer(
+  ({data, style}: TypedDataViewerProps) => {
+    const {animate} = useLayoutAnimation();
+    const [isJsonHidden, setJsonHidden] = useState(true);
+    const message = data?.message as EIPMessage;
+    const amount = useMemo(() => {
+      return message?.msgs.reduce((prev: Balance, {value}) => {
+        if (value?.amount?.amount) {
+          return prev.operate(new Balance(value?.amount?.amount), 'add');
+        }
+        return prev;
+      }, Balance.Empty);
+    }, [data]);
+
+    const fee = useMemo(() => {
+      return message?.fee?.amount?.reduce((prev: Balance, c) => {
+        if (c.amount) {
+          return prev.operate(new Balance(c.amount), 'add');
+        }
+        return prev;
+      }, Balance.Empty);
+    }, [data]);
+
+    const type = useMemo(() => {
+      const firsMsg = message?.msgs?.[0];
+      if (typeof firsMsg?.type === 'string') {
+        const paths = firsMsg.type.split('/');
+        const name = paths[paths.length - 1]?.replace(
+          /Msg(Begin)?(Withdraw)?/,
+          '',
+        );
+        return name;
       }
-      return prev;
-    }, Balance.Empty);
-  }, [data]);
+      return 'Unknown';
+    }, [data]);
 
-  const fee = useMemo(() => {
-    return message?.fee?.amount?.reduce((prev: Balance, c) => {
-      if (c.amount) {
-        return prev.operate(new Balance(c.amount), 'add');
-      }
-      return prev;
-    }, Balance.Empty);
-  }, [data]);
+    const handleShowJsonViewer = useCallback(() => {
+      animate();
+      setJsonHidden(false);
+    }, [animate]);
 
-  const type = useMemo(() => {
-    const firsMsg = message?.msgs?.[0];
-    if (typeof firsMsg?.type === 'string') {
-      const paths = firsMsg.type.split('/');
-      const name = paths[paths.length - 1]?.replace(
-        /Msg(Begin)?(Withdraw)?/,
-        '',
-      );
-      return name;
-    }
-    return 'Unknown';
-  }, [data]);
+    const handleHideJsonViewer = useCallback(() => {
+      animate();
+      setJsonHidden(true);
+    }, [animate]);
 
-  const handleShowJsonViewer = useCallback(() => {
-    animate();
-    setJsonHidden(false);
-  }, [animate]);
-
-  const handleHideJsonViewer = useCallback(() => {
-    animate();
-    setJsonHidden(true);
-  }, [animate]);
-
-  return (
-    <View style={[styles.container, style]}>
-      <ScrollView style={styles.json} showsVerticalScrollIndicator={false}>
-        <View style={styles.info}>
-          <DataView i18n={I18N.transactionInfoTypeOperation}>
-            <Text variant={TextVariant.t11} color={Color.textBase1}>
-              {type}
-            </Text>
-          </DataView>
-          <DataView i18n={I18N.transactionInfoCryptocurrency}>
-            <Text variant={TextVariant.t11} color={Color.textBase1}>
-              {`${app.provider.coinName} ${app.provider.denom}`}
-            </Text>
-          </DataView>
-          {amount?.isPositive() && (
-            <DataView i18n={I18N.transactionInfoAmount}>
+    return (
+      <View style={[styles.container, style]}>
+        <ScrollView style={styles.json} showsVerticalScrollIndicator={false}>
+          <View style={styles.info}>
+            <DataView i18n={I18N.transactionInfoTypeOperation}>
               <Text variant={TextVariant.t11} color={Color.textBase1}>
-                {amount?.toBalanceString('auto')}
+                {type}
               </Text>
             </DataView>
-          )}
-          <DataView i18n={I18N.transactionInfoNetworkFee}>
-            <Text variant={TextVariant.t11} color={Color.textBase1}>
-              {fee?.toBalanceString('auto')}
-            </Text>
-          </DataView>
-          {!!message?.memo?.length && (
-            <DataView i18n={I18N.transactionInfoMemo}>
-              <Text
-                variant={TextVariant.t11}
-                color={Color.textBase1}
-                style={styles.memoText}>
-                {message.memo}
+            <DataView i18n={I18N.transactionInfoCryptocurrency}>
+              <Text variant={TextVariant.t11} color={Color.textBase1}>
+                {`${Provider.selectedProvider.coinName} ${Provider.selectedProvider.denom}`}
               </Text>
             </DataView>
-          )}
-        </View>
-
-        <Spacer height={20} />
-
-        <View style={styles.jsonViewerContainer}>
-          <First>
-            {isJsonHidden && (
-              <Button
-                size={ButtonSize.small}
-                i18n={I18N.transactionInforShowRawOperationInfo}
-                onPress={handleShowJsonViewer}
-              />
+            {amount?.isPositive() && (
+              <DataView i18n={I18N.transactionInfoAmount}>
+                <Text variant={TextVariant.t11} color={Color.textBase1}>
+                  {amount?.toBalanceString('auto')}
+                </Text>
+              </DataView>
             )}
+            <DataView i18n={I18N.transactionInfoNetworkFee}>
+              <Text variant={TextVariant.t11} color={Color.textBase1}>
+                {fee?.toBalanceString('auto')}
+              </Text>
+            </DataView>
+            {!!message?.memo?.length && (
+              <DataView i18n={I18N.transactionInfoMemo}>
+                <Text
+                  variant={TextVariant.t11}
+                  color={Color.textBase1}
+                  style={styles.memoText}>
+                  {message.memo}
+                </Text>
+              </DataView>
+            )}
+          </View>
 
-            <>
-              <Button
-                size={ButtonSize.small}
-                i18n={I18N.transactionInforHideRawOperationInfo}
-                onPress={handleHideJsonViewer}
-              />
-              <View style={styles.separator} />
-              <ScrollView
-                horizontal
-                style={styles.json}
-                showsHorizontalScrollIndicator={false}>
-                <JsonViewer
-                  autoexpand={false}
-                  style={styles.json}
-                  data={data as unknown as Renderable}
+          <Spacer height={20} />
+
+          <View style={styles.jsonViewerContainer}>
+            <First>
+              {isJsonHidden && (
+                <Button
+                  size={ButtonSize.small}
+                  i18n={I18N.transactionInforShowRawOperationInfo}
+                  onPress={handleShowJsonViewer}
                 />
-              </ScrollView>
-            </>
-          </First>
-        </View>
-      </ScrollView>
-    </View>
-  );
-}
+              )}
+
+              <>
+                <Button
+                  size={ButtonSize.small}
+                  i18n={I18N.transactionInforHideRawOperationInfo}
+                  onPress={handleHideJsonViewer}
+                />
+                <View style={styles.separator} />
+                <ScrollView
+                  horizontal
+                  style={styles.json}
+                  showsHorizontalScrollIndicator={false}>
+                  <JsonViewer
+                    autoexpand={false}
+                    style={styles.json}
+                    data={data as unknown as Renderable}
+                  />
+                </ScrollView>
+              </>
+            </First>
+          </View>
+        </ScrollView>
+      </View>
+    );
+  },
+);
 
 const styles = createTheme({
   container: {

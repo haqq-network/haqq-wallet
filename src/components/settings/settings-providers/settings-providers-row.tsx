@@ -5,10 +5,10 @@ import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
 import {Color} from '@app/colors';
 import {ImageWrapper} from '@app/components/image-wrapper';
 import {DataContent, Icon, Spacer} from '@app/components/ui';
-import {Provider} from '@app/models/provider';
+import {ProviderModel} from '@app/models/provider';
 
 export type SettingsProvidersRowProps = {
-  item: Provider;
+  item: ProviderModel;
   providerId: string;
   onPress: (providerId: string) => void;
 };

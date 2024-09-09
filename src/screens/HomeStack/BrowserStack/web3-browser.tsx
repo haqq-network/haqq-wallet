@@ -1,7 +1,8 @@
-import React, {memo, useCallback, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
 import {useFocusEffect} from '@react-navigation/native';
+import {observer} from 'mobx-react';
 import {Share} from 'react-native';
 import WebView from 'react-native-webview';
 
@@ -30,7 +31,7 @@ import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {BrowserStackParamList, BrowserStackRoutes} from '@app/route-types';
 import {sendNotification} from '@app/services';
 
-export const Web3BrowserScreen = memo(() => {
+export const Web3BrowserScreen = observer(() => {
   const [focused, setFocused] = useState(false);
   const {url, popup} = useTypedRoute<
     BrowserStackParamList,
@@ -48,7 +49,6 @@ export const Web3BrowserScreen = memo(() => {
   const helper = useRef<Web3BrowserHelper | null>(
     new Web3BrowserHelper({webviewRef, initialUrl: url}),
   );
-  const userProvider = useMemo(() => Provider.getById(app.providerId), []);
   const [isLoading, setLoading] = useState(true);
   const onPressHeaderUrl = useCallback(
     ({}: Web3BrowserPressHeaderEvent) => {
@@ -243,7 +243,6 @@ export const Web3BrowserScreen = memo(() => {
       sessions={sessions}
       bookmarks={bookmarks}
       showActionMenu={showActionMenu}
-      userProvider={userProvider!}
       focused={focused}
       onPressClose={onPressClose}
       onPressHeaderUrl={onPressHeaderUrl}

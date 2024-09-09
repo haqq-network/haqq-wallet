@@ -21,9 +21,9 @@ import {
   InfoBlock,
   Text,
 } from '@app/components/ui';
-import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
@@ -76,7 +76,7 @@ export const AccountDetail = observer(
               title={I18N.evmTitle}
               component={null}
             />
-            {app.provider.config.isBech32Enabled && (
+            {Provider.selectedProvider.config.isBech32Enabled && (
               <TopTabNavigator.Tab
                 name={TabNames.bech32}
                 title={I18N.bech32Title}
@@ -90,8 +90,8 @@ export const AccountDetail = observer(
           style={styles.info}
           i18n={I18N.modalDetailsQRWarning}
           i18params={{
-            assetName: app.provider.denom,
-            networkName: app.provider.name,
+            assetName: Provider.selectedProvider.denom,
+            networkName: Provider.selectedProvider.name,
           }}
           icon={<Icon name="warning" color={Color.textYellow1} />}
         />

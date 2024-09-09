@@ -13,10 +13,10 @@ import {
 } from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
 import {WidgetHeader} from '@app/components/ui/widget-header';
-import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
 import {I18N, getText} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
 
 type Props = {
@@ -57,7 +57,7 @@ export const StakingWidget = observer(
           icon={'staking_thin'}
           title={getText(I18N.earnStaking)}
           description={getText(I18N.earnStakingDescription, {
-            symbol: app.provider.denom,
+            symbol: Provider.selectedProvider.denom,
           })}
           largeIcon
         />

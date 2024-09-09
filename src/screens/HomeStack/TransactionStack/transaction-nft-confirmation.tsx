@@ -17,6 +17,7 @@ import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Fee} from '@app/models/fee';
 import {ContractType} from '@app/models/nft';
+import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {
   TransactionStackParamList,
@@ -152,7 +153,7 @@ export const TransactionNftConfirmationScreen = observer(() => {
           id: errorId,
           walletType: wallet.type,
           contact,
-          provider: app.provider.name,
+          provider: Provider.selectedProvider.name,
         });
 
         const err = e as EthSignErrorDataDetails;

@@ -32,7 +32,7 @@ import {IconProps} from '@app/components/ui';
 import {I18N} from '@app/i18n';
 import {Banner} from '@app/models/banner';
 import {NftCollection, NftItem} from '@app/models/nft';
-import {Provider} from '@app/models/provider';
+import {ProviderModel} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {SignUpStackRoutes, WelcomeStackRoutes} from '@app/route-types';
 import {EthNetwork} from '@app/services';
@@ -479,7 +479,7 @@ export type RootStackParamList = {
   };
   settingsProviderForm: {
     id?: string;
-    data?: Partial<Provider>;
+    data?: Partial<ProviderModel>;
   };
   stakingValidators: undefined;
   stakingInfo: {
@@ -1089,7 +1089,7 @@ export type Modals = {
   providersBottomSheet: {
     onClose?: () => void;
     title: I18N;
-    providers: Provider[] | Results<Provider>;
+    providers: ProviderModel[] | Results<ProviderModel>;
     initialProviderId: string;
     closeDistance?: () => number;
     eventSuffix?: string;
@@ -1850,7 +1850,8 @@ export type IndexerTransactionWithType<T extends IndexerTxMsgType> = Extract<
 
 export type IndexerTransactionResponse = {
   hash: string;
-  txs: IndexerTransaction[];
+  txs?: IndexerTransaction[];
+  transactions?: IndexerTransaction[];
 };
 
 export type ChainId = string | number;

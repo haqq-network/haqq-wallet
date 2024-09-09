@@ -5,9 +5,9 @@ import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Text, TextPosition, TextVariant} from '@app/components/ui';
-import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 
 import {Spacer} from './spacer';
 
@@ -34,7 +34,7 @@ export const TextSum = observer(
     const hasRightText = typeof rightText !== 'undefined';
     const text = hasRightText
       ? getText(rightText)
-      : app.provider.denom + suffix;
+      : Provider.selectedProvider.denom + suffix;
 
     const viewStyles = StyleSheet.flatten([
       center && styles.center,

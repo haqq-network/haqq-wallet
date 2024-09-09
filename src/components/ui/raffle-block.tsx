@@ -5,11 +5,11 @@ import {ActivityIndicator, Image, TouchableOpacity, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import {Color, getColor} from '@app/colors';
-import {app} from '@app/contexts';
 import {cleanNumber, createTheme, getWindowWidth} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks';
 import {useTimer} from '@app/hooks/use-timer';
 import {I18N} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {Raffle, TimerUpdateInterval} from '@app/types';
 import {WEI} from '@app/variables/common';
 
@@ -167,7 +167,7 @@ export const RaffleBlock = observer(
                   style={styles.flexOne}
                   color={Color.textBase3}
                   ellipsizeMode={'tail'}>
-                  {`${formattedAmount} ${app.provider.denom}`}
+                  {`${formattedAmount} ${Provider.selectedProvider.denom}`}
                 </Text>
               </View>
             </View>

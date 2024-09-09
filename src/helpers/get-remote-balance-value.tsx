@@ -20,17 +20,17 @@ export const getDefaultBalanceValue = <
 ): Balance => {
   switch (key) {
     case 'transfer_min_amount':
-      return MIN_AMOUNT;
+      return new Balance(MIN_AMOUNT);
     case 'staking_reward_min_amount':
-      return MIN_STAKING_REWARD;
+      return new Balance(MIN_STAKING_REWARD);
     case 'cosmos_min_amount':
-      return COSMOS_MIN_AMOUNT;
+      return new Balance(COSMOS_MIN_AMOUNT);
     case 'cosmos_min_gas_limit':
-      return COSMOS_MIN_GAS_LIMIT;
+      return new Balance(COSMOS_MIN_GAS_LIMIT);
     case 'eth_min_amount':
-      return MIN_AMOUNT;
+      return new Balance(MIN_AMOUNT);
     case 'eth_min_gas_limit':
-      return MIN_GAS_LIMIT;
+      return new Balance(MIN_GAS_LIMIT, 0);
     default:
       return Balance.Empty;
   }
@@ -55,11 +55,11 @@ export const getDefaultMultiplierValue = <
 ): number => {
   switch (key) {
     case 'cosmos_commission_multiplier':
-      return parseFloat(String(BALANCE_MULTIPLIER));
+      return BALANCE_MULTIPLIER;
     case 'eth_commission_multiplier':
-      return parseFloat(String(BALANCE_MULTIPLIER));
+      return BALANCE_MULTIPLIER;
     default:
-      return parseFloat(String(BALANCE_MULTIPLIER));
+      return BALANCE_MULTIPLIER;
   }
 };
 

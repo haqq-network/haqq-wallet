@@ -15,10 +15,10 @@ import {
   TextPosition,
   TextVariant,
 } from '@app/components/ui';
-import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N, getText} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
 
 export type ProposalDepositPreviewProps = {
@@ -56,7 +56,7 @@ export const ProposalDepositPreview = observer(
           variant={TextVariant.t3}
           position={TextPosition.center}
           style={styles.sum}>
-          {`${cleanNumber(amount)} ${app.provider.denom}`}
+          {`${cleanNumber(amount)} ${Provider.selectedProvider.denom}`}
         </Text>
         <Text
           variant={TextVariant.t11}
