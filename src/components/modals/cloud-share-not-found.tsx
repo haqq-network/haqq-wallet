@@ -42,40 +42,47 @@ export const CloudShareNotFound = observer(
 
         const creds = await provider();
 
-        if (!creds.privateKey) {
-          throw new Error('No Private Key Detected');
-        }
+        if (creds) {
+          if (!creds.privateKey) {
+            throw new Error('No Private Key Detected');
+          }
 
-        const walletInfo = await await getMetadataValueWrapped(
-          RemoteConfig.get('sss_metadata_url')!,
-          creds.privateKey,
-          'socialShareIndex',
-        );
+          const walletInfo = await getMetadataValueWrapped(
+            RemoteConfig.get('sss_metadata_url')!,
+            creds.privateKey,
+            'socialShareIndex',
+          );
 
-        if (!walletInfo) {
-          throw new Error('No Wallet Info Detected');
-        }
+          if (!walletInfo) {
+            throw new Error('No Wallet Info Detected');
+          }
 
-        const localShare = await decryptLocalShare(creds.privateKey, password);
-        const storage = await getProviderStorage('', 'cloud');
+          const localShare = await decryptLocalShare(
+            creds.privateKey,
+            password,
+          );
+          const storage = await getProviderStorage('', 'cloud');
 
-        await ProviderSSSReactNative.initialize(
-          creds.privateKey,
-          null,
-          localShare,
-          null,
-          creds.verifier,
-          creds.token,
-          getPasswordPromise,
-          storage,
-          {
-            metadataUrl: RemoteConfig.get('sss_metadata_url')!,
-            generateSharesUrl: RemoteConfig.get('sss_generate_shares_url')!,
-          },
-        ).catch(err => ErrorHandler.handle('sssLimitReached', err));
+          await ProviderSSSReactNative.initialize(
+            creds.privateKey,
+            null,
+            localShare,
+            null,
+            creds.verifier,
+            creds.token,
+            getPasswordPromise,
+            storage,
+            {
+              metadataUrl: RemoteConfig.get('sss_metadata_url')!,
+              generateSharesUrl: RemoteConfig.get('sss_generate_shares_url')!,
+            },
+          ).catch(err => {
+            ErrorHandler.handle('sssLimitReached', err);
+          });
 
-        if (wallet?.address) {
-          Wallet.update(wallet.address, {socialLinkEnabled: true});
+          if (wallet?.address) {
+            Wallet.update(wallet.address, {socialLinkEnabled: true});
+          }
         }
 
         hideModal(ModalType.cloudShareNotFound);

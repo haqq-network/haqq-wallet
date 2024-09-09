@@ -52,6 +52,10 @@ export async function onLoginCustom() {
     throw new Error('sss_custom is not set');
   }
 
+  if (!authInfo) {
+    return Promise.resolve(null);
+  }
+
   return await onAuthorized(verifier, authInfo.sub, authState.idToken);
 }
 
@@ -72,30 +76,44 @@ export async function onLoginGoogle() {
     throw new Error('sss_google is not set');
   }
 
+  if (!authInfo) {
+    return Promise.resolve(null);
+  }
+
   return await onAuthorized(verifier, authInfo.email, authState.idToken);
 }
 
 export async function onLoginApple() {
-  const appleAuthRequestResponse = await appleAuth.performRequest({
-    requestedOperation: appleAuth.Operation.LOGIN,
-    requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
-  });
+  try {
+    const appleAuthRequestResponse = await appleAuth.performRequest({
+      requestedOperation: appleAuth.Operation.LOGIN,
+      requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+    });
 
-  if (!appleAuthRequestResponse?.identityToken) {
-    throw new Error('onLoginApple');
+    if (!appleAuthRequestResponse?.identityToken) {
+      throw new Error('onLoginApple');
+    }
+
+    const {identityToken} = appleAuthRequestResponse;
+
+    const authInfo = parseJwt(identityToken);
+
+    const verifier = RemoteConfig.get('sss_apple_provider');
+
+    if (!verifier) {
+      throw new Error('sss_apple is not set');
+    }
+
+    if (!authInfo) {
+      return Promise.resolve(null);
+    }
+
+    return await onAuthorized(verifier, authInfo.email, identityToken);
+  } catch (e: any) {
+    if (e.code.toString() !== '1001') {
+      throw e;
+    }
   }
-
-  const {identityToken} = appleAuthRequestResponse;
-
-  const authInfo = parseJwt(identityToken);
-
-  const verifier = RemoteConfig.get('sss_apple_provider');
-
-  if (!verifier) {
-    throw new Error('sss_apple is not set');
-  }
-
-  return await onAuthorized(verifier, authInfo.email, identityToken);
 }
 
 export type Creds = {

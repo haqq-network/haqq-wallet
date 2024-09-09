@@ -50,78 +50,80 @@ export const SignInNetworksScreen = memo(() => {
       }
 
       try {
-        if (!creds.privateKey) {
-          throw new SssError('signinNotExists');
-        }
-
-        const walletInfo = await getMetadataValueWrapped(
-          RemoteConfig.get('sss_metadata_url')!,
-          creds.privateKey,
-          'socialShareIndex',
-        );
-
-        if (!walletInfo) {
-          throw new SssError('signinNotExists');
-        }
-
-        const cloud = await getProviderStorage('', provider);
-        const supported = await Cloud.isEnabled();
-
-        if (!supported) {
-          throw new SssError('signinNotExists');
-        }
-
-        const account = await accountInfo(creds.privateKey as string);
-
-        if (!skipCheck) {
-          const hasPermissions = await verifyCloud(provider);
-          if (!hasPermissions) {
-            navigation.navigate(SignInStackRoutes.SigninCloudProblems, {
-              sssProvider: provider,
-              onNext: () => onLogin(provider, true),
-            });
-            return;
+        if (creds) {
+          if (!creds.privateKey) {
+            throw new SssError('signinNotExists');
           }
-        }
 
-        const cloudShare = await cloud.getItem(
-          `haqq_${account.address.toLowerCase()}`,
-        );
+          const walletInfo = await getMetadataValueWrapped(
+            RemoteConfig.get('sss_metadata_url')!,
+            creds.privateKey,
+            'socialShareIndex',
+          );
 
-        const localShare = await EncryptedStorage.getItem(
-          `${ITEM_KEY}_${account.address.toLowerCase()}`,
-        );
-
-        if (!cloudShare) {
-          if (!localShare) {
-            throw new SssError('signinSharesNotFound');
+          if (!walletInfo) {
+            throw new SssError('signinNotExists');
           }
-          throw new SssError('signinNotRecovery');
+
+          const cloud = await getProviderStorage('', provider);
+          const supported = await Cloud.isEnabled();
+
+          if (!supported) {
+            throw new SssError('signinNotExists');
+          }
+
+          const account = await accountInfo(creds.privateKey as string);
+
+          if (!skipCheck) {
+            const hasPermissions = await verifyCloud(provider);
+            if (!hasPermissions) {
+              navigation.navigate(SignInStackRoutes.SigninCloudProblems, {
+                sssProvider: provider,
+                onNext: () => onLogin(provider, true),
+              });
+              return;
+            }
+          }
+
+          const cloudShare = await cloud.getItem(
+            `haqq_${account.address.toLowerCase()}`,
+          );
+
+          const localShare = await EncryptedStorage.getItem(
+            `${ITEM_KEY}_${account.address.toLowerCase()}`,
+          );
+
+          if (!cloudShare) {
+            if (!localShare) {
+              throw new SssError('signinSharesNotFound');
+            }
+            throw new SssError('signinNotRecovery');
+          }
+
+          const nextScreen = app.onboarded
+            ? SignInStackRoutes.SigninStoreWallet
+            : SignInStackRoutes.OnboardingSetupPin;
+
+          //@ts-ignore
+          navigation.navigate(nextScreen, {
+            type: 'sss',
+            sssPrivateKey: creds.privateKey,
+            token: creds.token,
+            verifier: creds.verifier,
+            sssCloudShare: cloudShare,
+            sssLocalShare: null,
+            sssProvider: provider,
+          });
         }
-
-        const nextScreen = app.onboarded
-          ? SignInStackRoutes.SigninStoreWallet
-          : SignInStackRoutes.OnboardingSetupPin;
-
-        //@ts-ignore
-        navigation.navigate(nextScreen, {
-          type: 'sss',
-          sssPrivateKey: creds.privateKey,
-          token: creds.token,
-          verifier: creds.verifier,
-          sssCloudShare: cloudShare,
-          sssLocalShare: null,
-          sssProvider: provider,
-        });
       } catch (e) {
         Logger.log('error', e, e instanceof SssError);
         if (e instanceof SssError) {
           // @ts-ignore
           navigation.navigate(e.message, {
             type: 'sss',
-            sssPrivateKey: creds.privateKey,
-            token: creds.token,
-            verifier: creds.verifier,
+            sssPrivateKey: creds?.privateKey,
+            token: creds?.token,
+            verifier: creds?.verifier,
             sssCloudShare: null,
             sssLocalShare: null,
             provider,
