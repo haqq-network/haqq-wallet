@@ -2,7 +2,7 @@ import {getAppInfo} from '@app/helpers/get-app-info';
 import {Initializable} from '@app/helpers/initializable';
 import {VariablesString} from '@app/models/variables-string';
 import {Backend} from '@app/services/backend';
-import {RemoteConfigTypes} from '@app/services/remote-config/remote-config-types';
+import {RemoteConfigTypes} from '@app/services/remote-config';
 import {isValidJSON} from '@app/utils';
 
 import {REMOTE_CONFIG_DEFAULT_VALUES} from './remote-config-default-values';

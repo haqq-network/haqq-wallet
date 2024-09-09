@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
-import {app} from '@app/contexts';
+import {observer} from 'mobx-react';
+
 import {awaitForFee} from '@app/helpers/await-for-fee';
 import {useTypedNavigation} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
@@ -38,164 +39,168 @@ interface JsonRpcTransactionInfoProps {
   setFeeLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const JsonRpcTransactionInfo = ({
-  request,
-  metadata,
-  verifyAddressResponse,
-  chainId,
-  hideContractAttention,
-  fee,
-  setFee,
-  isFeeLoading,
-  setFeeLoading,
-}: JsonRpcTransactionInfoProps) => {
-  const navigation = useTypedNavigation<JsonRpcSignPopupStackParamList>();
+export const JsonRpcTransactionInfo = observer(
+  ({
+    request,
+    metadata,
+    verifyAddressResponse,
+    chainId,
+    hideContractAttention,
+    fee,
+    setFee,
+    isFeeLoading,
+    setFeeLoading,
+  }: JsonRpcTransactionInfoProps) => {
+    const navigation = useTypedNavigation<JsonRpcSignPopupStackParamList>();
 
-  const [isSwapRenderError, setIsSwapRenderError] = useState(false);
+    const [isSwapRenderError, setIsSwapRenderError] = useState(false);
 
-  const tx = useMemo(
-    () => getTransactionFromJsonRpcRequest(request),
-    [request],
-  );
-
-  const provider = useMemo(() => {
-    return Provider.getByEthChainId(
-      tx?.chainId ?? chainId ?? app.provider.ethChainId,
+    const tx = useMemo(
+      () => getTransactionFromJsonRpcRequest(request),
+      [request],
     );
-  }, [chainId, tx]);
 
-  const isContract = useMemo(
-    () =>
-      verifyAddressResponse?.address_type === AddressType.contract ||
-      isContractTransaction(tx),
-    [tx, verifyAddressResponse],
-  );
+    const provider = useMemo(() => {
+      return Provider.getByEthChainId(
+        tx?.chainId ?? chainId ?? Provider.selectedProvider.ethChainId,
+      );
+    }, [chainId, tx]);
 
-  const isInWhiteList = useMemo(
-    () => !!verifyAddressResponse?.is_in_white_list,
-    [verifyAddressResponse],
-  );
+    const isContract = useMemo(
+      () =>
+        verifyAddressResponse?.address_type === AddressType.contract ||
+        isContractTransaction(tx),
+      [tx, verifyAddressResponse],
+    );
 
-  const showSignContratAttention =
-    !hideContractAttention && isContract && !isInWhiteList;
+    const isInWhiteList = useMemo(
+      () => !!verifyAddressResponse?.is_in_white_list,
+      [verifyAddressResponse],
+    );
 
-  const txParsedData = useMemo(() => parseTxDataFromHexInput(tx?.data), [tx]);
+    const showSignContratAttention =
+      !hideContractAttention && isContract && !isInWhiteList;
 
-  const functionName = useMemo(() => {
-    if (txParsedData) {
-      return txParsedData.name;
-    }
-    return '';
-  }, [txParsedData]);
+    const txParsedData = useMemo(() => parseTxDataFromHexInput(tx?.data), [tx]);
 
-  const isSwapTx = useMemo(
-    () => ['exactInput', 'deposit', 'withdraw'].includes(functionName),
-    [functionName],
-  );
+    const functionName = useMemo(() => {
+      if (txParsedData) {
+        return txParsedData.name;
+      }
+      return '';
+    }, [txParsedData]);
 
-  const calculateFee = useCallback(async () => {
-    if (!tx) {
-      return Balance.Empty;
-    }
+    const isSwapTx = useMemo(
+      () => ['exactInput', 'deposit', 'withdraw'].includes(functionName),
+      [functionName],
+    );
 
-    try {
-      const data = await EthNetwork.estimate(
-        {
+    const calculateFee = useCallback(async () => {
+      if (!tx) {
+        return Balance.Empty;
+      }
+
+      try {
+        const data = await EthNetwork.estimate(
+          {
+            from: tx.from!,
+            to: tx.to!,
+            value: new Balance(
+              tx.value || Balance.Empty,
+              provider?.decimals,
+              provider?.denom,
+            ),
+            data: tx.data,
+          },
+          EstimationVariant.average,
+          provider,
+        );
+        setFee(new Fee(data));
+        return data.expectedFee;
+      } catch {
+        return Balance.Empty;
+      }
+    }, [tx, provider]);
+
+    const onFeePress = useCallback(async () => {
+      if (!tx) {
+        return;
+      }
+
+      if (fee) {
+        const result = await awaitForFee({
+          fee,
           from: tx.from!,
           to: tx.to!,
           value: new Balance(
-            tx.value || Balance.Empty,
+            tx.value! || Balance.Empty,
             provider?.decimals,
             provider?.denom,
           ),
           data: tx.data,
-        },
-        EstimationVariant.average,
-        provider,
-      );
-      setFee(new Fee(data));
-      return data.expectedFee;
-    } catch {
-      return Balance.Empty;
-    }
-  }, [tx, provider]);
-
-  const onFeePress = useCallback(async () => {
-    if (!tx) {
-      return;
-    }
-
-    if (fee) {
-      const result = await awaitForFee({
-        fee,
-        from: tx.from!,
-        to: tx.to!,
-        value: new Balance(
-          tx.value! || Balance.Empty,
-          provider?.decimals,
-          provider?.denom,
-        ),
-        data: tx.data,
-        chainId: provider?.ethChainId ? String(provider.ethChainId) : undefined,
-      });
-      setFee(result);
-    }
-  }, [navigation, tx, fee, provider]);
-
-  const onSwapRenderError = useCallback(() => {
-    setIsSwapRenderError(true);
-  }, []);
-
-  useEffectAsync(async () => {
-    if (!fee?.calculatedFees) {
-      try {
-        if (tx) {
-          setFeeLoading(true);
-          await calculateFee();
-        }
-      } catch (err) {
-        Logger.captureException(err, 'JsonRpcTransactionInfo:calculateFee', {
-          params: tx,
-          chainId,
+          chainId: provider?.ethChainId
+            ? String(provider.ethChainId)
+            : undefined,
         });
-      } finally {
+        setFee(result);
+      }
+    }, [navigation, tx, fee, provider]);
+
+    const onSwapRenderError = useCallback(() => {
+      setIsSwapRenderError(true);
+    }, []);
+
+    useEffectAsync(async () => {
+      if (!fee?.calculatedFees) {
+        try {
+          if (tx) {
+            setFeeLoading(true);
+            await calculateFee();
+          }
+        } catch (err) {
+          Logger.captureException(err, 'JsonRpcTransactionInfo:calculateFee', {
+            params: tx,
+            chainId,
+          });
+        } finally {
+          setFeeLoading(false);
+        }
+      } else {
         setFeeLoading(false);
       }
-    } else {
-      setFeeLoading(false);
-    }
-  }, [chainId]);
+    }, [chainId]);
 
-  return (
-    <First>
-      {!isSwapRenderError && isSwapTx && isContract && (
-        <JsonRpcSwapTransaction
-          verifyAddressResponse={verifyAddressResponse}
+    return (
+      <First>
+        {!isSwapRenderError && isSwapTx && isContract && (
+          <JsonRpcSwapTransaction
+            verifyAddressResponse={verifyAddressResponse}
+            metadata={metadata}
+            parsedInput={txParsedData}
+            provider={provider}
+            functionName={functionName}
+            isFeeLoading={isFeeLoading}
+            chainId={provider?.ethChainId!}
+            fee={fee}
+            tx={tx}
+            onFeePress={onFeePress}
+            onError={onSwapRenderError}
+          />
+        )}
+
+        <JsonRpcCommonTransaction
           metadata={metadata}
-          parsedInput={txParsedData}
-          provider={provider}
+          showSignContratAttention={showSignContratAttention}
           functionName={functionName}
+          isContract={isContract}
+          provider={provider}
           isFeeLoading={isFeeLoading}
-          chainId={provider?.ethChainId!}
+          parsedInput={txParsedData}
           fee={fee}
           tx={tx}
           onFeePress={onFeePress}
-          onError={onSwapRenderError}
         />
-      )}
-
-      <JsonRpcCommonTransaction
-        metadata={metadata}
-        showSignContratAttention={showSignContratAttention}
-        functionName={functionName}
-        isContract={isContract}
-        provider={provider}
-        isFeeLoading={isFeeLoading}
-        parsedInput={txParsedData}
-        fee={fee}
-        tx={tx}
-        onFeePress={onFeePress}
-      />
-    </First>
-  );
-};
+      </First>
+    );
+  },
+);

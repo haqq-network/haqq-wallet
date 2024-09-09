@@ -1,4 +1,4 @@
-import React, {memo} from 'react';
+import React, {memo, useMemo} from 'react';
 
 import {
   NativeStackNavigationOptions,
@@ -7,6 +7,7 @@ import {
 import Config from 'react-native-config';
 
 import {getModalScreenOptions} from '@app/helpers/get-modal-screen-options';
+import {getWelcomeScreen} from '@app/helpers/get-welcome-screen';
 import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {WelcomeStackParamList, WelcomeStackRoutes} from '@app/route-types';
 import {basicScreenOptions} from '@app/screens';
@@ -33,11 +34,11 @@ const newsDetailOptions: NativeStackNavigationOptions = {
   ...modalOptions,
 };
 
-type Props = {
-  initialRouteName: WelcomeStackRoutes.Welcome | WelcomeStackRoutes.WelcomeNews;
-};
+const WelcomeStack = memo(() => {
+  const initialRouteName = useMemo(() => {
+    return getWelcomeScreen();
+  }, []);
 
-const WelcomeStack = memo(({initialRouteName}: Props) => {
   return (
     <Stack.Navigator
       initialRouteName={initialRouteName}

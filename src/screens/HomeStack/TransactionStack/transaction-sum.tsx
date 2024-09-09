@@ -1,11 +1,11 @@
-import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+
+import {observer} from 'mobx-react';
 
 import {TransactionSum} from '@app/components/transaction-sum';
 import {app} from '@app/contexts';
-import {Events} from '@app/events';
 import {showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
-import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {awaitForProvider} from '@app/helpers/await-for-provider';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
@@ -25,7 +25,7 @@ import {HapticEffects, vibrate} from '@app/services/haptic';
 import {ModalType} from '@app/types';
 import {generateUUID} from '@app/utils';
 
-export const TransactionSumScreen = memo(() => {
+export const TransactionSumScreen = observer(() => {
   const navigation = useTypedNavigation<TransactionStackParamList>();
   useAndroidBackHandler(() => {
     navigation.goBack();
@@ -135,11 +135,10 @@ export const TransactionSumScreen = memo(() => {
   const onNetworkPress = useCallback(async () => {
     const providerId = await awaitForProvider({
       providers: Provider.getAll(),
-      initialProviderId: app.providerId!,
+      initialProviderId: Provider.selectedProviderId,
       title: I18N.networks,
     });
-    app.providerId = providerId;
-    await awaitForEventDone(Events.onProviderChanged);
+    Provider.setSelectedProviderId(providerId);
     navigation.goBack();
   }, [navigation]);
 

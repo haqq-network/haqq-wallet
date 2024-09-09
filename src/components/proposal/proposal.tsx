@@ -18,10 +18,10 @@ import {
   TextPosition,
   TextVariant,
 } from '@app/components/ui';
-import {app} from '@app/contexts';
 import {cleanNumber, createTheme} from '@app/helpers';
 import {proposalDepositNeeds, yesPercent} from '@app/helpers/governance';
 import {I18N} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {VoteNamesType} from '@app/types';
 import {NUM_PRECISION, WEI} from '@app/variables/common';
 import {ProposalsTags} from '@app/variables/proposal';
@@ -158,7 +158,10 @@ export const Proposal = observer(
               <Text
                 variant={TextVariant.t14}
                 i18n={I18N.amount}
-                i18params={{amount: deposit, symbol: app.provider.denom}}
+                i18params={{
+                  amount: deposit,
+                  symbol: Provider.selectedProvider.denom,
+                }}
               />
             </View>
           </View>

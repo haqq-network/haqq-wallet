@@ -204,7 +204,7 @@ const getTestModals = (): TestModals => {
     },
     notEnoughGas: {
       currentAmount: app.getBalanceData(firstWalletAddress).available,
-      gasLimit: MIN_GAS_LIMIT,
+      gasLimit: new Balance(MIN_GAS_LIMIT, 0),
       onClose: () => logger.log('notEnoughGas closed'),
     },
     viewErrorDetails: {
@@ -727,7 +727,7 @@ export const SettingsTestScreen = observer(() => {
               wallets: Wallet.getAllVisible(),
             });
             const providers = Provider.getAll();
-            const initialProviderId = app.provider.id;
+            const initialProviderId = Provider.selectedProviderId;
             const providerId = await awaitForProvider({
               providers,
               initialProviderId: initialProviderId!,

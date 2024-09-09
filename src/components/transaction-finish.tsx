@@ -19,11 +19,11 @@ import {
   TextPosition,
   TextVariant,
 } from '@app/components/ui';
-import {app} from '@app/contexts';
 import {createTheme, openURL} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Fee} from '@app/models/fee';
+import {Provider} from '@app/models/provider';
 import {sendNotification} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {IToken, TransactionResponse} from '@app/types';
@@ -56,7 +56,9 @@ export const TransactionFinish = observer(
   }: TransactionFinishProps) => {
     const name = token?.name || contact?.name;
     const onPressHash = async () => {
-      const url = app.provider.getTxExplorerUrl(transaction?.hash!);
+      const url = Provider.selectedProvider.getTxExplorerUrl(
+        transaction?.hash!,
+      );
       await openURL(url);
     };
 
@@ -74,15 +76,15 @@ export const TransactionFinish = observer(
         return new Balance(
           (transaction as TransactionResponse)?.value._hex ?? 0,
           undefined,
-          token.symbol ?? app.provider.denom,
+          token.symbol ?? Provider.selectedProvider.denom,
         );
       }
       return new Balance(
         transaction?.value ?? 0,
         undefined,
-        token.symbol ?? app.provider.denom,
+        token.symbol ?? Provider.selectedProvider.denom,
       );
-    }, [transaction, token, amount, app.provider.denom]);
+    }, [transaction, token, amount, Provider.selectedProvider.denom]);
 
     return (
       <PopupContainer style={styles.container} testID={testID}>
@@ -118,7 +120,7 @@ export const TransactionFinish = observer(
               position={TextPosition.center}
               style={styles.address}>
               {name}
-              {STRINGS.NBSP}({token.symbol || app.provider.denom})
+              {STRINGS.NBSP}({token.symbol || Provider.selectedProvider.denom})
             </Text>
           )}
           <Text
@@ -135,10 +137,10 @@ export const TransactionFinish = observer(
 
         <View style={styles.providerContainer}>
           <Text variant={TextVariant.t14} color={Color.textBase2}>
-            {app.provider.name}
+            {Provider.selectedProvider.name}
           </Text>
           <Text variant={TextVariant.t14} color={Color.textBase2}>
-            {`${STRINGS.NBSP}(${app.provider.denom})`}
+            {`${STRINGS.NBSP}(${Provider.selectedProvider.denom})`}
           </Text>
         </View>
 

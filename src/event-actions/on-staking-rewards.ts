@@ -2,6 +2,7 @@ import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {getProviderInstanceForWallet} from '@app/helpers';
 import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
+import {Provider} from '@app/models/provider';
 import {
   StakingMetadata,
   StakingMetadataType,
@@ -11,7 +12,7 @@ import {Cosmos} from '@app/services/cosmos';
 import {AWAIT_NEW_BLOCK_MS} from '@app/variables/common';
 
 export async function onStakingRewards() {
-  const cosmos = new Cosmos(app.provider!);
+  const cosmos = new Cosmos(Provider.selectedProvider);
   const visible = Wallet.getAllVisible();
   const rewards = StakingMetadata.getAllByType(StakingMetadataType.reward);
   const delegators: any = {};

@@ -17,11 +17,11 @@ import {
   TextPosition,
   TextVariant,
 } from '@app/components/ui';
-import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {formatPercents} from '@app/helpers/format-percents';
 import {I18N, getText} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
 import {ValidatorItem, ValidatorStatus} from '@app/types';
 
@@ -74,7 +74,7 @@ export const StakingDelegatePreview = observer(
           i18n={I18N.amount}
           i18params={{
             amount: cleanNumber(amount),
-            symbol: app.provider.denom,
+            symbol: Provider.selectedProvider.denom,
           }}
         />
         <Text

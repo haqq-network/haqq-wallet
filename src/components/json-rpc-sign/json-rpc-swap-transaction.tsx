@@ -29,7 +29,7 @@ import {I18N} from '@app/i18n';
 import {Contracts} from '@app/models/contracts';
 import {Currencies} from '@app/models/currencies';
 import {Fee} from '@app/models/fee';
-import {Provider} from '@app/models/provider';
+import {ProviderModel} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
@@ -50,7 +50,7 @@ import {
 
 export interface JsonRpcSwapTransactionProps {
   metadata: JsonRpcMetadata;
-  provider: Provider | undefined;
+  provider: ProviderModel | undefined;
   isFeeLoading: boolean;
   functionName: string;
   fee: Fee | null | undefined;

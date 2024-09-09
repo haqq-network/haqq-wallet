@@ -3,13 +3,13 @@ import {Results} from 'realm';
 import {app} from '@app/contexts';
 import {showModal} from '@app/helpers/modal';
 import {I18N} from '@app/i18n';
-import {Provider} from '@app/models/provider';
+import {ProviderModel} from '@app/models/provider';
 
 import {getWindowHeight} from './scaling-utils';
 
 export interface AwaitProviderParams {
   title: I18N;
-  providers: Provider[] | Results<Provider>;
+  providers: ProviderModel[] | Results<ProviderModel>;
   initialProviderId: string;
 }
 

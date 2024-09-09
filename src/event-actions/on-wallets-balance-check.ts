@@ -2,6 +2,7 @@ import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {Currencies} from '@app/models/currencies';
+import {Provider} from '@app/models/provider';
 import {VariablesDate} from '@app/models/variables-date';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
@@ -67,7 +68,7 @@ export const onWalletsBalanceCheck = createAsyncTask(async () => {
     }
     const wallets = Wallet.getAllVisible();
     const lastBalanceUpdates = VariablesDate.get(
-      `indexer_${app.provider.cosmosChainId}`,
+      `indexer_${Provider.selectedProvider.cosmosChainId}`,
     );
 
     let accounts = wallets.map(w => w.cosmosAddress);
@@ -78,7 +79,7 @@ export const onWalletsBalanceCheck = createAsyncTask(async () => {
     );
 
     VariablesDate.set(
-      `indexer_${app.provider.cosmosChainId}`,
+      `indexer_${Provider.selectedProvider.cosmosChainId}`,
       new Date(updates.last_update),
     );
 
@@ -113,7 +114,7 @@ export async function onWalletsBalanceCheckRPC(
 ) {
   try {
     VariablesDate.set(
-      `indexer_${app.provider.cosmosChainId}`,
+      `indexer_${Provider.selectedProvider.cosmosChainId}`,
       new Date(updates.last_update),
     );
 
