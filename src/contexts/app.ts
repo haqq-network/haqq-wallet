@@ -25,7 +25,11 @@ import {getUid} from '@app/helpers/get-uid';
 import {SecurePinUtils} from '@app/helpers/secure-pin-utils';
 import {I18N, getText} from '@app/i18n';
 import {Currencies} from '@app/models/currencies';
-import {Provider, RemoteProviderConfig} from '@app/models/provider';
+import {
+  ALL_NETWORKS_ID,
+  Provider,
+  RemoteProviderConfig,
+} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
@@ -652,7 +656,64 @@ class App extends AsyncEventEmitter {
     this.emit(Events.onBalanceSync);
   }
 
+  private _calculateAllNetworksBalance = (address: string) => {
+    const balances = Provider.getAllNetworks().map(p => {
+      return (
+        this._balances[p.ethChainId]?.[AddressUtils.toEth(address)] ||
+        Balance.emptyBalances[AddressUtils.toEth(address)]
+      );
+    });
+
+    return balances.reduce(
+      (acc, balance) => {
+        const {available, locked, staked, total, vested, availableForStake} =
+          balance ?? {};
+
+        return {
+          staked: acc.staked.operate(
+            Currencies.convert(staked ?? Balance.Empty),
+            'add',
+          ),
+          vested: acc.vested.operate(
+            Currencies.convert(vested ?? Balance.Empty),
+            'add',
+          ),
+          available: acc.available?.operate(
+            Currencies.convert(available ?? Balance.Empty),
+            'add',
+          ),
+          total: acc.total?.operate(
+            Currencies.convert(total ?? Balance.Empty),
+            'add',
+          ),
+          locked: acc.locked?.operate(
+            Currencies.convert(locked ?? Balance.Empty),
+            'add',
+          ),
+          availableForStake: acc.availableForStake?.operate(
+            Currencies.convert(availableForStake ?? Balance.Empty),
+            'add',
+          ),
+          unlock: acc.unlock,
+        };
+      },
+      {
+        staked: Balance.Empty,
+        vested: Balance.Empty,
+        available: Balance.Empty,
+        total: Balance.Empty,
+        locked: Balance.Empty,
+        availableForStake: Balance.Empty,
+        unlock: new Date(0),
+      },
+    );
+  };
+
   getBalanceData(address: string) {
+    if (Provider.selectedProviderId === ALL_NETWORKS_ID) {
+      return this._calculateAllNetworksBalance(address);
+    }
+
     return (
       this._balances[Provider.selectedProvider.ethChainId]?.[
         AddressUtils.toEth(address)

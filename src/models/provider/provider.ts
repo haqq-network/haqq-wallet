@@ -21,7 +21,11 @@ import {
 
 import {RemoteProviderConfig} from './provider-config';
 import {ProviderModel} from './provider.model';
-import {ALL_NETWORKS_PROVIDER, ProviderID} from './provider.types';
+import {
+  ALL_NETWORKS_ID,
+  ALL_NETWORKS_PROVIDER,
+  ProviderID,
+} from './provider.types';
 
 import {Currencies} from '../currencies';
 import {Nft} from '../nft';
@@ -164,6 +168,10 @@ class ProviderStore {
   }
   getAll() {
     return Object.values(this._data);
+  }
+
+  getAllNetworks() {
+    return Object.values(this._data).filter(p => p.id !== ALL_NETWORKS_ID);
   }
 
   create(id: string, item: NetworkProvider | ProviderModel) {
