@@ -88,9 +88,9 @@ export const TransactionAddressScreen = observer(() => {
     async (result: string) => {
       try {
         setLoading(true);
-        const nft = route.params.nft;
+        const {nft, token} = route.params || {};
         if (nft) {
-          navigation.navigate(
+          return navigation.navigate(
             TransactionStackRoutes.TransactionNftConfirmation,
             {
               from: AddressUtils.toEth(route.params.from),
@@ -98,6 +98,12 @@ export const TransactionAddressScreen = observer(() => {
               nft,
             },
           );
+        } else if (token) {
+          return navigation.navigate(TransactionStackRoutes.TransactionSum, {
+            from: AddressUtils.toEth(route.params.from),
+            to: AddressUtils.toEth(result),
+            token,
+          });
         } else {
           if (!Token.tokens?.[AddressUtils.toEth(route.params.from)]) {
             const hide = showModal(ModalType.loading, {
