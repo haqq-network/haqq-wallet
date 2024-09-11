@@ -167,7 +167,7 @@ export class WalletConnect extends Initializable {
       if (token) {
         this.setupPushNotifications(token);
       } else {
-        logger.log('FCM token not found, push notifiactions disabled!');
+        logger.log('FCM token not found, push notifications disabled!');
       }
       this.stopInitialization();
     } catch (err) {
