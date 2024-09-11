@@ -1045,19 +1045,19 @@ export function getText(key: I18N, params?: Record<string, string>): string {
 
   // FIXME: Make sure that we have 100% translations
   //@ts-ignore
-  if (!translations[key]) {
+  if (!Language.keys[key]) {
     return `[${key}]`;
   }
 
   if (params) {
     return translations.formatString(
       //@ts-ignore
-      fixLocalise(translations[key]),
+      fixLocalise(Language.keys[key]),
       params,
     ) as string;
   }
   //@ts-ignore
-  return fixLocalise(translations[key]);
+  return fixLocalise(Language.keys[key]);
 }
 
 export const supportedTranslationsMap: {[key in AppLanguage]: NodeRequire} = {
