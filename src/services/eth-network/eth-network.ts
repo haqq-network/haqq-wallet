@@ -219,7 +219,7 @@ export class EthNetwork {
    * @param from Wallet address
    * @param to Wallet address
    * @param value coins amount
-   * @param data aditional data if needed
+   * @param data additional data if needed
    * @returns fee data
    */
   static async estimate(

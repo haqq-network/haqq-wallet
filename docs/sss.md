@@ -39,7 +39,7 @@ const localShare = await EncryptedStorage.getItem(
   `${ITEM_KEY}_${account.address.toLowerCase()}`,
 );
 ```
-and [pass it to `ProviderSSSReactNative.initialize`](https://github.com/haqq-network/haqq-wallet/blob/f12c76361a7d759f2a9f841c0627ec3b6eef7081/src/screens/WelcomeStack/SignInStack/signin-store-wallet.tsx#L94). Otherwise there is [some logic](https://github.com/haqq-network/haqq-wallet/blob/ed1fcdc1ad27f966520c6e4b66dc7148f2461018/src/screens/WelcomeStack/SignInStack/signin-networks.tsx#L95) related to shares existance.
+and [pass it to `ProviderSSSReactNative.initialize`](https://github.com/haqq-network/haqq-wallet/blob/f12c76361a7d759f2a9f841c0627ec3b6eef7081/src/screens/WelcomeStack/SignInStack/signin-store-wallet.tsx#L94). Otherwise there is [some logic](https://github.com/haqq-network/haqq-wallet/blob/ed1fcdc1ad27f966520c6e4b66dc7148f2461018/src/screens/WelcomeStack/SignInStack/signin-networks.tsx#L95) related to shares existence.
 
 3. Wallets were created at `ChooseAccount` screen.
 
