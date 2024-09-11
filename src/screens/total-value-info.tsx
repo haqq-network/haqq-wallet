@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useMemo} from 'react';
 
+import {toJS} from 'mobx';
 import {observer} from 'mobx-react';
 
 import {TotalValueInfo} from '@app/components/total-value-info';
@@ -12,8 +13,12 @@ import {I18N, getText} from '@app/i18n';
 import {Token} from '@app/models/tokens';
 import {Transaction} from '@app/models/transaction';
 import {Wallet} from '@app/models/wallet';
-import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
-import {ModalType} from '@app/types';
+import {
+  HomeStackParamList,
+  HomeStackRoutes,
+  TransactionStackRoutes,
+} from '@app/route-types';
+import {IToken, ModalType} from '@app/types';
 import {calculateBalances} from '@app/utils';
 
 export const TotalValueInfoScreen = observer(() => {
@@ -51,6 +56,20 @@ export const TotalValueInfoScreen = observer(() => {
     [],
   );
 
+  const onPressToken = useCallback(
+    (w: Wallet, token: IToken) => {
+      navigation.navigate(HomeStackRoutes.Transaction, {
+        // @ts-ignore
+        screen: TransactionStackRoutes.TransactionAddress,
+        params: {
+          token: toJS(token),
+          from: w.address!,
+        },
+      });
+    },
+    [navigation],
+  );
+
   if (!wallets?.length) {
     return <Loading />;
   }
@@ -59,10 +78,11 @@ export const TotalValueInfoScreen = observer(() => {
     <TotalValueInfo
       balance={calculatedBalance}
       addressList={addressList}
-      onPressInfo={onPressInfo}
-      onPressTxRow={onPressTxRow}
       tokens={Token.tokens}
       initialTab={route?.params?.tab}
+      onPressInfo={onPressInfo}
+      onPressTxRow={onPressTxRow}
+      onPressToken={onPressToken}
     />
   );
 });
