@@ -1,8 +1,11 @@
 import React, {memo, useCallback} from 'react';
 
 import {CreateAgreement} from '@app/components/create-agreement';
+import {app} from '@app/contexts';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {
+  HomeStackParamList,
+  HomeStackRoutes,
   SignUpStackParamList,
   SignUpStackRoutes,
   WelcomeStackRoutes,
@@ -11,7 +14,7 @@ import {
 export const SignUpAgreementScreen = memo(() => {
   const navigation = useTypedNavigation<SignUpStackParamList>();
   const params = useTypedRoute<
-    SignUpStackParamList,
+    SignUpStackParamList & HomeStackParamList,
     SignUpStackRoutes.SignUpAgreement
   >().params;
   const onPressRegularWallet = useCallback(() => {
@@ -25,7 +28,10 @@ export const SignUpAgreementScreen = memo(() => {
   }, [navigation, params.nextScreen]);
 
   const onPressHardwareWallet = () => {
-    navigation.navigate(WelcomeStackRoutes.Device);
+    navigation.navigate(
+      // @ts-ignore
+      app.onboarded ? HomeStackRoutes.Device : WelcomeStackRoutes.Device,
+    );
   };
 
   return (

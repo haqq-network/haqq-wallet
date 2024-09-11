@@ -13,6 +13,8 @@ import {getMetadataValueWrapped} from '@app/helpers/wrappers/get-metadata-value'
 import {useTypedNavigation} from '@app/hooks';
 import {ErrorHandler} from '@app/models/error-handler';
 import {
+  HomeStackParamList,
+  HomeStackRoutes,
   SignInStackParamList,
   SignInStackRoutes,
   WelcomeStackRoutes,
@@ -27,7 +29,9 @@ import {
 import {RemoteConfig} from '@app/services/remote-config';
 
 export const SignInNetworksScreen = memo(() => {
-  const navigation = useTypedNavigation<SignInStackParamList>();
+  const navigation = useTypedNavigation<
+    SignInStackParamList & HomeStackParamList
+  >();
 
   const onLogin = useCallback(
     async (provider: SssProviders, skipCheck: boolean = false) => {
@@ -139,7 +143,9 @@ export const SignInNetworksScreen = memo(() => {
   }, [navigation]);
 
   const onPressHardwareWallet = useCallback(() => {
-    navigation.navigate(WelcomeStackRoutes.Device);
+    navigation.navigate(
+      app.onboarded ? HomeStackRoutes.Device : WelcomeStackRoutes.Device,
+    );
   }, [navigation]);
 
   return (
