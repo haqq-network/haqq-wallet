@@ -4,7 +4,7 @@ import {app} from '@app/contexts';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {WalletType} from '@app/types';
-import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables/common';
+import {ETH_HD_SHORT_PATH} from '@app/variables/common';
 
 import {AddressUtils} from './address-utils';
 
@@ -20,7 +20,7 @@ export async function createWalletsForProvider(
 
     const name =
       total === 0
-        ? MAIN_ACCOUNT_NAME
+        ? getText(I18N.mainAccount)
         : getText(I18N.signinStoreWalletAccountNumber, {
             number: `${total + 1}`,
           });

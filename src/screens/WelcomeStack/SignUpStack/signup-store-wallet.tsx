@@ -18,7 +18,7 @@ import {
 } from '@app/route-types';
 import {SssProviders} from '@app/services/provider-sss';
 import {ModalType, WalletType} from '@app/types';
-import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables/common';
+import {ETH_HD_SHORT_PATH} from '@app/variables/common';
 
 export const SignUpStoreWalletScreen = observer(() => {
   const navigation = useTypedNavigation<SignUpStackParamList>();
@@ -115,7 +115,7 @@ export const SignUpStoreWalletScreen = observer(() => {
         const total = Wallet.getAll().length;
         const name =
           walletsTotalCount === 0
-            ? MAIN_ACCOUNT_NAME
+            ? getText(I18N.mainAccount)
             : getText(I18N.signupStoreWalletAccountNumber, {
                 number: `${total + 1}`,
               });

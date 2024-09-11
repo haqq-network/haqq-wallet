@@ -9,6 +9,7 @@ import React, {
 } from 'react';
 
 import {
+  I18nManager,
   InteractionManager,
   Keyboard,
   LayoutChangeEvent,
@@ -172,6 +173,7 @@ export const TextField: React.FC<TextFieldProps> = memo(
 
     const labelAnimStyle = useAnimatedStyle(
       () => ({
+        alignItems: 'flex-start',
         transform: [
           {
             scale: interpolate(focusAnim.value, [0, 1], [1, 1.33]),
@@ -180,7 +182,11 @@ export const TextField: React.FC<TextFieldProps> = memo(
             translateY: interpolate(focusAnim.value, [0, 1], [0, 10]),
           },
           {
-            translateX: interpolate(focusAnim.value, [0, 1], [0, left.value]),
+            translateX: interpolate(
+              focusAnim.value,
+              [0, 1],
+              [0, I18nManager.isRTL ? -left.value : left.value],
+            ),
           },
         ],
       }),
@@ -298,6 +304,7 @@ const styles = createTheme({
   },
   inputContainer: {
     flex: 1,
+    alignItems: 'flex-start',
   },
   disabled: {
     opacity: 0.5,
@@ -313,6 +320,7 @@ const styles = createTheme({
     textAlignVertical: 'center',
     right: IS_IOS ? 0 : 4.5,
     flex: 1,
+    alignItems: 'flex-start',
   },
   error: {
     marginLeft: 4,
