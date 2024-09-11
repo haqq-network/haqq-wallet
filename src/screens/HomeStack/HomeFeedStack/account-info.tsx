@@ -1,5 +1,6 @@
 import React, {useCallback, useMemo} from 'react';
 
+import {toJS} from 'mobx';
 import {observer} from 'mobx-react';
 
 import {AccountInfo} from '@app/components/account-info';
@@ -9,12 +10,18 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useWallet} from '@app/hooks/use-wallet';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {Token} from '@app/models/tokens';
-import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
-import {IndexerTransaction, ModalType} from '@app/types';
+import {Wallet} from '@app/models/wallet';
+import {
+  HomeStackParamList,
+  HomeStackRoutes,
+  TransactionStackParamList,
+  TransactionStackRoutes,
+} from '@app/route-types';
+import {IToken, IndexerTransaction, ModalType} from '@app/types';
 
 export const AccountInfoScreen = observer(() => {
   const route = useTypedRoute<
-    HomeStackParamList,
+    HomeStackParamList & TransactionStackParamList,
     HomeStackRoutes.AccountInfo
   >();
   const navigation = useTypedNavigation<HomeStackParamList>();
@@ -51,6 +58,20 @@ export const AccountInfoScreen = observer(() => {
     [],
   );
 
+  const onPressToken = useCallback(
+    (w: Wallet, token: IToken) => {
+      navigation.navigate(HomeStackRoutes.Transaction, {
+        // @ts-ignore
+        screen: TransactionStackRoutes.TransactionAddress,
+        params: {
+          token: toJS(token),
+          from: w.address!,
+        },
+      });
+    },
+    [navigation],
+  );
+
   if (!wallet) {
     return <Loading />;
   }
@@ -62,6 +83,7 @@ export const AccountInfoScreen = observer(() => {
       onReceive={onReceive}
       onSend={onSend}
       onPressTxRow={onPressTxRow}
+      onPressToken={onPressToken}
       available={available}
       locked={locked}
       staked={staked}

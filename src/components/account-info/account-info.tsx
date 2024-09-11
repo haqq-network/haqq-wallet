@@ -27,10 +27,6 @@ enum TabNames {
 
 export type AccountInfoProps = {
   wallet: Wallet;
-  onPressInfo: () => void;
-  onSend: () => void;
-  onReceive: () => void;
-  onPressTxRow: (tx: IndexerTransaction) => void;
   available: Balance;
   locked: Balance;
   staked: Balance;
@@ -38,6 +34,11 @@ export type AccountInfoProps = {
   vested: Balance;
   unlock: Date;
   tokens: Record<HaqqEthereumAddress, IToken[]>;
+  onPressInfo: () => void;
+  onSend: () => void;
+  onReceive: () => void;
+  onPressTxRow: (tx: IndexerTransaction) => void;
+  onPressToken?: (wallet: Wallet, token: IToken) => void;
 };
 
 const TAB_INDEX_MAP = {
@@ -55,11 +56,12 @@ export const AccountInfo = observer(
     total,
     unlock,
     vested,
+    tokens,
     onPressInfo,
     onSend,
     onReceive,
     onPressTxRow,
-    tokens,
+    onPressToken,
   }: AccountInfoProps) => {
     const [activeTab, setActiveTab] = useState(TabNames.tokens);
 
@@ -133,6 +135,7 @@ export const AccountInfo = observer(
               <TokenViewer
                 wallet={wallet}
                 data={tokens}
+                onPressToken={onPressToken}
                 style={styles.nftViewerContainer}
               />
             </>
