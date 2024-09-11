@@ -538,8 +538,9 @@ export enum TransactionStackRoutes {
 export type TransactionStackParamList = HomeFeedStackParamList & {
   [TransactionStackRoutes.TransactionAddress]: {
     from: string;
-    to?: string;
-    nft?: NftItem;
+    to?: string | undefined;
+    nft?: NftItem | undefined;
+    token?: IToken | undefined;
   };
   [TransactionStackRoutes.TransactionSum]: {
     from: string;
