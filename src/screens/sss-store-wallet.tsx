@@ -13,7 +13,7 @@ import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 import {RemoteConfig} from '@app/services/remote-config';
 import {ModalType, WalletType} from '@app/types';
-import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables/common';
+import {ETH_HD_SHORT_PATH} from '@app/variables/common';
 
 export const SssStoreWalletScreen = () => {
   const route = useTypedRoute<'sssStoreWallet'>();
@@ -51,7 +51,7 @@ export const SssStoreWalletScreen = () => {
 
           const name =
             total === 0
-              ? MAIN_ACCOUNT_NAME
+              ? getText(I18N.mainAccount)
               : getText(I18N.signinStoreWalletAccountNumber, {
                   number: `${total + 1}`,
                 });

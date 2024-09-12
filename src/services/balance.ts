@@ -171,6 +171,7 @@ export class Balance implements IBalance, ISerializable {
     fixed: number | 'auto' = NUM_PRECISION,
     precission: number = this.precission,
     useZeroFormatter = true,
+    withoutSymbol = false,
   ) => {
     let fixedNum = 0;
     if (fixed === 'auto') {
@@ -180,17 +181,21 @@ export class Balance implements IBalance, ISerializable {
       fixedNum = fixed;
     }
 
+    if (withoutSymbol) {
+      return this.toFloatString(fixedNum, precission, useZeroFormatter).trim();
+    }
+
     const isRTL = I18nManager.isRTL;
     if (isRTL) {
       return `${this.symbol} ${this.toFloatString(
         fixedNum,
         precission,
         useZeroFormatter,
-      )}`;
+      )}`.trim();
     }
     return (
       this.toFloatString(fixedNum, precission, useZeroFormatter) +
-      ` ${this.symbol}`
+      ` ${this.symbol}`.trim()
     );
   };
 

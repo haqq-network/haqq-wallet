@@ -89,10 +89,7 @@ export const useSumAmount = (
     setMax() {
       const max = maxAmountRef.current ?? maxAmount;
       setAmount(({changed: _changed}) => ({
-        amountText: max
-          ?.toBalanceString('auto', undefined, false)
-          ?.split(max.getSymbol())?.[0]
-          ?.trim(),
+        amountText: max?.toBalanceString('auto', undefined, false, true),
         amount: max,
         changed: _changed,
       }));
@@ -100,10 +97,7 @@ export const useSumAmount = (
     setMin: () => {
       const min = minAmountRef.current ?? minAmount;
       setAmount(({changed: _changed}) => ({
-        amountText: min
-          ?.toBalanceString('auto', undefined, false)
-          ?.split(min.getSymbol())?.[0]
-          ?.trim(),
+        amountText: min?.toBalanceString('auto', undefined, false, true),
         amount: min,
         changed: _changed,
       }));

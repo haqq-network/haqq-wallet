@@ -4,10 +4,8 @@ import {NativeStackNavigationOptions} from '@react-navigation/native-stack';
 import {PopupHeader} from '@app/components';
 import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
 import {SpacerPopupButton} from '@app/components/popup/spacer-popup-button';
-import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {RootStackParamList, StackPresentationTypes} from '@app/types';
-import {MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
 export function getWalletTitle(props: {
   route: RouteProp<RootStackParamList, 'accountInfo'>;
@@ -15,14 +13,8 @@ export function getWalletTitle(props: {
 }): NativeStackNavigationOptions {
   const wallet = Wallet.getById(props.route.params.accountId);
 
-  const translatedWalletName = wallet?.name
-    ? wallet.name === MAIN_ACCOUNT_NAME
-      ? getText(I18N.mainAccount)
-      : wallet.name
-    : 'Account';
-
   return {
-    title: translatedWalletName,
+    title: wallet?.name,
     headerShown: true,
     header: PopupHeader,
     headerLeft: SpacerPopupButton,
