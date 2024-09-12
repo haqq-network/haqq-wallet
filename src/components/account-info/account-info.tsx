@@ -4,7 +4,7 @@ import {observer} from 'mobx-react';
 
 import {TokenViewer} from '@app/components/token-viewer';
 import {TransactionEmpty} from '@app/components/transaction-empty';
-import {First, PopupContainer, Spacer} from '@app/components/ui';
+import {First, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useShowNft} from '@app/hooks/nft';
@@ -156,15 +156,13 @@ export const AccountInfo = observer(
     );
 
     return (
-      <PopupContainer plain>
-        <TransactionList
-          addresses={[wallet.address]}
-          hideContent={hideTransactionsContent}
-          onTransactionPress={onPressTxRow}
-          ListHeaderComponent={renderListHeader}
-          ListEmptyComponent={renderListEmptyComponent}
-        />
-      </PopupContainer>
+      <TransactionList
+        addresses={[wallet.address]}
+        hideContent={hideTransactionsContent}
+        onTransactionPress={onPressTxRow}
+        ListHeaderComponent={renderListHeader}
+        ListEmptyComponent={renderListEmptyComponent}
+      />
     );
   },
 );
