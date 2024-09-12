@@ -3,15 +3,15 @@
  */
 import '@ethersproject/shims';
 import '@walletconnect/react-native-compat';
-import {AppRegistry, LogBox} from 'react-native';
+import {AppRegistry, I18nManager, LogBox} from 'react-native';
 import './global';
 
-import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {enableBatchedStateUpdates} from '@app/hooks/batched-set-state';
+import {Provider} from '@app/models/provider';
 import {EventTracker} from '@app/services/event-tracker';
 import {MarketingEvents} from '@app/types';
-import {IS_IOS} from '@app/variables/common';
+import {IS_IOS, RTL_LANGUAGES} from '@app/variables/common';
 import {JsonRpcProvider} from '@ethersproject/providers';
 import messaging from '@react-native-firebase/messaging';
 import * as Sentry from '@sentry/react-native';
@@ -22,7 +22,7 @@ import {name as appName} from './app.json';
 import {App} from './src/app';
 import './src/event-actions';
 import {Jailbreak} from './src/jailbreak';
-import {Provider} from '@app/models/provider';
+import {Language} from '@app/models/language';
 
 if (!global.BigInt) {
   const BigInt = require('big-integer');
@@ -31,6 +31,9 @@ if (!global.BigInt) {
     BigInt: BigInt,
   });
 }
+
+const isRTL = RTL_LANGUAGES.includes(Language.current);
+I18nManager.allowRTL(isRTL);
 
 enableScreens();
 enableFreeze(true);
