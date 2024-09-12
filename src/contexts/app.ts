@@ -28,6 +28,7 @@ import {Currencies} from '@app/models/currencies';
 import {
   ALL_NETWORKS_ID,
   Provider,
+  ProviderModel,
   RemoteProviderConfig,
 } from '@app/models/provider';
 import {Token} from '@app/models/tokens';
@@ -657,17 +658,14 @@ class App extends AsyncEventEmitter {
   }
 
   private _calculateAllNetworksBalance = (address: string) => {
-    const balances = Provider.getAllNetworks().map(p => {
-      return (
-        this._balances[p.ethChainId]?.[AddressUtils.toEth(address)] ||
-        Balance.emptyBalances[AddressUtils.toEth(address)]
-      );
-    });
+    const getBalanceData = (p: ProviderModel) =>
+      this._balances[p.ethChainId]?.[AddressUtils.toEth(address)] ||
+      Balance.emptyBalances[AddressUtils.toEth(address)];
 
-    return balances.reduce(
-      (acc, balance) => {
+    return Provider.getAllNetworks().reduce(
+      (acc, p) => {
         const {available, locked, staked, total, vested, availableForStake} =
-          balance ?? {};
+          getBalanceData(p) ?? {};
 
         return {
           staked: acc.staked.operate(

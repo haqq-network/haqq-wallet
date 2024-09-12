@@ -19,7 +19,7 @@ export const ALL_NETWORKS_PROVIDER: NetworkProvider = {
   cosmos_chain_id: undefined,
   cosmos_entry_point: undefined,
   cosmos_explorer_url: undefined,
-  decimals: 0,
+  decimals: 18,
   denom: '',
   entry_point: 'https://rpc.eth.haqq.network/',
   explorer_url: undefined,
