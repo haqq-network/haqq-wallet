@@ -91,7 +91,7 @@ class ProviderStore {
       await Transaction.fetchLatestTransactions(Wallet.addressList(), true);
       await Currencies.fetchCurrencies();
 
-      if (this.selectedProvider.config.isNftEnabled) {
+      if (this.isAllNetworks || this.selectedProvider.config.isNftEnabled) {
         await Nft.fetchNft();
       }
       this.fetchProviders();
