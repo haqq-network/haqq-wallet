@@ -27,7 +27,6 @@ import {
 } from '@app/route-types';
 import {Balance} from '@app/services/balance';
 import {ChooseAccountItem, ModalType, WalletType} from '@app/types';
-import {MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
 const PAGE_SIZE = 5;
 
@@ -195,7 +194,7 @@ export const ChooseAccountScreen = observer(() => {
         const total = Wallet.getAll().length;
         const name =
           total === 0
-            ? MAIN_ACCOUNT_NAME
+            ? getText(I18N.mainAccount)
             : getText(I18N.signinStoreWalletAccountNumber, {
                 number: `${total + 1}`,
               });

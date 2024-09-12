@@ -1000,15 +1000,23 @@ export const SwapScreen = observer(() => {
   ]);
 
   const onPressMax = async () => {
-    Keyboard.dismiss();
-    vibrate(HapticEffects.impactLight);
-    await refreshTokenBalances(currentWallet.address, t0Available);
+    try {
+      Keyboard.dismiss();
+      vibrate(HapticEffects.impactLight);
+      await refreshTokenBalances(currentWallet.address, t0Available);
 
-    amountsIn.setAmount(
-      t0Available.toBalanceString('auto', tokenIn?.decimals!, false),
-    );
+      amountsIn.setAmount(
+        t0Available.toFloatString(
+          t0Available.getPrecission(),
+          t0Available.getPrecission(),
+          false,
+        ),
+      );
 
-    await estimate();
+      await estimate();
+    } catch (error) {
+      logger.error('onPressMax', error);
+    }
   };
 
   const onPressChangeWallet = useCallback(async () => {

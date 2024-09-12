@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {observer} from 'mobx-react';
-import {View} from 'react-native';
+import {I18nManager, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
@@ -77,7 +77,7 @@ export const SwapRoutePathIcons = observer(
               {!isLast && (
                 <Text variant={TextVariant.t14} color={Color.textBase1}>
                   {STRINGS.NBSP}
-                  {'→'}
+                  {I18nManager.isRTL ? '←' : '→'}
                   {STRINGS.NBSP}
                 </Text>
               )}

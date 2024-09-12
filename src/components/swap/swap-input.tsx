@@ -140,7 +140,7 @@ const styles = createTheme({
     justifyContent: 'space-between',
   },
   amountInput: {
-    flex: 3.8,
+    flex: 3.5,
   },
   cryptoBlockImage: {
     maxHeight: 12,

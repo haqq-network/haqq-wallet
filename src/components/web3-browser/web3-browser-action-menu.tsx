@@ -71,18 +71,15 @@ export const Web3BrowserActionMenu = ({
   const insets = useSafeAreaInsets();
   const isRTL = useMemo(() => I18nManager.isRTL, []);
   const actionMenuStyle = useMemo(() => {
-    const x1 =
+    const x =
       moreIconLayout.x! -
       ACTION_MENU_WIDTH +
       moreIconLayout.width! * (IS_IOS ? 2 : 4);
-    const x2 =
-      moreIconLayout.x! +
-      ACTION_MENU_WIDTH -
-      moreIconLayout.width! * (IS_IOS ? 2 : 4);
+
     const y = moreIconLayout.height! + moreIconLayout.y! + 5 + insets.top;
 
     return {
-      left: isRTL ? x2 : x1,
+      left: isRTL ? -x : x,
       top: isRTL ? y + 5 : y,
     };
   }, [isRTL, moreIconLayout]);
@@ -217,7 +214,13 @@ export const Web3BrowserActionMenu = ({
 const styles = createTheme({
   moreButtonSeparator: {
     width: ACTION_MENU_WIDTH,
-    transform: [{translateX: -ACTION_MENU_PADDING_HORIZONTAL}],
+    transform: [
+      {
+        translateX: I18nManager.isRTL
+          ? ACTION_MENU_PADDING_HORIZONTAL
+          : -ACTION_MENU_PADDING_HORIZONTAL,
+      },
+    ],
     backgroundColor: Color.graphicSecond2,
     height: 1,
     opacity: 0.5,

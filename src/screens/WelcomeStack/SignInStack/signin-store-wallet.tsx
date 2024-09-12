@@ -21,7 +21,6 @@ import {
 } from '@app/route-types';
 import {RemoteConfig} from '@app/services/remote-config';
 import {ModalType, WalletType} from '@app/types';
-import {MAIN_ACCOUNT_NAME} from '@app/variables/common';
 
 export const SignInStoreWalletScreen = observer(() => {
   const navigation = useTypedNavigation<SignInStackParamList>();
@@ -50,7 +49,7 @@ export const SignInStoreWalletScreen = observer(() => {
 
             const name =
               total === 0
-                ? MAIN_ACCOUNT_NAME
+                ? getText(I18N.mainAccount)
                 : getText(I18N.signinStoreWalletAccountNumber, {
                     number: `${total + 1}`,
                   });

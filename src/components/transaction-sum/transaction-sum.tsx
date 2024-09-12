@@ -23,7 +23,6 @@ import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Provider} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
-import {HapticEffects, vibrate} from '@app/services/haptic';
 import {IToken} from '@app/types';
 import {BALANCE_MULTIPLIER, FEE_AMOUNT} from '@app/variables/balance';
 
@@ -111,7 +110,6 @@ export const TransactionSum = observer(
     }, [amounts, onPressPreview]);
 
     const onPressMax = useCallback(() => {
-      vibrate(HapticEffects.impactLight);
       amounts.setMax();
     }, [amounts]);
 
