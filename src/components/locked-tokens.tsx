@@ -129,6 +129,7 @@ export const LockedTokens = observer(
 const styles = createTheme({
   container: {
     paddingHorizontal: 20,
+    alignItems: 'flex-start',
   },
   row: {
     flexDirection: 'row',

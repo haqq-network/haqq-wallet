@@ -78,7 +78,7 @@ export const SumBlock = observer(
 
     const onPressMax = useCallback(() => {
       vibrate(HapticEffects.impactLight);
-      onMax();
+      onMax?.();
     }, [onMax]);
 
     const fiatString = useMemo(() => {
