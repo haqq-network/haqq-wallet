@@ -68,6 +68,10 @@ class ProviderStore {
     return this._data[this._selectedProviderId];
   }
 
+  get isAllNetworks() {
+    return this._selectedProviderId === ALL_NETWORKS_ID;
+  }
+
   setSelectedProviderId = async (id: ProviderID) => {
     runInAction(() => {
       this._selectedProviderId = id;

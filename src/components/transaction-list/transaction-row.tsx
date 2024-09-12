@@ -100,6 +100,14 @@ export const TransactionRow = memo(
       }
     }, []);
 
+    const tokenImage = useMemo(
+      () =>
+        token?.icon
+          ? {uri: token.icon}
+          : require('@assets/images/empty-icon.png'),
+      [token],
+    );
+
     return (
       <TouchableOpacity onPress={handlePress}>
         <View
@@ -108,7 +116,7 @@ export const TransactionRow = memo(
             <Icon name={item.parsed.icon} color={Color.graphicBase1} />
             {!!token && (
               <View style={styles.tokenIconWrapper}>
-                <ImageWrapper source={token.icon} style={styles.tokenIcon} />
+                <ImageWrapper source={tokenImage} style={styles.tokenIcon} />
               </View>
             )}
           </View>
