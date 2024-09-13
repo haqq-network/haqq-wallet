@@ -349,7 +349,7 @@ export const SwapScreen = observer(() => {
       );
 
       amountsOut.setAmount(
-        amountOut.toBalanceString('auto', tokenOut?.decimals!, false),
+        amountOut.toBalanceString('auto', tokenOut?.decimals!, false, true),
       );
     } catch (err) {
       //@ts-ignore
