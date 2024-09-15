@@ -240,7 +240,10 @@ class TokensStore implements MobXStore<IToken> {
         const contract =
           addressesMap.get(contractAddress) ||
           this.getContract(contractAddress) ||
-          (await Whitelist.verifyAddress(contractAddress));
+          (await Whitelist.verifyAddress(
+            contractAddress,
+            Provider.getByEthChainId(t.chain_id),
+          ));
 
         if (!contract) {
           Logger.error(
@@ -353,7 +356,10 @@ class TokensStore implements MobXStore<IToken> {
     token: IndexerToken,
   ): Promise<IContract> => {
     try {
-      const contract = await Whitelist.verifyAddress(token.contract);
+      const contract = await Whitelist.verifyAddress(
+        token.contract,
+        Provider.getByEthChainId(token.chain_id),
+      );
       return (contract || {}) as IContract;
     } catch (e) {
       return {} as IContract;

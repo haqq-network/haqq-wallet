@@ -5,7 +5,6 @@ import {
 import _ from 'lodash';
 
 import {AddressUtils} from '@app/helpers/address-utils';
-import {Whitelist} from '@app/helpers/whitelist';
 import {I18N, getText} from '@app/i18n';
 import {NftCollectionIndexer} from '@app/models/nft';
 import {
@@ -143,11 +142,6 @@ export class Indexer {
       }
     },
   );
-
-  async getContractName(address: string): Promise<string> {
-    const info = await Whitelist.verifyAddress(address);
-    return info?.name ?? getText(I18N.transactionContractDefaultName);
-  }
 
   async getContractNames(addresses: string[]): Promise<ContractNameMap> {
     try {
