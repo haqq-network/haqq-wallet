@@ -652,9 +652,11 @@ class App extends AsyncEventEmitter {
       return;
     }
 
-    this._balances = balances;
-    Token.fetchTokens();
-    this.emit(Events.onBalanceSync);
+    if (JSON.stringify(this._balances) !== JSON.stringify(balances)) {
+      this._balances = balances;
+      Token.fetchTokens();
+      this.emit(Events.onBalanceSync);
+    }
   }
 
   private _calculateAllNetworksBalance = (address: string) => {
