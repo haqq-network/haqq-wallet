@@ -1140,6 +1140,7 @@ export const SwapScreen = observer(() => {
                     is_erc1155: false,
                     is_erc721: false,
                     is_in_white_list: true,
+                    chain_id: Provider.selectedProvider.ethChainId,
                   }) as IToken,
               ),
             )
@@ -1206,7 +1207,7 @@ export const SwapScreen = observer(() => {
                   providers: Provider.getAll().filter(p =>
                     providersIDs.includes(p.id!),
                   ),
-                  initialProviderId: Provider.selectedProviderId,
+                  initialProviderChainId: Provider.selectedProvider.ethChainId,
                   title: I18N.swapSupportedNetworks,
                 });
                 Provider.setSelectedProviderId(providerId);

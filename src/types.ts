@@ -1090,7 +1090,7 @@ export type Modals = {
     onClose?: () => void;
     title: I18N;
     providers: ProviderModel[] | Results<ProviderModel>;
-    initialProviderId: string;
+    initialProviderChainId: number;
     closeDistance?: () => number;
     eventSuffix?: string;
   };
@@ -1361,6 +1361,7 @@ export type IndexerToken = {
   created_at: string;
   updated_at: string;
   value: string;
+  chain_id: number;
 };
 export type IndexerTime = Record<
   HaqqCosmosAddress | HaqqEthereumAddress,
@@ -1555,6 +1556,7 @@ export type IToken = {
   symbol: IContract['symbol'];
   created_at: string;
   updated_at: string;
+  chain_id: number;
 
   image: ImageSourcePropType;
 };

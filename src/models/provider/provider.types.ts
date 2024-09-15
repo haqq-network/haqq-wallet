@@ -10,11 +10,12 @@ export type ProviderID = string;
 export const INDEXER_PROXY_ENDPOINT = 'https://proxy.indexer.haqq.network';
 
 export const ALL_NETWORKS_ID = 'all_networks';
+export const ALL_NETWORKS_CHAIN_ID = -1;
 export const ALL_NETWORKS_PROVIDER: NetworkProvider = {
   id: ALL_NETWORKS_ID,
   name: 'All Networks',
   icon: '',
-  chain_id: -1,
+  chain_id: ALL_NETWORKS_CHAIN_ID,
   coin_name: 'All Network',
   cosmos_chain_id: undefined,
   cosmos_entry_point: undefined,

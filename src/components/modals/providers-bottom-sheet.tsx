@@ -9,7 +9,7 @@ import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N} from '@app/i18n';
-import {ALL_NETWORKS_ID} from '@app/models/provider';
+import {ALL_NETWORKS_ID, Provider} from '@app/models/provider';
 import {ModalType, Modals} from '@app/types';
 
 import {SettingsProvidersAllNetworksRow} from '../settings/settings-providers/settings-providers-all-networks-row';
@@ -18,7 +18,7 @@ import {SettingsProvidersRow} from '../settings/settings-providers/settings-prov
 export function ProvidersBottomSheet({
   title,
   providers,
-  initialProviderId: initialProvider,
+  initialProviderChainId,
   closeDistance,
   eventSuffix = '',
   onClose,
@@ -30,13 +30,16 @@ export function ProvidersBottomSheet({
     [closeDistance],
   );
   const onPressProvider = useCallback(
-    (providerId: string) => {
-      if (providerId === initialProvider) {
+    (providerChainId: number) => {
+      if (providerChainId === initialProviderChainId) {
         // close if selected same provider
         return onCloseModal();
       }
       onClose?.();
-      app.emit(`provider-selected${eventSuffix}`, providerId);
+      app.emit(
+        `provider-selected${eventSuffix}`,
+        Provider.getByEthChainId(providerChainId)?.id,
+      );
     },
     [eventSuffix, onClose],
   );
@@ -98,7 +101,7 @@ export function ProvidersBottomSheet({
           if (item.id === ALL_NETWORKS_ID) {
             return (
               <SettingsProvidersAllNetworksRow
-                providerId={initialProvider}
+                providerChainId={initialProviderChainId}
                 item={item}
                 onPress={onPressProvider}
               />
@@ -107,7 +110,7 @@ export function ProvidersBottomSheet({
 
           return (
             <SettingsProvidersRow
-              providerId={initialProvider}
+              providerChainId={initialProviderChainId}
               item={item}
               onPress={onPressProvider}
             />

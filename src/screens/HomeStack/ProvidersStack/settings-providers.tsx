@@ -16,9 +16,9 @@ export const SettingsProvidersScreen = observer(() => {
   const providers = Provider.getAll();
 
   const onSelectProvider = useCallback(
-    (pid: string) => {
+    (chainId: number) => {
       navigation.navigate(ProvidersStackRoutes.SettingsProviderForm, {
-        id: pid,
+        id: chainId,
       });
     },
     [navigation],
@@ -56,7 +56,7 @@ export const SettingsProvidersScreen = observer(() => {
       {header}
       <SettingsProviders
         providers={providers}
-        providerId={Provider.selectedProviderId}
+        providerChainId={Provider.selectedProvider.ethChainId}
         onSelect={onSelectProvider}
       />
     </>

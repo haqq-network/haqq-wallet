@@ -232,7 +232,7 @@ export const SettingsDeveloperTools = observer(() => {
             showModal('loading');
             const providerId = await awaitForProvider({
               providers: Provider.getAll(),
-              initialProviderId: '',
+              initialProviderChainId: Provider.selectedProvider.ethChainId,
               title: I18N.networks,
             });
             const provider = Provider.getById(providerId);
@@ -291,10 +291,9 @@ export const SettingsDeveloperTools = observer(() => {
               wallets: Wallet.getAllVisible(),
             });
             const providers = Provider.getAll();
-            const initialProviderId = Provider.selectedProviderId;
             const providerId = await awaitForProvider({
               providers,
-              initialProviderId: initialProviderId!,
+              initialProviderChainId: Provider.selectedProvider.ethChainId,
               title: I18N.networks,
             });
             const result = await awaitForJsonRpcSign({

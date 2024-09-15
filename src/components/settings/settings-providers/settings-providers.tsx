@@ -8,24 +8,24 @@ import {SettingsProvidersRow} from './settings-providers-row';
 
 export type SettingsProvidersProps = {
   providers: ProviderModel[];
-  providerId: string;
-  onSelect: (providerId: string) => void;
+  providerChainId: number;
+  onSelect: (providerChainId: number) => void;
 };
 
 export const SettingsProviders = ({
   providers,
-  providerId,
+  providerChainId,
   onSelect,
 }: SettingsProvidersProps) => {
   return (
     <FlatList
-      key={providerId}
+      key={providerChainId}
       data={providers}
       renderItem={({item}) => (
         <SettingsProvidersRow
           item={item}
           onPress={onSelect}
-          providerId={providerId}
+          providerChainId={providerChainId}
         />
       )}
       keyExtractor={item => item.id}

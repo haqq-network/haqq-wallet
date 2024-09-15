@@ -249,13 +249,13 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
       const providers = Provider.getAll();
       const session = Web3BrowserSession.getByOrigin(helper.origin);
 
-      const initialProviderId = Provider.getByChainIdHex(
+      const initialProvider = Provider.getByChainIdHex(
         session?.selectedChainIdHex!,
-      )?.id;
+      );
 
       const providerId = await awaitForProvider({
         providers,
-        initialProviderId: initialProviderId!,
+        initialProviderChainId: initialProvider?.ethChainId!,
         title: I18N.networks,
       });
 

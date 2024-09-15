@@ -5,22 +5,22 @@ import {TouchableWithoutFeedback, View} from 'react-native';
 import {Color} from '@app/colors';
 import {DataContent, Icon, IconsName, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {ALL_NETWORKS_ID, ProviderModel} from '@app/models/provider';
+import {ALL_NETWORKS_CHAIN_ID, ProviderModel} from '@app/models/provider';
 
 export type SettingsProvidersAllNetworksRowProps = {
   item: ProviderModel;
-  providerId: string;
-  onPress: (providerId: string) => void;
+  providerChainId: number;
+  onPress: (providerChainId: number) => void;
 };
 export const SettingsProvidersAllNetworksRow = ({
   item,
   onPress,
-  providerId,
+  providerChainId,
 }: SettingsProvidersAllNetworksRowProps) => {
   return (
     <TouchableWithoutFeedback
       onPress={() => {
-        onPress(item.id);
+        onPress(item.ethChainId);
       }}>
       <View style={styles.container}>
         <View style={styles.iconWrapper}>
@@ -33,7 +33,7 @@ export const SettingsProvidersAllNetworksRow = ({
         <Spacer width={12} />
         <DataContent style={styles.info} title={item.name} />
         <Spacer flex={1} />
-        {providerId === ALL_NETWORKS_ID && (
+        {providerChainId === ALL_NETWORKS_CHAIN_ID && (
           <Icon color={Color.graphicGreen1} name="check" i24 />
         )}
       </View>

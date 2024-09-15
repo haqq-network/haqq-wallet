@@ -250,7 +250,7 @@ class TokensStore implements MobXStore<IToken> {
           continue;
         }
 
-        const token = {
+        const token: IToken = {
           id: contract.id,
           contract_created_at: contract.created_at,
           contract_updated_at: contract.updated_at,
@@ -268,6 +268,7 @@ class TokensStore implements MobXStore<IToken> {
           symbol: contract.symbol,
           created_at: t.created_at,
           updated_at: t.updated_at,
+          chain_id: t.chain_id,
           image: contract.icon
             ? {uri: contract.icon}
             : require('@assets/images/empty-icon.png'),
@@ -317,6 +318,7 @@ class TokensStore implements MobXStore<IToken> {
       symbol: Provider.selectedProvider.denom,
       created_at: '',
       updated_at: '',
+      chain_id: Provider.selectedProvider.ethChainId,
       image: Provider.selectedProvider.isHaqqNetwork
         ? require('@assets/images/islm_icon.png')
         : {
@@ -382,6 +384,7 @@ class TokensStore implements MobXStore<IToken> {
       symbol: contractFromCache.symbol,
       created_at: token.created_at,
       updated_at: token.updated_at,
+      chain_id: token.chain_id,
       image: contractFromCache.icon
         ? {uri: contractFromCache.icon}
         : require('@assets/images/empty-icon.png'),

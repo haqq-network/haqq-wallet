@@ -33,7 +33,7 @@ export async function onWalletConnectSignTransaction(
       const providers = Provider.getAll();
       const providerId = await awaitForProvider({
         providers,
-        initialProviderId: Provider.selectedProviderId,
+        initialProviderChainId: Provider.selectedProvider.ethChainId,
         title: I18N.networks,
       });
 
