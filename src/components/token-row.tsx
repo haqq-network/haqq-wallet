@@ -24,7 +24,7 @@ export const TokenRow = ({item, checked = false, onPress}: TokenRowProps) => {
   const providerImage = useMemo(() => {
     const p = Provider.getByEthChainId(item.chain_id);
 
-    if (!p) {
+    if (!Provider.isAllNetworks || !p) {
       return undefined;
     }
 

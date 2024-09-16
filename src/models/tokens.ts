@@ -23,7 +23,7 @@ import {
 import {RPCMessage} from '@app/types/rpc';
 import {createAsyncTask} from '@app/utils';
 
-import {Provider} from './provider';
+import {Provider, ProviderModel} from './provider';
 
 class TokensStore implements MobXStore<IToken> {
   /**
@@ -226,7 +226,7 @@ class TokensStore implements MobXStore<IToken> {
 
     wallets.forEach(wallet => {
       _tokens[AddressUtils.toEth(wallet.cosmosAddress)] = [
-        this.generateNativeToken(wallet),
+        ...this.generateNativeTokens(wallet),
       ];
     });
     for await (const t of updates.tokens) {
@@ -281,7 +281,7 @@ class TokensStore implements MobXStore<IToken> {
 
         if (!_tokens[walletAddress]?.length) {
           _tokens[walletAddress] = [
-            this.generateNativeToken(Wallet.getById(walletAddress)!),
+            ...this.generateNativeTokens(Wallet.getById(walletAddress)!),
           ];
         }
 
@@ -304,7 +304,18 @@ class TokensStore implements MobXStore<IToken> {
     });
   });
 
-  public generateNativeToken = (wallet: Wallet): IToken => {
+  private generateNativeTokens = (w: Wallet) => {
+    if (Provider.isAllNetworks) {
+      return Provider.getAllNetworks().map(p => this.generateNativeToken(w, p));
+    }
+
+    return [this.generateNativeToken(w)];
+  };
+
+  public generateNativeToken = (
+    wallet: Wallet,
+    provider: ProviderModel = Provider.selectedProvider,
+  ): IToken => {
     const balance = app.getAvailableBalance(wallet.address);
 
     return {
@@ -312,43 +323,53 @@ class TokensStore implements MobXStore<IToken> {
       contract_created_at: '',
       contract_updated_at: '',
       value: balance,
-      decimals: Provider.selectedProvider.decimals,
+      decimals: provider.decimals,
       is_erc20: false,
       is_erc721: false,
       is_erc1155: false,
       is_in_white_list: true,
-      name: Provider.selectedProvider.coinName,
-      symbol: Provider.selectedProvider.denom,
+      name: provider.coinName,
+      symbol: provider.denom,
       created_at: '',
       updated_at: '',
-      chain_id: Provider.selectedProvider.ethChainId,
-      image: Provider.selectedProvider.isHaqqNetwork
+      chain_id: provider.ethChainId,
+      image: provider.isHaqqNetwork
         ? require('@assets/images/islm_icon.png')
-        : {
-            uri: Provider.selectedProvider.icon,
-          },
+        : {uri: provider.icon},
     };
   };
 
-  public generateNativeTokenContract = (): IContract => {
+  private generateNativeTokenContracts = () => {
+    if (Provider.isAllNetworks) {
+      return Provider.getAllNetworks().map(p =>
+        this.generateNativeTokenContract(p),
+      );
+    }
+
+    return [this.generateNativeTokenContract()];
+  };
+
+  public generateNativeTokenContract = (
+    provider: ProviderModel = Provider.selectedProvider,
+  ): IContract => {
     return {
       id: AddressUtils.toHaqq(NATIVE_TOKEN_ADDRESS),
       eth_address: AddressUtils.toEth(NATIVE_TOKEN_ADDRESS),
       address_type: AddressType.contract,
       is_skip_eth_tx: false,
       min_input_amount: '18',
-      decimals: Provider.selectedProvider.decimals,
+      decimals: provider.decimals,
       is_erc20: false,
       is_erc721: false,
       is_erc1155: false,
       is_in_white_list: true,
-      name: Provider.selectedProvider.coinName,
-      symbol: Provider.selectedProvider.denom,
+      name: provider.coinName,
+      symbol: provider.denom,
       created_at: '',
       updated_at: '',
-      icon: Provider.selectedProvider.isHaqqNetwork
+      icon: provider.isHaqqNetwork
         ? require('@assets/images/islm_icon.png')
-        : Provider.selectedProvider.icon,
+        : provider.icon,
     };
   };
 

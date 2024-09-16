@@ -46,6 +46,10 @@ export function ImageWrapper({source, style, ...props}: ImageWrapperProps) {
       return toJS(source) as ImageSourcePropType;
     }
 
+    if (typeof source === 'number') {
+      return source as ImageSourcePropType;
+    }
+
     if (!(source as ImageURISource).uri) {
       return {uri: ''};
     }
