@@ -721,51 +721,63 @@ class App extends AsyncEventEmitter {
     );
   }
 
-  getAvailableBalance(address: string): Balance {
+  getAvailableBalance(
+    address: string,
+    provider = Provider.selectedProvider,
+  ): Balance {
     return (
-      this._balances[Provider.selectedProvider.ethChainId]?.[
-        AddressUtils.toEth(address)
-      ]?.available ?? Balance.Empty
+      this._balances[provider.ethChainId]?.[AddressUtils.toEth(address)]
+        ?.available ?? Balance.Empty
     );
   }
 
-  getAvailableForStakeBalance(address: string): Balance {
+  getAvailableForStakeBalance(
+    address: string,
+    provider = Provider.selectedProvider,
+  ): Balance {
     return (
-      this._balances[Provider.selectedProvider.ethChainId]?.[
-        AddressUtils.toEth(address)
-      ]?.availableForStake ?? Balance.Empty
+      this._balances[provider.ethChainId]?.[AddressUtils.toEth(address)]
+        ?.availableForStake ?? Balance.Empty
     );
   }
 
-  getStakingBalance(address: string): Balance {
+  getStakingBalance(
+    address: string,
+    provider = Provider.selectedProvider,
+  ): Balance {
     return (
-      this._balances[Provider.selectedProvider.ethChainId]?.[
-        AddressUtils.toEth(address)
-      ]?.staked ?? Balance.Empty
+      this._balances[provider.ethChainId]?.[AddressUtils.toEth(address)]
+        ?.staked ?? Balance.Empty
     );
   }
 
-  getVestingBalance(address: string): Balance {
+  getVestingBalance(
+    address: string,
+    provider = Provider.selectedProvider,
+  ): Balance {
     return (
-      this._balances[Provider.selectedProvider.ethChainId]?.[
-        AddressUtils.toEth(address)
-      ]?.vested ?? Balance.Empty
+      this._balances[provider.ethChainId]?.[AddressUtils.toEth(address)]
+        ?.vested ?? Balance.Empty
     );
   }
 
-  getTotalBalance(address: string): Balance {
+  getTotalBalance(
+    address: string,
+    provider = Provider.selectedProvider,
+  ): Balance {
     return (
-      this._balances[Provider.selectedProvider.ethChainId]?.[
-        AddressUtils.toEth(address)
-      ]?.total ?? Balance.Empty
+      this._balances[provider.ethChainId]?.[AddressUtils.toEth(address)]
+        ?.total ?? Balance.Empty
     );
   }
 
-  getLockedBalance(address: string): Balance {
+  getLockedBalance(
+    address: string,
+    provider = Provider.selectedProvider,
+  ): Balance {
     return (
-      this._balances[Provider.selectedProvider.ethChainId]?.[
-        AddressUtils.toEth(address)
-      ]?.locked ?? Balance.Empty
+      this._balances[provider.ethChainId]?.[AddressUtils.toEth(address)]
+        ?.locked ?? Balance.Empty
     );
   }
 

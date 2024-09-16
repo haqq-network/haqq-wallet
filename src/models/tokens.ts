@@ -316,7 +316,7 @@ class TokensStore implements MobXStore<IToken> {
     wallet: Wallet,
     provider: ProviderModel = Provider.selectedProvider,
   ): IToken => {
-    const balance = app.getAvailableBalance(wallet.address);
+    const balance = app.getAvailableBalance(wallet.address, provider);
 
     return {
       id: AddressUtils.toHaqq(NATIVE_TOKEN_ADDRESS),
@@ -339,7 +339,7 @@ class TokensStore implements MobXStore<IToken> {
     };
   };
 
-  private generateNativeTokenContracts = () => {
+  public generateNativeTokenContracts = () => {
     if (Provider.isAllNetworks) {
       return Provider.getAllNetworks().map(p =>
         this.generateNativeTokenContract(p),

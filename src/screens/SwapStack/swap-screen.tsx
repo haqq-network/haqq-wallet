@@ -532,7 +532,7 @@ export const SwapScreen = observer(() => {
         const [walletAddres, tokenAddress] = token?.tag.split('_');
         const wallet = Wallet.getById(AddressUtils.toEth(walletAddres))!;
         const generatedISLMContract = {
-          ...Token.generateNativeTokenContract(),
+          ...Token.generateNativeTokenContracts(),
           ...Token.generateNativeToken(wallet),
         };
         logger.log('awaitForToken', {
