@@ -20,7 +20,7 @@ import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {IToken} from '@app/types';
-import {calculateBalances, generateUUID} from '@app/utils';
+import {calculateBalances} from '@app/utils';
 
 export type Props = {
   wallet: Wallet;
@@ -59,7 +59,7 @@ export const WalletCard = ({
       }
       return (
         <TokenRow
-          key={generateUUID()}
+          key={token.id}
           onPress={() => onPressToken?.(wallet, token, idx)}
           item={token}
           checked={checkTokenSelected?.(wallet, token, idx)}
@@ -130,7 +130,7 @@ export const WalletCard = ({
         }
         return (
           <TokenRow
-            key={generateUUID()}
+            key={token.id}
             item={token}
             onPress={() => onPressToken?.(wallet, token, idx)}
             checked={checkTokenSelected?.(wallet, token, idx)}
