@@ -13,7 +13,7 @@ import {ProvidersStackParamList, ProvidersStackRoutes} from '@app/route-types';
 
 export const SettingsProvidersScreen = observer(() => {
   const navigation = useTypedNavigation<ProvidersStackParamList>();
-  const providers = Provider.getAll();
+  const providers = Provider.getAllNetworks();
 
   const onSelectProvider = useCallback(
     (chainId: number) => {
