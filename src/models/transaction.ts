@@ -1,4 +1,3 @@
-import {hashMessage} from '@walletconnect/utils';
 import {makeAutoObservable, runInAction, when} from 'mobx';
 import {isHydrated} from 'mobx-persist-store';
 
@@ -11,7 +10,6 @@ import {Indexer} from '@app/services/indexer';
 import {IndexerTransaction, IndexerTxParsedTokenInfo} from '@app/types';
 import {RPCMessage, RPCObserver} from '@app/types/rpc';
 
-import {Provider} from './provider';
 import {Token} from './tokens';
 
 export enum TransactionStatus {
@@ -39,15 +37,10 @@ export type Transaction = IndexerTransaction & {
   parsed: ParsedTransactionData;
 };
 
-type AccountsHash = string;
-type CacheKey = `${AccountsHash}:${string}`;
-
 class TransactionStore implements RPCObserver {
   private _transactions: Array<Transaction> = [];
-  private _lastSyncedAccountsHash: AccountsHash = '';
   private _lastSyncedTransactionTs: string = 'latest';
   private _isLoading = false;
-  private _cache = new Map<CacheKey, Transaction[]>();
 
   constructor() {
     makeAutoObservable(this);
@@ -129,7 +122,6 @@ class TransactionStore implements RPCObserver {
   }
 
   removeAll() {
-    this._lastSyncedAccountsHash = '';
     this._lastSyncedTransactionTs = 'latest';
     this._transactions = [];
   }
@@ -153,7 +145,8 @@ class TransactionStore implements RPCObserver {
     if (this.isLoading && !force) {
       return;
     }
-    const newTxs = await this._fetch(accounts);
+
+    const newTxs = await this._fetch(accounts, 'latest');
 
     runInAction(() => {
       this._transactions = newTxs;
@@ -162,39 +155,23 @@ class TransactionStore implements RPCObserver {
     return newTxs;
   };
 
-  private _fetch = async (accounts: string[]) => {
+  private _fetch = async (accounts: string[], ts?: string) => {
     try {
-      const accountHash = hashMessage(accounts.join(''));
-      const cacheKey: CacheKey = `${Provider.selectedProviderId}${accountHash}:${this._lastSyncedTransactionTs}`;
-
-      runInAction(() => {
-        this._isLoading = true;
-        if (
-          this._lastSyncedTransactionTs === 'latest' &&
-          this._lastSyncedAccountsHash !== accountHash
-        ) {
-          const cahced = this._cache.get(cacheKey);
-          if (cahced?.length) {
-            this._transactions = cahced;
-          } else {
-            this._transactions = [];
-          }
-        }
-
-        this._lastSyncedAccountsHash = accountHash;
-      });
-
       const result = await Indexer.instance.getTransactions(
         accounts,
-        this._lastSyncedTransactionTs,
+        ts ?? this._lastSyncedTransactionTs,
       );
       await when(() => !Token.isLoading, {});
       const parsed = result
         .map(tx => parseTransaction(tx, accounts))
         .filter(tx => !!tx.parsed);
-      this._cache.set(cacheKey, parsed);
 
-      this._lastSyncedTransactionTs = parsed[parsed.length - 1]?.ts ?? 'latest';
+      // If new transactions exists than _lastSyncedTransactionTs must be updated
+      // If transactions array is empty it's mean all transactions fetched and _lastSyncedTransactionTs mustn't be updated
+      if (parsed.length) {
+        this._lastSyncedTransactionTs =
+          parsed[parsed.length - 1]?.ts ?? 'latest';
+      }
 
       return parsed;
     } catch (e) {

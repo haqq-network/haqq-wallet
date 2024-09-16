@@ -157,6 +157,7 @@ export const AccountInfo = observer(
 
     return (
       <TransactionList
+        key={activeTab}
         addresses={[wallet.address]}
         hideContent={hideTransactionsContent}
         onTransactionPress={onPressTxRow}
