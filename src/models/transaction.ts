@@ -4,7 +4,6 @@ import {isHydrated} from 'mobx-persist-store';
 
 import {IconProps} from '@app/components/ui';
 import {parseTransaction} from '@app/helpers/indexer-transaction-utils';
-import {TransactionRealmObject} from '@app/models/realm-object-for-migration';
 import {Socket} from '@app/models/socket';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
@@ -44,7 +43,6 @@ type AccountsHash = string;
 type CacheKey = `${AccountsHash}:${string}`;
 
 class TransactionStore implements RPCObserver {
-  realmSchemaName = TransactionRealmObject.schema.name;
   private _transactions: Array<Transaction> = [];
   private _lastSyncedAccountsHash: AccountsHash = '';
   private _lastSyncedTransactionTs: string = 'latest';

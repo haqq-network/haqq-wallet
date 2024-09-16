@@ -1,10 +1,10 @@
 import React, {memo, useCallback, useMemo} from 'react';
 
-import {ImageURISource, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import BlastedImage from 'react-native-blasted-image';
 
 import {Color} from '@app/colors';
-import {Spacer, Text} from '@app/components/ui';
+import {Spacer, Text, TextVariant} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {IStory} from '@app/types';
 
@@ -15,8 +15,8 @@ type Props = {
 };
 
 export const StoriesPreviewItem = memo(({item, onPress, seen}: Props) => {
-  const source: ImageURISource = {
-    uri: item.preview,
+  const source = {
+    uri: item.preview ?? '',
   };
   const borderColor = useMemo(
     () => (seen ? styles.borderSeen : styles.borderUnseen),
@@ -41,12 +41,12 @@ export const StoriesPreviewItem = memo(({item, onPress, seen}: Props) => {
 
       <Spacer height={2} />
       <Text
-        t17
-        children={item.title}
+        variant={TextVariant.t17}
         style={styles.title}
         numberOfLines={2}
-        color={titleColor}
-      />
+        color={titleColor}>
+        {item.title}
+      </Text>
     </TouchableOpacity>
   );
 });

@@ -8,7 +8,6 @@ import {Events} from '@app/events';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {awaitForRealm} from '@app/helpers/await-for-realm';
-import {WalletRealmObject} from '@app/models/realm-object-for-migration';
 import {Socket} from '@app/models/socket';
 import {storage} from '@app/services/mmkv';
 import {RPCMessage, RPCObserver} from '@app/types/rpc';
@@ -23,12 +22,10 @@ import {
 
 import {Token} from './tokens';
 
-import {realm} from './index';
 import {
   AddWalletParams,
   HaqqCosmosAddress,
   HaqqEthereumAddress,
-  MobXStoreFromRealm,
   WalletCardPattern,
   WalletCardStyle,
   WalletCardStyleT,
@@ -84,8 +81,7 @@ function getMockWallets(): Wallet[] {
   }));
 }
 
-class WalletStore implements MobXStoreFromRealm, RPCObserver {
-  realmSchemaName = WalletRealmObject.schema.name;
+class WalletStore implements RPCObserver {
   wallets: Wallet[] = [];
 
   constructor(shouldSkipPersisting: boolean = false) {
@@ -141,23 +137,6 @@ class WalletStore implements MobXStoreFromRealm, RPCObserver {
     await when(() => this.isHydrated, {
       timeout: STORE_REHYDRATION_TIMEOUT_MS,
     });
-
-    const realmData = realm.objects<Wallet>(this.realmSchemaName);
-    if (realmData.length > 0) {
-      realmData.forEach(item => {
-        this.create(item.name, {
-          address: item.address,
-          accountId: item.accountId || '',
-          path: item.path || '',
-          type: item.type,
-          pattern: item.pattern,
-          cardStyle: item.cardStyle,
-        });
-        realm.write(() => {
-          realm.delete(item);
-        });
-      });
-    }
   };
 
   async create(

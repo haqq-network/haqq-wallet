@@ -4,7 +4,14 @@ import {toJS} from 'mobx';
 import {TouchableOpacity, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {CardSmall, DataContent, Icon, Spacer, Text} from '@app/components/ui';
+import {
+  CardSmall,
+  DataContent,
+  Icon,
+  Spacer,
+  Text,
+  TextVariant,
+} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {Transaction} from '@app/models/transaction';
@@ -101,10 +108,7 @@ export const TransactionRow = memo(
     }, []);
 
     const tokenImage = useMemo(
-      () =>
-        token?.icon
-          ? {uri: token.icon}
-          : require('@assets/images/empty-icon.png'),
+      () => token?.icon ?? require('@assets/images/empty-icon.png'),
       [token],
     );
 
@@ -124,7 +128,7 @@ export const TransactionRow = memo(
             style={styles.infoContainer}
             title={
               <View style={styles.titleWrapper}>
-                <Text children={item.parsed.title} color={Color.textBase1} />
+                <Text color={Color.textBase1}>{item.parsed.title}</Text>
                 <TransactionStatus status={item.code} />
               </View>
             }
@@ -146,7 +150,7 @@ export const TransactionRow = memo(
                   </>
                 )}
                 <View>
-                  <Text t14 color={Color.textBase2}>
+                  <Text variant={TextVariant.t14} color={Color.textBase2}>
                     {item.parsed.subtitle}
                   </Text>
                 </View>
@@ -158,7 +162,7 @@ export const TransactionRow = memo(
           {amount.isPositive() && (
             <View style={styles.amountWrapper}>
               <Text
-                t11
+                variant={TextVariant.t11}
                 color={amoutColor}
                 ellipsizeMode="middle"
                 numberOfLines={1}>
@@ -168,7 +172,7 @@ export const TransactionRow = memo(
               </Text>
               <Spacer height={2} />
               <Text
-                t14
+                variant={TextVariant.t14}
                 color={Color.textBase2}
                 ellipsizeMode="middle"
                 numberOfLines={1}>

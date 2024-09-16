@@ -69,6 +69,7 @@ class StoriesStore {
         {} as Record<IStory['id'], IStory>,
       );
       // Preload all images
+      // @ts-ignore
       BlastedImage.preload(sources);
       runInAction(() => {
         this.data = normalizedStories;
