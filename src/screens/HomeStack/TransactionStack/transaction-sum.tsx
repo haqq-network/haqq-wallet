@@ -13,6 +13,7 @@ import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
+import {EstimationVariant} from '@app/models/fee';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {
@@ -144,11 +145,15 @@ export const TransactionSumScreen = observer(() => {
 
   useEffectAsync(async () => {
     const b = app.getAvailableBalance(route.params.from);
-    const {expectedFee} = await EthNetwork.estimate({
-      from: route.params.from,
-      to,
-      value: b,
-    });
+    const {expectedFee} = await EthNetwork.estimate(
+      {
+        from: route.params.from,
+        to,
+        value: b,
+      },
+      EstimationVariant.average,
+      Provider.getByEthChainId(route.params.token.chain_id),
+    );
     setFee(expectedFee);
   }, [to]);
 
