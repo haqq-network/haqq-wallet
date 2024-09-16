@@ -11,7 +11,7 @@ export interface AwaitForFeeParams {
   to: string;
   value?: Balance;
   data?: string;
-  chainId?: string;
+  chainId?: number;
 
   eventSuffix?: string | number;
 }

@@ -346,6 +346,7 @@ export class EthNetwork {
       contractAddress: string;
     },
     estimationVariant: EstimationVariant = EstimationVariant.average,
+    provider = Provider.selectedProvider,
   ) {
     const data = getERC20TransferData(to, amount, contractAddress);
     return await EthNetwork.estimate(
@@ -356,6 +357,7 @@ export class EthNetwork {
         data,
       },
       estimationVariant,
+      provider,
     );
   }
 

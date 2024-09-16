@@ -175,6 +175,7 @@ export const TransactionConfirmationScreen = observer(() => {
         to,
         value,
         data,
+        chainId: token.chain_id,
       });
 
       setFee(result);

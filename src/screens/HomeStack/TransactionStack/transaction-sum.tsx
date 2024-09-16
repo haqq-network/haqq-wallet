@@ -56,18 +56,26 @@ export const TransactionSumScreen = observer(() => {
       try {
         const token = route.params.token;
         if (token.is_erc20) {
-          return await EthNetwork.estimateERC20Transfer({
-            from: wallet?.address!,
-            to: route.params.to,
-            amount,
-            contractAddress: AddressUtils.toEth(token.id),
-          });
+          return await EthNetwork.estimateERC20Transfer(
+            {
+              from: wallet?.address!,
+              to: route.params.to,
+              amount,
+              contractAddress: AddressUtils.toEth(token.id),
+            },
+            EstimationVariant.average,
+            Provider.getByEthChainId(route.params.token.chain_id),
+          );
         } else {
-          return await EthNetwork.estimate({
-            from: route.params.from,
-            to: route.params.to,
-            value: amount,
-          });
+          return await EthNetwork.estimate(
+            {
+              from: route.params.from,
+              to: route.params.to,
+              value: amount,
+            },
+            EstimationVariant.average,
+            Provider.getByEthChainId(route.params.token.chain_id),
+          );
         }
       } catch (err) {
         Logger.log('tx sum err getFee', err);
@@ -154,6 +162,7 @@ export const TransactionSumScreen = observer(() => {
       EstimationVariant.average,
       Provider.getByEthChainId(route.params.token.chain_id),
     );
+
     setFee(expectedFee);
   }, [to]);
 
