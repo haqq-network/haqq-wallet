@@ -28,10 +28,7 @@ export const TransactionSelectCryptoScreen = observer(() => {
         () =>
           Token.tokens[AddressUtils.toEth(params.from)]?.filter(
             item =>
-              !!item.is_in_white_list &&
-              // FIXME: only erc20 tokens or native currency (ISLM)
-              (item.is_erc20 ||
-                item.symbol === Provider.selectedProvider.denom),
+              !!item.is_in_white_list && !item.is_erc721 && !item.is_erc1155,
           ) ?? [],
       ),
     [params.from, Provider.selectedProvider.denom],
