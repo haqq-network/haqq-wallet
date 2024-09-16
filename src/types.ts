@@ -23,7 +23,6 @@ import {
   TextStyle,
   ViewStyle,
 } from 'react-native';
-import {Results} from 'realm';
 
 import {Color} from '@app/colors';
 import {CaptchaType} from '@app/components/captcha';
@@ -1089,8 +1088,9 @@ export type Modals = {
   providersBottomSheet: {
     onClose?: () => void;
     title: I18N;
-    providers: ProviderModel[] | Results<ProviderModel>;
+    providers?: ProviderModel[];
     initialProviderChainId: number;
+    desableAllNetworksOption?: boolean;
     closeDistance?: () => number;
     eventSuffix?: string;
   };

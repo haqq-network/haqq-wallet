@@ -231,7 +231,6 @@ export const SettingsDeveloperTools = observer(() => {
           try {
             showModal('loading');
             const providerId = await awaitForProvider({
-              providers: Provider.getAll(),
               initialProviderChainId: Provider.selectedProvider.ethChainId,
               title: I18N.networks,
             });
@@ -290,9 +289,7 @@ export const SettingsDeveloperTools = observer(() => {
               title: I18N.selectAccount,
               wallets: Wallet.getAllVisible(),
             });
-            const providers = Provider.getAll();
             const providerId = await awaitForProvider({
-              providers,
               initialProviderChainId: Provider.selectedProvider.ethChainId,
               title: I18N.networks,
             });

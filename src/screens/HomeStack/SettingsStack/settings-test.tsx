@@ -271,7 +271,6 @@ const getTestModals = (): TestModals => {
   if (firstProviderId) {
     modals.providersBottomSheet = {
       title: I18N.welcomeTitle,
-      providers,
       initialProviderChainId: firstProviderId,
       eventSuffix: '-test',
       closeDistance: () => getWindowHeight() / 6,
@@ -726,9 +725,7 @@ export const SettingsTestScreen = observer(() => {
               title: I18N.selectAccount,
               wallets: Wallet.getAllVisible(),
             });
-            const providers = Provider.getAll();
             const providerId = await awaitForProvider({
-              providers,
               initialProviderChainId: Provider.selectedProvider.ethChainId,
               title: I18N.networks,
             });

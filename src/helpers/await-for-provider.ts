@@ -1,5 +1,3 @@
-import {Results} from 'realm';
-
 import {app} from '@app/contexts';
 import {showModal} from '@app/helpers/modal';
 import {I18N} from '@app/i18n';
@@ -9,8 +7,9 @@ import {getWindowHeight} from './scaling-utils';
 
 export interface AwaitProviderParams {
   title: I18N;
-  providers: ProviderModel[] | Results<ProviderModel>;
+  providers?: ProviderModel[];
   initialProviderChainId: number;
+  desableAllNetworksOption?: boolean;
 }
 
 export class AwaitProviderError {
@@ -25,6 +24,7 @@ export async function awaitForProvider({
   title,
   providers,
   initialProviderChainId,
+  desableAllNetworksOption,
 }: AwaitProviderParams): Promise<string> {
   return new Promise((resolve, reject) => {
     const removeAllListeners = () => {
@@ -47,9 +47,10 @@ export async function awaitForProvider({
 
     return showModal('providersBottomSheet', {
       title,
-      providers,
       closeDistance: () => getWindowHeight() / 6,
       initialProviderChainId,
+      desableAllNetworksOption,
+      providers,
     });
   });
 }

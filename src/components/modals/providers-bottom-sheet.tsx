@@ -17,13 +17,21 @@ import {SettingsProvidersRow} from '../settings/settings-providers/settings-prov
 
 export function ProvidersBottomSheet({
   title,
-  providers,
+  providers: outProviders,
   initialProviderChainId,
   closeDistance,
   eventSuffix = '',
   onClose,
+  desableAllNetworksOption,
 }: Modals[ModalType.providersBottomSheet]) {
   const [searchProviderValue, setSearchProviderValue] = useState('');
+  const providers = useMemo(
+    () =>
+      outProviders ?? desableAllNetworksOption
+        ? Provider.getAllNetworks()
+        : Provider.getAll(),
+    [desableAllNetworksOption],
+  );
 
   const closeDistanceCalculated = useCalculatedDimensionsValue(
     () => closeDistance?.(),

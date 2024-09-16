@@ -143,7 +143,6 @@ export const TransactionSumScreen = observer(() => {
 
   const onNetworkPress = useCallback(async () => {
     const providerId = await awaitForProvider({
-      providers: Provider.getAll(),
       initialProviderChainId: route.params.token.chain_id,
       title: I18N.networks,
     });

@@ -246,7 +246,6 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   eth_coinbase: getEthAccounts,
   wallet_switchEthereumChain: async ({helper}) => {
     try {
-      const providers = Provider.getAll();
       const session = Web3BrowserSession.getByOrigin(helper.origin);
 
       const initialProvider = Provider.getByChainIdHex(
@@ -254,7 +253,6 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
       );
 
       const providerId = await awaitForProvider({
-        providers,
         initialProviderChainId: initialProvider?.ethChainId!,
         title: I18N.networks,
       });
