@@ -18,16 +18,18 @@ import {IBC_DENOM} from '@app/variables/common';
 import {AddressUtils} from './address-utils';
 import {shortAddress} from './short-address';
 
-const getNativeToken = (): IndexerTxParsedTokenInfo => {
+const getNativeToken = (
+  provider = Provider.selectedProvider,
+): IndexerTxParsedTokenInfo => {
   return {
-    name: Provider.selectedProvider.isHaqqNetwork
+    name: provider.isHaqqNetwork
       ? getText(I18N.transactionConfirmationIslamicCoin)
-      : Provider.selectedProvider.name,
-    symbol: Provider.selectedProvider.denom,
-    icon: Provider.selectedProvider.isHaqqNetwork
+      : provider.name,
+    symbol: provider.denom,
+    icon: provider.isHaqqNetwork
       ? require('@assets/images/islm_icon.png')
-      : {uri: Provider.selectedProvider.icon},
-    decimals: Provider.selectedProvider.decimals,
+      : {uri: provider.icon},
+    decimals: provider.decimals,
     contract_address: '',
   };
 };
@@ -94,7 +96,7 @@ function parseMsgBeginRedelegate(
     isContractInteraction: false,
     isIncoming,
     isOutcoming: !isIncoming,
-    tokens: [getNativeToken()],
+    tokens: [getNativeToken(provider)],
     isCosmosTx: true,
     isEthereumTx: false,
     icon: IconsName.staking_redelegation,
@@ -153,7 +155,7 @@ function parseMsgEthereumRaffleTx(
     isContractInteraction: false,
     isIncoming,
     isOutcoming: !isIncoming,
-    tokens: [getNativeToken()],
+    tokens: [getNativeToken(provider)],
     isCosmosTx: false,
     isEthereumTx: true,
     icon: IconsName.raffle_reward,
@@ -181,7 +183,7 @@ function parseMsgWithdrawDelegatorReward(
     isContractInteraction: false,
     isIncoming,
     isOutcoming: !isIncoming,
-    tokens: [getNativeToken()],
+    tokens: [getNativeToken(provider)],
     isCosmosTx: true,
     isEthereumTx: false,
     icon: IconsName.staking_reword,
@@ -208,7 +210,7 @@ function parseMsgDelegate(
     isContractInteraction: false,
     isIncoming,
     isOutcoming: !isIncoming,
-    tokens: [getNativeToken()],
+    tokens: [getNativeToken(provider)],
     isCosmosTx: true,
     isEthereumTx: true,
     icon: IconsName.staking_delegation,
@@ -235,7 +237,7 @@ function parseMsgUndelegate(
     isContractInteraction: false,
     isIncoming,
     isOutcoming: !isIncoming,
-    tokens: [getNativeToken()],
+    tokens: [getNativeToken(provider)],
     isCosmosTx: true,
     isEthereumTx: false,
     icon: IconsName.staking_undelegation,
@@ -273,7 +275,7 @@ function parseMsgEthereumTx(
     isContractInteraction,
     isIncoming,
     isOutcoming: !isIncoming,
-    tokens: [getNativeToken()],
+    tokens: [getNativeToken(provider)],
     isCosmosTx: false,
     isEthereumTx: true,
     icon: isContractInteraction ? IconsName.contract : icon,
@@ -477,9 +479,10 @@ function getTokensInfo(tx: IndexerTransaction): IndexerTxParsedTokenInfo[] {
     }
   }
 
+  const provider = Provider.getByEthChainId(tx.chain_id);
   // @ts-ignore
-  if (tx.msg?.amount?.denom === Provider.selectedProvider.weiDenom) {
-    return [getNativeToken()];
+  if (tx.msg?.amount?.denom === provider.weiDenom) {
+    return [getNativeToken(provider)];
   }
 
   let contractInfo: IContract | undefined;

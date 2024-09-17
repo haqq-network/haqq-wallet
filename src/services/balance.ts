@@ -199,10 +199,9 @@ export class Balance implements IBalance, ISerializable {
         useZeroFormatter,
       )}`.trim();
     }
-    return (
-      this.toFloatString(fixedNum, precission, useZeroFormatter) +
-      ` ${this.symbol}`.trim()
-    );
+    return `${this.toFloatString(fixedNum, precission, useZeroFormatter)} ${
+      this.symbol
+    }`.trim();
   };
 
   private getStringWithSymbol = (value: string) => {

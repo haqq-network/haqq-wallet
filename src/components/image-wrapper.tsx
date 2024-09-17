@@ -18,7 +18,7 @@ import {isValidUrl} from '@app/utils';
 import {First} from './ui';
 
 export type ImageWrapperProps = Omit<BlastedImageProps, 'source' | 'style'> & {
-  source: ImageSourcePropType | string;
+  source: ImageSourcePropType | string | null;
   style?: StyleProp<ImageStyle>;
 };
 
@@ -27,7 +27,11 @@ const SVG_MIME_TYPE = 'data:image/svg+xml;base64,';
 export function ImageWrapper({source, style, ...props}: ImageWrapperProps) {
   const [isError, setError] = useState(false);
 
-  const fixedSource: number | ImageSourcePropType = useMemo(() => {
+  const fixedSource = useMemo(() => {
+    if (!source) {
+      return undefined;
+    }
+
     if (typeof source === 'string' && isValidUrl(source)) {
       return {uri: source} as ImageSourcePropType;
     }
@@ -51,7 +55,7 @@ export function ImageWrapper({source, style, ...props}: ImageWrapperProps) {
     }
 
     if (!(source as ImageURISource).uri) {
-      return {uri: ''};
+      return undefined;
     }
 
     return source as ImageSourcePropType;
@@ -111,8 +115,9 @@ export function ImageWrapper({source, style, ...props}: ImageWrapperProps) {
           }}
         />
       )}
+      {!fixedSource && false}
       {isError && (
-        <Image {...(props as ImageProps)} style={style} source={fixedSource} />
+        <Image {...(props as ImageProps)} style={style} source={fixedSource!} />
       )}
       <BlastedImage
         {...props}

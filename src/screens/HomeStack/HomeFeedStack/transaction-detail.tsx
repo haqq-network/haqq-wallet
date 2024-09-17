@@ -24,6 +24,10 @@ export const TransactionDetailScreen = observer(() => {
     HomeStackRoutes.TransactionDetail
   >();
   const tx = useTransaction(route.params.txId);
+  const provider = useMemo(
+    () => Provider.getByEthChainId(tx.chain_id),
+    [tx.chain_id],
+  );
 
   const timestamp = useMemo(
     () => format(new Date(tx.ts), 'dd MMMM yyyy, HH:mm'),
@@ -35,14 +39,17 @@ export const TransactionDetailScreen = observer(() => {
     [tx],
   );
 
-  const fee = useMemo(() => new Balance(`${tx.fee}`), [tx.fee]);
+  const fee = useMemo(
+    () => new Balance(`${tx.fee}`, provider?.decimals, provider?.denom),
+    [tx.fee],
+  );
 
   // TODO: fix calculation of total amount
   // const total = useMemo(() => fee.operate(amount, 'add'), [fee, amount]);
   const total = useMemo(() => Balance.Empty, []);
 
   const onPressInfo = useCallback(async () => {
-    const url = Provider.selectedProvider.getTxExplorerUrl(tx?.hash);
+    const url = provider?.getTxExplorerUrl(tx?.hash);
     if (url) {
       openInAppBrowser(url);
     }
@@ -58,7 +65,7 @@ export const TransactionDetailScreen = observer(() => {
   }, [navigation]);
 
   const onPressSpenderAddress = useCallback((address: string) => {
-    const url = Provider.selectedProvider.getAddressExplorerUrl(address);
+    const url = provider!.getAddressExplorerUrl(address);
     return openInAppBrowser(url);
   }, []);
 
@@ -81,7 +88,6 @@ export const TransactionDetailScreen = observer(() => {
 
   return (
     <TransactionDetail
-      provider={Provider.selectedProvider}
       tx={tx}
       timestamp={timestamp}
       splitted={splitted}
