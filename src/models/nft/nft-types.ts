@@ -6,6 +6,7 @@ export type NftCollectionIndexer = {
   address: HaqqEthereumAddress;
   description: string;
   external_url: string;
+  chain_id: number;
   id: HaqqCosmosAddress;
   image: string;
   name: string;
@@ -54,6 +55,7 @@ export type NftItem = Omit<
   NftItemIndexer,
   'price' | 'description' | 'token_id'
 > & {
+  chain_id: number;
   contractType: ContractType;
   description: string;
   price?: Balance;
