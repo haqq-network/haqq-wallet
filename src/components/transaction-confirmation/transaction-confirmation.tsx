@@ -179,7 +179,7 @@ export const TransactionConfirmation = observer(
             </DataView>
             <DataView i18n={I18N.transactionDetailNetwork}>
               <Text variant={TextVariant.t11} color={Color.textBase1}>
-                <Text>{Provider.selectedProvider.name}</Text>
+                <Text>{Provider.getByEthChainId(token.chain_id)?.name}</Text>
               </Text>
             </DataView>
             <DataView i18n={I18N.transactionDetailAmount}>

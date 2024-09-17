@@ -32,6 +32,7 @@ import {getDefaultNetwork} from '@app/network';
 import {getAppVersion} from '@app/services/version';
 import {HaqqCosmosAddress, WalletType} from '@app/types';
 import {makeID, requestQRScannerPermission} from '@app/utils';
+import {MAIN_NETWORK_ID} from '@app/variables/common';
 
 import {Cosmos} from '../cosmos';
 import {EthSign} from '../eth-sign';
@@ -156,7 +157,9 @@ const getNetworkProvier = (helper: JsonRpcHelper) => {
   if (session?.isActive) {
     provider = Provider.getByChainIdHex(session?.selectedChainIdHex!);
   } else {
-    provider = Provider.selectedProvider;
+    provider = Provider.isAllNetworks
+      ? Provider.getById(MAIN_NETWORK_ID)
+      : Provider.selectedProvider;
   }
   return provider;
 };
@@ -246,16 +249,14 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   eth_coinbase: getEthAccounts,
   wallet_switchEthereumChain: async ({helper}) => {
     try {
-      const providers = Provider.getAll();
       const session = Web3BrowserSession.getByOrigin(helper.origin);
 
-      const initialProviderId = Provider.getByChainIdHex(
+      const initialProvider = Provider.getByChainIdHex(
         session?.selectedChainIdHex!,
-      )?.id;
+      );
 
       const providerId = await awaitForProvider({
-        providers,
-        initialProviderId: initialProviderId!,
+        initialProviderChainId: initialProvider?.ethChainId!,
         title: I18N.networks,
       });
 

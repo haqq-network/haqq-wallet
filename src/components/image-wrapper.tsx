@@ -6,6 +6,7 @@ import {
   ImageProps,
   ImageSourcePropType,
   ImageStyle,
+  ImageURISource,
   StyleProp,
   StyleSheet,
 } from 'react-native';
@@ -26,7 +27,7 @@ const SVG_MIME_TYPE = 'data:image/svg+xml;base64,';
 export function ImageWrapper({source, style, ...props}: ImageWrapperProps) {
   const [isError, setError] = useState(false);
 
-  const fixedSource = useMemo(() => {
+  const fixedSource: number | ImageSourcePropType = useMemo(() => {
     if (typeof source === 'string' && isValidUrl(source)) {
       return {uri: source} as ImageSourcePropType;
     }
@@ -44,6 +45,15 @@ export function ImageWrapper({source, style, ...props}: ImageWrapperProps) {
     if (isObservable(source)) {
       return toJS(source) as ImageSourcePropType;
     }
+
+    if (typeof source === 'number') {
+      return source as ImageSourcePropType;
+    }
+
+    if (!(source as ImageURISource).uri) {
+      return {uri: ''};
+    }
+
     return source as ImageSourcePropType;
   }, [source]);
 
@@ -107,6 +117,7 @@ export function ImageWrapper({source, style, ...props}: ImageWrapperProps) {
       <BlastedImage
         {...props}
         style={StyleSheet.flatten(style)}
+        // @ts-ignore
         source={fixedSource}
         onError={() => setError(true)}
       />

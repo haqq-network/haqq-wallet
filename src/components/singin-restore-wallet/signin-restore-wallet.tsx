@@ -13,6 +13,7 @@ import {
   Spacer,
   Text,
   TextField,
+  TextVariant,
 } from '@app/components/ui';
 import {hideModal} from '@app/helpers';
 import {I18N} from '@app/i18n';
@@ -71,7 +72,7 @@ export const SignInRestore = ({
       testID={testID}>
       <KeyboardSafeArea style={page.container} testID={`${testID}_area`}>
         <Text
-          t11
+          variant={TextVariant.t11}
           color={getColor(Color.textBase2)}
           i18n={I18N.signinRestoreWalletPhraseOrKey}
           style={page.intro}
@@ -96,7 +97,7 @@ export const SignInRestore = ({
         <IconButton onPress={onPressPaste} style={page.button}>
           <Text
             color={Color.textGreen1}
-            t14
+            variant={TextVariant.t14}
             i18n={I18N.signinRestoreWalletPasteClipboard}
           />
         </IconButton>

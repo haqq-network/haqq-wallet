@@ -93,17 +93,16 @@ export const Web3BrowserScreen = observer(() => {
 
   const onPressProviders = useCallback(async () => {
     setShowActionMenu(false);
-    const providers = Provider.getAll();
     const session = Web3BrowserSession.getByOrigin(helper.current?.origin!);
 
-    const initialProviderId = Provider.getByChainIdHex(
+    const initialProvider = Provider.getByChainIdHex(
       session?.selectedChainIdHex!,
-    )?.id;
+    );
 
     const providerId = await awaitForProvider({
-      providers,
-      initialProviderId: initialProviderId!,
+      initialProviderChainId: initialProvider?.ethChainId!,
       title: I18N.networks,
+      desableAllNetworksOption: true,
     });
     const provider = Provider.getById(providerId);
     if (provider) {

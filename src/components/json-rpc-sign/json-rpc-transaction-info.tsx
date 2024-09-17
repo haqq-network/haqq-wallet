@@ -138,9 +138,7 @@ export const JsonRpcTransactionInfo = observer(
             provider?.denom,
           ),
           data: tx.data,
-          chainId: provider?.ethChainId
-            ? String(provider.ethChainId)
-            : undefined,
+          chainId: provider?.ethChainId ? provider.ethChainId : undefined,
         });
         setFee(result);
       }

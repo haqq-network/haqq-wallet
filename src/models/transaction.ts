@@ -1,10 +1,8 @@
-import {hashMessage} from '@walletconnect/utils';
 import {makeAutoObservable, runInAction, when} from 'mobx';
 import {isHydrated} from 'mobx-persist-store';
 
 import {IconProps} from '@app/components/ui';
 import {parseTransaction} from '@app/helpers/indexer-transaction-utils';
-import {TransactionRealmObject} from '@app/models/realm-object-for-migration';
 import {Socket} from '@app/models/socket';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
@@ -12,7 +10,6 @@ import {Indexer} from '@app/services/indexer';
 import {IndexerTransaction, IndexerTxParsedTokenInfo} from '@app/types';
 import {RPCMessage, RPCObserver} from '@app/types/rpc';
 
-import {Provider} from './provider';
 import {Token} from './tokens';
 
 export enum TransactionStatus {
@@ -40,17 +37,10 @@ export type Transaction = IndexerTransaction & {
   parsed: ParsedTransactionData;
 };
 
-type AccountsHash = string;
-type BlockNumber = 'latest' | `${number}`;
-type CacheKey = `${AccountsHash}:${BlockNumber}`;
-
 class TransactionStore implements RPCObserver {
-  realmSchemaName = TransactionRealmObject.schema.name;
   private _transactions: Array<Transaction> = [];
-  private _lastSyncedAccountsHash: AccountsHash = '';
-  private _lastSyncedBlockNumber: BlockNumber = 'latest';
+  private _lastSyncedTransactionTs: string = 'latest';
   private _isLoading = false;
-  private _cache = new Map<CacheKey, Transaction[]>();
 
   constructor() {
     makeAutoObservable(this);
@@ -132,8 +122,7 @@ class TransactionStore implements RPCObserver {
   }
 
   removeAll() {
-    this._lastSyncedAccountsHash = '';
-    this._lastSyncedBlockNumber = 'latest';
+    this._lastSyncedTransactionTs = 'latest';
     this._transactions = [];
   }
 
@@ -141,22 +130,11 @@ class TransactionStore implements RPCObserver {
     if (this.isLoading) {
       return;
     }
-    const accountHash = hashMessage(accounts.join(''));
-    const isHashEquals = this._lastSyncedAccountsHash === accountHash;
 
-    const prevTxList = this._transactions;
-    const lastTx = prevTxList[prevTxList.length - 1];
-    const blockNumber: BlockNumber =
-      isHashEquals && lastTx ? `${lastTx.block}` : 'latest';
-
-    if (isHashEquals && blockNumber === this._lastSyncedBlockNumber) {
-      return this._transactions;
-    }
-
-    const nextTxList = await this._fetch(accounts, blockNumber);
+    const nextTxList = await this._fetch(accounts);
 
     runInAction(() => {
-      this._transactions = [...prevTxList, ...nextTxList];
+      this._transactions = [...this._transactions, ...nextTxList];
       this._isLoading = false;
     });
 
@@ -167,6 +145,7 @@ class TransactionStore implements RPCObserver {
     if (this.isLoading && !force) {
       return;
     }
+
     const newTxs = await this._fetch(accounts, 'latest');
 
     runInAction(() => {
@@ -176,46 +155,29 @@ class TransactionStore implements RPCObserver {
     return newTxs;
   };
 
-  private _fetch = async (
-    accounts: string[],
-    blockNumber: BlockNumber = 'latest',
-  ) => {
+  private _fetch = async (accounts: string[], ts?: string) => {
     try {
-      const accountHash = hashMessage(accounts.join(''));
-      const cacheKey: CacheKey = `${Provider.selectedProviderId}${accountHash}:${blockNumber}`;
-
-      runInAction(() => {
-        this._isLoading = true;
-        if (
-          blockNumber === 'latest' &&
-          this._lastSyncedAccountsHash !== accountHash
-        ) {
-          const cahced = this._cache.get(cacheKey);
-          if (cahced?.length) {
-            this._transactions = cahced;
-          } else {
-            this._transactions = [];
-          }
-        }
-
-        this._lastSyncedAccountsHash = accountHash;
-        this._lastSyncedBlockNumber = blockNumber;
-      });
-
       const result = await Indexer.instance.getTransactions(
         accounts,
-        blockNumber,
+        ts ?? this._lastSyncedTransactionTs,
       );
       await when(() => !Token.isLoading, {});
       const parsed = result
         .map(tx => parseTransaction(tx, accounts))
         .filter(tx => !!tx.parsed);
-      this._cache.set(cacheKey, parsed);
+
+      // If new transactions exists than _lastSyncedTransactionTs must be updated
+      // If transactions array is empty it's mean all transactions fetched and _lastSyncedTransactionTs mustn't be updated
+      if (parsed.length) {
+        this._lastSyncedTransactionTs =
+          parsed[parsed.length - 1]?.ts ?? 'latest';
+      }
+
       return parsed;
     } catch (e) {
       Logger.captureException(e, 'TransactionStore._fetch', {
         accounts,
-        blockNumber,
+        transactionTs: this._lastSyncedTransactionTs,
       });
       return [];
     }
