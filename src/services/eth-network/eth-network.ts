@@ -162,9 +162,12 @@ export class EthNetwork {
             ? estimateGasLimit.toNumber()
             : gasLimit,
         ),
+        provider.decimals,
+        provider.denom,
       );
 
       const blockBaseFeePerGasGWEI = block.baseFeePerGas!.toNumber() / 10 ** 9;
+
       const resultMaxBaseFee = new Balance(
         new Balance(
           new Decimal(
@@ -174,6 +177,8 @@ export class EthNetwork {
           ),
         ).toNumber() /
           10 ** 9,
+        provider.decimals,
+        provider.denom,
       );
 
       const resultMaxPriorityFee = new Balance(
