@@ -55,10 +55,9 @@ export const TransactionFinish = observer(
     fee,
   }: TransactionFinishProps) => {
     const name = token?.name || contact?.name;
+    const provider = Provider.getByEthChainId(token.chain_id)!;
     const onPressHash = async () => {
-      const url = Provider.selectedProvider.getTxExplorerUrl(
-        transaction?.hash!,
-      );
+      const url = provider.getTxExplorerUrl(transaction?.hash!);
       await openURL(url);
     };
 
@@ -76,15 +75,15 @@ export const TransactionFinish = observer(
         return new Balance(
           (transaction as TransactionResponse)?.value._hex ?? 0,
           undefined,
-          token.symbol ?? Provider.selectedProvider.denom,
+          token.symbol ?? provider.denom,
         );
       }
       return new Balance(
         transaction?.value ?? 0,
         undefined,
-        token.symbol ?? Provider.selectedProvider.denom,
+        token.symbol ?? provider.denom,
       );
-    }, [transaction, token, amount, Provider.selectedProvider.denom]);
+    }, [transaction, token, amount, provider.denom]);
 
     return (
       <PopupContainer style={styles.container} testID={testID}>
@@ -120,7 +119,7 @@ export const TransactionFinish = observer(
               position={TextPosition.center}
               style={styles.address}>
               {name}
-              {STRINGS.NBSP}({token.symbol || Provider.selectedProvider.denom})
+              {STRINGS.NBSP}({token.symbol || provider.denom})
             </Text>
           )}
           <Text
@@ -137,10 +136,10 @@ export const TransactionFinish = observer(
 
         <View style={styles.providerContainer}>
           <Text variant={TextVariant.t14} color={Color.textBase2}>
-            {Provider.selectedProvider.name}
+            {provider.name}
           </Text>
           <Text variant={TextVariant.t14} color={Color.textBase2}>
-            {`${STRINGS.NBSP}(${Provider.selectedProvider.denom})`}
+            {`${STRINGS.NBSP}(${provider.denom})`}
           </Text>
         </View>
 
