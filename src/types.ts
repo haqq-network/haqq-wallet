@@ -23,7 +23,6 @@ import {
   TextStyle,
   ViewStyle,
 } from 'react-native';
-import {Results} from 'realm';
 
 import {Color} from '@app/colors';
 import {CaptchaType} from '@app/components/captcha';
@@ -1089,8 +1088,9 @@ export type Modals = {
   providersBottomSheet: {
     onClose?: () => void;
     title: I18N;
-    providers: ProviderModel[] | Results<ProviderModel>;
-    initialProviderId: string;
+    providers?: ProviderModel[];
+    initialProviderChainId: number;
+    desableAllNetworksOption?: boolean;
     closeDistance?: () => number;
     eventSuffix?: string;
   };
@@ -1349,16 +1349,19 @@ export type HaqqCosmosAddress = `haqq${string}`;
 export type HaqqEthereumAddress = `0x${string}`;
 export type HexNumber = `0x${string}`;
 
-export type IndexerBalance = Record<
+export type IndexerBalanceItem = [
   HaqqCosmosAddress | HaqqEthereumAddress,
-  HexNumber
->;
+  ChainId,
+  HexNumber,
+];
+export type IndexerBalance = Array<IndexerBalanceItem>;
 export type IndexerToken = {
   address: HaqqCosmosAddress;
   contract: HaqqCosmosAddress;
   created_at: string;
   updated_at: string;
   value: string;
+  chain_id: number;
 };
 export type IndexerTime = Record<
   HaqqCosmosAddress | HaqqEthereumAddress,
@@ -1376,7 +1379,10 @@ export interface BalanceData {
   unlock: Date;
 }
 
-export type IndexerBalanceData = Record<HaqqEthereumAddress, BalanceData>;
+export type IndexerBalanceData = Record<
+  ChainId,
+  Record<HaqqEthereumAddress, BalanceData>
+>;
 
 export type JsonRpcTransactionRequest = {
   to?: string;
@@ -1550,6 +1556,7 @@ export type IToken = {
   symbol: IContract['symbol'];
   created_at: string;
   updated_at: string;
+  chain_id: number;
 
   image: ImageSourcePropType;
 };

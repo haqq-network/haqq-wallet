@@ -2,7 +2,7 @@ import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {Currencies} from '@app/models/currencies';
-import {Provider} from '@app/models/provider';
+import {ALL_NETWORKS_ID, Provider} from '@app/models/provider';
 import {VariablesDate} from '@app/models/variables-date';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
@@ -35,27 +35,78 @@ const parseIndexerBalances = (
     });
   });
 
-  return Wallet.getAll().reduce((acc, w) => {
-    const cosmosAddress = AddressUtils.toHaqq(w.address);
-    const staked = data?.total_staked?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
-    const vested = data?.vested?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
-    const available = data?.available?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
-    const total = data?.total?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
-    const locked = data?.locked?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
-    const availableForStake =
-      data?.available_for_stake?.[cosmosAddress] ?? ZERO_HEX_NUMBER;
-    const unlock = Number(data?.unlock?.[cosmosAddress]) ?? 0;
+  const providers = Provider.getAll().filter(p => p.id !== ALL_NETWORKS_ID);
+  const wallets = Wallet.getAll();
 
+  return providers.reduce((acc, p) => {
     return {
       ...acc,
-      [w.address]: {
-        staked: new Balance(staked),
-        vested: new Balance(vested),
-        available: new Balance(available),
-        total: new Balance(total),
-        locked: new Balance(locked),
-        availableForStake: new Balance(availableForStake),
-        unlock: new Date(unlock * 1000),
+      [p.ethChainId]: {
+        ...wallets.reduce((ac, w) => {
+          const cosmosAddress = AddressUtils.toHaqq(w.address);
+          const unlock = Number(data?.unlock?.[cosmosAddress]) ?? 0;
+
+          return {
+            ...ac,
+            [AddressUtils.toEth(w.address)]: {
+              staked: new Balance(
+                data?.total_staked.find(
+                  ([address, chainId]) =>
+                    AddressUtils.equals(w.address, address) &&
+                    p.ethChainId === chainId,
+                )?.[2] ?? ZERO_HEX_NUMBER,
+                p.decimals,
+                p.denom,
+              ),
+              vested: new Balance(
+                data?.vested.find(
+                  ([address, chainId]) =>
+                    AddressUtils.equals(w.address, address) &&
+                    p.ethChainId === chainId,
+                )?.[2] ?? ZERO_HEX_NUMBER,
+                p.decimals,
+                p.denom,
+              ),
+              available: new Balance(
+                data?.available.find(
+                  ([address, chainId]) =>
+                    AddressUtils.equals(w.address, address) &&
+                    p.ethChainId === chainId,
+                )?.[2] ?? ZERO_HEX_NUMBER,
+                p.decimals,
+                p.denom,
+              ),
+              total: new Balance(
+                data?.total.find(
+                  ([address, chainId]) =>
+                    AddressUtils.equals(w.address, address) &&
+                    p.ethChainId === chainId,
+                )?.[2] ?? ZERO_HEX_NUMBER,
+                p.decimals,
+                p.denom,
+              ),
+              locked: new Balance(
+                data?.locked.find(
+                  ([address, chainId]) =>
+                    AddressUtils.equals(w.address, address) &&
+                    p.ethChainId === chainId,
+                )?.[2] ?? ZERO_HEX_NUMBER,
+                p.decimals,
+                p.denom,
+              ),
+              availableForStake: new Balance(
+                data?.available_for_stake.find(
+                  ([address, chainId]) =>
+                    AddressUtils.equals(w.address, address) &&
+                    p.ethChainId === chainId,
+                )?.[2] ?? ZERO_HEX_NUMBER,
+                p.decimals,
+                p.denom,
+              ),
+              unlock: new Date(unlock * 1000),
+            },
+          };
+        }, {}),
       },
     };
   }, {});

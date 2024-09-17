@@ -13,6 +13,7 @@ import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
+import {EstimationVariant} from '@app/models/fee';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {
@@ -55,18 +56,26 @@ export const TransactionSumScreen = observer(() => {
       try {
         const token = route.params.token;
         if (token.is_erc20) {
-          return await EthNetwork.estimateERC20Transfer({
-            from: wallet?.address!,
-            to: route.params.to,
-            amount,
-            contractAddress: AddressUtils.toEth(token.id),
-          });
+          return await EthNetwork.estimateERC20Transfer(
+            {
+              from: wallet?.address!,
+              to: route.params.to,
+              amount,
+              contractAddress: AddressUtils.toEth(token.id),
+            },
+            EstimationVariant.average,
+            Provider.getByEthChainId(route.params.token.chain_id),
+          );
         } else {
-          return await EthNetwork.estimate({
-            from: route.params.from,
-            to: route.params.to,
-            value: amount,
-          });
+          return await EthNetwork.estimate(
+            {
+              from: route.params.from,
+              to: route.params.to,
+              value: amount,
+            },
+            EstimationVariant.average,
+            Provider.getByEthChainId(route.params.token.chain_id),
+          );
         }
       } catch (err) {
         Logger.log('tx sum err getFee', err);
@@ -134,8 +143,7 @@ export const TransactionSumScreen = observer(() => {
 
   const onNetworkPress = useCallback(async () => {
     const providerId = await awaitForProvider({
-      providers: Provider.getAll(),
-      initialProviderId: Provider.selectedProviderId,
+      initialProviderChainId: route.params.token.chain_id,
       title: I18N.networks,
     });
     Provider.setSelectedProviderId(providerId);
@@ -144,11 +152,16 @@ export const TransactionSumScreen = observer(() => {
 
   useEffectAsync(async () => {
     const b = app.getAvailableBalance(route.params.from);
-    const {expectedFee} = await EthNetwork.estimate({
-      from: route.params.from,
-      to,
-      value: b,
-    });
+    const {expectedFee} = await EthNetwork.estimate(
+      {
+        from: route.params.from,
+        to,
+        value: b,
+      },
+      EstimationVariant.average,
+      Provider.getByEthChainId(route.params.token.chain_id),
+    );
+
     setFee(expectedFee);
   }, [to]);
 

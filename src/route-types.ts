@@ -291,7 +291,7 @@ export type SettingsStackParamList = HomeStackParamList & {
   [SettingsStackRoutes.Home]?: {
     screen: SettingsStackRoutes.SettingsProviderForm;
     params: {
-      id?: string;
+      id?: number;
       data?: Partial<ProviderModel>;
     };
   };
@@ -319,7 +319,7 @@ export enum ProvidersStackRoutes {
 export type ProvidersStackParamList = {
   [ProvidersStackRoutes.SettingsProviders]: undefined;
   [ProvidersStackRoutes.SettingsProviderForm]: {
-    id?: string;
+    id?: number;
     data?: Partial<ProviderModel>;
   };
 };

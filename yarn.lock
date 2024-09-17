@@ -12240,7 +12240,7 @@ __metadata:
     react-native-adjust-oaid: 4.38.1
     react-native-aes-crypto: 3.0.3
     react-native-base64: 0.2.1
-    react-native-blasted-image: 0.0.13
+    react-native-blasted-image: 1.0.3
     react-native-ble-plx: 3.2.1
     react-native-camera: 4.2.1
     react-native-config: 1.5.3
@@ -17729,12 +17729,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-blasted-image@npm:0.0.13":
-  version: 0.0.13
-  resolution: "react-native-blasted-image@npm:0.0.13"
+"react-native-blasted-image@npm:1.0.3":
+  version: 1.0.3
+  resolution: "react-native-blasted-image@npm:1.0.3"
   peerDependencies:
     react-native: ">=0.60.0"
-  checksum: 3eef3ce86e0375b0cda96011d8f67f0486d9c855dca26d610270412f4247710b626b1f590cc1161ce43cbd53dd5541614e89913bf3cd3feff2b658ace6818a37
+  checksum: fd0a5b039853f1af1656143df814e7ac279d77b87cd71ddcd54c805bf0b535b19bcd449fd638cf27d47a2c6fa4655daa4d4a62647663c1d411b1c06fdeea7a84
   languageName: node
   linkType: hard
 

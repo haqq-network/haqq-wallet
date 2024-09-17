@@ -9,18 +9,18 @@ import {ProviderModel} from '@app/models/provider';
 
 export type SettingsProvidersRowProps = {
   item: ProviderModel;
-  providerId: string;
-  onPress: (providerId: string) => void;
+  providerChainId: number;
+  onPress: (providerChainId: number) => void;
 };
 export const SettingsProvidersRow = ({
   item,
   onPress,
-  providerId,
+  providerChainId,
 }: SettingsProvidersRowProps) => {
   return (
     <TouchableWithoutFeedback
       onPress={() => {
-        onPress(item.id);
+        onPress(item.ethChainId);
       }}>
       <View style={styles.container}>
         <ImageWrapper source={item.icon} style={styles.icon} />
@@ -31,7 +31,7 @@ export const SettingsProvidersRow = ({
           subtitle={`${item.name} (${item.ethChainId})`}
         />
         <Spacer flex={1} />
-        {providerId === item.id && (
+        {providerChainId === item.ethChainId && (
           <Icon color={Color.graphicGreen1} name="check" i24 />
         )}
       </View>

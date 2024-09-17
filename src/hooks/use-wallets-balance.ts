@@ -14,7 +14,9 @@ export type WalletBalance = {
 
 const getBalance = (wallets: Wallet[]): WalletBalance => {
   return Object.fromEntries(
-    wallets.map(w => [w.address, app.getBalanceData(w.address)]),
+    wallets.map(w => {
+      return [w.address, app.getBalanceData(w.address)];
+    }),
   ) as WalletBalance;
 };
 

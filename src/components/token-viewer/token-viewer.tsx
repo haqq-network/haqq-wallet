@@ -17,7 +17,6 @@ import {WalletCard} from '@app/components/ui/walletCard';
 import {createTheme} from '@app/helpers';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {I18N, getText} from '@app/i18n';
-import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {HaqqEthereumAddress, IToken} from '@app/types';
 
@@ -173,13 +172,7 @@ export const TokenViewer = observer(
             <WalletCard
               key={address}
               wallet={_wallet}
-              tokens={tokens.filter(
-                item =>
-                  item.is_in_white_list &&
-                  // FIXME: only erc20 tokens or native currency (ISLM)
-                  (item.is_erc20 ||
-                    item.symbol === Provider.selectedProvider.denom),
-              )}
+              tokens={tokens.filter(item => item.is_in_white_list)}
               tokensOnly={!!wallet}
               isLast={index === list.length - 1}
               onPressToken={onPressToken}

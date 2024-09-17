@@ -50,21 +50,22 @@ export const useSumAmount = (
           },
         });
         const newString = errorArray?.length > 0 ? errorArray.join(' ') : '';
-        setError(
-          newString
-            .replace(
-              Provider.selectedProvider.denom,
-              maxAmountRef.current.getSymbol(),
-            )
-            .replace(
-              maxAmountRef.current.toFloat(),
-              maxAmountRef.current.toBalanceString('auto'),
-            )
-            .replace(
-              minAmountRef.current.toFloat(),
-              minAmountRef.current.toBalanceString('auto'),
-            ),
-        );
+        let e = newString
+          .replace(
+            maxAmountRef.current.toFloat(),
+            maxAmountRef.current.toBalanceString('auto'),
+          )
+          .replace(
+            minAmountRef.current.toFloat(),
+            minAmountRef.current.toBalanceString('auto'),
+          );
+        if (!Provider.isAllNetworks) {
+          e = error.replace(
+            Provider.selectedProvider.denom,
+            maxAmountRef.current.getSymbol(),
+          );
+        }
+        setError(e);
       }
     }
   }, [changed, amount, minAmount, maxAmount, Provider.selectedProvider.denom]);

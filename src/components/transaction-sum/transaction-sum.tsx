@@ -167,7 +167,7 @@ export const TransactionSum = observer(
                 color={Color.textBase1}
                 numberOfLines={1}
                 ellipsizeMode="tail">
-                {Provider.selectedProvider.name}
+                {Provider.getByEthChainId(token.chain_id)?.name}
               </Text>
             </View>
           </LabeledBlock>

@@ -91,7 +91,9 @@ export const KeystoneAccountsScreen = memo(() => {
         const resultWithBalances = result.map(item => ({
           ...item,
           balance: new Balance(
-            balances.total[AddressUtils.toHaqq(item.address)] || item.balance,
+            balances.total.find(t =>
+              AddressUtils.equals(t[0], item.address),
+            )?.[2] || item.balance,
           ),
         }));
         setAddresses(resultWithBalances);

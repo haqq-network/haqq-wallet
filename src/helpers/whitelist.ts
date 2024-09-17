@@ -59,15 +59,6 @@ export class Whitelist {
     return await Indexer.instance.validateDappDomain(url);
   }
 
-  static async checkAddress(
-    address: string,
-    provider?: ProviderModel,
-  ): Promise<boolean> {
-    provider = provider ?? Provider.selectedProvider;
-    const result = await Whitelist.verifyAddress(address, provider);
-    return !!result?.is_in_white_list;
-  }
-
   static async verifyAddress(
     address: string,
     provider?: ProviderModel,
