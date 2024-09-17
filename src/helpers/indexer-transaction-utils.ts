@@ -82,7 +82,10 @@ function parseMsgBeginRedelegate(
   _: string[],
 ): ParsedTransactionData {
   const isIncoming = false;
-  const amount = [new Balance(tx.msg.amount.amount)];
+  const provider = Provider.getByEthChainId(tx.chain_id);
+  const amount = [
+    new Balance(tx.msg.amount.amount, provider?.decimals, provider?.denom),
+  ];
 
   return {
     from: AddressUtils.toEth(tx.msg.delegator_address),
@@ -138,7 +141,10 @@ function parseMsgEthereumRaffleTx(
 ): ParsedTransactionData {
   const isIncoming = isIncomingTx(tx, addresses);
   const {from, to} = getFromAndTo(tx, isIncoming);
-  const amount = [new Balance(tx.msg.amount.amount)];
+  const provider = Provider.getByEthChainId(tx.chain_id);
+  const amount = [
+    new Balance(tx.msg.amount.amount, provider?.decimals, provider?.denom),
+  ];
 
   return {
     from,
@@ -163,7 +169,10 @@ function parseMsgWithdrawDelegatorReward(
   const isIncoming = isIncomingTx(tx, addresses);
   const {from, to} = getFromAndTo(tx, isIncoming);
   // for delegation reward tx amount is empty
-  const amount = [Balance.Empty];
+  const provider = Provider.getByEthChainId(tx.chain_id);
+  const amount = [
+    new Balance(Balance.Empty, provider?.decimals, provider?.denom),
+  ];
 
   return {
     from,
@@ -187,7 +196,10 @@ function parseMsgDelegate(
 ): ParsedTransactionData {
   const isIncoming = false;
   const {from, to} = getFromAndTo(tx, isIncoming);
-  const amount = [new Balance(tx.msg.amount.amount)];
+  const provider = Provider.getByEthChainId(tx.chain_id);
+  const amount = [
+    new Balance(tx.msg.amount.amount, provider?.decimals, provider?.denom),
+  ];
 
   return {
     from,
@@ -211,7 +223,10 @@ function parseMsgUndelegate(
 ): ParsedTransactionData {
   const isIncoming = true;
   const {from, to} = getFromAndTo(tx, isIncoming);
-  const amount = [new Balance(tx.msg.amount.amount)];
+  const provider = Provider.getByEthChainId(tx.chain_id);
+  const amount = [
+    new Balance(tx.msg.amount.amount, provider?.decimals, provider?.denom),
+  ];
 
   return {
     from,
@@ -235,7 +250,10 @@ function parseMsgEthereumTx(
 ): ParsedTransactionData {
   const isIncoming = isIncomingTx(tx, addresses);
   const {from, to} = getFromAndTo(tx, isIncoming);
-  const amount = [new Balance(tx.msg.amount.amount)];
+  const provider = Provider.getByEthChainId(tx.chain_id);
+  const amount = [
+    new Balance(tx.msg.amount.amount, provider?.decimals, provider?.denom),
+  ];
 
   const title = isIncoming
     ? getText(I18N.transactionReceiveTitle)
@@ -319,14 +337,15 @@ function parseMsgSend(
 
   const tokens = getTokensInfo(tx);
   const amount = tx?.msg?.amount?.map(a => {
+    const provider = Provider.getByEthChainId(tx.chain_id);
     const contract = Contracts.getById(
       a.contract_address! || tx.msg.contract_address,
     );
-    if (contract && contract.is_erc20) {
+    if (contract?.is_erc20) {
       return new Balance(
         a.amount,
-        contract.decimals || 0,
-        contract.symbol || IBC_DENOM,
+        contract.decimals ?? provider?.decimals,
+        contract.symbol ?? provider?.denom,
       );
     }
 

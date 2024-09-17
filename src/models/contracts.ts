@@ -78,7 +78,7 @@ class ContractsStore implements MobXStore<IContract> {
 
   getById(id: string) {
     if (AddressUtils.equals(id, NATIVE_TOKEN_ADDRESS)) {
-      return Token.generateNativeTokenContract();
+      return Token.generateNativeTokenContracts()[0];
     }
     const result = this.data[AddressUtils.toHaqq(id)];
 

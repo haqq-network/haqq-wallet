@@ -81,7 +81,7 @@ export class Whitelist {
     }
 
     if (AddressUtils.equals(address, NATIVE_TOKEN_ADDRESS)) {
-      return Token.generateNativeTokenContract();
+      return Token.generateNativeTokenContracts()[0];
     }
 
     const key = `${CACHE_KEY}:${JSON.stringify(address)}:${provider.id}`;
