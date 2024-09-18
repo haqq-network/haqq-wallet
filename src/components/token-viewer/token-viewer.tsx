@@ -172,7 +172,12 @@ export const TokenViewer = observer(
             <WalletCard
               key={address}
               wallet={_wallet}
-              tokens={tokens.filter(item => item.is_in_white_list)}
+              tokens={tokens.filter(
+                item =>
+                  !!item.is_in_white_list &&
+                  !item.is_erc721 &&
+                  !item.is_erc1155,
+              )}
               tokensOnly={!!wallet}
               isLast={index === list.length - 1}
               onPressToken={onPressToken}

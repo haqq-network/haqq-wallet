@@ -2,7 +2,11 @@ import {JSONRPCError, jsonrpcRequest} from '@haqq/shared-react-native';
 
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
-import {Provider, ProviderModel} from '@app/models/provider';
+import {
+  INDEXER_PROXY_ENDPOINT,
+  Provider,
+  ProviderModel,
+} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
@@ -106,12 +110,15 @@ export class Whitelist {
     }
 
     try {
-      const haqqAddressList = getParsedAddressList(address);
+      const params: any[] = getParsedAddressList(address);
+      if (!Provider.isAllNetworks) {
+        params.push(Provider.selectedProvider.ethChainId);
+      }
 
       const response = await jsonrpcRequest<VerifyAddressResponse | null>(
-        provider.indexer,
+        INDEXER_PROXY_ENDPOINT,
         'address',
-        haqqAddressList,
+        params,
       );
 
       if (response) {
