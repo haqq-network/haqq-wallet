@@ -1627,7 +1627,7 @@ export type Eventable = Required<{
 }>;
 
 export type FiatRate = {denom: string; amount: string};
-export type RatesResponse = Record<string, FiatRate[]>;
+export type RatesResponse = Record<ChainId, Record<string, FiatRate[]>>;
 
 export type IndexerTxMsgUnknown = {
   schema: string;
