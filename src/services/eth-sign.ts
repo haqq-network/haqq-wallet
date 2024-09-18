@@ -1,4 +1,4 @@
-import {TransactionRequest} from '@haqq/provider-base';
+import {TransactionRequest} from '@haqq/rn-wallet-providers';
 
 import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';

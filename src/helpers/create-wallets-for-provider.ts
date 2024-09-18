@@ -1,4 +1,4 @@
-import {ProviderInterface} from '@haqq/provider-base';
+import {ProviderInterface} from '@haqq/rn-wallet-providers';
 
 import {app} from '@app/contexts';
 import {I18N, getText} from '@app/i18n';

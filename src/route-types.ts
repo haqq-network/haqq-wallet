@@ -1,7 +1,6 @@
 import {Proposal as ProposalProvider} from '@evmos/provider';
 import {Proposal as ProposalGovProvider} from '@evmos/provider/dist/rest/gov';
-import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {ProviderMnemonicBase, ProviderSSSBase} from '@haqq/rn-wallet-providers';
 import {SessionTypes} from '@walletconnect/types';
 
 import {TotalValueTabNames} from '@app/components/total-value-info';
@@ -675,13 +674,13 @@ export enum OnboardingStackRoutes {
 
 export type OnboardingStackParamList = WelcomeStackParamList & {
   [OnboardingStackRoutes.OnboardingSetupPin]: WalletInitialData & {
-    provider?: ProviderMnemonicReactNative;
+    provider?: ProviderMnemonicBase;
     currentPin: string;
     nextScreen: AnyRouteFromParent;
     errorText?: string;
   };
   [OnboardingStackRoutes.OnboardingRepeatPin]: WalletInitialData & {
-    provider?: ProviderMnemonicReactNative;
+    provider?: ProviderMnemonicBase;
     currentPin: string;
     nextScreen: AnyRouteFromParent;
   };
@@ -749,17 +748,14 @@ export type SignInStackParamList = WelcomeStackParamList & {
   [SignInStackRoutes.SigninPin]: WalletInitialData;
   [SignInStackRoutes.SigninSharesNotFound]: undefined;
   [SignInStackRoutes.OnboardingSetupPin]: WalletInitialData & {
-    provider?:
-      | ProviderMnemonicReactNative
-      | ProviderSSSReactNative
-      | SssProviders;
+    provider?: ProviderMnemonicBase | ProviderSSSBase | SssProviders;
     biometryType?: BiometryType;
   };
   [SignInStackRoutes.SigninStoreWallet]: WalletInitialData & {
     nextScreen?: SignInStackRoutes;
   };
   [SignInStackRoutes.SigninNotExists]: WalletInitialData & {
-    provider: ProviderMnemonicReactNative | ProviderSSSReactNative;
+    provider: ProviderMnemonicBase | ProviderSSSBase;
     email?: string;
   };
   [SignInStackRoutes.SigninNotRecovery]: WalletInitialData;
@@ -769,11 +765,11 @@ export type SignInStackParamList = WelcomeStackParamList & {
   };
   [SignInStackRoutes.SigninChooseAccount]:
     | (WalletInitialData & {
-        provider: ProviderMnemonicReactNative;
+        provider: ProviderMnemonicBase;
         nextScreen?: SignInStackRoutes;
       })
     | {
-        provider: ProviderSSSReactNative;
+        provider: ProviderSSSBase;
         nextScreen?: SignInStackRoutes;
         sssProvider: string;
       };

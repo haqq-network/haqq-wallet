@@ -1,7 +1,6 @@
 import {useEffect} from 'react';
 
-import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {ProviderMnemonicBase, ProviderSSSBase} from '@haqq/rn-wallet-providers';
 import {useFocusEffect} from '@react-navigation/native';
 import {mnemonicToEntropy} from 'ethers/lib/utils';
 import {observer} from 'mobx-react';
@@ -37,7 +36,7 @@ export const SssMigrateStoreScreen = observer(() => {
         const storage = await getProviderStorage('', route.params.provider);
         const getPassword = app.getPassword.bind(app);
 
-        const mnemonicProvider = new ProviderMnemonicReactNative({
+        const mnemonicProvider = new ProviderMnemonicBase({
           account: route.params.accountId,
           getPassword,
         });
@@ -52,7 +51,7 @@ export const SssMigrateStoreScreen = observer(() => {
 
         entropy = entropy.padStart(64, '0');
 
-        const provider = await ProviderSSSReactNative.initialize(
+        const provider = await ProviderSSSBase.initialize(
           route.params.privateKey,
           null,
           null,
@@ -85,10 +84,7 @@ export const SssMigrateStoreScreen = observer(() => {
               accountId,
               socialLinkEnabled: true,
             });
-            await ProviderSSSReactNative.setStorageForAccount(
-              accountId,
-              storage,
-            );
+            await ProviderSSSBase.setStorageForAccount(accountId, storage);
           }
         }
 

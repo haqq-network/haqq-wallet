@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
-import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {ProviderMnemonicBase, ProviderSSSBase} from '@haqq/rn-wallet-providers';
 import {useFocusEffect} from '@react-navigation/native';
 import {observer} from 'mobx-react';
 
@@ -47,17 +46,16 @@ export const ChooseAccountScreen = observer(() => {
   const generator = useRef<ReturnType<typeof getWalletsFromProvider> | null>(
     null,
   );
-  const walletProvider = useRef<
-    ProviderMnemonicReactNative | ProviderSSSReactNative | null
-  >(null);
+  const walletProvider = useRef<ProviderMnemonicBase | ProviderSSSBase | null>(
+    null,
+  );
 
   const isMnemonicProvider =
-    walletProvider.current instanceof ProviderMnemonicReactNative;
-  const isSSSProvider =
-    walletProvider.current instanceof ProviderSSSReactNative;
+    walletProvider.current instanceof ProviderMnemonicBase;
+  const isSSSProvider = walletProvider.current instanceof ProviderSSSBase;
 
   useEffect(() => {
-    if (params.provider instanceof ProviderSSSReactNative) {
+    if (params.provider instanceof ProviderSSSBase) {
       navigation.setOptions({
         //@ts-ignore
         customBackFunction: () => navigation.popToTop(),
@@ -123,7 +121,7 @@ export const ChooseAccountScreen = observer(() => {
     setLoading(true);
     try {
       walletProvider.current = params.provider;
-      if (walletProvider.current instanceof ProviderMnemonicReactNative) {
+      if (walletProvider.current instanceof ProviderMnemonicBase) {
         await walletProvider.current.setMnemonicSaved();
       }
 
@@ -210,7 +208,7 @@ export const ChooseAccountScreen = observer(() => {
       const accountID = walletsToCreate[0].accountId;
       //@ts-ignore
       const storage = await getProviderStorage(accountID, params.sssProvider);
-      await ProviderSSSReactNative.setStorageForAccount(accountID, storage);
+      await ProviderSSSBase.setStorageForAccount(accountID, storage);
     }
 
     if (isMnemonicProvider && !app.onboarded) {

@@ -1,6 +1,6 @@
 import React, {memo, useCallback} from 'react';
 
-import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
+import {ProviderMnemonicBase} from '@haqq/rn-wallet-providers';
 import {utils} from 'ethers';
 
 import {SignInRestore} from '@app/components/singin-restore-wallet';
@@ -36,7 +36,7 @@ export const SignInRestoreScreen = memo(() => {
         const generatedPassword = String(makeID(10));
         const passwordPromise = () => Promise.resolve(generatedPassword);
 
-        const provider = await ProviderMnemonicReactNative.initialize(
+        const provider = await ProviderMnemonicBase.initialize(
           seed.trim().toLowerCase(),
           app.onboarded ? app.getPassword.bind(app) : passwordPromise,
           {},

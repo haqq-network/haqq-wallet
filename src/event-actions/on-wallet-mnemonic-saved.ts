@@ -1,4 +1,4 @@
-import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
+import {ProviderMnemonicBase} from '@haqq/rn-wallet-providers';
 
 import {app} from '@app/contexts';
 import {Wallet} from '@app/models/wallet';
@@ -7,7 +7,7 @@ import {WalletType} from '@app/types';
 export async function onWalletMnemonicSaved(accountId: string) {
   const wallets = Wallet.getAll();
 
-  const provider = new ProviderMnemonicReactNative({
+  const provider = new ProviderMnemonicBase({
     account: accountId,
     getPassword: app.getPassword.bind(app),
   });

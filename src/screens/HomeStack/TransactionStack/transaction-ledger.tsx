@@ -1,6 +1,6 @@
 import React, {memo, useCallback, useEffect, useRef} from 'react';
 
-import {ProviderInterface} from '@haqq/provider-base';
+import {ProviderInterface} from '@haqq/rn-wallet-providers';
 
 import {TransactionLedger} from '@app/components/transaction-ledger';
 import {app} from '@app/contexts';

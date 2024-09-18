@@ -1,6 +1,6 @@
 import {useCallback, useEffect} from 'react';
 
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {ProviderSSSBase, ProviderSSSEvm} from '@haqq/rn-wallet-providers';
 import {observer} from 'mobx-react';
 
 import {app} from '@app/contexts';
@@ -52,7 +52,9 @@ export const SignUpStoreWalletScreen = observer(() => {
       //@ts-ignore
       route.params.sssPrivateKey ||
       //@ts-ignore
-      route.params.provider instanceof ProviderSSSReactNative ||
+      route.params.provider instanceof ProviderSSSBase ||
+      //@ts-ignore
+      route.params.provider instanceof ProviderSSSEvm ||
       //@ts-ignore
       Object.values(SssProviders).includes(route.params.provider)
     ) {

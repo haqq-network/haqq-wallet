@@ -1,4 +1,4 @@
-import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
+import {ProviderMnemonicBase} from '@haqq/rn-wallet-providers';
 import {isAfter} from 'date-fns';
 
 import {app} from '@app/contexts';
@@ -20,7 +20,7 @@ export async function onWalletMnemonicCheck(snoozeBackup: Date) {
     );
 
     for (const accountId of accounts) {
-      const provider = new ProviderMnemonicReactNative({
+      const provider = new ProviderMnemonicBase({
         account: accountId,
         getPassword: app.getPassword.bind(app),
       });

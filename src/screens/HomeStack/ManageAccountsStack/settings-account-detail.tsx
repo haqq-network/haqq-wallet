@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect} from 'react';
 
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {ProviderSSSBase} from '@haqq/rn-wallet-providers';
 import {observer} from 'mobx-react';
 import {Alert, Platform} from 'react-native';
 
@@ -86,8 +86,9 @@ export const SettingsAccountDetailScreen = observer(() => {
             requestAnimationFrame(async () => {
               const sssWalletsCountBefore = Wallet.count(WalletType.sss);
               const accountID = wallet?.accountId;
-              const providerArray =
-                await ProviderSSSReactNative.getStoragesForAccount(accountID!);
+              const providerArray = await ProviderSSSBase.getStoragesForAccount(
+                accountID!,
+              );
               await Wallet.remove(address);
               hideModal(ModalType.loading);
               navigation.goBack();

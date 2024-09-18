@@ -1,7 +1,11 @@
 import React, {memo, useEffect, useState} from 'react';
 
-import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {
+  ProviderMnemonicBase,
+  ProviderMnemonicEvm,
+  ProviderSSSBase,
+  ProviderSSSEvm,
+} from '@haqq/rn-wallet-providers';
 import {Alert} from 'react-native';
 import {addScreenshotListener} from 'react-native-detector';
 
@@ -26,8 +30,10 @@ export const BackupCreateScreen = memo(() => {
     const provider = await getProviderInstanceForWallet(wallet, true);
 
     if (
-      provider instanceof ProviderMnemonicReactNative ||
-      provider instanceof ProviderSSSReactNative
+      provider instanceof ProviderMnemonicBase ||
+      provider instanceof ProviderMnemonicEvm ||
+      provider instanceof ProviderSSSBase ||
+      provider instanceof ProviderSSSEvm
     ) {
       provider.getMnemonicPhrase().then(phrase => setMnemonic(phrase));
     }

@@ -1,4 +1,4 @@
-import {getBleManager} from '@haqq/provider-ledger-react-native';
+import {utils} from '@haqq/rn-wallet-providers';
 import {State} from 'react-native-ble-plx';
 
 import {hideModal, showModal} from '@app/helpers/modal';
@@ -10,7 +10,7 @@ export const awaitForBluetooth = () => {
   return new Promise<void>((resolve, reject) => {
     let currentState = State.Unknown;
     let currentModal: ModalName | null = null;
-    const manager = getBleManager();
+    const manager = utils.getBleManager();
 
     const onClose = () => {
       reject(new Error('bluetooth_popup_closed'));
