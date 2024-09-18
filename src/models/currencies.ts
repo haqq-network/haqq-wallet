@@ -114,7 +114,9 @@ class CurrenciesStore {
   }
 
   get isRatesAvailable(): boolean {
-    return !!Object.keys(this._rates).length;
+    return !!(
+      this._getProviderRates() && Object.keys(this._getProviderRates()).length
+    );
   }
 
   get selectedCurrency() {
@@ -164,6 +166,13 @@ class CurrenciesStore {
     this.setRates(updates.rates);
   };
 
+  private _getProviderRates = () =>
+    this._rates[
+      Provider.isAllNetworks
+        ? MAINNET_ETH_CHAIN_ID
+        : Provider.selectedProvider.ethChainId
+    ];
+
   convert = (balance: Balance): Balance => {
     const currencyId = this.selectedCurrency?.toLocaleLowerCase();
     const serialized = balance.toJsonString();
@@ -178,12 +187,14 @@ class CurrenciesStore {
       return Balance.Empty;
     }
 
+    const providerRates = this._getProviderRates();
+
+    if (!providerRates) {
+      return Balance.Empty;
+    }
+
     const rate =
-      this._rates[
-        Provider.isAllNetworks
-          ? MAINNET_ETH_CHAIN_ID
-          : Provider.selectedProvider.ethChainId
-      ][balance.getSymbol()?.toLocaleLowerCase()]?.amount;
+      providerRates[balance.getSymbol()?.toLocaleLowerCase()]?.amount;
     const currency = this._currencies[currencyId];
 
     if (!rate || !currency) {
