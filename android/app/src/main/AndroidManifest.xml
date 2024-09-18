@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" package="com.haqq.wallet">
+    xmlns:tools="http://schemas.android.com/tools">
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -44,7 +44,8 @@
     android:allowBackup="false"
     android:theme="@style/AppTheme"
     android:networkSecurityConfig="@xml/network_security_config"
-    android:largeHeap="true">
+    android:largeHeap="true"
+    android:supportsRtl="true">
 
     <activity
       android:name=".MainActivity"

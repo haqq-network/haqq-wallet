@@ -8,7 +8,7 @@ module.exports = function (api) {
     !!process.env.FOR_DETOX;
 
   const presets = [
-    'module:metro-react-native-babel-preset',
+    'module:@react-native/babel-preset',
     '@babel/preset-typescript',
   ];
   const plugins = [

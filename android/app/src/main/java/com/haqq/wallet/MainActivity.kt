@@ -10,8 +10,8 @@ import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
-import com.facebook.react.ReactRootView
-import com.haqq.wallet.MainActivity.MainActivityDelegate
+import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
+import com.facebook.react.defaults.DefaultReactActivityDelegate
 import org.devio.rn.splashscreen.SplashScreen
 import com.facebook.react.modules.i18nmanager.I18nUtil;
 
@@ -20,7 +20,7 @@ class MainActivity : ReactActivity() {
    * Returns the name of the main component registered from JavaScript. This is used to schedule
    * rendering of the component.
    */
-  override fun getMainComponentName(): String? {
+  override fun getMainComponentName(): String {
     try {
       return if (RootUtil.isDeviceRooted) {
         "jailbreak"
@@ -112,27 +112,9 @@ class MainActivity : ReactActivity() {
   }
 
   /**
-   * Returns the instance of the [ReactActivityDelegate]. There the RootView is created and
-   * you can specify the renderer you wish to use - the new renderer (Fabric) or the old renderer
-   * (Paper).
+   * Returns the instance of the [ReactActivityDelegate]. We use [DefaultReactActivityDelegate]
+   * which allows you to enable New Architecture with a single boolean flags [fabricEnabled]
    */
-  override fun createReactActivityDelegate(): ReactActivityDelegate {
-    return MainActivityDelegate(this, mainComponentName)
-  }
-
-  class MainActivityDelegate(activity: ReactActivity?, mainComponentName: String?) :
-    ReactActivityDelegate(activity, mainComponentName) {
-    override fun createRootView(): ReactRootView {
-      val reactRootView = ReactRootView(context)
-      // If you opted-in for the New Architecture, we enable the Fabric Renderer.
-      reactRootView.setIsFabric(BuildConfig.IS_NEW_ARCHITECTURE_ENABLED)
-      return reactRootView
-    }
-
-    fun isConcurrentRootEnabled(): Boolean {
-      // If you opted-in for the New Architecture, we enable Concurrent Root (i.e. React 18).
-      // More on this on https://reactjs.org/blog/2022/03/29/react-v18.html
-      return BuildConfig.IS_NEW_ARCHITECTURE_ENABLED
-    }
-  }
+  override fun createReactActivityDelegate(): ReactActivityDelegate =
+      DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
 }
