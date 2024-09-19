@@ -169,6 +169,7 @@ export const Swap = observer(
 
       return Color.textBase1;
     }, [estimateData]);
+
     return (
       <KeyboardSafeArea style={styles.container}>
         <View style={styles.header}>

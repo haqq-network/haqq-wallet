@@ -54,7 +54,7 @@ import {
   ModalType,
 } from '@app/types';
 import {ERC20_ABI, V3SWAPROUTER_ABI, WETH_ABI} from '@app/variables/abi';
-import {HAQQ_METADATA} from '@app/variables/common';
+import {HAQQ_METADATA, ZERO_HEX_NUMBER} from '@app/variables/common';
 
 const logger = Logger.create('SwapScreen', {
   emodjiPrefix: '🟠',
@@ -160,7 +160,7 @@ export const SwapScreen = observer(() => {
     const symbol = tokenIn?.symbol!;
     const decimals = tokenIn?.decimals!;
     if (!estimateData?.fee) {
-      return new Balance(Balance.Empty, decimals, symbol);
+      return new Balance(ZERO_HEX_NUMBER, decimals, symbol);
     }
     return new Balance(estimateData?.fee.amount || '0', decimals, symbol);
   }, [tokenIn, estimateData]);
