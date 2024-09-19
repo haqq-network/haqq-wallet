@@ -1407,7 +1407,9 @@ export enum AddressType {
   unknown = 'unknown',
 }
 
-export type VerifyAddressResponse = IContract;
+export type VerifyAddressResponse = {
+  address: Record<ChainId, IContract>;
+};
 
 export interface MobXStoreFromRealm {
   realmSchemaName: string;

@@ -35,9 +35,9 @@ import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {Indexer, SushiPoolEstimateResponse} from '@app/services/indexer';
 import {
+  IContract,
   JsonRpcMetadata,
   JsonRpcTransactionRequest,
-  VerifyAddressResponse,
 } from '@app/types';
 import {formatNumberString, openInAppBrowser, sleep} from '@app/utils';
 import {STRINGS} from '@app/variables/common';
@@ -57,7 +57,7 @@ export interface JsonRpcSwapTransactionProps {
   tx: Partial<JsonRpcTransactionRequest> | undefined;
   parsedInput: ethers.utils.TransactionDescription | undefined;
   chainId: string | number;
-  verifyAddressResponse: VerifyAddressResponse | null;
+  verifyAddressResponse: IContract | null;
 
   onFeePress: () => void;
   onError: () => void;
