@@ -64,6 +64,7 @@ export const SwapRoutePathIcons = observer(
           if (!contract) {
             return null;
           }
+
           return (
             <React.Fragment key={`swap-route-path-item-${contract.id}`}>
               <ImageWrapper

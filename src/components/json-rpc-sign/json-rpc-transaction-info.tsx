@@ -12,9 +12,9 @@ import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {
   AddressType,
+  IContract,
   JsonRpcMetadata,
   PartialJsonRpcRequest,
-  VerifyAddressResponse,
 } from '@app/types';
 import {
   getTransactionFromJsonRpcRequest,
@@ -30,7 +30,7 @@ import {First} from '../ui';
 interface JsonRpcTransactionInfoProps {
   request: PartialJsonRpcRequest;
   metadata: JsonRpcMetadata;
-  verifyAddressResponse: VerifyAddressResponse | null;
+  verifyAddressResponse: IContract | null;
   chainId?: number;
   hideContractAttention?: boolean;
   fee?: Fee | null;
