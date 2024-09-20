@@ -671,27 +671,30 @@ class App extends AsyncEventEmitter {
 
         return {
           staked: acc.staked.operate(
-            Currencies.convert(staked ?? Balance.Empty),
+            Currencies.convert(staked ?? Balance.Empty, p.ethChainId),
             'add',
           ),
           vested: acc.vested.operate(
-            Currencies.convert(vested ?? Balance.Empty),
+            Currencies.convert(vested ?? Balance.Empty, p.ethChainId),
             'add',
           ),
           available: acc.available?.operate(
-            Currencies.convert(available ?? Balance.Empty),
+            Currencies.convert(available ?? Balance.Empty, p.ethChainId),
             'add',
           ),
           total: acc.total?.operate(
-            Currencies.convert(total ?? Balance.Empty),
+            Currencies.convert(total ?? Balance.Empty, p.ethChainId),
             'add',
           ),
           locked: acc.locked?.operate(
-            Currencies.convert(locked ?? Balance.Empty),
+            Currencies.convert(locked ?? Balance.Empty, p.ethChainId),
             'add',
           ),
           availableForStake: acc.availableForStake?.operate(
-            Currencies.convert(availableForStake ?? Balance.Empty),
+            Currencies.convert(
+              availableForStake ?? Balance.Empty,
+              p.ethChainId,
+            ),
             'add',
           ),
           unlock: acc.unlock,

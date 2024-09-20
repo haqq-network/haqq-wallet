@@ -166,14 +166,14 @@ class CurrenciesStore {
     this.setRates(updates.rates);
   };
 
-  private _getProviderRates = () =>
+  private _getProviderRates = (chainId?: number) =>
     this._rates[
       Provider.isAllNetworks
-        ? MAINNET_ETH_CHAIN_ID
+        ? chainId ?? MAINNET_ETH_CHAIN_ID
         : Provider.selectedProvider.ethChainId
     ];
 
-  convert = (balance: Balance): Balance => {
+  convert = (balance: Balance, chainId?: number): Balance => {
     const currencyId = this.selectedCurrency?.toLocaleLowerCase();
     const serialized = balance.toJsonString();
     const cacheKey = `${serialized}-${Provider.selectedProviderId}-${currencyId}-${this._prevRatesHash}`;
@@ -187,7 +187,7 @@ class CurrenciesStore {
       return Balance.Empty;
     }
 
-    const providerRates = this._getProviderRates();
+    const providerRates = this._getProviderRates(chainId);
 
     if (!providerRates) {
       return Balance.Empty;
