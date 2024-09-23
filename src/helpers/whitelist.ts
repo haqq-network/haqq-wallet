@@ -2,12 +2,17 @@ import {JSONRPCError, jsonrpcRequest} from '@haqq/shared-react-native';
 
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
-import {Provider, ProviderModel} from '@app/models/provider';
+import {
+  INDEXER_PROXY_ENDPOINT,
+  Provider,
+  ProviderModel,
+} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
 import {Indexer} from '@app/services/indexer';
-import {AddressType, VerifyAddressResponse} from '@app/types';
+import {AddressType, IContract, VerifyAddressResponse} from '@app/types';
+import {MAINNET_ETH_CHAIN_ID} from '@app/variables/common';
 
 import {AddressUtils, NATIVE_TOKEN_ADDRESS} from './address-utils';
 
@@ -59,21 +64,15 @@ export class Whitelist {
     return await Indexer.instance.validateDappDomain(url);
   }
 
-  static async checkAddress(
-    address: string,
-    provider?: ProviderModel,
-  ): Promise<boolean> {
-    provider = provider ?? Provider.selectedProvider;
-    const result = await Whitelist.verifyAddress(address, provider);
-    return !!result?.is_in_white_list;
-  }
-
   static async verifyAddress(
     address: string,
     provider?: ProviderModel,
     force = false,
   ) {
     provider = provider ?? Provider.selectedProvider;
+    const chainId = Provider.isAllNetworks
+      ? MAINNET_ETH_CHAIN_ID
+      : provider.ethChainId;
     const isWallet = Wallet.getAll().some(wallet =>
       AddressUtils.equals(wallet.address, address),
     );
@@ -82,7 +81,7 @@ export class Whitelist {
       return {
         address_type: AddressType.wallet,
         id: AddressUtils.toHaqq(address),
-      } as VerifyAddressResponse;
+      } as IContract;
     }
 
     if (!provider.indexer || !address) {
@@ -90,10 +89,10 @@ export class Whitelist {
     }
 
     if (AddressUtils.equals(address, NATIVE_TOKEN_ADDRESS)) {
-      return Token.generateNativeTokenContract();
+      return Token.generateNativeTokenContracts()[0];
     }
 
-    const key = `${CACHE_KEY}:${JSON.stringify(address)}:${provider.id}`;
+    const key = `${CACHE_KEY}:${JSON.stringify(address)}`;
     let responseFromCache: CachedVerifyAddressResponse | null = null;
     if (!force) {
       try {
@@ -106,7 +105,7 @@ export class Whitelist {
             responseFromCache?.cachedAt &&
             responseFromCache.cachedAt + CACHE_LIFE_TIME > Date.now()
           ) {
-            return responseFromCache;
+            return responseFromCache.address[chainId];
           }
         }
       } catch (err) {
@@ -115,12 +114,15 @@ export class Whitelist {
     }
 
     try {
-      const haqqAddressList = getParsedAddressList(address);
+      const params: any[] = getParsedAddressList(address);
+      if (!Provider.isAllNetworks) {
+        params.push(provider.ethChainId);
+      }
 
       const response = await jsonrpcRequest<VerifyAddressResponse | null>(
-        provider.indexer,
+        INDEXER_PROXY_ENDPOINT,
         'address',
-        haqqAddressList,
+        params,
       );
 
       if (response) {
@@ -131,7 +133,7 @@ export class Whitelist {
         VariablesString.set(key, responseForCache);
       }
 
-      return response;
+      return response?.address[chainId] ?? null;
     } catch (err) {
       if (err instanceof JSONRPCError) {
         Logger.captureException(err, 'Whitelist:verifyAddress', err.meta);
@@ -139,7 +141,7 @@ export class Whitelist {
       logger.error('verifyAddress', err);
 
       if (responseFromCache) {
-        return responseFromCache;
+        return responseFromCache.address[chainId];
       }
 
       return null;

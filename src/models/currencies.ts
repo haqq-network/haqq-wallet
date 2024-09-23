@@ -10,9 +10,12 @@ import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
 import {RemoteConfig} from '@app/services/remote-config';
-import {RatesResponse} from '@app/types';
+import {ChainId, RatesResponse} from '@app/types';
 import {createAsyncTask} from '@app/utils';
-import {STORE_REHYDRATION_TIMEOUT_MS} from '@app/variables/common';
+import {
+  MAINNET_ETH_CHAIN_ID,
+  STORE_REHYDRATION_TIMEOUT_MS,
+} from '@app/variables/common';
 
 import {Provider} from './provider';
 
@@ -21,7 +24,7 @@ const convertedCache = new Map<string, Balance>();
 class CurrenciesStore {
   private _selectedCurrency: string = '';
   private _currencies: Record<string, Currency> = {};
-  private _rates: Record<string, CurrencyRate> = {};
+  private _rates: Record<ChainId, Record<string, CurrencyRate>> = {};
   private _isInited = false;
   private _prevRatesHash = '';
 
@@ -66,25 +69,34 @@ class CurrenciesStore {
     this._prevRatesHash = ratesHash;
     convertedCache.clear();
 
-    const ratesMap: Record<string, CurrencyRate> = Object.entries(rates).reduce(
-      (prev, [tokenKey, fiatRates]) => {
-        const rate = fiatRates?.find(
-          it =>
-            it.denom?.toLowerCase() === this.selectedCurrency?.toLowerCase(),
-        );
-        return {
-          ...prev,
-          [tokenKey?.toLocaleLowerCase()]: {
-            amount: rate?.amount
-              ? parseFloat(rate.amount) /
-                10 ** Provider.selectedProvider.decimals
-              : 0,
-            denom: rate?.denom,
-          } as CurrencyRate,
-        };
-      },
-      {},
-    );
+    const ratesMap: Record<
+      ChainId,
+      Record<string, CurrencyRate>
+    > = Object.entries(rates).reduce((prev, [chainId, chainRates]) => {
+      return {
+        ...prev,
+        [chainId]: Object.entries(chainRates).reduce(
+          (acc, [tokenKey, fiatRates]) => {
+            const rate = fiatRates?.find(
+              it =>
+                it.denom?.toLowerCase() ===
+                this.selectedCurrency?.toLowerCase(),
+            );
+            return {
+              ...acc,
+              [tokenKey?.toLocaleLowerCase()]: {
+                amount: rate?.amount
+                  ? parseFloat(rate.amount) /
+                    10 ** Provider.getByEthChainId(chainId)!.decimals
+                  : 0,
+                denom: rate?.denom,
+              } as CurrencyRate,
+            };
+          },
+          {},
+        ),
+      };
+    }, {});
 
     this._rates = ratesMap;
   };
@@ -102,7 +114,9 @@ class CurrenciesStore {
   }
 
   get isRatesAvailable(): boolean {
-    return !!Object.keys(this._rates).length;
+    return !!(
+      this._getProviderRates() && Object.keys(this._getProviderRates()).length
+    );
   }
 
   get selectedCurrency() {
@@ -152,6 +166,13 @@ class CurrenciesStore {
     this.setRates(updates.rates);
   };
 
+  private _getProviderRates = () =>
+    this._rates[
+      Provider.isAllNetworks
+        ? MAINNET_ETH_CHAIN_ID
+        : Provider.selectedProvider.ethChainId
+    ];
+
   convert = (balance: Balance): Balance => {
     const currencyId = this.selectedCurrency?.toLocaleLowerCase();
     const serialized = balance.toJsonString();
@@ -166,7 +187,14 @@ class CurrenciesStore {
       return Balance.Empty;
     }
 
-    const rate = this._rates[balance.getSymbol()?.toLocaleLowerCase()]?.amount;
+    const providerRates = this._getProviderRates();
+
+    if (!providerRates) {
+      return Balance.Empty;
+    }
+
+    const rate =
+      providerRates[balance.getSymbol()?.toLocaleLowerCase()]?.amount;
     const currency = this._currencies[currencyId];
 
     if (!rate || !currency) {

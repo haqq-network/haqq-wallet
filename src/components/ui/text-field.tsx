@@ -304,7 +304,6 @@ const styles = createTheme({
   },
   inputContainer: {
     flex: 1,
-    alignItems: 'flex-start',
   },
   disabled: {
     opacity: 0.5,

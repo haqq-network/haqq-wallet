@@ -182,6 +182,7 @@ class NftStore {
           is_transfer_prohibinden: Boolean(contract.is_transfer_prohibinden),
           nfts: item.nfts.map(nft => ({
             ...nft,
+            chain_id: item.chain_id,
             contractType: contractType,
             name: nft.name || 'Unknown',
             description: nft.description || '-',
@@ -204,7 +205,7 @@ class NftStore {
       ? ContractType.erc721
       : ContractType.erc1155;
 
-    const nft: NftItem = {
+    const nft = {
       ...data,
       contractType: contractType,
       name: data.name || 'Unknown',
@@ -214,6 +215,7 @@ class NftStore {
       is_transfer_prohibinden: Boolean(contract.is_transfer_prohibinden),
     };
 
+    // @ts-ignore
     this.update(nft);
   };
 

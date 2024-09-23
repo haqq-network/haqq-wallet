@@ -50,10 +50,9 @@ export const TransactionNftFinish = observer(
     contact,
     fee,
   }: TransactionFinishProps) => {
+    const provider = Provider.getByEthChainId(item.chain_id)!;
     const onPressHash = async () => {
-      const url = Provider.selectedProvider.getTxExplorerUrl(
-        transaction?.hash!,
-      );
+      const url = provider.getTxExplorerUrl(transaction?.hash!);
       await openURL(url);
     };
 
@@ -117,10 +116,10 @@ export const TransactionNftFinish = observer(
 
         <View style={styles.providerContainer}>
           <Text variant={TextVariant.t14} color={Color.textBase2}>
-            {Provider.selectedProvider.name}
+            {provider.name}
           </Text>
           <Text variant={TextVariant.t14} color={Color.textBase2}>
-            {`${STRINGS.NBSP}(${Provider.selectedProvider.denom})`}
+            {`${STRINGS.NBSP}(${provider.denom})`}
           </Text>
         </View>
 

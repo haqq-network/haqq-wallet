@@ -90,6 +90,7 @@ export const TransactionConfirmationScreen = observer(() => {
               route.params.to,
               route.params.amount,
               AddressUtils.toEth(token.id),
+              Provider.getByEthChainId(token.chain_id),
             );
           } else {
             transaction = await ethNetworkProvider.transferTransaction(
@@ -98,6 +99,7 @@ export const TransactionConfirmationScreen = observer(() => {
               wallet,
               route.params.to,
               route.params.amount,
+              Provider.getByEthChainId(token.chain_id),
             );
           }
 
@@ -175,6 +177,7 @@ export const TransactionConfirmationScreen = observer(() => {
         to,
         value,
         data,
+        chainId: token.chain_id,
       });
 
       setFee(result);

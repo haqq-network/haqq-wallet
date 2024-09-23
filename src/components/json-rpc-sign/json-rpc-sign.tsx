@@ -13,11 +13,7 @@ import {EthereumSignInMessage} from '@app/helpers/ethereum-message-checker';
 import {I18N} from '@app/i18n';
 import {Fee} from '@app/models/fee';
 import {Wallet} from '@app/models/wallet';
-import {
-  JsonRpcMetadata,
-  PartialJsonRpcRequest,
-  VerifyAddressResponse,
-} from '@app/types';
+import {IContract, JsonRpcMetadata, PartialJsonRpcRequest} from '@app/types';
 
 export interface JsonRpcSignProps {
   isTransaction: boolean;
@@ -26,7 +22,7 @@ export interface JsonRpcSignProps {
   request: PartialJsonRpcRequest;
   metadata: JsonRpcMetadata;
   wallet: Wallet;
-  verifyAddressResponse: VerifyAddressResponse | null;
+  verifyAddressResponse: IContract | null;
   chainId?: number;
   hideContractAttention?: boolean;
   isAllowedDomain: boolean;

@@ -35,6 +35,7 @@ export class EthNetwork {
   static async populateTransaction(
     estimate: CalculatedFees,
     {from, to, value = Balance.Empty, data = '0x'}: TxEstimationParams,
+    provider = Provider.selectedProvider,
   ) {
     try {
       if (!AddressUtils.isEthAddress(to)) {
@@ -43,7 +44,7 @@ export class EthNetwork {
       if (!AddressUtils.isEthAddress(from)) {
         throw new Error('Invalid "to" address');
       }
-      const rpcProvider = await getRpcProvider(Provider.selectedProvider);
+      const rpcProvider = await getRpcProvider(provider);
       const nonce = await rpcProvider.getTransactionCount(from, 'latest');
 
       const transaction = {
@@ -55,7 +56,7 @@ export class EthNetwork {
         maxPriorityFeePerGas: estimate.maxPriorityFee.toHex(),
         gasLimit: estimate.gasLimit.toHex(),
         data,
-        chainId: Provider.selectedProvider.ethChainId,
+        chainId: provider.ethChainId,
       };
 
       const tx = await utils.resolveProperties(transaction);
@@ -78,7 +79,7 @@ export class EthNetwork {
         value,
         data,
         ...estimate,
-        provider: Provider.selectedProvider.name,
+        provider: provider.name,
       });
       throw error;
     }
@@ -123,13 +124,19 @@ export class EthNetwork {
     }
   }
 
-  static async sendTransaction(signedTx: string) {
-    const rpcProvider = await getRpcProvider(Provider.selectedProvider);
+  static async sendTransaction(
+    signedTx: string,
+    provider = Provider.selectedProvider,
+  ) {
+    const rpcProvider = await getRpcProvider(provider);
     return await rpcProvider.sendTransaction(signedTx);
   }
 
-  static async getTransactionReceipt(txHash: string) {
-    const rpcProvider = await getRpcProvider(Provider.selectedProvider);
+  static async getTransactionReceipt(
+    txHash: string,
+    provider = Provider.selectedProvider,
+  ) {
+    const rpcProvider = await getRpcProvider(provider);
 
     return await rpcProvider.getTransactionReceipt(txHash);
   }
@@ -155,9 +162,12 @@ export class EthNetwork {
             ? estimateGasLimit.toNumber()
             : gasLimit,
         ),
+        provider.decimals,
+        provider.denom,
       );
 
       const blockBaseFeePerGasGWEI = block.baseFeePerGas!.toNumber() / 10 ** 9;
+
       const resultMaxBaseFee = new Balance(
         new Balance(
           new Decimal(
@@ -167,6 +177,8 @@ export class EthNetwork {
           ),
         ).toNumber() /
           10 ** 9,
+        provider.decimals,
+        provider.denom,
       );
 
       const resultMaxPriorityFee = new Balance(
@@ -304,13 +316,18 @@ export class EthNetwork {
     wallet: Wallet,
     to: string,
     value: Balance,
+    provider = Provider.selectedProvider,
   ) {
     try {
-      const transaction = await EthNetwork.populateTransaction(estimate, {
-        from: wallet.address,
-        to,
-        value,
-      });
+      const transaction = await EthNetwork.populateTransaction(
+        estimate,
+        {
+          from: wallet.address,
+          to,
+          value,
+        },
+        provider,
+      );
       const signedTx = await transport.signTransaction(
         wallet.path!,
         transaction,
@@ -320,7 +337,7 @@ export class EthNetwork {
         throw new Error('signedTx not found');
       }
 
-      return await EthNetwork.sendTransaction(signedTx);
+      return await EthNetwork.sendTransaction(signedTx, provider);
     } catch (error) {
       Logger.captureException(error, 'EthNetwork.transferTransaction', {
         value,
@@ -346,6 +363,7 @@ export class EthNetwork {
       contractAddress: string;
     },
     estimationVariant: EstimationVariant = EstimationVariant.average,
+    provider = Provider.selectedProvider,
   ) {
     const data = getERC20TransferData(to, amount, contractAddress);
     return await EthNetwork.estimate(
@@ -356,6 +374,7 @@ export class EthNetwork {
         data,
       },
       estimationVariant,
+      provider,
     );
   }
 
@@ -366,19 +385,24 @@ export class EthNetwork {
     to: string,
     amount: Balance,
     contractAddress: string,
+    provider = Provider.selectedProvider,
   ) {
     try {
       const data = getERC20TransferData(to, amount, contractAddress);
-      const unsignedTx = await EthNetwork.populateTransaction(estimate, {
-        from: from.address,
-        to: contractAddress,
-        value: Balance.Empty,
-        data,
-      });
+      const unsignedTx = await EthNetwork.populateTransaction(
+        estimate,
+        {
+          from: from.address,
+          to: contractAddress,
+          value: Balance.Empty,
+          data,
+        },
+        provider,
+      );
 
       const signedTx = await transport.signTransaction(from.path!, unsignedTx);
 
-      return await EthNetwork.sendTransaction(signedTx);
+      return await EthNetwork.sendTransaction(signedTx, provider);
     } catch (error) {
       Logger.captureException(error, 'EthNetwork.transferERC20', {
         amount,
@@ -398,19 +422,24 @@ export class EthNetwork {
     to: string,
     tokenId: number,
     contractAddress: string,
+    provider = Provider.selectedProvider,
   ) {
     try {
       const data = getERC721TransferData(from.address, to, tokenId);
-      const unsignedTx = await EthNetwork.populateTransaction(estimate, {
-        from: from.address,
-        to: contractAddress,
-        value: Balance.Empty,
-        data,
-      });
+      const unsignedTx = await EthNetwork.populateTransaction(
+        estimate,
+        {
+          from: from.address,
+          to: contractAddress,
+          value: Balance.Empty,
+          data,
+        },
+        provider,
+      );
 
       const signedTx = await transport.signTransaction(from.path!, unsignedTx);
 
-      return await EthNetwork.sendTransaction(signedTx);
+      return await EthNetwork.sendTransaction(signedTx, provider);
     } catch (error) {
       Logger.captureException(error, 'EthNetwork.transferERC721', {
         tokenId,
@@ -430,19 +459,24 @@ export class EthNetwork {
     to: string,
     tokenId: number,
     contractAddress: string,
+    provider = Provider.selectedProvider,
   ) {
     try {
       const data = getERC1155TransferData(from.address, to, tokenId);
-      const unsignedTx = await EthNetwork.populateTransaction(estimate, {
-        from: from.address,
-        to: contractAddress,
-        value: Balance.Empty,
-        data,
-      });
+      const unsignedTx = await EthNetwork.populateTransaction(
+        estimate,
+        {
+          from: from.address,
+          to: contractAddress,
+          value: Balance.Empty,
+          data,
+        },
+        provider,
+      );
 
       const signedTx = await transport.signTransaction(from.path!, unsignedTx);
 
-      return await EthNetwork.sendTransaction(signedTx);
+      return await EthNetwork.sendTransaction(signedTx, provider);
     } catch (error) {
       Logger.captureException(error, 'EthNetwork.transferERC1155', {
         tokenId,

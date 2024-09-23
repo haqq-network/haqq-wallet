@@ -15,7 +15,8 @@ export const SettingsProviderEditScreen = observer(() => {
     ProvidersStackRoutes.SettingsProviderForm
   >();
   const provider = useMemo(
-    () => (route.params?.id ? Provider.getById(route.params?.id) : null),
+    () =>
+      route.params?.id ? Provider.getByEthChainId(route.params?.id) : null,
     [route.params?.id],
   );
 

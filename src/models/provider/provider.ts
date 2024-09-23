@@ -21,7 +21,11 @@ import {
 
 import {RemoteProviderConfig} from './provider-config';
 import {ProviderModel} from './provider.model';
-import {ALL_NETWORKS_PROVIDER, ProviderID} from './provider.types';
+import {
+  ALL_NETWORKS_ID,
+  ALL_NETWORKS_PROVIDER,
+  ProviderID,
+} from './provider.types';
 
 import {Currencies} from '../currencies';
 import {Nft} from '../nft';
@@ -64,6 +68,10 @@ class ProviderStore {
     return this._data[this._selectedProviderId];
   }
 
+  get isAllNetworks() {
+    return this._selectedProviderId === ALL_NETWORKS_ID;
+  }
+
   setSelectedProviderId = async (id: ProviderID) => {
     runInAction(() => {
       this._selectedProviderId = id;
@@ -83,7 +91,7 @@ class ProviderStore {
       await Transaction.fetchLatestTransactions(Wallet.addressList(), true);
       await Currencies.fetchCurrencies();
 
-      if (this.selectedProvider.config.isNftEnabled) {
+      if (this.isAllNetworks || this.selectedProvider.config.isNftEnabled) {
         await Nft.fetchNft();
       }
       this.fetchProviders();
@@ -164,6 +172,10 @@ class ProviderStore {
   }
   getAll() {
     return Object.values(this._data);
+  }
+
+  getAllNetworks() {
+    return Object.values(this._data).filter(p => p.id !== ALL_NETWORKS_ID);
   }
 
   create(id: string, item: NetworkProvider | ProviderModel) {

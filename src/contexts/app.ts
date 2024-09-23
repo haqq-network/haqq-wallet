@@ -25,7 +25,12 @@ import {getUid} from '@app/helpers/get-uid';
 import {SecurePinUtils} from '@app/helpers/secure-pin-utils';
 import {I18N, getText} from '@app/i18n';
 import {Currencies} from '@app/models/currencies';
-import {Provider, RemoteProviderConfig} from '@app/models/provider';
+import {
+  ALL_NETWORKS_ID,
+  Provider,
+  ProviderModel,
+  RemoteProviderConfig,
+} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
@@ -44,6 +49,7 @@ import {
   AppTheme,
   BalanceData,
   BiometryType,
+  ChainId,
   DynamicLink,
   HaqqEthereumAddress,
   IndexerBalanceData,
@@ -78,7 +84,8 @@ class App extends AsyncEventEmitter {
   private user: User;
   private _authenticated: boolean = DEBUG_VARS.enableSkipPinOnLogin;
   private appStatus: AppStatus = AppStatus.inactive;
-  private _balances: Map<HaqqEthereumAddress, BalanceData> = new Map();
+  private _balances: Record<ChainId, Record<HaqqEthereumAddress, BalanceData>> =
+    {};
   private _googleSigninSupported: boolean = false;
   private _appleSigninSupported: boolean =
     Platform.select({
@@ -644,77 +651,133 @@ class App extends AsyncEventEmitter {
     if (!this.onboarded) {
       return;
     }
-    let changed = false;
 
-    const balancesEntries = Object.entries(balances) as unknown as [
-      HaqqEthereumAddress,
-      BalanceData,
-    ][];
-
-    for (const [address, data] of balancesEntries) {
-      const prevBalance = this._balances.get(address);
-
-      if (
-        !prevBalance?.available?.compare(data.available, 'eq') ||
-        !prevBalance?.staked?.compare(data.staked, 'eq') ||
-        !prevBalance?.vested?.compare(data.vested, 'eq') ||
-        !prevBalance?.total?.compare(data.total, 'eq') ||
-        !prevBalance?.locked?.compare(data.locked, 'eq') ||
-        !prevBalance?.availableForStake?.compare(data.availableForStake, 'eq')
-      ) {
-        this._balances.set(address, data);
-        changed = true;
-      }
-    }
-
-    if (changed) {
+    if (JSON.stringify(this._balances) !== JSON.stringify(balances)) {
+      this._balances = balances;
       Token.fetchTokens();
       this.emit(Events.onBalanceSync);
     }
   }
 
+  private _calculateAllNetworksBalance = (address: string) => {
+    const getBalanceData = (p: ProviderModel) =>
+      this._balances[p.ethChainId]?.[AddressUtils.toEth(address)] ||
+      Balance.emptyBalances[AddressUtils.toEth(address)];
+
+    return Provider.getAllNetworks().reduce(
+      (acc, p) => {
+        const {available, locked, staked, total, vested, availableForStake} =
+          getBalanceData(p) ?? {};
+
+        return {
+          staked: acc.staked.operate(
+            Currencies.convert(staked ?? Balance.Empty),
+            'add',
+          ),
+          vested: acc.vested.operate(
+            Currencies.convert(vested ?? Balance.Empty),
+            'add',
+          ),
+          available: acc.available?.operate(
+            Currencies.convert(available ?? Balance.Empty),
+            'add',
+          ),
+          total: acc.total?.operate(
+            Currencies.convert(total ?? Balance.Empty),
+            'add',
+          ),
+          locked: acc.locked?.operate(
+            Currencies.convert(locked ?? Balance.Empty),
+            'add',
+          ),
+          availableForStake: acc.availableForStake?.operate(
+            Currencies.convert(availableForStake ?? Balance.Empty),
+            'add',
+          ),
+          unlock: acc.unlock,
+        };
+      },
+      {
+        staked: Balance.Empty,
+        vested: Balance.Empty,
+        available: Balance.Empty,
+        total: Balance.Empty,
+        locked: Balance.Empty,
+        availableForStake: Balance.Empty,
+        unlock: new Date(0),
+      },
+    );
+  };
+
   getBalanceData(address: string) {
+    if (Provider.selectedProviderId === ALL_NETWORKS_ID) {
+      return this._calculateAllNetworksBalance(address);
+    }
+
     return (
-      this._balances.get(AddressUtils.toEth(address)) ||
-      Balance.emptyBalances[AddressUtils.toEth(address)]
+      this._balances[Provider.selectedProvider.ethChainId]?.[
+        AddressUtils.toEth(address)
+      ] || Balance.emptyBalances[AddressUtils.toEth(address)]
     );
   }
 
-  getAvailableBalance(address: string): Balance {
+  getAvailableBalance(
+    address: string,
+    provider = Provider.selectedProvider,
+  ): Balance {
     return (
-      this._balances.get(AddressUtils.toEth(address))?.available ??
-      Balance.Empty
+      this._balances[provider.ethChainId]?.[AddressUtils.toEth(address)]
+        ?.available ?? Balance.Empty
     );
   }
 
-  getAvailableForStakeBalance(address: string): Balance {
+  getAvailableForStakeBalance(
+    address: string,
+    provider = Provider.selectedProvider,
+  ): Balance {
     return (
-      this._balances.get(AddressUtils.toEth(address))?.availableForStake ??
-      Balance.Empty
+      this._balances[provider.ethChainId]?.[AddressUtils.toEth(address)]
+        ?.availableForStake ?? Balance.Empty
     );
   }
 
-  getStakingBalance(address: string): Balance {
+  getStakingBalance(
+    address: string,
+    provider = Provider.selectedProvider,
+  ): Balance {
     return (
-      this._balances.get(AddressUtils.toEth(address))?.staked ?? Balance.Empty
+      this._balances[provider.ethChainId]?.[AddressUtils.toEth(address)]
+        ?.staked ?? Balance.Empty
     );
   }
 
-  getVestingBalance(address: string): Balance {
+  getVestingBalance(
+    address: string,
+    provider = Provider.selectedProvider,
+  ): Balance {
     return (
-      this._balances.get(AddressUtils.toEth(address))?.vested ?? Balance.Empty
+      this._balances[provider.ethChainId]?.[AddressUtils.toEth(address)]
+        ?.vested ?? Balance.Empty
     );
   }
 
-  getTotalBalance(address: string): Balance {
+  getTotalBalance(
+    address: string,
+    provider = Provider.selectedProvider,
+  ): Balance {
     return (
-      this._balances.get(AddressUtils.toEth(address))?.total ?? Balance.Empty
+      this._balances[provider.ethChainId]?.[AddressUtils.toEth(address)]
+        ?.total ?? Balance.Empty
     );
   }
 
-  getLockedBalance(address: string): Balance {
+  getLockedBalance(
+    address: string,
+    provider = Provider.selectedProvider,
+  ): Balance {
     return (
-      this._balances.get(AddressUtils.toEth(address))?.locked ?? Balance.Empty
+      this._balances[provider.ethChainId]?.[AddressUtils.toEth(address)]
+        ?.locked ?? Balance.Empty
     );
   }
 

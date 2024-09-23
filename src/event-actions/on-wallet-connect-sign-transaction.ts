@@ -30,10 +30,8 @@ export async function onWalletConnectSignTransaction(
     const method = event?.params?.request?.method;
 
     if (session && method === 'wallet_switchEthereumChain') {
-      const providers = Provider.getAll();
       const providerId = await awaitForProvider({
-        providers,
-        initialProviderId: Provider.selectedProviderId,
+        initialProviderChainId: Provider.selectedProvider.ethChainId,
         title: I18N.networks,
       });
 

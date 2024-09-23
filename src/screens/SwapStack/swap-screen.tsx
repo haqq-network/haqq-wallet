@@ -54,7 +54,7 @@ import {
   ModalType,
 } from '@app/types';
 import {ERC20_ABI, V3SWAPROUTER_ABI, WETH_ABI} from '@app/variables/abi';
-import {HAQQ_METADATA} from '@app/variables/common';
+import {HAQQ_METADATA, ZERO_HEX_NUMBER} from '@app/variables/common';
 
 const logger = Logger.create('SwapScreen', {
   emodjiPrefix: '🟠',
@@ -160,7 +160,7 @@ export const SwapScreen = observer(() => {
     const symbol = tokenIn?.symbol!;
     const decimals = tokenIn?.decimals!;
     if (!estimateData?.fee) {
-      return new Balance(Balance.Empty, decimals, symbol);
+      return new Balance(ZERO_HEX_NUMBER, decimals, symbol);
     }
     return new Balance(estimateData?.fee.amount || '0', decimals, symbol);
   }, [tokenIn, estimateData]);
@@ -532,7 +532,7 @@ export const SwapScreen = observer(() => {
         const [walletAddres, tokenAddress] = token?.tag.split('_');
         const wallet = Wallet.getById(AddressUtils.toEth(walletAddres))!;
         const generatedISLMContract = {
-          ...Token.generateNativeTokenContract(),
+          ...Token.generateNativeTokenContracts(),
           ...Token.generateNativeToken(wallet),
         };
         logger.log('awaitForToken', {
@@ -1140,6 +1140,7 @@ export const SwapScreen = observer(() => {
                     is_erc1155: false,
                     is_erc721: false,
                     is_in_white_list: true,
+                    chain_id: Provider.selectedProvider.ethChainId,
                   }) as IToken,
               ),
             )
@@ -1206,7 +1207,7 @@ export const SwapScreen = observer(() => {
                   providers: Provider.getAll().filter(p =>
                     providersIDs.includes(p.id!),
                   ),
-                  initialProviderId: Provider.selectedProviderId,
+                  initialProviderChainId: Provider.selectedProvider.ethChainId,
                   title: I18N.swapSupportedNetworks,
                 });
                 Provider.setSelectedProviderId(providerId);

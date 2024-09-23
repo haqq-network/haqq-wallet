@@ -108,11 +108,11 @@ export class Balance implements IBalance, ISerializable {
     return `a${this.symbol}`;
   }
 
-  static getEmpty = () => {
+  static getEmpty = (precision?: number, symbol?: string) => {
     return new Balance(
       zeroBN,
-      Provider.selectedProvider.decimals,
-      Provider.selectedProvider.denom,
+      precision ?? Provider.selectedProvider.decimals,
+      symbol ?? Provider.selectedProvider.denom,
     );
   };
 
@@ -185,6 +185,12 @@ export class Balance implements IBalance, ISerializable {
       return this.toFloatString(fixedNum, precission, useZeroFormatter).trim();
     }
 
+    if (!this.symbol) {
+      return this.getStringWithSymbol(
+        this.toFloatString(fixedNum, precission, useZeroFormatter),
+      );
+    }
+
     const isRTL = I18nManager.isRTL;
     if (isRTL) {
       return `${this.symbol} ${this.toFloatString(
@@ -193,10 +199,17 @@ export class Balance implements IBalance, ISerializable {
         useZeroFormatter,
       )}`.trim();
     }
-    return (
-      this.toFloatString(fixedNum, precission, useZeroFormatter) +
-      ` ${this.symbol}`.trim()
-    );
+    return `${this.toFloatString(fixedNum, precission, useZeroFormatter)} ${
+      this.symbol
+    }`.trim();
+  };
+
+  private getStringWithSymbol = (value: string) => {
+    const currency = Currencies.currency;
+    const result = [value];
+    currency?.prefix && result.unshift(currency.prefix);
+    currency?.postfix && result.push(currency.postfix);
+    return result.join(' ');
   };
 
   /**
@@ -215,20 +228,12 @@ export class Balance implements IBalance, ISerializable {
       fixedNum = fixed;
     }
 
-    const getStringWithSymbol = (value: string) => {
-      const currency = Currencies.currency;
-      const result = [value];
-      currency?.prefix && result.unshift(currency.prefix);
-      currency?.postfix && result.push(currency.postfix);
-      return result.join(' ');
-    };
-
     const floatString = this.toFloatString(fixedNum, precission);
     const isNegative = floatString.startsWith('-');
     if (isNegative) {
-      return `- ${getStringWithSymbol(floatString.replace('-', ''))}`;
+      return `- ${this.getStringWithSymbol(floatString.replace('-', ''))}`;
     }
-    return `${getStringWithSymbol(floatString)}`;
+    return `${this.getStringWithSymbol(floatString)}`;
   };
 
   toString = () => {

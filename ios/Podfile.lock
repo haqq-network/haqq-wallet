@@ -8,7 +8,7 @@ PODS:
   - AppAuth/Core (1.7.5)
   - AppAuth/ExternalUserAgent (1.7.5):
     - AppAuth/Core
-  - BlastedImage (0.0.13):
+  - BlastedImage (1.0.3):
     - React-Core
     - SDWebImage
   - boost (1.76.0)
@@ -1078,7 +1078,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Adjust: 41d0d5c031409aebe7fb1f5703ff0d3306133439
   AppAuth: 501c04eda8a8d11f179dbe8637b7a91bb7e5d2fa
-  BlastedImage: 7dd925da7db9dcf1120efc0009bad5492e843b1e
+  BlastedImage: 8abb8801426490487c7d06cf0b54ec88b20dcd40
   boost: 7dcd2de282d72e344012f7d6564d024930a6a440
   BVLinearGradient: fbe308a1d19a8133f69e033abc85d8008644f5e3
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99

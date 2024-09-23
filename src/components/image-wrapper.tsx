@@ -6,6 +6,7 @@ import {
   ImageProps,
   ImageSourcePropType,
   ImageStyle,
+  ImageURISource,
   StyleProp,
   StyleSheet,
 } from 'react-native';
@@ -17,7 +18,7 @@ import {isValidUrl} from '@app/utils';
 import {First} from './ui';
 
 export type ImageWrapperProps = Omit<BlastedImageProps, 'source' | 'style'> & {
-  source: ImageSourcePropType | string;
+  source: ImageSourcePropType | string | null;
   style?: StyleProp<ImageStyle>;
 };
 
@@ -27,6 +28,10 @@ export function ImageWrapper({source, style, ...props}: ImageWrapperProps) {
   const [isError, setError] = useState(false);
 
   const fixedSource = useMemo(() => {
+    if (!source) {
+      return undefined;
+    }
+
     if (typeof source === 'string' && isValidUrl(source)) {
       return {uri: source} as ImageSourcePropType;
     }
@@ -44,6 +49,15 @@ export function ImageWrapper({source, style, ...props}: ImageWrapperProps) {
     if (isObservable(source)) {
       return toJS(source) as ImageSourcePropType;
     }
+
+    if (typeof source === 'number') {
+      return source as ImageSourcePropType;
+    }
+
+    if (!(source as ImageURISource).uri) {
+      return undefined;
+    }
+
     return source as ImageSourcePropType;
   }, [source]);
 
@@ -101,12 +115,14 @@ export function ImageWrapper({source, style, ...props}: ImageWrapperProps) {
           }}
         />
       )}
+      {!fixedSource && false}
       {isError && (
-        <Image {...(props as ImageProps)} style={style} source={fixedSource} />
+        <Image {...(props as ImageProps)} style={style} source={fixedSource!} />
       )}
       <BlastedImage
         {...props}
         style={StyleSheet.flatten(style)}
+        // @ts-ignore
         source={fixedSource}
         onError={() => setError(true)}
       />

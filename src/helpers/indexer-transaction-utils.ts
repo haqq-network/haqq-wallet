@@ -18,16 +18,18 @@ import {IBC_DENOM} from '@app/variables/common';
 import {AddressUtils} from './address-utils';
 import {shortAddress} from './short-address';
 
-const getNativeToken = (): IndexerTxParsedTokenInfo => {
+const getNativeToken = (
+  provider = Provider.selectedProvider,
+): IndexerTxParsedTokenInfo => {
   return {
-    name: Provider.selectedProvider.isHaqqNetwork
+    name: provider.isHaqqNetwork
       ? getText(I18N.transactionConfirmationIslamicCoin)
-      : Provider.selectedProvider.name,
-    symbol: Provider.selectedProvider.denom,
-    icon: Provider.selectedProvider.isHaqqNetwork
+      : provider.name,
+    symbol: provider.denom,
+    icon: provider.isHaqqNetwork
       ? require('@assets/images/islm_icon.png')
-      : {uri: Provider.selectedProvider.icon},
-    decimals: Provider.selectedProvider.decimals,
+      : {uri: provider.icon},
+    decimals: provider.decimals,
     contract_address: '',
   };
 };
@@ -82,7 +84,10 @@ function parseMsgBeginRedelegate(
   _: string[],
 ): ParsedTransactionData {
   const isIncoming = false;
-  const amount = [new Balance(tx.msg.amount.amount)];
+  const provider = Provider.getByEthChainId(tx.chain_id);
+  const amount = [
+    new Balance(tx.msg.amount.amount, provider?.decimals, provider?.denom),
+  ];
 
   return {
     from: AddressUtils.toEth(tx.msg.delegator_address),
@@ -91,7 +96,7 @@ function parseMsgBeginRedelegate(
     isContractInteraction: false,
     isIncoming,
     isOutcoming: !isIncoming,
-    tokens: [getNativeToken()],
+    tokens: [getNativeToken(provider)],
     isCosmosTx: true,
     isEthereumTx: false,
     icon: IconsName.staking_redelegation,
@@ -138,7 +143,10 @@ function parseMsgEthereumRaffleTx(
 ): ParsedTransactionData {
   const isIncoming = isIncomingTx(tx, addresses);
   const {from, to} = getFromAndTo(tx, isIncoming);
-  const amount = [new Balance(tx.msg.amount.amount)];
+  const provider = Provider.getByEthChainId(tx.chain_id);
+  const amount = [
+    new Balance(tx.msg.amount.amount, provider?.decimals, provider?.denom),
+  ];
 
   return {
     from,
@@ -147,7 +155,7 @@ function parseMsgEthereumRaffleTx(
     isContractInteraction: false,
     isIncoming,
     isOutcoming: !isIncoming,
-    tokens: [getNativeToken()],
+    tokens: [getNativeToken(provider)],
     isCosmosTx: false,
     isEthereumTx: true,
     icon: IconsName.raffle_reward,
@@ -163,7 +171,10 @@ function parseMsgWithdrawDelegatorReward(
   const isIncoming = isIncomingTx(tx, addresses);
   const {from, to} = getFromAndTo(tx, isIncoming);
   // for delegation reward tx amount is empty
-  const amount = [Balance.Empty];
+  const provider = Provider.getByEthChainId(tx.chain_id);
+  const amount = [
+    new Balance(Balance.Empty, provider?.decimals, provider?.denom),
+  ];
 
   return {
     from,
@@ -172,7 +183,7 @@ function parseMsgWithdrawDelegatorReward(
     isContractInteraction: false,
     isIncoming,
     isOutcoming: !isIncoming,
-    tokens: [getNativeToken()],
+    tokens: [getNativeToken(provider)],
     isCosmosTx: true,
     isEthereumTx: false,
     icon: IconsName.staking_reword,
@@ -187,7 +198,10 @@ function parseMsgDelegate(
 ): ParsedTransactionData {
   const isIncoming = false;
   const {from, to} = getFromAndTo(tx, isIncoming);
-  const amount = [new Balance(tx.msg.amount.amount)];
+  const provider = Provider.getByEthChainId(tx.chain_id);
+  const amount = [
+    new Balance(tx.msg.amount.amount, provider?.decimals, provider?.denom),
+  ];
 
   return {
     from,
@@ -196,7 +210,7 @@ function parseMsgDelegate(
     isContractInteraction: false,
     isIncoming,
     isOutcoming: !isIncoming,
-    tokens: [getNativeToken()],
+    tokens: [getNativeToken(provider)],
     isCosmosTx: true,
     isEthereumTx: true,
     icon: IconsName.staking_delegation,
@@ -211,7 +225,10 @@ function parseMsgUndelegate(
 ): ParsedTransactionData {
   const isIncoming = true;
   const {from, to} = getFromAndTo(tx, isIncoming);
-  const amount = [new Balance(tx.msg.amount.amount)];
+  const provider = Provider.getByEthChainId(tx.chain_id);
+  const amount = [
+    new Balance(tx.msg.amount.amount, provider?.decimals, provider?.denom),
+  ];
 
   return {
     from,
@@ -220,7 +237,7 @@ function parseMsgUndelegate(
     isContractInteraction: false,
     isIncoming,
     isOutcoming: !isIncoming,
-    tokens: [getNativeToken()],
+    tokens: [getNativeToken(provider)],
     isCosmosTx: true,
     isEthereumTx: false,
     icon: IconsName.staking_undelegation,
@@ -235,7 +252,10 @@ function parseMsgEthereumTx(
 ): ParsedTransactionData {
   const isIncoming = isIncomingTx(tx, addresses);
   const {from, to} = getFromAndTo(tx, isIncoming);
-  const amount = [new Balance(tx.msg.amount.amount)];
+  const provider = Provider.getByEthChainId(tx.chain_id);
+  const amount = [
+    new Balance(tx.msg.amount.amount, provider?.decimals, provider?.denom),
+  ];
 
   const title = isIncoming
     ? getText(I18N.transactionReceiveTitle)
@@ -255,7 +275,7 @@ function parseMsgEthereumTx(
     isContractInteraction,
     isIncoming,
     isOutcoming: !isIncoming,
-    tokens: [getNativeToken()],
+    tokens: [getNativeToken(provider)],
     isCosmosTx: false,
     isEthereumTx: true,
     icon: isContractInteraction ? IconsName.contract : icon,
@@ -319,14 +339,15 @@ function parseMsgSend(
 
   const tokens = getTokensInfo(tx);
   const amount = tx?.msg?.amount?.map(a => {
+    const provider = Provider.getByEthChainId(tx.chain_id);
     const contract = Contracts.getById(
       a.contract_address! || tx.msg.contract_address,
     );
-    if (contract && contract.is_erc20) {
+    if (contract?.is_erc20) {
       return new Balance(
         a.amount,
-        contract.decimals || 0,
-        contract.symbol || IBC_DENOM,
+        contract.decimals ?? provider?.decimals,
+        contract.symbol ?? provider?.denom,
       );
     }
 
@@ -458,9 +479,10 @@ function getTokensInfo(tx: IndexerTransaction): IndexerTxParsedTokenInfo[] {
     }
   }
 
+  const provider = Provider.getByEthChainId(tx.chain_id);
   // @ts-ignore
-  if (tx.msg?.amount?.denom === Provider.selectedProvider.weiDenom) {
-    return [getNativeToken()];
+  if (tx.msg?.amount?.denom === provider.weiDenom) {
+    return [getNativeToken(provider)];
   }
 
   let contractInfo: IContract | undefined;

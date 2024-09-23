@@ -25,7 +25,7 @@ import {Balance} from '@app/services/balance';
 import {EthSignErrorDataDetails} from '@app/services/eth-sign';
 import {Indexer} from '@app/services/indexer';
 import {SignJsonRpcRequest} from '@app/services/sign-json-rpc-request';
-import {ModalType, VerifyAddressResponse} from '@app/types';
+import {IContract, ModalType} from '@app/types';
 import {
   getTransactionFromJsonRpcRequest,
   getUserAddressFromJRPCRequest,
@@ -37,7 +37,7 @@ export const JsonRpcSignScreen = memo(() => {
   const [rejectLoading, setRejectLoading] = useState(false);
   const [signLoading, setSignLoading] = useState(false);
   const [verifyAddressResponse, setVerifyAddressResponse] =
-    useState<VerifyAddressResponse | null>(null);
+    useState<IContract | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [phishingTxRequest, setPhisingTxRequest] =
     useState<ethers.Transaction | null>(null);

@@ -14,8 +14,7 @@ import {Provider} from '@app/models/provider';
 export const ProviderMenu = observer(() => {
   const open = useCallback(async () => {
     const providerId = await awaitForProvider({
-      providers: Provider.getAll(),
-      initialProviderId: Provider.selectedProviderId,
+      initialProviderChainId: Provider.selectedProvider.ethChainId,
       title: I18N.networks,
     });
 
