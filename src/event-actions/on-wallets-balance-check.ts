@@ -126,7 +126,6 @@ export const onWalletsBalanceCheck = createAsyncTask(async () => {
     const updates = await Indexer.instance.updates(
       accounts,
       lastBalanceUpdates,
-      Currencies.selectedCurrency,
     );
 
     VariablesDate.set(

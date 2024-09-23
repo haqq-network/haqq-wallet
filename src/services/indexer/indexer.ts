@@ -6,6 +6,7 @@ import _ from 'lodash';
 
 import {AddressUtils} from '@app/helpers/address-utils';
 import {I18N, getText} from '@app/i18n';
+import {Currencies} from '@app/models/currencies';
 import {NftCollectionIndexer} from '@app/models/nft';
 import {
   ALL_NETWORKS_ID,
@@ -114,34 +115,30 @@ export class Indexer {
     );
   }
 
-  updates = createAsyncTask(
-    async (
-      accounts: string[],
-      lastUpdated: Date | undefined,
-      selectedCurrency?: string,
-    ) => {
-      try {
-        this.checkIndexerAvailability();
+  updates = createAsyncTask(async (accounts: string[], lastUpdated?: Date) => {
+    try {
+      this.checkIndexerAvailability();
 
-        const updated = lastUpdated || new Date(0);
+      const updated = lastUpdated || new Date(0);
 
-        const result: IndexerUpdatesResponse = await jsonrpcRequest(
-          INDEXER_PROXY_ENDPOINT,
-          'updates_v2',
-          [this.getProvidersHeader(accounts), updated, selectedCurrency].filter(
-            Boolean,
-          ),
-        );
+      const result: IndexerUpdatesResponse = await jsonrpcRequest(
+        INDEXER_PROXY_ENDPOINT,
+        'updates_v2',
+        [
+          this.getProvidersHeader(accounts),
+          updated,
+          Currencies.selectedCurrency,
+        ].filter(Boolean),
+      );
 
-        return result;
-      } catch (err) {
-        if (err instanceof JSONRPCError) {
-          this.captureException(err, 'Indexer:updates', err.meta);
-        }
-        throw err;
+      return result;
+    } catch (err) {
+      if (err instanceof JSONRPCError) {
+        this.captureException(err, 'Indexer:updates', err.meta);
       }
-    },
-  );
+      throw err;
+    }
+  });
 
   async getContractNames(addresses: string[]): Promise<ContractNameMap> {
     try {

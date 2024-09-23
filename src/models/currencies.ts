@@ -154,7 +154,6 @@ class CurrenciesStore {
     const updates = await Indexer.instance.updates(
       accounts,
       lastBalanceUpdates,
-      selectedCurrency,
     );
 
     VariablesDate.set(
