@@ -9,6 +9,7 @@ import {Wallet} from '@app/models/wallet';
 import {
   BalanceConstructor,
   BalanceData,
+  ChainId,
   HaqqEthereumAddress,
   HexNumber,
   IBalance,
@@ -377,8 +378,9 @@ export class Balance implements IBalance, ISerializable {
     fixed?: number | 'auto';
     precission?: number;
     useDefaultCurrency?: boolean;
+    chainId?: ChainId;
   }) => {
-    const convertedBalance = Currencies.convert(this);
+    const convertedBalance = Currencies.convert(this, props?.chainId);
     const fixed = props?.fixed ?? NUM_PRECISION;
     const precission = props?.precission ?? this.precission;
     const useDefaultCurrency = props?.useDefaultCurrency ?? false;
