@@ -1,4 +1,3 @@
-import {Currencies} from '@app/models/currencies';
 import {Provider} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
@@ -15,8 +14,7 @@ export const safeLoadBalances = async (wallets: string[]) => {
   try {
     balances = await Indexer.instance.updates(
       wallets.map(AddressUtils.toHaqq),
-      new Date(0),
-      Currencies.selectedCurrency,
+      new Date(),
     );
   } catch (e) {
     logger.error('Failed to load balances from indexer', e);

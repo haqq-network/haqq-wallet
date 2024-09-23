@@ -18,7 +18,7 @@ export interface TokenRowProps {
 
 export const TokenRow = ({item, checked = false, onPress}: TokenRowProps) => {
   const priceInUSD = useMemo(() => {
-    return item?.value?.toFiat?.({fixed: 4});
+    return item?.value?.toFiat?.({fixed: 4, chainId: item.chain_id});
   }, [item]);
 
   const providerImage = useMemo(() => {
