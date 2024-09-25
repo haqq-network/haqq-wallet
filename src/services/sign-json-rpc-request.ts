@@ -1,5 +1,4 @@
-import {TransactionRequest} from '@haqq/provider-base';
-import {normalize0x} from '@haqq/provider-keystone-react-native';
+import {TransactionRequest, utils} from '@haqq/rn-wallet-providers';
 import {getSdkError} from '@walletconnect/utils';
 
 import {DEBUG_VARS} from '@app/debug-vars';
@@ -228,6 +227,6 @@ export class SignJsonRpcRequest {
 
     logger.log('✅ signEIP155Request result:', result, result.length);
 
-    return normalize0x(result);
+    return utils.normalize0x(result);
   }
 }

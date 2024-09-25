@@ -7,11 +7,11 @@ import {Coin} from '@evmos/transactions';
 import {
   AccessListish,
   BigNumberish,
+  KeystoneAwaitForSignParams,
+  ProviderMnemonicBase,
+  ProviderSSSBase,
   TypedDataTypesNames,
-} from '@haqq/provider-base';
-import {KeystoneAwaitForSignParams} from '@haqq/provider-keystone-react-native';
-import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+} from '@haqq/rn-wallet-providers';
 import {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
 import {NativeStackNavigationOptions} from '@react-navigation/native-stack';
 import {SessionTypes} from '@walletconnect/types';
@@ -153,9 +153,9 @@ export type KeystoneWalletInitialData = {
 
 export type RootStackParamList = {
   chooseAccount:
-    | (WalletInitialData & {provider: ProviderMnemonicReactNative})
+    | (WalletInitialData & {provider: ProviderMnemonicBase})
     | {
-        provider: ProviderSSSReactNative;
+        provider: ProviderSSSBase;
       };
   cloudProblems: {sssProvider: SssProviders; onNext: () => void};
   home: undefined;

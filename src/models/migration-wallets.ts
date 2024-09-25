@@ -1,6 +1,5 @@
 import {decrypt} from '@haqq/encryption-react-native';
-import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
-import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
+import {ProviderHotBase, ProviderMnemonicBase} from '@haqq/rn-wallet-providers';
 
 import {Wallet} from './wallet';
 
@@ -28,7 +27,7 @@ export async function migrationWallets() {
           wallet.data,
         );
 
-        const provider = await ProviderHotReactNative.initialize(
+        const provider = await ProviderHotBase.initialize(
           privateKey,
           getPassword,
           {},
@@ -48,7 +47,7 @@ export async function migrationWallets() {
 
         const m = typeof mnemonic === 'string' ? mnemonic : mnemonic.phrase;
 
-        const provider = await ProviderMnemonicReactNative.initialize(
+        const provider = await ProviderMnemonicBase.initialize(
           m,
           getPassword,
           {},

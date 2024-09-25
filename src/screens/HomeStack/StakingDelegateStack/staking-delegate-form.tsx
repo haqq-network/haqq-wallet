@@ -1,6 +1,6 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
-import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
+import {ProviderLedgerEvm} from '@haqq/rn-wallet-providers';
 import _ from 'lodash';
 import {observer} from 'mobx-react';
 
@@ -55,7 +55,7 @@ export const StakingDelegateFormScreen = observer(() => {
         Logger.log('f.amount', f.amount);
         _setFee(new Balance(f.amount));
       } catch (err) {
-        if (instance instanceof ProviderLedgerReactNative) {
+        if (instance instanceof ProviderLedgerEvm) {
           instance.abort();
           setDefaultFee();
         }

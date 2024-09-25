@@ -1,7 +1,8 @@
 import React, {memo, useCallback, useEffect, useRef, useState} from 'react';
 
-import {State, tryToInitBt} from '@haqq/provider-ledger-react-native';
+import {utils} from '@haqq/rn-wallet-providers';
 import {Linking} from 'react-native';
+import {State} from 'react-native-ble-plx';
 import {Subscription} from 'rxjs';
 
 import {LedgerBluetooth} from '@app/components/ledger-bluetooth';
@@ -46,7 +47,7 @@ export const LedgerBluetoothScreen = memo(() => {
       subscription.current?.unsubscribe();
     }
     setLoading(true);
-    const sub = await tryToInitBt();
+    const sub = await utils.tryToInitBt();
     // @ts-ignore
     subscription.current = sub.subscribe({
       next: (state: State) => {

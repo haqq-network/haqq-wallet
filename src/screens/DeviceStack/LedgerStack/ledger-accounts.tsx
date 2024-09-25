@@ -1,6 +1,6 @@
 import React, {memo, useCallback, useEffect, useRef, useState} from 'react';
 
-import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
+import {ProviderLedgerEvm} from '@haqq/rn-wallet-providers';
 
 import {ChooseAccountTabNames} from '@app/components/choose-account/choose-account';
 import {LedgerAccounts} from '@app/components/ledger-accounts';
@@ -26,7 +26,7 @@ export const LedgerAccountsScreen = memo(() => {
     LedgerStackRoutes.LedgerAccounts
   >().params;
   const provider = useRef(
-    new ProviderLedgerReactNative({
+    new ProviderLedgerEvm({
       getPassword: app.getPassword.bind(app),
       deviceId,
       appName: LEDGER_APP,

@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect} from 'react';
 
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {ProviderSSSBase} from '@haqq/rn-wallet-providers';
 import {observer} from 'mobx-react';
 import {Image, Platform, View} from 'react-native';
 
@@ -63,7 +63,7 @@ export const CloudShareNotFound = observer(
           );
           const storage = await getProviderStorage('', 'cloud');
 
-          await ProviderSSSReactNative.initialize(
+          await ProviderSSSBase.initialize(
             creds.privateKey,
             null,
             localShare,

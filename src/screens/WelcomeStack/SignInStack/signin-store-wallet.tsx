@@ -1,8 +1,10 @@
 import {useEffect} from 'react';
 
-import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
-import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {
+  ProviderHotBase,
+  ProviderMnemonicBase,
+  ProviderSSSBase,
+} from '@haqq/rn-wallet-providers';
 import {observer} from 'mobx-react';
 
 import {app} from '@app/contexts';
@@ -58,7 +60,7 @@ export const SignInStoreWalletScreen = observer(() => {
               ? params.privateKey.slice(2)
               : params.privateKey;
 
-            const provider = await ProviderHotReactNative.initialize(
+            const provider = await ProviderHotBase.initialize(
               privateKey,
               app.getPassword.bind(app),
               {},
@@ -74,12 +76,11 @@ export const SignInStoreWalletScreen = observer(() => {
             });
             break;
           case 'mnemonic':
-            const mnemonicProvider =
-              await ProviderMnemonicReactNative.initialize(
-                params.mnemonic,
-                getPassword,
-                {},
-              );
+            const mnemonicProvider = await ProviderMnemonicBase.initialize(
+              params.mnemonic,
+              getPassword,
+              {},
+            );
 
             await mnemonicProvider.setMnemonicSaved();
 
@@ -90,7 +91,7 @@ export const SignInStoreWalletScreen = observer(() => {
             const storage = await getProviderStorage('', params.provider);
             const password = await getPassword();
 
-            const sssProvider = await ProviderSSSReactNative.initialize(
+            const sssProvider = await ProviderSSSBase.initialize(
               params.sssPrivateKey,
               params.sssCloudShare,
               params.sssLocalShare,

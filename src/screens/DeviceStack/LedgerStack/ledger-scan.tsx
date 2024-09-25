@@ -2,9 +2,10 @@ import React, {memo, useCallback, useEffect, useRef, useState} from 'react';
 
 import {
   Device,
-  ProviderLedgerReactNative,
-  scanDevices,
-} from '@haqq/provider-ledger-react-native';
+  ProviderLedgerBase,
+  ProviderLedgerEvm,
+  utils,
+} from '@haqq/rn-wallet-providers';
 import {Observable, firstValueFrom} from 'rxjs';
 
 import {LedgerScan} from '@app/components/ledger-scan';
@@ -20,9 +21,9 @@ import {LEDGER_APP} from '@app/variables/common';
 export const LedgerScanScreen = memo(() => {
   const [refreshing, setRefreshing] = useState(false);
   const [devices, setDevices] = useState<Device[]>([]);
-  const scan = useRef(scanDevices()).current;
+  const scan = useRef(utils.scanDevices()).current;
   const ledgerProvidersMap = useRef<
-    Record<string, {taskId: string; provider: ProviderLedgerReactNative}>
+    Record<string, {taskId: string; provider: ProviderLedgerBase}>
   >({}).current;
   const [devicesLoadingMap, setDevicesLoadingMap] = useState<
     Record<string, boolean>
@@ -88,7 +89,7 @@ export const LedgerScanScreen = memo(() => {
     async (item: Device) => {
       setDeviceError(item, null);
       setDeviceLoading(item, true);
-      const provider = new ProviderLedgerReactNative({
+      const provider = new ProviderLedgerEvm({
         getPassword: app.getPassword.bind(app),
         deviceId: item.id,
         appName: LEDGER_APP,

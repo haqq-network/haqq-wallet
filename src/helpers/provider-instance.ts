@@ -1,15 +1,15 @@
 import {
   BytesLike,
   ProviderBaseError,
+  ProviderHotEvm,
   ProviderInterface,
+  ProviderKeystoneEvm,
+  ProviderLedgerEvm,
+  ProviderMnemonicEvm,
+  ProviderSSSEvm,
   TransactionRequest,
   TypedData,
-} from '@haqq/provider-base';
-import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
-import {ProviderKeystoneReactNative} from '@haqq/provider-keystone-react-native';
-import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
-import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+} from '@haqq/rn-wallet-providers';
 
 import {app} from '@app/contexts';
 import {awaitForLedger} from '@app/helpers/await-for-ledger';
@@ -112,19 +112,19 @@ export async function getProviderInstanceForWallet(
   let provider: ProviderInterface;
   switch (wallet.type) {
     case WalletType.mnemonic:
-      provider = new ProviderMnemonicReactNative({
+      provider = new ProviderMnemonicEvm({
         account: wallet.accountId!,
         getPassword: app.getPassword.bind(app),
       });
       break;
     case WalletType.hot:
-      provider = new ProviderHotReactNative({
+      provider = new ProviderHotEvm({
         getPassword: app.getPassword.bind(app),
         account: wallet.accountId!,
       });
       break;
     case WalletType.ledgerBt: {
-      provider = new ProviderLedgerReactNative({
+      provider = new ProviderLedgerEvm({
         getPassword: app.getPassword.bind(app),
         deviceId: wallet.accountId!,
         appName: LEDGER_APP,
@@ -136,14 +136,14 @@ export async function getProviderInstanceForWallet(
     }
     case WalletType.sss:
       const storage = await getProviderStorage(wallet.accountId as string);
-      provider = new ProviderSSSReactNative({
+      provider = new ProviderSSSEvm({
         storage,
         getPassword: app.getPassword.bind(app),
         account: wallet.accountId!,
       });
       break;
     case WalletType.keystone:
-      provider = new ProviderKeystoneReactNative({
+      provider = new ProviderKeystoneEvm({
         qrCBORHex: wallet.accountId!,
         awaitForSign: async params => {
           const signatureHex = await awaitForQRSign(params);

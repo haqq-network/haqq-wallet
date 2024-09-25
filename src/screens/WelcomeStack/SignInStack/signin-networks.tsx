@@ -1,7 +1,7 @@
 import React, {memo, useCallback} from 'react';
 
-import {ITEM_KEY} from '@haqq/provider-sss-react-native/dist/constants';
 import {accountInfo} from '@haqq/provider-web3-utils';
+import {constants} from '@haqq/rn-wallet-providers';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
 import {SigninNetworks} from '@app/components/signin-networks';
@@ -94,7 +94,9 @@ export const SignInNetworksScreen = memo(() => {
           );
 
           const localShare = await EncryptedStorage.getItem(
-            `${ITEM_KEY}_${account.address.toLowerCase()}`,
+            `${
+              constants.ITEM_KEYS[constants.WalletType.sss]
+            }_${account.address.toLowerCase()}`,
           );
 
           if (!cloudShare) {

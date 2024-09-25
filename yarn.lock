@@ -2364,106 +2364,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@haqq/provider-base@npm:0.0.23":
-  version: 0.0.23
-  resolution: "@haqq/provider-base@npm:0.0.23"
-  dependencies:
-    bech32-converting: ^1.0.9
-    ethers: ^5.7.2
-    events: ^3.3.0
-  checksum: 2b34d31e39567ba7e2996b8bece47037aae6ae760225dc0423c561d832934bcd65787f5d0688ead955a97254d80ba8353f3d4627775ca02d94460fe5fe06abd9
-  languageName: node
-  linkType: hard
-
-"@haqq/provider-hot-react-native@npm:0.0.10":
-  version: 0.0.10
-  resolution: "@haqq/provider-hot-react-native@npm:0.0.10"
-  dependencies:
-    "@ethersproject/bytes": ^5.7.0
-    "@ethersproject/transactions": ^5.7.0
-  peerDependencies:
-    "@haqq/encryption-react-native": "*"
-    "@haqq/provider-base": "*"
-    "@haqq/provider-web3-utils": "*"
-    "@haqq/shared-react-native": "*"
-    react-native-encrypted-storage: "*"
-  checksum: c8eb370eea2a4ae06b77352308ddd3e9bbca77061e9704b0521f0500f6b956134d5f0e932d39f28ed90365fb49f7eda6163f5a1e46e19c65b75fcb76ba3dea4e
-  languageName: node
-  linkType: hard
-
-"@haqq/provider-keystone-react-native@npm:0.0.7":
-  version: 0.0.7
-  resolution: "@haqq/provider-keystone-react-native@npm:0.0.7"
-  dependencies:
-    "@ethersproject/abstract-provider": ^5.7.0
-    "@keystonehq/bc-ur-registry-eth": ^0.7.7
-    "@keystonehq/ur-decoder": ^0.12.2
-    ethers: ^5.7.2
-    events: ^3.3.0
-  peerDependencies:
-    "@haqq/provider-base": "*"
-    react: "*"
-    react-native: "*"
-  checksum: cbec5f892b86d88770430e5c1e509a96e29090db315529bfd4887902fabd6b5ef0337cc11c86495f1d4bef087d50516a23523da54183d436a34ba476bac2abd8
-  languageName: node
-  linkType: hard
-
-"@haqq/provider-ledger-react-native@npm:0.0.28":
-  version: 0.0.28
-  resolution: "@haqq/provider-ledger-react-native@npm:0.0.28"
-  dependencies:
-    "@ethersproject/abstract-provider": ^5.7.0
-    "@ledgerhq/hw-app-eth": 6.35.4
-    "@ledgerhq/hw-transport": 6.30.3
-    "@ledgerhq/react-native-hw-transport-ble": 6.30.0
-    ethers: ^5.7.2
-    events: ^3.3.0
-    rxjs: ^7.8.0
-  peerDependencies:
-    "@haqq/provider-base": "*"
-    react: "*"
-    react-native: "*"
-    react-native-ble-plx: "*"
-  checksum: 318d2eea26e856dfff2ac1cddf4cd97234ac5df793a825323e0f425cf42ed617686a751fb4cc4c850e9436994162d9a17c51d963f537b0cbbae3b1a44a1caca5
-  languageName: node
-  linkType: hard
-
-"@haqq/provider-mnemonic-react-native@npm:0.0.14":
-  version: 0.0.14
-  resolution: "@haqq/provider-mnemonic-react-native@npm:0.0.14"
-  dependencies:
-    "@ethersproject/bytes": ^5.7.0
-    "@ethersproject/transactions": ^5.7.0
-    bip39: ^3.1.0
-  peerDependencies:
-    "@haqq/encryption-react-native": "*"
-    "@haqq/provider-base": "*"
-    "@haqq/provider-web3-utils": "*"
-    "@haqq/shared-react-native": "*"
-    react-native-encrypted-storage: "*"
-  checksum: 35506b1ea1d079af309f71f6e6015a19ee1ca6c3950a07587a308d17711d2523e051bd4b52984287d5f06ff02da23e8ab89a4e22d266a29a7ebf31146a23750d
-  languageName: node
-  linkType: hard
-
-"@haqq/provider-sss-react-native@npm:0.0.14":
-  version: 0.0.14
-  resolution: "@haqq/provider-sss-react-native@npm:0.0.14"
-  dependencies:
-    "@ethersproject/bytes": 5.7.0
-    "@ethersproject/transactions": 5.7.0
-    bn.js: 5.2.1
-    events: 3.3.0
-  peerDependencies:
-    "@haqq/provider-base": "*"
-    "@haqq/provider-web3-utils": "*"
-    "@haqq/shared-react-native": "*"
-    react: "*"
-    react-native: "*"
-    react-native-encrypted-storage: "*"
-  checksum: 59430174e5f4fcb5a0b01c58496287dd8b5e5f08725e160f4f60380ce495749ef504f3a6deed04f0776d6afffe55e9f259cdd56eb7bcc8f6a5d46636a6b7ce89
-  languageName: node
-  linkType: hard
-
 "@haqq/provider-web3-utils@npm:0.0.14":
   version: 0.0.14
   resolution: "@haqq/provider-web3-utils@npm:0.0.14"
@@ -2471,6 +2371,35 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: a28940220969e4a4f4936901b836ffc4e89512639a860e7fc5f1242ee8a9ea3ba25a159092b8731d5fcee10e80d6db5481968e68fc0af8d7330e959e49065664
+  languageName: node
+  linkType: hard
+
+"@haqq/rn-wallet-providers@npm:0.0.2":
+  version: 0.0.2
+  resolution: "@haqq/rn-wallet-providers@npm:0.0.2"
+  dependencies:
+    "@ethersproject/abstract-provider": ^5.7.0
+    "@ethersproject/bytes": ^5.7.0
+    "@ethersproject/transactions": ^5.7.0
+    "@keystonehq/bc-ur-registry-eth": ^0.7.7
+    "@keystonehq/ur-decoder": ^0.12.2
+    "@ledgerhq/hw-app-eth": 6.35.4
+    "@ledgerhq/hw-transport": 6.30.3
+    "@ledgerhq/react-native-hw-transport-ble": 6.30.0
+    bech32-converting: ^1.0.9
+    bip39: ^3.1.0
+    ethers: ^5.7.2
+    events: ^3.3.0
+    rxjs: ^7.8.0
+  peerDependencies:
+    "@haqq/encryption-react-native": "*"
+    "@haqq/provider-web3-utils": "*"
+    "@haqq/shared-react-native": "*"
+    react: "*"
+    react-native: "*"
+    react-native-ble-plx: "*"
+    react-native-encrypted-storage: "*"
+  checksum: d85f7ed5f28ca7854ca13e07045da833862cc2352dcce761a09921519d72958982dc6c09754fec481b218b2687e8889fd5134ba159b7c533e4a4bf4cf2d6db99
   languageName: node
   linkType: hard
 
@@ -9828,12 +9757,11 @@ __metadata:
   linkType: hard
 
 "find-babel-config@npm:^2.0.0":
-  version: 2.1.1
-  resolution: "find-babel-config@npm:2.1.1"
+  version: 2.1.2
+  resolution: "find-babel-config@npm:2.1.2"
   dependencies:
     json5: ^2.2.3
-    path-exists: ^4.0.0
-  checksum: 4be54397339520e0cd49870acb10366684ffc001fd0b7bffedd0fe9d3e1d82234692d3cb4e5ba95280a35887238ba6f82dc79569a13a3749ae3931c23e0b3a99
+  checksum: 268f29cb38ee086b0f953c89f762dcea30b5b0e14abee2b39516410c00b49baa6821f598bd50346c93584e5625c5740f5c8b7e34993f568787a068f84dacc8c2
   languageName: node
   linkType: hard
 
@@ -10498,13 +10426,8 @@ __metadata:
     "@expo/react-native-action-sheet": 4.0.1
     "@haqq/encryption-react-native": 0.0.4
     "@haqq/format-number-with-subscript-zeros": 1.0.1
-    "@haqq/provider-base": 0.0.23
-    "@haqq/provider-hot-react-native": 0.0.10
-    "@haqq/provider-keystone-react-native": 0.0.7
-    "@haqq/provider-ledger-react-native": 0.0.28
-    "@haqq/provider-mnemonic-react-native": 0.0.14
-    "@haqq/provider-sss-react-native": 0.0.14
     "@haqq/provider-web3-utils": 0.0.14
+    "@haqq/rn-wallet-providers": 0.0.2
     "@haqq/shared-react-native": 0.0.12
     "@invertase/react-native-apple-authentication": 2.2.2
     "@keystonehq/bc-ur-registry-eth": 0.7.7
@@ -18331,7 +18254,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:1 || 2, tslib@npm:^2.0.0, tslib@npm:^2.0.1, tslib@npm:^2.1.0, tslib@npm:^2.3.0, tslib@npm:^2.4.1 || ^1.9.3, tslib@npm:^2.5.3, tslib@npm:^2.6.2":
+"tslib@npm:1 || 2, tslib@npm:^2.0.0, tslib@npm:^2.0.1, tslib@npm:^2.1.0, tslib@npm:^2.3.0, tslib@npm:^2.4.1 || ^1.9.3, tslib@npm:^2.6.2":
   version: 2.6.3
   resolution: "tslib@npm:2.6.3"
   checksum: 74fce0e100f1ebd95b8995fbbd0e6c91bdd8f4c35c00d4da62e285a3363aaa534de40a80db30ecfd388ed7c313c42d930ee0eaf108e8114214b180eec3dbe6f5
@@ -18342,6 +18265,13 @@ __metadata:
   version: 1.14.1
   resolution: "tslib@npm:1.14.1"
   checksum: dbe628ef87f66691d5d2959b3e41b9ca0045c3ee3c7c7b906cc1e328b39f199bb1ad9e671c39025bd56122ac57dfbf7385a94843b1cc07c60a4db74795829acd
+  languageName: node
+  linkType: hard
+
+"tslib@npm:^2.5.3":
+  version: 2.7.0
+  resolution: "tslib@npm:2.7.0"
+  checksum: 1606d5c89f88d466889def78653f3aab0f88692e80bb2066d090ca6112ae250ec1cfa9dbfaab0d17b60da15a4186e8ec4d893801c67896b277c17374e36e1d28
   languageName: node
   linkType: hard
 

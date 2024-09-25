@@ -1,7 +1,10 @@
 import React, {useCallback} from 'react';
 
-import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {
+  ProviderMnemonicBase,
+  ProviderSSSBase,
+  ProviderSSSEvm,
+} from '@haqq/rn-wallet-providers';
 import {observer} from 'mobx-react';
 
 import {Wallets} from '@app/components/wallets';
@@ -117,10 +120,11 @@ export const WalletsWrapper = observer(() => {
   );
 
   const onPressCreate = useCallback(async () => {
-    const getType = (
-      provider: ProviderMnemonicReactNative | ProviderSSSReactNative,
-    ) => {
-      if (provider instanceof ProviderSSSReactNative) {
+    const getType = (provider: ProviderMnemonicBase | ProviderSSSBase) => {
+      if (
+        provider instanceof ProviderSSSBase ||
+        provider instanceof ProviderSSSEvm
+      ) {
         return WalletType.sss;
       }
       return WalletType.mnemonic;

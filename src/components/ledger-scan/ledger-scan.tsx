@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 
-import {Device} from '@haqq/provider-ledger-react-native';
+import {Device} from '@haqq/rn-wallet-providers';
 import {FlatList, ListRenderItem} from 'react-native';
 
 import {PopupContainer} from '@app/components/ui';

@@ -1,4 +1,4 @@
-import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
+import {ProviderMnemonicBase} from '@haqq/rn-wallet-providers';
 
 import {app} from '@app/contexts';
 import {onStakingSync} from '@app/event-actions/on-staking-sync';
@@ -43,7 +43,7 @@ export async function onWalletCreate(wallet: Wallet) {
         case WalletType.mnemonic:
           const providerMnemonic = (await getProviderInstanceForWallet(
             wallet,
-          )) as ProviderMnemonicReactNative;
+          )) as ProviderMnemonicBase;
           if (typeof providerMnemonic.isMnemonicSaved === 'function') {
             mnemonicSaved = await providerMnemonic.isMnemonicSaved();
           } else {

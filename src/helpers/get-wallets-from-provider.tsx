@@ -1,5 +1,8 @@
-import {ProviderInterface} from '@haqq/provider-base';
-import {ProviderKeystoneReactNative} from '@haqq/provider-keystone-react-native';
+import {
+  ProviderInterface,
+  ProviderKeystoneBase,
+  ProviderKeystoneEvm,
+} from '@haqq/rn-wallet-providers';
 
 import {ChooseAccountTabNames} from '@app/components/choose-account/choose-account';
 import {Wallet} from '@app/models/wallet';
@@ -28,7 +31,10 @@ export async function* getWalletsFromProvider(
   })[] = [];
 
   const genHdPath = (_index: number) => {
-    if (provider instanceof ProviderKeystoneReactNative) {
+    if (
+      provider instanceof ProviderKeystoneBase ||
+      provider instanceof ProviderKeystoneEvm
+    ) {
       return provider.buildPath(_index);
     }
     if (mnemonicType === ChooseAccountTabNames.Basic) {

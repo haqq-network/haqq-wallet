@@ -1,5 +1,5 @@
-import {lagrangeInterpolation} from '@haqq/provider-sss-react-native';
 import {generateEntropy} from '@haqq/provider-web3-utils';
+import {lagrangeInterpolation} from '@haqq/rn-wallet-providers/dist/utils';
 import {jsonrpcRequest} from '@haqq/shared-react-native';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
 import BN from 'bn.js';

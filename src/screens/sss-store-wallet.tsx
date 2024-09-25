@@ -1,7 +1,7 @@
 //@ts-nocheck
 import React, {useEffect} from 'react';
 
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {ProviderSSSBase} from '@haqq/rn-wallet-providers';
 
 import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
@@ -28,7 +28,7 @@ export const SssStoreWalletScreen = () => {
       try {
         const storage = await getProviderStorage();
 
-        const provider = await ProviderSSSReactNative.initialize(
+        const provider = await ProviderSSSBase.initialize(
           route.params.privateKey,
           route.params.cloudShare,
           route.params.localShare,

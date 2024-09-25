@@ -1,6 +1,6 @@
 import {TransactionRequest} from '@ethersproject/abstract-provider';
 import {Deferrable} from '@ethersproject/properties';
-import {ProviderInterface} from '@haqq/provider-base';
+import {ProviderInterface} from '@haqq/rn-wallet-providers';
 import Decimal from 'decimal.js';
 import {BigNumber, utils} from 'ethers';
 

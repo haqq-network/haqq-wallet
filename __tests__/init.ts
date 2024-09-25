@@ -89,20 +89,19 @@ jest.mock('react-native-fs', jest.fn);
 jest.mock('@react-navigation/native', () => ({
   createNavigationContainerRef: jest.fn,
 }));
-jest.mock('@haqq/provider-ledger-react-native', () => ({
-  getBleManager: jest.fn,
-}));
 jest.mock('react-native-ble-plx', () => ({
   State: jest.fn,
 }));
-jest.mock('@haqq/provider-mnemonic-react-native', () => ({
-  ProviderMnemonicReactNative: jest.fn,
-}));
-jest.mock('@haqq/provider-sss-react-native', () => ({
-  ProviderSSSReactNative: jest.fn,
-}));
-jest.mock('@haqq/provider-hot-react-native', () => ({
-  ProviderHotReactNative: jest.fn,
+jest.mock('@haqq/rn-wallet-providers', () => ({
+  utils: {
+    getBleManager: jest.fn,
+  },
+  ProviderMnemonicBase: jest.fn,
+  ProviderMnemonicEvm: jest.fn,
+  ProviderSSSBase: jest.fn,
+  ProviderSSSEvm: jest.fn,
+  ProviderHotBase: jest.fn,
+  ProviderHotEvm: jest.fn,
 }));
 jest.mock('@react-native-async-storage/async-storage', jest.fn);
 jest.mock('@haqq/shared-react-native', () => ({

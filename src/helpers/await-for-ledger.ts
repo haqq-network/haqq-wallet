@@ -1,5 +1,8 @@
-import {ProviderInterface} from '@haqq/provider-base';
-import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
+import {
+  ProviderInterface,
+  ProviderLedgerBase,
+  ProviderLedgerEvm,
+} from '@haqq/rn-wallet-providers';
 import {Keyboard} from 'react-native';
 
 import {app} from '@app/contexts';
@@ -19,7 +22,10 @@ const LEDGER_PROVIDER_EVENTS = [
 ];
 
 export const awaitForLedger = async (transport: ProviderInterface) => {
-  if (transport instanceof ProviderLedgerReactNative) {
+  if (
+    transport instanceof ProviderLedgerBase ||
+    transport instanceof ProviderLedgerEvm
+  ) {
     Keyboard.dismiss();
     await awaitForBluetooth();
     return new Promise<void>((resolve, reject) => {

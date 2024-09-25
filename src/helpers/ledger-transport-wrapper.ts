@@ -1,5 +1,8 @@
-import {ProviderInterface} from '@haqq/provider-base';
-import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
+import {
+  ProviderInterface,
+  ProviderLedgerBase,
+  ProviderLedgerEvm,
+} from '@haqq/rn-wallet-providers';
 
 import {ModalName, awaitForBluetooth, awaitForLedger, hideModal} from './';
 import {ExtractPromiseType} from '../types';
@@ -18,7 +21,10 @@ export const ledgerTransportCbWrapper = async <ReturnType>(
 ): Promise<ExtractPromiseType<ReturnType>> => {
   let result;
   try {
-    if (transport instanceof ProviderLedgerReactNative) {
+    if (
+      transport instanceof ProviderLedgerBase ||
+      transport instanceof ProviderLedgerEvm
+    ) {
       await awaitForBluetooth();
       // no need await here
       awaitForLedger(transport);

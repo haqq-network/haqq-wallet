@@ -1,6 +1,6 @@
 import React, {memo, useCallback} from 'react';
 
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {ProviderSSSBase} from '@haqq/rn-wallet-providers';
 import {addMinutes} from 'date-fns';
 
 import {
@@ -31,7 +31,7 @@ export const BackupSssNotificationScreen = memo(() => {
         if (wallet.accountId) {
           const storage = new Cloud();
 
-          const provider = new ProviderSSSReactNative({
+          const provider = new ProviderSSSBase({
             storage,
             account: wallet.accountId,
             getPassword: app.getPassword.bind(app),

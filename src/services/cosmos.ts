@@ -38,8 +38,7 @@ import {
   signatureToWeb3Extension,
 } from '@evmos/transactions';
 import {Sender} from '@evmos/transactions/dist/messages/common';
-import {ProviderInterface, base64PublicKey} from '@haqq/provider-base';
-import {normalize0x} from '@haqq/provider-keystone-react-native';
+import {ProviderInterface, utils} from '@haqq/rn-wallet-providers';
 import Decimal from 'decimal.js';
 
 import {AddressUtils} from '@app/helpers/address-utils';
@@ -317,7 +316,7 @@ export class Cosmos {
       accountAddress: account.base_account.address,
       sequence: parseInt(account.base_account.sequence as string, 10),
       accountNumber: parseInt(account.base_account.account_number, 10),
-      pubkey: base64PublicKey(publicKey),
+      pubkey: utils.base64PublicKey(publicKey),
     };
   }
 
@@ -335,7 +334,7 @@ export class Cosmos {
       types,
     });
 
-    return normalize0x(signature);
+    return utils.normalize0x(signature);
   }
 
   async sendMsg(

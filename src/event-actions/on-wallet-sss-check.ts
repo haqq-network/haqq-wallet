@@ -1,4 +1,4 @@
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {ProviderSSSBase} from '@haqq/rn-wallet-providers';
 import {isAfter} from 'date-fns';
 
 import {app} from '@app/contexts';
@@ -23,7 +23,7 @@ export async function onWalletSssCheck(snoozeBackup: Date) {
 
     for (const accountId of accounts) {
       const storage = await getProviderStorage(accountId);
-      const provider = new ProviderSSSReactNative({
+      const provider = new ProviderSSSBase({
         storage,
         account: accountId,
         getPassword: app.getPassword.bind(app),

@@ -1,5 +1,4 @@
-import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {ProviderMnemonicBase, ProviderSSSBase} from '@haqq/rn-wallet-providers';
 
 import {app} from '@app/contexts';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
@@ -12,7 +11,7 @@ export async function getProviderForNewWallet(params?: WalletInitialData) {
 
   if (params && params.type === 'sss') {
     const storage = await getProviderStorage('', params.provider);
-    return await ProviderSSSReactNative.initialize(
+    return await ProviderSSSBase.initialize(
       params.action === 'restore' ? params.sssPrivateKey || null : null,
       params.sssCloudShare || null,
       params.sssLocalShare || null,
@@ -28,26 +27,26 @@ export async function getProviderForNewWallet(params?: WalletInitialData) {
     ).catch(err => ErrorHandler.handle('sssLimitReached', err));
   }
 
-  const keysSss = await ProviderSSSReactNative.getAccounts();
+  const keysSss = await ProviderSSSBase.getAccounts();
 
   if (keysSss.length) {
     const storage = await getProviderStorage(keysSss[0]);
 
-    return new ProviderSSSReactNative({
+    return new ProviderSSSBase({
       storage,
       account: keysSss[0],
       getPassword,
     });
   }
 
-  const keysMnemonic = await ProviderMnemonicReactNative.getAccounts();
+  const keysMnemonic = await ProviderMnemonicBase.getAccounts();
 
   if (keysMnemonic.length) {
-    return new ProviderMnemonicReactNative({
+    return new ProviderMnemonicBase({
       account: keysMnemonic[0],
       getPassword,
     });
   }
 
-  return await ProviderMnemonicReactNative.initialize(null, getPassword, {});
+  return await ProviderMnemonicBase.initialize(null, getPassword, {});
 }

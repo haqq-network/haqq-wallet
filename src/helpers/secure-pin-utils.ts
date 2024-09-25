@@ -1,6 +1,8 @@
-import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
-import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {
+  ProviderHotBase,
+  ProviderMnemonicBase,
+  ProviderSSSBase,
+} from '@haqq/rn-wallet-providers';
 import {decryptPassworder, encryptPassworder} from '@haqq/shared-react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
@@ -68,18 +70,18 @@ const getProviderForUpdatePin = async (
 ) => {
   switch (wallet.type) {
     case WalletType.mnemonic:
-      return new ProviderMnemonicReactNative({
+      return new ProviderMnemonicBase({
         account: wallet.accountId!,
         getPassword,
       });
     case WalletType.hot:
-      return new ProviderHotReactNative({
+      return new ProviderHotBase({
         getPassword,
         account: wallet.accountId!,
       });
     case WalletType.sss:
       const storage = await getProviderStorage(wallet.accountId as string);
-      return new ProviderSSSReactNative({
+      return new ProviderSSSBase({
         storage,
         getPassword,
         account: wallet.accountId!,
