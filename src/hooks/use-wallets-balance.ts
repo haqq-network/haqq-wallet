@@ -6,8 +6,6 @@ import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {BalanceData, HaqqEthereumAddress} from '@app/types';
 
-import {usePrevious} from './use-previous';
-
 export type WalletBalance = {
   [key: HaqqEthereumAddress]: BalanceData;
 };
@@ -22,24 +20,19 @@ const getBalance = (wallets: Wallet[]): WalletBalance => {
 
 export function useWalletsBalance(wallets: Wallet[]): WalletBalance {
   const [balance, setBalance] = useState<WalletBalance>(getBalance(wallets));
-  const prevWalletsLength = usePrevious(wallets.length);
 
   useEffect(() => {
     const onBalance = () => {
       setBalance(getBalance(wallets));
     };
 
-    if (prevWalletsLength !== wallets?.length) {
-      onBalance();
-    }
+    onBalance();
 
     app.on(Events.onBalanceSync, onBalance);
-    app.on(Events.onProviderChangedFinish, onBalance);
     return () => {
       app.off(Events.onBalanceSync, onBalance);
-      app.off(Events.onProviderChangedFinish, onBalance);
     };
-  }, [prevWalletsLength, wallets]);
+  }, [wallets, wallets?.length, Provider.selectedProviderId]);
 
   useEffect(() => {
     setBalance(getBalance(wallets));
