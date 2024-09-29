@@ -1,18 +1,16 @@
 package com.haqq.wallet
 
 import android.app.Application
-import android.content.Context
 import android.os.Build
 import com.facebook.react.*
-import com.facebook.react.config.ReactFeatureFlags
+import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint
+import com.facebook.react.defaults.DefaultReactNativeHost
 import com.haqq.wallet.haptic.HapticPackage
 import com.haqq.wallet.cloud.CloudPackage
 import com.haqq.wallet.version.VersionPackage
-import com.haqq.wallet.newarchitecture.MainApplicationReactNativeHost
 import com.facebook.soloader.SoLoader
 import com.haqq.wallet.MainApplication
 import com.haqq.wallet.toast.ToastPackage
-import java.lang.reflect.InvocationTargetException
 import android.webkit.WebView;
 import androidx.annotation.RequiresApi
 import com.facebook.react.modules.i18nmanager.I18nUtil
@@ -44,13 +42,9 @@ class MainApplication : Application(), ReactApplication {
       return "index"
     }
   }
-  private val mNewArchitectureNativeHost: ReactNativeHost = MainApplicationReactNativeHost(this)
+  
   override fun getReactNativeHost(): ReactNativeHost {
-    return if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
-      mNewArchitectureNativeHost
-    } else {
-      mReactNativeHost
-    }
+    return mReactNativeHost;
   }
 
   override fun onCreate() {
@@ -59,8 +53,6 @@ class MainApplication : Application(), ReactApplication {
     if (ProcessPhoenix.isPhoenixProcess(this)) {
       return;
     }
-    // If you opted-in for the New Architecture, we enable the TurboModule system
-    ReactFeatureFlags.useTurboModules = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
       WebView.setDataDirectorySuffix("haqqwebview")
@@ -71,44 +63,9 @@ class MainApplication : Application(), ReactApplication {
     }
 
     SoLoader.init(this,  /* native exopackage */false)
-    initializeFlipper(this, reactNativeHost.reactInstanceManager)
-  }
-
-  companion object {
-    /**
-     * Loads Flipper in React Native templates. Call this in the onCreate method with something like
-     * initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
-     *
-     * @param context
-     * @param reactInstanceManager
-     */
-    private fun initializeFlipper(
-      context: Context, reactInstanceManager: ReactInstanceManager
-    ) {
-      if (BuildConfig.DEBUG) {
-        try {
-          /*
-We use reflection here to pick up the class that initializes Flipper,
-since Flipper library is not available in release mode
-*/
-          val aClass = Class.forName("com.haqq.ReactNativeFlipper")
-          aClass
-            .getMethod(
-              "initializeFlipper",
-              Context::class.java,
-              ReactInstanceManager::class.java
-            )
-            .invoke(null, context, reactInstanceManager)
-        } catch (e: ClassNotFoundException) {
-          e.printStackTrace()
-        } catch (e: NoSuchMethodException) {
-          e.printStackTrace()
-        } catch (e: IllegalAccessException) {
-          e.printStackTrace()
-        } catch (e: InvocationTargetException) {
-          e.printStackTrace()
-        }
-      }
+    if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
+      // If you opted-in for the New Architecture, we load the native entry point for this app.
+      DefaultNewArchitectureEntryPoint.load();
     }
   }
 }
