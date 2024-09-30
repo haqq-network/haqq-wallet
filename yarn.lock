@@ -1703,14 +1703,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@birdwingo/react-native-spinning-numbers@npm:1.0.5":
-  version: 1.0.5
-  resolution: "@birdwingo/react-native-spinning-numbers@npm:1.0.5"
+"@birdwingo/react-native-spinning-numbers@npm:1.0.12":
+  version: 1.0.12
+  resolution: "@birdwingo/react-native-spinning-numbers@npm:1.0.12"
   peerDependencies:
     react: ">=18.0.0"
     react-native: ">=0.70.0"
     react-native-reanimated: ">=2.12.0"
-  checksum: f739ad49ce35ecba6efaa1da560ebeab11fc9bf7a59c93f6d1e0b7e200cce7007f06eac082ff1d2e7beebff46520c955606939600a52c6f6b6f8f3aed27a3ba6
+  checksum: b5bdd3c42b5e8355a39019ee4722f23b5ab269f588dd7562ea1e7b9da10ddcaee6d4c76a2353e3fa990d989947431a70131c6aec1d2e94600410a2a49ec265fe
   languageName: node
   linkType: hard
 
@@ -2315,15 +2315,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@expo/react-native-action-sheet@npm:4.0.1":
-  version: 4.0.1
-  resolution: "@expo/react-native-action-sheet@npm:4.0.1"
+"@expo/react-native-action-sheet@npm:4.1.0":
+  version: 4.1.0
+  resolution: "@expo/react-native-action-sheet@npm:4.1.0"
   dependencies:
     "@types/hoist-non-react-statics": ^3.3.1
     hoist-non-react-statics: ^3.3.0
   peerDependencies:
-    react: ">=16.3.0"
-  checksum: f33b8a3b7c6ca77a6e05e5b2284c0961cf1e27b954e87b76747afc990a9581b852326e1ab739ac84a2c1afce05a133627c85465418cad5292d162fbcb305d86e
+    react: ">=18.0.0"
+  checksum: 38ff3f21e5f63da0ffab3cf1800dbbe167283a6bfafaa059156da2fa2e771209a140d49d6261488c0651cf9cb8fbe5a8cf19c9c2718b563e8b1f5df8b9eda015
   languageName: node
   linkType: hard
 
@@ -2465,10 +2465,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@invertase/react-native-apple-authentication@npm:2.2.2":
-  version: 2.2.2
-  resolution: "@invertase/react-native-apple-authentication@npm:2.2.2"
-  checksum: d51c121eba66721e914c16bfa352929b03bf8f6a38aae4b06157ee3399d0ecdc42bd53d5e655ae39b460ec7c759f87753d2c917bccedb3118e2c1bd75d6f874c
+"@invertase/react-native-apple-authentication@npm:2.4.0":
+  version: 2.4.0
+  resolution: "@invertase/react-native-apple-authentication@npm:2.4.0"
+  checksum: 105dde0a27224e7f2a64d7e0a00465d43869b787359efe8672d60dc81d932189b400faf68d4ce18a57317edaa3b187224c7a2fa196e82480a55eb82feea50e7f
   languageName: node
   linkType: hard
 
@@ -3412,34 +3412,41 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-async-storage/async-storage@npm:1.19.0":
-  version: 1.19.0
-  resolution: "@react-native-async-storage/async-storage@npm:1.19.0"
+"@react-native-async-storage/async-storage@npm:1.24.0":
+  version: 1.24.0
+  resolution: "@react-native-async-storage/async-storage@npm:1.24.0"
   dependencies:
     merge-options: ^3.0.4
   peerDependencies:
-    react-native: ^0.0.0-0 || 0.60 - 0.72 || 1000.0.0
-  checksum: 669f50695838a010f6444f0c0e0618aeda072d25798901d0802f0b945aa6fbab13a68d83a23f6bef591793ae09341dbb8a88f2d40eaf9542bde159711d9deb0e
+    react-native: ^0.0.0-0 || >=0.60 <1.0
+  checksum: 7e56a2e97f48332f57c56ebf473b763c7ca2b1ef82f4b5f8e1c73350231ec91b8eafc4e4d1f972c4c1005da0d304816fa725dc6f07a8a7543e90f8bd16c22ab4
   languageName: node
   linkType: hard
 
-"@react-native-clipboard/clipboard@npm:1.11.2":
-  version: 1.11.2
-  resolution: "@react-native-clipboard/clipboard@npm:1.11.2"
+"@react-native-clipboard/clipboard@npm:1.14.2":
+  version: 1.14.2
+  resolution: "@react-native-clipboard/clipboard@npm:1.14.2"
   peerDependencies:
-    react: ">=16.0"
-    react-native: ">=0.57.0"
-  checksum: a797ae8156451f58e75fd495e36396444e28b9859e35dd657720e4eb8859330ffe73341135db95ce2144c1ffb82de74587e494203217cbf255ff16f91b95db1e
+    react: ">= 16.9.0"
+    react-native: ">= 0.61.5"
+    react-native-macos: ">= 0.61.0"
+    react-native-windows: ">= 0.61.0"
+  peerDependenciesMeta:
+    react-native-macos:
+      optional: true
+    react-native-windows:
+      optional: true
+  checksum: a14c7de784f78c360b41fc723221d1091ccf59dc12ff5dcadf11c7fe078ae081afa1b95f2fe3cf0d4fcd25bc0e2a04cc56fb85aff8437de19cb2eba7d95362df
   languageName: node
   linkType: hard
 
-"@react-native-community/blur@npm:4.3.2":
-  version: 4.3.2
-  resolution: "@react-native-community/blur@npm:4.3.2"
+"@react-native-community/blur@npm:4.4.1":
+  version: 4.4.1
+  resolution: "@react-native-community/blur@npm:4.4.1"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 4f7ed6a3bb58cd53346bb7d5755bb2733e8401fdae86334fde4f2fa0c554734e9bb52175c1f9ef1d99766aeb7a4991ac5dfe428c92da518d0353a1a6e5c3d39c
+  checksum: 1e47144b0c00dce562e72ea9f6c3e93d3bb392ec0ea001ce37ff801d9a496c9801927033ee4800bf92ea2ece9de0abe596715add3b7afe3c5d1533e260f5e09e
   languageName: node
   linkType: hard
 
@@ -3811,13 +3818,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-community/geolocation@npm:3.1.0":
-  version: 3.1.0
-  resolution: "@react-native-community/geolocation@npm:3.1.0"
+"@react-native-community/geolocation@npm:3.4.0":
+  version: 3.4.0
+  resolution: "@react-native-community/geolocation@npm:3.4.0"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: defc42ed11d0a3cc697d5db56c17cc19af2ca35b32674dc7323b40a458f5066b051191e5dc58c367f2643a0ed70b47e8eb2ac87ab1566e642ca0cbab1a1f09a9
+  checksum: 4a1a334de5b8345ee5ca9af987718a4cdd0b401b6d024268330c98736eccd0bebf45fd1d4cb396558f429a4670e5b29da0b5b7ebd4e51ca12972d4b08b55d4bc
   languageName: node
   linkType: hard
 
@@ -3831,12 +3838,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-community/netinfo@npm:9.4.1":
-  version: 9.4.1
-  resolution: "@react-native-community/netinfo@npm:9.4.1"
+"@react-native-community/netinfo@npm:9.5.0":
+  version: 9.5.0
+  resolution: "@react-native-community/netinfo@npm:9.5.0"
   peerDependencies:
     react-native: ">=0.59"
-  checksum: cf6471a50a5282f858797cda7531c61ac3d94de2e1c379b14a11f6b049f582606dae55a041dd900c56b01faf69eb5cfef9b4e84b0ea7f02de52804aa5a6e22df
+  checksum: 999e1d396dde9385ccd0ce3707ca436ce4a8bef987bb92b94b32f82b0c9c65fc91cd22bb2792bf7633d71987f20805d3f77df49ee1148f48f57826cfa483e7aa
   languageName: node
   linkType: hard
 
@@ -10503,27 +10510,27 @@ __metadata:
     "@babel/preset-env": 7.23.3
     "@babel/preset-typescript": 7.23.3
     "@babel/runtime": 7.23.4
-    "@birdwingo/react-native-spinning-numbers": 1.0.5
+    "@birdwingo/react-native-spinning-numbers": 1.0.12
     "@ethersproject/shims": 5.7.0
     "@evmos/provider": 0.3.1
     "@evmos/transactions": 0.2.13
-    "@expo/react-native-action-sheet": 4.0.1
+    "@expo/react-native-action-sheet": 4.1.0
     "@haqq/encryption-react-native": 0.0.4
     "@haqq/format-number-with-subscript-zeros": 1.0.1
     "@haqq/provider-web3-utils": 0.0.14
     "@haqq/rn-wallet-providers": 0.0.2
     "@haqq/shared-react-native": 0.0.12
-    "@invertase/react-native-apple-authentication": 2.2.2
+    "@invertase/react-native-apple-authentication": 2.4.0
     "@keystonehq/bc-ur-registry-eth": 0.7.7
     "@keystonehq/ur-decoder": 0.12.2
     "@metamask/phishing-controller": 3.0.0
-    "@react-native-async-storage/async-storage": 1.19.0
-    "@react-native-clipboard/clipboard": 1.11.2
-    "@react-native-community/blur": 4.3.2
+    "@react-native-async-storage/async-storage": 1.24.0
+    "@react-native-clipboard/clipboard": 1.14.2
+    "@react-native-community/blur": 4.4.1
     "@react-native-community/cameraroll": 4.1.2
-    "@react-native-community/geolocation": 3.1.0
+    "@react-native-community/geolocation": 3.4.0
     "@react-native-community/hooks": 3.0.0
-    "@react-native-community/netinfo": 9.4.1
+    "@react-native-community/netinfo": 9.5.0
     "@react-native-cookies/cookies": 6.2.1
     "@react-native-firebase/analytics": 19.0.1
     "@react-native-firebase/app": 19.0.1
@@ -10620,7 +10627,7 @@ __metadata:
     react-native-draggable-flatlist: 4.0.1
     react-native-encrypted-storage: 4.0.3
     react-native-fs: 2.20.0
-    react-native-gesture-handler: 2.12.0
+    react-native-gesture-handler: 2.19.0
     react-native-get-random-values: 1.9.0
     react-native-image-picker: 5.6.0
     react-native-in-app-review: 4.3.3
@@ -15507,19 +15514,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-gesture-handler@npm:2.12.0":
-  version: 2.12.0
-  resolution: "react-native-gesture-handler@npm:2.12.0"
+"react-native-gesture-handler@npm:2.19.0":
+  version: 2.19.0
+  resolution: "react-native-gesture-handler@npm:2.19.0"
   dependencies:
     "@egjs/hammerjs": ^2.0.17
     hoist-non-react-statics: ^3.3.0
     invariant: ^2.2.4
-    lodash: ^4.17.21
     prop-types: ^15.7.2
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 5147357b3212e269d0b8003e1be9e0993d0770f4880f1a8f52d2d61512c4569c48ec7b866d0a9ee44038785c29e0f84fbb99fd18a8e09552a25910c71602d788
+  checksum: ce9b9fc6537debf962e6b8d84f1c4cf18fe00f39bd86498e84a203ebb26bf3543c2642ed247d974537840407b7ddb602939fd8c817c00a3416e87bddc8f2088f
   languageName: node
   linkType: hard
 

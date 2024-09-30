@@ -4,13 +4,12 @@ import android.app.Application
 import android.os.Build
 import com.facebook.react.*
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.load
-mport com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
+import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.soloader.SoLoader
 import com.haqq.wallet.haptic.HapticPackage
 import com.haqq.wallet.cloud.CloudPackage
 import com.haqq.wallet.version.VersionPackage
-import com.facebook.soloader.SoLoader
 import com.haqq.wallet.MainApplication
 import com.haqq.wallet.toast.ToastPackage
 import android.webkit.WebView;
@@ -43,10 +42,6 @@ class MainApplication : Application(), ReactApplication {
       override val isHermesEnabled: Boolean = BuildConfig.IS_HERMES_ENABLED
     }
   
-  override fun getReactNativeHost(): ReactNativeHost {
-    return mReactNativeHost;
-  }
-
   override fun onCreate() {
     super.onCreate()
     // To check if your application is inside the Phoenix process to skip initialization in onCreate:
