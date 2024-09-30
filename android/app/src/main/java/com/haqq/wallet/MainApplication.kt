@@ -3,8 +3,10 @@ package com.haqq.wallet
 import android.app.Application
 import android.os.Build
 import com.facebook.react.*
-import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint
+import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.load
+mport com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
+import com.facebook.soloader.SoLoader
 import com.haqq.wallet.haptic.HapticPackage
 import com.haqq.wallet.cloud.CloudPackage
 import com.haqq.wallet.version.VersionPackage
@@ -19,29 +21,27 @@ import com.haqq.wallet.apputils.AppUtilsPackage
 import com.jakewharton.processphoenix.ProcessPhoenix
 
 class MainApplication : Application(), ReactApplication {
-  private val mReactNativeHost: ReactNativeHost = object : ReactNativeHost(this) {
-    override fun getUseDeveloperSupport(): Boolean {
-      return BuildConfig.DEBUG
-    }
+  override val reactNativeHost: ReactNativeHost =
+    object : DefaultReactNativeHost(this) {
+      override fun getPackages(): List<ReactPackage> =
+        PackageList(this).packages.apply {
+          // Packages that cannot be autolinked yet can be added manually here, for example:
+          // add(MyReactNativePackage())
+          add(HapticPackage())
+          add(VersionPackage())
+          add(ToastPackage())
+          add(CloudPackage())
+          add(AppUtilsPackage())
+          add(AppNativeConfigPackage())
+        }
 
-    override fun getPackages(): List<ReactPackage> {
-      val packages: MutableList<ReactPackage> = PackageList(this).packages
-      // Packages that cannot be autolinked yet can be added manually here, for example:
-      // packages.add(new MyReactNativePackage());
-      packages.add(HapticPackage())
-      packages.add(VersionPackage())
-      packages.add(ToastPackage())
-      packages.add(CloudPackage())
-      packages.add(AppUtilsPackage())
-      packages.add(AppNativeConfigPackage())
+      override fun getJSMainModuleName(): String = "index"
 
-      return packages
-    }
+      override fun getUseDeveloperSupport(): Boolean = BuildConfig.DEBUG
 
-    override fun getJSMainModuleName(): String {
-      return "index"
+      override val isNewArchEnabled: Boolean = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED
+      override val isHermesEnabled: Boolean = BuildConfig.IS_HERMES_ENABLED
     }
-  }
   
   override fun getReactNativeHost(): ReactNativeHost {
     return mReactNativeHost;
@@ -65,7 +65,7 @@ class MainApplication : Application(), ReactApplication {
     SoLoader.init(this,  /* native exopackage */false)
     if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
       // If you opted-in for the New Architecture, we load the native entry point for this app.
-      DefaultNewArchitectureEntryPoint.load();
+      load()
     }
   }
 }

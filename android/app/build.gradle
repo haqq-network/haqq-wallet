@@ -2,7 +2,7 @@ apply plugin: "com.android.application"
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 apply plugin: "com.facebook.react"
 apply plugin: "com.google.gms.google-services"
-apply plugin: "kotlin-android"
+apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: 'kotlinx-serialization'
 
 /**
@@ -77,7 +77,8 @@ android {
   namespace 'com.haqq.wallet'
   ndkVersion rootProject.ext.ndkVersion
 
-  compileSdkVersion rootProject.ext.compileSdkVersion
+  buildToolsVersion rootProject.ext.buildToolsVersion
+  compileSdk rootProject.ext.compileSdkVersion
 
   defaultConfig {
     applicationId "com.haqq.wallet"

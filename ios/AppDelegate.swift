@@ -57,12 +57,16 @@ class AppDelegate: RCTAppDelegate {
     return app;
   }
 
-  override func sourceURL(for bridge: RCTBridge!) -> URL! {
-#if DEBUG
-    return RCTBundleURLProvider.sharedSettings().jsBundleURL(forBundleRoot: "index")
-#else
+  func sourceURL(for bridge: RCTBridge!) -> URL! {
+    return getBundleURL()
+  }
+
+  func getBundleURL() -> URL? {
+    #if DEBUG
+    return RCTBundleURLProvider.sharedSettings()?.jsBundleURL(forBundleRoot: "index", fallbackResource: nil)
+    #else
     return Bundle.main.url(forResource: "main", withExtension: "jsbundle")
-#endif
+    #endif
   }
 
   override func application(_ application: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {

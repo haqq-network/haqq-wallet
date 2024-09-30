@@ -63,7 +63,6 @@
     "@react-native-firebase/messaging": "19.0.1",
     "@react-native-google-signin/google-signin": "10.0.1",
     "@react-native-masked-view/masked-view": "0.3.0",
-    "@react-native/eslint-config": "^0.75.3",
     "@react-navigation/bottom-tabs": "6.5.8",
     "@react-navigation/native": "6.1.7",
     "@react-navigation/native-stack": "6.9.13",
@@ -103,7 +102,7 @@
     "pump": "3.0.0",
     "randombytes": "2.1.0",
     "react": "18.2.0",
-    "react-native": "0.72.17",
+    "react-native": "0.73.9",
     "react-native-adjust": "4.33.0",
     "react-native-adjust-oaid": "4.33.0",
     "react-native-aes-crypto": "3.0.1",
@@ -132,7 +131,7 @@
     "react-native-mmkv": "2.11.0",
     "react-native-network-info": "5.2.1",
     "react-native-os": "https://github.com/aprock/react-native-os#938676ebd92d58b8928168a7e78cbe216838ed17",
-    "react-native-permissions": "3.10.0",
+    "react-native-permissions": "3.10.1",
     "react-native-play-install-referrer": "1.1.8",
     "react-native-popup-menu": "0.16.1",
     "react-native-prompt-android": "1.1.0",
@@ -156,7 +155,7 @@
     "react-timer-mixin": "0.13.4",
     "readable-stream": "4.4.2",
     "realm": "11.10.1",
-    "rive-react-native": "4.1.2",
+    "rive-react-native": "7.3.0",
     "rxjs": "7.8.1",
     "sha.js": "2.4.11",
     "simple-markdown": "0.7.3",
@@ -175,7 +174,10 @@
     "@babel/preset-env": "7.23.3",
     "@babel/preset-typescript": "7.23.3",
     "@babel/runtime": "7.23.4",
-    "@react-native/metro-config": "0.72.12",
+    "@react-native/babel-preset": "0.73.21",
+    "@react-native/eslint-config": "0.75.3",
+    "@react-native/metro-config": "0.73.5",
+    "@react-native/typescript-config": "0.73.1",
     "@sentry/cli": "2.20.5",
     "@tsconfig/react-native": "3.0.2",
     "@types/bn.js": "5.1.1",
@@ -240,6 +242,9 @@
     "os": "react-native-os",
     "stream": "stream-browserify",
     "vm": "vm-browserify"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "packageManager": "yarn@3.8.5"
 }
