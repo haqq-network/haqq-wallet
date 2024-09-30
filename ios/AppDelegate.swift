@@ -57,15 +57,15 @@ class AppDelegate: RCTAppDelegate {
     return app;
   }
 
-  func sourceURL(for bridge: RCTBridge!) -> URL! {
-    return getBundleURL()
+  func sourceURL(for bridge: RCTBridge) -> URL {
+    return bundleURL()
   }
 
-  func getBundleURL() -> URL? {
+  func bundleURL() -> URL {
     #if DEBUG
-    return RCTBundleURLProvider.sharedSettings()?.jsBundleURL(forBundleRoot: "index", fallbackResource: nil)
+    return RCTBundleURLProvider.sharedSettings().jsBundleURL(forBundleRoot: "index", fallbackResource: nil)
     #else
-    return Bundle.main.url(forResource: "main", withExtension: "jsbundle")
+    return Bundle.main.url(forResource: "main", withExtension: "jsbundle")!
     #endif
   }
 
