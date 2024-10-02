@@ -56,7 +56,7 @@ export const SignInStoreWalletScreen = observer(() => {
                     number: `${total + 1}`,
                   });
 
-            const privateKeyValue = params.privateKey.getValue();
+            const privateKeyValue = params.privateKey.value;
             let privateKey = privateKeyValue.startsWith('0x')
               ? privateKeyValue.slice(2)
               : privateKeyValue;
@@ -78,7 +78,7 @@ export const SignInStoreWalletScreen = observer(() => {
             break;
           case 'mnemonic':
             const mnemonicProvider = await ProviderMnemonicBase.initialize(
-              params.mnemonic.getValue(),
+              params.mnemonic.value,
               getPassword,
               {},
             );
@@ -98,7 +98,7 @@ export const SignInStoreWalletScreen = observer(() => {
               params.sssLocalShare,
               null,
               params.verifier,
-              params.token.getValue(),
+              params.token.value,
               app.getPassword.bind(app),
               storage,
               {

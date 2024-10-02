@@ -43,7 +43,7 @@ export const OnboardingRepeatPin = ({
 
   useEffect(() => {
     if (pin.length === 6) {
-      if (pin === currentPin.getValue()) {
+      if (pin === currentPin.value) {
         onSetPin(pin);
       } else {
         const invalidCode = getText(I18N.onboardingRepeatPinInvalidCode);
