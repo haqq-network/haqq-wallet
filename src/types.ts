@@ -42,6 +42,7 @@ import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 import {AwaitValue} from './helpers/await-for-value';
 import {Fee} from './models/fee';
+import {SecureValue} from './modifiers/secure-value';
 
 export enum MarketingEvents {
   accountCreated = 'q3vxmg',
@@ -115,11 +116,11 @@ export type SendTransactionRequest = Awaited<
 export type WalletInitialData =
   | {
       type: 'mnemonic';
-      mnemonic: string;
+      mnemonic: SecureValue<string>;
     }
   | {
       type: 'privateKey';
-      privateKey: string;
+      privateKey: SecureValue<string>;
     }
   | {
       type: 'sss';
@@ -127,7 +128,7 @@ export type WalletInitialData =
       sssCloudShare: string | null;
       sssLocalShare: string | null;
       verifier: string;
-      token: string;
+      token: SecureValue<string>;
       action?: 'restore' | 'replace';
       provider: SssProviders;
     }
