@@ -30,6 +30,7 @@ import {
 import {WalletConnectApproveConnectionEvent} from '@app/types/wallet-connect';
 
 import {Fee} from './models/fee';
+import {SecureValue} from './modifiers/secure-value';
 import {CalculatedFees} from './services/eth-network/types';
 
 export type AnyRouteFromParent =
@@ -169,7 +170,7 @@ export type SssMigrateStackParamList = HomeStackParamList & {
   [SssMigrateStackRoutes.SssMigrateNetworks]: {accountId: string};
   [SssMigrateStackRoutes.SssMigrateRewrite]: {
     accountId: string;
-    privateKey: string;
+    privateKey: SecureValue<string>;
     provider: SssProviders;
     email?: string;
     verifier: string;
@@ -177,7 +178,7 @@ export type SssMigrateStackParamList = HomeStackParamList & {
   };
   [SssMigrateStackRoutes.SssMigrateStore]: {
     accountId: string;
-    privateKey: string | null;
+    privateKey: SecureValue<string | null>;
     provider?: SssProviders;
     email?: string;
     verifier: string;

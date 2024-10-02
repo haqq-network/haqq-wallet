@@ -52,7 +52,7 @@ export const SssMigrateStoreScreen = observer(() => {
         entropy = entropy.padStart(64, '0');
 
         const provider = await ProviderSSSBase.initialize(
-          route.params.privateKey,
+          route.params.privateKey.getValue(),
           null,
           null,
           entropy,
