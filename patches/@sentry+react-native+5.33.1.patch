@@ -2,7 +2,7 @@ diff --git a/node_modules/@sentry/react-native/sentry.gradle b/node_modules/@sen
 index b4671fa..f1f5ea7 100644
 --- a/node_modules/@sentry/react-native/sentry.gradle
 +++ b/node_modules/@sentry/react-native/sentry.gradle
-@@ -118,7 +118,7 @@ gradle.projectsEvaluated {
+@@ -165,27 +165,27 @@ gradle.projectsEvaluated {
  
                def resolvedCliPackage = null
                try {
@@ -11,7 +11,7 @@ index b4671fa..f1f5ea7 100644
                } catch (Throwable ignored) {}
                def cliPackage = resolvedCliPackage != null && resolvedCliPackage.exists() ? resolvedCliPackage.getAbsolutePath() : "$reactRoot/node_modules/@sentry/cli"
                def cliExecutable = sentryProps.get("cli.executable", "$cliPackage/bin/sentry-cli")
-@@ -168,7 +168,7 @@ gradle.projectsEvaluated {
+@@ -293,9 +293,9 @@ gradle.projectsEvaluated {
  
                def resolvedSentryPath = null
                try {

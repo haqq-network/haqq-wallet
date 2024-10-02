@@ -1705,9 +1705,29 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNSentry (5.7.1):
+  - RNSentry (5.33.1):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
     - React-Core
-    - Sentry/HybridSDK (= 8.8.0)
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Sentry/HybridSDK (= 8.36.0)
+    - Yoga
   - RNSVG (13.14.1):
     - React-Core
   - SDWebImage (5.19.7):
@@ -1716,9 +1736,7 @@ PODS:
   - secp256k1Swift (0.7.4):
     - secp256k1Wrapper (~> 0.0.5)
   - secp256k1Wrapper (0.0.5)
-  - Sentry/HybridSDK (8.8.0):
-    - SentryPrivate (= 8.8.0)
-  - SentryPrivate (8.8.0)
+  - Sentry/HybridSDK (8.36.0)
   - SocketRocket (0.7.0)
   - ToastViewSwift (2.1.2)
   - TouchID (4.4.1):
@@ -1875,7 +1893,6 @@ SPEC REPOS:
     - secp256k1Swift
     - secp256k1Wrapper
     - Sentry
-    - SentryPrivate
     - SocketRocket
     - ToastViewSwift
 
@@ -2230,13 +2247,12 @@ SPEC CHECKSUMS:
   RNPermissions: 64242b5eabc3ca5ed33f6feb38a183cb1d66d277
   RNReanimated: 09ea7d18be5cac02e06daeee982c7f6a945c5478
   RNScreens: 23dad53fc9db1da2c93e647ae33fd7ce2bd49d60
-  RNSentry: 4e4fc87b53002c015f644cb7207d4b598bc3703f
+  RNSentry: c74f756c88aa2a90070f555609d2a31ab2a7f461
   RNSVG: af3907ac5d4fa26a862b75a16d8f15bc74f2ceda
   SDWebImage: 8a6b7b160b4d710e2a22b6900e25301075c34cb3
   secp256k1Swift: ea49d2b06724444a03cf7938a2d3fc7acc4c0f08
   secp256k1Wrapper: 0378417cd06d51187bbc9e178ec318e7902e2120
-  Sentry: 927dfb29d18a14d924229a59cc2ad149f43349f2
-  SentryPrivate: 4350d865f898224ab9fa02b37d6ee7fbb623f47e
+  Sentry: f8374b5415bc38dfb5645941b3ae31230fbeae57
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   ToastViewSwift: 62e4c54cd482dd1106c2b2224103a8b171763cf3
   TouchID: ba4c656d849cceabc2e4eef722dea5e55959ecf4
