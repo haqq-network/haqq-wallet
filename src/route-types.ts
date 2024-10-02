@@ -676,13 +676,13 @@ export enum OnboardingStackRoutes {
 export type OnboardingStackParamList = WelcomeStackParamList & {
   [OnboardingStackRoutes.OnboardingSetupPin]: WalletInitialData & {
     provider?: ProviderMnemonicBase;
-    currentPin: string;
+    currentPin: SecureValue<string>;
     nextScreen: AnyRouteFromParent;
     errorText?: string;
   };
   [OnboardingStackRoutes.OnboardingRepeatPin]: WalletInitialData & {
     provider?: ProviderMnemonicBase;
-    currentPin: string;
+    currentPin: SecureValue<string>;
     nextScreen: AnyRouteFromParent;
   };
   [OnboardingStackRoutes.OnboardingBiometry]: {
