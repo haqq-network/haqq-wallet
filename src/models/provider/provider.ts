@@ -35,6 +35,10 @@ import {Transaction} from '../transaction';
 import {Wallet} from '../wallet';
 import {WalletConnectSessionMetadata} from '../wallet-connect-session-metadata';
 
+type SelectProviderOptions = {
+  requestMarkup: boolean;
+};
+
 const logger = Logger.create('NetworkProvider:store', {
   stringifyJson: true,
   emodjiPrefix: '🟡',
@@ -72,7 +76,10 @@ class ProviderStore {
     return this._selectedProviderId === ALL_NETWORKS_ID;
   }
 
-  setSelectedProviderId = async (id: ProviderID) => {
+  setSelectedProviderId = async (
+    id: ProviderID,
+    {requestMarkup}: SelectProviderOptions = {requestMarkup: true},
+  ) => {
     runInAction(() => {
       this._selectedProviderId = id;
     });
@@ -86,7 +93,9 @@ class ProviderStore {
 
       await RemoteProviderConfig.init();
       await awaitForEventDone(Events.onSyncAppBalances);
-      await awaitForEventDone(Events.onRequestMarkup);
+      if (requestMarkup) {
+        await awaitForEventDone(Events.onRequestMarkup);
+      }
       await Token.fetchTokens(true);
       await Transaction.fetchLatestTransactions(Wallet.addressList(), true);
       await Currencies.fetchCurrencies();
@@ -98,8 +107,6 @@ class ProviderStore {
 
       await this.awaitForInitialization();
       for (let session of WalletConnectSessionMetadata.getAll()) {
-        // sleep to avoid frequency requests to wallet connect relay server
-        await sleep(300);
         await WalletConnect.instance.emitChainChange(
           this.selectedProvider.ethChainId,
           session.topic,
@@ -107,7 +114,6 @@ class ProviderStore {
       }
     } finally {
       hideModal(ModalType.loading);
-      app.emit(Events.onProviderChangedFinish);
     }
 
     await Promise.allSettled([
