@@ -37,25 +37,31 @@ export const KeyboardSafeArea = ({
           paddingBottom.value = withTiming(prevHeight.current, {
             duration: 50,
           });
+          props.sharedValue &&
+            (props.sharedValue.value = withTiming(prevHeight.current, {
+              duration: 50,
+            }));
         },
       );
       const keyboardDidHideSub = Keyboard.addListener('keyboardDidHide', () => {
         paddingBottom.value = withTiming(0, {duration: 70});
+        props.sharedValue &&
+          (props.sharedValue.value = withTiming(0, {duration: 70}));
       });
       return () => {
         keyboardWillShowSub.remove();
         keyboardDidHideSub.remove();
         paddingBottom.value = 0;
+        props.sharedValue && (props.sharedValue.value = 0);
       };
-    }, [paddingBottom, isNumeric]),
+    }, [paddingBottom, isNumeric, props.sharedValue]),
   );
 
-  const keyboardAnimatedStyle = useAnimatedStyle(
-    () => ({
+  const keyboardAnimatedStyle = useAnimatedStyle(() => {
+    return {
       paddingBottom: paddingBottom.value + bottom,
-    }),
-    [bottom],
-  );
+    };
+  }, [bottom]);
 
   return (
     <Animated.View

@@ -38,6 +38,7 @@ import {
   First,
   Icon,
   IconButton,
+  KeyboardSafeArea,
   Spacer,
   SwiperIcon,
   Text,
@@ -119,6 +120,8 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
     const translationY = useSharedValue(0);
     const scrollOffset = useSharedValue(0);
     const bottomSheetTranslateY = useSharedValue(closedSnapPoint);
+
+    const bottomSheetBotomValue = useSharedValue(0);
 
     const onHandlerEndOnJS = (point: number) => {
       setSnapPoint(point);
@@ -247,78 +250,91 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
 
     const FullscreenWrapper = fullscreen ? ModalProvider : React.Fragment;
 
+    const keyboardAnimatedStyle = useAnimatedStyle(() => {
+      return {
+        bottom: bottomSheetBotomValue.value,
+      };
+    }, []);
+
     return (
-      <View style={[StyleSheet.absoluteFillObject, page.container]}>
-        <View style={page.wrap}>
-          <FullscreenWrapper>
-            <Animated.View
-              style={[
-                StyleSheet.absoluteFillObject,
-                page.background,
-                backgroundAnimatedStyle,
-              ]}
-            />
-            <TouchableWithoutFeedback onPress={onClosePopup}>
-              <View style={page.space} />
-            </TouchableWithoutFeedback>
-            <Animated.View
-              style={[
-                page.animateView,
-                page.content,
-                bottomSheetStyle,
-                contentContainerStyle,
-              ]}>
-              <GestureDetector gesture={headerGesture}>
-                <Animated.View style={titleContainerStyle}>
-                  <View style={page.swipe}>
-                    <SwiperIcon color={getColor(Color.graphicSecond2)} />
-                  </View>
-                  <View style={page.header}>
-                    <First>
-                      {!!renderTitle && renderTitle?.()}
-                      {!!i18nTitle && (
-                        <>
-                          <Text t6 color={Color.textBase1} i18n={i18nTitle} />
-                          <Spacer />
-                        </>
-                      )}
-                      {!!title && (
-                        <>
-                          <Text t6 color={Color.textBase1} children={title} />
-                          <Spacer />
-                        </>
-                      )}
-                    </First>
-                    <IconButton onPress={onClosePopup}>
-                      <Icon
-                        i24
-                        name="close_circle"
-                        color={Color.graphicSecond2}
-                      />
-                    </IconButton>
-                  </View>
-                </Animated.View>
-              </GestureDetector>
-              <GestureDetector
-                gesture={Gesture.Simultaneous(panGesture, scrollViewGesture)}>
-                <Animated.ScrollView
-                  bounces={false}
-                  scrollEnabled={scrollable}
-                  showsVerticalScrollIndicator={false}
-                  scrollEventThrottle={1}
-                  onScrollBeginDrag={(
-                    e: NativeSyntheticEvent<NativeScrollEvent>,
-                  ) => {
-                    scrollOffset.value = e.nativeEvent.contentOffset.y;
-                  }}>
-                  {children}
-                  <Spacer style={{height: bottomInsets}} />
-                </Animated.ScrollView>
-              </GestureDetector>
-            </Animated.View>
-          </FullscreenWrapper>
-        </View>
-      </View>
+      <KeyboardSafeArea sharedValue={bottomSheetBotomValue}>
+        <Animated.View
+          style={[
+            StyleSheet.absoluteFillObject,
+            page.container,
+            keyboardAnimatedStyle,
+          ]}>
+          <View style={page.wrap}>
+            <FullscreenWrapper>
+              <Animated.View
+                style={[
+                  StyleSheet.absoluteFillObject,
+                  page.background,
+                  backgroundAnimatedStyle,
+                ]}
+              />
+              <TouchableWithoutFeedback onPress={onClosePopup}>
+                <View style={page.space} />
+              </TouchableWithoutFeedback>
+              <Animated.View
+                style={[
+                  page.animateView,
+                  page.content,
+                  bottomSheetStyle,
+                  contentContainerStyle,
+                ]}>
+                <GestureDetector gesture={headerGesture}>
+                  <Animated.View style={titleContainerStyle}>
+                    <View style={page.swipe}>
+                      <SwiperIcon color={getColor(Color.graphicSecond2)} />
+                    </View>
+                    <View style={page.header}>
+                      <First>
+                        {!!renderTitle && renderTitle?.()}
+                        {!!i18nTitle && (
+                          <>
+                            <Text t6 color={Color.textBase1} i18n={i18nTitle} />
+                            <Spacer />
+                          </>
+                        )}
+                        {!!title && (
+                          <>
+                            <Text t6 color={Color.textBase1} children={title} />
+                            <Spacer />
+                          </>
+                        )}
+                      </First>
+                      <IconButton onPress={onClosePopup}>
+                        <Icon
+                          i24
+                          name="close_circle"
+                          color={Color.graphicSecond2}
+                        />
+                      </IconButton>
+                    </View>
+                  </Animated.View>
+                </GestureDetector>
+                <GestureDetector
+                  gesture={Gesture.Simultaneous(panGesture, scrollViewGesture)}>
+                  <Animated.ScrollView
+                    bounces={false}
+                    scrollEnabled={scrollable}
+                    showsVerticalScrollIndicator={false}
+                    scrollEventThrottle={1}
+                    onScrollBeginDrag={(
+                      e: NativeSyntheticEvent<NativeScrollEvent>,
+                    ) => {
+                      scrollOffset.value = e.nativeEvent.contentOffset.y;
+                    }}>
+                    {children}
+                    <Spacer style={{height: bottomInsets}} />
+                  </Animated.ScrollView>
+                </GestureDetector>
+              </Animated.View>
+            </FullscreenWrapper>
+          </View>
+        </Animated.View>
+      </KeyboardSafeArea>
     );
   },
 );
