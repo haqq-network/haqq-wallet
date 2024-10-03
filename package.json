@@ -242,5 +242,8 @@
     "stream": "stream-browserify",
     "vm": "vm-browserify"
   },
-  "packageManager": "yarn@3.6.0"
+  "packageManager": "yarn@3.6.0",
+  "resolutions": {
+    "@sentry/react-native@^5.33.1": "patch:@sentry/react-native@npm%3A5.33.1#./.yarn/patches/@sentry-react-native-npm-5.33.1-7dbdef21fa.patch"
+  }
 }
