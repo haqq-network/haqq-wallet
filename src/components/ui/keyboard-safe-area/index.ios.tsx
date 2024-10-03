@@ -1,4 +1,4 @@
-import React, {useCallback, useRef} from 'react';
+import React, {useCallback, useMemo, useRef} from 'react';
 
 import {useHeaderHeight} from '@react-navigation/elements';
 import {useFocusEffect} from '@react-navigation/native';
@@ -13,6 +13,8 @@ import {KeyboardSafeAreaProps} from '.';
 export const KeyboardSafeArea = ({
   children,
   style,
+  withBottom = true,
+  sharedValue,
   ...props
 }: KeyboardSafeAreaProps) => {
   const header = useHeaderHeight();
@@ -20,43 +22,44 @@ export const KeyboardSafeArea = ({
   const prevHeight = useRef(0);
   useKeyboardDismissInBackground();
 
+  const marginBottom = useMemo(
+    () => (withBottom ? bottom : 0),
+    [withBottom, bottom],
+  );
+
   useFocusEffect(
     useCallback(() => {
       const keyboardWillShowSub = Keyboard.addListener(
         'keyboardDidShow',
         ({endCoordinates: {height}}) => {
-          if (props.sharedValue) {
+          if (sharedValue) {
             prevHeight.current =
               Math.max(height, prevHeight.current) > 0
                 ? Math.max(height, prevHeight.current)
                 : height;
-            props.sharedValue &&
-              (props.sharedValue.value = withTiming(
-                prevHeight.current - bottom,
-                {
-                  duration: 50,
-                },
-              ));
+            sharedValue &&
+              (sharedValue.value = withTiming(prevHeight.current - bottom, {
+                duration: 50,
+              }));
           }
         },
       );
       const keyboardDidHideSub = Keyboard.addListener('keyboardDidHide', () => {
-        props.sharedValue &&
-          (props.sharedValue.value = withTiming(0, {duration: 70}));
+        sharedValue && (sharedValue.value = withTiming(0, {duration: 70}));
       });
       return () => {
         keyboardWillShowSub.remove();
         keyboardDidHideSub.remove();
-        props.sharedValue && (props.sharedValue.value = 0);
+        sharedValue && (sharedValue.value = 0);
       };
-    }, [props.sharedValue, bottom]),
+    }, [sharedValue, bottom]),
   );
 
   return (
     <KeyboardAvoidingView
       behavior="padding"
       keyboardVerticalOffset={top + header}
-      style={[styles.flexOne, {marginBottom: bottom}, style]}
+      style={[styles.flexOne, {marginBottom}, style]}
       {...props}>
       {children}
     </KeyboardAvoidingView>

@@ -257,7 +257,7 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
     }, []);
 
     return (
-      <KeyboardSafeArea sharedValue={bottomSheetBotomValue}>
+      <KeyboardSafeArea withBottom={false} sharedValue={bottomSheetBotomValue}>
         <Animated.View
           style={[
             StyleSheet.absoluteFillObject,
