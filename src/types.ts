@@ -96,6 +96,10 @@ export enum MarketingEvents {
   navigation = '68gzdc',
 
   bannerClicked = '9zjcys',
+
+  swapStart = 'swapStart',
+  swapSuccess = 'swapSuccess',
+  swapFail = 'swapFail',
 }
 
 export enum PopupNotificationBannerTypes {

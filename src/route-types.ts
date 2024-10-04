@@ -31,6 +31,7 @@ import {WalletConnectApproveConnectionEvent} from '@app/types/wallet-connect';
 
 import {Fee} from './models/fee';
 import {CalculatedFees} from './services/eth-network/types';
+import {SushiPoolEstimateResponse} from './services/indexer';
 
 export type AnyRouteFromParent =
   | SignInStackRoutes
@@ -875,7 +876,14 @@ export type SwapStackParamList = {
   Preview: {
     address: string;
   };
-  Finish: undefined;
+  Finish: {
+    token0: IToken;
+    token1: IToken;
+    txHash: string;
+    estimateData: SushiPoolEstimateResponse;
+    isWrapTx: boolean;
+    isUnwrapTx: boolean;
+  };
 };
 
 export enum SwapStackRoutes {

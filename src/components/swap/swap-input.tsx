@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 
 import {observer} from 'mobx-react';
 import {View} from 'react-native';
@@ -9,6 +9,7 @@ import {useSumAmount} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Balance} from '@app/services/balance';
 import {IToken} from '@app/types';
+import {WEI_PRECISION} from '@app/variables/common';
 
 import {ImageWrapper} from '../image-wrapper';
 import {
@@ -53,6 +54,19 @@ export const SwapInput = observer(
     onPressMax,
     ...inputProps
   }: SwapInputProps) => {
+    const handleOnChangeText = useCallback(
+      (text: string) => {
+        let decimalsOffset = 0;
+
+        if (text.startsWith('0.')) {
+          decimalsOffset = 2;
+        }
+
+        const decimals = (token.decimals || WEI_PRECISION) + decimalsOffset;
+        amounts.setAmount(text?.trim()?.slice(0, decimals));
+      },
+      [amounts, token, availableBalance, currentBalance],
+    );
     return (
       <View>
         <View style={styles.amountContainer}>
@@ -84,7 +98,7 @@ export const SwapInput = observer(
               errorText={amounts.error}
               {...inputProps}
               value={amounts.amount}
-              onChangeText={amounts.setAmount}
+              onChangeText={handleOnChangeText}
               keyboardType="numeric"
               inputMode="decimal"
               returnKeyType="done"
