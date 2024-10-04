@@ -4668,6 +4668,32 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sentry/react-native@patch:@sentry/react-native@npm%3A5.33.1#./.yarn/patches/@sentry-react-native-npm-5.33.1-7dbdef21fa.patch::locator=haqq%40workspace%3A.":
+  version: 5.33.1
+  resolution: "@sentry/react-native@patch:@sentry/react-native@npm%3A5.33.1#./.yarn/patches/@sentry-react-native-npm-5.33.1-7dbdef21fa.patch::version=5.33.1&hash=138f4f&locator=haqq%40workspace%3A."
+  dependencies:
+    "@sentry/babel-plugin-component-annotate": 2.20.1
+    "@sentry/browser": 7.119.0
+    "@sentry/cli": 2.36.1
+    "@sentry/core": 7.119.0
+    "@sentry/hub": 7.119.0
+    "@sentry/integrations": 7.119.0
+    "@sentry/react": 7.119.0
+    "@sentry/types": 7.119.0
+    "@sentry/utils": 7.119.0
+  peerDependencies:
+    expo: ">=49.0.0"
+    react: ">=17.0.0"
+    react-native: ">=0.65.0"
+  peerDependenciesMeta:
+    expo:
+      optional: true
+  bin:
+    sentry-expo-upload-sourcemaps: scripts/expo-upload-sourcemaps.js
+  checksum: df2618fd60022ccc324aedaed6e63c16ad678d8a69ec48d2802eac31d434ea86c52eb40a9acdc0e756c0baab447d49f92fb2802e273e53fbd139f8ee36ca1dff
+  languageName: node
+  linkType: hard
+
 "@sentry/react@npm:7.119.0":
   version: 7.119.0
   resolution: "@sentry/react@npm:7.119.0"
