@@ -24,7 +24,7 @@ import {
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
-import {Wallet} from '@app/models/wallet';
+import {WalletModel} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
 
@@ -34,7 +34,7 @@ enum TabNames {
 }
 
 export interface DetailsQrModalProps {
-  wallet: Wallet;
+  wallet: WalletModel;
   onClose: () => void;
 }
 

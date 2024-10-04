@@ -2,87 +2,28 @@ import {makeAutoObservable, when} from 'mobx';
 import {isHydrated, makePersistable} from 'mobx-persist-store';
 
 import {app} from '@app/contexts';
-import {DEBUG_VARS} from '@app/debug-vars';
 import {onWalletsBalanceCheckRPC} from '@app/event-actions/on-wallets-balance-check';
 import {Events} from '@app/events';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
-import {awaitForRealm} from '@app/helpers/await-for-realm';
 import {Socket} from '@app/models/socket';
 import {storage} from '@app/services/mmkv';
 import {RPCMessage, RPCObserver} from '@app/types/rpc';
-import {generateFlatColors, generateGradientColors, makeID} from '@app/utils';
-import {
-  CARD_CIRCLE_TOTAL,
-  CARD_RHOMBUS_TOTAL,
-  FLAT_PRESETS,
-  GRADIENT_PRESETS,
-  STORE_REHYDRATION_TIMEOUT_MS,
-} from '@app/variables/common';
 
-import {Token} from './tokens';
+import {getCardStyle, getColors, getPattern} from './wallet.helpers';
+import {deserialize, serialize} from './wallet.mock';
+import {WalletModel} from './wallet.model';
 
 import {
   AddWalletParams,
-  HaqqCosmosAddress,
   HaqqEthereumAddress,
-  WalletCardPattern,
-  WalletCardStyle,
   WalletCardStyleT,
   WalletType,
-} from '../types';
-
-export type Wallet = {
-  address: HaqqEthereumAddress;
-  name: string;
-  data: string;
-  mnemonicSaved: boolean;
-  socialLinkEnabled: boolean;
-  cardStyle: WalletCardStyle;
-  colorFrom: string;
-  colorTo: string;
-  colorPattern: string;
-  pattern: string;
-  isHidden: boolean;
-  isMain: boolean;
-  type: WalletType;
-  deviceId?: string;
-  path?: string;
-  rootAddress?: string;
-  subscription: string | null;
-  version: number;
-  accountId: string | null;
-  cosmosAddress: HaqqCosmosAddress;
-  position: number;
-  isImported?: boolean;
-};
-
-function getMockWallets(): Wallet[] {
-  return DEBUG_VARS.mockWalletsAddresses.map((address, index) => ({
-    address: AddressUtils.toEth(address),
-    cosmosAddress: AddressUtils.toHaqq(address),
-    accountId: makeID(6),
-    data: '',
-    mnemonicSaved: false,
-    socialLinkEnabled: false,
-    name: `🔴 DEBUG #${index}`,
-    pattern: `card-rhombus-${index + 1}`,
-    cardStyle: WalletCardStyle.gradient,
-    colorFrom: '#2ebf41',
-    colorTo: '#552ebf',
-    colorPattern: '#A6A628',
-    type: WalletType.hot,
-    path: "44'/60'/0'/0/0",
-    version: 2,
-    isHidden: false,
-    isMain: index === 0,
-    position: index,
-    subscription: null,
-  }));
-}
+} from '../../types';
+import {Token} from '../tokens';
 
 class WalletStore implements RPCObserver {
-  wallets: Wallet[] = [];
+  wallets: WalletModel[] = [];
 
   constructor(shouldSkipPersisting: boolean = false) {
     makeAutoObservable(this);
@@ -93,37 +34,16 @@ class WalletStore implements RPCObserver {
     );
 
     if (!shouldSkipPersisting) {
-      const isMockEnabled =
-        __DEV__ &&
-        DEBUG_VARS.enableMockWallets &&
-        DEBUG_VARS.mockWalletsAddresses.length;
-
-      let originalWallets: Wallet[] = [];
-
       makePersistable(this, {
         name: this.constructor.name,
         properties: [
           {
             key: 'wallets',
-            deserialize: value => {
-              if (isMockEnabled) {
-                originalWallets = value;
-                return getMockWallets();
-              }
-
-              return value.sort(
-                (a: Wallet, b: Wallet) => a.position - b.position,
-              );
-            },
-            serialize: value => {
-              if (isMockEnabled) {
-                return originalWallets;
-              }
-              return value;
-            },
+            deserialize,
+            serialize,
           },
         ],
-        storage: storage,
+        storage,
       });
     }
   }
@@ -132,67 +52,24 @@ class WalletStore implements RPCObserver {
     return isHydrated(this);
   }
 
-  migrate = async () => {
-    await awaitForRealm();
-    await when(() => this.isHydrated, {
-      timeout: STORE_REHYDRATION_TIMEOUT_MS,
-    });
-  };
-
-  async create(
-    name = '',
+  create = (
+    name: string,
     walletParams: AddWalletParams,
-  ): Promise<Wallet | null> {
-    const cards = Object.keys(WalletCardStyle);
-    const cardStyle =
-      walletParams.cardStyle ??
-      (cards[Math.floor(Math.random() * cards.length)] as WalletCardStyle);
-
-    const patterns = Object.keys(WalletCardPattern);
-    const patternVariant =
-      patterns[Math.floor(Math.random() * patterns.length)];
-
-    const pattern =
-      walletParams.pattern ??
-      `card-${patternVariant}-${Math.floor(
-        Math.random() *
-          (patternVariant === WalletCardPattern.circle
-            ? CARD_CIRCLE_TOTAL
-            : CARD_RHOMBUS_TOTAL),
-      )}`;
-
-    const usedColors = new Set(this.wallets.map(w => w.colorFrom));
-
-    let availableColors = (
-      cardStyle === WalletCardStyle.flat ? FLAT_PRESETS : GRADIENT_PRESETS
-    ).filter(c => !usedColors.has(c[0]));
-
-    let colors: string[];
-
-    if (availableColors.length) {
-      colors =
-        availableColors[Math.floor(Math.random() * availableColors.length)];
-    } else {
-      colors =
-        cardStyle === WalletCardStyle.flat
-          ? generateFlatColors()
-          : generateGradientColors();
-    }
-
-    if (walletParams.colorFrom) {
-      colors[0] = walletParams.colorFrom;
-    }
-
-    if (walletParams.colorTo) {
-      colors[1] = walletParams.colorTo;
-    }
-
-    if (walletParams.colorPattern) {
-      colors[2] = walletParams.colorPattern;
-    }
+  ): WalletModel | null => {
+    const cardStyle = getCardStyle(walletParams?.cardStyle);
+    const pattern = getPattern(walletParams?.pattern);
+    const {colorFrom, colorTo, colorPattern} = getColors(
+      this.wallets,
+      cardStyle,
+      {
+        colorFrom: walletParams?.colorFrom,
+        colorTo: walletParams?.colorTo,
+        colorPattern: walletParams?.colorPattern,
+      },
+    );
 
     const existingWallet = this.getById(walletParams.address);
-    const newWallet = {
+    const newWallet = new WalletModel({
       ...existingWallet,
       data: '',
       subscription: existingWallet?.subscription ?? null,
@@ -202,9 +79,9 @@ class WalletStore implements RPCObserver {
       name: existingWallet?.name ?? name,
       pattern,
       cardStyle,
-      colorFrom: colors[0],
-      colorTo: colors[1],
-      colorPattern: colors[2],
+      colorFrom,
+      colorTo,
+      colorPattern,
       type: walletParams.type,
       path: walletParams.path,
       accountId: walletParams.accountId,
@@ -213,7 +90,7 @@ class WalletStore implements RPCObserver {
       isMain: existingWallet?.isMain ?? false,
       cosmosAddress: AddressUtils.toHaqq(walletParams.address),
       position: this.getSize(),
-    };
+    });
 
     if (existingWallet) {
       this.update(existingWallet.address, {
@@ -227,7 +104,7 @@ class WalletStore implements RPCObserver {
     app.emit(Events.onWalletCreate, newWallet);
 
     return newWallet;
-  }
+  };
 
   getById(id: string = '') {
     return (
@@ -305,20 +182,23 @@ class WalletStore implements RPCObserver {
     }
   }
 
-  update(address: string, params: Partial<Wallet>) {
+  update(address: string, params: Partial<WalletModel>) {
     const wallet = this.getById(address);
 
     if (wallet) {
       const otherWallets = this.wallets.filter(
         w => !AddressUtils.equals(w.address, address),
       );
-      this.wallets = [...otherWallets, {...wallet, ...params}].sort(
-        (a, b) => a.position - b.position,
-      );
+      this.wallets = [
+        ...otherWallets,
+        // FIXME: Check types. For some reason type check failed here
+        // @ts-ignore
+        new WalletModel({...wallet, ...params}),
+      ].sort((a, b) => a.position - b.position);
     }
   }
 
-  setCardStyle(address: string = '', params: Partial<WalletCardStyleT>) {
+  setCardStyle(address: string, params: Partial<WalletCardStyleT>) {
     this.update(address, params);
   }
 

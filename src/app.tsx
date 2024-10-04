@@ -29,7 +29,6 @@ import {Contact} from '@app/models/contact';
 import {Language} from '@app/models/language';
 import {Stories} from '@app/models/stories';
 import {VariablesBool} from '@app/models/variables-bool';
-import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 import {
   HomeStackRoutes,
@@ -133,7 +132,7 @@ export const App = () => {
           await app.init();
           await migrationWallets();
           // MobX stores migration
-          await Promise.allSettled([Contact.migrate(), Wallet.migrate()]);
+          await Promise.allSettled([Contact.migrate()]);
 
           // We need reopen app for start SSS check
           // because we are working with cloud snapshots

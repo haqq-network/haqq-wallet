@@ -6,7 +6,7 @@ import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
 import {Whitelist} from '@app/helpers/whitelist';
 import {Contracts} from '@app/models/contracts';
 import {Socket} from '@app/models/socket';
-import {Wallet} from '@app/models/wallet';
+import {Wallet, WalletModel} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
@@ -304,7 +304,7 @@ class TokensStore implements MobXStore<IToken> {
     });
   });
 
-  private generateNativeTokens = (w: Wallet) => {
+  private generateNativeTokens = (w: WalletModel) => {
     if (Provider.isAllNetworks) {
       return Provider.getAllNetworks().map(p => this.generateNativeToken(w, p));
     }
@@ -313,7 +313,7 @@ class TokensStore implements MobXStore<IToken> {
   };
 
   public generateNativeToken = (
-    wallet: Wallet,
+    wallet: WalletModel,
     provider: ProviderModel = Provider.selectedProvider,
   ): IToken => {
     const balance = app.getAvailableBalance(wallet.address, provider);

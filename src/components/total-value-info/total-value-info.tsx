@@ -10,7 +10,7 @@ import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useShowNft} from '@app/hooks/nft';
 import {I18N} from '@app/i18n';
 import {Transaction} from '@app/models/transaction';
-import {Wallet} from '@app/models/wallet';
+import {WalletModel} from '@app/models/wallet';
 import {BalanceData, HaqqEthereumAddress, IToken} from '@app/types';
 
 import {TotalValueInfoHeader} from './total-value-info-header';
@@ -38,7 +38,7 @@ export type TotalValueInfoProps = {
   initialTab?: TotalValueTabNames;
   onPressTxRow: (tx: Transaction) => void;
   onPressInfo: () => void;
-  onPressToken?: (wallet: Wallet, token: IToken) => void;
+  onPressToken?: (wallet: WalletModel, token: IToken) => void;
 };
 
 export const TotalValueInfo = observer(
