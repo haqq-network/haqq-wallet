@@ -45,9 +45,11 @@ export const deserialize = (value: WalletModel[]) => {
     return getMockWallets();
   }
 
-  return value.sort(
-    (a: WalletModel, b: WalletModel) => a.position - b.position,
-  );
+  return value
+    .map(wallet =>
+      wallet instanceof WalletModel ? wallet : new WalletModel(wallet),
+    )
+    .sort((a: WalletModel, b: WalletModel) => a.position - b.position);
 };
 
 export const serialize = (value: WalletModel[]) => {
