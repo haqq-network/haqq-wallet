@@ -49,7 +49,11 @@ import {
   ModalType,
 } from '@app/types';
 import {ERC20_ABI, V3SWAPROUTER_ABI, WETH_ABI} from '@app/variables/abi';
-import {HAQQ_METADATA, ZERO_HEX_NUMBER} from '@app/variables/common';
+import {
+  HAQQ_METADATA,
+  LONG_NUM_PRECISION,
+  ZERO_HEX_NUMBER,
+} from '@app/variables/common';
 
 const logger = Logger.create('SwapScreen', {
   emodjiPrefix: '🟠',
@@ -188,7 +192,7 @@ export const SwapScreen = observer(() => {
   );
   const t0Current = useMemo(() => {
     if (!amountsIn.amount || !tokenIn?.decimals) {
-      return Balance.Empty;
+      return new Balance(0, tokenIn?.decimals!, tokenIn?.symbol!);
     }
     return new Balance(
       parseFloat(amountsIn.amount),
@@ -199,7 +203,7 @@ export const SwapScreen = observer(() => {
 
   const t1Current = useMemo(() => {
     if (!estimateData?.amount_out || !tokenOut?.decimals) {
-      return Balance.Empty;
+      return new Balance(0, tokenOut?.decimals!, tokenOut?.symbol!);
     }
     return new Balance(
       estimateData?.amount_out,
@@ -471,13 +475,45 @@ export const SwapScreen = observer(() => {
           })
           .filter(Boolean) as IToken[];
 
+        const sortedTokens = [currentToken, ...possibleRoutesForSwap].sort(
+          (a, b) => {
+            if (!a?.value || !b?.value) {
+              return 0;
+            }
+
+            const aValue = parseFloat(
+              a.value.toBalanceString(
+                LONG_NUM_PRECISION,
+                undefined,
+                false,
+                true,
+              ),
+            );
+            const bValue = parseFloat(
+              b.value.toBalanceString(
+                LONG_NUM_PRECISION,
+                undefined,
+                false,
+                true,
+              ),
+            );
+            if (aValue > bValue) {
+              return -1;
+            }
+            if (aValue < bValue) {
+              return 1;
+            }
+            return 0;
+          },
+        );
+
         const {value, index} = await awaitForValue({
           title: 'Select token',
           values: [
             {
               id: currentWallet.address,
               wallet: currentWallet,
-              tokens: [currentToken, ...possibleRoutesForSwap],
+              tokens: sortedTokens,
               title: currentWallet.name,
               subtitle: currentWallet.address,
             },
@@ -1166,7 +1202,7 @@ export const SwapScreen = observer(() => {
                 contract =>
                   ({
                     image: contract.icon!,
-                    value: Balance.Empty!,
+                    value: new Balance(0, contract.decimals!, contract.symbol!),
                     contract_created_at: contract.created_at!,
                     created_at: contract.created_at!,
                     contract_updated_at: contract.updated_at!,
