@@ -726,20 +726,21 @@ PODS:
   - RNScreens (3.29.0):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
-  - RNSentry (5.7.1):
+  - RNSentry (5.33.1):
+    - hermes-engine
+    - RCT-Folly (= 2021.07.22.00)
     - React-Core
-    - Sentry/HybridSDK (= 8.8.0)
+    - React-hermes
+    - Sentry/HybridSDK (= 8.36.0)
   - RNSVG (13.10.0):
     - React-Core
-  - SDWebImage (5.19.6):
-    - SDWebImage/Core (= 5.19.6)
-  - SDWebImage/Core (5.19.6)
+  - SDWebImage (5.19.7):
+    - SDWebImage/Core (= 5.19.7)
+  - SDWebImage/Core (5.19.7)
   - secp256k1Swift (0.7.4):
     - secp256k1Wrapper (~> 0.0.5)
   - secp256k1Wrapper (0.0.5)
-  - Sentry/HybridSDK (8.8.0):
-    - SentryPrivate (= 8.8.0)
-  - SentryPrivate (8.8.0)
+  - Sentry/HybridSDK (8.36.0)
   - SocketRocket (0.6.1)
   - ToastViewSwift (2.1.2)
   - TouchID (4.4.1):
@@ -883,7 +884,6 @@ SPEC REPOS:
     - secp256k1Swift
     - secp256k1Wrapper
     - Sentry
-    - SentryPrivate
     - SocketRocket
     - ToastViewSwift
 
@@ -1194,13 +1194,12 @@ SPEC CHECKSUMS:
   RNPermissions: 81b4a5e0f9fdb3b145e9622c199df8f629c51f51
   RNReanimated: 43675f1f0e704abe8ebf953fd79b00e66302cda2
   RNScreens: 3c5b9f4a9dcde752466854b6109b79c0e205dad3
-  RNSentry: 4e4fc87b53002c015f644cb7207d4b598bc3703f
+  RNSentry: 0744d3c79504bc4778190d047d1b60daf4a378cd
   RNSVG: 80584470ff1ffc7994923ea135a3e5ad825546b9
-  SDWebImage: a79252b60f4678812d94316c91da69ec83089c9f
+  SDWebImage: 8a6b7b160b4d710e2a22b6900e25301075c34cb3
   secp256k1Swift: ea49d2b06724444a03cf7938a2d3fc7acc4c0f08
   secp256k1Wrapper: 0378417cd06d51187bbc9e178ec318e7902e2120
-  Sentry: 927dfb29d18a14d924229a59cc2ad149f43349f2
-  SentryPrivate: 4350d865f898224ab9fa02b37d6ee7fbb623f47e
+  Sentry: f8374b5415bc38dfb5645941b3ae31230fbeae57
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   ToastViewSwift: 62e4c54cd482dd1106c2b2224103a8b171763cf3
   TouchID: ba4c656d849cceabc2e4eef722dea5e55959ecf4

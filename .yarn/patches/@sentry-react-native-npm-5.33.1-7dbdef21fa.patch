@@ -1,0 +1,22 @@
+diff --git a/sentry.gradle b/sentry.gradle
+index 99f2bafdfdb17dc65c2cdf19d40b11e4fc3b1158..23c40f19e3f5f57ed2b7bde3e7cd66f124702f33 100644
+--- a/sentry.gradle
++++ b/sentry.gradle
+@@ -162,7 +162,7 @@ gradle.projectsEvaluated {
+ 
+                       def resolvedCliPackage = null
+                       try {
+-                          resolvedCliPackage = new File(["node", "--print", "require.resolve('@sentry/cli/package.json')"].execute(null, rootDir).text.trim()).getParentFile();
++                          resolvedCliPackage = new File("$reactRoot/node_modules/@sentry/react-native/package.json").getParentFile();
+                       } catch (Throwable ignored) {}
+                       def cliPackage = resolvedCliPackage != null && resolvedCliPackage.exists() ? resolvedCliPackage.getAbsolutePath() : "$reactRoot/node_modules/@sentry/cli"
+                       def cliExecutable = sentryProps.get("cli.executable", "$cliPackage/bin/sentry-cli")
+@@ -290,7 +290,7 @@ gradle.projectsEvaluated {
+ def resolveSentryReactNativeSDKPath(reactRoot) {
+     def resolvedSentryPath = null
+     try {
+-        resolvedSentryPath = new File(["node", "--print", "require.resolve('@sentry/react-native/package.json')"].execute(null, rootDir).text.trim()).getParentFile();
++        resolvedSentryPath = new File("$reactRoot/node_modules/@sentry/react-native/package.json").getParentFile();
+     } catch (Throwable ignored) {} // if the resolve fails we fallback to the default path
+     def sentryPackage = resolvedSentryPath != null && resolvedSentryPath.exists() ? resolvedSentryPath.getAbsolutePath() : "$reactRoot/node_modules/@sentry/react-native"
+     return sentryPackage
