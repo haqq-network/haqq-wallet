@@ -2,6 +2,7 @@ import RNAsyncStorage from '@react-native-async-storage/async-storage';
 import BlastedImage from 'react-native-blasted-image';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {resetGenericPassword} from 'react-native-keychain';
+import RNRestart from 'react-native-restart';
 
 import {app} from '@app/contexts';
 import {Contact} from '@app/models/contact';
@@ -49,5 +50,6 @@ export async function onAppReset() {
     Logger.captureException(err, 'onAppReset');
   } finally {
     app.onboarded = false;
+    RNRestart.restart();
   }
 }
