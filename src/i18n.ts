@@ -1023,6 +1023,11 @@ export enum I18N {
   transactionNetwork = 'transactionNetwork',
   noSwapRoutesFound = 'noSwapRoutesFound',
   swapSupportedNetworks = 'swapSupportedNetworks',
+  swapFinishYouPaid = 'swapFinishYouPaid',
+  swapFinishYouReceived = 'swapFinishYouReceived',
+  swapFinishComplete = 'swapFinishComplete',
+  swapFinishUnwrapComplete = 'swapFinishUnwrapComplete',
+  swapFinishWrapComplete = 'swapFinishWrapComplete',
 }
 
 const defaultTranslation = {en};

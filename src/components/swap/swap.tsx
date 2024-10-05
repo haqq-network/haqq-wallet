@@ -126,20 +126,34 @@ export const Swap = observer(
     const isHeaderButtonsDisabled =
       isEstimating || isSwapInProgress || isApproveInProgress;
 
+    const isInfussentBalance = useMemo(() => {
+      return t0Available.compare(t0Current, 'lt');
+    }, [t0Available, t0Current]);
+
     const isSwapButtonDisabled = useMemo(() => {
       return (
         isEstimating ||
         isSwapInProgress ||
         !!amountsIn.error ||
-        !t0Current.isPositive()
+        !t0Current.isPositive() ||
+        isInfussentBalance
       );
-    }, [isEstimating, isSwapInProgress, amountsIn.error, t0Current]);
+    }, [
+      isEstimating,
+      isSwapInProgress,
+      amountsIn.error,
+      t0Current,
+      isInfussentBalance,
+    ]);
 
     const isApproveButtonDisabled = useMemo(() => {
       return (
-        isApproveInProgress || !!amountsIn.error || !t0Current.isPositive()
+        isApproveInProgress ||
+        !!amountsIn.error ||
+        !t0Current.isPositive() ||
+        isInfussentBalance
       );
-    }, [isApproveInProgress, amountsIn.error, t0Current]);
+    }, [isApproveInProgress, amountsIn.error, t0Current, isInfussentBalance]);
 
     const rate = useMemo(() => {
       const r =
