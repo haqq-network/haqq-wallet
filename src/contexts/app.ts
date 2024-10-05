@@ -43,7 +43,7 @@ import {EventTracker} from '@app/services/event-tracker';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {RemoteConfig} from '@app/services/remote-config';
 
-import {hideAll, showModal} from '../helpers';
+import {showModal} from '../helpers';
 import {User} from '../models/user';
 import {
   AppTheme,
@@ -409,7 +409,7 @@ class App extends AsyncEventEmitter {
     return possibleToRestoreWallet;
   };
 
-  async getPassword(pinCandidate?: string): Promise<string> {
+  async getPassword(): Promise<string> {
     const creds = await getGenericPassword();
 
     // Detect keychain migration
@@ -425,52 +425,9 @@ class App extends AsyncEventEmitter {
         !passwordEntity?.iv ||
         !passwordEntity?.salt
       ) {
-        Logger.error('iOS Keychain Migration Error Found:', creds);
-        const walletToCheck = this.getWalletForPinRestore();
-        // Save old biometry
-        const biomentryMigrationKey = 'biometry_before_migration';
-        if (!VariablesBool.exists(biomentryMigrationKey)) {
-          VariablesBool.set(biomentryMigrationKey, this.biometry);
-        }
-        this.biometry = false;
-
-        // Reset app if we have main Hardware Wallet
-        if (!walletToCheck) {
-          this.onboarded = false;
-          await onAppReset();
-          hideAll();
-          Alert.alert(getText(I18N.keychainMigrationNotPossible));
-          return Promise.reject('password_migration_not_possible');
-        }
-
-        if (!pinCandidate) {
-          return Promise.reject('password_not_migrated');
-        }
-
-        // Try to verify old pin
-        try {
-          const isValid = await SecurePinUtils.checkPinCorrect(
-            walletToCheck,
-            pinCandidate,
-          );
-          if (isValid) {
-            creds.password = await this.setPin(pinCandidate);
-            const uid = await getUid();
-            const resp = await decryptPassworder<{password: string}>(
-              uid,
-              creds.password,
-            );
-
-            this.biometry = VariablesBool.get(biomentryMigrationKey);
-            VariablesBool.remove(biomentryMigrationKey);
-            return resp.password;
-          } else {
-            app.failureEnter();
-            return Promise.reject('password_migration_not_matched');
-          }
-        } catch (err) {
-          Logger.error('iOS Keychain Migration Error:', err);
-        }
+        Alert.alert(getText(I18N.keychainMigrationNotPossible));
+        await onAppReset();
+        return Promise.reject('password_migration_not_possible');
       }
     }
 
@@ -510,7 +467,7 @@ class App extends AsyncEventEmitter {
     const passwordsDoNotMatch = new Error('password_do_not_match');
     if (this.canEnter) {
       try {
-        const password = await this.getPassword(pin);
+        const password = await this.getPassword();
         return password === pin
           ? Promise.resolve()
           : Promise.reject(passwordsDoNotMatch);
