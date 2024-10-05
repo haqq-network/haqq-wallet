@@ -108,6 +108,13 @@ target 'haqq' do
           config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
         end
       end
+
+      # https://github.com/getsentry/sentry-react-native/issues/4095
+      target.build_configurations.each do |config|
+        if target.name == 'Sentry'
+          config.build_settings['APPLICATION_EXTENSION_API_ONLY'] = 'YES'
+        end
+      end
     end
   end
 end
