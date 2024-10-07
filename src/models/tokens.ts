@@ -175,7 +175,14 @@ class TokensStore implements MobXStore<IToken> {
   }
 
   getById(id: string) {
-    return this.data[AddressUtils.toEth(id)];
+    const token = this.data[AddressUtils.toEth(id)];
+
+    if (!token) {
+      return Object.values(this.tokens)
+        .flat()
+        .find(t => t.id === id);
+    }
+    return token;
   }
 
   update(id: string | undefined, item: Omit<IToken, 'id'>) {

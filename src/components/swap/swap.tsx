@@ -127,7 +127,7 @@ export const Swap = observer(
       isEstimating || isSwapInProgress || isApproveInProgress;
 
     const isInfussentBalance = useMemo(() => {
-      return t0Available.compare(t0Current, 'lt');
+      return t0Current.compare(t0Available, 'gt');
     }, [t0Available, t0Current]);
 
     const isSwapButtonDisabled = useMemo(() => {

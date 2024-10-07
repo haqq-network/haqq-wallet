@@ -16,6 +16,7 @@ import {
 import {Loading} from '@app/components/ui';
 import {WalletCard} from '@app/components/ui/walletCard';
 import {app} from '@app/contexts';
+import {onWalletsBalanceCheck} from '@app/event-actions/on-wallets-balance-check';
 import {Events} from '@app/events';
 import {awaitForWallet, showModal} from '@app/helpers';
 import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
@@ -25,6 +26,7 @@ import {awaitForProvider} from '@app/helpers/await-for-provider';
 import {AwaitValue, awaitForValue} from '@app/helpers/await-for-value';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {useSumAmount, useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useBackNavigationHandler} from '@app/hooks/use-back-navigation-handler';
 import {usePrevious} from '@app/hooks/use-previous';
 import {I18N, getText} from '@app/i18n';
 import {Contracts} from '@app/models/contracts';
@@ -71,6 +73,35 @@ const getMinAmountForDecimals = (d: number | null, symbol: string | null) => {
   return new Balance(Number(`0.${'0'.repeat(d! - 1)}1`), d, symbol!);
 };
 
+function findToken(wallet: string, token_address: string) {
+  if (AddressUtils.equals(token_address, NATIVE_TOKEN_ADDRESS)) {
+    return Token.generateNativeToken(Wallet.getById(wallet)!);
+  }
+
+  const tokenForWallet = Token.tokens?.[AddressUtils.toEth(wallet)]?.find(it =>
+    AddressUtils.equals(it.id, token_address),
+  );
+
+  if (tokenForWallet) {
+    return tokenForWallet;
+  }
+
+  const token = Token.data?.[AddressUtils.toEth(token_address)];
+
+  if (!token) {
+    return null;
+  }
+
+  return {
+    ...token,
+    value: new Balance(
+      0,
+      token.decimals! ?? Provider.selectedProvider.decimals,
+      token.symbol! ?? Provider.selectedProvider.denom,
+    ),
+  } as IToken;
+}
+
 export const SwapScreen = observer(() => {
   const navigation = useTypedNavigation<SwapStackParamList>();
   const {params} = useTypedRoute<SwapStackParamList, SwapStackRoutes.Swap>();
@@ -100,36 +131,20 @@ export const SwapScreen = observer(() => {
 
   const tokenIn = useMemo(
     () =>
-      Token.tokens?.[currentWallet.address]?.find(it =>
-        AddressUtils.equals(
-          it.id!,
-          (currentRoute || poolsData.routes[0])?.token0!,
-        ),
-      ) ||
-      poolsData.contracts?.find?.(it =>
-        AddressUtils.equals(
-          it.id!,
-          (currentRoute || poolsData.routes[0])?.token0!,
-        ),
+      findToken(
+        currentWallet.address,
+        (currentRoute || poolsData.routes[0])?.token0!,
       ),
     [currentRoute, poolsData, currentWallet],
   );
 
   const tokenOut = useMemo(
     () =>
-      Token.tokens?.[currentWallet.address]?.find(it =>
-        AddressUtils.equals(
-          it.id!,
-          (currentRoute || poolsData.routes[0])?.token1!,
-        ),
-      ) ||
-      poolsData.contracts?.find?.(it =>
-        AddressUtils.equals(
-          it.id!,
-          (currentRoute || poolsData.routes[0])?.token1!,
-        ),
+      findToken(
+        currentWallet.address,
+        (currentRoute || poolsData.routes[0])?.token1!,
       ),
-    [currentRoute, poolsData, estimateData, currentWallet],
+    [currentRoute, poolsData, currentWallet],
   );
 
   const amountsOut = useSumAmount(
@@ -167,11 +182,7 @@ export const SwapScreen = observer(() => {
     return new Balance(estimateData?.fee.amount || '0', decimals, symbol);
   }, [tokenIn, estimateData]);
   const isLoading = useMemo(
-    () =>
-      !poolsData?.contracts?.length ||
-      !poolsData?.routes?.length ||
-      !tokenIn ||
-      !tokenOut,
+    () => !poolsData?.routes?.length || !tokenIn || !tokenOut,
     [tokenIn, tokenOut, poolsData],
   );
   const isWrapTx = useMemo(
@@ -424,8 +435,12 @@ export const SwapScreen = observer(() => {
           initialValue.id!,
         );
 
-        const tokens =
-          poolsData.contracts || Token.tokens[currentWallet.address] || [];
+        const tokens = poolsData.contracts
+          .map(c => findToken(currentWallet.address, c.id!))
+          .filter(Boolean) as IToken[];
+
+        logger.log('tokens', tokens);
+
         const currentToken = {
           ...tokens.find(t => AddressUtils.equals(t.id, initialValue.id!))!,
           value: isToken0 ? t0Available : t1Available,
@@ -477,8 +492,13 @@ export const SwapScreen = observer(() => {
 
         const sortedTokens = [currentToken, ...possibleRoutesForSwap].sort(
           (a, b) => {
-            if (!a?.value || !b?.value) {
-              return 0;
+            // should be last if balance is 0
+            if (!a?.value?.isPositive?.()) {
+              return 1;
+            }
+            // should be last if balance is 0
+            if (!b?.value?.isPositive?.()) {
+              return -1;
             }
 
             const aValue = parseFloat(
@@ -606,6 +626,7 @@ export const SwapScreen = observer(() => {
     if (!t0 || !wallet) {
       return {};
     }
+    await onWalletsBalanceCheck();
 
     const tokenValue =
       // @ts-ignore
@@ -770,7 +791,9 @@ export const SwapScreen = observer(() => {
       const deadline =
         Math.floor(Date.now() / 1000) + 60 * parseFloat(swapSettings.deadline);
 
-      const tokenInIsISLM = tokenIn?.symbol === Provider.selectedProvider.denom;
+      const toke0IsNative = tokenIn?.symbol === Provider.selectedProvider.denom;
+      const toke1IsNative =
+        tokenOut?.symbol === Provider.selectedProvider.denom;
 
       const encodedPath = `0x${estimateData.route}`;
       const swapParams = [
@@ -786,10 +809,26 @@ export const SwapScreen = observer(() => {
         minReceivedAmount?.toHex() || 0,
       ];
 
-      const encodedTxData = swapRouter.interface.encodeFunctionData(
+      let txData = '';
+      const encodedSwapTxData = swapRouter.interface.encodeFunctionData(
         'exactInput',
         [swapParams],
       ) as string;
+
+      // if token1 is native, we need to unwrap it
+      if (toke1IsNative) {
+        const encodedUnwrap = swapRouter.interface.encodeFunctionData(
+          'unwrapWETH9',
+          // unwrap zero amount means - unwrap all of current swap amount
+          ['0x0', currentWallet.address],
+        );
+
+        txData = swapRouter.interface.encodeFunctionData('multicall', [
+          [encodedSwapTxData, encodedUnwrap],
+        ]) as string;
+      } else {
+        txData = encodedSwapTxData;
+      }
 
       const rawTx = await awaitForJsonRpcSign({
         metadata: HAQQ_METADATA,
@@ -801,8 +840,8 @@ export const SwapScreen = observer(() => {
             {
               from: currentWallet.address,
               to: Provider.selectedProvider.config.swapRouterV3,
-              value: tokenInIsISLM ? estimateData.amount_in : '0x0',
-              data: encodedTxData,
+              value: toke0IsNative ? estimateData.amount_in : '0x0',
+              data: txData,
             },
           ],
         },
@@ -1087,7 +1126,7 @@ export const SwapScreen = observer(() => {
 
       amountsIn.setAmount(
         t0Available.toFloatString(
-          t0Available.getPrecission(),
+          undefined,
           t0Available.getPrecission(),
           false,
         ),
@@ -1222,10 +1261,14 @@ export const SwapScreen = observer(() => {
             .concat([Token.generateNativeToken(currentWallet)!])
             .filter(Boolean) as IToken[];
 
+          tokens.forEach(t => Token.create(t.id, t));
+
           setPoolsData(() => ({
             ...data,
             contracts: tokens,
           }));
+
+          // setPoolsData(() => data);
 
           routesByToken0.current = {};
           routesByToken1.current = {};
@@ -1311,6 +1354,11 @@ export const SwapScreen = observer(() => {
       fetchData();
     }
   }, [poolsData]);
+
+  useBackNavigationHandler(() => {
+    onWalletsBalanceCheck();
+    Token.fetchTokens(true);
+  }, []);
 
   if (isLoading) {
     return <Loading />;

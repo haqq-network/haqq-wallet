@@ -81,7 +81,17 @@ export const JsonRpcTransactionInfo = observer(
     const showSignContratAttention =
       !hideContractAttention && isContract && !isInWhiteList;
 
-    const txParsedData = useMemo(() => parseTxDataFromHexInput(tx?.data), [tx]);
+    const txParsedData = useMemo(() => {
+      const parsed = parseTxDataFromHexInput(tx?.data);
+
+      // if is multicall, return first call because it's a swap transaction
+      // second call is unwrap transaction
+      // see swap-screen.tsx onPressSwap function
+      if (parsed?.name === 'multicall') {
+        return parseTxDataFromHexInput(parsed.args[0][0]);
+      }
+      return parsed;
+    }, [tx]);
 
     const functionName = useMemo(() => {
       if (txParsedData) {
