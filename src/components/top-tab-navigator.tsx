@@ -107,7 +107,7 @@ const TopTabNavigator: TopTabNavigatorComponent = ({
   );
 
   useEffect(() => {
-    if (currentIndex && currentIndex !== activeTabIndex) {
+    if (currentIndex !== undefined && currentIndex !== activeTabIndex) {
       setActiveTabIndex(currentIndex);
     }
   }, [currentIndex, activeTabIndex]);
