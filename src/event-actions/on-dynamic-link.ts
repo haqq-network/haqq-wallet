@@ -1,11 +1,14 @@
 import url from 'url';
 
 import {onBannerAddClaimCode} from '@app/event-actions/on-banner-add-claim-code';
+import {showModal} from '@app/helpers';
+import {Whitelist} from '@app/helpers/whitelist';
 import {Refferal} from '@app/models/refferal';
 import {VariablesString} from '@app/models/variables-string';
 import {Airdrop} from '@app/services/airdrop';
 import {EventTracker} from '@app/services/event-tracker';
-import {DynamicLink, MarketingEvents} from '@app/types';
+import {DynamicLink, MarketingEvents, ModalType} from '@app/types';
+import {openInAppBrowser, openWeb3Browser} from '@app/utils';
 
 export async function onDynamicLink(link: Partial<DynamicLink> | null) {
   if (link && 'url' in link) {
@@ -18,6 +21,26 @@ export async function onDynamicLink(link: Partial<DynamicLink> | null) {
 
     if (typeof parsedUrl?.query?.block_code === 'string') {
       VariablesString.set('block_code', parsedUrl.query.block_code);
+    }
+
+    if (typeof parsedUrl?.query?.browser === 'string') {
+      if (await Whitelist.checkUrl(parsedUrl?.query?.browser)) {
+        openInAppBrowser(parsedUrl?.query?.browser);
+      } else {
+        showModal(ModalType.domainBlocked, {
+          domain: parsedUrl.query.browser!,
+        });
+      }
+    }
+
+    if (typeof parsedUrl?.query?.web3_browser === 'string') {
+      if (await Whitelist.checkUrl(parsedUrl?.query?.web3_browser)) {
+        openWeb3Browser(parsedUrl?.query?.web3_browser);
+      } else {
+        showModal(ModalType.domainBlocked, {
+          domain: parsedUrl.query.web3_browser!,
+        });
+      }
     }
 
     if (parsedUrl.query.claim_code) {
