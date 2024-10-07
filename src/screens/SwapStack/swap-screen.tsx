@@ -2,7 +2,6 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
 import {ethers} from 'ethers';
-import {toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import {Alert, Keyboard, View} from 'react-native';
 import Toast from 'react-native-toast-message';
@@ -19,42 +18,42 @@ import {WalletCard} from '@app/components/ui/walletCard';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {awaitForWallet, showModal} from '@app/helpers';
-import {AddressUtils} from '@app/helpers/address-utils';
+import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
 import {awaitForProvider} from '@app/helpers/await-for-provider';
 import {AwaitValue, awaitForValue} from '@app/helpers/await-for-value';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
-import {useSumAmount, useTypedRoute} from '@app/hooks';
+import {useSumAmount, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {usePrevious} from '@app/hooks/use-previous';
 import {I18N, getText} from '@app/i18n';
+import {Contracts} from '@app/models/contracts';
 import {Currencies} from '@app/models/currencies';
 import {Provider} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {Wallet} from '@app/models/wallet';
-import {navigator} from '@app/navigator';
-import {
-  HomeStackRoutes,
-  SwapStackParamList,
-  SwapStackRoutes,
-  TransactionStackRoutes,
-} from '@app/route-types';
+import {SwapStackParamList, SwapStackRoutes} from '@app/route-types';
 import {Balance} from '@app/services/balance';
+import {EventTracker} from '@app/services/event-tracker';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {
   Indexer,
   SushiPoolEstimateResponse,
   SushiRoute,
 } from '@app/services/indexer';
-import {message} from '@app/services/toast';
 import {
   HaqqCosmosAddress,
   HaqqEthereumAddress,
   IToken,
+  MarketingEvents,
   ModalType,
 } from '@app/types';
 import {ERC20_ABI, V3SWAPROUTER_ABI, WETH_ABI} from '@app/variables/abi';
-import {HAQQ_METADATA, ZERO_HEX_NUMBER} from '@app/variables/common';
+import {
+  HAQQ_METADATA,
+  LONG_NUM_PRECISION,
+  ZERO_HEX_NUMBER,
+} from '@app/variables/common';
 
 const logger = Logger.create('SwapScreen', {
   emodjiPrefix: '🟠',
@@ -73,6 +72,7 @@ const getMinAmountForDecimals = (d: number | null, symbol: string | null) => {
 };
 
 export const SwapScreen = observer(() => {
+  const navigation = useTypedNavigation<SwapStackParamList>();
   const {params} = useTypedRoute<SwapStackParamList, SwapStackRoutes.Swap>();
   const [swapSettings, setSwapSettings] = useState<SwapTransactionSettings>(
     SWAP_SETTINGS_DEFAULT,
@@ -100,36 +100,38 @@ export const SwapScreen = observer(() => {
 
   const tokenIn = useMemo(
     () =>
-      poolsData.contracts?.find?.(it =>
+      Token.tokens?.[currentWallet.address]?.find(it =>
         AddressUtils.equals(
           it.id!,
           (currentRoute || poolsData.routes[0])?.token0!,
         ),
       ) ||
-      Token.getAll().find(it =>
+      poolsData.contracts?.find?.(it =>
         AddressUtils.equals(
           it.id!,
           (currentRoute || poolsData.routes[0])?.token0!,
         ),
       ),
-    [currentRoute, poolsData],
+    [currentRoute, poolsData, currentWallet],
   );
+
   const tokenOut = useMemo(
     () =>
-      poolsData.contracts?.find?.(it =>
+      Token.tokens?.[currentWallet.address]?.find(it =>
         AddressUtils.equals(
           it.id!,
           (currentRoute || poolsData.routes[0])?.token1!,
         ),
       ) ||
-      Token.getAll().find(it =>
+      poolsData.contracts?.find?.(it =>
         AddressUtils.equals(
           it.id!,
           (currentRoute || poolsData.routes[0])?.token1!,
         ),
       ),
-    [currentRoute, poolsData, estimateData],
+    [currentRoute, poolsData, estimateData, currentWallet],
   );
+
   const amountsOut = useSumAmount(
     undefined,
     undefined,
@@ -190,7 +192,7 @@ export const SwapScreen = observer(() => {
   );
   const t0Current = useMemo(() => {
     if (!amountsIn.amount || !tokenIn?.decimals) {
-      return Balance.Empty;
+      return new Balance(0, tokenIn?.decimals!, tokenIn?.symbol!);
     }
     return new Balance(
       parseFloat(amountsIn.amount),
@@ -201,7 +203,7 @@ export const SwapScreen = observer(() => {
 
   const t1Current = useMemo(() => {
     if (!estimateData?.amount_out || !tokenOut?.decimals) {
-      return Balance.Empty;
+      return new Balance(0, tokenOut?.decimals!, tokenOut?.symbol!);
     }
     return new Balance(
       estimateData?.amount_out,
@@ -214,6 +216,10 @@ export const SwapScreen = observer(() => {
     if (!tokenIn) {
       logger.log('t0 available: tokenIn is empty');
       return Balance.Empty;
+    }
+
+    if (tokenIn.value?.isPositive()) {
+      return tokenIn.value;
     }
 
     if (tokenIn.symbol === Provider.selectedProvider.denom) {
@@ -238,6 +244,10 @@ export const SwapScreen = observer(() => {
       return Balance.Empty;
     }
 
+    if (tokenOut.value?.isPositive()) {
+      return tokenOut.value;
+    }
+
     if (tokenOut.symbol === Provider.selectedProvider.denom) {
       return app.getAvailableBalance(currentWallet.address);
     }
@@ -250,7 +260,7 @@ export const SwapScreen = observer(() => {
     }
 
     return new Balance(0, 0, tokenOut.symbol!);
-  }, [currentWallet, tokenOut, Provider.selectedProvider.denom]);
+  }, [currentWallet, tokenOut, Provider.selectedProvider.denom, Token.tokens]);
 
   const estimate = async (force = false) => {
     const errCtx: Record<string, any> = {};
@@ -306,7 +316,9 @@ export const SwapScreen = observer(() => {
           gas_estimate: '0x0',
           initialized_ticks_crossed_list: [0],
           need_approve: false,
-          route: '',
+          route: `${NATIVE_TOKEN_ADDRESS.slice(
+            2,
+          )}000000${NATIVE_TOKEN_ADDRESS.slice(2)}`,
           s_amount_in: t0Current.toFloatString(),
           s_assumed_amount_out: t0Current.toFloatString(),
           s_gas_spent: 0,
@@ -320,8 +332,6 @@ export const SwapScreen = observer(() => {
       const request = {
         amount: t0Current.toHex(),
         sender: currentWallet.address,
-        // token_in: tokenIn?.id!,
-        // token_out: tokenOut?.id!,
         route: currentRoute?.route_hex!,
         currency_id: Currencies.currency?.id,
       };
@@ -447,7 +457,7 @@ export const SwapScreen = observer(() => {
               poolsData.contracts?.find(c =>
                 AddressUtils.equals(c?.id!, isToken0 ? it.token0 : it.token1),
               ) ||
-              Token.getAll().find(c =>
+              Token.tokens?.[currentWallet.address]?.find(c =>
                 AddressUtils.equals(c?.id!, isToken0 ? it.token0 : it.token1),
               );
 
@@ -465,13 +475,45 @@ export const SwapScreen = observer(() => {
           })
           .filter(Boolean) as IToken[];
 
+        const sortedTokens = [currentToken, ...possibleRoutesForSwap].sort(
+          (a, b) => {
+            if (!a?.value || !b?.value) {
+              return 0;
+            }
+
+            const aValue = parseFloat(
+              a.value.toBalanceString(
+                LONG_NUM_PRECISION,
+                undefined,
+                false,
+                true,
+              ),
+            );
+            const bValue = parseFloat(
+              b.value.toBalanceString(
+                LONG_NUM_PRECISION,
+                undefined,
+                false,
+                true,
+              ),
+            );
+            if (aValue > bValue) {
+              return -1;
+            }
+            if (aValue < bValue) {
+              return 1;
+            }
+            return 0;
+          },
+        );
+
         const {value, index} = await awaitForValue({
           title: 'Select token',
           values: [
             {
               id: currentWallet.address,
               wallet: currentWallet,
-              tokens: [currentToken, ...possibleRoutesForSwap],
+              tokens: sortedTokens,
               title: currentWallet.name,
               subtitle: currentWallet.address,
             },
@@ -608,7 +650,7 @@ export const SwapScreen = observer(() => {
       vibrate(HapticEffects.impactLight);
       Keyboard.dismiss();
       setIsEstimating(() => true);
-      amountsOut.setAmount('0');
+      amountsOut.setAmount('');
       logger.log('onPressChangeTokenIn', token.symbol);
       if (wallet.address !== currentWallet.address) {
         setCurrentWallet(() => wallet);
@@ -634,7 +676,7 @@ export const SwapScreen = observer(() => {
         setCurrentRoute(route! || filteredRoutes[0]);
       }
       await refreshTokenBalances(wallet.address, t0Available);
-      amountsIn.setMin();
+      amountsIn.setAmount('');
       return await estimate();
     } catch (err) {
       Logger.error(err, 'onPressChangeTokenIn');
@@ -655,7 +697,7 @@ export const SwapScreen = observer(() => {
       }
       vibrate(HapticEffects.impactLight);
       Keyboard.dismiss();
-      amountsOut.setAmount('0');
+      amountsOut.setAmount('');
       setIsEstimating(() => true);
       setCurrentWallet(() => wallet);
 
@@ -688,8 +730,33 @@ export const SwapScreen = observer(() => {
     }
   };
 
+  const COMMON_EVENT_PARAMS = {
+    // token0
+    token0_symbol: tokenIn?.symbol!,
+    token0_address: AddressUtils.toEth(tokenIn?.id!),
+    token0_amount_text: amountsIn.amount,
+    token0_amount_hex: estimateData?.amount_in!,
+    token0_chain_id: Provider.selectedProvider.ethChainId.toString(), // TODO: for cross-chain swaps
+    // token1
+    token1_symbol: tokenOut?.symbol!,
+    token1_address: AddressUtils.toEth(tokenOut?.id!),
+    token1_amount_text: amountsOut.amount,
+    token1_amount_hex: estimateData?.amount_out!,
+    token1_chain_id: Provider.selectedProvider.ethChainId.toString(), // TODO: for cross-chain swaps
+    // other
+    chain_id: Provider.selectedProvider.ethChainId.toString(),
+    wallet_address: currentWallet.address,
+  };
+
   const onPressSwap = useCallback(async () => {
     try {
+      EventTracker.instance.trackEvent(MarketingEvents.swapStart, {
+        ...COMMON_EVENT_PARAMS,
+        type: 'swap',
+        swap_source: 'SwapRouterV3',
+        swap_source_address: Provider.selectedProvider.config.swapRouterV3,
+      });
+
       if (!estimateData?.route?.length) {
         return Alert.alert('Error', 'No swap route found');
       }
@@ -744,43 +811,40 @@ export const SwapScreen = observer(() => {
       const provider = await getRpcProvider(Provider.selectedProvider);
       const txHandler = await provider.sendTransaction(rawTx);
       const txResp = await txHandler.wait();
-      navigator.goBack();
-      navigator.navigate(HomeStackRoutes.Transaction, {
-        // @ts-ignore
-        screen: TransactionStackRoutes.TransactionFinish,
-        params: {
-          hash: txResp.transactionHash,
-          hideContact: true,
-          transaction: {
-            ...txResp,
-            hash: txResp.transactionHash,
-          },
-          token: toJS(
-            tokenIn?.symbol === Provider.selectedProvider.denom
-              ? Token.generateNativeToken(currentWallet)
-              : [
-                  ...poolsData.contracts,
-                  ...Token.tokens[currentWallet.address],
-                ].find(t => AddressUtils.equals(t.id, tokenIn?.id!)),
-          ),
-          amount: new Balance(
-            parseFloat(amountsIn.amount),
-            tokenIn?.decimals!,
-            tokenIn?.symbol!,
-          ),
-        },
+
+      navigation.navigate(SwapStackRoutes.Finish, {
+        txHash: txResp.transactionHash,
+        token0: {...tokenIn!, value: t0Current},
+        token1: {...tokenOut!, value: t1Current},
+        isWrapTx,
+        isUnwrapTx,
+        estimateData: estimateData!,
       });
       logger.log('txResp', txResp);
+      EventTracker.instance.trackEvent(MarketingEvents.swapSuccess, {
+        ...COMMON_EVENT_PARAMS,
+        type: 'swap',
+        swap_source: 'SwapRouterV3',
+        swap_source_address: Provider.selectedProvider.config.swapRouterV3,
+      });
       await estimate();
     } catch (err) {
       if (err instanceof Error) {
         Alert.alert('Error', err.message);
       }
       logger.captureException(err, 'onPressSwap');
+      EventTracker.instance.trackEvent(MarketingEvents.swapFail, {
+        ...COMMON_EVENT_PARAMS,
+        type: 'swap',
+        swap_source: 'SwapRouterV3',
+        swap_source_address: Provider.selectedProvider.config.swapRouterV3,
+      });
     } finally {
       setSwapInProgress(() => false);
     }
   }, [
+    navigation,
+    tokenOut,
     estimateData,
     tokenIn,
     currentWallet,
@@ -832,10 +896,9 @@ export const SwapScreen = observer(() => {
         type: 'success',
         text1: 'ERC20 Token Approved',
         text2: `for amount ${amountsIn.amount} ${tokenIn?.symbol}`,
-        position: 'bottom',
-        autoHide: false,
+        position: 'top',
+        topOffset: 100,
       });
-      message(`${tokenIn?.symbol} approved for amount ${amountsIn.amount}`);
       await estimate();
     } catch (err) {
       logger.captureException(err, 'onPressApprove');
@@ -845,8 +908,18 @@ export const SwapScreen = observer(() => {
   }, [amountsIn, tokenIn, currentWallet, estimate]);
 
   const onPressWrap = useCallback(async () => {
+    const swapSource =
+      Contracts.getById(Provider.selectedProvider.config.wethAddress)?.name ||
+      'WETH';
+
     // deposit
     try {
+      EventTracker.instance.trackEvent(MarketingEvents.swapStart, {
+        ...COMMON_EVENT_PARAMS,
+        type: 'wrap',
+        swap_source: swapSource,
+        swap_source_address: Provider.selectedProvider.config.wethAddress,
+      });
       setSwapInProgress(() => true);
       const provider = await getRpcProvider(Provider.selectedProvider);
       const WETH = new ethers.Contract(
@@ -876,41 +949,40 @@ export const SwapScreen = observer(() => {
 
       const txHandler = await provider.sendTransaction(rawTx);
       const txResp = await txHandler.wait();
-      navigator.goBack();
-      navigator.navigate(HomeStackRoutes.Transaction, {
-        // @ts-ignore
-        screen: TransactionStackRoutes.TransactionFinish,
-        params: {
-          hash: txResp.transactionHash,
-          hideContact: true,
-          transaction: {
-            ...txResp,
-            hash: txResp.transactionHash,
-          },
-          token: toJS(
-            tokenIn?.symbol === Provider.selectedProvider.denom
-              ? Token.generateNativeToken(currentWallet)
-              : [
-                  ...poolsData.contracts,
-                  ...Token.tokens[currentWallet.address],
-                ].find(t => AddressUtils.equals(t.id, tokenIn?.id!)),
-          ),
-          amount: new Balance(
-            parseFloat(amountsIn.amount),
-            tokenIn?.decimals!,
-            tokenIn?.symbol!,
-          ),
-        },
+
+      navigation.navigate(SwapStackRoutes.Finish, {
+        txHash: txResp.transactionHash,
+        token0: {...tokenIn!, value: t0Current},
+        token1: {...tokenOut!, value: t1Current},
+        estimateData: estimateData!,
+        isWrapTx,
+        isUnwrapTx,
       });
       logger.log('txResp', txResp);
+      EventTracker.instance.trackEvent(MarketingEvents.swapSuccess, {
+        ...COMMON_EVENT_PARAMS,
+        type: 'wrap',
+        swap_source: swapSource,
+        swap_source_address: Provider.selectedProvider.config.wethAddress,
+      });
       await estimate();
     } catch (err) {
       Logger.error(err, 'deposit');
       logger.captureException(err, 'deposit');
+      EventTracker.instance.trackEvent(MarketingEvents.swapFail, {
+        ...COMMON_EVENT_PARAMS,
+        type: 'wrap',
+        swap_source: swapSource,
+        swap_source_address: Provider.selectedProvider.config.wethAddress,
+      });
     } finally {
       setSwapInProgress(() => false);
     }
   }, [
+    navigation,
+    tokenIn,
+    tokenOut,
+    estimateData,
     currentWallet,
     t0Current,
     estimate,
@@ -918,8 +990,17 @@ export const SwapScreen = observer(() => {
     Provider.selectedProvider.denom,
   ]);
   const onPressUnrap = useCallback(async () => {
+    const swapSource =
+      Contracts.getById(Provider.selectedProvider.config.wethAddress)?.name ||
+      'WETH';
     // withdraw
     try {
+      EventTracker.instance.trackEvent(MarketingEvents.swapStart, {
+        ...COMMON_EVENT_PARAMS,
+        type: 'unwrap',
+        swap_source: swapSource,
+        swap_source_address: Provider.selectedProvider.config.wethAddress,
+      });
       setSwapInProgress(() => true);
       const provider = await getRpcProvider(Provider.selectedProvider);
       const WETH = new ethers.Contract(
@@ -956,41 +1037,40 @@ export const SwapScreen = observer(() => {
 
       const txHandler = await provider.sendTransaction(rawTx);
       const txResp = await txHandler.wait();
-      navigator.goBack();
-      navigator.navigate(HomeStackRoutes.Transaction, {
-        // @ts-ignore
-        screen: TransactionStackRoutes.TransactionFinish,
-        params: {
-          hash: txResp.transactionHash,
-          hideContact: true,
-          transaction: {
-            ...txResp,
-            hash: txResp.transactionHash,
-          },
-          token: toJS(
-            tokenIn?.symbol === Provider.selectedProvider.denom
-              ? Token.generateNativeToken(currentWallet)
-              : [
-                  ...poolsData.contracts,
-                  ...Token.tokens[currentWallet.address],
-                ].find(t => AddressUtils.equals(t.id, tokenIn?.id!)),
-          ),
-          amount: new Balance(
-            parseFloat(amountsIn.amount),
-            tokenIn?.decimals!,
-            tokenIn?.symbol!,
-          ),
-        },
+
+      navigation.navigate(SwapStackRoutes.Finish, {
+        txHash: txResp.transactionHash,
+        token0: {...tokenIn!, value: t0Current},
+        token1: {...tokenOut!, value: t1Current},
+        estimateData: estimateData!,
+        isWrapTx,
+        isUnwrapTx,
       });
       logger.log('txResp', txResp);
+      EventTracker.instance.trackEvent(MarketingEvents.swapSuccess, {
+        ...COMMON_EVENT_PARAMS,
+        type: 'unwrap',
+        swap_source: swapSource,
+        swap_source_address: Provider.selectedProvider.config.wethAddress,
+      });
       await estimate();
     } catch (err) {
       Logger.error(err, 'withdraw');
       logger.captureException(err, 'withdraw');
+      EventTracker.instance.trackEvent(MarketingEvents.swapFail, {
+        ...COMMON_EVENT_PARAMS,
+        type: 'unwrap',
+        swap_source: swapSource,
+        swap_source_address: Provider.selectedProvider.config.wethAddress,
+      });
     } finally {
       setSwapInProgress(() => false);
     }
   }, [
+    navigation,
+    tokenIn,
+    tokenOut,
+    estimateData,
     amountsIn.amount,
     tokenIn?.decimals,
     tokenIn?.symbol,
@@ -1063,15 +1143,6 @@ export const SwapScreen = observer(() => {
     swapSettingsRef?.current?.open?.();
   }, []);
 
-  useEffect(() => {
-    if (currentRoute) {
-      logger.log('useEffect estimate()');
-      refreshTokenBalances(currentWallet.address, t0Available).then(() =>
-        estimate(),
-      );
-    }
-  }, [tokenIn, tokenOut, currentWallet, currentRoute]);
-
   const prevTokenIn = usePrevious(tokenIn);
   const prevTokenOut = usePrevious(tokenOut);
   const prevCurrentWallet = usePrevious(currentWallet);
@@ -1107,7 +1178,7 @@ export const SwapScreen = observer(() => {
 
   useEffect(() => {
     if (!Provider.selectedProvider.config.swapEnabled) {
-      return navigator.goBack();
+      return navigation.goBack();
     }
     const fetchData = () => {
       Indexer.instance
@@ -1121,13 +1192,17 @@ export const SwapScreen = observer(() => {
               ...data.routes.map(r => r.token1),
             ]),
           )
-            .map(token => Token.getById(token))
+            .map(token =>
+              Token.tokens[currentWallet.address!].find(t =>
+                AddressUtils.equals(t.id, token),
+              ),
+            )
             .concat(
               data.contracts.map(
                 contract =>
                   ({
                     image: contract.icon!,
-                    value: Balance.Empty!,
+                    value: new Balance(0, contract.decimals!, contract.symbol!),
                     contract_created_at: contract.created_at!,
                     created_at: contract.created_at!,
                     contract_updated_at: contract.updated_at!,
@@ -1169,14 +1244,25 @@ export const SwapScreen = observer(() => {
               route,
             );
           });
+
+          const {swapDefaultToken0, swapDefaultToken1} =
+            Provider.selectedProvider.config;
+          logger.log('TOKEN 0', swapDefaultToken0);
+          logger.log('TOKEN 1', swapDefaultToken1);
+
           setCurrentRoute(
             () =>
-              data.routes.find(r =>
-                AddressUtils.equals(
-                  r.token0,
-                  Provider.selectedProvider.config.wethAddress,
-                ),
-              ) || data.routes[1],
+              data.routes.find(r => {
+                // if swapDefaultToken1 is valid
+                if (AddressUtils.isValidAddress(swapDefaultToken1)) {
+                  return (
+                    AddressUtils.equals(r.token0, swapDefaultToken0) &&
+                    AddressUtils.equals(r.token1, swapDefaultToken1)
+                  );
+                }
+
+                return AddressUtils.equals(r.token0, swapDefaultToken0);
+              }) || data.routes[0],
           );
           if (!data.pools?.length || !data?.routes?.length) {
             showModal(ModalType.error, {
@@ -1184,7 +1270,7 @@ export const SwapScreen = observer(() => {
               description: getText(I18N.noSwapRoutesFound),
               close: getText(I18N.pinErrorModalClose),
               async onClose() {
-                navigator.goBack();
+                navigation.goBack();
                 const providersIDsPromises = await Promise.allSettled(
                   Provider.getAll().map(async p => {
                     const indexer = new Indexer(p.ethChainId);

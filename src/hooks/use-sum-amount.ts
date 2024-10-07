@@ -3,7 +3,6 @@ import {useEffect, useRef, useState} from 'react';
 import validate from 'validate.js';
 
 import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
-import {I18N, getText} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
 
@@ -40,30 +39,33 @@ export const useSumAmount = (
           numericality: {
             notValid: 'Invalid number',
             greaterThanOrEqualTo: minAmountRef.current.toFloat(),
-            notGreaterThanOrEqualTo: getText(I18N.sumAmountTooLow, {
-              amount: minAmountRef.current.toBalanceString('auto'),
-            }),
             lessThanOrEqualTo: maxAmountRef.current.toFloat(),
-            notLessThanOrEqualTo: getText(I18N.sumAmountNotEnough, {
-              symbol: maxAmountRef.current.getSymbol(),
-            }),
           },
         });
         const newString = errorArray?.length > 0 ? errorArray.join(' ') : '';
-        let e = newString
-          .replace(
-            maxAmountRef.current.toFloat(),
-            maxAmountRef.current.toBalanceString('auto'),
-          )
-          .replace(
-            minAmountRef.current.toFloat(),
-            minAmountRef.current.toBalanceString('auto'),
-          );
-        if (!Provider.isAllNetworks) {
-          e = error.replace(
-            Provider.selectedProvider.denom,
-            maxAmountRef.current.getSymbol(),
-          );
+
+        let e = '';
+
+        if (Provider.isAllNetworks) {
+          e = newString
+            .replace(
+              minAmountRef.current.toFloat(),
+              minAmountRef.current.toFiatBalanceString('auto'),
+            )
+            .replace(
+              maxAmountRef.current.toFloat(),
+              maxAmountRef.current.toFiatBalanceString('auto'),
+            );
+        } else {
+          e = newString
+            .replace(
+              minAmountRef.current.toFloat(),
+              minAmountRef.current.toBalanceString('auto'),
+            )
+            .replace(
+              maxAmountRef.current.toFloat(),
+              maxAmountRef.current.toBalanceString('auto'),
+            );
         }
         setError(e);
       }
@@ -105,9 +107,22 @@ export const useSumAmount = (
     },
     setAmount(text: string, precision?: number) {
       if (text.match(/^[0-9].*/)) {
+        if (text.match(/^(0{2,})$/)) {
+          const amountZero = '0.';
+          if (typeof onChange === 'function') {
+            onChange(initialSum, amountZero);
+          }
+          return setAmount({
+            amountText: amountZero,
+            amount: initialSum,
+            changed: true,
+          });
+        }
+
         let i = 0;
         const textFormatted = text
           .replace(/,/g, '.')
+          .replace(/(^0+)(\d+)/, '$2')
           .replace(/[.%]/g, function (match) {
             return match === '.' ? (i++ === 0 ? '.' : '') : '';
           })
@@ -139,7 +154,7 @@ export const useSumAmount = (
         });
       } else if (text === '') {
         if (typeof onChange === 'function') {
-          onChange(Balance.Empty, '0');
+          onChange(Balance.Empty, '');
         }
         setAmount({
           amountText: '',

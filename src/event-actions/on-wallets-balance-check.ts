@@ -50,7 +50,7 @@ const parseIndexerBalances = (
             ...ac,
             [AddressUtils.toEth(w.address)]: {
               staked: new Balance(
-                data?.total_staked.find(
+                data?.total_staked?.find?.(
                   ([address, chainId]) =>
                     AddressUtils.equals(w.address, address) &&
                     p.ethChainId === chainId,
@@ -59,7 +59,7 @@ const parseIndexerBalances = (
                 p.denom,
               ),
               vested: new Balance(
-                data?.vested.find(
+                data?.vested?.find?.(
                   ([address, chainId]) =>
                     AddressUtils.equals(w.address, address) &&
                     p.ethChainId === chainId,
@@ -68,7 +68,7 @@ const parseIndexerBalances = (
                 p.denom,
               ),
               available: new Balance(
-                data?.available.find(
+                data?.available?.find?.(
                   ([address, chainId]) =>
                     AddressUtils.equals(w.address, address) &&
                     p.ethChainId === chainId,
@@ -77,7 +77,7 @@ const parseIndexerBalances = (
                 p.denom,
               ),
               total: new Balance(
-                data?.total.find(
+                data?.total?.find?.(
                   ([address, chainId]) =>
                     AddressUtils.equals(w.address, address) &&
                     p.ethChainId === chainId,
@@ -86,7 +86,7 @@ const parseIndexerBalances = (
                 p.denom,
               ),
               locked: new Balance(
-                data?.locked.find(
+                data?.locked?.find?.(
                   ([address, chainId]) =>
                     AddressUtils.equals(w.address, address) &&
                     p.ethChainId === chainId,
@@ -95,7 +95,7 @@ const parseIndexerBalances = (
                 p.denom,
               ),
               availableForStake: new Balance(
-                data?.available_for_stake.find(
+                data?.available_for_stake?.find?.(
                   ([address, chainId]) =>
                     AddressUtils.equals(w.address, address) &&
                     p.ethChainId === chainId,
