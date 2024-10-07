@@ -4,10 +4,9 @@ import {
   NetworkProviderStatus,
   NetworkProviderTypes,
 } from '@app/services/backend';
+import {RemoteConfig} from '@app/services/remote-config';
 
 export type ProviderID = string;
-
-export const INDEXER_PROXY_ENDPOINT = 'https://proxy.indexer.haqq.network';
 
 export const ALL_NETWORKS_ID = 'all_networks';
 export const ALL_NETWORKS_CHAIN_ID = -1;
@@ -24,7 +23,7 @@ export const ALL_NETWORKS_PROVIDER: NetworkProvider = {
   denom: '',
   entry_point: 'https://rpc.eth.haqq.network/',
   explorer_url: undefined,
-  indexer_url: INDEXER_PROXY_ENDPOINT,
+  indexer_url: RemoteConfig.get('proxy_server')!,
   network_type: NetworkProviderTypes.EVM,
   stage: NetworkProviderStage.MAINNET,
   status: NetworkProviderStatus.PUBLISHED,
