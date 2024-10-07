@@ -60,6 +60,9 @@ const EventsNameMap: Record<MarketingEvents, string> = {
   [MarketingEvents.appStarted]: 'app started',
   [MarketingEvents.navigation]: 'navigation',
   [MarketingEvents.bannerClicked]: 'banner clicked',
+  [MarketingEvents.swapStart]: 'swap start',
+  [MarketingEvents.swapSuccess]: 'swap success',
+  [MarketingEvents.swapFail]: 'swap fail',
 };
 
 export class EventTracker extends Initializable {

@@ -66,6 +66,8 @@ export type ProviderConfig = {
   explorer_token_url: string;
   explorer_tx_url: string;
   explorer_token_id_url: string;
+  swap_default_token0: string;
+  swap_default_token1: string;
 };
 
 export type VerifyContractRequest = {

@@ -72,7 +72,7 @@ export const SwapRoutePathIcons = observer(
                 source={{uri: contract.icon!}}
               />
               {!isLast && (
-                <Text variant={TextVariant.t14} color={Color.textBase1}>
+                <Text variant={TextVariant.t14} color={Color.graphicSecond3}>
                   {STRINGS.NBSP}
                   {I18nManager.isRTL ? '←' : '→'}
                   {STRINGS.NBSP}
