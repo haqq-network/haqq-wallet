@@ -5,6 +5,7 @@ import {app} from '@app/contexts';
 import {getMetadataValueWrapped} from '@app/helpers/wrappers/get-metadata-value';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {ErrorHandler} from '@app/models/error-handler';
+import {SecureValue} from '@app/modifiers/secure-value';
 import {
   SssMigrateStackParamList,
   SssMigrateStackRoutes,
@@ -60,7 +61,9 @@ export const SssMigrateNetworksScreen = memo(() => {
             //@ts-ignore
             navigation.navigate(nextScreen, {
               accountId: route.params.accountId,
-              privateKey: creds?.privateKey,
+              privateKey: new SecureValue<string | null | undefined>(
+                creds?.privateKey,
+              ),
               token: creds?.token,
               verifier: creds?.verifier,
               provider,
@@ -81,7 +84,7 @@ export const SssMigrateNetworksScreen = memo(() => {
         } else {
           navigation.navigate(SssMigrateStackRoutes.SssMigrateStore, {
             accountId: route.params.accountId,
-            privateKey: null,
+            privateKey: new SecureValue<string | null>(null),
             token: creds.token,
             verifier: creds.verifier,
           });
