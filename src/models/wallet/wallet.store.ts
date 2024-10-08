@@ -11,27 +11,26 @@ import {awaitForRealm} from '@app/helpers/await-for-realm';
 import {Socket} from '@app/models/socket';
 import {storage} from '@app/services/mmkv';
 import {RPCMessage, RPCObserver} from '@app/types/rpc';
-import {generateFlatColors, generateGradientColors} from '@app/utils';
 import {
-  CARD_CIRCLE_TOTAL,
-  CARD_RHOMBUS_TOTAL,
-  FLAT_PRESETS,
-  GRADIENT_PRESETS,
   STORE_REHYDRATION_TIMEOUT_MS,
 } from '@app/variables/common';
 
 import {getMockWallets} from './wallet.mock';
 import {WalletModel} from './wallet.types';
+import {
+  getWalletCardStyle,
+  getWalletColors,
+  getWalletPattern,
+} from './wallet.utils';
 
 import {
   AddWalletParams,
   HaqqEthereumAddress,
-  WalletCardPattern,
-  WalletCardStyle,
   WalletCardStyleT,
   WalletType,
 } from '../../types';
 import {Token} from '../tokens';
+
 
 class WalletStore implements RPCObserver {
   wallets: WalletModel[] = [];
@@ -95,53 +94,17 @@ class WalletStore implements RPCObserver {
     name = '',
     walletParams: AddWalletParams,
   ): Promise<WalletModel | null> {
-    const cards = Object.keys(WalletCardStyle);
-    const cardStyle =
-      walletParams.cardStyle ??
-      (cards[Math.floor(Math.random() * cards.length)] as WalletCardStyle);
-
-    const patterns = Object.keys(WalletCardPattern);
-    const patternVariant =
-      patterns[Math.floor(Math.random() * patterns.length)];
-
-    const pattern =
-      walletParams.pattern ??
-      `card-${patternVariant}-${Math.floor(
-        Math.random() *
-          (patternVariant === WalletCardPattern.circle
-            ? CARD_CIRCLE_TOTAL
-            : CARD_RHOMBUS_TOTAL),
-      )}`;
-
-    const usedColors = new Set(this.wallets.map(w => w.colorFrom));
-
-    let availableColors = (
-      cardStyle === WalletCardStyle.flat ? FLAT_PRESETS : GRADIENT_PRESETS
-    ).filter(c => !usedColors.has(c[0]));
-
-    let colors: string[];
-
-    if (availableColors.length) {
-      colors =
-        availableColors[Math.floor(Math.random() * availableColors.length)];
-    } else {
-      colors =
-        cardStyle === WalletCardStyle.flat
-          ? generateFlatColors()
-          : generateGradientColors();
-    }
-
-    if (walletParams.colorFrom) {
-      colors[0] = walletParams.colorFrom;
-    }
-
-    if (walletParams.colorTo) {
-      colors[1] = walletParams.colorTo;
-    }
-
-    if (walletParams.colorPattern) {
-      colors[2] = walletParams.colorPattern;
-    }
+    const cardStyle = getWalletCardStyle(walletParams?.cardStyle);
+    const pattern = getWalletPattern(walletParams?.pattern);
+    const {colorFrom, colorTo, colorPattern} = getWalletColors(
+      this.wallets,
+      cardStyle,
+      {
+        colorFrom: walletParams?.colorFrom,
+        colorTo: walletParams?.colorTo,
+        colorPattern: walletParams?.colorPattern,
+      },
+    );
 
     const existingWallet = this.getById(walletParams.address);
     const newWallet = {
@@ -154,9 +117,9 @@ class WalletStore implements RPCObserver {
       name: existingWallet?.name ?? name,
       pattern,
       cardStyle,
-      colorFrom: colors[0],
-      colorTo: colors[1],
-      colorPattern: colors[2],
+      colorFrom,
+      colorTo,
+      colorPattern,
       type: walletParams.type,
       path: walletParams.path,
       accountId: walletParams.accountId,
