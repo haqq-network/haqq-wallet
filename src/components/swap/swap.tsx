@@ -1,7 +1,9 @@
 import React, {useMemo} from 'react';
 
 import {observer} from 'mobx-react';
-import {View} from 'react-native';
+import {KeyboardAvoidingView, View} from 'react-native';
+import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
@@ -19,7 +21,7 @@ import {
 } from '@app/services/indexer';
 import {IToken} from '@app/types';
 import {formatNumberString} from '@app/utils';
-import {STRINGS} from '@app/variables/common';
+import {IS_IOS, STRINGS} from '@app/variables/common';
 
 import {EstimatedValue} from './estimated-value';
 import {SwapInput} from './swap-input';
@@ -55,7 +57,7 @@ export type PoolsData = Omit<SushiPoolResponse, 'contracts'> & {
 export interface SwapProps {
   currentWallet: Wallet;
   poolData: PoolsData;
-  estimateData: SushiPoolEstimateResponse | null;
+  estimateData: Partial<SushiPoolEstimateResponse>;
   tokenIn: IToken;
   tokenOut: IToken;
   amountsIn: ReturnType<typeof useSumAmount>;
@@ -123,6 +125,7 @@ export const Swap = observer(
     onPressChangeDirection,
     onPressSettings,
   }: SwapProps) => {
+    const insets = useSafeAreaInsets();
     const isHeaderButtonsDisabled =
       isEstimating || isSwapInProgress || isApproveInProgress;
 
@@ -156,6 +159,9 @@ export const Swap = observer(
     }, [isApproveInProgress, amountsIn.error, t0Current, isInfussentBalance]);
 
     const rate = useMemo(() => {
+      if (!estimateData?.amount_in) {
+        return Balance.Empty.toBalanceString('auto');
+      }
       const r =
         t1Current.toFloat() /
         new Balance(
@@ -186,172 +192,195 @@ export const Swap = observer(
 
     return (
       <KeyboardSafeArea style={styles.container}>
-        <View style={styles.header}>
-          <View style={styles.headerButtonsContainer}>
-            <IconButton
-              onPress={onPressChangeDirection}
-              disabled={isHeaderButtonsDisabled}>
-              <Icon
-                i24
-                name={IconsName.swap_vertical}
-                color={Color.graphicGreen1}
-              />
-            </IconButton>
-            <Spacer width={10} />
-            <IconButton
-              onPress={onPressSettings}
-              disabled={isHeaderButtonsDisabled}>
-              <Icon i24 name={IconsName.settings} color={Color.graphicGreen1} />
-            </IconButton>
-          </View>
-          <Spacer flex={1} />
-          <Text variant={TextVariant.t8} i18n={I18N.swapScreenTitle} />
-          <Spacer flex={1} />
-          <WalletRow
-            item={currentWallet}
-            type={WalletRowTypes.variant3}
-            onPress={onPressChangeWallet}
-          />
-          <Spacer width={10} />
-          <DismissPopupButton />
-        </View>
-
-        <Spacer height={12} />
-
-        <SwapInput
-          label={I18N.transactionDetailAmountIn}
-          placeholder={I18N.transactionInfoFunctionValue}
-          amounts={amountsIn}
-          isLoading={isEstimating}
-          currentBalance={t0Current}
-          availableBalance={t0Available}
-          token={tokenIn}
-          disableTextFieldLoader={true}
-          autoFocus={true}
-          showMaxButton={true}
-          onPressMax={onPressMax}
-          onBlur={onInputBlur}
-          onPressChangeToken={onPressChangeTokenIn}
-        />
-
-        <Spacer height={24} />
-
-        <SwapInput
-          label={I18N.transactionDetailAmountOut}
-          placeholder={I18N.transactionInfoFunctionValue}
-          amounts={amountsOut}
-          editable={false}
-          currentBalance={t1Current}
-          availableBalance={t1Available}
-          isLoading={isEstimating}
-          token={tokenOut}
-          onPressChangeToken={onPressChangeTokenOut}
-        />
-
-        <Spacer height={24} />
-
-        {!!estimateData && (
-          <View>
-            <EstimatedValue
-              title={I18N.swapScreenRate}
-              value={`1${STRINGS.NBSP}${t0Current.getSymbol()}${STRINGS.NBSP}≈${
-                STRINGS.NBSP
-              }${rate}`}
+        <KeyboardAvoidingView
+          behavior={IS_IOS ? 'padding' : undefined}
+          style={styles.keyboardAvoidingView}>
+          <View style={styles.header}>
+            <View style={styles.headerButtonsContainer}>
+              <IconButton
+                onPress={onPressChangeDirection}
+                disabled={isHeaderButtonsDisabled}>
+                <Icon
+                  i24
+                  name={IconsName.swap_vertical}
+                  color={Color.graphicGreen1}
+                />
+              </IconButton>
+              <Spacer width={10} />
+              <IconButton
+                onPress={onPressSettings}
+                disabled={isHeaderButtonsDisabled}>
+                <Icon
+                  i24
+                  name={IconsName.settings}
+                  color={Color.graphicGreen1}
+                />
+              </IconButton>
+            </View>
+            <Spacer flex={1} />
+            <Text variant={TextVariant.t8} i18n={I18N.swapScreenTitle} />
+            <Spacer flex={1} />
+            <WalletRow
+              item={currentWallet}
+              type={WalletRowTypes.variant3}
+              onPress={onPressChangeWallet}
             />
-            {!isWrapTx && !isUnwrapTx && (
-              <>
-                <EstimatedValue
-                  title={I18N.swapScreenProviderFee}
-                  value={providerFee.toFiat({
-                    useDefaultCurrency: true,
-                    fixed: 6,
-                  })}
-                />
-                <EstimatedValue
-                  title={I18N.swapScreenPriceImpact}
-                  valueColor={priceImpactColor}
-                  value={`${formatNumberString(estimateData.s_price_impact)}%`}
-                />
-                <EstimatedValue
-                  title={I18N.swapScreenMinimumReceived}
-                  value={minReceivedAmount.toBalanceString('auto')}
-                />
-              </>
-            )}
+            <Spacer width={10} />
+            <DismissPopupButton />
+          </View>
 
-            <First>
-              {(isWrapTx || isUnwrapTx) && (
+          <Spacer height={12} />
+
+          <SwapInput
+            label={I18N.transactionDetailAmountIn}
+            placeholder={I18N.transactionInfoFunctionValue}
+            amounts={amountsIn}
+            isLoading={isEstimating}
+            currentBalance={t0Current}
+            availableBalance={t0Available}
+            token={tokenIn}
+            disableTextFieldLoader={true}
+            autoFocus={true}
+            showMaxButton={true}
+            onPressMax={onPressMax}
+            onBlur={onInputBlur}
+            onPressChangeToken={onPressChangeTokenIn}
+          />
+
+          <Spacer height={24} />
+
+          <SwapInput
+            label={I18N.transactionDetailAmountOut}
+            placeholder={I18N.transactionInfoFunctionValue}
+            amounts={amountsOut}
+            editable={false}
+            currentBalance={t1Current}
+            availableBalance={t1Available}
+            isLoading={isEstimating}
+            token={tokenOut}
+            onPressChangeToken={onPressChangeTokenOut}
+          />
+
+          <Spacer height={24} />
+
+          {!!estimateData?.route && (
+            <Animated.View entering={FadeIn} exiting={FadeOut}>
+              <EstimatedValue
+                title={I18N.swapScreenRate}
+                value={`1${STRINGS.NBSP}${t0Current.getSymbol()}${
+                  STRINGS.NBSP
+                }≈${STRINGS.NBSP}${rate}`}
+              />
+              {!isWrapTx && !isUnwrapTx && (
+                <>
+                  <EstimatedValue
+                    title={I18N.swapScreenProviderFee}
+                    value={providerFee.toFiat({
+                      useDefaultCurrency: true,
+                      fixed: 6,
+                    })}
+                  />
+                  <EstimatedValue
+                    title={I18N.swapScreenPriceImpact}
+                    valueColor={priceImpactColor}
+                    value={`${formatNumberString(
+                      estimateData.s_price_impact || '0',
+                    )}${STRINGS.NBSP}%`}
+                  />
+                  <EstimatedValue
+                    title={I18N.swapScreenMinimumReceived}
+                    value={minReceivedAmount.toBalanceString('auto')}
+                  />
+                </>
+              )}
+
+              <First>
+                {(isWrapTx || isUnwrapTx) && (
+                  <EstimatedValue
+                    title={I18N.swapScreenRoutingSource}
+                    value={`${Contracts.getById(
+                      Provider.selectedProvider.config.wethAddress,
+                    )?.name}${STRINGS.NBSP}${shortAddress(
+                      Provider.selectedProvider.config.wethAddress!,
+                      '•',
+                      true,
+                    )}`}
+                  />
+                )}
                 <EstimatedValue
                   title={I18N.swapScreenRoutingSource}
-                  value={`${Contracts.getById(
-                    Provider.selectedProvider.config.wethAddress,
-                  )?.name}${STRINGS.NBSP}${shortAddress(
-                    Provider.selectedProvider.config.wethAddress!,
-                    '•',
-                    true,
-                  )}`}
+                  value={'SwapRouterV3'}
                 />
-              )}
+              </First>
+
               <EstimatedValue
-                title={I18N.swapScreenRoutingSource}
-                value={'SwapRouterV3'}
+                title={I18N.swapScreenRoute}
+                value={
+                  <SwapRoutePathIcons
+                    type={SwapRoutePathIconsType.route}
+                    route={currentRoute.route}
+                  />
+                }
               />
-            </First>
+            </Animated.View>
+          )}
 
-            <EstimatedValue
-              title={I18N.swapScreenRoute}
-              value={
-                <SwapRoutePathIcons
-                  type={SwapRoutePathIconsType.route}
-                  route={currentRoute.route}
+          <Spacer />
+
+          <Animated.View
+            style={{bottom: insets.bottom + 25, ...styles.button_container}}
+            entering={FadeIn}
+            exiting={FadeOut}>
+            <First>
+              {isUnwrapTx && (
+                <Animated.View entering={FadeIn} exiting={FadeOut}>
+                  <Button
+                    variant={ButtonVariant.contained}
+                    i18n={I18N.swapScreenUnwrap}
+                    loading={isEstimating || isSwapInProgress}
+                    disabled={isSwapButtonDisabled}
+                    onPress={onPressUnrap}
+                  />
+                </Animated.View>
+              )}
+              {isWrapTx && (
+                <Animated.View entering={FadeIn} exiting={FadeOut}>
+                  <Button
+                    variant={ButtonVariant.contained}
+                    i18n={I18N.swapScreenWrap}
+                    loading={isEstimating || isSwapInProgress}
+                    disabled={isSwapButtonDisabled}
+                    onPress={onPressWrap}
+                  />
+                </Animated.View>
+              )}
+              {!!estimateData?.need_approve && (
+                <Animated.View entering={FadeIn} exiting={FadeOut}>
+                  <Button
+                    variant={ButtonVariant.contained}
+                    i18n={I18N.swapScreenApprove}
+                    i18params={{
+                      symbol: tokenIn.symbol || Provider.selectedProvider.denom,
+                      amount: amountsIn.amount,
+                    }}
+                    loading={isApproveInProgress}
+                    disabled={isApproveButtonDisabled}
+                    onPress={onPressApprove}
+                  />
+                </Animated.View>
+              )}
+              <Animated.View entering={FadeIn} exiting={FadeOut}>
+                <Button
+                  variant={ButtonVariant.contained}
+                  i18n={I18N.swapScreenSwap}
+                  loading={isEstimating || isSwapInProgress}
+                  disabled={isSwapButtonDisabled}
+                  onPress={onPressSwap}
                 />
-              }
-            />
-          </View>
-        )}
-
-        <Spacer />
-
-        <First>
-          {isUnwrapTx && (
-            <Button
-              variant={ButtonVariant.contained}
-              i18n={I18N.swapScreenUnwrap}
-              loading={isEstimating || isSwapInProgress}
-              disabled={isSwapButtonDisabled}
-              onPress={onPressUnrap}
-            />
-          )}
-          {isWrapTx && (
-            <Button
-              variant={ButtonVariant.contained}
-              i18n={I18N.swapScreenWrap}
-              loading={isEstimating || isSwapInProgress}
-              disabled={isSwapButtonDisabled}
-              onPress={onPressWrap}
-            />
-          )}
-          {!!estimateData?.need_approve && (
-            <Button
-              variant={ButtonVariant.contained}
-              i18n={I18N.swapScreenApprove}
-              i18params={{
-                symbol: tokenIn.symbol || Provider.selectedProvider.denom,
-                amount: amountsIn.amount,
-              }}
-              loading={isApproveInProgress}
-              disabled={isApproveButtonDisabled}
-              onPress={onPressApprove}
-            />
-          )}
-          <Button
-            variant={ButtonVariant.contained}
-            i18n={I18N.swapScreenSwap}
-            loading={isEstimating || isSwapInProgress}
-            disabled={isSwapButtonDisabled}
-            onPress={onPressSwap}
-          />
-        </First>
+              </Animated.View>
+            </First>
+          </Animated.View>
+        </KeyboardAvoidingView>
 
         <SwapSettingBottomSheet
           ref={swapSettingsRef}
@@ -368,6 +397,9 @@ const styles = createTheme({
     paddingHorizontal: 20,
     flex: 1,
   },
+  keyboardAvoidingView: {
+    flex: 1,
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -376,5 +408,10 @@ const styles = createTheme({
   },
   headerButtonsContainer: {
     flexDirection: 'row',
+  },
+  button_container: {
+    position: 'absolute',
+    width: '100%',
+    opacity: 0.95,
   },
 });

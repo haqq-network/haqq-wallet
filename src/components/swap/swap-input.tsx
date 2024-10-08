@@ -1,15 +1,17 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {observer} from 'mobx-react';
-import {View} from 'react-native';
+import {Platform, View} from 'react-native';
+import AnimatedRollingNumber from 'react-native-animated-rolling-numbers';
+import {Easing} from 'react-native-reanimated';
 
-import {Color} from '@app/colors';
+import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {useSumAmount} from '@app/hooks';
-import {I18N} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
 import {Balance} from '@app/services/balance';
 import {IToken} from '@app/types';
-import {WEI_PRECISION} from '@app/variables/common';
+import {STRINGS, WEI_PRECISION} from '@app/variables/common';
 
 import {ImageWrapper} from '../image-wrapper';
 import {
@@ -54,6 +56,22 @@ export const SwapInput = observer(
     onPressMax,
     ...inputProps
   }: SwapInputProps) => {
+    const [amount, amountSymbol] = useMemo(() => {
+      const [num, denom] = currentBalance
+        .toFiat({
+          useDefaultCurrency: true,
+        })
+        .split(STRINGS.NBSP);
+      return [parseFloat(num), denom];
+    }, [currentBalance]);
+
+    const [available, availableSymbol] = useMemo(() => {
+      const [num, denom] = availableBalance
+        .toBalanceString('auto')
+
+        .split(STRINGS.NBSP);
+      return [parseFloat(num), denom];
+    }, [currentBalance]);
     const handleOnChangeText = useCallback(
       (text: string) => {
         let decimalsOffset = 0;
@@ -71,13 +89,15 @@ export const SwapInput = observer(
       <View>
         <View style={styles.amountContainer}>
           <First>
-            {isLoading && disableTextFieldLoader === false && (
-              <View style={styles.amountInput}>
-                <Placeholder opacity={0.7}>
-                  <Placeholder.Item width={'100%'} height={58} />
-                </Placeholder>
-              </View>
-            )}
+            {isLoading &&
+              !amounts?.amountBalance?.isPositive() &&
+              disableTextFieldLoader === false && (
+                <View style={styles.amountInput}>
+                  <Placeholder opacity={0.7}>
+                    <Placeholder.Item width={'100%'} height={58} />
+                  </Placeholder>
+                </View>
+              )}
             <TextField
               rightAction={
                 showMaxButton ? (
@@ -131,17 +151,37 @@ export const SwapInput = observer(
 
         <View>
           <Spacer height={4} />
-          <Text
-            variant={TextVariant.t14}
-            color={Color.textBase2}
-            i18n={I18N.swapInputAmountData}
-            i18params={{
-              currentFiatAmount: currentBalance.toFiat({
-                useDefaultCurrency: true,
-              }),
-              availableAmount: availableBalance.toBalanceString('auto'),
-            }}
-          />
+          <Text variant={TextVariant.t14} color={Color.textBase2}>
+            {`≈${STRINGS.NBSP}`}
+            <AnimatedRollingNumber
+              useGrouping
+              textStyle={styles.inputRolling}
+              containerStyle={styles.inputRollingContainer}
+              value={amount}
+              spinningAnimationConfig={{
+                duration: 500,
+                easing: Easing.bounce,
+              }}
+            />
+            {STRINGS.NBSP}
+            {amountSymbol}
+            {getText(I18N.swapInputAmountData, {
+              currentFiatAmount: '',
+              availableAmount: '',
+            }).replace('≈', '')}
+            <AnimatedRollingNumber
+              useGrouping
+              textStyle={styles.inputRolling}
+              containerStyle={styles.inputRollingContainer}
+              value={available}
+              spinningAnimationConfig={{
+                duration: 500,
+                easing: Easing.bounce,
+              }}
+            />
+            {STRINGS.NBSP}
+            {availableSymbol}
+          </Text>
         </View>
       </View>
     );
@@ -149,6 +189,30 @@ export const SwapInput = observer(
 );
 
 const styles = createTheme({
+  inputRollingContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 14,
+    width: 'auto',
+  },
+  inputRolling: {
+    width: 'auto',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 15,
+    fontSize: 14,
+    lineHeight: 18,
+    color: getColor(Color.textBase2),
+    ...Platform.select({
+      ios: {
+        fontFamily: 'SF Pro Display',
+        fontWeight: '400',
+      },
+      android: {
+        fontFamily: 'SF-Pro-Display-Regular',
+      },
+    }),
+  },
   amountContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

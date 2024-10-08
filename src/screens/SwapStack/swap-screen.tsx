@@ -120,8 +120,9 @@ export const SwapScreen = observer(() => {
   const routesByToken0 = useRef<Record<HaqqEthereumAddress, SushiRoute[]>>({});
   const routesByToken1 = useRef<Record<HaqqEthereumAddress, SushiRoute[]>>({});
 
-  const [estimateData, setEstimateData] =
-    useState<SushiPoolEstimateResponse | null>(null);
+  const [estimateData, setEstimateData] = useState<
+    Partial<SushiPoolEstimateResponse>
+  >({});
   const [currentWallet, setCurrentWallet] = useState(
     Wallet.getById(params.address)!,
   );
@@ -159,7 +160,7 @@ export const SwapScreen = observer(() => {
     MIN_SWAP_AMOUNT,
   );
   const minReceivedAmount = useMemo(() => {
-    if (!estimateData || !tokenOut) {
+    if (!estimateData.route || !tokenOut) {
       return new Balance(0, 0, tokenOut?.symbol!);
     }
 
@@ -179,7 +180,7 @@ export const SwapScreen = observer(() => {
     if (!estimateData?.fee) {
       return new Balance(ZERO_HEX_NUMBER, decimals, symbol);
     }
-    return new Balance(estimateData?.fee.amount || '0', decimals, symbol);
+    return new Balance(estimateData?.fee?.amount || '0', decimals, symbol);
   }, [tokenIn, estimateData]);
   const isLoading = useMemo(
     () => !poolsData?.routes?.length || !tokenIn || !tokenOut,
@@ -293,14 +294,14 @@ export const SwapScreen = observer(() => {
       }
 
       if (/^0(\.)?(0+)?$/.test(amountsIn.amount)) {
-        return setEstimateData(null);
+        return; /* setEstimateData(null); */
       }
 
       setIsEstimating(true);
-      setEstimateData(null);
+      // setEstimateData(null);
 
       if (t0Current?.compare?.('0x0', 'lte')) {
-        setEstimateData(null);
+        // setEstimateData(null);
         vibrate(HapticEffects.impactLight);
         Keyboard.dismiss();
         return amountsOut.setAmount('0');
@@ -857,7 +858,7 @@ export const SwapScreen = observer(() => {
         token1: {...tokenOut!, value: t1Current},
         isWrapTx,
         isUnwrapTx,
-        estimateData: estimateData!,
+        estimateData: estimateData as SushiPoolEstimateResponse,
       });
       logger.log('txResp', txResp);
       EventTracker.instance.trackEvent(MarketingEvents.swapSuccess, {
@@ -993,7 +994,7 @@ export const SwapScreen = observer(() => {
         txHash: txResp.transactionHash,
         token0: {...tokenIn!, value: t0Current},
         token1: {...tokenOut!, value: t1Current},
-        estimateData: estimateData!,
+        estimateData: estimateData as SushiPoolEstimateResponse,
         isWrapTx,
         isUnwrapTx,
       });
@@ -1081,7 +1082,7 @@ export const SwapScreen = observer(() => {
         txHash: txResp.transactionHash,
         token0: {...tokenIn!, value: t0Current},
         token1: {...tokenOut!, value: t1Current},
-        estimateData: estimateData!,
+        estimateData: estimateData as SushiPoolEstimateResponse,
         isWrapTx,
         isUnwrapTx,
       });
@@ -1149,11 +1150,12 @@ export const SwapScreen = observer(() => {
     });
     await refreshTokenBalances(address as HaqqEthereumAddress, t0Available);
     setCurrentWallet(() => Wallet.getById(address)!);
-  }, [currentWallet, refreshTokenBalances, tokenIn]);
+    await estimate();
+  }, [currentWallet, refreshTokenBalances, tokenIn, estimate]);
 
   const onInputBlur = useCallback(async () => {
-    if (!amountsIn.amount) {
-      setEstimateData(null);
+    if (!amountsIn.amount || !amountsIn.amountBalance?.isPositive()) {
+      setEstimateData({});
       amountsOut.setAmount('0');
       return amountsIn.setError('');
     }

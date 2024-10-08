@@ -20,6 +20,7 @@ import {
   LONG_NUM_PRECISION,
   NUM_DELIMITER,
   NUM_PRECISION,
+  STRINGS,
 } from '@app/variables/common';
 
 const zeroBN = new Decimal(0);
@@ -200,9 +201,9 @@ export class Balance implements IBalance, ISerializable {
         useZeroFormatter,
       )}`.trim();
     }
-    return `${this.toFloatString(fixedNum, precission, useZeroFormatter)} ${
-      this.symbol
-    }`.trim();
+    return `${this.toFloatString(fixedNum, precission, useZeroFormatter)}${
+      STRINGS.NBSP
+    }${this.symbol}`.trim();
   };
 
   private getStringWithSymbol = (value: string) => {
@@ -210,7 +211,7 @@ export class Balance implements IBalance, ISerializable {
     const result = [value];
     currency?.prefix && result.unshift(currency.prefix);
     currency?.postfix && result.push(currency.postfix);
-    return result.join(' ');
+    return result.join(STRINGS.NBSP);
   };
 
   /**
@@ -232,7 +233,9 @@ export class Balance implements IBalance, ISerializable {
     const floatString = this.toFloatString(fixedNum, precission);
     const isNegative = floatString.startsWith('-');
     if (isNegative) {
-      return `- ${this.getStringWithSymbol(floatString.replace('-', ''))}`;
+      return `-${STRINGS.NBSP}${this.getStringWithSymbol(
+        floatString.replace('-', ''),
+      )}`;
     }
     return `${this.getStringWithSymbol(floatString)}`;
   };
