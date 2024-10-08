@@ -28,7 +28,7 @@ export const AccountInfoScreen = observer(() => {
   const accountId = useMemo(() => route.params.accountId, [route]);
   const wallet = useWallet(accountId);
   const balances = useWalletsBalance([wallet!]);
-  const {available, locked, staked, total, unlock, vested} = useMemo(
+  const {available, locked, staked, total, nextVestingUnlockDate, vested} = useMemo(
     () => balances[wallet?.address!],
     [balances, wallet],
   );
@@ -88,7 +88,7 @@ export const AccountInfoScreen = observer(() => {
       locked={locked}
       staked={staked}
       total={total}
-      unlock={unlock}
+      unlock={nextVestingUnlockDate}
       vested={vested}
       tokens={Token.tokens}
     />

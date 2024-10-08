@@ -6,12 +6,12 @@ import {Color} from '@app/colors';
 import {First, Spacer, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {BalanceData} from '@app/types';
+import { BalanceModel } from '@app/models/wallet';
 
 import {StackedVestedTokens} from '../stacked-vested-tokens';
 
 export type TotalValueInfoProps = {
-  balance: BalanceData;
+  balance: BalanceModel;
   onPressInfo: () => void;
 };
 
@@ -44,7 +44,7 @@ export const TotalValueInfoHeader = ({
           vestedBalance={balance?.vested}
           stakingBalance={balance?.staked}
           onPressInfo={onPressInfo}
-          unlock={balance?.unlock}
+          unlock={balance?.nextVestingUnlockDate}
         />
       </First>
     </>

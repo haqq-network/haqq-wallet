@@ -21,8 +21,9 @@ import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Fee} from '@app/models/fee';
 import {Provider} from '@app/models/provider';
+import { BalanceModel } from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
-import {BalanceData, IToken} from '@app/types';
+import {IToken} from '@app/types';
 import {splitAddress} from '@app/utils';
 import {LONG_NUM_PRECISION} from '@app/variables/common';
 
@@ -39,7 +40,7 @@ interface TransactionConfirmationProps {
   onPressToAddress: () => void;
   fee: Fee | null;
   token: IToken;
-  balance: BalanceData;
+  balance: BalanceModel;
 }
 
 export const TransactionConfirmation = observer(

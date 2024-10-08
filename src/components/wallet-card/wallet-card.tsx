@@ -10,8 +10,7 @@ import {
 import {Card, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useIsBalancesFirstSync} from '@app/hooks/use-is-balances-sync';
-import {WalletModel} from '@app/models/wallet';
-import {BalanceData} from '@app/types';
+import {BalanceModel, WalletModel} from '@app/models/wallet';
 import {SHADOW_L} from '@app/variables/shadows';
 
 import {BalanceInfoDetails} from './balance-info-details';
@@ -23,7 +22,7 @@ import {ProtectionBadge} from './protection-badge';
 export type BalanceProps = {
   testID?: string;
   wallet: WalletModel;
-  balance?: BalanceData;
+  balance?: BalanceModel;
   showLockedTokens: boolean;
   walletConnectSessions: SessionTypes.Struct[];
   onPressAccountInfo: (address: string) => void;

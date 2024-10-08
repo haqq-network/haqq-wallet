@@ -32,7 +32,7 @@ import {I18N} from '@app/i18n';
 import {Banner} from '@app/models/banner';
 import {NftCollection, NftItem} from '@app/models/nft';
 import {ProviderModel} from '@app/models/provider';
-import {WalletModel} from '@app/models/wallet';
+import {BalanceModel, WalletModel} from '@app/models/wallet';
 import {SignUpStackRoutes, WelcomeStackRoutes} from '@app/route-types';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
@@ -1373,20 +1373,9 @@ export type IndexerTime = Record<
   number
 >;
 
-export interface BalanceData {
-  vested: Balance;
-  staked: Balance;
-  available: Balance;
-  total: Balance;
-  locked: Balance;
-  availableForStake: Balance;
-  // next time to unlock vested tokens
-  unlock: Date;
-}
-
 export type IndexerBalanceData = Record<
   ChainId,
-  Record<HaqqEthereumAddress, BalanceData>
+  Record<HaqqEthereumAddress, BalanceModel>
 >;
 
 export type JsonRpcTransactionRequest = {

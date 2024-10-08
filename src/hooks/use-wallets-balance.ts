@@ -3,11 +3,11 @@ import {useEffect, useState} from 'react';
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {Provider} from '@app/models/provider';
-import {WalletModel} from '@app/models/wallet';
-import {BalanceData, HaqqEthereumAddress} from '@app/types';
+import {BalanceModel, WalletModel} from '@app/models/wallet';
+import {HaqqEthereumAddress} from '@app/types';
 
 export type WalletBalance = {
-  [key: HaqqEthereumAddress]: BalanceData;
+  [key: HaqqEthereumAddress]: BalanceModel;
 };
 
 const getBalance = (wallets: WalletModel[]): WalletBalance => {
