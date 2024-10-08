@@ -11,10 +11,9 @@ import {awaitForRealm} from '@app/helpers/await-for-realm';
 import {Socket} from '@app/models/socket';
 import {storage} from '@app/services/mmkv';
 import {RPCMessage, RPCObserver} from '@app/types/rpc';
-import {
-  STORE_REHYDRATION_TIMEOUT_MS,
-} from '@app/variables/common';
+import {STORE_REHYDRATION_TIMEOUT_MS} from '@app/variables/common';
 
+import {BalanceModel} from './balance.model';
 import {getMockWallets} from './wallet.mock';
 import {WalletModel} from './wallet.types';
 import {
@@ -25,15 +24,16 @@ import {
 
 import {
   AddWalletParams,
+  ChainId,
   HaqqEthereumAddress,
   WalletCardStyleT,
   WalletType,
 } from '../../types';
 import {Token} from '../tokens';
 
-
 class WalletStore implements RPCObserver {
   wallets: WalletModel[] = [];
+  balances: Record<HaqqEthereumAddress, Record<ChainId, BalanceModel>> = {};
 
   constructor(shouldSkipPersisting: boolean = false) {
     makeAutoObservable(this);
