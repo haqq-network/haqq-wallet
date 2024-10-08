@@ -39,7 +39,7 @@ import {WalletBalance} from './hooks/use-wallets-balance';
 import {I18N, getText} from './i18n';
 import {Banner, BannerButtonEvent, BannerType} from './models/banner';
 import {Fee} from './models/fee';
-import {Wallet} from './models/wallet';
+import {WalletModel} from './models/wallet';
 import {navigator} from './navigator';
 import {HomeStackRoutes, WelcomeStackRoutes} from './route-types';
 import {Balance} from './services/balance';
@@ -856,7 +856,7 @@ export function isContractTransaction(
 
 export const calculateBalances = (
   data: WalletBalance,
-  wallets: Wallet[],
+  wallets: WalletModel[],
 ): BalanceData => {
   return wallets.reduce(
     (acc, curr) => {

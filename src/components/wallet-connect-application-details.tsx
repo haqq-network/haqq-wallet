@@ -16,13 +16,13 @@ import {
 import {WalletRow, WalletRowTypes} from '@app/components/wallet-row';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Wallet} from '@app/models/wallet';
+import {WalletModel} from '@app/models/wallet';
 import {WalletConnectSessionMetadata} from '@app/models/wallet-connect-session-metadata';
 import {WalletConnectSessionType} from '@app/types/wallet-connect';
 import {getHostnameFromUrl} from '@app/utils';
 
 interface WalletConnectApplicationDetailsProps {
-  linkedWallet: Wallet;
+  linkedWallet: WalletModel;
   session: WalletConnectSessionType;
   sessionMetadata: WalletConnectSessionMetadata;
 

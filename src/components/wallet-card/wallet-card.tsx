@@ -10,7 +10,7 @@ import {
 import {Card, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useIsBalancesFirstSync} from '@app/hooks/use-is-balances-sync';
-import {Wallet} from '@app/models/wallet';
+import {WalletModel} from '@app/models/wallet';
 import {BalanceData} from '@app/types';
 import {SHADOW_L} from '@app/variables/shadows';
 
@@ -22,14 +22,14 @@ import {ProtectionBadge} from './protection-badge';
 
 export type BalanceProps = {
   testID?: string;
-  wallet: Wallet;
+  wallet: WalletModel;
   balance?: BalanceData;
   showLockedTokens: boolean;
   walletConnectSessions: SessionTypes.Struct[];
   onPressAccountInfo: (address: string) => void;
   onPressSend: (address: string) => void;
   onPressQR: (address: string) => void;
-  onPressProtection: (wallet: Wallet) => void;
+  onPressProtection: (wallet: WalletModel) => void;
   onPressWalletConnect?: (address: string) => void;
   isSecondMnemonic: boolean;
 };

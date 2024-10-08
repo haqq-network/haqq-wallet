@@ -31,7 +31,7 @@ import {withActionsContactItem} from '@app/hocs';
 import {useKeyboard} from '@app/hooks/use-keyboard';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
-import {Wallet} from '@app/models/wallet';
+import {WalletModel} from '@app/models/wallet';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {showUnrecognizedDataAttention} from '@app/utils';
 
@@ -42,7 +42,7 @@ export type TransactionAddressProps = {
   testID?: string;
   initial?: string;
   loading?: boolean;
-  filteredWallets?: Wallet[];
+  filteredWallets?: WalletModel[];
   contacts?: Contact[];
   address: string;
   onAddress: (address: string) => void;
@@ -130,11 +130,11 @@ export const TransactionAddress = ({
   );
 
   const myAccountsKeyExtractor = useCallback(
-    (item: Wallet) => item.address,
+    (item: WalletModel) => item.address,
     [],
   );
 
-  const myAccountsRenderItem: ListRenderItem<Wallet> = useCallback(
+  const myAccountsRenderItem: ListRenderItem<WalletModel> = useCallback(
     ({item}) => (
       <>
         <WalletRow

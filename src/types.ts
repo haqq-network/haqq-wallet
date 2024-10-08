@@ -32,7 +32,7 @@ import {I18N} from '@app/i18n';
 import {Banner} from '@app/models/banner';
 import {NftCollection, NftItem} from '@app/models/nft';
 import {ProviderModel} from '@app/models/provider';
-import {Wallet} from '@app/models/wallet';
+import {WalletModel} from '@app/models/wallet';
 import {SignUpStackRoutes, WelcomeStackRoutes} from '@app/route-types';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
@@ -301,7 +301,7 @@ export type RootStackParamList = {
     accountId: string;
   };
   backupNotification: {
-    wallet: Wallet;
+    wallet: WalletModel;
   };
   backupSssNotification: {
     accountId: string;
@@ -517,7 +517,7 @@ export type RootStackParamList = {
     selectedWalletAddress: string;
   };
   stakingUnDelegateAccount: {
-    available: Wallet[];
+    available: WalletModel[];
     validator: ValidatorItem;
     maxAmount: number;
   };
@@ -556,7 +556,7 @@ export type RootStackParamList = {
   };
   settingsSecurity: undefined;
   walletSelector: Eventable & {
-    wallets: Wallet[];
+    wallets: WalletModel[];
     title: string;
     initialAddress?: string;
   };
@@ -1076,7 +1076,7 @@ export type Modals = {
   };
   walletsBottomSheet: Eventable & {
     onClose?: () => void;
-    wallets: Wallet[];
+    wallets: WalletModel[];
     closeDistance?: () => number;
     title: I18N;
     autoSelectWallet?: boolean;
@@ -1115,7 +1115,7 @@ export type Modals = {
     errorDetails: string;
     onClose?: () => void;
   };
-  cloudShareNotFound: {onClose?: () => void; wallet: Wallet};
+  cloudShareNotFound: {onClose?: () => void; wallet: WalletModel};
   keystoneScanner: {
     purpose?: 'sign' | 'sync';
     eventTaskId?: string;
