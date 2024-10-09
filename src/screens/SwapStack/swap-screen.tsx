@@ -28,6 +28,7 @@ import {AwaitValue, awaitForValue} from '@app/helpers/await-for-value';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {useSumAmount, useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useBackNavigationHandler} from '@app/hooks/use-back-navigation-handler';
+import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {usePrevious} from '@app/hooks/use-previous';
 import {I18N, getText} from '@app/i18n';
 import {Contracts} from '@app/models/contracts';
@@ -110,6 +111,7 @@ function findToken(wallet: string, token_address: string) {
 }
 
 export const SwapScreen = observer(() => {
+  const {animate} = useLayoutAnimation();
   const navigation = useTypedNavigation<SwapStackParamList>();
   const {params} = useTypedRoute<SwapStackParamList, SwapStackRoutes.Swap>();
   const [swapSettings, setSwapSettings] = useState<SwapTransactionSettings>(
@@ -1207,29 +1209,37 @@ export const SwapScreen = observer(() => {
   }, [estimate, setIsEstimating]);
 
   const onPressChangeDirection = useCallback(async () => {
-    setEstimateData(() => ({
-      ...estimateData,
-      amount_in: estimateData.amount_out,
-      amount_out: estimateData.amount_in,
-    }));
-    amountsIn.setError('');
-    amountsIn.setAmount(amountsOut.amount);
-    amountsOut.setAmount(amountsIn.amount);
-    const route = poolsData.routes.find(
-      r =>
-        AddressUtils.equals(r.token0, currentRoute?.token1!) &&
-        AddressUtils.equals(r.token1, currentRoute?.token0!),
-    )!;
-    setCurrentRoute(() => route);
+    try {
+      setIsEstimating(() => true);
+      animate();
+      setEstimateData(() => ({
+        ...estimateData,
+        amount_in: estimateData.amount_out,
+        amount_out: estimateData.amount_in,
+      }));
+      amountsIn.setError('');
+      amountsIn.setAmount(amountsOut.amount);
+      amountsOut.setAmount(amountsIn.amount);
+      const route = poolsData.routes.find(
+        r =>
+          AddressUtils.equals(r.token0, currentRoute?.token1!) &&
+          AddressUtils.equals(r.token1, currentRoute?.token0!),
+      )!;
+      setCurrentRoute(() => route);
 
-    EventTracker.instance.trackEvent(MarketingEvents.swapChangeDirection, {
-      token0: route.token0,
-      token1: route.token1,
-      swap_path: route.route_hex,
-    });
+      EventTracker.instance.trackEvent(MarketingEvents.swapChangeDirection, {
+        token0: route.token0,
+        token1: route.token1,
+        swap_path: route.route_hex,
+      });
 
-    await refreshTokenBalances();
-    await estimate();
+      await refreshTokenBalances();
+      await estimate();
+    } catch (error) {
+      logger.error('onPressChangeDirection', error);
+    } finally {
+      setIsEstimating(() => false);
+    }
   }, [
     amountsIn,
     amountsOut,
