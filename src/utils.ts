@@ -867,19 +867,17 @@ export const calculateBalances = (
     unlock: new Date(0),
   });
 
-  wallets.forEach(
-    (wallet) => {
-      const {available, locked, staked, total, vested, availableForStake} =
-        data[wallet.address] ?? {};
+  wallets.forEach(wallet => {
+    const {available, locked, staked, total, vested, availableForStake} =
+      data[wallet.address] ?? {};
 
-      balance.addStaked(staked);
-      balance.addVested(vested);
-      balance.addAvailable(available);
-      balance.addTotal(total);
-      balance.addLocked(locked);
-      balance.addAvailableForState(availableForStake);
-    },
-  );
+    balance.addStaked(staked);
+    balance.addVested(vested);
+    balance.addAvailable(available);
+    balance.addTotal(total);
+    balance.addLocked(locked);
+    balance.addAvailableForState(availableForStake);
+  });
 
   return balance;
 };
@@ -1133,3 +1131,11 @@ export function createAsyncTask<T>(fn: AsyncTaskFunction<T>) {
     return instance.finally(() => (instance = null));
   };
 }
+
+export const deepClone = (value?: Object) => {
+  if (!value) {
+    return value;
+  }
+
+  return JSON.parse(JSON.stringify(value));
+};

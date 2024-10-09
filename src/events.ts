@@ -1,6 +1,4 @@
 export enum Events {
-  onWalletsBalanceCheck = 'onWalletsBalanceCheck',
-  onWalletsBalanceCheckError = 'onWalletsBalanceCheckError',
   onWalletCreate = 'onWalletCreate',
   onWalletReset = 'onWalletReset',
   onWalletRemove = 'onWalletRemove',
@@ -35,8 +33,6 @@ export enum Events {
   onStakingBalanceSync = 'onStakingBalanceSync',
   onWalletsVestingBalanceCheck = 'onWalletsVestingBalanceCheck',
   onWalletsStakingBalanceCheck = 'onWalletsStakingBalanceCheck',
-  onSyncAppBalances = 'onSyncAppBalances',
-  onWalletVisibilityChange = 'onWalletVisibilityChange',
   onThemeChanged = 'onThemeChanged',
   onBlockRequestCheck = 'onBlockRequestCheck',
   onRequestMarkup = 'onRequestMarkup',

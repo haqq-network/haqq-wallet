@@ -54,7 +54,6 @@ import {
   IndexerBalanceData,
   MarketingEvents,
   ModalType,
-  WalletType,
 } from '../types';
 import {LIGHT_GRAPHIC_GREEN_1} from '../variables/common';
 
@@ -83,8 +82,10 @@ class App extends AsyncEventEmitter {
   private user: User;
   private _authenticated: boolean = DEBUG_VARS.enableSkipPinOnLogin;
   private appStatus: AppStatus = AppStatus.inactive;
-  private _balances: Record<ChainId, Record<HaqqEthereumAddress, BalanceModel>> =
-    {};
+  private _balances: Record<
+    ChainId,
+    Record<HaqqEthereumAddress, BalanceModel>
+  > = {};
   private _googleSigninSupported: boolean = false;
   private _appleSigninSupported: boolean =
     Platform.select({
@@ -387,7 +388,7 @@ class App extends AsyncEventEmitter {
       }
     }
 
-    await awaitForEventDone(Events.onWalletsBalanceCheck);
+    await Wallet.fetchBalances();
 
     this.authenticated = true;
 
@@ -395,18 +396,6 @@ class App extends AsyncEventEmitter {
 
     return Promise.resolve();
   }
-
-  private getWalletForPinRestore = () => {
-    const possibleToRestoreWalletTypes = [
-      WalletType.hot,
-      WalletType.mnemonic,
-      WalletType.sss,
-    ];
-    const possibleToRestoreWallet = Wallet.getAll().find(wallet =>
-      possibleToRestoreWalletTypes.includes(wallet.type),
-    );
-    return possibleToRestoreWallet;
-  };
 
   async getPassword(): Promise<string> {
     const creds = await getGenericPassword();
@@ -599,7 +588,7 @@ class App extends AsyncEventEmitter {
 
   checkBalance() {
     if (AppState.currentState === 'active') {
-      this.emit(Events.onWalletsBalanceCheck);
+      Wallet.fetchBalances();
     }
   }
 

@@ -16,7 +16,6 @@ import {
 import {Loading} from '@app/components/ui';
 import {WalletCard} from '@app/components/ui/walletCard';
 import {app} from '@app/contexts';
-import {onWalletsBalanceCheck} from '@app/event-actions/on-wallets-balance-check';
 import {Events} from '@app/events';
 import {awaitForWallet, showModal} from '@app/helpers';
 import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
@@ -626,7 +625,7 @@ export const SwapScreen = observer(() => {
     if (!t0 || !wallet) {
       return {};
     }
-    await onWalletsBalanceCheck();
+    await Wallet.fetchBalances();
 
     const tokenValue =
       // @ts-ignore
@@ -1356,7 +1355,7 @@ export const SwapScreen = observer(() => {
   }, [poolsData]);
 
   useBackNavigationHandler(() => {
-    onWalletsBalanceCheck();
+    Wallet.fetchBalances();
     Token.fetchTokens(true);
   }, []);
 
