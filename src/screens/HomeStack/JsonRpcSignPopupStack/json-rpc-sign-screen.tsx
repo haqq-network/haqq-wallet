@@ -23,9 +23,10 @@ import {Wallet} from '@app/models/wallet';
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {Balance} from '@app/services/balance';
 import {EthSignErrorDataDetails} from '@app/services/eth-sign';
+import {EventTracker} from '@app/services/event-tracker';
 import {Indexer} from '@app/services/indexer';
 import {SignJsonRpcRequest} from '@app/services/sign-json-rpc-request';
-import {IContract, ModalType} from '@app/types';
+import {IContract, MarketingEvents, ModalType} from '@app/types';
 import {
   getTransactionFromJsonRpcRequest,
   getUserAddressFromJRPCRequest,
@@ -75,7 +76,15 @@ export const JsonRpcSignScreen = memo(() => {
   );
 
   const onPressReject = useCallback(
-    async (err?: EthSignErrorDataDetails | string) => {
+    async (err?: EthSignErrorDataDetails | string, custom = false) => {
+      EventTracker.instance.trackEvent(
+        custom
+          ? MarketingEvents.jsonRpcSignFail
+          : MarketingEvents.jsonRpcSignUserReject,
+        {
+          error: typeof err === 'string' ? err : err ? JSON.stringify(err) : '',
+        },
+      );
       setRejectLoading(true);
       app.emit('json-rpc-sign-reject', err);
       navigation.goBack();
@@ -92,28 +101,42 @@ export const JsonRpcSignScreen = memo(() => {
   const onPressSign = useCallback(
     async (fee?: Fee | null) => {
       try {
+        const EVENT_PARAMS = {
+          transaction_request: JSON.stringify(request),
+          chainId: chainId?.toString() ?? '',
+          wallet_address: wallet?.address ?? '',
+        };
+        EventTracker.instance.trackEvent(
+          MarketingEvents.jsonRpcSignStart,
+          EVENT_PARAMS,
+        );
         if (phishingTxRequest && Object.values(phishingTxRequest).length) {
-          return Logger.error('JsonRpcSignScreen:onPressSign tx is phishing', {
+          Logger.error('JsonRpcSignScreen:onPressSign tx is phishing', {
             request,
             phishingTxRequest,
           });
+          return onPressReject(
+            'transaction contains phishing signature request',
+            true,
+          );
         }
 
         if (messageIsHex && blindSignEnabled === false && isAllowed === false) {
-          return Logger.error(
+          Logger.error(
             'JsonRpcSignScreen:onPressSign hex blind sign does not allowed',
             {
               request,
               messageIsHex,
             },
           );
+          return onPressReject('hex blind sign does not allowed', true);
         }
 
         if (
           !isAllowed &&
           !(DEBUG_VARS.disableWeb3DomainBlocking || app.isTesterMode)
         ) {
-          return onPressReject('domain is blocked');
+          return onPressReject('domain is blocked', true);
         }
         setSignLoading(true);
 
@@ -129,6 +152,15 @@ export const JsonRpcSignScreen = memo(() => {
         );
 
         app.emit('json-rpc-sign-success', result);
+        EventTracker.instance.trackEvent(
+          MarketingEvents.jsonRpcSignSuccess,
+          request.method === 'eth_sendTransaction'
+            ? {
+                ...EVENT_PARAMS,
+                transaction_hash: result,
+              }
+            : EVENT_PARAMS,
+        );
         navigation.goBack();
       } catch (e) {
         const err = e as EthSignErrorDataDetails;
@@ -149,10 +181,11 @@ export const JsonRpcSignScreen = memo(() => {
             currentAmount: app.getAvailableBalance(wallet!.address),
           });
         }
-        onPressReject(err);
+        onPressReject(err, true);
         Logger.captureException(err, 'JsonRpcSignScreen:onPressSign', {
           request,
           chainId,
+          errCode,
         });
       }
     },
@@ -216,7 +249,7 @@ export const JsonRpcSignScreen = memo(() => {
         ) {
           showModal(ModalType.domainBlocked, {
             domain: getHost(metadata.url),
-            onClose: () => onPressReject('domain is blocked'),
+            onClose: () => onPressReject('domain is blocked', true),
           });
         }
       }
@@ -240,7 +273,7 @@ export const JsonRpcSignScreen = memo(() => {
   useEffect(() => {
     const address = selectedAccount || getUserAddressFromJRPCRequest(request);
     if (!address) {
-      onPressReject(`method not implemented: ${request.method}`);
+      onPressReject(`method not implemented: ${request.method}`, true);
     }
   }, [onPressReject, request, selectedAccount]);
 
