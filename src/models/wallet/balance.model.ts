@@ -21,7 +21,7 @@ export class BalanceModel {
     this.model.vested = vested;
   }
   addVested(vested = Balance.Empty) {
-    this.model.vested.operate(vested, 'add');
+    this.model.vested = this.model.vested.operate(vested, 'add');
   }
 
   get staked() {
@@ -31,7 +31,7 @@ export class BalanceModel {
     this.model.staked = staked;
   }
   addStaked(staked = Balance.Empty) {
-    this.model.staked.operate(staked, 'add');
+    this.model.staked = this.model.staked.operate(staked, 'add');
   }
 
   get available() {
@@ -41,7 +41,7 @@ export class BalanceModel {
     this.model.available = available;
   }
   addAvailable(available = Balance.Empty) {
-    this.model.available.operate(available, 'add');
+    this.model.available = this.model.available.operate(available, 'add');
   }
 
   get total() {
@@ -51,7 +51,7 @@ export class BalanceModel {
     this.model.total = total;
   }
   addTotal(total = Balance.Empty) {
-    this.model.total.operate(total, 'add');
+    this.model.total = this.model.total.operate(total, 'add');
   }
 
   get locked() {
@@ -61,7 +61,7 @@ export class BalanceModel {
     this.model.locked = locked;
   }
   addLocked(locked = Balance.Empty) {
-    this.model.locked.operate(locked, 'add');
+    this.model.locked = this.model.locked.operate(locked, 'add');
   }
 
   get availableForStake() {
@@ -71,7 +71,10 @@ export class BalanceModel {
     this.model.availableForStake = availableForStake ?? Balance.Empty;
   }
   addAvailableForState(availableForStake = Balance.Empty) {
-    this.model.availableForStake.operate(availableForStake, 'add');
+    this.model.availableForStake = this.model.availableForStake.operate(
+      availableForStake,
+      'add',
+    );
   }
 
   get nextVestingUnlockDate() {

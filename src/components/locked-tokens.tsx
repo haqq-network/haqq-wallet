@@ -23,7 +23,6 @@ import {Placeholder} from './ui/placeholder';
 
 export interface LockedTokensProps {
   balance?: BalanceModel;
-
   onForwardPress(): void;
 }
 

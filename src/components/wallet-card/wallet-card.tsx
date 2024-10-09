@@ -65,11 +65,7 @@ export const WalletCard = ({
       onLoad={() => {
         setCardState('laded');
       }}>
-      <CardName
-        onAccountInfo={onAccountInfo}
-        testID={testID}
-        wallet={wallet}
-      />
+      <CardName onAccountInfo={onAccountInfo} testID={testID} wallet={wallet} />
       <ProtectionBadge
         wallet={wallet}
         isSecondMnemonic={isSecondMnemonic}
@@ -81,9 +77,7 @@ export const WalletCard = ({
         testID="accountInfoButton"
         onPress={onAccountInfo}>
         <View>
-          <BalanceInfoTotal
-            total={total}
-          />
+          <BalanceInfoTotal total={total} />
           <BalanceInfoDetails
             showLockedTokens={showLockedTokens}
             total={total}

@@ -15,9 +15,8 @@ import {Dot} from '@app/components/wallets/dot';
 import {Plus} from '@app/components/wallets/plus';
 import {createTheme} from '@app/helpers';
 import {useWalletConnectSessions} from '@app/hooks/use-wallet-connect-sessions';
-import {WalletBalance} from '@app/hooks/use-wallets-balance';
 import {VariablesString} from '@app/models/variables-string';
-import {Wallet, WalletModel} from '@app/models/wallet';
+import {Wallet, WalletBalance, WalletModel} from '@app/models/wallet';
 import {WalletType} from '@app/types';
 import {filterWalletConnectSessionsByAddress} from '@app/utils';
 

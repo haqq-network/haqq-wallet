@@ -15,7 +15,6 @@ import {
 } from '@app/components/ui';
 import {WalletCard} from '@app/components/ui/walletCard';
 import {createTheme} from '@app/helpers';
-import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {I18N, getText} from '@app/i18n';
 import {Wallet, WalletModel} from '@app/models/wallet';
 import {HaqqEthereumAddress, IToken} from '@app/types';
@@ -51,7 +50,7 @@ export const TokenViewer = observer(
           .filter(item => !!item) as WalletModel[],
       [data],
     );
-    const balances = useWalletsBalance(wallets);
+    const balances = Wallet.getBalancesByAddressList(wallets);
     const {showActionSheetWithOptions} = useActionSheet();
 
     const [showLowBalance, setShowLowBalance] = useState(true);

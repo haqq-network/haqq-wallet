@@ -1,4 +1,4 @@
-import {makeAutoObservable, when} from 'mobx';
+import {makeAutoObservable, runInAction, when} from 'mobx';
 import {isHydrated, makePersistable} from 'mobx-persist-store';
 
 import {app} from '@app/contexts';
@@ -33,7 +33,7 @@ import {
   WalletType,
 } from '../../types';
 import {Currencies} from '../currencies';
-import {ALL_NETWORKS_ID, Provider} from '../provider';
+import {ALL_NETWORKS_ID, Provider, ProviderModel} from '../provider';
 import {Token} from '../tokens';
 
 class WalletStore implements RPCObserver {
@@ -202,9 +202,10 @@ class WalletStore implements RPCObserver {
         );
       }
 
-      this.lastBalanceUpdate = new Date(updates.last_update);
-
-      this.balances = this.parseIndexerBalances(updates);
+      runInAction(() => {
+        this.lastBalanceUpdate = new Date(updates.last_update);
+        this.balances = this.parseIndexerBalances(updates);
+      });
 
       Currencies.setRates(updates.rates);
     } catch (e) {
@@ -216,7 +217,91 @@ class WalletStore implements RPCObserver {
     return !this.isBalancesLoaded;
   }
   get isBalancesLoaded() {
-    return Boolean(this.balances[Provider.selectedProvider.ethChainId]);
+    return (
+      Provider.isAllNetworks ||
+      Boolean(this.balances[Provider.selectedProvider.ethChainId])
+    );
+  }
+
+  private _calculateAllNetworksBalance = (address: string) => {
+    const getBalanceData = (p: ProviderModel) =>
+      this.balances[p.ethChainId]?.[AddressUtils.toEth(address)] ||
+      Balance.emptyBalances[AddressUtils.toEth(address)];
+
+    const balance = new BalanceModel({
+      staked: Balance.Empty,
+      vested: Balance.Empty,
+      available: Balance.Empty,
+      total: Balance.Empty,
+      locked: Balance.Empty,
+      availableForStake: Balance.Empty,
+      unlock: new Date(0),
+    });
+
+    Provider.getAllNetworks().forEach(p => {
+      const {available, locked, staked, total, vested, availableForStake} =
+        getBalanceData(p) ?? {};
+
+      balance.addStaked(
+        Currencies.convert(staked ?? Balance.Empty, p.ethChainId),
+      );
+      balance.addVested(
+        Currencies.convert(vested ?? Balance.Empty, p.ethChainId),
+      );
+      balance.addAvailable(
+        Currencies.convert(available ?? Balance.Empty, p.ethChainId),
+      );
+      balance.addTotal(
+        Currencies.convert(total ?? Balance.Empty, p.ethChainId),
+      );
+      balance.addLocked(
+        Currencies.convert(locked ?? Balance.Empty, p.ethChainId),
+      );
+      balance.addAvailableForState(
+        Currencies.convert(availableForStake ?? Balance.Empty, p.ethChainId),
+      );
+    });
+
+    return balance;
+  };
+
+  getBalances = (address: string, provider = Provider.selectedProvider) => {
+    if (provider.id === ALL_NETWORKS_ID) {
+      return this._calculateAllNetworksBalance(address);
+    }
+
+    return (
+      this.balances[Provider.selectedProvider.ethChainId]?.[
+        AddressUtils.toEth(address)
+      ] || Balance.emptyBalances[AddressUtils.toEth(address)]
+    );
+  };
+
+  getBalancesByAddressList = (
+    addresses: WalletModel[],
+    provider = Provider.selectedProvider,
+  ): Record<HaqqEthereumAddress, BalanceModel> => {
+    return addresses.reduce(
+      (acc, wallet) => {
+        acc[wallet.address] = this.getBalances(wallet.address, provider);
+        return acc;
+      },
+      {} as Record<HaqqEthereumAddress, BalanceModel>,
+    );
+  };
+
+  getBalance(
+    address: string,
+    key:
+      | 'available'
+      | 'availableForStake'
+      | 'staked'
+      | 'vested'
+      | 'total'
+      | 'locked',
+    provider = Provider.selectedProvider,
+  ): Balance {
+    return this.getBalances(address, provider)[key];
   }
 
   async create(
@@ -305,7 +390,7 @@ class WalletStore implements RPCObserver {
       if (wallet.isHidden) {
         return false;
       }
-      const balance = app.getAvailableBalance(wallet.address);
+      const balance = this.getBalance(wallet.address, 'available');
       const isPositiveBalance = balance.isPositive();
 
       const tokens = Token.tokens[wallet.address] || [];

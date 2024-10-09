@@ -5,6 +5,8 @@ import {
   WalletType,
 } from '@app/types';
 
+import {BalanceModel} from './balance.model';
+
 export type WalletModel = {
   address: HaqqEthereumAddress;
   name: string;
@@ -29,3 +31,5 @@ export type WalletModel = {
   position: number;
   isImported?: boolean;
 };
+
+export type WalletBalance = Record<HaqqEthereumAddress, BalanceModel>;
