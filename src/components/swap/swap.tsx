@@ -167,7 +167,11 @@ export const Swap = observer(
       const t0 = new Decimal(amountsIn.amount);
       const t1 = new Decimal(amountsOut.amount);
 
-      return t1.div(t0).toString();
+      return t1
+        .div(t0)
+        .toString()
+        .concat(STRINGS.NBSP)
+        .concat(tokenOut.symbol!);
     }, [amountsIn.amount, amountsOut.amount]);
 
     const priceImpactColor = useMemo(() => {

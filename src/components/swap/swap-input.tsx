@@ -57,21 +57,25 @@ export const SwapInput = observer(
     ...inputProps
   }: SwapInputProps) => {
     const [amount, amountSymbol] = useMemo(() => {
-      const [num, denom] = currentBalance
+      const args = currentBalance
         .toFiat({
           useDefaultCurrency: true,
         })
         .split(STRINGS.NBSP);
-      return [parseFloat(num), denom];
+
+      const num = args.find(it => !Number.isNaN(parseFloat(it)));
+      const denom = args.find(it => Number.isNaN(parseFloat(it)));
+
+      return [parseFloat(num!), denom];
     }, [currentBalance]);
 
     const [available, availableSymbol] = useMemo(() => {
-      const [num, denom] = availableBalance
-        .toBalanceString('auto')
+      const args = availableBalance.toBalanceString('auto').split(STRINGS.NBSP);
 
-        .split(STRINGS.NBSP);
-      return [parseFloat(num), denom];
-    }, [currentBalance]);
+      const num = args.find(it => !Number.isNaN(parseFloat(it)));
+      const denom = args.find(it => Number.isNaN(parseFloat(it)));
+      return [parseFloat(num!), denom];
+    }, [availableBalance]);
     const handleOnChangeText = useCallback(
       (text: string) => {
         let decimalsOffset = 0;
@@ -167,10 +171,14 @@ export const SwapInput = observer(
           <Text variant={TextVariant.t14} color={Color.textBase2}>
             {STRINGS.NBSP}
             {amountSymbol}
+          </Text>
+          <Text variant={TextVariant.t14} color={Color.textBase2}>
+            {STRINGS.NBSP}
             {getText(I18N.swapInputAmountData, {
               currentFiatAmount: '',
               availableAmount: '',
             }).replace('≈', '')}
+            {STRINGS.NBSP}
           </Text>
           <AnimatedRollingNumber
             useGrouping

@@ -195,7 +195,7 @@ export class Balance implements IBalance, ISerializable {
 
     const isRTL = I18nManager.isRTL;
     if (isRTL) {
-      return `${this.symbol} ${this.toFloatString(
+      return `${this.symbol}${STRINGS.NBSP}${this.toFloatString(
         fixedNum,
         precission,
         useZeroFormatter,
@@ -336,9 +336,9 @@ export class Balance implements IBalance, ISerializable {
   toWeiString = () => {
     const isRTL = I18nManager.isRTL;
     if (isRTL) {
-      return `a${this.symbol} ${this.toWei()}`;
+      return `a${this.symbol}${STRINGS.NBSP}${this.toWei()}`;
     }
-    return this.toWei() + ` a${this.symbol}`;
+    return `${this.toWei()}${STRINGS.NBSP}a${this.symbol}`;
   };
 
   toBigNumberish = (): BigNumberish => {

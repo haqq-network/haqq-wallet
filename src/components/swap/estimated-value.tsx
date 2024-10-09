@@ -28,13 +28,9 @@ export const EstimatedValue = observer(
     const uuid = useRef(uuidv4()).current;
     const _value = useMemo(() => {
       if (typeof value === 'string') {
-        // split by space or NBSP
         return value.split(STRINGS.NBSP).map(v => {
           try {
-            Logger.log(' ==============');
-            Logger.log(' not pared =======> v', v);
             const n = parseFloat(v);
-            Logger.log(' parsed =======> n', n);
             if (Number.isNaN(n)) {
               return v;
             }

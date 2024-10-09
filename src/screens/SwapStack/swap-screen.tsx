@@ -364,9 +364,7 @@ export const SwapScreen = observer(() => {
       if (tokenIn?.symbol === Provider.selectedProvider.denom) {
         response.need_approve = false;
       }
-      response.s_price_impact = (
-        parseFloat(response.s_price_impact) * 100
-      ).toString();
+
       logger.log('estimate resp', response);
       setEstimateData(response);
 
@@ -760,23 +758,37 @@ export const SwapScreen = observer(() => {
     }
   };
 
-  const COMMON_EVENT_PARAMS = {
-    // token0
-    token0_symbol: tokenIn?.symbol!,
-    token0_address: AddressUtils.toEth(tokenIn?.id!),
-    token0_amount_text: amountsIn.amount,
-    token0_amount_hex: estimateData?.amount_in!,
-    token0_chain_id: Provider.selectedProvider.ethChainId.toString(), // TODO: for cross-chain swaps
-    // token1
-    token1_symbol: tokenOut?.symbol!,
-    token1_address: AddressUtils.toEth(tokenOut?.id!),
-    token1_amount_text: amountsOut.amount,
-    token1_amount_hex: estimateData?.amount_out!,
-    token1_chain_id: Provider.selectedProvider.ethChainId.toString(), // TODO: for cross-chain swaps
-    // other
-    chain_id: Provider.selectedProvider.ethChainId.toString(),
-    wallet_address: currentWallet.address,
-  };
+  const COMMON_EVENT_PARAMS = useMemo(
+    () => ({
+      // token0
+      token0_symbol: tokenIn?.symbol!,
+      token0_address: AddressUtils.toEth(tokenIn?.id!),
+      token0_amount_text: amountsIn.amount,
+      token0_amount_hex: estimateData?.amount_in!,
+      token0_chain_id: Provider.selectedProvider.ethChainId.toString(), // TODO: for cross-chain swaps
+      // token1
+      token1_symbol: tokenOut?.symbol!,
+      token1_address: AddressUtils.toEth(tokenOut?.id!),
+      token1_amount_text: amountsOut.amount,
+      token1_amount_hex: estimateData?.amount_out!,
+      token1_chain_id: Provider.selectedProvider.ethChainId.toString(), // TODO: for cross-chain swaps
+      // other
+      chain_id: Provider.selectedProvider.ethChainId.toString(),
+      wallet_address: currentWallet.address,
+    }),
+    [
+      tokenIn?.symbol,
+      tokenIn?.id,
+      amountsIn.amount,
+      estimateData?.amount_in,
+      tokenOut?.symbol,
+      tokenOut?.id,
+      amountsOut.amount,
+      estimateData?.amount_out,
+      Provider.selectedProvider.ethChainId,
+      currentWallet.address,
+    ],
+  );
 
   const onPressSwap = useCallback(async () => {
     try {
@@ -902,6 +914,9 @@ export const SwapScreen = observer(() => {
     swapSettings,
     minReceivedAmount,
     Provider.selectedProvider.denom,
+    COMMON_EVENT_PARAMS,
+    t0Current,
+    t1Current,
   ]);
 
   const onPressApprove = useCallback(async () => {
@@ -974,7 +989,16 @@ export const SwapScreen = observer(() => {
     } finally {
       setApproveInProgress(() => false);
     }
-  }, [amountsIn, tokenIn, currentWallet, estimate]);
+  }, [
+    amountsIn,
+    tokenIn,
+    tokenOut,
+    currentWallet,
+    estimate,
+    COMMON_EVENT_PARAMS,
+    t0Current,
+    t1Current,
+  ]);
 
   const onPressWrap = useCallback(async () => {
     const swapSource =
@@ -1054,10 +1078,12 @@ export const SwapScreen = observer(() => {
     tokenOut,
     estimateData,
     currentWallet,
-    t0Current,
     estimate,
     amountsIn.amount,
     Provider.selectedProvider.denom,
+    COMMON_EVENT_PARAMS,
+    t0Current,
+    t1Current,
   ]);
   const onPressUnrap = useCallback(async () => {
     const swapSource =
@@ -1148,9 +1174,11 @@ export const SwapScreen = observer(() => {
     currentWallet,
     estimate,
     Provider.selectedProvider.denom,
+    COMMON_EVENT_PARAMS,
   ]);
 
-  const onPressMax = async () => {
+  // 2. Ensure all callback functions are memoized with useCallback
+  const onPressMax = useCallback(async () => {
     try {
       Keyboard.dismiss();
       vibrate(HapticEffects.impactLight);
@@ -1171,7 +1199,14 @@ export const SwapScreen = observer(() => {
     } catch (error) {
       logger.error('onPressMax', error);
     }
-  };
+  }, [
+    refreshTokenBalances,
+    currentWallet.address,
+    t0Available,
+    amountsIn,
+    estimate,
+    COMMON_EVENT_PARAMS,
+  ]);
 
   const onPressChangeWallet = useCallback(async () => {
     const wallets = Wallet.getAll();
@@ -1206,7 +1241,7 @@ export const SwapScreen = observer(() => {
     Keyboard.dismiss();
     setIsEstimating(() => true);
     await estimate();
-  }, [estimate, setIsEstimating]);
+  }, [estimate, setIsEstimating, COMMON_EVENT_PARAMS]);
 
   const onPressChangeDirection = useCallback(async () => {
     try {
@@ -1440,9 +1475,13 @@ export const SwapScreen = observer(() => {
   }, [poolsData]);
 
   useBackNavigationHandler(() => {
+    EventTracker.instance.trackEvent(
+      MarketingEvents.swapScreenClose,
+      COMMON_EVENT_PARAMS,
+    );
     onWalletsBalanceCheck();
     Token.fetchTokens(true);
-  }, []);
+  }, [COMMON_EVENT_PARAMS]);
 
   useFocusEffect(
     useCallback(() => {
@@ -1450,7 +1489,7 @@ export const SwapScreen = observer(() => {
         MarketingEvents.swapScreenOpen,
         COMMON_EVENT_PARAMS,
       );
-    }, []),
+    }, [COMMON_EVENT_PARAMS]),
   );
 
   if (isLoading) {

@@ -40,7 +40,7 @@ import {
   JsonRpcTransactionRequest,
 } from '@app/types';
 import {formatNumberString, openInAppBrowser, sleep} from '@app/utils';
-import {STRINGS} from '@app/variables/common';
+import {LONG_NUM_PRECISION, STRINGS} from '@app/variables/common';
 
 import {ImageWrapper} from '../image-wrapper';
 import {
@@ -364,18 +364,31 @@ export const JsonRpcSwapTransaction = observer(
           contentContainerStyle={styles.infoContentContainer}
           showsVerticalScrollIndicator={false}>
           <DataView i18n={I18N.swapScreenRate}>
-            <Text variant={TextVariant.t11} color={Color.textBase1}>
-              {`1${STRINGS.NBSP}${tokenIn?.amount?.getSymbol()}${
-                STRINGS.NBSP
-              }≈${STRINGS.NBSP}${rate}`}
-            </Text>
+            <View style={styles.row}>
+              <Text variant={TextVariant.t11} color={Color.textBase1}>
+                {'1'}
+              </Text>
+              <Text variant={TextVariant.t11} color={Color.textBase1}>
+                {STRINGS.NBSP}
+                {tokenIn?.amount?.getSymbol()}
+                {STRINGS.NBSP}
+              </Text>
+              <Text variant={TextVariant.t11} color={Color.textBase1}>
+                {STRINGS.NBSP}≈{STRINGS.NBSP}
+              </Text>
+              <Text variant={TextVariant.t11} color={Color.textBase1}>
+                {rate}
+              </Text>
+            </View>
           </DataView>
           {!isWETHInteraction && (
             <>
               <DataView i18n={I18N.swapScreenPriceImpact}>
                 <Text variant={TextVariant.t11} color={priceImpactColor}>
                   {`${formatNumberString(
-                    estimateData?.s_price_impact ?? '0',
+                    parseFloat(estimateData?.s_price_impact ?? '0').toFixed(
+                      LONG_NUM_PRECISION,
+                    ),
                   )}%`}
                 </Text>
               </DataView>
@@ -435,6 +448,9 @@ export const JsonRpcSwapTransaction = observer(
 );
 
 const styles = createTheme({
+  row: {
+    flexDirection: 'row',
+  },
   info: {
     width: '100%',
     flex: 1,
