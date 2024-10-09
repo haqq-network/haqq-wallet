@@ -281,7 +281,6 @@ export const SwapScreen = observer(() => {
       estimateAbortController.current = new AbortController();
 
       logger.log('estimate token', {
-        // token,
         tokenOut,
         tokenIn,
         isEstimating,
@@ -294,14 +293,12 @@ export const SwapScreen = observer(() => {
       }
 
       if (/^0(\.)?(0+)?$/.test(amountsIn.amount)) {
-        return; /* setEstimateData(null); */
+        return;
       }
 
       setIsEstimating(true);
-      // setEstimateData(null);
 
       if (t0Current?.compare?.('0x0', 'lte')) {
-        // setEstimateData(null);
         vibrate(HapticEffects.impactLight);
         Keyboard.dismiss();
         return amountsOut.setAmount('0');
@@ -683,23 +680,22 @@ export const SwapScreen = observer(() => {
         AddressUtils.equals(token.id!, tokenOut?.id!) &&
         token.symbol === tokenOut.symbol;
 
+      if (needChangeTokenOut) {
+        return onPressChangeDirection();
+      }
+
       const filteredRoutes = poolsData.routes.filter(r =>
         AddressUtils.equals(r.token0!, token?.id!),
       );
-      if (needChangeTokenOut) {
-        const route = filteredRoutes.find(r =>
-          AddressUtils.equals(r.token1!, tokenIn?.id!),
-        );
-        setCurrentRoute(route || filteredRoutes[0]);
-      } else {
-        const route = filteredRoutes.find(r =>
-          AddressUtils.equals(r.token1!, tokenOut?.id!),
-        );
-        setCurrentRoute(route! || filteredRoutes[0]);
-      }
+      const route = filteredRoutes.find(r =>
+        AddressUtils.equals(r.token1!, tokenOut?.id!),
+      );
+      setCurrentRoute(route! || filteredRoutes[0]);
+
       await refreshTokenBalances(wallet.address, t0Available);
       amountsIn.setAmount('');
-      return await estimate();
+      amountsIn.setError('');
+      await estimate();
     } catch (err) {
       Logger.error(err, 'onPressChangeTokenIn');
       logger.captureException(err, 'onPressChangeTokenIn');
@@ -714,7 +710,7 @@ export const SwapScreen = observer(() => {
       if (!token || !wallet || !tokenIn || !tokenOut) {
         return;
       }
-      if (token.symbol === tokenIn.symbol) {
+      if (token.symbol === tokenOut.symbol) {
         return estimate();
       }
       vibrate(HapticEffects.impactLight);
@@ -727,21 +723,18 @@ export const SwapScreen = observer(() => {
         AddressUtils.equals(token.id!, tokenIn?.id!) &&
         token.symbol === tokenIn.symbol;
 
+      if (needChangeTokenIn) {
+        return onPressChangeDirection();
+      }
+
       const filteredRoutes = poolsData.routes.filter(r =>
         AddressUtils.equals(r.token1!, token?.id!),
       );
 
-      if (needChangeTokenIn) {
-        const route = filteredRoutes.find(r =>
-          AddressUtils.equals(r.token0!, tokenOut?.id!),
-        );
-        setCurrentRoute(route || filteredRoutes[0]);
-      } else {
-        const route = filteredRoutes.find(r =>
-          AddressUtils.equals(r.token0!, tokenIn?.id!),
-        );
-        setCurrentRoute(route! || filteredRoutes[0]);
-      }
+      const route = filteredRoutes.find(r =>
+        AddressUtils.equals(r.token0!, tokenIn?.id!),
+      );
+      setCurrentRoute(route! || filteredRoutes[0]);
       await refreshTokenBalances(wallet.address, t0Available);
       return await estimate();
     } catch (err) {
@@ -1151,6 +1144,7 @@ export const SwapScreen = observer(() => {
     await refreshTokenBalances(address as HaqqEthereumAddress, t0Available);
     setCurrentWallet(() => Wallet.getById(address)!);
     await estimate();
+    amountsIn.setError('');
   }, [currentWallet, refreshTokenBalances, tokenIn, estimate]);
 
   const onInputBlur = useCallback(async () => {
@@ -1166,6 +1160,14 @@ export const SwapScreen = observer(() => {
   }, [estimate, setIsEstimating]);
 
   const onPressChangeDirection = useCallback(async () => {
+    setEstimateData(() => ({
+      ...estimateData,
+      amount_in: estimateData.amount_out,
+      amount_out: estimateData.amount_in,
+    }));
+    amountsIn.setError('');
+    amountsIn.setAmount(amountsOut.amount);
+    amountsOut.setAmount(amountsIn.amount);
     setCurrentRoute(
       () =>
         poolsData.routes.find(
@@ -1176,7 +1178,17 @@ export const SwapScreen = observer(() => {
     );
     await refreshTokenBalances();
     await estimate();
-  }, [currentRoute, setCurrentRoute, poolsData]);
+  }, [
+    amountsIn,
+    amountsOut,
+    estimateData,
+    setEstimateData,
+    currentRoute,
+    setCurrentRoute,
+    poolsData,
+    estimate,
+    refreshTokenBalances,
+  ]);
 
   const onPressSettings = useCallback(async () => {
     vibrate(HapticEffects.impactLight);

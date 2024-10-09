@@ -1,5 +1,6 @@
 import React, {useMemo} from 'react';
 
+import Decimal from 'decimal.js';
 import {observer} from 'mobx-react';
 import {KeyboardAvoidingView, View} from 'react-native';
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
@@ -159,18 +160,15 @@ export const Swap = observer(
     }, [isApproveInProgress, amountsIn.error, t0Current, isInfussentBalance]);
 
     const rate = useMemo(() => {
-      if (!estimateData?.amount_in) {
-        return Balance.Empty.toBalanceString('auto');
+      if (!amountsIn.amount || !amountsOut.amount) {
+        return '0';
       }
-      const r =
-        t1Current.toFloat() /
-        new Balance(
-          estimateData?.amount_in!,
-          t0Current.getPrecission(),
-          t0Current.getSymbol(),
-        ).toFloat();
-      return new Balance(r, 0, t1Current.getSymbol()).toBalanceString('auto');
-    }, [t1Current, t0Current, estimateData]);
+
+      const t0 = new Decimal(amountsIn.amount);
+      const t1 = new Decimal(amountsOut.amount);
+
+      return t1.div(t0).toString();
+    }, [amountsIn.amount, amountsOut.amount]);
 
     const priceImpactColor = useMemo(() => {
       if (!estimateData?.s_price_impact) {
@@ -412,6 +410,5 @@ const styles = createTheme({
   button_container: {
     position: 'absolute',
     width: '100%',
-    opacity: 0.95,
   },
 });

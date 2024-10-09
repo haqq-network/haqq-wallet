@@ -9,7 +9,11 @@ import {Easing} from 'react-native-reanimated';
 import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
-import {STRINGS} from '@app/variables/common';
+import {
+  LONG_NUM_PRECISION,
+  NUM_PRECISION,
+  STRINGS,
+} from '@app/variables/common';
 
 import {First, Spacer, Text, TextVariant} from '../ui';
 
@@ -24,9 +28,13 @@ export const EstimatedValue = observer(
     const uuid = useRef(uuidv4()).current;
     const _value = useMemo(() => {
       if (typeof value === 'string') {
+        // split by space or NBSP
         return value.split(STRINGS.NBSP).map(v => {
           try {
+            Logger.log(' ==============');
+            Logger.log(' not pared =======> v', v);
             const n = parseFloat(v);
+            Logger.log(' parsed =======> n', n);
             if (Number.isNaN(n)) {
               return v;
             }
@@ -55,13 +63,23 @@ export const EstimatedValue = observer(
           {React.isValidElement(value) && value}
           {typeof value === 'string' && (
             <View style={styles.rowContainer}>
-              {_value.map(v => {
+              {_value.map((v, i) => {
                 if (typeof v === 'number') {
                   return (
                     <AnimatedRollingNumber
-                      key={`estimated-animated-value-${uuid}`}
+                      key={`estimated-animated-value-${uuid}-idx-${i}`}
                       value={v}
-                      useGrouping
+                      enableCompactNotation={false}
+                      useGrouping={false}
+                      toFixed={
+                        v === 0
+                          ? undefined
+                          : v >= 1
+                          ? // for numbers greater than or equal to 1, we need to show 2 digits after the decimal point
+                            NUM_PRECISION
+                          : // for numbers less than 1, we need to show more digits
+                            LONG_NUM_PRECISION
+                      }
                       textStyle={{color: getColor(valueColor)}}
                       spinningAnimationConfig={{
                         duration: 500,
@@ -72,7 +90,7 @@ export const EstimatedValue = observer(
                 }
                 return (
                   <Text
-                    key={`estimated-text-value-${uuid}`}
+                    key={`estimated-text-value-${uuid}-idx-${i}`}
                     variant={TextVariant.t14}
                     color={valueColor}>
                     {STRINGS.NBSP}

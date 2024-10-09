@@ -114,7 +114,7 @@ export const SwapInput = observer(
                 ) : undefined
               }
               style={styles.amountInput}
-              error={!!amounts.error}
+              error={!!amounts.error && amounts.amountBalance?.isPositive()}
               errorText={amounts.error}
               {...inputProps}
               value={amounts.amount}
@@ -149,36 +149,40 @@ export const SwapInput = observer(
           </LabeledBlock>
         </View>
 
-        <View>
+        <View style={styles.balanceContainer}>
           <Spacer height={4} />
           <Text variant={TextVariant.t14} color={Color.textBase2}>
             {`≈${STRINGS.NBSP}`}
-            <AnimatedRollingNumber
-              useGrouping
-              textStyle={styles.inputRolling}
-              containerStyle={styles.inputRollingContainer}
-              value={amount}
-              spinningAnimationConfig={{
-                duration: 500,
-                easing: Easing.bounce,
-              }}
-            />
+          </Text>
+          <AnimatedRollingNumber
+            useGrouping
+            textStyle={styles.inputRolling}
+            containerStyle={styles.inputRollingContainer}
+            value={amount}
+            spinningAnimationConfig={{
+              duration: 500,
+              easing: Easing.bounce,
+            }}
+          />
+          <Text variant={TextVariant.t14} color={Color.textBase2}>
             {STRINGS.NBSP}
             {amountSymbol}
             {getText(I18N.swapInputAmountData, {
               currentFiatAmount: '',
               availableAmount: '',
             }).replace('≈', '')}
-            <AnimatedRollingNumber
-              useGrouping
-              textStyle={styles.inputRolling}
-              containerStyle={styles.inputRollingContainer}
-              value={available}
-              spinningAnimationConfig={{
-                duration: 500,
-                easing: Easing.bounce,
-              }}
-            />
+          </Text>
+          <AnimatedRollingNumber
+            useGrouping
+            textStyle={styles.inputRolling}
+            containerStyle={styles.inputRollingContainer}
+            value={available}
+            spinningAnimationConfig={{
+              duration: 500,
+              easing: Easing.bounce,
+            }}
+          />
+          <Text variant={TextVariant.t14} color={Color.textBase2}>
             {STRINGS.NBSP}
             {availableSymbol}
           </Text>
@@ -189,19 +193,20 @@ export const SwapInput = observer(
 );
 
 const styles = createTheme({
+  balanceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
   inputRollingContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: 14,
-    width: 'auto',
   },
   inputRolling: {
-    width: 'auto',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 15,
+    alignSelf: 'center',
     fontSize: 14,
-    lineHeight: 18,
     color: getColor(Color.textBase2),
     ...Platform.select({
       ios: {
