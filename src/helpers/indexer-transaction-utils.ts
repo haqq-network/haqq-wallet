@@ -1,12 +1,11 @@
 import {IconsName} from '@app/components/ui';
 import {I18N, getText} from '@app/i18n';
-import {Contracts} from '@app/models/contracts';
 import {Provider} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {ParsedTransactionData, Transaction} from '@app/models/transaction';
 import {Balance} from '@app/services/balance';
 import {
-  IContract,
+  IToken,
   IndexerTransaction,
   IndexerTransactionWithType,
   IndexerTxMsgEthereumTx,
@@ -115,9 +114,7 @@ function parseMsgEthereumApprovalTx(
 ): ParsedTransactionData {
   const [token] = getTokensInfo(tx);
   const amount = [new Balance(tx.msg.amount, token.decimals, token.symbol)];
-  const spenderContract = Contracts.getById(
-    AddressUtils.toHaqq(tx.msg.spender),
-  );
+  const spenderContract = Token.getById(AddressUtils.toHaqq(tx.msg.spender));
 
   return {
     from: AddressUtils.toEth(tx.msg.owner),
@@ -340,7 +337,7 @@ function parseMsgSend(
   const tokens = getTokensInfo(tx);
   const amount = tx?.msg?.amount?.map(a => {
     const provider = Provider.getByEthChainId(tx.chain_id);
-    const contract = Contracts.getById(
+    const contract = Token.getById(
       a.contract_address! || tx.msg.contract_address,
     );
     if (contract?.is_erc20) {
@@ -446,17 +443,17 @@ function getContractName(tx: IndexerTransaction): string {
   let name = '';
 
   if ('contract_address' in msg) {
-    const contract = Contracts.getById(msg.contract_address);
+    const contract = Token.getById(msg.contract_address);
     name = contract?.name!;
   }
 
   if ('to_address' in msg && !name) {
-    const contract = Contracts.getById(msg.to_address);
+    const contract = Token.getById(msg.to_address);
     name = contract?.name!;
   }
 
   if ('from_address' in msg && !name) {
-    const contract = Contracts.getById(msg.from_address as string);
+    const contract = Token.getById(msg.from_address as string);
     name = contract?.name!;
   }
 
@@ -485,7 +482,7 @@ function getTokensInfo(tx: IndexerTransaction): IndexerTxParsedTokenInfo[] {
     return [getNativeToken(provider)];
   }
 
-  let contractInfo: IContract | undefined;
+  let contractInfo: IToken | undefined;
 
   if (
     'amount' in tx.msg &&
@@ -494,19 +491,19 @@ function getTokensInfo(tx: IndexerTransaction): IndexerTxParsedTokenInfo[] {
     'amount' in tx?.msg?.amount &&
     tx.msg.amount.contract_address
   ) {
-    contractInfo = Contracts.getById(tx.msg.amount.contract_address);
+    contractInfo = Token.getById(tx.msg.amount.contract_address);
   }
 
   if ('contract_address' in tx.msg && !contractInfo?.is_erc20) {
-    contractInfo = Contracts.getById(tx.msg.contract_address);
+    contractInfo = Token.getById(tx.msg.contract_address);
   }
 
   if ('to_address' in tx.msg && !contractInfo?.is_erc20) {
-    contractInfo = Contracts.getById(tx.msg.to_address);
+    contractInfo = Token.getById(tx.msg.to_address);
   }
 
   if ('from_address' in tx.msg && !contractInfo?.is_erc20) {
-    contractInfo = Contracts.getById(tx.msg.from_address);
+    contractInfo = Token.getById(tx.msg.from_address);
   }
 
   if (
@@ -520,9 +517,7 @@ function getTokensInfo(tx: IndexerTransaction): IndexerTxParsedTokenInfo[] {
         name: contractInfo.name,
         // @ts-ignore
         symbol: tx?.msg?.amount?.denom || contractInfo.symbol,
-        icon: contractInfo.icon
-          ? {uri: contractInfo.icon}
-          : require('@assets/images/empty-icon.png'),
+        icon: contractInfo.image ?? require('@assets/images/empty-icon.png'),
         decimals: contractInfo?.decimals || Provider.selectedProvider.decimals,
         contract_address: contractInfo.id,
       },
