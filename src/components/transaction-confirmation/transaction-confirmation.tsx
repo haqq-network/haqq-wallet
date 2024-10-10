@@ -21,7 +21,7 @@ import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Fee} from '@app/models/fee';
 import {Provider} from '@app/models/provider';
-import { BalanceModel } from '@app/models/wallet';
+import {BalanceModel} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {IToken} from '@app/types';
 import {splitAddress} from '@app/utils';

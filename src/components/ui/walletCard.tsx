@@ -28,7 +28,11 @@ export type Props = {
   tokensOnly?: boolean;
   hideWalletSummary?: boolean;
   onPressToken?: (wallet: WalletModel, token: IToken, idx: number) => void;
-  checkTokenSelected?: (wallet: WalletModel, token: IToken, idx: number) => boolean;
+  checkTokenSelected?: (
+    wallet: WalletModel,
+    token: IToken,
+    idx: number,
+  ) => boolean;
   onPressWallet?: (wallet: WalletModel) => void;
   isLast?: boolean;
 };

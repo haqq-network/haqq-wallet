@@ -83,8 +83,10 @@ class App extends AsyncEventEmitter {
   private user: User;
   private _authenticated: boolean = DEBUG_VARS.enableSkipPinOnLogin;
   private appStatus: AppStatus = AppStatus.inactive;
-  private _balances: Record<ChainId, Record<HaqqEthereumAddress, BalanceModel>> =
-    {};
+  private _balances: Record<
+    ChainId,
+    Record<HaqqEthereumAddress, BalanceModel>
+  > = {};
   private _googleSigninSupported: boolean = false;
   private _appleSigninSupported: boolean =
     Platform.select({
