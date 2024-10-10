@@ -6,8 +6,12 @@ import {Whitelist} from '@app/helpers/whitelist';
 import {storage} from '@app/services/mmkv';
 import {IContract, IToken, MobXStore} from '@app/types';
 
+import {Provider} from './provider';
 import {Token} from './tokens';
 
+/**
+ * @deprecated use Token store instead
+ */
 class ContractsStore implements MobXStore<IContract> {
   /**
    * User's contracts
@@ -80,10 +84,14 @@ class ContractsStore implements MobXStore<IContract> {
     if (AddressUtils.equals(id, NATIVE_TOKEN_ADDRESS)) {
       return Token.generateNativeTokenContracts()[0];
     }
-    const result = this.data[AddressUtils.toHaqq(id)];
+    let result = this.data[AddressUtils.toHaqq(id)];
 
     if (!result) {
       this._fetchContractData(id);
+    }
+
+    if ('address' in result && typeof result.address === 'object') {
+      result = (result.address as any)[Provider.selectedProvider.ethChainId];
     }
 
     return result;
@@ -130,5 +138,8 @@ class ContractsStore implements MobXStore<IContract> {
   }
 }
 
+/**
+ * @deprecated use Token store instead
+ */
 const instance = new ContractsStore(Boolean(process.env.JEST_WORKER_ID));
 export {instance as Contracts};

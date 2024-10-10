@@ -16,7 +16,7 @@ import {App} from './src/app';
 import './src/event-actions';
 import {Jailbreak} from './src/jailbreak';
 import {Language} from '@app/models/language';
-
+LogBox.ignoreAllLogs();
 if (!global.BigInt) {
   const BigInt = require('big-integer');
 

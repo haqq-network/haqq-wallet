@@ -117,6 +117,7 @@ export enum MarketingEvents {
   jsonRpcSignSuccess = 'jsonRpcSignSuccess',
   jsonRpcSignFail = 'jsonRpcSignFail',
   jsonRpcSignUserReject = 'jsonRpcSignUserReject',
+  swapScreenClose = 'swapScreenClose',
 }
 
 export enum PopupNotificationBannerTypes {
@@ -1632,7 +1633,7 @@ export type PartialRequired<T, K extends keyof T> = Partial<T> & Pick<T, K>;
 
 export enum DeeplinkProtocol {
   haqq = 'haqq',
-  etherium = 'etherium',
+  ethereum = 'ethereum',
   wc = 'wc',
 }
 

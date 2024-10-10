@@ -21,8 +21,8 @@ import {
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {I18N, getText} from '@app/i18n';
-import {Contracts} from '@app/models/contracts';
 import {Provider} from '@app/models/provider';
+import {Token} from '@app/models/tokens';
 import {SwapStackParamList, SwapStackRoutes} from '@app/route-types';
 import {Balance} from '@app/services/balance';
 import {STRINGS} from '@app/variables/common';
@@ -54,6 +54,8 @@ export const SwapFinish = observer(
     isWrapTx,
     rate,
     providerFee,
+    amountIn,
+    amountOut,
   }: SwapFinishProps) => {
     return (
       <PopupContainer style={styles.container} testID={testID}>
@@ -104,7 +106,9 @@ export const SwapFinish = observer(
             <ImageWrapper source={token0?.image!} style={styles.tokenImage} />
             <Spacer width={10} />
             <Text variant={TextVariant.t3}>
-              {token0?.value.toBalanceString('auto')}
+              {amountIn}
+              {STRINGS.NBSP}
+              {token0?.symbol}
             </Text>
           </View>
 
@@ -121,7 +125,9 @@ export const SwapFinish = observer(
             <ImageWrapper source={token1?.image!} style={styles.tokenImage} />
             <Spacer width={10} />
             <Text variant={TextVariant.t3}>
-              {token1?.value.toBalanceString('auto')}
+              {amountOut}
+              {STRINGS.NBSP}
+              {token1?.symbol}
             </Text>
           </View>
         </View>
@@ -153,9 +159,8 @@ export const SwapFinish = observer(
             {(isWrapTx || isUnwrapTx) && (
               <Text variant={TextVariant.t15} color={Color.textBase2}>
                 {getText(I18N.swapScreenRoutingSource)}:{STRINGS.NBSP}
-                {`${Contracts.getById(
-                  Provider.selectedProvider.config.wethAddress,
-                )?.name}${STRINGS.NBSP}${shortAddress(
+                {`${Token.getById(Provider.selectedProvider.config.wethAddress)
+                  ?.name}${STRINGS.NBSP}${shortAddress(
                   Provider.selectedProvider.config.wethAddress!,
                   '•',
                   true,
@@ -196,7 +201,7 @@ export const SwapFinish = observer(
               color={Color.textBase2}
             />
           </IconButton>
-          <Spacer height={32} />
+          <Spacer height={12} />
           <Button
             style={styles.margin}
             variant={ButtonVariant.contained}

@@ -19,8 +19,8 @@ export const getERC20TransferData = (
 
     const haqqContractAddress = AddressUtils.toHaqq(contractAddress);
     const contractInfo =
-      Contracts.getById(haqqContractAddress) ||
-      Token.getById(haqqContractAddress);
+      Token.getById(haqqContractAddress) ||
+      Contracts.getById(haqqContractAddress);
 
     const decimals =
       contractInfo.decimals ?? Provider.selectedProvider.decimals;

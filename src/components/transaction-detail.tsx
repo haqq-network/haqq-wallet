@@ -18,8 +18,8 @@ import {createTheme} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N, getText} from '@app/i18n';
-import {Contracts} from '@app/models/contracts';
 import {Provider} from '@app/models/provider';
+import {Token} from '@app/models/tokens';
 import {Transaction} from '@app/models/transaction';
 import {Balance} from '@app/services/balance';
 import {IndexerTxMsgType} from '@app/types';
@@ -56,7 +56,7 @@ export const TransactionDetail = observer(
     );
     const contractTo = useMemo(() => {
       if (tx.parsed.isContractInteraction) {
-        return Contracts.getById(AddressUtils.toHaqq(tx.parsed.to));
+        return Token.getById(AddressUtils.toHaqq(tx.parsed.to));
       }
       return null;
     }, [tx]);
