@@ -3,15 +3,15 @@ import React from 'react';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {First, Spacer, Text} from '@app/components/ui';
+import {First, Spacer, Text, TextVariant} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {BalanceData} from '@app/types';
+import {BalanceModel} from '@app/models/wallet';
 
 import {StackedVestedTokens} from '../stacked-vested-tokens';
 
 export type TotalValueInfoProps = {
-  balance: BalanceData;
+  balance: BalanceModel;
   onPressInfo: () => void;
 };
 
@@ -22,18 +22,22 @@ export const TotalValueInfoHeader = ({
   return (
     <>
       <View style={styles.header}>
-        <Text t12 i18n={I18N.totalValueAccount} color={Color.textBase2} />
+        <Text
+          variant={TextVariant.t12}
+          i18n={I18N.totalValueAccount}
+          color={Color.textBase2}
+        />
         <Spacer height={4} />
         <View style={styles.balanceWrapper}>
-          <Text t3 children={balance.total.toBalanceString('auto')} />
+          <Text variant={TextVariant.t3}>
+            {balance.total.toBalanceString('auto')}
+          </Text>
         </View>
         {!!balance.total.toFiat() && (
           <View style={styles.usdWrapper}>
-            <Text
-              style={styles.usdText}
-              t13
-              children={balance.total.toFiat()}
-            />
+            <Text style={styles.usdText} variant={TextVariant.t13}>
+              {balance.total.toFiat()}
+            </Text>
           </View>
         )}
       </View>
@@ -44,7 +48,7 @@ export const TotalValueInfoHeader = ({
           vestedBalance={balance?.vested}
           stakingBalance={balance?.staked}
           onPressInfo={onPressInfo}
-          unlock={balance?.unlock}
+          unlock={balance?.nextVestingUnlockDate}
         />
       </First>
     </>

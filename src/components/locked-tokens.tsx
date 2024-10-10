@@ -8,7 +8,7 @@ import {createTheme} from '@app/helpers';
 import {useIsBalancesFirstSync} from '@app/hooks/use-is-balances-sync';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
-import {BalanceData} from '@app/types';
+import {BalanceModel} from '@app/models/wallet';
 
 import {
   Badge,
@@ -23,7 +23,7 @@ import {
 import {Placeholder} from './ui/placeholder';
 
 export interface LockedTokensProps {
-  balance?: BalanceData;
+  balance?: BalanceModel;
 
   onForwardPress(): void;
 }

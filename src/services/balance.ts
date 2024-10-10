@@ -5,10 +5,9 @@ import {I18nManager} from 'react-native';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {Currencies} from '@app/models/currencies';
 import {Provider} from '@app/models/provider';
-import {Wallet} from '@app/models/wallet';
+import {BalanceModel, Wallet} from '@app/models/wallet';
 import {
   BalanceConstructor,
-  BalanceData,
   ChainId,
   HaqqEthereumAddress,
   HexNumber,
@@ -430,11 +429,11 @@ export class Balance implements IBalance, ISerializable {
     }
   };
 
-  static get emptyBalances(): Record<HaqqEthereumAddress, BalanceData> {
+  static get emptyBalances(): Record<HaqqEthereumAddress, BalanceModel> {
     return Wallet.getAll().reduce((acc, w) => {
       return {
         ...acc,
-        [w.address]: {
+        [w.address]: new BalanceModel({
           staked: Balance.Empty,
           vested: Balance.Empty,
           available: Balance.Empty,
@@ -442,7 +441,7 @@ export class Balance implements IBalance, ISerializable {
           locked: Balance.Empty,
           availableForStake: Balance.Empty,
           unlock: new Date(0),
-        },
+        }),
       };
     }, {});
   }

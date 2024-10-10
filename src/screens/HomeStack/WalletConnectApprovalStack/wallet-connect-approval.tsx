@@ -6,7 +6,7 @@ import {WalletConnectApproval} from '@app/components/wallet-connect-approval';
 import {WalletSelectType, awaitForWallet} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {Wallet} from '@app/models/wallet';
+import {Wallet, WalletModel} from '@app/models/wallet';
 import {
   WalletConnectApprovalStackParamList,
   WalletConnectApprovalStackRoutes,
@@ -20,7 +20,9 @@ export const WalletConnectApprovalScreen = observer(() => {
     WalletConnectApprovalStackRoutes.WalletConnectApproval
   >();
   const wallets = Wallet.getAllVisible();
-  const [selectedWallet, setSelectedWallet] = useState<Wallet>(wallets?.[0]);
+  const [selectedWallet, setSelectedWallet] = useState<WalletModel>(
+    wallets?.[0],
+  );
   const isApproved = useRef(false);
   const event = useMemo(() => route?.params?.event, [route?.params?.event]);
 

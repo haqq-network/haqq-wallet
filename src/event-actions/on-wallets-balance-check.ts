@@ -4,7 +4,7 @@ import {AddressUtils} from '@app/helpers/address-utils';
 import {Currencies} from '@app/models/currencies';
 import {ALL_NETWORKS_ID, Provider} from '@app/models/provider';
 import {VariablesDate} from '@app/models/variables-date';
-import {Wallet} from '@app/models/wallet';
+import {BalanceModel, Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {Indexer, IndexerUpdatesResponse} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
@@ -48,7 +48,7 @@ const parseIndexerBalances = (
 
           return {
             ...ac,
-            [AddressUtils.toEth(w.address)]: {
+            [AddressUtils.toEth(w.address)]: new BalanceModel({
               staked: new Balance(
                 data?.total_staked?.find?.(
                   ([address, chainId]) =>
@@ -104,7 +104,7 @@ const parseIndexerBalances = (
                 p.denom,
               ),
               unlock: new Date(unlock * 1000),
-            },
+            }),
           };
         }, {}),
       },
