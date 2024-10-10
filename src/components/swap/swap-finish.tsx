@@ -152,7 +152,7 @@ export const SwapFinish = observer(
           <First>
             {(isWrapTx || isUnwrapTx) && (
               <Text variant={TextVariant.t15} color={Color.textBase2}>
-                {getText(I18N.swapScreenProviderFee)}:{STRINGS.NBSP}
+                {getText(I18N.swapScreenRoutingSource)}:{STRINGS.NBSP}
                 {`${Contracts.getById(
                   Provider.selectedProvider.config.wethAddress,
                 )?.name}${STRINGS.NBSP}${shortAddress(
