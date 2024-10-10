@@ -8,7 +8,7 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 
 import {app} from '@app/contexts';
 import {VariablesString} from '@app/models/variables-string';
-import {Wallet} from '@app/models/wallet';
+import {Wallet, WalletModel} from '@app/models/wallet';
 import {WalletType} from '@app/types';
 
 import {AddressUtils} from './address-utils';
@@ -65,7 +65,7 @@ const removeNewPinCache = async () => {
 };
 
 const getProviderForUpdatePin = async (
-  wallet: Wallet,
+  wallet: WalletModel,
   getPassword: () => Promise<string>,
 ) => {
   switch (wallet.type) {
@@ -90,7 +90,7 @@ const getProviderForUpdatePin = async (
   return null;
 };
 
-const checkPinCorrect = async (wallet: Wallet, pin: string) => {
+const checkPinCorrect = async (wallet: WalletModel, pin: string) => {
   try {
     const providerWithNewPin = await getProviderForUpdatePin(wallet, () =>
       Promise.resolve(pin),

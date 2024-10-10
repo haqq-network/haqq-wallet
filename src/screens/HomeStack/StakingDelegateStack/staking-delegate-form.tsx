@@ -9,7 +9,6 @@ import {getProviderInstanceForWallet} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useLayoutEffectAsync} from '@app/hooks/use-effect-async';
-import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {
@@ -27,7 +26,7 @@ export const StakingDelegateFormScreen = observer(() => {
     StakingDelegateStackRoutes.StakingDelegateForm
   >().params;
   const wallet = Wallet.getById(account);
-  const balances = useWalletsBalance([wallet!]);
+  const balances = Wallet.getBalancesByAddressList([wallet!]);
   const currentBalance = useMemo(
     () => balances[AddressUtils.toEth(account)],
     [balances, account],

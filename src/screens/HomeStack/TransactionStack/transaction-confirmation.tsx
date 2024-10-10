@@ -4,7 +4,6 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import {observer} from 'mobx-react';
 
 import {TransactionConfirmation} from '@app/components/transaction-confirmation';
-import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForFee} from '@app/helpers/await-for-fee';
@@ -12,7 +11,6 @@ import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useError} from '@app/hooks/use-error';
-import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Fee} from '@app/models/fee';
@@ -42,7 +40,7 @@ export const TransactionConfirmationScreen = observer(() => {
   >();
   const {token, calculatedFees} = route.params;
   const visible = Wallet.getAllVisible();
-  const balance = useWalletsBalance(visible);
+  const balance = Wallet.getBalancesByAddressList(visible);
 
   const [fee, setFee] = useState<Fee>(new Fee(calculatedFees!));
 
@@ -146,7 +144,7 @@ export const TransactionConfirmationScreen = observer(() => {
           );
           showModal(ModalType.notEnoughGas, {
             gasLimit: gasLimit,
-            currentAmount: app.getAvailableBalance(wallet!.address),
+            currentAmount: Wallet.getBalance(wallet!.address, 'available'),
           });
           return;
         }

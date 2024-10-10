@@ -1,6 +1,7 @@
-import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {ethers} from 'ethers';
+import {observer} from 'mobx-react';
 
 import {JsonRpcSign} from '@app/components/json-rpc-sign/json-rpc-sign';
 import {getMessageByRequest} from '@app/components/json-rpc-sign/json-rpc-sign-info';
@@ -33,7 +34,7 @@ import {
 } from '@app/utils';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
-export const JsonRpcSignScreen = memo(() => {
+export const JsonRpcSignScreen = observer(() => {
   const [isAllowed, setIsAllowed] = useState(false);
   const [rejectLoading, setRejectLoading] = useState(false);
   const [signLoading, setSignLoading] = useState(false);
@@ -178,7 +179,7 @@ export const JsonRpcSignScreen = memo(() => {
           );
           showModal(ModalType.notEnoughGas, {
             gasLimit,
-            currentAmount: app.getAvailableBalance(wallet!.address),
+            currentAmount: Wallet.getBalance(wallet!.address, 'available'),
           });
         }
         onPressReject(err, true);

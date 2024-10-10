@@ -1,6 +1,5 @@
 import {ProviderInterface} from '@haqq/rn-wallet-providers';
 
-import {app} from '@app/contexts';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {WalletType} from '@app/types';
@@ -30,7 +29,7 @@ export async function createWalletsForProvider(
     const {address} = await provider.getAccountInfo(hdPath);
 
     if (!Wallet.getById(address)) {
-      const balance = app.getAvailableBalance(address);
+      const balance = Wallet.getBalance(address, 'available');
       canNext = balance.isPositive() || index === 0;
 
       if (canNext) {

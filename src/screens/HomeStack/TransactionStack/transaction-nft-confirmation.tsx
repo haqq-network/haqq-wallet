@@ -4,7 +4,6 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import {observer} from 'mobx-react';
 
 import {TransactionNftConfirmation} from '@app/components/transaction-nft-confirmation';
-import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForFee} from '@app/helpers/await-for-fee';
@@ -182,7 +181,7 @@ export const TransactionNftConfirmationScreen = observer(() => {
           );
           showModal(ModalType.notEnoughGas, {
             gasLimit: gasLimit,
-            currentAmount: app.getAvailableBalance(wallet!.address),
+            currentAmount: Wallet.getBalance(wallet!.address, 'available'),
           });
           return;
         }

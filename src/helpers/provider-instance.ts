@@ -15,7 +15,7 @@ import {app} from '@app/contexts';
 import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {Provider} from '@app/models/provider';
-import {Wallet} from '@app/models/wallet';
+import {WalletModel} from '@app/models/wallet';
 import {EventTracker} from '@app/services/event-tracker';
 import {MarketingEvents, WalletType} from '@app/types';
 import {LEDGER_APP} from '@app/variables/common';
@@ -102,11 +102,11 @@ function getProviderWrapper(provider: ProviderInterface) {
 
 /**
  * getProviderInstanceForWallet helper
- * @param {Wallet} wallet
+ * @param {WalletModel} wallet
  * @param {boolean} [skipAwaitForLedgerCall=false] Use `true` for synthetic transaction on Ledger. Default is `false`.
  */
 export async function getProviderInstanceForWallet(
-  wallet: Wallet,
+  wallet: WalletModel,
   skipAwaitForLedgerCall: boolean = false,
 ): Promise<ProviderInterface> {
   let provider: ProviderInterface;

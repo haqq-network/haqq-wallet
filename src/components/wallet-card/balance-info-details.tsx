@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {observer} from 'mobx-react';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -14,71 +15,68 @@ import {
 import {Placeholder} from '@app/components/ui/placeholder';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 
 type BalanceInfoDetailsProps = {
-  isBalancesFirstSync: boolean;
   total?: Balance;
   locked?: Balance;
   showLockedTokens: boolean;
 };
 
-export const BalanceInfoDetails = ({
-  isBalancesFirstSync,
-  total,
-  locked,
-  showLockedTokens,
-}: BalanceInfoDetailsProps) => {
-  return (
-    <View style={styles.row}>
-      <First>
-        {isBalancesFirstSync && (
-          <>
-            <Spacer height={8} />
-            <Placeholder opacity={0.6}>
-              <Placeholder.Item width={40} height={16} />
-            </Placeholder>
-          </>
-        )}
-        <View style={styles.lockedTokensContainer}>
-          <Text
-            variant={TextVariant.t15}
-            color={Color.textSecond2}
-            children={total?.toFiat()}
-            suppressHighlighting={true}
-          />
-        </View>
-      </First>
-
-      {!!total?.toFiat() && <Spacer width={10} />}
-      {showLockedTokens && (
+export const BalanceInfoDetails = observer(
+  ({total, locked, showLockedTokens}: BalanceInfoDetailsProps) => {
+    return (
+      <View style={styles.row}>
         <First>
-          {isBalancesFirstSync && (
+          {Wallet.isBalancesLoading && (
             <>
               <Spacer height={8} />
               <Placeholder opacity={0.6}>
-                <Placeholder.Item width={60} height={16} />
+                <Placeholder.Item width={40} height={16} />
               </Placeholder>
             </>
           )}
-          {locked?.isPositive() && (
-            <View style={[styles.row, styles.lockedTokensContainer]}>
-              <Icon i16 color={Color.textBase3} name={IconsName.lock} />
-              <Spacer width={4} />
-              <Text
-                variant={TextVariant.t15}
-                color={Color.textBase3}
-                i18n={I18N.walletCardLocked}
-                i18params={{count: locked?.toEtherString() ?? '0'}}
-                suppressHighlighting={true}
-              />
-            </View>
-          )}
+          <View style={styles.lockedTokensContainer}>
+            <Text
+              variant={TextVariant.t15}
+              color={Color.textSecond2}
+              children={total?.toFiat()}
+              suppressHighlighting={true}
+            />
+          </View>
         </First>
-      )}
-    </View>
-  );
-};
+
+        {!!total?.toFiat() && <Spacer width={10} />}
+        {showLockedTokens && (
+          <First>
+            {Wallet.isBalancesLoading && (
+              <>
+                <Spacer height={8} />
+                <Placeholder opacity={0.6}>
+                  <Placeholder.Item width={60} height={16} />
+                </Placeholder>
+              </>
+            )}
+            {locked?.isPositive() && (
+              <View style={[styles.row, styles.lockedTokensContainer]}>
+                <Icon i16 color={Color.textBase3} name={IconsName.lock} />
+                <Spacer width={4} />
+                <Text
+                  variant={TextVariant.t15}
+                  color={Color.textBase3}
+                  i18n={I18N.walletCardLocked}
+                  i18params={{count: locked?.toEtherString() ?? '0'}}
+                  suppressHighlighting={true}
+                />
+              </View>
+            )}
+          </First>
+        )}
+      </View>
+    );
+  },
+);
 
 const styles = createTheme({
   row: {

@@ -35,11 +35,10 @@ import {AddressUtils} from './helpers/address-utils';
 import {getRemoteMultiplierValue} from './helpers/get-remote-balance-value';
 import {shortAddress} from './helpers/short-address';
 import {getHost, onUrlSubmit} from './helpers/web3-browser-utils';
-import {WalletBalance} from './hooks/use-wallets-balance';
 import {I18N, getText} from './i18n';
 import {Banner, BannerButtonEvent, BannerType} from './models/banner';
 import {Fee} from './models/fee';
-import {Wallet} from './models/wallet';
+import {BalanceModel, WalletBalance, WalletModel} from './models/wallet';
 import {navigator} from './navigator';
 import {HomeStackRoutes, WelcomeStackRoutes} from './route-types';
 import {Balance} from './services/balance';
@@ -47,7 +46,6 @@ import {EthSignError} from './services/eth-sign';
 import {
   AdjustTrackingAuthorizationStatus,
   AppLanguage,
-  BalanceData,
   EIPTypedData,
   EthType,
   EthTypedData,
@@ -856,35 +854,31 @@ export function isContractTransaction(
 
 export const calculateBalances = (
   data: WalletBalance,
-  wallets: Wallet[],
-): BalanceData => {
-  return wallets.reduce(
-    (acc, curr) => {
-      const {available, locked, staked, total, vested, availableForStake} =
-        data[curr.address] ?? {};
+  wallets: WalletModel[],
+): BalanceModel => {
+  const balance = new BalanceModel({
+    staked: Balance.Empty,
+    vested: Balance.Empty,
+    available: Balance.Empty,
+    total: Balance.Empty,
+    locked: Balance.Empty,
+    availableForStake: Balance.Empty,
+    unlock: new Date(0),
+  });
 
-      return {
-        staked: staked?.operate(acc.staked, 'add') ?? Balance.Empty,
-        vested: vested?.operate(acc.vested, 'add') ?? Balance.Empty,
-        available: available?.operate(acc.available, 'add') ?? Balance.Empty,
-        total: total?.operate(acc.total, 'add') ?? Balance.Empty,
-        locked: locked?.operate(acc.locked, 'add') ?? Balance.Empty,
-        availableForStake:
-          availableForStake?.operate(acc.availableForStake, 'add') ??
-          Balance.Empty,
-        unlock: acc.unlock,
-      };
-    },
-    {
-      staked: Balance.Empty,
-      vested: Balance.Empty,
-      available: Balance.Empty,
-      total: Balance.Empty,
-      locked: Balance.Empty,
-      availableForStake: Balance.Empty,
-      unlock: new Date(0),
-    },
-  );
+  wallets.forEach(wallet => {
+    const {available, locked, staked, total, vested, availableForStake} =
+      data[wallet.address] ?? {};
+
+    balance.addStaked(staked);
+    balance.addVested(vested);
+    balance.addAvailable(available);
+    balance.addTotal(total);
+    balance.addLocked(locked);
+    balance.addAvailableForState(availableForStake);
+  });
+
+  return balance;
 };
 
 export const generateMockBanner = (): Banner => {
@@ -1136,3 +1130,11 @@ export function createAsyncTask<T>(fn: AsyncTaskFunction<T>) {
     return instance.finally(() => (instance = null));
   };
 }
+
+export const deepClone = (value?: Object) => {
+  if (!value) {
+    return value;
+  }
+
+  return JSON.parse(JSON.stringify(value));
+};

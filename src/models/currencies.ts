@@ -61,7 +61,6 @@ class CurrenciesStore {
       return;
     }
     // optimization to prevent unnecessary loops while parsing rates
-    // nedeed because rates are updated inside onWalletsBalanceCheck
     const ratesHash = hashMessage(JSON.stringify(rates));
     if (this._prevRatesHash === ratesHash) {
       return;

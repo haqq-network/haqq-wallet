@@ -27,12 +27,12 @@ import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
-import {Wallet} from '@app/models/wallet';
+import {WalletModel} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {WalletType} from '@app/types';
 
 type SettingsAccountDetailProps = {
-  wallet: Wallet;
+  wallet: WalletModel;
   onPressRename: () => void;
   onPressStyle: () => void;
   onToggleIsHidden: () => void;

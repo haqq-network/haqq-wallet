@@ -6,11 +6,11 @@ import {Color} from '@app/colors';
 import {BlurView, Icon, IconButton, IconsName, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Wallet} from '@app/models/wallet';
+import {WalletModel} from '@app/models/wallet';
 import {IS_IOS, SYSTEM_BLUR_2} from '@app/variables/common';
 
 type CardButtonsProps = {
-  wallet: Wallet;
+  wallet: WalletModel;
   cardState: string;
   testID?: string;
   onPressSend: (address: string) => void;

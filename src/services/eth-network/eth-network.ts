@@ -8,7 +8,7 @@ import {AddressUtils} from '@app/helpers/address-utils';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {EstimationVariant} from '@app/models/fee';
 import {Provider, ProviderModel} from '@app/models/provider';
-import {Wallet} from '@app/models/wallet';
+import {WalletModel} from '@app/models/wallet';
 import {getDefaultChainId} from '@app/network';
 import {Balance} from '@app/services/balance';
 import {getERC1155TransferData} from '@app/services/eth-network/erc1155';
@@ -313,7 +313,7 @@ export class EthNetwork {
   async transferTransaction(
     estimate: CalculatedFees,
     transport: ProviderInterface,
-    wallet: Wallet,
+    wallet: WalletModel,
     to: string,
     value: Balance,
     provider = Provider.selectedProvider,
@@ -381,7 +381,7 @@ export class EthNetwork {
   async transferERC20(
     estimate: CalculatedFees,
     transport: ProviderInterface,
-    from: Wallet,
+    from: WalletModel,
     to: string,
     amount: Balance,
     contractAddress: string,
@@ -418,7 +418,7 @@ export class EthNetwork {
   async transferERC721(
     estimate: CalculatedFees,
     transport: ProviderInterface,
-    from: Wallet,
+    from: WalletModel,
     to: string,
     tokenId: number,
     contractAddress: string,
@@ -455,7 +455,7 @@ export class EthNetwork {
   async transferERC1155(
     estimate: CalculatedFees,
     transport: ProviderInterface,
-    from: Wallet,
+    from: WalletModel,
     to: string,
     tokenId: number,
     contractAddress: string,

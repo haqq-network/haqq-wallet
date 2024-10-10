@@ -9,11 +9,6 @@ import UIKit
 import React
 import FirebaseCore
 import AVFoundation
-#if DEBUG
-#if FB_SONARKIT_ENABLED
-import FlipperKit
-#endif
-#endif
 
 func clearKeychainIfNecessary() {
   // Checks whether or not this is the first time the app is run
@@ -48,6 +43,7 @@ func clearKeychainIfNecessary() {
 class AppDelegate: RCTAppDelegate {
   override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
     moduleName = getModuleName()
+    initialProps = [:]
     clearKeychainIfNecessary();
     FirebaseApp.configure()
     let app = super.application(application, didFinishLaunchingWithOptions: launchOptions);
@@ -57,19 +53,11 @@ class AppDelegate: RCTAppDelegate {
   }
 
   override func sourceURL(for bridge: RCTBridge!) -> URL! {
-#if DEBUG
+    #if DEBUG
     return RCTBundleURLProvider.sharedSettings().jsBundleURL(forBundleRoot: "index")
-#else
+    #else
     return Bundle.main.url(forResource: "main", withExtension: "jsbundle")
-#endif
-  }
-
-  override func application(_ application: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-    return RCTLinkingManager.application(application, open: url, options: options)
-  }
-
-  func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
-    return RCTLinkingManager.application(application, continue: userActivity, restorationHandler: restorationHandler)
+    #endif
   }
 
   func getModuleName() -> String {

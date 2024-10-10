@@ -92,7 +92,7 @@ class ProviderStore {
       Currencies.clear();
 
       await RemoteProviderConfig.init();
-      await awaitForEventDone(Events.onSyncAppBalances);
+      await Wallet.fetchBalances();
       if (requestMarkup) {
         await awaitForEventDone(Events.onRequestMarkup);
       }

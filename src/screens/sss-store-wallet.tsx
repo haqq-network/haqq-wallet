@@ -2,6 +2,7 @@
 import React, {useEffect} from 'react';
 
 import {ProviderSSSBase} from '@haqq/rn-wallet-providers';
+import {observer} from 'mobx-react';
 
 import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
@@ -15,7 +16,7 @@ import {RemoteConfig} from '@app/services/remote-config';
 import {ModalType, WalletType} from '@app/types';
 import {ETH_HD_SHORT_PATH} from '@app/variables/common';
 
-export const SssStoreWalletScreen = () => {
+export const SssStoreWalletScreen = observer(() => {
   const route = useTypedRoute<'sssStoreWallet'>();
   const navigation = useTypedNavigation();
 
@@ -61,7 +62,7 @@ export const SssStoreWalletScreen = () => {
           const {address} = await provider.getAccountInfo(hdPath);
 
           if (!Wallet.getById(address)) {
-            const balance = app.getAvailableBalance(address);
+            const balance = Wallet.getBalance(address, 'available');
             canNext = balance.isPositive() || index === 0;
 
             if (canNext) {
@@ -100,4 +101,4 @@ export const SssStoreWalletScreen = () => {
   }, [navigation, route]);
 
   return <></>;
-};
+});

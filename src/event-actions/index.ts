@@ -12,7 +12,6 @@ import {onDynamicLink} from '@app/event-actions/on-dynamic-link';
 import {onNeedUpdate} from '@app/event-actions/on-need-update';
 import {onPushNotification} from '@app/event-actions/on-push-notification';
 import {onStakingSync} from '@app/event-actions/on-staking-sync';
-import {onSyncAppBalances} from '@app/event-actions/on-sync-app-balances';
 import {onTransactionStatusLoad} from '@app/event-actions/on-transaction-status-load';
 import {onTransactionsLoad} from '@app/event-actions/on-transactions-load';
 import {onWalletConnectApproveConnection} from '@app/event-actions/on-wallet-connect-approve-connection';
@@ -25,8 +24,6 @@ import {onWalletRemove} from '@app/event-actions/on-wallet-remove';
 import {onWalletReset} from '@app/event-actions/on-wallet-reset';
 import {onWalletSssCheck} from '@app/event-actions/on-wallet-sss-check';
 import {onWalletSssSaved} from '@app/event-actions/on-wallet-sss-saved';
-import {onWalletVisibilityChange} from '@app/event-actions/on-wallet-visibility-change';
-import {onWalletsBalanceCheck} from '@app/event-actions/on-wallets-balance-check';
 // import {onWalletsStakingBalanceCheck} from '@app/event-actions/on-wallets-staking-balance-check';
 // import {onWalletsVestingBalanceCheck} from '@app/event-actions/on-wallets-vesting-balance-check';
 import {Events} from '@app/events';
@@ -34,11 +31,8 @@ import {throttle} from '@app/utils';
 
 import {onPushTokenRefresh} from './on-push-token-refresh';
 
-app.on(Events.onWalletsBalanceCheck, throttle(onWalletsBalanceCheck, 1000));
 // app.on(Events.onWalletsVestingBalanceCheck, onWalletsVestingBalanceCheck);
 // app.on(Events.onWalletsStakingBalanceCheck, onWalletsStakingBalanceCheck);
-app.on(Events.onSyncAppBalances, onSyncAppBalances);
-app.on(Events.onWalletVisibilityChange, onWalletVisibilityChange);
 app.on(Events.onDeepLink, onDeepLink);
 app.on(Events.onWalletCreate, onWalletCreate);
 app.on(Events.onWalletRemove, onWalletRemove);

@@ -10,7 +10,7 @@ import {useSumAmount} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Contracts} from '@app/models/contracts';
 import {Provider} from '@app/models/provider';
-import {Wallet} from '@app/models/wallet';
+import {WalletModel} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {
   SushiPoolEstimateResponse,
@@ -53,7 +53,7 @@ export type PoolsData = Omit<SushiPoolResponse, 'contracts'> & {
 };
 
 export interface SwapProps {
-  currentWallet: Wallet;
+  currentWallet: WalletModel;
   poolData: PoolsData;
   estimateData: SushiPoolEstimateResponse | null;
   tokenIn: IToken;

@@ -8,9 +8,8 @@ import {Loading} from '@app/components/ui';
 import {showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useWallet} from '@app/hooks/use-wallet';
-import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {Token} from '@app/models/tokens';
-import {Wallet} from '@app/models/wallet';
+import {Wallet, WalletModel} from '@app/models/wallet';
 import {
   HomeStackParamList,
   HomeStackRoutes,
@@ -27,8 +26,8 @@ export const AccountInfoScreen = observer(() => {
   const navigation = useTypedNavigation<HomeStackParamList>();
   const accountId = useMemo(() => route.params.accountId, [route]);
   const wallet = useWallet(accountId);
-  const balances = useWalletsBalance([wallet!]);
-  const {available, locked, staked, total, unlock, vested} = useMemo(
+  const balances = Wallet.getBalancesByAddressList([wallet!]);
+  const {available, locked, staked, total, nextVestingUnlockDate, vested} = useMemo(
     () => balances[wallet?.address!],
     [balances, wallet],
   );
@@ -59,7 +58,7 @@ export const AccountInfoScreen = observer(() => {
   );
 
   const onPressToken = useCallback(
-    (w: Wallet, token: IToken) => {
+    (w: WalletModel, token: IToken) => {
       navigation.navigate(HomeStackRoutes.Transaction, {
         // @ts-ignore
         screen: TransactionStackRoutes.TransactionAddress,
@@ -88,7 +87,7 @@ export const AccountInfoScreen = observer(() => {
       locked={locked}
       staked={staked}
       total={total}
-      unlock={unlock}
+      unlock={nextVestingUnlockDate}
       vested={vested}
       tokens={Token.tokens}
     />

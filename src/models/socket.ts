@@ -1,8 +1,6 @@
 import {makeAutoObservable, runInAction} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
-import {app} from '@app/contexts';
-import {Events} from '@app/events';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {Wallet} from '@app/models/wallet';
 import {storage} from '@app/services/mmkv';
@@ -46,7 +44,7 @@ class SocketStore {
       clearInterval(this.fallbackIntervalTimer);
     }
     this.fallbackIntervalTimer = setInterval(() => {
-      app.emit(Events.onWalletsBalanceCheck);
+      Wallet.fetchBalances();
     }, 6000);
   };
 
