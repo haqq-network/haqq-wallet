@@ -101,6 +101,22 @@ export enum MarketingEvents {
   swapStart = 'swapStart',
   swapSuccess = 'swapSuccess',
   swapFail = 'swapFail',
+
+  swapScreenOpen = 'swapScreenOpen',
+  swapSelectToken0 = 'swapSelectToken0',
+  swapSelectToken1 = 'swapSelectToken1',
+  swapEnterAmount = 'swapEnterAmount',
+  swapPressMax = 'swapPressMax',
+  swapChangeDirection = 'swapChangeDirection',
+
+  swapApproveStart = 'swapApproveStart',
+  swapApproveSuccess = 'swapApproveSuccess',
+  swapApproveFail = 'swapApproveFail',
+
+  jsonRpcSignStart = 'jsonRpcSignStart',
+  jsonRpcSignSuccess = 'jsonRpcSignSuccess',
+  jsonRpcSignFail = 'jsonRpcSignFail',
+  jsonRpcSignUserReject = 'jsonRpcSignUserReject',
 }
 
 export enum PopupNotificationBannerTypes {
