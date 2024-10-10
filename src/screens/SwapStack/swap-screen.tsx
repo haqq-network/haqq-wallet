@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
+import {useFocusEffect} from '@react-navigation/native';
 import {ethers} from 'ethers';
 import {observer} from 'mobx-react';
 import {Alert, Keyboard, View} from 'react-native';
@@ -69,6 +70,12 @@ const getMinAmountForDecimals = (d: number | null, symbol: string | null) => {
 
   return new Balance(Number(`0.${'0'.repeat(d! - 1)}1`), d, symbol!);
 };
+
+function getError(err: any): string {
+  return typeof err === 'string'
+    ? err
+    : (err as any).message || (err as any).toString();
+}
 
 function findToken(wallet: string, token_address: string) {
   if (AddressUtils.equals(token_address, NATIVE_TOKEN_ADDRESS)) {
@@ -655,22 +662,23 @@ export const SwapScreen = observer(() => {
 
   const onPressChangeTokenIn = async () => {
     try {
-      const {token, wallet} = (await awaitForToken(tokenIn!)) || {};
-      if (!token || !wallet || !tokenIn || !tokenOut) {
+      const {token} = (await awaitForToken(tokenIn!)) || {};
+      if (!token || !tokenIn || !tokenOut) {
         return;
       }
       if (token.symbol === tokenIn.symbol) {
         return await estimate();
       }
+      EventTracker.instance.trackEvent(MarketingEvents.swapSelectToken0, {
+        token0_symbol: token.symbol!,
+        token0_address: AddressUtils.toEth(token.id),
+        chain_id: Provider.selectedProvider.ethChainId.toString(),
+        wallet_address: currentWallet.address,
+      });
       vibrate(HapticEffects.impactLight);
       Keyboard.dismiss();
       setIsEstimating(() => true);
       amountsOut.setAmount('');
-      logger.log('onPressChangeTokenIn', token.symbol);
-      if (wallet.address !== currentWallet.address) {
-        setCurrentWallet(() => wallet);
-      }
-      logger.log('token', token);
 
       const needChangeTokenOut =
         AddressUtils.equals(token.id!, tokenOut?.id!) &&
@@ -690,7 +698,7 @@ export const SwapScreen = observer(() => {
         );
         setCurrentRoute(route! || filteredRoutes[0]);
       }
-      await refreshTokenBalances(wallet.address, t0Available);
+      await refreshTokenBalances(currentWallet.address, t0Available);
       amountsIn.setAmount('');
       return await estimate();
     } catch (err) {
@@ -703,18 +711,23 @@ export const SwapScreen = observer(() => {
 
   const onPressChangeTokenOut = async () => {
     try {
-      const {token, wallet} = (await awaitForToken(tokenOut!)) || {};
-      if (!token || !wallet || !tokenIn || !tokenOut) {
+      const {token} = (await awaitForToken(tokenOut!)) || {};
+      if (!token || !tokenIn || !tokenOut) {
         return;
       }
       if (token.symbol === tokenIn.symbol) {
         return estimate();
       }
+      EventTracker.instance.trackEvent(MarketingEvents.swapSelectToken1, {
+        token1_symbol: token.symbol!,
+        token1_address: AddressUtils.toEth(token.id),
+        chain_id: Provider.selectedProvider.ethChainId.toString(),
+        wallet_address: currentWallet.address,
+      });
       vibrate(HapticEffects.impactLight);
       Keyboard.dismiss();
       amountsOut.setAmount('');
       setIsEstimating(() => true);
-      setCurrentWallet(() => wallet);
 
       const needChangeTokenIn =
         AddressUtils.equals(token.id!, tokenIn?.id!) &&
@@ -735,7 +748,7 @@ export const SwapScreen = observer(() => {
         );
         setCurrentRoute(route! || filteredRoutes[0]);
       }
-      await refreshTokenBalances(wallet.address, t0Available);
+      await refreshTokenBalances(currentWallet.address, t0Available);
       return await estimate();
     } catch (err) {
       Logger.error(err, 'onPressChangeTokenOut');
@@ -871,6 +884,7 @@ export const SwapScreen = observer(() => {
         type: 'swap',
         swap_source: 'SwapRouterV3',
         swap_source_address: Provider.selectedProvider.config.swapRouterV3,
+        error: getError(err),
       });
     } finally {
       setSwapInProgress(() => false);
@@ -890,6 +904,12 @@ export const SwapScreen = observer(() => {
 
   const onPressApprove = useCallback(async () => {
     try {
+      EventTracker.instance.trackEvent(MarketingEvents.swapApproveStart, {
+        ...COMMON_EVENT_PARAMS,
+        type: 'approve',
+        swap_source: 'SwapRouterV3',
+        swap_source_address: Provider.selectedProvider.config.swapRouterV3,
+      });
       setApproveInProgress(() => true);
       const provider = await getRpcProvider(Provider.selectedProvider);
       const erc20Token = new ethers.Contract(tokenIn?.id!, ERC20_ABI, provider);
@@ -924,6 +944,12 @@ export const SwapScreen = observer(() => {
       const txHandler = await provider.sendTransaction(rawTx);
       const txResp = await txHandler.wait();
       logger.log('txResp', txResp);
+      EventTracker.instance.trackEvent(MarketingEvents.swapApproveSuccess, {
+        ...COMMON_EVENT_PARAMS,
+        type: 'approve',
+        swap_source: 'SwapRouterV3',
+        swap_source_address: Provider.selectedProvider.config.swapRouterV3,
+      });
       vibrate(HapticEffects.success);
       Toast.show({
         type: 'success',
@@ -933,8 +959,16 @@ export const SwapScreen = observer(() => {
         topOffset: 100,
       });
       await estimate();
+      amountsIn.setError('');
     } catch (err) {
       logger.captureException(err, 'onPressApprove');
+      EventTracker.instance.trackEvent(MarketingEvents.swapApproveFail, {
+        ...COMMON_EVENT_PARAMS,
+        type: 'approve',
+        swap_source: 'SwapRouterV3',
+        swap_source_address: Provider.selectedProvider.config.swapRouterV3,
+        error: getError(err),
+      });
     } finally {
       setApproveInProgress(() => false);
     }
@@ -1007,6 +1041,7 @@ export const SwapScreen = observer(() => {
         type: 'wrap',
         swap_source: swapSource,
         swap_source_address: Provider.selectedProvider.config.wethAddress,
+        error: getError(err),
       });
     } finally {
       setSwapInProgress(() => false);
@@ -1095,6 +1130,7 @@ export const SwapScreen = observer(() => {
         type: 'unwrap',
         swap_source: swapSource,
         swap_source_address: Provider.selectedProvider.config.wethAddress,
+        error: getError(err),
       });
     } finally {
       setSwapInProgress(() => false);
@@ -1118,15 +1154,18 @@ export const SwapScreen = observer(() => {
       vibrate(HapticEffects.impactLight);
       await refreshTokenBalances(currentWallet.address, t0Available);
 
-      amountsIn.setAmount(
-        t0Available.toFloatString(
-          undefined,
-          t0Available.getPrecission(),
-          false,
-        ),
+      const maxAmount = t0Available.toBalanceString(
+        'auto',
+        t0Available.getPrecission(),
+        false,
+        true,
       );
-
+      amountsIn.setAmount(maxAmount);
       await estimate();
+      EventTracker.instance.trackEvent(MarketingEvents.swapPressMax, {
+        max_amount: maxAmount,
+        ...COMMON_EVENT_PARAMS,
+      });
     } catch (error) {
       logger.error('onPressMax', error);
     }
@@ -1143,7 +1182,10 @@ export const SwapScreen = observer(() => {
     });
     await refreshTokenBalances(address as HaqqEthereumAddress, t0Available);
     setCurrentWallet(() => Wallet.getById(address)!);
-  }, [currentWallet, refreshTokenBalances, tokenIn]);
+    navigation.setParams({
+      address,
+    });
+  }, [currentWallet, refreshTokenBalances, tokenIn, navigation]);
 
   const onInputBlur = useCallback(async () => {
     if (!amountsIn.amount) {
@@ -1151,6 +1193,11 @@ export const SwapScreen = observer(() => {
       amountsOut.setAmount('0');
       return amountsIn.setError('');
     }
+
+    EventTracker.instance.trackEvent(
+      MarketingEvents.swapEnterAmount,
+      COMMON_EVENT_PARAMS,
+    );
     vibrate(HapticEffects.impactLight);
     Keyboard.dismiss();
     setIsEstimating(() => true);
@@ -1158,14 +1205,19 @@ export const SwapScreen = observer(() => {
   }, [estimate, setIsEstimating]);
 
   const onPressChangeDirection = useCallback(async () => {
-    setCurrentRoute(
-      () =>
-        poolsData.routes.find(
-          r =>
-            AddressUtils.equals(r.token0, currentRoute?.token1!) &&
-            AddressUtils.equals(r.token1, currentRoute?.token0!),
-        )!,
-    );
+    const route = poolsData.routes.find(
+      r =>
+        AddressUtils.equals(r.token0, currentRoute?.token1!) &&
+        AddressUtils.equals(r.token1, currentRoute?.token0!),
+    )!;
+    setCurrentRoute(() => route);
+
+    EventTracker.instance.trackEvent(MarketingEvents.swapChangeDirection, {
+      token0: route.token0,
+      token1: route.token1,
+      swap_path: route.route_hex,
+    });
+
     await refreshTokenBalances();
     await estimate();
   }, [currentRoute, setCurrentRoute, poolsData]);
@@ -1175,6 +1227,14 @@ export const SwapScreen = observer(() => {
     Keyboard.dismiss();
     swapSettingsRef?.current?.open?.();
   }, []);
+
+  const onSwapSettingsChange = useCallback(
+    (settings: SwapTransactionSettings) => {
+      setSwapSettings(() => settings);
+      estimate();
+    },
+    [setSwapSettings, estimate],
+  );
 
   const prevTokenIn = usePrevious(tokenIn);
   const prevTokenOut = usePrevious(tokenOut);
@@ -1354,6 +1414,15 @@ export const SwapScreen = observer(() => {
     Token.fetchTokens(true);
   }, []);
 
+  useFocusEffect(
+    useCallback(() => {
+      EventTracker.instance.trackEvent(
+        MarketingEvents.swapScreenOpen,
+        COMMON_EVENT_PARAMS,
+      );
+    }, []),
+  );
+
   if (isLoading) {
     return <Loading />;
   }
@@ -1381,7 +1450,7 @@ export const SwapScreen = observer(() => {
       swapSettings={swapSettings}
       minReceivedAmount={minReceivedAmount}
       currentRoute={currentRoute!}
-      onSettingsChange={setSwapSettings}
+      onSettingsChange={onSwapSettingsChange}
       onPressWrap={onPressWrap}
       onPressUnrap={onPressUnrap}
       onPressSwap={onPressSwap}

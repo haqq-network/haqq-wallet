@@ -21,8 +21,6 @@ export const SwapFinishScreen = observer(({}) => {
   const {estimateData, token0, token1, txHash, isUnwrapTx, isWrapTx} =
     useTypedRoute<SwapStackParamList, SwapStackRoutes.Finish>().params;
 
-  Logger.log('estimateData', JSON.stringify(estimateData, null, 2));
-
   const rate = useMemo(() => {
     const r =
       token1.value.toFloat() /
