@@ -65,8 +65,7 @@ export const EstimatedValue = observer(
                     <AnimatedRollingNumber
                       key={`estimated-animated-value-${uuid}-idx-${i}`}
                       value={v}
-                      enableCompactNotation={false}
-                      useGrouping={false}
+                      useGrouping
                       toFixed={
                         v === 0
                           ? undefined

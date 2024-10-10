@@ -1,6 +1,5 @@
 import React, {useMemo} from 'react';
 
-import Decimal from 'decimal.js';
 import {observer} from 'mobx-react';
 import {KeyboardAvoidingView, View} from 'react-native';
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
@@ -11,8 +10,9 @@ import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {useSumAmount} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {Contracts} from '@app/models/contracts';
+import {Currencies} from '@app/models/currencies';
 import {Provider} from '@app/models/provider';
+import {Token} from '@app/models/tokens';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {
@@ -21,8 +21,12 @@ import {
   SushiRoute,
 } from '@app/services/indexer';
 import {IToken} from '@app/types';
-import {formatNumberString} from '@app/utils';
-import {IS_IOS, STRINGS} from '@app/variables/common';
+import {
+  IS_IOS,
+  LONG_NUM_PRECISION,
+  SPACE_OR_NBSP,
+  STRINGS,
+} from '@app/variables/common';
 
 import {EstimatedValue} from './estimated-value';
 import {SwapInput} from './swap-input';
@@ -77,6 +81,7 @@ export interface SwapProps {
   swapSettingsRef: React.RefObject<SwapSettingBottomSheetRef>;
   swapSettings: SwapTransactionSettings;
   currentRoute: SushiRoute;
+  rate: string;
   onSettingsChange: (settings: SwapTransactionSettings) => void;
   onPressWrap(): Promise<void>;
   onPressUnrap(): Promise<void>;
@@ -113,6 +118,7 @@ export const Swap = observer(
     swapSettings,
     minReceivedAmount,
     currentRoute,
+    rate,
     onSettingsChange,
     onPressWrap,
     onPressUnrap,
@@ -159,21 +165,6 @@ export const Swap = observer(
       );
     }, [isApproveInProgress, amountsIn.error, t0Current, isInfussentBalance]);
 
-    const rate = useMemo(() => {
-      if (!amountsIn.amount || !amountsOut.amount) {
-        return '0';
-      }
-
-      const t0 = new Decimal(amountsIn.amount);
-      const t1 = new Decimal(amountsOut.amount);
-
-      return t1
-        .div(t0)
-        .toString()
-        .concat(STRINGS.NBSP)
-        .concat(tokenOut.symbol!);
-    }, [amountsIn.amount, amountsOut.amount]);
-
     const priceImpactColor = useMemo(() => {
       if (!estimateData?.s_price_impact) {
         return Color.textBase1;
@@ -191,6 +182,48 @@ export const Swap = observer(
 
       return Color.textBase1;
     }, [estimateData]);
+
+    const minReceivedFormatted = useMemo(() => {
+      const balance = minReceivedAmount
+        .toBalanceString('auto', undefined, false, true)
+        .replaceAll(SPACE_OR_NBSP, '');
+
+      const parsed = parseFloat(balance);
+
+      if (Number.isNaN(parsed)) {
+        return [0, minReceivedAmount.getSymbol()];
+      }
+
+      return `${parseFloat(balance!)}${
+        STRINGS.NBSP
+      }${minReceivedAmount.getSymbol()}`;
+    }, [minReceivedAmount]);
+
+    const priceImpactFormatted = useMemo(() => {
+      const PI = parseFloat(estimateData?.s_price_impact!).toFixed(
+        LONG_NUM_PRECISION,
+      );
+      return `${PI}${STRINGS.NBSP}${'%'}`;
+    }, [estimateData]);
+
+    const providerFeeFormatted = useMemo(() => {
+      const symbol =
+        Currencies.currency?.postfix || Currencies.currency?.prefix;
+      const balance = providerFee
+        .toFiat({
+          useDefaultCurrency: false,
+          withoutSymbol: true,
+        })
+        .replaceAll(SPACE_OR_NBSP, '');
+
+      const parsed = parseFloat(balance);
+
+      if (Number.isNaN(parsed)) {
+        return `${0}${STRINGS.NBSP}${symbol}`;
+      }
+
+      return `${parsed}${STRINGS.NBSP}${symbol}`;
+    }, [providerFee]);
 
     return (
       <KeyboardSafeArea style={styles.container}>
@@ -277,21 +310,16 @@ export const Swap = observer(
                 <>
                   <EstimatedValue
                     title={I18N.swapScreenProviderFee}
-                    value={providerFee.toFiat({
-                      useDefaultCurrency: true,
-                      fixed: 6,
-                    })}
+                    value={providerFeeFormatted}
                   />
                   <EstimatedValue
                     title={I18N.swapScreenPriceImpact}
                     valueColor={priceImpactColor}
-                    value={`${formatNumberString(
-                      estimateData.s_price_impact || '0',
-                    )}${STRINGS.NBSP}%`}
+                    value={priceImpactFormatted}
                   />
                   <EstimatedValue
                     title={I18N.swapScreenMinimumReceived}
-                    value={minReceivedAmount.toBalanceString('auto')}
+                    value={minReceivedFormatted}
                   />
                 </>
               )}
@@ -300,7 +328,7 @@ export const Swap = observer(
                 {(isWrapTx || isUnwrapTx) && (
                   <EstimatedValue
                     title={I18N.swapScreenRoutingSource}
-                    value={`${Contracts.getById(
+                    value={`${Token.getById(
                       Provider.selectedProvider.config.wethAddress,
                     )?.name}${STRINGS.NBSP}${shortAddress(
                       Provider.selectedProvider.config.wethAddress!,

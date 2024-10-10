@@ -18,7 +18,6 @@ import {
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
-import {Contracts} from '@app/models/contracts';
 import {Fee} from '@app/models/fee';
 import {ProviderModel} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
@@ -190,7 +189,7 @@ export const JsonRpcCommonTransaction = ({
               onPress={onPressApproveSpender}
               variant={TextVariant.t11}
               color={Color.textGreen1}>
-              {Contracts.getById(parsedInput?.args?.[0])?.name ?? ''}
+              {Token.getById(parsedInput?.args?.[0])?.name ?? ''}
               {STRINGS.NBSP}
               {shortAddress(parsedInput?.args?.[0], '•', true)}
             </Text>

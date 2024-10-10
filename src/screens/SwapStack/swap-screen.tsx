@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
 import {useFocusEffect} from '@react-navigation/native';
+import Decimal from 'decimal.js';
 import {ethers} from 'ethers';
 import {observer} from 'mobx-react';
 import {Alert, Keyboard, View} from 'react-native';
@@ -31,7 +32,6 @@ import {useBackNavigationHandler} from '@app/hooks/use-back-navigation-handler';
 import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {usePrevious} from '@app/hooks/use-previous';
 import {I18N, getText} from '@app/i18n';
-import {Contracts} from '@app/models/contracts';
 import {Currencies} from '@app/models/currencies';
 import {Provider} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
@@ -56,6 +56,8 @@ import {ERC20_ABI, V3SWAPROUTER_ABI, WETH_ABI} from '@app/variables/abi';
 import {
   HAQQ_METADATA,
   LONG_NUM_PRECISION,
+  NUM_PRECISION,
+  STRINGS,
   ZERO_HEX_NUMBER,
 } from '@app/variables/common';
 
@@ -282,6 +284,25 @@ export const SwapScreen = observer(() => {
 
     return new Balance(0, 0, tokenOut.symbol!);
   }, [currentWallet, tokenOut, Provider.selectedProvider.denom, Token.tokens]);
+
+  const rate = useMemo(() => {
+    if (!amountsIn.amount || !amountsOut.amount || !tokenOut) {
+      return '0';
+    }
+
+    const t0 = new Decimal(amountsIn.amount);
+    const t1 = new Decimal(amountsOut.amount);
+    const r = t1.div(t0);
+    let result = '';
+
+    if (r.lt(1)) {
+      result = r.toFixed(LONG_NUM_PRECISION);
+    } else {
+      result = r.toFixed(NUM_PRECISION);
+    }
+
+    return result.concat(STRINGS.NBSP).concat(tokenOut.symbol!);
+  }, [amountsIn.amount, amountsOut.amount, tokenOut]);
 
   const estimate = async (force = false) => {
     const errCtx: Record<string, any> = {};
@@ -873,6 +894,9 @@ export const SwapScreen = observer(() => {
       const txResp = await txHandler.wait();
 
       navigation.navigate(SwapStackRoutes.Finish, {
+        rate,
+        amountIn: amountsIn.amount,
+        amountOut: amountsOut.amount,
         txHash: txResp.transactionHash,
         token0: {...tokenIn!, value: t0Current},
         token1: {...tokenOut!, value: t1Current},
@@ -917,6 +941,9 @@ export const SwapScreen = observer(() => {
     COMMON_EVENT_PARAMS,
     t0Current,
     t1Current,
+    rate,
+    amountsIn.amount,
+    amountsOut.amount,
   ]);
 
   const onPressApprove = useCallback(async () => {
@@ -998,11 +1025,14 @@ export const SwapScreen = observer(() => {
     COMMON_EVENT_PARAMS,
     t0Current,
     t1Current,
+    rate,
+    amountsIn.amount,
+    amountsOut.amount,
   ]);
 
   const onPressWrap = useCallback(async () => {
     const swapSource =
-      Contracts.getById(Provider.selectedProvider.config.wethAddress)?.name ||
+      Token.getById(Provider.selectedProvider.config.wethAddress)?.name ||
       'WETH';
 
     // deposit
@@ -1044,6 +1074,9 @@ export const SwapScreen = observer(() => {
       const txResp = await txHandler.wait();
 
       navigation.navigate(SwapStackRoutes.Finish, {
+        rate,
+        amountIn: amountsIn.amount,
+        amountOut: amountsOut.amount,
         txHash: txResp.transactionHash,
         token0: {...tokenIn!, value: t0Current},
         token1: {...tokenOut!, value: t1Current},
@@ -1084,10 +1117,13 @@ export const SwapScreen = observer(() => {
     COMMON_EVENT_PARAMS,
     t0Current,
     t1Current,
+    rate,
+    amountsIn.amount,
+    amountsOut.amount,
   ]);
   const onPressUnrap = useCallback(async () => {
     const swapSource =
-      Contracts.getById(Provider.selectedProvider.config.wethAddress)?.name ||
+      Token.getById(Provider.selectedProvider.config.wethAddress)?.name ||
       'WETH';
     // withdraw
     try {
@@ -1141,6 +1177,9 @@ export const SwapScreen = observer(() => {
         estimateData: estimateData as SushiPoolEstimateResponse,
         isWrapTx,
         isUnwrapTx,
+        rate,
+        amountIn: amountsIn.amount,
+        amountOut: amountsOut.amount,
       });
       logger.log('txResp', txResp);
       EventTracker.instance.trackEvent(MarketingEvents.swapSuccess, {
@@ -1175,6 +1214,8 @@ export const SwapScreen = observer(() => {
     estimate,
     Provider.selectedProvider.denom,
     COMMON_EVENT_PARAMS,
+    amountsOut.amount,
+    rate,
   ]);
 
   // 2. Ensure all callback functions are memoized with useCallback
@@ -1498,6 +1539,7 @@ export const SwapScreen = observer(() => {
 
   return (
     <Swap
+      rate={rate}
       currentWallet={currentWallet}
       poolData={poolsData!}
       isEstimating={isEstimating}

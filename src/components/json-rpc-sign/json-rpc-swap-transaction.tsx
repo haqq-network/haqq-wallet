@@ -26,7 +26,6 @@ import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
 import {shortAddress} from '@app/helpers/short-address';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N} from '@app/i18n';
-import {Contracts} from '@app/models/contracts';
 import {Currencies} from '@app/models/currencies';
 import {Fee} from '@app/models/fee';
 import {ProviderModel} from '@app/models/provider';
@@ -39,7 +38,7 @@ import {
   JsonRpcMetadata,
   JsonRpcTransactionRequest,
 } from '@app/types';
-import {formatNumberString, openInAppBrowser, sleep} from '@app/utils';
+import {openInAppBrowser, sleep} from '@app/utils';
 import {LONG_NUM_PRECISION, STRINGS} from '@app/variables/common';
 
 import {ImageWrapper} from '../image-wrapper';
@@ -262,7 +261,7 @@ export const JsonRpcSwapTransaction = observer(
           ),
           image:
             tokenInContract?.image ??
-            Contracts.getById(tokenInAddress)?.icon ??
+            Token.getById(tokenInAddress)?.image ??
             require('@assets/images/empty-icon.png'),
         }));
 
@@ -275,7 +274,7 @@ export const JsonRpcSwapTransaction = observer(
           ),
           image:
             tokenOutContract?.image ??
-            Contracts.getById(tokenOutAddress)?.icon ??
+            Token.getById(tokenOutAddress)?.image ??
             require('@assets/images/empty-icon.png'),
         }));
 
@@ -385,11 +384,11 @@ export const JsonRpcSwapTransaction = observer(
             <>
               <DataView i18n={I18N.swapScreenPriceImpact}>
                 <Text variant={TextVariant.t11} color={priceImpactColor}>
-                  {`${formatNumberString(
-                    parseFloat(estimateData?.s_price_impact ?? '0').toFixed(
-                      LONG_NUM_PRECISION,
-                    ),
-                  )}%`}
+                  {parseFloat(estimateData?.s_price_impact!).toFixed(
+                    LONG_NUM_PRECISION,
+                  )}
+                  {STRINGS.NBSP}
+                  {'%'}
                 </Text>
               </DataView>
               <DataView i18n={I18N.swapScreenProviderFee}>
@@ -429,7 +428,7 @@ export const JsonRpcSwapTransaction = observer(
               onPress={onPressRoutingSource}
               variant={TextVariant.t11}
               color={Color.textGreen1}>
-              {Contracts.getById(tx?.to!)?.name}
+              {Token.getById(tx?.to!)?.name}
               {STRINGS.NBSP}
               {shortAddress(tx?.to!, '•', true)}
             </Text>

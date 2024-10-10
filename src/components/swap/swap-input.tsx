@@ -9,9 +9,10 @@ import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {useSumAmount} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {Currencies} from '@app/models/currencies';
 import {Balance} from '@app/services/balance';
 import {IToken} from '@app/types';
-import {STRINGS, WEI_PRECISION} from '@app/variables/common';
+import {SPACE_OR_NBSP, STRINGS, WEI_PRECISION} from '@app/variables/common';
 
 import {ImageWrapper} from '../image-wrapper';
 import {
@@ -57,25 +58,38 @@ export const SwapInput = observer(
     ...inputProps
   }: SwapInputProps) => {
     const [amount, amountSymbol] = useMemo(() => {
-      const args = currentBalance
+      const balance = currentBalance
         .toFiat({
-          useDefaultCurrency: true,
+          useDefaultCurrency: false,
+          withoutSymbol: true,
         })
-        .split(STRINGS.NBSP);
+        .replaceAll(SPACE_OR_NBSP, '');
+      const parsed = parseFloat(balance);
 
-      const num = args.find(it => !Number.isNaN(parseFloat(it)));
-      const denom = args.find(it => Number.isNaN(parseFloat(it)));
+      if (Number.isNaN(parsed)) {
+        return [parseFloat(amounts.amount || '0'), currentBalance.getSymbol()];
+      }
 
-      return [parseFloat(num!), denom];
+      return [
+        parsed,
+        Currencies.currency?.postfix || Currencies.currency?.prefix,
+      ];
     }, [currentBalance]);
 
     const [available, availableSymbol] = useMemo(() => {
-      const args = availableBalance.toBalanceString('auto').split(STRINGS.NBSP);
+      const balance = availableBalance
+        .toBalanceString('auto', undefined, false, true)
+        .replaceAll(SPACE_OR_NBSP, '');
 
-      const num = args.find(it => !Number.isNaN(parseFloat(it)));
-      const denom = args.find(it => Number.isNaN(parseFloat(it)));
-      return [parseFloat(num!), denom];
+      const parsed = parseFloat(balance);
+
+      if (Number.isNaN(parsed)) {
+        return [0, availableBalance.getSymbol()];
+      }
+
+      return [parseFloat(balance!), availableBalance.getSymbol()];
     }, [availableBalance]);
+
     const handleOnChangeText = useCallback(
       (text: string) => {
         let decimalsOffset = 0;
