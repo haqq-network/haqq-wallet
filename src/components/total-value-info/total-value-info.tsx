@@ -52,6 +52,7 @@ export const TotalValueInfo = observer(
     onPressToken,
   }: TotalValueInfoProps) => {
     const showNft = useShowNft();
+
     const initialTabName = useMemo(() => {
       if (
         initialTab === TotalValueTabNames.tokens &&
@@ -60,16 +61,18 @@ export const TotalValueInfo = observer(
         return TotalValueTabNames.tokens;
       }
 
-      if (showNft) {
+      if (initialTab === TotalValueTabNames.nft && showNft) {
         return TotalValueTabNames.nft;
       }
 
       return TotalValueTabNames.transactions;
-    }, [showNft]);
+    }, [showNft, initialTab]);
+
     const initialTabIndex = useMemo(
       () => TabIndexMap[initialTabName] ?? 0,
       [initialTabName],
     );
+
     const [activeTab, setActiveTab] = useState(initialTabName);
 
     const hideTransactionsContent = useMemo(
@@ -80,6 +83,7 @@ export const TotalValueInfo = observer(
     const onTabChange = useCallback((tabName: TotalValueTabNames) => {
       setActiveTab(tabName);
     }, []);
+
     const renderListHeader = () => (
       <>
         <TotalValueInfoHeader balance={balance} onPressInfo={onPressInfo} />
@@ -113,6 +117,7 @@ export const TotalValueInfo = observer(
         </TopTabNavigator>
       </>
     );
+
     const renderListEmptyComponent = useCallback(
       () => (
         <First>

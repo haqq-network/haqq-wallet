@@ -9,6 +9,8 @@ import {
   ButtonVariant,
   LottieWrap,
   Text,
+  TextPosition,
+  TextVariant,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks';
@@ -46,10 +48,15 @@ export const NotificationPopup = ({
           loop={true}
         />
       </View>
-      <Text t7 center style={styles.title} i18n={I18N.popupNotificationTitle} />
       <Text
-        t14
-        center
+        variant={TextVariant.t7}
+        position={TextPosition.center}
+        style={styles.title}
+        i18n={I18N.popupNotificationTitle}
+      />
+      <Text
+        variant={TextVariant.t14}
+        position={TextPosition.center}
         color={Color.textBase2}
         style={styles.t14}
         i18n={I18N.popupNotificationDescription}

@@ -34,7 +34,7 @@ export async function onBannerAction(
       await onBannerNotificationsEnable(id);
       break;
     case BannerButtonEvent.notificationsSnooze:
-      await onBannerNotificationsSnooze(id);
+      await onBannerNotificationsSnooze();
       break;
     case BannerButtonEvent.notificationsTopicSubscribe:
       await onBannerNotificationsTopicSubscribe(id, params.topic ?? '');

@@ -32,7 +32,7 @@ export function useWalletsBalance(wallets: Wallet[]): WalletBalance {
     return () => {
       app.off(Events.onBalanceSync, onBalance);
     };
-  }, [wallets, wallets?.length, Provider.selectedProviderId]);
+  }, [wallets?.length, Provider.selectedProviderId]);
 
   useEffect(() => {
     setBalance(getBalance(wallets));

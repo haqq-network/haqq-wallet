@@ -2,6 +2,7 @@ import React, {memo, useCallback, useEffect, useState} from 'react';
 
 import {OnboardingSetupPin} from '@app/components/onboardinng-setup-pin';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {SecureValue} from '@app/modifiers/secure-value';
 import {
   OnboardingStackParamList,
   OnboardingStackRoutes,
@@ -29,7 +30,7 @@ export const OnboardingSetupPinScreen = memo(() => {
     if (pin.length === 6) {
       navigation.navigate(OnboardingStackRoutes.OnboardingRepeatPin, {
         ...route,
-        currentPin: pin,
+        currentPin: new SecureValue<string>(pin),
       });
       setPin('');
     }

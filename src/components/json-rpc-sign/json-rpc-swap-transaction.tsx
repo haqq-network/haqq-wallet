@@ -180,33 +180,6 @@ export const JsonRpcSwapTransaction = observer(
           });
         }
 
-        if (functionName === 'exactInput') {
-          const [path, recipient, _, amountIn, _amountOutMinimum] = parsedInput
-            ?.args[0]! as [
-            string, // path
-            string, // recipient
-            number, // deadline
-            BigNumber, // amountIn
-            BigNumber, //  amountOutMinimum
-          ];
-          amountOutMinimum = _amountOutMinimum._hex;
-          const matchArray = path.match(
-            /^0x([a-fA-F0-9]{40}).*([a-fA-F0-9]{40})$/,
-          );
-
-          // first 40 characters of path doesn't include the '0x' prefix
-          tokenInAddress = `0x${matchArray?.[1]}`;
-          // last 40 characters of path
-          tokenOutAddress = `0x${matchArray?.[2]}`;
-
-          response = await indexer.sushiPoolEstimate({
-            amount: amountIn._hex,
-            sender: recipient,
-            route: path.slice(2),
-            currency_id: Currencies.currency?.id,
-          });
-        }
-
         // unwrap
         if (functionName === 'withdraw') {
           const config = await indexer.getProviderConfig();
