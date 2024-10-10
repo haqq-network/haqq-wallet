@@ -20,6 +20,7 @@ import {
   LONG_NUM_PRECISION,
   NUM_DELIMITER,
   NUM_PRECISION,
+  STRINGS,
 } from '@app/variables/common';
 
 const zeroBN = new Decimal(0);
@@ -194,15 +195,15 @@ export class Balance implements IBalance, ISerializable {
 
     const isRTL = I18nManager.isRTL;
     if (isRTL) {
-      return `${this.symbol} ${this.toFloatString(
+      return `${this.symbol}${STRINGS.NBSP}${this.toFloatString(
         fixedNum,
         precission,
         useZeroFormatter,
       )}`.trim();
     }
-    return `${this.toFloatString(fixedNum, precission, useZeroFormatter)} ${
-      this.symbol
-    }`.trim();
+    return `${this.toFloatString(fixedNum, precission, useZeroFormatter)}${
+      STRINGS.NBSP
+    }${this.symbol}`.trim();
   };
 
   private getStringWithSymbol = (value: string) => {
@@ -210,7 +211,7 @@ export class Balance implements IBalance, ISerializable {
     const result = [value];
     currency?.prefix && result.unshift(currency.prefix);
     currency?.postfix && result.push(currency.postfix);
-    return result.join(' ');
+    return result.join(STRINGS.NBSP);
   };
 
   /**
@@ -220,6 +221,7 @@ export class Balance implements IBalance, ISerializable {
   toFiatBalanceString = (
     fixed: number | 'auto' = NUM_PRECISION,
     precission: number = this.precission,
+    withoutSymbol = false,
   ) => {
     let fixedNum = 0;
     if (fixed === 'auto') {
@@ -232,7 +234,16 @@ export class Balance implements IBalance, ISerializable {
     const floatString = this.toFloatString(fixedNum, precission);
     const isNegative = floatString.startsWith('-');
     if (isNegative) {
-      return `- ${this.getStringWithSymbol(floatString.replace('-', ''))}`;
+      if (withoutSymbol) {
+        return `-${STRINGS.NBSP}${floatString.replace('-', '')}`;
+      }
+      return `-${STRINGS.NBSP}${this.getStringWithSymbol(
+        floatString.replace('-', ''),
+      )}`;
+    }
+
+    if (withoutSymbol) {
+      return floatString;
     }
     return `${this.getStringWithSymbol(floatString)}`;
   };
@@ -333,9 +344,9 @@ export class Balance implements IBalance, ISerializable {
   toWeiString = () => {
     const isRTL = I18nManager.isRTL;
     if (isRTL) {
-      return `a${this.symbol} ${this.toWei()}`;
+      return `a${this.symbol}${STRINGS.NBSP}${this.toWei()}`;
     }
-    return this.toWei() + ` a${this.symbol}`;
+    return `${this.toWei()}${STRINGS.NBSP}a${this.symbol}`;
   };
 
   toBigNumberish = (): BigNumberish => {
@@ -379,6 +390,7 @@ export class Balance implements IBalance, ISerializable {
     precission?: number;
     useDefaultCurrency?: boolean;
     chainId?: ChainId;
+    withoutSymbol?: boolean;
   }) => {
     const convertedBalance = Currencies.convert(this, props?.chainId);
     const fixed = props?.fixed ?? NUM_PRECISION;
@@ -387,12 +399,21 @@ export class Balance implements IBalance, ISerializable {
 
     if (!convertedBalance.toNumber()) {
       if (useDefaultCurrency) {
-        return this.toBalanceString(fixed, precission);
+        return this.toBalanceString(
+          fixed,
+          precission,
+          undefined,
+          props?.withoutSymbol,
+        );
       }
       return '';
     }
 
-    return convertedBalance.toFiatBalanceString(fixed, precission);
+    return convertedBalance.toFiatBalanceString(
+      fixed,
+      precission,
+      props?.withoutSymbol,
+    );
   };
 
   private getBnRaw = (

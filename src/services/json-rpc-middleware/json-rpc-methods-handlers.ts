@@ -117,7 +117,7 @@ const getEthAccounts = ({helper}: JsonRpcMethodHandlerParams) => {
 };
 
 function determineNumberType(number: number) {
-  if (!Number.isInteger(number)) {
+  if (Number.isNaN(number)) {
     return 'string';
   }
 

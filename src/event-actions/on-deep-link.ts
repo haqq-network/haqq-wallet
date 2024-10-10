@@ -75,7 +75,7 @@ export async function onDeepLink(
       return true;
     }
 
-    if (link.startsWith(`${DeeplinkProtocol.etherium}:`)) {
+    if (link.startsWith(`${DeeplinkProtocol.ethereum}:`)) {
       const to = link.split(':')[1];
       if (AddressUtils.isEthAddress(to)) {
         await handleAddress(to, withoutFromAddress);

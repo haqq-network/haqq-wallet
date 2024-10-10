@@ -18,24 +18,17 @@ export const SwapFinishScreen = observer(({}) => {
   const {openInAppBrowser} = useOpenInAppBrowser();
 
   const navigation = useTypedNavigation<SwapStackParamList>();
-  const {estimateData, token0, token1, txHash, isUnwrapTx, isWrapTx} =
-    useTypedRoute<SwapStackParamList, SwapStackRoutes.Finish>().params;
-
-  const rate = useMemo(() => {
-    const r =
-      token1.value.toFloat() /
-      new Balance(
-        estimateData?.amount_in!,
-        token0.decimals!,
-        token0.symbol!,
-      ).toFloat();
-
-    return new Balance(r, token1.decimals!, token1.symbol!).toBalanceString(
-      'auto',
-      token1.decimals!,
-      true,
-    );
-  }, [token0, token1, estimateData]);
+  const {
+    estimateData,
+    token0,
+    token1,
+    txHash,
+    isUnwrapTx,
+    isWrapTx,
+    rate,
+    amountIn,
+    amountOut,
+  } = useTypedRoute<SwapStackParamList, SwapStackRoutes.Finish>().params;
 
   const providerFee = useMemo(() => {
     const symbol = token0?.symbol!;
@@ -66,6 +59,8 @@ export const SwapFinishScreen = observer(({}) => {
 
   return (
     <SwapFinish
+      amountIn={amountIn}
+      amountOut={amountOut}
       onPressDone={handlePressDone}
       onPressHash={handlePressHash}
       testID="swap_finish"
