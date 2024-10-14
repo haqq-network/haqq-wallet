@@ -6,7 +6,6 @@ import {Whitelist} from '@app/helpers/whitelist';
 import {storage} from '@app/services/mmkv';
 import {IContract, IToken, MobXStore} from '@app/types';
 
-import {Provider} from './provider';
 import {Token} from './tokens';
 
 /**
@@ -84,14 +83,10 @@ class ContractsStore implements MobXStore<IContract> {
     if (AddressUtils.equals(id, NATIVE_TOKEN_ADDRESS)) {
       return Token.generateNativeTokenContracts()[0];
     }
-    let result = this.data[AddressUtils.toHaqq(id)];
+    const result = this.data[AddressUtils.toHaqq(id)];
 
     if (!result) {
       this._fetchContractData(id);
-    }
-
-    if ('address' in result && typeof result.address === 'object') {
-      result = (result.address as any)[Provider.selectedProvider.ethChainId];
     }
 
     return result;
