@@ -151,29 +151,27 @@ class NftStore {
     const accounts = wallets.map(w => w.cosmosAddress);
     const nfts = await Indexer.instance.getNfts(accounts);
 
-    runInAction(() => {
-      this.parseIndexerNfts(nfts);
-    });
+    this.parseIndexerNfts(nfts);
   };
 
   private parseIndexerNfts = (data: NftCollectionIndexer[]): void => {
     this.data = {};
 
-    runInAction(() => {
-      data.forEach(async item => {
-        const contractAddress = AddressUtils.toHaqq(item.address);
-        const contract = (this.getContract(contractAddress) ||
-          (await Whitelist.verifyAddress(item.address)) ||
-          {}) as IContract;
-        const hasCache = this.hasContractCache(contractAddress);
-        if (!hasCache) {
-          this.saveContract(contract);
-        }
+    data.forEach(async item => {
+      const contractAddress = AddressUtils.toHaqq(item.address);
+      const contract = (this.getContract(contractAddress) ||
+        (await Whitelist.verifyAddress(item.address)) ||
+        {}) as IContract;
+      const hasCache = this.hasContractCache(contractAddress);
+      if (!hasCache) {
+        this.saveContract(contract);
+      }
 
-        const contractType = contract.is_erc721
-          ? ContractType.erc721
-          : ContractType.erc1155;
+      const contractType = contract.is_erc721
+        ? ContractType.erc721
+        : ContractType.erc1155;
 
+      runInAction(() => {
         this.data[item.id] = {
           ...item,
           description: item.description || '',

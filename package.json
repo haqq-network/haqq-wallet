@@ -107,6 +107,7 @@
     "react-native-adjust": "4.33.0",
     "react-native-adjust-oaid": "4.33.0",
     "react-native-aes-crypto": "3.0.1",
+    "react-native-animated-rolling-numbers": "^1.0.1",
     "react-native-base64": "0.2.1",
     "react-native-blasted-image": "1.0.3",
     "react-native-ble-plx": "2.0.3",

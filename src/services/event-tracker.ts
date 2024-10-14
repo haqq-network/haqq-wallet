@@ -72,6 +72,7 @@ const EventsNameMap: Record<MarketingEvents, string> = {
   [MarketingEvents.swapApproveStart]: 'swap approve start',
   [MarketingEvents.swapApproveSuccess]: 'swap approve success',
   [MarketingEvents.swapApproveFail]: 'swap approve fail',
+  [MarketingEvents.swapScreenClose]: 'swap screen close',
   [MarketingEvents.jsonRpcSignStart]: 'sign operation start',
   [MarketingEvents.jsonRpcSignSuccess]: 'sign operation success',
   [MarketingEvents.jsonRpcSignFail]: 'sign operation fail',

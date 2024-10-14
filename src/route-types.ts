@@ -884,6 +884,9 @@ export type SwapStackParamList = {
     estimateData: SushiPoolEstimateResponse;
     isWrapTx: boolean;
     isUnwrapTx: boolean;
+    rate: string;
+    amountIn: string;
+    amountOut: string;
   };
 };
 

@@ -25,6 +25,9 @@ export class ProviderConfigModel {
   get wethSymbol() {
     return this.config?.weth_symbol ?? '';
   }
+  get enableUnwrapWETH9Call() {
+    return this.config?.enable_unwrapWETH9_call ?? false;
+  }
 
   /**
    * Get the EVM explorer URL template for an address.

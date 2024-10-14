@@ -8,6 +8,9 @@ import {IContract, IToken, MobXStore} from '@app/types';
 
 import {Token} from './tokens';
 
+/**
+ * @deprecated use Token store instead
+ */
 class ContractsStore implements MobXStore<IContract> {
   /**
    * User's contracts
@@ -130,5 +133,8 @@ class ContractsStore implements MobXStore<IContract> {
   }
 }
 
+/**
+ * @deprecated use Token store instead
+ */
 const instance = new ContractsStore(Boolean(process.env.JEST_WORKER_ID));
 export {instance as Contracts};

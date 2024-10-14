@@ -338,3 +338,5 @@ export const SUPPORTED_UR_TYPE = {
 export const KEYSTONE_NAME = 'Keystone';
 
 export const RTL_LANGUAGES: AppLanguage[] = [AppLanguage.ar];
+
+export const SPACE_OR_NBSP = /\s|\u00A0/gi;
