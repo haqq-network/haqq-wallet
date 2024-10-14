@@ -171,17 +171,16 @@ export const SwapScreen = observer(() => {
     MIN_SWAP_AMOUNT,
   );
   const minReceivedAmount = useMemo(() => {
-    if (!estimateData.route || !tokenOut) {
+    if (!estimateData.route || !tokenOut || !amountsOut.amount) {
       return new Balance(0, 0, tokenOut?.symbol!);
     }
 
-    const slippage = parseFloat(swapSettings.slippage) / 100;
-    const amountOut = parseFloat(amountsOut.amount);
-
-    const result = (
-      (amountOut - amountOut * slippage) *
-      10 ** tokenOut.decimals!
-    ).toString();
+    const slippage = new Decimal(swapSettings.slippage).div(100);
+    const amountOut = new Decimal(amountsOut.amount);
+    const result = amountOut
+      .minus(amountOut.times(slippage))
+      .times(new Decimal(10).pow(tokenOut.decimals!))
+      .toString();
     return new Balance(result, tokenOut.decimals!, tokenOut.symbol!);
   }, [estimateData, tokenOut, swapSettings, amountsOut.amount]);
 
@@ -307,8 +306,9 @@ export const SwapScreen = observer(() => {
   const estimate = async (force = false) => {
     const errCtx: Record<string, any> = {};
     try {
-      estimateAbortController?.current?.abort();
-      estimateAbortController.current = new AbortController();
+      const currentAbortController = new AbortController();
+      estimateAbortController.current?.abort();
+      estimateAbortController.current = currentAbortController;
 
       logger.log('estimate token', {
         tokenOut,
@@ -344,7 +344,10 @@ export const SwapScreen = observer(() => {
 
       if (isWrapTx || isUnwrapTx) {
         amountsOut.setAmount(amountsIn.amount);
-        return setEstimateData({
+        if (currentAbortController.signal.aborted) {
+          return;
+        }
+        return setEstimateData(() => ({
           allowance: '0x0',
           amount_in: t0Current.toHex(),
           amount_out: t0Current.toHex(),
@@ -365,7 +368,7 @@ export const SwapScreen = observer(() => {
           s_primary_price: '0',
           s_swap_price: '0',
           sqrt_price_x96_after_list: [],
-        });
+        }));
       }
 
       const request = {
@@ -387,7 +390,10 @@ export const SwapScreen = observer(() => {
       }
 
       logger.log('estimate resp', response);
-      setEstimateData(response);
+      if (currentAbortController.signal.aborted) {
+        return;
+      }
+      setEstimateData(() => response);
 
       const amountOut = new Balance(
         response.amount_out,
@@ -858,11 +864,13 @@ export const SwapScreen = observer(() => {
       ) as string;
 
       // if token1 is native, we need to unwrap it
-      if (toke1IsNative) {
+      if (
+        toke1IsNative &&
+        Provider.selectedProvider.config.enableUnwrapWETH9Call
+      ) {
         const encodedUnwrap = swapRouter.interface.encodeFunctionData(
           'unwrapWETH9',
-          // unwrap zero amount means - unwrap all of current swap amount
-          ['0x0', currentWallet.address],
+          [minReceivedAmount?.toHex() || 0, currentWallet.address],
         );
 
         txData = swapRouter.interface.encodeFunctionData('multicall', [
@@ -1269,7 +1277,7 @@ export const SwapScreen = observer(() => {
 
   const onInputBlur = useCallback(async () => {
     if (!amountsIn.amount || !amountsIn.amountBalance?.isPositive()) {
-      setEstimateData({});
+      setEstimateData(() => ({}));
       amountsOut.setAmount('0');
       return amountsIn.setError('');
     }
