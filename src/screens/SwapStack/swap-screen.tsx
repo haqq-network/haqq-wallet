@@ -864,10 +864,13 @@ export const SwapScreen = observer(() => {
       ) as string;
 
       // if token1 is native, we need to unwrap it
-      if (toke1IsNative) {
+      if (
+        toke1IsNative &&
+        Provider.selectedProvider.config.enableUnwrapWETH9Call
+      ) {
         const encodedUnwrap = swapRouter.interface.encodeFunctionData(
           'unwrapWETH9',
-          ['0x0', currentWallet.address],
+          [minReceivedAmount?.toHex() || 0, currentWallet.address],
         );
 
         txData = swapRouter.interface.encodeFunctionData('multicall', [
