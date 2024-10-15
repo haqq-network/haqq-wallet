@@ -1,9 +1,10 @@
 require('dotenv').config();
-const path = require("path");
-const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
+const path = require('path');
+const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
 const blacklist = require('metro-config/src/defaults/exclusionList');
 
-const defaultModuleResolver = getDefaultConfig(__dirname).resolver.resolveRequest;
+const defaultModuleResolver =
+  getDefaultConfig(__dirname).resolver.resolveRequest;
 
 const config = {
   resetCache: true,
@@ -19,6 +20,7 @@ const config = {
     // plugins: ['@babel/plugin-proposal-numeric-separator'],
   },
   resolver: {
+    extraNodeModules: require('node-libs-react-native'),
     blacklistRE: blacklist([
       /ios\/build\/SourcePackages\/checkouts\/grpc-ios\/native_src\/.*/,
     ]),
@@ -33,18 +35,24 @@ const config = {
       try {
         return context.resolveRequest(context, moduleName, platform);
       } catch (error) {
-        console.warn('\n1️⃣ context.resolveRequest cannot resolve: ', moduleName);
+        console.warn(
+          '\n1️⃣ context.resolveRequest cannot resolve: ',
+          moduleName,
+        );
       }
 
       try {
         const resolution = require.resolve(moduleName, {
-          paths: [path.dirname(context.originModulePath), ...config.resolver.nodeModulesPaths],
+          paths: [
+            path.dirname(context.originModulePath),
+            ...config.resolver.nodeModulesPaths,
+          ],
         });
 
         if (path.isAbsolute(resolution)) {
           return {
             filePath: resolution,
-            type: "sourceFile",
+            type: 'sourceFile',
           };
         }
       } catch (error) {
@@ -60,14 +68,15 @@ const config = {
       try {
         return {
           filePath: require.resolve(moduleName),
-          type: "sourceFile",
+          type: 'sourceFile',
         };
       } catch (error) {
         console.warn('\n4️⃣ require.resolve cannot resolve: ', moduleName);
       }
 
       try {
-        const resolution = getDefaultConfig(require.resolve(moduleName)).resolver?.resolveRequest
+        const resolution = getDefaultConfig(require.resolve(moduleName))
+          .resolver?.resolveRequest;
         return resolution(context, moduleName, platform);
       } catch (error) {
         console.warn('\n5️⃣ getDefaultConfig cannot resolve: ', moduleName);
