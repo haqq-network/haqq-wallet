@@ -1117,6 +1117,11 @@ export type Modals = {
     closeDistance?: () => number;
     eventSuffix?: string;
   };
+  copyAddressBottomSheet: {
+    onClose?: () => void;
+    wallet: WalletModel;
+    eventSuffix?: string;
+  };
   captcha: {
     onClose?: () => void;
     variant?: CaptchaType;
@@ -1185,6 +1190,7 @@ export enum ModalType {
   transactionError = 'transactionError',
   locationUnauthorized = 'locationUnauthorized',
   providersBottomSheet = 'providersBottomSheet',
+  copyAddressBottomSheet = 'copyAddressBottomSheet',
   captcha = 'captcha',
   domainBlocked = 'domainBlocked',
   raffleAgreement = 'raffleAgreement',

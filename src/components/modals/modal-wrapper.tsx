@@ -37,6 +37,7 @@ import {PopupInfoScreen} from '@app/screens/popup-info';
 import {PopupNotificationScreen} from '@app/screens/popup-notification';
 import {ModalType, Modals, ModalsListBase} from '@app/types';
 
+import {CopyAddressBottomSheet} from './copy-address-bottom-sheet';
 import {DomainBlocked} from './domain-blocked';
 import {KeystoneQRModal} from './keystone/keystone-qr';
 import {KeystoneScannerModal} from './keystone/keystone-scanner';
@@ -138,6 +139,10 @@ export const ModalWrapper = ({
         return <LocationUnauthorized onClose={onCloseModalPress} />;
       case ModalType.providersBottomSheet:
         return <ProvidersBottomSheet {...modal} onClose={onCloseModalPress} />;
+      case ModalType.copyAddressBottomSheet:
+        return (
+          <CopyAddressBottomSheet {...modal} onClose={onCloseModalPress} />
+        );
       case ModalType.captcha:
         return <CaptchaModal onClose={modal.onClose} variant={modal.variant} />;
       case ModalType.domainBlocked:

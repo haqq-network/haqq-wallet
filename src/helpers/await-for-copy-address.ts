@@ -6,14 +6,14 @@ import {ModalType} from '@app/types';
 
 import {getWindowHeight} from './scaling-utils';
 
-export interface AwaitProviderParams {
+export interface AwaitCopyAddressParams {
   title: I18N;
   providers?: ProviderModel[];
   initialProviderChainId: number;
   desableAllNetworksOption?: boolean;
 }
 
-export class AwaitProviderError {
+export class AwaitCopyAddressError {
   message?: string;
 
   constructor(message?: string) {
@@ -21,16 +21,16 @@ export class AwaitProviderError {
   }
 }
 
-export async function awaitForProvider({
+export async function awaitForCopyAddress({
   title,
   providers,
   initialProviderChainId,
   desableAllNetworksOption,
-}: AwaitProviderParams): Promise<string> {
+}: AwaitCopyAddressParams): Promise<string> {
   return new Promise((resolve, reject) => {
     const removeAllListeners = () => {
-      app.removeListener('provider-selected', onAction);
-      app.removeListener('provider-selected-reject', onReject);
+      app.removeListener('copy-address-selected', onAction);
+      app.removeListener('copy-address-reject', onReject);
     };
 
     const onAction = (address: string) => {
@@ -40,13 +40,13 @@ export async function awaitForProvider({
 
     const onReject = () => {
       removeAllListeners();
-      reject(new AwaitProviderError('rejected by user'));
+      reject(new AwaitCopyAddressError('rejected by user'));
     };
 
     app.addListener('provider-selected', onAction);
     app.addListener('provider-selected-reject', onReject);
 
-    return showModal(ModalType.providersBottomSheet, {
+    return showModal(ModalType.copyAddressBottomSheet, {
       title,
       closeDistance: () => getWindowHeight() / 6,
       initialProviderChainId,
