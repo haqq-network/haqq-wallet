@@ -174,7 +174,10 @@ export class EthSign {
     }
   }
 
-  static async signTypedData(wallet: WalletModel | string, typedData: EIPTypedData) {
+  static async signTypedData(
+    wallet: WalletModel | string,
+    typedData: EIPTypedData,
+  ) {
     if (!wallet || !typedData) {
       throw new EthSignError('Invalid params', {
         method: EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA,

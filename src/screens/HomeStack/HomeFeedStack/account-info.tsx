@@ -27,10 +27,8 @@ export const AccountInfoScreen = observer(() => {
   const accountId = useMemo(() => route.params.accountId, [route]);
   const wallet = useWallet(accountId);
   const balances = Wallet.getBalancesByAddressList([wallet!]);
-  const {available, locked, staked, total, nextVestingUnlockDate, vested} = useMemo(
-    () => balances[wallet?.address!],
-    [balances, wallet],
-  );
+  const {available, locked, staked, total, nextVestingUnlockDate, vested} =
+    useMemo(() => balances[wallet?.address!], [balances, wallet]);
 
   const onReceive = useCallback(() => {
     showModal(ModalType.cardDetailsQr, {address: route.params.accountId});

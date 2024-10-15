@@ -16,7 +16,6 @@ import {ZERO_HEX_NUMBER} from '@app/variables/common';
 
 import {BalanceModel} from './balance.model';
 import {getMockWallets} from './wallet.mock';
-import {Wallet} from './wallet.store';
 import {WalletModel} from './wallet.types';
 import {
   getWalletCardStyle,
@@ -430,7 +429,7 @@ class WalletStore implements RPCObserver {
     const wallet = this.getById(address);
     if (wallet) {
       this.update(address, {isHidden: !wallet.isHidden});
-      await Wallet.fetchBalances();
+      await this.fetchBalances();
     }
   }
 
