@@ -8,7 +8,6 @@ import {Loading} from '@app/components/ui';
 import {showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useWalletsAddressList} from '@app/hooks/use-wallets-address-list';
-import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {I18N, getText} from '@app/i18n';
 import {Token} from '@app/models/tokens';
 import {Transaction} from '@app/models/transaction';
@@ -29,7 +28,7 @@ export const TotalValueInfoScreen = observer(() => {
   >();
   const wallets = Wallet.getAllVisible();
   const addressList = useWalletsAddressList();
-  const balances = useWalletsBalance(wallets);
+  const balances = Wallet.getBalancesByAddressList(wallets);
   const calculatedBalance = useMemo(
     () => calculateBalances(balances, wallets),
     [balances, wallets],
