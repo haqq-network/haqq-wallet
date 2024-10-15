@@ -46,11 +46,11 @@ import {RemoteConfig} from '@app/services/remote-config';
 import {showModal} from '../helpers';
 import {User} from '../models/user';
 import {
+  AddressEthereum,
   AppTheme,
   BiometryType,
   ChainId,
   DynamicLink,
-  HaqqEthereumAddress,
   IndexerBalanceData,
   MarketingEvents,
   ModalType,
@@ -83,10 +83,8 @@ class App extends AsyncEventEmitter {
   private user: User;
   private _authenticated: boolean = DEBUG_VARS.enableSkipPinOnLogin;
   private appStatus: AppStatus = AppStatus.inactive;
-  private _balances: Record<
-    ChainId,
-    Record<HaqqEthereumAddress, BalanceModel>
-  > = {};
+  private _balances: Record<ChainId, Record<AddressEthereum, BalanceModel>> =
+    {};
   private _googleSigninSupported: boolean = false;
   private _appleSigninSupported: boolean =
     Platform.select({

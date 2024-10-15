@@ -1,13 +1,13 @@
 import {CurrencyRate} from '@app/models/types';
 import {Balance} from '@app/services/balance';
-import {HaqqCosmosAddress, HaqqEthereumAddress} from '@app/types';
+import {AddressCosmos, AddressEthereum} from '@app/types';
 
 export type NftCollectionIndexer = {
-  address: HaqqEthereumAddress;
+  address: AddressEthereum;
   description: string;
   external_url: string;
   chain_id: number;
-  id: HaqqCosmosAddress;
+  id: AddressCosmos;
   image: string;
   name: string;
   symbol: string;
@@ -16,12 +16,12 @@ export type NftCollectionIndexer = {
 };
 
 export type NftItemIndexer = {
-  address: HaqqCosmosAddress;
+  address: AddressCosmos;
   amount: number; // number of copies
   attributes: NftAttribute[] | null;
   block: number;
   cached_url: string | null;
-  contract: HaqqCosmosAddress;
+  contract: AddressCosmos;
   created_at: string;
   description: string | null;
   file_type: string | null;

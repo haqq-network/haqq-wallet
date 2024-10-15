@@ -15,7 +15,8 @@ import {STORE_REHYDRATION_TIMEOUT_MS} from '@app/variables/common';
 
 import {BalanceModel} from './balance.model';
 import {getMockWallets} from './wallet.mock';
-import {WalletModel} from './wallet.types';
+import {WalletModel} from './wallet.model';
+import {IWalletModel} from './wallet.types';
 import {
   getWalletCardStyle,
   getWalletColors,
@@ -24,8 +25,8 @@ import {
 
 import {
   AddWalletParams,
+  AddressEthereum,
   ChainId,
-  HaqqEthereumAddress,
   WalletCardStyleT,
   WalletType,
 } from '../../types';
@@ -33,7 +34,7 @@ import {Token} from '../tokens';
 
 class WalletStore implements RPCObserver {
   wallets: WalletModel[] = [];
-  balances: Record<HaqqEthereumAddress, Record<ChainId, BalanceModel>> = {};
+  balances: Record<AddressEthereum, Record<ChainId, BalanceModel>> = {};
 
   constructor(shouldSkipPersisting: boolean = false) {
     makeAutoObservable(this);
@@ -49,7 +50,7 @@ class WalletStore implements RPCObserver {
         DEBUG_VARS.enableMockWallets &&
         DEBUG_VARS.mockWalletsAddresses.length;
 
-      let originalWallets: WalletModel[] = [];
+      let originalWallets: IWalletModel[] = [];
 
       makePersistable(this, {
         name: this.constructor.name,
@@ -59,18 +60,20 @@ class WalletStore implements RPCObserver {
             deserialize: value => {
               if (isMockEnabled) {
                 originalWallets = value;
-                return getMockWallets();
+                return getMockWallets().map(w => new WalletModel(w));
               }
 
-              return value.sort(
-                (a: WalletModel, b: WalletModel) => a.position - b.position,
-              );
+              return value
+                .sort(
+                  (a: IWalletModel, b: IWalletModel) => a.position - b.position,
+                )
+                .map((w: IWalletModel) => new WalletModel(w));
             },
             serialize: value => {
               if (isMockEnabled) {
                 return originalWallets;
               }
-              return value;
+              return value.map(w => w.model);
             },
           },
         ],
@@ -111,7 +114,7 @@ class WalletStore implements RPCObserver {
       ...existingWallet,
       data: '',
       subscription: existingWallet?.subscription ?? null,
-      address: walletParams.address.toLowerCase() as HaqqEthereumAddress,
+      address: walletParams.address.toLowerCase() as AddressEthereum,
       mnemonicSaved: walletParams.mnemonicSaved || false,
       socialLinkEnabled: walletParams.socialLinkEnabled || false,
       name: existingWallet?.name ?? name,
@@ -136,17 +139,18 @@ class WalletStore implements RPCObserver {
         name: existingWallet.name,
       });
     } else {
-      this.wallets.push(newWallet);
+      this.wallets.push(new WalletModel(newWallet));
     }
 
     app.emit(Events.onWalletCreate, newWallet);
 
-    return newWallet;
+    return new WalletModel(newWallet);
   }
 
-  getById(id: string = '') {
+  getById(id: string = ''): WalletModel | null {
     return (
-      this.wallets.find(wallet => wallet.address === id.toLowerCase()) ?? null
+      this.wallets.find(wallet => AddressUtils.equals(wallet.address, id)) ??
+      null
     );
   }
 
@@ -155,15 +159,13 @@ class WalletStore implements RPCObserver {
   }
 
   addressList() {
-    return this.wallets.map(
-      w => w.address.toLowerCase() as HaqqEthereumAddress,
-    );
+    return this.wallets.map(w => w.address.toLowerCase() as AddressEthereum);
   }
 
   addressListAllVisible() {
     return this.wallets
       .filter(w => !w.isHidden)
-      .map(w => w.address.toLowerCase() as HaqqEthereumAddress);
+      .map(w => w.address.toLowerCase() as AddressEthereum);
   }
 
   getAll() {
@@ -179,7 +181,7 @@ class WalletStore implements RPCObserver {
       const balance = app.getAvailableBalance(wallet.address);
       const isPositiveBalance = balance.isPositive();
 
-      const tokens = Token.tokens[wallet.address] || [];
+      const tokens = Token.tokens[AddressUtils.toEth(wallet.address)] || [];
       const isPositiveTokenBalance = tokens.some(
         token => token.value?.isPositive?.(),
       );
@@ -220,14 +222,15 @@ class WalletStore implements RPCObserver {
     }
   }
 
-  update(address: string, params: Partial<WalletModel>) {
+  update(address: string, params: Partial<IWalletModel>) {
     const wallet = this.getById(address);
 
     if (wallet) {
       const otherWallets = this.wallets.filter(
         w => !AddressUtils.equals(w.address, address),
       );
-      this.wallets = [...otherWallets, {...wallet, ...params}].sort(
+      const updatedWallet = new WalletModel({...wallet.model, ...params});
+      this.wallets = [...otherWallets, updatedWallet].sort(
         (a, b) => a.position - b.position,
       );
     }

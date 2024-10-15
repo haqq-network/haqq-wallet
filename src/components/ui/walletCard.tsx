@@ -18,22 +18,22 @@ import {
 import {createTheme} from '@app/helpers';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {I18N} from '@app/i18n';
-import {WalletModel} from '@app/models/wallet';
+import {IWalletModel} from '@app/models/wallet';
 import {IToken} from '@app/types';
 import {calculateBalances} from '@app/utils';
 
 export type Props = {
-  wallet: WalletModel;
+  wallet: IWalletModel;
   tokens: IToken[];
   tokensOnly?: boolean;
   hideWalletSummary?: boolean;
-  onPressToken?: (wallet: WalletModel, token: IToken, idx: number) => void;
+  onPressToken?: (wallet: IWalletModel, token: IToken, idx: number) => void;
   checkTokenSelected?: (
-    wallet: WalletModel,
+    wallet: IWalletModel,
     token: IToken,
     idx: number,
   ) => boolean;
-  onPressWallet?: (wallet: WalletModel) => void;
+  onPressWallet?: (wallet: IWalletModel) => void;
   isLast?: boolean;
 };
 const CARD_WIDTH = 57.78;

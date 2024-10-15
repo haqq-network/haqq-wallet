@@ -1,12 +1,7 @@
-import {
-  HaqqCosmosAddress,
-  HaqqEthereumAddress,
-  WalletCardStyle,
-  WalletType,
-} from '@app/types';
+import {AddressCosmos, WalletCardStyle, WalletType} from '@app/types';
 
-export type WalletModel = {
-  address: HaqqEthereumAddress;
+export interface IWalletModel {
+  address: string;
   name: string;
   data: string;
   mnemonicSaved: boolean;
@@ -25,7 +20,7 @@ export type WalletModel = {
   subscription: string | null;
   version: number;
   accountId: string | null;
-  cosmosAddress: HaqqCosmosAddress;
+  cosmosAddress: AddressCosmos;
   position: number;
   isImported?: boolean;
-};
+}

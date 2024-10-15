@@ -17,15 +17,15 @@ import {WalletCard} from '@app/components/ui/walletCard';
 import {createTheme} from '@app/helpers';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {I18N, getText} from '@app/i18n';
-import {Wallet, WalletModel} from '@app/models/wallet';
-import {HaqqEthereumAddress, IToken} from '@app/types';
+import {IWalletModel, Wallet} from '@app/models/wallet';
+import {AddressEthereum, IToken} from '@app/types';
 
 export interface TokenViewerProps {
-  data: Record<HaqqEthereumAddress, IToken[]>;
+  data: Record<AddressEthereum, IToken[]>;
   style?: StyleProp<ViewStyle>;
-  wallet?: WalletModel;
+  wallet?: IWalletModel;
   hideFilter?: boolean;
-  onPressToken?: (wallet: WalletModel, token: IToken) => void;
+  onPressToken?: (wallet: IWalletModel, token: IToken) => void;
 }
 
 const SortingNamesMap = {
@@ -48,7 +48,7 @@ export const TokenViewer = observer(
       () =>
         Object.keys(data)
           .map(item => Wallet.getById(item))
-          .filter(item => !!item) as WalletModel[],
+          .filter(item => !!item) as IWalletModel[],
       [data],
     );
     const balances = useWalletsBalance(wallets);
@@ -93,7 +93,7 @@ export const TokenViewer = observer(
     }, []);
 
     const sort = useCallback(
-      (a: HaqqEthereumAddress, b: HaqqEthereumAddress) => {
+      (a: AddressEthereum, b: AddressEthereum) => {
         const aBalance = balances[a];
         const bBalance = balances[b];
 
@@ -110,7 +110,7 @@ export const TokenViewer = observer(
     );
 
     const filter = useCallback(
-      (address: HaqqEthereumAddress) => {
+      (address: AddressEthereum) => {
         if (wallet) {
           return address === wallet.address;
         } else {
@@ -120,7 +120,7 @@ export const TokenViewer = observer(
       [balances, wallet],
     );
 
-    const list = (Object.keys(data) as HaqqEthereumAddress[])
+    const list = (Object.keys(data) as AddressEthereum[])
       .filter(filter)
       .sort(sort);
 

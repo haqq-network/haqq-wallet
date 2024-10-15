@@ -27,12 +27,12 @@ import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
-import {WalletModel} from '@app/models/wallet';
+import {IWalletModel} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {WalletType} from '@app/types';
 
 type SettingsAccountDetailProps = {
-  wallet: WalletModel;
+  wallet: IWalletModel;
   onPressRename: () => void;
   onPressStyle: () => void;
   onToggleIsHidden: () => void;
@@ -104,9 +104,7 @@ export const SettingsAccountDetail = observer(
                 onCopy(wallet?.address);
               }}>
               <View style={[styles.row, styles.alignItemsCenter]}>
-                <Text variant={TextVariant.t10} style={styles.headerName}>
-                  {wallet.name}
-                </Text>
+                <Text variant={TextVariant.t10}>{wallet.name}</Text>
                 <Text
                   variant={TextVariant.t14}
                   color={Color.textBase2}
@@ -115,6 +113,7 @@ export const SettingsAccountDetail = observer(
                 />
                 <Icon name="copy" color={Color.textBase2} i16 />
               </View>
+              <Spacer height={4} />
 
               <Text variant={TextVariant.t14}>{wallet?.address}</Text>
             </TouchableOpacity>
@@ -144,6 +143,7 @@ export const SettingsAccountDetail = observer(
                   />
                   <Icon name="copy" color={Color.textBase2} i16 />
                 </View>
+                <Spacer height={4} />
                 <Text variant={TextVariant.t14}>
                   {AddressUtils.toHaqq(wallet?.address)}
                 </Text>
@@ -285,9 +285,6 @@ const styles = createTheme({
     borderRadius: 16,
     padding: CARD_PADDING,
     marginBottom: 20,
-  },
-  headerName: {
-    marginBottom: 4,
   },
   cardMask: {
     margin: 4,

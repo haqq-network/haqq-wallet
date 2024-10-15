@@ -39,18 +39,18 @@ import {WalletBalance} from './hooks/use-wallets-balance';
 import {I18N, getText} from './i18n';
 import {Banner, BannerButtonEvent, BannerType} from './models/banner';
 import {Fee} from './models/fee';
-import {BalanceModel, WalletModel} from './models/wallet';
+import {BalanceModel, IWalletModel} from './models/wallet';
 import {navigator} from './navigator';
 import {HomeStackRoutes, WelcomeStackRoutes} from './route-types';
 import {Balance} from './services/balance';
 import {EthSignError} from './services/eth-sign';
 import {
+  AddressEthereum,
   AdjustTrackingAuthorizationStatus,
   AppLanguage,
   EIPTypedData,
   EthType,
   EthTypedData,
-  HaqqEthereumAddress,
   IndexerTransaction,
   IndexerTransactionWithType,
   IndexerTxMsgType,
@@ -840,7 +840,7 @@ export const getTransactionFromJsonRpcRequest = (
 };
 
 export function isContractTransaction(
-  tx: {to?: HaqqEthereumAddress | string; data?: string} | undefined | null,
+  tx: {to?: AddressEthereum | string; data?: string} | undefined | null,
 ): boolean {
   if (!tx || !tx.to || !AddressUtils.isEthAddress(tx.to)) {
     return false;
@@ -855,7 +855,7 @@ export function isContractTransaction(
 
 export const calculateBalances = (
   data: WalletBalance,
-  wallets: WalletModel[],
+  wallets: IWalletModel[],
 ): BalanceModel => {
   const balance = new BalanceModel({
     staked: Balance.Empty,
@@ -869,7 +869,7 @@ export const calculateBalances = (
 
   wallets.forEach(wallet => {
     const {available, locked, staked, total, vested, availableForStake} =
-      data[wallet.address] ?? {};
+      data[AddressUtils.toEth(wallet.address)] ?? {};
 
     balance.addStaked(staked);
     balance.addVested(vested);

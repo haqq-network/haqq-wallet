@@ -13,11 +13,11 @@ import {
 import {Socket} from '@app/models/socket';
 import {Wallet} from '@app/models/wallet';
 import {Indexer} from '@app/services/indexer';
-import {HaqqCosmosAddress, IContract} from '@app/types';
+import {AddressCosmos, IContract} from '@app/types';
 import {RPCMessage} from '@app/types/rpc';
 
 class NftStore {
-  data: Record<HaqqCosmosAddress, NftCollection> = {};
+  data: Record<AddressCosmos, NftCollection> = {};
 
   constructor() {
     makeAutoObservable(this);
@@ -47,13 +47,13 @@ class NftStore {
     return item.address;
   }
 
-  getCollectionById(contractAddress: HaqqCosmosAddress): NftCollection | null {
+  getCollectionById(contractAddress: AddressCosmos): NftCollection | null {
     return this.data[contractAddress] ?? null;
   }
 
-  getCollectionsByWallet(address: HaqqCosmosAddress): NftCollection[] {
+  getCollectionsByWallet(address: AddressCosmos): NftCollection[] {
     return Object.keys(this.data).reduce((acc, key) => {
-      const collection = this.data[key as HaqqCosmosAddress];
+      const collection = this.data[key as AddressCosmos];
       const filteredNfts = collection.nfts.filter(
         nft => nft.address === address,
       );
@@ -69,10 +69,7 @@ class NftStore {
     }, [] as NftCollection[]);
   }
 
-  getNftById(
-    nftContractAddress: HaqqCosmosAddress,
-    nftId: number,
-  ): NftItem | null {
+  getNftById(nftContractAddress: AddressCosmos, nftId: number): NftItem | null {
     let nftItem: NftItem | null = null;
 
     for (const [_, collection] of Object.entries(this.data)) {
@@ -217,7 +214,7 @@ class NftStore {
     this.update(nft);
   };
 
-  private hasContractCache = (id: HaqqCosmosAddress) => {
+  private hasContractCache = (id: AddressCosmos) => {
     return !!Contracts.getById(id);
   };
 
@@ -229,7 +226,7 @@ class NftStore {
     Contracts.create(contract.id, contract);
   };
 
-  private getContract = (id: HaqqCosmosAddress) => {
+  private getContract = (id: AddressCosmos) => {
     return Contracts.getById(id);
   };
 

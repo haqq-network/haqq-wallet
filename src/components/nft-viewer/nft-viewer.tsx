@@ -17,7 +17,7 @@ import {useTypedNavigation} from '@app/hooks';
 import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {I18N, getText} from '@app/i18n';
 import {Nft, NftCollection, NftItem} from '@app/models/nft';
-import {WalletModel} from '@app/models/wallet';
+import {IWalletModel} from '@app/models/wallet';
 import {HomeStackRoutes, NftStackRoutes} from '@app/route-types';
 import {NftWidgetSize} from '@app/types';
 import {SortDirectionEnum, arraySortUtil} from '@app/utils';
@@ -38,7 +38,7 @@ import {
 
 export interface NftViewerProps {
   scrollEnabled?: boolean;
-  wallet?: WalletModel;
+  wallet?: IWalletModel;
   style?: StyleProp<ViewStyle>;
 }
 

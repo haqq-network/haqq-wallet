@@ -5,12 +5,13 @@ import {View} from 'react-native';
 import {Color} from '@app/colors';
 import {Icon, IconsName, Spacer, Text, TextVariant} from '@app/components/ui';
 import {CopyMenu} from '@app/components/ui/copy-menu';
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
-import {WalletModel} from '@app/models/wallet';
+import {IWalletModel} from '@app/models/wallet';
 
 type CardNameProps = {
-  wallet: WalletModel;
+  wallet: IWalletModel;
   isBalancesFirstSync: boolean;
   onAccountInfo: () => void;
   testID?: string;
@@ -41,6 +42,13 @@ export const CardName = ({
           {wallet.name || 'Unknown'}
         </Text>
       </View>
+      {(app.isTesterMode || app.isDeveloper) && (
+        <View style={styles.pathContainer}>
+          <Text variant={TextVariant.t15} color={Color.textBase3}>
+            m/{wallet.path}
+          </Text>
+        </View>
+      )}
       <Spacer flex={1} />
       <CopyMenu style={styles.copyIcon} value={wallet.address} withSettings>
         <Text
@@ -84,4 +92,5 @@ const styles = createTheme({
     justifyContent: 'space-between',
     marginLeft: 12,
   },
+  pathContainer: {},
 });

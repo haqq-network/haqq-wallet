@@ -6,7 +6,7 @@ import {I18nManager, View} from 'react-native';
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {Token} from '@app/models/tokens';
-import {HaqqCosmosAddress} from '@app/types';
+import {AddressCosmos} from '@app/types';
 import {STRINGS} from '@app/variables/common';
 
 import {ImageWrapper} from '../image-wrapper';
@@ -20,7 +20,7 @@ export enum SwapRoutePathIconsType {
 export type SwapRoutePathIconsProps =
   | {
       type: SwapRoutePathIconsType;
-      route: HaqqCosmosAddress[];
+      route: AddressCosmos[];
     }
   | {
       type: SwapRoutePathIconsType;

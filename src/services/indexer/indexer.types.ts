@@ -1,20 +1,20 @@
-import {HaqqCosmosAddress, IContract} from '@app/types';
+import {AddressCosmos, IContract} from '@app/types';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 export type SushiRoute = {
   fee: number;
   liquidity: string; // number liquidity for the pool
-  route: HaqqCosmosAddress[];
-  pools: HaqqCosmosAddress[];
+  route: AddressCosmos[];
+  pools: AddressCosmos[];
   route_hex: string; // hex route for SwapRouterV3
-  token0: HaqqCosmosAddress;
-  token1: HaqqCosmosAddress;
+  token0: AddressCosmos;
+  token1: AddressCosmos;
 };
 
 export type SushiPool = {
   fee: string;
   name: string;
-  pool: HaqqCosmosAddress;
+  pool: AddressCosmos;
 };
 
 export type SushiPoolResponse = {

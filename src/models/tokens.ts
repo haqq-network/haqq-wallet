@@ -6,14 +6,14 @@ import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
 import {Whitelist} from '@app/helpers/whitelist';
 import {Contracts} from '@app/models/contracts';
 import {Socket} from '@app/models/socket';
-import {Wallet, WalletModel} from '@app/models/wallet';
+import {IWalletModel, Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
 import {
+  AddressCosmos,
+  AddressEthereum,
   AddressType,
-  HaqqCosmosAddress,
-  HaqqEthereumAddress,
   IContract,
   IToken,
   IndexerToken,
@@ -228,8 +228,8 @@ class TokensStore implements MobXStore<IToken> {
       ]),
     );
 
-    const _tokens = {} as Record<HaqqEthereumAddress, IToken[]>;
-    const _data = {} as Record<HaqqEthereumAddress, IToken>;
+    const _tokens = {} as Record<AddressEthereum, IToken[]>;
+    const _data = {} as Record<AddressEthereum, IToken>;
 
     wallets.forEach(wallet => {
       _tokens[AddressUtils.toEth(wallet.cosmosAddress)] = [
@@ -311,7 +311,7 @@ class TokensStore implements MobXStore<IToken> {
     });
   });
 
-  private generateNativeTokens = (w: WalletModel) => {
+  private generateNativeTokens = (w: IWalletModel) => {
     if (Provider.isAllNetworks) {
       return Provider.getAllNetworks().map(p => this.generateNativeToken(w, p));
     }
@@ -320,7 +320,7 @@ class TokensStore implements MobXStore<IToken> {
   };
 
   public generateNativeToken = (
-    wallet: WalletModel,
+    wallet: IWalletModel,
     provider: ProviderModel = Provider.selectedProvider,
   ): IToken => {
     const balance = app.getAvailableBalance(wallet.address, provider);
@@ -435,7 +435,7 @@ class TokensStore implements MobXStore<IToken> {
     Contracts.create(contract.id, contract);
   };
 
-  private getContract = (id: HaqqCosmosAddress | HaqqEthereumAddress) => {
+  private getContract = (id: AddressCosmos | AddressEthereum) => {
     return Contracts.getById(id);
   };
 

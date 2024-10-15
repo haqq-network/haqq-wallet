@@ -7,13 +7,13 @@ import {onVestingSync} from '@app/event-actions/on-vesting-sync';
 import {Events} from '@app/events';
 import {getProviderInstanceForWallet} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
-import {Wallet, WalletModel} from '@app/models/wallet';
+import {IWalletModel, Wallet} from '@app/models/wallet';
 import {Backend} from '@app/services/backend';
 import {WalletType} from '@app/types';
 
 import {onWalletsBalanceCheck} from './on-wallets-balance-check';
 
-export async function onWalletCreate(wallet: WalletModel) {
+export async function onWalletCreate(wallet: IWalletModel) {
   try {
     let subscription = app.notificationToken;
     if (subscription) {
