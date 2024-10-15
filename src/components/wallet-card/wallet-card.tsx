@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react';
+import React, {useState} from 'react';
 
 import {SessionTypes} from '@walletconnect/types';
 import {
@@ -9,7 +9,6 @@ import {
 
 import {Card, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useIsBalancesFirstSync} from '@app/hooks/use-is-balances-sync';
 import {BalanceModel, IWalletModel} from '@app/models/wallet';
 import {SHADOW_L} from '@app/variables/shadows';
 
@@ -48,20 +47,7 @@ export const WalletCard = ({
 }: BalanceProps) => {
   const {locked, total} = balance ?? {};
   const [cardState, setCardState] = useState('loading');
-  const {isBalanceLoadingError, isBalancesFirstSync} = useIsBalancesFirstSync();
   const screenWidth = useWindowDimensions().width;
-
-  const showPlaceholder = useMemo(() => {
-    if (isBalancesFirstSync) {
-      return true;
-    }
-
-    if (isBalanceLoadingError) {
-      return !total?.isPositive();
-    }
-
-    return false;
-  }, [isBalanceLoadingError, isBalancesFirstSync]);
 
   const onAccountInfo = () => {
     onPressAccountInfo(wallet?.address);
@@ -79,12 +65,7 @@ export const WalletCard = ({
       onLoad={() => {
         setCardState('laded');
       }}>
-      <CardName
-        onAccountInfo={onAccountInfo}
-        isBalancesFirstSync={showPlaceholder}
-        testID={testID}
-        wallet={wallet}
-      />
+      <CardName onAccountInfo={onAccountInfo} testID={testID} wallet={wallet} />
       <ProtectionBadge
         wallet={wallet}
         isSecondMnemonic={isSecondMnemonic}
@@ -96,12 +77,8 @@ export const WalletCard = ({
         testID="accountInfoButton"
         onPress={onAccountInfo}>
         <View>
-          <BalanceInfoTotal
-            isBalancesFirstSync={showPlaceholder}
-            total={total}
-          />
+          <BalanceInfoTotal total={total} />
           <BalanceInfoDetails
-            isBalancesFirstSync={showPlaceholder}
             showLockedTokens={showLockedTokens}
             total={total}
             locked={locked}

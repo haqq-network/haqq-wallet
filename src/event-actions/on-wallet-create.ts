@@ -11,8 +11,6 @@ import {IWalletModel, Wallet} from '@app/models/wallet';
 import {Backend} from '@app/services/backend';
 import {WalletType} from '@app/types';
 
-import {onWalletsBalanceCheck} from './on-wallets-balance-check';
-
 export async function onWalletCreate(wallet: IWalletModel) {
   try {
     let subscription = app.notificationToken;
@@ -25,7 +23,7 @@ export async function onWalletCreate(wallet: IWalletModel) {
       Wallet.update(wallet.address, {subscription});
     }
 
-    await onWalletsBalanceCheck();
+    await Wallet.fetchBalances();
 
     await Promise.all([
       onTransactionsLoad(wallet.address),

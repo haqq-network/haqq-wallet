@@ -5,10 +5,9 @@ import {View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
-import {useIsBalancesFirstSync} from '@app/hooks/use-is-balances-sync';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
-import {BalanceModel} from '@app/models/wallet';
+import {BalanceModel, Wallet} from '@app/models/wallet';
 
 import {
   Badge,
@@ -24,32 +23,17 @@ import {Placeholder} from './ui/placeholder';
 
 export interface LockedTokensProps {
   balance?: BalanceModel;
-
   onForwardPress(): void;
 }
 
 export const LockedTokens = observer(
   ({balance, onForwardPress}: LockedTokensProps) => {
     const {available, locked, total} = balance ?? {};
-    const {isBalanceLoadingError, isBalancesFirstSync} =
-      useIsBalancesFirstSync();
     const defaultTotalValueISLM = useMemo(
       () => `0 ${Provider.selectedProvider.denom}`,
       [Provider.selectedProvider.denom],
     );
     const defaultTotalValueUSD = useMemo(() => '$0', []);
-
-    const showPlaceholder = useMemo(() => {
-      if (isBalancesFirstSync) {
-        return true;
-      }
-
-      if (isBalanceLoadingError) {
-        return !total?.isPositive();
-      }
-
-      return false;
-    }, [isBalanceLoadingError, isBalancesFirstSync]);
 
     return (
       <View style={styles.container}>
@@ -59,7 +43,7 @@ export const LockedTokens = observer(
           i18n={I18N.lockedTokensTotalValue}
         />
         <First>
-          {showPlaceholder && (
+          {Wallet.isBalancesLoading && (
             <Placeholder opacity={0.9}>
               <Placeholder.Item height={20} width={100} />
             </Placeholder>
@@ -89,7 +73,7 @@ export const LockedTokens = observer(
         </First>
         <Spacer height={4} />
         <First>
-          {isBalancesFirstSync && (
+          {Wallet.isBalancesLoading && (
             <>
               <Spacer height={4} />
               <Placeholder opacity={0.9}>

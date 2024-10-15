@@ -1,4 +1,6 @@
-import {AddressCosmos, WalletCardStyle, WalletType} from '@app/types';
+import {AddressCosmos, AddressEthereum, WalletCardStyle, WalletType} from '@app/types';
+
+import {BalanceModel} from './balance.model';
 
 export interface IWalletModel {
   address: string;
@@ -24,3 +26,5 @@ export interface IWalletModel {
   position: number;
   isImported?: boolean;
 }
+
+export type WalletBalance = Record<AddressEthereum, BalanceModel>;

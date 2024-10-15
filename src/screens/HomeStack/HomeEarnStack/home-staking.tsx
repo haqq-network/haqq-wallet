@@ -32,7 +32,7 @@ export const HomeStakingScreen = observer(() => {
   const [data, setData] = useState({
     ...initData,
     availableSum: visible.reduce(
-      (acc, w) => acc.operate(app.getAvailableBalance(w.address), 'add'),
+      (acc, w) => acc.operate(Wallet.getBalance(w.address, 'available'), 'add'),
       Balance.Empty,
     ),
   });
@@ -62,7 +62,7 @@ export const HomeStakingScreen = observer(() => {
       const unDelegationSum = new Balance(reduceAmounts(unDelegations));
       const availableSum = visibleWallets.reduce(
         (acc, w) =>
-          acc.operate(app.getAvailableForStakeBalance(w.address), 'add'),
+          acc.operate(Wallet.getBalance(w.address, 'availableForStake'), 'add'),
         Balance.Empty,
       );
 
@@ -76,10 +76,8 @@ export const HomeStakingScreen = observer(() => {
     };
 
     const disposer = autorun(listener);
-    app.addListener(Events.onBalanceSync, listener);
     return () => {
       disposer();
-      app.removeListener(Events.onBalanceSync, listener);
     };
   }, []);
 

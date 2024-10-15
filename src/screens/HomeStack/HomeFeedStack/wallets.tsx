@@ -10,7 +10,6 @@ import {observer} from 'mobx-react';
 import {Wallets} from '@app/components/wallets';
 import {getProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet';
 import {useTypedNavigation} from '@app/hooks';
-import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {IWalletModel, Wallet} from '@app/models/wallet';
 import {HomeFeedStackParamList, HomeStackRoutes} from '@app/route-types';
 import {WalletConnect} from '@app/services/wallet-connect';
@@ -20,7 +19,7 @@ import {filterWalletConnectSessionsByAddress} from '@app/utils';
 export const WalletsWrapper = observer(() => {
   const navigation = useTypedNavigation<HomeFeedStackParamList>();
   const visible = Wallet.getAllVisible();
-  const balance = useWalletsBalance(visible);
+  const balance = Wallet.getBalancesByAddressList(visible);
 
   const onPressSend = useCallback(
     (address: string) => {

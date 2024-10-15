@@ -35,11 +35,10 @@ import {AddressUtils} from './helpers/address-utils';
 import {getRemoteMultiplierValue} from './helpers/get-remote-balance-value';
 import {shortAddress} from './helpers/short-address';
 import {getHost, onUrlSubmit} from './helpers/web3-browser-utils';
-import {WalletBalance} from './hooks/use-wallets-balance';
 import {I18N, getText} from './i18n';
 import {Banner, BannerButtonEvent, BannerType} from './models/banner';
 import {Fee} from './models/fee';
-import {BalanceModel, IWalletModel} from './models/wallet';
+import {BalanceModel, IWalletModel, WalletBalance} from './models/wallet';
 import {navigator} from './navigator';
 import {HomeStackRoutes, WelcomeStackRoutes} from './route-types';
 import {Balance} from './services/balance';
@@ -1131,3 +1130,11 @@ export function createAsyncTask<T>(fn: AsyncTaskFunction<T>) {
     return instance.finally(() => (instance = null));
   };
 }
+
+export const deepClone = (value?: Object) => {
+  if (!value) {
+    return value;
+  }
+
+  return JSON.parse(JSON.stringify(value));
+};

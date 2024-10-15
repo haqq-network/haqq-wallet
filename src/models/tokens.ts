@@ -1,7 +1,6 @@
 import {makeAutoObservable, runInAction, when} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
-import {app} from '@app/contexts';
 import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
 import {Whitelist} from '@app/helpers/whitelist';
 import {Contracts} from '@app/models/contracts';
@@ -323,7 +322,7 @@ class TokensStore implements MobXStore<IToken> {
     wallet: IWalletModel,
     provider: ProviderModel = Provider.selectedProvider,
   ): IToken => {
-    const balance = app.getAvailableBalance(wallet.address, provider);
+    const balance = Wallet.getBalance(wallet.address, 'available', provider);
 
     return {
       id: AddressUtils.toHaqq(NATIVE_TOKEN_ADDRESS),

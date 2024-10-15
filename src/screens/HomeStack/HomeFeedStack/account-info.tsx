@@ -9,9 +9,8 @@ import {showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useWallet} from '@app/hooks/use-wallet';
-import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {Token} from '@app/models/tokens';
-import {IWalletModel} from '@app/models/wallet';
+import {IWalletModel, Wallet} from '@app/models/wallet';
 import {
   HomeStackParamList,
   HomeStackRoutes,
@@ -28,7 +27,7 @@ export const AccountInfoScreen = observer(() => {
   const navigation = useTypedNavigation<HomeStackParamList>();
   const accountId = useMemo(() => route.params.accountId, [route]);
   const wallet = useWallet(accountId);
-  const balances = useWalletsBalance([wallet!]);
+  const balances = Wallet.getBalancesByAddressList([wallet!]);
   const {available, locked, staked, total, nextVestingUnlockDate, vested} =
     useMemo(
       () => balances[AddressUtils.toEth(wallet?.address!)],

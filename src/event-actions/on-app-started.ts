@@ -11,10 +11,10 @@ import {onBannerNotificationCreate} from '@app/event-actions/on-banner-notificat
 import {onBannerNotificationTopicCreate} from '@app/event-actions/on-banner-notification-topic-create';
 import {Events} from '@app/events';
 import {showModal} from '@app/helpers';
-import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {I18N, getText} from '@app/i18n';
 import {Banner} from '@app/models/banner';
 import {Refferal} from '@app/models/refferal';
+import {Wallet} from '@app/models/wallet';
 import {EventTracker} from '@app/services/event-tracker';
 import {MarketingEvents} from '@app/types';
 
@@ -76,6 +76,6 @@ export async function onAppStarted() {
 
   await onUpdatesSync();
   await onAppBackup();
-  await awaitForEventDone(Events.onSyncAppBalances);
+  await Wallet.fetchBalances();
   app.checkUpdate();
 }

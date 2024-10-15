@@ -18,11 +18,8 @@ import {
 import {Loading} from '@app/components/ui';
 import {WalletCard} from '@app/components/ui/walletCard';
 import {app} from '@app/contexts';
-import {onWalletsBalanceCheck} from '@app/event-actions/on-wallets-balance-check';
-import {Events} from '@app/events';
 import {awaitForWallet, showModal} from '@app/helpers';
 import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
-import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
 import {awaitForProvider} from '@app/helpers/await-for-provider';
 import {AwaitValue, awaitForValue} from '@app/helpers/await-for-value';
@@ -167,7 +164,7 @@ export const SwapScreen = observer(() => {
   );
   const amountsIn = useSumAmount(
     START_SWAP_AMOUNT,
-    app.getAvailableBalance(currentWallet.address),
+    Wallet.getBalance(currentWallet.address, 'available'),
     MIN_SWAP_AMOUNT,
   );
   const minReceivedAmount = useMemo(() => {
@@ -246,7 +243,7 @@ export const SwapScreen = observer(() => {
 
     if (tokenIn.symbol === Provider.selectedProvider.denom) {
       logger.log(`t0 available: currency ${Provider.selectedProvider.denom}`);
-      return app.getAvailableBalance(currentWallet.address);
+      return Wallet.getBalance(currentWallet.address, 'available');
     }
 
     const tokenData = Token.tokens?.[
@@ -271,7 +268,7 @@ export const SwapScreen = observer(() => {
     }
 
     if (tokenOut.symbol === Provider.selectedProvider.denom) {
-      return app.getAvailableBalance(currentWallet.address);
+      return Wallet.getBalance(currentWallet.address, 'available');
     }
 
     const tokenData = Token.tokens?.[
@@ -337,7 +334,6 @@ export const SwapScreen = observer(() => {
       if (!Token.tokens?.[AddressUtils.toEth(currentWallet.address)]) {
         await Promise.all([
           Token.fetchTokens(true),
-          awaitForEventDone(Events.onBalanceSync),
         ]);
       }
       await refreshTokenBalances(currentWallet.address, t0Available);
@@ -452,10 +448,7 @@ export const SwapScreen = observer(() => {
             text: 'Loading token balances',
           });
           try {
-            await Promise.all([
-              Token.fetchTokens(true),
-              awaitForEventDone(Events.onBalanceSync),
-            ]);
+            await Token.fetchTokens(true);
           } catch {
           } finally {
             hide();
@@ -589,7 +582,10 @@ export const SwapScreen = observer(() => {
                     if (t.symbol === Provider.selectedProvider.denom) {
                       return {
                         ...t,
-                        value: app.getAvailableBalance(value?.wallet?.address),
+                        value: Wallet.getBalance(
+                          value?.wallet?.address,
+                          'available',
+                        ),
                       };
                     }
 
@@ -659,7 +655,7 @@ export const SwapScreen = observer(() => {
     if (!t0 || !wallet) {
       return {};
     }
-    await onWalletsBalanceCheck();
+    await Wallet.fetchBalances();
 
     const tokenValue =
       // @ts-ignore
@@ -667,7 +663,7 @@ export const SwapScreen = observer(() => {
       Token.tokens?.[AddressUtils.toEth(wallet)]?.find(t =>
         AddressUtils.equals(t.id, tokenIn?.id!),
       )?.value;
-    const availableIslm = app.getAvailableBalance(wallet);
+      const availableIslm = Wallet.getBalance(wallet, 'available');
 
     const symbol = t0.getSymbol() || Provider.selectedProvider.denom;
     const isNativeCurrency = symbol === Provider.selectedProvider.denom;
@@ -1530,7 +1526,7 @@ export const SwapScreen = observer(() => {
       MarketingEvents.swapScreenClose,
       COMMON_EVENT_PARAMS,
     );
-    onWalletsBalanceCheck();
+    Wallet.fetchBalances();
     Token.fetchTokens(true);
   }, [COMMON_EVENT_PARAMS]);
 

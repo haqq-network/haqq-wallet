@@ -1,8 +1,10 @@
-import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+
+import {observer} from 'mobx-react';
 
 import {ProposalDepositForm} from '@app/components/proposal-deposit-form';
-import {app} from '@app/contexts';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {Wallet} from '@app/models/wallet';
 import {
   ProposalDepositStackParamList,
   ProposalDepositStackRoutes,
@@ -10,7 +12,7 @@ import {
 import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
 
-export const ProposalDepositFormScreen = memo(() => {
+export const ProposalDepositFormScreen = observer(() => {
   const navigation = useTypedNavigation<ProposalDepositStackParamList>();
   const {account, proposal} = useTypedRoute<
     ProposalDepositStackParamList,
@@ -20,7 +22,7 @@ export const ProposalDepositFormScreen = memo(() => {
   const [balance, setBalance] = useState(Balance.Empty);
 
   useEffect(() => {
-    const newBalance = app.getAvailableBalance(account);
+    const newBalance = Wallet.getBalance(account, 'available');
     setBalance(newBalance);
   }, [account]);
 
