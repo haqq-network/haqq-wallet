@@ -2,12 +2,15 @@ import {JSONRPCError, jsonrpcRequest} from '@haqq/shared-react-native';
 
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
-import {Provider, ProviderModel} from '@app/models/provider';
+import {
+  INDEXER_PROXY_ENDPOINT,
+  Provider,
+  ProviderModel,
+} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
 import {Indexer} from '@app/services/indexer';
-import {RemoteConfig} from '@app/services/remote-config';
 import {AddressType, IContract, VerifyAddressResponse} from '@app/types';
 import {MAINNET_ETH_CHAIN_ID} from '@app/variables/common';
 
@@ -117,7 +120,7 @@ export class Whitelist {
       }
 
       const response = await jsonrpcRequest<VerifyAddressResponse | null>(
-        RemoteConfig.get('proxy_server')!,
+        INDEXER_PROXY_ENDPOINT,
         'address',
         params,
       );
