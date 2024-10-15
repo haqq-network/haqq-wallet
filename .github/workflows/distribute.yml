@@ -79,3 +79,4 @@ jobs:
     secrets: inherit
     needs:
       - slack_notify
+    if: ${{ github.ref == 'refs/heads/main' }}
