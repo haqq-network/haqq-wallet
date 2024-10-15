@@ -32,12 +32,10 @@ import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 import {
-  HomeStackRoutes,
   KeystoneStackRoutes,
   LedgerStackRoutes,
   OnboardingStackRoutes,
   SssMigrateStackRoutes,
-  WelcomeStackRoutes,
 } from '@app/route-types';
 import {RootStack} from '@app/screens/RootStack';
 import {AppTheme, ModalType} from '@app/types';
@@ -78,15 +76,6 @@ const SAFE_AREA_INTIAL_METRICS: Metrics = {
     top: 0,
   },
 };
-
-// We need to log some screens with params
-// be careful with this list to avoid capturing sensitive data
-const ALLOWED_SCREEN_TO_LOG_PARAMS = [
-  HomeStackRoutes.TransactionDetail,
-  HomeStackRoutes.Web3BrowserPopup,
-  HomeStackRoutes.InAppBrowser,
-  WelcomeStackRoutes.InAppBrowser,
-];
 
 export const App = () => {
   const [initialized, setInitialized] = useState(false);
@@ -249,11 +238,7 @@ export const App = () => {
                   captureScreens: true,
                   navigation: {
                     routeToProperties: (name, params) => {
-                      // @ts-ignore
-                      if (ALLOWED_SCREEN_TO_LOG_PARAMS.includes(name)) {
-                        return params;
-                      }
-                      return undefined;
+                      return params;
                     },
                   },
                 }}>

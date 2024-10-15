@@ -40,7 +40,7 @@ export const SettingsProviderEditScreen = observer(() => {
 
   const onSelect = useCallback(() => {
     if (provider) {
-      Provider.setSelectedProviderId(provider.id);
+      Provider.setSelectedProviderId(provider.id, {requestMarkup: false});
     }
     goBack();
   }, [goBack, provider]);

@@ -42,6 +42,7 @@ import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 import {AwaitValue} from './helpers/await-for-value';
 import {Fee} from './models/fee';
+import {SecureValue} from './modifiers/secure-value';
 
 export enum MarketingEvents {
   accountCreated = 'q3vxmg',
@@ -96,6 +97,27 @@ export enum MarketingEvents {
   navigation = '68gzdc',
 
   bannerClicked = '9zjcys',
+
+  swapStart = 'swapStart',
+  swapSuccess = 'swapSuccess',
+  swapFail = 'swapFail',
+
+  swapScreenOpen = 'swapScreenOpen',
+  swapSelectToken0 = 'swapSelectToken0',
+  swapSelectToken1 = 'swapSelectToken1',
+  swapEnterAmount = 'swapEnterAmount',
+  swapPressMax = 'swapPressMax',
+  swapChangeDirection = 'swapChangeDirection',
+
+  swapApproveStart = 'swapApproveStart',
+  swapApproveSuccess = 'swapApproveSuccess',
+  swapApproveFail = 'swapApproveFail',
+
+  jsonRpcSignStart = 'jsonRpcSignStart',
+  jsonRpcSignSuccess = 'jsonRpcSignSuccess',
+  jsonRpcSignFail = 'jsonRpcSignFail',
+  jsonRpcSignUserReject = 'jsonRpcSignUserReject',
+  swapScreenClose = 'swapScreenClose',
 }
 
 export enum PopupNotificationBannerTypes {
@@ -115,11 +137,11 @@ export type SendTransactionRequest = Awaited<
 export type WalletInitialData =
   | {
       type: 'mnemonic';
-      mnemonic: string;
+      mnemonic: SecureValue<string>;
     }
   | {
       type: 'privateKey';
-      privateKey: string;
+      privateKey: SecureValue<string>;
     }
   | {
       type: 'sss';
@@ -127,7 +149,7 @@ export type WalletInitialData =
       sssCloudShare: string | null;
       sssLocalShare: string | null;
       verifier: string;
-      token: string;
+      token: SecureValue<string>;
       action?: 'restore' | 'replace';
       provider: SssProviders;
     }
@@ -1611,7 +1633,7 @@ export type PartialRequired<T, K extends keyof T> = Partial<T> & Pick<T, K>;
 
 export enum DeeplinkProtocol {
   haqq = 'haqq',
-  etherium = 'etherium',
+  ethereum = 'ethereum',
   wc = 'wc',
 }
 

@@ -92,6 +92,7 @@ export const TransactionList = observer(
     const txTimestampHeadersEnabled = useRemoteConfigVar(
       'tx_timestamp_headers',
     );
+
     const sections = useMemo(
       () =>
         hideContent
@@ -99,6 +100,7 @@ export const TransactionList = observer(
           : prepareDataForSectionList(transactions, txTimestampHeadersEnabled),
       [transactions, hideContent, txTimestampHeadersEnabled],
     );
+
     const listStyle = useMemo(
       () => StyleSheet.flatten([styles.list, style]),
       [style],

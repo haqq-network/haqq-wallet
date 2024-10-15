@@ -1,8 +1,9 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
+import {useFocusEffect} from '@react-navigation/native';
+import Decimal from 'decimal.js';
 import {ethers} from 'ethers';
-import {toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import {Alert, Keyboard, View} from 'react-native';
 import Toast from 'react-native-toast-message';
@@ -17,44 +18,48 @@ import {
 import {Loading} from '@app/components/ui';
 import {WalletCard} from '@app/components/ui/walletCard';
 import {app} from '@app/contexts';
+import {onWalletsBalanceCheck} from '@app/event-actions/on-wallets-balance-check';
 import {Events} from '@app/events';
 import {awaitForWallet, showModal} from '@app/helpers';
-import {AddressUtils} from '@app/helpers/address-utils';
+import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
 import {awaitForProvider} from '@app/helpers/await-for-provider';
 import {AwaitValue, awaitForValue} from '@app/helpers/await-for-value';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
-import {useSumAmount, useTypedRoute} from '@app/hooks';
+import {useSumAmount, useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useBackNavigationHandler} from '@app/hooks/use-back-navigation-handler';
+import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {usePrevious} from '@app/hooks/use-previous';
 import {I18N, getText} from '@app/i18n';
 import {Currencies} from '@app/models/currencies';
 import {Provider} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {Wallet} from '@app/models/wallet';
-import {navigator} from '@app/navigator';
-import {
-  HomeStackRoutes,
-  SwapStackParamList,
-  SwapStackRoutes,
-  TransactionStackRoutes,
-} from '@app/route-types';
+import {SwapStackParamList, SwapStackRoutes} from '@app/route-types';
 import {Balance} from '@app/services/balance';
+import {EventTracker} from '@app/services/event-tracker';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {
   Indexer,
   SushiPoolEstimateResponse,
   SushiRoute,
 } from '@app/services/indexer';
-import {message} from '@app/services/toast';
 import {
   HaqqCosmosAddress,
   HaqqEthereumAddress,
   IToken,
+  MarketingEvents,
   ModalType,
 } from '@app/types';
 import {ERC20_ABI, V3SWAPROUTER_ABI, WETH_ABI} from '@app/variables/abi';
-import {HAQQ_METADATA, ZERO_HEX_NUMBER} from '@app/variables/common';
+import {
+  HAQQ_METADATA,
+  LONG_NUM_PRECISION,
+  NUM_PRECISION,
+  STRINGS,
+  ZERO_HEX_NUMBER,
+} from '@app/variables/common';
 
 const logger = Logger.create('SwapScreen', {
   emodjiPrefix: '🟠',
@@ -72,7 +77,44 @@ const getMinAmountForDecimals = (d: number | null, symbol: string | null) => {
   return new Balance(Number(`0.${'0'.repeat(d! - 1)}1`), d, symbol!);
 };
 
+function getError(err: any): string {
+  return typeof err === 'string'
+    ? err
+    : (err as any).message || (err as any).toString();
+}
+
+function findToken(wallet: string, token_address: string) {
+  if (AddressUtils.equals(token_address, NATIVE_TOKEN_ADDRESS)) {
+    return Token.generateNativeToken(Wallet.getById(wallet)!);
+  }
+
+  const tokenForWallet = Token.tokens?.[AddressUtils.toEth(wallet)]?.find(it =>
+    AddressUtils.equals(it.id, token_address),
+  );
+
+  if (tokenForWallet) {
+    return tokenForWallet;
+  }
+
+  const token = Token.data?.[AddressUtils.toEth(token_address)];
+
+  if (!token) {
+    return null;
+  }
+
+  return {
+    ...token,
+    value: new Balance(
+      0,
+      token.decimals! ?? Provider.selectedProvider.decimals,
+      token.symbol! ?? Provider.selectedProvider.denom,
+    ),
+  } as IToken;
+}
+
 export const SwapScreen = observer(() => {
+  const {animate} = useLayoutAnimation();
+  const navigation = useTypedNavigation<SwapStackParamList>();
   const {params} = useTypedRoute<SwapStackParamList, SwapStackRoutes.Swap>();
   const [swapSettings, setSwapSettings] = useState<SwapTransactionSettings>(
     SWAP_SETTINGS_DEFAULT,
@@ -89,8 +131,9 @@ export const SwapScreen = observer(() => {
   const routesByToken0 = useRef<Record<HaqqEthereumAddress, SushiRoute[]>>({});
   const routesByToken1 = useRef<Record<HaqqEthereumAddress, SushiRoute[]>>({});
 
-  const [estimateData, setEstimateData] =
-    useState<SushiPoolEstimateResponse | null>(null);
+  const [estimateData, setEstimateData] = useState<
+    Partial<SushiPoolEstimateResponse>
+  >({});
   const [currentWallet, setCurrentWallet] = useState(
     Wallet.getById(params.address)!,
   );
@@ -100,36 +143,22 @@ export const SwapScreen = observer(() => {
 
   const tokenIn = useMemo(
     () =>
-      poolsData.contracts?.find?.(it =>
-        AddressUtils.equals(
-          it.id!,
-          (currentRoute || poolsData.routes[0])?.token0!,
-        ),
-      ) ||
-      Token.getAll().find(it =>
-        AddressUtils.equals(
-          it.id!,
-          (currentRoute || poolsData.routes[0])?.token0!,
-        ),
+      findToken(
+        currentWallet.address,
+        (currentRoute || poolsData.routes[0])?.token0!,
       ),
-    [currentRoute, poolsData],
+    [currentRoute, poolsData, currentWallet],
   );
+
   const tokenOut = useMemo(
     () =>
-      poolsData.contracts?.find?.(it =>
-        AddressUtils.equals(
-          it.id!,
-          (currentRoute || poolsData.routes[0])?.token1!,
-        ),
-      ) ||
-      Token.getAll().find(it =>
-        AddressUtils.equals(
-          it.id!,
-          (currentRoute || poolsData.routes[0])?.token1!,
-        ),
+      findToken(
+        currentWallet.address,
+        (currentRoute || poolsData.routes[0])?.token1!,
       ),
-    [currentRoute, poolsData, estimateData],
+    [currentRoute, poolsData, currentWallet],
   );
+
   const amountsOut = useSumAmount(
     undefined,
     undefined,
@@ -142,17 +171,16 @@ export const SwapScreen = observer(() => {
     MIN_SWAP_AMOUNT,
   );
   const minReceivedAmount = useMemo(() => {
-    if (!estimateData || !tokenOut) {
+    if (!estimateData.route || !tokenOut || !amountsOut.amount) {
       return new Balance(0, 0, tokenOut?.symbol!);
     }
 
-    const slippage = parseFloat(swapSettings.slippage) / 100;
-    const amountOut = parseFloat(amountsOut.amount);
-
-    const result = (
-      (amountOut - amountOut * slippage) *
-      10 ** tokenOut.decimals!
-    ).toString();
+    const slippage = new Decimal(swapSettings.slippage).div(100);
+    const amountOut = new Decimal(amountsOut.amount);
+    const result = amountOut
+      .minus(amountOut.times(slippage))
+      .times(new Decimal(10).pow(tokenOut.decimals!))
+      .toString();
     return new Balance(result, tokenOut.decimals!, tokenOut.symbol!);
   }, [estimateData, tokenOut, swapSettings, amountsOut.amount]);
 
@@ -162,14 +190,10 @@ export const SwapScreen = observer(() => {
     if (!estimateData?.fee) {
       return new Balance(ZERO_HEX_NUMBER, decimals, symbol);
     }
-    return new Balance(estimateData?.fee.amount || '0', decimals, symbol);
+    return new Balance(estimateData?.fee?.amount || '0', decimals, symbol);
   }, [tokenIn, estimateData]);
   const isLoading = useMemo(
-    () =>
-      !poolsData?.contracts?.length ||
-      !poolsData?.routes?.length ||
-      !tokenIn ||
-      !tokenOut,
+    () => !poolsData?.routes?.length || !tokenIn || !tokenOut,
     [tokenIn, tokenOut, poolsData],
   );
   const isWrapTx = useMemo(
@@ -190,7 +214,7 @@ export const SwapScreen = observer(() => {
   );
   const t0Current = useMemo(() => {
     if (!amountsIn.amount || !tokenIn?.decimals) {
-      return Balance.Empty;
+      return new Balance(0, tokenIn?.decimals!, tokenIn?.symbol!);
     }
     return new Balance(
       parseFloat(amountsIn.amount),
@@ -201,7 +225,7 @@ export const SwapScreen = observer(() => {
 
   const t1Current = useMemo(() => {
     if (!estimateData?.amount_out || !tokenOut?.decimals) {
-      return Balance.Empty;
+      return new Balance(0, tokenOut?.decimals!, tokenOut?.symbol!);
     }
     return new Balance(
       estimateData?.amount_out,
@@ -214,6 +238,10 @@ export const SwapScreen = observer(() => {
     if (!tokenIn) {
       logger.log('t0 available: tokenIn is empty');
       return Balance.Empty;
+    }
+
+    if (tokenIn.value?.isPositive()) {
+      return tokenIn.value;
     }
 
     if (tokenIn.symbol === Provider.selectedProvider.denom) {
@@ -238,6 +266,10 @@ export const SwapScreen = observer(() => {
       return Balance.Empty;
     }
 
+    if (tokenOut.value?.isPositive()) {
+      return tokenOut.value;
+    }
+
     if (tokenOut.symbol === Provider.selectedProvider.denom) {
       return app.getAvailableBalance(currentWallet.address);
     }
@@ -250,16 +282,35 @@ export const SwapScreen = observer(() => {
     }
 
     return new Balance(0, 0, tokenOut.symbol!);
-  }, [currentWallet, tokenOut, Provider.selectedProvider.denom]);
+  }, [currentWallet, tokenOut, Provider.selectedProvider.denom, Token.tokens]);
+
+  const rate = useMemo(() => {
+    if (!amountsIn.amount || !amountsOut.amount || !tokenOut) {
+      return '0';
+    }
+
+    const t0 = new Decimal(amountsIn.amount);
+    const t1 = new Decimal(amountsOut.amount);
+    const r = t1.div(t0);
+    let result = '';
+
+    if (r.lt(1)) {
+      result = r.toFixed(LONG_NUM_PRECISION);
+    } else {
+      result = r.toFixed(NUM_PRECISION);
+    }
+
+    return result.concat(STRINGS.NBSP).concat(tokenOut.symbol!);
+  }, [amountsIn.amount, amountsOut.amount, tokenOut]);
 
   const estimate = async (force = false) => {
     const errCtx: Record<string, any> = {};
     try {
-      estimateAbortController?.current?.abort();
-      estimateAbortController.current = new AbortController();
+      const currentAbortController = new AbortController();
+      estimateAbortController.current?.abort();
+      estimateAbortController.current = currentAbortController;
 
       logger.log('estimate token', {
-        // token,
         tokenOut,
         tokenIn,
         isEstimating,
@@ -272,14 +323,12 @@ export const SwapScreen = observer(() => {
       }
 
       if (/^0(\.)?(0+)?$/.test(amountsIn.amount)) {
-        return setEstimateData(null);
+        return;
       }
 
       setIsEstimating(true);
-      setEstimateData(null);
 
       if (t0Current?.compare?.('0x0', 'lte')) {
-        setEstimateData(null);
         vibrate(HapticEffects.impactLight);
         Keyboard.dismiss();
         return amountsOut.setAmount('0');
@@ -295,7 +344,10 @@ export const SwapScreen = observer(() => {
 
       if (isWrapTx || isUnwrapTx) {
         amountsOut.setAmount(amountsIn.amount);
-        return setEstimateData({
+        if (currentAbortController.signal.aborted) {
+          return;
+        }
+        return setEstimateData(() => ({
           allowance: '0x0',
           amount_in: t0Current.toHex(),
           amount_out: t0Current.toHex(),
@@ -306,7 +358,9 @@ export const SwapScreen = observer(() => {
           gas_estimate: '0x0',
           initialized_ticks_crossed_list: [0],
           need_approve: false,
-          route: '',
+          route: `${NATIVE_TOKEN_ADDRESS.slice(
+            2,
+          )}000000${NATIVE_TOKEN_ADDRESS.slice(2)}`,
           s_amount_in: t0Current.toFloatString(),
           s_assumed_amount_out: t0Current.toFloatString(),
           s_gas_spent: 0,
@@ -314,14 +368,12 @@ export const SwapScreen = observer(() => {
           s_primary_price: '0',
           s_swap_price: '0',
           sqrt_price_x96_after_list: [],
-        });
+        }));
       }
 
       const request = {
         amount: t0Current.toHex(),
         sender: currentWallet.address,
-        // token_in: tokenIn?.id!,
-        // token_out: tokenOut?.id!,
         route: currentRoute?.route_hex!,
         currency_id: Currencies.currency?.id,
       };
@@ -336,11 +388,12 @@ export const SwapScreen = observer(() => {
       if (tokenIn?.symbol === Provider.selectedProvider.denom) {
         response.need_approve = false;
       }
-      response.s_price_impact = (
-        parseFloat(response.s_price_impact) * 100
-      ).toString();
+
       logger.log('estimate resp', response);
-      setEstimateData(response);
+      if (currentAbortController.signal.aborted) {
+        return;
+      }
+      setEstimateData(() => response);
 
       const amountOut = new Balance(
         response.amount_out,
@@ -414,8 +467,12 @@ export const SwapScreen = observer(() => {
           initialValue.id!,
         );
 
-        const tokens =
-          poolsData.contracts || Token.tokens[currentWallet.address] || [];
+        const tokens = poolsData.contracts
+          .map(c => findToken(currentWallet.address, c.id!))
+          .filter(Boolean) as IToken[];
+
+        logger.log('tokens', tokens);
+
         const currentToken = {
           ...tokens.find(t => AddressUtils.equals(t.id, initialValue.id!))!,
           value: isToken0 ? t0Available : t1Available,
@@ -447,7 +504,7 @@ export const SwapScreen = observer(() => {
               poolsData.contracts?.find(c =>
                 AddressUtils.equals(c?.id!, isToken0 ? it.token0 : it.token1),
               ) ||
-              Token.getAll().find(c =>
+              Token.tokens?.[currentWallet.address]?.find(c =>
                 AddressUtils.equals(c?.id!, isToken0 ? it.token0 : it.token1),
               );
 
@@ -465,13 +522,50 @@ export const SwapScreen = observer(() => {
           })
           .filter(Boolean) as IToken[];
 
+        const sortedTokens = [currentToken, ...possibleRoutesForSwap].sort(
+          (a, b) => {
+            // should be last if balance is 0
+            if (!a?.value?.isPositive?.()) {
+              return 1;
+            }
+            // should be last if balance is 0
+            if (!b?.value?.isPositive?.()) {
+              return -1;
+            }
+
+            const aValue = parseFloat(
+              a.value.toBalanceString(
+                LONG_NUM_PRECISION,
+                undefined,
+                false,
+                true,
+              ),
+            );
+            const bValue = parseFloat(
+              b.value.toBalanceString(
+                LONG_NUM_PRECISION,
+                undefined,
+                false,
+                true,
+              ),
+            );
+            if (aValue > bValue) {
+              return -1;
+            }
+            if (aValue < bValue) {
+              return 1;
+            }
+            return 0;
+          },
+        );
+
         const {value, index} = await awaitForValue({
           title: 'Select token',
           values: [
             {
               id: currentWallet.address,
               wallet: currentWallet,
-              tokens: [currentToken, ...possibleRoutesForSwap],
+              tokens: sortedTokens,
               title: currentWallet.name,
               subtitle: currentWallet.address,
             },
@@ -564,6 +658,7 @@ export const SwapScreen = observer(() => {
     if (!t0 || !wallet) {
       return {};
     }
+    await onWalletsBalanceCheck();
 
     const tokenValue =
       // @ts-ignore
@@ -598,44 +693,44 @@ export const SwapScreen = observer(() => {
 
   const onPressChangeTokenIn = async () => {
     try {
-      const {token, wallet} = (await awaitForToken(tokenIn!)) || {};
-      if (!token || !wallet || !tokenIn || !tokenOut) {
+      const {token} = (await awaitForToken(tokenIn!)) || {};
+      if (!token || !tokenIn || !tokenOut) {
         return;
       }
       if (token.symbol === tokenIn.symbol) {
         return await estimate();
       }
+      EventTracker.instance.trackEvent(MarketingEvents.swapSelectToken0, {
+        token0_symbol: token.symbol!,
+        token0_address: AddressUtils.toEth(token.id),
+        chain_id: Provider.selectedProvider.ethChainId.toString(),
+        wallet_address: currentWallet.address,
+      });
       vibrate(HapticEffects.impactLight);
       Keyboard.dismiss();
       setIsEstimating(() => true);
-      amountsOut.setAmount('0');
-      logger.log('onPressChangeTokenIn', token.symbol);
-      if (wallet.address !== currentWallet.address) {
-        setCurrentWallet(() => wallet);
-      }
-      logger.log('token', token);
+      amountsOut.setAmount('');
 
       const needChangeTokenOut =
         AddressUtils.equals(token.id!, tokenOut?.id!) &&
         token.symbol === tokenOut.symbol;
 
+      if (needChangeTokenOut) {
+        return onPressChangeDirection();
+      }
+
       const filteredRoutes = poolsData.routes.filter(r =>
         AddressUtils.equals(r.token0!, token?.id!),
       );
-      if (needChangeTokenOut) {
-        const route = filteredRoutes.find(r =>
-          AddressUtils.equals(r.token1!, tokenIn?.id!),
-        );
-        setCurrentRoute(route || filteredRoutes[0]);
-      } else {
-        const route = filteredRoutes.find(r =>
-          AddressUtils.equals(r.token1!, tokenOut?.id!),
-        );
-        setCurrentRoute(route! || filteredRoutes[0]);
-      }
-      await refreshTokenBalances(wallet.address, t0Available);
-      amountsIn.setMin();
-      return await estimate();
+      const route = filteredRoutes.find(r =>
+        AddressUtils.equals(r.token1!, tokenOut?.id!),
+      );
+      setCurrentRoute(route! || filteredRoutes[0]);
+
+      await refreshTokenBalances(currentWallet?.address, t0Available);
+      amountsIn.setAmount('');
+      amountsIn.setError('');
+      await estimate();
     } catch (err) {
       Logger.error(err, 'onPressChangeTokenIn');
       logger.captureException(err, 'onPressChangeTokenIn');
@@ -646,39 +741,41 @@ export const SwapScreen = observer(() => {
 
   const onPressChangeTokenOut = async () => {
     try {
-      const {token, wallet} = (await awaitForToken(tokenOut!)) || {};
-      if (!token || !wallet || !tokenIn || !tokenOut) {
+      const {token} = (await awaitForToken(tokenOut!)) || {};
+      if (!token || !tokenIn || !tokenOut) {
         return;
       }
-      if (token.symbol === tokenIn.symbol) {
+      if (token.symbol === tokenOut.symbol) {
         return estimate();
       }
+      EventTracker.instance.trackEvent(MarketingEvents.swapSelectToken1, {
+        token1_symbol: token.symbol!,
+        token1_address: AddressUtils.toEth(token.id),
+        chain_id: Provider.selectedProvider.ethChainId.toString(),
+        wallet_address: currentWallet.address,
+      });
       vibrate(HapticEffects.impactLight);
       Keyboard.dismiss();
-      amountsOut.setAmount('0');
+      amountsOut.setAmount('');
       setIsEstimating(() => true);
-      setCurrentWallet(() => wallet);
 
       const needChangeTokenIn =
         AddressUtils.equals(token.id!, tokenIn?.id!) &&
         token.symbol === tokenIn.symbol;
 
+      if (needChangeTokenIn) {
+        return onPressChangeDirection();
+      }
+
       const filteredRoutes = poolsData.routes.filter(r =>
         AddressUtils.equals(r.token1!, token?.id!),
       );
 
-      if (needChangeTokenIn) {
-        const route = filteredRoutes.find(r =>
-          AddressUtils.equals(r.token0!, tokenOut?.id!),
-        );
-        setCurrentRoute(route || filteredRoutes[0]);
-      } else {
-        const route = filteredRoutes.find(r =>
-          AddressUtils.equals(r.token0!, tokenIn?.id!),
-        );
-        setCurrentRoute(route! || filteredRoutes[0]);
-      }
-      await refreshTokenBalances(wallet.address, t0Available);
+      const route = filteredRoutes.find(r =>
+        AddressUtils.equals(r.token0!, tokenIn?.id!),
+      );
+      setCurrentRoute(route! || filteredRoutes[0]);
+      await refreshTokenBalances(currentWallet?.address, t0Available);
       return await estimate();
     } catch (err) {
       Logger.error(err, 'onPressChangeTokenOut');
@@ -688,8 +785,47 @@ export const SwapScreen = observer(() => {
     }
   };
 
+  const COMMON_EVENT_PARAMS = useMemo(
+    () => ({
+      // token0
+      token0_symbol: tokenIn?.symbol!,
+      token0_address: AddressUtils.toEth(tokenIn?.id!),
+      token0_amount_text: amountsIn.amount,
+      token0_amount_hex: estimateData?.amount_in!,
+      token0_chain_id: Provider.selectedProvider.ethChainId.toString(), // TODO: for cross-chain swaps
+      // token1
+      token1_symbol: tokenOut?.symbol!,
+      token1_address: AddressUtils.toEth(tokenOut?.id!),
+      token1_amount_text: amountsOut.amount,
+      token1_amount_hex: estimateData?.amount_out!,
+      token1_chain_id: Provider.selectedProvider.ethChainId.toString(), // TODO: for cross-chain swaps
+      // other
+      chain_id: Provider.selectedProvider.ethChainId.toString(),
+      wallet_address: currentWallet.address,
+    }),
+    [
+      tokenIn?.symbol,
+      tokenIn?.id,
+      amountsIn.amount,
+      estimateData?.amount_in,
+      tokenOut?.symbol,
+      tokenOut?.id,
+      amountsOut.amount,
+      estimateData?.amount_out,
+      Provider.selectedProvider.ethChainId,
+      currentWallet.address,
+    ],
+  );
+
   const onPressSwap = useCallback(async () => {
     try {
+      EventTracker.instance.trackEvent(MarketingEvents.swapStart, {
+        ...COMMON_EVENT_PARAMS,
+        type: 'swap',
+        swap_source: 'SwapRouterV3',
+        swap_source_address: Provider.selectedProvider.config.swapRouterV3,
+      });
+
       if (!estimateData?.route?.length) {
         return Alert.alert('Error', 'No swap route found');
       }
@@ -703,7 +839,9 @@ export const SwapScreen = observer(() => {
       const deadline =
         Math.floor(Date.now() / 1000) + 60 * parseFloat(swapSettings.deadline);
 
-      const tokenInIsISLM = tokenIn?.symbol === Provider.selectedProvider.denom;
+      const toke0IsNative = tokenIn?.symbol === Provider.selectedProvider.denom;
+      const toke1IsNative =
+        tokenOut?.symbol === Provider.selectedProvider.denom;
 
       const encodedPath = `0x${estimateData.route}`;
       const swapParams = [
@@ -719,10 +857,28 @@ export const SwapScreen = observer(() => {
         minReceivedAmount?.toHex() || 0,
       ];
 
-      const encodedTxData = swapRouter.interface.encodeFunctionData(
+      let txData = '';
+      const encodedSwapTxData = swapRouter.interface.encodeFunctionData(
         'exactInput',
         [swapParams],
       ) as string;
+
+      // if token1 is native, we need to unwrap it
+      if (
+        toke1IsNative &&
+        Provider.selectedProvider.config.enableUnwrapWETH9Call
+      ) {
+        const encodedUnwrap = swapRouter.interface.encodeFunctionData(
+          'unwrapWETH9',
+          [minReceivedAmount?.toHex() || 0, currentWallet.address],
+        );
+
+        txData = swapRouter.interface.encodeFunctionData('multicall', [
+          [encodedSwapTxData, encodedUnwrap],
+        ]) as string;
+      } else {
+        txData = encodedSwapTxData;
+      }
 
       const rawTx = await awaitForJsonRpcSign({
         metadata: HAQQ_METADATA,
@@ -734,8 +890,8 @@ export const SwapScreen = observer(() => {
             {
               from: currentWallet.address,
               to: Provider.selectedProvider.config.swapRouterV3,
-              value: tokenInIsISLM ? estimateData.amount_in : '0x0',
-              data: encodedTxData,
+              value: toke0IsNative ? estimateData.amount_in : '0x0',
+              data: txData,
             },
           ],
         },
@@ -744,43 +900,44 @@ export const SwapScreen = observer(() => {
       const provider = await getRpcProvider(Provider.selectedProvider);
       const txHandler = await provider.sendTransaction(rawTx);
       const txResp = await txHandler.wait();
-      navigator.goBack();
-      navigator.navigate(HomeStackRoutes.Transaction, {
-        // @ts-ignore
-        screen: TransactionStackRoutes.TransactionFinish,
-        params: {
-          hash: txResp.transactionHash,
-          hideContact: true,
-          transaction: {
-            ...txResp,
-            hash: txResp.transactionHash,
-          },
-          token: toJS(
-            tokenIn?.symbol === Provider.selectedProvider.denom
-              ? Token.generateNativeToken(currentWallet)
-              : [
-                  ...poolsData.contracts,
-                  ...Token.tokens[currentWallet.address],
-                ].find(t => AddressUtils.equals(t.id, tokenIn?.id!)),
-          ),
-          amount: new Balance(
-            parseFloat(amountsIn.amount),
-            tokenIn?.decimals!,
-            tokenIn?.symbol!,
-          ),
-        },
+
+      navigation.navigate(SwapStackRoutes.Finish, {
+        rate,
+        amountIn: amountsIn.amount,
+        amountOut: amountsOut.amount,
+        txHash: txResp.transactionHash,
+        token0: {...tokenIn!, value: t0Current},
+        token1: {...tokenOut!, value: t1Current},
+        isWrapTx,
+        isUnwrapTx,
+        estimateData: estimateData as SushiPoolEstimateResponse,
       });
       logger.log('txResp', txResp);
+      EventTracker.instance.trackEvent(MarketingEvents.swapSuccess, {
+        ...COMMON_EVENT_PARAMS,
+        type: 'swap',
+        swap_source: 'SwapRouterV3',
+        swap_source_address: Provider.selectedProvider.config.swapRouterV3,
+      });
       await estimate();
     } catch (err) {
       if (err instanceof Error) {
         Alert.alert('Error', err.message);
       }
       logger.captureException(err, 'onPressSwap');
+      EventTracker.instance.trackEvent(MarketingEvents.swapFail, {
+        ...COMMON_EVENT_PARAMS,
+        type: 'swap',
+        swap_source: 'SwapRouterV3',
+        swap_source_address: Provider.selectedProvider.config.swapRouterV3,
+        error: getError(err),
+      });
     } finally {
       setSwapInProgress(() => false);
     }
   }, [
+    navigation,
+    tokenOut,
     estimateData,
     tokenIn,
     currentWallet,
@@ -789,10 +946,22 @@ export const SwapScreen = observer(() => {
     swapSettings,
     minReceivedAmount,
     Provider.selectedProvider.denom,
+    COMMON_EVENT_PARAMS,
+    t0Current,
+    t1Current,
+    rate,
+    amountsIn.amount,
+    amountsOut.amount,
   ]);
 
   const onPressApprove = useCallback(async () => {
     try {
+      EventTracker.instance.trackEvent(MarketingEvents.swapApproveStart, {
+        ...COMMON_EVENT_PARAMS,
+        type: 'approve',
+        swap_source: 'SwapRouterV3',
+        swap_source_address: Provider.selectedProvider.config.swapRouterV3,
+      });
       setApproveInProgress(() => true);
       const provider = await getRpcProvider(Provider.selectedProvider);
       const erc20Token = new ethers.Contract(tokenIn?.id!, ERC20_ABI, provider);
@@ -827,26 +996,61 @@ export const SwapScreen = observer(() => {
       const txHandler = await provider.sendTransaction(rawTx);
       const txResp = await txHandler.wait();
       logger.log('txResp', txResp);
+      EventTracker.instance.trackEvent(MarketingEvents.swapApproveSuccess, {
+        ...COMMON_EVENT_PARAMS,
+        type: 'approve',
+        swap_source: 'SwapRouterV3',
+        swap_source_address: Provider.selectedProvider.config.swapRouterV3,
+      });
       vibrate(HapticEffects.success);
       Toast.show({
         type: 'success',
         text1: 'ERC20 Token Approved',
         text2: `for amount ${amountsIn.amount} ${tokenIn?.symbol}`,
-        position: 'bottom',
-        autoHide: false,
+        position: 'top',
+        topOffset: 100,
       });
-      message(`${tokenIn?.symbol} approved for amount ${amountsIn.amount}`);
       await estimate();
+      amountsIn.setError('');
     } catch (err) {
       logger.captureException(err, 'onPressApprove');
+      EventTracker.instance.trackEvent(MarketingEvents.swapApproveFail, {
+        ...COMMON_EVENT_PARAMS,
+        type: 'approve',
+        swap_source: 'SwapRouterV3',
+        swap_source_address: Provider.selectedProvider.config.swapRouterV3,
+        error: getError(err),
+      });
     } finally {
       setApproveInProgress(() => false);
     }
-  }, [amountsIn, tokenIn, currentWallet, estimate]);
+  }, [
+    amountsIn,
+    tokenIn,
+    tokenOut,
+    currentWallet,
+    estimate,
+    COMMON_EVENT_PARAMS,
+    t0Current,
+    t1Current,
+    rate,
+    amountsIn.amount,
+    amountsOut.amount,
+  ]);
 
   const onPressWrap = useCallback(async () => {
+    const swapSource =
+      Token.getById(Provider.selectedProvider.config.wethAddress)?.name ||
+      'WETH';
+
     // deposit
     try {
+      EventTracker.instance.trackEvent(MarketingEvents.swapStart, {
+        ...COMMON_EVENT_PARAMS,
+        type: 'wrap',
+        swap_source: swapSource,
+        swap_source_address: Provider.selectedProvider.config.wethAddress,
+      });
       setSwapInProgress(() => true);
       const provider = await getRpcProvider(Provider.selectedProvider);
       const WETH = new ethers.Contract(
@@ -876,50 +1080,67 @@ export const SwapScreen = observer(() => {
 
       const txHandler = await provider.sendTransaction(rawTx);
       const txResp = await txHandler.wait();
-      navigator.goBack();
-      navigator.navigate(HomeStackRoutes.Transaction, {
-        // @ts-ignore
-        screen: TransactionStackRoutes.TransactionFinish,
-        params: {
-          hash: txResp.transactionHash,
-          hideContact: true,
-          transaction: {
-            ...txResp,
-            hash: txResp.transactionHash,
-          },
-          token: toJS(
-            tokenIn?.symbol === Provider.selectedProvider.denom
-              ? Token.generateNativeToken(currentWallet)
-              : [
-                  ...poolsData.contracts,
-                  ...Token.tokens[currentWallet.address],
-                ].find(t => AddressUtils.equals(t.id, tokenIn?.id!)),
-          ),
-          amount: new Balance(
-            parseFloat(amountsIn.amount),
-            tokenIn?.decimals!,
-            tokenIn?.symbol!,
-          ),
-        },
+
+      navigation.navigate(SwapStackRoutes.Finish, {
+        rate,
+        amountIn: amountsIn.amount,
+        amountOut: amountsOut.amount,
+        txHash: txResp.transactionHash,
+        token0: {...tokenIn!, value: t0Current},
+        token1: {...tokenOut!, value: t1Current},
+        estimateData: estimateData as SushiPoolEstimateResponse,
+        isWrapTx,
+        isUnwrapTx,
       });
       logger.log('txResp', txResp);
+      EventTracker.instance.trackEvent(MarketingEvents.swapSuccess, {
+        ...COMMON_EVENT_PARAMS,
+        type: 'wrap',
+        swap_source: swapSource,
+        swap_source_address: Provider.selectedProvider.config.wethAddress,
+      });
       await estimate();
     } catch (err) {
       Logger.error(err, 'deposit');
       logger.captureException(err, 'deposit');
+      EventTracker.instance.trackEvent(MarketingEvents.swapFail, {
+        ...COMMON_EVENT_PARAMS,
+        type: 'wrap',
+        swap_source: swapSource,
+        swap_source_address: Provider.selectedProvider.config.wethAddress,
+        error: getError(err),
+      });
     } finally {
       setSwapInProgress(() => false);
     }
   }, [
+    navigation,
+    tokenIn,
+    tokenOut,
+    estimateData,
     currentWallet,
-    t0Current,
     estimate,
     amountsIn.amount,
     Provider.selectedProvider.denom,
+    COMMON_EVENT_PARAMS,
+    t0Current,
+    t1Current,
+    rate,
+    amountsIn.amount,
+    amountsOut.amount,
   ]);
   const onPressUnrap = useCallback(async () => {
+    const swapSource =
+      Token.getById(Provider.selectedProvider.config.wethAddress)?.name ||
+      'WETH';
     // withdraw
     try {
+      EventTracker.instance.trackEvent(MarketingEvents.swapStart, {
+        ...COMMON_EVENT_PARAMS,
+        type: 'unwrap',
+        swap_source: swapSource,
+        swap_source_address: Provider.selectedProvider.config.wethAddress,
+      });
       setSwapInProgress(() => true);
       const provider = await getRpcProvider(Provider.selectedProvider);
       const WETH = new ethers.Contract(
@@ -956,68 +1177,85 @@ export const SwapScreen = observer(() => {
 
       const txHandler = await provider.sendTransaction(rawTx);
       const txResp = await txHandler.wait();
-      navigator.goBack();
-      navigator.navigate(HomeStackRoutes.Transaction, {
-        // @ts-ignore
-        screen: TransactionStackRoutes.TransactionFinish,
-        params: {
-          hash: txResp.transactionHash,
-          hideContact: true,
-          transaction: {
-            ...txResp,
-            hash: txResp.transactionHash,
-          },
-          token: toJS(
-            tokenIn?.symbol === Provider.selectedProvider.denom
-              ? Token.generateNativeToken(currentWallet)
-              : [
-                  ...poolsData.contracts,
-                  ...Token.tokens[currentWallet.address],
-                ].find(t => AddressUtils.equals(t.id, tokenIn?.id!)),
-          ),
-          amount: new Balance(
-            parseFloat(amountsIn.amount),
-            tokenIn?.decimals!,
-            tokenIn?.symbol!,
-          ),
-        },
+
+      navigation.navigate(SwapStackRoutes.Finish, {
+        txHash: txResp.transactionHash,
+        token0: {...tokenIn!, value: t0Current},
+        token1: {...tokenOut!, value: t1Current},
+        estimateData: estimateData as SushiPoolEstimateResponse,
+        isWrapTx,
+        isUnwrapTx,
+        rate,
+        amountIn: amountsIn.amount,
+        amountOut: amountsOut.amount,
       });
       logger.log('txResp', txResp);
+      EventTracker.instance.trackEvent(MarketingEvents.swapSuccess, {
+        ...COMMON_EVENT_PARAMS,
+        type: 'unwrap',
+        swap_source: swapSource,
+        swap_source_address: Provider.selectedProvider.config.wethAddress,
+      });
       await estimate();
     } catch (err) {
       Logger.error(err, 'withdraw');
       logger.captureException(err, 'withdraw');
+      EventTracker.instance.trackEvent(MarketingEvents.swapFail, {
+        ...COMMON_EVENT_PARAMS,
+        type: 'unwrap',
+        swap_source: swapSource,
+        swap_source_address: Provider.selectedProvider.config.wethAddress,
+        error: getError(err),
+      });
     } finally {
       setSwapInProgress(() => false);
     }
   }, [
+    navigation,
+    tokenIn,
+    tokenOut,
+    estimateData,
     amountsIn.amount,
     tokenIn?.decimals,
     tokenIn?.symbol,
     currentWallet,
     estimate,
     Provider.selectedProvider.denom,
+    COMMON_EVENT_PARAMS,
+    amountsOut.amount,
+    rate,
   ]);
 
-  const onPressMax = async () => {
+  // 2. Ensure all callback functions are memoized with useCallback
+  const onPressMax = useCallback(async () => {
     try {
       Keyboard.dismiss();
       vibrate(HapticEffects.impactLight);
       await refreshTokenBalances(currentWallet.address, t0Available);
 
-      amountsIn.setAmount(
-        t0Available.toFloatString(
-          t0Available.getPrecission(),
-          t0Available.getPrecission(),
-          false,
-        ),
+      const maxAmount = t0Available.toBalanceString(
+        'auto',
+        t0Available.getPrecission(),
+        false,
+        true,
       );
-
+      amountsIn.setAmount(maxAmount);
       await estimate();
+      EventTracker.instance.trackEvent(MarketingEvents.swapPressMax, {
+        max_amount: maxAmount,
+        ...COMMON_EVENT_PARAMS,
+      });
     } catch (error) {
       logger.error('onPressMax', error);
     }
-  };
+  }, [
+    refreshTokenBalances,
+    currentWallet.address,
+    t0Available,
+    amountsIn,
+    estimate,
+    COMMON_EVENT_PARAMS,
+  ]);
 
   const onPressChangeWallet = useCallback(async () => {
     const wallets = Wallet.getAll();
@@ -1028,34 +1266,75 @@ export const SwapScreen = observer(() => {
       wallets: walletsWithBalances?.length ? walletsWithBalances : wallets,
       initialAddress: currentWallet.address,
     });
-    await refreshTokenBalances(address as HaqqEthereumAddress, t0Available);
     setCurrentWallet(() => Wallet.getById(address)!);
-  }, [currentWallet, refreshTokenBalances, tokenIn]);
+    await refreshTokenBalances(address as HaqqEthereumAddress);
+    await estimate();
+    amountsIn.setError('');
+    navigation.setParams({
+      address,
+    });
+  }, [currentWallet, refreshTokenBalances, tokenIn, navigation, estimate]);
 
   const onInputBlur = useCallback(async () => {
-    if (!amountsIn.amount) {
-      setEstimateData(null);
+    if (!amountsIn.amount || !amountsIn.amountBalance?.isPositive()) {
+      setEstimateData(() => ({}));
       amountsOut.setAmount('0');
       return amountsIn.setError('');
     }
+
+    EventTracker.instance.trackEvent(
+      MarketingEvents.swapEnterAmount,
+      COMMON_EVENT_PARAMS,
+    );
     vibrate(HapticEffects.impactLight);
     Keyboard.dismiss();
     setIsEstimating(() => true);
     await estimate();
-  }, [estimate, setIsEstimating]);
+  }, [estimate, setIsEstimating, COMMON_EVENT_PARAMS]);
 
   const onPressChangeDirection = useCallback(async () => {
-    setCurrentRoute(
-      () =>
-        poolsData.routes.find(
-          r =>
-            AddressUtils.equals(r.token0, currentRoute?.token1!) &&
-            AddressUtils.equals(r.token1, currentRoute?.token0!),
-        )!,
-    );
-    await refreshTokenBalances();
-    await estimate();
-  }, [currentRoute, setCurrentRoute, poolsData]);
+    try {
+      setIsEstimating(() => true);
+      animate();
+      setEstimateData(() => ({
+        ...estimateData,
+        amount_in: estimateData.amount_out,
+        amount_out: estimateData.amount_in,
+      }));
+      amountsIn.setError('');
+      amountsIn.setAmount(amountsOut.amount);
+      amountsOut.setAmount(amountsIn.amount);
+      const route = poolsData.routes.find(
+        r =>
+          AddressUtils.equals(r.token0, currentRoute?.token1!) &&
+          AddressUtils.equals(r.token1, currentRoute?.token0!),
+      )!;
+      setCurrentRoute(() => route);
+
+      EventTracker.instance.trackEvent(MarketingEvents.swapChangeDirection, {
+        token0: route.token0,
+        token1: route.token1,
+        swap_path: route.route_hex,
+      });
+
+      await refreshTokenBalances();
+      await estimate();
+    } catch (error) {
+      logger.error('onPressChangeDirection', error);
+    } finally {
+      setIsEstimating(() => false);
+    }
+  }, [
+    amountsIn,
+    amountsOut,
+    estimateData,
+    setEstimateData,
+    currentRoute,
+    setCurrentRoute,
+    poolsData,
+    estimate,
+    refreshTokenBalances,
+  ]);
 
   const onPressSettings = useCallback(async () => {
     vibrate(HapticEffects.impactLight);
@@ -1063,14 +1342,13 @@ export const SwapScreen = observer(() => {
     swapSettingsRef?.current?.open?.();
   }, []);
 
-  useEffect(() => {
-    if (currentRoute) {
-      logger.log('useEffect estimate()');
-      refreshTokenBalances(currentWallet.address, t0Available).then(() =>
-        estimate(),
-      );
-    }
-  }, [tokenIn, tokenOut, currentWallet, currentRoute]);
+  const onSwapSettingsChange = useCallback(
+    (settings: SwapTransactionSettings) => {
+      setSwapSettings(() => settings);
+      estimate();
+    },
+    [setSwapSettings, estimate],
+  );
 
   const prevTokenIn = usePrevious(tokenIn);
   const prevTokenOut = usePrevious(tokenOut);
@@ -1107,7 +1385,7 @@ export const SwapScreen = observer(() => {
 
   useEffect(() => {
     if (!Provider.selectedProvider.config.swapEnabled) {
-      return navigator.goBack();
+      return navigation.goBack();
     }
     const fetchData = () => {
       Indexer.instance
@@ -1121,13 +1399,17 @@ export const SwapScreen = observer(() => {
               ...data.routes.map(r => r.token1),
             ]),
           )
-            .map(token => Token.getById(token))
+            .map(token =>
+              Token.tokens[currentWallet.address!].find(t =>
+                AddressUtils.equals(t.id, token),
+              ),
+            )
             .concat(
               data.contracts.map(
                 contract =>
                   ({
                     image: contract.icon!,
-                    value: Balance.Empty!,
+                    value: new Balance(0, contract.decimals!, contract.symbol!),
                     contract_created_at: contract.created_at!,
                     created_at: contract.created_at!,
                     contract_updated_at: contract.updated_at!,
@@ -1147,10 +1429,14 @@ export const SwapScreen = observer(() => {
             .concat([Token.generateNativeToken(currentWallet)!])
             .filter(Boolean) as IToken[];
 
+          tokens.forEach(t => Token.create(t.id, t));
+
           setPoolsData(() => ({
             ...data,
             contracts: tokens,
           }));
+
+          // setPoolsData(() => data);
 
           routesByToken0.current = {};
           routesByToken1.current = {};
@@ -1169,14 +1455,25 @@ export const SwapScreen = observer(() => {
               route,
             );
           });
+
+          const {swapDefaultToken0, swapDefaultToken1} =
+            Provider.selectedProvider.config;
+          logger.log('TOKEN 0', swapDefaultToken0);
+          logger.log('TOKEN 1', swapDefaultToken1);
+
           setCurrentRoute(
             () =>
-              data.routes.find(r =>
-                AddressUtils.equals(
-                  r.token0,
-                  Provider.selectedProvider.config.wethAddress,
-                ),
-              ) || data.routes[1],
+              data.routes.find(r => {
+                // if swapDefaultToken1 is valid
+                if (AddressUtils.isValidAddress(swapDefaultToken1)) {
+                  return (
+                    AddressUtils.equals(r.token0, swapDefaultToken0) &&
+                    AddressUtils.equals(r.token1, swapDefaultToken1)
+                  );
+                }
+
+                return AddressUtils.equals(r.token0, swapDefaultToken0);
+              }) || data.routes[0],
           );
           if (!data.pools?.length || !data?.routes?.length) {
             showModal(ModalType.error, {
@@ -1184,7 +1481,7 @@ export const SwapScreen = observer(() => {
               description: getText(I18N.noSwapRoutesFound),
               close: getText(I18N.pinErrorModalClose),
               async onClose() {
-                navigator.goBack();
+                navigation.goBack();
                 const providersIDsPromises = await Promise.allSettled(
                   Provider.getAll().map(async p => {
                     const indexer = new Indexer(p.ethChainId);
@@ -1226,12 +1523,31 @@ export const SwapScreen = observer(() => {
     }
   }, [poolsData]);
 
+  useBackNavigationHandler(() => {
+    EventTracker.instance.trackEvent(
+      MarketingEvents.swapScreenClose,
+      COMMON_EVENT_PARAMS,
+    );
+    onWalletsBalanceCheck();
+    Token.fetchTokens(true);
+  }, [COMMON_EVENT_PARAMS]);
+
+  useFocusEffect(
+    useCallback(() => {
+      EventTracker.instance.trackEvent(
+        MarketingEvents.swapScreenOpen,
+        COMMON_EVENT_PARAMS,
+      );
+    }, [COMMON_EVENT_PARAMS]),
+  );
+
   if (isLoading) {
     return <Loading />;
   }
 
   return (
     <Swap
+      rate={rate}
       currentWallet={currentWallet}
       poolData={poolsData!}
       isEstimating={isEstimating}
@@ -1253,7 +1569,7 @@ export const SwapScreen = observer(() => {
       swapSettings={swapSettings}
       minReceivedAmount={minReceivedAmount}
       currentRoute={currentRoute!}
-      onSettingsChange={setSwapSettings}
+      onSettingsChange={onSwapSettingsChange}
       onPressWrap={onPressWrap}
       onPressUnrap={onPressUnrap}
       onPressSwap={onPressSwap}

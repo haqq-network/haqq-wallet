@@ -14,16 +14,11 @@ type Props = {
 };
 
 const RootStack = memo(({onboarded, isPinReseted, isReady}: Props) => {
-  if (!isReady) {
-    return <ModalsScreen initialModal={{type: 'splash'}} />;
-  }
-
   return (
     <View style={styles.container}>
-      {onboarded && !isPinReseted && <HomeStack />}
-      {!(onboarded && !isPinReseted) && <WelcomeStack />}
+      {onboarded && !isPinReseted ? <HomeStack /> : <WelcomeStack />}
       <ModalProvider>
-        <ModalsScreen />
+        <ModalsScreen initialModal={!isReady ? {type: 'splash'} : undefined} />
       </ModalProvider>
     </View>
   );

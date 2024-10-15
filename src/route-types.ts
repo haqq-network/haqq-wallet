@@ -30,7 +30,9 @@ import {
 import {WalletConnectApproveConnectionEvent} from '@app/types/wallet-connect';
 
 import {Fee} from './models/fee';
+import {SecureValue} from './modifiers/secure-value';
 import {CalculatedFees} from './services/eth-network/types';
+import {SushiPoolEstimateResponse} from './services/indexer';
 
 export type AnyRouteFromParent =
   | SignInStackRoutes
@@ -169,7 +171,7 @@ export type SssMigrateStackParamList = HomeStackParamList & {
   [SssMigrateStackRoutes.SssMigrateNetworks]: {accountId: string};
   [SssMigrateStackRoutes.SssMigrateRewrite]: {
     accountId: string;
-    privateKey: string;
+    privateKey: SecureValue<string>;
     provider: SssProviders;
     email?: string;
     verifier: string;
@@ -177,7 +179,7 @@ export type SssMigrateStackParamList = HomeStackParamList & {
   };
   [SssMigrateStackRoutes.SssMigrateStore]: {
     accountId: string;
-    privateKey: string | null;
+    privateKey: SecureValue<string | null>;
     provider?: SssProviders;
     email?: string;
     verifier: string;
@@ -675,13 +677,13 @@ export enum OnboardingStackRoutes {
 export type OnboardingStackParamList = WelcomeStackParamList & {
   [OnboardingStackRoutes.OnboardingSetupPin]: WalletInitialData & {
     provider?: ProviderMnemonicBase;
-    currentPin: string;
+    currentPin: SecureValue<string>;
     nextScreen: AnyRouteFromParent;
     errorText?: string;
   };
   [OnboardingStackRoutes.OnboardingRepeatPin]: WalletInitialData & {
     provider?: ProviderMnemonicBase;
-    currentPin: string;
+    currentPin: SecureValue<string>;
     nextScreen: AnyRouteFromParent;
   };
   [OnboardingStackRoutes.OnboardingBiometry]: {
@@ -875,7 +877,17 @@ export type SwapStackParamList = {
   Preview: {
     address: string;
   };
-  Finish: undefined;
+  Finish: {
+    token0: IToken;
+    token1: IToken;
+    txHash: string;
+    estimateData: SushiPoolEstimateResponse;
+    isWrapTx: boolean;
+    isUnwrapTx: boolean;
+    rate: string;
+    amountIn: string;
+    amountOut: string;
+  };
 };
 
 export enum SwapStackRoutes {

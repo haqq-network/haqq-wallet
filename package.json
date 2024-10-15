@@ -1,6 +1,6 @@
 {
   "name": "haqq",
-  "version": "1.9.2",
+  "version": "1.9.5",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -63,11 +63,12 @@
     "@react-native-firebase/messaging": "19.0.1",
     "@react-native-google-signin/google-signin": "10.0.1",
     "@react-native-masked-view/masked-view": "0.3.0",
+    "@react-native/eslint-config": "^0.75.4",
     "@react-navigation/bottom-tabs": "6.5.8",
     "@react-navigation/native": "6.1.7",
     "@react-navigation/native-stack": "6.9.13",
     "@react-navigation/stack": "6.3.17",
-    "@sentry/react-native": "5.7.1",
+    "@sentry/react-native": "5.33.1",
     "@tradle/react-native-http": "2.0.1",
     "@walletconnect/core": "2.11.2",
     "@walletconnect/react-native-compat": "2.11.2",
@@ -102,10 +103,11 @@
     "pump": "3.0.0",
     "randombytes": "2.1.0",
     "react": "18.2.0",
-    "react-native": "0.72.10",
+    "react-native": "0.72.17",
     "react-native-adjust": "4.33.0",
     "react-native-adjust-oaid": "4.33.0",
     "react-native-aes-crypto": "3.0.1",
+    "react-native-animated-rolling-numbers": "^1.0.1",
     "react-native-base64": "0.2.1",
     "react-native-blasted-image": "1.0.3",
     "react-native-ble-plx": "2.0.3",
@@ -174,9 +176,8 @@
     "@babel/preset-env": "7.23.3",
     "@babel/preset-typescript": "7.23.3",
     "@babel/runtime": "7.23.4",
-    "@react-native-community/eslint-config": "3.2.0",
-    "@react-native/metro-config": "0.72.11",
-    "@sentry/cli": "2.20.5",
+    "@react-native/metro-config": "0.72.12",
+    "@sentry/cli": "2.36.6",
     "@tsconfig/react-native": "3.0.2",
     "@types/bn.js": "5.1.1",
     "@types/create-hash": "1.2.2",
@@ -242,5 +243,8 @@
     "stream": "stream-browserify",
     "vm": "vm-browserify"
   },
-  "packageManager": "yarn@3.6.0"
+  "packageManager": "yarn@3.6.0",
+  "resolutions": {
+    "@sentry/react-native@5.33.1": "patch:@sentry/react-native@npm%3A5.33.1#./.yarn/patches/@sentry-react-native-npm-5.33.1-7dbdef21fa.patch"
+  }
 }

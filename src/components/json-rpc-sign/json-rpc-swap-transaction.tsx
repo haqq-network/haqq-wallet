@@ -26,7 +26,6 @@ import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
 import {shortAddress} from '@app/helpers/short-address';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N} from '@app/i18n';
-import {Contracts} from '@app/models/contracts';
 import {Currencies} from '@app/models/currencies';
 import {Fee} from '@app/models/fee';
 import {ProviderModel} from '@app/models/provider';
@@ -39,8 +38,8 @@ import {
   JsonRpcMetadata,
   JsonRpcTransactionRequest,
 } from '@app/types';
-import {formatNumberString, openInAppBrowser, sleep} from '@app/utils';
-import {STRINGS} from '@app/variables/common';
+import {openInAppBrowser, sleep} from '@app/utils';
+import {LONG_NUM_PRECISION, STRINGS} from '@app/variables/common';
 
 import {ImageWrapper} from '../image-wrapper';
 import {
@@ -180,33 +179,6 @@ export const JsonRpcSwapTransaction = observer(
           });
         }
 
-        if (functionName === 'exactInput') {
-          const [path, recipient, _, amountIn, _amountOutMinimum] = parsedInput
-            ?.args[0]! as [
-            string, // path
-            string, // recipient
-            number, // deadline
-            BigNumber, // amountIn
-            BigNumber, //  amountOutMinimum
-          ];
-          amountOutMinimum = _amountOutMinimum._hex;
-          const matchArray = path.match(
-            /^0x([a-fA-F0-9]{40}).*([a-fA-F0-9]{40})$/,
-          );
-
-          // first 40 characters of path doesn't include the '0x' prefix
-          tokenInAddress = `0x${matchArray?.[1]}`;
-          // last 40 characters of path
-          tokenOutAddress = `0x${matchArray?.[2]}`;
-
-          response = await indexer.sushiPoolEstimate({
-            amount: amountIn._hex,
-            sender: recipient,
-            route: path.slice(2),
-            currency_id: Currencies.currency?.id,
-          });
-        }
-
         // unwrap
         if (functionName === 'withdraw') {
           const config = await indexer.getProviderConfig();
@@ -289,7 +261,7 @@ export const JsonRpcSwapTransaction = observer(
           ),
           image:
             tokenInContract?.image ??
-            Contracts.getById(tokenInAddress)?.icon ??
+            Token.getById(tokenInAddress)?.image ??
             require('@assets/images/empty-icon.png'),
         }));
 
@@ -302,7 +274,7 @@ export const JsonRpcSwapTransaction = observer(
           ),
           image:
             tokenOutContract?.image ??
-            Contracts.getById(tokenOutAddress)?.icon ??
+            Token.getById(tokenOutAddress)?.image ??
             require('@assets/images/empty-icon.png'),
         }));
 
@@ -391,19 +363,32 @@ export const JsonRpcSwapTransaction = observer(
           contentContainerStyle={styles.infoContentContainer}
           showsVerticalScrollIndicator={false}>
           <DataView i18n={I18N.swapScreenRate}>
-            <Text variant={TextVariant.t11} color={Color.textBase1}>
-              {`1${STRINGS.NBSP}${tokenIn?.amount?.getSymbol()}${
-                STRINGS.NBSP
-              }≈${STRINGS.NBSP}${rate}`}
-            </Text>
+            <View style={styles.row}>
+              <Text variant={TextVariant.t11} color={Color.textBase1}>
+                {'1'}
+              </Text>
+              <Text variant={TextVariant.t11} color={Color.textBase1}>
+                {STRINGS.NBSP}
+                {tokenIn?.amount?.getSymbol()}
+                {STRINGS.NBSP}
+              </Text>
+              <Text variant={TextVariant.t11} color={Color.textBase1}>
+                {STRINGS.NBSP}≈{STRINGS.NBSP}
+              </Text>
+              <Text variant={TextVariant.t11} color={Color.textBase1}>
+                {rate}
+              </Text>
+            </View>
           </DataView>
           {!isWETHInteraction && (
             <>
               <DataView i18n={I18N.swapScreenPriceImpact}>
                 <Text variant={TextVariant.t11} color={priceImpactColor}>
-                  {`${formatNumberString(
-                    estimateData?.s_price_impact ?? '0',
-                  )}%`}
+                  {parseFloat(estimateData?.s_price_impact!).toFixed(
+                    LONG_NUM_PRECISION,
+                  )}
+                  {STRINGS.NBSP}
+                  {'%'}
                 </Text>
               </DataView>
               <DataView i18n={I18N.swapScreenProviderFee}>
@@ -443,7 +428,7 @@ export const JsonRpcSwapTransaction = observer(
               onPress={onPressRoutingSource}
               variant={TextVariant.t11}
               color={Color.textGreen1}>
-              {Contracts.getById(tx?.to!)?.name}
+              {Token.getById(tx?.to!)?.name}
               {STRINGS.NBSP}
               {shortAddress(tx?.to!, '•', true)}
             </Text>
@@ -462,6 +447,9 @@ export const JsonRpcSwapTransaction = observer(
 );
 
 const styles = createTheme({
+  row: {
+    flexDirection: 'row',
+  },
   info: {
     width: '100%',
     flex: 1,

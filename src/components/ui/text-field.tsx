@@ -21,8 +21,11 @@ import {
   TextInputProps,
   View,
 } from 'react-native';
+import AnimatedRollingNumber from 'react-native-animated-rolling-numbers';
 import Animated, {
   Easing,
+  FadeIn,
+  FadeOut,
   interpolate,
   useAnimatedStyle,
   useSharedValue,
@@ -38,6 +41,7 @@ import {sleep} from '@app/utils';
 import {IS_ANDROID, IS_IOS} from '@app/variables/common';
 
 import {Button, ButtonSize} from './button';
+import {First} from './first';
 
 type InfoBlock = {
   label: string;
@@ -196,6 +200,17 @@ export const TextField: React.FC<TextFieldProps> = memo(
     const inputAnimStyle = useAnimatedStyle(() => ({
       height: height.value,
     }));
+    const valueIsNumber = useMemo(
+      function (): boolean {
+        if (!value) {
+          return false;
+        }
+
+        const n = parseFloat(value);
+        return !isNaN(n) && typeof n === 'number';
+      },
+      [value],
+    );
 
     return (
       <View
@@ -230,26 +245,41 @@ export const TextField: React.FC<TextFieldProps> = memo(
                 i18n={placeholder}
               />
             )}
-            <TextInput
-              selectionColor={getColor(Color.textGreen1)}
-              allowFontScaling={false}
-              style={styles.input}
-              ref={inputRef}
-              placeholderTextColor={getColor(Color.textBase2)}
-              {...restOfProps}
-              value={value}
-              multiline={multiline}
-              onContentSizeChange={contentSizeChangeEvent}
-              onBlur={onBlurEvent}
-              onFocus={onFocusEvent}
-              numberOfLines={numberOfLines}
-              autoFocus={enableAutoFocus}
-            />
+            <First>
+              {restOfProps.editable === false && valueIsNumber && (
+                <AnimatedRollingNumber
+                  key={`AnimatedRollingNumber-input-value`}
+                  value={value as unknown as number}
+                  useGrouping
+                  textStyle={[styles.inputRolling, {color: getColor(color)}]}
+                  spinningAnimationConfig={{
+                    duration: 500,
+                    easing: Easing.bounce,
+                  }}
+                  containerStyle={styles.inputRollingContainer}
+                />
+              )}
+              <TextInput
+                selectionColor={getColor(Color.textGreen1)}
+                allowFontScaling={false}
+                style={styles.input}
+                ref={inputRef}
+                placeholderTextColor={getColor(Color.textBase2)}
+                {...restOfProps}
+                value={value}
+                multiline={multiline}
+                onContentSizeChange={contentSizeChangeEvent}
+                onBlur={onBlurEvent}
+                onFocus={onFocusEvent}
+                numberOfLines={numberOfLines}
+                autoFocus={enableAutoFocus}
+              />
+            </First>
           </View>
           {rightAction && <View style={styles.sub}>{rightAction}</View>}
         </Animated.View>
         {!!error && (errorText || errorTextI18n) && (
-          <>
+          <Animated.View entering={FadeIn} exiting={FadeOut}>
             <Spacer height={8} />
             {/* @ts-expect-error */}
             <Text
@@ -259,7 +289,7 @@ export const TextField: React.FC<TextFieldProps> = memo(
               style={styles.error}>
               {errorText}
             </Text>
-          </>
+          </Animated.View>
         )}
         {!error && hint && (
           <>
@@ -320,6 +350,20 @@ const styles = createTheme({
     right: IS_IOS ? 0 : 4.5,
     flex: 1,
     alignItems: 'flex-start',
+  },
+  inputRolling: {
+    fontFamily: 'SF Pro Display',
+    fontWeight: '400',
+    color: Color.textBase1,
+    fontSize: 16,
+    textAlignVertical: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  inputRollingContainer: {
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    minHeight: 28,
   },
   error: {
     marginLeft: 4,

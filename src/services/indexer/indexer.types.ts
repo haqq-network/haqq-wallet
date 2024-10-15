@@ -55,6 +55,7 @@ export type SushiPoolEstimateRequest = {
 };
 
 export type ProviderConfig = {
+  enable_unwrapWETH9_call?: boolean;
   nft_exists?: boolean;
   bech32_exists?: boolean;
   swap_enabled: boolean;
@@ -66,6 +67,8 @@ export type ProviderConfig = {
   explorer_token_url: string;
   explorer_tx_url: string;
   explorer_token_id_url: string;
+  swap_default_token0: string;
+  swap_default_token1: string;
 };
 
 export type VerifyContractRequest = {

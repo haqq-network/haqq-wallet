@@ -1,14 +1,18 @@
-import React from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {observer} from 'mobx-react';
-import {View} from 'react-native';
+import {Platform, View} from 'react-native';
+import AnimatedRollingNumber from 'react-native-animated-rolling-numbers';
+import {Easing} from 'react-native-reanimated';
 
-import {Color} from '@app/colors';
+import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {useSumAmount} from '@app/hooks';
-import {I18N} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
+import {Currencies} from '@app/models/currencies';
 import {Balance} from '@app/services/balance';
 import {IToken} from '@app/types';
+import {SPACE_OR_NBSP, STRINGS, WEI_PRECISION} from '@app/variables/common';
 
 import {ImageWrapper} from '../image-wrapper';
 import {
@@ -53,17 +57,65 @@ export const SwapInput = observer(
     onPressMax,
     ...inputProps
   }: SwapInputProps) => {
+    const [amount, amountSymbol] = useMemo(() => {
+      const balance = currentBalance
+        .toFiat({
+          useDefaultCurrency: false,
+          withoutSymbol: true,
+        })
+        .replaceAll(SPACE_OR_NBSP, '');
+      const parsed = parseFloat(balance);
+
+      if (Number.isNaN(parsed)) {
+        return [parseFloat(amounts.amount || '0'), currentBalance.getSymbol()];
+      }
+
+      return [
+        parsed,
+        Currencies.currency?.postfix || Currencies.currency?.prefix,
+      ];
+    }, [currentBalance]);
+
+    const [available, availableSymbol] = useMemo(() => {
+      const balance = availableBalance
+        .toBalanceString('auto', undefined, false, true)
+        .replaceAll(SPACE_OR_NBSP, '');
+
+      const parsed = parseFloat(balance);
+
+      if (Number.isNaN(parsed)) {
+        return [0, availableBalance.getSymbol()];
+      }
+
+      return [parseFloat(balance!), availableBalance.getSymbol()];
+    }, [availableBalance]);
+
+    const handleOnChangeText = useCallback(
+      (text: string) => {
+        let decimalsOffset = 0;
+
+        if (text.startsWith('0.')) {
+          decimalsOffset = 2;
+        }
+
+        const decimals = (token.decimals || WEI_PRECISION) + decimalsOffset;
+        amounts.setAmount(text?.trim()?.slice(0, decimals));
+      },
+      [amounts, token, availableBalance, currentBalance],
+    );
     return (
       <View>
         <View style={styles.amountContainer}>
           <First>
-            {isLoading && disableTextFieldLoader === false && (
-              <View style={styles.amountInput}>
-                <Placeholder opacity={0.7}>
-                  <Placeholder.Item width={'100%'} height={58} />
-                </Placeholder>
-              </View>
-            )}
+            {isLoading &&
+              !amounts?.amountBalance?.isPositive() &&
+              disableTextFieldLoader === false && (
+                <View style={styles.amountInput}>
+                  <Placeholder opacity={0.7}>
+                    <Placeholder.Item width={'100%'} height={58} />
+                  </Placeholder>
+                </View>
+              )}
             <TextField
               rightAction={
                 showMaxButton ? (
@@ -80,11 +132,11 @@ export const SwapInput = observer(
                 ) : undefined
               }
               style={styles.amountInput}
-              error={!!amounts.error}
+              error={!!amounts.error && amounts.amountBalance?.isPositive()}
               errorText={amounts.error}
               {...inputProps}
               value={amounts.amount}
-              onChangeText={amounts.setAmount}
+              onChangeText={handleOnChangeText}
               keyboardType="numeric"
               inputMode="decimal"
               returnKeyType="done"
@@ -115,19 +167,47 @@ export const SwapInput = observer(
           </LabeledBlock>
         </View>
 
-        <View>
+        <View style={styles.balanceContainer}>
           <Spacer height={4} />
-          <Text
-            variant={TextVariant.t14}
-            color={Color.textBase2}
-            i18n={I18N.swapInputAmountData}
-            i18params={{
-              currentFiatAmount: currentBalance.toFiat({
-                useDefaultCurrency: true,
-              }),
-              availableAmount: availableBalance.toBalanceString('auto'),
+          <Text variant={TextVariant.t14} color={Color.textBase2}>
+            {`≈${STRINGS.NBSP}`}
+          </Text>
+          <AnimatedRollingNumber
+            useGrouping
+            textStyle={styles.inputRolling}
+            containerStyle={styles.inputRollingContainer}
+            value={amount}
+            spinningAnimationConfig={{
+              duration: 500,
+              easing: Easing.bounce,
             }}
           />
+          <Text variant={TextVariant.t14} color={Color.textBase2}>
+            {STRINGS.NBSP}
+            {amountSymbol}
+          </Text>
+          <Text variant={TextVariant.t14} color={Color.textBase2}>
+            {STRINGS.NBSP}
+            {getText(I18N.swapInputAmountData, {
+              currentFiatAmount: '',
+              availableAmount: '',
+            }).replace('≈', '')}
+            {STRINGS.NBSP}
+          </Text>
+          <AnimatedRollingNumber
+            useGrouping
+            textStyle={styles.inputRolling}
+            containerStyle={styles.inputRollingContainer}
+            value={available}
+            spinningAnimationConfig={{
+              duration: 500,
+              easing: Easing.bounce,
+            }}
+          />
+          <Text variant={TextVariant.t14} color={Color.textBase2}>
+            {STRINGS.NBSP}
+            {availableSymbol}
+          </Text>
         </View>
       </View>
     );
@@ -135,6 +215,31 @@ export const SwapInput = observer(
 );
 
 const styles = createTheme({
+  balanceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  inputRollingContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  inputRolling: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    fontSize: 14,
+    color: getColor(Color.textBase2),
+    ...Platform.select({
+      ios: {
+        fontFamily: 'SF Pro Display',
+        fontWeight: '400',
+      },
+      android: {
+        fontFamily: 'SF-Pro-Display-Regular',
+      },
+    }),
+  },
   amountContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

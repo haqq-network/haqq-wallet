@@ -134,7 +134,10 @@ class TransactionStore implements RPCObserver {
     const nextTxList = await this._fetch(accounts);
 
     runInAction(() => {
-      this._transactions = [...this._transactions, ...nextTxList];
+      this._transactions = [...this._transactions, ...nextTxList].filter(
+        (value, index, self) =>
+          index === self.findIndex(t => t.id === value.id),
+      );
       this._isLoading = false;
     });
 

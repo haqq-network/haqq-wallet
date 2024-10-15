@@ -46,15 +46,13 @@ setup_permissions([
 #   dependencies: {
 #     ...(process.env.NO_FLIPPER ? { 'react-native-flipper': { platforms: { ios: null } } } : {}),
 # ```
-# flipper_config = ENV['NO_FLIPPER'] == "1" ? FlipperConfiguration.disabled : FlipperConfiguration.enabled(["Debug"], { 'Flipper' => '0.182.0' })
+# flipper_config = ENV['NO_FLIPPER'] == "1" ? FlipperConfiguration.disabled : FlipperConfiguration.enabled
 
 linkage = ENV['USE_FRAMEWORKS']
 if linkage != nil
   Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
   use_frameworks! :linkage => linkage.to_sym
 end
-
-production = ENV["PRODUCTION"] == "1"
 
 target 'haqq' do
   config = use_native_modules!
@@ -64,8 +62,6 @@ target 'haqq' do
   use_react_native!(
     :path => config[:reactNativePath],
     # Hermes is now enabled by default. Disable by setting this flag to false.
-    # Upcoming versions of React Native may rely on get_default_flags(), but
-    # we make it explicit here to aid in the React Native upgrade process.
     :hermes_enabled => flags[:hermes_enabled],
     :fabric_enabled => flags[:fabric_enabled],
     # Enables Flipper.
@@ -96,8 +92,6 @@ target 'haqq' do
     react_native_post_install(
       installer,
       config[:reactNativePath],
-      # Set `mac_catalyst_enabled` to `true` in order to apply patches
-      # necessary for Mac Catalyst builds
       :mac_catalyst_enabled => false
     )
     __apply_Xcode_12_5_M1_post_install_workaround(installer)
@@ -106,6 +100,13 @@ target 'haqq' do
       if target.respond_to?(:product_type) and target.product_type == "com.apple.product-type.bundle" # <--- this
         target.build_configurations.each do |config|
           config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
+        end
+      end
+
+      # https://github.com/getsentry/sentry-react-native/issues/4095
+      target.build_configurations.each do |config|
+        if target.name == 'Sentry'
+          config.build_settings['APPLICATION_EXTENSION_API_ONLY'] = 'YES'
         end
       end
     end

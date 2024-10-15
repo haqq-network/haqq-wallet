@@ -60,6 +60,23 @@ const EventsNameMap: Record<MarketingEvents, string> = {
   [MarketingEvents.appStarted]: 'app started',
   [MarketingEvents.navigation]: 'navigation',
   [MarketingEvents.bannerClicked]: 'banner clicked',
+  [MarketingEvents.swapStart]: 'swap start',
+  [MarketingEvents.swapSuccess]: 'swap success',
+  [MarketingEvents.swapFail]: 'swap fail',
+  [MarketingEvents.swapScreenOpen]: 'swap screen open',
+  [MarketingEvents.swapSelectToken0]: 'swap select token 0',
+  [MarketingEvents.swapSelectToken1]: 'swap select token 1',
+  [MarketingEvents.swapEnterAmount]: 'swap enter amount',
+  [MarketingEvents.swapPressMax]: 'swap press max',
+  [MarketingEvents.swapChangeDirection]: 'swap change direction',
+  [MarketingEvents.swapApproveStart]: 'swap approve start',
+  [MarketingEvents.swapApproveSuccess]: 'swap approve success',
+  [MarketingEvents.swapApproveFail]: 'swap approve fail',
+  [MarketingEvents.swapScreenClose]: 'swap screen close',
+  [MarketingEvents.jsonRpcSignStart]: 'sign operation start',
+  [MarketingEvents.jsonRpcSignSuccess]: 'sign operation success',
+  [MarketingEvents.jsonRpcSignFail]: 'sign operation fail',
+  [MarketingEvents.jsonRpcSignUserReject]: 'sign operation user reject',
 };
 
 export class EventTracker extends Initializable {

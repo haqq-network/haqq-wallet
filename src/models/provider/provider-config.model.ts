@@ -1,3 +1,4 @@
+import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
 import {ProviderConfig} from '@app/services/indexer';
 
 export class ProviderConfigModel {
@@ -23,6 +24,9 @@ export class ProviderConfigModel {
 
   get wethSymbol() {
     return this.config?.weth_symbol ?? '';
+  }
+  get enableUnwrapWETH9Call() {
+    return this.config?.enable_unwrapWETH9_call ?? false;
   }
 
   /**
@@ -73,5 +77,16 @@ export class ProviderConfigModel {
    */
   get explorerTokenIdUrl() {
     return this.config?.explorer_token_id_url ?? '';
+  }
+
+  get swapDefaultToken0() {
+    return this.config?.swap_default_token0 ?? NATIVE_TOKEN_ADDRESS;
+  }
+
+  get swapDefaultToken1() {
+    return (
+      this.config?.swap_default_token1 ||
+      AddressUtils.toEth('0x4FEBDDe47Ab9a76200e57eFcC80b212a07b3e6cE')
+    );
   }
 }

@@ -6,6 +6,7 @@ import {utils} from 'ethers';
 import {SignInRestore} from '@app/components/singin-restore-wallet';
 import {app} from '@app/contexts';
 import {useTypedNavigation} from '@app/hooks';
+import {SecureValue} from '@app/modifiers/secure-value';
 import {SignInStackParamList, SignInStackRoutes} from '@app/route-types';
 import {makeID} from '@app/utils';
 
@@ -26,7 +27,9 @@ export const SignInRestoreScreen = memo(() => {
 
         navigation.push(nextScreen, {
           type: 'privateKey',
-          privateKey: pk.startsWith('0x') ? pk : `0x${pk}`,
+          privateKey: new SecureValue<string>(
+            pk.startsWith('0x') ? pk : `0x${pk}`,
+          ),
         });
 
         return;
@@ -45,7 +48,7 @@ export const SignInRestoreScreen = memo(() => {
         navigation.push(SignInStackRoutes.SigninChooseAccount, {
           provider,
           type: 'mnemonic',
-          mnemonic: seed.trim().toLowerCase(),
+          mnemonic: new SecureValue<string>(seed.trim().toLowerCase()),
         });
 
         return;
