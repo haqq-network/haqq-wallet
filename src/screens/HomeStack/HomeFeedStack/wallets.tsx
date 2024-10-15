@@ -11,7 +11,7 @@ import {Wallets} from '@app/components/wallets';
 import {getProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet';
 import {useTypedNavigation} from '@app/hooks';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
-import {Wallet} from '@app/models/wallet';
+import {Wallet, WalletModel} from '@app/models/wallet';
 import {HomeFeedStackParamList, HomeStackRoutes} from '@app/route-types';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {WalletType} from '@app/types';
@@ -37,7 +37,7 @@ export const WalletsWrapper = observer(() => {
   );
 
   const onPressPhrase = useCallback(
-    (wallet: Wallet) => {
+    (wallet: WalletModel) => {
       navigation.navigate(HomeStackRoutes.Backup, {
         wallet,
         pinEnabled: true,
@@ -57,7 +57,7 @@ export const WalletsWrapper = observer(() => {
   );
 
   const onPressProtection = useCallback(
-    async (wallet: Wallet) => {
+    async (wallet: WalletModel) => {
       if (!wallet.accountId) {
         return;
       }

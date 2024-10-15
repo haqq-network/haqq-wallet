@@ -3,7 +3,7 @@ import React, {memo, useCallback, useMemo} from 'react';
 import {WalletConnectWalletList} from '@app/components/wallet-connect-wallet-list';
 import {useTypedNavigation} from '@app/hooks';
 import {useWalletConnectAccounts} from '@app/hooks/use-wallet-connect-accounts';
-import {Wallet} from '@app/models/wallet';
+import {Wallet, WalletModel} from '@app/models/wallet';
 import {
   WalletConnectStackParamList,
   WalletConnectStackRoutes,
@@ -17,7 +17,7 @@ export const WalletConnectWalletListScreen = memo(() => {
   const wallets = useMemo(
     () =>
       accounts
-        ?.map?.(item => Wallet.getById(item.address) as Wallet)
+        ?.map?.(item => Wallet.getById(item.address) as WalletModel)
         .filter(item => !!item),
     [accounts],
   );

@@ -25,7 +25,7 @@ module.exports = function (api) {
   ];
 
   if (currentEnv === 'production' && !isTestEnv) {
-    plugins.push(['react-remove-properties', { properties: ['testID'] }]);
+    plugins.push(['react-remove-properties', {properties: ['testID']}]);
   }
 
   return {
@@ -33,11 +33,14 @@ module.exports = function (api) {
     plugins,
     overrides: [
       {
-        test: /node_modules[\\/](problematic-package|tronweb)[\\/].*\.(js|ts|tsx)$/,
+        // Fix for "Class private methods are not enabled" after TronWeb installation.
+        // If enable `@babel/plugin-transform-private-methods` globally react-native app crashed:
+        // ERROR  TypeError: Cannot read property 'getItem' of FlatList
+        test: /node_modules[\\/](more-problematic-package-names|tronweb)[\\/].*\.(js|ts|tsx)$/,
         plugins: [
-          ['@babel/plugin-proposal-class-properties', { loose: true }],
-          ['@babel/plugin-proposal-private-methods', { loose: true }],
-          ['@babel/plugin-proposal-private-property-in-object', { loose: true }],
+          ['@babel/plugin-proposal-class-properties', {loose: true}],
+          ['@babel/plugin-proposal-private-methods', {loose: true}],
+          ['@babel/plugin-proposal-private-property-in-object', {loose: true}],
         ],
       },
     ],

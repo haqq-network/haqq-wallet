@@ -17,15 +17,15 @@ import {WalletCard} from '@app/components/ui/walletCard';
 import {createTheme} from '@app/helpers';
 import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {I18N, getText} from '@app/i18n';
-import {Wallet} from '@app/models/wallet';
+import {Wallet, WalletModel} from '@app/models/wallet';
 import {HaqqEthereumAddress, IToken} from '@app/types';
 
 export interface TokenViewerProps {
   data: Record<HaqqEthereumAddress, IToken[]>;
   style?: StyleProp<ViewStyle>;
-  wallet?: Wallet;
+  wallet?: WalletModel;
   hideFilter?: boolean;
-  onPressToken?: (wallet: Wallet, token: IToken) => void;
+  onPressToken?: (wallet: WalletModel, token: IToken) => void;
 }
 
 const SortingNamesMap = {
@@ -48,7 +48,7 @@ export const TokenViewer = observer(
       () =>
         Object.keys(data)
           .map(item => Wallet.getById(item))
-          .filter(item => !!item) as Wallet[],
+          .filter(item => !!item) as WalletModel[],
       [data],
     );
     const balances = useWalletsBalance(wallets);

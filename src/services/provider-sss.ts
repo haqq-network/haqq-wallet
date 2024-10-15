@@ -167,10 +167,12 @@ export async function onAuthorized(
   ][];
 
   if (shares2.length) {
-    creds.privateKey = providers.utils.lagrangeInterpolation(
-      shares2.map(s => new BN(s[0], 'hex')),
-      shares2.map(s => new BN(s[1], 'hex')),
-    ).toString('hex');
+    creds.privateKey = providers.utils
+      .lagrangeInterpolation(
+        shares2.map(s => new BN(s[0], 'hex')),
+        shares2.map(s => new BN(s[1], 'hex')),
+      )
+      .toString('hex');
   }
 
   return creds;
