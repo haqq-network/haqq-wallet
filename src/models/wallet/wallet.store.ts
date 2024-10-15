@@ -270,9 +270,8 @@ class WalletStore implements RPCObserver {
     }
 
     return (
-      this.balances[Provider.selectedProvider.ethChainId]?.[
-        AddressUtils.toEth(address)
-      ] || Balance.emptyBalances[AddressUtils.toEth(address)]
+      this.balances[provider.ethChainId]?.[AddressUtils.toEth(address)] ||
+      Balance.emptyBalances[AddressUtils.toEth(address)]
     );
   };
 

@@ -19,8 +19,6 @@ import {
 
 import {Provider} from './provider';
 
-// optimization for `convert()` method
-const convertedCache = new Map<string, Balance>();
 class CurrenciesStore {
   private _selectedCurrency: string = '';
   private _currencies: Record<string, Currency> = {};
@@ -66,7 +64,6 @@ class CurrenciesStore {
       return;
     }
     this._prevRatesHash = ratesHash;
-    convertedCache.clear();
 
     const ratesMap: Record<
       ChainId,
@@ -138,7 +135,6 @@ class CurrenciesStore {
       // Set current currency before any requests
       this._selectedCurrency = selectedCurrency as string;
     });
-    convertedCache.clear();
 
     // Request rates based on current currency
     await when(() => Wallet.isHydrated, {
@@ -173,14 +169,6 @@ class CurrenciesStore {
 
   convert = (balance: Balance, chainId?: ChainId): Balance => {
     const currencyId = this.selectedCurrency?.toLocaleLowerCase();
-    const serialized = balance.toJsonString();
-    const cacheKey = `${serialized}-${Provider.selectedProviderId}-${currencyId}-${this._prevRatesHash}`;
-
-    const cached = convertedCache.get(cacheKey);
-    if (cached) {
-      return cached;
-    }
-
     if (!balance || !this._selectedCurrency) {
       return Balance.Empty;
     }
@@ -201,7 +189,6 @@ class CurrenciesStore {
 
     const converted = new Balance(rate, 0).operate(balance, 'mul');
     const result = new Balance(converted, undefined, currency.id);
-    convertedCache.set(cacheKey, result);
     return result;
   };
 
