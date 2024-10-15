@@ -1,14 +1,12 @@
 import {
   BytesLike,
   ProviderBaseError,
-  ProviderHotEvm,
   ProviderInterface,
   ProviderKeystoneEvm,
   ProviderLedgerEvm,
-  ProviderMnemonicEvm,
-  ProviderSSSEvm,
   TransactionRequest,
   TypedData,
+  providers,
 } from '@haqq/rn-wallet-providers';
 
 import {app} from '@app/contexts';
@@ -16,6 +14,7 @@ import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
+import {NetworkProviderTypes} from '@app/services/backend';
 import {EventTracker} from '@app/services/event-tracker';
 import {MarketingEvents, WalletType} from '@app/types';
 import {LEDGER_APP} from '@app/variables/common';
@@ -108,22 +107,50 @@ function getProviderWrapper(provider: ProviderInterface) {
 export async function getProviderInstanceForWallet(
   wallet: Wallet,
   skipAwaitForLedgerCall: boolean = false,
+  network = Provider.selectedProvider,
 ): Promise<ProviderInterface> {
   let provider: ProviderInterface;
+
+  let blockchainType: 'Base' | 'Evm' | 'Tron' = 'Base';
+  switch (network.networkType) {
+    case NetworkProviderTypes.EVM:
+    case NetworkProviderTypes.HAQQ:
+      blockchainType = 'Evm';
+      break;
+    case NetworkProviderTypes.TRON:
+      blockchainType = 'Tron';
+      break;
+  }
+
   switch (wallet.type) {
     case WalletType.mnemonic:
-      provider = new ProviderMnemonicEvm({
+      const ProviderMnemonic = providers[
+        `ProviderMnemonic${blockchainType}`
+      ] as typeof providers.ProviderMnemonicBase;
+
+      provider = new ProviderMnemonic({
         account: wallet.accountId!,
         getPassword: app.getPassword.bind(app),
       });
       break;
     case WalletType.hot:
-      provider = new ProviderHotEvm({
+      // TODO: add tron provider
+      // const ProviderHot = providers[
+      //   `ProviderHot${blockchainType}`
+      // ] as typeof providers.ProviderHotBase;
+      const ProviderHot = providers.ProviderHotEvm;
+
+      provider = new ProviderHot({
         getPassword: app.getPassword.bind(app),
         account: wallet.accountId!,
       });
       break;
     case WalletType.ledgerBt: {
+      // TODO: add tron provider
+      // const ProviderLedger = providers[
+      //   `ProviderLedger${blockchainType}`
+      // ] as typeof providers.ProviderLedgerEvm;
+
       provider = new ProviderLedgerEvm({
         getPassword: app.getPassword.bind(app),
         deviceId: wallet.accountId!,
@@ -136,13 +163,23 @@ export async function getProviderInstanceForWallet(
     }
     case WalletType.sss:
       const storage = await getProviderStorage(wallet.accountId as string);
-      provider = new ProviderSSSEvm({
+      // TODO: add tron provider
+      // const ProviderSSS = providers[
+      //   `ProviderSSS${blockchainType}`
+      // ] as typeof providers.ProviderSSSBase;
+      const ProviderSSS = providers.ProviderSSSEvm;
+
+      provider = new ProviderSSS({
         storage,
         getPassword: app.getPassword.bind(app),
         account: wallet.accountId!,
       });
       break;
     case WalletType.keystone:
+      // const ProviderKeystone = providers[
+      //   `ProviderKeystone${blockchainType}`
+      // ] as typeof providers.ProviderKeystoneBase;
+
       provider = new ProviderKeystoneEvm({
         qrCBORHex: wallet.accountId!,
         awaitForSign: async params => {

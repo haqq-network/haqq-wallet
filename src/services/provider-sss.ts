@@ -1,5 +1,5 @@
 import {generateEntropy} from '@haqq/provider-web3-utils';
-import {lagrangeInterpolation} from '@haqq/rn-wallet-providers/dist/utils';
+import providers from '@haqq/rn-wallet-providers';
 import {jsonrpcRequest} from '@haqq/shared-react-native';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
 import BN from 'bn.js';
@@ -167,7 +167,7 @@ export async function onAuthorized(
   ][];
 
   if (shares2.length) {
-    creds.privateKey = lagrangeInterpolation(
+    creds.privateKey = providers.utils.lagrangeInterpolation(
       shares2.map(s => new BN(s[0], 'hex')),
       shares2.map(s => new BN(s[1], 'hex')),
     ).toString('hex');
