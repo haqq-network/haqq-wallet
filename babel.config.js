@@ -25,11 +25,21 @@ module.exports = function (api) {
   ];
 
   if (currentEnv === 'production' && !isTestEnv) {
-    plugins.push(['react-remove-properties', {properties: ['testID']}]);
+    plugins.push(['react-remove-properties', { properties: ['testID'] }]);
   }
 
   return {
     presets,
     plugins,
+    overrides: [
+      {
+        test: /node_modules[\\/](problematic-package|tronweb)[\\/].*\.(js|ts|tsx)$/,
+        plugins: [
+          ['@babel/plugin-proposal-class-properties', { loose: true }],
+          ['@babel/plugin-proposal-private-methods', { loose: true }],
+          ['@babel/plugin-proposal-private-property-in-object', { loose: true }],
+        ],
+      },
+    ],
   };
 };

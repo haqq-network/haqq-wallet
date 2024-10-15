@@ -1,0 +1,773 @@
+diff --git a/node_modules/tronweb/lib/commonjs/package.json b/node_modules/tronweb/lib/commonjs/package.json
+index b731bd6..2261f50 100644
+--- a/node_modules/tronweb/lib/commonjs/package.json
++++ b/node_modules/tronweb/lib/commonjs/package.json
+@@ -1 +1,29 @@
+-{"type": "commonjs"}
++{
++  "type": "commonjs",
++  "react-native": {
++    "crypto": "react-native-crypto",
++    "http": "@tradle/react-native-http",
++    "https": "https-browserify",
++    "os": "react-native-os",
++    "_stream_transform": "readable-stream/transform",
++    "_stream_readable": "readable-stream/readable",
++    "_stream_writable": "readable-stream/writable",
++    "_stream_duplex": "readable-stream/duplex",
++    "_stream_passthrough": "readable-stream/passthrough",
++    "stream": "stream-browserify",
++    "vm": "vm-browserify"
++  },
++  "browser": {
++    "crypto": "react-native-crypto",
++    "http": "@tradle/react-native-http",
++    "https": "https-browserify",
++    "os": "react-native-os",
++    "_stream_transform": "readable-stream/transform",
++    "_stream_readable": "readable-stream/readable",
++    "_stream_writable": "readable-stream/writable",
++    "_stream_duplex": "readable-stream/duplex",
++    "_stream_passthrough": "readable-stream/passthrough",
++    "stream": "stream-browserify",
++    "vm": "vm-browserify"
++  }
++}
+diff --git a/node_modules/tronweb/lib/commonjs/utils/fragments.js b/node_modules/tronweb/lib/commonjs/utils/fragments.js
+index a65c024..807a19d 100644
+--- a/node_modules/tronweb/lib/commonjs/utils/fragments.js
++++ b/node_modules/tronweb/lib/commonjs/utils/fragments.js
+@@ -49,26 +49,26 @@ const regexIdPrefix = new RegExp('^([a-zA-Z$_][a-zA-Z0-9$_]*)');
+ const regexId = new RegExp('^([a-zA-Z$_][a-zA-Z0-9$_]*)$');
+ const regexType = new RegExp('^(trcToken|address|bool|bytes([0-9]*)|string|u?int([0-9]*))$');
+ class TokenString {
+-    #offset;
+-    #tokens;
++    offset;
++    tokens;
+     get offset() {
+-        return this.#offset;
++        return this.offset;
+     }
+     get length() {
+-        return this.#tokens.length - this.#offset;
++        return this.tokens.length - this.offset;
+     }
+     constructor(tokens) {
+-        this.#offset = 0;
+-        this.#tokens = tokens.slice();
++        this.offset = 0;
++        this.tokens = tokens.slice();
+     }
+     clone() {
+-        return new _a(this.#tokens);
++        return new _a(this.tokens);
+     }
+     reset() {
+-        this.#offset = 0;
++        this.offset = 0;
+     }
+-    #subTokenString(from = 0, to = 0) {
+-        return new _a(this.#tokens.slice(from, to).map((t) => {
++    subTokenString(from = 0, to = 0) {
++        return new _a(this.tokens.slice(from, to).map((t) => {
+             return Object.freeze(Object.assign({}, t, {
+                 match: t.match - from,
+                 linkBack: t.linkBack - from,
+@@ -97,8 +97,8 @@ class TokenString {
+         if (top.type !== 'OPEN_PAREN') {
+             throw new Error('bad start');
+         }
+-        const result = this.#subTokenString(this.#offset + 1, top.match + 1);
+-        this.#offset = top.match + 1;
++        const result = this.subTokenString(this.offset + 1, top.match + 1);
++        this.offset = top.match + 1;
+         return result;
+     }
+     // Pops and returns the items within "(" ITEM1 "," ITEM2 "," ... ")"
+@@ -108,20 +108,20 @@ class TokenString {
+             throw new Error('bad start');
+         }
+         const result = [];
+-        while (this.#offset < top.match - 1) {
++        while (this.offset < top.match - 1) {
+             const link = this.peek().linkNext;
+-            result.push(this.#subTokenString(this.#offset + 1, link));
+-            this.#offset = link;
++            result.push(this.subTokenString(this.offset + 1, link));
++            this.offset = link;
+         }
+-        this.#offset = top.match + 1;
++        this.offset = top.match + 1;
+         return result;
+     }
+     // Returns the top Token, throwing if out of tokens
+     peek() {
+-        if (this.#offset >= this.#tokens.length) {
++        if (this.offset >= this.tokens.length) {
+             throw new Error('out-of-bounds');
+         }
+-        return this.#tokens[this.#offset];
++        return this.tokens[this.offset];
+     }
+     // Returns the next value, if it is a keyword in `allowed`
+     peekKeyword(allowed) {
+@@ -139,13 +139,13 @@ class TokenString {
+     // Returns the next token; throws if out of tokens
+     pop() {
+         const result = this.peek();
+-        this.#offset++;
++        this.offset++;
+         return result;
+     }
+     toString() {
+         const tokens = [];
+-        for (let i = this.#offset; i < this.#tokens.length; i++) {
+-            const token = this.#tokens[i];
++        for (let i = this.offset; i < this.tokens.length; i++) {
++            const token = this.tokens[i];
+             tokens.push(`${token.type}:${token.text}`);
+         }
+         return `<TokenString ${tokens.join(' ')}>`;
+@@ -548,7 +548,7 @@ class ParamType {
+         }
+         return process(this.type, value);
+     }
+-    #walkAsync(promises, value, process, setValue) {
++    walkAsync(promises, value, process, setValue) {
+         if (this.isArray()) {
+             if (!Array.isArray(value)) {
+                 throw new Error('invalid array value');
+@@ -559,7 +559,7 @@ class ParamType {
+             const childType = this.arrayChildren;
+             const result = value.slice();
+             result.forEach((value, index) => {
+-                childType.#walkAsync(promises, value, process, (value) => {
++                childType.walkAsync(promises, value, process, (value) => {
+                     result[index] = value;
+                 });
+             });
+@@ -591,7 +591,7 @@ class ParamType {
+                 throw new Error('array is wrong length');
+             }
+             result.forEach((value, index) => {
+-                components[index].#walkAsync(promises, value, process, (value) => {
++                components[index].walkAsync(promises, value, process, (value) => {
+                     result[index] = value;
+                 });
+             });
+@@ -618,7 +618,7 @@ class ParamType {
+     async walkAsync(value, process) {
+         const promises = [];
+         const result = [value];
+-        this.#walkAsync(promises, value, process, (value) => {
++        this.walkAsync(promises, value, process, (value) => {
+             result[0] = value;
+         });
+         if (promises.length) {
+@@ -1339,4 +1339,4 @@ class StructFragment extends NamedFragment {
+     }
+ }
+ exports.StructFragment = StructFragment;
+-//# sourceMappingURL=fragments.js.map
+\ No newline at end of file
++// sourceMappingURL=fragments.js.map
+\ No newline at end of file
+diff --git a/node_modules/tronweb/lib/commonjs/utils/interface.js b/node_modules/tronweb/lib/commonjs/utils/interface.js
+index d05951b..30b440c 100644
+--- a/node_modules/tronweb/lib/commonjs/utils/interface.js
++++ b/node_modules/tronweb/lib/commonjs/utils/interface.js
+@@ -178,7 +178,7 @@ class Indexed {
+     }
+ }
+ exports.Indexed = Indexed;
+-// https://docs.soliditylang.org/en/v0.8.13/control-structures.html?highlight=panic#panic-via-assert-and-error-via-require
++// https://docs.soliditylang.org/en/v0.8.13/control-structures.html?highlight=panicpanic-via-assert-and-error-via-require
+ const PanicReasons = {
+     '0': 'generic panic',
+     '1': 'assert(false)',
+@@ -240,11 +240,11 @@ class Interface {
+      *  If receiving ether is supported.
+      */
+     receive;
+-    #errors;
+-    #events;
+-    #functions;
+-    //    #structs: Map<string, StructFragment>;
+-    #abiCoder;
++    errors;
++    events;
++    functions;
++    //    structs: Map<string, StructFragment>;
++    abiCoder;
+     /**
+      *  Create a new Interface for the %%fragments%%.
+      */
+@@ -256,10 +256,10 @@ class Interface {
+         else {
+             abi = fragments;
+         }
+-        this.#functions = new Map();
+-        this.#errors = new Map();
+-        this.#events = new Map();
+-        //        this.#structs = new Map();
++        this.functions = new Map();
++        this.errors = new Map();
++        this.events = new Map();
++        //        this.structs = new Map();
+         const frags = [];
+         for (const a of abi) {
+             try {
+@@ -274,7 +274,7 @@ class Interface {
+         });
+         let fallback = null;
+         let receive = false;
+-        this.#abiCoder = this.getAbiCoder();
++        this.abiCoder = this.getAbiCoder();
+         // Add all fragments by their signature
+         this.fragments.forEach((fragment, index) => {
+             let bucket;
+@@ -302,14 +302,14 @@ class Interface {
+                 case 'function':
+                     //checkNames(fragment, "input", fragment.inputs);
+                     //checkNames(fragment, "output", (<FunctionFragment>fragment).outputs);
+-                    bucket = this.#functions;
++                    bucket = this.functions;
+                     break;
+                 case 'event':
+                     //checkNames(fragment, "input", fragment.inputs);
+-                    bucket = this.#events;
++                    bucket = this.events;
+                     break;
+                 case 'error':
+-                    bucket = this.#errors;
++                    bucket = this.errors;
+                     break;
+                 default:
+                     return;
+@@ -356,11 +356,11 @@ class Interface {
+         return ethers_4.AbiCoder.defaultAbiCoder();
+     }
+     // Find a function definition by any means necessary (unless it is ambiguous)
+-    #getFunction(key, values, forceUnique) {
++    getFunction(key, values, forceUnique) {
+         // Selector
+         if ((0, ethers_3.isHexString)(key)) {
+             const selector = key.toLowerCase();
+-            for (const fragment of this.#functions.values()) {
++            for (const fragment of this.functions.values()) {
+                 if (selector === fragment.selector) {
+                     return fragment;
+                 }
+@@ -370,7 +370,7 @@ class Interface {
+         // It is a bare name, look up the function (will return null if ambiguous)
+         if (key.indexOf('(') === -1) {
+             const matching = [];
+-            for (const [name, fragment] of this.#functions) {
++            for (const [name, fragment] of this.functions) {
+                 if (name.split('(' /* fix:) */)[0] === key) {
+                     matching.push(fragment);
+                 }
+@@ -433,7 +433,7 @@ class Interface {
+             return matching[0];
+         }
+         // Normalize the signature and lookup the function
+-        const result = this.#functions.get(fragments_js_1.FunctionFragment.from(key).format());
++        const result = this.functions.get(fragments_js_1.FunctionFragment.from(key).format());
+         if (result) {
+             return result;
+         }
+@@ -444,7 +444,7 @@ class Interface {
+      *  function name or function signature that belongs to the ABI.
+      */
+     getFunctionName(key) {
+-        const fragment = this.#getFunction(key, null, false);
++        const fragment = this.getFunction(key, null, false);
+         (0, ethers_3.assertArgument)(fragment, 'no matching function', 'key', key);
+         return fragment.name;
+     }
+@@ -456,7 +456,7 @@ class Interface {
+      *  accessing the [[FunctionFragment]] may require refinement.
+      */
+     hasFunction(key) {
+-        return !!this.#getFunction(key, null, false);
++        return !!this.getFunction(key, null, false);
+     }
+     /**
+      *  Get the [[FunctionFragment]] for %%key%%, which may be a function
+@@ -469,25 +469,25 @@ class Interface {
+      *  the ABI, this will throw.
+      */
+     getFunction(key, values) {
+-        return this.#getFunction(key, values || null, true);
++        return this.getFunction(key, values || null, true);
+     }
+     /**
+      *  Iterate over all functions, calling %%callback%%, sorted by their name.
+      */
+     forEachFunction(callback) {
+-        const names = Array.from(this.#functions.keys());
++        const names = Array.from(this.functions.keys());
+         names.sort((a, b) => a.localeCompare(b));
+         for (let i = 0; i < names.length; i++) {
+             const name = names[i];
+-            callback(this.#functions.get(name), i);
++            callback(this.functions.get(name), i);
+         }
+     }
+     // Find an event definition by any means necessary (unless it is ambiguous)
+-    #getEvent(key, values, forceUnique) {
++    getEvent(key, values, forceUnique) {
+         // EventTopic
+         if ((0, ethers_3.isHexString)(key)) {
+             const eventTopic = key.toLowerCase();
+-            for (const fragment of this.#events.values()) {
++            for (const fragment of this.events.values()) {
+                 if (eventTopic === fragment.topicHash) {
+                     return fragment;
+                 }
+@@ -497,7 +497,7 @@ class Interface {
+         // It is a bare name, look up the function (will return null if ambiguous)
+         if (key.indexOf('(') === -1) {
+             const matching = [];
+-            for (const [name, fragment] of this.#events) {
++            for (const [name, fragment] of this.events) {
+                 if (name.split('(' /* fix:) */)[0] === key) {
+                     matching.push(fragment);
+                 }
+@@ -535,7 +535,7 @@ class Interface {
+             return matching[0];
+         }
+         // Normalize the signature and lookup the function
+-        const result = this.#events.get(fragments_js_1.EventFragment.from(key).format());
++        const result = this.events.get(fragments_js_1.EventFragment.from(key).format());
+         if (result) {
+             return result;
+         }
+@@ -546,7 +546,7 @@ class Interface {
+      *  event name or event signature that belongs to the ABI.
+      */
+     getEventName(key) {
+-        const fragment = this.#getEvent(key, null, false);
++        const fragment = this.getEvent(key, null, false);
+         (0, ethers_3.assertArgument)(fragment, 'no matching event', 'key', key);
+         return fragment.name;
+     }
+@@ -558,7 +558,7 @@ class Interface {
+      *  accessing the [[EventFragment]] may require refinement.
+      */
+     hasEvent(key) {
+-        return !!this.#getEvent(key, null, false);
++        return !!this.getEvent(key, null, false);
+     }
+     /**
+      *  Get the [[EventFragment]] for %%key%%, which may be a topic hash,
+@@ -571,17 +571,17 @@ class Interface {
+      *  the ABI, this will throw.
+      */
+     getEvent(key, values) {
+-        return this.#getEvent(key, values || null, true);
++        return this.getEvent(key, values || null, true);
+     }
+     /**
+      *  Iterate over all events, calling %%callback%%, sorted by their name.
+      */
+     forEachEvent(callback) {
+-        const names = Array.from(this.#events.keys());
++        const names = Array.from(this.events.keys());
+         names.sort((a, b) => a.localeCompare(b));
+         for (let i = 0; i < names.length; i++) {
+             const name = names[i];
+-            callback(this.#events.get(name), i);
++            callback(this.events.get(name), i);
+         }
+     }
+     /**
+@@ -600,7 +600,7 @@ class Interface {
+             if (BuiltinErrors[selector]) {
+                 return fragments_js_1.ErrorFragment.from(BuiltinErrors[selector].signature);
+             }
+-            for (const fragment of this.#errors.values()) {
++            for (const fragment of this.errors.values()) {
+                 if (selector === fragment.selector) {
+                     return fragment;
+                 }
+@@ -610,7 +610,7 @@ class Interface {
+         // It is a bare name, look up the function (will return null if ambiguous)
+         if (key.indexOf('(') === -1) {
+             const matching = [];
+-            for (const [name, fragment] of this.#errors) {
++            for (const [name, fragment] of this.errors) {
+                 if (name.split('(' /* fix:) */)[0] === key) {
+                     matching.push(fragment);
+                 }
+@@ -638,7 +638,7 @@ class Interface {
+         if (key === 'Panic(uint256)') {
+             return fragments_js_1.ErrorFragment.from('error Panic(uint256)');
+         }
+-        const result = this.#errors.get(key);
++        const result = this.errors.get(key);
+         if (result) {
+             return result;
+         }
+@@ -648,11 +648,11 @@ class Interface {
+      *  Iterate over all errors, calling %%callback%%, sorted by their name.
+      */
+     forEachError(callback) {
+-        const names = Array.from(this.#errors.keys());
++        const names = Array.from(this.errors.keys());
+         names.sort((a, b) => a.localeCompare(b));
+         for (let i = 0; i < names.length; i++) {
+             const name = names[i];
+-            callback(this.#errors.get(name), i);
++            callback(this.errors.get(name), i);
+         }
+     }
+     // Get the 4-byte selector used by Solidity to identify a function
+@@ -684,10 +684,10 @@ class Interface {
+     }
+     */
+     _decodeParams(params, data) {
+-        return this.#abiCoder.decode(params, data);
++        return this.abiCoder.decode(params, data);
+     }
+     _encodeParams(params, values) {
+-        return this.#abiCoder.encode(params, values);
++        return this.abiCoder.encode(params, values);
+     }
+     /**
+      *  Encodes a ``tx.data`` object for deploying the Contract with
+@@ -779,7 +779,7 @@ class Interface {
+         const bytes = (0, ethers_3.getBytesCopy)(data);
+         if (bytes.length % 32 === 0) {
+             try {
+-                return this.#abiCoder.decode(fragment.outputs, bytes);
++                return this.abiCoder.decode(fragment.outputs, bytes);
+             }
+             catch (error) {
+                 message = 'could not decode result data';
+@@ -801,7 +801,7 @@ class Interface {
+             const ef = this.getError(selector);
+             if (ef) {
+                 try {
+-                    const args = this.#abiCoder.decode(ef.inputs, data.slice(4));
++                    const args = this.abiCoder.decode(ef.inputs, data.slice(4));
+                     error.revert = {
+                         name: ef.name,
+                         signature: ef.format(),
+@@ -840,7 +840,7 @@ class Interface {
+             (0, ethers_3.assertArgument)(f, 'unknown function', 'fragment', fragment);
+             fragment = f;
+         }
+-        return (0, ethers_3.hexlify)(this.#abiCoder.encode(fragment.outputs, values || []));
++        return (0, ethers_3.hexlify)(this.abiCoder.encode(fragment.outputs, values || []));
+     }
+     /*
+     spelunk(inputs: Array<ParamType>, values: ReadonlyArray<any>, processfunc: (type: string, value: any) => Promise<any>): Promise<Array<any>> {
+@@ -903,7 +903,7 @@ class Interface {
+             }
+             // Check addresses are valid
+             if (param.type === 'address') {
+-                this.#abiCoder.encode(['address'], [value]);
++                this.abiCoder.encode(['address'], [value]);
+             }
+             return (0, ethers_3.zeroPadValue)((0, ethers_3.hexlify)(value), 32);
+             //@TOOD should probably be return toHex(value, 32)
+@@ -960,7 +960,7 @@ class Interface {
+                     throw new Error('not implemented');
+                 }
+                 else {
+-                    topics.push(this.#abiCoder.encode([param.type], [value]));
++                    topics.push(this.abiCoder.encode([param.type], [value]));
+                 }
+             }
+             else {
+@@ -969,7 +969,7 @@ class Interface {
+             }
+         });
+         return {
+-            data: this.#abiCoder.encode(dataTypes, dataValues),
++            data: this.abiCoder.encode(dataTypes, dataValues),
+             topics: topics,
+         };
+     }
+@@ -1007,8 +1007,8 @@ class Interface {
+                 dynamic.push(false);
+             }
+         });
+-        const resultIndexed = topics != null ? this.#abiCoder.decode(indexed, (0, ethers_3.concat)(topics)) : null;
+-        const resultNonIndexed = this.#abiCoder.decode(nonIndexed, data, true);
++        const resultIndexed = topics != null ? this.abiCoder.decode(indexed, (0, ethers_3.concat)(topics)) : null;
++        const resultNonIndexed = this.abiCoder.decode(nonIndexed, data, true);
+         //const result: (Array<any> & { [ key: string ]: any }) = [ ];
+         const values = [];
+         const keys = [];
+@@ -1057,7 +1057,7 @@ class Interface {
+         if (!fragment) {
+             return null;
+         }
+-        const args = this.#abiCoder.decode(fragment.inputs, data.slice(4));
++        const args = this.abiCoder.decode(fragment.inputs, data.slice(4));
+         return new TransactionDescription(fragment, fragment.selector, args, value);
+     }
+     parseCallResult(data) {
+@@ -1091,7 +1091,7 @@ class Interface {
+         if (!fragment) {
+             return null;
+         }
+-        const args = this.#abiCoder.decode(fragment.inputs, (0, ethers_3.dataSlice)(hexData, 4));
++        const args = this.abiCoder.decode(fragment.inputs, (0, ethers_3.dataSlice)(hexData, 4));
+         return new ErrorDescription(fragment, fragment.selector, args);
+     }
+     /**
+@@ -1118,4 +1118,4 @@ class Interface {
+     }
+ }
+ exports.Interface = Interface;
+-//# sourceMappingURL=interface.js.map
+\ No newline at end of file
++// sourceMappingURL=interface.js.map
+\ No newline at end of file
+diff --git a/node_modules/tronweb/lib/commonjs/utils/typedData.js b/node_modules/tronweb/lib/commonjs/utils/typedData.js
+index 3f9b649..d9341cd 100644
+--- a/node_modules/tronweb/lib/commonjs/utils/typedData.js
++++ b/node_modules/tronweb/lib/commonjs/utils/typedData.js
+@@ -140,15 +140,15 @@ class TypedDataEncoder {
+      *  no parent nodes.
+      */
+     primaryType;
+-    #types;
++    types;
+     /**
+      *  The types.
+      */
+     get types() {
+-        return JSON.parse(this.#types);
++        return JSON.parse(this.types);
+     }
+-    #fullTypes;
+-    #encoderCache;
++    fullTypes;
++    encoderCache;
+     /**
+      *  Create a new **TypedDataEncoder** for %%types%%.
+      *
+@@ -157,9 +157,9 @@ class TypedDataEncoder {
+      *  well as computes the [[primaryType]].
+      */
+     constructor(types) {
+-        this.#types = JSON.stringify(types);
+-        this.#fullTypes = new Map();
+-        this.#encoderCache = new Map();
++        this.types = JSON.stringify(types);
++        this.fullTypes = new Map();
++        this.encoderCache = new Map();
+         // Link struct types to their direct child structs
+         const links = new Map();
+         // Link structs to structs which contain them as a child
+@@ -218,21 +218,21 @@ class TypedDataEncoder {
+         for (const [name, set] of subtypes) {
+             const st = Array.from(set);
+             st.sort();
+-            this.#fullTypes.set(name, encodeType(name, types[name]) + st.map((t) => encodeType(t, types[t])).join(''));
++            this.fullTypes.set(name, encodeType(name, types[name]) + st.map((t) => encodeType(t, types[t])).join(''));
+         }
+     }
+     /**
+      *  Returnthe encoder for the specific %%type%%.
+      */
+     getEncoder(type) {
+-        let encoder = this.#encoderCache.get(type);
++        let encoder = this.encoderCache.get(type);
+         if (!encoder) {
+-            encoder = this.#getEncoder(type);
+-            this.#encoderCache.set(type, encoder);
++            encoder = this.getEncoder(type);
++            this.encoderCache.set(type, encoder);
+         }
+         return encoder;
+     }
+-    #getEncoder(type) {
++    getEncoder(type) {
+         // Basic encoder type (address, bool, uint256, etc)
+         {
+             const encoder = getBaseEncoder(type);
+@@ -248,7 +248,7 @@ class TypedDataEncoder {
+             return (value) => {
+                 (0, ethers_1.assertArgument)(!match[3] || parseInt(match[3]) === value.length, `array length mismatch; expected length ${parseInt(match[3])}`, 'value', value);
+                 let result = value.map(subEncoder);
+-                if (this.#fullTypes.has(subtype)) {
++                if (this.fullTypes.has(subtype)) {
+                     result = result.map(ethers_1.keccak256);
+                 }
+                 return (0, ethers_1.keccak256)((0, ethers_1.concat)(result));
+@@ -257,11 +257,11 @@ class TypedDataEncoder {
+         // Struct
+         const fields = this.types[type];
+         if (fields) {
+-            const encodedType = (0, ethers_1.id)(this.#fullTypes.get(type));
++            const encodedType = (0, ethers_1.id)(this.fullTypes.get(type));
+             return (value) => {
+                 const values = fields.map(({ name, type }) => {
+                     const result = this.getEncoder(type)(value[name]);
+-                    if (this.#fullTypes.has(type)) {
++                    if (this.fullTypes.has(type)) {
+                         return (0, ethers_1.keccak256)(result);
+                     }
+                     return result;
+@@ -276,7 +276,7 @@ class TypedDataEncoder {
+      *  Return the full type for %%name%%.
+      */
+     encodeType(name) {
+-        const result = this.#fullTypes.get(name);
++        const result = this.fullTypes.get(name);
+         (0, ethers_1.assertArgument)(result, `unknown type: ${JSON.stringify(name)}`, 'name', name);
+         return result;
+     }
+@@ -495,4 +495,4 @@ exports.TypedDataEncoder = TypedDataEncoder;
+ function verifyTypedData(domain, types, value, signature) {
+     return (0, ethers_1.recoverAddress)(TypedDataEncoder.hash(domain, types, value), signature);
+ }
+-//# sourceMappingURL=typedData.js.map
+\ No newline at end of file
++// sourceMappingURL=typedData.js.map
+\ No newline at end of file
+diff --git a/node_modules/tronweb/lib/esm/package.json b/node_modules/tronweb/lib/esm/package.json
+index 6990891..76ae26e 100644
+--- a/node_modules/tronweb/lib/esm/package.json
++++ b/node_modules/tronweb/lib/esm/package.json
+@@ -1 +1,29 @@
+-{"type": "module"}
++{
++  "type": "module",
++  "react-native": {
++    "crypto": "react-native-crypto",
++    "http": "@tradle/react-native-http",
++    "https": "https-browserify",
++    "os": "react-native-os",
++    "_stream_transform": "readable-stream/transform",
++    "_stream_readable": "readable-stream/readable",
++    "_stream_writable": "readable-stream/writable",
++    "_stream_duplex": "readable-stream/duplex",
++    "_stream_passthrough": "readable-stream/passthrough",
++    "stream": "stream-browserify",
++    "vm": "vm-browserify"
++  },
++  "browser": {
++    "crypto": "react-native-crypto",
++    "http": "@tradle/react-native-http",
++    "https": "https-browserify",
++    "os": "react-native-os",
++    "_stream_transform": "readable-stream/transform",
++    "_stream_readable": "readable-stream/readable",
++    "_stream_writable": "readable-stream/writable",
++    "_stream_duplex": "readable-stream/duplex",
++    "_stream_passthrough": "readable-stream/passthrough",
++    "stream": "stream-browserify",
++    "vm": "vm-browserify"
++  }
++}
+diff --git a/node_modules/tronweb/lib/esm/utils/typedData.js b/node_modules/tronweb/lib/esm/utils/typedData.js
+index 6fad6ff..3465d30 100644
+--- a/node_modules/tronweb/lib/esm/utils/typedData.js
++++ b/node_modules/tronweb/lib/esm/utils/typedData.js
+@@ -136,15 +136,15 @@ export class TypedDataEncoder {
+      *  no parent nodes.
+      */
+     primaryType;
+-    #types;
++    types;
+     /**
+      *  The types.
+      */
+     get types() {
+-        return JSON.parse(this.#types);
++        return JSON.parse(this.types);
+     }
+-    #fullTypes;
+-    #encoderCache;
++    fullTypes;
++    encoderCache;
+     /**
+      *  Create a new **TypedDataEncoder** for %%types%%.
+      *
+@@ -153,9 +153,9 @@ export class TypedDataEncoder {
+      *  well as computes the [[primaryType]].
+      */
+     constructor(types) {
+-        this.#types = JSON.stringify(types);
+-        this.#fullTypes = new Map();
+-        this.#encoderCache = new Map();
++        this.types = JSON.stringify(types);
++        this.fullTypes = new Map();
++        this.encoderCache = new Map();
+         // Link struct types to their direct child structs
+         const links = new Map();
+         // Link structs to structs which contain them as a child
+@@ -214,21 +214,21 @@ export class TypedDataEncoder {
+         for (const [name, set] of subtypes) {
+             const st = Array.from(set);
+             st.sort();
+-            this.#fullTypes.set(name, encodeType(name, types[name]) + st.map((t) => encodeType(t, types[t])).join(''));
++            this.fullTypes.set(name, encodeType(name, types[name]) + st.map((t) => encodeType(t, types[t])).join(''));
+         }
+     }
+     /**
+      *  Returnthe encoder for the specific %%type%%.
+      */
+     getEncoder(type) {
+-        let encoder = this.#encoderCache.get(type);
++        let encoder = this.encoderCache.get(type);
+         if (!encoder) {
+-            encoder = this.#getEncoder(type);
+-            this.#encoderCache.set(type, encoder);
++            encoder = this.getEncoder(type);
++            this.encoderCache.set(type, encoder);
+         }
+         return encoder;
+     }
+-    #getEncoder(type) {
++    getEncoder(type) {
+         // Basic encoder type (address, bool, uint256, etc)
+         {
+             const encoder = getBaseEncoder(type);
+@@ -244,7 +244,7 @@ export class TypedDataEncoder {
+             return (value) => {
+                 assertArgument(!match[3] || parseInt(match[3]) === value.length, `array length mismatch; expected length ${parseInt(match[3])}`, 'value', value);
+                 let result = value.map(subEncoder);
+-                if (this.#fullTypes.has(subtype)) {
++                if (this.fullTypes.has(subtype)) {
+                     result = result.map(keccak256);
+                 }
+                 return keccak256(concat(result));
+@@ -253,11 +253,11 @@ export class TypedDataEncoder {
+         // Struct
+         const fields = this.types[type];
+         if (fields) {
+-            const encodedType = id(this.#fullTypes.get(type));
++            const encodedType = id(this.fullTypes.get(type));
+             return (value) => {
+                 const values = fields.map(({ name, type }) => {
+                     const result = this.getEncoder(type)(value[name]);
+-                    if (this.#fullTypes.has(type)) {
++                    if (this.fullTypes.has(type)) {
+                         return keccak256(result);
+                     }
+                     return result;
+@@ -272,7 +272,7 @@ export class TypedDataEncoder {
+      *  Return the full type for %%name%%.
+      */
+     encodeType(name) {
+-        const result = this.#fullTypes.get(name);
++        const result = this.fullTypes.get(name);
+         assertArgument(result, `unknown type: ${JSON.stringify(name)}`, 'name', name);
+         return result;
+     }
+@@ -490,4 +490,4 @@ export class TypedDataEncoder {
+ export function verifyTypedData(domain, types, value, signature) {
+     return recoverAddress(TypedDataEncoder.hash(domain, types, value), signature);
+ }
+-//# sourceMappingURL=typedData.js.map
+\ No newline at end of file
++// sourceMappingURL=typedData.js.map
+\ No newline at end of file

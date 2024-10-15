@@ -93,3 +93,4 @@ ios/tmp.xcconfig
 
 # testing
 /coverage
+.aider*
