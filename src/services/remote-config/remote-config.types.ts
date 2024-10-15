@@ -59,5 +59,4 @@ export type RemoteConfigTypes = RemoteConfigBalanceTypes &
     ws_updates: string;
     contests_url: string;
     local_captcha_url: string;
-    proxy_server: string;
   };
