@@ -59,7 +59,7 @@ export const SssStoreWalletScreen = observer(() => {
 
           const hdPath = `${ETH_HD_SHORT_PATH}/${index}`;
 
-          const {address} = await provider.getAccountInfo(hdPath);
+          const {address, tronAddress} = await provider.getAccountInfo(hdPath);
 
           if (!Wallet.getById(address)) {
             const balance = Wallet.getBalance(address, 'available');
@@ -67,7 +67,8 @@ export const SssStoreWalletScreen = observer(() => {
 
             if (canNext) {
               await Wallet.create(name, {
-                address: address,
+                address,
+                tronAddress,
                 type: WalletType.sss,
                 path: hdPath,
                 accountId: provider.getIdentifier(),

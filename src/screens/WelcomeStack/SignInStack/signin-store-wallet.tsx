@@ -72,6 +72,7 @@ export const SignInStoreWalletScreen = observer(() => {
             await Wallet.create(name, {
               path: '',
               address: AddressUtils.toEth(address),
+              tronAddress: '',
               type: WalletType.hot,
               accountId: provider.getIdentifier().toLowerCase(),
             });

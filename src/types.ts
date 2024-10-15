@@ -787,6 +787,7 @@ export enum AppTheme {
 
 export type AddWalletParams = {
   address: HaqqEthereumAddress;
+  tronAddress?: string; // FIXME: Create specific TRON address type
   accountId: string;
   path: string;
   type: WalletType;

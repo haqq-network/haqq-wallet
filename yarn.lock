@@ -2690,9 +2690,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@haqq/rn-wallet-providers@npm:0.0.2":
-  version: 0.0.2
-  resolution: "@haqq/rn-wallet-providers@npm:0.0.2"
+"@haqq/rn-wallet-providers@npm:0.0.4":
+  version: 0.0.4
+  resolution: "@haqq/rn-wallet-providers@npm:0.0.4"
   dependencies:
     "@ethersproject/abstract-provider": ^5.7.0
     "@ethersproject/bytes": ^5.7.0
@@ -2703,6 +2703,7 @@ __metadata:
     "@ledgerhq/hw-transport": 6.30.3
     "@ledgerhq/react-native-hw-transport-ble": 6.30.0
     bech32-converting: ^1.0.9
+    bip32: 1.0.4
     bip39: ^3.1.0
     ethers: ^5.7.2
     events: ^3.3.0
@@ -2715,7 +2716,7 @@ __metadata:
     react-native: "*"
     react-native-ble-plx: "*"
     react-native-encrypted-storage: "*"
-  checksum: d85f7ed5f28ca7854ca13e07045da833862cc2352dcce761a09921519d72958982dc6c09754fec481b218b2687e8889fd5134ba159b7c533e4a4bf4cf2d6db99
+  checksum: 7efdf21f925def50aa3d26e955820153278eef572df060a734a8d6cfbd146fb319e8d8a2219b7d56083741e51cc3d3e0f812a15f797297b173413400a8c23b9f
   languageName: node
   linkType: hard
 
@@ -7312,12 +7313,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bindings@npm:^1.5.0":
+"bindings@npm:^1.3.0, bindings@npm:^1.5.0":
   version: 1.5.0
   resolution: "bindings@npm:1.5.0"
   dependencies:
     file-uri-to-path: 1.0.0
   checksum: 65b6b48095717c2e6105a021a7da4ea435aa8d3d3cd085cb9e85bcb6e5773cf318c4745c3f7c504412855940b585bdf9b918236612a1c7a7942491de176f1ae7
+  languageName: node
+  linkType: hard
+
+"bip32@npm:1.0.4":
+  version: 1.0.4
+  resolution: "bip32@npm:1.0.4"
+  dependencies:
+    bs58check: ^2.1.1
+    create-hash: ^1.2.0
+    create-hmac: ^1.1.7
+    tiny-secp256k1: ^1.0.0
+    typeforce: ^1.11.5
+    wif: ^2.0.6
+  checksum: 4f10be3fab79b28ee9e39f88d2f6773791e8102148c9d7c604b48eb52ea0966a7ef5ec318fc16077746b9c69cfbb26e9f8b0f1932929700c8d926af90c2a8abd
   languageName: node
   linkType: hard
 
@@ -7545,7 +7560,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bs58check@npm:^2.1.2":
+"bs58check@npm:<3.0.0, bs58check@npm:^2.1.1, bs58check@npm:^2.1.2":
   version: 2.1.2
   resolution: "bs58check@npm:2.1.2"
   dependencies:
@@ -9130,6 +9145,21 @@ __metadata:
     minimalistic-assert: ^1.0.1
     minimalistic-crypto-utils: ^1.0.1
   checksum: d56d21fd04e97869f7ffcc92e18903b9f67f2d4637a23c860492fbbff5a3155fd9ca0184ce0c865dd6eb2487d234ce9551335c021c376cd2d3b7cb749c7d10f4
+  languageName: node
+  linkType: hard
+
+"elliptic@npm:^6.4.0":
+  version: 6.5.7
+  resolution: "elliptic@npm:6.5.7"
+  dependencies:
+    bn.js: ^4.11.9
+    brorand: ^1.1.0
+    hash.js: ^1.0.0
+    hmac-drbg: ^1.0.1
+    inherits: ^2.0.4
+    minimalistic-assert: ^1.0.1
+    minimalistic-crypto-utils: ^1.0.1
+  checksum: af0ffddffdbc2fea4eeec74388cd73e62ed5a0eac6711568fb28071566319785df529c968b0bf1250ba4bc628e074b2d64c54a633e034aa6f0c6b152ceb49ab8
   languageName: node
   linkType: hard
 
@@ -11018,7 +11048,7 @@ __metadata:
     "@haqq/encryption-react-native": 0.0.4
     "@haqq/format-number-with-subscript-zeros": 1.0.1
     "@haqq/provider-web3-utils": 0.0.14
-    "@haqq/rn-wallet-providers": 0.0.2
+    "@haqq/rn-wallet-providers": 0.0.4
     "@haqq/shared-react-native": 0.0.12
     "@invertase/react-native-apple-authentication": 2.2.2
     "@keystonehq/bc-ur-registry-eth": 0.7.7
@@ -14666,6 +14696,15 @@ __metadata:
     ncp: ~2.0.0
     rimraf: ~2.4.0
   checksum: 59d4b5ebff6c265b452d6630ae8873d573c82e36fdc1ed9c34c7901a0bf2d3d357022f49db8e9bded127b743f709c7ef7befec249a2b3967578d649a8029aa06
+  languageName: node
+  linkType: hard
+
+"nan@npm:^2.13.2":
+  version: 2.22.0
+  resolution: "nan@npm:2.22.0"
+  dependencies:
+    node-gyp: latest
+  checksum: 222e3a090e326c72f6782d948f44ee9b81cfb2161d5fe53216f04426a273fd094deee9dcc6813096dd2397689a2b10c1a92d3885d2e73fd2488a51547beb2929
   languageName: node
   linkType: hard
 
@@ -18759,6 +18798,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tiny-secp256k1@npm:^1.0.0":
+  version: 1.1.6
+  resolution: "tiny-secp256k1@npm:1.1.6"
+  dependencies:
+    bindings: ^1.3.0
+    bn.js: ^4.11.8
+    create-hmac: ^1.1.7
+    elliptic: ^6.4.0
+    nan: ^2.13.2
+    node-gyp: latest
+  checksum: f8f705f8a76dc9ccc9aa46f7bc353c00be63940c0a1198175fd77c9b85bdf24eb6db3d72c4756d24af320900290313c580c07695cda645d98410822f94ee01f5
+  languageName: node
+  linkType: hard
+
 "tmp@npm:^0.0.33":
   version: 0.0.33
   resolution: "tmp@npm:0.0.33"
@@ -19102,6 +19155,13 @@ __metadata:
   version: 0.0.6
   resolution: "typedarray@npm:0.0.6"
   checksum: 33b39f3d0e8463985eeaeeacc3cb2e28bc3dfaf2a5ed219628c0b629d5d7b810b0eb2165f9f607c34871d5daa92ba1dc69f49051cf7d578b4cbd26c340b9d1b1
+  languageName: node
+  linkType: hard
+
+"typeforce@npm:^1.11.5":
+  version: 1.18.0
+  resolution: "typeforce@npm:1.18.0"
+  checksum: e3b21e27e76cb05f32285bef7c30a29760e79c622cfe4aa3c179ce49d1c7895b7154c8deedb9fe4599b1fd0428d35860d43e0776da1c04861168f3ad7ed99c70
   languageName: node
   linkType: hard
 
@@ -19791,6 +19851,15 @@ __metadata:
   bin:
     node-which: bin/which.js
   checksum: f17e84c042592c21e23c8195108cff18c64050b9efb8459589116999ea9da6dd1509e6a1bac3aeebefd137be00fabbb61b5c2bc0aa0f8526f32b58ee2f545651
+  languageName: node
+  linkType: hard
+
+"wif@npm:^2.0.6":
+  version: 2.0.6
+  resolution: "wif@npm:2.0.6"
+  dependencies:
+    bs58check: <3.0.0
+  checksum: 8c3147ef98d56f394d66f0477f699fba7fc18dd0d1c2c5d0f8408be41acffed589fa82447d80eae5afc9a3cbd943bc3eebb337b9f114955adeaad02a244f4f9a
   languageName: node
   linkType: hard
 

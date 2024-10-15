@@ -9,6 +9,7 @@ import {BalanceModel} from './balance.model';
 
 export type WalletModel = {
   address: HaqqEthereumAddress;
+  tronAddress: string; //FIXME: Create specific TRON address type
   name: string;
   data: string;
   mnemonicSaved: boolean;

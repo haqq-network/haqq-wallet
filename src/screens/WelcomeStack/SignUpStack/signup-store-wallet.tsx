@@ -123,11 +123,12 @@ export const SignUpStoreWalletScreen = observer(() => {
               });
 
         try {
-          const {address} = await provider.getAccountInfo(hdPath);
+          const {address, tronAddress} = await provider.getAccountInfo(hdPath);
           const type = getWalletType();
 
           await Wallet.create(name, {
             address: AddressUtils.toEth(address),
+            tronAddress,
             accountId: provider.getIdentifier(),
             path: hdPath,
             type,

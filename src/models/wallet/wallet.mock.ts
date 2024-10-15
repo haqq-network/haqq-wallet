@@ -10,6 +10,7 @@ export const getMockWallets = (): WalletModel[] => {
   return DEBUG_VARS.mockWalletsAddresses.map((address, index) => ({
     address: AddressUtils.toEth(address),
     cosmosAddress: AddressUtils.toHaqq(address),
+    tronAddress: '', // FIXME: AddressUtils.toTron(address) as soon as tronweb will be added
     accountId: makeID(6),
     data: '',
     mnemonicSaved: false,

@@ -188,7 +188,7 @@ export const ChooseAccountScreen = observer(() => {
   const onAdd = useCallback(async () => {
     walletsToCreate
       .filter(_w => !Wallet.getById(_w.address))
-      .forEach(item => {
+      .forEach(async item => {
         const total = Wallet.getAll().length;
         const name =
           total === 0
@@ -197,7 +197,8 @@ export const ChooseAccountScreen = observer(() => {
                 number: `${total + 1}`,
               });
 
-        Wallet.create(name, item);
+        const {tronAddress} = await params.provider.getAccountInfo(item.path);
+        Wallet.create(name, {...item, tronAddress});
         if (isSSSProvider) {
           Wallet.update(item.address, {
             socialLinkEnabled: true,
