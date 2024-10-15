@@ -21,7 +21,7 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Wallet} from '@app/models/wallet';
+import {WalletModel} from '@app/models/wallet';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {WalletCardPattern, WalletCardStyle} from '@app/types';
 import {generateFlatColors, generateGradientColors} from '@app/utils';
@@ -59,7 +59,7 @@ type SettingsAccountStyleProps = {
   setColors: (value: string[]) => void;
   setPatternStyle: (value: WalletCardPattern) => void;
   setCardStyle: (value: WalletCardStyle) => void;
-  wallet: Wallet;
+  wallet: WalletModel;
 };
 
 export const SettingsAccountStyle = ({

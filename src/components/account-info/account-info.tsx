@@ -9,7 +9,7 @@ import {createTheme} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useShowNft} from '@app/hooks/nft';
 import {I18N} from '@app/i18n';
-import {Wallet} from '@app/models/wallet';
+import {WalletModel} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {HaqqEthereumAddress, IToken, IndexerTransaction} from '@app/types';
 
@@ -26,7 +26,7 @@ enum TabNames {
 }
 
 export type AccountInfoProps = {
-  wallet: Wallet;
+  wallet: WalletModel;
   available: Balance;
   locked: Balance;
   staked: Balance;
@@ -38,7 +38,7 @@ export type AccountInfoProps = {
   onSend: () => void;
   onReceive: () => void;
   onPressTxRow: (tx: IndexerTransaction) => void;
-  onPressToken?: (wallet: Wallet, token: IToken) => void;
+  onPressToken?: (wallet: WalletModel, token: IToken) => void;
 };
 
 const TAB_INDEX_MAP = {
