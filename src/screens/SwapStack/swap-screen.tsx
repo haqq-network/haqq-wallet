@@ -32,7 +32,7 @@ import {I18N, getText} from '@app/i18n';
 import {Currencies} from '@app/models/currencies';
 import {Provider} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
-import {Wallet, WalletModel} from '@app/models/wallet';
+import {IWalletModel, Wallet} from '@app/models/wallet';
 import {SwapStackParamList, SwapStackRoutes} from '@app/route-types';
 import {Balance} from '@app/services/balance';
 import {EventTracker} from '@app/services/event-tracker';
@@ -43,8 +43,8 @@ import {
   SushiRoute,
 } from '@app/services/indexer';
 import {
-  HaqqCosmosAddress,
-  HaqqEthereumAddress,
+  AddressCosmosHaqq,
+  AddressEthereum,
   IToken,
   MarketingEvents,
   ModalType,
@@ -125,8 +125,8 @@ export const SwapScreen = observer(() => {
     routes: [],
     pools: [],
   });
-  const routesByToken0 = useRef<Record<HaqqEthereumAddress, SushiRoute[]>>({});
-  const routesByToken1 = useRef<Record<HaqqEthereumAddress, SushiRoute[]>>({});
+  const routesByToken0 = useRef<Record<AddressEthereum, SushiRoute[]>>({});
+  const routesByToken1 = useRef<Record<AddressEthereum, SushiRoute[]>>({});
 
   const [estimateData, setEstimateData] = useState<
     Partial<SushiPoolEstimateResponse>
@@ -467,7 +467,7 @@ export const SwapScreen = observer(() => {
         const currentToken = {
           ...tokens.find(t => AddressUtils.equals(t.id, initialValue.id!))!,
           value: isToken0 ? t0Available : t1Available,
-          tag: `${currentWallet.address}_${initialValue.id}` as HaqqCosmosAddress,
+          tag: `${currentWallet.address}_${initialValue.id}` as AddressCosmosHaqq,
           id: initialValue.id,
         };
 
@@ -486,7 +486,7 @@ export const SwapScreen = observer(() => {
             if (tokenContract) {
               return {
                 ...tokenContract,
-                tag: `${currentWallet.address}_${tokenAddress}` as HaqqCosmosAddress,
+                tag: `${currentWallet.address}_${tokenAddress}` as AddressCosmosHaqq,
                 id: AddressUtils.toEth(tokenAddress),
               };
             }
@@ -502,7 +502,7 @@ export const SwapScreen = observer(() => {
             if (contract) {
               return {
                 ...contract,
-                tag: `${currentWallet.address}_${tokenAddress}` as HaqqCosmosAddress,
+                tag: `${currentWallet.address}_${tokenAddress}` as AddressCosmosHaqq,
                 image: contract.image,
                 value: new Balance(0, 0, contract?.symbol!),
                 id: AddressUtils.toEth(tokenAddress),
@@ -560,12 +560,12 @@ export const SwapScreen = observer(() => {
               title: currentWallet.name,
               subtitle: currentWallet.address,
             },
-          ] as AwaitValue<{wallet: WalletModel; tokens: IToken[]}>[],
+          ] as AwaitValue<{wallet: IWalletModel; tokens: IToken[]}>[],
           closeOnSelect: true,
           renderCell: (
             // eslint-disable-next-line @typescript-eslint/no-shadow
             value: AwaitValue<{
-              wallet: WalletModel;
+              wallet: IWalletModel;
               tokens: (IToken & {tag: string})[];
             }>,
             _,
@@ -601,7 +601,7 @@ export const SwapScreen = observer(() => {
                   onPressWallet={w => {
                     logger.log('onPressWallet', {wallet: w, value});
                     value.id =
-                      `${w.address}_${initialValue.id}` as HaqqCosmosAddress;
+                      `${w.address}_${initialValue.id}` as AddressCosmosHaqq;
                     onPress(
                       value,
                       value.tokens.findIndex(
@@ -1261,7 +1261,7 @@ export const SwapScreen = observer(() => {
       initialAddress: currentWallet.address,
     });
     setCurrentWallet(() => Wallet.getById(address)!);
-    await refreshTokenBalances(address as HaqqEthereumAddress);
+    await refreshTokenBalances(address as AddressEthereum);
     await estimate();
     amountsIn.setError('');
     navigation.setParams({

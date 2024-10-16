@@ -8,10 +8,10 @@ import {Icon, IconsName, Spacer, Text, TextVariant} from '@app/components/ui';
 import {CopyMenu} from '@app/components/ui/copy-menu';
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
-import {Wallet, WalletModel} from '@app/models/wallet';
+import {IWalletModel, Wallet} from '@app/models/wallet';
 
 type CardNameProps = {
-  wallet: WalletModel;
+  wallet: IWalletModel;
   onAccountInfo: () => void;
   testID?: string;
 };

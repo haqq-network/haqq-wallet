@@ -1,14 +1,14 @@
 import {
-  HaqqCosmosAddress,
-  HaqqEthereumAddress,
+  AddressCosmosHaqq,
+  AddressEthereum,
   WalletCardStyle,
   WalletType,
 } from '@app/types';
 
 import {BalanceModel} from './balance.model';
 
-export type WalletModel = {
-  address: HaqqEthereumAddress;
+export interface IWalletModel {
+  address: AddressEthereum;
   name: string;
   data: string;
   mnemonicSaved: boolean;
@@ -27,9 +27,9 @@ export type WalletModel = {
   subscription: string | null;
   version: number;
   accountId: string | null;
-  cosmosAddress: HaqqCosmosAddress;
+  cosmosAddress: AddressCosmosHaqq;
   position: number;
   isImported?: boolean;
-};
+}
 
-export type WalletBalance = Record<HaqqEthereumAddress, BalanceModel>;
+export type WalletBalance = Record<AddressEthereum, BalanceModel>;

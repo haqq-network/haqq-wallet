@@ -16,7 +16,8 @@ import {ZERO_HEX_NUMBER} from '@app/variables/common';
 
 import {BalanceModel} from './balance.model';
 import {getMockWallets} from './wallet.mock';
-import {WalletModel} from './wallet.types';
+import {WalletModel} from './wallet.model';
+import {IWalletModel} from './wallet.types';
 import {
   getWalletCardStyle,
   getWalletColors,
@@ -25,8 +26,8 @@ import {
 
 import {
   AddWalletParams,
+  AddressEthereum,
   ChainId,
-  HaqqEthereumAddress,
   IndexerBalanceData,
   WalletCardStyleT,
   WalletType,
@@ -39,7 +40,7 @@ class WalletStore implements RPCObserver {
   wallets: WalletModel[] = [];
 
   lastBalanceUpdate: Date = new Date(0);
-  balances: Record<ChainId, Record<HaqqEthereumAddress, BalanceModel>> = {};
+  balances: Record<ChainId, Record<AddressEthereum, BalanceModel>> = {};
 
   constructor(shouldSkipPersisting: boolean = false) {
     makeAutoObservable(this);
@@ -55,28 +56,30 @@ class WalletStore implements RPCObserver {
         DEBUG_VARS.enableMockWallets &&
         DEBUG_VARS.mockWalletsAddresses.length;
 
-      let originalWallets: WalletModel[] = [];
+      let originalWallets: IWalletModel[] = [];
 
       makePersistable(this, {
         name: this.constructor.name,
         properties: [
           {
             key: 'wallets',
-            deserialize: value => {
+            deserialize: (value: IWalletModel[]) => {
               if (isMockEnabled) {
                 originalWallets = value;
-                return getMockWallets();
+                return getMockWallets().map(w => new WalletModel(w));
               }
 
-              return value.sort(
-                (a: WalletModel, b: WalletModel) => a.position - b.position,
-              );
+              return value
+                .sort(
+                  (a: IWalletModel, b: IWalletModel) => a.position - b.position,
+                )
+                .map(w => new WalletModel(w));
             },
-            serialize: value => {
+            serialize: (value: WalletModel[]) => {
               if (isMockEnabled) {
                 return originalWallets;
               }
-              return value;
+              return value.map(w => w.toJSON());
             },
           },
         ],
@@ -276,15 +279,15 @@ class WalletStore implements RPCObserver {
   };
 
   getBalancesByAddressList = (
-    addresses: WalletModel[],
+    addresses: IWalletModel[],
     provider = Provider.selectedProvider,
-  ): Record<HaqqEthereumAddress, BalanceModel> => {
+  ): Record<AddressEthereum, BalanceModel> => {
     return addresses.reduce(
       (acc, wallet) => {
         acc[wallet.address] = this.getBalances(wallet.address, provider);
         return acc;
       },
-      {} as Record<HaqqEthereumAddress, BalanceModel>,
+      {} as Record<AddressEthereum, BalanceModel>,
     );
   };
 
@@ -319,11 +322,11 @@ class WalletStore implements RPCObserver {
     );
 
     const existingWallet = this.getById(walletParams.address);
-    const newWallet = {
-      ...existingWallet,
+    const newWallet = new WalletModel({
+      ...existingWallet?.model,
       data: '',
       subscription: existingWallet?.subscription ?? null,
-      address: walletParams.address.toLowerCase() as HaqqEthereumAddress,
+      address: walletParams.address.toLowerCase() as AddressEthereum,
       mnemonicSaved: walletParams.mnemonicSaved || false,
       socialLinkEnabled: walletParams.socialLinkEnabled || false,
       name: existingWallet?.name ?? name,
@@ -340,7 +343,7 @@ class WalletStore implements RPCObserver {
       isMain: existingWallet?.isMain ?? false,
       cosmosAddress: AddressUtils.toHaqq(walletParams.address),
       position: this.getSize(),
-    };
+    });
 
     if (existingWallet) {
       this.update(existingWallet.address, {
@@ -367,15 +370,13 @@ class WalletStore implements RPCObserver {
   }
 
   addressList() {
-    return this.wallets.map(
-      w => w.address.toLowerCase() as HaqqEthereumAddress,
-    );
+    return this.wallets.map(w => w.address.toLowerCase() as AddressEthereum);
   }
 
   addressListAllVisible() {
     return this.wallets
       .filter(w => !w.isHidden)
-      .map(w => w.address.toLowerCase() as HaqqEthereumAddress);
+      .map(w => w.address.toLowerCase() as AddressEthereum);
   }
 
   getAll() {
@@ -432,16 +433,17 @@ class WalletStore implements RPCObserver {
     }
   }
 
-  update(address: string, params: Partial<WalletModel>) {
+  update(address: string, params: Partial<IWalletModel>) {
     const wallet = this.getById(address);
 
     if (wallet) {
       const otherWallets = this.wallets.filter(
         w => !AddressUtils.equals(w.address, address),
       );
-      this.wallets = [...otherWallets, {...wallet, ...params}].sort(
-        (a, b) => a.position - b.position,
-      );
+      this.wallets = [
+        ...otherWallets,
+        new WalletModel({...wallet.model, ...params}),
+      ].sort((a, b) => a.position - b.position);
     }
   }
 
