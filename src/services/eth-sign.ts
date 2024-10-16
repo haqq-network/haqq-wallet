@@ -64,7 +64,7 @@ const prepareTransaction = async (from: string, tx: TransactionRequest) => {
     tx.value = ZERO_HEX_NUMBER;
   }
 
-  if (!tx.nonce) {
+  if (!tx.nonce && Provider.selectedProvider.isEVM) {
     const rpcProvider = await app.getRpcProvider();
     tx.nonce = await rpcProvider.getTransactionCount(from, 'latest');
   }

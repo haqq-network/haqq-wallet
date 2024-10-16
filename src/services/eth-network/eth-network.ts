@@ -45,7 +45,11 @@ export class EthNetwork {
         throw new Error('Invalid "to" address');
       }
       const rpcProvider = await getRpcProvider(provider);
-      const nonce = await rpcProvider.getTransactionCount(from, 'latest');
+      let nonce: number | undefined;
+
+      if (provider.isEVM) {
+        nonce = await rpcProvider.getTransactionCount(from, 'latest');
+      }
 
       const transaction = {
         to: to,
