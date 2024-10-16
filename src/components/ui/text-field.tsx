@@ -248,7 +248,7 @@ export const TextField: React.FC<TextFieldProps> = memo(
             <First>
               {restOfProps.editable === false && valueIsNumber && (
                 <AnimatedRollingNumber
-                  key={`AnimatedRollingNumber-input-value`}
+                  key={'AnimatedRollingNumber-input-value'}
                   value={value as unknown as number}
                   useGrouping
                   textStyle={[styles.inputRolling, {color: getColor(color)}]}

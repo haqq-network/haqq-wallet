@@ -1,8 +1,7 @@
 import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {removeLastSlash} from '@app/helpers/url';
-import {NetworkProvider} from '@app/services/backend';
-import {ISLM_DENOM} from '@app/variables/common';
+import {NetworkProvider, NetworkProviderTypes} from '@app/services/backend';
 
 import {RemoteProviderConfig} from './provider-config';
 
@@ -90,10 +89,6 @@ export class ProviderModel {
     return this.model.denom;
   }
 
-  get isHaqqNetwork() {
-    return this.model.denom.toLowerCase() === ISLM_DENOM.toLowerCase();
-  }
-
   get bench32Prefix() {
     return HAQQ_BENCH_32_PREFIX;
   }
@@ -104,6 +99,22 @@ export class ProviderModel {
 
   get config() {
     return RemoteProviderConfig.getConfig(this.ethChainId);
+  }
+
+  get networkType() {
+    return this.model.network_type;
+  }
+
+  get isHaqqNetwork() {
+    return this.networkType === NetworkProviderTypes.HAQQ;
+  }
+
+  get isEVM() {
+    return this.isHaqqNetwork || this.networkType === NetworkProviderTypes.EVM;
+  }
+
+  get isTron() {
+    return this.networkType === NetworkProviderTypes.TRON;
   }
 
   toJSON() {

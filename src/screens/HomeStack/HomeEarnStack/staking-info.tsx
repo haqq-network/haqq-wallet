@@ -156,7 +156,9 @@ export const StakingInfoScreen = observer(() => {
 
   const onDelegate = useCallback(async () => {
     const available = visible.filter(
-      v => Wallet.getBalance(v.address, 'available').toFloat() >= minAmount.toFloat(),
+      v =>
+        Wallet.getBalance(v.address, 'available').toFloat() >=
+        minAmount.toFloat(),
     );
 
     if (!available?.length) {

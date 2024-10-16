@@ -20,7 +20,9 @@ export const WalletConnectApprovalScreen = observer(() => {
     WalletConnectApprovalStackRoutes.WalletConnectApproval
   >();
   const wallets = Wallet.getAllVisible();
-  const [selectedWallet, setSelectedWallet] = useState<WalletModel>(wallets?.[0]);
+  const [selectedWallet, setSelectedWallet] = useState<WalletModel>(
+    wallets?.[0],
+  );
   const isApproved = useRef(false);
   const event = useMemo(() => route?.params?.event, [route?.params?.event]);
 

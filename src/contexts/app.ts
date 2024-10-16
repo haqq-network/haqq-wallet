@@ -27,7 +27,7 @@ import {Currencies} from '@app/models/currencies';
 import {Provider, RemoteProviderConfig} from '@app/models/provider';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
-import {BalanceModel, Wallet} from '@app/models/wallet';
+import {Wallet} from '@app/models/wallet';
 import {EthNetwork} from '@app/services';
 import {Backend} from '@app/services/backend';
 import {Cosmos} from '@app/services/cosmos';
@@ -40,9 +40,7 @@ import {User} from '../models/user';
 import {
   AppTheme,
   BiometryType,
-  ChainId,
   DynamicLink,
-  HaqqEthereumAddress,
   MarketingEvents,
   ModalType,
 } from '../types';
@@ -73,10 +71,6 @@ class App extends AsyncEventEmitter {
   private user: User;
   private _authenticated: boolean = DEBUG_VARS.enableSkipPinOnLogin;
   private appStatus: AppStatus = AppStatus.inactive;
-  private _balances: Record<
-    ChainId,
-    Record<HaqqEthereumAddress, BalanceModel>
-  > = {};
   private _googleSigninSupported: boolean = false;
   private _appleSigninSupported: boolean =
     Platform.select({
