@@ -5932,17 +5932,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:18.2.6":
-  version: 18.2.6
-  resolution: "@types/react@npm:18.2.6"
-  dependencies:
-    "@types/prop-types": "*"
-    "@types/scheduler": "*"
-    csstype: ^3.0.2
-  checksum: dea9d232d8df7ac357367a69dcb557711ab3d5501807ffa77cebeee73d49ee94d095f298e36853c63ed47cce097eee4c7eae2aaa8c02fac3f0171ec1b523a819
-  languageName: node
-  linkType: hard
-
 "@types/readable-stream@npm:2.3.15":
   version: 2.3.15
   resolution: "@types/readable-stream@npm:2.3.15"
@@ -5950,13 +5939,6 @@ __metadata:
     "@types/node": "*"
     safe-buffer: ~5.1.1
   checksum: ec36f525cad09b6c65a1dafcb5ad99b9e2ed824ec49b7aa23180ac427e5d35b8a0706193ecd79ab4253a283ad485ba03d5917a98daaaa144f0ea34f4823e9d82
-  languageName: node
-  linkType: hard
-
-"@types/scheduler@npm:*":
-  version: 0.23.0
-  resolution: "@types/scheduler@npm:0.23.0"
-  checksum: 874d753aa65c17760dfc460a91e6df24009bde37bfd427a031577b30262f7770c1b8f71a21366c7dbc76111967384cf4090a31d65315155180ef14bd7acccb32
   languageName: node
   linkType: hard
 
@@ -11416,7 +11398,6 @@ __metadata:
     "@types/pbkdf2": 3.1.0
     "@types/pump": 1.1.1
     "@types/randombytes": 2.0.0
-    "@types/react": 18.2.6
     "@types/react-native-base64": 0.2.0
     "@types/react-native-video": 5.0.19
     "@types/react-test-renderer": 18.0.0
