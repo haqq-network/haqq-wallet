@@ -21,19 +21,17 @@ import com.jakewharton.processphoenix.ProcessPhoenix
 
 class MainApplication : Application(), ReactApplication {
   override val reactNativeHost: ReactNativeHost = object : DefaultReactNativeHost(this) {
-    override fun getPackages(): List<ReactPackage> {
-      val packages: MutableList<ReactPackage> = PackageList(this).packages
-      // Packages that cannot be autolinked yet can be added manually here, for example:
-      // packages.add(new MyReactNativePackage());
-      packages.add(HapticPackage())
-      packages.add(VersionPackage())
-      packages.add(ToastPackage())
-      packages.add(CloudPackage())
-      packages.add(AppUtilsPackage())
-      packages.add(AppNativeConfigPackage())
-
-      return packages
-    }
+    override fun getPackages(): List<ReactPackage> =
+            PackageList(this).packages.apply {
+              // Packages that cannot be autolinked yet can be added manually here, for example:
+              // add(MyReactNativePackage())
+              add(HapticPackage())
+              add(VersionPackage())
+              add(ToastPackage())
+              add(CloudPackage())
+              add(AppUtilsPackage())
+              add(AppNativeConfigPackage())
+            }
 
     override fun getJSMainModuleName(): String = "index"
 
