@@ -1,22 +1,52 @@
 import converter from 'bech32-converting';
 import {utils} from 'ethers';
+import tron from 'tronweb';
 
-import {AddressCosmosHaqq, AddressEthereum, AddressType} from '@app/types';
+import {
+  AddressCosmosHaqq,
+  AddressEthereum,
+  AddressTron,
+  AddressType,
+} from '@app/types';
 import {splitAddress} from '@app/utils';
 
 import {Whitelist} from './whitelist';
 
 export const HAQQ_VALIDATOR_PREFIX = 'haqqvaloper';
 export class AddressUtils {
-  static toHaqq(address: string): AddressCosmosHaqq {
+  static toTron(address: string): AddressTron {
+    if (!address) {
+      return '' as AddressTron;
+    }
     try {
-      if (!address) {
-        return '' as AddressCosmosHaqq;
+      if (AddressUtils.isTronAddress(address)) {
+        return address as AddressTron;
       }
-      if (AddressUtils.isHaqqValidatorAddress(address)) {
-        return (address || '').toLowerCase() as AddressCosmosHaqq;
+      return tron.utils.address.fromHex(
+        AddressUtils.toEth(address),
+      ) as AddressTron;
+    } catch (e) {
+      Logger.warn(e, 'AddressUtils.toTron', {address});
+      return address as AddressTron;
+    }
+  }
+
+  static toHaqq(address: string): AddressCosmosHaqq {
+    if (!address) {
+      return '' as AddressCosmosHaqq;
+    }
+    try {
+      if (AddressUtils.isTronAddress(address)) {
+        return AddressUtils.toHaqq(
+          tron.utils.address
+            .toChecksumAddress(address)
+            .replace(tron.utils.address.ADDRESS_PREFIX_REGEX, '0x'),
+        );
       }
       if (AddressUtils.isHaqqAddress(address)) {
+        return address.toLowerCase() as AddressCosmosHaqq;
+      }
+      if (AddressUtils.isHaqqValidatorAddress(address)) {
         return address.toLowerCase() as AddressCosmosHaqq;
       }
       return converter('haqq')
@@ -28,15 +58,23 @@ export class AddressUtils {
     }
   }
 
-  static toEth(address: string) {
+  static toEth(address: string): AddressEthereum {
+    if (!address) {
+      return '' as AddressEthereum;
+    }
     try {
-      if (!address) {
-        return '' as AddressEthereum;
-      }
-      if (AddressUtils.isHaqqValidatorAddress(address)) {
-        return (address || '').toLowerCase() as AddressEthereum;
+      if (AddressUtils.isTronAddress(address)) {
+        return tron.utils.address
+          .toChecksumAddress(address)
+          .replace(
+            tron.utils.address.ADDRESS_PREFIX_REGEX,
+            '0x',
+          ) as AddressEthereum;
       }
       if (AddressUtils.isEthAddress(address)) {
+        return address.toLowerCase() as AddressEthereum;
+      }
+      if (AddressUtils.isHaqqValidatorAddress(address)) {
         return address.toLowerCase() as AddressEthereum;
       }
       return converter('haqq').toHex(address).toLowerCase() as AddressEthereum;
@@ -46,11 +84,23 @@ export class AddressUtils {
     }
   }
 
-  static isEthAddress(address: string): address is AddressEthereum {
+  static isTronAddress(address: string): address is AddressTron {
+    if (!address) {
+      return false;
+    }
     try {
-      if (!address) {
-        return false;
-      }
+      return tron.utils.address.isAddress(address);
+    } catch (e) {
+      Logger.warn(e, 'AddressUtils.isTronAddress', {address});
+      return false;
+    }
+  }
+
+  static isEthAddress(address: string): address is AddressEthereum {
+    if (!address) {
+      return false;
+    }
+    try {
       return utils.isAddress(address);
     } catch (e) {
       Logger.warn(e, 'AddressUtils.isEthAddress', {address});
@@ -58,61 +108,49 @@ export class AddressUtils {
     }
   }
 
-  static isHaqqValidatorAddress = (address: string) => {
-    return (
-      typeof address === 'string' && address.startsWith(HAQQ_VALIDATOR_PREFIX)
-    );
-  };
+  static isHaqqValidatorAddress = (address: string): boolean =>
+    typeof address === 'string' && address.startsWith(HAQQ_VALIDATOR_PREFIX);
 
   static isHaqqAddress = (address: string): address is AddressCosmosHaqq => {
+    if (
+      !address ||
+      typeof address !== 'string' ||
+      !address.startsWith('haqq')
+    ) {
+      return false;
+    }
     try {
-      if (!address) {
-        return false;
+      if (AddressUtils.isHaqqValidatorAddress(address)) {
+        return true;
       }
-      if (typeof address === 'string' && address.startsWith('haqq')) {
-        if (AddressUtils.isHaqqValidatorAddress(address)) {
-          return true;
-        }
-        const hex = AddressUtils.toEth(address as AddressCosmosHaqq);
-        return AddressUtils.isEthAddress(hex);
-      }
+      const hex = converter('haqq').toHex(address);
+      return AddressUtils.isEthAddress(hex);
     } catch (e) {
       Logger.warn(e, 'AddressUtils.isHaqqAddress', {address});
+      return false;
     }
-    return false;
   };
 
-  static isValidAddress = (address: string) => {
-    return (
-      AddressUtils.isEthAddress(address) || AddressUtils.isHaqqAddress(address)
-    );
-  };
+  static isValidAddress = (address: string): boolean =>
+    AddressUtils.isEthAddress(address) || AddressUtils.isHaqqAddress(address);
 
-  static isContractAddress = async (address: string) => {
+  static isContractAddress = async (address: string): Promise<boolean> => {
+    if (!address) {
+      return false;
+    }
     try {
-      if (!address) {
-        return false;
-      }
       const response = await Whitelist.verifyAddress(address);
-
-      if (!response) {
-        return false;
-      }
-
-      return response.address_type === AddressType.contract;
+      return response?.address_type === AddressType.contract;
     } catch (e) {
       Logger.warn(e, 'AddressUtils.isContractAddress', {address});
       return false;
     }
   };
 
-  static equals = (a: string, b: string) => {
-    return AddressUtils.toEth(a) === AddressUtils.toEth(b);
-  };
+  static equals = (a: string, b: string): boolean =>
+    AddressUtils.toEth(a) === AddressUtils.toEth(b);
 
-  static splitAddress = (address: string) => {
-    return splitAddress(address);
-  };
+  static splitAddress = splitAddress;
 }
 
 export const NATIVE_TOKEN_ADDRESS = AddressUtils.toEth(

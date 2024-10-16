@@ -81,6 +81,7 @@ export function isNumber(value: string) {
 const ethAddressRegex = /(0x\w{2})(.*)(\w{4})$/gm;
 const haqqAddressRegex = /(haqq)(.*)(\w{4})$/gm;
 const haqqValidatorAddressRegex = /(haqqvaloper)(.*)(\w{4})$/gm;
+const tronAddressRegex = /(T)(.*)(\w{4})$/gm;
 
 export function splitAddress(address: string) {
   if (!address) {
@@ -88,6 +89,10 @@ export function splitAddress(address: string) {
   }
 
   let regex = ethAddressRegex;
+
+  if (AddressUtils.isTronAddress(address)) {
+    regex = tronAddressRegex;
+  }
 
   if (AddressUtils.isHaqqAddress(address)) {
     regex = haqqAddressRegex;
