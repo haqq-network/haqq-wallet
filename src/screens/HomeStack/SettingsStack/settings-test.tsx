@@ -726,7 +726,7 @@ export const SettingsTestScreen = observer(() => {
               wallets: Wallet.getAllVisible(),
             });
             const providerId = await awaitForProvider({
-              initialProviderChainId: Provider.selectedProvider.ethChainId,
+              disableAllNetworksOption: true,
               title: I18N.networks,
             });
             const result = await awaitForJsonRpcSign({
