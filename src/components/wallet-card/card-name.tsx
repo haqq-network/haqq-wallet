@@ -6,6 +6,7 @@ import {View} from 'react-native';
 import {Color} from '@app/colors';
 import {Icon, IconsName, Spacer, Text, TextVariant} from '@app/components/ui';
 import {CopyMenu} from '@app/components/ui/copy-menu';
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {IWalletModel, Wallet} from '@app/models/wallet';
@@ -37,6 +38,11 @@ export const CardName = observer(
             {wallet.name || 'Unknown'}
           </Text>
         </View>
+        {(app.isTesterMode || app.isDeveloper) && (
+          <Text variant={TextVariant.t15} color={Color.textBase3}>
+            {wallet.path}
+          </Text>
+        )}
         <Spacer flex={1} />
         <CopyMenu style={styles.copyIcon} value={wallet.address} withSettings>
           <Text
