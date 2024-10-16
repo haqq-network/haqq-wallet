@@ -5,11 +5,11 @@ import {StyleProp, View, ViewStyle} from 'react-native';
 import {PopupContainer} from '@app/components/ui';
 import {WalletRow, WalletRowTypes} from '@app/components/wallet-row';
 import {createTheme} from '@app/helpers';
-import {WalletModel} from '@app/models/wallet';
+import {IWalletModel} from '@app/models/wallet';
 
 interface Props {
   initialAddress?: string;
-  wallets: WalletModel[];
+  wallets: IWalletModel[];
   style?: StyleProp<ViewStyle>;
 
   onWalletSelected?(address: string): void;

@@ -7,7 +7,7 @@ import {
   GRADIENT_PRESETS,
 } from '@app/variables/common';
 
-import {WalletModel} from './wallet.types';
+import {IWalletModel} from './wallet.types';
 
 export const getWalletCardStyle = (cardStyle?: WalletCardStyle) => {
   const cards = Object.keys(WalletCardStyle);
@@ -38,7 +38,7 @@ type WalletColors = {
   colorPattern: string;
 };
 export const getWalletColors = (
-  wallets: WalletModel[],
+  wallets: IWalletModel[],
   cardStyle: WalletCardStyle,
   walletColors: Partial<WalletColors>,
 ): WalletColors => {

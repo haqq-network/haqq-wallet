@@ -11,7 +11,7 @@ import {useWalletsAddressList} from '@app/hooks/use-wallets-address-list';
 import {I18N, getText} from '@app/i18n';
 import {Token} from '@app/models/tokens';
 import {Transaction} from '@app/models/transaction';
-import {Wallet, WalletModel} from '@app/models/wallet';
+import {IWalletModel, Wallet} from '@app/models/wallet';
 import {
   HomeStackParamList,
   HomeStackRoutes,
@@ -56,7 +56,7 @@ export const TotalValueInfoScreen = observer(() => {
   );
 
   const onPressToken = useCallback(
-    (w: WalletModel, token: IToken) => {
+    (w: IWalletModel, token: IToken) => {
       navigation.navigate(HomeStackRoutes.Transaction, {
         // @ts-ignore
         screen: TransactionStackRoutes.TransactionAddress,

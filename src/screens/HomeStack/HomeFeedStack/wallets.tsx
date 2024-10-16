@@ -10,7 +10,7 @@ import {observer} from 'mobx-react';
 import {Wallets} from '@app/components/wallets';
 import {getProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet';
 import {useTypedNavigation} from '@app/hooks';
-import {Wallet, WalletModel} from '@app/models/wallet';
+import {IWalletModel, Wallet} from '@app/models/wallet';
 import {HomeFeedStackParamList, HomeStackRoutes} from '@app/route-types';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {WalletType} from '@app/types';
@@ -36,7 +36,7 @@ export const WalletsWrapper = observer(() => {
   );
 
   const onPressPhrase = useCallback(
-    (wallet: WalletModel) => {
+    (wallet: IWalletModel) => {
       navigation.navigate(HomeStackRoutes.Backup, {
         wallet,
         pinEnabled: true,
@@ -56,7 +56,7 @@ export const WalletsWrapper = observer(() => {
   );
 
   const onPressProtection = useCallback(
-    async (wallet: WalletModel) => {
+    async (wallet: IWalletModel) => {
       if (!wallet.accountId) {
         return;
       }

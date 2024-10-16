@@ -2,7 +2,7 @@ import React from 'react';
 
 import {StyleProp, ViewStyle} from 'react-native';
 
-import {WalletModel} from '@app/models/wallet';
+import {IWalletModel} from '@app/models/wallet';
 
 import {WalletRowVariant1} from './wallet-row-variant-1';
 import {WalletRowVariant2} from './wallet-row-variant-2';
@@ -19,7 +19,7 @@ export enum WalletRowTypes {
 }
 
 export type WalletRowProps = {
-  item: WalletModel;
+  item: IWalletModel;
   style?: StyleProp<ViewStyle>;
   onPress?: (address: string) => void;
   hideArrow?: boolean;

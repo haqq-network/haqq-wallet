@@ -4,7 +4,7 @@ import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
 import {Provider} from '@app/models/provider';
-import {WalletModel} from '@app/models/wallet';
+import {IWalletModel} from '@app/models/wallet';
 import {EIPTypedData} from '@app/types';
 import {stringToHex} from '@app/utils';
 import {HAQQ_METADATA, ZERO_HEX_NUMBER} from '@app/variables/common';
@@ -54,7 +54,7 @@ export class EthSignError extends Error {
   }
 }
 
-const getWalletAddress = (wallet: WalletModel | string) =>
+const getWalletAddress = (wallet: IWalletModel | string) =>
   typeof wallet === 'string' ? AddressUtils.toEth(wallet) : wallet.address;
 
 const prepareTransaction = async (from: string, tx: TransactionRequest) => {
@@ -73,7 +73,7 @@ const prepareTransaction = async (from: string, tx: TransactionRequest) => {
 };
 
 export class EthSign {
-  static async personalSign(wallet: WalletModel | string, message: string) {
+  static async personalSign(wallet: IWalletModel | string, message: string) {
     if (!wallet || !message) {
       throw new EthSignError('Invalid params', {
         method: EIP155_SIGNING_METHODS.PERSONAL_SIGN,
@@ -92,7 +92,7 @@ export class EthSign {
   }
 
   static async signTransaction(
-    wallet: WalletModel | string,
+    wallet: IWalletModel | string,
     tx: TransactionRequest,
   ) {
     if (!wallet || !tx) {
@@ -125,7 +125,7 @@ export class EthSign {
   }
 
   static async sendTransaction(
-    wallet: WalletModel | string,
+    wallet: IWalletModel | string,
     tx: TransactionRequest,
   ) {
     if (!wallet || !tx) {
@@ -175,7 +175,7 @@ export class EthSign {
   }
 
   static async signTypedData(
-    wallet: WalletModel | string,
+    wallet: IWalletModel | string,
     typedData: EIPTypedData,
   ) {
     if (!wallet || !typedData) {

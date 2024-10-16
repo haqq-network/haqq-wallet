@@ -14,7 +14,7 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {WalletModel} from '@app/models/wallet';
+import {IWalletModel} from '@app/models/wallet';
 import {WalletType} from '@app/types';
 
 enum ProtectionStatus {
@@ -25,9 +25,9 @@ enum ProtectionStatus {
 }
 
 type ProtectionBadgeProps = {
-  wallet: WalletModel;
+  wallet: IWalletModel;
   isSecondMnemonic: boolean;
-  onPressProtection: (wallet: WalletModel) => void;
+  onPressProtection: (wallet: IWalletModel) => void;
   onPressWalletConnect?: (address: string) => void;
   walletConnectSessions: SessionTypes.Struct[];
 };

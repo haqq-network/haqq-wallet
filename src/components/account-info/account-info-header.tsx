@@ -17,7 +17,7 @@ import {CopyMenu} from '@app/components/ui/copy-menu';
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
-import {WalletModel} from '@app/models/wallet';
+import {IWalletModel} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 
 import {StackedVestedTokens} from '../stacked-vested-tokens';
@@ -26,7 +26,7 @@ const CARD_WIDTH = 78;
 const CARD_RADIUS = 8;
 
 export type AccountInfoProps = {
-  wallet: WalletModel;
+  wallet: IWalletModel;
   available: Balance;
   locked: Balance;
   staked: Balance;

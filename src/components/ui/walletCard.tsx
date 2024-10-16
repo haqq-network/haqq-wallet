@@ -18,21 +18,21 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Wallet, WalletModel} from '@app/models/wallet';
+import {IWalletModel, Wallet} from '@app/models/wallet';
 import {IToken} from '@app/types';
 
 export type Props = {
-  wallet: WalletModel;
+  wallet: IWalletModel;
   tokens: IToken[];
   tokensOnly?: boolean;
   hideWalletSummary?: boolean;
-  onPressToken?: (wallet: WalletModel, token: IToken, idx: number) => void;
+  onPressToken?: (wallet: IWalletModel, token: IToken, idx: number) => void;
   checkTokenSelected?: (
-    wallet: WalletModel,
+    wallet: IWalletModel,
     token: IToken,
     idx: number,
   ) => boolean;
-  onPressWallet?: (wallet: WalletModel) => void;
+  onPressWallet?: (wallet: IWalletModel) => void;
   isLast?: boolean;
 };
 const CARD_WIDTH = 57.78;
