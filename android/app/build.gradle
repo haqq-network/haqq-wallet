@@ -2,7 +2,7 @@ apply plugin: "com.android.application"
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 apply plugin: "com.facebook.react"
 apply plugin: "com.google.gms.google-services"
-apply plugin: "kotlin-android"
+apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: 'kotlinx-serialization'
 
 /**
@@ -77,7 +77,8 @@ android {
   namespace 'com.haqq.wallet'
   ndkVersion rootProject.ext.ndkVersion
 
-  compileSdkVersion rootProject.ext.compileSdkVersion
+  buildToolsVersion rootProject.ext.buildToolsVersion
+  compileSdk rootProject.ext.compileSdkVersion
 
   defaultConfig {
     applicationId "com.haqq.wallet"
@@ -135,8 +136,8 @@ dependencies {
       exclude module: "protobuf-lite"
   }
   // Fix for react-native-video-cache
-  implementation('com.danikula:videocache:2.7.1')
-  implementation("org.slf4j:slf4j-api:2.0.9")
+  implementation 'com.danikula:videocache:2.7.1'
+  implementation 'org.slf4j:slf4j-api:2.0.9'
 
   implementation 'com.jakewharton:process-phoenix:3.0.0'
   implementation 'com.facebook.soloader:soloader:0.10.4+'
@@ -167,21 +168,8 @@ dependencies {
   testImplementation platform("org.junit:junit-bom:5.9.1")
   testImplementation "org.junit.jupiter:junit-jupiter:5.9.1"
 
-  debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
-    exclude group: 'com.facebook.fbjni'
-  }
-
-  debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
-    exclude group: 'com.facebook.flipper'
-    exclude group: 'com.squareup.okhttp3', module: 'okhttp'
-  }
-
-  debugImplementation("com.facebook.flipper:flipper-fresco-plugin:${FLIPPER_VERSION}") {
-    exclude group: 'com.facebook.flipper'
-  }
-
   if (hermesEnabled.toBoolean()) {
-    implementation("com.facebook.react:hermes-android")
+    implementation 'com.facebook.react:hermes-android'
   } else {
     implementation jscFlavor
   }

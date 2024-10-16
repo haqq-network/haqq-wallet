@@ -3,12 +3,13 @@ package com.haqq.wallet
 import android.app.Application
 import android.os.Build
 import com.facebook.react.*
-import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
-import com.facebook.react.defaults.DefaultReactNativeHost;
+import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.load;
+import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
+import com.facebook.react.defaults.DefaultReactNativeHost
+import com.facebook.soloader.SoLoader
 import com.haqq.wallet.haptic.HapticPackage
 import com.haqq.wallet.cloud.CloudPackage
 import com.haqq.wallet.version.VersionPackage
-import com.facebook.soloader.SoLoader
 import com.haqq.wallet.MainApplication
 import com.haqq.wallet.toast.ToastPackage
 import android.webkit.WebView;
@@ -19,11 +20,7 @@ import com.haqq.wallet.apputils.AppUtilsPackage
 import com.jakewharton.processphoenix.ProcessPhoenix
 
 class MainApplication : Application(), ReactApplication {
-  private val mReactNativeHost: ReactNativeHost = object : DefaultReactNativeHost(this) {
-    override fun getUseDeveloperSupport(): Boolean {
-      return BuildConfig.DEBUG
-    }
-
+  override val reactNativeHost: ReactNativeHost = object : DefaultReactNativeHost(this) {
     override fun getPackages(): List<ReactPackage> {
       val packages: MutableList<ReactPackage> = PackageList(this).packages
       // Packages that cannot be autolinked yet can be added manually here, for example:
@@ -38,14 +35,15 @@ class MainApplication : Application(), ReactApplication {
       return packages
     }
 
-    override fun getJSMainModuleName(): String {
-      return "index"
-    }
+    override fun getJSMainModuleName(): String = "index"
+
+    override fun getUseDeveloperSupport(): Boolean = BuildConfig.DEBUG
+    override val isNewArchEnabled: Boolean = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED
+    override val isHermesEnabled: Boolean = BuildConfig.IS_HERMES_ENABLED
   }
 
-  override fun getReactNativeHost(): ReactNativeHost {
-    return mReactNativeHost
-  }
+  override val reactHost: ReactHost
+    get() = getDefaultReactHost(this.applicationContext, reactNativeHost)
 
   override fun onCreate() {
     super.onCreate()
@@ -63,5 +61,10 @@ class MainApplication : Application(), ReactApplication {
     }
 
     SoLoader.init(this,  /* native exopackage */false)
+
+    if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
+      // If you opted-in for the New Architecture, we load the native entry point for this app.
+      load()
+    }
   }
 }
