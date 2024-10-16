@@ -164,7 +164,11 @@ export class SignJsonRpcRequest {
           : request.params;
 
         const {address} = await instanceProvider.getAccountInfo(path);
-        const nonce = await rpcProvider.getTransactionCount(address, 'latest');
+        let nonce: number | undefined;
+
+        if (Provider.selectedProvider.isEVM) {
+          nonce = await rpcProvider.getTransactionCount(address, 'latest');
+        }
 
         const minGas = new Balance(signTransactionRequest.gasLimit ?? 0);
 
