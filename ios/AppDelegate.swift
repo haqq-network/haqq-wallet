@@ -45,14 +45,14 @@ class AppDelegate: RCTAppDelegate {
   }
 
   override func sourceURL(for bridge: RCTBridge?) -> URL? {
-    return getBundleURL()
+    return bundleURL()
   }
   
-  func getBundleURL() -> URL? {
+  override func bundleURL() -> URL? {
     #if DEBUG
-    return RCTBundleURLProvider.sharedSettings().jsBundleURL(forBundleRoot: "index")
+    return RCTBundleURLProvider.sharedSettings().jsBundleURL(forBundleRoot: "index", fallbackExtension: nil)
     #else
-    return Bundle.main.url(forResource: "main", withExtension: "jsbundle")
+      return Bundle.main.url(forResource: "main", withExtension: "jsbundle")
     #endif
   }
 
