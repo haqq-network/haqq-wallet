@@ -4341,18 +4341,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-firebase/analytics@npm:19.0.1":
-  version: 19.0.1
-  resolution: "@react-native-firebase/analytics@npm:19.0.1"
+"@react-native-firebase/analytics@npm:19.3.0":
+  version: 19.3.0
+  resolution: "@react-native-firebase/analytics@npm:19.3.0"
   peerDependencies:
-    "@react-native-firebase/app": 19.0.1
-  checksum: 9559c006d25719f011957368d34fc321a21169b1b8f3095cf47a79d7d01a6025bb3423ae2e9adf293ded1c4c476b28be807952ca819186d4ceadc8e68df73c5a
+    "@react-native-firebase/app": 19.3.0
+  checksum: 2fe37e550bf915c6d1faedd7804cdd4e0bbbf90cfe245b212c340329b4421a27399fb356fed3451f807a8d74a0a857d83af8ab7fc4fa6124813886e0afe4909b
   languageName: node
   linkType: hard
 
-"@react-native-firebase/app@npm:19.0.1":
-  version: 19.0.1
-  resolution: "@react-native-firebase/app@npm:19.0.1"
+"@react-native-firebase/app@npm:19.3.0":
+  version: 19.3.0
+  resolution: "@react-native-firebase/app@npm:19.3.0"
   dependencies:
     opencollective-postinstall: ^2.0.3
     superstruct: ^0.6.2
@@ -4363,33 +4363,33 @@ __metadata:
   peerDependenciesMeta:
     expo:
       optional: true
-  checksum: d934aff14b1f7303596ffe9f27697f80522be683e26bb2f3a6ab98a9a59771f8fb6ebef4e8e704490518a9a82c17031ccc932e34a77110970463e9ffd7266991
+  checksum: 4fddf8635a8cc64eb5bc8e06af6fc38dcf11779b79b1228a00216643438c094f4bf57baca4697377392a4219d251a7d8b621b7cdfb87f5bffa4254b31eac45ee
   languageName: node
   linkType: hard
 
-"@react-native-firebase/dynamic-links@npm:19.0.1":
-  version: 19.0.1
-  resolution: "@react-native-firebase/dynamic-links@npm:19.0.1"
+"@react-native-firebase/dynamic-links@npm:19.3.0":
+  version: 19.3.0
+  resolution: "@react-native-firebase/dynamic-links@npm:19.3.0"
   peerDependencies:
-    "@react-native-firebase/app": 19.0.1
+    "@react-native-firebase/app": 19.3.0
     expo: ">=47.0.0"
   peerDependenciesMeta:
     expo:
       optional: true
-  checksum: a03511c0314838b809011a0ff0636557937e062e4730ad109445d107199331503af5b86b78dc5524ad28f80fc7cc7e466c0f4b471e1da3bbadc55a5e760e3b69
+  checksum: 67acf7e5bd2fbdfe449a5cbe4e339c170f8ed34ff0724715c6f99cddafb24ed3edac4faf56692c302d479da767e82ba90416e7fcbb796be01a4c6f9d9701ca33
   languageName: node
   linkType: hard
 
-"@react-native-firebase/messaging@npm:19.0.1":
-  version: 19.0.1
-  resolution: "@react-native-firebase/messaging@npm:19.0.1"
+"@react-native-firebase/messaging@npm:19.3.0":
+  version: 19.3.0
+  resolution: "@react-native-firebase/messaging@npm:19.3.0"
   peerDependencies:
-    "@react-native-firebase/app": 19.0.1
+    "@react-native-firebase/app": 19.3.0
     expo: ">=47.0.0"
   peerDependenciesMeta:
     expo:
       optional: true
-  checksum: fc6fae35d29673edd411132af40cb19495aa5bbf975ac36146e494aa5f464d21a9138b7c7636ee287f275c43ce5e79a8f45728b67f588fa826601d0beb50f8ea
+  checksum: 326b80ed16be040802b8fe48f9d9c43801f2cb48e6171fbb9467fb3e81e0b2ed6d7823069c44bcb96c07ba7c5d7440634e274addfd048a9a44cb862ab156b74d
   languageName: node
   linkType: hard
 
@@ -11526,10 +11526,10 @@ __metadata:
     "@react-native-community/hooks": 3.0.0
     "@react-native-community/netinfo": 9.4.1
     "@react-native-cookies/cookies": 6.2.1
-    "@react-native-firebase/analytics": 19.0.1
-    "@react-native-firebase/app": 19.0.1
-    "@react-native-firebase/dynamic-links": 19.0.1
-    "@react-native-firebase/messaging": 19.0.1
+    "@react-native-firebase/analytics": 19.3.0
+    "@react-native-firebase/app": 19.3.0
+    "@react-native-firebase/dynamic-links": 19.3.0
+    "@react-native-firebase/messaging": 19.3.0
     "@react-native-google-signin/google-signin": 10.0.1
     "@react-native-masked-view/masked-view": 0.3.0
     "@react-native/babel-preset": 0.73.18
@@ -11591,7 +11591,7 @@ __metadata:
     js-sha3: 0.8.0
     json-rpc-engine: 6.1.0
     json-stable-stringify: 1.0.2
-    lottie-react-native: 6.7.2
+    lottie-react-native: 7.0.0
     markdown-it: 13.0.1
     metro-minify-terser: 0.80.6
     mobx: 6.12.0
@@ -11655,7 +11655,7 @@ __metadata:
     react-native-system-navigation-bar: 2.6.1
     react-native-toast-message: 2.2.0
     react-native-touch-id: 4.4.1
-    react-native-video: 6.0.0
+    react-native-video: 6.6.4
     react-native-video-cache: 2.7.4
     react-native-webview: 13.8.1
     react-test-renderer: 18.2.0
@@ -13973,9 +13973,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lottie-react-native@npm:6.7.2":
-  version: 6.7.2
-  resolution: "lottie-react-native@npm:6.7.2"
+"lottie-react-native@npm:7.0.0":
+  version: 7.0.0
+  resolution: "lottie-react-native@npm:7.0.0"
   peerDependencies:
     "@dotlottie/react-player": ^1.6.1
     "@lottiefiles/react-lottie-player": ^3.5.3
@@ -13989,7 +13989,7 @@ __metadata:
       optional: true
     react-native-windows:
       optional: true
-  checksum: 8b14ca10f4f0e75505ee5485b47c31db2146baea1634e66f0d485abb8a44ba2019930239970015cedaad627e306828be977b4797256aa2cc143b476ed31585fa
+  checksum: b81d716ecbdc1ce51c642acd8a5d8f522b840f73f4472ca77f67f429c8cb06bd2ab2d92a12868a8bc642b36211bee652c16afbbb717de798d3d4865766556a38
   languageName: node
   linkType: hard
 
@@ -17252,13 +17252,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-video@npm:6.0.0":
-  version: 6.0.0
-  resolution: "react-native-video@npm:6.0.0"
+"react-native-video@npm:6.6.4":
+  version: 6.6.4
+  resolution: "react-native-video@npm:6.6.4"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 3320cf9b5d5845dd72d6fef3cf7d8d5cf543f6bcb78d8d1ea5a8eb6bb90d62bd43e467aa14f6d6e1b2170e3a95c3f739556c26deebe0239f1d45be152eb719a2
+  checksum: cf68bc6099b5f2a8e51a761ef35f35e0c05e158fc45154c1e6af9c2fd0a70b88be708f88438938c35a48e967041bbaa8b64bd71a1e2c9f379ec9f1031e72cc9e
   languageName: node
   linkType: hard
 

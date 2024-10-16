@@ -1,14 +1,6 @@
-//
-//  AppDelegate.swift
-//  haqq
-//
-//  Created by Andrey Makarov on 21.06.2023.
-//
-import Foundation
 import UIKit
 import React
 import FirebaseCore
-import AVFoundation
 
 func clearKeychainIfNecessary() {
   // Checks whether or not this is the first time the app is run
@@ -52,7 +44,11 @@ class AppDelegate: RCTAppDelegate {
     return app;
   }
 
-  override func sourceURL(for bridge: RCTBridge!) -> URL! {
+  override func sourceURL(for bridge: RCTBridge?) -> URL? {
+    return getBundleURL()
+  }
+  
+  func getBundleURL() -> URL? {
     #if DEBUG
     return RCTBundleURLProvider.sharedSettings().jsBundleURL(forBundleRoot: "index")
     #else

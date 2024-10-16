@@ -70,7 +70,6 @@
 		21FED0292A459DE6007FE5B1 /* UIDevice+modelName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FED0282A459DE6007FE5B1 /* UIDevice+modelName.swift */; };
 		224AA57830E846C281B5FB48 /* cloud-share-not-found.png in Resources */ = {isa = PBXBuildFile; fileRef = 7BF9048E79044981AE23D631 /* cloud-share-not-found.png */; };
 		2937E48098E7454A9685D198 /* SF-ProText-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 01195ACEE4074A0E906294A7 /* SF-ProText-Bold.ttf */; };
-		2F9DA72034182AAA5D2359F9 /* libPods-haqq.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CFF103C83963D241E55A373 /* libPods-haqq.a */; };
 		31297D92EC01449C9FE823F4 /* ledger-no-app.png in Resources */ = {isa = PBXBuildFile; fileRef = 5C57942F9C9B4973B42F735D /* ledger-no-app.png */; };
 		32E564D574C74AD1B5AA9302 /* domain-blocked-dark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C4ACC9802BA84429A4A812D3 /* domain-blocked-dark@2x.png */; };
 		337C6F51656447BEA19C3D75 /* bluetooth-powered-off@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3348BC6A64CB46A7B4E5BCCA /* bluetooth-powered-off@2x.png */; };
@@ -116,6 +115,7 @@
 		863D4EB3A14043B1A47D1306 /* keplr-mobile-provider.js in Resources */ = {isa = PBXBuildFile; fileRef = B471E62250F04D52853D7404 /* keplr-mobile-provider.js */; };
 		8799854AD253405E84309D53 /* card-rhombus-0@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4184D848D8434D3AAA82ACBF /* card-rhombus-0@2x.png */; };
 		87D7939DF43045B3AD6F0893 /* keystone-connect-frame-light@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 735E38B239494D5290D6D37B /* keystone-connect-frame-light@3x.png */; };
+		8905009E7C5C75F6CA72C5DF /* libPods-haqq.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0882606F67F7E0575358A4AC /* libPods-haqq.a */; };
 		8C2041B134A2414AB1A2C059 /* browser-error-light.png in Resources */ = {isa = PBXBuildFile; fileRef = 2FB0F0A6B52E40B0AD9B9AC7 /* browser-error-light.png */; };
 		8E51523209E94E4EA153ED9D /* backup-sss-suggestion-light.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AAA2041937743A185E4F569 /* backup-sss-suggestion-light.png */; };
 		8EF155B29CA4479AA8E82E4A /* backup-notification-dark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 987D8832384445AF9BE931EA /* backup-notification-dark@2x.png */; };
@@ -146,13 +146,13 @@
 		BCE8D61DA932477781C76A80 /* ElMessiri-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 22739AB14E6E413385C0ECE0 /* ElMessiri-SemiBold.ttf */; };
 		BD945F44FBB346A3888088FE /* browser-error-dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 68925590CE0E4E9582CD6E9D /* browser-error-dark.png */; };
 		BEFF23B4E9FE4A40BD7E5624 /* SF-ProText-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5F54850256194B99B575DBD3 /* SF-ProText-Regular.ttf */; };
+		BF41FC0A97714ED7EB8FAF12 /* libPods-haqq-haqqTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E1E989F022E184B2EC9B7A4 /* libPods-haqq-haqqTests.a */; };
 		BFD84A14503B4832A8CAF889 /* islm_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E0A5095C2B34207A41D2E1A /* islm_icon@3x.png */; };
 		C06D2261E647456EAAEE7C74 /* sss-limit-reached@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 430951EBEC864503800C1548 /* sss-limit-reached@3x.png */; };
 		C1EF8188FB404AD4BD2264E4 /* none-nft@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 62EF189C18C54C2DBFB50151 /* none-nft@2x.png */; };
 		C2535F70E3ED4812A053EF7C /* device-ledger.png in Resources */ = {isa = PBXBuildFile; fileRef = 46AAF059D58A42868AC24D24 /* device-ledger.png */; };
 		C47B976A9C714DE8B2272371 /* logo-empty.png in Resources */ = {isa = PBXBuildFile; fileRef = 45BB855BE6C744119DB53DC5 /* logo-empty.png */; };
 		C5CD28FF5C4744869B14B5F5 /* logo-empty@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A09417FD7EC4C838B71D9BD /* logo-empty@3x.png */; };
-		C61FCB9DA82B8A95903A35C2 /* libPods-haqq-haqqTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 386A925AC4373F5D6945F0A8 /* libPods-haqq-haqqTests.a */; };
 		C6890A49482E40768FC1A97B /* keystone-connect-frame-dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4552D5CD839645DBBCF5198F /* keystone-connect-frame-dark@3x.png */; };
 		C6B0804012AB478DB46458DE /* signup-network-exists-warning@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D69B77F39E664C21827D2371 /* signup-network-exists-warning@3x.png */; };
 		C799065A631B4EFCA1E0CB6B /* exclamation-mark-error.png in Resources */ = {isa = PBXBuildFile; fileRef = 8437A65A0FC64FFB8169F071 /* exclamation-mark-error.png */; };
@@ -164,7 +164,7 @@
 		CBCC64782CB528A6001CC737 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = CBCC64772CB528A6001CC737 /* PrivacyInfo.xcprivacy */; };
 		CEB60C4A517B4A0E9FC525A3 /* cloud-problems@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5CCF10400ADB4F63AB8CAC62 /* cloud-problems@3x.png */; };
 		CEBA4969BB874AF6B924DA37 /* domain-blocked-dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F5FCD1005E8E4C08BB4782E3 /* domain-blocked-dark@3x.png */; };
-		CF0D49E2FABD41D9A34AB04C /* (null) in Resources */ = {isa = PBXBuildFile; };
+		CF0D49E2FABD41D9A34AB04C /* BuildFile in Resources */ = {isa = PBXBuildFile; };
 		CF3BD3A1F0A24224948734D3 /* ElMessiri-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6B48442C371E4A5CB312ED9E /* ElMessiri-Medium.ttf */; };
 		CF474CA50EB643EB87EA09A4 /* cloud-share-not-found@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 477AFBB25A0D45F18299CC7F /* cloud-share-not-found@3x.png */; };
 		CF6F3ED1E5A54155A2507F94 /* ledger-locked@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 60F20D8762B94A298A8895E3 /* ledger-locked@3x.png */; };
@@ -206,6 +206,7 @@
 		00E356F21AD99517003FC87E /* haqqTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = haqqTests.m; sourceTree = "<group>"; };
 		01195ACEE4074A0E906294A7 /* SF-ProText-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-ProText-Bold.ttf"; path = "../assets/fonts/SF-ProText-Bold.ttf"; sourceTree = "<group>"; };
 		07520727D95E48D48D613B2D /* bluetooth-failed@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "bluetooth-failed@2x.png"; path = "../assets/images/bluetooth-failed@2x.png"; sourceTree = "<group>"; };
+		0882606F67F7E0575358A4AC /* libPods-haqq.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-haqq.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		08B5271DE0374A4D92FA59D6 /* keystone-connect-frame-dark@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "keystone-connect-frame-dark@2x.png"; path = "../assets/images/keystone-connect-frame-dark@2x.png"; sourceTree = "<group>"; };
 		0A939DA77EF542A2827CE749 /* mnemonic-notify.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "mnemonic-notify.png"; path = "../assets/images/mnemonic-notify.png"; sourceTree = "<group>"; };
 		0C454ACD843E4BE8B4BAF182 /* qr-logo@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "qr-logo@3x.png"; path = "../assets/images/qr-logo@3x.png"; sourceTree = "<group>"; };
@@ -275,7 +276,6 @@
 		3348BC6A64CB46A7B4E5BCCA /* bluetooth-powered-off@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "bluetooth-powered-off@2x.png"; path = "../assets/images/bluetooth-powered-off@2x.png"; sourceTree = "<group>"; };
 		351AF865381043718EEE3555 /* browser-error-light@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "browser-error-light@2x.png"; path = "../assets/images/browser-error-light@2x.png"; sourceTree = "<group>"; };
 		3533D7BE6C6048AAB1EBBCF4 /* exclamation-mark-error@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "exclamation-mark-error@2x.png"; path = "../assets/images/exclamation-mark-error@2x.png"; sourceTree = "<group>"; };
-		386A925AC4373F5D6945F0A8 /* libPods-haqq-haqqTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-haqq-haqqTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3FA95EFE063F4706BDA031ED /* card-circles-0@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-circles-0@3x.png"; path = "../assets/images/card-circles-0@3x.png"; sourceTree = "<group>"; };
 		4105EFA9B0BB4D07BDC112C1 /* backup-notification-light@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "backup-notification-light@3x.png"; path = "../assets/images/backup-notification-light@3x.png"; sourceTree = "<group>"; };
 		4184D848D8434D3AAA82ACBF /* card-rhombus-0@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-rhombus-0@2x.png"; path = "../assets/images/card-rhombus-0@2x.png"; sourceTree = "<group>"; };
@@ -295,10 +295,10 @@
 		4E5DD565E167498D902E04C1 /* not-enough-gas@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "not-enough-gas@2x.png"; path = "../assets/images/not-enough-gas@2x.png"; sourceTree = "<group>"; };
 		4EC478ED7CF6446EB76CB24B /* question-circle@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "question-circle@2x.png"; path = "../assets/images/question-circle@2x.png"; sourceTree = "<group>"; };
 		507F49E8E14D423A95B1CE9A /* news_placeholder@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "news_placeholder@2x.png"; path = "../assets/images/news_placeholder@2x.png"; sourceTree = "<group>"; };
-		50A6B77C3B7B6E42B9912C07 /* Pods-haqq.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-haqq.debug.xcconfig"; path = "Target Support Files/Pods-haqq/Pods-haqq.debug.xcconfig"; sourceTree = "<group>"; };
 		5C57942F9C9B4973B42F735D /* ledger-no-app.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ledger-no-app.png"; path = "../assets/images/ledger-no-app.png"; sourceTree = "<group>"; };
 		5CC5CC6680A74F829967534E /* question-circle.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "question-circle.png"; path = "../assets/images/question-circle.png"; sourceTree = "<group>"; };
 		5CCF10400ADB4F63AB8CAC62 /* cloud-problems@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "cloud-problems@3x.png"; path = "../assets/images/cloud-problems@3x.png"; sourceTree = "<group>"; };
+		5D54F0ED8399A41A7D9E7975 /* Pods-haqq-haqqTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-haqq-haqqTests.release.xcconfig"; path = "Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests.release.xcconfig"; sourceTree = "<group>"; };
 		5EB18A9D85084F9E8FE9C432 /* domain-blocked-light@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "domain-blocked-light@2x.png"; path = "../assets/images/domain-blocked-light@2x.png"; sourceTree = "<group>"; };
 		5F1EE6BE8E784394961095EA /* bluetooth-unauthorized@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "bluetooth-unauthorized@3x.png"; path = "../assets/images/bluetooth-unauthorized@3x.png"; sourceTree = "<group>"; };
 		5F54850256194B99B575DBD3 /* SF-ProText-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-ProText-Regular.ttf"; path = "../assets/fonts/SF-ProText-Regular.ttf"; sourceTree = "<group>"; };
@@ -307,11 +307,13 @@
 		61B3DFA376404A5894560199 /* backup-sss-suggestion-dark@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "backup-sss-suggestion-dark@2x.png"; path = "../assets/images/backup-sss-suggestion-dark@2x.png"; sourceTree = "<group>"; };
 		61C5C66B0F44412FBB1D39B5 /* card-maks@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-maks@2x.png"; path = "../assets/images/card-maks@2x.png"; sourceTree = "<group>"; };
 		62EF189C18C54C2DBFB50151 /* none-nft@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "none-nft@2x.png"; path = "../assets/images/none-nft@2x.png"; sourceTree = "<group>"; };
+		6479F9520BF9B107701D30BF /* Pods-haqq-haqqTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-haqq-haqqTests.debug.xcconfig"; path = "Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests.debug.xcconfig"; sourceTree = "<group>"; };
 		66AB110367BD407BAE2DE26C /* device-keystone.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "device-keystone.png"; path = "../assets/images/device-keystone.png"; sourceTree = "<group>"; };
 		68925590CE0E4E9582CD6E9D /* browser-error-dark.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "browser-error-dark.png"; path = "../assets/images/browser-error-dark.png"; sourceTree = "<group>"; };
 		6A09417FD7EC4C838B71D9BD /* logo-empty@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "logo-empty@3x.png"; path = "../assets/images/logo-empty@3x.png"; sourceTree = "<group>"; };
 		6B48442C371E4A5CB312ED9E /* ElMessiri-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ElMessiri-Medium.ttf"; path = "../assets/fonts/ElMessiri-Medium.ttf"; sourceTree = "<group>"; };
 		6C9117DD24DA4B89A6D64989 /* qr-logo.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "qr-logo.png"; path = "../assets/images/qr-logo.png"; sourceTree = "<group>"; };
+		6E1E989F022E184B2EC9B7A4 /* libPods-haqq-haqqTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-haqq-haqqTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FED6A9545D34AC982895A9E /* backup-notification-light.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "backup-notification-light.png"; path = "../assets/images/backup-notification-light.png"; sourceTree = "<group>"; };
 		735E38B239494D5290D6D37B /* keystone-connect-frame-light@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "keystone-connect-frame-light@3x.png"; path = "../assets/images/keystone-connect-frame-light@3x.png"; sourceTree = "<group>"; };
 		73A58DCDF822452093CE5B04 /* sss-limit-reached@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "sss-limit-reached@2x.png"; path = "../assets/images/sss-limit-reached@2x.png"; sourceTree = "<group>"; };
@@ -320,7 +322,6 @@
 		7B77EA7E07E045F1BDA90E9A /* earn-staking.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "earn-staking.png"; path = "../assets/images/earn-staking.png"; sourceTree = "<group>"; };
 		7BEF18996B59450D86D7D658 /* backup-notification-dark@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "backup-notification-dark@3x.png"; path = "../assets/images/backup-notification-dark@3x.png"; sourceTree = "<group>"; };
 		7BF9048E79044981AE23D631 /* cloud-share-not-found.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "cloud-share-not-found.png"; path = "../assets/images/cloud-share-not-found.png"; sourceTree = "<group>"; };
-		7CFF103C83963D241E55A373 /* libPods-haqq.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-haqq.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D7F48BB6BB64A7887914F2C /* backup-notification-light@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "backup-notification-light@2x.png"; path = "../assets/images/backup-notification-light@2x.png"; sourceTree = "<group>"; };
 		7EE9E61AAF4045E78155DED7 /* backup-sss-suggestion-light@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "backup-sss-suggestion-light@3x.png"; path = "../assets/images/backup-sss-suggestion-light@3x.png"; sourceTree = "<group>"; };
 		7FB8A02FCF3F4824B4718B5B /* card-rhombus-0.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-rhombus-0.png"; path = "../assets/images/card-rhombus-0.png"; sourceTree = "<group>"; };
@@ -336,7 +337,7 @@
 		8EB050BA08FE4CD4B4A767AD /* SF-Pro-Display-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Pro-Display-Regular.ttf"; path = "../assets/fonts/SF-Pro-Display-Regular.ttf"; sourceTree = "<group>"; };
 		916B6A1590F44B18A14B8CD8 /* keystone-connect-frame-light.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "keystone-connect-frame-light.png"; path = "../assets/images/keystone-connect-frame-light.png"; sourceTree = "<group>"; };
 		987D8832384445AF9BE931EA /* backup-notification-dark@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "backup-notification-dark@2x.png"; path = "../assets/images/backup-notification-dark@2x.png"; sourceTree = "<group>"; };
-		9BB9139B1DF38F10CD20912E /* Pods-haqq-haqqTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-haqq-haqqTests.release.xcconfig"; path = "Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests.release.xcconfig"; sourceTree = "<group>"; };
+		99E61A856113D6805032BAC4 /* Pods-haqq.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-haqq.release.xcconfig"; path = "Target Support Files/Pods-haqq/Pods-haqq.release.xcconfig"; sourceTree = "<group>"; };
 		9E0A5095C2B34207A41D2E1A /* islm_icon@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "islm_icon@3x.png"; path = "../assets/images/islm_icon@3x.png"; sourceTree = "<group>"; };
 		A007B4F4798B4E7483EFD10E /* banner_news.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = banner_news.png; path = ../assets/images/banner_news.png; sourceTree = "<group>"; };
 		A0CE9DE44441445FB7391296 /* SF-ProText-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-ProText-Medium.ttf"; path = "../assets/fonts/SF-ProText-Medium.ttf"; sourceTree = "<group>"; };
@@ -348,7 +349,6 @@
 		AC7CB5B8B3E24B56A8C7EF28 /* domain-blocked-dark.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "domain-blocked-dark.png"; path = "../assets/images/domain-blocked-dark.png"; sourceTree = "<group>"; };
 		ACC48A1BA8A04336BFF04056 /* domain-blocked-light@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "domain-blocked-light@3x.png"; path = "../assets/images/domain-blocked-light@3x.png"; sourceTree = "<group>"; };
 		AD1883D787E8449B9B3E2EAA /* SF-Pro-Display-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Pro-Display-Bold.ttf"; path = "../assets/fonts/SF-Pro-Display-Bold.ttf"; sourceTree = "<group>"; };
-		AE81F08DD83D407B667A1E49 /* Pods-haqq.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-haqq.release.xcconfig"; path = "Target Support Files/Pods-haqq/Pods-haqq.release.xcconfig"; sourceTree = "<group>"; };
 		AEF6DD2BC5D244B9B1DFBA09 /* earn-staking@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "earn-staking@2x.png"; path = "../assets/images/earn-staking@2x.png"; sourceTree = "<group>"; };
 		B1283B44F2284BA484D1D979 /* browser-error-dark@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "browser-error-dark@2x.png"; path = "../assets/images/browser-error-dark@2x.png"; sourceTree = "<group>"; };
 		B1852229389E40D5A81E386E /* card-maks.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-maks.png"; path = "../assets/images/card-maks.png"; sourceTree = "<group>"; };
@@ -358,6 +358,7 @@
 		B841EDBC4B79491D9D704E78 /* ElMessiri-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "ElMessiri-Regular.ttf"; path = "../assets/fonts/ElMessiri-Regular.ttf"; sourceTree = "<group>"; };
 		B9AB78E07FF446AE8E5724C1 /* islm_icon@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "islm_icon@2x.png"; path = "../assets/images/islm_icon@2x.png"; sourceTree = "<group>"; };
 		BC1BF4D5F5414DB89C675767 /* card-circles-0@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "card-circles-0@2x.png"; path = "../assets/images/card-circles-0@2x.png"; sourceTree = "<group>"; };
+		BD05E14F8DCC0610FFF92484 /* Pods-haqq.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-haqq.debug.xcconfig"; path = "Target Support Files/Pods-haqq/Pods-haqq.debug.xcconfig"; sourceTree = "<group>"; };
 		BE329D77ACC3497D9444B38D /* device-ledger@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "device-ledger@3x.png"; path = "../assets/images/device-ledger@3x.png"; sourceTree = "<group>"; };
 		C11270485E834BB89DB0883E /* jailbreak@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "jailbreak@3x.png"; path = "../assets/images/jailbreak@3x.png"; sourceTree = "<group>"; };
 		C1CE33A4DDAE4C2E896D1116 /* device-ledger@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "device-ledger@2x.png"; path = "../assets/images/device-ledger@2x.png"; sourceTree = "<group>"; };
@@ -367,7 +368,6 @@
 		CBCC64772CB528A6001CC737 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		CBDB7F40A5B642CBBB3ACEBA /* not-enough-gas.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "not-enough-gas.png"; path = "../assets/images/not-enough-gas.png"; sourceTree = "<group>"; };
 		CCB6A71C6D0B4611BD0020F4 /* backup-notification-dark.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "backup-notification-dark.png"; path = "../assets/images/backup-notification-dark.png"; sourceTree = "<group>"; };
-		CD4DB3EB8DC45861009C2608 /* Pods-haqq-haqqTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-haqq-haqqTests.debug.xcconfig"; path = "Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests.debug.xcconfig"; sourceTree = "<group>"; };
 		D35FE9082706444AB8F75888 /* bluetooth-failed.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "bluetooth-failed.png"; path = "../assets/images/bluetooth-failed.png"; sourceTree = "<group>"; };
 		D3A59FF6FC7C4A3288BB1782 /* backup-sss-suggestion-dark.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "backup-sss-suggestion-dark.png"; path = "../assets/images/backup-sss-suggestion-dark.png"; sourceTree = "<group>"; };
 		D5CEFF1E09834237BC73AB45 /* jailbreak@2x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "jailbreak@2x.png"; path = "../assets/images/jailbreak@2x.png"; sourceTree = "<group>"; };
@@ -400,7 +400,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C61FCB9DA82B8A95903A35C2 /* libPods-haqq-haqqTests.a in Frameworks */,
+				BF41FC0A97714ED7EB8FAF12 /* libPods-haqq-haqqTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -412,7 +412,7 @@
 				213327BF2A08EEAD00E28E6F /* StoreKit.framework in Frameworks */,
 				213327BD2A08EE9E00E28E6F /* AdServices.framework in Frameworks */,
 				213327BB2A08EE9800E28E6F /* AdSupport.framework in Frameworks */,
-				2F9DA72034182AAA5D2359F9 /* libPods-haqq.a in Frameworks */,
+				8905009E7C5C75F6CA72C5DF /* libPods-haqq.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -563,8 +563,8 @@
 				213327BC2A08EE9E00E28E6F /* AdServices.framework */,
 				213327BA2A08EE9800E28E6F /* AdSupport.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				7CFF103C83963D241E55A373 /* libPods-haqq.a */,
-				386A925AC4373F5D6945F0A8 /* libPods-haqq-haqqTests.a */,
+				0882606F67F7E0575358A4AC /* libPods-haqq.a */,
+				6E1E989F022E184B2EC9B7A4 /* libPods-haqq-haqqTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -607,10 +607,10 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				50A6B77C3B7B6E42B9912C07 /* Pods-haqq.debug.xcconfig */,
-				AE81F08DD83D407B667A1E49 /* Pods-haqq.release.xcconfig */,
-				CD4DB3EB8DC45861009C2608 /* Pods-haqq-haqqTests.debug.xcconfig */,
-				9BB9139B1DF38F10CD20912E /* Pods-haqq-haqqTests.release.xcconfig */,
+				BD05E14F8DCC0610FFF92484 /* Pods-haqq.debug.xcconfig */,
+				99E61A856113D6805032BAC4 /* Pods-haqq.release.xcconfig */,
+				6479F9520BF9B107701D30BF /* Pods-haqq-haqqTests.debug.xcconfig */,
+				5D54F0ED8399A41A7D9E7975 /* Pods-haqq-haqqTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -764,12 +764,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "haqqTests" */;
 			buildPhases = (
-				F6AF2BA423D0E3AF8BABE4E2 /* [CP] Check Pods Manifest.lock */,
+				AEF1204726289E385470D92F /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				B372CD9D52F2ED6CEDF3055E /* [CP] Embed Pods Frameworks */,
-				729EC8E41264EA4E20AEF6D2 /* [CP] Copy Pods Resources */,
+				C705B0D8CA907584A5FB0385 /* [CP] Embed Pods Frameworks */,
+				EC362D240E0F55DD54414B46 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -785,16 +785,15 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "haqq" */;
 			buildPhases = (
-				21D90255485E8FC6AD356335 /* [CP] Check Pods Manifest.lock */,
-				FD10A7F022414F080027D42C /* Start Packager */,
+				8F3264F7AFADBE0E9DDA4E10 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				68C2D203CE084DF1A99D35EB /* Upload Debug Symbols to Sentry */,
-				2000A70E1A32FB46EEEE3957 /* [CP] Embed Pods Frameworks */,
-				8F73BB05BF363350EE44F407 /* [CP] Copy Pods Resources */,
-				2EA701436FB6A43B410D0C8F /* [CP-User] [RNFB] Core Configuration */,
+				83A4BDB03691720FC7801E0B /* [CP] Embed Pods Frameworks */,
+				9AE13F452D6E1ABB7908DAF0 /* [CP] Copy Pods Resources */,
+				1AB28A6584E79E21BB9BDE48 /* [CP-User] [RNFB] Core Configuration */,
 			);
 			buildRules = (
 			);
@@ -875,7 +874,7 @@
 				BEFF23B4E9FE4A40BD7E5624 /* SF-ProText-Regular.ttf in Resources */,
 				F57AEFB435FF4249932EF918 /* SF-ProText-Semibold.ttf in Resources */,
 				2129B78329CACF69005C0CCA /* overview.storyboard in Resources */,
-				CF0D49E2FABD41D9A34AB04C /* (null) in Resources */,
+				CF0D49E2FABD41D9A34AB04C /* BuildFile in Resources */,
 				1A6D4E352A149298001B1549 /* staking_on_earn_page_dark.riv in Resources */,
 				7CE3C371577D43A6BAA1DF94 /* backup-notification-dark.png in Resources */,
 				8EF155B29CA4479AA8E82E4A /* backup-notification-dark@2x.png in Resources */,
@@ -1026,46 +1025,7 @@
 			shellPath = /bin/sh;
 			shellScript = "export SENTRY_PROPERTIES=sentry.properties\nexport EXTRA_PACKAGER_ARGS=\"--sourcemap-output $DERIVED_FILE_DIR/main.jsbundle.map\"\nset -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\nif [[ \"$SDKROOT\" == *\"iPhoneSimulator\"* ]]; then\n    echo \"[Bundle React Native code and images] Skipping sentry\"\n        /bin/sh -c \"$REACT_NATIVE_XCODE\"\nelse\n    export SENTRY_PROPERTIES=sentry.properties\n    export NODE_BINARY=node\n    /bin/sh -c \"$WITH_ENVIRONMENT \\\"../node_modules/@sentry/cli/bin/sentry-cli react-native xcode $REACT_NATIVE_XCODE\\\"\"\nfi\n";
 		};
-		2000A70E1A32FB46EEEE3957 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-haqq/Pods-haqq-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-haqq/Pods-haqq-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-haqq/Pods-haqq-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		21D90255485E8FC6AD356335 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-haqq-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		2EA701436FB6A43B410D0C8F /* [CP-User] [RNFB] Core Configuration */ = {
+		1AB28A6584E79E21BB9BDE48 /* [CP-User] [RNFB] Core Configuration */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1092,24 +1052,46 @@
 			shellPath = /bin/sh;
 			shellScript = "WITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nif [ -f \"$WITH_ENVIRONMENT\" ]; then\n    . \"$WITH_ENVIRONMENT\"\nfi\n\nif [[ \"$SDKROOT\" == *\"iPhoneSimulator\"* ]]; then\n    echo \"Skipping sentry...\"\nelse\n    export SENTRY_PROPERTIES=sentry.properties\n    [ \"$SENTRY_INCLUDE_NATIVE_SOURCES\" = \"true\" ] && INCLUDE_SOURCES_FLAG=\"--include-sources\" || INCLUDE_SOURCES_FLAG=\"\"\n    ../node_modules/@sentry/cli/bin/sentry-cli debug-files upload \"$INCLUDE_SOURCES_FLAG\" \"$DWARF_DSYM_FOLDER_PATH\"\nfi\n";
 		};
-		729EC8E41264EA4E20AEF6D2 /* [CP] Copy Pods Resources */ = {
+		83A4BDB03691720FC7801E0B /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-haqq/Pods-haqq-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Copy Pods Resources";
+			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-haqq/Pods-haqq-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-haqq/Pods-haqq-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		8F73BB05BF363350EE44F407 /* [CP] Copy Pods Resources */ = {
+		8F3264F7AFADBE0E9DDA4E10 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-haqq-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9AE13F452D6E1ABB7908DAF0 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1126,24 +1108,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-haqq/Pods-haqq-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		B372CD9D52F2ED6CEDF3055E /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F6AF2BA423D0E3AF8BABE4E2 /* [CP] Check Pods Manifest.lock */ = {
+		AEF1204726289E385470D92F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1165,23 +1130,38 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		FD10A7F022414F080027D42C /* Start Packager */ = {
+		C705B0D8CA907584A5FB0385 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
-			name = "Start Packager";
+			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-			);
-			outputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export RCT_METRO_PORT=\"${RCT_METRO_PORT:=8081}\"\necho \"export RCT_METRO_PORT=${RCT_METRO_PORT}\" > \"${SRCROOT}/../node_modules/react-native/scripts/.packager.env\"\nif [ -z \"${RCT_NO_LAUNCH_PACKAGER+xxx}\" ] ; then\n  if nc -w 5 -z localhost ${RCT_METRO_PORT} ; then\n    if ! curl -s \"http://localhost:${RCT_METRO_PORT}/status\" | grep -q \"packager-status:running\" ; then\n      echo \"Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly\"\n      exit 2\n    fi\n  else\n    open \"$SRCROOT/../node_modules/react-native/scripts/launchPackager.command\" || echo \"Can't start packager automatically\"\n  fi\nfi\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EC362D240E0F55DD54414B46 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-haqq-haqqTests/Pods-haqq-haqqTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1240,7 +1220,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CD4DB3EB8DC45861009C2608 /* Pods-haqq-haqqTests.debug.xcconfig */;
+			baseConfigurationReference = 6479F9520BF9B107701D30BF /* Pods-haqq-haqqTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -1253,7 +1233,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = haqqTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1276,7 +1256,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9BB9139B1DF38F10CD20912E /* Pods-haqq-haqqTests.release.xcconfig */;
+			baseConfigurationReference = 5D54F0ED8399A41A7D9E7975 /* Pods-haqq-haqqTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -1286,7 +1266,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = XL66G6TJJL;
 				INFOPLIST_FILE = haqqTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1308,7 +1288,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 50A6B77C3B7B6E42B9912C07 /* Pods-haqq.debug.xcconfig */;
+			baseConfigurationReference = BD05E14F8DCC0610FFF92484 /* Pods-haqq.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -1320,7 +1300,7 @@
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = haqq/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Haqq Wallet";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1346,7 +1326,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AE81F08DD83D407B667A1E49 /* Pods-haqq.release.xcconfig */;
+			baseConfigurationReference = 99E61A856113D6805032BAC4 /* Pods-haqq.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -1357,7 +1337,7 @@
 				DEVELOPMENT_TEAM = XL66G6TJJL;
 				INFOPLIST_FILE = haqq/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Haqq Wallet";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1386,7 +1366,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++20";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -1414,7 +1394,7 @@
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1457,11 +1437,17 @@
 					"-DFOLLY_NO_CONFIG",
 					"-DFOLLY_MOBILE=1",
 					"-DFOLLY_USE_LIBCPP=1",
+					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-Wl",
+					"-ld_classic",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				USE_HERMES = true;
 			};
 			name = Debug;
 		};
@@ -1471,7 +1457,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++20";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -1499,7 +1485,7 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1537,11 +1523,17 @@
 					"-DFOLLY_NO_CONFIG",
 					"-DFOLLY_MOBILE=1",
 					"-DFOLLY_USE_LIBCPP=1",
+					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-Wl",
+					"-ld_classic",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				USE_HERMES = true;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
