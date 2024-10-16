@@ -22,15 +22,15 @@ export function ProvidersBottomSheet({
   closeDistance,
   eventSuffix = '',
   onClose,
-  desableAllNetworksOption,
+  disableAllNetworksOption,
 }: Modals[ModalType.providersBottomSheet]) {
   const [searchProviderValue, setSearchProviderValue] = useState('');
   const providers = useMemo(
     () =>
-      outProviders ?? desableAllNetworksOption
+      outProviders ?? disableAllNetworksOption
         ? Provider.getAllNetworks()
         : Provider.getAll(),
-    [desableAllNetworksOption],
+    [disableAllNetworksOption],
   );
 
   const closeDistanceCalculated = useCalculatedDimensionsValue(
@@ -39,7 +39,10 @@ export function ProvidersBottomSheet({
   );
   const onPressProvider = useCallback(
     (providerChainId: number) => {
-      if (providerChainId === initialProviderChainId) {
+      if (
+        !!initialProviderChainId &&
+        providerChainId === initialProviderChainId
+      ) {
         // close if selected same provider
         return onCloseModal();
       }

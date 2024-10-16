@@ -1112,7 +1112,7 @@ export type Modals = {
     title: I18N;
     providers?: ProviderModel[];
     initialProviderChainId: number;
-    desableAllNetworksOption?: boolean;
+    disableAllNetworksOption?: boolean;
     closeDistance?: () => number;
     eventSuffix?: string;
   };
