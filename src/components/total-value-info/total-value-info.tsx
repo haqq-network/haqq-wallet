@@ -10,8 +10,8 @@ import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useShowNft} from '@app/hooks/nft';
 import {I18N} from '@app/i18n';
 import {Transaction} from '@app/models/transaction';
-import {BalanceModel, WalletModel} from '@app/models/wallet';
-import {HaqqEthereumAddress, IToken} from '@app/types';
+import {BalanceModel, IWalletModel} from '@app/models/wallet';
+import {AddressEthereum, IToken} from '@app/types';
 
 import {TotalValueInfoHeader} from './total-value-info-header';
 
@@ -34,11 +34,11 @@ const TabIndexMap = {
 export type TotalValueInfoProps = {
   balance: BalanceModel;
   addressList: string[];
-  tokens: Record<HaqqEthereumAddress, IToken[]>;
+  tokens: Record<AddressEthereum, IToken[]>;
   initialTab?: TotalValueTabNames;
   onPressTxRow: (tx: Transaction) => void;
   onPressInfo: () => void;
-  onPressToken?: (wallet: WalletModel, token: IToken) => void;
+  onPressToken?: (wallet: IWalletModel, token: IToken) => void;
 };
 
 export const TotalValueInfo = observer(

@@ -19,7 +19,7 @@ import {createTheme} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {EthereumSignInMessage} from '@app/helpers/ethereum-message-checker';
 import {I18N} from '@app/i18n';
-import {WalletModel} from '@app/models/wallet';
+import {IWalletModel} from '@app/models/wallet';
 import {JsonRpcMetadata, PartialJsonRpcRequest} from '@app/types';
 import {
   getHostnameFromUrl,
@@ -38,7 +38,7 @@ import {WalletRow, WalletRowTypes} from '../wallet-row';
 interface WalletConnectSignInfoProps {
   request: PartialJsonRpcRequest;
   metadata: JsonRpcMetadata;
-  wallet: WalletModel;
+  wallet: IWalletModel;
   phishingTxRequest: Transaction | null;
   messageIsHex: boolean;
   blindSignEnabled: boolean;

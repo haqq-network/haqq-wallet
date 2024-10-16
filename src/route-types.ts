@@ -7,7 +7,7 @@ import {TotalValueTabNames} from '@app/components/total-value-info';
 import {AwaitValue} from '@app/helpers/await-for-value';
 import {NftCollection, NftItem} from '@app/models/nft';
 import {ProviderModel} from '@app/models/provider';
-import {WalletModel} from '@app/models/wallet';
+import {IWalletModel} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {SssProviders} from '@app/services/provider-sss';
 import {
@@ -258,14 +258,14 @@ export enum BackupStackRoutes {
 
 export type BackupStackParamList = HomeStackParamList & {
   [BackupStackRoutes.BackupWarning]: {
-    wallet: WalletModel;
+    wallet: IWalletModel;
     pinEnabled?: boolean;
   };
   [BackupStackRoutes.BackupCreate]: {
-    wallet: WalletModel;
+    wallet: IWalletModel;
   };
   [BackupStackRoutes.BackupVerify]: {
-    wallet: WalletModel;
+    wallet: IWalletModel;
   };
   [BackupStackRoutes.BackupFinish]: undefined;
 };
@@ -397,11 +397,11 @@ export type HomeStackParamList = {
       };
   [HomeStackRoutes.AccountDetail]: {address: string};
   [HomeStackRoutes.Backup]: {
-    wallet: WalletModel;
+    wallet: IWalletModel;
     pinEnabled?: boolean;
   };
   [HomeStackRoutes.WalletProtectionPopup]: {
-    wallet: WalletModel;
+    wallet: IWalletModel;
     pinEnabled?: boolean;
   };
   [HomeStackRoutes.WalletConnectApplicationDetailsPopup]: {
@@ -427,7 +427,7 @@ export type HomeStackParamList = {
     accountId: string;
     pinEnabled?: boolean;
   };
-  [HomeStackRoutes.BackupNotification]: {wallet: WalletModel};
+  [HomeStackRoutes.BackupNotification]: {wallet: IWalletModel};
   [HomeStackRoutes.JsonRpcSign]: {
     request: PartialJsonRpcRequest;
     metadata: JsonRpcMetadata;
@@ -445,7 +445,7 @@ export type HomeStackParamList = {
   [HomeStackRoutes.PopupTrackActivity]: {bannerId: string};
   [HomeStackRoutes.Web3BrowserPopup]: {url: string; popup?: boolean};
   [HomeStackRoutes.WalletSelector]: Eventable & {
-    wallets: WalletModel[];
+    wallets: IWalletModel[];
     title: string;
     initialAddress?: string;
   };

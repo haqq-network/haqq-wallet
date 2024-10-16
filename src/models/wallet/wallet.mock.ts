@@ -4,9 +4,9 @@ import {DEBUG_VARS} from '@app/debug-vars';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {WalletCardStyle, WalletType} from '@app/types';
 
-import {WalletModel} from './wallet.types';
+import {IWalletModel} from './wallet.types';
 
-export const getMockWallets = (): WalletModel[] => {
+export const getMockWallets = (): IWalletModel[] => {
   return DEBUG_VARS.mockWalletsAddresses.map((address, index) => ({
     address: AddressUtils.toEth(address),
     cosmosAddress: AddressUtils.toHaqq(address),

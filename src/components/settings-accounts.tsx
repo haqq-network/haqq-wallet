@@ -7,11 +7,11 @@ import {NoTransactionsIcon, Text} from '@app/components/ui';
 import {WalletRow} from '@app/components/wallet-row';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {WalletModel} from '@app/models/wallet';
+import {IWalletModel} from '@app/models/wallet';
 
 type SettingsAccountsProps = {
   onPressRow: (address: string) => void;
-  rows: WalletModel[];
+  rows: IWalletModel[];
 };
 
 export const SettingsAccounts = ({onPressRow, rows}: SettingsAccountsProps) => {
@@ -35,7 +35,7 @@ export const SettingsAccounts = ({onPressRow, rows}: SettingsAccountsProps) => {
     <FlatList
       data={rows}
       renderItem={({item}) => <WalletRow item={item} onPress={onPressRow} />}
-      keyExtractor={(wallet: WalletModel) => wallet.address}
+      keyExtractor={(wallet: IWalletModel) => wallet.address}
       style={styles.container}
     />
   );

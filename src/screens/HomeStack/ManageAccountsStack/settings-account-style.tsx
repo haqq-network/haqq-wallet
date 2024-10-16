@@ -6,7 +6,7 @@ import {SettingsAccountStyle} from '@app/components/settings-account-style';
 import {CustomHeader} from '@app/components/ui';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {Wallet, WalletModel} from '@app/models/wallet';
+import {IWalletModel, Wallet} from '@app/models/wallet';
 import {
   ManageAccountsStackParamList,
   ManageAccountsStackRoutes,
@@ -21,7 +21,7 @@ export const SettingsAccountStyleScreen = observer(() => {
   >();
 
   // TODO Wallet can be null
-  const wallet = Wallet.getById(route.params.address) as WalletModel;
+  const wallet = Wallet.getById(route.params.address) as IWalletModel;
   const [pattern, setPattern] = useState<string>(wallet.pattern);
 
   const [cardStyle, setCardStyle] = useState<WalletCardStyle>(

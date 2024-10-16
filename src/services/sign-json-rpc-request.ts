@@ -7,7 +7,7 @@ import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {I18N, getText} from '@app/i18n';
 import {EstimationVariant} from '@app/models/fee';
 import {Provider} from '@app/models/provider';
-import {Wallet, WalletModel} from '@app/models/wallet';
+import {IWalletModel, Wallet} from '@app/models/wallet';
 import {getDefaultNetwork} from '@app/network';
 import {Cosmos} from '@app/services/cosmos';
 import {PartialJsonRpcRequest, WalletType} from '@app/types';
@@ -85,7 +85,7 @@ export class SignJsonRpcRequest {
    * ]
    */
   public static async signEIP155Request(
-    wallet: WalletModel | string,
+    wallet: IWalletModel | string,
     request: PartialJsonRpcRequest,
     chainId?: number,
   ) {

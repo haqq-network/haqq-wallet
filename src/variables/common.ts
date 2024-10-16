@@ -178,6 +178,9 @@ export const DEFAULT_USERNAME = 'username';
 export const ETH_HD_SHORT_PATH = "44'/60'/0'/0"; // HD derivation path
 export const LEDGER_HD_PATH_TEMPLATE = "44'/60'/index'/0/0"; // HD derivation path
 export const ETH_HD_PATH = `${ETH_HD_SHORT_PATH}/0`; // HD derivation path
+export const TRON_HD_PATH = "44'/195'/0'/0/index"; // HD derivation path
+export const TRON_COIN_TYPE = "195'";
+export const ETH_COIN_TYPE = "60'";
 
 export const DEFAULT_PROVIDERS =
   DefaultProvidersJson as unknown as NetworkProviderResponse;

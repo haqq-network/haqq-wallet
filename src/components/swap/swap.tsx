@@ -13,7 +13,7 @@ import {I18N} from '@app/i18n';
 import {Currencies} from '@app/models/currencies';
 import {Provider} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
-import {WalletModel} from '@app/models/wallet';
+import {IWalletModel} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {
   SushiPoolEstimateResponse,
@@ -60,7 +60,7 @@ export type PoolsData = Omit<SushiPoolResponse, 'contracts'> & {
 };
 
 export interface SwapProps {
-  currentWallet: WalletModel;
+  currentWallet: IWalletModel;
   poolData: PoolsData;
   estimateData: Partial<SushiPoolEstimateResponse>;
   tokenIn: IToken;

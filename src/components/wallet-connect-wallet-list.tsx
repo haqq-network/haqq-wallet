@@ -3,10 +3,10 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 
 import {WalletRow} from '@app/components/wallet-row';
-import {WalletModel} from '@app/models/wallet';
+import {IWalletModel} from '@app/models/wallet';
 
 interface WalletConnectWalletListProps {
-  wallets: WalletModel[];
+  wallets: IWalletModel[];
 
   handleWalletPress(address: string): void;
 }

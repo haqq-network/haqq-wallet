@@ -9,7 +9,7 @@ import {showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useWallet} from '@app/hooks/use-wallet';
 import {Token} from '@app/models/tokens';
-import {Wallet, WalletModel} from '@app/models/wallet';
+import {IWalletModel, Wallet} from '@app/models/wallet';
 import {
   HomeStackParamList,
   HomeStackRoutes,
@@ -56,7 +56,7 @@ export const AccountInfoScreen = observer(() => {
   );
 
   const onPressToken = useCallback(
-    (w: WalletModel, token: IToken) => {
+    (w: IWalletModel, token: IToken) => {
       navigation.navigate(HomeStackRoutes.Transaction, {
         // @ts-ignore
         screen: TransactionStackRoutes.TransactionAddress,

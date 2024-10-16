@@ -20,7 +20,7 @@ import {
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
-import {Wallet, WalletModel} from '@app/models/wallet';
+import {IWalletModel, Wallet} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {ModalType, Modals} from '@app/types';
 import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
@@ -33,7 +33,7 @@ export const DetailsQrModal = observer(
   ({address, onClose}: Modals[ModalType.cardDetailsQr]) => {
     const svg = useRef();
     // TODO wallet can be null
-    const wallet = Wallet.getById(address) as WalletModel;
+    const wallet = Wallet.getById(address) as IWalletModel;
     const {width} = useWindowDimensions();
 
     const onCopy = () => {
