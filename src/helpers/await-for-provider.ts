@@ -8,8 +8,8 @@ import {getWindowHeight} from './scaling-utils';
 export interface AwaitProviderParams {
   title: I18N;
   providers?: ProviderModel[];
-  initialProviderChainId: number;
-  desableAllNetworksOption?: boolean;
+  initialProviderChainId?: number;
+  disableAllNetworksOption?: boolean;
 }
 
 export class AwaitProviderError {
@@ -24,7 +24,7 @@ export async function awaitForProvider({
   title,
   providers,
   initialProviderChainId,
-  desableAllNetworksOption,
+  disableAllNetworksOption,
 }: AwaitProviderParams): Promise<string> {
   return new Promise((resolve, reject) => {
     const removeAllListeners = () => {
@@ -49,7 +49,7 @@ export async function awaitForProvider({
       title,
       closeDistance: () => getWindowHeight() / 6,
       initialProviderChainId,
-      desableAllNetworksOption,
+      disableAllNetworksOption,
       providers,
     });
   });
