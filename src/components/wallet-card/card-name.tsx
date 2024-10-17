@@ -21,7 +21,7 @@ export const CardName = observer(
   ({wallet, onAccountInfo, testID}: CardNameProps) => {
     const formattedAddress = useMemo(
       () => shortAddress(wallet?.providerSpecificAddress ?? '', '•'),
-      [wallet?.address],
+      [wallet?.providerSpecificAddress],
     );
 
     return (

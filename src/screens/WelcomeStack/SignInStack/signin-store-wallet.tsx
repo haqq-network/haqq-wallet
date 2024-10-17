@@ -3,6 +3,7 @@ import {useEffect} from 'react';
 import {
   ProviderHotBase,
   ProviderMnemonicBase,
+  ProviderMnemonicTron,
   ProviderSSSBase,
 } from '@haqq/rn-wallet-providers';
 import {observer} from 'mobx-react';
@@ -22,7 +23,7 @@ import {
   WelcomeStackRoutes,
 } from '@app/route-types';
 import {RemoteConfig} from '@app/services/remote-config';
-import {ModalType, WalletType} from '@app/types';
+import {AddressTron, ModalType, WalletType} from '@app/types';
 
 export const SignInStoreWalletScreen = observer(() => {
   const navigation = useTypedNavigation<SignInStackParamList>();
@@ -69,6 +70,7 @@ export const SignInStoreWalletScreen = observer(() => {
 
             const {address} = await provider.getAccountInfo('');
 
+            // FIXME: Implement tronAddress when ProviderHotTron will be implemented
             await Wallet.create(name, {
               path: '',
               address: AddressUtils.toEth(address),
@@ -82,12 +84,26 @@ export const SignInStoreWalletScreen = observer(() => {
               getPassword,
               {},
             );
+            const tronProvider = await ProviderMnemonicTron.initialize(
+              params.mnemonic.value,
+              getPassword,
+              {},
+            );
+            Wallet.getAll().forEach(async wallet => {
+              const {address: tronAddress} = await tronProvider.getAccountInfo(
+                wallet.path!,
+              );
+              Wallet.update(wallet.address, {
+                tronAddress: tronAddress as AddressTron,
+              });
+            });
 
             await mnemonicProvider.setMnemonicSaved();
 
             // Wallets were created on previous step
             break;
           case 'sss':
+            // FIXME: Implement tronAddress when ProviderSssTron will be implemented
             //@ts-ignore
             const storage = await getProviderStorage('', params.provider);
             const password = await getPassword();

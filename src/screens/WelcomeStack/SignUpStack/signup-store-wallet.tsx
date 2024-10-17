@@ -1,6 +1,10 @@
 import {useCallback, useEffect} from 'react';
 
-import {ProviderSSSBase, ProviderSSSEvm} from '@haqq/rn-wallet-providers';
+import {
+  ProviderMnemonicTron,
+  ProviderSSSBase,
+  ProviderSSSEvm,
+} from '@haqq/rn-wallet-providers';
 import {observer} from 'mobx-react';
 
 import {app} from '@app/contexts';
@@ -17,7 +21,7 @@ import {
   WelcomeStackRoutes,
 } from '@app/route-types';
 import {SssProviders} from '@app/services/provider-sss';
-import {ModalType, WalletType} from '@app/types';
+import {AddressTron, ModalType, WalletType} from '@app/types';
 import {ETH_HD_SHORT_PATH} from '@app/variables/common';
 
 export const SignUpStoreWalletScreen = observer(() => {
@@ -124,10 +128,20 @@ export const SignUpStoreWalletScreen = observer(() => {
 
         try {
           const {address} = await provider.getAccountInfo(hdPath);
+          const mnemonic = await provider.getMnemonicPhrase();
+          const tronProvider = await ProviderMnemonicTron.initialize(
+            mnemonic,
+            app.getPassword.bind(app),
+            {},
+          );
+          const {address: tronAddress} = await tronProvider.getAccountInfo(
+            hdPath,
+          );
           const type = getWalletType();
 
           await Wallet.create(name, {
             address: AddressUtils.toEth(address),
+            tronAddress: tronAddress as AddressTron,
             accountId: provider.getIdentifier(),
             path: hdPath,
             type,

@@ -1,6 +1,7 @@
 import {
   AddressCosmosHaqq,
   AddressEthereum,
+  AddressTron,
   WalletCardStyle,
   WalletType,
 } from '@app/types';
@@ -9,6 +10,7 @@ import {BalanceModel} from './balance.model';
 
 export interface IWalletModel {
   address: AddressEthereum;
+  tronAddress?: AddressTron;
   name: string;
   data: string;
   mnemonicSaved: boolean;

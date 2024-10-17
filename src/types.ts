@@ -787,6 +787,7 @@ export enum AppTheme {
 
 export type AddWalletParams = {
   address: AddressEthereum;
+  tronAddress?: AddressTron;
   accountId: string;
   path: string;
   type: WalletType;

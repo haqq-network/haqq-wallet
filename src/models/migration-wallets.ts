@@ -1,13 +1,17 @@
 import {decrypt} from '@haqq/encryption-react-native';
-import {ProviderHotBase, ProviderMnemonicBase} from '@haqq/rn-wallet-providers';
+import {
+  ProviderMnemonicBase,
+  ProviderMnemonicTron,
+} from '@haqq/rn-wallet-providers';
 
-import {Wallet} from './wallet';
+import {Wallet, WalletModel} from './wallet';
 
 import {app} from '../contexts';
-import {WalletType} from '../types';
+import {AddressTron, WalletType} from '../types';
 
+const NEW_WALLET_VERSION = 3;
 const getWalletForMigration = () =>
-  Wallet.getAll().filter(w => w.version === 1 && w.data);
+  Wallet.getAll().filter(w => w.version < NEW_WALLET_VERSION);
 
 export async function migrationWallets() {
   try {
@@ -18,58 +22,18 @@ export async function migrationWallets() {
     }
 
     const getPassword = app.getPassword.bind(app);
-    const password = await getPassword();
 
     for (const wallet of wallets) {
       if (wallet.type === WalletType.hot) {
-        const {privateKey} = await decrypt<{privateKey: string}>(
-          password,
-          wallet.data,
-        );
-
-        const provider = await ProviderHotBase.initialize(
-          privateKey,
-          getPassword,
-          {},
-        );
-
-        Wallet.update(wallet.address, {
-          data: '',
-          version: 2,
-          accountId: provider.getIdentifier(),
-        });
+        _migrateHotWallet(wallet, getPassword);
       }
 
       if (wallet.type === WalletType.mnemonic) {
-        const {mnemonic} = await decrypt<{
-          mnemonic: {phrase: string} | string;
-        }>(password, wallet.data);
+        _migrateMnemonicWallet(wallet, getPassword);
+      }
 
-        const m = typeof mnemonic === 'string' ? mnemonic : mnemonic.phrase;
-
-        const provider = await ProviderMnemonicBase.initialize(
-          m,
-          getPassword,
-          {},
-        );
-
-        if (wallet.mnemonicSaved) {
-          await provider.setMnemonicSaved();
-        }
-
-        const rootAddress = wallets.filter(
-          w =>
-            w.rootAddress === wallet.rootAddress &&
-            w.type === WalletType.mnemonic,
-        );
-
-        for (const w of rootAddress) {
-          Wallet.update(w.address, {
-            data: '',
-            version: 2,
-            accountId: provider.getIdentifier(),
-          });
-        }
+      if (wallet.type === WalletType.sss) {
+        _migrateSssWallet(wallet, getPassword);
       }
     }
   } catch (err) {
@@ -79,3 +43,86 @@ export async function migrationWallets() {
     Logger.captureException(err, 'migrationWallets');
   }
 }
+
+const _migrateHotWallet = async (
+  wallet: WalletModel,
+  getPassword: () => Promise<string>,
+): Promise<void> => {
+  if (wallet.data) {
+    const password = await getPassword();
+    const {mnemonic} = await decrypt<{
+      mnemonic: {phrase: string} | string;
+    }>(password, wallet.data);
+
+    const m = typeof mnemonic === 'string' ? mnemonic : mnemonic.phrase;
+    const tronProvider = await ProviderMnemonicTron.initialize(
+      m,
+      getPassword,
+      {},
+    );
+    const {address} = await tronProvider.getAccountInfo(wallet.path!);
+
+    Wallet.update(wallet.address, {
+      data: '',
+      version: NEW_WALLET_VERSION,
+      tronAddress: address as AddressTron,
+    });
+  }
+};
+
+const _migrateMnemonicWallet = async (
+  wallet: WalletModel,
+  getPassword: () => Promise<string>,
+) => {
+  if (wallet.data) {
+    const password = await getPassword();
+    const {mnemonic} = await decrypt<{
+      mnemonic: {phrase: string} | string;
+    }>(password, wallet.data);
+
+    const m = typeof mnemonic === 'string' ? mnemonic : mnemonic.phrase;
+    const provider = await ProviderMnemonicBase.initialize(m, getPassword, {});
+    const tronProvider = await ProviderMnemonicTron.initialize(
+      m,
+      getPassword,
+      {},
+    );
+    const {address} = await tronProvider.getAccountInfo(wallet.path!);
+
+    if (wallet.mnemonicSaved) {
+      await provider.setMnemonicSaved();
+    }
+
+    Wallet.update(wallet.address, {
+      data: '',
+      version: NEW_WALLET_VERSION,
+      tronAddress: address as AddressTron,
+    });
+  }
+};
+
+const _migrateSssWallet = async (
+  wallet: WalletModel,
+  getPassword: () => Promise<string>,
+) => {
+  if (wallet.data) {
+    const password = await getPassword();
+    const {mnemonic} = await decrypt<{
+      mnemonic: {phrase: string} | string;
+    }>(password, wallet.data);
+
+    const m = typeof mnemonic === 'string' ? mnemonic : mnemonic.phrase;
+    const tronProvider = await ProviderMnemonicTron.initialize(
+      m,
+      getPassword,
+      {},
+    );
+    const {address} = await tronProvider.getAccountInfo(wallet.path!);
+
+    Wallet.update(wallet.address, {
+      data: '',
+      version: NEW_WALLET_VERSION,
+      tronAddress: address as AddressTron,
+    });
+  }
+};
