@@ -32,7 +32,7 @@ import {I18N, getText} from '@app/i18n';
 import {Currencies} from '@app/models/currencies';
 import {Provider} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
-import {IWalletModel, Wallet} from '@app/models/wallet';
+import {Wallet, WalletModel} from '@app/models/wallet';
 import {SwapStackParamList, SwapStackRoutes} from '@app/route-types';
 import {Balance} from '@app/services/balance';
 import {EventTracker} from '@app/services/event-tracker';
@@ -560,12 +560,12 @@ export const SwapScreen = observer(() => {
               title: currentWallet.name,
               subtitle: currentWallet.address,
             },
-          ] as AwaitValue<{wallet: IWalletModel; tokens: IToken[]}>[],
+          ] as AwaitValue<{wallet: WalletModel; tokens: IToken[]}>[],
           closeOnSelect: true,
           renderCell: (
             // eslint-disable-next-line @typescript-eslint/no-shadow
             value: AwaitValue<{
-              wallet: IWalletModel;
+              wallet: WalletModel;
               tokens: (IToken & {tag: string})[];
             }>,
             _,

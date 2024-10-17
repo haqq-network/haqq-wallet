@@ -9,7 +9,7 @@ import {
 
 import {Card, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {BalanceModel, IWalletModel} from '@app/models/wallet';
+import {BalanceModel, WalletModel} from '@app/models/wallet';
 import {SHADOW_L} from '@app/variables/shadows';
 
 import {BalanceInfoDetails} from './balance-info-details';
@@ -20,14 +20,14 @@ import {ProtectionBadge} from './protection-badge';
 
 export type BalanceProps = {
   testID?: string;
-  wallet: IWalletModel;
+  wallet: WalletModel;
   balance?: BalanceModel;
   showLockedTokens: boolean;
   walletConnectSessions: SessionTypes.Struct[];
   onPressAccountInfo: (address: string) => void;
   onPressSend: (address: string) => void;
   onPressQR: (address: string) => void;
-  onPressProtection: (wallet: IWalletModel) => void;
+  onPressProtection: (wallet: WalletModel) => void;
   onPressWalletConnect?: (address: string) => void;
   isSecondMnemonic: boolean;
 };

@@ -16,18 +16,18 @@ import {Plus} from '@app/components/wallets/plus';
 import {createTheme} from '@app/helpers';
 import {useWalletConnectSessions} from '@app/hooks/use-wallet-connect-sessions';
 import {VariablesString} from '@app/models/variables-string';
-import {IWalletModel, Wallet, WalletBalance} from '@app/models/wallet';
+import {Wallet, WalletBalance, WalletModel} from '@app/models/wallet';
 import {WalletType} from '@app/types';
 import {filterWalletConnectSessionsByAddress} from '@app/utils';
 
 export type WalletsProps = {
-  wallets: IWalletModel[];
+  wallets: WalletModel[];
   balance: WalletBalance;
   showLockedTokens: boolean;
   onPressSend: (address: string) => void;
   onPressQR: (address: string) => void;
   onPressWalletConnect: (address: string) => void;
-  onPressProtection: (wallet: IWalletModel) => void;
+  onPressProtection: (wallet: WalletModel) => void;
   onPressCreate: () => void;
   onPressHardwareWallet: () => void;
   onPressRestore: () => void;

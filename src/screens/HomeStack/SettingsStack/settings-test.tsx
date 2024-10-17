@@ -126,6 +126,7 @@ const getTestModals = (): TestModals => {
     cardDetailsQr: null,
     walletsBottomSheet: null,
     providersBottomSheet: null,
+    copyAddressBottomSheet: null,
     // Other modals props.
     noInternet: {showClose: true},
     loading: {

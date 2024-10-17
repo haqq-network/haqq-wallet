@@ -1,5 +1,6 @@
 import {makeAutoObservable} from 'mobx';
 
+import {AddressUtils} from '@app/helpers/address-utils';
 import {WalletType} from '@app/types';
 import {ETH_COIN_TYPE, TRON_COIN_TYPE} from '@app/variables/common';
 
@@ -30,7 +31,22 @@ export class WalletModel implements IWalletModel {
   }
 
   get address() {
-    return this.model.address;
+    return AddressUtils.toEth(this.model.address);
+  }
+
+  get cosmosAddress() {
+    return AddressUtils.toHaqq(this.model.cosmosAddress);
+  }
+
+  get tronAddress() {
+    return AddressUtils.toTron(this.model.address);
+  }
+
+  get providerSpecificAddress() {
+    if (Provider.selectedProvider.isTron) {
+      return this.tronAddress;
+    }
+    return this.address;
   }
 
   get name() {
@@ -116,10 +132,6 @@ export class WalletModel implements IWalletModel {
 
   get accountId() {
     return this.model.accountId;
-  }
-
-  get cosmosAddress() {
-    return this.model.cosmosAddress;
   }
 
   get position() {
