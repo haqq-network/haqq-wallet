@@ -1,3 +1,9 @@
+# if devpkg is enabled, throw error and exit with code 1
+if [ -f .devpkg.json ] && [ "$(jq -r '.enabled' .devpkg.json)" = "true" ]; then
+  echo "\033[31mError: DevPkg is enabled. Please disable .devpkg.json to proceed with commit.\033[0m" >&2
+  exit 1
+fi
+
 #!/bin/sh
 npx patch-package --error-on-fail
 
