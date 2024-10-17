@@ -2,6 +2,7 @@ import {app} from '@app/contexts';
 import {showModal} from '@app/helpers/modal';
 import {I18N} from '@app/i18n';
 import {ProviderModel} from '@app/models/provider';
+import {ModalType} from '@app/types';
 
 import {getWindowHeight} from './scaling-utils';
 
@@ -45,7 +46,7 @@ export async function awaitForProvider({
     app.addListener('provider-selected', onAction);
     app.addListener('provider-selected-reject', onReject);
 
-    return showModal('providersBottomSheet', {
+    return showModal(ModalType.providersBottomSheet, {
       title,
       closeDistance: () => getWindowHeight() / 6,
       initialProviderChainId,

@@ -41,6 +41,7 @@ import {
   Spacer,
   SwiperIcon,
   Text,
+  TextVariant,
 } from '@app/components/ui';
 import {createTheme, getWindowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
@@ -278,13 +279,21 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
                       {!!renderTitle && renderTitle?.()}
                       {!!i18nTitle && (
                         <>
-                          <Text t6 color={Color.textBase1} i18n={i18nTitle} />
+                          <Text
+                            variant={TextVariant.t6}
+                            color={Color.textBase1}
+                            i18n={i18nTitle}
+                          />
                           <Spacer />
                         </>
                       )}
                       {!!title && (
                         <>
-                          <Text t6 color={Color.textBase1} children={title} />
+                          <Text
+                            variant={TextVariant.t6}
+                            color={Color.textBase1}>
+                            {title}
+                          </Text>
                           <Spacer />
                         </>
                       )}

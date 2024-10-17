@@ -769,6 +769,7 @@ export type SignInStackParamList = WelcomeStackParamList & {
     | (WalletInitialData & {
         provider: ProviderMnemonicBase;
         nextScreen?: SignInStackRoutes;
+        mnemonic: SecureValue<string>;
       })
     | {
         provider: ProviderSSSBase;

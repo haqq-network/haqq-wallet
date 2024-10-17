@@ -17,7 +17,7 @@ import {CopyMenu} from '@app/components/ui/copy-menu';
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
-import {IWalletModel} from '@app/models/wallet';
+import {WalletModel} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 
 import {StackedVestedTokens} from '../stacked-vested-tokens';
@@ -26,7 +26,7 @@ const CARD_WIDTH = 78;
 const CARD_RADIUS = 8;
 
 export type AccountInfoProps = {
-  wallet: IWalletModel;
+  wallet: WalletModel;
   available: Balance;
   locked: Balance;
   staked: Balance;
@@ -71,10 +71,7 @@ export const AccountInfoHeader = ({
             variant={TextVariant.t3}
             children={total.toFiat({useDefaultCurrency: true})}
           />
-          <CopyMenu
-            value={wallet.address}
-            style={styles.copyButton}
-            withSettings>
+          <CopyMenu wallet={wallet} style={styles.copyButton} withSettings>
             <Text variant={TextVariant.t14} color={Color.textBase2}>
               {formattedAddress}
             </Text>

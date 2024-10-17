@@ -32,7 +32,7 @@ import {I18N} from '@app/i18n';
 import {Banner} from '@app/models/banner';
 import {NftCollection, NftItem} from '@app/models/nft';
 import {ProviderModel} from '@app/models/provider';
-import {BalanceModel, IWalletModel} from '@app/models/wallet';
+import {BalanceModel, IWalletModel, WalletModel} from '@app/models/wallet';
 import {SignUpStackRoutes, WelcomeStackRoutes} from '@app/route-types';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
@@ -787,6 +787,7 @@ export enum AppTheme {
 
 export type AddWalletParams = {
   address: AddressEthereum;
+  tronAddress?: AddressTron;
   accountId: string;
   path: string;
   type: WalletType;
@@ -1116,6 +1117,12 @@ export type Modals = {
     closeDistance?: () => number;
     eventSuffix?: string;
   };
+  copyAddressBottomSheet: {
+    wallet: WalletModel;
+    eventSuffix?: string;
+    onClose?: () => void;
+    closeDistance?: () => number;
+  };
   captcha: {
     onClose?: () => void;
     variant?: CaptchaType;
@@ -1184,6 +1191,7 @@ export enum ModalType {
   transactionError = 'transactionError',
   locationUnauthorized = 'locationUnauthorized',
   providersBottomSheet = 'providersBottomSheet',
+  copyAddressBottomSheet = 'copyAddressBottomSheet',
   captcha = 'captcha',
   domainBlocked = 'domainBlocked',
   raffleAgreement = 'raffleAgreement',

@@ -327,6 +327,7 @@ class WalletStore implements RPCObserver {
       data: '',
       subscription: existingWallet?.subscription ?? null,
       address: walletParams.address.toLowerCase() as AddressEthereum,
+      tronAddress: walletParams.tronAddress || existingWallet?.tronAddress,
       mnemonicSaved: walletParams.mnemonicSaved || false,
       socialLinkEnabled: walletParams.socialLinkEnabled || false,
       name: existingWallet?.name ?? name,
@@ -338,7 +339,7 @@ class WalletStore implements RPCObserver {
       type: walletParams.type,
       path: walletParams.path,
       accountId: walletParams.accountId,
-      version: 2,
+      version: 3,
       isHidden: existingWallet?.isHidden ?? false,
       isMain: existingWallet?.isMain ?? false,
       cosmosAddress: AddressUtils.toHaqq(walletParams.address),
@@ -402,7 +403,10 @@ class WalletStore implements RPCObserver {
   }
 
   getAllVisible() {
-    return this.wallets.filter(w => !w.isHidden);
+    const visibleWallets = Provider.selectedProvider.isTron
+      ? this.wallets.filter(w => w.tronAddress)
+      : this.wallets;
+    return visibleWallets.filter(w => !w.isHidden);
   }
 
   getForAccount(accountId: string) {

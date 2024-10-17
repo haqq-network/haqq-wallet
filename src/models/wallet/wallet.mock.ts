@@ -10,6 +10,7 @@ export const getMockWallets = (): IWalletModel[] => {
   return DEBUG_VARS.mockWalletsAddresses.map((address, index) => ({
     address: AddressUtils.toEth(address),
     cosmosAddress: AddressUtils.toHaqq(address),
+    tronAddress: AddressUtils.toTron(address),
     accountId: makeID(6),
     data: '',
     mnemonicSaved: false,

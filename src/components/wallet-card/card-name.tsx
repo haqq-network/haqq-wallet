@@ -9,10 +9,10 @@ import {CopyMenu} from '@app/components/ui/copy-menu';
 import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
-import {IWalletModel, Wallet} from '@app/models/wallet';
+import {Wallet, WalletModel} from '@app/models/wallet';
 
 type CardNameProps = {
-  wallet: IWalletModel;
+  wallet: WalletModel;
   onAccountInfo: () => void;
   testID?: string;
 };
@@ -20,8 +20,8 @@ type CardNameProps = {
 export const CardName = observer(
   ({wallet, onAccountInfo, testID}: CardNameProps) => {
     const formattedAddress = useMemo(
-      () => shortAddress(wallet?.address ?? '', '•'),
-      [wallet?.address],
+      () => shortAddress(wallet?.providerSpecificAddress ?? '', '•'),
+      [wallet?.providerSpecificAddress],
     );
 
     return (
@@ -44,7 +44,7 @@ export const CardName = observer(
           </Text>
         )}
         <Spacer flex={1} />
-        <CopyMenu style={styles.copyIcon} value={wallet.address} withSettings>
+        <CopyMenu style={styles.copyIcon} wallet={wallet} withSettings>
           <Text
             variant={TextVariant.t14}
             color={Color.textBase3}
