@@ -4,7 +4,6 @@ import {StyleSheet, View, useWindowDimensions} from 'react-native';
 
 import {
   ClaimOnMainNet,
-  DetailsQrModal,
   ErrorAccountAdded,
   ErrorCreateAccount,
   ErrorModal,
@@ -115,8 +114,6 @@ export const ModalWrapper = ({
         return <KeystoneScannerModal {...modal} onClose={onCloseModalPress} />;
       case ModalType.keystoneQR:
         return <KeystoneQRModal {...modal} onClose={onCloseModalPress} />;
-      case ModalType.cardDetailsQr:
-        return <DetailsQrModal {...modal} onClose={onCloseModalPress} />;
       case ModalType.error:
         return <ErrorModal {...modal} onClose={onCloseModalPress} />;
       case ModalType.claimOnMainnet:

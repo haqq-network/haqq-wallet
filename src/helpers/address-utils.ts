@@ -14,7 +14,7 @@ import {Whitelist} from './whitelist';
 
 export const HAQQ_VALIDATOR_PREFIX = 'haqqvaloper';
 export class AddressUtils {
-  static toTron(address: string): AddressTron {
+  static toTron(address?: string): AddressTron {
     if (!address) {
       return '' as AddressTron;
     }
@@ -84,7 +84,7 @@ export class AddressUtils {
     }
   }
 
-  static isTronAddress(address: string): address is AddressTron {
+  static isTronAddress(address?: string): address is AddressTron {
     if (!address) {
       return false;
     }

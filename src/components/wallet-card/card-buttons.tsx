@@ -6,26 +6,26 @@ import {Color} from '@app/colors';
 import {BlurView, Icon, IconButton, IconsName, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {IWalletModel} from '@app/models/wallet';
+import {WalletModel} from '@app/models/wallet';
 import {IS_IOS, SYSTEM_BLUR_2} from '@app/variables/common';
 
 type CardButtonsProps = {
-  wallet: IWalletModel;
+  wallet: WalletModel;
   cardState: string;
   testID?: string;
   onPressSend: (address: string) => void;
-  onPressQR: (address: string) => void;
+  onPressReceive: (address: string) => void;
 };
 
 export const CardButtons = ({
   wallet,
   cardState,
   testID,
-  onPressQR,
+  onPressReceive,
   onPressSend,
 }: CardButtonsProps) => {
-  const onQr = () => {
-    onPressQR(wallet.address);
+  const onReceive = () => {
+    onPressReceive(wallet.address);
   };
 
   const onSend = () => {
@@ -48,7 +48,7 @@ export const CardButtons = ({
         {IS_IOS && <BlurView action="receive" cardState={cardState} />}
         <IconButton
           style={styles.spacer}
-          onPress={onQr}
+          onPress={onReceive}
           testID={`${testID}_receive`}>
           <Icon i24 name={IconsName.arrow_receive} color={Color.graphicBase3} />
           <Text color={Color.textBase3} i18n={I18N.modalDetailsQRReceive} />

@@ -26,7 +26,7 @@ export type BalanceProps = {
   walletConnectSessions: SessionTypes.Struct[];
   onPressAccountInfo: (address: string) => void;
   onPressSend: (address: string) => void;
-  onPressQR: (address: string) => void;
+  onPressReceive: (address: string) => void;
   onPressProtection: (wallet: WalletModel) => void;
   onPressWalletConnect?: (address: string) => void;
   isSecondMnemonic: boolean;
@@ -38,7 +38,7 @@ export const WalletCard = ({
   walletConnectSessions,
   showLockedTokens,
   onPressSend,
-  onPressQR,
+  onPressReceive,
   onPressWalletConnect,
   onPressProtection,
   onPressAccountInfo,
@@ -90,7 +90,7 @@ export const WalletCard = ({
         testID={testID}
         wallet={wallet}
         cardState={cardState}
-        onPressQR={onPressQR}
+        onPressReceive={onPressReceive}
         onPressSend={onPressSend}
       />
     </Card>
