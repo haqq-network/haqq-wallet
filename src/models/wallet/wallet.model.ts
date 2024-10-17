@@ -39,7 +39,7 @@ export class WalletModel implements IWalletModel {
   }
 
   get tronAddress() {
-    return AddressUtils.toTron(this.model.address);
+    return AddressUtils.toTron(this.model.tronAddress);
   }
 
   get providerSpecificAddress() {
