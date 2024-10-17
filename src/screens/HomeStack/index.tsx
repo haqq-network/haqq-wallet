@@ -109,7 +109,7 @@ const HomeStack = memo(() => {
       />
 
       <Stack.Screen
-        name={HomeStackRoutes.AccountDetail}
+        name={HomeStackRoutes.Receive}
         component={themeUpdaterHOC(AccountDetailScreen)}
         options={fullScreenModalOptions}
       />

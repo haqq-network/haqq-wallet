@@ -9,10 +9,7 @@ import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 
 export const AccountDetailScreen = observer(() => {
   const navigation = useTypedNavigation<HomeStackParamList>();
-  const route = useTypedRoute<
-    HomeStackParamList,
-    HomeStackRoutes.AccountDetail
-  >();
+  const route = useTypedRoute<HomeStackParamList, HomeStackRoutes.Receive>();
 
   const wallet = Wallet.getById(route.params.address);
 

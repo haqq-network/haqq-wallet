@@ -348,7 +348,7 @@ export enum HomeStackRoutes {
   AccountInfo = 'accountInfo',
   Transaction = 'transaction',
   Nft = 'Nft',
-  AccountDetail = 'accountDetail',
+  Receive = 'receive',
   Backup = 'backup',
   WalletProtectionPopup = 'walletProtectionPopup',
   WalletConnectApplicationDetailsPopup = 'walletConnectApplicationDetailsPopup',
@@ -395,7 +395,7 @@ export type HomeStackParamList = {
         initScreen: NftStackRoutes.NftCollectionDetails;
         item: NftCollection;
       };
-  [HomeStackRoutes.AccountDetail]: {address: string};
+  [HomeStackRoutes.Receive]: {address: string};
   [HomeStackRoutes.Backup]: {
     wallet: IWalletModel;
     pinEnabled?: boolean;

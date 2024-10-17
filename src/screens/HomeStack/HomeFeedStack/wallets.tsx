@@ -30,7 +30,7 @@ export const WalletsWrapper = observer(() => {
 
   const onPressQR = useCallback(
     (address: string) => {
-      navigation.navigate(HomeStackRoutes.AccountDetail, {address});
+      navigation.navigate(HomeStackRoutes.Receive, {address});
     },
     [navigation],
   );
