@@ -31,7 +31,7 @@ export const AccountInfoScreen = observer(() => {
     useMemo(() => balances[wallet?.address!], [balances, wallet]);
 
   const onReceive = useCallback(() => {
-    showModal(ModalType.cardDetailsQr, {address: route.params.accountId});
+    // showModal(ModalType.cardDetailsQr, {address: route.params.accountId});
   }, [route.params.accountId]);
 
   const onSend = useCallback(() => {
