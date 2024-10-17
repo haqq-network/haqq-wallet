@@ -1,0 +1,9 @@
+{
+  "enabled": false,
+  "packages": {
+    "@haqq/rn-wallet-providers": {
+      "path": "../haqq-rn-wallet-providers",
+      "useDevEntryPoint": true
+    }
+  }
+}

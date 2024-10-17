@@ -3,6 +3,9 @@ const path = require('path');
 const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
 const blacklist = require('metro-config/src/defaults/exclusionList');
 
+// used for local development
+const devpkg = require('./.devpkg.js');
+
 const defaultModuleResolver =
   getDefaultConfig(__dirname).resolver.resolveRequest;
 
@@ -20,18 +23,26 @@ const config = {
     // plugins: ['@babel/plugin-proposal-numeric-separator'],
   },
   resolver: {
-    extraNodeModules: require('node-libs-react-native'),
+    extraNodeModules: {
+      ...require('node-libs-react-native'),
+      ...devpkg.extraNodeModules,
+    },
     blacklistRE: blacklist([
       /ios\/build\/SourcePackages\/checkouts\/grpc-ios\/native_src\/.*/,
     ]),
     nodeModulesPaths: [
-      // process.env.PROVIDER_BASE_PACKAGE,
-      // process.env.PROVIDER_HOT_PACKAGE,
-      // process.env.ENCRYPTION_RN_PACKAGE,
-      // process.env.PROVIDER_WEB3_UTILS,
-      // process.env.PROVIDER_LEDGER_RN_PACKAGE,
+     ...devpkg.nodeModulesPaths,
     ].filter(Boolean),
     resolveRequest: (context, moduleName, platform) => {
+      try {
+       if(devpkg.extraNodeModules[moduleName]) {
+        return {
+          filePath: devpkg.extraNodeModules[moduleName],
+          type: 'sourceFile',
+        };
+       }
+      } catch (error) {}
+
       try {
         return context.resolveRequest(context, moduleName, platform);
       } catch (error) {
@@ -84,11 +95,7 @@ const config = {
     },
   },
   watchFolders: [
-    // process.env.PROVIDER_BASE_PACKAGE,
-    // process.env.PROVIDER_HOT_PACKAGE,
-    // process.env.ENCRYPTION_RN_PACKAGE,
-    // process.env.PROVIDER_WEB3_UTILS,
-    // process.env.PROVIDER_LEDGER_RN_PACKAGE,
+    ...devpkg.watchFolders,
   ].filter(Boolean),
   watcher: {
     healthCheck: {
