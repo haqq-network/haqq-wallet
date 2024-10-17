@@ -25,7 +25,7 @@ export type WalletsProps = {
   balance: WalletBalance;
   showLockedTokens: boolean;
   onPressSend: (address: string) => void;
-  onPressQR: (address: string) => void;
+  onPressReceive: (address: string) => void;
   onPressWalletConnect: (address: string) => void;
   onPressProtection: (wallet: WalletModel) => void;
   onPressCreate: () => void;
@@ -40,7 +40,7 @@ export const Wallets = ({
   wallets,
   showLockedTokens,
   onPressSend,
-  onPressQR,
+  onPressReceive,
   onPressCreate,
   onPressHardwareWallet,
   onPressProtection,
@@ -150,7 +150,7 @@ export const Wallets = ({
                 walletConnectSessions={walletConnectSessions[i]}
                 showLockedTokens={showLockedTokens}
                 onPressSend={onPressSend}
-                onPressQR={onPressQR}
+                onPressReceive={onPressReceive}
                 onPressProtection={onPressProtection}
                 onPressWalletConnect={onPressWalletConnect}
                 onPressAccountInfo={onPressAccountInfo}

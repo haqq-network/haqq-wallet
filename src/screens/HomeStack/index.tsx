@@ -43,7 +43,7 @@ import {Web3BrowserPopup as Web3BrowserPopupScreen} from '@app/screens/web3-brow
 import {SignInStack} from '@app/screens/WelcomeStack/SignInStack';
 
 import {NewsDetailScreen} from './HomeNewsStack/news-detail';
-import {ReceiveScreen} from './ReceiveStack';
+import {ReceiveScreen, SelectNetworkScreen} from './ReceiveStack';
 import {FeeSettingsScreen} from './TransactionStack/fee-settings';
 
 import {SwapStack} from '../SwapStack';
@@ -106,6 +106,12 @@ const HomeStack = memo(() => {
         name={HomeStackRoutes.Transaction}
         component={TransactionStack}
         options={modalOptions}
+      />
+
+      <Stack.Screen
+        name={HomeStackRoutes.SelectNetwork}
+        component={themeUpdaterHOC(SelectNetworkScreen)}
+        options={fullScreenModalOptions}
       />
 
       <Stack.Screen

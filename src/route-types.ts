@@ -12,6 +12,7 @@ import {Balance} from '@app/services/balance';
 import {SssProviders} from '@app/services/provider-sss';
 import {
   BiometryType,
+  ChainId,
   Eventable,
   IStory,
   IToken,
@@ -348,6 +349,7 @@ export enum HomeStackRoutes {
   AccountInfo = 'accountInfo',
   Transaction = 'transaction',
   Nft = 'Nft',
+  SelectNetwork = 'selectNetwork',
   Receive = 'receive',
   Backup = 'backup',
   WalletProtectionPopup = 'walletProtectionPopup',
@@ -395,7 +397,8 @@ export type HomeStackParamList = {
         initScreen: NftStackRoutes.NftCollectionDetails;
         item: NftCollection;
       };
-  [HomeStackRoutes.Receive]: {address: string};
+  [HomeStackRoutes.SelectNetwork]: {address: string};
+  [HomeStackRoutes.Receive]: {address: string; chainId: ChainId};
   [HomeStackRoutes.Backup]: {
     wallet: IWalletModel;
     pinEnabled?: boolean;

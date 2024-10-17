@@ -39,9 +39,14 @@ export const ReceiveScreen = observer(() => {
   const svg = useRef();
   const {width} = useWindowDimensions();
 
+  const provider = useMemo(
+    () => Provider.getByEthChainId(route.params.chainId),
+    [route.params.chainId],
+  );
+
   const address = useMemo(
-    () => wallet?.providerSpecificAddress,
-    [wallet?.providerSpecificAddress],
+    () => wallet?.getAddressByProviderChainId(route.params.chainId),
+    [route.params.chainId],
   );
 
   const onCopy = useCallback(() => {
@@ -66,8 +71,8 @@ export const ReceiveScreen = observer(() => {
         style={styles.info}
         i18n={I18N.modalDetailsQRWarning}
         i18params={{
-          assetName: Provider.selectedProvider.denom,
-          networkName: Provider.selectedProvider.name,
+          assetName: provider!.denom,
+          networkName: provider!.name,
         }}
         icon={<Icon name="warning" color={Color.textYellow1} />}
       />

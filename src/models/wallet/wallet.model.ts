@@ -1,7 +1,7 @@
 import {makeAutoObservable} from 'mobx';
 
 import {AddressUtils} from '@app/helpers/address-utils';
-import {WalletType} from '@app/types';
+import {ChainId, WalletType} from '@app/types';
 import {ETH_COIN_TYPE, TRON_COIN_TYPE} from '@app/variables/common';
 
 import {IWalletModel} from './wallet.types';
@@ -48,6 +48,17 @@ export class WalletModel implements IWalletModel {
     }
     return this.address;
   }
+
+  getAddressByProviderChainId = (chainId: ChainId) => {
+    const provider = Provider.getByEthChainId(chainId);
+    if (provider?.isTron) {
+      return this.tronAddress;
+    }
+    if (provider?.isHaqqNetwork) {
+      return this.cosmosAddress;
+    }
+    return this.address;
+  };
 
   get name() {
     return this.model.name;
