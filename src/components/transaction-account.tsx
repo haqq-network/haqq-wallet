@@ -5,10 +5,10 @@ import {FlatList} from 'react-native';
 import {PopupContainer} from '@app/components/ui';
 import {WalletRow} from '@app/components/wallet-row';
 import {createTheme} from '@app/helpers';
-import {IWalletModel} from '@app/models/wallet';
+import {WalletModel} from '@app/models/wallet';
 
 type TransactionAccountProps = {
-  rows: IWalletModel[];
+  rows: WalletModel[];
   onPressRow: (address: string) => void;
 };
 

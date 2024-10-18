@@ -1094,7 +1094,7 @@ export type Modals = {
   };
   walletsBottomSheet: Eventable & {
     onClose?: () => void;
-    wallets: IWalletModel[];
+    wallets: WalletModel[];
     closeDistance?: () => number;
     title: I18N;
     autoSelectWallet?: boolean;
