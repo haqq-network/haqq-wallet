@@ -7,7 +7,7 @@ import {TotalValueTabNames} from '@app/components/total-value-info';
 import {AwaitValue} from '@app/helpers/await-for-value';
 import {NftCollection, NftItem} from '@app/models/nft';
 import {ProviderModel} from '@app/models/provider';
-import {IWalletModel} from '@app/models/wallet';
+import {IWalletModel, WalletModel} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {SssProviders} from '@app/services/provider-sss';
 import {
@@ -448,7 +448,7 @@ export type HomeStackParamList = {
   [HomeStackRoutes.PopupTrackActivity]: {bannerId: string};
   [HomeStackRoutes.Web3BrowserPopup]: {url: string; popup?: boolean};
   [HomeStackRoutes.WalletSelector]: Eventable & {
-    wallets: IWalletModel[];
+    wallets: WalletModel[];
     title: string;
     initialAddress?: string;
   };

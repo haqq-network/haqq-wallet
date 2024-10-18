@@ -35,8 +35,8 @@ export const WalletRowVariant4 = ({
   );
 
   const addressString = useMemo(
-    () => `•••${splitAddress(item.address)[2]}`,
-    [item.address],
+    () => `•••${splitAddress(item.providerSpecificAddress)[2]}`,
+    [item.providerSpecificAddress],
   );
 
   return (

@@ -51,8 +51,8 @@ export const AccountInfoHeader = ({
   unlock,
 }: AccountInfoProps) => {
   const formattedAddress = useMemo(
-    () => shortAddress(wallet.address, '•'),
-    [wallet.address],
+    () => shortAddress(wallet.providerSpecificAddress, '•'),
+    [wallet.providerSpecificAddress],
   );
 
   return (
