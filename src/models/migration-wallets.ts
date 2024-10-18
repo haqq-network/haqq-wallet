@@ -37,9 +37,10 @@ export async function migrationWallets() {
       }
     } catch (err) {
       Logger.error('migrationWallets', err, {
+        current_wallet: wallet.address,
         wallets: getWalletForMigration(),
       });
-      Logger.captureException(err, 'migrationWallets');
+      Logger.captureException(err, 'migrationWallets', {wallet});
     }
   }
 }
@@ -73,6 +74,7 @@ const _migrateMnemonicWallet = async (
   wallet: WalletModel,
   getPassword: () => Promise<string>,
 ) => {
+  // Convert legacy wallet to new format
   if (wallet.data) {
     const password = await getPassword();
     const {mnemonic} = await decrypt<{
@@ -81,11 +83,6 @@ const _migrateMnemonicWallet = async (
 
     const m = typeof mnemonic === 'string' ? mnemonic : mnemonic.phrase;
     const provider = await ProviderMnemonicBase.initialize(m, getPassword, {});
-    const tronProvider = await ProviderMnemonicTron.initialize(m, getPassword, {
-      account: wallet.accountId!,
-      tronWebHostUrl: '', // this url used for TX signing
-    });
-    const {address} = await tronProvider.getAccountInfo(wallet.path!);
 
     if (wallet.mnemonicSaved) {
       await provider.setMnemonicSaved();
@@ -93,6 +90,20 @@ const _migrateMnemonicWallet = async (
 
     Wallet.update(wallet.address, {
       data: '',
+      version: NEW_WALLET_VERSION,
+    });
+  }
+
+  // generate TRX address
+  if (wallet.version < 3) {
+    const tronProvider = new ProviderMnemonicTron({
+      account: wallet.accountId!,
+      getPassword,
+      tronWebHostUrl: '', // this url used for TX signing
+    });
+    const {address} = await tronProvider.getAccountInfo(wallet.path!);
+
+    Wallet.update(wallet.address, {
       version: NEW_WALLET_VERSION,
       tronAddress: address as AddressTron,
     });
