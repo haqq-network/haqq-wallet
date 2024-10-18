@@ -77,13 +77,27 @@ export class Indexer {
   }
 
   private getProvidersHeader = (accounts: string[]) => {
-    return Provider.selectedProviderId === ALL_NETWORKS_ID
-      ? Provider.getAll()
-          .filter(item => item.id !== ALL_NETWORKS_ID)
-          .reduce((acc, item) => ({...acc, [item.ethChainId]: accounts}), {})
-      : {
-          [Provider.selectedProvider.ethChainId]: accounts,
-        };
+    const provider = Provider.selectedProvider;
+
+    if (provider.id === ALL_NETWORKS_ID) {
+      return Provider.getAllNetworks().reduce(
+        (acc, item) => ({
+          ...acc,
+          [item.ethChainId]: AddressUtils.convertAddressByNetwork(
+            accounts,
+            item.networkType,
+          ),
+        }),
+        {},
+      );
+    }
+
+    return {
+      [provider.ethChainId]: AddressUtils.convertAddressByNetwork(
+        accounts,
+        provider.networkType,
+      ),
+    };
   };
 
   get endpoint() {

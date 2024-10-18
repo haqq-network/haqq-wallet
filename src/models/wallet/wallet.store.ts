@@ -403,10 +403,7 @@ class WalletStore implements RPCObserver {
   }
 
   getAllVisible() {
-    const visibleWallets = Provider.selectedProvider.isTron
-      ? this.wallets.filter(w => w.tronAddress)
-      : this.wallets;
-    return visibleWallets.filter(w => !w.isHidden);
+    return this.wallets.filter(w => !w.isHidden);
   }
 
   getForAccount(accountId: string) {

@@ -98,6 +98,8 @@ export class SignJsonRpcRequest {
     }
 
     const instanceProvider = await getProviderInstanceForWallet(wallet, false);
+    Logger.log('instanceProvider', instanceProvider.constructor.name);
+    Logger.log('instanceProvider', JSON.stringify(instanceProvider, null, 2));
 
     if (!instanceProvider) {
       throw new Error(getText(I18N.jsonRpcErrorInvalidProvider));
@@ -168,43 +170,42 @@ export class SignJsonRpcRequest {
 
         if (Provider.selectedProvider.isEVM) {
           nonce = await rpcProvider.getTransactionCount(address, 'latest');
-        }
 
-        const minGas = new Balance(signTransactionRequest.gasLimit ?? 0);
+          const minGas = new Balance(signTransactionRequest.gasLimit ?? 0);
 
-        const {gasLimit, maxBaseFee, maxPriorityFee} =
-          await EthNetwork.estimate(
-            {
-              from: signTransactionRequest.from!,
-              to: signTransactionRequest.to!,
-              value: new Balance(
-                signTransactionRequest.value! || Balance.Empty,
-              ),
-              data: signTransactionRequest.data?.toString()!,
-              minGas,
-            },
-            EstimationVariant.average,
-            provider,
+          const {gasLimit, maxBaseFee, maxPriorityFee} =
+            await EthNetwork.estimate(
+              {
+                from: signTransactionRequest.from!,
+                to: signTransactionRequest.to!,
+                value: new Balance(
+                  signTransactionRequest.value! || Balance.Empty,
+                ),
+                data: signTransactionRequest.data?.toString()!,
+                minGas,
+              },
+              EstimationVariant.average,
+              provider,
+            );
+
+          const maxPriorityFeePerGasCalculated = maxPriorityFee.max(
+            signTransactionRequest.maxPriorityFeePerGas || 0,
+          );
+          const maxFeePerGasCalculated = maxBaseFee.max(
+            signTransactionRequest.maxFeePerGas || 0,
           );
 
-        const maxPriorityFeePerGasCalculated = maxPriorityFee.max(
-          signTransactionRequest.maxPriorityFeePerGas || 0,
-        );
-        const maxFeePerGasCalculated = maxBaseFee.max(
-          signTransactionRequest.maxFeePerGas || 0,
-        );
-
-        signTransactionRequest = {
-          ...signTransactionRequest,
-          nonce,
-          type: 2,
-          gasLimit: gasLimit.toHex(),
-          maxFeePerGas: maxFeePerGasCalculated.toHex(),
-          maxPriorityFeePerGas: maxPriorityFeePerGasCalculated.toHex(),
-        };
-
-        if (signTransactionRequest.gasPrice) {
-          delete signTransactionRequest.gasPrice;
+          signTransactionRequest = {
+            ...signTransactionRequest,
+            nonce,
+            type: 2,
+            gasLimit: gasLimit.toHex(),
+            maxFeePerGas: maxFeePerGasCalculated.toHex(),
+            maxPriorityFeePerGas: maxPriorityFeePerGasCalculated.toHex(),
+          };
+          if (signTransactionRequest.gasPrice) {
+            delete signTransactionRequest.gasPrice;
+          }
         }
 
         if (chainId) {

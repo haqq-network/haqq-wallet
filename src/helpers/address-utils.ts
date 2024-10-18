@@ -2,6 +2,8 @@ import converter from 'bech32-converting';
 import {utils} from 'ethers';
 import tron from 'tronweb';
 
+import {Wallet} from '@app/models/wallet';
+import {NetworkProviderTypes} from '@app/services/backend';
 import {
   AddressCosmosHaqq,
   AddressEthereum,
@@ -18,10 +20,27 @@ export class AddressUtils {
     if (!address) {
       return '' as AddressTron;
     }
+
     try {
       if (AddressUtils.isTronAddress(address)) {
         return address as AddressTron;
       }
+
+      // we should use tronAddress for existings wallet addres from Wallet store
+      // because this wallet use tron address for different HD path
+      const wallet = Wallet.getAll().find(w => {
+        if (AddressUtils.isEthAddress(address)) {
+          return w.address.toLocaleLowerCase() === address.toLowerCase();
+        }
+        if (AddressUtils.isHaqqAddress(address)) {
+          w.cosmosAddress.toLocaleLowerCase() === address.toLowerCase();
+        }
+      });
+
+      if (wallet) {
+        return wallet.tronAddress;
+      }
+
       return tron.utils.address.fromHex(
         AddressUtils.toEth(address),
       ) as AddressTron;
@@ -151,6 +170,26 @@ export class AddressUtils {
     AddressUtils.toEth(a) === AddressUtils.toEth(b);
 
   static splitAddress = splitAddress;
+
+  static getConverterByNetwork(network: NetworkProviderTypes) {
+    switch (network) {
+      case NetworkProviderTypes.EVM:
+        return AddressUtils.toEth;
+      case NetworkProviderTypes.TRON:
+        return AddressUtils.toTron;
+      case NetworkProviderTypes.HAQQ:
+      default:
+        return AddressUtils.toHaqq;
+    }
+  }
+
+  static convertAddressByNetwork(
+    addresses: string[],
+    network: NetworkProviderTypes,
+  ) {
+    const converterFn = AddressUtils.getConverterByNetwork(network);
+    return addresses.map(converterFn);
+  }
 }
 
 export const NATIVE_TOKEN_ADDRESS = AddressUtils.toEth(

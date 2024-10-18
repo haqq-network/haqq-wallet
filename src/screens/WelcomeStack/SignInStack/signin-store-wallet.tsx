@@ -24,6 +24,7 @@ import {
 } from '@app/route-types';
 import {RemoteConfig} from '@app/services/remote-config';
 import {AddressTron, ModalType, WalletType} from '@app/types';
+import {ETH_COIN_TYPE, TRON_COIN_TYPE} from '@app/variables/common';
 
 export const SignInStoreWalletScreen = observer(() => {
   const navigation = useTypedNavigation<SignInStackParamList>();
@@ -91,7 +92,7 @@ export const SignInStoreWalletScreen = observer(() => {
                 tronWebHostUrl: '',
               });
               const {address: tronAddress} = await tronProvider.getAccountInfo(
-                wallet.path!,
+                wallet.path?.replace?.(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
               );
               Wallet.update(wallet.address, {
                 tronAddress: tronAddress as AddressTron,

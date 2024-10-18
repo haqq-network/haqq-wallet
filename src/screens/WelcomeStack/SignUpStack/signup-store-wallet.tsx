@@ -22,7 +22,11 @@ import {
 } from '@app/route-types';
 import {SssProviders} from '@app/services/provider-sss';
 import {AddressTron, ModalType, WalletType} from '@app/types';
-import {ETH_HD_SHORT_PATH} from '@app/variables/common';
+import {
+  ETH_COIN_TYPE,
+  ETH_HD_SHORT_PATH,
+  TRON_COIN_TYPE,
+} from '@app/variables/common';
 
 export const SignUpStoreWalletScreen = observer(() => {
   const navigation = useTypedNavigation<SignUpStackParamList>();
@@ -134,7 +138,7 @@ export const SignUpStoreWalletScreen = observer(() => {
             tronWebHostUrl: '',
           });
           const {address: tronAddress} = await tronProvider.getAccountInfo(
-            hdPath,
+            hdPath.replace?.(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
           );
           const type = getWalletType();
 

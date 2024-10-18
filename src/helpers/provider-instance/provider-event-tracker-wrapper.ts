@@ -50,10 +50,11 @@ function wrapProviderMethod<TMethodName extends keyof ProviderInterface>(
 export function wrapWalletProvider(
   provider: ProviderInterface,
 ): ProviderInterface {
-  return {
-    ...provider,
+  const wrapped = {
     signTransaction: wrapProviderMethod(provider, 'signTransaction'),
     signPersonalMessage: wrapProviderMethod(provider, 'signPersonalMessage'),
     signTypedData: wrapProviderMethod(provider, 'signTypedData'),
   };
+
+  return Object.assign(provider, wrapped);
 }
