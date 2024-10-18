@@ -84,12 +84,12 @@ export const SignInStoreWalletScreen = observer(() => {
               getPassword,
               {},
             );
-            const tronProvider = await ProviderMnemonicTron.initialize(
-              params.mnemonic.value,
-              getPassword,
-              {},
-            );
             Wallet.getAll().forEach(async wallet => {
+              const tronProvider = new ProviderMnemonicTron({
+                account: wallet.accountId!,
+                getPassword,
+                tronWebHostUrl: '',
+              });
               const {address: tronAddress} = await tronProvider.getAccountInfo(
                 wallet.path!,
               );

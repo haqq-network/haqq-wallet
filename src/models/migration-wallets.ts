@@ -14,33 +14,33 @@ const getWalletForMigration = () =>
   Wallet.getAll().filter(w => w.version < NEW_WALLET_VERSION);
 
 export async function migrationWallets() {
-  try {
-    const wallets = getWalletForMigration();
+  const wallets = getWalletForMigration();
 
-    if (!wallets.length) {
-      return;
-    }
+  if (!wallets.length) {
+    return;
+  }
 
-    const getPassword = app.getPassword.bind(app);
+  const getPassword = app.getPassword.bind(app);
 
-    for (const wallet of wallets) {
+  for (const wallet of wallets) {
+    try {
       if (wallet.type === WalletType.hot) {
-        _migrateHotWallet(wallet, getPassword);
+        await _migrateHotWallet(wallet, getPassword);
       }
 
       if (wallet.type === WalletType.mnemonic) {
-        _migrateMnemonicWallet(wallet, getPassword);
+        await _migrateMnemonicWallet(wallet, getPassword);
       }
 
       if (wallet.type === WalletType.sss) {
-        _migrateSssWallet(wallet, getPassword);
+        await _migrateSssWallet(wallet, getPassword);
       }
+    } catch (err) {
+      Logger.error('migrationWallets', err, {
+        wallets: getWalletForMigration(),
+      });
+      Logger.captureException(err, 'migrationWallets');
     }
-  } catch (err) {
-    Logger.error('migrationWallets', err, {
-      wallets: getWalletForMigration(),
-    });
-    Logger.captureException(err, 'migrationWallets');
   }
 }
 
@@ -55,11 +55,10 @@ const _migrateHotWallet = async (
     }>(password, wallet.data);
 
     const m = typeof mnemonic === 'string' ? mnemonic : mnemonic.phrase;
-    const tronProvider = await ProviderMnemonicTron.initialize(
-      m,
-      getPassword,
-      {},
-    );
+    const tronProvider = await ProviderMnemonicTron.initialize(m, getPassword, {
+      account: wallet.accountId!,
+      tronWebHostUrl: '', // this url used for TX signing
+    });
     const {address} = await tronProvider.getAccountInfo(wallet.path!);
 
     Wallet.update(wallet.address, {
@@ -82,11 +81,10 @@ const _migrateMnemonicWallet = async (
 
     const m = typeof mnemonic === 'string' ? mnemonic : mnemonic.phrase;
     const provider = await ProviderMnemonicBase.initialize(m, getPassword, {});
-    const tronProvider = await ProviderMnemonicTron.initialize(
-      m,
-      getPassword,
-      {},
-    );
+    const tronProvider = await ProviderMnemonicTron.initialize(m, getPassword, {
+      account: wallet.accountId!,
+      tronWebHostUrl: '', // this url used for TX signing
+    });
     const {address} = await tronProvider.getAccountInfo(wallet.path!);
 
     if (wallet.mnemonicSaved) {
@@ -112,11 +110,10 @@ const _migrateSssWallet = async (
     }>(password, wallet.data);
 
     const m = typeof mnemonic === 'string' ? mnemonic : mnemonic.phrase;
-    const tronProvider = await ProviderMnemonicTron.initialize(
-      m,
-      getPassword,
-      {},
-    );
+    const tronProvider = await ProviderMnemonicTron.initialize(m, getPassword, {
+      account: wallet.accountId!,
+      tronWebHostUrl: '', // this url used for TX signing
+    });
     const {address} = await tronProvider.getAccountInfo(wallet.path!);
 
     Wallet.update(wallet.address, {

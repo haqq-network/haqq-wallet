@@ -128,12 +128,11 @@ export const SignUpStoreWalletScreen = observer(() => {
 
         try {
           const {address} = await provider.getAccountInfo(hdPath);
-          const mnemonic = await provider.getMnemonicPhrase();
-          const tronProvider = await ProviderMnemonicTron.initialize(
-            mnemonic,
-            app.getPassword.bind(app),
-            {},
-          );
+          const tronProvider = new ProviderMnemonicTron({
+            account: provider.getIdentifier(),
+            getPassword: app.getPassword.bind(app),
+            tronWebHostUrl: '',
+          });
           const {address: tronAddress} = await tronProvider.getAccountInfo(
             hdPath,
           );
