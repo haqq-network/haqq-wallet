@@ -82,15 +82,7 @@ export const JsonRpcTransactionInfo = observer(
       !hideContractAttention && isContract && !isInWhiteList;
 
     const txParsedData = useMemo(() => {
-      const parsed = parseTxDataFromHexInput(tx?.data);
-
-      // if is multicall, return first call because it's a swap transaction
-      // second call is unwrap transaction
-      // see swap-screen.tsx onPressSwap function
-      if (parsed?.name === 'multicall') {
-        return parseTxDataFromHexInput(parsed.args[0][0]);
-      }
-      return parsed;
+      return parseTxDataFromHexInput(tx?.data);
     }, [tx]);
 
     const functionName = useMemo(() => {
@@ -100,10 +92,25 @@ export const JsonRpcTransactionInfo = observer(
       return '';
     }, [txParsedData]);
 
-    const isSwapTx = useMemo(
-      () => ['exactInput', 'deposit', 'withdraw'].includes(functionName),
-      [functionName],
-    );
+    const isSwapTx = useMemo(() => {
+      if (['exactInput', 'deposit', 'withdraw'].includes(functionName)) {
+        return true;
+      }
+
+      // swap to native token and unwrap
+      // look https://github.com/haqq-network/haqq-wallet/blob/6a64d63a20686fc1a711737784ad9e0514723d6d/src/screens/SwapStack/swap-screen.tsx#L855
+      if (functionName === 'multicall') {
+        const [exactInputTxData, unwrapWETH9TxData] = txParsedData
+          ?.args[0]! as [string, string];
+        const exactInputParsed = parseTxDataFromHexInput(exactInputTxData);
+        const unwrapWETH9Parsed = parseTxDataFromHexInput(unwrapWETH9TxData);
+        return (
+          exactInputParsed?.name === 'exactInput' &&
+          unwrapWETH9Parsed?.name === 'unwrapWETH9'
+        );
+      }
+      return false;
+    }, [functionName]);
 
     const calculateFee = useCallback(async () => {
       if (!tx) {

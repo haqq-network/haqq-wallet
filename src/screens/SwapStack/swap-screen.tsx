@@ -852,16 +852,14 @@ export const SwapScreen = observer(() => {
       ];
 
       let txData = '';
-      const encodedSwapTxData = swapRouter.interface.encodeFunctionData(
-        'exactInput',
-        [swapParams],
-      ) as string;
-
       // if token1 is native, we need to unwrap it
-      if (
-        toke1IsNative &&
-        Provider.selectedProvider.config.enableUnwrapWETH9Call
-      ) {
+      if (toke1IsNative) {
+        // we need to change the recipient to the router address when use unwrapWETH9 inside multicall
+        swapParams[1] = Provider.selectedProvider.config.swapRouterV3;
+        const encodedSwapTxData = swapRouter.interface.encodeFunctionData(
+          'exactInput',
+          [swapParams],
+        ) as string;
         const encodedUnwrap = swapRouter.interface.encodeFunctionData(
           'unwrapWETH9',
           [minReceivedAmount?.toHex() || 0, currentWallet.address],
@@ -871,7 +869,9 @@ export const SwapScreen = observer(() => {
           [encodedSwapTxData, encodedUnwrap],
         ]) as string;
       } else {
-        txData = encodedSwapTxData;
+        txData = swapRouter.interface.encodeFunctionData('exactInput', [
+          swapParams,
+        ]) as string;
       }
 
       const rawTx = await awaitForJsonRpcSign({
