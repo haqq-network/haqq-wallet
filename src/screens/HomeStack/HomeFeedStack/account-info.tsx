@@ -31,7 +31,9 @@ export const AccountInfoScreen = observer(() => {
     useMemo(() => balances[wallet?.address!], [balances, wallet]);
 
   const onReceive = useCallback(() => {
-    showModal(ModalType.cardDetailsQr, {address: route.params.accountId});
+    navigation.navigate(HomeStackRoutes.SelectNetwork, {
+      address: wallet?.address!,
+    });
   }, [route.params.accountId]);
 
   const onSend = useCallback(() => {
