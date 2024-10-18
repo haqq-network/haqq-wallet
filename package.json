@@ -32,7 +32,8 @@
     "env:verify": "yarn zx ./scripts/verify-env.mjs",
     "env:update": "yarn zx ./scripts/update-version.mjs",
     "locales:update": "yarn zx ./scripts/pull-locales.mjs",
-    "pin": "sh ./scripts/adb-enter-pin.sh"
+    "pin": "sh ./scripts/adb-enter-pin.sh",
+    "devpkg:update": "yarn zx ./scripts/update-devpkg.mjs"
   },
   "dependencies": {
     "@birdwingo/react-native-spinning-numbers": "1.0.5",
@@ -43,7 +44,7 @@
     "@haqq/encryption-react-native": "0.0.4",
     "@haqq/format-number-with-subscript-zeros": "1.0.1",
     "@haqq/provider-web3-utils": "0.0.14",
-    "@haqq/rn-wallet-providers": "0.0.6",
+    "@haqq/rn-wallet-providers": "0.0.7",
     "@haqq/shared-react-native": "0.0.12",
     "@invertase/react-native-apple-authentication": "2.2.2",
     "@keystonehq/bc-ur-registry-eth": "0.7.7",
