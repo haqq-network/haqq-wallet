@@ -1,15 +1,13 @@
-import {decrypt} from '@haqq/encryption-react-native';
-import {
-  ProviderMnemonicBase,
-  ProviderMnemonicTron,
-} from '@haqq/rn-wallet-providers';
+import {ProviderMnemonicTron} from '@haqq/rn-wallet-providers';
+
+import {ETH_COIN_TYPE, TRON_COIN_TYPE} from '@app/variables/common';
 
 import {Wallet, WalletModel} from './wallet';
 
 import {app} from '../contexts';
 import {AddressTron, WalletType} from '../types';
 
-const NEW_WALLET_VERSION = 3;
+const NEW_WALLET_VERSION = 4;
 const getWalletForMigration = () =>
   Wallet.getAll().filter(w => w.version < NEW_WALLET_VERSION);
 
@@ -37,62 +35,38 @@ export async function migrationWallets() {
       }
     } catch (err) {
       Logger.error('migrationWallets', err, {
+        current_wallet: wallet.address,
         wallets: getWalletForMigration(),
       });
-      Logger.captureException(err, 'migrationWallets');
+      Logger.captureException(err, 'migrationWallets', {wallet});
     }
   }
 }
 
 const _migrateHotWallet = async (
-  wallet: WalletModel,
-  getPassword: () => Promise<string>,
+  _wallet: WalletModel,
+  _getPassword: () => Promise<string>,
 ): Promise<void> => {
-  if (wallet.data) {
-    const password = await getPassword();
-    const {mnemonic} = await decrypt<{
-      mnemonic: {phrase: string} | string;
-    }>(password, wallet.data);
-
-    const m = typeof mnemonic === 'string' ? mnemonic : mnemonic.phrase;
-    const tronProvider = await ProviderMnemonicTron.initialize(m, getPassword, {
-      account: wallet.accountId!,
-      tronWebHostUrl: '', // this url used for TX signing
-    });
-    const {address} = await tronProvider.getAccountInfo(wallet.path!);
-
-    Wallet.update(wallet.address, {
-      data: '',
-      version: NEW_WALLET_VERSION,
-      tronAddress: address as AddressTron,
-    });
-  }
+  // TODO: generate tron address
 };
 
 const _migrateMnemonicWallet = async (
   wallet: WalletModel,
   getPassword: () => Promise<string>,
 ) => {
-  if (wallet.data) {
-    const password = await getPassword();
-    const {mnemonic} = await decrypt<{
-      mnemonic: {phrase: string} | string;
-    }>(password, wallet.data);
-
-    const m = typeof mnemonic === 'string' ? mnemonic : mnemonic.phrase;
-    const provider = await ProviderMnemonicBase.initialize(m, getPassword, {});
-    const tronProvider = await ProviderMnemonicTron.initialize(m, getPassword, {
+  // generate TRX address after 3 version
+  if (wallet.version <= 3) {
+    const tronProvider = new ProviderMnemonicTron({
       account: wallet.accountId!,
+      getPassword,
       tronWebHostUrl: '', // this url used for TX signing
     });
-    const {address} = await tronProvider.getAccountInfo(wallet.path!);
 
-    if (wallet.mnemonicSaved) {
-      await provider.setMnemonicSaved();
-    }
+    const {address} = await tronProvider.getAccountInfo(
+      wallet.path?.replace(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
+    );
 
     Wallet.update(wallet.address, {
-      data: '',
       version: NEW_WALLET_VERSION,
       tronAddress: address as AddressTron,
     });
@@ -100,26 +74,8 @@ const _migrateMnemonicWallet = async (
 };
 
 const _migrateSssWallet = async (
-  wallet: WalletModel,
-  getPassword: () => Promise<string>,
+  _wallet: WalletModel,
+  _getPassword: () => Promise<string>,
 ) => {
-  if (wallet.data) {
-    const password = await getPassword();
-    const {mnemonic} = await decrypt<{
-      mnemonic: {phrase: string} | string;
-    }>(password, wallet.data);
-
-    const m = typeof mnemonic === 'string' ? mnemonic : mnemonic.phrase;
-    const tronProvider = await ProviderMnemonicTron.initialize(m, getPassword, {
-      account: wallet.accountId!,
-      tronWebHostUrl: '', // this url used for TX signing
-    });
-    const {address} = await tronProvider.getAccountInfo(wallet.path!);
-
-    Wallet.update(wallet.address, {
-      data: '',
-      version: NEW_WALLET_VERSION,
-      tronAddress: address as AddressTron,
-    });
-  }
+  // TODO: generate tron address
 };
