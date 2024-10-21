@@ -150,6 +150,8 @@ dependencies {
   implementation 'fr.acinq.secp256k1:secp256k1-kmp-jni-android:0.7.0'
   implementation 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
 //  implementation 'fr.acinq.secp256k1:secp256k1-kmp-jni-jvm-darwin:0.7.0'
+
+  implementation platform('org.jetbrains.kotlin:kotlin-bom:1.8.0')
   implementation platform('com.google.firebase:firebase-bom:30.3.2')
 
   implementation "com.github.komputing.khash:keccak:1.1.1"

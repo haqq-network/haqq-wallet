@@ -1504,10 +1504,10 @@ PODS:
     - React-Core
   - RealmJS (11.10.1):
     - React
-  - rive-react-native (4.1.2):
+  - rive-react-native (7.3.0):
     - React-Core
-    - RiveRuntime (= 4.0.4)
-  - RiveRuntime (4.0.4)
+    - RiveRuntime (= 5.14.0)
+  - RiveRuntime (5.14.0)
   - RNAppleAuthentication (2.2.2):
     - React-Core
   - RNCAsyncStorage (1.19.0):
@@ -1565,7 +1565,7 @@ PODS:
     - React-Core
   - RNOS (1.2.7):
     - React
-  - RNPermissions (3.10.0):
+  - RNPermissions (5.0.1):
     - React-Core
   - RNReanimated (3.15.5):
     - DoubleConversion
@@ -2176,8 +2176,8 @@ SPEC CHECKSUMS:
   ReactCommon: 2cde697fd80bd31da1d6448d25a5803088585219
   ReactNativeLocalization: fb171138cdc80d5d0d4f20243d2fc82c2b3cc48f
   RealmJS: 8deebf00c84f499c654bc585583c54f55b586751
-  rive-react-native: ac42cbef913861b914893e3ba5e2cbf489384849
-  RiveRuntime: 76eab58e930afd03dae3edac3ed8ab4f31df7347
+  rive-react-native: 9d724daa93efa3066e19e53960f83df5098cc112
+  RiveRuntime: c470cc8daa0c192c678f7abb35b980f95d2bb625
   RNAppleAuthentication: 0571c08da8c327ae2afc0261b48b4a515b0286a6
   RNCAsyncStorage: 4b98ac3c64efa4e35c1197cb0c5ca5e9f5d4c666
   RNCClipboard: 3f0451a8100393908bea5c5c5b16f96d45f30bfc
@@ -2192,7 +2192,7 @@ SPEC CHECKSUMS:
   RNGoogleSignin: ccaa4a81582cf713eea562c5dd9dc1961a715fd0
   RNKeychain: ff836453cba46938e0e9e4c22e43d43fa2c90333
   RNOS: bba50dcae32026943877b163e93d4e1e0eca48eb
-  RNPermissions: 81b4a5e0f9fdb3b145e9622c199df8f629c51f51
+  RNPermissions: 7df9aeb1335cfb98c9b8f4fb56fbaa1efa170919
   RNReanimated: e4f45f26ac30208ad2c53dadc304d070aa262bfd
   RNScreens: 23dad53fc9db1da2c93e647ae33fd7ce2bd49d60
   RNSentry: c74f756c88aa2a90070f555609d2a31ab2a7f461
@@ -2206,6 +2206,6 @@ SPEC CHECKSUMS:
   TouchID: ba4c656d849cceabc2e4eef722dea5e55959ecf4
   Yoga: 56f906bf6c11c931588191dde1229fd3e4e3d557
 
-PODFILE CHECKSUM: 6a453cd228bb5fd078d87dda5a7c1dabeedd1723
+PODFILE CHECKSUM: a0b5412525441266d56cc6d538e451975fe5f8fd
 
 COCOAPODS: 1.15.2

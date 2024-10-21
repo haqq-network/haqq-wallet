@@ -11474,7 +11474,7 @@ __metadata:
     react-native-mmkv: 2.11.0
     react-native-network-info: 5.2.1
     react-native-os: "https://github.com/aprock/react-native-os#938676ebd92d58b8928168a7e78cbe216838ed17"
-    react-native-permissions: 3.10.0
+    react-native-permissions: 5.0.1
     react-native-play-install-referrer: 1.1.8
     react-native-popup-menu: 0.16.1
     react-native-prompt-android: 1.1.0
@@ -11499,7 +11499,7 @@ __metadata:
     react-timer-mixin: 0.13.4
     readable-stream: 4.4.2
     realm: 11.10.1
-    rive-react-native: 4.1.2
+    rive-react-native: 7.3.0
     rn-nodeify: 10.3.0
     rxjs: 7.8.1
     sha.js: 2.4.11
@@ -16549,17 +16549,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-permissions@npm:3.10.0":
-  version: 3.10.0
-  resolution: "react-native-permissions@npm:3.10.0"
+"react-native-permissions@npm:5.0.1":
+  version: 5.0.1
+  resolution: "react-native-permissions@npm:5.0.1"
   peerDependencies:
-    react: ">=16.13.1"
-    react-native: ">=0.63.3"
-    react-native-windows: ">=0.62.0"
+    react: ">=18.1.0"
+    react-native: ">=0.70.0"
+    react-native-windows: ">=0.70.0"
   peerDependenciesMeta:
     react-native-windows:
       optional: true
-  checksum: cd3b3fd99212f0d044fd4de1b410b9f7cee0ccc92bd6fd8f4d45bce815ccac36d8744d5440822135c95cd9b821c6972f42142b9c8ae9e950695faed2fcd7779d
+  checksum: b7546df5f2cbb34895df13077247d880633ace481aa75b8d32409da80ca3a8e9c9a50ccdcf38767d92a27aab4273ad514b1fdcc53d28418d164c26ba3c9f4d73
   languageName: node
   linkType: hard
 
@@ -17500,13 +17500,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rive-react-native@npm:4.1.2":
-  version: 4.1.2
-  resolution: "rive-react-native@npm:4.1.2"
+"rive-react-native@npm:7.3.0":
+  version: 7.3.0
+  resolution: "rive-react-native@npm:7.3.0"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: b0667c85a9bb9fc0f4fadf58e766084c0429ced520d797a696e821940425d70ffeed1ebe67350f0a79dd5da8aa594b59a835bf47dcd44ba261a6fdea4bae61f0
+  checksum: 5f28c1fd2206ee8d8194035841069f71b08530d0e6e0726b23d6c5f5d11586edaf970185fcac171c2688a77426f41383994933e3d6158ed3240b19aa89e8fd84
   languageName: node
   linkType: hard
 
