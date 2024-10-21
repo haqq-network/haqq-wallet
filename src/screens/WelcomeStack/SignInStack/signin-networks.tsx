@@ -145,7 +145,8 @@ export const SignInNetworksScreen = memo(() => {
   }, [navigation]);
 
   const onPressHardwareWallet = useCallback(() => {
-    navigation.navigate(
+    navigation.replace(
+      // @ts-ignore
       app.onboarded ? HomeStackRoutes.Device : WelcomeStackRoutes.Device,
     );
   }, [navigation]);
