@@ -1,5 +1,6 @@
 import {TransactionRequest, utils} from '@haqq/rn-wallet-providers';
 import {getSdkError} from '@walletconnect/utils';
+import tron from 'tronweb';
 
 import {DEBUG_VARS} from '@app/debug-vars';
 import {getProviderInstanceForWallet, hideModal} from '@app/helpers';
@@ -97,16 +98,20 @@ export class SignJsonRpcRequest {
       throw new Error(getText(I18N.jsonRpcErrorInvalidWallet));
     }
 
-    const instanceProvider = await getProviderInstanceForWallet(wallet, false);
-    Logger.log('instanceProvider', instanceProvider.constructor.name);
-    Logger.log('instanceProvider', JSON.stringify(instanceProvider, null, 2));
+    const provider =
+      Provider.getByEthChainId(chainId!) || Provider.selectedProvider;
+    const instanceProvider = await getProviderInstanceForWallet(
+      wallet,
+      false,
+      provider,
+    );
+    Logger.log('Wallet Provider', instanceProvider.constructor.name);
+    Logger.log('Network Provider', JSON.stringify(provider, null, 2));
 
     if (!instanceProvider) {
       throw new Error(getText(I18N.jsonRpcErrorInvalidProvider));
     }
 
-    const provider =
-      Provider.getByEthChainId(chainId!) || Provider.selectedProvider;
     const rpcProvider = provider
       ? await getRpcProvider(provider)
       : getDefaultNetwork();
@@ -129,7 +134,7 @@ export class SignJsonRpcRequest {
       case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V4:
         const typedData = getSignTypedDataParamsData(request.params);
         if (isEthTypedData(typedData)) {
-          const cosmos = new Cosmos(Provider.selectedProvider);
+          const cosmos = new Cosmos(provider);
           const signTypedDataResult = cosmos.signTypedData(
             path,
             instanceProvider,
@@ -155,8 +160,21 @@ export class SignJsonRpcRequest {
           chainId,
         );
 
-        const tx = await rpcProvider.sendTransaction(signedTransaction);
-        result = tx.hash;
+        if (provider.isTron) {
+          const rawTxRequest = JSON.parse(signedTransaction.replace(/^0x/, ''));
+          const tronHttpProvider = new tron.providers.HttpProvider(
+            provider.ethRpcEndpoint,
+          );
+          const tx = (await tronHttpProvider.request(
+            'wallet/broadcasttransaction',
+            rawTxRequest,
+            'post',
+          )) as {txid: string};
+          result = tx.txid;
+        } else {
+          const tx = await rpcProvider.sendTransaction(signedTransaction);
+          result = tx.hash;
+        }
         break;
       case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
         let signTransactionRequest: TransactionRequest = Array.isArray(
@@ -168,7 +186,7 @@ export class SignJsonRpcRequest {
         const {address} = await instanceProvider.getAccountInfo(path);
         let nonce: number | undefined;
 
-        if (Provider.selectedProvider.isEVM) {
+        if (provider.isEVM) {
           nonce = await rpcProvider.getTransactionCount(address, 'latest');
 
           const minGas = new Balance(signTransactionRequest.gasLimit ?? 0);
@@ -232,6 +250,9 @@ export class SignJsonRpcRequest {
 
     logger.log('✅ signEIP155Request result:', result, result.length);
 
+    if (provider.isTron) {
+      return result.replace(/^0x/, '');
+    }
     return utils.normalize0x(result);
   }
 }

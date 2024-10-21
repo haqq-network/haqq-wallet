@@ -229,9 +229,17 @@ class WalletStore implements RPCObserver {
   }
 
   private _calculateAllNetworksBalance = (address: string) => {
-    const getBalanceData = (p: ProviderModel) =>
-      this.balances[p.ethChainId]?.[AddressUtils.toEth(address)] ||
-      Balance.emptyBalances[AddressUtils.toEth(address)];
+    const getBalanceData = (p: ProviderModel) => {
+      const ADDRESS_KEY = p.isTron
+        ? AddressUtils.toTron(address)
+        : AddressUtils.toEth(address);
+      return (
+        // @ts-ignore
+        this.balances[p.ethChainId]?.[ADDRESS_KEY] ||
+        // @ts-ignore
+        Balance.emptyBalances[ADDRESS_KEY]
+      );
+    };
 
     const balance = new BalanceModel({
       staked: Balance.Empty,
