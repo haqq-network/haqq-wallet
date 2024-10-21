@@ -1,5 +1,10 @@
-import {ProviderMnemonicTron} from '@haqq/rn-wallet-providers';
+import {
+  ProviderHotTron,
+  ProviderMnemonicTron,
+  ProviderSSSTron,
+} from '@haqq/rn-wallet-providers';
 
+import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {ETH_COIN_TYPE, TRON_COIN_TYPE} from '@app/variables/common';
 
 import {Wallet, WalletModel} from './wallet';
@@ -7,7 +12,7 @@ import {Wallet, WalletModel} from './wallet';
 import {app} from '../contexts';
 import {AddressTron, WalletType} from '../types';
 
-const NEW_WALLET_VERSION = 4;
+const NEW_WALLET_VERSION = 5;
 const getWalletForMigration = () =>
   Wallet.getAll().filter(w => w.version < NEW_WALLET_VERSION);
 
@@ -44,18 +49,34 @@ export async function migrationWallets() {
 }
 
 const _migrateHotWallet = async (
-  _wallet: WalletModel,
-  _getPassword: () => Promise<string>,
+  wallet: WalletModel,
+  getPassword: () => Promise<string>,
 ): Promise<void> => {
-  // TODO: generate tron address
+  // generate TRX address after 4 version
+  if (wallet.version <= 4) {
+    const tronProvider = new ProviderHotTron({
+      account: wallet.accountId!,
+      getPassword,
+      tronWebHostUrl: '', // this url used for TX signing
+    });
+
+    const {address} = await tronProvider.getAccountInfo(
+      wallet.path?.replace(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
+    );
+
+    Wallet.update(wallet.address, {
+      version: NEW_WALLET_VERSION,
+      tronAddress: address as AddressTron,
+    });
+  }
 };
 
 const _migrateMnemonicWallet = async (
   wallet: WalletModel,
   getPassword: () => Promise<string>,
 ) => {
-  // generate TRX address after 3 version
-  if (wallet.version <= 3) {
+  // generate TRX address after 4 version
+  if (wallet.version <= 4) {
     const tronProvider = new ProviderMnemonicTron({
       account: wallet.accountId!,
       getPassword,
@@ -74,8 +95,27 @@ const _migrateMnemonicWallet = async (
 };
 
 const _migrateSssWallet = async (
-  _wallet: WalletModel,
-  _getPassword: () => Promise<string>,
+  wallet: WalletModel,
+  getPassword: () => Promise<string>,
 ) => {
-  // TODO: generate tron address
+  // generate TRX address after 4 version
+  if (wallet.version <= 4) {
+    const storage = await getProviderStorage(wallet.accountId as string);
+
+    const tronProvider = new ProviderSSSTron({
+      account: wallet.accountId!,
+      getPassword,
+      tronWebHostUrl: '', // this url used for TX signing
+      storage,
+    });
+
+    const {address} = await tronProvider.getAccountInfo(
+      wallet.path?.replace(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
+    );
+
+    Wallet.update(wallet.address, {
+      version: NEW_WALLET_VERSION,
+      tronAddress: address as AddressTron,
+    });
+  }
 };

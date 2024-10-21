@@ -122,14 +122,17 @@ class WalletStore implements RPCObserver {
           ...this.wallets.reduce((ac, w) => {
             const cosmosAddress = AddressUtils.toHaqq(w.address);
             const unlock = Number(data?.unlock?.[cosmosAddress]) ?? 0;
+            const ADDRESS_KEY = p.isTron
+              ? w.tronAddress
+              : AddressUtils.toEth(w.address);
 
             return {
               ...ac,
-              [AddressUtils.toEth(w.address)]: new BalanceModel({
+              [ADDRESS_KEY]: new BalanceModel({
                 staked: new Balance(
                   data?.total_staked?.find?.(
                     ([address, chainId]) =>
-                      AddressUtils.equals(w.address, address) &&
+                      AddressUtils.equals(ADDRESS_KEY, address) &&
                       p.ethChainId === chainId,
                   )?.[2] ?? ZERO_HEX_NUMBER,
                   p.decimals,
@@ -138,7 +141,7 @@ class WalletStore implements RPCObserver {
                 vested: new Balance(
                   data?.vested?.find?.(
                     ([address, chainId]) =>
-                      AddressUtils.equals(w.address, address) &&
+                      AddressUtils.equals(ADDRESS_KEY, address) &&
                       p.ethChainId === chainId,
                   )?.[2] ?? ZERO_HEX_NUMBER,
                   p.decimals,
@@ -147,7 +150,7 @@ class WalletStore implements RPCObserver {
                 available: new Balance(
                   data?.available?.find?.(
                     ([address, chainId]) =>
-                      AddressUtils.equals(w.address, address) &&
+                      AddressUtils.equals(ADDRESS_KEY, address) &&
                       p.ethChainId === chainId,
                   )?.[2] ?? ZERO_HEX_NUMBER,
                   p.decimals,
@@ -156,7 +159,7 @@ class WalletStore implements RPCObserver {
                 total: new Balance(
                   data?.total?.find?.(
                     ([address, chainId]) =>
-                      AddressUtils.equals(w.address, address) &&
+                      AddressUtils.equals(ADDRESS_KEY, address) &&
                       p.ethChainId === chainId,
                   )?.[2] ?? ZERO_HEX_NUMBER,
                   p.decimals,
@@ -165,7 +168,7 @@ class WalletStore implements RPCObserver {
                 locked: new Balance(
                   data?.locked?.find?.(
                     ([address, chainId]) =>
-                      AddressUtils.equals(w.address, address) &&
+                      AddressUtils.equals(ADDRESS_KEY, address) &&
                       p.ethChainId === chainId,
                   )?.[2] ?? ZERO_HEX_NUMBER,
                   p.decimals,
@@ -174,7 +177,7 @@ class WalletStore implements RPCObserver {
                 availableForStake: new Balance(
                   data?.available_for_stake?.find?.(
                     ([address, chainId]) =>
-                      AddressUtils.equals(w.address, address) &&
+                      AddressUtils.equals(ADDRESS_KEY, address) &&
                       p.ethChainId === chainId,
                   )?.[2] ?? ZERO_HEX_NUMBER,
                   p.decimals,

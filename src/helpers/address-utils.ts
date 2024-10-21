@@ -166,8 +166,13 @@ export class AddressUtils {
     }
   };
 
-  static equals = (a: string, b: string): boolean =>
-    AddressUtils.toEth(a) === AddressUtils.toEth(b);
+  static equals = (a: string, b: string): boolean => {
+    if (AddressUtils.isTronAddress(a) || AddressUtils.isTronAddress(b)) {
+      return AddressUtils.toTron(a) === AddressUtils.toTron(b);
+    }
+
+    return AddressUtils.toEth(a) === AddressUtils.toEth(b);
+  };
 
   static splitAddress = splitAddress;
 

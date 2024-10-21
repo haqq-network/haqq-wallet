@@ -61,8 +61,12 @@ export class ProviderFactory {
           account: wallet.accountId!,
           getPassword: app.getPassword.bind(app),
         });
-      // TODO: add tron provider
       case NetworkProviderTypes.TRON:
+        return new providers.ProviderHotTron({
+          account: wallet.accountId!,
+          getPassword: app.getPassword.bind(app),
+          tronWebHostUrl: network.ethRpcEndpoint,
+        });
       default:
         throw new Error('transport_not_implemented');
     }
@@ -114,8 +118,13 @@ export class ProviderFactory {
           account: wallet.accountId!,
           getPassword: app.getPassword.bind(app),
         });
-      // TODO: add tron provider
       case NetworkProviderTypes.TRON:
+        return new providers.ProviderSSSTron({
+          storage,
+          account: wallet.accountId!,
+          getPassword: app.getPassword.bind(app),
+          tronWebHostUrl: network.ethRpcEndpoint,
+        });
       default:
         throw new Error('transport_not_implemented');
     }
