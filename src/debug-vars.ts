@@ -8,6 +8,7 @@ interface DebugVars {
   enableCaptchaLogger: boolean;
   enableSkipPinOnLogin: boolean;
   enableWeb3BrowserLogger: boolean;
+  enableKeystoneMockSync: boolean;
   allowAnySourcesForWalletConnectLogin: boolean;
   disableWeb3DomainBlocking: boolean;
   enableMockWallets: boolean;
@@ -28,6 +29,7 @@ const production: DebugVars = {
   enableAsyncEventEmitterLogs: true,
   enableMockWallets: false,
   mockWalletsAddresses: [],
+  enableKeystoneMockSync: false,
 };
 
 const debug: DebugVars = {
@@ -49,6 +51,7 @@ const debug: DebugVars = {
     '0x65221cede3abdd03e377e3a4ce84e14fcd497919',
     '0x98ed1f5d1e0ca514c390b7e08cbb8d769fc87ac5',
   ],
+  enableKeystoneMockSync: true,
 };
 
 export const DEBUG_VARS = __DEV__ ? debug : production;

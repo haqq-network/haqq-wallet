@@ -1,5 +1,6 @@
-import React, {memo} from 'react';
+import React from 'react';
 
+import {observer} from 'mobx-react';
 import {StyleSheet, View} from 'react-native';
 
 import {ModalProvider} from '@app/components/modal-provider';
@@ -13,7 +14,7 @@ type Props = {
   isReady: boolean;
 };
 
-const RootStack = memo(({onboarded, isPinReseted, isReady}: Props) => {
+const RootStack = observer(({onboarded, isPinReseted, isReady}: Props) => {
   return (
     <View style={styles.container}>
       {onboarded && !isPinReseted ? <HomeStack /> : <WelcomeStack />}

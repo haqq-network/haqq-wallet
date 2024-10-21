@@ -28,7 +28,7 @@ export const SignUpAgreementScreen = memo(() => {
   }, [navigation, params.nextScreen]);
 
   const onPressHardwareWallet = () => {
-    navigation.navigate(
+    navigation.replace(
       // @ts-ignore
       app.onboarded ? HomeStackRoutes.Device : WelcomeStackRoutes.Device,
     );
