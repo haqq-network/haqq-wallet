@@ -212,12 +212,18 @@ export const JsonRpcCommonTransaction = ({
         <DataView i18n={I18N.transactionInfoNetworkFee}>
           <First>
             {isFeeLoading && <ActivityIndicator />}
-            <TouchableWithoutFeedback onPress={onFeePress}>
+            <TouchableWithoutFeedback
+              disabled={provider?.isTron}
+              onPress={onFeePress}>
               <View style={styles.feeContainer}>
                 <Text variant={TextVariant.t11} color={Color.textGreen1}>
-                  {fee?.expectedFeeString}
+                  {provider?.isTron
+                    ? fee?.expectedFee?.toBalanceString()
+                    : fee?.expectedFeeString}
                 </Text>
-                <Icon name={IconsName.tune} color={Color.textGreen1} />
+                {(provider?.isEVM || provider?.isHaqqNetwork) && (
+                  <Icon name={IconsName.tune} color={Color.textGreen1} />
+                )}
               </View>
             </TouchableWithoutFeedback>
           </First>

@@ -125,7 +125,7 @@ export const TransactionConfirmationScreen = observer(() => {
           walletType: wallet.type,
           token,
           contact,
-          provider: Provider.selectedProvider.name,
+          provider: Provider.getByEthChainId(token.chain_id)?.name,
         });
 
         const err = e as EthSignErrorDataDetails;

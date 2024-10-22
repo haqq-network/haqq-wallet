@@ -1,6 +1,5 @@
 import {TransactionRequest, utils} from '@haqq/rn-wallet-providers';
 import {getSdkError} from '@walletconnect/utils';
-import tron from 'tronweb';
 
 import {DEBUG_VARS} from '@app/debug-vars';
 import {getProviderInstanceForWallet, hideModal} from '@app/helpers';
@@ -21,6 +20,7 @@ import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 import {Balance} from './balance';
 import {EthNetwork} from './eth-network/eth-network';
+import {TronNetwork} from './tron-network';
 
 const logger = Logger.create('SignJsonRpcRequest', {
   enabled:
@@ -161,16 +161,11 @@ export class SignJsonRpcRequest {
         );
 
         if (provider.isTron) {
-          const rawTxRequest = JSON.parse(signedTransaction.replace(/^0x/, ''));
-          const tronHttpProvider = new tron.providers.HttpProvider(
-            provider.ethRpcEndpoint,
+          const tx = await TronNetwork.broadcastTransaction(
+            signedTransaction,
+            provider,
           );
-          const tx = (await tronHttpProvider.request(
-            'wallet/broadcasttransaction',
-            rawTxRequest,
-            'post',
-          )) as {txid: string};
-          result = tx.txid;
+          result = tx.hash;
         } else {
           const tx = await rpcProvider.sendTransaction(signedTransaction);
           result = tx.hash;

@@ -100,8 +100,18 @@ export const TransactionSumScreen = observer(() => {
       setLoading(true);
       const estimate = await getFee(amount);
 
-      if (estimate?.expectedFee.isPositive()) {
+      let successCondition = false;
+
+      if (Provider.getByEthChainId(route.params.token.chain_id)?.isTron) {
+        // fee can be zero for TRON if user has enough bandwidth (freezed TRX)
+        successCondition = !!estimate?.expectedFee ?? false;
+      } else {
+        successCondition = estimate?.expectedFee.isPositive() ?? false;
+      }
+
+      if (successCondition) {
         navigation.navigate(TransactionStackRoutes.TransactionConfirmation, {
+          // @ts-ignore
           calculatedFees: estimate,
           from: route.params.from,
           to,

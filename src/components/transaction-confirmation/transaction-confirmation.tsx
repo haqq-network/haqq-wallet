@@ -64,6 +64,10 @@ export const TransactionConfirmation = observer(
         return null;
       }
 
+      if (Provider.getByEthChainId(token.chain_id)?.isTron) {
+        return fee.calculatedFees.expectedFee.operate(amount.toFloat(), 'add');
+      }
+
       if (amount.isNativeCoin) {
         return fee.calculatedFees.expectedFee.operate(amount, 'add');
       }
@@ -200,8 +204,11 @@ export const TransactionConfirmation = observer(
                     color={
                       transactionSumError ? Color.graphicRed1 : Color.textGreen1
                     }
+                    disabled={Provider.getByEthChainId(token.chain_id)?.isTron}
                     onPress={onFeePress}>
-                    {fee.expectedFeeString}
+                    {Provider.getByEthChainId(token.chain_id)?.isTron
+                      ? fee.expectedFee?.toBalanceString()
+                      : fee.expectedFeeString}
                   </Text>
                   <Icon
                     name={IconsName.tune}

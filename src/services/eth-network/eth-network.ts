@@ -23,6 +23,8 @@ import {
   TxEstimationParams,
 } from './types';
 
+import {TronNetwork} from '../tron-network';
+
 export class EthNetwork {
   static chainId: number = getDefaultChainId();
   static explorer: string | undefined;
@@ -151,6 +153,12 @@ export class EthNetwork {
     provider = Provider.selectedProvider,
   ): Promise<CalculatedFees> {
     try {
+      if (provider.isTron) {
+        return await TronNetwork.estimateFeeSendTRX(
+          {from, to, value, data},
+          provider,
+        );
+      }
       const rpcProvider = await getRpcProvider(provider);
       const block = await rpcProvider.getBlock('latest');
       const estimateGasLimit = await rpcProvider.estimateGas({
@@ -239,11 +247,19 @@ export class EthNetwork {
    * @returns fee data
    */
   static async estimate(
-    {from, to, value = Balance.Empty, data = '0x', minGas}: TxEstimationParams,
+    txParams: TxEstimationParams,
     calculationType: EstimationVariant = EstimationVariant.average,
     provider = Provider.selectedProvider,
   ): Promise<CalculatedFees> {
     try {
+      Logger.log('txParams', JSON.stringify(txParams, null, 2));
+      const {from, to, value = Balance.Empty, data = '0x', minGas} = txParams;
+      if (provider.isTron) {
+        return await TronNetwork.estimateFeeSendTRX(
+          {from, to, value, data},
+          provider,
+        );
+      }
       const rpcProvider = await getRpcProvider(provider);
       const {maxFeePerGas, maxPriorityFeePerGas} =
         await rpcProvider.getFeeData();
@@ -323,6 +339,19 @@ export class EthNetwork {
     provider = Provider.selectedProvider,
   ) {
     try {
+      if (provider.isTron) {
+        const signedTx = await transport.signTransaction(wallet.path!, {
+          from: wallet.tronAddress,
+          to: AddressUtils.toTron(to),
+          value: value.toBalanceString(
+            provider.decimals,
+            provider.decimals,
+            false,
+            true,
+          ),
+        });
+        return await TronNetwork.broadcastTransaction(signedTx, provider);
+      }
       const transaction = await EthNetwork.populateTransaction(
         estimate,
         {
@@ -340,7 +369,6 @@ export class EthNetwork {
       if (!signedTx) {
         throw new Error('signedTx not found');
       }
-
       return await EthNetwork.sendTransaction(signedTx, provider);
     } catch (error) {
       Logger.captureException(error, 'EthNetwork.transferTransaction', {
