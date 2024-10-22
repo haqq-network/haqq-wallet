@@ -104,6 +104,7 @@ export const JsonRpcSign = ({
             setFee={setFee}
             isFeeLoading={isFeeLoading}
             setFeeLoading={setFeeLoading}
+            wallet={wallet!}
           />
         )}
 

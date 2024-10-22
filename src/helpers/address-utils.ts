@@ -16,6 +16,52 @@ import {Whitelist} from './whitelist';
 
 export const HAQQ_VALIDATOR_PREFIX = 'haqqvaloper';
 export class AddressUtils {
+  static hexToTron(address?: string): AddressTron {
+    if (!address) {
+      return '' as AddressTron;
+    }
+    return tron.utils.address.fromHex(address) as AddressTron;
+  }
+
+  static tronToHex(address?: string): AddressEthereum {
+    if (!address) {
+      return '' as AddressEthereum;
+    }
+
+    if (address.startsWith('0x')) {
+      return address as AddressEthereum;
+    }
+
+    return tron.utils.address
+      .toChecksumAddress(address)
+      .replace(tron.utils.address.ADDRESS_PREFIX_REGEX, '0x')
+      .toLowerCase() as AddressEthereum;
+  }
+
+  static haqqToTron(address?: string): AddressTron {
+    if (!address) {
+      return '' as AddressTron;
+    }
+
+    return AddressUtils.hexToTron(
+      converter('haqq').toHex(address).toLowerCase(),
+    );
+  }
+
+  static tronToHaqq(address?: string): AddressCosmosHaqq {
+    if (!address) {
+      return '' as AddressCosmosHaqq;
+    }
+
+    if (address.startsWith('haqq')) {
+      return address as AddressCosmosHaqq;
+    }
+
+    return converter('haqq')
+      .toBech32(AddressUtils.tronToHex(address))
+      .toLowerCase() as AddressCosmosHaqq;
+  }
+
   static toTron(address?: string): AddressTron {
     if (!address) {
       return '' as AddressTron;
@@ -28,15 +74,7 @@ export class AddressUtils {
 
       // we should use tronAddress for existings wallet addres from Wallet store
       // because this wallet use tron address for different HD path
-      const wallet = Wallet.getAll().find(w => {
-        if (AddressUtils.isEthAddress(address)) {
-          return w.address.toLocaleLowerCase() === address.toLowerCase();
-        }
-        if (AddressUtils.isHaqqAddress(address)) {
-          w.cosmosAddress.toLocaleLowerCase() === address.toLowerCase();
-        }
-      });
-
+      const wallet = AddressUtils.getWalletByAddress(address);
       if (wallet) {
         return wallet.tronAddress;
       }
@@ -166,8 +204,13 @@ export class AddressUtils {
     }
   };
 
-  static equals = (a: string, b: string): boolean =>
-    AddressUtils.toEth(a) === AddressUtils.toEth(b);
+  static equals = (a: string, b: string): boolean => {
+    if (AddressUtils.isTronAddress(a) || AddressUtils.isTronAddress(b)) {
+      return AddressUtils.toTron(a) === AddressUtils.toTron(b);
+    }
+
+    return AddressUtils.toEth(a) === AddressUtils.toEth(b);
+  };
 
   static splitAddress = splitAddress;
 
@@ -189,6 +232,30 @@ export class AddressUtils {
   ) {
     const converterFn = AddressUtils.getConverterByNetwork(network);
     return addresses.map(converterFn);
+  }
+
+  static getWalletByAddress(address: string) {
+    const addressLower = address.toLowerCase();
+
+    return Wallet.getAll().find(w => {
+      if (address.startsWith('0x')) {
+        const trxAddress = AddressUtils.hexToTron(address);
+        return (
+          addressLower === w.address.toLowerCase() ||
+          trxAddress === w.tronAddress
+        );
+      }
+      if (address.startsWith('haqq')) {
+        const trxAddress = AddressUtils.haqqToTron(address);
+        return (
+          addressLower === w.cosmosAddress.toLowerCase() ||
+          trxAddress === w.tronAddress
+        );
+      }
+      if (AddressUtils.isTronAddress(address)) {
+        return w.tronAddress === address;
+      }
+    });
   }
 }
 

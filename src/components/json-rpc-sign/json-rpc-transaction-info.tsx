@@ -7,6 +7,7 @@ import {useTypedNavigation} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {EstimationVariant, Fee} from '@app/models/fee';
 import {Provider} from '@app/models/provider';
+import {WalletModel} from '@app/models/wallet';
 import {JsonRpcSignPopupStackParamList} from '@app/route-types';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
@@ -37,6 +38,7 @@ interface JsonRpcTransactionInfoProps {
   setFee: React.Dispatch<React.SetStateAction<Fee | null>>;
   isFeeLoading: boolean;
   setFeeLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  wallet: WalletModel;
 }
 
 export const JsonRpcTransactionInfo = observer(
@@ -50,6 +52,7 @@ export const JsonRpcTransactionInfo = observer(
     setFee,
     isFeeLoading,
     setFeeLoading,
+    wallet,
   }: JsonRpcTransactionInfoProps) => {
     const navigation = useTypedNavigation<JsonRpcSignPopupStackParamList>();
 
@@ -120,7 +123,7 @@ export const JsonRpcTransactionInfo = observer(
       try {
         const data = await EthNetwork.estimate(
           {
-            from: tx.from!,
+            from: tx.from! || wallet.address,
             to: tx.to!,
             value: new Balance(
               tx.value || Balance.Empty,
@@ -147,7 +150,7 @@ export const JsonRpcTransactionInfo = observer(
       if (fee) {
         const result = await awaitForFee({
           fee,
-          from: tx.from!,
+          from: tx.from! || wallet.address,
           to: tx.to!,
           value: new Balance(
             tx.value! || Balance.Empty,
@@ -159,7 +162,7 @@ export const JsonRpcTransactionInfo = observer(
         });
         setFee(result);
       }
-    }, [navigation, tx, fee, provider]);
+    }, [navigation, tx, fee, provider, wallet]);
 
     const onSwapRenderError = useCallback(() => {
       setIsSwapRenderError(true);

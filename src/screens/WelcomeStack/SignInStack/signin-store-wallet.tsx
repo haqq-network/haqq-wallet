@@ -2,9 +2,11 @@ import {useEffect} from 'react';
 
 import {
   ProviderHotBase,
+  ProviderHotTron,
   ProviderMnemonicBase,
   ProviderMnemonicTron,
   ProviderSSSBase,
+  ProviderSSSTron,
 } from '@haqq/rn-wallet-providers';
 import {observer} from 'mobx-react';
 
@@ -69,14 +71,21 @@ export const SignInStoreWalletScreen = observer(() => {
               {},
             );
 
-            const {address} = await provider.getAccountInfo('');
+            const tronHotProvider = new ProviderHotTron({
+              account: provider.getIdentifier().toLowerCase(),
+              getPassword: app.getPassword.bind(app),
+              tronWebHostUrl: '',
+            });
 
-            // FIXME: Implement tronAddress when ProviderHotTron will be implemented
+            const {address} = await provider.getAccountInfo('');
+            const hotTronAccountInfo = await tronHotProvider.getAccountInfo('');
+
             await Wallet.create(name, {
               path: '',
               address: AddressUtils.toEth(address),
               type: WalletType.hot,
               accountId: provider.getIdentifier().toLowerCase(),
+              tronAddress: hotTronAccountInfo.address as AddressTron,
             });
             break;
           case 'mnemonic':
@@ -85,26 +94,29 @@ export const SignInStoreWalletScreen = observer(() => {
               getPassword,
               {},
             );
-            Wallet.getAll().forEach(async wallet => {
-              const tronProvider = new ProviderMnemonicTron({
-                account: wallet.accountId!,
-                getPassword,
-                tronWebHostUrl: '',
-              });
-              const {address: tronAddress} = await tronProvider.getAccountInfo(
-                wallet.path?.replace?.(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
-              );
-              Wallet.update(wallet.address, {
-                tronAddress: tronAddress as AddressTron,
-              });
-            });
+
+            Wallet.getForAccount(mnemonicProvider.getIdentifier()).forEach(
+              async wallet => {
+                const tronMnemonicProvider = new ProviderMnemonicTron({
+                  account: wallet.accountId!,
+                  getPassword,
+                  tronWebHostUrl: '',
+                });
+                const tronMnemonicAccountInfo =
+                  await tronMnemonicProvider.getAccountInfo(
+                    wallet.path?.replace?.(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
+                  );
+                Wallet.update(wallet.address, {
+                  tronAddress: tronMnemonicAccountInfo.address as AddressTron,
+                });
+              },
+            );
 
             await mnemonicProvider.setMnemonicSaved();
 
             // Wallets were created on previous step
             break;
           case 'sss':
-            // FIXME: Implement tronAddress when ProviderSssTron will be implemented
             //@ts-ignore
             const storage = await getProviderStorage('', params.provider);
             const password = await getPassword();
@@ -130,6 +142,24 @@ export const SignInStoreWalletScreen = observer(() => {
               return;
             }
             await sssProvider.updatePin(password);
+
+            Wallet.getForAccount(sssProvider.getIdentifier()).forEach(
+              async wallet => {
+                const tronSSSProvider = new ProviderSSSTron({
+                  account: wallet.accountId!,
+                  getPassword,
+                  tronWebHostUrl: '',
+                  storage,
+                });
+
+                const tronSSSAccountInfo = await tronSSSProvider.getAccountInfo(
+                  wallet.path?.replace?.(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
+                );
+                Wallet.update(wallet.address, {
+                  tronAddress: tronSSSAccountInfo.address as AddressTron,
+                });
+              },
+            );
 
             navigation.navigate(SignInStackRoutes.SigninChooseAccount, {
               sssProvider: params.provider,

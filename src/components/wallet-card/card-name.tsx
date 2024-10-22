@@ -40,7 +40,7 @@ export const CardName = observer(
         </View>
         {(app.isTesterMode || app.isDeveloper) && (
           <Text variant={TextVariant.t15} color={Color.textBase3}>
-            {wallet.path}
+            {wallet.path} {wallet.type}
           </Text>
         )}
         <Spacer flex={1} />

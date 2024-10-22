@@ -5,12 +5,14 @@ import {
 } from '@haqq/rn-wallet-providers';
 
 import {ChooseAccountTabNames} from '@app/components/choose-account/choose-account';
+import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {AddWalletParams, ChooseAccountItem, WalletType} from '@app/types';
 import {
   ETH_HD_SHORT_PATH,
   LEDGER_HD_PATH_TEMPLATE,
+  TRON_HD_SHORT_PATH,
 } from '@app/variables/common';
 
 import {AddressUtils} from './address-utils';
@@ -38,8 +40,12 @@ export async function* getWalletsFromProvider(
       return provider.buildPath(_index);
     }
     if (mnemonicType === ChooseAccountTabNames.Basic) {
+      if (Provider.selectedProvider.isTron) {
+        return `${TRON_HD_SHORT_PATH}/${_index}`;
+      }
       return `${ETH_HD_SHORT_PATH}/${_index}`;
     }
+    // TODO: add TRON support for ledger
     return LEDGER_HD_PATH_TEMPLATE.replace('index', String(_index));
   };
 

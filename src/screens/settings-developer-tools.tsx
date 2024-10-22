@@ -346,10 +346,11 @@ export const SettingsDeveloperTools = observer(() => {
             },
             index => {
               let tx = {} as PartialJsonRpcRequest;
-              //eth_sendTransactio and eth_signTransaction
+              //eth_sendTransaction and eth_signTransaction
               if (index === 1 || index === 2) {
                 tx = {
-                  method: 'eth_signTransaction',
+                  method:
+                    index === 1 ? 'eth_sendTransaction' : 'eth_signTransaction',
                   params: [
                     {
                       value: '1',

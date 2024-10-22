@@ -20,9 +20,9 @@ export class WalletModel implements IWalletModel {
   get isSupportTron() {
     switch (this.type) {
       case WalletType.mnemonic:
-        return true;
-      case WalletType.hot:
       case WalletType.sss:
+      case WalletType.hot:
+        return true;
       case WalletType.ledgerBt:
       case WalletType.keystone:
       default:

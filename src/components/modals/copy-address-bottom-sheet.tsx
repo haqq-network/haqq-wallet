@@ -1,7 +1,7 @@
 import React, {useCallback, useMemo} from 'react';
 
 import Clipboard from '@react-native-clipboard/clipboard';
-import {FlatList, TouchableOpacity, View} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {BottomSheet} from '@app/components/bottom-sheet';
@@ -18,11 +18,7 @@ import {
   ModalType,
   Modals,
 } from '@app/types';
-import {
-  ETH_CHAIN_ID,
-  MAINNET_ETH_CHAIN_ID,
-  TRON_CHAIN_ID,
-} from '@app/variables/common';
+import {ETH_CHAIN_ID, MAINNET_ETH_CHAIN_ID} from '@app/variables/common';
 
 import {ImageWrapper} from '../image-wrapper';
 
@@ -52,7 +48,7 @@ export function CopyAddressBottomSheet({
   const addresses: AddressItem[] = useMemo(() => {
     const haqqProvider = Provider.getByEthChainId(MAINNET_ETH_CHAIN_ID);
     const ethProvider = Provider.getByEthChainId(ETH_CHAIN_ID);
-    const tronProvider = Provider.getByEthChainId(TRON_CHAIN_ID);
+    const tronProvider = Provider.getAll().find(p => p.isTron)!;
 
     return [
       {
@@ -76,32 +72,28 @@ export function CopyAddressBottomSheet({
   return (
     <BottomSheet
       onClose={onCloseModal}
+      scrollable
       contentContainerStyle={styles.container}
       i18nTitle={I18N.yourAddresses}>
-      <FlatList
-        data={addresses}
-        renderItem={({item}) => {
-          return (
-            <TouchableOpacity onPress={onPressCopy(item.address)}>
-              <View style={styles.item}>
-                <ImageWrapper
-                  resizeMode="cover"
-                  source={item.icon}
-                  style={styles.icon}
-                  borderRadius={12}
-                />
-                <View style={styles.addressBlock}>
-                  <Text variant={TextVariant.t11}>{item.providerName}</Text>
-                  <Text variant={TextVariant.t14} color={Color.textBase2}>
-                    {shortAddress(item.address)}
-                  </Text>
-                </View>
-                <Icon i22 name={IconsName.copy} color={Color.textBase2} />
-              </View>
-            </TouchableOpacity>
-          );
-        }}
-      />
+      {addresses.map(item => (
+        <TouchableOpacity onPress={onPressCopy(item.address)}>
+          <View style={styles.item}>
+            <ImageWrapper
+              resizeMode="cover"
+              source={item.icon}
+              style={styles.icon}
+              borderRadius={12}
+            />
+            <View style={styles.addressBlock}>
+              <Text variant={TextVariant.t11}>{item.providerName}</Text>
+              <Text variant={TextVariant.t14} color={Color.textBase2}>
+                {shortAddress(item.address)}
+              </Text>
+            </View>
+            <Icon i22 name={IconsName.copy} color={Color.textBase2} />
+          </View>
+        </TouchableOpacity>
+      ))}
       <Spacer height={50} />
     </BottomSheet>
   );

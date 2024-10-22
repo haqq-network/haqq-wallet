@@ -66,12 +66,23 @@ export const SssStoreWalletScreen = observer(() => {
             canNext = balance.isPositive() || index === 0;
 
             if (canNext) {
+              // generate tron wallet address
+              const tronProvider = new ProviderSSSTron({
+                account: provider.getIdentifier(),
+                getPassword: app.getPassword.bind(app),
+                tronWebHostUrl: '',
+                storage,
+              });
+              const {address: tronAddress} = await tronProvider.getAccountInfo(
+                hdPath.replace(ETH_COIN_TYPE, TRON_COIN_TYPE),
+              );
               await Wallet.create(name, {
                 address: address,
                 type: WalletType.sss,
                 path: hdPath,
                 accountId: provider.getIdentifier(),
                 socialLinkEnabled: true,
+                tronAddress: tronAddress as AddressTron,
               });
             }
           }

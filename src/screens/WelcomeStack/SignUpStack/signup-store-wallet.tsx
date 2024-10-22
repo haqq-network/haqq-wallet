@@ -1,16 +1,19 @@
 import {useCallback, useEffect} from 'react';
 
 import {
-  ProviderMnemonicTron,
   ProviderSSSBase,
   ProviderSSSEvm,
+  ProviderSSSTron,
 } from '@haqq/rn-wallet-providers';
 import {observer} from 'mobx-react';
 
 import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
-import {getProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet';
+import {
+  getProviderForNewWallet,
+  getTronProviderForNewWallet,
+} from '@app/helpers/get-provider-for-new-wallet';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
@@ -64,6 +67,8 @@ export const SignUpStoreWalletScreen = observer(() => {
       //@ts-ignore
       route.params.provider instanceof ProviderSSSEvm ||
       //@ts-ignore
+      route.params.provider instanceof ProviderSSSTron ||
+      //@ts-ignore
       Object.values(SssProviders).includes(route.params.provider)
     ) {
       return WalletType.sss;
@@ -86,6 +91,10 @@ export const SignUpStoreWalletScreen = observer(() => {
     setTimeout(async () => {
       try {
         const provider = await getCurrentProvider();
+        const tronProvider = await getTronProviderForNewWallet(
+          getWalletType(),
+          provider.getIdentifier(),
+        );
 
         // sssLimitReached
         if (!provider || typeof provider?.getIdentifier !== 'function') {
@@ -132,11 +141,6 @@ export const SignUpStoreWalletScreen = observer(() => {
 
         try {
           const {address} = await provider.getAccountInfo(hdPath);
-          const tronProvider = new ProviderMnemonicTron({
-            account: provider.getIdentifier(),
-            getPassword: app.getPassword.bind(app),
-            tronWebHostUrl: '',
-          });
           const {address: tronAddress} = await tronProvider.getAccountInfo(
             hdPath.replace?.(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
           );

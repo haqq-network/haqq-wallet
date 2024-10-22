@@ -13,6 +13,7 @@ import {
   AddressCosmosHaqq,
   AddressEthereum,
   AddressType,
+  ChainId,
   IContract,
   IToken,
   IndexerToken,
@@ -235,6 +236,9 @@ class TokensStore implements MobXStore<IToken> {
         ...this.generateNativeTokens(wallet),
       ];
     });
+    const TRON_PROVIDER_CHAIN_IDS = Provider.getAll()
+      .filter(p => p.isTron)
+      .map(p => p.ethChainId as ChainId);
     for await (const t of updates.tokens) {
       try {
         const isPositive = new Balance(t.value).isPositive();
@@ -283,7 +287,21 @@ class TokensStore implements MobXStore<IToken> {
             : require('@assets/images/empty-icon.png'),
         };
 
-        const walletAddress = AddressUtils.toEth(t.address);
+        const isTron = TRON_PROVIDER_CHAIN_IDS.includes(t.chain_id);
+        let walletAddress = '' as AddressEthereum;
+
+        if (isTron) {
+          const w = AddressUtils.getWalletByAddress(t.address);
+          if (w) {
+            walletAddress = w.address;
+          } else {
+            walletAddress = t.address.startsWith('0x')
+              ? (t.address as AddressEthereum)
+              : AddressUtils.tronToHex(t.address);
+          }
+        } else {
+          walletAddress = AddressUtils.toEth(t.address);
+        }
 
         if (!_tokens[walletAddress]?.length) {
           _tokens[walletAddress] = [

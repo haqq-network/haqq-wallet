@@ -142,7 +142,10 @@ export const Wallets = ({
           }
 
           return (
-            <CarouselItem index={i} pan={pan} key={w.address}>
+            <CarouselItem
+              index={i}
+              pan={pan}
+              key={'carousel_item_wallet_card_' + w.address}>
               <WalletCard
                 testID={`${testID}_${w.address}`}
                 wallet={w}
