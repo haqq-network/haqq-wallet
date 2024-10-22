@@ -169,7 +169,7 @@ export const TokenViewer = observer(
 
           return (
             <WalletCard
-              key={address}
+              key={'wallet_card' + _wallet.address + '_token_viewer_' + address}
               wallet={_wallet}
               tokens={tokens.filter(
                 item =>

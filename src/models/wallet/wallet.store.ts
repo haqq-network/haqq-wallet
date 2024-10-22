@@ -26,8 +26,12 @@ import {
 
 import {
   AddWalletParams,
+  AddressCosmosHaqq,
   AddressEthereum,
+  AddressTron,
   ChainId,
+  HexNumber,
+  IndexerBalance,
   IndexerBalanceData,
   WalletCardStyleT,
   WalletType,
@@ -92,28 +96,59 @@ class WalletStore implements RPCObserver {
     return isHydrated(this);
   }
 
+  private _prepareIndexerBalances = (data: IndexerBalance) => {
+    const TRON_CHAIN_IDS = Provider.getAllNetworks()
+      .filter(p => p.isTron)
+      .map(p => p.ethChainId as ChainId);
+
+    return data.reduce(
+      (acc, [address, chainId, value]) => {
+        const isTron = TRON_CHAIN_IDS.includes(chainId);
+        let ADDRESS_KEY = '';
+
+        // convert TRX address to ETH address
+        if (isTron) {
+          const wallet = AddressUtils.getWalletByAddress(address);
+          if (wallet) {
+            ADDRESS_KEY = wallet.address;
+          } else {
+            ADDRESS_KEY = address.startsWith('0x')
+              ? address
+              : AddressUtils.tronToHex(address);
+          }
+        } else {
+          ADDRESS_KEY = AddressUtils.toEth(address);
+        }
+
+        return {
+          ...acc,
+          [chainId]: {
+            ...acc[chainId],
+            [ADDRESS_KEY]: value,
+          },
+        };
+      },
+      {} as {
+        [key: ChainId]: {
+          [key: AddressEthereum | AddressCosmosHaqq | AddressTron]: HexNumber;
+        };
+      },
+    );
+  };
+
   private parseIndexerBalances = (
     data: IndexerUpdatesResponse,
   ): IndexerBalanceData => {
-    Object.entries(data).forEach(([key, value]) => {
-      if (['addresses', 'tokens', 'nfts'].includes(key)) {
-        return;
-      }
-
-      Object.entries(value).forEach(([key2, value2]) => {
-        if (
-          AddressUtils.isValidAddress(key2) &&
-          !AddressUtils.isHaqqAddress(key2)
-        ) {
-          // @ts-ignore
-          value[AddressUtils.toHaqq(key2)] = value2;
-          // @ts-ignore
-          delete value[key2];
-        }
-      });
-    });
-
     const providers = Provider.getAll().filter(p => p.id !== ALL_NETWORKS_ID);
+
+    const staked = this._prepareIndexerBalances(data.total_staked);
+    const vested = this._prepareIndexerBalances(data.vested);
+    const available = this._prepareIndexerBalances(data.available);
+    const total = this._prepareIndexerBalances(data.total);
+    const lock = this._prepareIndexerBalances(data.locked);
+    const availableForStake = this._prepareIndexerBalances(
+      data.available_for_stake,
+    );
 
     return providers.reduce((acc, p) => {
       return {
@@ -122,64 +157,39 @@ class WalletStore implements RPCObserver {
           ...this.wallets.reduce((ac, w) => {
             const cosmosAddress = AddressUtils.toHaqq(w.address);
             const unlock = Number(data?.unlock?.[cosmosAddress]) ?? 0;
-            const ADDRESS_KEY = p.isTron
-              ? w.tronAddress
-              : AddressUtils.toEth(w.address);
+            const ADDRESS_KEY = AddressUtils.toEth(w.address);
 
             return {
               ...ac,
               [ADDRESS_KEY]: new BalanceModel({
                 staked: new Balance(
-                  data?.total_staked?.find?.(
-                    ([address, chainId]) =>
-                      AddressUtils.equals(ADDRESS_KEY, address) &&
-                      p.ethChainId === chainId,
-                  )?.[2] ?? ZERO_HEX_NUMBER,
+                  staked[p.ethChainId]?.[ADDRESS_KEY] ?? ZERO_HEX_NUMBER,
                   p.decimals,
                   p.denom,
                 ),
                 vested: new Balance(
-                  data?.vested?.find?.(
-                    ([address, chainId]) =>
-                      AddressUtils.equals(ADDRESS_KEY, address) &&
-                      p.ethChainId === chainId,
-                  )?.[2] ?? ZERO_HEX_NUMBER,
+                  vested[p.ethChainId]?.[ADDRESS_KEY] ?? ZERO_HEX_NUMBER,
                   p.decimals,
                   p.denom,
                 ),
                 available: new Balance(
-                  data?.available?.find?.(
-                    ([address, chainId]) =>
-                      AddressUtils.equals(ADDRESS_KEY, address) &&
-                      p.ethChainId === chainId,
-                  )?.[2] ?? ZERO_HEX_NUMBER,
+                  available[p.ethChainId]?.[ADDRESS_KEY] ?? ZERO_HEX_NUMBER,
                   p.decimals,
                   p.denom,
                 ),
                 total: new Balance(
-                  data?.total?.find?.(
-                    ([address, chainId]) =>
-                      AddressUtils.equals(ADDRESS_KEY, address) &&
-                      p.ethChainId === chainId,
-                  )?.[2] ?? ZERO_HEX_NUMBER,
+                  total[p.ethChainId]?.[ADDRESS_KEY] ?? ZERO_HEX_NUMBER,
                   p.decimals,
                   p.denom,
                 ),
                 locked: new Balance(
-                  data?.locked?.find?.(
-                    ([address, chainId]) =>
-                      AddressUtils.equals(ADDRESS_KEY, address) &&
-                      p.ethChainId === chainId,
-                  )?.[2] ?? ZERO_HEX_NUMBER,
+                  lock[p.ethChainId]?.[ADDRESS_KEY] ?? ZERO_HEX_NUMBER,
                   p.decimals,
                   p.denom,
                 ),
                 availableForStake: new Balance(
-                  data?.available_for_stake?.find?.(
-                    ([address, chainId]) =>
-                      AddressUtils.equals(ADDRESS_KEY, address) &&
-                      p.ethChainId === chainId,
-                  )?.[2] ?? ZERO_HEX_NUMBER,
+                  availableForStake[p.ethChainId]?.[ADDRESS_KEY] ??
+                    ZERO_HEX_NUMBER,
                   p.decimals,
                   p.denom,
                 ),
@@ -283,9 +293,18 @@ class WalletStore implements RPCObserver {
       return this._calculateAllNetworksBalance(address);
     }
 
+    let ADDRESS_KEY = '' as AddressEthereum;
+
+    if (provider.isTron) {
+      const wallet = AddressUtils.getWalletByAddress(address);
+      ADDRESS_KEY = wallet?.address ?? AddressUtils.tronToHex(address);
+    } else {
+      ADDRESS_KEY = AddressUtils.toEth(address);
+    }
+
     return (
-      this.balances[provider.ethChainId]?.[AddressUtils.toEth(address)] ||
-      Balance.emptyBalances[AddressUtils.toEth(address)]
+      this.balances[provider.ethChainId]?.[ADDRESS_KEY] ||
+      Balance.emptyBalances[ADDRESS_KEY]
     );
   };
 
@@ -373,7 +392,12 @@ class WalletStore implements RPCObserver {
 
   getById(id: string = '') {
     return (
-      this.wallets.find(wallet => wallet.address === id.toLowerCase()) ?? null
+      this.wallets.find(
+        wallet =>
+          wallet.address.toLowerCase() === id.toLowerCase() ||
+          wallet.tronAddress?.toLowerCase() === id.toLowerCase() ||
+          wallet.cosmosAddress.toLowerCase() === id.toLowerCase(),
+      ) ?? null
     );
   }
 

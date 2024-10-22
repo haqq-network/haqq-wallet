@@ -44,7 +44,9 @@ export const TokensWidget = observer(({onPress, tokens}: Props) => {
         )
         .slice(0, VISIBLE_ITEM_AMOUNT)
         .map(item => {
-          return <TokenRow key={item.id} item={item} />;
+          return (
+            <TokenRow key={'tokens_widget_token_row_' + item.id} item={item} />
+          );
         })}
       {otherTokensAmount !== null && (
         <>

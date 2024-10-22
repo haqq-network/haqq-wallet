@@ -59,7 +59,7 @@ export const WalletCard = observer(
         }
         return (
           <TokenRow
-            key={token.id}
+            key={`${wallet.address}_tokensOnly_wallet_card_token_row_${token.id}_${idx}`}
             onPress={() => onPressToken?.(wallet, token, idx)}
             item={token}
             checked={checkTokenSelected?.(wallet, token, idx)}
@@ -130,7 +130,7 @@ export const WalletCard = observer(
           }
           return (
             <TokenRow
-              key={token.id}
+              key={`${wallet.address}_wallet_card_token_row_${token.id}_${idx}`}
               item={token}
               onPress={() => onPressToken?.(wallet, token, idx)}
               checked={checkTokenSelected?.(wallet, token, idx)}
