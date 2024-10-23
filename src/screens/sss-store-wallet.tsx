@@ -22,7 +22,9 @@ const logger = Logger.create('SssStoreWalletScreen', {
 export const SssStoreWalletScreen = () => {
   logger.log('SssStoreWalletScreen: Component rendering');
   const route = useTypedRoute<'sssStoreWallet'>();
-  logger.log('SssStoreWalletScreen: Retrieved typed route', { params: route.params });
+  logger.log('SssStoreWalletScreen: Retrieved typed route', {
+    params: route.params,
+  });
   const navigation = useTypedNavigation();
   logger.log('SssStoreWalletScreen: Retrieved typed navigation');
 
@@ -47,7 +49,9 @@ export const SssStoreWalletScreen = () => {
           route.params.localShare,
           null,
           route.params.verifier,
-          route.params.token,
+          typeof route.params.token === 'string'
+            ? route.params.token
+            : route.params.token.value,
           app.getPassword.bind(app),
           storage,
           {
@@ -55,7 +59,10 @@ export const SssStoreWalletScreen = () => {
             generateSharesUrl: RemoteConfig.get('sss_generate_shares_url')!,
           },
         ).catch(err => {
-          logger.log('SssStoreWalletScreen: Error initializing ProviderSSSBase', { error: err });
+          logger.log(
+            'SssStoreWalletScreen: Error initializing ProviderSSSBase',
+            {error: err},
+          );
           return ErrorHandler.handle('sssLimitReached', err);
         });
         logger.log('SssStoreWalletScreen: ProviderSSSBase initialized');
@@ -65,9 +72,9 @@ export const SssStoreWalletScreen = () => {
 
         logger.log('SssStoreWalletScreen: Starting wallet creation loop');
         while (canNext) {
-          logger.log('SssStoreWalletScreen: Loop iteration', { index });
+          logger.log('SssStoreWalletScreen: Loop iteration', {index});
           const total = Wallet.getAll().length;
-          logger.log('SssStoreWalletScreen: Total wallets', { total });
+          logger.log('SssStoreWalletScreen: Total wallets', {total});
 
           const name =
             total === 0
@@ -75,21 +82,27 @@ export const SssStoreWalletScreen = () => {
               : getText(I18N.signinStoreWalletAccountNumber, {
                   number: `${total + 1}`,
                 });
-          logger.log('SssStoreWalletScreen: Wallet name determined', { name });
+          logger.log('SssStoreWalletScreen: Wallet name determined', {name});
 
           const hdPath = `${ETH_HD_SHORT_PATH}/${index}`;
-          logger.log('SssStoreWalletScreen: HD path created', { hdPath });
+          logger.log('SssStoreWalletScreen: HD path created', {hdPath});
 
           logger.log('SssStoreWalletScreen: Getting account info');
           const {address} = await provider.getAccountInfo(hdPath);
-          logger.log('SssStoreWalletScreen: Account info retrieved', { address });
+          logger.log('SssStoreWalletScreen: Account info retrieved', {address});
 
           if (!Wallet.getById(address)) {
-            logger.log('SssStoreWalletScreen: Wallet not found, proceeding with creation');
+            logger.log(
+              'SssStoreWalletScreen: Wallet not found, proceeding with creation',
+            );
             const balance = app.getAvailableBalance(address);
-            logger.log('SssStoreWalletScreen: Retrieved balance', { balance: balance.toString() });
+            logger.log('SssStoreWalletScreen: Retrieved balance', {
+              balance: balance.toString(),
+            });
             canNext = balance.isPositive() || index === 0;
-            logger.log('SssStoreWalletScreen: Determined if can proceed', { canNext });
+            logger.log('SssStoreWalletScreen: Determined if can proceed', {
+              canNext,
+            });
 
             if (canNext) {
               logger.log('SssStoreWalletScreen: Creating new wallet');
@@ -103,17 +116,21 @@ export const SssStoreWalletScreen = () => {
               logger.log('SssStoreWalletScreen: Wallet created');
             }
           } else {
-            logger.log('SssStoreWalletScreen: Wallet already exists', { address });
+            logger.log('SssStoreWalletScreen: Wallet already exists', {
+              address,
+            });
           }
 
           index += 1;
-          logger.log('SssStoreWalletScreen: Incremented index', { newIndex: index });
+          logger.log('SssStoreWalletScreen: Incremented index', {
+            newIndex: index,
+          });
         }
 
         logger.log('SssStoreWalletScreen: Navigating to sssFinish');
         navigation.navigate('sssFinish');
       } catch (e) {
-        logger.log('SssStoreWalletScreen: Caught error', { error: e });
+        logger.log('SssStoreWalletScreen: Caught error', {error: e});
         switch (e) {
           case 'wallet_already_exists':
             logger.log('SssStoreWalletScreen: Wallet already exists error');

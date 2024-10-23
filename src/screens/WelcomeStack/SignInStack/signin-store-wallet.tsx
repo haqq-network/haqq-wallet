@@ -151,7 +151,9 @@ export const SignInStoreWalletScreen = observer(() => {
               params.sssLocalShare,
               null,
               params.verifier,
-              params.token.value,
+              typeof params.token === 'string'
+                ? params.token
+                : params.token.value,
               app.getPassword.bind(app),
               storage,
               {
