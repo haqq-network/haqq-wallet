@@ -27,7 +27,7 @@ export async function getProviderForNewWallet(params?: WalletInitialData) {
       params.sssLocalShare || null,
       null,
       params.verifier,
-      params.token?.value,
+      typeof params.token === 'string' ? params.token : params.token.value,
       app.getPassword.bind(app),
       storage,
       {
