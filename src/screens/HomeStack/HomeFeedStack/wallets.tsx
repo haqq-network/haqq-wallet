@@ -10,8 +10,7 @@ import {observer} from 'mobx-react';
 import {Wallets} from '@app/components/wallets';
 import {getProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet';
 import {useTypedNavigation} from '@app/hooks';
-import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
-import {Wallet} from '@app/models/wallet';
+import {Wallet, WalletModel} from '@app/models/wallet';
 import {HomeFeedStackParamList, HomeStackRoutes} from '@app/route-types';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {WalletType} from '@app/types';
@@ -20,7 +19,7 @@ import {filterWalletConnectSessionsByAddress} from '@app/utils';
 export const WalletsWrapper = observer(() => {
   const navigation = useTypedNavigation<HomeFeedStackParamList>();
   const visible = Wallet.getAllVisible();
-  const balance = useWalletsBalance(visible);
+  const balance = Wallet.getBalancesByAddressList(visible);
 
   const onPressSend = useCallback(
     (address: string) => {
@@ -29,15 +28,15 @@ export const WalletsWrapper = observer(() => {
     [navigation],
   );
 
-  const onPressQR = useCallback(
+  const onPressReceive = useCallback(
     (address: string) => {
-      navigation.navigate(HomeStackRoutes.AccountDetail, {address});
+      navigation.navigate(HomeStackRoutes.SelectNetwork, {address});
     },
     [navigation],
   );
 
   const onPressPhrase = useCallback(
-    (wallet: Wallet) => {
+    (wallet: WalletModel) => {
       navigation.navigate(HomeStackRoutes.Backup, {
         wallet,
         pinEnabled: true,
@@ -57,7 +56,7 @@ export const WalletsWrapper = observer(() => {
   );
 
   const onPressProtection = useCallback(
-    async (wallet: Wallet) => {
+    async (wallet: WalletModel) => {
       if (!wallet.accountId) {
         return;
       }
@@ -168,7 +167,7 @@ export const WalletsWrapper = observer(() => {
       onPressHardwareWallet={onPressHardwareWallet}
       onPressCreate={onPressCreate}
       onPressRestore={onPressRestore}
-      onPressQR={onPressQR}
+      onPressReceive={onPressReceive}
       onPressProtection={onPressProtection}
       onPressAccountInfo={onPressAccountInfo}
       testID="wallets"

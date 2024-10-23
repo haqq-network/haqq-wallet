@@ -8,7 +8,7 @@ import {AddressUtils} from '@app/helpers/address-utils';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {EstimationVariant} from '@app/models/fee';
 import {Provider, ProviderModel} from '@app/models/provider';
-import {Wallet} from '@app/models/wallet';
+import {IWalletModel} from '@app/models/wallet';
 import {getDefaultChainId} from '@app/network';
 import {Balance} from '@app/services/balance';
 import {getERC1155TransferData} from '@app/services/eth-network/erc1155';
@@ -22,6 +22,8 @@ import {
   TxCustomEstimationParams,
   TxEstimationParams,
 } from './types';
+
+import {TronNetwork} from '../tron-network';
 
 export class EthNetwork {
   static chainId: number = getDefaultChainId();
@@ -45,7 +47,11 @@ export class EthNetwork {
         throw new Error('Invalid "to" address');
       }
       const rpcProvider = await getRpcProvider(provider);
-      const nonce = await rpcProvider.getTransactionCount(from, 'latest');
+      let nonce: number | undefined;
+
+      if (provider.isEVM) {
+        nonce = await rpcProvider.getTransactionCount(from, 'latest');
+      }
 
       const transaction = {
         to: to,
@@ -147,6 +153,12 @@ export class EthNetwork {
     provider = Provider.selectedProvider,
   ): Promise<CalculatedFees> {
     try {
+      if (provider.isTron) {
+        return await TronNetwork.estimateFeeSendTRX(
+          {from, to, value, data},
+          provider,
+        );
+      }
       const rpcProvider = await getRpcProvider(provider);
       const block = await rpcProvider.getBlock('latest');
       const estimateGasLimit = await rpcProvider.estimateGas({
@@ -235,11 +247,19 @@ export class EthNetwork {
    * @returns fee data
    */
   static async estimate(
-    {from, to, value = Balance.Empty, data = '0x', minGas}: TxEstimationParams,
+    txParams: TxEstimationParams,
     calculationType: EstimationVariant = EstimationVariant.average,
     provider = Provider.selectedProvider,
   ): Promise<CalculatedFees> {
     try {
+      Logger.log('txParams', JSON.stringify(txParams, null, 2));
+      const {from, to, value = Balance.Empty, data = '0x', minGas} = txParams;
+      if (provider.isTron) {
+        return await TronNetwork.estimateFeeSendTRX(
+          {from, to, value, data},
+          provider,
+        );
+      }
       const rpcProvider = await getRpcProvider(provider);
       const {maxFeePerGas, maxPriorityFeePerGas} =
         await rpcProvider.getFeeData();
@@ -313,12 +333,25 @@ export class EthNetwork {
   async transferTransaction(
     estimate: CalculatedFees,
     transport: ProviderInterface,
-    wallet: Wallet,
+    wallet: IWalletModel,
     to: string,
     value: Balance,
     provider = Provider.selectedProvider,
   ) {
     try {
+      if (provider.isTron) {
+        const signedTx = await transport.signTransaction(wallet.path!, {
+          from: wallet.tronAddress,
+          to: AddressUtils.toTron(to),
+          value: value.toBalanceString(
+            provider.decimals,
+            provider.decimals,
+            false,
+            true,
+          ),
+        });
+        return await TronNetwork.broadcastTransaction(signedTx, provider);
+      }
       const transaction = await EthNetwork.populateTransaction(
         estimate,
         {
@@ -336,7 +369,6 @@ export class EthNetwork {
       if (!signedTx) {
         throw new Error('signedTx not found');
       }
-
       return await EthNetwork.sendTransaction(signedTx, provider);
     } catch (error) {
       Logger.captureException(error, 'EthNetwork.transferTransaction', {
@@ -381,7 +413,7 @@ export class EthNetwork {
   async transferERC20(
     estimate: CalculatedFees,
     transport: ProviderInterface,
-    from: Wallet,
+    from: IWalletModel,
     to: string,
     amount: Balance,
     contractAddress: string,
@@ -418,7 +450,7 @@ export class EthNetwork {
   async transferERC721(
     estimate: CalculatedFees,
     transport: ProviderInterface,
-    from: Wallet,
+    from: IWalletModel,
     to: string,
     tokenId: number,
     contractAddress: string,
@@ -455,7 +487,7 @@ export class EthNetwork {
   async transferERC1155(
     estimate: CalculatedFees,
     transport: ProviderInterface,
-    from: Wallet,
+    from: IWalletModel,
     to: string,
     tokenId: number,
     contractAddress: string,

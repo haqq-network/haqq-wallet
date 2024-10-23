@@ -42,7 +42,12 @@ export const SignInNetworksScreen = memo(() => {
 
   const onLogin = useCallback(
     async (provider: SssProviders, skipCheck: boolean = false) => {
-      logger.log('onLogin callback called with provider:', provider, 'and skipCheck:', skipCheck);
+      logger.log(
+        'onLogin callback called with provider:',
+        provider,
+        'and skipCheck:',
+        skipCheck,
+      );
       let creds;
       try {
         logger.log('Attempting to login based on provider');
@@ -104,7 +109,9 @@ export const SignInNetworksScreen = memo(() => {
             logger.log('Verifying cloud permissions');
             const hasPermissions = await verifyCloud(provider);
             if (!hasPermissions) {
-              logger.log('Cloud permissions not granted, navigating to SigninCloudProblems');
+              logger.log(
+                'Cloud permissions not granted, navigating to SigninCloudProblems',
+              );
               navigation.navigate(SignInStackRoutes.SigninCloudProblems, {
                 sssProvider: provider,
                 onNext: () => onLogin(provider, true),
@@ -179,9 +186,10 @@ export const SignInNetworksScreen = memo(() => {
 
   const onPressHardwareWallet = useCallback(() => {
     logger.log('Hardware wallet button pressed');
-    const route = app.onboarded ? HomeStackRoutes.Device : WelcomeStackRoutes.Device;
-    logger.log('Navigating to:', route);
-    navigation.navigate(route);
+    navigation.replace(
+      // @ts-ignore
+      app.onboarded ? HomeStackRoutes.Device : WelcomeStackRoutes.Device,
+    );
   }, [navigation]);
 
   logger.log('Rendering SigninNetworks component');

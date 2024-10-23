@@ -3,10 +3,8 @@ import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {observer} from 'mobx-react';
 
 import {TransactionAddress} from '@app/components/transaction-address';
-import {Events} from '@app/events';
 import {showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
-import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {Contact} from '@app/models/contact';
@@ -110,10 +108,7 @@ export const TransactionAddressScreen = observer(() => {
               text: 'Loading token balances',
             });
             try {
-              await Promise.all([
-                Token.fetchTokens(true, true),
-                awaitForEventDone(Events.onBalanceSync),
-              ]);
+              await Token.fetchTokens(true, true);
             } catch {
             } finally {
               hide();

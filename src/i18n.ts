@@ -439,6 +439,7 @@ export enum I18N {
   walletCreateImport = 'walletCreateImport',
   walletCardSend = 'walletCardSend',
   walletCardWithoutBackup = 'walletCardWithoutBackup',
+  yourAddresses = 'yourAddresses',
   settingsAccountStyleChoseColor = 'settingsAccountStyleChoseColor',
   settingsAccountStyleChosePattern = 'settingsAccountStyleChosePattern',
   settingsAccountStyleGenerate = 'settingsAccountStyleGenerate',

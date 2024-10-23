@@ -8,11 +8,7 @@ import {AddressUtils} from '@app/helpers/address-utils';
 import {I18N, getText} from '@app/i18n';
 import {Currencies} from '@app/models/currencies';
 import {NftCollectionIndexer} from '@app/models/nft';
-import {
-  ALL_NETWORKS_ID,
-  INDEXER_PROXY_ENDPOINT,
-  Provider,
-} from '@app/models/provider';
+import {ALL_NETWORKS_ID, Provider} from '@app/models/provider';
 import {
   ContractNameMap,
   IContract,
@@ -81,13 +77,27 @@ export class Indexer {
   }
 
   private getProvidersHeader = (accounts: string[]) => {
-    return Provider.selectedProviderId === ALL_NETWORKS_ID
-      ? Provider.getAll()
-          .filter(item => item.id !== ALL_NETWORKS_ID)
-          .reduce((acc, item) => ({...acc, [item.ethChainId]: accounts}), {})
-      : {
-          [Provider.selectedProvider.ethChainId]: accounts,
-        };
+    const provider = Provider.selectedProvider;
+
+    if (provider.id === ALL_NETWORKS_ID) {
+      return Provider.getAllNetworks().reduce(
+        (acc, item) => ({
+          ...acc,
+          [item.ethChainId]: AddressUtils.convertAddressByNetwork(
+            accounts,
+            item.networkType,
+          ),
+        }),
+        {},
+      );
+    }
+
+    return {
+      [provider.ethChainId]: AddressUtils.convertAddressByNetwork(
+        accounts,
+        provider.networkType,
+      ),
+    };
   };
 
   get endpoint() {
@@ -122,7 +132,7 @@ export class Indexer {
       const updated = lastUpdated || new Date(0);
 
       const result: IndexerUpdatesResponse = await jsonrpcRequest(
-        INDEXER_PROXY_ENDPOINT,
+        RemoteConfig.get('proxy_server')!,
         'updates_v2',
         [
           this.getProvidersHeader(accounts),
@@ -209,7 +219,7 @@ export class Indexer {
         }
 
         const response = await jsonrpcRequest<IndexerTransactionResponse>(
-          INDEXER_PROXY_ENDPOINT,
+          RemoteConfig.get('proxy_server')!,
           'transactions_by_timestamp',
           [this.getProvidersHeader(accounts), latestBlock ?? 'latest'],
         );
@@ -233,7 +243,7 @@ export class Indexer {
       }
 
       const response = await jsonrpcRequest<NftCollectionIndexer[]>(
-        INDEXER_PROXY_ENDPOINT,
+        RemoteConfig.get('proxy_server')!,
         'nfts',
         [this.getProvidersHeader(accounts)],
       );

@@ -126,6 +126,7 @@ const getTestModals = (): TestModals => {
     cardDetailsQr: null,
     walletsBottomSheet: null,
     providersBottomSheet: null,
+    copyAddressBottomSheet: null,
     // Other modals props.
     noInternet: {showClose: true},
     loading: {
@@ -203,7 +204,7 @@ const getTestModals = (): TestModals => {
       onClose: () => logger.log('lockedTokensInfo closed'),
     },
     notEnoughGas: {
-      currentAmount: app.getBalanceData(firstWalletAddress).available,
+      currentAmount: Wallet.getBalances(firstWalletAddress).available,
       gasLimit: new Balance(MIN_GAS_LIMIT, 0),
       onClose: () => logger.log('notEnoughGas closed'),
     },
@@ -726,7 +727,7 @@ export const SettingsTestScreen = observer(() => {
               wallets: Wallet.getAllVisible(),
             });
             const providerId = await awaitForProvider({
-              initialProviderChainId: Provider.selectedProvider.ethChainId,
+              disableAllNetworksOption: true,
               title: I18N.networks,
             });
             const result = await awaitForJsonRpcSign({

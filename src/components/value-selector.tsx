@@ -42,12 +42,12 @@ export const ValueSelector = ({
     <PopupContainer style={style}>
       {values?.map?.((value, idx) => {
         return typeof renderCell === 'function' ? (
-          <React.Fragment key={value.id}>
+          <React.Fragment key={'value_' + value.id}>
             {renderCell(value, idx, (v, i) => handleValuePress(v, i))}
           </React.Fragment>
         ) : (
           <ValueRow
-            key={value.id}
+            key={'value_row_' + value.id}
             item={value}
             hideArrow
             checked={idx === selected}

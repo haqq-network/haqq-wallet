@@ -2,13 +2,13 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import _ from 'lodash';
 import {Dimensions, StatusBar, View} from 'react-native';
-import {BarCodeReadEvent} from 'react-native-camera';
 // @ts-ignore
 import {QRscanner} from 'react-native-qr-decode-image-camera';
 
 import {Color, getColor} from '@app/colors';
 import {First, Text} from '@app/components/ui';
 import {app} from '@app/contexts';
+import {DEBUG_VARS} from '@app/debug-vars';
 import {createTheme} from '@app/helpers';
 import {
   AwaitForScanQrError,
@@ -126,7 +126,7 @@ export const KeystoneScannerModal = ({
     onClose?.();
   }, [emmitError, isAuthorized, isRequestFromEvent, onClose]);
 
-  const onSuccess = useCallback(async (e: BarCodeReadEvent) => {
+  const onSuccess = useCallback(async (e: {data: string}) => {
     try {
       const content = e.data?.trim?.();
       if (!content) {
@@ -203,6 +203,15 @@ export const KeystoneScannerModal = ({
       StatusBar.setBackgroundColor('transparent');
     };
   }, [theme]);
+
+  useEffect(() => {
+    if (__DEV__ && DEBUG_VARS.enableKeystoneMockSync && purpose === 'sync') {
+      onSuccess({
+        // @ts-ignore
+        data: 'UR:CRYPTO-HDKEY/PTAOWKAXHDCLAOBGCABSFTRDHLJEFLVDGEVTONAAYTVEBKLBRODWTYLDBDFEETWYFZLEDABKYNDNDYAAHDCXCTMSWEFGBNURFYWKCWDERFUYLKFZRTCNVDHDDEPSFRNYBDNLJLZOBBTERNNDNNBNAHTAADEHOEADCSFNAOAEAMTAADDYOTADLNCSDWYKCSFNYKAEYKAOCYRLTIGWVYAXAXATTAADDYOEADLRAEWKLAWKAXAEAYCYMWMSSNEOASISGRIHKKJKJYJLJTIHBKJOHSIAIAJLKPJTJYDMJKJYHSJTIEHSJPIEZEZEOLQZ',
+      });
+    }
+  }, [purpose, onSuccess]);
 
   if (!isAuthorized) {
     return renserNotAuthorizedView();

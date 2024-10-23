@@ -32,7 +32,7 @@ import {I18N} from '@app/i18n';
 import {Banner} from '@app/models/banner';
 import {NftCollection, NftItem} from '@app/models/nft';
 import {ProviderModel} from '@app/models/provider';
-import {Wallet} from '@app/models/wallet';
+import {BalanceModel, IWalletModel, WalletModel} from '@app/models/wallet';
 import {SignUpStackRoutes, WelcomeStackRoutes} from '@app/route-types';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
@@ -158,7 +158,7 @@ export type WalletInitialData =
 
 export type LedgerWalletInitialData = {
   type: 'ledger';
-  address: HaqqEthereumAddress;
+  address: AddressEthereum;
   hdPath: string;
   publicKey: string;
   deviceId: string;
@@ -167,7 +167,7 @@ export type LedgerWalletInitialData = {
 
 export type KeystoneWalletInitialData = {
   type: 'keystone';
-  address: HaqqEthereumAddress;
+  address: AddressEthereum;
   hdPath: string;
   publicKey: string;
   qrCBORHex: string;
@@ -318,7 +318,7 @@ export type RootStackParamList = {
     accountId: string;
   };
   backupNotification: {
-    wallet: Wallet;
+    wallet: IWalletModel;
   };
   backupSssNotification: {
     accountId: string;
@@ -534,7 +534,7 @@ export type RootStackParamList = {
     selectedWalletAddress: string;
   };
   stakingUnDelegateAccount: {
-    available: Wallet[];
+    available: IWalletModel[];
     validator: ValidatorItem;
     maxAmount: number;
   };
@@ -573,7 +573,7 @@ export type RootStackParamList = {
   };
   settingsSecurity: undefined;
   walletSelector: Eventable & {
-    wallets: Wallet[];
+    wallets: IWalletModel[];
     title: string;
     initialAddress?: string;
   };
@@ -786,7 +786,8 @@ export enum AppTheme {
 }
 
 export type AddWalletParams = {
-  address: HaqqEthereumAddress;
+  address: AddressEthereum;
+  tronAddress?: AddressTron;
   accountId: string;
   path: string;
   type: WalletType;
@@ -1093,7 +1094,7 @@ export type Modals = {
   };
   walletsBottomSheet: Eventable & {
     onClose?: () => void;
-    wallets: Wallet[];
+    wallets: WalletModel[];
     closeDistance?: () => number;
     title: I18N;
     autoSelectWallet?: boolean;
@@ -1112,9 +1113,15 @@ export type Modals = {
     title: I18N;
     providers?: ProviderModel[];
     initialProviderChainId: number;
-    desableAllNetworksOption?: boolean;
+    disableAllNetworksOption?: boolean;
     closeDistance?: () => number;
     eventSuffix?: string;
+  };
+  copyAddressBottomSheet: {
+    wallet: WalletModel;
+    eventSuffix?: string;
+    onClose?: () => void;
+    closeDistance?: () => number;
   };
   captcha: {
     onClose?: () => void;
@@ -1132,7 +1139,7 @@ export type Modals = {
     errorDetails: string;
     onClose?: () => void;
   };
-  cloudShareNotFound: {onClose?: () => void; wallet: Wallet};
+  cloudShareNotFound: {onClose?: () => void; wallet: IWalletModel};
   keystoneScanner: {
     purpose?: 'sign' | 'sync';
     eventTaskId?: string;
@@ -1184,6 +1191,7 @@ export enum ModalType {
   transactionError = 'transactionError',
   locationUnauthorized = 'locationUnauthorized',
   providersBottomSheet = 'providersBottomSheet',
+  copyAddressBottomSheet = 'copyAddressBottomSheet',
   captcha = 'captcha',
   domainBlocked = 'domainBlocked',
   raffleAgreement = 'raffleAgreement',
@@ -1367,43 +1375,30 @@ export type SendTransactionError = {
 
 export type ContractNameMap = Record<string, {name: string; symbol: string}>;
 
-export type HaqqCosmosAddress = `haqq${string}`;
-export type HaqqEthereumAddress = `0x${string}`;
+export type AddressCosmosHaqq = `haqq${string}`;
+export type AddressEthereum = `0x${string}`;
+export type AddressTron = `T${string}`;
 export type HexNumber = `0x${string}`;
 
 export type IndexerBalanceItem = [
-  HaqqCosmosAddress | HaqqEthereumAddress,
+  AddressCosmosHaqq | AddressEthereum,
   ChainId,
   HexNumber,
 ];
 export type IndexerBalance = Array<IndexerBalanceItem>;
 export type IndexerToken = {
-  address: HaqqCosmosAddress;
-  contract: HaqqCosmosAddress;
+  address: AddressCosmosHaqq;
+  contract: AddressCosmosHaqq;
   created_at: string;
   updated_at: string;
   value: string;
   chain_id: number;
 };
-export type IndexerTime = Record<
-  HaqqCosmosAddress | HaqqEthereumAddress,
-  number
->;
-
-export interface BalanceData {
-  vested: Balance;
-  staked: Balance;
-  available: Balance;
-  total: Balance;
-  locked: Balance;
-  availableForStake: Balance;
-  // next time to unlock vested tokens
-  unlock: Date;
-}
+export type IndexerTime = Record<AddressCosmosHaqq | AddressEthereum, number>;
 
 export type IndexerBalanceData = Record<
   ChainId,
-  Record<HaqqEthereumAddress, BalanceData>
+  Record<AddressEthereum, BalanceModel>
 >;
 
 export type JsonRpcTransactionRequest = {
@@ -1563,7 +1558,7 @@ export type IToken = {
   /**
    * Token contract address
    */
-  id: HaqqCosmosAddress;
+  id: AddressCosmosHaqq;
   contract_created_at: IContract['created_at'];
   contract_updated_at: IContract['updated_at'];
   value: Balance;
@@ -1589,7 +1584,7 @@ export type IContract = {
   address_type: AddressType;
   created_at: string;
   decimals: number | null;
-  id: HaqqCosmosAddress;
+  id: AddressCosmosHaqq;
   is_erc20: boolean | null;
   is_erc721: boolean | null;
   is_erc1155: boolean | null;
@@ -1604,7 +1599,7 @@ export type IContract = {
   is_skip_eth_tx: boolean | null;
 };
 
-export type IndexerTokensData = Record<HaqqEthereumAddress, IToken[]>;
+export type IndexerTokensData = Record<AddressEthereum, IToken[]>;
 
 export enum BrowserPermissionStatus {
   allow = 'allow',
@@ -1666,98 +1661,98 @@ export type IndexerTxMsgVote = {
 };
 
 export type IndexerTxMsgWithdrawDelegatorReward = {
-  delegator_address: HaqqCosmosAddress;
-  validator_address: HaqqCosmosAddress;
+  delegator_address: AddressCosmosHaqq;
+  validator_address: AddressCosmosHaqq;
   type: IndexerTxMsgType.msgWithdrawDelegatorReward;
 };
 
 export type IndexerTxMsgWithdrawValidatorCommission = {
-  validator_address: HaqqCosmosAddress;
+  validator_address: AddressCosmosHaqq;
   type: IndexerTxMsgType.msgWithdrawValidatorCommission;
 };
 
 export type IndexerTxMsgSend = {
-  from_address: HaqqCosmosAddress;
-  to_address: HaqqCosmosAddress;
+  from_address: AddressCosmosHaqq;
+  to_address: AddressCosmosHaqq;
   amount: IndexerCoin[];
   type: IndexerTxMsgType.msgSend;
   contract_address: string;
 };
 
 export type IndexerTxMsgDelegateTx = {
-  delegator_address: HaqqCosmosAddress;
-  validator_address: HaqqCosmosAddress;
+  delegator_address: AddressCosmosHaqq;
+  validator_address: AddressCosmosHaqq;
   amount: IndexerCoin;
   type: IndexerTxMsgType.msgDelegate;
 };
 
 export type IndexerTxMsgUndelegateTx = {
-  delegator_address: HaqqCosmosAddress;
-  validator_address: HaqqCosmosAddress;
+  delegator_address: AddressCosmosHaqq;
+  validator_address: AddressCosmosHaqq;
   amount: IndexerCoin;
   type: IndexerTxMsgType.msgUndelegate;
 };
 
 export type IndexerTxMsgEthereumTx = {
-  from_address: HaqqCosmosAddress;
-  to_address: HaqqCosmosAddress;
+  from_address: AddressCosmosHaqq;
+  to_address: AddressCosmosHaqq;
   amount: IndexerCoin;
   type: IndexerTxMsgType.msgEthereumTx;
 };
 
 export type IndexerTxMsgEthereumErc20TransferTx = {
-  contract_address: HaqqCosmosAddress;
-  from_address: HaqqCosmosAddress;
-  to_address: HaqqCosmosAddress;
+  contract_address: AddressCosmosHaqq;
+  from_address: AddressCosmosHaqq;
+  to_address: AddressCosmosHaqq;
   amount: IndexerCoin;
   type: IndexerTxMsgType.msgEthereumErc20TransferTx;
 };
 
 export type IndexerTxMsgEthereumNftTransferTx = {
-  contract_address: HaqqCosmosAddress;
-  from_address: HaqqCosmosAddress;
-  to_address: HaqqCosmosAddress;
+  contract_address: AddressCosmosHaqq;
+  from_address: AddressCosmosHaqq;
+  to_address: AddressCosmosHaqq;
   token_id: string;
   type: IndexerTxMsgType.msgEthereumNftTransferTx;
 };
 
 export type IndexerTxMsgEthereumNftMintTx = {
-  contract_address: HaqqCosmosAddress;
-  to_address: HaqqCosmosAddress;
+  contract_address: AddressCosmosHaqq;
+  to_address: AddressCosmosHaqq;
   token_id: string;
   type: IndexerTxMsgType.msgEthereumNftMintTx;
 };
 
 export type IndexerTxMsgEthereumRaffleTx = {
-  contract_address: HaqqCosmosAddress;
-  winner: HaqqCosmosAddress;
+  contract_address: AddressCosmosHaqq;
+  winner: AddressCosmosHaqq;
   amount: IndexerCoin;
   ticket: number;
   type: IndexerTxMsgType.msgEthereumRaffleTx;
 };
 
 export type IndexerTxMsgConvertIntoVestingAccountTx = {
-  from_address: HaqqCosmosAddress;
-  to_address: HaqqCosmosAddress;
+  from_address: AddressCosmosHaqq;
+  to_address: AddressCosmosHaqq;
   start_time?: number;
   merge: boolean;
   stake: boolean;
-  validator_address: HaqqCosmosAddress;
+  validator_address: AddressCosmosHaqq;
   lockup_periods: IndexerPeriod[];
   vesting_periods: IndexerPeriod[];
   type: IndexerTxMsgType.msgConvertIntoVestingAccount;
 };
 
 export type IndexerTxMsgBeginRedelegateTx = {
-  delegator_address: HaqqCosmosAddress;
-  validator_src_address: HaqqCosmosAddress;
-  validator_dst_address: HaqqCosmosAddress;
+  delegator_address: AddressCosmosHaqq;
+  validator_src_address: AddressCosmosHaqq;
+  validator_dst_address: AddressCosmosHaqq;
   amount: IndexerCoin;
   type: IndexerTxMsgType.msgBeginRedelegate;
 };
 
 export type IndexerTxMsgUnjailTx = {
-  validator_address: HaqqCosmosAddress;
+  validator_address: AddressCosmosHaqq;
   type: IndexerTxMsgType.msgUnjail;
 };
 
@@ -1765,8 +1760,8 @@ export type IndexerTxMsgCreateValidatorTx = {
   description?: IndexerTxMsgCreateValidatorTxDescription;
   commission?: IndexerTxMsgCreateValidatorTxCommissionRates;
   min_self_delegation: string;
-  delegator_address: HaqqCosmosAddress;
-  validator_address: HaqqCosmosAddress;
+  delegator_address: AddressCosmosHaqq;
+  validator_address: AddressCosmosHaqq;
   value?: IndexerCoin;
   type: IndexerTxMsgType.msgCreateValidator;
 };
@@ -1775,7 +1770,7 @@ export type IndexerTxMsgEditValidatorTx = {
   description?: IndexerTxMsgCreateValidatorTxDescription;
   commission_rate: string;
   min_self_delegation: string;
-  validator_address: HaqqCosmosAddress;
+  validator_address: AddressCosmosHaqq;
   type: IndexerTxMsgType.msgEditValidator;
 };
 
@@ -1801,15 +1796,15 @@ export type IndexerPeriod = {
 export type IndexerCoin = {
   denom: string;
   amount: string;
-  contract_address?: HaqqCosmosAddress;
+  contract_address?: AddressCosmosHaqq;
 };
 
 export type IndexerTxMsgApproval = {
   type: IndexerTxMsgType.msgEthereumApprovalTx;
   amount: string;
-  contract_address: HaqqCosmosAddress;
-  owner: HaqqCosmosAddress;
-  spender: HaqqCosmosAddress;
+  contract_address: AddressCosmosHaqq;
+  owner: AddressCosmosHaqq;
+  spender: AddressCosmosHaqq;
 };
 
 export enum IndexerTxMsgType {

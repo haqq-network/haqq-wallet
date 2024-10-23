@@ -2,6 +2,7 @@
 import React, {useEffect} from 'react';
 
 import {ProviderSSSBase} from '@haqq/rn-wallet-providers';
+import {observer} from 'mobx-react';
 
 import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
@@ -19,7 +20,7 @@ const logger = Logger.create('SssStoreWalletScreen', {
   enabled: __DEV__ || app.isTesterMode || app.isDeveloper,
 });
 
-export const SssStoreWalletScreen = () => {
+export const SssStoreWalletScreen = observer(() => {
   logger.log('SssStoreWalletScreen: Component rendering');
   const route = useTypedRoute<'sssStoreWallet'>();
   logger.log('SssStoreWalletScreen: Retrieved typed route', {
@@ -95,7 +96,8 @@ export const SssStoreWalletScreen = () => {
             logger.log(
               'SssStoreWalletScreen: Wallet not found, proceeding with creation',
             );
-            const balance = app.getAvailableBalance(address);
+
+            const balance = Wallet.getBalance(address, 'available');
             logger.log('SssStoreWalletScreen: Retrieved balance', {
               balance: balance.toString(),
             });
@@ -106,12 +108,23 @@ export const SssStoreWalletScreen = () => {
 
             if (canNext) {
               logger.log('SssStoreWalletScreen: Creating new wallet');
+              // generate tron wallet address
+              const tronProvider = new ProviderSSSTron({
+                account: provider.getIdentifier(),
+                getPassword: app.getPassword.bind(app),
+                tronWebHostUrl: '',
+                storage,
+              });
+              const {address: tronAddress} = await tronProvider.getAccountInfo(
+                hdPath.replace(ETH_COIN_TYPE, TRON_COIN_TYPE),
+              );
               await Wallet.create(name, {
                 address: address,
                 type: WalletType.sss,
                 path: hdPath,
                 accountId: provider.getIdentifier(),
                 socialLinkEnabled: true,
+                tronAddress: tronAddress as AddressTron,
               });
               logger.log('SssStoreWalletScreen: Wallet created');
             }
@@ -154,4 +167,4 @@ export const SssStoreWalletScreen = () => {
 
   logger.log('SssStoreWalletScreen: Rendering empty fragment');
   return <></>;
-};
+});

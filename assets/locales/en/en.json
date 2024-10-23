@@ -3,7 +3,7 @@
   "StakingInfoUnDelegationDay": " ({{day}} day left)",
   "StakingInfoUnDelegationDays": " ({{days}} days left)",
   "Welcome_haqq_pin": "Welcome to HAQQ Wallet",
-  "_hash": "667ecdcbe124953c309e9bd49431ea145466b821cf601df2117cb7010b95fb4a",
+  "_hash": "d6d1ea02bc8fed1db6c5959487363903f5f6fd1548d1f8e8a76dad9e8b851bbe",
   "accept": "Accept",
   "accountInfoNftTabTitle": "NFTs",
   "accountInfoTokensTabTitle": "Tokens",
@@ -343,6 +343,8 @@
   "markupAdAmbasadorTitle": "Ambassador Program",
   "markupAdAmbassadorDescription": "Together, we're building the largest online community promoting Islamic values in crypto.",
   "markupAdBazaarDescription": "Mint to support the artist and\nparticipate in a special raffle",
+  "markupAdBazaarSpringDescription": "Mint to support the artist and\nparticipate in a special raffle",
+  "markupAdBazaarSpringTitle": "Bazaar.Art presents\nSpring NFT",
   "markupAdBazaarTitle": "Bazaar.Art presents\nMaxugá Miller's NFT",
   "markupAdBuyWithFiatDescription": "Buy ISLM with cash at the best price from a trusted provider",
   "markupAdBuyWithFiatTitle": "Buy ISLM with fiat",
@@ -1062,5 +1064,6 @@
   "welcomeSocialWallet": "Social login",
   "welcomeTitle": "No account is connected",
   "yes": "Yes",
+  "yourAddresses": "Your addresses",
   "yourAppVersion": "Your version: {{version}}"
 }

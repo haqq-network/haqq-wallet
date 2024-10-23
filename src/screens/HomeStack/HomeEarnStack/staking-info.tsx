@@ -4,7 +4,6 @@ import {autorun} from 'mobx';
 import {observer} from 'mobx-react';
 
 import {StakingInfo} from '@app/components/staking-info';
-import {app} from '@app/contexts';
 import {
   awaitForPopupClosed,
   awaitForWallet,
@@ -157,7 +156,9 @@ export const StakingInfoScreen = observer(() => {
 
   const onDelegate = useCallback(async () => {
     const available = visible.filter(
-      v => app.getAvailableBalance(v.address).toFloat() >= minAmount.toFloat(),
+      v =>
+        Wallet.getBalance(v.address, 'available').toFloat() >=
+        minAmount.toFloat(),
     );
 
     if (!available?.length) {

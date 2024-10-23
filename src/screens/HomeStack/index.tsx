@@ -17,7 +17,6 @@ import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {basicScreenOptions} from '@app/screens';
 import {DeviceStack} from '@app/screens/DeviceStack';
-import {AccountDetailScreen} from '@app/screens/HomeStack/account-detail';
 import {BackupStack} from '@app/screens/HomeStack/BackupStack';
 import {HomeScreen} from '@app/screens/HomeStack/home';
 import {AccountInfoScreen} from '@app/screens/HomeStack/HomeFeedStack/account-info';
@@ -44,6 +43,7 @@ import {Web3BrowserPopup as Web3BrowserPopupScreen} from '@app/screens/web3-brow
 import {SignInStack} from '@app/screens/WelcomeStack/SignInStack';
 
 import {NewsDetailScreen} from './HomeNewsStack/news-detail';
+import {ReceiveScreen, SelectNetworkScreen} from './ReceiveStack';
 import {FeeSettingsScreen} from './TransactionStack/fee-settings';
 
 import {SwapStack} from '../SwapStack';
@@ -109,8 +109,14 @@ const HomeStack = memo(() => {
       />
 
       <Stack.Screen
-        name={HomeStackRoutes.AccountDetail}
-        component={themeUpdaterHOC(AccountDetailScreen)}
+        name={HomeStackRoutes.SelectNetwork}
+        component={themeUpdaterHOC(SelectNetworkScreen)}
+        options={fullScreenModalOptions}
+      />
+
+      <Stack.Screen
+        name={HomeStackRoutes.Receive}
+        component={themeUpdaterHOC(ReceiveScreen)}
         options={fullScreenModalOptions}
       />
 

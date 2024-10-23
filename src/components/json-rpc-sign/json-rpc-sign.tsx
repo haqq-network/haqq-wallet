@@ -12,7 +12,7 @@ import {createTheme} from '@app/helpers';
 import {EthereumSignInMessage} from '@app/helpers/ethereum-message-checker';
 import {I18N} from '@app/i18n';
 import {Fee} from '@app/models/fee';
-import {Wallet} from '@app/models/wallet';
+import {WalletModel} from '@app/models/wallet';
 import {IContract, JsonRpcMetadata, PartialJsonRpcRequest} from '@app/types';
 
 export interface JsonRpcSignProps {
@@ -21,7 +21,7 @@ export interface JsonRpcSignProps {
   signLoading: boolean;
   request: PartialJsonRpcRequest;
   metadata: JsonRpcMetadata;
-  wallet: Wallet;
+  wallet: WalletModel;
   verifyAddressResponse: IContract | null;
   chainId?: number;
   hideContractAttention?: boolean;
@@ -104,6 +104,7 @@ export const JsonRpcSign = ({
             setFee={setFee}
             isFeeLoading={isFeeLoading}
             setFeeLoading={setFeeLoading}
+            wallet={wallet!}
           />
         )}
 

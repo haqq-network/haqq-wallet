@@ -8,9 +8,8 @@ import {Loading} from '@app/components/ui';
 import {showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useWallet} from '@app/hooks/use-wallet';
-import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {Token} from '@app/models/tokens';
-import {Wallet} from '@app/models/wallet';
+import {IWalletModel, Wallet} from '@app/models/wallet';
 import {
   HomeStackParamList,
   HomeStackRoutes,
@@ -27,14 +26,14 @@ export const AccountInfoScreen = observer(() => {
   const navigation = useTypedNavigation<HomeStackParamList>();
   const accountId = useMemo(() => route.params.accountId, [route]);
   const wallet = useWallet(accountId);
-  const balances = useWalletsBalance([wallet!]);
-  const {available, locked, staked, total, unlock, vested} = useMemo(
-    () => balances[wallet?.address!],
-    [balances, wallet],
-  );
+  const balances = Wallet.getBalancesByAddressList([wallet!]);
+  const {available, locked, staked, total, nextVestingUnlockDate, vested} =
+    useMemo(() => balances[wallet?.address!], [balances, wallet]);
 
   const onReceive = useCallback(() => {
-    showModal(ModalType.cardDetailsQr, {address: route.params.accountId});
+    navigation.navigate(HomeStackRoutes.SelectNetwork, {
+      address: wallet?.address!,
+    });
   }, [route.params.accountId]);
 
   const onSend = useCallback(() => {
@@ -59,7 +58,7 @@ export const AccountInfoScreen = observer(() => {
   );
 
   const onPressToken = useCallback(
-    (w: Wallet, token: IToken) => {
+    (w: IWalletModel, token: IToken) => {
       navigation.navigate(HomeStackRoutes.Transaction, {
         // @ts-ignore
         screen: TransactionStackRoutes.TransactionAddress,
@@ -88,7 +87,7 @@ export const AccountInfoScreen = observer(() => {
       locked={locked}
       staked={staked}
       total={total}
-      unlock={unlock}
+      unlock={nextVestingUnlockDate}
       vested={vested}
       tokens={Token.tokens}
     />

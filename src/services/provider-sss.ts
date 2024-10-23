@@ -1,5 +1,5 @@
 import {generateEntropy} from '@haqq/provider-web3-utils';
-import {lagrangeInterpolation} from '@haqq/rn-wallet-providers/dist/utils';
+import {utils} from '@haqq/rn-wallet-providers';
 import {jsonrpcRequest} from '@haqq/shared-react-native';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
 import BN from 'bn.js';
@@ -251,11 +251,12 @@ export async function onAuthorized(
 
   if (shares2.length) {
     loggerAuthorized.log('Performing Lagrange interpolation');
-    creds.privateKey = lagrangeInterpolation(
-      shares2.map(s => new BN(s[0], 'hex')),
-      shares2.map(s => new BN(s[1], 'hex')),
-    ).toString('hex');
-    loggerAuthorized.log('Private key generated');
+    creds.privateKey = utils
+      .lagrangeInterpolation(
+        shares2.map(s => new BN(s[0], 'hex')),
+        shares2.map(s => new BN(s[1], 'hex')),
+      )
+      .toString('hex');
   } else {
     loggerAuthorized.warn('No valid shares to generate private key');
   }

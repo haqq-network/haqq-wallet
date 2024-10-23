@@ -1,19 +1,19 @@
 import {makeAutoObservable, runInAction, when} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
-import {app} from '@app/contexts';
 import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
 import {Whitelist} from '@app/helpers/whitelist';
 import {Contracts} from '@app/models/contracts';
 import {Socket} from '@app/models/socket';
-import {Wallet} from '@app/models/wallet';
+import {IWalletModel, Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
 import {
+  AddressCosmosHaqq,
+  AddressEthereum,
   AddressType,
-  HaqqCosmosAddress,
-  HaqqEthereumAddress,
+  ChainId,
   IContract,
   IToken,
   IndexerToken,
@@ -228,14 +228,17 @@ class TokensStore implements MobXStore<IToken> {
       ]),
     );
 
-    const _tokens = {} as Record<HaqqEthereumAddress, IToken[]>;
-    const _data = {} as Record<HaqqEthereumAddress, IToken>;
+    const _tokens = {} as Record<AddressEthereum, IToken[]>;
+    const _data = {} as Record<AddressEthereum, IToken>;
 
     wallets.forEach(wallet => {
       _tokens[AddressUtils.toEth(wallet.cosmosAddress)] = [
         ...this.generateNativeTokens(wallet),
       ];
     });
+    const TRON_PROVIDER_CHAIN_IDS = Provider.getAll()
+      .filter(p => p.isTron)
+      .map(p => p.ethChainId as ChainId);
     for await (const t of updates.tokens) {
       try {
         const isPositive = new Balance(t.value).isPositive();
@@ -284,7 +287,21 @@ class TokensStore implements MobXStore<IToken> {
             : require('@assets/images/empty-icon.png'),
         };
 
-        const walletAddress = AddressUtils.toEth(t.address);
+        const isTron = TRON_PROVIDER_CHAIN_IDS.includes(t.chain_id);
+        let walletAddress = '' as AddressEthereum;
+
+        if (isTron) {
+          const w = AddressUtils.getWalletByAddress(t.address);
+          if (w) {
+            walletAddress = w.address;
+          } else {
+            walletAddress = t.address.startsWith('0x')
+              ? (t.address as AddressEthereum)
+              : AddressUtils.tronToHex(t.address);
+          }
+        } else {
+          walletAddress = AddressUtils.toEth(t.address);
+        }
 
         if (!_tokens[walletAddress]?.length) {
           _tokens[walletAddress] = [
@@ -311,7 +328,7 @@ class TokensStore implements MobXStore<IToken> {
     });
   });
 
-  private generateNativeTokens = (w: Wallet) => {
+  private generateNativeTokens = (w: IWalletModel) => {
     if (Provider.isAllNetworks) {
       return Provider.getAllNetworks().map(p => this.generateNativeToken(w, p));
     }
@@ -320,10 +337,10 @@ class TokensStore implements MobXStore<IToken> {
   };
 
   public generateNativeToken = (
-    wallet: Wallet,
+    wallet: IWalletModel,
     provider: ProviderModel = Provider.selectedProvider,
   ): IToken => {
-    const balance = app.getAvailableBalance(wallet.address, provider);
+    const balance = Wallet.getBalance(wallet.address, 'available', provider);
 
     return {
       id: AddressUtils.toHaqq(NATIVE_TOKEN_ADDRESS),
@@ -435,7 +452,7 @@ class TokensStore implements MobXStore<IToken> {
     Contracts.create(contract.id, contract);
   };
 
-  private getContract = (id: HaqqCosmosAddress | HaqqEthereumAddress) => {
+  private getContract = (id: AddressCosmosHaqq | AddressEthereum) => {
     return Contracts.getById(id);
   };
 

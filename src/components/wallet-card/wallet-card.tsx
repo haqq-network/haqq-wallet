@@ -1,17 +1,19 @@
-import React, {useMemo, useState} from 'react';
+import React, {useState} from 'react';
 
 import {SessionTypes} from '@walletconnect/types';
 import {
+  StyleSheet,
   TouchableWithoutFeedback,
   View,
   useWindowDimensions,
 } from 'react-native';
 
-import {Card, Spacer} from '@app/components/ui';
+import {Color} from '@app/colors';
+import {Card, Spacer, Text, TextVariant} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useIsBalancesFirstSync} from '@app/hooks/use-is-balances-sync';
-import {Wallet} from '@app/models/wallet';
-import {BalanceData} from '@app/types';
+import {Provider} from '@app/models/provider';
+import {BalanceModel, WalletModel} from '@app/models/wallet';
+import {addOpacityToColor} from '@app/utils';
 import {SHADOW_L} from '@app/variables/shadows';
 
 import {BalanceInfoDetails} from './balance-info-details';
@@ -22,14 +24,14 @@ import {ProtectionBadge} from './protection-badge';
 
 export type BalanceProps = {
   testID?: string;
-  wallet: Wallet;
-  balance?: BalanceData;
+  wallet: WalletModel;
+  balance?: BalanceModel;
   showLockedTokens: boolean;
   walletConnectSessions: SessionTypes.Struct[];
   onPressAccountInfo: (address: string) => void;
   onPressSend: (address: string) => void;
-  onPressQR: (address: string) => void;
-  onPressProtection: (wallet: Wallet) => void;
+  onPressReceive: (address: string) => void;
+  onPressProtection: (wallet: WalletModel) => void;
   onPressWalletConnect?: (address: string) => void;
   isSecondMnemonic: boolean;
 };
@@ -40,7 +42,7 @@ export const WalletCard = ({
   walletConnectSessions,
   showLockedTokens,
   onPressSend,
-  onPressQR,
+  onPressReceive,
   onPressWalletConnect,
   onPressProtection,
   onPressAccountInfo,
@@ -49,20 +51,7 @@ export const WalletCard = ({
 }: BalanceProps) => {
   const {locked, total} = balance ?? {};
   const [cardState, setCardState] = useState('loading');
-  const {isBalanceLoadingError, isBalancesFirstSync} = useIsBalancesFirstSync();
   const screenWidth = useWindowDimensions().width;
-
-  const showPlaceholder = useMemo(() => {
-    if (isBalancesFirstSync) {
-      return true;
-    }
-
-    if (isBalanceLoadingError) {
-      return !total?.isPositive();
-    }
-
-    return false;
-  }, [isBalanceLoadingError, isBalancesFirstSync]);
 
   const onAccountInfo = () => {
     onPressAccountInfo(wallet?.address);
@@ -80,12 +69,7 @@ export const WalletCard = ({
       onLoad={() => {
         setCardState('laded');
       }}>
-      <CardName
-        onAccountInfo={onAccountInfo}
-        isBalancesFirstSync={showPlaceholder}
-        testID={testID}
-        wallet={wallet}
-      />
+      <CardName onAccountInfo={onAccountInfo} testID={testID} wallet={wallet} />
       <ProtectionBadge
         wallet={wallet}
         isSecondMnemonic={isSecondMnemonic}
@@ -97,12 +81,8 @@ export const WalletCard = ({
         testID="accountInfoButton"
         onPress={onAccountInfo}>
         <View>
-          <BalanceInfoTotal
-            isBalancesFirstSync={showPlaceholder}
-            total={total}
-          />
+          <BalanceInfoTotal total={total} />
           <BalanceInfoDetails
-            isBalancesFirstSync={showPlaceholder}
             showLockedTokens={showLockedTokens}
             total={total}
             locked={locked}
@@ -114,9 +94,25 @@ export const WalletCard = ({
         testID={testID}
         wallet={wallet}
         cardState={cardState}
-        onPressQR={onPressQR}
+        onPressReceive={onPressReceive}
         onPressSend={onPressSend}
       />
+      {/* TODO: add tron support */}
+      {Provider.selectedProvider.isTron && !wallet.isSupportTron && (
+        <View style={styles.tronNotSupportContainer}>
+          <View style={styles.tronNotSupportTextContainer}>
+            <Text color={Color.textBase1} variant={TextVariant.t4}>
+              TRON NOT SUPPORTED YET
+            </Text>
+            <Text color={Color.textBase1} variant={TextVariant.t10}>
+              PLEASE WAIT UNTIL FINISH DEVELOPMENT
+            </Text>
+            <Text color={Color.textBase1} variant={TextVariant.t15}>
+              * this banner not for production
+            </Text>
+          </View>
+        </View>
+      )}
     </Card>
   );
 };
@@ -125,5 +121,18 @@ const styles = createTheme({
   container: {
     justifyContent: 'space-between',
     ...SHADOW_L,
+  },
+  tronNotSupportContainer: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: addOpacityToColor(Color.graphicGreen2, 0.8),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  tronNotSupportTextContainer: {
+    backgroundColor: addOpacityToColor(Color.bg1, 0.8),
+    padding: 4,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

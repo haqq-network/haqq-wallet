@@ -11,12 +11,14 @@ import {
 import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
+import {getTronProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {getWalletsFromProvider} from '@app/helpers/get-wallets-from-provider';
 import {safeLoadBalances} from '@app/helpers/safe-load-balances';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N, getText} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {
   HomeStackRoutes,
@@ -25,7 +27,13 @@ import {
   SignInStackRoutes,
 } from '@app/route-types';
 import {Balance} from '@app/services/balance';
-import {ChooseAccountItem, ModalType, WalletType} from '@app/types';
+import {
+  AddressTron,
+  ChooseAccountItem,
+  ModalType,
+  WalletType,
+} from '@app/types';
+import {ETH_COIN_TYPE, TRON_COIN_TYPE} from '@app/variables/common';
 
 const PAGE_SIZE = 5;
 
@@ -188,7 +196,7 @@ export const ChooseAccountScreen = observer(() => {
   const onAdd = useCallback(async () => {
     walletsToCreate
       .filter(_w => !Wallet.getById(_w.address))
-      .forEach(item => {
+      .forEach(async item => {
         const total = Wallet.getAll().length;
         const name =
           total === 0
@@ -197,6 +205,12 @@ export const ChooseAccountScreen = observer(() => {
                 number: `${total + 1}`,
               });
 
+        if (Provider.selectedProvider.isTron) {
+          // wallet should be created with ETH coin type
+          // tron address will be generated later
+          item.path = item.path?.replace(TRON_COIN_TYPE, ETH_COIN_TYPE);
+        }
+
         Wallet.create(name, item);
         if (isSSSProvider) {
           Wallet.update(item.address, {
@@ -204,6 +218,18 @@ export const ChooseAccountScreen = observer(() => {
             type: WalletType.sss,
           });
         }
+
+        // generate tron wallet address
+        const tronProvider = await getTronProviderForNewWallet(
+          item.type,
+          item.accountId!,
+        );
+        const {address: tronAddress} = await tronProvider.getAccountInfo(
+          item.path?.replace?.(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
+        );
+        Wallet.update(item.address, {
+          tronAddress: tronAddress as AddressTron,
+        });
       });
 
     if (isSSSProvider) {

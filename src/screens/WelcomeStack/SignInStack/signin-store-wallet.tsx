@@ -2,8 +2,11 @@ import {useEffect} from 'react';
 
 import {
   ProviderHotBase,
+  ProviderHotTron,
   ProviderMnemonicBase,
+  ProviderMnemonicTron,
   ProviderSSSBase,
+  ProviderSSSTron,
 } from '@haqq/rn-wallet-providers';
 import {observer} from 'mobx-react';
 
@@ -22,7 +25,8 @@ import {
   WelcomeStackRoutes,
 } from '@app/route-types';
 import {RemoteConfig} from '@app/services/remote-config';
-import {ModalType, WalletType} from '@app/types';
+import {AddressTron, ModalType, WalletType} from '@app/types';
+import {ETH_COIN_TYPE, TRON_COIN_TYPE} from '@app/variables/common';
 
 const logger = Logger.create('SignInStoreWalletScreen', {
   enabled: __DEV__ || app.isTesterMode || app.isDeveloper,
@@ -96,8 +100,16 @@ export const SignInStoreWalletScreen = observer(() => {
             );
             logger.log('SignInStoreWalletScreen: ProviderHotBase initialized');
 
-            logger.log('SignInStoreWalletScreen: Getting account info');
+            const tronHotProvider = new ProviderHotTron({
+              account: provider.getIdentifier().toLowerCase(),
+              getPassword: app.getPassword.bind(app),
+              tronWebHostUrl: '',
+            });
+
             const {address} = await provider.getAccountInfo('');
+            const hotTronAccountInfo = await tronHotProvider.getAccountInfo('');
+
+            logger.log('SignInStoreWalletScreen: Getting account info');
             logger.log('SignInStoreWalletScreen: Account info retrieved', {
               address,
             });
@@ -108,6 +120,7 @@ export const SignInStoreWalletScreen = observer(() => {
               address: AddressUtils.toEth(address),
               type: WalletType.hot,
               accountId: provider.getIdentifier().toLowerCase(),
+              tronAddress: hotTronAccountInfo.address as AddressTron,
             });
             logger.log('SignInStoreWalletScreen: Wallet created');
             break;
@@ -126,6 +139,24 @@ export const SignInStoreWalletScreen = observer(() => {
             );
 
             logger.log('SignInStoreWalletScreen: Setting mnemonic as saved');
+
+            Wallet.getForAccount(mnemonicProvider.getIdentifier()).forEach(
+              async wallet => {
+                const tronMnemonicProvider = new ProviderMnemonicTron({
+                  account: wallet.accountId!,
+                  getPassword,
+                  tronWebHostUrl: '',
+                });
+                const tronMnemonicAccountInfo =
+                  await tronMnemonicProvider.getAccountInfo(
+                    wallet.path?.replace?.(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
+                  );
+                Wallet.update(wallet.address, {
+                  tronAddress: tronMnemonicAccountInfo.address as AddressTron,
+                });
+              },
+            );
+
             await mnemonicProvider.setMnemonicSaved();
             logger.log('SignInStoreWalletScreen: Mnemonic marked as saved');
 
@@ -180,6 +211,24 @@ export const SignInStoreWalletScreen = observer(() => {
             logger.log('SignInStoreWalletScreen: Updating pin');
             await sssProvider.updatePin(password);
             logger.log('SignInStoreWalletScreen: Pin updated');
+
+            Wallet.getForAccount(sssProvider.getIdentifier()).forEach(
+              async wallet => {
+                const tronSSSProvider = new ProviderSSSTron({
+                  account: wallet.accountId!,
+                  getPassword,
+                  tronWebHostUrl: '',
+                  storage,
+                });
+
+                const tronSSSAccountInfo = await tronSSSProvider.getAccountInfo(
+                  wallet.path?.replace?.(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
+                );
+                Wallet.update(wallet.address, {
+                  tronAddress: tronSSSAccountInfo.address as AddressTron,
+                });
+              },
+            );
 
             logger.log(
               'SignInStoreWalletScreen: Navigating to SigninChooseAccount',

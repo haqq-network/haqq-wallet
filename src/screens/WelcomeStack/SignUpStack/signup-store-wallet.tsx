@@ -1,12 +1,19 @@
 import {useCallback, useEffect} from 'react';
 
-import {ProviderSSSBase, ProviderSSSEvm} from '@haqq/rn-wallet-providers';
+import {
+  ProviderSSSBase,
+  ProviderSSSEvm,
+  ProviderSSSTron,
+} from '@haqq/rn-wallet-providers';
 import {observer} from 'mobx-react';
 
 import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
-import {getProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet';
+import {
+  getProviderForNewWallet,
+  getTronProviderForNewWallet,
+} from '@app/helpers/get-provider-for-new-wallet';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
@@ -17,8 +24,12 @@ import {
   WelcomeStackRoutes,
 } from '@app/route-types';
 import {SssProviders} from '@app/services/provider-sss';
-import {ModalType, WalletType} from '@app/types';
-import {ETH_HD_SHORT_PATH} from '@app/variables/common';
+import {AddressTron, ModalType, WalletType} from '@app/types';
+import {
+  ETH_COIN_TYPE,
+  ETH_HD_SHORT_PATH,
+  TRON_COIN_TYPE,
+} from '@app/variables/common';
 
 export const SignUpStoreWalletScreen = observer(() => {
   const navigation = useTypedNavigation<SignUpStackParamList>();
@@ -56,6 +67,8 @@ export const SignUpStoreWalletScreen = observer(() => {
       //@ts-ignore
       route.params.provider instanceof ProviderSSSEvm ||
       //@ts-ignore
+      route.params.provider instanceof ProviderSSSTron ||
+      //@ts-ignore
       Object.values(SssProviders).includes(route.params.provider)
     ) {
       return WalletType.sss;
@@ -78,6 +91,10 @@ export const SignUpStoreWalletScreen = observer(() => {
     setTimeout(async () => {
       try {
         const provider = await getCurrentProvider();
+        const tronProvider = await getTronProviderForNewWallet(
+          getWalletType(),
+          provider.getIdentifier(),
+        );
 
         // sssLimitReached
         if (!provider || typeof provider?.getIdentifier !== 'function') {
@@ -124,10 +141,14 @@ export const SignUpStoreWalletScreen = observer(() => {
 
         try {
           const {address} = await provider.getAccountInfo(hdPath);
+          const {address: tronAddress} = await tronProvider.getAccountInfo(
+            hdPath.replace?.(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
+          );
           const type = getWalletType();
 
           await Wallet.create(name, {
             address: AddressUtils.toEth(address),
+            tronAddress: tronAddress as AddressTron,
             accountId: provider.getIdentifier(),
             path: hdPath,
             type,

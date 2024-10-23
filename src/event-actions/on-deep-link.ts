@@ -60,6 +60,7 @@ export async function onDeepLink(
   withoutFromAddress: boolean = false,
   isInitialRun = false,
 ) {
+  logger.log('onDeepLink', {link, withoutFromAddress, isInitialRun});
   try {
     if (!link) {
       return false;

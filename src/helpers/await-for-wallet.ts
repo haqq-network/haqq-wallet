@@ -1,7 +1,7 @@
 import {app} from '@app/contexts';
 import {showModal} from '@app/helpers/modal';
 import {I18N, getText} from '@app/i18n';
-import {Wallet} from '@app/models/wallet';
+import {Wallet, WalletModel} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 import {Eventable} from '@app/types';
 
@@ -13,7 +13,7 @@ export enum WalletSelectType {
 }
 
 export interface AwaitForWalletParams {
-  wallets: Wallet[];
+  wallets: WalletModel[];
   title: I18N;
   type?: WalletSelectType;
   initialAddress?: string;
@@ -94,7 +94,7 @@ export async function awaitForWallet({
       case WalletSelectType.bottomSheet:
       default:
         return showModal('walletsBottomSheet', {
-          wallets: wallets as Wallet[],
+          wallets: wallets as WalletModel[],
           closeDistance: () => getWindowHeight() / 6,
           title,
           autoSelectWallet,

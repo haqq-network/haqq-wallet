@@ -10,7 +10,13 @@ import {
 } from '@react-navigation/native';
 import * as Sentry from '@sentry/react-native';
 import PostHog, {PostHogProvider} from 'posthog-react-native';
-import {AppState, Dimensions, Linking, StyleSheet} from 'react-native';
+import {
+  AppState,
+  Dimensions,
+  InteractionManager,
+  Linking,
+  StyleSheet,
+} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {MenuProvider} from 'react-native-popup-menu';
 import {Metrics, SafeAreaProvider} from 'react-native-safe-area-context';
@@ -29,7 +35,6 @@ import {Contact} from '@app/models/contact';
 import {Language} from '@app/models/language';
 import {Stories} from '@app/models/stories';
 import {VariablesBool} from '@app/models/variables-bool';
-import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 import {
   KeystoneStackRoutes,
@@ -98,7 +103,10 @@ export const App = () => {
 
   useEffect(() => {
     const sub = (value: boolean) => {
-      setOnboarded(value);
+      InteractionManager.setDeadline(1000);
+      InteractionManager.runAfterInteractions(() => {
+        setOnboarded(value);
+      });
     };
 
     app.addListener(Events.onOnboardedChanged, sub);
@@ -122,7 +130,7 @@ export const App = () => {
           await app.init();
           await migrationWallets();
           // MobX stores migration
-          await Promise.allSettled([Contact.migrate(), Wallet.migrate()]);
+          await Promise.allSettled([Contact.migrate()]);
 
           // We need reopen app for start SSS check
           // because we are working with cloud snapshots

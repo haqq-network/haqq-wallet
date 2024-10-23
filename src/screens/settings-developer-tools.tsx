@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
+import {useActionSheet} from '@expo/react-native-action-sheet';
 import Clipboard from '@react-native-clipboard/clipboard';
 import CookieManager from '@react-native-cookies/cookies';
 import {observer} from 'mobx-react';
@@ -57,6 +58,7 @@ const Title = ({text = ''}) => (
 );
 
 export const SettingsDeveloperTools = observer(() => {
+  const {showActionSheetWithOptions} = useActionSheet();
   const {animate} = useLayoutAnimation();
   const [wc, setWc] = useState('');
   const [rawSignData, setRawSignData] = useState('');
@@ -231,7 +233,7 @@ export const SettingsDeveloperTools = observer(() => {
           try {
             showModal('loading');
             const providerId = await awaitForProvider({
-              initialProviderChainId: Provider.selectedProvider.ethChainId,
+              disableAllNetworksOption: true,
               title: I18N.networks,
             });
             const provider = Provider.getById(providerId);
@@ -290,7 +292,7 @@ export const SettingsDeveloperTools = observer(() => {
               wallets: Wallet.getAllVisible(),
             });
             const providerId = await awaitForProvider({
-              initialProviderChainId: Provider.selectedProvider.ethChainId,
+              disableAllNetworksOption: true,
               title: I18N.networks,
             });
             const result = await awaitForJsonRpcSign({
@@ -311,10 +313,257 @@ export const SettingsDeveloperTools = observer(() => {
       />
       <Spacer height={8} />
       <Button
+        title="Paste"
+        onPress={async () => {
+          const data = await Clipboard.getString();
+          setRawSignData(data);
+          try {
+            setSignData(JSON.parse(data));
+            setValidRawSignData(true);
+          } catch (e) {
+            setValidRawSignData(false);
+          }
+        }}
+        variant={ButtonVariant.second}
+      />
+      <Spacer height={8} />
+      <Button
+        title="Transaction snippet"
+        onPress={() => {
+          showActionSheetWithOptions(
+            {
+              options: [
+                'Cancel',
+                'eth_sendTransaction',
+                'eth_signTransaction',
+                'personal_sign',
+                'eth_signTypedData_v4',
+                'Sign in with Ethereum',
+              ],
+              cancelButtonIndex: 0,
+              destructiveButtonIndex: 0,
+              title: 'Choose action',
+            },
+            index => {
+              let tx = {} as PartialJsonRpcRequest;
+              //eth_sendTransaction and eth_signTransaction
+              if (index === 1 || index === 2) {
+                tx = {
+                  method:
+                    index === 1 ? 'eth_sendTransaction' : 'eth_signTransaction',
+                  params: [
+                    {
+                      value: '1',
+                      to: '0x415b829d862121f25fcdfdfadf7a705e45249dbc',
+                    },
+                  ],
+                };
+              }
+              // personal_sign
+              if (index === 3) {
+                tx = {
+                  method: 'personal_sign',
+                  params: [
+                    '0x415b829d862121f25fcdfdfadf7a705e45249dbc',
+                    'Hello HAQQ Wallet!',
+                  ],
+                };
+              }
+
+              // eth_signTypedData_v4
+              if (index === 4) {
+                tx = {
+                  method: 'eth_signTypedData_v4',
+                  params: [
+                    '0x1bb71b571a16eed293d931d245f43d2a1d341759',
+                    {
+                      types: {
+                        EIP712Domain: [
+                          {
+                            name: 'name',
+                            type: 'string',
+                          },
+                          {
+                            name: 'version',
+                            type: 'string',
+                          },
+                          {
+                            name: 'chainId',
+                            type: 'uint256',
+                          },
+                          {
+                            name: 'verifyingContract',
+                            type: 'string',
+                          },
+                          {
+                            name: 'salt',
+                            type: 'string',
+                          },
+                        ],
+                        Tx: [
+                          {
+                            name: 'account_number',
+                            type: 'string',
+                          },
+                          {
+                            name: 'chain_id',
+                            type: 'string',
+                          },
+                          {
+                            name: 'fee',
+                            type: 'Fee',
+                          },
+                          {
+                            name: 'memo',
+                            type: 'string',
+                          },
+                          {
+                            name: 'msgs',
+                            type: 'Msg[]',
+                          },
+                          {
+                            name: 'sequence',
+                            type: 'string',
+                          },
+                        ],
+                        Fee: [
+                          {
+                            name: 'feePayer',
+                            type: 'string',
+                          },
+                          {
+                            name: 'amount',
+                            type: 'Coin[]',
+                          },
+                          {
+                            name: 'gas',
+                            type: 'string',
+                          },
+                        ],
+                        Coin: [
+                          {
+                            name: 'denom',
+                            type: 'string',
+                          },
+                          {
+                            name: 'amount',
+                            type: 'string',
+                          },
+                        ],
+                        Msg: [
+                          {
+                            name: 'type',
+                            type: 'string',
+                          },
+                          {
+                            name: 'value',
+                            type: 'MsgValue',
+                          },
+                        ],
+                        MsgValue: [
+                          {
+                            name: 'delegator_address',
+                            type: 'string',
+                          },
+                          {
+                            name: 'validator_address',
+                            type: 'string',
+                          },
+                          {
+                            name: 'amount',
+                            type: 'TypeAmount',
+                          },
+                        ],
+                        TypeAmount: [
+                          {
+                            name: 'denom',
+                            type: 'string',
+                          },
+                          {
+                            name: 'amount',
+                            type: 'string',
+                          },
+                        ],
+                      },
+                      primaryType: 'Tx',
+                      domain: {
+                        name: 'Cosmos Web3',
+                        version: '1.0.0',
+                        chainId: 11235,
+                        verifyingContract: 'cosmos',
+                        salt: '0',
+                      },
+                      message: {
+                        account_number: '3239277',
+                        chain_id: 'haqq_11235-1',
+                        fee: {
+                          amount: [
+                            {
+                              amount: '181336045000000000',
+                              denom: 'aISLM',
+                            },
+                          ],
+                          gas: '6594038',
+                          feePayer:
+                            'haqq1rwm3k4c6zmhd9y7ex8fytapa9gwng96eapx3ek',
+                        },
+                        memo: '',
+                        msgs: [
+                          {
+                            type: 'cosmos-sdk/MsgDelegate',
+                            value: {
+                              amount: {
+                                amount: '1000000000000000000',
+                                denom: 'aISLM',
+                              },
+                              delegator_address:
+                                'haqq1rwm3k4c6zmhd9y7ex8fytapa9gwng96eapx3ek',
+                              validator_address:
+                                'haqqvaloper16hy887wxzjmmkkfrdxzgz9dlv6mfru56q539cw',
+                            },
+                          },
+                        ],
+                        sequence: '1',
+                      },
+                    },
+                  ],
+                };
+              }
+
+              // Sign in with Ethereum
+              if (index === 5) {
+                tx = {
+                  method: 'personal_sign',
+                  params: [
+                    '0x415b829d862121f25fcdfdfadf7a705e45249dbc',
+                    `HAQQ Wallet wants you to sign in with your Ethereum account:
+0x415b829d862121f25fcdfdfadf7a705e45249dbc
+
+This is a test statement.
+
+URI: https://test.test/login
+Version: 1
+Chain ID: 11235
+Nonce: 1234567890
+Issued At: 2024-02-20T12:00:00.000Z`,
+                  ],
+                };
+              }
+
+              setRawSignData(JSON.stringify(tx, null, 2));
+              setSignData(tx);
+              setValidRawSignData(true);
+            },
+          );
+        }}
+        variant={ButtonVariant.second}
+      />
+      <Spacer height={8} />
+      <Button
         title="Clear"
         disabled={!rawSignData}
         onPress={() => setRawSignData('')}
-        variant={ButtonVariant.second}
+        variant={ButtonVariant.warning}
       />
       <Spacer height={8} />
       <Title text="WalletConnect" />

@@ -1,3 +1,4 @@
+import 'node-libs-react-native/globals';
 import '@ethersproject/shims';
 import '@walletconnect/react-native-compat';
 import {AppRegistry, I18nManager, LogBox} from 'react-native';

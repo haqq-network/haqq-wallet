@@ -21,8 +21,9 @@ import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Fee} from '@app/models/fee';
 import {Provider} from '@app/models/provider';
+import {BalanceModel} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
-import {BalanceData, IToken} from '@app/types';
+import {IToken} from '@app/types';
 import {splitAddress} from '@app/utils';
 import {LONG_NUM_PRECISION} from '@app/variables/common';
 
@@ -39,7 +40,7 @@ interface TransactionConfirmationProps {
   onPressToAddress: () => void;
   fee: Fee | null;
   token: IToken;
-  balance: BalanceData;
+  balance: BalanceModel;
 }
 
 export const TransactionConfirmation = observer(
@@ -61,6 +62,10 @@ export const TransactionConfirmation = observer(
     const transactionSum = useMemo(() => {
       if (!fee?.calculatedFees) {
         return null;
+      }
+
+      if (Provider.getByEthChainId(token.chain_id)?.isTron) {
+        return fee.calculatedFees.expectedFee.operate(amount.toFloat(), 'add');
       }
 
       if (amount.isNativeCoin) {
@@ -199,8 +204,11 @@ export const TransactionConfirmation = observer(
                     color={
                       transactionSumError ? Color.graphicRed1 : Color.textGreen1
                     }
+                    disabled={Provider.getByEthChainId(token.chain_id)?.isTron}
                     onPress={onFeePress}>
-                    {fee.expectedFeeString}
+                    {Provider.getByEthChainId(token.chain_id)?.isTron
+                      ? fee.expectedFee?.toBalanceString()
+                      : fee.expectedFeeString}
                   </Text>
                   <Icon
                     name={IconsName.tune}

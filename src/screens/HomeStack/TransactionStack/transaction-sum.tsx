@@ -10,7 +10,6 @@ import {awaitForProvider} from '@app/helpers/await-for-provider';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
-import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {EstimationVariant} from '@app/models/fee';
@@ -39,7 +38,7 @@ export const TransactionSumScreen = observer(() => {
   const event = useMemo(() => generateUUID(), []);
   const [to, setTo] = useState(route.params.to);
   const wallet = Wallet.getById(route.params.from);
-  const balances = useWalletsBalance([wallet!]);
+  const balances = Wallet.getBalancesByAddressList([wallet!]);
   const currentBalance = useMemo(
     () => balances[AddressUtils.toEth(route.params.from)],
     [balances, route],
@@ -101,8 +100,18 @@ export const TransactionSumScreen = observer(() => {
       setLoading(true);
       const estimate = await getFee(amount);
 
-      if (estimate?.expectedFee.isPositive()) {
+      let successCondition = false;
+
+      if (Provider.getByEthChainId(route.params.token.chain_id)?.isTron) {
+        // fee can be zero for TRON if user has enough bandwidth (freezed TRX)
+        successCondition = !!estimate?.expectedFee ?? false;
+      } else {
+        successCondition = estimate?.expectedFee.isPositive() ?? false;
+      }
+
+      if (successCondition) {
         navigation.navigate(TransactionStackRoutes.TransactionConfirmation, {
+          // @ts-ignore
           calculatedFees: estimate,
           from: route.params.from,
           to,
@@ -151,7 +160,7 @@ export const TransactionSumScreen = observer(() => {
   }, [navigation]);
 
   useEffectAsync(async () => {
-    const b = app.getAvailableBalance(route.params.from);
+    const b = Wallet.getBalance(route.params.from, 'available');
     const {expectedFee} = await EthNetwork.estimate(
       {
         from: route.params.from,
