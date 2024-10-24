@@ -32,7 +32,6 @@ class RNCloud: NSObject {
       }
   }
 
-  //// Return true if iCloud is enabled
   var isCloudEnabled: Bool {
       if DocumentsDirectory.iCloudDocumentsURL != nil {
         return true
@@ -42,7 +41,9 @@ class RNCloud: NSObject {
   }
 
   @objc
-  static func requiresMainQueueSetup() -> Bool { return false }
+  static func requiresMainQueueSetup() -> Bool { 
+    return false 
+  }
 
   @objc
   public func constantsToExport() -> [AnyHashable : Any]! {
@@ -56,10 +57,6 @@ class RNCloud: NSObject {
       let nestedFolderURL = DocumentsDirectory.iCloudDocumentsURL!
       
       let fileNames = try! self.fileManager.contentsOfDirectory(atPath: nestedFolderURL.path)
-      
-      for fileName in fileNames {
-        print(fileName)
-      }
       
       let fileUrl = nestedFolderURL.appendingPathComponent(key)
       let exists = self.fileManager.fileExists(atPath: fileUrl.path)
@@ -93,6 +90,7 @@ class RNCloud: NSObject {
     }
     
     ensureFileLoaded(key)
+    
     let nestedFolderURL = DocumentsDirectory.iCloudDocumentsURL!
     
     let fileUrl = nestedFolderURL.appendingPathComponent(key)
@@ -133,7 +131,6 @@ class RNCloud: NSObject {
     do {
       try fileManager.createDirectory(atPath: nestedFolderURL.path, withIntermediateDirectories: true);
     } catch {
-      // Directory already exist, nothing to do here
     }
     if fileManager.fileExists(atPath: fileUrl.path) == true {
         return
@@ -148,7 +145,6 @@ class RNCloud: NSObject {
     do {
       try fileManager.startDownloadingUbiquitousItem(at: cloudFileUrl)
     } catch {
-      logger("cant load file \(key)")
     }
     
     let startingTime = Date()
