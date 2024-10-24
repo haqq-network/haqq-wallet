@@ -374,6 +374,7 @@ export enum HomeStackRoutes {
   Swap = '_swap',
   NewsDetailPushNotification = 'newsDetailsPushNotification',
   FeeSettings = 'feeSettings',
+  SignUp = 'SignUp',
 }
 
 export type HomeStackParamList = {
@@ -382,6 +383,7 @@ export type HomeStackParamList = {
   [HomeStackRoutes.Ledger]: undefined;
   [HomeStackRoutes.Device]: undefined;
   [HomeStackRoutes.SignIn]: undefined;
+  [HomeStackRoutes.SignUp]: undefined;
   [HomeStackRoutes.AccountInfo]: {accountId: string};
   [HomeStackRoutes.Transaction]: {
     from?: string;

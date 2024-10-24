@@ -202,7 +202,11 @@ export const TransactionConfirmation = observer(
                   <Text
                     variant={TextVariant.t11}
                     color={
-                      transactionSumError ? Color.graphicRed1 : Color.textGreen1
+                      transactionSumError
+                        ? Color.graphicRed1
+                        : Provider.selectedProvider.isEVM
+                        ? Color.textGreen1
+                        : Color.textBase1
                     }
                     disabled={Provider.getByEthChainId(token.chain_id)?.isTron}
                     onPress={onFeePress}>
@@ -210,12 +214,16 @@ export const TransactionConfirmation = observer(
                       ? fee.expectedFee?.toBalanceString()
                       : fee.expectedFeeString}
                   </Text>
-                  <Icon
-                    name={IconsName.tune}
-                    color={
-                      transactionSumError ? Color.graphicRed1 : Color.textGreen1
-                    }
-                  />
+                  {Provider.selectedProvider.isEVM && (
+                    <Icon
+                      name={IconsName.tune}
+                      color={
+                        transactionSumError
+                          ? Color.graphicRed1
+                          : Color.textGreen1
+                      }
+                    />
+                  )}
                 </View>
               )}
             </DataView>

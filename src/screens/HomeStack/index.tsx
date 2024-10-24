@@ -47,6 +47,7 @@ import {ReceiveScreen, SelectNetworkScreen} from './ReceiveStack';
 import {FeeSettingsScreen} from './TransactionStack/fee-settings';
 
 import {SwapStack} from '../SwapStack';
+import {SignUpStack} from '../WelcomeStack/SignUpStack';
 
 const navigatorOptions: NativeStackNavigationOptions = {
   gestureEnabled: false,
@@ -225,7 +226,11 @@ const HomeStack = memo(() => {
         component={SignInStack}
         options={modalOptions}
       />
-
+      <Stack.Screen
+        name={HomeStackRoutes.SignUp}
+        component={SignUpStack}
+        options={modalOptions}
+      />
       <Stack.Screen
         name={HomeStackRoutes.ValueSelector}
         component={themeUpdaterHOC(ValueSelectorScreen)}

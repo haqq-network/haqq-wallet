@@ -12,10 +12,7 @@ export const safeLoadBalances = async (wallets: string[]) => {
   let balances: {total: IndexerBalance} | null = null;
 
   try {
-    balances = await Indexer.instance.updates(
-      wallets.map(AddressUtils.toHaqq),
-      new Date(),
-    );
+    balances = await Indexer.instance.updates(wallets, new Date());
   } catch (e) {
     logger.error('Failed to load balances from indexer', e);
   }
@@ -41,10 +38,7 @@ export const safeLoadBalances = async (wallets: string[]) => {
   }
 
   if (!balances) {
-    const emptyBalances = wallets.map(w => [
-      AddressUtils.toHaqq(w),
-      Balance.Empty,
-    ]);
+    const emptyBalances = wallets.map(w => [w, Balance.Empty]);
     balances = {
       total: Object.fromEntries(emptyBalances),
     };

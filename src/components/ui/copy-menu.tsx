@@ -67,7 +67,9 @@ export const CopyMenu = observer(
 
     return (
       <Menu renderer={Popover} rendererProps={rendererProps}>
-        <MenuTrigger customStyles={menuTriggerCustomStyles}>
+        <MenuTrigger
+          onAlternativeAction={onCopyPress}
+          customStyles={menuTriggerCustomStyles}>
           <View style={containerStyle}>{children}</View>
         </MenuTrigger>
         <MenuOptions

@@ -8,6 +8,7 @@ import {AddressUtils} from '@app/helpers/address-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {Contact} from '@app/models/contact';
+import {Provider} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {Wallet} from '@app/models/wallet';
 import {
@@ -32,28 +33,41 @@ export const TransactionAddressScreen = observer(() => {
   const [loading, setLoading] = React.useState(false);
   const wallets = Wallet.getAllVisible();
   const contacts = useRef(Contact.getAll()).current;
+  const fromWallet = useMemo(
+    () => Wallet.getById(route.params.from)!,
+    [route.params.from],
+  );
 
   const [address, setAddress] = useState(route.params?.to || '');
   const filteredWallets = useMemo(() => {
     if (!wallets || !wallets.length) {
       return [];
     }
+    const isTron = Provider.selectedProvider.isTron;
 
     if (!address) {
-      return wallets.filter(
-        w => !AddressUtils.equals(w.address, route.params.from),
-      );
+      return wallets.filter(w => {
+        if (isTron && !w.isSupportTron) {
+          return false;
+        }
+        return !AddressUtils.equals(w.address, route.params.from);
+      });
     }
 
     const lowerCaseAddress = address.toLowerCase();
 
-    return wallets.filter(
-      w =>
+    return wallets.filter(w => {
+      if (isTron && !w.isSupportTron) {
+        return false;
+      }
+      return (
         (w.address.toLowerCase().includes(lowerCaseAddress) ||
+          w.tronAddress?.toLowerCase?.()?.includes?.(lowerCaseAddress) ||
           w.cosmosAddress.toLowerCase().includes(lowerCaseAddress) ||
           w.name.toLowerCase().includes(lowerCaseAddress)) &&
-        !AddressUtils.equals(w.address, route.params.from),
-    );
+        !AddressUtils.equals(w.address, route.params.from)
+      );
+    });
   }, [address, wallets]);
 
   const filteredContacts = useMemo(() => {
@@ -85,21 +99,24 @@ export const TransactionAddressScreen = observer(() => {
   const onDone = useCallback(
     async (result: string) => {
       try {
+        const converter = AddressUtils.getConverterByNetwork(
+          Provider.selectedProvider.networkType,
+        );
         setLoading(true);
         const {nft, token} = route.params || {};
         if (nft) {
           return navigation.navigate(
             TransactionStackRoutes.TransactionNftConfirmation,
             {
-              from: AddressUtils.toEth(route.params.from),
-              to: AddressUtils.toEth(result),
+              from: converter(route.params.from),
+              to: converter(result),
               nft,
             },
           );
         } else if (token) {
           return navigation.navigate(TransactionStackRoutes.TransactionSum, {
-            from: AddressUtils.toEth(route.params.from),
-            to: AddressUtils.toEth(result),
+            from: converter(route.params.from),
+            to: converter(result),
             token,
           });
         } else {
@@ -115,8 +132,8 @@ export const TransactionAddressScreen = observer(() => {
             }
           }
           navigation.navigate(TransactionStackRoutes.TransactionSelectCrypto, {
-            from: AddressUtils.toEth(route.params.from),
-            to: AddressUtils.toEth(result),
+            from: converter(route.params.from),
+            to: converter(result),
           });
         }
       } catch (e) {
@@ -137,6 +154,7 @@ export const TransactionAddressScreen = observer(() => {
       contacts={filteredContacts}
       onAddress={onDone}
       testID="transaction_address"
+      fromWallet={fromWallet}
     />
   );
 });

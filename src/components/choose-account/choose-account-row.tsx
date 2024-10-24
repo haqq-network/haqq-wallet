@@ -45,7 +45,7 @@ export const ChooseAccountRow = ({
     }
 
     if (Provider.selectedProvider.isTron) {
-      return AddressUtils.toTron(item.address);
+      return item.tronAddress || AddressUtils.toTron(item.address);
     }
     return item.address;
   }, [item, isWalletCreated]);

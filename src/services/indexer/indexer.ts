@@ -76,9 +76,10 @@ export class Indexer {
     this.init();
   }
 
-  private getProvidersHeader = (accounts: string[]) => {
-    const provider = Provider.selectedProvider;
-
+  private getProvidersHeader = (
+    accounts: string[],
+    provider = Provider.selectedProvider,
+  ) => {
     if (provider.id === ALL_NETWORKS_ID) {
       return Provider.getAllNetworks().reduce(
         (acc, item) => ({

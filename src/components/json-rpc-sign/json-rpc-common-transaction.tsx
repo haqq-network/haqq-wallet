@@ -216,7 +216,9 @@ export const JsonRpcCommonTransaction = ({
               disabled={provider?.isTron}
               onPress={onFeePress}>
               <View style={styles.feeContainer}>
-                <Text variant={TextVariant.t11} color={Color.textGreen1}>
+                <Text
+                  variant={TextVariant.t11}
+                  color={provider?.isTron ? Color.textBase1 : Color.textGreen1}>
                   {provider?.isTron
                     ? fee?.expectedFee?.toBalanceString()
                     : fee?.expectedFeeString}

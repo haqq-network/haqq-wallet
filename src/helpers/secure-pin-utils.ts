@@ -10,6 +10,7 @@ import {app} from '@app/contexts';
 import {VariablesString} from '@app/models/variables-string';
 import {IWalletModel, Wallet} from '@app/models/wallet';
 import {WalletType} from '@app/types';
+import {ETH_COIN_TYPE, TRON_COIN_TYPE} from '@app/variables/common';
 
 import {AddressUtils} from './address-utils';
 import {getProviderStorage} from './get-provider-storage';
@@ -98,7 +99,9 @@ const checkPinCorrect = async (wallet: IWalletModel, pin: string) => {
     if (!providerWithNewPin) {
       throw new Error('providerWithNewPin not found');
     }
-    const {address} = await providerWithNewPin.getAccountInfo(wallet.path!);
+    const {address} = await providerWithNewPin.getAccountInfo(
+      wallet.path?.replace?.(TRON_COIN_TYPE, ETH_COIN_TYPE)!,
+    );
     if (!AddressUtils.equals(address, wallet.address)) {
       throw new Error('address not match');
     }

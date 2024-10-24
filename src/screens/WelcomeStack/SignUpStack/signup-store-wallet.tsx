@@ -18,6 +18,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {
+  HomeStackRoutes,
   SignInStackRoutes,
   SignUpStackParamList,
   SignUpStackRoutes,
@@ -40,7 +41,12 @@ export const SignUpStoreWalletScreen = observer(() => {
 
   const goBack = useCallback(() => {
     hideModal(ModalType.loading);
-    navigation.replace(WelcomeStackRoutes.SignUp);
+    if (app.onboarded) {
+      // @ts-ignore
+      navigation.replace(HomeStackRoutes.SignUp);
+    } else {
+      navigation.replace(WelcomeStackRoutes.SignUp);
+    }
   }, [navigation]);
 
   useEffect(() => {
@@ -150,7 +156,7 @@ export const SignUpStoreWalletScreen = observer(() => {
             address: AddressUtils.toEth(address),
             tronAddress: tronAddress as AddressTron,
             accountId: provider.getIdentifier(),
-            path: hdPath,
+            path: hdPath.replace?.(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
             type,
             socialLinkEnabled: type === WalletType.sss,
             mnemonicSaved: !!accountWallets.find(
