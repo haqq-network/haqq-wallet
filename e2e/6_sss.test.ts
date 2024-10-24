@@ -5,7 +5,7 @@ import {getTimeStamp} from './helpers/getTimeStamp';
 import {launchApp} from './helpers/launchApp';
 import {PIN} from './test-variables';
 
-describe.skip('SSS Wallet', () => {
+describe('SSS Wallet', () => {
   let uid = '';
   let mnemonic = '';
   const isAndroid = device.getPlatform() === 'android';
@@ -21,7 +21,11 @@ describe.skip('SSS Wallet', () => {
   });
 
   it('should create SSS wallet', async () => {
-    await expect(element(by.id('welcome'))).toBeVisible();
+    await waitFor(element(by.text('Turn on push notifications'))).toBeVisible();
+
+    await element(by.text('Not now')).tap();
+
+    await waitFor(element(by.id('welcome'))).toBeVisible();
     await expect(element(by.id('welcome_signup'))).toBeVisible();
     await element(by.id('welcome_signup')).tap();
 
@@ -39,13 +43,23 @@ describe.skip('SSS Wallet', () => {
     await element(by.id('custom_provider_email_input')).replaceText(uid);
     await element(by.id('custom_provider_email_submit')).tap();
 
+    await waitFor(element(by.text('Important information'))).toBeVisible();
+
+    await waitFor(element(by.text('Continue')))
+      .toBeVisible()
+      .withTimeout(5000);
+
+    await element(by.text('Continue')).tap();
+
     await expect(element(by.id('onboarding_setup_pin_set'))).toBeVisible();
 
     for (const num of PIN.split('')) {
       await element(by.id(`numeric_keyboard_${num}`)).tap();
     }
 
-    await expect(element(by.text('Please repeat pin code'))).toBeVisible();
+    await expect(
+      element(by.text('Please re-enter your PIN code')),
+    ).toBeVisible();
 
     for (const num of PIN.split('')) {
       await element(by.id(`numeric_keyboard_${num}`)).tap();
@@ -126,7 +140,7 @@ describe.skip('SSS Wallet', () => {
     // await transferCoins(wallet.address, milkWallet.address);
   });
 
-  it('should restore SSS wallet', async () => {
+  it.skip('should restore SSS wallet', async () => {
     await expect(element(by.id('welcome'))).toBeVisible();
     await expect(element(by.id('welcome_signin'))).toBeVisible();
     await element(by.id('welcome_signin')).tap();
