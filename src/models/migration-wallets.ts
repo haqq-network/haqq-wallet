@@ -52,8 +52,8 @@ const _migrateHotWallet = async (
   wallet: WalletModel,
   getPassword: () => Promise<string>,
 ): Promise<void> => {
-  // generate TRX address after 4 version
-  if (wallet.version <= 4) {
+  // generate TRX address
+  if (!wallet.tronAddress) {
     const tronProvider = new ProviderHotTron({
       account: wallet.accountId!,
       getPassword,
@@ -75,8 +75,8 @@ const _migrateMnemonicWallet = async (
   wallet: WalletModel,
   getPassword: () => Promise<string>,
 ) => {
-  // generate TRX address after 4 version
-  if (wallet.version <= 4) {
+  // generate TRX address
+  if (!wallet.tronAddress) {
     const tronProvider = new ProviderMnemonicTron({
       account: wallet.accountId!,
       getPassword,
@@ -98,8 +98,8 @@ const _migrateSssWallet = async (
   wallet: WalletModel,
   getPassword: () => Promise<string>,
 ) => {
-  // generate TRX address after 4 version
-  if (wallet.version <= 4) {
+  // generate TRX address
+  if (!wallet.tronAddress) {
     const storage = await getProviderStorage(wallet.accountId as string);
 
     const tronProvider = new ProviderSSSTron({

@@ -245,7 +245,15 @@ export class AddressUtils {
     network: NetworkProviderTypes,
   ) {
     const converterFn = AddressUtils.getConverterByNetwork(network);
-    return addresses.map(converterFn);
+    return addresses.map(address => {
+      if (
+        network === NetworkProviderTypes.TRON &&
+        AddressUtils.isTronAddress(address)
+      ) {
+        return address;
+      }
+      return converterFn(address);
+    });
   }
 
   static getWalletByAddress(address: string) {

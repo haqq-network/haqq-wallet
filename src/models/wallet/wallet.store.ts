@@ -12,7 +12,11 @@ import {Indexer, IndexerUpdatesResponse} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
 import {RPCMessage, RPCObserver} from '@app/types/rpc';
 import {deepClone} from '@app/utils';
-import {ZERO_HEX_NUMBER} from '@app/variables/common';
+import {
+  ETH_COIN_TYPE,
+  TRON_COIN_TYPE,
+  ZERO_HEX_NUMBER,
+} from '@app/variables/common';
 
 import {BalanceModel} from './balance.model';
 import {getMockWallets} from './wallet.mock';
@@ -367,7 +371,7 @@ class WalletStore implements RPCObserver {
       colorTo,
       colorPattern,
       type: walletParams.type,
-      path: walletParams.path,
+      path: walletParams.path?.replace?.(TRON_COIN_TYPE, ETH_COIN_TYPE)!,
       accountId: walletParams.accountId,
       version: 3,
       isHidden: existingWallet?.isHidden ?? false,
