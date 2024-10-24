@@ -57,6 +57,8 @@ export function parseTransaction(
         return parseMsgBeginRedelegate(tx as any, addresses);
       case IndexerTxMsgType.msgEthereumApprovalTx:
         return parseMsgEthereumApprovalTx(tx as any, addresses);
+      case IndexerTxMsgType.transferContract:
+        return parseTransferContractTx(tx as any, addresses);
       // TODO: implement other tx types
       case IndexerTxMsgType.unknown:
       case IndexerTxMsgType.msgVote:
@@ -110,6 +112,32 @@ function parseMsgBeginRedelegate(
 
 function parseMsgEthereumApprovalTx(
   tx: IndexerTransactionWithType<IndexerTxMsgType.msgEthereumApprovalTx>,
+  _: string[],
+): ParsedTransactionData {
+  const [token] = getTokensInfo(tx);
+  const amount = [new Balance(tx.msg.amount, token.decimals, token.symbol)];
+  const spenderContract = Token.getById(AddressUtils.toHaqq(tx.msg.spender));
+
+  return {
+    from: AddressUtils.toEth(tx.msg.owner),
+    to: AddressUtils.toEth(tx.msg.contract_address),
+    amount,
+    isContractInteraction: true,
+    isIncoming: false,
+    isOutcoming: false,
+    tokens: [token],
+    isCosmosTx: false,
+    isEthereumTx: true,
+    icon: IconsName.check,
+    title: getText(I18N.transactionApproveERC20Title),
+    subtitle:
+      spenderContract?.name ||
+      formatAddressForSubtitle(tx.msg.spender, 'toEth', false),
+  };
+}
+
+function parseTransferContractTx(
+  tx: IndexerTransactionWithType<IndexerTxMsgType.transferContract>,
   _: string[],
 ): ParsedTransactionData {
   const [token] = getTokensInfo(tx);
