@@ -1807,8 +1807,8 @@ export type IndexerTxMsgApproval = {
   spender: AddressCosmosHaqq;
 };
 
-export type IndexerTxMsgTransferContract = {
-  type: IndexerTxMsgType.transferContract;
+export type IndexerTxMsgProtoTx = {
+  type: IndexerTxMsgType.msgProtoTx;
   amount: string;
   contract_address: AddressCosmosHaqq;
   owner: AddressCosmosHaqq;
@@ -1835,7 +1835,7 @@ export enum IndexerTxMsgType {
   msgCreateValidator = 'msgCreateValidator',
   msgEditValidator = 'msgEditValidator',
   msgEthereumApprovalTx = 'msgEthereumApprovalTx',
-  transferContract = 'TransferContract',
+  msgProtoTx = 'msgProtoTx',
 }
 
 export type IndexerTxMsgUnion =
@@ -1857,7 +1857,7 @@ export type IndexerTxMsgUnion =
   | {msg: IndexerTxMsgCreateValidatorTx}
   | {msg: IndexerTxMsgEditValidatorTx}
   | {msg: IndexerTxMsgApproval}
-  | {msg: IndexerTxMsgTransferContract};
+  | {msg: IndexerTxMsgProtoTx};
 
 export enum IndexerTransactionStatus {
   inProgress = -1,

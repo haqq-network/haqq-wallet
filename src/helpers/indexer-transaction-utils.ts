@@ -57,7 +57,7 @@ export function parseTransaction(
         return parseMsgBeginRedelegate(tx as any, addresses);
       case IndexerTxMsgType.msgEthereumApprovalTx:
         return parseMsgEthereumApprovalTx(tx as any, addresses);
-      case IndexerTxMsgType.transferContract:
+      case IndexerTxMsgType.msgProtoTx:
         return parseTransferContractTx(tx as any, addresses);
       // TODO: implement other tx types
       case IndexerTxMsgType.unknown:
@@ -137,9 +137,33 @@ function parseMsgEthereumApprovalTx(
 }
 
 function parseTransferContractTx(
-  tx: IndexerTransactionWithType<IndexerTxMsgType.transferContract>,
+  tx: IndexerTransactionWithType<IndexerTxMsgType.msgProtoTx>,
   _: string[],
 ): ParsedTransactionData {
+  /**
+  {
+    "block": 48682614,
+    "chain_id": 0,
+    "code": 3,
+    "confirmations": 0,
+    "fee": "0",
+    "gas_limit": "0",
+    "hash": "0x59b181942cf0656f467a5935d39b6ec8f69701a5bffa098ae87b236692cd089a",
+    "id": "0x59b181942cf0656f467a5935d39b6ec8f69701a5bffa098ae87b236692cd089a",
+    "input": "",
+    "msg": {
+      "transferContract": {
+        "amount": "100000000",
+        "ownerAddress": "HXFYEQKwQWNOYkegpTJgRW07eFw=",
+        "toAddress": "8GbsUWS244zcq42qlXwh+pdZIV8="
+      },
+      "type": "msgProtoTx"
+    },
+    "msg_type": "TransferContract",
+    "senders": [],
+    "ts": "2024-10-23T18:51:27Z"
+  },
+   */
   const [token] = getTokensInfo(tx);
   const amount = [new Balance(tx.msg.amount, token.decimals, token.symbol)];
   const spenderContract = Token.getById(AddressUtils.toHaqq(tx.msg.spender));
@@ -493,8 +517,15 @@ function getTokensInfo(tx: IndexerTransaction): IndexerTxParsedTokenInfo[] {
     return [Token.UNKNOWN_TOKEN];
   }
 
-  if ('amount' in tx.msg && Array.isArray(tx.msg.amount)) {
-    const result = tx.msg.amount
+  let amountKey = 'amount';
+  if (tx.msg.type === IndexerTxMsgType.msgProtoTx) {
+    amountKey = 'transferContract';
+  }
+  //@ts-ignore
+  const amountValue = tx.msg[amountKey];
+
+  if (amountValue && Array.isArray(amountValue)) {
+    const result = amountValue
       // @ts-ignore
       .map(amount => getTokensInfo({...tx, msg: {...tx.msg, amount}}))
       .flat();
@@ -505,29 +536,33 @@ function getTokensInfo(tx: IndexerTransaction): IndexerTxParsedTokenInfo[] {
   }
 
   const provider = Provider.getByEthChainId(tx.chain_id);
-  // @ts-ignore
-  if (tx.msg?.amount?.denom === provider.weiDenom) {
+  if (amountValue?.denom === provider?.weiDenom) {
     return [getNativeToken(provider)];
   }
 
   let contractInfo: IToken | undefined;
 
   if (
-    'amount' in tx.msg &&
-    typeof tx?.msg?.amount === 'object' &&
-    tx?.msg?.amount &&
-    'amount' in tx?.msg?.amount &&
-    tx.msg.amount.contract_address
+    amountValue &&
+    typeof amountValue === 'object' &&
+    'amount' in amountValue &&
+    amountValue.contract_address
   ) {
-    contractInfo = Token.getById(tx.msg.amount.contract_address);
+    contractInfo = Token.getById(amountValue.contract_address);
   }
 
   if ('contract_address' in tx.msg && !contractInfo?.is_erc20) {
     contractInfo = Token.getById(tx.msg.contract_address);
   }
+  if ('ownerAddress' in tx.msg && !contractInfo?.is_erc20) {
+    contractInfo = Token.getById(tx.msg.ownerAddress as string);
+  }
 
   if ('to_address' in tx.msg && !contractInfo?.is_erc20) {
     contractInfo = Token.getById(tx.msg.to_address);
+  }
+  if ('toAddress' in tx.msg && !contractInfo?.is_erc20) {
+    contractInfo = Token.getById(tx.msg.toAddress as string);
   }
 
   if ('from_address' in tx.msg && !contractInfo?.is_erc20) {
@@ -543,8 +578,7 @@ function getTokensInfo(tx: IndexerTransaction): IndexerTxParsedTokenInfo[] {
     return [
       {
         name: contractInfo.name,
-        // @ts-ignore
-        symbol: tx?.msg?.amount?.denom || contractInfo.symbol,
+        symbol: amountValue?.denom || contractInfo.symbol,
         icon: contractInfo.image ?? require('@assets/images/empty-icon.png'),
         decimals: contractInfo?.decimals || Provider.selectedProvider.decimals,
         contract_address: contractInfo.id,
