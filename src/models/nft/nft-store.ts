@@ -1,7 +1,6 @@
 import {makeAutoObservable, runInAction, when} from 'mobx';
 
 import {AddressUtils} from '@app/helpers/address-utils';
-import {Whitelist} from '@app/helpers/whitelist';
 import {Contracts} from '@app/models/contracts';
 import {
   ContractType,
@@ -12,6 +11,7 @@ import {
 } from '@app/models/nft';
 import {Socket} from '@app/models/socket';
 import {Wallet} from '@app/models/wallet';
+import {Whitelist} from '@app/models/whitelist';
 import {Indexer} from '@app/services/indexer';
 import {AddressCosmosHaqq, IContract} from '@app/types';
 import {RPCMessage} from '@app/types/rpc';

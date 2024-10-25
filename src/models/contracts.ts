@@ -2,7 +2,7 @@ import {makeAutoObservable} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
 import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
-import {Whitelist} from '@app/helpers/whitelist';
+import {Whitelist} from '@app/models/whitelist';
 import {storage} from '@app/services/mmkv';
 import {IContract, IToken, MobXStore} from '@app/types';
 
