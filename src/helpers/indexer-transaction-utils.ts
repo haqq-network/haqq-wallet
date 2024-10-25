@@ -140,12 +140,13 @@ function parseTransferContractTx(
   tx: IndexerTransactionWithType<IndexerTxMsgType.msgProtoTx>,
   addresses: string[],
 ): ParsedTransactionData {
-  const isIncoming = isIncomingTx(tx, addresses);
-  const {from, to} = getFromAndTo(tx, isIncoming);
-  const provider = Provider.getByEthChainId(tx.chain_id);
+  const transaction = parseTronTransaction(tx);
+  const isIncoming = isIncomingTx(transaction, addresses);
+  const {from, to} = getFromAndTo(transaction, isIncoming);
+  const provider = Provider.getByEthChainId(transaction.chain_id);
   const amount = [
     new Balance(
-      tx.msg.transferContract.amount,
+      transaction.msg.transferContract.amount,
       provider?.decimals,
       provider?.denom,
     ),
@@ -160,7 +161,7 @@ function parseTransferContractTx(
     : formatAddressForSubtitle(to, 'toTron', false);
   const icon = isIncoming ? IconsName.arrow_receive : IconsName.arrow_send;
 
-  const isContractInteraction = isContractInteractionTx(tx);
+  const isContractInteraction = isContractInteractionTx(transaction);
 
   return {
     from,
@@ -176,7 +177,7 @@ function parseTransferContractTx(
     title: isContractInteraction
       ? getText(I18N.transactionContractTitle)
       : title,
-    subtitle: isContractInteraction ? getContractName(tx) : subtitle,
+    subtitle: isContractInteraction ? getContractName(transaction) : subtitle,
   };
 }
 
@@ -445,10 +446,9 @@ function isIncomingTx(tx: IndexerTransaction, addresses: string[]): boolean {
   }
 
   if (msg.type === IndexerTxMsgType.msgProtoTx) {
+    const tronAddresses = addresses.map(AddressUtils.toTron);
     if (msg.transferContract?.toAddress) {
-      return haqqAddresses.includes(
-        AddressUtils.toHaqq(msg.transferContract.toAddress),
-      );
+      return tronAddresses.includes(msg.transferContract.toAddress);
     }
     return false;
   }
@@ -590,6 +590,32 @@ function getTokensInfo(tx: IndexerTransaction): IndexerTxParsedTokenInfo[] {
   }
 
   return [Token.UNKNOWN_TOKEN];
+}
+
+function parseTronTransaction(
+  tx: IndexerTransactionWithType<IndexerTxMsgType.msgProtoTx>,
+): IndexerTransactionWithType<IndexerTxMsgType.msgProtoTx> {
+  return {
+    ...tx,
+    msg: {
+      ...tx.msg,
+      transferContract: {
+        ...tx.msg.transferContract,
+        ownerAddress: AddressUtils.toTron(
+          `0x${Buffer.from(
+            tx.msg.transferContract.ownerAddress,
+            'base64',
+          ).toString('hex')}`,
+        ),
+        toAddress: AddressUtils.toTron(
+          `0x${Buffer.from(
+            tx.msg.transferContract.ownerAddress,
+            'base64',
+          ).toString('hex')}`,
+        ),
+      },
+    },
+  };
 }
 
 function getFromAndTo(tx: IndexerTransaction, isIncoming: boolean) {
