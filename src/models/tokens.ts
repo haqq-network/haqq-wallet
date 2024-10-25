@@ -294,7 +294,7 @@ class TokensStore implements MobXStore<IToken> {
     const balance = Wallet.getBalance(wallet.address, 'available', provider);
 
     return {
-      id: AddressUtils.toEth(NATIVE_TOKEN_ADDRESS),
+      id: AddressUtils.toHaqq(NATIVE_TOKEN_ADDRESS),
       contract_created_at: '',
       contract_updated_at: '',
       value: balance,
@@ -374,7 +374,7 @@ class TokensStore implements MobXStore<IToken> {
     const contract = contracts[_providerEthChainId][0];
 
     const result: IToken = {
-      id: AddressUtils.toEth(contract.id),
+      id: AddressUtils.toHaqq(contract.id),
       contract_created_at: contract.created_at,
       contract_updated_at: contract.updated_at,
       value: new Balance(
