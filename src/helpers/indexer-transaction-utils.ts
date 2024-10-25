@@ -140,30 +140,6 @@ function parseTransferContractTx(
   tx: IndexerTransactionWithType<IndexerTxMsgType.msgProtoTx>,
   _: string[],
 ): ParsedTransactionData {
-  /**
-  {
-    "block": 48682614,
-    "chain_id": 0,
-    "code": 3,
-    "confirmations": 0,
-    "fee": "0",
-    "gas_limit": "0",
-    "hash": "0x59b181942cf0656f467a5935d39b6ec8f69701a5bffa098ae87b236692cd089a",
-    "id": "0x59b181942cf0656f467a5935d39b6ec8f69701a5bffa098ae87b236692cd089a",
-    "input": "",
-    "msg": {
-      "transferContract": {
-        "amount": "100000000",
-        "ownerAddress": "HXFYEQKwQWNOYkegpTJgRW07eFw=",
-        "toAddress": "8GbsUWS244zcq42qlXwh+pdZIV8="
-      },
-      "type": "msgProtoTx"
-    },
-    "msg_type": "TransferContract",
-    "senders": [],
-    "ts": "2024-10-23T18:51:27Z"
-  },
-   */
   const [token] = getTokensInfo(tx);
   const amount = [new Balance(tx.msg.amount, token.decimals, token.symbol)];
   const spenderContract = Token.getById(AddressUtils.toHaqq(tx.msg.spender));
@@ -433,7 +409,7 @@ function parseMsgSend(
 
 const formatAddressForSubtitle = (
   address: string,
-  format: 'toEth' | 'toHaqq' = 'toEth',
+  format: 'toEth' | 'toHaqq' | 'toTron' = 'toEth',
   from = false,
 ) =>
   `${from ? 'from' : 'to'} ${shortAddress(AddressUtils[format](address), '•')}`;
