@@ -1,3 +1,5 @@
+import Config from 'react-native-config';
+
 import {
   BALANCE_MULTIPLIER,
   COSMOS_MIN_AMOUNT,
@@ -125,7 +127,9 @@ export const REMOTE_CONFIG_DEFAULT_VALUES: Required<RemoteConfigTypes> = {
   tx_timestamp_headers: true,
   enable_eth_commission_multiplier: false,
   indexer_sentry_capture_exeption_throttle_ms: 2 * 60 * 1000, // 2 min,
-  ws_updates: '',
+  ws_updates: 'wss://websocket.wallet.testedge2.haqq.network/ws',
   contests_url: '',
   local_captcha_url: '',
+  wallet_connect_project_id: Config.WALLET_CONNECT_PROJECT_ID,
+  wallet_connect_relay_url: Config.WALLET_CONNECT_RELAY_URL,
 };

@@ -1,7 +1,6 @@
 import React from 'react';
 
 import {Image, StyleProp, StyleSheet, ViewStyle} from 'react-native';
-import Config from 'react-native-config';
 import LinearGradient from 'react-native-linear-gradient';
 
 import {createTheme} from '@app/helpers';
@@ -58,10 +57,7 @@ export const CardSmall = ({
       ]}>
       <Image
         source={{
-          uri: `${RemoteConfig.get_env(
-            'pattern_source',
-            Config.PATTERNS_SOURCE,
-          )}${pattern}.png`,
+          uri: `${RemoteConfig.get('pattern_source')}${pattern}.png`,
         }}
         style={[
           {
