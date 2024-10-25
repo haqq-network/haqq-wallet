@@ -591,13 +591,13 @@ function parseTronTransaction(
       ...tx.msg,
       transferContract: {
         ...tx.msg.transferContract,
-        ownerAddress: AddressUtils.toTron(
+        ownerAddress: AddressUtils.hexToTron(
           `0x${Buffer.from(
             tx.msg.transferContract.ownerAddress,
             'base64',
           ).toString('hex')}`,
         ),
-        toAddress: AddressUtils.toTron(
+        toAddress: AddressUtils.hexToTron(
           `0x${Buffer.from(
             tx.msg.transferContract.ownerAddress,
             'base64',
