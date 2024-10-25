@@ -1029,6 +1029,7 @@ export enum I18N {
   swapFinishComplete = 'swapFinishComplete',
   swapFinishUnwrapComplete = 'swapFinishUnwrapComplete',
   swapFinishWrapComplete = 'swapFinishWrapComplete',
+  tronNotSupportedYet = 'tronNotSupportedYet',
 }
 
 const defaultTranslation = {en};
