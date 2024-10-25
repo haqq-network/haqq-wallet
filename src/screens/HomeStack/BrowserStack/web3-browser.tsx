@@ -100,9 +100,9 @@ export const Web3BrowserScreen = observer(() => {
     );
 
     const providerId = await awaitForProvider({
+      providers: Provider.getAllEVM(),
       initialProviderChainId: initialProvider?.ethChainId!,
       title: I18N.networks,
-      disableAllNetworksOption: true,
     });
     const provider = Provider.getById(providerId);
     if (provider) {
