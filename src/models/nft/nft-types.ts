@@ -1,6 +1,6 @@
 import {CurrencyRate} from '@app/models/types';
 import {Balance} from '@app/services/balance';
-import {AddressCosmosHaqq, AddressEthereum} from '@app/types';
+import {AddressCosmosHaqq, AddressEthereum, ChainId} from '@app/types';
 
 export type NftCollectionIndexer = {
   address: AddressEthereum;
@@ -36,6 +36,7 @@ export type NftItemIndexer = {
   updated_at: string;
   price?: CurrencyRate;
   properties: Record<string, string> | null;
+  chain_id: ChainId;
 };
 
 type NftMetadata = {
@@ -55,7 +56,7 @@ export type NftItem = Omit<
   NftItemIndexer,
   'price' | 'description' | 'token_id'
 > & {
-  chain_id: number;
+  chain_id: ChainId;
   contractType: ContractType;
   description: string;
   price?: Balance;
