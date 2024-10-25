@@ -260,6 +260,11 @@ export class EthNetwork {
           provider,
         );
       }
+      txParams = {
+        ...txParams,
+        from: AddressUtils.toEth(from),
+        to: AddressUtils.toEth(to),
+      };
       const rpcProvider = await getRpcProvider(provider);
       const {maxFeePerGas, maxPriorityFeePerGas} =
         await rpcProvider.getFeeData();
