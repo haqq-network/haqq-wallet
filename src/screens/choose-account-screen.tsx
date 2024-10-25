@@ -106,16 +106,23 @@ export const ChooseAccountScreen = observer(() => {
         }
         index += 1;
       }
-      const wallets = result.map(item => item.address);
-
+      const isTron = Provider.selectedProvider.isTron;
+      const wallets = result.map(item =>
+        isTron ? item.tronAddress! : item.address,
+      );
       const balances = await safeLoadBalances(wallets);
-
       const resultWithBalances = result.map(item => ({
         ...item,
         balance: new Balance(
-          balances?.total.find(t =>
-            AddressUtils.equals(t[0], item.address),
-          )?.[2] || item.balance,
+          balances?.total.find(t => {
+            const addressKey = isTron
+              ? AddressUtils.hexToTron(t[0])
+              : AddressUtils.toHaqq(t[0]);
+            const itemAddress = isTron
+              ? item.tronAddress!
+              : AddressUtils.toHaqq(item.address);
+            return addressKey === itemAddress;
+          })?.[2] || item.balance,
         ),
       }));
       setAddresses(resultWithBalances);
@@ -167,8 +174,12 @@ export const ChooseAccountScreen = observer(() => {
         hdPath: item.path,
         publicKey: '',
         exists:
-          walletsToCreate.find(wallet => wallet.address === item.address)
-            ?.exists ||
+          walletsToCreate.find(wallet => {
+            return (
+              wallet.address === item.address ||
+              wallet.tronAddress === item.tronAddress
+            );
+          })?.exists ||
           item.exists ||
           false,
       })),
@@ -205,12 +216,6 @@ export const ChooseAccountScreen = observer(() => {
                 number: `${total + 1}`,
               });
 
-        if (Provider.selectedProvider.isTron) {
-          // wallet should be created with ETH coin type
-          // tron address will be generated later
-          item.path = item.path?.replace(TRON_COIN_TYPE, ETH_COIN_TYPE);
-        }
-
         Wallet.create(name, item);
         if (isSSSProvider) {
           Wallet.update(item.address, {
@@ -224,12 +229,16 @@ export const ChooseAccountScreen = observer(() => {
           item.type,
           item.accountId!,
         );
-        const {address: tronAddress} = await tronProvider.getAccountInfo(
-          item.path?.replace?.(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
-        );
-        Wallet.update(item.address, {
-          tronAddress: tronAddress as AddressTron,
-        });
+
+        if (!item.tronAddress) {
+          const {address: tronAddress} = await tronProvider.getAccountInfo(
+            // for tron coin type
+            item.path?.replace?.(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
+          );
+          Wallet.update(item.address, {
+            tronAddress: tronAddress as AddressTron,
+          });
+        }
       });
 
     if (isSSSProvider) {

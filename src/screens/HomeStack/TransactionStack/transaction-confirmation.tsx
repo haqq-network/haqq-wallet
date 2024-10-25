@@ -25,7 +25,7 @@ import {Balance} from '@app/services/balance';
 import {getERC20TransferData} from '@app/services/eth-network/erc20';
 import {EthSignErrorDataDetails} from '@app/services/eth-sign';
 import {EventTracker} from '@app/services/event-tracker';
-import {AddressEthereum, MarketingEvents, ModalType} from '@app/types';
+import {MarketingEvents, ModalType} from '@app/types';
 import {makeID} from '@app/utils';
 
 export const TransactionConfirmationScreen = observer(() => {
@@ -189,7 +189,7 @@ export const TransactionConfirmationScreen = observer(() => {
 
   return (
     <TransactionConfirmation
-      balance={balance[route.params.from as AddressEthereum]}
+      balance={balance[AddressUtils.toEth(route.params.from)]}
       disabled={disabled}
       contact={contact}
       to={route.params.to}

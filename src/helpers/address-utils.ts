@@ -94,6 +94,12 @@ export class AddressUtils {
     }
     try {
       if (AddressUtils.isTronAddress(address)) {
+        const isExistWallet = Wallet.getAll().find(
+          w => w.tronAddress === address,
+        );
+        if (isExistWallet) {
+          return isExistWallet.cosmosAddress;
+        }
         return AddressUtils.toHaqq(
           tron.utils.address
             .toChecksumAddress(address)
@@ -121,6 +127,12 @@ export class AddressUtils {
     }
     try {
       if (AddressUtils.isTronAddress(address)) {
+        const isExistWallet = Wallet.getAll().find(
+          w => w.tronAddress === address,
+        );
+        if (isExistWallet) {
+          return isExistWallet.address;
+        }
         return tron.utils.address
           .toChecksumAddress(address)
           .replace(
@@ -189,7 +201,9 @@ export class AddressUtils {
   };
 
   static isValidAddress = (address: string): boolean =>
-    AddressUtils.isEthAddress(address) || AddressUtils.isHaqqAddress(address);
+    AddressUtils.isEthAddress(address) ||
+    AddressUtils.isHaqqAddress(address) ||
+    AddressUtils.isTronAddress(address);
 
   static isContractAddress = async (address: string): Promise<boolean> => {
     if (!address) {
@@ -231,7 +245,15 @@ export class AddressUtils {
     network: NetworkProviderTypes,
   ) {
     const converterFn = AddressUtils.getConverterByNetwork(network);
-    return addresses.map(converterFn);
+    return addresses.map(address => {
+      if (
+        network === NetworkProviderTypes.TRON &&
+        AddressUtils.isTronAddress(address)
+      ) {
+        return address;
+      }
+      return converterFn(address);
+    });
   }
 
   static getWalletByAddress(address: string) {

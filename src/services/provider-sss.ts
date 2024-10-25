@@ -4,6 +4,7 @@ import {jsonrpcRequest} from '@haqq/shared-react-native';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
 import BN from 'bn.js';
 
+import {app} from '@app/contexts';
 import {awaitForPopupClosed} from '@app/helpers';
 import {getGoogleTokens} from '@app/helpers/get-google-tokens';
 import {parseJwt} from '@app/helpers/parse-jwt';
@@ -17,21 +18,33 @@ export enum SssProviders {
   custom = 'custom',
 }
 
+const loggerCustom = Logger.create('onLoginCustom', {
+  enabled: __DEV__ || app.isTesterMode || app.isDeveloper,
+});
+
 export async function onLoginCustom() {
+  loggerCustom.log('Starting onLoginCustom function');
+
   const email = await new Promise(resolve => {
+    loggerCustom.log('Awaiting for popup to be closed');
     awaitForPopupClosed(ModalType.customProviderEmail, {
       onChange: (e: string) => {
+        loggerCustom.log('Email input changed', {email: e});
         resolve(e);
       },
     });
   });
+  loggerCustom.log('Email received from popup', {email});
 
   const verifier_url = RemoteConfig.get('sss_custom_url');
+  loggerCustom.log('Retrieved custom URL from RemoteConfig', {verifier_url});
 
   if (!verifier_url) {
+    loggerCustom.error('sss_custom_url is not set');
     throw new Error('sss_custom_url is not set');
   }
 
+  loggerCustom.log('Fetching token from verifier URL', {verifier_url});
   const token = await fetch(verifier_url, {
     method: 'POST',
     headers: {
@@ -42,77 +55,120 @@ export async function onLoginCustom() {
       email,
     }),
   });
+  loggerCustom.log('Token fetch completed');
 
   const authState = await getHttpResponse(token);
+  loggerCustom.log('Received auth state from HTTP response');
 
   const authInfo = parseJwt(authState.idToken);
+  loggerCustom.log('Parsed JWT from auth state', {authInfo});
+
   const verifier = RemoteConfig.get('sss_custom_provider');
+  loggerCustom.log('Retrieved custom provider from RemoteConfig', {verifier});
 
   if (!verifier) {
+    loggerCustom.error('sss_custom is not set');
     throw new Error('sss_custom is not set');
   }
 
   if (!authInfo) {
+    loggerCustom.warn('Auth info is null, resolving with null');
     return Promise.resolve(null);
   }
 
+  loggerCustom.log(
+    'Calling onAuthorized with verifier, authInfo.sub, and idToken',
+  );
   return await onAuthorized(verifier, authInfo.sub, authState.idToken);
 }
 
+const loggerGoogle = Logger.create('onLoginGoogle', {
+  enabled: __DEV__ || app.isTesterMode || app.isDeveloper,
+});
+
 export async function onLoginGoogle() {
+  loggerGoogle.log('Starting onLoginGoogle function');
   let authState = {
     idToken: '',
   };
   try {
+    loggerGoogle.log('Attempting to get Google tokens');
     authState = await getGoogleTokens();
+    loggerGoogle.log('Successfully retrieved Google tokens');
   } catch (err) {
+    loggerGoogle.error('Error getting Google tokens', {error: err});
     Logger.log('SSS_GOOGLE_ERROR', err);
   }
   const authInfo = parseJwt(authState.idToken);
+  loggerGoogle.log('Parsed JWT from auth state', {authInfo});
 
   const verifier = RemoteConfig.get('sss_google_provider');
+  loggerGoogle.log('Retrieved Google provider from RemoteConfig', {verifier});
 
   if (!verifier) {
+    loggerGoogle.error('sss_google is not set');
     throw new Error('sss_google is not set');
   }
 
   if (!authInfo) {
+    loggerGoogle.warn('Auth info is null, resolving with null');
     return Promise.resolve(null);
   }
 
+  loggerGoogle.log(
+    'Calling onAuthorized with verifier, authInfo.email, and idToken',
+  );
   return await onAuthorized(verifier, authInfo.email, authState.idToken);
 }
 
+const loggerApple = Logger.create('onLoginApple', {
+  enabled: __DEV__ || app.isTesterMode || app.isDeveloper,
+});
+
 export async function onLoginApple() {
+  loggerApple.log('Starting onLoginApple function');
   try {
+    loggerApple.log('Performing Apple auth request');
     const appleAuthRequestResponse = await appleAuth.performRequest({
       requestedOperation: appleAuth.Operation.LOGIN,
       requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
     });
+    loggerApple.log('Apple auth request completed');
 
     if (!appleAuthRequestResponse?.identityToken) {
+      loggerApple.error('No identity token in Apple auth response');
       throw new Error('onLoginApple');
     }
 
     const {identityToken} = appleAuthRequestResponse;
+    loggerApple.log('Retrieved identity token from Apple auth response');
 
     const authInfo = parseJwt(identityToken);
+    loggerApple.log('Parsed JWT from identity token', {authInfo});
 
     const verifier = RemoteConfig.get('sss_apple_provider');
+    loggerApple.log('Retrieved Apple provider from RemoteConfig', {verifier});
 
     if (!verifier) {
+      loggerApple.error('sss_apple is not set');
       throw new Error('sss_apple is not set');
     }
 
     if (!authInfo) {
+      loggerApple.warn('Auth info is null, resolving with null');
       return Promise.resolve(null);
     }
 
+    loggerApple.log(
+      'Calling onAuthorized with verifier, authInfo.email, and identityToken',
+    );
     return await onAuthorized(verifier, authInfo.email, identityToken);
   } catch (e: any) {
     if (e.code.toString() !== '1001') {
+      loggerApple.error('Error in Apple login', {error: e});
       throw e;
     }
+    loggerApple.warn('Apple auth was cancelled by user', {code: e.code});
   }
 }
 
@@ -122,6 +178,9 @@ export type Creds = {
   privateKey: string | null;
 };
 
+const loggerAuthorized = Logger.create('onAuthorized', {
+  enabled: __DEV__ || app.isTesterMode || app.isDeveloper,
+});
 /**
  * Fetch private key from shares
  * @param verifier
@@ -133,12 +192,18 @@ export async function onAuthorized(
   verifierId: string,
   token: string,
 ): Promise<Creds> {
+  loggerAuthorized.log('Starting onAuthorized function', {
+    verifier,
+    verifierId,
+  });
   const creds: Creds = {
     token: token,
     verifier: verifier,
     privateKey: null,
   };
+  loggerAuthorized.log('Initialized creds object');
 
+  loggerAuthorized.log('Requesting node details');
   const nodeDetailsRequest = await jsonrpcRequest<{
     isNew: boolean;
     shares: [string, string][];
@@ -147,8 +212,16 @@ export async function onAuthorized(
     token,
     false,
   ]);
+  loggerAuthorized.log('Received node details', {
+    isNew: nodeDetailsRequest.isNew,
+    sharesCount: nodeDetailsRequest.shares.length,
+  });
 
+  loggerAuthorized.log('Generating entropy');
   const tmpPk = await generateEntropy(32);
+  loggerAuthorized.log('Entropy generated');
+
+  loggerAuthorized.log('Requesting shares');
   const shares = await Promise.all(
     nodeDetailsRequest.shares.map(s =>
       jsonrpcRequest<{key: string; hex_share: string}>(s[0], 'shareRequest', [
@@ -156,24 +229,38 @@ export async function onAuthorized(
         token,
         tmpPk.toString('hex'),
       ])
-        .then(r => [r.hex_share, s[1]])
-        .catch(() => [null, s[1]]),
+        .then(r => {
+          loggerAuthorized.log('Share request successful', {key: r.key});
+          return [r.hex_share, s[1]];
+        })
+        .catch(() => {
+          loggerAuthorized.warn('Share request failed');
+          return [null, s[1]];
+        }),
     ),
   );
+  loggerAuthorized.log('All share requests completed');
 
   const shares2 = shares.filter(s => s[0] !== null && s[0] !== '') as [
     string,
     string,
   ][];
+  loggerAuthorized.log('Filtered valid shares', {
+    validSharesCount: shares2.length,
+  });
 
   if (shares2.length) {
+    loggerAuthorized.log('Performing Lagrange interpolation');
     creds.privateKey = utils
       .lagrangeInterpolation(
         shares2.map(s => new BN(s[0], 'hex')),
         shares2.map(s => new BN(s[1], 'hex')),
       )
       .toString('hex');
+  } else {
+    loggerAuthorized.warn('No valid shares to generate private key');
   }
 
+  loggerAuthorized.log('onAuthorized function completed');
   return creds;
 }
