@@ -396,12 +396,23 @@ class WalletStore implements RPCObserver {
 
   getById(id: string = '') {
     return (
-      this.wallets.find(
-        wallet =>
+      this.wallets.find(wallet => {
+        if (
           wallet.address.toLowerCase() === id.toLowerCase() ||
-          wallet.tronAddress?.toLowerCase() === id.toLowerCase() ||
-          wallet.cosmosAddress.toLowerCase() === id.toLowerCase(),
-      ) ?? null
+          wallet.cosmosAddress.toLowerCase() === id.toLowerCase()
+        ) {
+          return wallet;
+        }
+
+        if (
+          !!wallet.tronAddress &&
+          wallet.tronAddress.toLowerCase() === id.toLowerCase()
+        ) {
+          return wallet;
+        }
+
+        return null;
+      }) ?? null
     );
   }
 

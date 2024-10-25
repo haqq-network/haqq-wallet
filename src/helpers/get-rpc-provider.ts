@@ -8,6 +8,6 @@ export async function getRpcProvider(provider: ProviderModel) {
   await EthRpcEndpointAvailability.awaitForInitialization();
   return new ethers.providers.StaticJsonRpcProvider(provider.ethRpcEndpoint, {
     chainId: provider.ethChainId,
-    name: provider.id,
+    name: provider.name,
   });
 }

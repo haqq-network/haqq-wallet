@@ -15,6 +15,7 @@ import {
   TransactionStackParamList,
   TransactionStackRoutes,
 } from '@app/route-types';
+import {NetworkProviderTypes} from '@app/services/backend';
 import {ModalType} from '@app/types';
 
 const logger = Logger.create('TransactionAddressScreen');
@@ -99,9 +100,10 @@ export const TransactionAddressScreen = observer(() => {
   const onDone = useCallback(
     async (result: string) => {
       try {
-        const converter = AddressUtils.getConverterByNetwork(
-          Provider.selectedProvider.networkType,
-        );
+        const networkType = Provider.selectedProvider.isTron
+          ? NetworkProviderTypes.TRON
+          : NetworkProviderTypes.EVM;
+        const converter = AddressUtils.getConverterByNetwork(networkType);
         setLoading(true);
         const {nft, token} = route.params || {};
         if (nft) {
