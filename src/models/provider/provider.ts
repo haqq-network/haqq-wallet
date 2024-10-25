@@ -72,6 +72,14 @@ class ProviderStore {
     return this._data[this._selectedProviderId];
   }
 
+  get defaultProviderId() {
+    return this._defaultProviderId;
+  }
+
+  get defaultProvider() {
+    return this._data[this._defaultProviderId];
+  }
+
   get isAllNetworks() {
     return this._selectedProviderId === ALL_NETWORKS_ID;
   }

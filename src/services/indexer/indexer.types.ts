@@ -1,5 +1,6 @@
 import {
   AddressCosmosHaqq,
+  ChainId,
   IContract,
   IndexerBalance,
   IndexerTime,
@@ -28,7 +29,7 @@ export type IndexerUpdatesResponse = {
   rates: RatesResponse;
 };
 
-export type IndexerAddressesResponse = IContract[];
+export type IndexerAddressesResponse = Record<ChainId, IContract[]>;
 
 export type SushiRoute = {
   fee: number;
