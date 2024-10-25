@@ -37,7 +37,7 @@ export const SignInRestore = ({
       return true;
     }
 
-    if (!s.startsWith('0x')) {
+    if (!s.startsWith('0x') && !s.startsWith('T')) {
       s = `0x${seed}`;
     }
 

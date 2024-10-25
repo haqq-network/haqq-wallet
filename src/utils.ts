@@ -997,7 +997,7 @@ export function parseTxDataFromHexInput(hex?: string) {
     return undefined;
   }
   let data = hex;
-  if (!hex.startsWith('0x')) {
+  if (!hex.startsWith('0x') && !hex.startsWith('T')) {
     data = `0x${hex}`;
   }
 

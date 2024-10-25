@@ -28,7 +28,7 @@ export const SignInRestoreScreen = memo(() => {
         navigation.push(nextScreen, {
           type: 'privateKey',
           privateKey: new SecureValue<string>(
-            pk.startsWith('0x') ? pk : `0x${pk}`,
+            pk.startsWith('0x') || pk.startsWith('T') ? pk : `0x${pk}`,
           ),
         });
 
