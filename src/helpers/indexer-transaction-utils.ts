@@ -520,12 +520,8 @@ function getTokensInfo(tx: IndexerTransaction): IndexerTxParsedTokenInfo[] {
     return [Token.UNKNOWN_TOKEN];
   }
 
-  let amountKey = 'amount';
-  if (tx.msg.type === IndexerTxMsgType.msgProtoTx) {
-    amountKey = 'transferContract';
-  }
   //@ts-ignore
-  const amountValue = tx.msg[amountKey];
+  const amountValue = tx.msg?.amount;
 
   if (amountValue && Array.isArray(amountValue)) {
     const result = amountValue
@@ -557,15 +553,9 @@ function getTokensInfo(tx: IndexerTransaction): IndexerTxParsedTokenInfo[] {
   if ('contract_address' in tx.msg && !contractInfo?.is_erc20) {
     contractInfo = Token.getById(tx.msg.contract_address);
   }
-  if ('ownerAddress' in tx.msg && !contractInfo?.is_erc20) {
-    contractInfo = Token.getById(tx.msg.ownerAddress as string);
-  }
 
   if ('to_address' in tx.msg && !contractInfo?.is_erc20) {
     contractInfo = Token.getById(tx.msg.to_address);
-  }
-  if ('toAddress' in tx.msg && !contractInfo?.is_erc20) {
-    contractInfo = Token.getById(tx.msg.toAddress as string);
   }
 
   if ('from_address' in tx.msg && !contractInfo?.is_erc20) {
