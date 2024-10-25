@@ -138,27 +138,45 @@ function parseMsgEthereumApprovalTx(
 
 function parseTransferContractTx(
   tx: IndexerTransactionWithType<IndexerTxMsgType.msgProtoTx>,
-  _: string[],
+  addresses: string[],
 ): ParsedTransactionData {
-  const [token] = getTokensInfo(tx);
-  const amount = [new Balance(tx.msg.amount, token.decimals, token.symbol)];
-  const spenderContract = Token.getById(AddressUtils.toHaqq(tx.msg.spender));
+  const isIncoming = isIncomingTx(tx, addresses);
+  const {from, to} = getFromAndTo(tx, isIncoming);
+  const provider = Provider.getByEthChainId(tx.chain_id);
+  const amount = [
+    new Balance(
+      tx.msg.transferContract.amount,
+      provider?.decimals,
+      provider?.denom,
+    ),
+  ];
+
+  const title = isIncoming
+    ? getText(I18N.transactionReceiveTitle)
+    : getText(I18N.transactionSendTitle);
+
+  const subtitle = isIncoming
+    ? formatAddressForSubtitle(from, 'toTron', true)
+    : formatAddressForSubtitle(to, 'toTron', false);
+  const icon = isIncoming ? IconsName.arrow_receive : IconsName.arrow_send;
+
+  const isContractInteraction = isContractInteractionTx(tx);
 
   return {
-    from: AddressUtils.toEth(tx.msg.owner),
-    to: AddressUtils.toEth(tx.msg.contract_address),
+    from,
+    to,
     amount,
-    isContractInteraction: true,
-    isIncoming: false,
-    isOutcoming: false,
-    tokens: [token],
+    isContractInteraction,
+    isIncoming,
+    isOutcoming: !isIncoming,
+    tokens: [getNativeToken(provider)],
     isCosmosTx: false,
     isEthereumTx: true,
-    icon: IconsName.check,
-    title: getText(I18N.transactionApproveERC20Title),
-    subtitle:
-      spenderContract?.name ||
-      formatAddressForSubtitle(tx.msg.spender, 'toEth', false),
+    icon: isContractInteraction ? IconsName.contract : icon,
+    title: isContractInteraction
+      ? getText(I18N.transactionContractTitle)
+      : title,
+    subtitle: isContractInteraction ? getContractName(tx) : subtitle,
   };
 }
 
@@ -426,6 +444,15 @@ function isIncomingTx(tx: IndexerTransaction, addresses: string[]): boolean {
     return haqqAddresses.includes(AddressUtils.toHaqq(msg.to_address));
   }
 
+  if (msg.type === IndexerTxMsgType.msgProtoTx) {
+    if (msg.transferContract?.toAddress) {
+      return haqqAddresses.includes(
+        AddressUtils.toHaqq(msg.transferContract.toAddress),
+      );
+    }
+    return false;
+  }
+
   if ('winner' in msg) {
     return haqqAddresses.includes(AddressUtils.toHaqq(msg.winner));
   }
@@ -567,6 +594,13 @@ function getTokensInfo(tx: IndexerTransaction): IndexerTxParsedTokenInfo[] {
 
 function getFromAndTo(tx: IndexerTransaction, isIncoming: boolean) {
   if (isIncoming) {
+    if (tx?.msg?.type === IndexerTxMsgType.msgProtoTx) {
+      return {
+        from: tx.msg.transferContract.ownerAddress,
+        to: tx.msg.transferContract.toAddress,
+      };
+    }
+
     const from =
       // @ts-ignore
       tx.msg.from_address ||

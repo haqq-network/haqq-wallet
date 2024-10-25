@@ -1809,10 +1809,11 @@ export type IndexerTxMsgApproval = {
 
 export type IndexerTxMsgProtoTx = {
   type: IndexerTxMsgType.msgProtoTx;
-  amount: string;
-  contract_address: AddressCosmosHaqq;
-  owner: AddressCosmosHaqq;
-  spender: AddressCosmosHaqq;
+  transferContract: {
+    amount: string;
+    ownerAddress: AddressTron;
+    toAddress: AddressTron;
+  };
 };
 
 export enum IndexerTxMsgType {
