@@ -7,6 +7,7 @@ import {Color} from '@app/colors';
 import {Button, ButtonSize, ButtonVariant, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 
 type WelcomeProps = {
   onPressSignup: () => void;
@@ -50,13 +51,15 @@ export const Welcome = ({
         onPress={onPressSignup}
         size={ButtonSize.large}
       />
-      <Button
-        testID="welcome_connect_hardware_wallet"
-        i18n={I18N.welcomeConnectHardwareWallet}
-        variant={ButtonVariant.second}
-        onPress={onPressHardwareWallet}
-        size={ButtonSize.large}
-      />
+      {!Provider.selectedProvider.isTron && (
+        <Button
+          testID="welcome_connect_hardware_wallet"
+          i18n={I18N.welcomeConnectHardwareWallet}
+          variant={ButtonVariant.second}
+          onPress={onPressHardwareWallet}
+          size={ButtonSize.large}
+        />
+      )}
       <Button
         testID="welcome_signin"
         i18n={I18N.welcomeRestoreWallet}

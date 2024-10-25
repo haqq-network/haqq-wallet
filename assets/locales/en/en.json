@@ -1059,7 +1059,6 @@
   "welcomeConnectHardwareWallet": "Hardware Wallet",
   "welcomeCreateWallet": "Create Account",
   "welcomeDescription": "You can create a new account or connect an existing one.",
-  "welcomeLedgerWallet": "Connect",
   "welcomeRestoreWallet": "I already have an account",
   "welcomeSocialWallet": "Social login",
   "welcomeTitle": "No account is connected",
