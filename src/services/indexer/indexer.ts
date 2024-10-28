@@ -11,17 +11,14 @@ import {NftCollectionIndexer} from '@app/models/nft';
 import {ALL_NETWORKS_ID, Provider} from '@app/models/provider';
 import {
   ContractNameMap,
-  IContract,
-  IndexerBalance,
-  IndexerTime,
-  IndexerToken,
   IndexerTransaction,
   IndexerTransactionResponse,
-  RatesResponse,
 } from '@app/types';
 import {createAsyncTask} from '@app/utils';
 
 import {
+  IndexerAddressesResponse,
+  IndexerUpdatesResponse,
   ProviderConfig,
   SushiPoolEstimateRequest,
   SushiPoolEstimateResponse,
@@ -31,26 +28,6 @@ import {
 } from './indexer.types';
 
 import {RemoteConfig} from '../remote-config';
-
-export type IndexerUpdatesResponse = {
-  addresses: IContract[];
-  balance: IndexerBalance;
-  staked: IndexerBalance;
-  total_staked: IndexerBalance;
-  vested: IndexerBalance;
-  available: IndexerBalance;
-  locked: IndexerBalance;
-  total: IndexerBalance;
-  available_for_stake: IndexerBalance;
-  // next time for unlock vested tokens
-  unlock: IndexerTime;
-  last_update: string;
-  // TODO: add types
-  nfts: unknown[];
-  tokens: IndexerToken[];
-  transactions: unknown[];
-  rates: RatesResponse;
-};
 
 const logger = Logger.create('IndexerService');
 
@@ -132,7 +109,7 @@ export class Indexer {
 
       const updated = lastUpdated || new Date(0);
 
-      const result: IndexerUpdatesResponse = await jsonrpcRequest(
+      return await jsonrpcRequest<IndexerUpdatesResponse>(
         RemoteConfig.get('proxy_server')!,
         'updates_v2',
         [
@@ -141,8 +118,6 @@ export class Indexer {
           Currencies.selectedCurrency,
         ].filter(Boolean),
       );
-
-      return result;
     } catch (err) {
       if (err instanceof JSONRPCError) {
         this.captureException(err, 'Indexer:updates', err.meta);
@@ -150,6 +125,23 @@ export class Indexer {
       throw err;
     }
   });
+
+  getAddresses = async (accounts: string[]) => {
+    try {
+      this.checkIndexerAvailability();
+
+      return await jsonrpcRequest<IndexerAddressesResponse>(
+        RemoteConfig.get('proxy_server')!,
+        'addresses',
+        [this.getProvidersHeader(accounts)],
+      );
+    } catch (err) {
+      if (err instanceof JSONRPCError) {
+        this.captureException(err, 'Indexer:addresses', err.meta);
+      }
+      throw err;
+    }
+  };
 
   async getContractNames(addresses: string[]): Promise<ContractNameMap> {
     try {
