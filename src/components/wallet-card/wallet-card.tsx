@@ -9,8 +9,15 @@ import {
 } from 'react-native';
 
 import {Color} from '@app/colors';
-import {Card, Spacer, Text, TextVariant} from '@app/components/ui';
+import {
+  Card,
+  Spacer,
+  Text,
+  TextPosition,
+  TextVariant,
+} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {BalanceModel, WalletModel} from '@app/models/wallet';
 import {addOpacityToColor} from '@app/utils';
@@ -100,17 +107,12 @@ export const WalletCard = ({
       {/* TODO: add tron support */}
       {Provider.selectedProvider.isTron && !wallet.isSupportTron && (
         <View style={styles.tronNotSupportContainer}>
-          <View style={styles.tronNotSupportTextContainer}>
-            <Text color={Color.textBase1} variant={TextVariant.t4}>
-              TRON NOT SUPPORTED YET
-            </Text>
-            <Text color={Color.textBase1} variant={TextVariant.t10}>
-              PLEASE WAIT UNTIL FINISH DEVELOPMENT
-            </Text>
-            <Text color={Color.textBase1} variant={TextVariant.t15}>
-              * this banner not for production
-            </Text>
-          </View>
+          <Text
+            color={Color.textBase3}
+            variant={TextVariant.t10}
+            position={TextPosition.center}
+            i18n={I18N.tronNotSupportedYet}
+          />
         </View>
       )}
     </Card>
@@ -124,15 +126,10 @@ const styles = createTheme({
   },
   tronNotSupportContainer: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: addOpacityToColor(Color.graphicGreen2, 0.8),
+    backgroundColor: addOpacityToColor(Color.graphicGreen2, 0.9),
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  tronNotSupportTextContainer: {
-    backgroundColor: addOpacityToColor(Color.bg1, 0.8),
-    padding: 4,
+    paddingHorizontal: 36,
     borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
