@@ -1,45 +1,48 @@
 declare module 'react-native-config' {
   export interface NativeConfig {
-    POSTHOG_API_KEY: string;
-    POSTHOG_HOST: string;
-    PROVIDER_NETWORK: string;
-    PROVIDER_CHAIN_ID: string;
-    SENTRY_DSN: string;
-    PATTERNS_SOURCE: string;
-    ENVIRONMENT: string;
-    IS_DEVELOPMENT: string;
-    WALLET_CONNECT_PROJECT_ID: string;
-    WALLET_CONNECT_RELAY_URL: string;
-    HCAPTCHA_SITE_KEY: string;
-    HCAPTCHA_URL: string;
-    GOOGLE_SIGNIN_WEB_CLIENT_ID: string;
-    METADATA_URL: string;
-    GENERATE_SHARES_URL: string;
-    AIRDROP_MAINNET_URL: string;
-    HAQQ_BACKEND: string;
-    HAQQ_BACKEND_DEV: string;
-    HAQQ_BACKEND_DEFAULT: string;
+    // Default chain provider configuration
+    PROVIDER_NETWORK: string; // Network URL for provider
+    PROVIDER_CHAIN_ID: string; // Chain ID for provider network
 
-    ADJUST_TOKEN: string;
-    ADJUST_ENVIRONMENT: 'sandbox' | 'production';
-    AIRDROP_GASDROP_SECRET: string;
-    AIRDROP_GASDROP_CAMPAIGN_ID: string;
-    GOOGLE_PLAY_PACKAGE: string;
-    APPSTORE_APP_ID: string;
-    // https://dash.cloudflare.com/login
-    TURNSTILE_URL: string;
-    TURNSTILE_SITEKEY: string;
-    // https://www.google.com/recaptcha/admin/create
-    RECAPTCHA_V2_URL: string;
-    RECAPTCHA_V2_SITEKEY: string;
-    MMKV_KEY: string;
-    FOR_DETOX: boolean;
-    STORIES_ENABLED: boolean;
-    DETOX_MILK_PRIVATE_KEY: string;
-    DETOX_PROVIDER: string;
-    DETOX_CHAIN_ID: string;
+    // Wallet Connect Configuration
+    WALLET_CONNECT_PROJECT_ID: string; // Project ID for Wallet Connect
+    WALLET_CONNECT_RELAY_URL: string; // Relay URL for Wallet Connect
 
-    APP_VERSION: string;
+    GOOGLE_SIGNIN_WEB_CLIENT_ID: string; // Web client ID for Google Sign-In
+
+    // HAQQ Backend Configuration
+    HAQQ_BACKEND: string; // Production URL for HAQQ backend
+    HAQQ_BACKEND_DEV: string; // Development URL for HAQQ backend
+
+    // App ids Configuration
+    GOOGLE_PLAY_PACKAGE: string; // Package name for Google Play store
+    APPSTORE_APP_ID: string; // App ID for Apple App Store
+
+    // CAPTCHA Configuration
+    TURNSTILE_URL: string; // Turnstile service URL for CAPTCHA
+    TURNSTILE_SITEKEY: string; // Site key for Turnstile CAPTCHA
+    RECAPTCHA_V2_URL: string; // URL for Google reCAPTCHA V2
+    RECAPTCHA_V2_SITEKEY: string; // Site key for Google reCAPTCHA V2
+    HCAPTCHA_SITE_KEY: string; // Public key for hCaptcha
+    HCAPTCHA_URL: string; // hCaptcha service URL
+
+    // End-to-End Testing Configuration
+    FOR_DETOX: boolean; // Flag to enable Detox for E2E tests
+    DETOX_MILK_PRIVATE_KEY: string; // Private key for Detox's Milk
+    DETOX_PROVIDER: string; // Provider URL for Detox
+    DETOX_CHAIN_ID: string; // Chain ID for Detox
+
+    // Other
+    MMKV_KEY: string; // Encryption key for MMKV storage
+    STORIES_ENABLED: boolean; // Flag to enable Stories feature
+    ENVIRONMENT: string; // Application environment
+    IS_DEVELOPMENT: string; // Flag indicating if the app is in development
+    APP_VERSION: string; // Current version of the app
+    POSTHOG_API_KEY: string; // API key for PostHog
+    POSTHOG_HOST: string; // Host URL for PostHog
+    SENTRY_DSN: string; // DSN for Sentry error tracking
+    ADJUST_TOKEN: string; // Token for Adjust integration
+    ADJUST_ENVIRONMENT: 'sandbox' | 'production'; // Environment for Adjust
   }
 
   export const Config: NativeConfig;

@@ -2,9 +2,9 @@ import url from 'url';
 
 import {onBannerAddClaimCode} from '@app/event-actions/on-banner-add-claim-code';
 import {showModal} from '@app/helpers';
-import {Whitelist} from '@app/helpers/whitelist';
 import {Refferal} from '@app/models/refferal';
 import {VariablesString} from '@app/models/variables-string';
+import {Whitelist} from '@app/models/whitelist';
 import {Airdrop} from '@app/services/airdrop';
 import {EventTracker} from '@app/services/event-tracker';
 import {DynamicLink, MarketingEvents, ModalType} from '@app/types';

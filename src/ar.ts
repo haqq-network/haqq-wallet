@@ -440,7 +440,6 @@ export const ar = {
   [I18N.welcomeTitle]: 'لا يوجد حساب متصل',
   [I18N.welcomeDescription]: 'يمكنك إنشاء حساب جديد أو ربط أي حساب موجود',
   [I18N.welcomeCreateWallet]: 'إنشاء حساب',
-  [I18N.welcomeLedgerWallet]: 'اتصال',
   [I18N.settingsAboutTitle]: 'حول التطبيق',
   [I18N.settingsAboutVisit]: 'قم بزيارة islamiccoin.net',
   [I18N.settingsAboutDocuments]: 'المستندات القانونية',

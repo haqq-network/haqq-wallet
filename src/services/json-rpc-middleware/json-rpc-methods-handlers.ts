@@ -258,6 +258,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
       const providerId = await awaitForProvider({
         initialProviderChainId: initialProvider?.ethChainId!,
         title: I18N.networks,
+        providers: Provider.getAllEVM(),
       });
 
       const selectedProvider = Provider.getById(providerId!);

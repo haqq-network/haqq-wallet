@@ -1,3 +1,4 @@
+import {app} from '@app/contexts';
 import {getAppInfo} from '@app/helpers/get-app-info';
 import {Initializable} from '@app/helpers/initializable';
 import {VariablesString} from '@app/models/variables-string';
@@ -13,6 +14,7 @@ const CONFIG_REINIT_TIMEOUT = 5 * 60 * 1000; // 5 minutes
 const logger = Logger.create('RemoteConfig', {
   emodjiPrefix: '🔴',
   stringifyJson: true,
+  enabled: __DEV__ || app.isTesterMode || app.isDeveloper,
 });
 
 function getCachedConfig() {
@@ -42,7 +44,7 @@ export class RemoteConfigService extends Initializable {
       this.startInitialization();
       const appInfo = await getAppInfo();
       const config = await Backend.instance.getRemoteConfig(appInfo);
-
+      logger.log('config', config);
       if (Object.keys(config).length) {
         VariablesString.set(KEY, JSON.stringify(config));
         RemoteConfigService.instance.isInited = true;

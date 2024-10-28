@@ -466,7 +466,6 @@ export enum I18N {
   welcomeTitle = 'welcomeTitle',
   welcomeDescription = 'welcomeDescription',
   welcomeCreateWallet = 'welcomeCreateWallet',
-  welcomeLedgerWallet = 'welcomeLedgerWallet',
   welcomeRestoreWallet = 'welcomeRestoreWallet',
   welcomeSocialWallet = 'welcomeSocialWallet',
   restoreWalletScreenTitle = 'restoreWalletScreenTitle',
@@ -1029,6 +1028,7 @@ export enum I18N {
   swapFinishComplete = 'swapFinishComplete',
   swapFinishUnwrapComplete = 'swapFinishUnwrapComplete',
   swapFinishWrapComplete = 'swapFinishWrapComplete',
+  tronNotSupportedYet = 'tronNotSupportedYet',
 }
 
 const defaultTranslation = {en};

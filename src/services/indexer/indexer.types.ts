@@ -1,5 +1,35 @@
-import {AddressCosmosHaqq, IContract} from '@app/types';
+import {
+  AddressCosmosHaqq,
+  ChainId,
+  IContract,
+  IndexerBalance,
+  IndexerTime,
+  IndexerToken,
+  RatesResponse,
+} from '@app/types';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
+
+export type IndexerUpdatesResponse = {
+  addresses: IContract[];
+  balance: IndexerBalance;
+  staked: IndexerBalance;
+  total_staked: IndexerBalance;
+  vested: IndexerBalance;
+  available: IndexerBalance;
+  locked: IndexerBalance;
+  total: IndexerBalance;
+  available_for_stake: IndexerBalance;
+  // next time for unlock vested tokens
+  unlock: IndexerTime;
+  last_update: string;
+  // TODO: add types
+  nfts: unknown[];
+  tokens: IndexerToken[];
+  transactions: unknown[];
+  rates: RatesResponse;
+};
+
+export type IndexerAddressesResponse = Record<ChainId, IContract[]>;
 
 export type SushiRoute = {
   fee: number;

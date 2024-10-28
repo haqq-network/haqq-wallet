@@ -1,9 +1,8 @@
 import {WebViewMessageEvent} from 'react-native-webview';
 
+import {Whitelist} from '@app/models/whitelist';
 import {EventTracker} from '@app/services/event-tracker';
 import {MarketingEvents} from '@app/types';
-
-import {Whitelist} from './whitelist';
 
 export enum AdjustMiddlewareEventNames {
   adjustTrackEvent = 'adjustTrackEvent',

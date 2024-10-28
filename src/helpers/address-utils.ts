@@ -3,6 +3,7 @@ import {utils} from 'ethers';
 import tron from 'tronweb';
 
 import {Wallet} from '@app/models/wallet';
+import {Whitelist} from '@app/models/whitelist';
 import {NetworkProviderTypes} from '@app/services/backend';
 import {
   AddressCosmosHaqq,
@@ -11,8 +12,6 @@ import {
   AddressType,
 } from '@app/types';
 import {splitAddress} from '@app/utils';
-
-import {Whitelist} from './whitelist';
 
 export const HAQQ_VALIDATOR_PREFIX = 'haqqvaloper';
 export class AddressUtils {
