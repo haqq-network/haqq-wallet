@@ -21,7 +21,6 @@ import {
   Platform,
 } from 'react-native';
 import {Adjust} from 'react-native-adjust';
-import Config from 'react-native-config';
 import prompt, {PromptOptions} from 'react-native-prompt-android';
 import RNRestart from 'react-native-restart';
 
@@ -192,10 +191,7 @@ export const HSBToHEX = (h: number, s: number, b: number) => {
 };
 
 export function getPatternName(pattern: string) {
-  return `${RemoteConfig.get_env(
-    'pattern_source',
-    Config.PATTERNS_SOURCE,
-  )}${pattern}@3x.png`;
+  return `${RemoteConfig.get('pattern_source')}${pattern}@3x.png`;
 }
 
 export function shuffleWords(words: Map<string, string>) {
