@@ -1477,7 +1477,7 @@ export const SwapScreen = observer(() => {
               async onClose() {
                 navigation.goBack();
                 const providersIDsPromises = await Promise.allSettled(
-                  Provider.getAll().map(async p => {
+                  Provider.getAllEVM().map(async p => {
                     const indexer = new Indexer(p.ethChainId);
                     const config = await indexer.getProviderConfig();
                     if (config.swap_enabled) {

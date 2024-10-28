@@ -15,6 +15,9 @@ import {ModalType, Modals} from '@app/types';
 import {SettingsProvidersAllNetworksRow} from '../settings/settings-providers/settings-providers-all-networks-row';
 import {SettingsProvidersRow} from '../settings/settings-providers/settings-providers-row';
 
+const logger = Logger.create('ProvidersBottomSheet', {
+  stringifyJson: true,
+});
 export function ProvidersBottomSheet({
   title,
   providers: outProviders,
@@ -25,13 +28,19 @@ export function ProvidersBottomSheet({
   disableAllNetworksOption,
 }: Modals[ModalType.providersBottomSheet]) {
   const [searchProviderValue, setSearchProviderValue] = useState('');
-  const providers = useMemo(
-    () =>
-      outProviders ?? disableAllNetworksOption
-        ? Provider.getAllNetworks()
-        : Provider.getAll(),
-    [disableAllNetworksOption],
-  );
+  const providers = useMemo(() => {
+    if (outProviders?.length) {
+      return outProviders;
+    }
+
+    if (disableAllNetworksOption) {
+      return Provider.getAllNetworks();
+    }
+
+    return Provider.getAll();
+  }, [disableAllNetworksOption, outProviders]);
+
+  logger.log('providers', {providers});
 
   const closeDistanceCalculated = useCalculatedDimensionsValue(
     () => closeDistance?.(),
