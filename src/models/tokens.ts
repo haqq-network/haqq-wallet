@@ -179,6 +179,7 @@ class TokensStore implements MobXStore<IToken> {
         .flat()
         .find(t => t.id === id);
     }
+
     return token;
   }
 

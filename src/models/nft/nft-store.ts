@@ -1,8 +1,5 @@
 import {makeAutoObservable, runInAction, when} from 'mobx';
 
-import {AddressUtils} from '@app/helpers/address-utils';
-import {Whitelist} from '@app/helpers/whitelist';
-import {Contracts} from '@app/models/contracts';
 import {
   ContractType,
   NftCollection,
@@ -15,6 +12,8 @@ import {Wallet} from '@app/models/wallet';
 import {Indexer} from '@app/services/indexer';
 import {AddressCosmosHaqq, IContract} from '@app/types';
 import {RPCMessage} from '@app/types/rpc';
+
+import {ALL_NETWORKS_ID, Provider} from '../provider';
 
 class NftStore {
   data: Record<AddressCosmosHaqq, NftCollection> = {};
@@ -158,15 +157,7 @@ class NftStore {
     this.data = {};
 
     data.forEach(async item => {
-      const contractAddress = AddressUtils.toHaqq(item.address);
-      const contract = (this.getContract(contractAddress) ||
-        (await Whitelist.verifyAddress(item.address)) ||
-        {}) as IContract;
-      const hasCache = this.hasContractCache(contractAddress);
-      if (!hasCache) {
-        this.saveContract(contract);
-      }
-
+      const contract = await this.getContract(item.address);
       const contractType = contract.is_erc721
         ? ContractType.erc721
         : ContractType.erc1155;
@@ -178,32 +169,32 @@ class NftStore {
           created_at: Date.now(),
           contractType: contractType,
           is_transfer_prohibinden: Boolean(contract.is_transfer_prohibinden),
-          nfts: item.nfts.map(nft => ({
-            ...nft,
-            chain_id: item.chain_id,
-            contractType: contractType,
-            name: nft.name || 'Unknown',
-            description: nft.description || '-',
-            tokenId: Number(nft.token_id),
-            price: undefined, // FIXME Calculate price by token
-            is_transfer_prohibinden: Boolean(contract.is_transfer_prohibinden),
-          })),
+          nfts: item.nfts.map(nft => this.parseIndexerNft(nft, contract)),
         };
       });
     });
   };
 
-  private parseIndexerNft = async (data: NftItemIndexer): Promise<void> => {
-    const contractAddress = AddressUtils.toHaqq(data.contract);
-    const contract = (this.getContract(contractAddress) ||
-      (await Whitelist.verifyAddress(contractAddress)) ||
-      {}) as IContract;
+  private readonly getContract = async (contractAddress: string) => {
+    const _providerEthChainId = (
+      Provider.selectedProviderId === ALL_NETWORKS_ID
+        ? Provider.defaultProvider
+        : Provider.selectedProvider
+    ).ethChainId;
 
+    const contracts = await Indexer.instance.getAddresses([contractAddress]);
+    return contracts[_providerEthChainId][0];
+  };
+
+  private readonly parseIndexerNft = (
+    data: NftItemIndexer,
+    contract: IContract,
+  ): NftItem => {
     const contractType = contract.is_erc721
       ? ContractType.erc721
       : ContractType.erc1155;
 
-    const nft = {
+    return {
       ...data,
       contractType: contractType,
       name: data.name || 'Unknown',
@@ -212,33 +203,15 @@ class NftStore {
       price: undefined, // FIXME Calculate price by token
       is_transfer_prohibinden: Boolean(contract.is_transfer_prohibinden),
     };
-
-    // @ts-ignore
-    this.update(nft);
   };
 
-  private hasContractCache = (id: AddressCosmosHaqq) => {
-    return !!Contracts.getById(id);
-  };
-
-  private saveContract = (contract: IContract | undefined) => {
-    if (!contract) {
-      return;
-    }
-
-    Contracts.create(contract.id, contract);
-  };
-
-  private getContract = (id: AddressCosmosHaqq) => {
-    return Contracts.getById(id);
-  };
-
-  onMessage = (message: RPCMessage) => {
+  onMessage = async (message: RPCMessage) => {
     if (message.type !== 'nft') {
       return;
     }
 
-    this.parseIndexerNft(message.data);
+    const contract = await this.getContract(message.data.contract);
+    this.update(this.parseIndexerNft(message.data, contract));
   };
 
   clear() {
