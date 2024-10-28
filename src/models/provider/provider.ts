@@ -192,6 +192,12 @@ class ProviderStore {
     return Object.values(this._data).filter(p => p.id !== ALL_NETWORKS_ID);
   }
 
+  getAllEVM() {
+    return Object.values(this._data).filter(
+      p => !p.isTron && p.id !== ALL_NETWORKS_ID,
+    );
+  }
+
   create(id: string, item: NetworkProvider | ProviderModel) {
     if (item instanceof ProviderModel) {
       this._data[id] = item;
