@@ -41,14 +41,10 @@ export class Backend {
 
   getRemoteUrl() {
     if (!VariablesString.exists('backend')) {
-      return Config.HAQQ_BACKEND_DEFAULT || Config.HAQQ_BACKEND;
+      return Config.HAQQ_BACKEND;
     }
 
-    return (
-      VariablesString.get('backend') ||
-      Config.HAQQ_BACKEND_DEFAULT ||
-      Config.HAQQ_BACKEND
-    );
+    return VariablesString.get('backend') || Config.HAQQ_BACKEND;
   }
 
   async blockRequest(
