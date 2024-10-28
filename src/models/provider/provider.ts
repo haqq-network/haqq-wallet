@@ -72,6 +72,14 @@ class ProviderStore {
     return this._data[this._selectedProviderId];
   }
 
+  get defaultProviderId() {
+    return this._defaultProviderId;
+  }
+
+  get defaultProvider() {
+    return this._data[this._defaultProviderId];
+  }
+
   get isAllNetworks() {
     return this._selectedProviderId === ALL_NETWORKS_ID;
   }
@@ -182,6 +190,12 @@ class ProviderStore {
 
   getAllNetworks() {
     return Object.values(this._data).filter(p => p.id !== ALL_NETWORKS_ID);
+  }
+
+  getAllEVM() {
+    return Object.values(this._data).filter(
+      p => !p.isTron && p.id !== ALL_NETWORKS_ID,
+    );
   }
 
   create(id: string, item: NetworkProvider | ProviderModel) {
