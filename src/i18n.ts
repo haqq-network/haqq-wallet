@@ -466,7 +466,6 @@ export enum I18N {
   welcomeTitle = 'welcomeTitle',
   welcomeDescription = 'welcomeDescription',
   welcomeCreateWallet = 'welcomeCreateWallet',
-  welcomeLedgerWallet = 'welcomeLedgerWallet',
   welcomeRestoreWallet = 'welcomeRestoreWallet',
   welcomeSocialWallet = 'welcomeSocialWallet',
   restoreWalletScreenTitle = 'restoreWalletScreenTitle',
