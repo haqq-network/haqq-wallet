@@ -50,7 +50,7 @@ export function CopyAddressBottomSheet({
     const ethProvider = Provider.getByEthChainId(ETH_CHAIN_ID);
     const tronProvider = Provider.getAll().find(p => p.isTron)!;
 
-    return [
+    const result: AddressItem[] = [
       {
         address: wallet.cosmosAddress,
         icon: haqqProvider?.icon || '',
@@ -61,12 +61,16 @@ export function CopyAddressBottomSheet({
         icon: ethProvider?.icon || '',
         providerName: ethProvider?.coinName || '',
       },
-      {
-        address: wallet.tronAddress,
-        icon: tronProvider?.icon || '',
-        providerName: tronProvider?.coinName || '',
-      },
     ];
+
+    if (tronProvider) {
+      result.push({
+        address: wallet.tronAddress,
+        icon: tronProvider.icon,
+        providerName: tronProvider.coinName,
+      });
+    }
+    return result;
   }, []);
 
   return (
