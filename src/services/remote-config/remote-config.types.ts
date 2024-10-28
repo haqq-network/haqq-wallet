@@ -27,7 +27,14 @@ export type RemoteConfigMultiplierTypes = {
 
 export type ExplorerUrlsMap = Record<ChainId, string>;
 
-export type RemoteConfigTypes = RemoteConfigBalanceTypes &
+export type WalletConnectTypes = {
+  wallet_connect_project_id: string;
+  wallet_connect_relay_url: string;
+  wallet_connect: WalletConnectAllowedNamespaces;
+};
+
+export type RemoteConfigTypes = WalletConnectTypes &
+  RemoteConfigBalanceTypes &
   RemoteConfigMultiplierTypes & {
     airdrop_gasdrop_campaign_id: string;
     airdrop_gasdrop_secret: string;
@@ -50,7 +57,6 @@ export type RemoteConfigTypes = RemoteConfigBalanceTypes &
     sss_google_provider: string;
     sss_metadata_url: string;
     version: string;
-    wallet_connect: WalletConnectAllowedNamespaces;
     web3_app_whitelist: string[];
     web3_browser_bookmarks: Omit<Link, 'subtitle' | 'id'>[];
     welcome_screen: keyof RootStackParamList;
