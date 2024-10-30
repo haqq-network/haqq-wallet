@@ -10,6 +10,7 @@ import {Currencies} from '@app/models/currencies';
 import {NftCollectionIndexer} from '@app/models/nft';
 import {ALL_NETWORKS_ID, Provider} from '@app/models/provider';
 import {
+  ChainId,
   ContractNameMap,
   IndexerTransaction,
   IndexerTransactionResponse,
@@ -126,14 +127,14 @@ export class Indexer {
     }
   });
 
-  getAddresses = async (accounts: string[]) => {
+  getAddresses = async (accounts: string[] | Record<ChainId, string[]>) => {
     try {
       this.checkIndexerAvailability();
 
       return await jsonrpcRequest<IndexerAddressesResponse>(
         RemoteConfig.get('proxy_server')!,
         'addresses',
-        [this.getProvidersHeader(accounts)],
+        [accounts],
       );
     } catch (err) {
       if (err instanceof JSONRPCError) {
