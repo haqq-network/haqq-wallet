@@ -306,11 +306,6 @@ class TokensStore implements MobXStore<IToken> {
         ..._data,
       };
       this._isLoading = false;
-      logger.log('Updated store state', {
-        tokensCount: Object.keys(this.tokens).length,
-        dataCount: Object.keys(this.data).length,
-        isLoading: this._isLoading,
-      });
     });
   });
 
