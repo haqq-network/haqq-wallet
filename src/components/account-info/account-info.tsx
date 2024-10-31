@@ -66,7 +66,7 @@ export const AccountInfo = observer(
     const [activeTab, setActiveTab] = useState(TabNames.tokens);
 
     const hideTransactionsContent = useMemo(
-      () => (activeTab === TabNames.transactions ? false : true),
+      () => activeTab !== TabNames.transactions,
       [activeTab],
     );
 
@@ -152,7 +152,7 @@ export const AccountInfo = observer(
           )}
         </First>
       ),
-      [activeTab],
+      [activeTab, tokens, wallet, onPressToken],
     );
 
     return (

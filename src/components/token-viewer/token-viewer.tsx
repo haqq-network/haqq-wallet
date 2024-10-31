@@ -10,6 +10,7 @@ import {
   Icon,
   IconButton,
   IconsName,
+  Loading,
   Text,
   TextVariant,
 } from '@app/components/ui';
@@ -123,8 +124,8 @@ export const TokenViewer = observer(
       .filter(filter)
       .sort(sort);
 
-    if (!Object.keys(data)) {
-      return null;
+    if (!Object.keys(data).length) {
+      return <Loading />;
     }
 
     return (
