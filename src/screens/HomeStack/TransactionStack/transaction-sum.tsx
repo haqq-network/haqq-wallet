@@ -165,17 +165,8 @@ export const TransactionSumScreen = observer(() => {
 
   useEffectAsync(async () => {
     const b = Wallet.getBalance(route.params.from, 'available');
-    const {expectedFee} = await EthNetwork.estimate(
-      {
-        from: route.params.from,
-        to,
-        value: b,
-      },
-      EstimationVariant.average,
-      Provider.getByEthChainId(route.params.token.chain_id),
-    );
-
-    setFee(expectedFee);
+    const estimate = await getFee(b);
+    setFee(estimate?.expectedFee ?? null);
   }, [to]);
 
   return (

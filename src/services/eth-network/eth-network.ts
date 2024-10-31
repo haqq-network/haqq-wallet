@@ -154,10 +154,7 @@ export class EthNetwork {
   ): Promise<CalculatedFees> {
     try {
       if (provider.isTron) {
-        return await TronNetwork.estimateFeeSendTRX(
-          {from, to, value, data},
-          provider,
-        );
+        return Promise.reject(new Error('Tron is not supported'));
       }
       const rpcProvider = await getRpcProvider(provider);
       const block = await rpcProvider.getBlock('latest');
@@ -348,12 +345,7 @@ export class EthNetwork {
         const signedTx = await transport.signTransaction(wallet.path!, {
           from: wallet.tronAddress,
           to: AddressUtils.toTron(to),
-          value: value.toBalanceString(
-            provider.decimals,
-            provider.decimals,
-            false,
-            true,
-          ),
+          value: value.toParsedBalanceNumber(),
         });
         return await TronNetwork.broadcastTransaction(signedTx, provider);
       }
@@ -436,7 +428,7 @@ export class EthNetwork {
           from: from.tronAddress,
           to: AddressUtils.toTron(to),
           data: contractAddress,
-          value: amount.toBalanceString(undefined, undefined, false, true),
+          value: amount.toParsedBalanceNumber(),
         });
 
         return await TronNetwork.broadcastTransaction(signedTx, provider);
