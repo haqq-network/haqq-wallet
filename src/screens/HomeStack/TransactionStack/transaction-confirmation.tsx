@@ -55,17 +55,21 @@ export const TransactionConfirmationScreen = observer(() => {
   const {from, to, value, data} = useMemo(() => {
     const contractAddress = AddressUtils.toEth(token.id);
 
+    const isTron = Provider.getByEthChainId(token.chain_id)?.isTron;
+
+    const txData = isTron
+      ? AddressUtils.hexToTron(contractAddress)
+      : getERC20TransferData(
+          route.params.to,
+          route.params.amount,
+          contractAddress,
+        );
+
     return {
       from: token.is_erc20 ? wallet?.address! : route.params.from,
       to: token.is_erc20 ? contractAddress : route.params.to,
       value: token.is_erc20 ? undefined : route.params.amount,
-      data: token.is_erc20
-        ? getERC20TransferData(
-            route.params.to,
-            route.params.amount,
-            contractAddress,
-          )
-        : undefined,
+      data: txData,
     };
   }, [token, wallet?.address, route.params]);
 
@@ -76,28 +80,35 @@ export const TransactionConfirmationScreen = observer(() => {
 
         const ethNetworkProvider = new EthNetwork();
 
-        const provider = await getProviderInstanceForWallet(wallet, false);
+        const walletProvider = await getProviderInstanceForWallet(
+          wallet,
+          false,
+        );
+        const networkProvider = Provider.getByEthChainId(token.chain_id);
 
         if (fee?.calculatedFees) {
           let transaction;
           if (token.is_erc20) {
+            const contractAddress = networkProvider?.isTron
+              ? AddressUtils.hexToTron(token.id)
+              : AddressUtils.toEth(token.id);
             transaction = await ethNetworkProvider.transferERC20(
               fee.calculatedFees,
-              provider,
+              walletProvider,
               wallet,
               route.params.to,
               route.params.amount,
-              AddressUtils.toEth(token.id),
-              Provider.getByEthChainId(token.chain_id),
+              contractAddress,
+              networkProvider,
             );
           } else {
             transaction = await ethNetworkProvider.transferTransaction(
               fee.calculatedFees,
-              provider,
+              walletProvider,
               wallet,
               route.params.to,
               route.params.amount,
-              Provider.getByEthChainId(token.chain_id),
+              networkProvider,
             );
           }
 
