@@ -58,7 +58,9 @@ export const WalletConnectApplicationDetails = ({
   );
 
   const chainId = useMemo(() => {
-    const chain = session?.requiredNamespaces?.eip155?.chains?.[0];
+    const requiredChain = session?.requiredNamespaces?.eip155?.chains?.[0];
+    const optionalChain = session?.optionalNamespaces?.eip155?.chains?.[0];
+    const chain = requiredChain || optionalChain;
     if (!chain) {
       return undefined;
     }

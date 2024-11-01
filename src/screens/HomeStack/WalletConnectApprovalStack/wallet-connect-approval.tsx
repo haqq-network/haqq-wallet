@@ -27,7 +27,11 @@ export const WalletConnectApprovalScreen = observer(() => {
   const event = useMemo(() => route?.params?.event, [route?.params?.event]);
 
   const chainId = useMemo(() => {
-    const chain = event?.params?.requiredNamespaces?.eip155?.chains?.[0];
+    const requiredChain =
+      event?.params?.requiredNamespaces?.eip155?.chains?.[0];
+    const optionalChain =
+      event?.params?.optionalNamespaces?.eip155?.chains?.[0];
+    const chain = requiredChain || optionalChain;
     if (!chain) {
       return undefined;
     }

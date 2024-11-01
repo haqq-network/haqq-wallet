@@ -192,7 +192,9 @@ export class SignJsonRpcRequest {
                 from: signTransactionRequest.from!,
                 to: signTransactionRequest.to!,
                 value: new Balance(
-                  signTransactionRequest.value! || Balance.Empty,
+                  signTransactionRequest.value! || '0x0',
+                  provider?.decimals,
+                  provider?.denom,
                 ),
                 data: signTransactionRequest.data?.toString()!,
                 minGas,

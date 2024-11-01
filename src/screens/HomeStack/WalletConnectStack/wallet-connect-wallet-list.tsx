@@ -12,7 +12,7 @@ import {WalletConnect} from '@app/services/wallet-connect';
 import {filterWalletConnectSessionsByAddress} from '@app/utils';
 
 export const WalletConnectWalletListScreen = memo(() => {
-  const {accounts} = useWalletConnectAccounts();
+  const {accounts, sessions} = useWalletConnectAccounts();
   const navigation = useTypedNavigation<WalletConnectStackParamList>();
   const wallets = useMemo(
     () =>
@@ -21,6 +21,21 @@ export const WalletConnectWalletListScreen = memo(() => {
         .filter(item => !!item),
     [accounts],
   );
+
+  const chainId = useMemo(() => {
+    const session = sessions?.[0];
+    const requiredChain = session?.requiredNamespaces?.eip155?.chains?.[0];
+    const optionalChain = session?.optionalNamespaces?.eip155?.chains?.[0];
+    const chain = requiredChain || optionalChain;
+    if (!chain) {
+      return undefined;
+    }
+    const [, id] = chain.split(':');
+    if (!id) {
+      return undefined;
+    }
+    return Number(id);
+  }, [sessions]);
 
   const handleWalletPress = useCallback(
     (address: string) => {
@@ -58,6 +73,7 @@ export const WalletConnectWalletListScreen = memo(() => {
     <WalletConnectWalletList
       handleWalletPress={handleWalletPress}
       wallets={wallets}
+      chainId={chainId}
     />
   );
 });
