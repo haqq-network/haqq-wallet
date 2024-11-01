@@ -16,7 +16,7 @@ export const QrScannerButton = () => {
 
   const onPressQR = useCallback(() => {
     const subscription = ({from, to}: any) => {
-      if (AddressUtils.isEthAddress(to)) {
+      if (AddressUtils.isValidAddress(to)) {
         app.off('address', subscription);
         hideModal(ModalType.qr);
         navigation.navigate('transaction', {to, from});
