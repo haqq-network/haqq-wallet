@@ -7,6 +7,7 @@ import {RemoteProviderConfig} from './provider-config';
 
 const HAQQ_BENCH_32_PREFIX = 'haqq';
 const EXPLORER_URL_TEMPLATES = {
+  TRON_ADDRESS: '{{tron_address}}',
   ADDRESS: '{{address}}',
   TOKEN_ID: '{{token_id}}',
   TX: '{{tx_hash}}',
@@ -136,6 +137,12 @@ export class ProviderModel {
     if (!txHash) {
       return '';
     }
+    if (this.isTron) {
+      return this.config.explorerTxUrl.replace(
+        EXPLORER_URL_TEMPLATES.TX,
+        txHash,
+      );
+    }
 
     if (txHash.startsWith('0x') || txHash.startsWith('0X')) {
       return this.config.explorerTxUrl.replace(
@@ -151,20 +158,35 @@ export class ProviderModel {
   }
 
   getAddressExplorerUrl(address: string) {
+    if (this.isTron) {
+      return this.config.explorerAddressUrl.replace(
+        EXPLORER_URL_TEMPLATES.TRON_ADDRESS,
+        AddressUtils.toTron(address),
+      );
+    }
+
     return this.config.explorerAddressUrl.replace(
       EXPLORER_URL_TEMPLATES.ADDRESS,
       AddressUtils.toEth(address),
     );
   }
 
+  // TODO: add tron explorer url for NFTs collection
   getCollectionExplorerUrl(address: string) {
+    if (this.isTron) {
+      return '';
+    }
     return this.config.explorerTokenUrl.replace(
       EXPLORER_URL_TEMPLATES.ADDRESS,
       AddressUtils.toEth(address),
     );
   }
 
+  // TODO: add tron explorer url for NFTs
   getTokenExplorerUrl(address: string, tokenId: string | number) {
+    if (this.isTron) {
+      return '';
+    }
     return this.config.explorerTokenIdUrl
       .replace(EXPLORER_URL_TEMPLATES.ADDRESS, AddressUtils.toEth(address))
       .replace(EXPLORER_URL_TEMPLATES.TOKEN_ID, tokenId.toString());
