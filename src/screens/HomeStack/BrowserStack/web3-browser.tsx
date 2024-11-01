@@ -15,7 +15,6 @@ import {
 } from '@app/components/web3-browser';
 import {Web3BrowserPressHeaderEvent} from '@app/components/web3-browser/web3-browser-header';
 import {app} from '@app/contexts';
-import {awaitForWallet} from '@app/helpers';
 import {awaitForProvider} from '@app/helpers/await-for-provider';
 import {getOriginFromUrl} from '@app/helpers/web3-browser-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
@@ -24,7 +23,6 @@ import {useWeb3BrowserSessions} from '@app/hooks/use-web3-browser-sessions';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {VariablesBool} from '@app/models/variables-bool';
-import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
@@ -59,21 +57,6 @@ export const Web3BrowserScreen = observer(() => {
       }
     },
     [helper, navigation, url],
-  );
-
-  const onPressHeaderWallet = useCallback(
-    async (accountId: string) => {
-      const wallets = Wallet.getAllVisible();
-      const selectedAccount = await awaitForWallet({
-        wallets,
-        title: I18N.selectAccount,
-        autoSelectWallet: false,
-        initialAddress: accountId,
-        hideBalance: true,
-      });
-      helper.current?.changeAccount?.(selectedAccount);
-    },
-    [helper],
   );
 
   const onPressGoBack = useCallback(() => {
@@ -245,7 +228,6 @@ export const Web3BrowserScreen = observer(() => {
       focused={focused}
       onPressClose={onPressClose}
       onPressHeaderUrl={onPressHeaderUrl}
-      onPressHeaderWallet={onPressHeaderWallet}
       toggleActionMenu={toggleActionMenu}
       onPressGoBack={onPressGoBack}
       onPressGoForward={onPressGoForward}

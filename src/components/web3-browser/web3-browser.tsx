@@ -10,11 +10,12 @@ import {
   WebViewNavigationEvent,
 } from 'react-native-webview/lib/WebViewTypes';
 
-import {createTheme} from '@app/helpers';
+import {awaitForWallet, createTheme} from '@app/helpers';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useLayout} from '@app/hooks/use-layout';
 import {usePrevious} from '@app/hooks/use-previous';
 import {useWebViewSharedProps} from '@app/hooks/use-webview-shared-props';
+import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
@@ -58,8 +59,6 @@ export interface Web3BrowserProps {
 
   toggleActionMenu(): void;
 
-  onPressHeaderWallet(accountId: string): void;
-
   onPressGoBack(): void;
 
   onPressGoForward(): void;
@@ -100,7 +99,6 @@ export const Web3Browser = observer(
     showActionMenu,
     onPressClose,
     toggleActionMenu,
-    onPressHeaderWallet,
     onPressHeaderUrl,
     onPressGoBack,
     onPressGoForward,
@@ -200,7 +198,7 @@ export const Web3Browser = observer(
 
     const currentProvider = useMemo(
       () => Provider.getByChainIdHex(chainId!),
-      [chainId],
+      [chainId, currentSession],
     );
 
     const injectedJSBeforeContentLoaded = useMemo(
@@ -311,6 +309,22 @@ export const Web3Browser = observer(
       [],
     );
 
+    const onPressHeaderWallet = useCallback(
+      async (accountId: string) => {
+        const wallets = Wallet.getAllVisible();
+        const newWalletAddress = await awaitForWallet({
+          wallets,
+          title: I18N.selectAccount,
+          autoSelectWallet: false,
+          initialAddress: accountId,
+          hideBalance: true,
+          chainId: currentProvider?.ethChainId,
+        });
+        helper?.changeAccount?.(newWalletAddress);
+      },
+      [helper, currentProvider],
+    );
+
     useAndroidBackHandler(() => {
       if (webviewRef.current) {
         if (webviewNavigationData?.canGoBack) {
@@ -378,6 +392,7 @@ export const Web3Browser = observer(
         ]}>
         <Web3BrowserHeader
           walletAddress={walletAddress}
+          chainId={currentProvider?.ethChainId!}
           webviewNavigationData={webviewNavigationData!}
           siteUrl={siteUrl}
           onPressMore={onPressMore}

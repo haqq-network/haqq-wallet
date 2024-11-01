@@ -210,7 +210,7 @@ export const KeystoneAccountsScreen = memo(() => {
       .forEach((item, index) => {
         const name = getText(I18N.keystoneWalletAccountNumber, {
           walletCount: `${index + lastIndex}`,
-          deviceName,
+          deviceName: deviceName.replace(STRINGS.NBSP, ' '),
         });
         Wallet.create(name, {...item, isImported: true});
       });

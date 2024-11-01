@@ -11,7 +11,7 @@ interface Props {
   initialAddress?: string;
   wallets: WalletModel[];
   style?: StyleProp<ViewStyle>;
-
+  chainId?: number;
   onWalletSelected?(address: string): void;
 }
 
@@ -20,6 +20,7 @@ export const WalletSelector = ({
   onWalletSelected,
   initialAddress,
   style,
+  chainId,
 }: Props) => {
   const [selectedAddress, setSelectedAddress] = useState(initialAddress);
 
@@ -44,6 +45,7 @@ export const WalletSelector = ({
               onPress={handleWalletPress}
               checked={selectedAddress === wallet?.address}
               type={WalletRowTypes.variant5}
+              chainId={chainId}
             />
           </View>
         );

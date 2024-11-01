@@ -57,6 +57,18 @@ export const WalletConnectApplicationDetails = ({
     [sessionMetadata?.createdAt],
   );
 
+  const chainId = useMemo(() => {
+    const chain = session?.requiredNamespaces?.eip155?.chains?.[0];
+    if (!chain) {
+      return undefined;
+    }
+    const [, id] = chain.split(':');
+    if (!id) {
+      return undefined;
+    }
+    return Number(id);
+  }, [session]);
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -83,6 +95,7 @@ export const WalletConnectApplicationDetails = ({
           disabled
           type={WalletRowTypes.variant2}
           item={linkedWallet!}
+          chainId={chainId}
         />
 
         <Spacer height={28} />

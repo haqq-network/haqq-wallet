@@ -33,6 +33,7 @@ interface Web3BrowserHeaderProps {
   webviewNavigationData: WebViewNavigation;
   siteUrl: string;
   popup: boolean;
+  chainId: number;
 
   onPressMore(): void;
 
@@ -51,6 +52,7 @@ interface Web3BrowserHeaderProps {
 
 export const Web3BrowserHeader = ({
   walletAddress,
+  chainId,
   webviewNavigationData,
   siteUrl,
   onPressMore,
@@ -157,6 +159,7 @@ export const Web3BrowserHeader = ({
               type={WalletRowTypes.variant3}
               item={Wallet.getById(walletAddress)!}
               onPress={handlePressHeaderWallet}
+              chainId={chainId}
             />
           </Animated.View>
         </>
