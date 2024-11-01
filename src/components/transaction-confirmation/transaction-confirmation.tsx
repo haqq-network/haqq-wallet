@@ -64,11 +64,17 @@ export const TransactionConfirmation = observer(
         return null;
       }
 
-      if (Provider.getByEthChainId(token.chain_id)?.isTron) {
-        return fee.calculatedFees.expectedFee.operate(amount.toFloat(), 'add');
-      }
+      const provider = Provider.getByEthChainId(token.chain_id);
+      const isNativeCoin = amount.getSymbol() === provider?.denom;
+      const isTron = provider?.isTron;
 
-      if (amount.isNativeCoin) {
+      if (isNativeCoin) {
+        if (isTron) {
+          return fee.calculatedFees.expectedFee.operate(
+            amount.toFloat(),
+            'add',
+          );
+        }
         return fee.calculatedFees.expectedFee.operate(amount, 'add');
       }
 

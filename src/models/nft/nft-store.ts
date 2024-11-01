@@ -182,7 +182,9 @@ class NftStore {
         : Provider.selectedProvider
     ).ethChainId;
 
-    const contracts = await Indexer.instance.getAddresses([contractAddress]);
+    const contracts = await Indexer.instance.getAddresses({
+      [_providerEthChainId]: [contractAddress],
+    });
     return contracts[_providerEthChainId][0];
   };
 

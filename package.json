@@ -44,7 +44,7 @@
     "@haqq/encryption-react-native": "0.0.4",
     "@haqq/format-number-with-subscript-zeros": "1.0.1",
     "@haqq/provider-web3-utils": "0.0.14",
-    "@haqq/rn-wallet-providers": "0.0.10",
+    "@haqq/rn-wallet-providers": "0.0.11",
     "@haqq/shared-react-native": "0.0.12",
     "@invertase/react-native-apple-authentication": "2.2.2",
     "@keystonehq/bc-ur-registry-eth": "0.7.7",

@@ -173,7 +173,7 @@ export const TokenViewer = observer(
               wallet={_wallet}
               tokens={tokens.filter(
                 item =>
-                  !!item.is_in_white_list &&
+                  (__DEV__ || !!item.is_in_white_list) &&
                   !item.is_erc721 &&
                   !item.is_erc1155,
               )}

@@ -154,10 +154,7 @@ export class EthNetwork {
   ): Promise<CalculatedFees> {
     try {
       if (provider.isTron) {
-        return await TronNetwork.estimateFeeSendTRX(
-          {from, to, value, data},
-          provider,
-        );
+        return Promise.reject(new Error('Tron is not supported'));
       }
       const rpcProvider = await getRpcProvider(provider);
       const block = await rpcProvider.getBlock('latest');
@@ -348,12 +345,7 @@ export class EthNetwork {
         const signedTx = await transport.signTransaction(wallet.path!, {
           from: wallet.tronAddress,
           to: AddressUtils.toTron(to),
-          value: value.toBalanceString(
-            provider.decimals,
-            provider.decimals,
-            false,
-            true,
-          ),
+          value: value.toParsedBalanceNumber(),
         });
         return await TronNetwork.broadcastTransaction(signedTx, provider);
       }
@@ -402,6 +394,12 @@ export class EthNetwork {
     estimationVariant: EstimationVariant = EstimationVariant.average,
     provider = Provider.selectedProvider,
   ) {
+    if (provider.isTron) {
+      return await TronNetwork.estimateFeeSendTRC20(
+        {from, to, value: amount, data: contractAddress},
+        provider,
+      );
+    }
     const data = getERC20TransferData(to, amount, contractAddress);
     return await EthNetwork.estimate(
       {
@@ -425,21 +423,34 @@ export class EthNetwork {
     provider = Provider.selectedProvider,
   ) {
     try {
-      const data = getERC20TransferData(to, amount, contractAddress);
-      const unsignedTx = await EthNetwork.populateTransaction(
-        estimate,
-        {
-          from: from.address,
-          to: contractAddress,
-          value: Balance.Empty,
-          data,
-        },
-        provider,
-      );
+      if (provider.isTron) {
+        const signedTx = await transport.signTransaction(from.path!, {
+          from: from.tronAddress,
+          to: AddressUtils.toTron(to),
+          data: contractAddress,
+          value: amount.toParsedBalanceNumber(),
+        });
 
-      const signedTx = await transport.signTransaction(from.path!, unsignedTx);
+        return await TronNetwork.broadcastTransaction(signedTx, provider);
+      } else {
+        const data = getERC20TransferData(to, amount, contractAddress);
+        const unsignedTx = await EthNetwork.populateTransaction(
+          estimate,
+          {
+            from: from.address,
+            to: contractAddress,
+            value: Balance.Empty,
+            data,
+          },
+          provider,
+        );
+        const signedTx = await transport.signTransaction(
+          from.path!,
+          unsignedTx,
+        );
 
-      return await EthNetwork.sendTransaction(signedTx, provider);
+        return await EthNetwork.sendTransaction(signedTx, provider);
+      }
     } catch (error) {
       Logger.captureException(error, 'EthNetwork.transferERC20', {
         amount,

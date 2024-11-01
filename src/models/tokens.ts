@@ -5,7 +5,7 @@ import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
 import {Socket} from '@app/models/socket';
 import {IWalletModel, Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
-import {Indexer} from '@app/services/indexer';
+import {Indexer, IndexerAddressesResponse} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
 import {
   AddressEthereum,
@@ -20,7 +20,12 @@ import {
 import {RPCMessage} from '@app/types/rpc';
 import {createAsyncTask} from '@app/utils';
 
-import {ALL_NETWORKS_ID, Provider, ProviderModel} from './provider';
+import {Provider, ProviderModel} from './provider';
+
+const logger = Logger.create('TokensStore', {
+  emodjiPrefix: '🟢',
+  stringifyJson: true,
+});
 
 class TokensStore implements MobXStore<IToken> {
   /**
@@ -223,13 +228,26 @@ class TokensStore implements MobXStore<IToken> {
     const _data = {} as Record<AddressEthereum, IToken>;
 
     wallets.forEach(wallet => {
-      _tokens[AddressUtils.toEth(wallet.cosmosAddress)] = [
-        ...this.generateNativeTokens(wallet),
-      ];
+      const nativeTokens = this.generateNativeTokens(wallet);
+      _tokens[AddressUtils.toEth(wallet.cosmosAddress)] = [...nativeTokens];
     });
+
     const TRON_PROVIDER_CHAIN_IDS = Provider.getAll()
       .filter(p => p.isTron)
       .map(p => p.ethChainId as ChainId);
+
+    const contracts = await Indexer.instance.getAddresses(
+      updates.tokens.reduce(
+        (prev, cur) => {
+          return {
+            ...prev,
+            [cur.chain_id]: [...(prev[cur.chain_id] || []), cur.contract],
+          };
+        },
+        {} as Record<ChainId, string[]>,
+      ),
+    );
+
     for await (const t of updates.tokens) {
       try {
         const isPositive = new Balance(t.value).isPositive();
@@ -237,9 +255,17 @@ class TokensStore implements MobXStore<IToken> {
           continue;
         }
 
-        const token = await this.parseIToken(t);
+        const token = await this.parseIToken(t, contracts);
+
+        if (!token) {
+          logger.error('fetchTokens: skipping token', {
+            token,
+          });
+          continue;
+        }
 
         const isTron = TRON_PROVIDER_CHAIN_IDS.includes(t.chain_id);
+
         let walletAddress = '' as AddressEthereum;
 
         if (isTron) {
@@ -256,20 +282,23 @@ class TokensStore implements MobXStore<IToken> {
         }
 
         if (!_tokens[walletAddress]?.length) {
-          _tokens[walletAddress] = [
-            ...this.generateNativeTokens(Wallet.getById(walletAddress)!),
-          ];
+          const wallet = Wallet.getById(walletAddress);
+          const nativeTokens = this.generateNativeTokens(wallet!);
+
+          _tokens[walletAddress] = [...nativeTokens];
         }
 
         _tokens[walletAddress].push(token);
         _data[AddressUtils.toEth(token.id)] = token;
       } catch (e) {
-        Logger.error(
-          'TokensStore.fetchTokens',
-          `error durning parsing tokens ${e}`,
-        );
+        logger.error('fetchTokens: error during parsing tokens', {
+          error: e,
+          tokenAddress: t.address,
+          chainId: t.chain_id,
+        });
       }
     }
+
     runInAction(() => {
       this.tokens = _tokens;
       this.data = {
@@ -349,30 +378,20 @@ class TokensStore implements MobXStore<IToken> {
     };
   };
 
-  private parseIToken = async (token: IndexerToken) => {
-    const _existingToken = this.data[AddressUtils.toEth(token.contract)];
-    if (_existingToken) {
-      return {
-        ..._existingToken,
-        value: new Balance(
-          token.value,
-          _existingToken.decimals || Provider.selectedProvider.decimals,
-          _existingToken.symbol || Provider.selectedProvider.denom,
-        ),
-        created_at: token.created_at,
-        updated_at: token.updated_at,
-        chain_id: token.chain_id,
-      };
+  private parseIToken = async (
+    token: IndexerToken,
+    contracts: IndexerAddressesResponse,
+  ) => {
+    const contratsForChainId = contracts[token.chain_id] || [];
+    const contract = contratsForChainId.find(c => c.id === token.contract);
+
+    if (!contract) {
+      logger.error('parseIToken: Contract not found', {
+        token,
+        contratsForChainId,
+      });
+      return null;
     }
-
-    const _providerEthChainId = (
-      Provider.selectedProviderId === ALL_NETWORKS_ID
-        ? Provider.defaultProvider
-        : Provider.selectedProvider
-    ).ethChainId;
-
-    const contracts = await Indexer.instance.getAddresses([token.contract]);
-    const contract = contracts[_providerEthChainId][0];
 
     const result: IToken = {
       id: AddressUtils.toHaqq(contract.id),
@@ -405,9 +424,18 @@ class TokensStore implements MobXStore<IToken> {
     if (message.type !== 'token') {
       return;
     }
+    const tokenData = message.data;
 
-    const token = await this.parseIToken(message.data);
-    this.update(token.id, token);
+    const contracts = await Indexer.instance.getAddresses({
+      [tokenData.chain_id || Provider.selectedProvider.ethChainId]: [
+        tokenData.contract,
+      ],
+    });
+
+    const token = await this.parseIToken(tokenData, contracts);
+    if (token) {
+      this.update(token.id, token);
+    }
   };
 
   clear() {
