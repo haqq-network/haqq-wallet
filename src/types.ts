@@ -576,6 +576,7 @@ export type RootStackParamList = {
     wallets: IWalletModel[];
     title: string;
     initialAddress?: string;
+    chainId?: number;
   };
   valueSelector: {
     title: string;
@@ -1100,6 +1101,7 @@ export type Modals = {
     autoSelectWallet?: boolean;
     initialAddress?: string;
     hideBalance?: boolean;
+    chainId?: number;
   };
   transactionError: {
     onClose?: () => void;

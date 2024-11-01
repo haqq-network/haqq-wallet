@@ -5,6 +5,7 @@ import {StyleSheet} from 'react-native';
 import {CardSmall, DataContent, MenuNavigationButton} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
+import {Provider} from '@app/models/provider';
 
 import {WalletRowProps} from './wallet-row';
 
@@ -17,11 +18,20 @@ export const WalletRowVariant1 = ({
   hideArrow = false,
   checked = false,
   style,
+  chainId,
 }: Omit<WalletRowProps, 'type'>) => {
+  const provider = useMemo(() => Provider.getByEthChainId(chainId!), [chainId]);
   const containerStyle = useMemo(
     () => StyleSheet.flatten([item.isHidden && {opacity: 0.5}, style]),
     [item.isHidden, style],
   );
+
+  const addressString = useMemo(() => {
+    if (provider?.isTron) {
+      return shortAddress(item.tronAddress);
+    }
+    return shortAddress(item.address);
+  }, [item, provider]);
 
   const pressCard = useCallback(
     () => onPress?.(item.address),
@@ -45,7 +55,7 @@ export const WalletRowVariant1 = ({
       <DataContent
         style={styles.info}
         title={item.name}
-        subtitle={shortAddress(item.providerSpecificAddress)}
+        subtitle={addressString}
       />
     </MenuNavigationButton>
   );

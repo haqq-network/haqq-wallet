@@ -98,12 +98,21 @@ const requestAccount = async ({helper}: JsonRpcMethodHandlerParams) => {
     ? session.selectedAccount
     : undefined;
 
+  let chainId = 1;
+
+  if (Provider.selectedProvider.isEVM) {
+    chainId = Provider.selectedProvider.ethChainId;
+  } else {
+    chainId = Provider.getById(MAIN_NETWORK_ID).ethChainId;
+  }
+
   const selectedAccount = await awaitForWallet({
     wallets,
     title: I18N.selectAccount,
     autoSelectWallet: false,
     initialAddress,
     hideBalance: true,
+    chainId,
   });
   return selectedAccount;
 };
@@ -157,9 +166,11 @@ const getNetworkProvier = (helper: JsonRpcHelper) => {
   if (session?.isActive) {
     provider = Provider.getByChainIdHex(session?.selectedChainIdHex!);
   } else {
-    provider = Provider.isAllNetworks
-      ? Provider.getById(MAIN_NETWORK_ID)
-      : Provider.selectedProvider;
+    if (Provider.selectedProvider.isEVM) {
+      provider = Provider.selectedProvider;
+    } else {
+      provider = Provider.getById(MAIN_NETWORK_ID);
+    }
   }
   return provider;
 };

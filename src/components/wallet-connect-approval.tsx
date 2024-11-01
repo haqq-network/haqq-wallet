@@ -49,6 +49,18 @@ export const WalletConnectApproval = ({
   const imageSource = useMemo(() => ({uri: metadata.icons?.[0]}), [metadata]);
   const url = useMemo(() => getHostnameFromUrl(metadata?.url), [metadata]);
 
+  const chainId = useMemo(() => {
+    const chain = event?.params?.requiredNamespaces?.eip155?.chains?.[0];
+    if (!chain) {
+      return undefined;
+    }
+    const [, id] = chain.split(':');
+    if (!id) {
+      return undefined;
+    }
+    return Number(id);
+  }, [event]);
+
   return (
     <View style={styles.container}>
       <View style={styles.selectAccount}>
@@ -81,6 +93,7 @@ export const WalletConnectApproval = ({
           item={selectedWallet}
           onPress={onSelectWalletPress}
           hideArrow={hideSelectWalletArrow}
+          chainId={chainId}
         />
 
         <Spacer height={12} />

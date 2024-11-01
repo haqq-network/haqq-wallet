@@ -111,6 +111,7 @@ export const JsonRpcSign = ({
         {!isTransaction && (
           // it renders: typed data v4 (with custom cosmos stakinkg actions render), personal sign, eth sign
           <JsonRpcSignInfo
+            chainId={chainId}
             metadata={metadata}
             request={request}
             wallet={wallet!}

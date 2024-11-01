@@ -453,6 +453,7 @@ export type HomeStackParamList = {
     wallets: WalletModel[];
     title: string;
     initialAddress?: string;
+    chainId?: number;
   };
   [HomeStackRoutes.TotalValueInfo]?: {
     tab?: TotalValueTabNames;

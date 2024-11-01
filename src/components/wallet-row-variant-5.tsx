@@ -11,6 +11,7 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {splitAddress} from '@app/utils';
 
@@ -27,7 +28,12 @@ export const WalletRowVariant5 = observer(
     checked = false,
     style,
     hideBalance,
+    chainId,
   }: Omit<WalletRowProps, 'type'>) => {
+    const provider = useMemo(
+      () => Provider.getByEthChainId(chainId!),
+      [chainId],
+    );
     const containerStyle = useMemo(
       () => StyleSheet.flatten([item.isHidden && {opacity: 0.5}, style]),
       [item.isHidden, style],
@@ -39,14 +45,16 @@ export const WalletRowVariant5 = observer(
     );
 
     const balance = useMemo(
-      () => Wallet.getBalance(item.address, 'available'),
+      () => Wallet.getBalance(item.address, 'available', provider),
       [item.address],
     );
 
-    const addressString = useMemo(
-      () => `•••${splitAddress(item.providerSpecificAddress)[2]}`,
-      [item.providerSpecificAddress],
-    );
+    const addressString = useMemo(() => {
+      if (provider?.isTron) {
+        return `•••${splitAddress(item.tronAddress)[2]}`;
+      }
+      return `•••${splitAddress(item.address)[2]}`;
+    }, [item.providerSpecificAddress, provider]);
 
     return (
       <MenuNavigationButton
