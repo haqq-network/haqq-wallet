@@ -164,6 +164,16 @@ export class Balance implements IBalance, ISerializable {
     return cleanNumber(this.toFloat(precission), NUM_DELIMITER, fixed);
   };
 
+  toParsedBalanceNumber = () => {
+    const b = this.toBalanceString(
+      undefined,
+      undefined,
+      false,
+      true,
+    ).replaceAll(' ', '');
+    return +b;
+  };
+
   /**
    * Convert balance to float string according to cleanNumber helper and append currency name
    * @example 123.45 ISLM

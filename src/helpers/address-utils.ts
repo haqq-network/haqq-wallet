@@ -19,6 +19,12 @@ export class AddressUtils {
     if (!address) {
       return '' as AddressTron;
     }
+    if (tron.utils.address.isAddress(address)) {
+      return address as AddressTron;
+    }
+    if (address.startsWith('haqq')) {
+      return AddressUtils.haqqToTron(address);
+    }
     return tron.utils.address.fromHex(address) as AddressTron;
   }
 

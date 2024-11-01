@@ -177,7 +177,9 @@ export const ChooseAccountScreen = observer(() => {
           walletsToCreate.find(wallet => {
             return (
               wallet.address === item.address ||
-              wallet.tronAddress === item.tronAddress
+              (!!wallet.tronAddress &&
+                !!item.tronAddress &&
+                wallet.tronAddress === item.tronAddress)
             );
           })?.exists ||
           item.exists ||

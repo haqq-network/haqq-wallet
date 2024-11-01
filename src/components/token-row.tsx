@@ -36,7 +36,11 @@ export const TokenRow = ({item, checked = false, onPress}: TokenRowProps) => {
       testID={String(item?.symbol)?.toUpperCase()}
       disabled={!onPress || checked === true}
       onPress={onPress}
-      style={[styles.container, checked && styles.checked]}>
+      style={[
+        styles.container,
+        checked && styles.checked,
+        !item.is_in_white_list && styles.notWhiteListed,
+      ]}>
       <View>
         <ImageWrapper
           style={styles.icon}
@@ -80,6 +84,11 @@ export const TokenRow = ({item, checked = false, onPress}: TokenRowProps) => {
 };
 
 const styles = createTheme({
+  notWhiteListed: {
+    backgroundColor: Color.bg6,
+    borderRadius: 12,
+    padding: 4,
+  },
   tokenName: {maxWidth: 220},
   container: {
     flex: 1,

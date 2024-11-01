@@ -53,17 +53,21 @@ export const TransactionSumScreen = observer(() => {
   const getFee = useCallback(
     async (amount: Balance) => {
       try {
+        const provider = Provider.getByEthChainId(route.params.token.chain_id);
         const token = route.params.token;
         if (token.is_erc20) {
+          const contractAddress = provider?.isTron
+            ? AddressUtils.hexToTron(token.id)
+            : AddressUtils.toEth(token.id);
           return await EthNetwork.estimateERC20Transfer(
             {
               from: wallet?.address!,
               to: route.params.to,
               amount,
-              contractAddress: AddressUtils.toEth(token.id),
+              contractAddress,
             },
             EstimationVariant.average,
-            Provider.getByEthChainId(route.params.token.chain_id),
+            provider,
           );
         } else {
           return await EthNetwork.estimate(
@@ -73,7 +77,7 @@ export const TransactionSumScreen = observer(() => {
               value: amount,
             },
             EstimationVariant.average,
-            Provider.getByEthChainId(route.params.token.chain_id),
+            provider,
           );
         }
       } catch (err) {
@@ -161,17 +165,8 @@ export const TransactionSumScreen = observer(() => {
 
   useEffectAsync(async () => {
     const b = Wallet.getBalance(route.params.from, 'available');
-    const {expectedFee} = await EthNetwork.estimate(
-      {
-        from: route.params.from,
-        to,
-        value: b,
-      },
-      EstimationVariant.average,
-      Provider.getByEthChainId(route.params.token.chain_id),
-    );
-
-    setFee(expectedFee);
+    const estimate = await getFee(b);
+    setFee(estimate?.expectedFee ?? null);
   }, [to]);
 
   return (

@@ -14,7 +14,7 @@ const CONFIG_REINIT_TIMEOUT = 5 * 60 * 1000; // 5 minutes
 const logger = Logger.create('RemoteConfig', {
   emodjiPrefix: '🔴',
   stringifyJson: true,
-  enabled: VariablesBool.get('isDeveloper'),
+  enabled: !__DEV__ && VariablesBool.get('isDeveloper'),
 });
 
 function getCachedConfig() {
