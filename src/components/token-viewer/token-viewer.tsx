@@ -17,6 +17,7 @@ import {
 import {WalletCard} from '@app/components/ui/walletCard';
 import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {Wallet, WalletModel} from '@app/models/wallet';
 import {AddressEthereum, IToken} from '@app/types';
 
@@ -151,6 +152,12 @@ export const TokenViewer = observer(
         {list.map((address, index) => {
           const _wallet = Wallet.getById(address);
           const tokens = data[address].filter(token => {
+            const provider = Provider.getByEthChainId(token.chain_id);
+            // hide tokens for unsupport Tron wallets
+            if (provider?.isTron && !_wallet?.isSupportTron) {
+              return false;
+            }
+
             if (showLowBalance) {
               return true;
             }
