@@ -13,7 +13,7 @@ import {ModalType} from '@app/types';
 import {sleep} from '@app/utils';
 
 import {BottomSheet, BottomSheetRef} from './bottom-sheet';
-import {Button, ButtonVariant, Spacer, Text} from './ui';
+import {Button, ButtonVariant, Spacer, Text, TextVariant} from './ui';
 
 type RestorePasswordProps = {
   onClose: () => void;
@@ -65,7 +65,11 @@ export const RestorePassword = ({onClose}: RestorePasswordProps) => {
       onClose={onClose}
       i18nTitle={I18N.restorePasswordForgot}
       closeDistance={closeDistance}>
-      <Text t14 color={Color.textBase2} i18n={I18N.restorePasswordWarning} />
+      <Text
+        variant={TextVariant.t14}
+        color={Color.textBase2}
+        i18n={I18N.restorePasswordWarning}
+      />
       <Spacer height={24} />
       <Button
         error

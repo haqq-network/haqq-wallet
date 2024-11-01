@@ -202,8 +202,8 @@ export const SwapSettingBottomSheet = React.forwardRef<
             disabled={isApplyDisabled}
           />
           <First>
-            {IS_IOS && keyboardShown && <Spacer height={keyboardHeight / 2} />}
-            <Spacer height={20} />
+            {IS_IOS && keyboardShown && <Spacer height={keyboardHeight} />}
+            <Spacer height={80} />
           </First>
         </View>
       </KeyboardSafeArea>

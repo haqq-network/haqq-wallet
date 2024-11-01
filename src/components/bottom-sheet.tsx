@@ -247,81 +247,83 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
     }));
 
     return (
-      <KeyboardAvoidingView behavior="padding" style={page.wrap}>
-        <View style={page.container}>
-          <Animated.View
-            style={[
-              StyleSheet.absoluteFillObject,
-              page.background,
-              backgroundAnimatedStyle,
-            ]}
-          />
-          <TouchableWithoutFeedback onPress={onClosePopup}>
-            <View style={page.space} />
-          </TouchableWithoutFeedback>
-          <Animated.View
-            style={[
-              page.animateView,
-              page.content,
-              bottomSheetStyle,
-              contentContainerStyle,
-            ]}>
-            <GestureDetector gesture={headerGesture}>
-              <Animated.View style={titleContainerStyle}>
-                <View style={page.swipe}>
-                  <SwiperIcon color={getColor(Color.graphicSecond2)} />
-                </View>
-                <View style={page.header}>
-                  <First>
-                    {!!renderTitle && renderTitle?.()}
-                    {!!i18nTitle && (
-                      <>
-                        <Text
-                          variant={TextVariant.t6}
-                          color={Color.textBase1}
-                          i18n={i18nTitle}
-                        />
-                        <Spacer />
-                      </>
-                    )}
-                    {!!title && (
-                      <>
-                        <Text variant={TextVariant.t6} color={Color.textBase1}>
-                          {title}
-                        </Text>
-                        <Spacer />
-                      </>
-                    )}
-                  </First>
-                  <IconButton onPress={onClosePopup}>
-                    <Icon
-                      i24
-                      name="close_circle"
-                      color={Color.graphicSecond2}
-                    />
-                  </IconButton>
-                </View>
-              </Animated.View>
-            </GestureDetector>
-            <GestureDetector
-              gesture={Gesture.Simultaneous(panGesture, scrollViewGesture)}>
-              <Animated.ScrollView
-                bounces={false}
-                scrollEnabled={scrollable}
-                showsVerticalScrollIndicator={false}
-                scrollEventThrottle={1}
-                onScrollBeginDrag={(
-                  e: NativeSyntheticEvent<NativeScrollEvent>,
-                ) => {
-                  scrollOffset.value = e.nativeEvent.contentOffset.y;
-                }}>
-                {children}
-                <Spacer style={{height: bottomInsets}} />
-              </Animated.ScrollView>
-            </GestureDetector>
-          </Animated.View>
-        </View>
-      </KeyboardAvoidingView>
+      <Animated.View
+        style={[
+          StyleSheet.absoluteFillObject,
+          page.background,
+          backgroundAnimatedStyle,
+        ]}>
+        <KeyboardAvoidingView behavior="padding" style={page.wrap}>
+          <View style={page.container}>
+            <TouchableWithoutFeedback onPress={onClosePopup}>
+              <View style={page.space} />
+            </TouchableWithoutFeedback>
+            <Animated.View
+              style={[
+                page.animateView,
+                page.content,
+                bottomSheetStyle,
+                contentContainerStyle,
+              ]}>
+              <GestureDetector gesture={headerGesture}>
+                <Animated.View style={titleContainerStyle}>
+                  <View style={page.swipe}>
+                    <SwiperIcon color={getColor(Color.graphicSecond2)} />
+                  </View>
+                  <View style={page.header}>
+                    <First>
+                      {!!renderTitle && renderTitle?.()}
+                      {!!i18nTitle && (
+                        <>
+                          <Text
+                            variant={TextVariant.t6}
+                            color={Color.textBase1}
+                            i18n={i18nTitle}
+                          />
+                          <Spacer />
+                        </>
+                      )}
+                      {!!title && (
+                        <>
+                          <Text
+                            variant={TextVariant.t6}
+                            color={Color.textBase1}>
+                            {title}
+                          </Text>
+                          <Spacer />
+                        </>
+                      )}
+                    </First>
+                    <IconButton onPress={onClosePopup}>
+                      <Icon
+                        i24
+                        name="close_circle"
+                        color={Color.graphicSecond2}
+                      />
+                    </IconButton>
+                  </View>
+                </Animated.View>
+              </GestureDetector>
+              <GestureDetector
+                gesture={Gesture.Simultaneous(panGesture, scrollViewGesture)}>
+                <Animated.ScrollView
+                  bounces={false}
+                  scrollEnabled={scrollable}
+                  showsVerticalScrollIndicator={false}
+                  scrollEventThrottle={1}
+                  onScrollBeginDrag={(
+                    e: NativeSyntheticEvent<NativeScrollEvent>,
+                  ) => {
+                    scrollOffset.value = e.nativeEvent.contentOffset.y;
+                  }}>
+                  {children}
+                  <Spacer style={{height: bottomInsets}} />
+                </Animated.ScrollView>
+              </GestureDetector>
+            </Animated.View>
+          </View>
+        </KeyboardAvoidingView>
+      </Animated.View>
     );
   },
 );
@@ -336,8 +338,6 @@ const page = createTheme({
   space: {flex: 1},
   background: {
     backgroundColor: Color.bg9,
-    bottom: -150,
-    right: -150,
   },
   animateView: {
     justifyContent: 'flex-end',
