@@ -105,10 +105,12 @@ export const TransactionList = observer(
       () => StyleSheet.flatten([styles.list, style]),
       [style],
     );
-    const scrollEnabled = useMemo(
-      () => !hideContent || !!transactions.length,
-      [hideContent, transactions],
-    );
+    const scrollEnabled = useMemo(() => {
+      if (hideContent) {
+        return true;
+      }
+      return !!transactions.length;
+    }, [hideContent, transactions]);
 
     /* EFFECTS */
     useEffect(() => {
