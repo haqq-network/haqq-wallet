@@ -22,6 +22,7 @@ import {
   Spacer,
   Text,
   TextField,
+  TextVariant,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
@@ -228,7 +229,7 @@ export const TransactionAddress = ({
 
         {Boolean(filteredWallets?.length) && (
           <View style={styles.marginHorizontal}>
-            <Text t6 i18n={I18N.transactionMyAccounts} />
+            <Text variant={TextVariant.t6} i18n={I18N.transactionMyAccounts} />
             <Spacer height={12} />
             <FlatList
               horizontal
@@ -246,7 +247,10 @@ export const TransactionAddress = ({
           <>
             <Spacer height={12} />
             <View style={styles.marginHorizontal}>
-              <Text t6 i18n={I18N.transactionMyContacts} />
+              <Text
+                variant={TextVariant.t6}
+                i18n={I18N.transactionMyContacts}
+              />
             </View>
             <ListOfContacts
               // @ts-ignore

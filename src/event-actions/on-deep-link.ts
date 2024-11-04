@@ -101,13 +101,16 @@ export async function onDeepLink(
         ':',
       );
 
-      if (AddressUtils.isHaqqAddress(link)) {
-        await handleAddress(AddressUtils.toEth(link), withoutFromAddress);
+      if (AddressUtils.isHaqqAddress(url.pathname)) {
+        await handleAddress(
+          AddressUtils.toEth(url.pathname),
+          withoutFromAddress,
+        );
         return true;
       }
 
-      if (AddressUtils.isValidAddress(link)) {
-        await handleAddress(link, withoutFromAddress);
+      if (AddressUtils.isValidAddress(url.pathname)) {
+        await handleAddress(url.pathname, withoutFromAddress);
         return true;
       }
 

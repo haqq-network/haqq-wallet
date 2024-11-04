@@ -16,6 +16,7 @@ import {
   Icon,
   InfoBlock,
   Text,
+  TextVariant,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
@@ -93,7 +94,7 @@ export const ReceiveScreen = observer(() => {
         </View>
         <View style={styles.qrStyle}>
           <QRCode
-            ecl={'H'}
+            ecl="H"
             logo={require('@assets/images/qr-logo.png')}
             value={`haqq:${address}`}
             size={width - 169}
@@ -102,10 +103,10 @@ export const ReceiveScreen = observer(() => {
             logoBorderRadius={8}
           />
         </View>
-        <Text t14 style={styles.title}>
+        <Text variant={TextVariant.t14} style={styles.title}>
           {wallet?.name}
         </Text>
-        <Text t10 style={styles.address}>
+        <Text variant={TextVariant.t10} style={styles.address}>
           {address}
         </Text>
       </LinearGradient>
