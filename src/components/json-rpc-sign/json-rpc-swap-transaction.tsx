@@ -130,9 +130,9 @@ export const JsonRpcSwapTransaction = observer(
       const symbol = tokenIn?.amount?.getSymbol()!;
       const decimals = tokenIn?.amount?.getPrecission()!;
       if (!estimateData?.fee) {
-        return new Balance(Balance.Empty, decimals, symbol);
+        return new Balance('0x0', decimals, symbol);
       }
-      return new Balance(estimateData?.fee.amount || '0', decimals, symbol);
+      return new Balance(estimateData?.fee.amount || '0x0', decimals, symbol);
     }, [tokenIn, estimateData]);
 
     const onPressRoutingSource = useCallback(() => {

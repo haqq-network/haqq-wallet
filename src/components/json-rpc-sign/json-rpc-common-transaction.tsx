@@ -66,7 +66,7 @@ export const JsonRpcCommonTransaction = ({
     }
 
     if (!tx?.value) {
-      return Balance.Empty;
+      return new Balance(0, provider?.decimals, provider?.denom);
     }
 
     return new Balance(tx.value, provider?.decimals, provider?.denom);
@@ -77,7 +77,11 @@ export const JsonRpcCommonTransaction = ({
       return fee?.calculatedFees?.expectedFee.toBalanceString('auto');
     }
     return value
-      .operate(fee?.calculatedFees?.expectedFee ?? Balance.Empty, 'add')
+      .operate(
+        fee?.calculatedFees?.expectedFee ??
+          new Balance(0, provider?.decimals, provider?.denom),
+        'add',
+      )
       .toBalanceString('auto');
   }, [value, fee?.calculatedFees?.expectedFee]);
 

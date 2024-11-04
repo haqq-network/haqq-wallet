@@ -50,10 +50,15 @@ export const WalletConnectApproval = ({
   const url = useMemo(() => getHostnameFromUrl(metadata?.url), [metadata]);
 
   const chainId = useMemo(() => {
-    const chain = event?.params?.requiredNamespaces?.eip155?.chains?.[0];
+    const requiredChain =
+      event?.params?.requiredNamespaces?.eip155?.chains?.[0];
+    const optionalChain =
+      event?.params?.optionalNamespaces?.eip155?.chains?.[0];
+    const chain = requiredChain || optionalChain;
     if (!chain) {
       return undefined;
     }
+    Logger.log('chain', chain);
     const [, id] = chain.split(':');
     if (!id) {
       return undefined;

@@ -7,13 +7,14 @@ import {WalletModel} from '@app/models/wallet';
 
 interface WalletConnectWalletListProps {
   wallets: WalletModel[];
-
+  chainId?: number;
   handleWalletPress(address: string): void;
 }
 
 export const WalletConnectWalletList = ({
-  handleWalletPress,
   wallets,
+  chainId,
+  handleWalletPress,
 }: WalletConnectWalletListProps) => {
   return (
     <View style={styles.container}>
@@ -23,6 +24,7 @@ export const WalletConnectWalletList = ({
             key={item.address}
             onPress={handleWalletPress}
             item={item}
+            chainId={chainId}
           />
         );
       })}
