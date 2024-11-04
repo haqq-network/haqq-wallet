@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import {ethers} from 'ethers';
 import {ActivityIndicator, ScrollView, View} from 'react-native';
@@ -11,18 +11,21 @@ import {
   Icon,
   IconsName,
   InfoBlock,
+  Loading,
   Spacer,
   Text,
   TextVariant,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
+import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N} from '@app/i18n';
 import {Fee} from '@app/models/fee';
 import {ProviderModel} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {Balance} from '@app/services/balance';
-import {JsonRpcMetadata, JsonRpcTransactionRequest} from '@app/types';
+import {Indexer} from '@app/services/indexer';
+import {IToken, JsonRpcMetadata, JsonRpcTransactionRequest} from '@app/types';
 import {getHostnameFromUrl, openInAppBrowser} from '@app/utils';
 import {STRINGS} from '@app/variables/common';
 
@@ -38,7 +41,7 @@ export interface JsonRpcCommonTransactionProps {
   fee: Fee | null | undefined;
   tx: Partial<JsonRpcTransactionRequest> | undefined;
   parsedInput: ethers.utils.TransactionDescription | undefined;
-
+  chainId: number;
   onFeePress: () => void;
 }
 
@@ -52,16 +55,18 @@ export const JsonRpcCommonTransaction = ({
   fee,
   tx,
   parsedInput,
+  chainId,
   onFeePress,
 }: JsonRpcCommonTransactionProps) => {
   const url = useMemo(() => getHostnameFromUrl(metadata?.url), [metadata]);
+  const [token, setToken] = useState(Token.getById(tx?.to!));
   const value = useMemo(() => {
     if (functionName === 'approve') {
-      const token = Token.getById(tx?.to!) || Token.UNKNOWN_TOKEN;
+      const t = token || Token.UNKNOWN_TOKEN;
       return new Balance(
         parsedInput?.args?.[1] || '0x0',
-        token.decimals!,
-        token.symbol!,
+        t.decimals!,
+        t.symbol!,
       );
     }
 
@@ -94,6 +99,18 @@ export const JsonRpcCommonTransaction = ({
       provider?.getAddressExplorerUrl?.(parsedInput?.args?.[0])!,
     );
   }, [provider, tx, parsedInput]);
+
+  useEffectAsync(async () => {
+    const resp = await Indexer.instance.getAddresses({
+      [chainId]: [tx?.to!],
+    });
+    const t = resp[chainId]?.[0] ?? Token.UNKNOWN_TOKEN;
+    setToken(t as unknown as IToken);
+  }, [tx, chainId]);
+
+  if (functionName === 'approve' && !token) {
+    return <Loading />;
+  }
 
   return (
     <View style={styles.container}>

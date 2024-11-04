@@ -4,7 +4,14 @@ import {useActionSheet} from '@expo/react-native-action-sheet';
 import Clipboard from '@react-native-clipboard/clipboard';
 import CookieManager from '@react-native-cookies/cookies';
 import {observer} from 'mobx-react';
-import {Alert, ScrollView, StyleSheet, View} from 'react-native';
+import {
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  SwitchChangeEvent,
+  View,
+} from 'react-native';
 
 import {Color} from '@app/colors';
 import {SettingsButton} from '@app/components/home-settings/settings-button';
@@ -13,9 +20,11 @@ import {
   Button,
   ButtonSize,
   ButtonVariant,
+  DataContent,
   First,
   IconsName,
   Input,
+  MenuNavigationButton,
   Spacer,
   Text,
 } from '@app/components/ui';
@@ -57,6 +66,8 @@ const Title = ({text = ''}) => (
   </>
 );
 
+export const SHOW_NON_WHITELIST_TOKEN = 'SHOW_NON_WHITELIST_TOKEN';
+
 export const SettingsDeveloperTools = observer(() => {
   const {showActionSheetWithOptions} = useActionSheet();
   const {animate} = useLayoutAnimation();
@@ -69,6 +80,18 @@ export const SettingsDeveloperTools = observer(() => {
   const [verifyAddress, setVerifyAddress] = useState('');
   const [appInfo, setAppInfo] = useState<AppInfo | null>();
   const [isAppInfoHidden, setAppInfoHidden] = useState(true);
+
+  const [showNonWhitlistedTokens, setShowNonWhitlistedTokens] = useState(
+    VariablesBool.get(SHOW_NON_WHITELIST_TOKEN),
+  );
+
+  const onToggleShowNonWhitlistedTokens = useCallback(
+    async ({nativeEvent: {value}}: SwitchChangeEvent) => {
+      setShowNonWhitlistedTokens(value);
+      VariablesBool.set(SHOW_NON_WHITELIST_TOKEN, value);
+    },
+    [],
+  );
 
   const isValidConvertAddress = useMemo(
     () => AddressUtils.isValidAddress(convertAddress),
@@ -218,7 +241,22 @@ export const SettingsDeveloperTools = observer(() => {
         variant={ButtonVariant.contained}
       />
       <Spacer height={8} />
-      <Title text="Contract info" />
+      <Title text="Contracts" />
+      <MenuNavigationButton hideArrow onPress={() => {}}>
+        <DataContent
+          style={styles.dataContent}
+          title={'Show non white-listed tokens'}
+          subtitle={
+            'Enable to display tokens that are not included in the Haqq Network white list. These tokens may be unsafe, and their appearance in the UI is highlighted in yellow to indicate potential risk.'
+          }
+        />
+        <Spacer />
+        <Switch
+          value={showNonWhitlistedTokens}
+          onChange={onToggleShowNonWhitlistedTokens}
+        />
+      </MenuNavigationButton>
+      <Spacer height={8} />
       <Input
         placeholder="haqq... or 0x..."
         value={verifyAddress}
@@ -661,6 +699,9 @@ Issued At: 2024-02-20T12:00:00.000Z`,
 });
 
 const styles = createTheme({
+  dataContent: {
+    flex: 4,
+  },
   container: {
     marginHorizontal: 20,
   },

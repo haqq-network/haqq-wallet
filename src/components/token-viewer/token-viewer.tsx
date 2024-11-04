@@ -15,6 +15,7 @@ import {
   TextVariant,
 } from '@app/components/ui';
 import {WalletCard} from '@app/components/ui/walletCard';
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {Provider} from '@app/models/provider';
@@ -181,7 +182,7 @@ export const TokenViewer = observer(
               wallet={_wallet}
               tokens={tokens.filter(
                 item =>
-                  (__DEV__ || !!item.is_in_white_list) &&
+                  (app.showNonWhitlistedTokens || !!item.is_in_white_list) &&
                   !item.is_erc721 &&
                   !item.is_erc1155,
               )}
