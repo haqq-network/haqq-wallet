@@ -218,6 +218,9 @@ export const JsonRpcTransactionInfo = observer(
           parsedInput={txParsedData}
           fee={fee}
           tx={tx}
+          chainId={
+            tx?.chainId ?? chainId ?? Provider.selectedProvider.ethChainId!
+          }
           onFeePress={onFeePress}
         />
       </First>
