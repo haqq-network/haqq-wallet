@@ -28,6 +28,7 @@ import {Provider, RemoteProviderConfig} from '@app/models/provider';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
+import {SHOW_NON_WHITELIST_TOKEN} from '@app/screens/settings-developer-tools';
 import {EthNetwork} from '@app/services';
 import {Backend} from '@app/services/backend';
 import {Cosmos} from '@app/services/cosmos';
@@ -281,6 +282,13 @@ class App extends AsyncEventEmitter {
   set isTesterMode(value) {
     this.onTesterModeChange(value);
     VariablesBool.set('isTesterMode', value);
+  }
+
+  get showNonWhitlistedTokens() {
+    return (
+      (this.isTesterMode && VariablesBool.get(SHOW_NON_WHITELIST_TOKEN)) ??
+      false
+    );
   }
 
   get blindSignEnabled() {
