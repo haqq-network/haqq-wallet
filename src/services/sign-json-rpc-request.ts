@@ -16,6 +16,7 @@ import {
   getSignTypedDataParamsData,
   isEthTypedData,
 } from '@app/utils';
+import {ETH_COIN_TYPE, TRON_COIN_TYPE} from '@app/variables/common';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 import {Balance} from './balance';
@@ -116,7 +117,7 @@ export class SignJsonRpcRequest {
       ? await getRpcProvider(provider)
       : getDefaultNetwork();
 
-    const path = wallet.path || '/';
+    const path = wallet.path?.replace(TRON_COIN_TYPE, ETH_COIN_TYPE)!;
     let result: string | undefined;
 
     switch (request.method) {
@@ -192,7 +193,9 @@ export class SignJsonRpcRequest {
                 from: signTransactionRequest.from!,
                 to: signTransactionRequest.to!,
                 value: new Balance(
-                  signTransactionRequest.value! || Balance.Empty,
+                  signTransactionRequest.value! || '0x0',
+                  provider?.decimals,
+                  provider?.denom,
                 ),
                 data: signTransactionRequest.data?.toString()!,
                 minGas,

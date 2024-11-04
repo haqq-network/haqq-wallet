@@ -28,11 +28,11 @@ export async function onWalletConnectSignTransaction(
   try {
     const session = WalletConnect.instance.getSessionByTopic(event.topic);
     const method = event?.params?.request?.method;
-
+    const chainId = Number(event?.params?.chainId?.split(':')?.[1]);
     if (session && method === 'wallet_switchEthereumChain') {
       const providerId = await awaitForProvider({
         providers: Provider.getAllEVM(),
-        initialProviderChainId: Provider.selectedProvider.ethChainId,
+        initialProviderChainId: chainId,
         title: I18N.networks,
       });
 
@@ -81,13 +81,11 @@ export async function onWalletConnectSignTransaction(
 
     const isAllowed = SIGN_METHOD_WHITELIST.includes(method);
     if (session && method && isAllowed) {
-      const [_, chainId, accountId] =
+      const [_namespace, chainIdFromNamespace, accountId] =
         session.namespaces.eip155?.accounts?.[0]?.split?.(':');
 
-      const chainIdFromParams = event?.params?.chainId?.split?.(':')?.[1];
-
       const result = await awaitForJsonRpcSign({
-        chainId: Number(chainIdFromParams || chainId),
+        chainId: chainId || Number(chainIdFromNamespace),
         request: event.params?.request,
         metadata: {
           url: session.peer.metadata.url,

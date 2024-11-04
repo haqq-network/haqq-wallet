@@ -116,8 +116,10 @@ export const JsonRpcTransactionInfo = observer(
     }, [functionName]);
 
     const calculateFee = useCallback(async () => {
+      const empty = new Balance(0, provider?.decimals, provider?.denom);
+
       if (!tx) {
-        return Balance.Empty;
+        return empty;
       }
 
       try {
@@ -126,7 +128,7 @@ export const JsonRpcTransactionInfo = observer(
             from: tx.from! || wallet.address,
             to: tx.to!,
             value: new Balance(
-              tx.value || Balance.Empty,
+              tx.value || empty,
               provider?.decimals,
               provider?.denom,
             ),
@@ -138,7 +140,7 @@ export const JsonRpcTransactionInfo = observer(
         setFee(new Fee(data));
         return data.expectedFee;
       } catch {
-        return Balance.Empty;
+        return empty;
       }
     }, [tx, provider]);
 
@@ -153,7 +155,7 @@ export const JsonRpcTransactionInfo = observer(
           from: tx.from! || wallet.address,
           to: tx.to!,
           value: new Balance(
-            tx.value! || Balance.Empty,
+            tx.value! || '0x0',
             provider?.decimals,
             provider?.denom,
           ),

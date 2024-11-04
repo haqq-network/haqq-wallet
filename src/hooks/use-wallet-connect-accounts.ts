@@ -12,5 +12,5 @@ export const useWalletConnectAccounts = () => {
     [activeSessions],
   );
 
-  return {accounts};
+  return {accounts, sessions: activeSessions};
 };
