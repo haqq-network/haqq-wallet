@@ -92,6 +92,7 @@ export const WalletConnectApprovalScreen = observer(() => {
       initialAddress: selectedWallet?.address,
       chainId,
       eventSuffix: event?.id,
+      hideBalance: true,
     });
     setSelectedWallet(Wallet.getById(address)!);
   };
