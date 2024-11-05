@@ -15,6 +15,22 @@ import {splitAddress} from '@app/utils';
 
 export const HAQQ_VALIDATOR_PREFIX = 'haqqvaloper';
 export class AddressUtils {
+  static bufferToTron(base64buffer: string): AddressTron {
+    if (!base64buffer) {
+      return '' as AddressTron;
+    }
+
+    if (AddressUtils.isTronAddress(base64buffer)) {
+      return base64buffer as AddressTron;
+    }
+
+    return AddressUtils.hexToTron(AddressUtils.fromBuffer(base64buffer));
+  }
+
+  static fromBuffer(base64buffer: string) {
+    return `0x${Buffer.from(base64buffer, 'base64').toString('hex')}`;
+  }
+
   static hexToTron(address?: string): AddressTron {
     if (!address) {
       return '' as AddressTron;

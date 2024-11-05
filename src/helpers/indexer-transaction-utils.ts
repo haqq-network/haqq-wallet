@@ -5,8 +5,11 @@ import {Token} from '@app/models/tokens';
 import {ParsedTransactionData, Transaction} from '@app/models/transaction';
 import {Balance} from '@app/services/balance';
 import {
+  ChainId,
   IToken,
+  IndexerProtoMsgTxType,
   IndexerTransaction,
+  IndexerTransactionParticipantRole,
   IndexerTransactionWithType,
   IndexerTxMsgEthereumTx,
   IndexerTxMsgType,
@@ -35,8 +38,9 @@ const getNativeToken = (
 
 export function parseTransaction(
   tx: IndexerTransaction,
-  addresses: string[],
+  addressesMap: Record<ChainId, string[]>,
 ): Transaction {
+  const addresses = addressesMap[tx.chain_id];
   const parse = () => {
     switch (tx.msg.type) {
       case IndexerTxMsgType.msgEthereumRaffleTx:
@@ -58,7 +62,9 @@ export function parseTransaction(
       case IndexerTxMsgType.msgEthereumApprovalTx:
         return parseMsgEthereumApprovalTx(tx as any, addresses);
       case IndexerTxMsgType.msgProtoTx:
-        return parseTransferContractTx(tx as any, addresses);
+        return parseMsgProtoTx(tx as any, addresses);
+      case IndexerTxMsgType.msgEventTx:
+        return parseMsgEventTx(tx as any, addresses);
       // TODO: implement other tx types
       case IndexerTxMsgType.unknown:
       case IndexerTxMsgType.msgVote:
@@ -136,17 +142,307 @@ function parseMsgEthereumApprovalTx(
   };
 }
 
+function parseMsgEventTx(
+  tx: IndexerTransactionWithType<IndexerTxMsgType.msgEventTx>,
+  addresses: string[],
+): ParsedTransactionData | undefined {
+  switch (tx.msg.messageType) {
+    case 'transfer':
+      return parseTransferEventTx(tx as any, addresses); // send TRC20 token
+    default:
+      return undefined;
+  }
+}
+
+/**
+ * Example transaction:
+  {
+    "block": 49017942,
+    "chain_id": 2494104990,
+    "code": 1,
+    "confirmations": 0,
+    "fee": "0",
+    "gas_limit": "13045",
+    "hash": "0x5f57e6021d9a4f1697351a23b50cd43a21ceceac0bf5582c1a2791d287f0f8a6",
+    "id": "0x5f57e6021d9a4f1697351a23b50cd43a21ceceac0bf5582c1a2791d287f0f8a6",
+    "input": "a9059cbb000000000000000000000000f066ec5164b6e38cdcab8daa957c21fa9759215f00000000000000000000000000000000000000000000000000000000006acfc0",
+    "msg": {
+      "blockId": "49017942",
+      "contractAddress": "tsNLx+A6DVJvQ4XupCQNOze0B28=",
+      "data": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABqz8A=",
+      "message": {
+        "transfer": {
+          "from": "HXFYEQKwQWNOYkegpTJgRW07eFw=",
+          "to": "8GbsUWS244zcq42qlXwh+pdZIV8=",
+          "value": "NzAwMDAwMA=="
+        }
+      },
+      "messageType": "transfer",
+      "topic0": "3fJSrRviyJtpwrBo/DeNqpUrp/FjxKEWKPVaTfUjs+8=",
+      "topic1": "AAAAAAAAAAAAAAAAHXFYEQKwQWNOYkegpTJgRW07eFw=",
+      "topic2": "AAAAAAAAAAAAAAAA8GbsUWS244zcq42qlXwh+pdZIV8=",
+      "txId": "X1fmAh2aTxaXNRojtQzUOiHOzqwL9VgsGieR0ofw+KY=",
+      "type": "msgEventTx"
+    },
+    "msg_type": "TriggerSmartContract",
+    "participants": [
+      {
+        "address": "HXFYEQKwQWNOYkegpTJgRW07eFw=",
+        "blockId": "49017942",
+        "role": "sender",
+        "txId": "X1fmAh2aTxaXNRojtQzUOiHOzqwL9VgsGieR0ofw+KY="
+      },
+      {
+        "address": "8GbsUWS244zcq42qlXwh+pdZIV8=",
+        "blockId": "49017942",
+        "role": "receiver",
+        "txId": "X1fmAh2aTxaXNRojtQzUOiHOzqwL9VgsGieR0ofw+KY="
+      }
+    ],
+    "senders": [],
+    "ts": "2024-11-04T13:07:09Z"
+  }
+ */
+function parseTransferEventTx(
+  tx: IndexerTransactionWithType<IndexerTxMsgType.msgEventTx>,
+  addresses: string[],
+): ParsedTransactionData | undefined {
+  if (!tx.msg.message.transfer) {
+    return undefined;
+  }
+  const contractAddress = AddressUtils.tronToHex(
+    AddressUtils.bufferToTron(tx.msg.contractAddress),
+  );
+  const token = Token.data[contractAddress] ?? Token.UNKNOWN_TOKEN;
+  const from = AddressUtils.bufferToTron(tx.msg.message.transfer.from);
+  const to = AddressUtils.bufferToTron(tx.msg.message.transfer.to);
+
+  let amountString = '';
+
+  // is base64 encoded
+  if (tx?.msg?.message?.transfer?.value?.endsWith('=')) {
+    amountString = AddressUtils.fromBuffer(tx.msg.message.transfer.value);
+  } else {
+    amountString = tx.msg.message.transfer.value;
+  }
+
+  const isIncoming = addresses.includes(to) && !addresses.includes(from);
+
+  const title = isIncoming
+    ? getText(I18N.transactionReceiveTitle)
+    : getText(I18N.transactionSendTitle);
+
+  const subtitle = isIncoming
+    ? formatAddressForSubtitle(from, 'hexToTron', true)
+    : formatAddressForSubtitle(to, 'hexToTron', false);
+
+  const amount = [new Balance(amountString, token.decimals!, token.symbol!)];
+
+  return {
+    from,
+    to,
+    amount,
+    isContractInteraction: false,
+    isIncoming,
+    isOutcoming: !isIncoming,
+    tokens: [
+      {
+        name: token.name!,
+        symbol: token.symbol!,
+        icon: token.image!,
+        decimals: token.decimals!,
+        contract_address: contractAddress,
+      },
+    ],
+    isCosmosTx: false,
+    isEthereumTx: true,
+    icon: isIncoming ? IconsName.arrow_receive : IconsName.arrow_send,
+    title,
+    subtitle,
+  };
+}
+
+function parseMsgProtoTx(
+  tx: IndexerTransactionWithType<IndexerTxMsgType.msgProtoTx>,
+  addresses: string[],
+): ParsedTransactionData | undefined {
+  switch (tx.msg_type) {
+    case IndexerProtoMsgTxType.transferContract:
+      return parseTransferContractTx(tx as any, addresses); // send TRX
+    case IndexerProtoMsgTxType.triggerSmartContract:
+      return parseTriggerSmartContractTx(tx as any, addresses); // call contract (contract interaction)
+    default:
+      return undefined;
+  }
+}
+
+/**
+ * Example transaction:
+ * {
+ *   "block": 49017942,
+ *   "chain_id": 2494104990,
+ *   "code": -1,
+ *   "confirmations": 0,
+ *   "fee": "0",
+ *   "gas_limit": "13045",
+ *   "hash": "0x5f57e6021d9a4f1697351a23b50cd43a21ceceac0bf5582c1a2791d287f0f8a6",
+ *   "id": "0x5f57e6021d9a4f1697351a23b50cd43a21ceceac0bf5582c1a2791d287f0f8a6",
+ *   "input": "a9059cbb000000000000000000000000f066ec5164b6e38cdcab8daa957c21fa9759215f00000000000000000000000000000000000000000000000000000000006acfc0",
+ *   "msg": {
+ *     "triggerSmartContract": {
+ *       "contractAddress": "tsNLx+A6DVJvQ4XupCQNOze0B28=",
+ *       "data": "qQWcuwAAAAAAAAAAAAAAAPBm7FFktuOM3KuNqpV8IfqXWSFfAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABqz8A=",
+ *       "ownerAddress": "HXFYEQKwQWNOYkegpTJgRW07eFw="
+ *     },
+ *     "type": "msgProtoTx"
+ *   },
+ *   "msg_type": "TriggerSmartContract",
+ *   "participants": [
+ *     {
+ *       "address": "HXFYEQKwQWNOYkegpTJgRW07eFw=",
+ *       "blockId": "49017942",
+ *       "role": "sender",
+ *       "txId": "X1fmAh2aTxaXNRojtQzUOiHOzqwL9VgsGieR0ofw+KY="
+ *     },
+ *     {
+ *       "address": "tsNLx+A6DVJvQ4XupCQNOze0B28=",
+ *       "blockId": "49017942",
+ *       "role": "receiver",
+ *       "txId": "X1fmAh2aTxaXNRojtQzUOiHOzqwL9VgsGieR0ofw+KY="
+ *     }
+ *   ],
+ *   "senders": [],
+ *   "ts": "2024-11-04T13:07:09Z"
+ * }
+ */
+function parseTriggerSmartContractTx(
+  tx: IndexerTransactionWithType<IndexerTxMsgType.msgProtoTx>,
+  _addresses: string[],
+): ParsedTransactionData | undefined {
+  if (!tx.msg.triggerSmartContract) {
+    return undefined;
+  }
+
+  const contractAddress = AddressUtils.tronToHex(
+    AddressUtils.bufferToTron(tx.msg.triggerSmartContract.contractAddress),
+  );
+
+  const senderParticipant = tx.participants.find(
+    p => p.role === IndexerTransactionParticipantRole.sender,
+  );
+  const receiverParticipant = tx.participants.find(
+    p => p.role === IndexerTransactionParticipantRole.receiver,
+  );
+
+  const from = senderParticipant
+    ? AddressUtils.bufferToTron(senderParticipant.address)
+    : '';
+  const to = receiverParticipant
+    ? AddressUtils.bufferToTron(receiverParticipant.address)
+    : '';
+
+  const provider = Provider.getByEthChainId(tx.chain_id);
+  const token = Token.data[contractAddress];
+
+  // Обработка данных контракта
+  const parsedToken: IndexerTxParsedTokenInfo = token
+    ? {
+        icon: token.image!,
+        decimals: token.decimals!,
+        name: token.name!,
+        symbol: token.symbol!,
+        contract_address: contractAddress,
+      }
+    : getNativeToken(provider);
+
+  return {
+    from,
+    to,
+    amount: [],
+    isContractInteraction: true,
+    isIncoming: false,
+    isOutcoming: true,
+    tokens: [parsedToken],
+    isCosmosTx: false,
+    isEthereumTx: true,
+    icon: IconsName.contract,
+    title: getText(I18N.transactionContractTitle),
+    subtitle:
+      token.name ??
+      getText(I18N.transactionContractDefaultName).replace(
+        'HAQQ Network',
+        provider?.name!,
+      ),
+  };
+}
+
+/**
+ * Example transaction:
+ * {
+ *   "block": 49017933,
+ *   "chain_id": 2494104990,
+ *   "code": -1,
+ *   "confirmations": 0,
+ *   "fee": "0",
+ *   "gas_limit": "0",
+ *   "hash": "0xf6371d0a49d088e524fea7444763eecf414ff2a0c225d677f5be0c005d9318d4",
+ *   "id": "0xf6371d0a49d088e524fea7444763eecf414ff2a0c225d677f5be0c005d9318d4",
+ *   "input": "",
+ *   "msg": {
+ *     "transferContract": {
+ *       "amount": "5000000",
+ *       "ownerAddress": "HXFYEQKwQWNOYkegpTJgRW07eFw=",
+ *       "toAddress": "8GbsUWS244zcq42qlXwh+pdZIV8="
+ *     },
+ *     "type": "msgProtoTx"
+ *   },
+ *   "msg_type": "TransferContract",
+ *   "participants": [
+ *     {
+ *       "address": "HXFYEQKwQWNOYkegpTJgRW07eFw=",
+ *       "blockId": "49017933",
+ *       "role": "sender",
+ *       "txId": "9jcdCknQiOUk/qdER2Puz0FP8qDCJdZ39b4MAF2TGNQ="
+ *     },
+ *     {
+ *       "address": "8GbsUWS244zcq42qlXwh+pdZIV8=",
+ *       "blockId": "49017933",
+ *       "role": "receiver",
+ *       "txId": "9jcdCknQiOUk/qdER2Puz0FP8qDCJdZ39b4MAF2TGNQ="
+ *     }
+ *   ],
+ *   "senders": [],
+ *   "ts": "2024-11-04T13:06:42Z"
+ * }
+ */
 function parseTransferContractTx(
   tx: IndexerTransactionWithType<IndexerTxMsgType.msgProtoTx>,
   addresses: string[],
-): ParsedTransactionData {
-  const transaction = parseTronTransaction(tx);
-  const isIncoming = isIncomingTx(transaction, addresses);
-  const {from, to} = getFromAndTo(transaction, isIncoming);
-  const provider = Provider.getByEthChainId(transaction.chain_id);
+): ParsedTransactionData | undefined {
+  if (!tx.msg.transferContract) {
+    return undefined;
+  }
+
+  const senderParticipant = tx.participants.find(
+    p => p.role === IndexerTransactionParticipantRole.sender,
+  );
+  const receiverParticipant = tx.participants.find(
+    p => p.role === IndexerTransactionParticipantRole.receiver,
+  );
+
+  const from = senderParticipant
+    ? AddressUtils.bufferToTron(senderParticipant.address)
+    : '';
+  const to = receiverParticipant
+    ? AddressUtils.bufferToTron(receiverParticipant.address)
+    : '';
+
+  const isIncoming = addresses.includes(to) && !addresses.includes(from);
+
+  const provider = Provider.getByEthChainId(tx.chain_id);
   const amount = [
     new Balance(
-      transaction.msg.transferContract.amount,
+      tx.msg.transferContract.amount,
       provider?.decimals,
       provider?.denom,
     ),
@@ -157,27 +453,24 @@ function parseTransferContractTx(
     : getText(I18N.transactionSendTitle);
 
   const subtitle = isIncoming
-    ? formatAddressForSubtitle(from, 'toTron', true)
-    : formatAddressForSubtitle(to, 'toTron', false);
-  const icon = isIncoming ? IconsName.arrow_receive : IconsName.arrow_send;
+    ? formatAddressForSubtitle(from, 'hexToTron', true)
+    : formatAddressForSubtitle(to, 'hexToTron', false);
 
-  const isContractInteraction = isContractInteractionTx(transaction);
+  const icon = isIncoming ? IconsName.arrow_receive : IconsName.arrow_send;
 
   return {
     from,
     to,
     amount,
-    isContractInteraction,
+    isContractInteraction: false,
     isIncoming,
     isOutcoming: !isIncoming,
     tokens: [getNativeToken(provider)],
     isCosmosTx: false,
     isEthereumTx: true,
-    icon: isContractInteraction ? IconsName.contract : icon,
-    title: isContractInteraction
-      ? getText(I18N.transactionContractTitle)
-      : title,
-    subtitle: isContractInteraction ? getContractName(transaction) : subtitle,
+    icon: icon,
+    title,
+    subtitle: subtitle,
   };
 }
 
@@ -428,7 +721,7 @@ function parseMsgSend(
 
 const formatAddressForSubtitle = (
   address: string,
-  format: 'toEth' | 'toHaqq' | 'toTron' = 'toEth',
+  format: 'toEth' | 'toHaqq' | 'toTron' | 'hexToTron' = 'toEth',
   from = false,
 ) =>
   `${from ? 'from' : 'to'} ${shortAddress(AddressUtils[format](address), '•')}`;
@@ -449,6 +742,9 @@ function isIncomingTx(tx: IndexerTransaction, addresses: string[]): boolean {
     const tronAddresses = addresses.map(AddressUtils.toTron);
     if (msg.transferContract?.toAddress) {
       return tronAddresses.includes(msg.transferContract.toAddress);
+    }
+    if (msg.triggerSmartContract?.ownerAddress) {
+      return tronAddresses.includes(msg.triggerSmartContract.ownerAddress);
     }
     return false;
   }
@@ -582,38 +878,18 @@ function getTokensInfo(tx: IndexerTransaction): IndexerTxParsedTokenInfo[] {
   return [Token.UNKNOWN_TOKEN];
 }
 
-function parseTronTransaction(
-  tx: IndexerTransactionWithType<IndexerTxMsgType.msgProtoTx>,
-): IndexerTransactionWithType<IndexerTxMsgType.msgProtoTx> {
-  return {
-    ...tx,
-    msg: {
-      ...tx.msg,
-      transferContract: {
-        ...tx.msg.transferContract,
-        ownerAddress: AddressUtils.hexToTron(
-          `0x${Buffer.from(
-            tx.msg.transferContract.ownerAddress,
-            'base64',
-          ).toString('hex')}`,
-        ),
-        toAddress: AddressUtils.hexToTron(
-          `0x${Buffer.from(
-            tx.msg.transferContract.ownerAddress,
-            'base64',
-          ).toString('hex')}`,
-        ),
-      },
-    },
-  };
-}
-
 function getFromAndTo(tx: IndexerTransaction, isIncoming: boolean) {
   if (isIncoming) {
     if (tx?.msg?.type === IndexerTxMsgType.msgProtoTx) {
+      const from = tx.participants.find(
+        p => p.role === IndexerTransactionParticipantRole.sender,
+      )?.address;
+      const to = tx.participants.find(
+        p => p.role === IndexerTransactionParticipantRole.receiver,
+      )?.address;
       return {
-        from: tx.msg.transferContract.ownerAddress,
-        to: tx.msg.transferContract.toAddress,
+        from: from ? AddressUtils.bufferToTron(from) : '',
+        to: to ? AddressUtils.bufferToTron(to) : '',
       };
     }
 

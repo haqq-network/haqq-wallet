@@ -19,7 +19,7 @@ import {TransactionSectionHeader} from './transaction-section-header';
 import {ItemData, SectionHeaderData, TransactionSection} from './types';
 
 import {TransactionEmpty} from '../transaction-empty';
-import {Spacer} from '../ui';
+import {Loading, Spacer} from '../ui';
 
 type OmitedSectionListProps = Omit<
   SectionListProps<Transaction, TransactionSection>,
@@ -95,10 +95,15 @@ export const TransactionList = observer(
 
     const sections = useMemo(
       () =>
-        hideContent
+        hideContent || isTransactionsLoading
           ? []
           : prepareDataForSectionList(transactions, txTimestampHeadersEnabled),
-      [transactions, hideContent, txTimestampHeadersEnabled],
+      [
+        transactions,
+        hideContent,
+        txTimestampHeadersEnabled,
+        isTransactionsLoading,
+      ],
     );
 
     const listStyle = useMemo(
@@ -125,7 +130,7 @@ export const TransactionList = observer(
       await Transaction.fetchNextTransactions(addresses);
     }, [isTransactionsLoading]);
     const keyExtractor = useCallback(
-      (item: Transaction) => `${item.id}:${item.hash}`,
+      (item: Transaction) => `${item.id}:${item.hash}:${item.msg.type}`,
       [],
     );
 
@@ -153,20 +158,38 @@ export const TransactionList = observer(
       },
       [addresses, onTransactionPress],
     );
-    const renderListEmptyComponent = useCallback(
+    const renderListEmptyComponentDefault = useCallback(
       () => <TransactionEmpty />,
       [],
     );
+
+    const renderListEmptyComponent = useMemo(() => {
+      if (sectionListProps.ListEmptyComponent) {
+        // if active tab is transactions and transactions are loading
+        if (!hideContent && isTransactionsLoading) {
+          return <Loading />;
+        }
+        return sectionListProps.ListEmptyComponent;
+      }
+      return renderListEmptyComponentDefault;
+    }, [hideContent, renderListEmptyComponentDefault, isTransactionsLoading]);
+
     const renderListFooterComponent = useCallback(
       () => (
         <>
-          <ActivityIndicator
-            size="small"
-            color={
-              isTransactionsLoading ? getColor(Color.textBase2) : 'transparent'
-            }
-          />
-          <Spacer height={12} />
+          {!hideContent && !!sections.length && (
+            <>
+              <ActivityIndicator
+                size="small"
+                color={
+                  isTransactionsLoading
+                    ? getColor(Color.textBase2)
+                    : 'transparent'
+                }
+              />
+              <Spacer height={12} />
+            </>
+          )}
         </>
       ),
       [isTransactionsLoading],
@@ -178,11 +201,11 @@ export const TransactionList = observer(
           overScrollMode="never"
           bounces={false}
           scrollEnabled={scrollEnabled}
-          ListEmptyComponent={renderListEmptyComponent}
           ListFooterComponent={renderListFooterComponent}
           contentContainerStyle={styles.grow}
           {...sectionListProps}
           /* CAN'NOT OVERRIDE */
+          ListEmptyComponent={renderListEmptyComponent}
           sections={sections}
           renderItem={renderItem}
           keyExtractor={keyExtractor}

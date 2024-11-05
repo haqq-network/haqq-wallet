@@ -1809,14 +1809,43 @@ export type IndexerTxMsgApproval = {
   spender: AddressCosmosHaqq;
 };
 
+export type IndexerTxMsgEventTx = {
+  type: IndexerTxMsgType.msgEventTx;
+  blockId: string;
+  contractAddress: string;
+  data: string;
+  message: {
+    transfer?: {
+      from: string;
+      to: string;
+      value: string;
+    };
+  };
+  messageType: 'transfer' | string;
+  topic0: string;
+  topic1: string;
+  topic2: string;
+  txId: string;
+};
+
 export type IndexerTxMsgProtoTx = {
   type: IndexerTxMsgType.msgProtoTx;
-  transferContract: {
+  transferContract?: {
     amount: string;
     ownerAddress: AddressTron;
     toAddress: AddressTron;
   };
+  triggerSmartContract?: {
+    contractAddress: AddressTron;
+    data: string;
+    ownerAddress: AddressTron;
+  };
 };
+
+export enum IndexerProtoMsgTxType {
+  transferContract = 'TransferContract',
+  triggerSmartContract = 'TriggerSmartContract',
+}
 
 export enum IndexerTxMsgType {
   unknown = 'unknown',
@@ -1839,6 +1868,7 @@ export enum IndexerTxMsgType {
   msgEditValidator = 'msgEditValidator',
   msgEthereumApprovalTx = 'msgEthereumApprovalTx',
   msgProtoTx = 'msgProtoTx',
+  msgEventTx = 'msgEventTx',
 }
 
 export type IndexerTxMsgUnion =
@@ -1860,7 +1890,8 @@ export type IndexerTxMsgUnion =
   | {msg: IndexerTxMsgCreateValidatorTx}
   | {msg: IndexerTxMsgEditValidatorTx}
   | {msg: IndexerTxMsgApproval}
-  | {msg: IndexerTxMsgProtoTx};
+  | {msg: IndexerTxMsgProtoTx}
+  | {msg: IndexerTxMsgEventTx};
 
 export enum IndexerTransactionStatus {
   inProgress = -1,
@@ -1880,7 +1911,18 @@ export type IndexerTransaction = {
   id: string;
   confirmations: number;
   msg_type: string;
+  participants: {
+    address: string;
+    blockId: string;
+    role: IndexerTransactionParticipantRole;
+    txId: string;
+  }[];
 } & IndexerTxMsgUnion;
+
+export enum IndexerTransactionParticipantRole {
+  sender = 'sender',
+  receiver = 'receiver',
+}
 
 export type IndexerTransactionWithType<T extends IndexerTxMsgType> = Extract<
   IndexerTransaction,

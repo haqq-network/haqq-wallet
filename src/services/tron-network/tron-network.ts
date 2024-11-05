@@ -107,6 +107,7 @@ const SUN_PER_TRX = 1_000_000;
 const BANDWIDTH_PRICE_IN_SUN = 1000; // 1000 SUN per byte
 
 export class TronNetwork {
+  static TOKEN_TRANSFER_SELECTOR = 'a9059cbb';
   static async broadcastTransaction(
     signedTransaction: string,
     provider: ProviderModel,
@@ -148,7 +149,7 @@ export class TronNetwork {
       const data = paramValue?.data ?? '';
       // Assuming standard TRC20 transfer function signature
       // Function: transfer(address _to, uint256 _value)
-      if (data.startsWith('a9059cbb')) {
+      if (data.startsWith(TronNetwork.TOKEN_TRANSFER_SELECTOR)) {
         const valueHex = '0x' + data.slice(74, 138);
         value = valueHex;
       } else {
