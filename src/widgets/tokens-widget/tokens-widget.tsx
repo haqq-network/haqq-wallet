@@ -4,7 +4,7 @@ import {observer} from 'mobx-react';
 import {StyleSheet} from 'react-native';
 
 import {Color} from '@app/colors';
-import {TokenRow} from '@app/components/token-row';
+import {TokenRow} from '@app/components/token';
 import {Spacer, Text, TextVariant} from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
 import {WidgetHeader} from '@app/components/ui/widget-header';

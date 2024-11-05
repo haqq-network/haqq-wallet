@@ -2111,13 +2111,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@bufbuild/protobuf@npm:^2.1.0":
-  version: 2.2.1
-  resolution: "@bufbuild/protobuf@npm:2.2.1"
-  checksum: 1c522dabe861e8137a0d76c33c6e4850bb4ba9a861d53febd5be75e3f492dd64053a9911ddc07a1ff46463ae1863bccaddbd72f5e165af9bd5c64975466bd235
-  languageName: node
-  linkType: hard
-
 "@colors/colors@npm:1.5.0":
   version: 1.5.0
   resolution: "@colors/colors@npm:1.5.0"
@@ -2772,15 +2765,6 @@ __metadata:
   version: 1.0.1
   resolution: "@haqq/format-number-with-subscript-zeros@npm:1.0.1"
   checksum: 3b7b9d6cb20c3205473db71cf1d7f9fd4d2eef12ca579ac4e9d5440bc30d404ef583f01524f0380a9af3b3e4694b8cfe6ebc7371d9ab0b6da1993de1f1aa2578
-  languageName: node
-  linkType: hard
-
-"@haqq/indexer-proto@npm:0.0.30":
-  version: 0.0.30
-  resolution: "@haqq/indexer-proto@npm:0.0.30"
-  dependencies:
-    "@bufbuild/protobuf": ^2.1.0
-  checksum: 14cc502ea42e3b63d88e24d1b68c587ab4f25458f3551c03f1f18afba385d333eb3c9511539a3d904887f4735126e9261a8c90a81da9b2ac86ab1b72e01131d5
   languageName: node
   linkType: hard
 
@@ -11365,7 +11349,6 @@ __metadata:
     "@expo/react-native-action-sheet": 4.0.1
     "@haqq/encryption-react-native": 0.0.4
     "@haqq/format-number-with-subscript-zeros": 1.0.1
-    "@haqq/indexer-proto": 0.0.30
     "@haqq/provider-web3-utils": 0.0.14
     "@haqq/rn-wallet-providers": 0.0.11
     "@haqq/shared-react-native": 0.0.12
