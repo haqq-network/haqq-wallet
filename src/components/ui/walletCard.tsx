@@ -6,7 +6,7 @@ import {TouchableOpacity, View, useWindowDimensions} from 'react-native';
 import {Color} from '@app/colors';
 import {DashedLine} from '@app/components/dashed-line';
 import {SolidLine} from '@app/components/solid-line';
-import {TokenRow} from '@app/components/token-row';
+import {TokenRow} from '@app/components/token';
 import {
   CardSmall,
   DataContent,

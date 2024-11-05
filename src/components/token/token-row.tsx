@@ -6,29 +6,18 @@ import {Color} from '@app/colors';
 import {Spacer, Text, TextVariant} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {Provider} from '@app/models/provider';
-import {IToken} from '@app/types';
 
-import {ImageWrapper} from './image-wrapper';
-
-export interface TokenRowProps {
-  item: IToken;
-  checked?: boolean | undefined;
-  onPress?: () => void;
-}
+import {TokenIcon} from './token-icon';
+import {TokenRowProps} from './token.types';
 
 export const TokenRow = ({item, checked = false, onPress}: TokenRowProps) => {
   const priceInUSD = useMemo(() => {
     return item?.value?.toFiat?.({fixed: 4, chainId: item.chain_id});
   }, [item]);
 
-  const providerImage = useMemo(() => {
+  const providerNetworkName = useMemo(() => {
     const p = Provider.getByEthChainId(item.chain_id);
-
-    if (!Provider.isAllNetworks || !p) {
-      return undefined;
-    }
-
-    return p.icon;
+    return p?.name;
   }, []);
 
   return (
@@ -41,21 +30,8 @@ export const TokenRow = ({item, checked = false, onPress}: TokenRowProps) => {
         checked && styles.checked,
         !item.is_in_white_list && styles.notWhiteListed,
       ]}>
-      <View>
-        <ImageWrapper
-          style={styles.icon}
-          source={item?.image || require('@assets/images/empty-icon.png')}
-          resizeMode="cover"
-        />
-        {providerImage && (
-          <ImageWrapper
-            style={styles.providerIcon}
-            source={providerImage || require('@assets/images/empty-icon.png')}
-            resizeMode="cover"
-          />
-        )}
-      </View>
-      <Spacer width={12} />
+      <TokenIcon item={item} />
+      <Spacer width={20} />
       <View style={styles.textContainer}>
         <View style={styles.row}>
           <Text
@@ -70,9 +46,11 @@ export const TokenRow = ({item, checked = false, onPress}: TokenRowProps) => {
           </Text>
         </View>
         <View style={styles.row}>
-          <Text variant={TextVariant.t14} color={Color.textBase2}>
-            {item?.name}
-          </Text>
+          <View style={styles.providerNetworkNameContainer}>
+            <Text variant={TextVariant.t14} color={Color.textBase2}>
+              {providerNetworkName}
+            </Text>
+          </View>
           <Spacer />
           <Text variant={TextVariant.t14} color={Color.textBase2}>
             {priceInUSD}
@@ -98,26 +76,17 @@ const styles = createTheme({
   row: {
     flexDirection: 'row',
   },
-  icon: {
-    width: 42,
-    height: 42,
-    borderRadius: 12,
-  },
-  providerIcon: {
-    position: 'absolute',
-    top: 0,
-    right: -10,
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: Color.bg1,
-  },
   textContainer: {
     flex: 1,
     alignItems: 'center',
   },
   checked: {
     opacity: 0.5,
+  },
+  providerNetworkNameContainer: {
+    backgroundColor: Color.bg8,
+    paddingVertical: 2,
+    paddingHorizontal: 4,
+    borderRadius: 8,
   },
 });
