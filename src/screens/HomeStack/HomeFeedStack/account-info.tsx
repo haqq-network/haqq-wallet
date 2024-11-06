@@ -47,6 +47,7 @@ export const AccountInfoScreen = observer(() => {
       navigation.navigate(HomeStackRoutes.TransactionDetail, {
         txId: tx.id,
         addresses: [accountId],
+        txType: tx.msg.type,
       });
     },
     [navigation, accountId],

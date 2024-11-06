@@ -111,6 +111,7 @@ export async function onPushNotification(message: RemoteMessage<Data>) {
           // @ts-ignore
           txId: transaction.id,
           addresses: Wallet.addressList(),
+          txType: transaction.msg.type,
         });
       }
       break;

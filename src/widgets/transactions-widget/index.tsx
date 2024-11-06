@@ -31,6 +31,7 @@ export const TransactionsWidgetWrapper = observer(() => {
       navigation.navigate(HomeStackRoutes.TransactionDetail, {
         txId: tx.id,
         addresses: addressList,
+        txType: tx.msg.type,
       });
     },
     [navigation, addressList],

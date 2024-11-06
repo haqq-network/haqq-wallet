@@ -178,7 +178,7 @@ export const TransactionDetail = observer(
                   short
                 />
 
-                {balance.isPositive() && (
+                {balance?.isPositive() && (
                   <DataContent
                     title={balance.toBalanceString(LONG_NUM_PRECISION)}
                     subtitleI18n={I18N.transactionDetailAmount}

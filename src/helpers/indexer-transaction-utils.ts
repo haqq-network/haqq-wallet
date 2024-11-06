@@ -358,7 +358,7 @@ function parseTriggerSmartContractTx(
   return {
     from,
     to,
-    amount: [],
+    amount: [Balance.Empty],
     isContractInteraction: true,
     isIncoming: false,
     isOutcoming: true,

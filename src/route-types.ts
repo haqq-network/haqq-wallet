@@ -16,6 +16,7 @@ import {
   Eventable,
   IStory,
   IToken,
+  IndexerTxMsgType,
   JsonRpcMetadata,
   LedgerWalletInitialData,
   MarketingEvents,
@@ -417,7 +418,11 @@ export type HomeStackParamList = {
     address: string;
     isPopup?: boolean;
   };
-  [HomeStackRoutes.TransactionDetail]: {txId: string; addresses: string[]};
+  [HomeStackRoutes.TransactionDetail]: {
+    txId: string;
+    addresses: string[];
+    txType: IndexerTxMsgType;
+  };
   [HomeStackRoutes.InAppBrowser]: {
     url: string;
     title?: string;

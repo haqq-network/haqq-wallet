@@ -95,7 +95,7 @@ export const TransactionList = observer(
 
     const sections = useMemo(
       () =>
-        hideContent || isTransactionsLoading
+        hideContent || (!transactions?.length && isTransactionsLoading)
           ? []
           : prepareDataForSectionList(transactions, txTimestampHeadersEnabled),
       [

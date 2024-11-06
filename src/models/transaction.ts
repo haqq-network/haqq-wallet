@@ -10,6 +10,7 @@ import {Indexer} from '@app/services/indexer';
 import {
   ChainId,
   IndexerTransaction,
+  IndexerTxMsgType,
   IndexerTxParsedTokenInfo,
 } from '@app/types';
 import {RPCMessage, RPCObserver} from '@app/types/rpc';
@@ -96,12 +97,18 @@ class TransactionStore implements RPCObserver {
     }
   }
 
-  getById(id: string) {
+  getById(id: string, txType?: IndexerTxMsgType) {
     const transactionLowerCaseId = id.toLowerCase();
     return (
-      this.getAll().find(
-        transaction => transaction.id.toLowerCase() === transactionLowerCaseId,
-      ) || null
+      this.getAll().find(transaction => {
+        if (txType) {
+          return (
+            transaction.id.toLowerCase() === transactionLowerCaseId &&
+            transaction.msg.type === txType
+          );
+        }
+        return transaction.id.toLowerCase() === transactionLowerCaseId;
+      }) || null
     );
   }
 
