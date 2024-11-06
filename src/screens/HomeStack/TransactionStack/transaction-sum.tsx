@@ -37,8 +37,11 @@ export const TransactionSumScreen = observer(() => {
   >();
   const event = useMemo(() => generateUUID(), []);
   const [to, setTo] = useState(route.params.to);
+  const provider =
+    Provider.getByEthChainId(route.params.token.chain_id) ??
+    Provider.selectedProvider;
   const wallet = Wallet.getById(route.params.from);
-  const balances = Wallet.getBalancesByAddressList([wallet!]);
+  const balances = Wallet.getBalancesByAddressList([wallet!], provider);
   const currentBalance = useMemo(
     () => balances[AddressUtils.toEth(route.params.from)],
     [balances, route],
@@ -53,7 +56,6 @@ export const TransactionSumScreen = observer(() => {
   const getFee = useCallback(
     async (amount: Balance) => {
       try {
-        const provider = Provider.getByEthChainId(route.params.token.chain_id);
         const token = route.params.token;
         if (token.is_erc20) {
           const contractAddress = provider?.isTron
@@ -85,7 +87,7 @@ export const TransactionSumScreen = observer(() => {
         return null;
       }
     },
-    [route.params],
+    [route.params, provider],
   );
 
   useEffect(() => {
@@ -102,27 +104,7 @@ export const TransactionSumScreen = observer(() => {
   const onPressPreview = useCallback(
     async (amount: Balance, repeated = false) => {
       setLoading(true);
-      const estimate = await getFee(amount);
-
-      let successCondition = false;
-
-      if (Provider.getByEthChainId(route.params.token.chain_id)?.isTron) {
-        // fee can be zero for TRON if user has enough bandwidth (freezed TRX)
-        successCondition = !!estimate?.expectedFee ?? false;
-      } else {
-        successCondition = estimate?.expectedFee.isPositive() ?? false;
-      }
-
-      if (successCondition) {
-        navigation.navigate(TransactionStackRoutes.TransactionConfirmation, {
-          // @ts-ignore
-          calculatedFees: estimate,
-          from: route.params.from,
-          to,
-          amount,
-          token: route.params.token,
-        });
-      } else {
+      const showError = () => {
         showModal(ModalType.error, {
           title: getText(I18N.feeCalculatingRpcErrorTitle),
           description: getText(I18N.feeCalculatingRpcErrorDescription),
@@ -135,10 +117,60 @@ export const TransactionSumScreen = observer(() => {
             }
           },
         });
+      };
+      try {
+        const estimate = await getFee(amount);
+        const balance = Wallet.getBalance(
+          route.params.from,
+          'available',
+          provider,
+        );
+
+        let totalAmount = estimate?.expectedFee;
+
+        if (amount.isNativeCoin) {
+          totalAmount = totalAmount?.operate(amount, 'add');
+        }
+
+        if (totalAmount && totalAmount.compare(balance, 'gt')) {
+          return showModal(ModalType.notEnoughGas, {
+            gasLimit: estimate?.expectedFee!,
+            currentAmount: balance,
+          });
+        }
+
+        let successCondition = false;
+
+        if (provider.isTron) {
+          // fee can be zero for TRON if user has enough bandwidth (freezed TRX)
+          successCondition = !!estimate?.expectedFee ?? false;
+        } else {
+          successCondition = estimate?.expectedFee.isPositive() ?? false;
+        }
+
+        if (successCondition) {
+          navigation.navigate(TransactionStackRoutes.TransactionConfirmation, {
+            // @ts-ignore
+            calculatedFees: estimate,
+            from: route.params.from,
+            to,
+            amount,
+            token: route.params.token,
+          });
+        } else {
+          showError();
+        }
+      } catch (err) {
+        Logger.captureException(err, 'TransactionSumScreen:onPressPreview', {
+          amount,
+          provider: provider.name,
+        });
+        showError();
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     },
-    [fee, navigation, route.params.from, to],
+    [fee, navigation, route.params.from, to, provider],
   );
 
   const onContact = useCallback(() => {
