@@ -54,7 +54,7 @@ export class Indexer {
     this.init();
   }
 
-  private getProvidersHeader = (
+  public getProvidersHeader = (
     accounts: string[],
     provider = Provider.selectedProvider,
   ) => {
@@ -204,18 +204,25 @@ export class Indexer {
 
   getTransactions = createAsyncTask(
     async (
-      accounts: string[],
+      accounts: string[] | Record<ChainId, string[]>,
       latestBlock: string | null,
     ): Promise<IndexerTransaction[]> => {
       try {
-        if (!accounts.length) {
+        if (Array.isArray(accounts) && !accounts.length) {
+          return [];
+        }
+
+        if (
+          typeof accounts === 'object' &&
+          Object.values(accounts).every(addresses => !addresses.length)
+        ) {
           return [];
         }
 
         const response = await jsonrpcRequest<IndexerTransactionResponse>(
           RemoteConfig.get('proxy_server')!,
           'transactions_by_timestamp',
-          [this.getProvidersHeader(accounts), latestBlock ?? 'latest'],
+          [accounts, latestBlock ?? 'latest'],
         );
 
         return response?.transactions || [];

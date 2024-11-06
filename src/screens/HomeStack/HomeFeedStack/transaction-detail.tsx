@@ -23,7 +23,7 @@ export const TransactionDetailScreen = observer(() => {
     HomeStackParamList,
     HomeStackRoutes.TransactionDetail
   >();
-  const tx = useTransaction(route.params.txId);
+  const tx = useTransaction(route.params.txId, route.params.txType);
   const provider = useMemo(
     () => Provider.getByEthChainId(tx.chain_id),
     [tx.chain_id],

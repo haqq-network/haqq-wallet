@@ -140,7 +140,7 @@ export class ProviderModel {
     if (this.isTron) {
       return this.config.explorerTxUrl.replace(
         EXPLORER_URL_TEMPLATES.TX,
-        txHash,
+        txHash.replace(/^0x/, ''),
       );
     }
 
