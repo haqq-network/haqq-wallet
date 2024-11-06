@@ -40,43 +40,56 @@ export function parseTransaction(
   tx: IndexerTransaction,
   addressesMap: Record<ChainId, string[]>,
 ): Transaction {
-  const addresses = addressesMap[tx.chain_id];
+  let addresses = addressesMap[tx.chain_id];
+
+  if (!addresses) {
+    addresses = Object.values(addressesMap).flat();
+  }
+
   const parse = () => {
-    switch (tx.msg.type) {
-      case IndexerTxMsgType.msgEthereumRaffleTx:
-        return parseMsgEthereumRaffleTx(tx as any, addresses);
-      case IndexerTxMsgType.msgWithdrawDelegatorReward:
-        return parseMsgWithdrawDelegatorReward(tx as any, addresses);
-      case IndexerTxMsgType.msgDelegate:
-        return parseMsgDelegate(tx as any, addresses);
-      case IndexerTxMsgType.msgUndelegate:
-        return parseMsgUndelegate(tx as any, addresses);
-      case IndexerTxMsgType.msgEthereumTx:
-        return parseMsgEthereumTx(tx as any, addresses);
-      case IndexerTxMsgType.msgEthereumErc20TransferTx:
-        return parseMsgEthereumErc20TransferTx(tx as any, addresses);
-      case IndexerTxMsgType.msgSend:
-        return parseMsgSend(tx as any, addresses);
-      case IndexerTxMsgType.msgBeginRedelegate:
-        return parseMsgBeginRedelegate(tx as any, addresses);
-      case IndexerTxMsgType.msgEthereumApprovalTx:
-        return parseMsgEthereumApprovalTx(tx as any, addresses);
-      case IndexerTxMsgType.msgProtoTx:
-        return parseMsgProtoTx(tx as any, addresses);
-      case IndexerTxMsgType.msgEventTx:
-        return parseMsgEventTx(tx as any, addresses);
-      // TODO: implement other tx types
-      case IndexerTxMsgType.unknown:
-      case IndexerTxMsgType.msgVote:
-      case IndexerTxMsgType.msgWithdrawValidatorCommission:
-      case IndexerTxMsgType.msgEthereumNftTransferTx:
-      case IndexerTxMsgType.msgEthereumNftMintTx:
-      case IndexerTxMsgType.msgConvertIntoVestingAccount:
-      case IndexerTxMsgType.msgUnjail:
-      case IndexerTxMsgType.msgCreateValidator:
-      case IndexerTxMsgType.msgEditValidator:
-      default:
-        return undefined;
+    try {
+      switch (tx.msg.type) {
+        case IndexerTxMsgType.msgEthereumRaffleTx:
+          return parseMsgEthereumRaffleTx(tx as any, addresses);
+        case IndexerTxMsgType.msgWithdrawDelegatorReward:
+          return parseMsgWithdrawDelegatorReward(tx as any, addresses);
+        case IndexerTxMsgType.msgDelegate:
+          return parseMsgDelegate(tx as any, addresses);
+        case IndexerTxMsgType.msgUndelegate:
+          return parseMsgUndelegate(tx as any, addresses);
+        case IndexerTxMsgType.msgEthereumTx:
+          return parseMsgEthereumTx(tx as any, addresses);
+        case IndexerTxMsgType.msgEthereumErc20TransferTx:
+          return parseMsgEthereumErc20TransferTx(tx as any, addresses);
+        case IndexerTxMsgType.msgSend:
+          return parseMsgSend(tx as any, addresses);
+        case IndexerTxMsgType.msgBeginRedelegate:
+          return parseMsgBeginRedelegate(tx as any, addresses);
+        case IndexerTxMsgType.msgEthereumApprovalTx:
+          return parseMsgEthereumApprovalTx(tx as any, addresses);
+        case IndexerTxMsgType.msgProtoTx:
+          return parseMsgProtoTx(tx as any, addresses);
+        case IndexerTxMsgType.msgEventTx:
+          return parseMsgEventTx(tx as any, addresses);
+        // TODO: implement other tx types
+        case IndexerTxMsgType.unknown:
+        case IndexerTxMsgType.msgVote:
+        case IndexerTxMsgType.msgWithdrawValidatorCommission:
+        case IndexerTxMsgType.msgEthereumNftTransferTx:
+        case IndexerTxMsgType.msgEthereumNftMintTx:
+        case IndexerTxMsgType.msgConvertIntoVestingAccount:
+        case IndexerTxMsgType.msgUnjail:
+        case IndexerTxMsgType.msgCreateValidator:
+        case IndexerTxMsgType.msgEditValidator:
+        default:
+          return undefined;
+      }
+    } catch (err) {
+      Logger.captureException(err, 'parseTransaction', {
+        tx,
+        addressesMap,
+      });
+      return undefined;
     }
   };
 
@@ -213,7 +226,7 @@ function parseTransferEventTx(
   const contractAddress = AddressUtils.tronToHex(
     AddressUtils.bufferToTron(tx.msg.contractAddress),
   );
-  const token = Token.data[contractAddress] ?? Token.UNKNOWN_TOKEN;
+  const token = Token.data[contractAddress] || Token.UNKNOWN_TOKEN;
   const from = AddressUtils.bufferToTron(tx.msg.message.transfer.from);
   const to = AddressUtils.bufferToTron(tx.msg.message.transfer.to);
 
@@ -342,7 +355,7 @@ function parseTriggerSmartContractTx(
     : '';
 
   const provider = Provider.getByEthChainId(tx.chain_id);
-  const token = Token.data[contractAddress];
+  const token = Token.data[contractAddress] || Token.UNKNOWN_TOKEN;
 
   // Обработка данных контракта
   const parsedToken: IndexerTxParsedTokenInfo = token
@@ -368,7 +381,7 @@ function parseTriggerSmartContractTx(
     icon: IconsName.contract,
     title: getText(I18N.transactionContractTitle),
     subtitle:
-      token.name ??
+      token.name ||
       getText(I18N.transactionContractDefaultName).replace(
         'HAQQ Network',
         provider?.name!,
