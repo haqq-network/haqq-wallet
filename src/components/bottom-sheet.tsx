@@ -71,6 +71,7 @@ export type BottomSheetProps = {
   scrollable?: boolean;
   contentContainerStyle?: StyleProp<ViewStyle>;
   titleContainerStyle?: StyleProp<ViewStyle>;
+  renderContentHeader?: () => React.ReactNode;
   fullscreen?: boolean;
 } & TitleProp;
 
@@ -94,6 +95,7 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
       contentContainerStyle,
       titleContainerStyle,
       fullscreen,
+      renderContentHeader,
     },
     ref,
   ) => {
@@ -304,6 +306,7 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
                   </View>
                 </Animated.View>
               </GestureDetector>
+              {renderContentHeader && renderContentHeader()}
               <GestureDetector
                 gesture={Gesture.Simultaneous(panGesture, scrollViewGesture)}>
                 <Animated.ScrollView

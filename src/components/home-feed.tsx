@@ -11,6 +11,7 @@ import {createTheme, showModal} from '@app/helpers';
 import {loadAllTransactions} from '@app/helpers/load-transactions';
 import {useTypedNavigation} from '@app/hooks';
 import {Nft} from '@app/models/nft';
+import {Provider} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesDate} from '@app/models/variables-date';
@@ -77,8 +78,10 @@ export const HomeFeed = observer(() => {
       {!!Config.STORIES_ENABLED && (
         <StoriesWrapper onStoryPress={onStoryPress} />
       )}
-      <LockedTokensWrapper />
-      <WalletsWrapper />
+      <React.Fragment key={Provider.selectedProviderId}>
+        <LockedTokensWrapper />
+        <WalletsWrapper />
+      </React.Fragment>
       <BannersWrapper />
       <WidgetRoot lastUpdate={lastUpdateTimestamp} />
     </ScrollView>

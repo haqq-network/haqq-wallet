@@ -100,12 +100,11 @@ class ProviderStore {
       Currencies.clear();
 
       await RemoteProviderConfig.init();
-      await Wallet.fetchBalances();
+      await Wallet.fetchBalances(undefined, true);
       if (requestMarkup) {
         await awaitForEventDone(Events.onRequestMarkup);
       }
       await Token.fetchTokens(true);
-      await Transaction.fetchLatestTransactions(Wallet.addressList(), true);
       await Currencies.fetchCurrencies();
 
       if (this.isAllNetworks || this.selectedProvider.config.isNftEnabled) {
@@ -121,6 +120,7 @@ class ProviderStore {
         );
       }
     } finally {
+      Transaction.fetchLatestTransactions(Wallet.addressList(), true);
       hideModal(ModalType.loading);
     }
 

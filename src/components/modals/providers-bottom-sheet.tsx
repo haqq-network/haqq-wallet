@@ -1,7 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
-import {FlatList} from 'react-native';
-
 import {Color} from '@app/colors';
 import {BottomSheet} from '@app/components/bottom-sheet';
 import {Icon, IconsName, Spacer, TextField} from '@app/components/ui';
@@ -17,6 +15,7 @@ import {SettingsProvidersRow} from '../settings/settings-providers/settings-prov
 
 const logger = Logger.create('ProvidersBottomSheet', {
   stringifyJson: true,
+  enabled: app.isTesterMode,
 });
 export function ProvidersBottomSheet({
   title,
@@ -104,39 +103,40 @@ export function ProvidersBottomSheet({
       onClose={onCloseModal}
       contentContainerStyle={styles.container}
       closeDistance={closeDistanceCalculated}
-      i18nTitle={title}>
-      <TextField
-        label={I18N.browserSearch}
-        value={searchProviderValue}
-        onChangeText={setSearchProviderValue}
-        leading={
-          <Icon i24 name={IconsName.search} color={Color.graphicBase2} />
-        }
-        style={styles.searchField}
-      />
-      <FlatList
-        data={visibleProviders}
-        keyExtractor={item => item.id}
-        renderItem={({item}) => {
-          if (item.id === ALL_NETWORKS_ID) {
-            return (
-              <SettingsProvidersAllNetworksRow
-                providerChainId={initialProviderChainId}
-                item={item}
-                onPress={onPressProvider}
-              />
-            );
+      scrollable
+      renderContentHeader={() => (
+        <TextField
+          label={I18N.browserSearch}
+          value={searchProviderValue}
+          onChangeText={setSearchProviderValue}
+          leading={
+            <Icon i24 name={IconsName.search} color={Color.graphicBase2} />
           }
-
+          style={styles.searchField}
+        />
+      )}
+      i18nTitle={title}>
+      {visibleProviders.map(item => {
+        if (item.id === ALL_NETWORKS_ID) {
           return (
-            <SettingsProvidersRow
+            <SettingsProvidersAllNetworksRow
+              key={item.id}
               providerChainId={initialProviderChainId}
               item={item}
               onPress={onPressProvider}
             />
           );
-        }}
-      />
+        }
+
+        return (
+          <SettingsProvidersRow
+            key={item.id}
+            providerChainId={initialProviderChainId}
+            item={item}
+            onPress={onPressProvider}
+          />
+        );
+      })}
       <Spacer height={50} />
     </BottomSheet>
   );
