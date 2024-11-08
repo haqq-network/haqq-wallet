@@ -57,7 +57,13 @@ import {
   SendTransactionError,
   WalletConnectParsedAccount,
 } from './types';
-import {ERC20_ABI, V3SWAPROUTER_ABI, WETH_ABI} from './variables/abi';
+import {
+  DISTRIBUTION_ABI,
+  ERC20_ABI,
+  STAKING_ABI,
+  V3SWAPROUTER_ABI,
+  WETH_ABI,
+} from './variables/abi';
 import {IS_ANDROID, RTL_LANGUAGES, STORE_PAGE_URL} from './variables/common';
 import {EIP155_SIGNING_METHODS} from './variables/EIP155';
 
@@ -1012,6 +1018,18 @@ export function parseTxDataFromHexInput(hex?: string) {
   // try to parse as a wrap/unwrap transaction
   try {
     return new ethers.utils.Interface(WETH_ABI).parseTransaction({
+      data: data,
+    });
+  } catch (e) {}
+
+  try {
+    return new ethers.utils.Interface(DISTRIBUTION_ABI).parseTransaction({
+      data: data,
+    });
+  } catch (e) {}
+
+  try {
+    return new ethers.utils.Interface(STAKING_ABI).parseTransaction({
       data: data,
     });
   } catch (e) {}
