@@ -961,6 +961,8 @@ export enum I18N {
   jsonRpcSignParsedMsg = 'jsonRpcSignParsedMsg',
   removeSSSTitle = 'removeSSSTitle',
   removeSSSDescription = 'removeSSSDescription',
+  deleteSssTitle = 'deleteSssTitle',
+  deleteSssDescription = 'deleteSssDescription',
   removeSSSDescriptionImportant = 'removeSSSDescriptionImportant',
   removeSSSSecondary = 'removeSSSSecondary',
   removeSSSPrimary = 'removeSSSPrimary',
