@@ -19,7 +19,6 @@ import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {
   HomeStackRoutes,
-  SignInStackRoutes,
   SignUpStackParamList,
   SignUpStackRoutes,
   WelcomeStackRoutes,
@@ -106,21 +105,6 @@ export const SignUpStoreWalletScreen = observer(() => {
         if (!provider || typeof provider?.getIdentifier !== 'function') {
           hideModal('loading');
           goBack();
-          return;
-        }
-
-        if (
-          getWalletType() === WalletType.sss &&
-          app.onboarded === false &&
-          route.params.type === 'sss'
-        ) {
-          hideModal('loading');
-          const sssProvider = route.params.provider;
-          //@ts-ignore
-          navigation.navigate(WelcomeStackRoutes.SignIn, {
-            screen: SignInStackRoutes.SigninChooseAccount,
-            params: {provider, sssProvider},
-          });
           return;
         }
 

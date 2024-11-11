@@ -1,7 +1,6 @@
 import React, {memo, useCallback, useMemo} from 'react';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {Platform} from 'react-native';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
@@ -16,7 +15,6 @@ import {CloudProblemsScreen} from '@app/screens/cloud-problems';
 import {OnboardingStack} from '@app/screens/WelcomeStack/OnboardingStack';
 import {SignUpAgreementScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-agreement';
 import {SignUpImportantInfoScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-important-info';
-import {SignupNetworkExistsScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-network-exists';
 import {SignupNetworksScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-networks';
 import {SignupPinScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-pin';
 import {SignUpStoreWalletScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-store-wallet';
@@ -71,14 +69,6 @@ const SignUpStack = memo(() => {
         name={SignUpStackRoutes.SignUpNetworks}
         component={themeUpdaterHOC(SignupNetworksScreen)}
         options={hideBack}
-      />
-      <Stack.Screen
-        name={SignUpStackRoutes.SignUpNetworkExists}
-        component={themeUpdaterHOC(SignupNetworkExistsScreen)}
-        options={{
-          ...hideBack,
-          headerShown: Platform.OS === 'ios',
-        }}
       />
       <Stack.Screen
         name={SignUpStackRoutes.SignUpPin}

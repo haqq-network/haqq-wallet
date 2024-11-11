@@ -75,7 +75,6 @@ export type WelcomeStackParamList = {
 export enum SignUpStackRoutes {
   SignUpAgreement = 'signupAgreement',
   SignUpNetworks = 'signupNetworks',
-  SignUpNetworkExists = 'signupNetworkExists',
   SignUpPin = 'signupPin',
   OnboardingSetupPin = 'onboardingSetupPin',
   SignupStoreWallet = 'signupStoreWallet',
@@ -90,10 +89,6 @@ export type SignUpStackParamList = WelcomeStackParamList & {
       | SignUpStackRoutes.SignUpNetworks;
   };
   [SignUpStackRoutes.SignUpNetworks]: WalletInitialData;
-  [SignUpStackRoutes.SignUpNetworkExists]: {
-    provider: SssProviders;
-    email?: string;
-  } & WalletInitialData;
   [SignUpStackRoutes.SignUpPin]: WalletInitialData;
   [SignUpStackRoutes.OnboardingSetupPin]: WalletInitialData;
   [SignUpStackRoutes.SignupStoreWallet]: WalletInitialData & {

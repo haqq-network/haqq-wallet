@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+import {useCallback, useEffect} from 'react';
 
 import {
   ProviderHotBase,
@@ -10,10 +10,13 @@ import {
 } from '@haqq/rn-wallet-providers';
 import {observer} from 'mobx-react';
 
+import {ChooseAccountTabNames} from '@app/components/choose-account/choose-account';
 import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
+import {getTronProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
+import {getWalletsFromProvider} from '@app/helpers/get-wallets-from-provider';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {ErrorHandler} from '@app/models/error-handler';
@@ -44,6 +47,56 @@ export const SignInStoreWalletScreen = observer(() => {
     nextScreen,
     params,
   });
+
+  const createSssFirstWallet = useCallback(async () => {
+    // @ts-ignore
+    const item = (
+      await getWalletsFromProvider(
+        // @ts-ignore
+        params.provider,
+        WalletType.mnemonic,
+        ChooseAccountTabNames.Basic,
+      ).next()
+    ).value;
+
+    const total = Wallet.getAll().length;
+    const name =
+      total === 0
+        ? getText(I18N.mainAccount)
+        : getText(I18N.signinStoreWalletAccountNumber, {
+            number: `${total + 1}`,
+          });
+
+    Wallet.create(name, {
+      ...item,
+      socialLinkEnabled: true,
+      type: WalletType.sss,
+    });
+
+    // generate tron wallet address
+    const tronProvider = await getTronProviderForNewWallet(
+      item.type,
+      item.accountId!,
+    );
+
+    if (!item.tronAddress) {
+      const {address: tronAddress} = await tronProvider.getAccountInfo(
+        // for tron coin type
+        item.path?.replace?.(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
+      );
+      Wallet.update(item.address, {
+        tronAddress: tronAddress as AddressTron,
+      });
+    }
+
+    const accountID = item.accountId;
+    //@ts-ignore
+    const storage = await getProviderStorage(accountID, params.sssProvider);
+    await ProviderSSSBase.setStorageForAccount(accountID, storage);
+
+    //@ts-ignore
+    navigation.navigate(OnboardingStackRoutes.OnboardingFinish);
+  }, []);
 
   useEffect(() => {
     logger.log('SignInStoreWalletScreen: Loading modal effect triggered');
@@ -230,16 +283,9 @@ export const SignInStoreWalletScreen = observer(() => {
               },
             );
 
-            logger.log(
-              'SignInStoreWalletScreen: Navigating to SigninChooseAccount',
-            );
-            navigation.navigate(SignInStackRoutes.SigninChooseAccount, {
-              sssProvider: params.provider,
-              provider: sssProvider,
-            });
-            logger.log(
-              'SignInStoreWalletScreen: Navigation to SigninChooseAccount completed',
-            );
+            logger.log('SignInStoreWalletScreen: Creating SSS wallet');
+            await createSssFirstWallet();
+            logger.log('SignInStoreWalletScreen: SSS wallet created');
             break;
         }
 
@@ -293,7 +339,7 @@ export const SignInStoreWalletScreen = observer(() => {
         hideModal('loading');
       }
     }, 350);
-  }, [navigation, nextScreen, params]);
+  }, [navigation, nextScreen, params, createSssFirstWallet]);
 
   logger.log('SignInStoreWalletScreen: Rendering null');
   return null;
