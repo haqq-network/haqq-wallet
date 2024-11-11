@@ -44,6 +44,8 @@ export const TokensWidgetWrapper = observer(() => {
     return Object.values(cache);
   }, [tokens]);
 
+  Logger.log('tokens', JSON.stringify(tokens, null, 2));
+
   if (tokens.length === 0) {
     return null;
   }

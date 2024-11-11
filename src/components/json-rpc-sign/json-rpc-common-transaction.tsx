@@ -61,6 +61,21 @@ export const JsonRpcCommonTransaction = ({
   const url = useMemo(() => getHostnameFromUrl(metadata?.url), [metadata]);
   const [token, setToken] = useState(Token.getById(tx?.to!));
   const value = useMemo(() => {
+    if (['delegate', 'undelegate'].includes(functionName!)) {
+      return new Balance(
+        parsedInput?.args?.[2] || '0x0',
+        provider?.decimals!,
+        provider?.denom!,
+      );
+    }
+    if (functionName === 'redelegate') {
+      return new Balance(
+        parsedInput?.args?.[3] || '0x0',
+        provider?.decimals!,
+        provider?.denom!,
+      );
+    }
+
     if (functionName === 'approve') {
       const t = token || Token.UNKNOWN_TOKEN;
       return new Balance(
@@ -77,18 +92,39 @@ export const JsonRpcCommonTransaction = ({
     return new Balance(tx.value, provider?.decimals, provider?.denom);
   }, [tx, provider, parsedInput]);
 
+  const to = useMemo(() => {
+    return tx?.to ? shortAddress(tx.to, '•') : '';
+  }, [tx]);
+
+  const delegatorAddress = useMemo(() => {
+    if (['delegate', 'undelegate'].includes(functionName!)) {
+      return parsedInput?.args?.[1];
+    }
+    if (functionName === 'redelegate') {
+      return parsedInput?.args?.[2];
+    }
+    return '';
+  }, [functionName, parsedInput]);
+
   const total = useMemo(() => {
     if (functionName === 'approve') {
       return fee?.calculatedFees?.expectedFee.toBalanceString('auto');
     }
-    return value
-      .operate(
-        fee?.calculatedFees?.expectedFee ??
-          new Balance(0, provider?.decimals, provider?.denom),
-        'add',
-      )
-      .toBalanceString('auto');
-  }, [value, fee?.calculatedFees?.expectedFee]);
+
+    const expectedFee =
+      fee?.calculatedFees?.expectedFee ||
+      new Balance(0, provider?.decimals, provider?.denom);
+
+    const expectedFeeHex = expectedFee.toHex();
+    const valueHex = value.toHex();
+    const totalHex = ethers.BigNumber.from(valueHex).add(expectedFeeHex);
+
+    return new Balance(
+      totalHex,
+      provider?.decimals,
+      provider?.denom,
+    ).toBalanceString(4);
+  }, [value, fee]);
 
   const onPressToAddress = useCallback(() => {
     openInAppBrowser(provider?.getAddressExplorerUrl?.(tx?.to!)!);
@@ -99,6 +135,20 @@ export const JsonRpcCommonTransaction = ({
       provider?.getAddressExplorerUrl?.(parsedInput?.args?.[0])!,
     );
   }, [provider, tx, parsedInput]);
+
+  const onPressDelegatorAddress = useCallback(() => {
+    // TODO: add to provider config
+    const pingPubUrl = provider?.config.explorerCosmosTxUrl.replace(
+      /tx\/.*/,
+      `staking/${delegatorAddress}`,
+    );
+
+    if (!pingPubUrl) {
+      return;
+    }
+
+    openInAppBrowser(pingPubUrl);
+  }, [provider, parsedInput, delegatorAddress]);
 
   useEffectAsync(async () => {
     const resp = await Indexer.instance.getAddresses({
@@ -180,7 +230,7 @@ export const JsonRpcCommonTransaction = ({
         variant={TextVariant.t10}
         selectable
         color={Color.textBase1}>
-        {tx?.to}
+        {to}
       </Text>
 
       <Spacer height={28} />
@@ -204,6 +254,16 @@ export const JsonRpcCommonTransaction = ({
             )}
           </Text>
         </DataView>
+        {!!delegatorAddress && (
+          <DataView i18n={I18N.stakingInfo}>
+            <Text
+              variant={TextVariant.t11}
+              color={Color.textGreen1}
+              onPress={onPressDelegatorAddress}>
+              {shortAddress(delegatorAddress, '•')}
+            </Text>
+          </DataView>
+        )}
         {functionName === 'approve' && (
           <DataView i18n={I18N.transactionDetailApproveSpenderTitle}>
             <Text
@@ -223,13 +283,15 @@ export const JsonRpcCommonTransaction = ({
             </Text>
           </DataView>
         )}
-        <DataView i18n={I18N.transactionInfoAmount}>
-          <Text
-            variant={TextVariant.t11}
-            color={Color.textBase1}
-            children={value.toBalanceString('auto')}
-          />
-        </DataView>
+        {functionName !== 'claimRewards' && (
+          <DataView i18n={I18N.transactionInfoAmount}>
+            <Text
+              variant={TextVariant.t11}
+              color={Color.textBase1}
+              children={value.toBalanceString('auto')}
+            />
+          </DataView>
+        )}
         <DataView i18n={I18N.transactionInfoNetworkFee}>
           <First>
             {isFeeLoading && <ActivityIndicator />}

@@ -34,6 +34,7 @@ class TokensStore implements MobXStore<IToken> {
    * @value IToken
    */
   data: Record<string, IToken> = {};
+  fetchedUnknownTokens: Record<string, boolean> = {};
   /**
    * Indexer response with token info
    * @key Wallet address
@@ -50,6 +51,8 @@ class TokensStore implements MobXStore<IToken> {
         name: this.constructor.name,
         properties: [
           // https://github.com/quarrant/mobx-persist-store/issues/97
+          // @ts-ignore
+          'fetchedUnknownTokens',
           // @ts-ignore
           'contracts',
           {
@@ -177,16 +180,67 @@ class TokensStore implements MobXStore<IToken> {
   }
 
   getById(id: string) {
-    const token = this.data[AddressUtils.toEth(id)];
+    let token = this.data[AddressUtils.toEth(id)];
 
     if (!token) {
-      return Object.values(this.tokens)
+      token = Object.values(this.tokens)
         .flat()
-        .find(t => t.id === id);
+        .find(t => t.id === id)!;
+    }
+
+    if (!token) {
+      this._safeLoadUnknownToken(id);
     }
 
     return token;
   }
+
+  /**
+   * Load unknown token by id
+   * @param id - token id
+   */
+  private _safeLoadUnknownToken = createAsyncTask(async (id: string) => {
+    try {
+      if (this.fetchedUnknownTokens[id]) {
+        return;
+      }
+
+      const headers = Indexer.instance.getProvidersHeader([id]);
+      const contracts = await Indexer.instance.getAddresses(headers);
+      const tokensForAnyChains = Object.entries(contracts).flatMap(
+        ([chain_id, v]) => v.map(c => ({...c, chain_id: Number(chain_id)})),
+      ) as (IContract & {chain_id: number})[];
+
+      runInAction(() => {
+        this.fetchedUnknownTokens[id] = true;
+      });
+
+      // find token with name, symbol, decimals and is_erc20
+      const token = tokensForAnyChains?.find(
+        t => t.name && t.symbol && t.decimals && t.is_erc20,
+      );
+
+      if (token) {
+        runInAction(() => {
+          this.data[AddressUtils.toEth(token.id)] = {
+            ...token,
+            contract_created_at: token.created_at,
+            contract_updated_at: token.updated_at,
+            value: new Balance('0x0', token.decimals!, token.symbol!),
+            chain_id: token.chain_id!,
+            image: token.icon
+              ? {uri: token.icon}
+              : require('@assets/images/empty-icon.png'),
+          };
+        });
+      }
+    } catch (e) {
+      Logger.error('TokensStore: _safeLoadUnknownToken: error', {
+        error: e,
+        id,
+      });
+    }
+  });
 
   update(id: string | undefined, item: Omit<IToken, 'id'>) {
     if (!id) {
@@ -199,14 +253,17 @@ class TokensStore implements MobXStore<IToken> {
 
     const updatedValue = itemToUpdate.value.operate(item.value, 'add');
 
-    this.data = {
-      ...this.data,
-      [AddressUtils.toEth(id)]: {
-        ...itemToUpdate,
-        ...item,
-        value: updatedValue,
-      },
-    };
+    runInAction(() => {
+      this.data = {
+        ...this.data,
+        [AddressUtils.toEth(id)]: {
+          ...itemToUpdate,
+          ...item,
+          value: updatedValue,
+        },
+      };
+    });
+
     return true;
   }
 

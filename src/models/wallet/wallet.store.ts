@@ -206,7 +206,10 @@ class WalletStore implements RPCObserver {
     }, {});
   };
 
-  fetchBalances = async (indexerUpdates?: IndexerUpdatesResponse) => {
+  fetchBalances = async (
+    indexerUpdates?: IndexerUpdatesResponse,
+    forceUpdateRates = false,
+  ) => {
     try {
       if (!app.onboarded) {
         return;
@@ -226,7 +229,7 @@ class WalletStore implements RPCObserver {
         this.balances = this.parseIndexerBalances(updates);
       });
 
-      Currencies.setRates(updates.rates);
+      Currencies.setRates(updates.rates, forceUpdateRates);
     } catch (e) {
       Logger.error('Fetch balances error', e);
     }
@@ -300,7 +303,7 @@ class WalletStore implements RPCObserver {
     let ADDRESS_KEY = '' as AddressEthereum;
 
     if (provider.isTron) {
-      const wallet = AddressUtils.getWalletByAddress(address);
+      const wallet = this.getById(address);
       ADDRESS_KEY = wallet?.address ?? AddressUtils.tronToHex(address);
     } else {
       ADDRESS_KEY = AddressUtils.toEth(address);

@@ -54,13 +54,13 @@ class CurrenciesStore {
     }
   });
 
-  setRates = (rates: RatesResponse) => {
+  setRates = (rates: RatesResponse, force: boolean = false) => {
     if (!rates) {
       return;
     }
     // optimization to prevent unnecessary loops while parsing rates
     const ratesHash = hashMessage(JSON.stringify(rates));
-    if (this._prevRatesHash === ratesHash) {
+    if (this._prevRatesHash === ratesHash && !force) {
       return;
     }
     this._prevRatesHash = ratesHash;
@@ -174,7 +174,6 @@ class CurrenciesStore {
     }
 
     const providerRates = this._getProviderRates(chainId);
-
     if (!providerRates) {
       return Balance.Empty;
     }
@@ -182,7 +181,6 @@ class CurrenciesStore {
     const rate =
       providerRates[balance.getSymbol()?.toLocaleLowerCase()]?.amount;
     const currency = this._currencies[currencyId];
-
     if (!rate || !currency) {
       return Balance.Empty;
     }
