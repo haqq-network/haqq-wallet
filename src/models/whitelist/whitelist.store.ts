@@ -59,7 +59,9 @@ class Whitelist {
 
     if (
       enableForceSkip &&
-      (DEBUG_VARS.disableWeb3DomainBlocking || app.isTesterMode)
+      (DEBUG_VARS.disableWeb3DomainBlocking ||
+        app.isTesterMode ||
+        Provider.selectedProvider.isTestnet)
     ) {
       return true;
     }
