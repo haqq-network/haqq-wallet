@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+import {useCallback, useEffect} from 'react';
 
 import {
   ProviderHotBase,
@@ -340,7 +340,7 @@ export const SignInStoreWalletScreen = observer(() => {
         hideModal('loading');
       }
     }, 350);
-  }, [navigation, nextScreen, params]);
+  }, [navigation, nextScreen, params, createSssFirstWallet]);
 
   logger.log('SignInStoreWalletScreen: Rendering null');
   return null;
