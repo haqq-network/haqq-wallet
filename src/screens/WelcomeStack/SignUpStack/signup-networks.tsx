@@ -83,18 +83,28 @@ export const SignupNetworksScreen = memo(() => {
           : SignUpStackRoutes.OnboardingSetupPin;
       }
 
+      if (nextScreen === SignUpStackRoutes.SignupStoreWallet) {
+        //@ts-ignore
+        navigation.navigate(SignInStackRoutes.SigninStoreWallet, {
+          type: 'sss',
+          sssPrivateKey: creds?.privateKey,
+          token: creds?.token,
+          verifier: creds?.verifier,
+          sssCloudShare: cloudShare,
+          sssLocalShare: localShare,
+        });
+        return;
+      }
+
       //@ts-ignore
-      navigation.navigate(SignInStackRoutes.SigninStoreWallet, {
+      navigation.navigate(nextScreen, {
         type: 'sss',
         sssPrivateKey: creds?.privateKey,
         token: creds?.token,
         verifier: creds?.verifier,
         sssCloudShare: cloudShare,
         sssLocalShare: localShare,
-        action:
-          nextScreen === SignUpStackRoutes.SignupStoreWallet
-            ? undefined
-            : 'restore',
+        action: 'restore',
       });
     },
     [navigation],
