@@ -131,6 +131,7 @@ export const SettingsSecurity = ({
           titleI18n={I18N.deleteSssTitle}
           titleColor={Color.textRed1}
           subtitleI18n={I18N.deleteSssDescription}
+          subtitleI18nParams={{walletType: 'Google'}}
         />
       </MenuNavigationButton>
       <Spacer />
