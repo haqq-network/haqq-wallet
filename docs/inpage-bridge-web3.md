@@ -1,6 +1,8 @@
 ### Inpage Bridge Web3 documentation
+
 ---
 **Table of Contents**
+
 - [Inpage Bridge Web3 documentation](#inpage-bridge-web3-documentation)
 - [Injected properties](#injected-properties)
 - [Supported methods for `window.ethereum.request()`](#supported-methods-for-windowethereumrequest)
@@ -25,7 +27,14 @@ window.platformOS: 'ios' | 'android';
 
 This property is string value representing the current OS.
 
+```ts
+window.HaqqWalletLanguage: string;
+```
+
+This property is string value representing the current language (e.g., `en`, `tr`, `id`, `ar`).
+
 ### Supported methods for `window.ethereum.request()`
+
 Below are some of the methods supported in Haqq Wallet:
 
 | Method Name                  | Params `array`                                          | Return Type                                                                                                      | Description                                                                                                                                                                                          |
@@ -59,8 +68,6 @@ Below are some of the methods supported in Haqq Wallet:
 | `wallet_switchEthereumChain` | None                                                    | null                                                                                                             | Switches the current chain, returns null (show popup with saved chains)                                                                                                                              |
 | `wallet_addEthereumChain`    | `[chainParams: EthereumChainParams]`                    | null                                                                                                             | Requests the user to add a new chain, returns null. [EthereumChainParams](https://github.com/haqq-network/haqq-wallet/blob/main/src/helpers/web3-browser-utils.ts#L29)                               |
 
-
-
  > For more information, visit the [MetaMask Documentation](https://docs.metamask.io/wallet/reference/rpc-api/#provider)
 
 ### Custom Headers
@@ -87,13 +94,20 @@ The Haqq-Wallet WebView sends the following [custom HTTP headers](https://github
 - **Description**: The type of browser session from which the request originated.
 - **Value**: Either `inapp` or `web3`, indicating an in-application browser or a web3 browser respectively.
 
+5. `X-App-Language`
+
+- **Description**: The current language of the Haqq Wallet application.
+- **Value**: A string representing the current language, retrieved dynamically from the app's services (e.g., `en`, `tr`, `id`, `ar`).
+
 ### How to update `InpageBridgeWeb3.js`
+
 **Instructions to Obtain InpageBridgeWeb3.js from MetaMask's mobile-provider**
 
 1. **Clone the Repository**
 
    - Open your terminal or command prompt.
    - Enter the following command to clone the MetaMask mobile-provider repository:
+
      ```bash
      git clone https://github.com/MetaMask/mobile-provider.git
      ```
@@ -101,6 +115,7 @@ The Haqq-Wallet WebView sends the following [custom HTTP headers](https://github
 2. **Navigate to the Directory**
 
    - Change into the directory of the cloned repository:
+
      ```bash
      cd mobile-provider
      ```
@@ -108,13 +123,13 @@ The Haqq-Wallet WebView sends the following [custom HTTP headers](https://github
 3. **Build the Package**
 
    - Depending on the build process used by the repository (usually mentioned in the README or package.json file), you might need to run a build command. Commonly for JavaScript projects, this might be:
+
      ```bash
      yarn && yarn build
      ```
 
 4. **Сopy the Script to React Native Project**
 
- - You should copy `InpageBridgeWeb3.js` to the [/assets/custom/InpageBridgeWeb3.js](https://github.com/haqq-network/haqq-wallet/blob/main/assets/custom/InpageBridgeWeb3.js) directory of your React Native project.
- - Run `yarn link-assets`
- - Build the `Haqq Wallet` app from sources again
-
+- You should copy `InpageBridgeWeb3.js` to the [/assets/custom/InpageBridgeWeb3.js](https://github.com/haqq-network/haqq-wallet/blob/main/assets/custom/InpageBridgeWeb3.js) directory of your React Native project.
+- Run `yarn link-assets`
+- Build the `Haqq Wallet` app from sources again
