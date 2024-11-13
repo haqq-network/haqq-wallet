@@ -137,7 +137,11 @@ export const JsonRpcSignScreen = observer(() => {
 
         if (
           !isAllowed &&
-          !(DEBUG_VARS.disableWeb3DomainBlocking || app.isTesterMode)
+          !(
+            DEBUG_VARS.disableWeb3DomainBlocking ||
+            app.isTesterMode ||
+            Provider.getByEthChainId(chainId!)!.isTestnet
+          )
         ) {
           return onPressReject('domain is blocked', true);
         }
