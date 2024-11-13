@@ -8,7 +8,6 @@ export enum Events {
   onDeepLink = 'onDeepLink',
   onStakingSync = 'onStakingSync',
   onCloseModal = 'onCloseModal',
-  onTransactionsLoad = 'onTransactionsLoad',
   onTransactionStatusLoad = 'onTransactionStatusLoad',
   onAppActive = 'onAppActive',
   onAppInitialized = 'onAppInitialized',
