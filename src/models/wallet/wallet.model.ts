@@ -61,7 +61,10 @@ export class WalletModel implements IWalletModel {
   };
 
   get name() {
-    return this.model.name;
+    if (!this.model.name) {
+      return 'Unknown';
+    }
+    return this.model.name.replaceAll('&nbsp;', ' ');
   }
 
   get data() {
