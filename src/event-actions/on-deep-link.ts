@@ -13,8 +13,11 @@ import {sendNotification} from '@app/services/toast';
 import {DeeplinkProtocol, DeeplinkUrlKey, ModalType} from '@app/types';
 import {openInAppBrowser, openWeb3Browser} from '@app/utils';
 
+import {onDynamicLink} from './on-dynamic-link';
+
 export type ParsedQuery = {
   uri?: string;
+  [key: string]: string | undefined;
 };
 
 const BROWSERS_FN = {
@@ -64,6 +67,12 @@ export async function onDeepLink(
   try {
     if (!link) {
       return false;
+    }
+
+    if (link.startsWith('https://haqq.page.link/')) {
+      return onDynamicLink({
+        url: new Url<{link: string}>(link, true).query.link as string,
+      });
     }
 
     if (AddressUtils.isHaqqAddress(link)) {
@@ -125,7 +134,13 @@ export async function onDeepLink(
         case DeeplinkUrlKey.web3browser:
           if (await Whitelist.checkUrl(url.query.uri)) {
             const openBrowserFn = BROWSERS_FN[key];
-            openBrowserFn(url.query.uri!);
+            let uri = url.query.uri!;
+            for (let qkey in url.query) {
+              if (qkey !== 'uri') {
+                uri += `&${qkey}=${url.query[qkey]}`;
+              }
+            }
+            openBrowserFn(uri as string);
           } else {
             showModal(ModalType.domainBlocked, {
               domain: url.query.uri!,
