@@ -384,9 +384,10 @@ export type HomeStackParamList = {
   [HomeStackRoutes.NetworkLogger]: undefined;
   [HomeStackRoutes.AccountInfo]: {accountId: string};
   [HomeStackRoutes.Transaction]: {
-    from?: string;
+    from: string;
     to?: string;
     nft?: NftItem;
+    token?: IToken;
   };
   [HomeStackRoutes.Nft]:
     | {
