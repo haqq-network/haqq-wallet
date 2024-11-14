@@ -1,6 +1,6 @@
 import {ChainId} from '@app/types';
 
 export type TransactionParcicipant = {
-  address?: string;
+  address: string;
   chain_id?: ChainId;
 };

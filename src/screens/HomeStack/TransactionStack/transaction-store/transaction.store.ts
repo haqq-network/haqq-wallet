@@ -18,10 +18,24 @@ class TransactionStore {
       chain_id: token?.chain_id,
     };
     this.to = {
-      address: to,
+      address: to ?? '',
       chain_id: token?.chain_id,
     };
   };
+
+  get fromAddress() {
+    return this.from?.address!;
+  }
+
+  get toAddress() {
+    return this.to?.address ?? '';
+  }
+  set toAddress(address: string) {
+    this.to = {
+      ...(this.to ?? {}),
+      address,
+    };
+  }
 
   clear = () => {
     this.from = null;
