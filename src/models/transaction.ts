@@ -14,6 +14,7 @@ import {
   IndexerTxParsedTokenInfo,
 } from '@app/types';
 import {RPCMessage, RPCObserver} from '@app/types/rpc';
+import {createAsyncTask} from '@app/utils';
 
 import {Token} from './tokens';
 
@@ -174,36 +175,38 @@ class TransactionStore implements RPCObserver {
     return newTxs;
   };
 
-  private _fetch = async (accounts: Record<ChainId, string[]>, ts?: string) => {
-    try {
-      runInAction(() => {
-        this._isLoading = true;
-      });
-      const result = await Indexer.instance.getTransactions(
-        accounts,
-        ts ?? this._lastSyncedTransactionTs,
-      );
-      await when(() => !Token.isLoading, {});
-      const parsed = result
-        .map(tx => parseTransaction(tx, accounts))
-        .filter(tx => !!tx.parsed);
+  private _fetch = createAsyncTask(
+    async (accounts: Record<ChainId, string[]>, ts?: string) => {
+      try {
+        runInAction(() => {
+          this._isLoading = true;
+        });
+        const result = await Indexer.instance.getTransactions(
+          accounts,
+          ts ?? this._lastSyncedTransactionTs,
+        );
+        await when(() => !Token.isLoading, {});
+        const parsed = result
+          .map(tx => parseTransaction(tx, accounts))
+          .filter(tx => !!tx.parsed);
 
-      // If new transactions exists than _lastSyncedTransactionTs must be updated
-      // If transactions array is empty it's mean all transactions fetched and _lastSyncedTransactionTs mustn't be updated
-      if (parsed.length) {
-        this._lastSyncedTransactionTs =
-          parsed[parsed.length - 1]?.ts ?? 'latest';
+        // If new transactions exists than _lastSyncedTransactionTs must be updated
+        // If transactions array is empty it's mean all transactions fetched and _lastSyncedTransactionTs mustn't be updated
+        if (parsed.length) {
+          this._lastSyncedTransactionTs =
+            parsed[parsed.length - 1]?.ts ?? 'latest';
+        }
+
+        return parsed;
+      } catch (e) {
+        Logger.captureException(e, 'TransactionStore._fetch', {
+          accounts,
+          transactionTs: this._lastSyncedTransactionTs,
+        });
+        return [];
       }
-
-      return parsed;
-    } catch (e) {
-      Logger.captureException(e, 'TransactionStore._fetch', {
-        accounts,
-        transactionTs: this._lastSyncedTransactionTs,
-      });
-      return [];
-    }
-  };
+    },
+  );
 
   onMessage = (message: RPCMessage) => {
     if (message.type !== 'transaction') {

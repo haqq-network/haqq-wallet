@@ -11,8 +11,10 @@ import {DynamicLink, MarketingEvents, ModalType} from '@app/types';
 import {openInAppBrowser, openWeb3Browser} from '@app/utils';
 
 export async function onDynamicLink(link: Partial<DynamicLink> | null) {
+  Logger.log('onDynamicLink', JSON.stringify(link, null, 2));
   if (link && 'url' in link) {
     const parsedUrl = url.parse(link.url!, true);
+    Logger.log('onDynamicLink parsedUrl', JSON.stringify(parsedUrl, null, 2));
 
     if (typeof parsedUrl?.query?.distinct_id === 'string') {
       await EventTracker.instance.awaitForInitialization();
@@ -25,7 +27,13 @@ export async function onDynamicLink(link: Partial<DynamicLink> | null) {
 
     if (typeof parsedUrl?.query?.browser === 'string') {
       if (await Whitelist.checkUrl(parsedUrl?.query?.browser)) {
-        openInAppBrowser(parsedUrl?.query?.browser);
+        let uri = parsedUrl?.query?.browser!;
+        for (const key in parsedUrl.query) {
+          if (key !== 'browser') {
+            uri += `&${key}=${parsedUrl.query[key]}`;
+          }
+        }
+        openInAppBrowser(uri as string);
       } else {
         showModal(ModalType.domainBlocked, {
           domain: parsedUrl.query.browser!,
@@ -35,7 +43,14 @@ export async function onDynamicLink(link: Partial<DynamicLink> | null) {
 
     if (typeof parsedUrl?.query?.web3_browser === 'string') {
       if (await Whitelist.checkUrl(parsedUrl?.query?.web3_browser)) {
-        openWeb3Browser(parsedUrl?.query?.web3_browser);
+        let uri = parsedUrl?.query?.web3_browser!;
+        for (const key in parsedUrl.query) {
+          if (key !== 'web3_browser') {
+            uri += `&${key}=${parsedUrl.query[key]}`;
+          }
+        }
+
+        openWeb3Browser(uri);
       } else {
         showModal(ModalType.domainBlocked, {
           domain: parsedUrl.query.web3_browser!,

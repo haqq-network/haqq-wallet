@@ -1,9 +1,6 @@
 import {ProviderMnemonicBase} from '@haqq/rn-wallet-providers';
 
 import {app} from '@app/contexts';
-import {onStakingSync} from '@app/event-actions/on-staking-sync';
-import {onTransactionsLoad} from '@app/event-actions/on-transactions-load';
-import {onVestingSync} from '@app/event-actions/on-vesting-sync';
 import {Events} from '@app/events';
 import {getProviderInstanceForWallet} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
@@ -24,12 +21,6 @@ export async function onWalletCreate(wallet: IWalletModel) {
     }
 
     await Wallet.fetchBalances();
-
-    await Promise.all([
-      onTransactionsLoad(wallet.address),
-      onStakingSync(),
-      onVestingSync(),
-    ]);
 
     if (!wallet.mnemonicSaved) {
       let mnemonicSaved: boolean;

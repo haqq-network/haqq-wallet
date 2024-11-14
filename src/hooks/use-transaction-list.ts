@@ -14,7 +14,7 @@ export function useTransactionList(addressList: string[]) {
 
   useEffect(() => {
     Transaction.fetchLatestTransactions(addressList, true);
-  }, [addressList]);
+  }, [addressList[0]]);
 
   return {transactions, isTransactionsLoading};
 }

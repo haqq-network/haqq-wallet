@@ -231,10 +231,12 @@ export const prefixUrlWithProtocol = (
  * @returns - String corresponding to sanitized input depending if it's a search or url
  */
 export const onUrlSubmit = (
-  input: string,
+  _input: string,
   searchEngine = 'Google',
   defaultProtocol = 'https://',
 ) => {
+  // Remove paired quotes from the beginning and end of the input
+  const input = decodeURIComponent(_input).replace(/^(["'`])(.*)\1$/, '$2');
   //Check if it's a url or a keyword
   const regEx = new RegExp(
     /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!&',;=.+]+$/g,

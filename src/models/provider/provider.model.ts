@@ -1,7 +1,11 @@
 import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {removeLastSlash} from '@app/helpers/url';
-import {NetworkProvider, NetworkProviderTypes} from '@app/services/backend';
+import {
+  NetworkProvider,
+  NetworkProviderStage,
+  NetworkProviderTypes,
+} from '@app/services/backend';
 
 import {RemoteProviderConfig} from './provider-config';
 
@@ -116,6 +120,10 @@ export class ProviderModel {
 
   get isTron() {
     return this.networkType === NetworkProviderTypes.TRON;
+  }
+
+  get isTestnet() {
+    return this.model.stage === NetworkProviderStage.TESTNET;
   }
 
   toJSON() {

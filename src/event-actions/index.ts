@@ -13,7 +13,6 @@ import {onNeedUpdate} from '@app/event-actions/on-need-update';
 import {onPushNotification} from '@app/event-actions/on-push-notification';
 import {onStakingSync} from '@app/event-actions/on-staking-sync';
 import {onTransactionStatusLoad} from '@app/event-actions/on-transaction-status-load';
-import {onTransactionsLoad} from '@app/event-actions/on-transactions-load';
 import {onWalletConnectApproveConnection} from '@app/event-actions/on-wallet-connect-approve-connection';
 import {onWalletConnectSignTransaction} from '@app/event-actions/on-wallet-connect-sign-transaction';
 import {onWalletConnectUri} from '@app/event-actions/on-wallet-connect-uri';
@@ -55,7 +54,6 @@ app.on(
 app.on(Events.onAppProviderSssBackup, onAppProviderSssBackup);
 app.on(Events.onWalletConnectSignTransaction, onWalletConnectSignTransaction);
 app.on(Events.onDynamicLink, onDynamicLink);
-app.on(Events.onTransactionsLoad, onTransactionsLoad);
 app.on(Events.onTransactionStatusLoad, onTransactionStatusLoad);
 app.on(Events.onPushNotification, onPushNotification);
 app.on(Events.onAppReviewRequest, onAppReviewRequest);
