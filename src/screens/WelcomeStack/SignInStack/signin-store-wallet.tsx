@@ -1,4 +1,4 @@
-import {useCallback, useEffect} from 'react';
+import {useEffect} from 'react';
 
 import {
   ProviderHotBase,
@@ -48,7 +48,7 @@ export const SignInStoreWalletScreen = observer(() => {
     params,
   });
 
-  const createSssFirstWallet = useCallback(async () => {
+  const createSssFirstWallet = async () => {
     // @ts-ignore
     const item = (
       await getWalletsFromProvider(
@@ -96,7 +96,7 @@ export const SignInStoreWalletScreen = observer(() => {
 
     //@ts-ignore
     navigation.navigate(OnboardingStackRoutes.OnboardingFinish);
-  }, []);
+  };
 
   useEffect(() => {
     logger.log('SignInStoreWalletScreen: Loading modal effect triggered');
@@ -339,7 +339,7 @@ export const SignInStoreWalletScreen = observer(() => {
         hideModal('loading');
       }
     }, 350);
-  }, [navigation, nextScreen, params, createSssFirstWallet]);
+  }, [navigation, nextScreen, params]);
 
   logger.log('SignInStoreWalletScreen: Rendering null');
   return null;
