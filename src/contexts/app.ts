@@ -3,7 +3,6 @@ import {appleAuth} from '@invertase/react-native-apple-authentication';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {subMinutes} from 'date-fns';
-import {makeObservable, observable, runInAction} from 'mobx';
 import {Alert, AppState, Appearance, Platform, StatusBar} from 'react-native';
 import Config from 'react-native-config';
 import Keychain, {
@@ -17,7 +16,6 @@ import {DEBUG_VARS} from '@app/debug-vars';
 import {onAppReset} from '@app/event-actions/on-app-reset';
 import {onUpdatesSync} from '@app/event-actions/on-updates-sync';
 import {Events} from '@app/events';
-import {AddressUtils} from '@app/helpers/address-utils';
 import {AsyncEventEmitter} from '@app/helpers/async-event-emitter';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {checkNeedUpdate} from '@app/helpers/check-app-version';
@@ -27,38 +25,27 @@ import {SecurePinUtils} from '@app/helpers/secure-pin-utils';
 import {I18N, getText} from '@app/i18n';
 import {Currencies} from '@app/models/currencies';
 import {Provider, RemoteProviderConfig} from '@app/models/provider';
-import {Token} from '@app/models/tokens';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
+import {SHOW_NON_WHITELIST_TOKEN} from '@app/screens/settings-developer-tools';
 import {EthNetwork} from '@app/services';
 import {Backend} from '@app/services/backend';
-import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
 import {EventTracker} from '@app/services/event-tracker';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {RemoteConfig} from '@app/services/remote-config';
 
-import {hideAll, showModal} from '../helpers';
+import {showModal} from '../helpers';
 import {User} from '../models/user';
 import {
   AppTheme,
-  BalanceData,
   BiometryType,
   DynamicLink,
-  HaqqEthereumAddress,
-  IndexerBalanceData,
   MarketingEvents,
   ModalType,
-  WalletType,
 } from '../types';
-import {
-  ISLM_DENOM,
-  LIGHT_GRAPHIC_GREEN_1,
-  MAIN_NETWORK_ID,
-  TEST_NETWORK_ID,
-  WEI_PRECISION,
-} from '../variables/common';
+import {LIGHT_GRAPHIC_GREEN_1} from '../variables/common';
 
 const optionalConfigObject = {
   title: 'Fingerprint Login', // Android
@@ -85,7 +72,6 @@ class App extends AsyncEventEmitter {
   private user: User;
   private _authenticated: boolean = DEBUG_VARS.enableSkipPinOnLogin;
   private appStatus: AppStatus = AppStatus.inactive;
-  private _balances: Map<HaqqEthereumAddress, BalanceData> = new Map();
   private _googleSigninSupported: boolean = false;
   private _appleSigninSupported: boolean =
     Platform.select({
@@ -97,10 +83,6 @@ class App extends AsyncEventEmitter {
 
   constructor() {
     super();
-    makeObservable(this, {
-      // @ts-ignore
-      _provider: observable,
-    });
     this.startInitialization();
     this.setMaxListeners(1000);
     this._startUpTime = Date.now();
@@ -126,16 +108,9 @@ class App extends AsyncEventEmitter {
     this.user = User.getOrCreate();
 
     Provider.init()
-      .then(() => {
-        runInAction(() => {
-          this._provider = Provider.getById(this.providerId);
-        });
-      })
       .then(RemoteProviderConfig.init)
       .then(() => {
-        if (this._provider) {
-          EthNetwork.init(this._provider);
-        }
+        EthNetwork.init(Provider.selectedProvider);
 
         this.checkBalance = this.checkBalance.bind(this);
         this.checkBalance();
@@ -215,43 +190,8 @@ class App extends AsyncEventEmitter {
     );
   }
 
-  private _provider: Provider | null = null;
-
-  get provider() {
-    return (this._provider || {
-      // used as default value while first provider initialization
-      denom: ISLM_DENOM,
-      decimals: WEI_PRECISION,
-    }) as Provider;
-  }
-
-  get providerId() {
-    return (
-      VariablesString.get('providerId') ??
-      (Config.ENVIRONMENT === 'production' ||
-      Config.ENVIRONMENT === 'distribution'
-        ? MAIN_NETWORK_ID
-        : TEST_NETWORK_ID)
-    );
-  }
-
-  set providerId(value) {
-    const p = Provider.getById(value);
-    if (p) {
-      VariablesString.set('providerId', value);
-      runInAction(() => {
-        this._provider = p;
-      });
-      EthNetwork.init(p);
-      this._balances.clear();
-      app.emit(Events.onProviderChanged, p.id);
-    } else {
-      throw new Error('Provider not found');
-    }
-  }
-
   get cosmos() {
-    return new Cosmos(app.provider);
+    return new Cosmos(Provider.selectedProvider);
   }
 
   get backend() {
@@ -344,6 +284,13 @@ class App extends AsyncEventEmitter {
     VariablesBool.set('isTesterMode', value);
   }
 
+  get showNonWhitlistedTokens() {
+    return (
+      (this.isTesterMode && VariablesBool.get(SHOW_NON_WHITELIST_TOKEN)) ??
+      false
+    );
+  }
+
   get blindSignEnabled() {
     return VariablesBool.get('blindSignEnabled') ?? false;
   }
@@ -434,7 +381,7 @@ class App extends AsyncEventEmitter {
       }
     }
 
-    await awaitForEventDone(Events.onWalletsBalanceCheck);
+    await Wallet.fetchBalances();
 
     this.authenticated = true;
 
@@ -443,19 +390,7 @@ class App extends AsyncEventEmitter {
     return Promise.resolve();
   }
 
-  private getWalletForPinRestore = () => {
-    const possibleToRestoreWalletTypes = [
-      WalletType.hot,
-      WalletType.mnemonic,
-      WalletType.sss,
-    ];
-    const possibleToRestoreWallet = Wallet.getAll().find(wallet =>
-      possibleToRestoreWalletTypes.includes(wallet.type),
-    );
-    return possibleToRestoreWallet;
-  };
-
-  async getPassword(pinCandidate?: string): Promise<string> {
+  async getPassword(): Promise<string> {
     const creds = await getGenericPassword();
 
     // Detect keychain migration
@@ -471,52 +406,9 @@ class App extends AsyncEventEmitter {
         !passwordEntity?.iv ||
         !passwordEntity?.salt
       ) {
-        Logger.error('iOS Keychain Migration Error Found:', creds);
-        const walletToCheck = this.getWalletForPinRestore();
-        // Save old biometry
-        const biomentryMigrationKey = 'biometry_before_migration';
-        if (!VariablesBool.exists(biomentryMigrationKey)) {
-          VariablesBool.set(biomentryMigrationKey, this.biometry);
-        }
-        this.biometry = false;
-
-        // Reset app if we have main Hardware Wallet
-        if (!walletToCheck) {
-          this.onboarded = false;
-          await onAppReset();
-          hideAll();
-          Alert.alert(getText(I18N.keychainMigrationNotPossible));
-          return Promise.reject('password_migration_not_possible');
-        }
-
-        if (!pinCandidate) {
-          return Promise.reject('password_not_migrated');
-        }
-
-        // Try to verify old pin
-        try {
-          const isValid = await SecurePinUtils.checkPinCorrect(
-            walletToCheck,
-            pinCandidate,
-          );
-          if (isValid) {
-            creds.password = await this.setPin(pinCandidate);
-            const uid = await getUid();
-            const resp = await decryptPassworder<{password: string}>(
-              uid,
-              creds.password,
-            );
-
-            this.biometry = VariablesBool.get(biomentryMigrationKey);
-            VariablesBool.remove(biomentryMigrationKey);
-            return resp.password;
-          } else {
-            app.failureEnter();
-            return Promise.reject('password_migration_not_matched');
-          }
-        } catch (err) {
-          Logger.error('iOS Keychain Migration Error:', err);
-        }
+        Alert.alert(getText(I18N.keychainMigrationNotPossible));
+        await onAppReset();
+        return Promise.reject('password_migration_not_possible');
       }
     }
 
@@ -556,7 +448,7 @@ class App extends AsyncEventEmitter {
     const passwordsDoNotMatch = new Error('password_do_not_match');
     if (this.canEnter) {
       try {
-        const password = await this.getPassword(pin);
+        const password = await this.getPassword();
         return password === pin
           ? Promise.resolve()
           : Promise.reject(passwordsDoNotMatch);
@@ -689,86 +581,8 @@ class App extends AsyncEventEmitter {
 
   checkBalance() {
     if (AppState.currentState === 'active') {
-      this.emit(Events.onWalletsBalanceCheck);
+      Wallet.fetchBalances();
     }
-  }
-
-  onWalletsBalance(balances: IndexerBalanceData) {
-    if (!this.onboarded) {
-      return;
-    }
-    let changed = false;
-
-    const balancesEntries = Object.entries(balances) as unknown as [
-      HaqqEthereumAddress,
-      BalanceData,
-    ][];
-
-    for (const [address, data] of balancesEntries) {
-      const prevBalance = this._balances.get(address);
-
-      if (
-        !prevBalance?.available?.compare(data.available, 'eq') ||
-        !prevBalance?.staked?.compare(data.staked, 'eq') ||
-        !prevBalance?.vested?.compare(data.vested, 'eq') ||
-        !prevBalance?.total?.compare(data.total, 'eq') ||
-        !prevBalance?.locked?.compare(data.locked, 'eq') ||
-        !prevBalance?.availableForStake?.compare(data.availableForStake, 'eq')
-      ) {
-        this._balances.set(address, data);
-        changed = true;
-      }
-    }
-
-    if (changed) {
-      Token.fetchTokens();
-      this.emit(Events.onBalanceSync);
-    }
-  }
-
-  getBalanceData(address: string) {
-    return (
-      this._balances.get(AddressUtils.toEth(address)) ||
-      Balance.emptyBalances[AddressUtils.toEth(address)]
-    );
-  }
-
-  getAvailableBalance(address: string): Balance {
-    return (
-      this._balances.get(AddressUtils.toEth(address))?.available ??
-      Balance.Empty
-    );
-  }
-
-  getAvailableForStakeBalance(address: string): Balance {
-    return (
-      this._balances.get(AddressUtils.toEth(address))?.availableForStake ??
-      Balance.Empty
-    );
-  }
-
-  getStakingBalance(address: string): Balance {
-    return (
-      this._balances.get(AddressUtils.toEth(address))?.staked ?? Balance.Empty
-    );
-  }
-
-  getVestingBalance(address: string): Balance {
-    return (
-      this._balances.get(AddressUtils.toEth(address))?.vested ?? Balance.Empty
-    );
-  }
-
-  getTotalBalance(address: string): Balance {
-    return (
-      this._balances.get(AddressUtils.toEth(address))?.total ?? Balance.Empty
-    );
-  }
-
-  getLockedBalance(address: string): Balance {
-    return (
-      this._balances.get(AddressUtils.toEth(address))?.locked ?? Balance.Empty
-    );
   }
 
   handleDynamicLink(link: DynamicLink | null) {
@@ -786,7 +600,7 @@ class App extends AsyncEventEmitter {
   }
 
   async getRpcProvider() {
-    return await getRpcProvider(this.provider);
+    return await getRpcProvider(Provider.selectedProvider);
   }
 
   resetAuth() {

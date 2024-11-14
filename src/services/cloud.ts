@@ -1,4 +1,4 @@
-import {StorageInterface} from '@haqq/provider-sss-react-native';
+import {StorageInterface} from '@haqq/rn-wallet-providers';
 import {NativeModules} from 'react-native';
 
 const {RNCloud} = NativeModules;

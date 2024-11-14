@@ -10,23 +10,24 @@ import {
   Icon,
   IconButton,
   IconsName,
+  Loading,
   Text,
   TextVariant,
 } from '@app/components/ui';
 import {WalletCard} from '@app/components/ui/walletCard';
 import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
-import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {I18N, getText} from '@app/i18n';
-import {Wallet} from '@app/models/wallet';
-import {HaqqEthereumAddress, IToken} from '@app/types';
+import {Provider} from '@app/models/provider';
+import {Wallet, WalletModel} from '@app/models/wallet';
+import {AddressEthereum, IToken} from '@app/types';
 
 export interface TokenViewerProps {
-  data: Record<HaqqEthereumAddress, IToken[]>;
+  data: Record<AddressEthereum, IToken[]>;
   style?: StyleProp<ViewStyle>;
-  wallet?: Wallet;
+  wallet?: WalletModel;
   hideFilter?: boolean;
-  onPressToken?: (wallet: Wallet, token: IToken) => void;
+  onPressToken?: (wallet: WalletModel, token: IToken) => void;
 }
 
 const SortingNamesMap = {
@@ -49,10 +50,10 @@ export const TokenViewer = observer(
       () =>
         Object.keys(data)
           .map(item => Wallet.getById(item))
-          .filter(item => !!item) as Wallet[],
+          .filter(item => !!item) as WalletModel[],
       [data],
     );
-    const balances = useWalletsBalance(wallets);
+    const balances = Wallet.getBalancesByAddressList(wallets);
     const {showActionSheetWithOptions} = useActionSheet();
 
     const [showLowBalance, setShowLowBalance] = useState(true);
@@ -94,7 +95,7 @@ export const TokenViewer = observer(
     }, []);
 
     const sort = useCallback(
-      (a: HaqqEthereumAddress, b: HaqqEthereumAddress) => {
+      (a: AddressEthereum, b: AddressEthereum) => {
         const aBalance = balances[a];
         const bBalance = balances[b];
 
@@ -111,7 +112,7 @@ export const TokenViewer = observer(
     );
 
     const filter = useCallback(
-      (address: HaqqEthereumAddress) => {
+      (address: AddressEthereum) => {
         if (wallet) {
           return address === wallet.address;
         } else {
@@ -121,12 +122,12 @@ export const TokenViewer = observer(
       [balances, wallet],
     );
 
-    const list = (Object.keys(data) as HaqqEthereumAddress[])
+    const list = (Object.keys(data) as AddressEthereum[])
       .filter(filter)
       .sort(sort);
 
-    if (!Object.keys(data)) {
-      return null;
+    if (!Object.keys(data).length) {
+      return <Loading />;
     }
 
     return (
@@ -152,6 +153,12 @@ export const TokenViewer = observer(
         {list.map((address, index) => {
           const _wallet = Wallet.getById(address);
           const tokens = data[address].filter(token => {
+            const provider = Provider.getByEthChainId(token.chain_id);
+            // hide tokens for unsupport Tron wallets
+            if (provider?.isTron && !_wallet?.isSupportTron) {
+              return false;
+            }
+
             if (showLowBalance) {
               return true;
             }
@@ -171,13 +178,13 @@ export const TokenViewer = observer(
 
           return (
             <WalletCard
-              key={address}
+              key={'wallet_card' + _wallet.address + '_token_viewer_' + address}
               wallet={_wallet}
               tokens={tokens.filter(
                 item =>
-                  item.is_in_white_list &&
-                  // FIXME: only erc20 tokens or native currency (ISLM)
-                  (item.is_erc20 || item.symbol === app.provider.denom),
+                  (app.showNonWhitlistedTokens || !!item.is_in_white_list) &&
+                  !item.is_erc721 &&
+                  !item.is_erc1155,
               )}
               tokensOnly={!!wallet}
               isLast={index === list.length - 1}

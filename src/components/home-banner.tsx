@@ -119,7 +119,7 @@ export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
           <Inline gap={20}>
             {banner.buttons.map((button: BannerButton) => (
               <Button
-                key={banner.id}
+                key={'banner_' + banner.id}
                 loading={loading}
                 onPress={onPressBanner(button)}
                 color={button.backgroundColor}

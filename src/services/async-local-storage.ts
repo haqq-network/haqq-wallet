@@ -1,4 +1,4 @@
-import {StorageInterface} from '@haqq/provider-sss-react-native';
+import {StorageInterface} from '@haqq/rn-wallet-providers';
 import RNAsyncStorage from '@react-native-async-storage/async-storage';
 
 export class AsyncLocalStorage implements StorageInterface {

@@ -4,10 +4,10 @@ import {observer} from 'mobx-react';
 import {Image, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {app} from '@app/contexts';
 import {cleanNumber, createTheme} from '@app/helpers';
 import {useTimer} from '@app/hooks/use-timer';
 import {I18N} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {Raffle, TimerUpdateInterval} from '@app/types';
 import {WEI} from '@app/variables/common';
 
@@ -96,7 +96,7 @@ export const RaffleDetails = observer(
             source={require('@assets/images/islm_icon.png')}
           />
           <Text variant={TextVariant.t8} numberOfLines={1}>
-            {`${formattedBudget} ${app.provider.denom}`}
+            {`${formattedBudget} ${Provider.selectedProvider.denom}`}
           </Text>
         </View>
 
@@ -145,7 +145,7 @@ export const RaffleDetails = observer(
                 i18params={{
                   islm: cleanNumber(prevIslmCount),
                   tickets: `${prevTicketsCount} `,
-                  symbol: app.provider.denom,
+                  symbol: Provider.selectedProvider.denom,
                 }}
               />
             </View>

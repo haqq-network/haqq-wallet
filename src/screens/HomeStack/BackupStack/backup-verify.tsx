@@ -1,7 +1,11 @@
 import React, {memo, useCallback, useRef, useState} from 'react';
 
-import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {
+  ProviderMnemonicBase,
+  ProviderMnemonicEvm,
+  ProviderSSSBase,
+  ProviderSSSEvm,
+} from '@haqq/rn-wallet-providers';
 
 import {BackupVerify} from '@app/components/backup-verify';
 import {Loading} from '@app/components/ui';
@@ -20,20 +24,20 @@ export const BackupVerifyScreen = memo(() => {
     BackupStackParamList,
     BackupStackRoutes.BackupVerify
   >().params;
-  const provider = useRef<
-    ProviderMnemonicReactNative | ProviderSSSReactNative | null
-  >(null);
+  const provider = useRef<ProviderMnemonicBase | ProviderSSSBase | null>(null);
 
   const [mnemonic, setMnemonic] = useState<string | null>(null);
 
   useEffectAsync(async () => {
     provider.current = (await getProviderInstanceForWallet(wallet, true)) as
-      | ProviderMnemonicReactNative
-      | ProviderSSSReactNative;
+      | ProviderMnemonicBase
+      | ProviderSSSBase;
 
     if (
-      provider.current instanceof ProviderMnemonicReactNative ||
-      provider.current instanceof ProviderSSSReactNative
+      provider.current instanceof ProviderMnemonicBase ||
+      provider.current instanceof ProviderMnemonicEvm ||
+      provider.current instanceof ProviderSSSEvm ||
+      provider.current instanceof ProviderSSSBase
     ) {
       provider.current.getMnemonicPhrase().then(phrase => setMnemonic(phrase));
     }
@@ -44,7 +48,10 @@ export const BackupVerifyScreen = memo(() => {
   const onDone = useCallback(
     async (selected: string) => {
       if (selected === mnemonic && provider.current !== null) {
-        if (provider.current instanceof ProviderMnemonicReactNative) {
+        if (
+          provider.current instanceof ProviderMnemonicBase ||
+          provider.current instanceof ProviderMnemonicEvm
+        ) {
           await provider.current.setMnemonicSaved();
         }
 

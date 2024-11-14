@@ -118,8 +118,6 @@ export const HR_GRAY = '#EEEEEE';
 
 export const TRANSPARENT = 'transparent';
 
-export const MAIN_ACCOUNT_NAME = 'Main account';
-
 export const MAGIC_CARD_HEIGHT = 0.333;
 export const MAGIC_NEWS_CARD_HEIGHT = 0.5625;
 
@@ -178,8 +176,12 @@ export const DEFAULT_HITSLOP = {top: 10, bottom: 10, left: 10, right: 10};
 
 export const DEFAULT_USERNAME = 'username';
 export const ETH_HD_SHORT_PATH = "44'/60'/0'/0"; // HD derivation path
+export const TRON_HD_SHORT_PATH = "44'/195'/0'/0"; // HD derivation path
 export const LEDGER_HD_PATH_TEMPLATE = "44'/60'/index'/0/0"; // HD derivation path
 export const ETH_HD_PATH = `${ETH_HD_SHORT_PATH}/0`; // HD derivation path
+export const TRON_HD_PATH = "44'/195'/0'/0/index"; // HD derivation path
+export const TRON_COIN_TYPE = "195'";
+export const ETH_COIN_TYPE = "60'";
 
 export const DEFAULT_PROVIDERS =
   DefaultProvidersJson as unknown as NetworkProviderResponse;
@@ -288,6 +290,8 @@ export const HAQQ_METADATA: JsonRpcMetadata = {
 
 export const TESTEDGE2_ETH_CHAIN_ID = 54211;
 export const MAINNET_ETH_CHAIN_ID = 11235;
+export const ETH_CHAIN_ID = 1;
+export const TRON_CHAIN_ID = 6;
 
 export const TEST_URLS: Partial<Link>[] = [
   {
@@ -340,3 +344,5 @@ export const SUPPORTED_UR_TYPE = {
 export const KEYSTONE_NAME = 'Keystone';
 
 export const RTL_LANGUAGES: AppLanguage[] = [AppLanguage.ar];
+
+export const SPACE_OR_NBSP = /\s|\u00A0/gi;

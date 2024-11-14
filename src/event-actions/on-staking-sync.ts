@@ -1,6 +1,6 @@
-import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {AddressUtils} from '@app/helpers/address-utils';
+import {Provider} from '@app/models/provider';
 import {
   StakingMetadata,
   StakingMetadataType,
@@ -10,7 +10,7 @@ import {Cosmos} from '@app/services/cosmos';
 
 export async function onStakingSync() {
   Logger.log(Events.onStakingSync);
-  const cosmos = new Cosmos(app.provider!);
+  const cosmos = new Cosmos(Provider.selectedProvider);
   const addressList = Wallet.getAllVisible().map(w =>
     AddressUtils.toHaqq(w.address),
   );

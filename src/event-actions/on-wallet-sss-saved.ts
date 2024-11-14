@@ -1,4 +1,4 @@
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {ProviderSSSBase} from '@haqq/rn-wallet-providers';
 
 import {app} from '@app/contexts';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
@@ -9,15 +9,13 @@ export async function onWalletSssSaved(accountId: string) {
   const wallets = Wallet.getAll();
 
   const storage = await getProviderStorage(accountId);
-  const provider = new ProviderSSSReactNative({
+  const provider = new ProviderSSSBase({
     account: accountId,
     storage,
     getPassword: app.getPassword.bind(app),
   });
 
-  const storages = await ProviderSSSReactNative.getStoragesForAccount(
-    accountId,
-  );
+  const storages = await ProviderSSSBase.getStoragesForAccount(accountId);
 
   const isShareSaved = await Promise.all(
     storages.map(async s => {

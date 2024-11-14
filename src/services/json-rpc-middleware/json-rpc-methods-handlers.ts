@@ -25,13 +25,14 @@ import {
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {isEthereumChainParams} from '@app/helpers/web3-browser-utils';
 import {I18N, getText} from '@app/i18n';
-import {Provider} from '@app/models/provider';
+import {Provider, ProviderModel} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {getDefaultNetwork} from '@app/network';
 import {getAppVersion} from '@app/services/version';
-import {HaqqCosmosAddress, WalletType} from '@app/types';
+import {AddressCosmosHaqq, WalletType} from '@app/types';
 import {makeID, requestQRScannerPermission} from '@app/utils';
+import {MAIN_NETWORK_ID} from '@app/variables/common';
 
 import {Cosmos} from '../cosmos';
 import {EthSign} from '../eth-sign';
@@ -97,12 +98,21 @@ const requestAccount = async ({helper}: JsonRpcMethodHandlerParams) => {
     ? session.selectedAccount
     : undefined;
 
+  let chainId = 1;
+
+  if (Provider.selectedProvider.isEVM) {
+    chainId = Provider.selectedProvider.ethChainId;
+  } else {
+    chainId = Provider.getById(MAIN_NETWORK_ID).ethChainId;
+  }
+
   const selectedAccount = await awaitForWallet({
     wallets,
     title: I18N.selectAccount,
     autoSelectWallet: false,
     initialAddress,
     hideBalance: true,
+    chainId,
   });
   return selectedAccount;
 };
@@ -116,7 +126,7 @@ const getEthAccounts = ({helper}: JsonRpcMethodHandlerParams) => {
 };
 
 function determineNumberType(number: number) {
-  if (!Number.isInteger(number)) {
+  if (Number.isNaN(number)) {
     return 'string';
   }
 
@@ -152,11 +162,15 @@ const getNetworkProvier = (helper: JsonRpcHelper) => {
   // };
 
   const session = Web3BrowserSession.getByOrigin(helper.origin);
-  let provider: Provider | undefined;
+  let provider: ProviderModel | undefined;
   if (session?.isActive) {
     provider = Provider.getByChainIdHex(session?.selectedChainIdHex!);
   } else {
-    provider = Provider.getById(app.providerId);
+    if (Provider.selectedProvider.isEVM) {
+      provider = Provider.selectedProvider;
+    } else {
+      provider = Provider.getById(MAIN_NETWORK_ID);
+    }
   }
   return provider;
 };
@@ -246,17 +260,16 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   eth_coinbase: getEthAccounts,
   wallet_switchEthereumChain: async ({helper}) => {
     try {
-      const providers = Provider.getAll();
       const session = Web3BrowserSession.getByOrigin(helper.origin);
 
-      const initialProviderId = Provider.getByChainIdHex(
+      const initialProvider = Provider.getByChainIdHex(
         session?.selectedChainIdHex!,
-      )?.id;
+      );
 
       const providerId = await awaitForProvider({
-        providers,
-        initialProviderId: initialProviderId!,
+        initialProviderChainId: initialProvider?.ethChainId!,
         title: I18N.networks,
+        providers: Provider.getAllEVM(),
       });
 
       const selectedProvider = Provider.getById(providerId!);
@@ -506,7 +519,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   signAmino: async ({req, helper}) => {
     const [cosmosChainId, address, msg, _] = req.params as [
       string,
-      HaqqCosmosAddress,
+      AddressCosmosHaqq,
       object,
       {preferNoSetFee: boolean},
     ];

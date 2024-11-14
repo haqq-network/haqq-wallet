@@ -1,0 +1,36 @@
+diff --git a/node_modules/react-native-animated-rolling-numbers/src/components/AnimatedRollingNumber.tsx b/node_modules/react-native-animated-rolling-numbers/src/components/AnimatedRollingNumber.tsx
+index 20f178d..4a3bc78 100644
+--- a/node_modules/react-native-animated-rolling-numbers/src/components/AnimatedRollingNumber.tsx
++++ b/node_modules/react-native-animated-rolling-numbers/src/components/AnimatedRollingNumber.tsx
+@@ -7,6 +7,7 @@ import {
+   TextStyle,
+   View,
+   Text,
++  I18nManager,
+ } from "react-native";
+ import Animated, {
+   AnimationCallback,
+@@ -160,6 +161,14 @@ export const AnimatedRollingNumber: React.FC<AnimatedRollingNumberProps> = ({
+     [height]
+   );
+ 
++  const numbers = useMemo(() => {
++    const nums = numberWithSign.split('');
++    if (I18nManager.isRTL) {
++      return nums.reverse();
++    }
++    return nums;
++  }, [numberWithSign]);
++
+   return (
+     <Animated.View
+       layout={LinearTransition}
+@@ -167,7 +176,7 @@ export const AnimatedRollingNumber: React.FC<AnimatedRollingNumberProps> = ({
+       {...rest}
+     >
+       <View style={styles.innerContainer} onLayout={handleLayout}>
+-        {numberWithSign.split("").map((char, index) => (
++        {numbers.map((char, index) => (
+           <AnimatedDigit
+             key={formattedNumber.length - index - 1}
+             value={char}

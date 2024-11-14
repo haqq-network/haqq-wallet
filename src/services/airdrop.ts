@@ -1,5 +1,4 @@
 import {HMAC} from 'fast-sha256';
-import Config from 'react-native-config';
 
 import {CaptchaType} from '@app/components/captcha';
 import {RemoteConfig} from '@app/services/remote-config';
@@ -59,7 +58,7 @@ export class Airdrop {
   };
 
   getRemoteUrl() {
-    return RemoteConfig.get_env('airdrop_url', Config.AIRDROP_MAINNET_URL);
+    return RemoteConfig.get('airdrop_url');
   }
 
   async captchaSession(): Promise<{captcha: CaptchaType; session: string}> {

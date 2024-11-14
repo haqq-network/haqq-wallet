@@ -85,15 +85,16 @@ export async function onBannerClaimAirdrop(claimCode: string) {
     });
 
     if (referral) {
-      const provider = Provider.getById(app.providerId);
-
       const info = await Airdrop.instance.campaign_code(claimCode);
 
-      if (provider?.id !== MAIN_NETWORK_ID && info.code_type !== 'raffle') {
+      if (
+        Provider.selectedProviderId !== MAIN_NETWORK_ID &&
+        info.code_type !== 'raffle'
+      ) {
         showModal('claimOnMainnet', {
-          network: provider?.name ?? '',
+          network: Provider.selectedProvider.name ?? '',
           onChange: () => {
-            app.providerId = MAIN_NETWORK_ID;
+            Provider.setSelectedProviderId(MAIN_NETWORK_ID);
           },
         });
       }

@@ -8,6 +8,7 @@ import {Icon, IconsName} from '@app/components/ui/icon';
 import {Spacer} from '@app/components/ui/spacer';
 import {Text, TextVariant} from '@app/components/ui/text';
 import {I18N} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 
 type Props = Pick<
   ButtonProps,
@@ -15,6 +16,10 @@ type Props = Pick<
 >;
 
 export const HardwareWalletButton = (props: Props) => {
+  if (Provider.selectedProvider.isTron) {
+    return null;
+  }
+
   return (
     <Button {...props} variant={ButtonVariant.second}>
       <View style={styles.row}>

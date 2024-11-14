@@ -38,9 +38,7 @@ export const PopupNotificationScreen = memo(({onCloseProp}: Props) => {
       await sleep(ANIMATION_DURATION);
       onCloseProp?.();
       goBack();
-      await onBannerNotificationsSnooze(
-        PopupNotificationBannerTypes.notification,
-      );
+      await onBannerNotificationsSnooze();
     },
     [goBack],
   );

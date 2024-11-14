@@ -4,11 +4,10 @@ import {observer} from 'mobx-react';
 import {StyleSheet} from 'react-native';
 
 import {Color} from '@app/colors';
-import {TokenRow} from '@app/components/token-row';
+import {TokenRow} from '@app/components/token';
 import {Spacer, Text, TextVariant} from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
 import {WidgetHeader} from '@app/components/ui/widget-header';
-import {app} from '@app/contexts';
 import {I18N, getText} from '@app/i18n';
 import {IToken} from '@app/types';
 
@@ -41,13 +40,13 @@ export const TokensWidget = observer(({onPress, tokens}: Props) => {
       {tokens
         .filter(
           item =>
-            !!item.is_in_white_list &&
-            // FIXME: only erc20 tokens or native currency (ISLM)
-            (item.is_erc20 || item.symbol === app.provider.denom),
+            !!item.is_in_white_list && !item.is_erc721 && !item.is_erc1155,
         )
         .slice(0, VISIBLE_ITEM_AMOUNT)
         .map(item => {
-          return <TokenRow key={item.id} item={item} />;
+          return (
+            <TokenRow key={'tokens_widget_token_row_' + item.id} item={item} />
+          );
         })}
       {otherTokensAmount !== null && (
         <>

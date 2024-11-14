@@ -3,7 +3,7 @@ import {Fee} from '@app/models/fee';
 import {navigator} from '@app/navigator';
 import {HomeStackRoutes} from '@app/route-types';
 import {Balance} from '@app/services/balance';
-import {Eventable} from '@app/types';
+import {ChainId, Eventable} from '@app/types';
 
 export interface AwaitForFeeParams {
   fee: Fee;
@@ -11,7 +11,7 @@ export interface AwaitForFeeParams {
   to: string;
   value?: Balance;
   data?: string;
-  chainId?: string;
+  chainId?: ChainId;
 
   eventSuffix?: string | number;
 }

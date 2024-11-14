@@ -2,14 +2,14 @@ import Decimal from 'decimal.js';
 import {BigNumber, BigNumberish} from 'ethers';
 import {I18nManager} from 'react-native';
 
-import {app} from '@app/contexts';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {Currencies} from '@app/models/currencies';
-import {Wallet} from '@app/models/wallet';
+import {Provider} from '@app/models/provider';
+import {BalanceModel, Wallet} from '@app/models/wallet';
 import {
+  AddressEthereum,
   BalanceConstructor,
-  BalanceData,
-  HaqqEthereumAddress,
+  ChainId,
   HexNumber,
   IBalance,
   ISerializable,
@@ -19,6 +19,7 @@ import {
   LONG_NUM_PRECISION,
   NUM_DELIMITER,
   NUM_PRECISION,
+  STRINGS,
 } from '@app/variables/common';
 
 const zeroBN = new Decimal(0);
@@ -30,7 +31,11 @@ export class Balance implements IBalance, ISerializable {
   private symbol: string;
 
   static get Empty() {
-    return new Balance(zeroBN, app.provider.decimals, app.provider.denom);
+    return new Balance(
+      zeroBN,
+      Provider.selectedProvider.decimals,
+      Provider.selectedProvider.denom,
+    );
   }
 
   constructor(
@@ -38,12 +43,9 @@ export class Balance implements IBalance, ISerializable {
     precission?: number,
     symbol?: string,
   ) {
-    precission = precission ?? app.provider.decimals;
-    symbol = symbol ?? app.provider.denom;
-
     this.originalValue = balance;
-    this.precission = precission ?? app.provider.decimals;
-    this.symbol = symbol || app.provider.denom;
+    this.precission = precission ?? Provider.selectedProvider.decimals;
+    this.symbol = symbol || Provider.selectedProvider.denom;
 
     if (BigNumber.isBigNumber(balance)) {
       const {_hex} = BigNumber.from(balance);
@@ -92,7 +94,7 @@ export class Balance implements IBalance, ISerializable {
    * Is current Balance instance is native network Coin
    */
   get isNativeCoin() {
-    return this.symbol === app.provider.denom;
+    return this.symbol === Provider.selectedProvider.denom;
   }
 
   getPrecission() {
@@ -107,8 +109,12 @@ export class Balance implements IBalance, ISerializable {
     return `a${this.symbol}`;
   }
 
-  static getEmpty = () => {
-    return new Balance(zeroBN, app.provider.decimals, app.provider.denom);
+  static getEmpty = (precision?: number, symbol?: string) => {
+    return new Balance(
+      zeroBN,
+      precision ?? Provider.selectedProvider.decimals,
+      symbol ?? Provider.selectedProvider.denom,
+    );
   };
 
   static fromJsonString = (obj: string | Balance) => {
@@ -158,6 +164,16 @@ export class Balance implements IBalance, ISerializable {
     return cleanNumber(this.toFloat(precission), NUM_DELIMITER, fixed);
   };
 
+  toParsedBalanceNumber = () => {
+    const b = this.toBalanceString(
+      undefined,
+      undefined,
+      false,
+      true,
+    ).replaceAll(' ', '');
+    return +b;
+  };
+
   /**
    * Convert balance to float string according to cleanNumber helper and append currency name
    * @example 123.45 ISLM
@@ -166,6 +182,7 @@ export class Balance implements IBalance, ISerializable {
     fixed: number | 'auto' = NUM_PRECISION,
     precission: number = this.precission,
     useZeroFormatter = true,
+    withoutSymbol = false,
   ) => {
     let fixedNum = 0;
     if (fixed === 'auto') {
@@ -175,18 +192,35 @@ export class Balance implements IBalance, ISerializable {
       fixedNum = fixed;
     }
 
+    if (withoutSymbol) {
+      return this.toFloatString(fixedNum, precission, useZeroFormatter).trim();
+    }
+
+    if (!this.symbol) {
+      return this.getStringWithSymbol(
+        this.toFloatString(fixedNum, precission, useZeroFormatter),
+      );
+    }
+
     const isRTL = I18nManager.isRTL;
     if (isRTL) {
-      return `${this.symbol} ${this.toFloatString(
+      return `${this.symbol}${STRINGS.NBSP}${this.toFloatString(
         fixedNum,
         precission,
         useZeroFormatter,
-      )}`;
+      )}`.trim();
     }
-    return (
-      this.toFloatString(fixedNum, precission, useZeroFormatter) +
-      ` ${this.symbol}`
-    );
+    return `${this.toFloatString(fixedNum, precission, useZeroFormatter)}${
+      STRINGS.NBSP
+    }${this.symbol}`.trim();
+  };
+
+  private getStringWithSymbol = (value: string) => {
+    const currency = Currencies.currency;
+    const result = [value];
+    currency?.prefix && result.unshift(currency.prefix);
+    currency?.postfix && result.push(currency.postfix);
+    return result.join(STRINGS.NBSP);
   };
 
   /**
@@ -196,6 +230,7 @@ export class Balance implements IBalance, ISerializable {
   toFiatBalanceString = (
     fixed: number | 'auto' = NUM_PRECISION,
     precission: number = this.precission,
+    withoutSymbol = false,
   ) => {
     let fixedNum = 0;
     if (fixed === 'auto') {
@@ -205,20 +240,21 @@ export class Balance implements IBalance, ISerializable {
       fixedNum = fixed;
     }
 
-    const getStringWithSymbol = (value: string) => {
-      const currency = Currencies.currency;
-      const result = [value];
-      currency?.prefix && result.unshift(currency.prefix);
-      currency?.postfix && result.push(currency.postfix);
-      return result.join(' ');
-    };
-
     const floatString = this.toFloatString(fixedNum, precission);
     const isNegative = floatString.startsWith('-');
     if (isNegative) {
-      return `- ${getStringWithSymbol(floatString.replace('-', ''))}`;
+      if (withoutSymbol) {
+        return `-${STRINGS.NBSP}${floatString.replace('-', '')}`;
+      }
+      return `-${STRINGS.NBSP}${this.getStringWithSymbol(
+        floatString.replace('-', ''),
+      )}`;
     }
-    return `${getStringWithSymbol(floatString)}`;
+
+    if (withoutSymbol) {
+      return floatString;
+    }
+    return `${this.getStringWithSymbol(floatString)}`;
   };
 
   toString = () => {
@@ -317,9 +353,9 @@ export class Balance implements IBalance, ISerializable {
   toWeiString = () => {
     const isRTL = I18nManager.isRTL;
     if (isRTL) {
-      return `a${this.symbol} ${this.toWei()}`;
+      return `a${this.symbol}${STRINGS.NBSP}${this.toWei()}`;
     }
-    return this.toWei() + ` a${this.symbol}`;
+    return `${this.toWei()}${STRINGS.NBSP}a${this.symbol}`;
   };
 
   toBigNumberish = (): BigNumberish => {
@@ -362,20 +398,31 @@ export class Balance implements IBalance, ISerializable {
     fixed?: number | 'auto';
     precission?: number;
     useDefaultCurrency?: boolean;
+    chainId?: ChainId;
+    withoutSymbol?: boolean;
   }) => {
-    const convertedBalance = Currencies.convert(this);
+    const convertedBalance = Currencies.convert(this, props?.chainId);
     const fixed = props?.fixed ?? NUM_PRECISION;
     const precission = props?.precission ?? this.precission;
     const useDefaultCurrency = props?.useDefaultCurrency ?? false;
 
     if (!convertedBalance.toNumber()) {
       if (useDefaultCurrency) {
-        return this.toBalanceString(fixed, precission);
+        return this.toBalanceString(
+          fixed,
+          precission,
+          undefined,
+          props?.withoutSymbol,
+        );
       }
       return '';
     }
 
-    return convertedBalance.toFiatBalanceString(fixed, precission);
+    return convertedBalance.toFiatBalanceString(
+      fixed,
+      precission,
+      props?.withoutSymbol,
+    );
   };
 
   private getBnRaw = (
@@ -392,11 +439,11 @@ export class Balance implements IBalance, ISerializable {
     }
   };
 
-  static get emptyBalances(): Record<HaqqEthereumAddress, BalanceData> {
+  static get emptyBalances(): Record<AddressEthereum, BalanceModel> {
     return Wallet.getAll().reduce((acc, w) => {
       return {
         ...acc,
-        [w.address]: {
+        [w.address]: new BalanceModel({
           staked: Balance.Empty,
           vested: Balance.Empty,
           available: Balance.Empty,
@@ -404,7 +451,7 @@ export class Balance implements IBalance, ISerializable {
           locked: Balance.Empty,
           availableForStake: Balance.Empty,
           unlock: new Date(0),
-        },
+        }),
       };
     }, {});
   }

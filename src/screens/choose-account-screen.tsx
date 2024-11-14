@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
-import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {ProviderMnemonicBase, ProviderSSSBase} from '@haqq/rn-wallet-providers';
 import {useFocusEffect} from '@react-navigation/native';
 import {observer} from 'mobx-react';
 
@@ -12,12 +11,14 @@ import {
 import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
+import {getTronProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {getWalletsFromProvider} from '@app/helpers/get-wallets-from-provider';
 import {safeLoadBalances} from '@app/helpers/safe-load-balances';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N, getText} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {
   HomeStackRoutes,
@@ -26,8 +27,13 @@ import {
   SignInStackRoutes,
 } from '@app/route-types';
 import {Balance} from '@app/services/balance';
-import {ChooseAccountItem, ModalType, WalletType} from '@app/types';
-import {MAIN_ACCOUNT_NAME} from '@app/variables/common';
+import {
+  AddressTron,
+  ChooseAccountItem,
+  ModalType,
+  WalletType,
+} from '@app/types';
+import {ETH_COIN_TYPE, TRON_COIN_TYPE} from '@app/variables/common';
 
 const PAGE_SIZE = 5;
 
@@ -48,17 +54,16 @@ export const ChooseAccountScreen = observer(() => {
   const generator = useRef<ReturnType<typeof getWalletsFromProvider> | null>(
     null,
   );
-  const walletProvider = useRef<
-    ProviderMnemonicReactNative | ProviderSSSReactNative | null
-  >(null);
+  const walletProvider = useRef<ProviderMnemonicBase | ProviderSSSBase | null>(
+    null,
+  );
 
   const isMnemonicProvider =
-    walletProvider.current instanceof ProviderMnemonicReactNative;
-  const isSSSProvider =
-    walletProvider.current instanceof ProviderSSSReactNative;
+    walletProvider.current instanceof ProviderMnemonicBase;
+  const isSSSProvider = walletProvider.current instanceof ProviderSSSBase;
 
   useEffect(() => {
-    if (params.provider instanceof ProviderSSSReactNative) {
+    if (params.provider instanceof ProviderSSSBase) {
       navigation.setOptions({
         //@ts-ignore
         customBackFunction: () => navigation.popToTop(),
@@ -101,14 +106,23 @@ export const ChooseAccountScreen = observer(() => {
         }
         index += 1;
       }
-      const wallets = result.map(item => item.address);
-
+      const isTron = Provider.selectedProvider.isTron;
+      const wallets = result.map(item =>
+        isTron ? item.tronAddress! : item.address,
+      );
       const balances = await safeLoadBalances(wallets);
-
       const resultWithBalances = result.map(item => ({
         ...item,
         balance: new Balance(
-          balances?.total[AddressUtils.toHaqq(item.address)] || item.balance,
+          balances?.total.find(t => {
+            const addressKey = isTron
+              ? AddressUtils.hexToTron(t[0])
+              : AddressUtils.toHaqq(t[0]);
+            const itemAddress = isTron
+              ? item.tronAddress!
+              : AddressUtils.toHaqq(item.address);
+            return addressKey === itemAddress;
+          })?.[2] || item.balance,
         ),
       }));
       setAddresses(resultWithBalances);
@@ -124,7 +138,7 @@ export const ChooseAccountScreen = observer(() => {
     setLoading(true);
     try {
       walletProvider.current = params.provider;
-      if (walletProvider.current instanceof ProviderMnemonicReactNative) {
+      if (walletProvider.current instanceof ProviderMnemonicBase) {
         await walletProvider.current.setMnemonicSaved();
       }
 
@@ -160,8 +174,14 @@ export const ChooseAccountScreen = observer(() => {
         hdPath: item.path,
         publicKey: '',
         exists:
-          walletsToCreate.find(wallet => wallet.address === item.address)
-            ?.exists ||
+          walletsToCreate.find(wallet => {
+            return (
+              wallet.address === item.address ||
+              (!!wallet.tronAddress &&
+                !!item.tronAddress &&
+                wallet.tronAddress === item.tronAddress)
+            );
+          })?.exists ||
           item.exists ||
           false,
       })),
@@ -189,11 +209,11 @@ export const ChooseAccountScreen = observer(() => {
   const onAdd = useCallback(async () => {
     walletsToCreate
       .filter(_w => !Wallet.getById(_w.address))
-      .forEach(item => {
+      .forEach(async item => {
         const total = Wallet.getAll().length;
         const name =
           total === 0
-            ? MAIN_ACCOUNT_NAME
+            ? getText(I18N.mainAccount)
             : getText(I18N.signinStoreWalletAccountNumber, {
                 number: `${total + 1}`,
               });
@@ -205,13 +225,29 @@ export const ChooseAccountScreen = observer(() => {
             type: WalletType.sss,
           });
         }
+
+        // generate tron wallet address
+        const tronProvider = await getTronProviderForNewWallet(
+          item.type,
+          item.accountId!,
+        );
+
+        if (!item.tronAddress) {
+          const {address: tronAddress} = await tronProvider.getAccountInfo(
+            // for tron coin type
+            item.path?.replace?.(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
+          );
+          Wallet.update(item.address, {
+            tronAddress: tronAddress as AddressTron,
+          });
+        }
       });
 
     if (isSSSProvider) {
       const accountID = walletsToCreate[0].accountId;
       //@ts-ignore
       const storage = await getProviderStorage(accountID, params.sssProvider);
-      await ProviderSSSReactNative.setStorageForAccount(accountID, storage);
+      await ProviderSSSBase.setStorageForAccount(accountID, storage);
     }
 
     if (isMnemonicProvider && !app.onboarded) {

@@ -439,6 +439,7 @@ export enum I18N {
   walletCreateImport = 'walletCreateImport',
   walletCardSend = 'walletCardSend',
   walletCardWithoutBackup = 'walletCardWithoutBackup',
+  yourAddresses = 'yourAddresses',
   settingsAccountStyleChoseColor = 'settingsAccountStyleChoseColor',
   settingsAccountStyleChosePattern = 'settingsAccountStyleChosePattern',
   settingsAccountStyleGenerate = 'settingsAccountStyleGenerate',
@@ -465,7 +466,6 @@ export enum I18N {
   welcomeTitle = 'welcomeTitle',
   welcomeDescription = 'welcomeDescription',
   welcomeCreateWallet = 'welcomeCreateWallet',
-  welcomeLedgerWallet = 'welcomeLedgerWallet',
   welcomeRestoreWallet = 'welcomeRestoreWallet',
   welcomeSocialWallet = 'welcomeSocialWallet',
   restoreWalletScreenTitle = 'restoreWalletScreenTitle',
@@ -1023,6 +1023,12 @@ export enum I18N {
   transactionNetwork = 'transactionNetwork',
   noSwapRoutesFound = 'noSwapRoutesFound',
   swapSupportedNetworks = 'swapSupportedNetworks',
+  swapFinishYouPaid = 'swapFinishYouPaid',
+  swapFinishYouReceived = 'swapFinishYouReceived',
+  swapFinishComplete = 'swapFinishComplete',
+  swapFinishUnwrapComplete = 'swapFinishUnwrapComplete',
+  swapFinishWrapComplete = 'swapFinishWrapComplete',
+  tronNotSupportedYet = 'tronNotSupportedYet',
 }
 
 const defaultTranslation = {en};
@@ -1045,19 +1051,19 @@ export function getText(key: I18N, params?: Record<string, string>): string {
 
   // FIXME: Make sure that we have 100% translations
   //@ts-ignore
-  if (!translations[key]) {
+  if (!Language.keys[key]) {
     return `[${key}]`;
   }
 
   if (params) {
     return translations.formatString(
       //@ts-ignore
-      fixLocalise(translations[key]),
+      fixLocalise(Language.keys[key]),
       params,
     ) as string;
   }
   //@ts-ignore
-  return fixLocalise(translations[key]);
+  return fixLocalise(Language.keys[key]);
 }
 
 export const supportedTranslationsMap: {[key in AppLanguage]: NodeRequire} = {

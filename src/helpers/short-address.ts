@@ -3,6 +3,9 @@ export function shortAddress(
   delimiter: string = '.',
   short = false,
 ) {
+  if (!address) {
+    return '';
+  }
   if (short) {
     return `${delimiter.repeat(3)}${address.slice(
       address.length - 4,

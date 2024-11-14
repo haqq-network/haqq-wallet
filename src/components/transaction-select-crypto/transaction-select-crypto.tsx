@@ -3,7 +3,7 @@ import React, {useCallback} from 'react';
 import {toJS} from 'mobx';
 import {FlatList, StyleSheet} from 'react-native';
 
-import {TokenRow} from '@app/components/token-row';
+import {TokenRow} from '@app/components/token';
 import {IToken} from '@app/types';
 
 export type Props = {

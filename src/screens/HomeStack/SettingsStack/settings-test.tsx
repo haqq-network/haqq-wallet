@@ -114,7 +114,7 @@ const getTestModals = (): TestModals => {
   const wallets = Wallet.getAllVisible();
   const firstWalletAddress = wallets[0].address;
   const providers = Provider.getAll();
-  const firstProviderId = providers[0].id;
+  const firstProviderId = providers[0].ethChainId;
 
   // Generate props for modals
   const modals: TestModals = {
@@ -126,6 +126,7 @@ const getTestModals = (): TestModals => {
     cardDetailsQr: null,
     walletsBottomSheet: null,
     providersBottomSheet: null,
+    copyAddressBottomSheet: null,
     // Other modals props.
     noInternet: {showClose: true},
     loading: {
@@ -203,8 +204,8 @@ const getTestModals = (): TestModals => {
       onClose: () => logger.log('lockedTokensInfo closed'),
     },
     notEnoughGas: {
-      currentAmount: app.getBalanceData(firstWalletAddress).available,
-      gasLimit: MIN_GAS_LIMIT,
+      currentAmount: Wallet.getBalances(firstWalletAddress).available,
+      gasLimit: new Balance(MIN_GAS_LIMIT, 0),
       onClose: () => logger.log('notEnoughGas closed'),
     },
     viewErrorDetails: {
@@ -271,8 +272,7 @@ const getTestModals = (): TestModals => {
   if (firstProviderId) {
     modals.providersBottomSheet = {
       title: I18N.welcomeTitle,
-      providers,
-      initialProviderId: firstProviderId,
+      initialProviderChainId: firstProviderId,
       eventSuffix: '-test',
       closeDistance: () => getWindowHeight() / 6,
       onClose: () => logger.log('providersBottomSheet closed'),
@@ -726,11 +726,8 @@ export const SettingsTestScreen = observer(() => {
               title: I18N.selectAccount,
               wallets: Wallet.getAllVisible(),
             });
-            const providers = Provider.getAll();
-            const initialProviderId = app.provider.id;
             const providerId = await awaitForProvider({
-              providers,
-              initialProviderId: initialProviderId!,
+              disableAllNetworksOption: true,
               title: I18N.networks,
             });
             const result = await awaitForJsonRpcSign({

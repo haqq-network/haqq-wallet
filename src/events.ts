@@ -1,7 +1,4 @@
 export enum Events {
-  onProviderChanged = 'onProviderChanged',
-  onWalletsBalanceCheck = 'onWalletsBalanceCheck',
-  onWalletsBalanceCheckError = 'onWalletsBalanceCheckError',
   onWalletCreate = 'onWalletCreate',
   onWalletReset = 'onWalletReset',
   onWalletRemove = 'onWalletRemove',
@@ -11,7 +8,6 @@ export enum Events {
   onDeepLink = 'onDeepLink',
   onStakingSync = 'onStakingSync',
   onCloseModal = 'onCloseModal',
-  onTransactionsLoad = 'onTransactionsLoad',
   onTransactionStatusLoad = 'onTransactionStatusLoad',
   onAppActive = 'onAppActive',
   onAppInitialized = 'onAppInitialized',
@@ -31,13 +27,10 @@ export enum Events {
   openInAppBrowserPageLoaded = 'openInAppBrowserPageLoaded',
   enterPinSuccess = 'enterPinSuccess',
   onOnboardedChanged = 'onOnboardedChanged',
-  onBalanceSync = 'onBalanceSync',
   onVestingBalanceSync = 'onVestingBalanceSync',
   onStakingBalanceSync = 'onStakingBalanceSync',
   onWalletsVestingBalanceCheck = 'onWalletsVestingBalanceCheck',
   onWalletsStakingBalanceCheck = 'onWalletsStakingBalanceCheck',
-  onSyncAppBalances = 'onSyncAppBalances',
-  onWalletVisibilityChange = 'onWalletVisibilityChange',
   onThemeChanged = 'onThemeChanged',
   onBlockRequestCheck = 'onBlockRequestCheck',
   onRequestMarkup = 'onRequestMarkup',
@@ -45,7 +38,6 @@ export enum Events {
   onAuthenticatedChanged = 'onAuthenticatedChanged',
   onPushTokenRefresh = 'onPushTokenRefresh',
   onLocaleChanged = 'onLocaleChanged',
-  onProviderChangedFinish = 'onProviderChangedFinish',
 }
 
 export enum WalletConnectEvents {

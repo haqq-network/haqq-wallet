@@ -1,13 +1,16 @@
-import {ProviderHotReactNative} from '@haqq/provider-hot-react-native';
-import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {
+  ProviderHotBase,
+  ProviderMnemonicBase,
+  ProviderSSSBase,
+} from '@haqq/rn-wallet-providers';
 import {decryptPassworder, encryptPassworder} from '@haqq/shared-react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
 import {app} from '@app/contexts';
 import {VariablesString} from '@app/models/variables-string';
-import {Wallet} from '@app/models/wallet';
+import {IWalletModel, Wallet} from '@app/models/wallet';
 import {WalletType} from '@app/types';
+import {ETH_COIN_TYPE, TRON_COIN_TYPE} from '@app/variables/common';
 
 import {AddressUtils} from './address-utils';
 import {getProviderStorage} from './get-provider-storage';
@@ -63,23 +66,23 @@ const removeNewPinCache = async () => {
 };
 
 const getProviderForUpdatePin = async (
-  wallet: Wallet,
+  wallet: IWalletModel,
   getPassword: () => Promise<string>,
 ) => {
   switch (wallet.type) {
     case WalletType.mnemonic:
-      return new ProviderMnemonicReactNative({
+      return new ProviderMnemonicBase({
         account: wallet.accountId!,
         getPassword,
       });
     case WalletType.hot:
-      return new ProviderHotReactNative({
+      return new ProviderHotBase({
         getPassword,
         account: wallet.accountId!,
       });
     case WalletType.sss:
       const storage = await getProviderStorage(wallet.accountId as string);
-      return new ProviderSSSReactNative({
+      return new ProviderSSSBase({
         storage,
         getPassword,
         account: wallet.accountId!,
@@ -88,7 +91,7 @@ const getProviderForUpdatePin = async (
   return null;
 };
 
-const checkPinCorrect = async (wallet: Wallet, pin: string) => {
+const checkPinCorrect = async (wallet: IWalletModel, pin: string) => {
   try {
     const providerWithNewPin = await getProviderForUpdatePin(wallet, () =>
       Promise.resolve(pin),
@@ -96,7 +99,9 @@ const checkPinCorrect = async (wallet: Wallet, pin: string) => {
     if (!providerWithNewPin) {
       throw new Error('providerWithNewPin not found');
     }
-    const {address} = await providerWithNewPin.getAccountInfo(wallet.path!);
+    const {address} = await providerWithNewPin.getAccountInfo(
+      wallet.path?.replace?.(TRON_COIN_TYPE, ETH_COIN_TYPE)!,
+    );
     if (!AddressUtils.equals(address, wallet.address)) {
       throw new Error('address not match');
     }

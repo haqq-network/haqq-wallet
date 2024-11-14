@@ -1,6 +1,6 @@
 import React, {memo, useCallback} from 'react';
 
-import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
+import {ProviderLedgerEvm} from '@haqq/rn-wallet-providers';
 import {useFocusEffect} from '@react-navigation/native';
 
 import {LedgerVerify} from '@app/components/ledger-verify';
@@ -33,7 +33,7 @@ export const LedgerVerifyScreen = memo(() => {
 
   useFocusEffect(
     useCallback(() => {
-      const provider = new ProviderLedgerReactNative({
+      const provider = new ProviderLedgerEvm({
         getPassword: app.getPassword.bind(app),
         deviceId: route.params.deviceId,
         appName: LEDGER_APP,

@@ -19,7 +19,7 @@ import {createTheme} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {EthereumSignInMessage} from '@app/helpers/ethereum-message-checker';
 import {I18N} from '@app/i18n';
-import {Wallet} from '@app/models/wallet';
+import {WalletModel} from '@app/models/wallet';
 import {JsonRpcMetadata, PartialJsonRpcRequest} from '@app/types';
 import {
   getHostnameFromUrl,
@@ -38,13 +38,14 @@ import {WalletRow, WalletRowTypes} from '../wallet-row';
 interface WalletConnectSignInfoProps {
   request: PartialJsonRpcRequest;
   metadata: JsonRpcMetadata;
-  wallet: Wallet;
+  wallet: WalletModel;
   phishingTxRequest: Transaction | null;
   messageIsHex: boolean;
   blindSignEnabled: boolean;
   isAllowedDomain: boolean;
   ethereumSignInMessage: EthereumSignInMessage | null;
   onPressAllowOnceSignDangerousTx: () => void;
+  chainId?: number;
 }
 
 export const getMessageByRequest = (request: PartialJsonRpcRequest) => {
@@ -93,6 +94,7 @@ export const getMessageByRequest = (request: PartialJsonRpcRequest) => {
 
 export const JsonRpcSignInfo = ({
   wallet,
+  chainId,
   metadata,
   request,
   phishingTxRequest,
@@ -133,7 +135,12 @@ export const JsonRpcSignInfo = ({
 
       <Spacer height={32} />
 
-      <WalletRow hideArrow item={wallet} type={WalletRowTypes.variant2} />
+      <WalletRow
+        hideArrow
+        item={wallet}
+        type={WalletRowTypes.variant2}
+        chainId={chainId}
+      />
 
       <Spacer height={12} />
 

@@ -1,4 +1,4 @@
-import {StorageInterface} from '@haqq/provider-sss-react-native';
+import {StorageInterface} from '@haqq/rn-wallet-providers';
 
 import {Cloud} from '@app/services/cloud';
 

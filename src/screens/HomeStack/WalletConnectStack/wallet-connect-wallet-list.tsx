@@ -3,7 +3,7 @@ import React, {memo, useCallback, useMemo} from 'react';
 import {WalletConnectWalletList} from '@app/components/wallet-connect-wallet-list';
 import {useTypedNavigation} from '@app/hooks';
 import {useWalletConnectAccounts} from '@app/hooks/use-wallet-connect-accounts';
-import {Wallet} from '@app/models/wallet';
+import {Wallet, WalletModel} from '@app/models/wallet';
 import {
   WalletConnectStackParamList,
   WalletConnectStackRoutes,
@@ -12,15 +12,30 @@ import {WalletConnect} from '@app/services/wallet-connect';
 import {filterWalletConnectSessionsByAddress} from '@app/utils';
 
 export const WalletConnectWalletListScreen = memo(() => {
-  const {accounts} = useWalletConnectAccounts();
+  const {accounts, sessions} = useWalletConnectAccounts();
   const navigation = useTypedNavigation<WalletConnectStackParamList>();
   const wallets = useMemo(
     () =>
       accounts
-        ?.map?.(item => Wallet.getById(item.address) as Wallet)
+        ?.map?.(item => Wallet.getById(item.address) as WalletModel)
         .filter(item => !!item),
     [accounts],
   );
+
+  const chainId = useMemo(() => {
+    const session = sessions?.[0];
+    const requiredChain = session?.requiredNamespaces?.eip155?.chains?.[0];
+    const optionalChain = session?.optionalNamespaces?.eip155?.chains?.[0];
+    const chain = requiredChain || optionalChain;
+    if (!chain) {
+      return undefined;
+    }
+    const [, id] = chain.split(':');
+    if (!id) {
+      return undefined;
+    }
+    return Number(id);
+  }, [sessions]);
 
   const handleWalletPress = useCallback(
     (address: string) => {
@@ -58,6 +73,7 @@ export const WalletConnectWalletListScreen = memo(() => {
     <WalletConnectWalletList
       handleWalletPress={handleWalletPress}
       wallets={wallets}
+      chainId={chainId}
     />
   );
 });

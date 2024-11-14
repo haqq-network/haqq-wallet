@@ -1,7 +1,9 @@
-import React, {memo, useCallback} from 'react';
+import React, {useCallback} from 'react';
 
-import {app} from '@app/contexts';
+import {observer} from 'mobx-react';
+
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {Provider} from '@app/models/provider';
 import {
   HomeStackRoutes,
   NftStackParamList,
@@ -11,7 +13,7 @@ import {openInAppBrowser} from '@app/utils';
 
 import {NftItemDetails} from './components/nft-item-details/nft-item-details';
 
-export const NftItemDetailsScreen = memo(() => {
+export const NftItemDetailsScreen = observer(() => {
   const navigation = useTypedNavigation<NftStackParamList>();
   const {params} = useTypedRoute<
     NftStackParamList,
@@ -28,7 +30,7 @@ export const NftItemDetailsScreen = memo(() => {
   }, [params.item, navigation]);
 
   const onPressExplorer = useCallback(() => {
-    const url = app.provider.getTokenExplorerUrl(
+    const url = Provider.selectedProvider.getTokenExplorerUrl(
       params.item.contract,
       params.item.tokenId,
     );

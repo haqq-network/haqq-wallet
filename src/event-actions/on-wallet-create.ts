@@ -1,19 +1,14 @@
-import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
+import {ProviderMnemonicBase} from '@haqq/rn-wallet-providers';
 
 import {app} from '@app/contexts';
-import {onStakingSync} from '@app/event-actions/on-staking-sync';
-import {onTransactionsLoad} from '@app/event-actions/on-transactions-load';
-import {onVestingSync} from '@app/event-actions/on-vesting-sync';
 import {Events} from '@app/events';
 import {getProviderInstanceForWallet} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
-import {Wallet} from '@app/models/wallet';
+import {IWalletModel, Wallet} from '@app/models/wallet';
 import {Backend} from '@app/services/backend';
 import {WalletType} from '@app/types';
 
-import {onWalletsBalanceCheck} from './on-wallets-balance-check';
-
-export async function onWalletCreate(wallet: Wallet) {
+export async function onWalletCreate(wallet: IWalletModel) {
   try {
     let subscription = app.notificationToken;
     if (subscription) {
@@ -25,13 +20,7 @@ export async function onWalletCreate(wallet: Wallet) {
       Wallet.update(wallet.address, {subscription});
     }
 
-    await onWalletsBalanceCheck();
-
-    await Promise.all([
-      onTransactionsLoad(wallet.address),
-      onStakingSync(),
-      onVestingSync(),
-    ]);
+    await Wallet.fetchBalances();
 
     if (!wallet.mnemonicSaved) {
       let mnemonicSaved: boolean;
@@ -43,7 +32,7 @@ export async function onWalletCreate(wallet: Wallet) {
         case WalletType.mnemonic:
           const providerMnemonic = (await getProviderInstanceForWallet(
             wallet,
-          )) as ProviderMnemonicReactNative;
+          )) as ProviderMnemonicBase;
           if (typeof providerMnemonic.isMnemonicSaved === 'function') {
             mnemonicSaved = await providerMnemonic.isMnemonicSaved();
           } else {

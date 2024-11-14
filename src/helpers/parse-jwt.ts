@@ -1,6 +1,12 @@
 import base64 from 'react-native-base64';
 
-export function parseJwt<T extends Record<string, any>>(token: string): T {
+export function parseJwt<T extends Record<string, any>>(
+  token: string,
+): T | null {
+  if (!token) {
+    return null;
+  }
+
   const base64Url = token.split('.')[1];
 
   const base64Data = base64

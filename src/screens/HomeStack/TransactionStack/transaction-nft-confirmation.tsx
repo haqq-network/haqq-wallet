@@ -4,7 +4,6 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import {observer} from 'mobx-react';
 
 import {TransactionNftConfirmation} from '@app/components/transaction-nft-confirmation';
-import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForFee} from '@app/helpers/await-for-fee';
@@ -15,8 +14,9 @@ import {useLayoutEffectAsync} from '@app/hooks/use-effect-async';
 import {useError} from '@app/hooks/use-error';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
-import {Fee} from '@app/models/fee';
+import {EstimationVariant, Fee} from '@app/models/fee';
 import {ContractType} from '@app/models/nft';
+import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {
   TransactionStackParamList,
@@ -57,6 +57,7 @@ export const TransactionNftConfirmationScreen = observer(() => {
     () => Contact.getById(route.params.to),
     [route.params.to],
   );
+  const provider = Provider.getByEthChainId(nft.chain_id);
 
   const showError = useError();
   const [soulboundTokenHint, setSoulboundTokenHint] = useState<string>('');
@@ -83,11 +84,15 @@ export const TransactionNftConfirmationScreen = observer(() => {
       }
       setFeeData(data);
       if (!fee?.calculatedFees) {
-        const calculatedFees = await EthNetwork.estimate({
-          from: wallet?.address!,
-          to: AddressUtils.toEth(nft.contract),
-          data,
-        });
+        const calculatedFees = await EthNetwork.estimate(
+          {
+            from: wallet?.address!,
+            to: AddressUtils.toEth(nft.contract),
+            data,
+          },
+          EstimationVariant.average,
+          provider,
+        );
         setFee(new Fee(calculatedFees));
       }
     } catch (err) {
@@ -107,27 +112,32 @@ export const TransactionNftConfirmationScreen = observer(() => {
 
         const ethNetworkProvider = new EthNetwork();
 
-        const provider = await getProviderInstanceForWallet(wallet, false);
+        const walletProvider = await getProviderInstanceForWallet(
+          wallet,
+          false,
+        );
 
         let transaction: TransactionResponse | null = null;
         if (fee?.calculatedFees) {
           if (nft.contractType === ContractType.erc721) {
             transaction = await ethNetworkProvider.transferERC721(
               fee.calculatedFees,
-              provider,
+              walletProvider,
               wallet,
               route.params.to,
               nft.tokenId,
               AddressUtils.toEth(nft.contract),
+              provider,
             );
           } else {
             transaction = await ethNetworkProvider.transferERC1155(
               fee.calculatedFees,
-              provider,
+              walletProvider,
               wallet,
               route.params.to,
               nft.tokenId,
               AddressUtils.toEth(nft.contract),
+              provider,
             );
           }
         }
@@ -152,7 +162,7 @@ export const TransactionNftConfirmationScreen = observer(() => {
           id: errorId,
           walletType: wallet.type,
           contact,
-          provider: app.provider.name,
+          provider: Provider.selectedProvider.name,
         });
 
         const err = e as EthSignErrorDataDetails;
@@ -171,7 +181,7 @@ export const TransactionNftConfirmationScreen = observer(() => {
           );
           showModal(ModalType.notEnoughGas, {
             gasLimit: gasLimit,
-            currentAmount: app.getAvailableBalance(wallet!.address),
+            currentAmount: Wallet.getBalance(wallet!.address, 'available'),
           });
           return;
         }
@@ -194,6 +204,7 @@ export const TransactionNftConfirmationScreen = observer(() => {
         from: wallet?.address!,
         to: AddressUtils.toEth(nft.contract),
         data: feeData,
+        chainId: nft.chain_id,
       });
       setFee(result);
     }

@@ -1,5 +1,4 @@
-import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {ProviderMnemonicBase, ProviderSSSBase} from '@haqq/rn-wallet-providers';
 import {isAfter} from 'date-fns';
 
 import {app} from '@app/contexts';
@@ -19,10 +18,10 @@ export async function onAppBackup() {
     return;
   }
 
-  const mnemonics = await ProviderMnemonicReactNative.getAccounts();
+  const mnemonics = await ProviderMnemonicBase.getAccounts();
 
   if (isFeatureEnabled(Feature.sss)) {
-    const sss = await ProviderSSSReactNative.getAccounts();
+    const sss = await ProviderSSSBase.getAccounts();
     if (mnemonics.length && !sss.length) {
       navigator.navigate(SettingsStackRoutes.BackupSssSuggestion, {
         accountId: mnemonics[0],

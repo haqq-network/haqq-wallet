@@ -6,22 +6,21 @@ import {TouchableOpacity, View} from 'react-native';
 import {Color} from '@app/colors';
 import {Icon, IconsName} from '@app/components/ui/icon';
 import {Text, TextPosition, TextVariant} from '@app/components/ui/text';
-import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {awaitForProvider} from '@app/helpers/await-for-provider';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 
 export const ProviderMenu = observer(() => {
-  const currentProvider = app.provider;
-
   const open = useCallback(async () => {
     const providerId = await awaitForProvider({
-      providers: Provider.getAll(),
-      initialProviderId: app.providerId!,
+      initialProviderChainId: Provider.selectedProvider.ethChainId,
       title: I18N.networks,
     });
-    app.providerId = providerId;
+
+    if (providerId) {
+      Provider.setSelectedProviderId(providerId);
+    }
   }, []);
 
   return (
@@ -31,7 +30,7 @@ export const ProviderMenu = observer(() => {
           color={Color.textBase2}
           variant={TextVariant.t14}
           position={TextPosition.center}>
-          {currentProvider?.name}
+          {Provider.selectedProvider.name}
         </Text>
         <Icon
           i12

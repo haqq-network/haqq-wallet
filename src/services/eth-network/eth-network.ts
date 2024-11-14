@@ -1,15 +1,14 @@
 import {TransactionRequest} from '@ethersproject/abstract-provider';
 import {Deferrable} from '@ethersproject/properties';
-import {ProviderInterface} from '@haqq/provider-base';
+import {ProviderInterface} from '@haqq/rn-wallet-providers';
 import Decimal from 'decimal.js';
 import {BigNumber, utils} from 'ethers';
 
-import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {EstimationVariant} from '@app/models/fee';
-import {Provider} from '@app/models/provider';
-import {Wallet} from '@app/models/wallet';
+import {Provider, ProviderModel} from '@app/models/provider';
+import {IWalletModel} from '@app/models/wallet';
 import {getDefaultChainId} from '@app/network';
 import {Balance} from '@app/services/balance';
 import {getERC1155TransferData} from '@app/services/eth-network/erc1155';
@@ -24,11 +23,13 @@ import {
   TxEstimationParams,
 } from './types';
 
+import {TronNetwork} from '../tron-network';
+
 export class EthNetwork {
   static chainId: number = getDefaultChainId();
   static explorer: string | undefined;
 
-  static init(provider: Provider) {
+  static init(provider: ProviderModel) {
     EthNetwork.chainId = provider.ethChainId;
     EthNetwork.explorer = provider.explorer;
   }
@@ -36,6 +37,7 @@ export class EthNetwork {
   static async populateTransaction(
     estimate: CalculatedFees,
     {from, to, value = Balance.Empty, data = '0x'}: TxEstimationParams,
+    provider = Provider.selectedProvider,
   ) {
     try {
       if (!AddressUtils.isEthAddress(to)) {
@@ -44,8 +46,12 @@ export class EthNetwork {
       if (!AddressUtils.isEthAddress(from)) {
         throw new Error('Invalid "to" address');
       }
-      const rpcProvider = await getRpcProvider(app.provider);
-      const nonce = await rpcProvider.getTransactionCount(from, 'latest');
+      const rpcProvider = await getRpcProvider(provider);
+      let nonce: number | undefined;
+
+      if (provider.isEVM) {
+        nonce = await rpcProvider.getTransactionCount(from, 'latest');
+      }
 
       const transaction = {
         to: to,
@@ -56,7 +62,7 @@ export class EthNetwork {
         maxPriorityFeePerGas: estimate.maxPriorityFee.toHex(),
         gasLimit: estimate.gasLimit.toHex(),
         data,
-        chainId: app.provider.ethChainId,
+        chainId: provider.ethChainId,
       };
 
       const tx = await utils.resolveProperties(transaction);
@@ -79,7 +85,7 @@ export class EthNetwork {
         value,
         data,
         ...estimate,
-        provider: app.provider.name,
+        provider: provider.name,
       });
       throw error;
     }
@@ -87,7 +93,7 @@ export class EthNetwork {
 
   static async getBalance(address: string): Promise<Balance> {
     try {
-      const rpcProvider = await getRpcProvider(app.provider);
+      const rpcProvider = await getRpcProvider(Provider.selectedProvider);
       const balanceResponse = await rpcProvider.getBalance(address);
       const balanceWithWEI = new Balance(balanceResponse._hex);
       const balance = new Balance(balanceWithWEI);
@@ -108,7 +114,7 @@ export class EthNetwork {
   }
 
   static async call(to: string, data: string) {
-    const rpcProvider = await getRpcProvider(app.provider);
+    const rpcProvider = await getRpcProvider(Provider.selectedProvider);
     return await rpcProvider.call({
       to,
       data,
@@ -117,20 +123,26 @@ export class EthNetwork {
 
   static async getCode(address: string) {
     try {
-      const rpcProvider = await getRpcProvider(app.provider);
+      const rpcProvider = await getRpcProvider(Provider.selectedProvider);
       return await rpcProvider.getCode(address);
     } catch (e) {
       return '0x';
     }
   }
 
-  static async sendTransaction(signedTx: string) {
-    const rpcProvider = await getRpcProvider(app.provider);
+  static async sendTransaction(
+    signedTx: string,
+    provider = Provider.selectedProvider,
+  ) {
+    const rpcProvider = await getRpcProvider(provider);
     return await rpcProvider.sendTransaction(signedTx);
   }
 
-  static async getTransactionReceipt(txHash: string) {
-    const rpcProvider = await getRpcProvider(app.provider);
+  static async getTransactionReceipt(
+    txHash: string,
+    provider = Provider.selectedProvider,
+  ) {
+    const rpcProvider = await getRpcProvider(provider);
 
     return await rpcProvider.getTransactionReceipt(txHash);
   }
@@ -138,9 +150,12 @@ export class EthNetwork {
   static async customEstimate(
     {from, to, value = Balance.Empty, data = '0x'}: TxEstimationParams,
     {gasLimit, maxBaseFee, maxPriorityFee}: TxCustomEstimationParams,
-    provider = app.provider,
+    provider = Provider.selectedProvider,
   ): Promise<CalculatedFees> {
     try {
+      if (provider.isTron) {
+        return Promise.reject(new Error('Tron is not supported'));
+      }
       const rpcProvider = await getRpcProvider(provider);
       const block = await rpcProvider.getBlock('latest');
       const estimateGasLimit = await rpcProvider.estimateGas({
@@ -156,9 +171,12 @@ export class EthNetwork {
             ? estimateGasLimit.toNumber()
             : gasLimit,
         ),
+        provider.decimals,
+        provider.denom,
       );
 
       const blockBaseFeePerGasGWEI = block.baseFeePerGas!.toNumber() / 10 ** 9;
+
       const resultMaxBaseFee = new Balance(
         new Balance(
           new Decimal(
@@ -168,6 +186,8 @@ export class EthNetwork {
           ),
         ).toNumber() /
           10 ** 9,
+        provider.decimals,
+        provider.denom,
       );
 
       const resultMaxPriorityFee = new Balance(
@@ -220,15 +240,28 @@ export class EthNetwork {
    * @param from Wallet address
    * @param to Wallet address
    * @param value coins amount
-   * @param data aditional data if needed
+   * @param data additional data if needed
    * @returns fee data
    */
   static async estimate(
-    {from, to, value = Balance.Empty, data = '0x', minGas}: TxEstimationParams,
+    txParams: TxEstimationParams,
     calculationType: EstimationVariant = EstimationVariant.average,
-    provider = app.provider,
+    provider = Provider.selectedProvider,
   ): Promise<CalculatedFees> {
     try {
+      Logger.log('txParams', JSON.stringify(txParams, null, 2));
+      const {from, to, value = Balance.Empty, data = '0x', minGas} = txParams;
+      if (provider.isTron) {
+        return await TronNetwork.estimateFeeSendTRX(
+          {from, to, value, data},
+          provider,
+        );
+      }
+      txParams = {
+        ...txParams,
+        from: AddressUtils.toEth(from),
+        to: AddressUtils.toEth(to),
+      };
       const rpcProvider = await getRpcProvider(provider);
       const {maxFeePerGas, maxPriorityFeePerGas} =
         await rpcProvider.getFeeData();
@@ -302,16 +335,29 @@ export class EthNetwork {
   async transferTransaction(
     estimate: CalculatedFees,
     transport: ProviderInterface,
-    wallet: Wallet,
+    wallet: IWalletModel,
     to: string,
     value: Balance,
+    provider = Provider.selectedProvider,
   ) {
     try {
-      const transaction = await EthNetwork.populateTransaction(estimate, {
-        from: wallet.address,
-        to,
-        value,
-      });
+      if (provider.isTron) {
+        const signedTx = await transport.signTransaction(wallet.path!, {
+          from: wallet.tronAddress,
+          to: AddressUtils.toTron(to),
+          value: value.toParsedBalanceNumber(),
+        });
+        return await TronNetwork.broadcastTransaction(signedTx, provider);
+      }
+      const transaction = await EthNetwork.populateTransaction(
+        estimate,
+        {
+          from: wallet.address,
+          to,
+          value,
+        },
+        provider,
+      );
       const signedTx = await transport.signTransaction(
         wallet.path!,
         transaction,
@@ -320,8 +366,7 @@ export class EthNetwork {
       if (!signedTx) {
         throw new Error('signedTx not found');
       }
-
-      return await EthNetwork.sendTransaction(signedTx);
+      return await EthNetwork.sendTransaction(signedTx, provider);
     } catch (error) {
       Logger.captureException(error, 'EthNetwork.transferTransaction', {
         value,
@@ -347,7 +392,14 @@ export class EthNetwork {
       contractAddress: string;
     },
     estimationVariant: EstimationVariant = EstimationVariant.average,
+    provider = Provider.selectedProvider,
   ) {
+    if (provider.isTron) {
+      return await TronNetwork.estimateFeeSendTRC20(
+        {from, to, value: amount, data: contractAddress},
+        provider,
+      );
+    }
     const data = getERC20TransferData(to, amount, contractAddress);
     return await EthNetwork.estimate(
       {
@@ -357,29 +409,48 @@ export class EthNetwork {
         data,
       },
       estimationVariant,
+      provider,
     );
   }
 
   async transferERC20(
     estimate: CalculatedFees,
     transport: ProviderInterface,
-    from: Wallet,
+    from: IWalletModel,
     to: string,
     amount: Balance,
     contractAddress: string,
+    provider = Provider.selectedProvider,
   ) {
     try {
-      const data = getERC20TransferData(to, amount, contractAddress);
-      const unsignedTx = await EthNetwork.populateTransaction(estimate, {
-        from: from.address,
-        to: contractAddress,
-        value: Balance.Empty,
-        data,
-      });
+      if (provider.isTron) {
+        const signedTx = await transport.signTransaction(from.path!, {
+          from: from.tronAddress,
+          to: AddressUtils.toTron(to),
+          data: contractAddress,
+          value: amount.toParsedBalanceNumber(),
+        });
 
-      const signedTx = await transport.signTransaction(from.path!, unsignedTx);
+        return await TronNetwork.broadcastTransaction(signedTx, provider);
+      } else {
+        const data = getERC20TransferData(to, amount, contractAddress);
+        const unsignedTx = await EthNetwork.populateTransaction(
+          estimate,
+          {
+            from: from.address,
+            to: contractAddress,
+            value: Balance.Empty,
+            data,
+          },
+          provider,
+        );
+        const signedTx = await transport.signTransaction(
+          from.path!,
+          unsignedTx,
+        );
 
-      return await EthNetwork.sendTransaction(signedTx);
+        return await EthNetwork.sendTransaction(signedTx, provider);
+      }
     } catch (error) {
       Logger.captureException(error, 'EthNetwork.transferERC20', {
         amount,
@@ -395,23 +466,28 @@ export class EthNetwork {
   async transferERC721(
     estimate: CalculatedFees,
     transport: ProviderInterface,
-    from: Wallet,
+    from: IWalletModel,
     to: string,
     tokenId: number,
     contractAddress: string,
+    provider = Provider.selectedProvider,
   ) {
     try {
       const data = getERC721TransferData(from.address, to, tokenId);
-      const unsignedTx = await EthNetwork.populateTransaction(estimate, {
-        from: from.address,
-        to: contractAddress,
-        value: Balance.Empty,
-        data,
-      });
+      const unsignedTx = await EthNetwork.populateTransaction(
+        estimate,
+        {
+          from: from.address,
+          to: contractAddress,
+          value: Balance.Empty,
+          data,
+        },
+        provider,
+      );
 
       const signedTx = await transport.signTransaction(from.path!, unsignedTx);
 
-      return await EthNetwork.sendTransaction(signedTx);
+      return await EthNetwork.sendTransaction(signedTx, provider);
     } catch (error) {
       Logger.captureException(error, 'EthNetwork.transferERC721', {
         tokenId,
@@ -427,23 +503,28 @@ export class EthNetwork {
   async transferERC1155(
     estimate: CalculatedFees,
     transport: ProviderInterface,
-    from: Wallet,
+    from: IWalletModel,
     to: string,
     tokenId: number,
     contractAddress: string,
+    provider = Provider.selectedProvider,
   ) {
     try {
       const data = getERC1155TransferData(from.address, to, tokenId);
-      const unsignedTx = await EthNetwork.populateTransaction(estimate, {
-        from: from.address,
-        to: contractAddress,
-        value: Balance.Empty,
-        data,
-      });
+      const unsignedTx = await EthNetwork.populateTransaction(
+        estimate,
+        {
+          from: from.address,
+          to: contractAddress,
+          value: Balance.Empty,
+          data,
+        },
+        provider,
+      );
 
       const signedTx = await transport.signTransaction(from.path!, unsignedTx);
 
-      return await EthNetwork.sendTransaction(signedTx);
+      return await EthNetwork.sendTransaction(signedTx, provider);
     } catch (error) {
       Logger.captureException(error, 'EthNetwork.transferERC1155', {
         tokenId,

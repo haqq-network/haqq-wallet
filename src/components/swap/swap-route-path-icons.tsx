@@ -1,14 +1,12 @@
 import React from 'react';
 
 import {observer} from 'mobx-react';
-import {View} from 'react-native';
+import {I18nManager, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
-import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
-import {Contracts} from '@app/models/contracts';
 import {Token} from '@app/models/tokens';
-import {HaqqCosmosAddress} from '@app/types';
+import {AddressCosmosHaqq} from '@app/types';
 import {STRINGS} from '@app/variables/common';
 
 import {ImageWrapper} from '../image-wrapper';
@@ -22,7 +20,7 @@ export enum SwapRoutePathIconsType {
 export type SwapRoutePathIconsProps =
   | {
       type: SwapRoutePathIconsType;
-      route: HaqqCosmosAddress[];
+      route: AddressCosmosHaqq[];
     }
   | {
       type: SwapRoutePathIconsType;
@@ -60,24 +58,20 @@ export const SwapRoutePathIcons = observer(
     return (
       <View style={styles.route}>
         {adresses.map((address, i, arr) => {
-          const contract = AddressUtils.equals(address, NATIVE_TOKEN_ADDRESS)
-            ? Token.generateNativeTokenContract()
-            : Contracts.getById(address);
+          const contract = Token.getById(address);
           const isLast = arr.length - 1 === i;
 
           if (!contract) {
             return null;
           }
+
           return (
             <React.Fragment key={`swap-route-path-item-${contract.id}`}>
-              <ImageWrapper
-                style={styles.routeIcon}
-                source={{uri: contract.icon!}}
-              />
+              <ImageWrapper style={styles.routeIcon} source={contract.image} />
               {!isLast && (
-                <Text variant={TextVariant.t14} color={Color.textBase1}>
+                <Text variant={TextVariant.t14} color={Color.graphicSecond3}>
                   {STRINGS.NBSP}
-                  {'→'}
+                  {I18nManager.isRTL ? '←' : '→'}
                   {STRINGS.NBSP}
                 </Text>
               )}

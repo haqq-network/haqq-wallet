@@ -18,7 +18,7 @@ import {
 import {WalletRow, WalletRowTypes} from '@app/components/wallet-row';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Wallet} from '@app/models/wallet';
+import {WalletModel} from '@app/models/wallet';
 import {WalletConnectApproveConnectionEvent} from '@app/types/wallet-connect';
 import {getHostnameFromUrl} from '@app/utils';
 
@@ -26,7 +26,7 @@ import {ImageWrapper} from './image-wrapper';
 
 interface WalletConnectApprovalProps {
   event: WalletConnectApproveConnectionEvent;
-  selectedWallet: Wallet;
+  selectedWallet: WalletModel;
   hideSelectWalletArrow: boolean;
 
   onSelectWalletPress(): void;
@@ -48,6 +48,23 @@ export const WalletConnectApproval = ({
   const metadata = useMemo(() => event?.params?.proposer?.metadata, [event]);
   const imageSource = useMemo(() => ({uri: metadata.icons?.[0]}), [metadata]);
   const url = useMemo(() => getHostnameFromUrl(metadata?.url), [metadata]);
+
+  const chainId = useMemo(() => {
+    const requiredChain =
+      event?.params?.requiredNamespaces?.eip155?.chains?.[0];
+    const optionalChain =
+      event?.params?.optionalNamespaces?.eip155?.chains?.[0];
+    const chain = requiredChain || optionalChain;
+    if (!chain) {
+      return undefined;
+    }
+    Logger.log('chain', chain);
+    const [, id] = chain.split(':');
+    if (!id) {
+      return undefined;
+    }
+    return Number(id);
+  }, [event]);
 
   return (
     <View style={styles.container}>
@@ -81,6 +98,7 @@ export const WalletConnectApproval = ({
           item={selectedWallet}
           onPress={onSelectWalletPress}
           hideArrow={hideSelectWalletArrow}
+          chainId={chainId}
         />
 
         <Spacer height={12} />

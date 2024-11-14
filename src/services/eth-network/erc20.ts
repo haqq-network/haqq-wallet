@@ -1,8 +1,7 @@
 import {utils} from 'ethers';
 
-import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
-import {Contracts} from '@app/models/contracts';
+import {Provider} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {Balance} from '@app/services/balance';
 
@@ -18,11 +17,10 @@ export const getERC20TransferData = (
     const iface = new utils.Interface(abi);
 
     const haqqContractAddress = AddressUtils.toHaqq(contractAddress);
-    const contractInfo =
-      Contracts.getById(haqqContractAddress) ||
-      Token.getById(haqqContractAddress);
+    const contractInfo = Token.getById(haqqContractAddress);
 
-    const decimals = contractInfo.decimals ?? app.provider.decimals;
+    const decimals =
+      contractInfo?.decimals ?? Provider.selectedProvider.decimals;
 
     const [amountClear] = new Balance(amount.toWei(), 0)
       .operate(Math.pow(10, amount.getPrecission()), 'div')

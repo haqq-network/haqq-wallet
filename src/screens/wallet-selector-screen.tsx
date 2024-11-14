@@ -24,8 +24,14 @@ export const WalletSelectorScreen = memo(() => {
     HomeStackParamList,
     HomeStackRoutes.WalletSelector
   >();
-  const {title, wallets, initialAddress, errorEventName, successEventName} =
-    params;
+  const {
+    title,
+    wallets,
+    initialAddress,
+    errorEventName,
+    successEventName,
+    chainId,
+  } = params;
   const selectedAddress = useRef(initialAddress);
 
   useFocusEffect(
@@ -54,9 +60,10 @@ export const WalletSelectorScreen = memo(() => {
         initialAddress={initialAddress}
         onWalletSelected={onWalletSelected}
         style={styles.walletSelector}
+        chainId={chainId}
       />
     ),
-    [initialAddress, onWalletSelected, wallets],
+    [initialAddress, onWalletSelected, wallets, chainId],
   );
 
   return (

@@ -2,9 +2,8 @@ import {useEffect, useRef, useState} from 'react';
 
 import validate from 'validate.js';
 
-import {app} from '@app/contexts';
 import {getRemoteBalanceValue} from '@app/helpers/get-remote-balance-value';
-import {I18N, getText} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
 
 export const useSumAmount = (
@@ -40,31 +39,38 @@ export const useSumAmount = (
           numericality: {
             notValid: 'Invalid number',
             greaterThanOrEqualTo: minAmountRef.current.toFloat(),
-            notGreaterThanOrEqualTo: getText(I18N.sumAmountTooLow, {
-              amount: minAmountRef.current.toBalanceString('auto'),
-            }),
             lessThanOrEqualTo: maxAmountRef.current.toFloat(),
-            notLessThanOrEqualTo: getText(I18N.sumAmountNotEnough, {
-              symbol: maxAmountRef.current.getSymbol(),
-            }),
           },
         });
         const newString = errorArray?.length > 0 ? errorArray.join(' ') : '';
-        setError(
-          newString
-            .replace(app.provider.denom, maxAmountRef.current.getSymbol())
+
+        let e = '';
+
+        if (Provider.isAllNetworks) {
+          e = newString
+            .replace(
+              minAmountRef.current.toFloat(),
+              minAmountRef.current.toFiatBalanceString('auto'),
+            )
             .replace(
               maxAmountRef.current.toFloat(),
-              maxAmountRef.current.toBalanceString('auto'),
-            )
+              maxAmountRef.current.toFiatBalanceString('auto'),
+            );
+        } else {
+          e = newString
             .replace(
               minAmountRef.current.toFloat(),
               minAmountRef.current.toBalanceString('auto'),
-            ),
-        );
+            )
+            .replace(
+              maxAmountRef.current.toFloat(),
+              maxAmountRef.current.toBalanceString('auto'),
+            );
+        }
+        setError(e);
       }
     }
-  }, [changed, amount, minAmount, maxAmount, app.provider.denom]);
+  }, [changed, amount, minAmount, maxAmount, Provider.selectedProvider.denom]);
 
   return {
     isValid:
@@ -86,10 +92,7 @@ export const useSumAmount = (
     setMax() {
       const max = maxAmountRef.current ?? maxAmount;
       setAmount(({changed: _changed}) => ({
-        amountText: max
-          ?.toBalanceString('auto', undefined, false)
-          ?.split(max.getSymbol())?.[0]
-          ?.trim(),
+        amountText: max?.toBalanceString('auto', undefined, false, true),
         amount: max,
         changed: _changed,
       }));
@@ -97,19 +100,29 @@ export const useSumAmount = (
     setMin: () => {
       const min = minAmountRef.current ?? minAmount;
       setAmount(({changed: _changed}) => ({
-        amountText: min
-          ?.toBalanceString('auto', undefined, false)
-          ?.split(min.getSymbol())?.[0]
-          ?.trim(),
+        amountText: min?.toBalanceString('auto', undefined, false, true),
         amount: min,
         changed: _changed,
       }));
     },
     setAmount(text: string, precision?: number) {
       if (text.match(/^[0-9].*/)) {
+        if (text.match(/^(0{2,})$/)) {
+          const amountZero = '0.';
+          if (typeof onChange === 'function') {
+            onChange(initialSum, amountZero);
+          }
+          return setAmount({
+            amountText: amountZero,
+            amount: initialSum,
+            changed: true,
+          });
+        }
+
         let i = 0;
         const textFormatted = text
           .replace(/,/g, '.')
+          .replace(/(^0+)(\d+)/, '$2')
           .replace(/[.%]/g, function (match) {
             return match === '.' ? (i++ === 0 ? '.' : '') : '';
           })
@@ -123,12 +136,12 @@ export const useSumAmount = (
           precision ??
           maxAmountRef.current?.getPrecission?.() ??
           minAmountRef.current?.getPrecission?.() ??
-          app.provider.decimals;
+          Provider.selectedProvider.decimals;
 
         const denom =
           maxAmountRef.current?.getSymbol?.() ??
           minAmountRef.current?.getSymbol?.() ??
-          app.provider.denom;
+          Provider.selectedProvider.denom;
 
         const newAmount = new Balance(+textFormatted, decimals, denom);
         if (typeof onChange === 'function') {
@@ -141,7 +154,7 @@ export const useSumAmount = (
         });
       } else if (text === '') {
         if (typeof onChange === 'function') {
-          onChange(Balance.Empty, '0');
+          onChange(Balance.Empty, '');
         }
         setAmount({
           amountText: '',
