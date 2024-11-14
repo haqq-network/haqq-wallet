@@ -84,6 +84,10 @@ export const WalletCard = observer(
           <DataContent
             style={styles.info}
             title={available.toEtherString()}
+            subtitleProps={{
+              numberOfLines: 1,
+              ellipsizeMode: 'tail',
+            }}
             subtitle={wallet.name}
             bold
           />

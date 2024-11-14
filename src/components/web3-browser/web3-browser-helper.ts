@@ -2,7 +2,6 @@ import {RefObject} from 'react';
 
 import EventEmitter from 'events';
 
-import {PhishingController} from '@metamask/phishing-controller';
 import {parseUri} from '@walletconnect/utils';
 import {JsonRpcEngine, JsonRpcRequest, JsonRpcResponse} from 'json-rpc-engine';
 import WebView, {WebViewMessageEvent} from 'react-native-webview';
@@ -15,6 +14,7 @@ import {
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {Events} from '@app/events';
+import {getMMPhishingController} from '@app/helpers/get-mm-phishing-controller';
 import {WebViewLogger} from '@app/helpers/webview-logger';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {navigator} from '@app/navigator';
@@ -53,7 +53,7 @@ export class Web3BrowserHelper extends EventEmitter implements JsonRpcHelper {
   public currentUrl: string;
   private webviewRef: RefObject<WebView>;
   private jrpcEngine = new JsonRpcEngine();
-  private phishingController = new PhishingController();
+  private phishingController = getMMPhishingController();
 
   constructor({webviewRef, initialUrl}: Web3BrowserHelperConstructor) {
     super();

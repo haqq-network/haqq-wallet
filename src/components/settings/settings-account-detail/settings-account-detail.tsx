@@ -102,7 +102,11 @@ export const SettingsAccountDetail = observer(
                 onCopy(wallet?.address);
               }}>
               <View style={[styles.row, styles.alignItemsCenter]}>
-                <Text variant={TextVariant.t10} style={styles.headerName}>
+                <Text
+                  variant={TextVariant.t10}
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                  style={styles.headerName}>
                   {wallet.name}
                 </Text>
                 <Text
@@ -238,6 +242,7 @@ const styles = createTheme({
   },
   row: {
     flexDirection: 'row',
+    marginBottom: 4,
   },
   button: {
     flex: 1,
@@ -256,7 +261,7 @@ const styles = createTheme({
     marginBottom: 20,
   },
   headerName: {
-    marginBottom: 4,
+    flex: 1,
   },
   cardMask: {
     margin: 4,
