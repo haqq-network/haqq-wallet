@@ -47,7 +47,7 @@
     "@haqq/rn-wallet-providers": "0.0.11",
     "@haqq/shared-react-native": "0.0.12",
     "@invertase/react-native-apple-authentication": "2.2.2",
-    "@keystonehq/bc-ur-registry-eth": "0.12.1",
+    "@keystonehq/bc-ur-registry-eth": "0.21.0",
     "@keystonehq/ur-decoder": "0.12.2",
     "@metamask/phishing-controller": "5.0.0",
     "@react-native-async-storage/async-storage": "1.19.0",
