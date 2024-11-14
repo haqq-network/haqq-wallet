@@ -41,8 +41,7 @@ export const TransactionAddressScreen = observer(() => {
     return true;
   }, [navigation]);
 
-  const toAddress = TransactionStore.to?.address;
-  const fromAddress = TransactionStore.from?.address;
+  const {toAddress, fromAddress} = TransactionStore;
 
   const {bottom: safeAreaBottomInset} = useSafeAreaInsets();
 
@@ -69,7 +68,7 @@ export const TransactionAddressScreen = observer(() => {
       });
     }
 
-    const lowerCaseAddress = toAddress!.toLowerCase();
+    const lowerCaseAddress = toAddress.toLowerCase();
 
     return wallets.filter(w => {
       if (isTron && !w.isSupportTron) {
@@ -150,23 +149,23 @@ export const TransactionAddressScreen = observer(() => {
   );
 
   const doneDisabled = useMemo(() => {
-    if (!address?.trim() || isError) {
+    if (!toAddress?.trim() || isError) {
       return true;
     }
 
     if (Provider.selectedProvider.isTron) {
       return (
         // can't send to the same wallet
-        fromWallet.tronAddress?.toLowerCase() === address?.toLowerCase() ||
-        !AddressUtils.isTronAddress(address)
+        fromWallet.tronAddress?.toLowerCase() === toAddress?.toLowerCase() ||
+        !AddressUtils.isTronAddress(toAddress)
       );
     }
     return (
-      fromWallet.address?.toLowerCase() === address?.toLowerCase() ||
-      fromWallet.cosmosAddress?.toLowerCase() === address?.toLowerCase() ||
-      !AddressUtils.isValidAddress(address)
+      fromWallet.address?.toLowerCase() === toAddress?.toLowerCase() ||
+      fromWallet.cosmosAddress?.toLowerCase() === toAddress?.toLowerCase() ||
+      !AddressUtils.isValidAddress(toAddress)
     );
-  }, [isError, address, fromWallet]);
+  }, [isError, toAddress, fromWallet]);
 
   const onPressAddress = useCallback(
     (item: string) => {
@@ -177,15 +176,13 @@ export const TransactionAddressScreen = observer(() => {
   );
 
   const onPressButton = useCallback(() => {
-    onDone(address.trim());
-  }, [address, onDone]);
+    onDone(toAddress.trim());
+  }, [toAddress, onDone]);
 
   return (
     <KeyboardSafeArea style={styles.keyboardAvoidingView}>
       <TransactionAddressInput
         testID={testID}
-        address={address}
-        setAddress={setAddress}
         isError={isError}
         setIsError={setIsError}
         onDone={onDone}
@@ -202,8 +199,8 @@ export const TransactionAddressScreen = observer(() => {
           onPress={onPressAddress}
         />
       )}
-      {AddressUtils.isValidAddress(address) && !filteredContacts.length && (
-        <TransactionAddressAddContact address={address} />
+      {AddressUtils.isValidAddress(toAddress) && !filteredContacts.length && (
+        <TransactionAddressAddContact address={toAddress} />
       )}
       <Spacer flex={1} />
       <Button

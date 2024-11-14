@@ -1,6 +1,7 @@
 import {PropsWithChildren, useCallback} from 'react';
 
 import {useFocusEffect} from '@react-navigation/native';
+import {observer} from 'mobx-react';
 
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 
@@ -10,19 +11,25 @@ type TransactionStoreContainerProps = {
   initialParams: HomeStackParamList[HomeStackRoutes.Transaction];
 };
 
-export const TransactionStoreContainer = ({
-  initialParams: {from, to, token},
-  children,
-}: PropsWithChildren<TransactionStoreContainerProps>) => {
-  useFocusEffect(
-    useCallback(() => {
-      TransactionStore.init(from, to, token);
+export const TransactionStoreContainer = observer(
+  ({
+    initialParams: {from, to, token},
+    children,
+  }: PropsWithChildren<TransactionStoreContainerProps>) => {
+    useFocusEffect(
+      useCallback(() => {
+        TransactionStore.init(from, to, token);
 
-      return () => {
-        TransactionStore.clear();
-      };
-    }, []),
-  );
+        return () => {
+          TransactionStore.clear();
+        };
+      }, []),
+    );
 
-  return children;
-};
+    if (!TransactionStore.from?.address) {
+      return null;
+    }
+
+    return children;
+  },
+);
