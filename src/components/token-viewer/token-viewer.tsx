@@ -28,6 +28,7 @@ export interface TokenViewerProps {
   wallet?: WalletModel;
   hideFilter?: boolean;
   onPressToken?: (wallet: WalletModel, token: IToken) => void;
+  onPressWallet?: (wallet: WalletModel) => void;
 }
 
 const SortingNamesMap = {
@@ -44,6 +45,7 @@ export const TokenViewer = observer(
     wallet,
     hideFilter = false,
     onPressToken,
+    onPressWallet,
   }: TokenViewerProps) => {
     const data = useMemo(() => computed(() => _data), [_data]).get();
     const wallets = useMemo(
@@ -189,6 +191,7 @@ export const TokenViewer = observer(
               tokensOnly={!!wallet}
               isLast={index === list.length - 1}
               onPressToken={onPressToken}
+              onPressWallet={onPressWallet}
             />
           );
         })}

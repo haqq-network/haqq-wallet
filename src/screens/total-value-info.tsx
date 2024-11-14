@@ -70,6 +70,15 @@ export const TotalValueInfoScreen = observer(() => {
     [navigation],
   );
 
+  const onPressWallet = useCallback(
+    (wallet: IWalletModel) => {
+      navigation.navigate(HomeStackRoutes.AccountInfo, {
+        accountId: wallet.address,
+      });
+    },
+    [navigation],
+  );
+
   if (!wallets?.length) {
     return <Loading />;
   }
@@ -83,6 +92,7 @@ export const TotalValueInfoScreen = observer(() => {
       onPressInfo={onPressInfo}
       onPressTxRow={onPressTxRow}
       onPressToken={onPressToken}
+      onPressWallet={onPressWallet}
     />
   );
 });
