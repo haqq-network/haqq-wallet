@@ -1,6 +1,5 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react';
 
-import {PhishingController} from '@metamask/phishing-controller';
 import {parseUri} from '@walletconnect/utils';
 import {ActivityIndicator, SafeAreaView, StyleSheet, View} from 'react-native';
 import WebView from 'react-native-webview';
@@ -15,6 +14,7 @@ import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {createTheme} from '@app/helpers';
 import {getAppHeaders} from '@app/helpers/get-app-headers';
+import {getMMPhishingController} from '@app/helpers/get-mm-phishing-controller';
 import {
   changeWebViewUrlJS,
   detectDeeplink,
@@ -57,7 +57,7 @@ export const InAppBrowser = ({
   const [navigationEvent, setNavigationEvent] = useState<WebViewNavigation>();
   const [isPageLoading, setPageLoading] = useState(false);
   const isFirstPageLoaded = useRef(false);
-  const phishingController = useRef(new PhishingController()).current;
+  const phishingController = useRef(getMMPhishingController()).current;
 
   const pageTitle = useMemo(
     () =>
