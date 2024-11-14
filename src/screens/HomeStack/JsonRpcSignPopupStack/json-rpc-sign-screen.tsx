@@ -1,6 +1,7 @@
-import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {ethers} from 'ethers';
+import {observer} from 'mobx-react';
 
 import {JsonRpcSign} from '@app/components/json-rpc-sign/json-rpc-sign';
 import {getMessageByRequest} from '@app/components/json-rpc-sign/json-rpc-sign-info';
@@ -13,12 +14,14 @@ import {
   EthereumMessageChecker,
   EthereumSignInMessage,
 } from '@app/helpers/ethereum-message-checker';
+import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {getHost} from '@app/helpers/web3-browser-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useBackNavigationHandler} from '@app/hooks/use-back-navigation-handler';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {Fee} from '@app/models/fee';
+import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {Balance} from '@app/services/balance';
@@ -33,7 +36,7 @@ import {
 } from '@app/utils';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
-export const JsonRpcSignScreen = memo(() => {
+export const JsonRpcSignScreen = observer(() => {
   const [isAllowed, setIsAllowed] = useState(false);
   const [rejectLoading, setRejectLoading] = useState(false);
   const [signLoading, setSignLoading] = useState(false);
@@ -134,7 +137,11 @@ export const JsonRpcSignScreen = memo(() => {
 
         if (
           !isAllowed &&
-          !(DEBUG_VARS.disableWeb3DomainBlocking || app.isTesterMode)
+          !(
+            DEBUG_VARS.disableWeb3DomainBlocking ||
+            app.isTesterMode ||
+            Provider.getByEthChainId(chainId!)!.isTestnet
+          )
         ) {
           return onPressReject('domain is blocked', true);
         }
@@ -166,19 +173,53 @@ export const JsonRpcSignScreen = memo(() => {
         const err = e as EthSignErrorDataDetails;
         const txInfo = err?.transaction;
         const errCode = err?.code;
-        if (
-          !!txInfo?.gasLimit &&
-          !!txInfo?.maxFeePerGas &&
-          errCode === 'INSUFFICIENT_FUNDS'
-        ) {
-          err.handled = true;
-          const gasLimit = new Balance(txInfo.gasLimit).operate(
-            new Balance(txInfo.maxFeePerGas),
-            'mul',
-          );
+        if (errCode === 'INSUFFICIENT_FUNDS') {
+          const provider = Provider.getByEthChainId(chainId!)!;
+          const rpcProvider = await getRpcProvider(provider);
+
+          const getBalance = async () => {
+            try {
+              const b1 = Wallet.getBalance(
+                wallet!.address,
+                'available',
+                provider,
+              );
+              if (b1.isPositive()) {
+                return b1;
+              }
+              const b2 = await rpcProvider.getBalance(wallet!.address);
+              return new Balance(b2, provider.decimals, provider.denom);
+            } catch (_err) {
+              Logger.captureException(_err, 'JsonRpcSignScreen:getBalance');
+              return new Balance('0x0', provider.decimals, provider.denom);
+            }
+          };
+
+          const getFee = () => {
+            try {
+              if (fee?.expectedFee?.isPositive?.()) {
+                return fee.expectedFee;
+              }
+              const gasLimit = ethers.BigNumber.from(txInfo?.gasLimit ?? 0);
+              const maxFeePerGas = ethers.BigNumber.from(
+                txInfo?.maxFeePerGas ?? 0,
+              );
+              const maxPriorityFeePerGas = ethers.BigNumber.from(
+                txInfo?.maxPriorityFeePerGas ?? 0,
+              );
+              return new Balance(
+                gasLimit.mul(maxFeePerGas.add(maxPriorityFeePerGas)),
+                provider.decimals,
+                provider.denom,
+              );
+            } catch (_err) {
+              Logger.captureException(_err, 'JsonRpcSignScreen:getFee');
+              return new Balance('0x0', provider.decimals, provider.denom);
+            }
+          };
           showModal(ModalType.notEnoughGas, {
-            gasLimit,
-            currentAmount: app.getAvailableBalance(wallet!.address),
+            gasLimit: getFee(),
+            currentAmount: await getBalance(),
           });
         }
         onPressReject(err, true);

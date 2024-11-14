@@ -38,7 +38,7 @@ import {
   JsonRpcMetadata,
   JsonRpcTransactionRequest,
 } from '@app/types';
-import {openInAppBrowser, sleep} from '@app/utils';
+import {openInAppBrowser, parseTxDataFromHexInput, sleep} from '@app/utils';
 import {LONG_NUM_PRECISION, STRINGS} from '@app/variables/common';
 
 import {ImageWrapper} from '../image-wrapper';
@@ -130,9 +130,9 @@ export const JsonRpcSwapTransaction = observer(
       const symbol = tokenIn?.amount?.getSymbol()!;
       const decimals = tokenIn?.amount?.getPrecission()!;
       if (!estimateData?.fee) {
-        return new Balance(Balance.Empty, decimals, symbol);
+        return new Balance('0x0', decimals, symbol);
       }
-      return new Balance(estimateData?.fee.amount || '0', decimals, symbol);
+      return new Balance(estimateData?.fee.amount || '0x0', decimals, symbol);
     }, [tokenIn, estimateData]);
 
     const onPressRoutingSource = useCallback(() => {
@@ -235,6 +235,44 @@ export const JsonRpcSwapTransaction = observer(
             s_swap_price: '0',
             sqrt_price_x96_after_list: [],
           };
+        }
+
+        // swap to native token and unwrap
+        // https://github.com/haqq-network/haqq-wallet/blob/6a64d63a20686fc1a711737784ad9e0514723d6d/src/screens/SwapStack/swap-screen.tsx#L855
+        if (functionName === 'multicall') {
+          const [swapTxData, _unwrapWETH9TxData] = parsedInput?.args[0]! as [
+            string,
+            string,
+          ];
+
+          estimateAbortController?.current?.abort();
+          estimateAbortController.current = new AbortController();
+
+          const [path, recipient, _, amountIn, _amountOutMinimum] =
+            parseTxDataFromHexInput(swapTxData)?.args[0]! as [
+              string, // path
+              string, // recipient
+              number, // deadline
+              BigNumber, // amountIn
+              BigNumber, //  amountOutMinimum
+            ];
+          amountOutMinimum = _amountOutMinimum._hex;
+          const matchArray = path.match(
+            /^0x([a-fA-F0-9]{40}).*([a-fA-F0-9]{40})$/,
+          );
+
+          // first 40 characters of path doesn't include the '0x' prefix
+          tokenInAddress = `0x${matchArray?.[1]}`;
+          // last 40 characters of path
+          tokenOutAddress = NATIVE_TOKEN_ADDRESS;
+
+          response = await indexer.sushiPoolEstimate({
+            amount: amountIn._hex,
+            sender: recipient,
+            route: path.slice(2),
+            currency_id: Currencies.currency?.id,
+            abortSignal: estimateAbortController.current?.signal,
+          });
         }
 
         const recipientWallet = Wallet.getById(tx?.from)!;

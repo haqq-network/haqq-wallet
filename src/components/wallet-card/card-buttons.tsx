@@ -14,18 +14,18 @@ type CardButtonsProps = {
   cardState: string;
   testID?: string;
   onPressSend: (address: string) => void;
-  onPressQR: (address: string) => void;
+  onPressReceive: (address: string) => void;
 };
 
 export const CardButtons = ({
   wallet,
   cardState,
   testID,
-  onPressQR,
+  onPressReceive,
   onPressSend,
 }: CardButtonsProps) => {
-  const onQr = () => {
-    onPressQR(wallet.address);
+  const onReceive = () => {
+    onPressReceive(wallet.address);
   };
 
   const onSend = () => {
@@ -48,7 +48,7 @@ export const CardButtons = ({
         {IS_IOS && <BlurView action="receive" cardState={cardState} />}
         <IconButton
           style={styles.spacer}
-          onPress={onQr}
+          onPress={onReceive}
           testID={`${testID}_receive`}>
           <Icon i24 name={IconsName.arrow_receive} color={Color.graphicBase3} />
           <Text color={Color.textBase3} i18n={I18N.modalDetailsQRReceive} />

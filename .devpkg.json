@@ -1,0 +1,13 @@
+{
+  "enabled": false,
+  "packages": {
+    "@haqq/rn-wallet-providers": {
+      "path": "../haqq-rn-wallet-providers",
+      "useDevEntryPoint": true
+    },
+    "@haqq/shared-react-native": {
+      "path": "../haqq-wallet-shared-react-native",
+      "useDevEntryPoint": true
+    }
+  }
+}

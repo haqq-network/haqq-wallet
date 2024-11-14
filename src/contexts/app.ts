@@ -16,7 +16,6 @@ import {DEBUG_VARS} from '@app/debug-vars';
 import {onAppReset} from '@app/event-actions/on-app-reset';
 import {onUpdatesSync} from '@app/event-actions/on-updates-sync';
 import {Events} from '@app/events';
-import {AddressUtils} from '@app/helpers/address-utils';
 import {AsyncEventEmitter} from '@app/helpers/async-event-emitter';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {checkNeedUpdate} from '@app/helpers/check-app-version';
@@ -25,19 +24,13 @@ import {getUid} from '@app/helpers/get-uid';
 import {SecurePinUtils} from '@app/helpers/secure-pin-utils';
 import {I18N, getText} from '@app/i18n';
 import {Currencies} from '@app/models/currencies';
-import {
-  ALL_NETWORKS_ID,
-  Provider,
-  ProviderModel,
-  RemoteProviderConfig,
-} from '@app/models/provider';
-import {Token} from '@app/models/tokens';
+import {Provider, RemoteProviderConfig} from '@app/models/provider';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
-import {BalanceModel, Wallet} from '@app/models/wallet';
+import {Wallet} from '@app/models/wallet';
+import {SHOW_NON_WHITELIST_TOKEN} from '@app/screens/settings-developer-tools';
 import {EthNetwork} from '@app/services';
 import {Backend} from '@app/services/backend';
-import {Balance} from '@app/services/balance';
 import {Cosmos} from '@app/services/cosmos';
 import {EventTracker} from '@app/services/event-tracker';
 import {HapticEffects, vibrate} from '@app/services/haptic';
@@ -48,13 +41,9 @@ import {User} from '../models/user';
 import {
   AppTheme,
   BiometryType,
-  ChainId,
   DynamicLink,
-  HaqqEthereumAddress,
-  IndexerBalanceData,
   MarketingEvents,
   ModalType,
-  WalletType,
 } from '../types';
 import {LIGHT_GRAPHIC_GREEN_1} from '../variables/common';
 
@@ -83,10 +72,6 @@ class App extends AsyncEventEmitter {
   private user: User;
   private _authenticated: boolean = DEBUG_VARS.enableSkipPinOnLogin;
   private appStatus: AppStatus = AppStatus.inactive;
-  private _balances: Record<
-    ChainId,
-    Record<HaqqEthereumAddress, BalanceModel>
-  > = {};
   private _googleSigninSupported: boolean = false;
   private _appleSigninSupported: boolean =
     Platform.select({
@@ -299,6 +284,13 @@ class App extends AsyncEventEmitter {
     VariablesBool.set('isTesterMode', value);
   }
 
+  get showNonWhitlistedTokens() {
+    return (
+      (this.isTesterMode && VariablesBool.get(SHOW_NON_WHITELIST_TOKEN)) ??
+      false
+    );
+  }
+
   get blindSignEnabled() {
     return VariablesBool.get('blindSignEnabled') ?? false;
   }
@@ -389,7 +381,7 @@ class App extends AsyncEventEmitter {
       }
     }
 
-    await awaitForEventDone(Events.onWalletsBalanceCheck);
+    await Wallet.fetchBalances();
 
     this.authenticated = true;
 
@@ -397,18 +389,6 @@ class App extends AsyncEventEmitter {
 
     return Promise.resolve();
   }
-
-  private getWalletForPinRestore = () => {
-    const possibleToRestoreWalletTypes = [
-      WalletType.hot,
-      WalletType.mnemonic,
-      WalletType.sss,
-    ];
-    const possibleToRestoreWallet = Wallet.getAll().find(wallet =>
-      possibleToRestoreWalletTypes.includes(wallet.type),
-    );
-    return possibleToRestoreWallet;
-  };
 
   async getPassword(): Promise<string> {
     const creds = await getGenericPassword();
@@ -601,145 +581,8 @@ class App extends AsyncEventEmitter {
 
   checkBalance() {
     if (AppState.currentState === 'active') {
-      this.emit(Events.onWalletsBalanceCheck);
+      Wallet.fetchBalances();
     }
-  }
-
-  onWalletsBalance(balances: IndexerBalanceData) {
-    if (!this.onboarded) {
-      return;
-    }
-
-    if (JSON.stringify(this._balances) !== JSON.stringify(balances)) {
-      this._balances = balances;
-      Token.fetchTokens();
-      this.emit(Events.onBalanceSync);
-    }
-  }
-
-  private _calculateAllNetworksBalance = (address: string) => {
-    const getBalanceData = (p: ProviderModel) =>
-      this._balances[p.ethChainId]?.[AddressUtils.toEth(address)] ||
-      Balance.emptyBalances[AddressUtils.toEth(address)];
-
-    return Provider.getAllNetworks().reduce(
-      (acc, p) => {
-        const {available, locked, staked, total, vested, availableForStake} =
-          getBalanceData(p) ?? {};
-
-        return {
-          staked: acc.staked.operate(
-            Currencies.convert(staked ?? Balance.Empty, p.ethChainId),
-            'add',
-          ),
-          vested: acc.vested.operate(
-            Currencies.convert(vested ?? Balance.Empty, p.ethChainId),
-            'add',
-          ),
-          available: acc.available?.operate(
-            Currencies.convert(available ?? Balance.Empty, p.ethChainId),
-            'add',
-          ),
-          total: acc.total?.operate(
-            Currencies.convert(total ?? Balance.Empty, p.ethChainId),
-            'add',
-          ),
-          locked: acc.locked?.operate(
-            Currencies.convert(locked ?? Balance.Empty, p.ethChainId),
-            'add',
-          ),
-          availableForStake: acc.availableForStake?.operate(
-            Currencies.convert(
-              availableForStake ?? Balance.Empty,
-              p.ethChainId,
-            ),
-            'add',
-          ),
-          unlock: acc.unlock,
-        };
-      },
-      {
-        staked: Balance.Empty,
-        vested: Balance.Empty,
-        available: Balance.Empty,
-        total: Balance.Empty,
-        locked: Balance.Empty,
-        availableForStake: Balance.Empty,
-        unlock: new Date(0),
-      },
-    );
-  };
-
-  getBalanceData(address: string) {
-    if (Provider.selectedProviderId === ALL_NETWORKS_ID) {
-      return this._calculateAllNetworksBalance(address);
-    }
-
-    return (
-      this._balances[Provider.selectedProvider.ethChainId]?.[
-        AddressUtils.toEth(address)
-      ] || Balance.emptyBalances[AddressUtils.toEth(address)]
-    );
-  }
-
-  getAvailableBalance(
-    address: string,
-    provider = Provider.selectedProvider,
-  ): Balance {
-    return (
-      this._balances[provider.ethChainId]?.[AddressUtils.toEth(address)]
-        ?.available ?? Balance.Empty
-    );
-  }
-
-  getAvailableForStakeBalance(
-    address: string,
-    provider = Provider.selectedProvider,
-  ): Balance {
-    return (
-      this._balances[provider.ethChainId]?.[AddressUtils.toEth(address)]
-        ?.availableForStake ?? Balance.Empty
-    );
-  }
-
-  getStakingBalance(
-    address: string,
-    provider = Provider.selectedProvider,
-  ): Balance {
-    return (
-      this._balances[provider.ethChainId]?.[AddressUtils.toEth(address)]
-        ?.staked ?? Balance.Empty
-    );
-  }
-
-  getVestingBalance(
-    address: string,
-    provider = Provider.selectedProvider,
-  ): Balance {
-    return (
-      this._balances[provider.ethChainId]?.[AddressUtils.toEth(address)]
-        ?.vested ?? Balance.Empty
-    );
-  }
-
-  getTotalBalance(
-    address: string,
-    provider = Provider.selectedProvider,
-  ): Balance {
-    return (
-      this._balances[provider.ethChainId]?.[AddressUtils.toEth(address)]
-        ?.total ?? Balance.Empty
-    );
-  }
-
-  getLockedBalance(
-    address: string,
-    provider = Provider.selectedProvider,
-  ): Balance {
-    return (
-      this._balances[provider.ethChainId]?.[AddressUtils.toEth(address)]
-        ?.locked ?? Balance.Empty
-    );
   }
 
   handleDynamicLink(link: DynamicLink | null) {

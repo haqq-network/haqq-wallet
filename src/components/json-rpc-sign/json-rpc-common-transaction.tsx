@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import {ethers} from 'ethers';
 import {ActivityIndicator, ScrollView, View} from 'react-native';
@@ -11,18 +11,21 @@ import {
   Icon,
   IconsName,
   InfoBlock,
+  Loading,
   Spacer,
   Text,
   TextVariant,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
+import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N} from '@app/i18n';
 import {Fee} from '@app/models/fee';
 import {ProviderModel} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {Balance} from '@app/services/balance';
-import {JsonRpcMetadata, JsonRpcTransactionRequest} from '@app/types';
+import {Indexer} from '@app/services/indexer';
+import {IToken, JsonRpcMetadata, JsonRpcTransactionRequest} from '@app/types';
 import {getHostnameFromUrl, openInAppBrowser} from '@app/utils';
 import {STRINGS} from '@app/variables/common';
 
@@ -38,7 +41,7 @@ export interface JsonRpcCommonTransactionProps {
   fee: Fee | null | undefined;
   tx: Partial<JsonRpcTransactionRequest> | undefined;
   parsedInput: ethers.utils.TransactionDescription | undefined;
-
+  chainId: number;
   onFeePress: () => void;
 }
 
@@ -52,34 +55,76 @@ export const JsonRpcCommonTransaction = ({
   fee,
   tx,
   parsedInput,
+  chainId,
   onFeePress,
 }: JsonRpcCommonTransactionProps) => {
   const url = useMemo(() => getHostnameFromUrl(metadata?.url), [metadata]);
+  const [token, setToken] = useState(Token.getById(tx?.to!));
   const value = useMemo(() => {
+    if (['delegate', 'undelegate'].includes(functionName!)) {
+      return new Balance(
+        parsedInput?.args?.[2] || '0x0',
+        provider?.decimals!,
+        provider?.denom!,
+      );
+    }
+    if (functionName === 'redelegate') {
+      return new Balance(
+        parsedInput?.args?.[3] || '0x0',
+        provider?.decimals!,
+        provider?.denom!,
+      );
+    }
+
     if (functionName === 'approve') {
-      const token = Token.getById(tx?.to!) || Token.UNKNOWN_TOKEN;
+      const t = token || Token.UNKNOWN_TOKEN;
       return new Balance(
         parsedInput?.args?.[1] || '0x0',
-        token.decimals!,
-        token.symbol!,
+        t.decimals!,
+        t.symbol!,
       );
     }
 
     if (!tx?.value) {
-      return Balance.Empty;
+      return new Balance(0, provider?.decimals, provider?.denom);
     }
 
     return new Balance(tx.value, provider?.decimals, provider?.denom);
   }, [tx, provider, parsedInput]);
 
+  const to = useMemo(() => {
+    return tx?.to ? shortAddress(tx.to, '•') : '';
+  }, [tx]);
+
+  const delegatorAddress = useMemo(() => {
+    if (['delegate', 'undelegate'].includes(functionName!)) {
+      return parsedInput?.args?.[1];
+    }
+    if (functionName === 'redelegate') {
+      return parsedInput?.args?.[2];
+    }
+    return '';
+  }, [functionName, parsedInput]);
+
   const total = useMemo(() => {
     if (functionName === 'approve') {
       return fee?.calculatedFees?.expectedFee.toBalanceString('auto');
     }
-    return value
-      .operate(fee?.calculatedFees?.expectedFee ?? Balance.Empty, 'add')
-      .toBalanceString('auto');
-  }, [value, fee?.calculatedFees?.expectedFee]);
+
+    const expectedFee =
+      fee?.calculatedFees?.expectedFee ||
+      new Balance(0, provider?.decimals, provider?.denom);
+
+    const expectedFeeHex = expectedFee.toHex();
+    const valueHex = value.toHex();
+    const totalHex = ethers.BigNumber.from(valueHex).add(expectedFeeHex);
+
+    return new Balance(
+      totalHex,
+      provider?.decimals,
+      provider?.denom,
+    ).toBalanceString(4);
+  }, [value, fee]);
 
   const onPressToAddress = useCallback(() => {
     openInAppBrowser(provider?.getAddressExplorerUrl?.(tx?.to!)!);
@@ -90,6 +135,32 @@ export const JsonRpcCommonTransaction = ({
       provider?.getAddressExplorerUrl?.(parsedInput?.args?.[0])!,
     );
   }, [provider, tx, parsedInput]);
+
+  const onPressDelegatorAddress = useCallback(() => {
+    // TODO: add to provider config
+    const pingPubUrl = provider?.config.explorerCosmosTxUrl.replace(
+      /tx\/.*/,
+      `staking/${delegatorAddress}`,
+    );
+
+    if (!pingPubUrl) {
+      return;
+    }
+
+    openInAppBrowser(pingPubUrl);
+  }, [provider, parsedInput, delegatorAddress]);
+
+  useEffectAsync(async () => {
+    const resp = await Indexer.instance.getAddresses({
+      [chainId]: [tx?.to!],
+    });
+    const t = resp[chainId]?.[0] ?? Token.UNKNOWN_TOKEN;
+    setToken(t as unknown as IToken);
+  }, [tx, chainId]);
+
+  if (functionName === 'approve' && !token) {
+    return <Loading />;
+  }
 
   return (
     <View style={styles.container}>
@@ -159,7 +230,7 @@ export const JsonRpcCommonTransaction = ({
         variant={TextVariant.t10}
         selectable
         color={Color.textBase1}>
-        {tx?.to}
+        {to}
       </Text>
 
       <Spacer height={28} />
@@ -183,6 +254,16 @@ export const JsonRpcCommonTransaction = ({
             )}
           </Text>
         </DataView>
+        {!!delegatorAddress && (
+          <DataView i18n={I18N.stakingInfo}>
+            <Text
+              variant={TextVariant.t11}
+              color={Color.textGreen1}
+              onPress={onPressDelegatorAddress}>
+              {shortAddress(delegatorAddress, '•')}
+            </Text>
+          </DataView>
+        )}
         {functionName === 'approve' && (
           <DataView i18n={I18N.transactionDetailApproveSpenderTitle}>
             <Text
@@ -202,22 +283,32 @@ export const JsonRpcCommonTransaction = ({
             </Text>
           </DataView>
         )}
-        <DataView i18n={I18N.transactionInfoAmount}>
-          <Text
-            variant={TextVariant.t11}
-            color={Color.textBase1}
-            children={value.toBalanceString('auto')}
-          />
-        </DataView>
+        {functionName !== 'claimRewards' && (
+          <DataView i18n={I18N.transactionInfoAmount}>
+            <Text
+              variant={TextVariant.t11}
+              color={Color.textBase1}
+              children={value.toBalanceString('auto')}
+            />
+          </DataView>
+        )}
         <DataView i18n={I18N.transactionInfoNetworkFee}>
           <First>
             {isFeeLoading && <ActivityIndicator />}
-            <TouchableWithoutFeedback onPress={onFeePress}>
+            <TouchableWithoutFeedback
+              disabled={provider?.isTron}
+              onPress={onFeePress}>
               <View style={styles.feeContainer}>
-                <Text variant={TextVariant.t11} color={Color.textGreen1}>
-                  {fee?.expectedFeeString}
+                <Text
+                  variant={TextVariant.t11}
+                  color={provider?.isTron ? Color.textBase1 : Color.textGreen1}>
+                  {provider?.isTron
+                    ? fee?.expectedFee?.toBalanceString()
+                    : fee?.expectedFeeString}
                 </Text>
-                <Icon name={IconsName.tune} color={Color.textGreen1} />
+                {(provider?.isEVM || provider?.isHaqqNetwork) && (
+                  <Icon name={IconsName.tune} color={Color.textGreen1} />
+                )}
               </View>
             </TouchableWithoutFeedback>
           </First>

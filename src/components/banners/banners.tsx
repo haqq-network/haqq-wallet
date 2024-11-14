@@ -40,7 +40,7 @@ export const Banners = ({banners, onPressBanner}: BannersProps) => {
           snapToAlignment="center">
           {banners.map(b => (
             <HomeBanner
-              key={b.id}
+              key={'home_banner_' + b.id}
               banner={b}
               onPress={onPressBanner}
               style={styles.banner}

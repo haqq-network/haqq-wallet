@@ -4,7 +4,7 @@ import {observer} from 'mobx-react';
 import {StyleSheet} from 'react-native';
 
 import {Color} from '@app/colors';
-import {TokenRow} from '@app/components/token-row';
+import {TokenRow} from '@app/components/token';
 import {Spacer, Text, TextVariant} from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
 import {WidgetHeader} from '@app/components/ui/widget-header';
@@ -44,7 +44,9 @@ export const TokensWidget = observer(({onPress, tokens}: Props) => {
         )
         .slice(0, VISIBLE_ITEM_AMOUNT)
         .map(item => {
-          return <TokenRow key={item.id} item={item} />;
+          return (
+            <TokenRow key={'tokens_widget_token_row_' + item.id} item={item} />
+          );
         })}
       {otherTokensAmount !== null && (
         <>

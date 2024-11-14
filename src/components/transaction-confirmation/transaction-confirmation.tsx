@@ -64,7 +64,17 @@ export const TransactionConfirmation = observer(
         return null;
       }
 
-      if (amount.isNativeCoin) {
+      const provider = Provider.getByEthChainId(token.chain_id);
+      const isNativeCoin = amount.getSymbol() === provider?.denom;
+      const isTron = provider?.isTron;
+
+      if (isNativeCoin) {
+        if (isTron) {
+          return fee.calculatedFees.expectedFee.operate(
+            amount.toFloat(),
+            'add',
+          );
+        }
         return fee.calculatedFees.expectedFee.operate(amount, 'add');
       }
 
@@ -198,17 +208,28 @@ export const TransactionConfirmation = observer(
                   <Text
                     variant={TextVariant.t11}
                     color={
-                      transactionSumError ? Color.graphicRed1 : Color.textGreen1
+                      transactionSumError
+                        ? Color.graphicRed1
+                        : Provider.selectedProvider.isEVM
+                        ? Color.textGreen1
+                        : Color.textBase1
                     }
+                    disabled={Provider.getByEthChainId(token.chain_id)?.isTron}
                     onPress={onFeePress}>
-                    {fee.expectedFeeString}
+                    {Provider.getByEthChainId(token.chain_id)?.isTron
+                      ? fee.expectedFee?.toBalanceString()
+                      : fee.expectedFeeString}
                   </Text>
-                  <Icon
-                    name={IconsName.tune}
-                    color={
-                      transactionSumError ? Color.graphicRed1 : Color.textGreen1
-                    }
-                  />
+                  {Provider.selectedProvider.isEVM && (
+                    <Icon
+                      name={IconsName.tune}
+                      color={
+                        transactionSumError
+                          ? Color.graphicRed1
+                          : Color.textGreen1
+                      }
+                    />
+                  )}
                 </View>
               )}
             </DataView>

@@ -12,9 +12,12 @@ import {
   Inline,
   Spacer,
   Text,
+  TextPosition,
+  TextVariant,
 } from '@app/components/ui';
 import {createTheme, getWindowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {MAGIC_CARD_HEIGHT} from '@app/variables/common';
 import {SHADOW_L} from '@app/variables/shadows';
 
@@ -33,15 +36,15 @@ export const WalletCreate = ({
   return (
     <View style={styles.container} testID={testID}>
       <Text
-        t8
+        variant={TextVariant.t8}
         i18n={I18N.walletCreateAddAccount}
         color={Color.textGreen1}
-        center
+        position={TextPosition.center}
         style={styles.title}
       />
       <Text
-        t14
-        center
+        variant={TextVariant.t14}
+        position={TextPosition.center}
         i18n={I18N.walletCreateImportAndCreate}
         color={Color.textBase2}
       />
@@ -55,19 +58,26 @@ export const WalletCreate = ({
         testID={`${testID}_create`}
       />
       <Inline gap={0}>
-        <Button
-          variant={ButtonVariant.second}
-          size={ButtonSize.middle}
-          onPress={onPressHardwareWallet}
-          testID={`${testID}_hardware`}>
-          <View style={styles.createButtonChildren}>
-            <Text t9 i18n={I18N.walletCreateConnect} color={Color.textGreen1} />
-            <Spacer width={8} />
-            <Icon i22 name={IconsName.keystone} color={Color.graphicGreen1} />
-            <Spacer width={8} />
-            <Icon i22 name={IconsName.ledger} color={Color.graphicGreen1} />
-          </View>
-        </Button>
+        {/* FIXME: Support TRON */}
+        {!Provider.selectedProvider.isTron && (
+          <Button
+            variant={ButtonVariant.second}
+            size={ButtonSize.middle}
+            onPress={onPressHardwareWallet}
+            testID={`${testID}_hardware`}>
+            <View style={styles.createButtonChildren}>
+              <Text
+                variant={TextVariant.t9}
+                i18n={I18N.walletCreateConnect}
+                color={Color.textGreen1}
+              />
+              <Spacer width={8} />
+              <Icon i22 name={IconsName.keystone} color={Color.graphicGreen1} />
+              <Spacer width={8} />
+              <Icon i22 name={IconsName.ledger} color={Color.graphicGreen1} />
+            </View>
+          </Button>
+        )}
         <Button
           size={ButtonSize.middle}
           i18n={I18N.walletCreateImport}

@@ -10,7 +10,7 @@ import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
-import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint
+import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
 import com.facebook.react.defaults.DefaultReactActivityDelegate
 import org.devio.rn.splashscreen.SplashScreen
 import com.facebook.react.modules.i18nmanager.I18nUtil;
@@ -112,16 +112,14 @@ class MainActivity : ReactActivity() {
   }
 
   /**
-   * Returns the instance of the {@link ReactActivityDelegate}. Here we use a util class {@link
-   * DefaultReactActivityDelegate} which allows you to easily enable Fabric and Concurrent React
-   * (aka React 18) with two boolean flags.
+   * Returns the instance of the [ReactActivityDelegate]. We use [DefaultReactActivityDelegate]
+   * which allows you to enable New Architecture with a single boolean flags [fabricEnabled]
    */
   override fun createReactActivityDelegate(): ReactActivityDelegate {
     return DefaultReactActivityDelegate(
       this,
       mainComponentName,
-      // If you opted-in for the New Architecture, we enable the Fabric Renderer.
-      BuildConfig.IS_NEW_ARCHITECTURE_ENABLED,
+      fabricEnabled,
     )
   }
 }

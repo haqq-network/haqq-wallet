@@ -7,7 +7,7 @@ import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {I18N, getText} from '@app/i18n';
 import {EstimationVariant} from '@app/models/fee';
 import {Provider} from '@app/models/provider';
-import {Wallet, WalletModel} from '@app/models/wallet';
+import {IWalletModel, Wallet} from '@app/models/wallet';
 import {getDefaultNetwork} from '@app/network';
 import {Cosmos} from '@app/services/cosmos';
 import {PartialJsonRpcRequest, WalletType} from '@app/types';
@@ -16,10 +16,12 @@ import {
   getSignTypedDataParamsData,
   isEthTypedData,
 } from '@app/utils';
+import {ETH_COIN_TYPE, TRON_COIN_TYPE} from '@app/variables/common';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 import {Balance} from './balance';
 import {EthNetwork} from './eth-network/eth-network';
+import {TronNetwork} from './tron-network';
 
 const logger = Logger.create('SignJsonRpcRequest', {
   enabled:
@@ -85,7 +87,7 @@ export class SignJsonRpcRequest {
    * ]
    */
   public static async signEIP155Request(
-    wallet: WalletModel | string,
+    wallet: IWalletModel | string,
     request: PartialJsonRpcRequest,
     chainId?: number,
   ) {
@@ -97,19 +99,25 @@ export class SignJsonRpcRequest {
       throw new Error(getText(I18N.jsonRpcErrorInvalidWallet));
     }
 
-    const instanceProvider = await getProviderInstanceForWallet(wallet, false);
+    const provider =
+      Provider.getByEthChainId(chainId!) || Provider.selectedProvider;
+    const instanceProvider = await getProviderInstanceForWallet(
+      wallet,
+      false,
+      provider,
+    );
+    Logger.log('Wallet Provider', instanceProvider.constructor.name);
+    Logger.log('Network Provider', JSON.stringify(provider, null, 2));
 
     if (!instanceProvider) {
       throw new Error(getText(I18N.jsonRpcErrorInvalidProvider));
     }
 
-    const provider =
-      Provider.getByEthChainId(chainId!) || Provider.selectedProvider;
     const rpcProvider = provider
       ? await getRpcProvider(provider)
       : getDefaultNetwork();
 
-    const path = wallet.path || '/';
+    const path = wallet.path?.replace(TRON_COIN_TYPE, ETH_COIN_TYPE)!;
     let result: string | undefined;
 
     switch (request.method) {
@@ -127,7 +135,7 @@ export class SignJsonRpcRequest {
       case EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA_V4:
         const typedData = getSignTypedDataParamsData(request.params);
         if (isEthTypedData(typedData)) {
-          const cosmos = new Cosmos(Provider.selectedProvider);
+          const cosmos = new Cosmos(provider);
           const signTypedDataResult = cosmos.signTypedData(
             path,
             instanceProvider,
@@ -153,8 +161,16 @@ export class SignJsonRpcRequest {
           chainId,
         );
 
-        const tx = await rpcProvider.sendTransaction(signedTransaction);
-        result = tx.hash;
+        if (provider.isTron) {
+          const tx = await TronNetwork.broadcastTransaction(
+            signedTransaction,
+            provider,
+          );
+          result = tx.hash;
+        } else {
+          const tx = await rpcProvider.sendTransaction(signedTransaction);
+          result = tx.hash;
+        }
         break;
       case EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION:
         let signTransactionRequest: TransactionRequest = Array.isArray(
@@ -164,43 +180,48 @@ export class SignJsonRpcRequest {
           : request.params;
 
         const {address} = await instanceProvider.getAccountInfo(path);
-        const nonce = await rpcProvider.getTransactionCount(address, 'latest');
+        let nonce: number | undefined;
 
-        const minGas = new Balance(signTransactionRequest.gasLimit ?? 0);
+        if (provider.isEVM) {
+          nonce = await rpcProvider.getTransactionCount(address, 'latest');
 
-        const {gasLimit, maxBaseFee, maxPriorityFee} =
-          await EthNetwork.estimate(
-            {
-              from: signTransactionRequest.from!,
-              to: signTransactionRequest.to!,
-              value: new Balance(
-                signTransactionRequest.value! || Balance.Empty,
-              ),
-              data: signTransactionRequest.data?.toString()!,
-              minGas,
-            },
-            EstimationVariant.average,
-            provider,
+          const minGas = new Balance(signTransactionRequest.gasLimit ?? 0);
+
+          const {gasLimit, maxBaseFee, maxPriorityFee} =
+            await EthNetwork.estimate(
+              {
+                from: signTransactionRequest.from!,
+                to: signTransactionRequest.to!,
+                value: new Balance(
+                  signTransactionRequest.value! || '0x0',
+                  provider?.decimals,
+                  provider?.denom,
+                ),
+                data: signTransactionRequest.data?.toString()!,
+                minGas,
+              },
+              EstimationVariant.average,
+              provider,
+            );
+
+          const maxPriorityFeePerGasCalculated = maxPriorityFee.max(
+            signTransactionRequest.maxPriorityFeePerGas || 0,
+          );
+          const maxFeePerGasCalculated = maxBaseFee.max(
+            signTransactionRequest.maxFeePerGas || 0,
           );
 
-        const maxPriorityFeePerGasCalculated = maxPriorityFee.max(
-          signTransactionRequest.maxPriorityFeePerGas || 0,
-        );
-        const maxFeePerGasCalculated = maxBaseFee.max(
-          signTransactionRequest.maxFeePerGas || 0,
-        );
-
-        signTransactionRequest = {
-          ...signTransactionRequest,
-          nonce,
-          type: 2,
-          gasLimit: gasLimit.toHex(),
-          maxFeePerGas: maxFeePerGasCalculated.toHex(),
-          maxPriorityFeePerGas: maxPriorityFeePerGasCalculated.toHex(),
-        };
-
-        if (signTransactionRequest.gasPrice) {
-          delete signTransactionRequest.gasPrice;
+          signTransactionRequest = {
+            ...signTransactionRequest,
+            nonce,
+            type: 2,
+            gasLimit: gasLimit.toHex(),
+            maxFeePerGas: maxFeePerGasCalculated.toHex(),
+            maxPriorityFeePerGas: maxPriorityFeePerGasCalculated.toHex(),
+          };
+          if (signTransactionRequest.gasPrice) {
+            delete signTransactionRequest.gasPrice;
+          }
         }
 
         if (chainId) {
@@ -227,6 +248,9 @@ export class SignJsonRpcRequest {
 
     logger.log('✅ signEIP155Request result:', result, result.length);
 
+    if (provider.isTron) {
+      return result.replace(/^0x/, '');
+    }
     return utils.normalize0x(result);
   }
 }

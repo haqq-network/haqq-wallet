@@ -7,9 +7,9 @@ import {Currencies} from '@app/models/currencies';
 import {Provider} from '@app/models/provider';
 import {BalanceModel, Wallet} from '@app/models/wallet';
 import {
+  AddressEthereum,
   BalanceConstructor,
   ChainId,
-  HaqqEthereumAddress,
   HexNumber,
   IBalance,
   ISerializable,
@@ -162,6 +162,16 @@ export class Balance implements IBalance, ISerializable {
       );
     }
     return cleanNumber(this.toFloat(precission), NUM_DELIMITER, fixed);
+  };
+
+  toParsedBalanceNumber = () => {
+    const b = this.toBalanceString(
+      undefined,
+      undefined,
+      false,
+      true,
+    ).replaceAll(' ', '');
+    return +b;
   };
 
   /**
@@ -429,7 +439,7 @@ export class Balance implements IBalance, ISerializable {
     }
   };
 
-  static get emptyBalances(): Record<HaqqEthereumAddress, BalanceModel> {
+  static get emptyBalances(): Record<AddressEthereum, BalanceModel> {
     return Wallet.getAll().reduce((acc, w) => {
       return {
         ...acc,

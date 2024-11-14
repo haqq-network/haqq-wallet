@@ -7,8 +7,14 @@ import {Socket} from '@app/models/socket';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
-import {IndexerTransaction, IndexerTxParsedTokenInfo} from '@app/types';
+import {
+  ChainId,
+  IndexerTransaction,
+  IndexerTxMsgType,
+  IndexerTxParsedTokenInfo,
+} from '@app/types';
 import {RPCMessage, RPCObserver} from '@app/types/rpc';
+import {createAsyncTask} from '@app/utils';
 
 import {Token} from './tokens';
 
@@ -59,7 +65,7 @@ class TransactionStore implements RPCObserver {
     return this._isLoading;
   }
 
-  create(transaction: IndexerTransaction) {
+  create(transaction: IndexerTransaction, accounts: Record<ChainId, string[]>) {
     const existingTransaction = this.getById(transaction.id);
 
     const newTransaction: Transaction = parseTransaction(
@@ -67,7 +73,7 @@ class TransactionStore implements RPCObserver {
         ...existingTransaction,
         ...transaction,
       },
-      Wallet.addressList(),
+      accounts,
     );
 
     if (existingTransaction) {
@@ -92,12 +98,18 @@ class TransactionStore implements RPCObserver {
     }
   }
 
-  getById(id: string) {
+  getById(id: string, txType?: IndexerTxMsgType) {
     const transactionLowerCaseId = id.toLowerCase();
     return (
-      this.getAll().find(
-        transaction => transaction.id.toLowerCase() === transactionLowerCaseId,
-      ) || null
+      this.getAll().find(transaction => {
+        if (txType) {
+          return (
+            transaction.id.toLowerCase() === transactionLowerCaseId &&
+            transaction.msg.type === txType
+          );
+        }
+        return transaction.id.toLowerCase() === transactionLowerCaseId;
+      }) || null
     );
   }
 
@@ -131,7 +143,9 @@ class TransactionStore implements RPCObserver {
       return;
     }
 
-    const nextTxList = await this._fetch(accounts);
+    const nextTxList = await this._fetch(
+      Indexer.instance.getProvidersHeader(accounts),
+    );
 
     runInAction(() => {
       this._transactions = [...this._transactions, ...nextTxList].filter(
@@ -149,7 +163,10 @@ class TransactionStore implements RPCObserver {
       return;
     }
 
-    const newTxs = await this._fetch(accounts, 'latest');
+    const newTxs = await this._fetch(
+      Indexer.instance.getProvidersHeader(accounts),
+      'latest',
+    );
 
     runInAction(() => {
       this._transactions = newTxs;
@@ -158,33 +175,38 @@ class TransactionStore implements RPCObserver {
     return newTxs;
   };
 
-  private _fetch = async (accounts: string[], ts?: string) => {
-    try {
-      const result = await Indexer.instance.getTransactions(
-        accounts,
-        ts ?? this._lastSyncedTransactionTs,
-      );
-      await when(() => !Token.isLoading, {});
-      const parsed = result
-        .map(tx => parseTransaction(tx, accounts))
-        .filter(tx => !!tx.parsed);
+  private _fetch = createAsyncTask(
+    async (accounts: Record<ChainId, string[]>, ts?: string) => {
+      try {
+        runInAction(() => {
+          this._isLoading = true;
+        });
+        const result = await Indexer.instance.getTransactions(
+          accounts,
+          ts ?? this._lastSyncedTransactionTs,
+        );
+        await when(() => !Token.isLoading, {});
+        const parsed = result
+          .map(tx => parseTransaction(tx, accounts))
+          .filter(tx => !!tx.parsed);
 
-      // If new transactions exists than _lastSyncedTransactionTs must be updated
-      // If transactions array is empty it's mean all transactions fetched and _lastSyncedTransactionTs mustn't be updated
-      if (parsed.length) {
-        this._lastSyncedTransactionTs =
-          parsed[parsed.length - 1]?.ts ?? 'latest';
+        // If new transactions exists than _lastSyncedTransactionTs must be updated
+        // If transactions array is empty it's mean all transactions fetched and _lastSyncedTransactionTs mustn't be updated
+        if (parsed.length) {
+          this._lastSyncedTransactionTs =
+            parsed[parsed.length - 1]?.ts ?? 'latest';
+        }
+
+        return parsed;
+      } catch (e) {
+        Logger.captureException(e, 'TransactionStore._fetch', {
+          accounts,
+          transactionTs: this._lastSyncedTransactionTs,
+        });
+        return [];
       }
-
-      return parsed;
-    } catch (e) {
-      Logger.captureException(e, 'TransactionStore._fetch', {
-        accounts,
-        transactionTs: this._lastSyncedTransactionTs,
-      });
-      return [];
-    }
-  };
+    },
+  );
 
   onMessage = (message: RPCMessage) => {
     if (message.type !== 'transaction') {
@@ -192,12 +214,12 @@ class TransactionStore implements RPCObserver {
     }
 
     const result = message.data.txs || message.data.transactions || [];
-    const accounts = Wallet.addressList();
+    const accounts = Indexer.instance.getProvidersHeader(Wallet.addressList());
     const parsed = result
       .map(tx => parseTransaction(tx, accounts))
       .filter(tx => !!tx.parsed);
 
-    parsed.forEach(transaction => this.create(transaction));
+    parsed.forEach(transaction => this.create(transaction, accounts));
   };
 
   clear() {

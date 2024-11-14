@@ -7,14 +7,16 @@ import {TotalValueTabNames} from '@app/components/total-value-info';
 import {AwaitValue} from '@app/helpers/await-for-value';
 import {NftCollection, NftItem} from '@app/models/nft';
 import {ProviderModel} from '@app/models/provider';
-import {WalletModel} from '@app/models/wallet';
+import {IWalletModel, WalletModel} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {SssProviders} from '@app/services/provider-sss';
 import {
   BiometryType,
+  ChainId,
   Eventable,
   IStory,
   IToken,
+  IndexerTxMsgType,
   JsonRpcMetadata,
   LedgerWalletInitialData,
   MarketingEvents,
@@ -258,14 +260,14 @@ export enum BackupStackRoutes {
 
 export type BackupStackParamList = HomeStackParamList & {
   [BackupStackRoutes.BackupWarning]: {
-    wallet: WalletModel;
+    wallet: IWalletModel;
     pinEnabled?: boolean;
   };
   [BackupStackRoutes.BackupCreate]: {
-    wallet: WalletModel;
+    wallet: IWalletModel;
   };
   [BackupStackRoutes.BackupVerify]: {
-    wallet: WalletModel;
+    wallet: IWalletModel;
   };
   [BackupStackRoutes.BackupFinish]: undefined;
 };
@@ -348,7 +350,8 @@ export enum HomeStackRoutes {
   AccountInfo = 'accountInfo',
   Transaction = 'transaction',
   Nft = 'Nft',
-  AccountDetail = 'accountDetail',
+  SelectNetwork = 'selectNetwork',
+  Receive = 'receive',
   Backup = 'backup',
   WalletProtectionPopup = 'walletProtectionPopup',
   WalletConnectApplicationDetailsPopup = 'walletConnectApplicationDetailsPopup',
@@ -372,6 +375,7 @@ export enum HomeStackRoutes {
   Swap = '_swap',
   NewsDetailPushNotification = 'newsDetailsPushNotification',
   FeeSettings = 'feeSettings',
+  SignUp = 'SignUp',
 }
 
 export type HomeStackParamList = {
@@ -380,6 +384,7 @@ export type HomeStackParamList = {
   [HomeStackRoutes.Ledger]: undefined;
   [HomeStackRoutes.Device]: undefined;
   [HomeStackRoutes.SignIn]: undefined;
+  [HomeStackRoutes.SignUp]: undefined;
   [HomeStackRoutes.AccountInfo]: {accountId: string};
   [HomeStackRoutes.Transaction]: {
     from?: string;
@@ -395,13 +400,14 @@ export type HomeStackParamList = {
         initScreen: NftStackRoutes.NftCollectionDetails;
         item: NftCollection;
       };
-  [HomeStackRoutes.AccountDetail]: {address: string};
+  [HomeStackRoutes.SelectNetwork]: {address: string};
+  [HomeStackRoutes.Receive]: {address: string; chainId: ChainId};
   [HomeStackRoutes.Backup]: {
-    wallet: WalletModel;
+    wallet: IWalletModel;
     pinEnabled?: boolean;
   };
   [HomeStackRoutes.WalletProtectionPopup]: {
-    wallet: WalletModel;
+    wallet: IWalletModel;
     pinEnabled?: boolean;
   };
   [HomeStackRoutes.WalletConnectApplicationDetailsPopup]: {
@@ -412,7 +418,11 @@ export type HomeStackParamList = {
     address: string;
     isPopup?: boolean;
   };
-  [HomeStackRoutes.TransactionDetail]: {txId: string; addresses: string[]};
+  [HomeStackRoutes.TransactionDetail]: {
+    txId: string;
+    addresses: string[];
+    txType: IndexerTxMsgType;
+  };
   [HomeStackRoutes.InAppBrowser]: {
     url: string;
     title?: string;
@@ -427,7 +437,7 @@ export type HomeStackParamList = {
     accountId: string;
     pinEnabled?: boolean;
   };
-  [HomeStackRoutes.BackupNotification]: {wallet: WalletModel};
+  [HomeStackRoutes.BackupNotification]: {wallet: IWalletModel};
   [HomeStackRoutes.JsonRpcSign]: {
     request: PartialJsonRpcRequest;
     metadata: JsonRpcMetadata;
@@ -448,6 +458,7 @@ export type HomeStackParamList = {
     wallets: WalletModel[];
     title: string;
     initialAddress?: string;
+    chainId?: number;
   };
   [HomeStackRoutes.TotalValueInfo]?: {
     tab?: TotalValueTabNames;
@@ -769,6 +780,7 @@ export type SignInStackParamList = WelcomeStackParamList & {
     | (WalletInitialData & {
         provider: ProviderMnemonicBase;
         nextScreen?: SignInStackRoutes;
+        mnemonic: SecureValue<string>;
       })
     | {
         provider: ProviderSSSBase;

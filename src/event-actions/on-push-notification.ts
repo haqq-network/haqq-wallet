@@ -102,12 +102,16 @@ export async function onPushNotification(message: RemoteMessage<Data>) {
         hash,
       );
       if (transaction) {
-        Transaction.create(transaction);
+        Transaction.create(
+          transaction,
+          Indexer.instance.getProvidersHeader(Wallet.addressList()),
+        );
         navigator.navigate(HomeStackRoutes.TransactionDetail, {
           // FIXME: For some reason navigator doesn't understand routing types correctly
           // @ts-ignore
           txId: transaction.id,
           addresses: Wallet.addressList(),
+          txType: transaction.msg.type,
         });
       }
       break;

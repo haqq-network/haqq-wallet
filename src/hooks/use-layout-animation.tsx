@@ -13,6 +13,10 @@ export const useLayoutAnimation = () => {
     UIManager.setLayoutAnimationEnabledExperimental(true);
 
     return () => {
+      if (!UIManager.setLayoutAnimationEnabledExperimental || !IS_ANDROID) {
+        return;
+      }
+
       UIManager.setLayoutAnimationEnabledExperimental(false);
     };
   }, []);

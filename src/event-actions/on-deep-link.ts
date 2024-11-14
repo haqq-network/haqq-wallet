@@ -5,16 +5,19 @@ import {Events} from '@app/events';
 import {awaitForWallet, showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {Url} from '@app/helpers/url';
-import {Whitelist} from '@app/helpers/whitelist';
 import {I18N} from '@app/i18n';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
+import {Whitelist} from '@app/models/whitelist';
 import {sendNotification} from '@app/services/toast';
 import {DeeplinkProtocol, DeeplinkUrlKey, ModalType} from '@app/types';
 import {openInAppBrowser, openWeb3Browser} from '@app/utils';
 
+import {onDynamicLink} from './on-dynamic-link';
+
 export type ParsedQuery = {
   uri?: string;
+  [key: string]: string | undefined;
 };
 
 const BROWSERS_FN = {
@@ -60,18 +63,25 @@ export async function onDeepLink(
   withoutFromAddress: boolean = false,
   isInitialRun = false,
 ) {
+  logger.log('onDeepLink', {link, withoutFromAddress, isInitialRun});
   try {
     if (!link) {
       return false;
     }
 
-    if (AddressUtils.isEthAddress(link)) {
-      await handleAddress(link, withoutFromAddress);
-      return true;
+    if (link.startsWith('https://haqq.page.link/')) {
+      return onDynamicLink({
+        url: new Url<{link: string}>(link, true).query.link as string,
+      });
     }
 
     if (AddressUtils.isHaqqAddress(link)) {
       await handleAddress(AddressUtils.toEth(link), withoutFromAddress);
+      return true;
+    }
+
+    if (AddressUtils.isValidAddress(link)) {
+      await handleAddress(link, withoutFromAddress);
       return true;
     }
 
@@ -100,13 +110,16 @@ export async function onDeepLink(
         ':',
       );
 
-      if (AddressUtils.isEthAddress(key)) {
-        await handleAddress(key, withoutFromAddress);
+      if (AddressUtils.isHaqqAddress(url.pathname)) {
+        await handleAddress(
+          AddressUtils.toEth(url.pathname),
+          withoutFromAddress,
+        );
         return true;
       }
 
-      if (AddressUtils.isHaqqAddress(key)) {
-        await handleAddress(AddressUtils.toEth(key), withoutFromAddress);
+      if (AddressUtils.isValidAddress(url.pathname)) {
+        await handleAddress(url.pathname, withoutFromAddress);
         return true;
       }
 
@@ -121,7 +134,13 @@ export async function onDeepLink(
         case DeeplinkUrlKey.web3browser:
           if (await Whitelist.checkUrl(url.query.uri)) {
             const openBrowserFn = BROWSERS_FN[key];
-            openBrowserFn(url.query.uri!);
+            let uri = url.query.uri!;
+            for (let qkey in url.query) {
+              if (qkey !== 'uri') {
+                uri += `&${qkey}=${url.query[qkey]}`;
+              }
+            }
+            openBrowserFn(uri as string);
           } else {
             showModal(ModalType.domainBlocked, {
               domain: url.query.uri!,

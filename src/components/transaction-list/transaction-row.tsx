@@ -149,11 +149,9 @@ export const TransactionRow = memo(
                     <Spacer width={4} />
                   </>
                 )}
-                <View>
-                  <Text variant={TextVariant.t14} color={Color.textBase2}>
-                    {item.parsed.subtitle}
-                  </Text>
-                </View>
+                <Text variant={TextVariant.t14} color={Color.textBase2}>
+                  {item.parsed.subtitle}
+                </Text>
               </View>
             }
             short

@@ -1,9 +1,10 @@
-import React, {memo, useMemo} from 'react';
+import React, {useMemo} from 'react';
 
 import {
   NativeStackNavigationOptions,
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
+import {observer} from 'mobx-react';
 import Config from 'react-native-config';
 
 import {getModalScreenOptions} from '@app/helpers/get-modal-screen-options';
@@ -34,7 +35,7 @@ const newsDetailOptions: NativeStackNavigationOptions = {
   ...modalOptions,
 };
 
-const WelcomeStack = memo(() => {
+const WelcomeStack = observer(() => {
   const initialRouteName = useMemo(() => {
     return getWelcomeScreen();
   }, []);
@@ -66,13 +67,13 @@ const WelcomeStack = memo(() => {
         options={modalOptions}
       />
       <Stack.Screen
-        component={DeviceStack}
-        name={WelcomeStackRoutes.Device}
+        component={SignInStack}
+        name={WelcomeStackRoutes.SignIn}
         options={modalOptions}
       />
       <Stack.Screen
-        component={SignInStack}
-        name={WelcomeStackRoutes.SignIn}
+        component={DeviceStack}
+        name={WelcomeStackRoutes.Device}
         options={modalOptions}
       />
       <Stack.Screen

@@ -3,6 +3,7 @@ import React, {useCallback} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {observer} from 'mobx-react-lite';
 
+import {app} from '@app/contexts';
 import {hideBack, hideHeader, popupScreenOptions} from '@app/helpers';
 import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {I18N, getText} from '@app/i18n';
@@ -41,7 +42,7 @@ const KeystoneStack = observer(() => {
         title={title}
       />
     ),
-    [],
+    [app.onboarded],
   );
 
   return (

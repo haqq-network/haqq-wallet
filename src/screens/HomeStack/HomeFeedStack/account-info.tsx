@@ -8,9 +8,8 @@ import {Loading} from '@app/components/ui';
 import {showModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useWallet} from '@app/hooks/use-wallet';
-import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {Token} from '@app/models/tokens';
-import {WalletModel} from '@app/models/wallet';
+import {IWalletModel, Wallet} from '@app/models/wallet';
 import {
   HomeStackParamList,
   HomeStackRoutes,
@@ -27,12 +26,14 @@ export const AccountInfoScreen = observer(() => {
   const navigation = useTypedNavigation<HomeStackParamList>();
   const accountId = useMemo(() => route.params.accountId, [route]);
   const wallet = useWallet(accountId);
-  const balances = useWalletsBalance([wallet!]);
+  const balances = Wallet.getBalancesByAddressList([wallet!]);
   const {available, locked, staked, total, nextVestingUnlockDate, vested} =
     useMemo(() => balances[wallet?.address!], [balances, wallet]);
 
   const onReceive = useCallback(() => {
-    showModal(ModalType.cardDetailsQr, {address: route.params.accountId});
+    navigation.navigate(HomeStackRoutes.SelectNetwork, {
+      address: wallet?.address!,
+    });
   }, [route.params.accountId]);
 
   const onSend = useCallback(() => {
@@ -46,6 +47,7 @@ export const AccountInfoScreen = observer(() => {
       navigation.navigate(HomeStackRoutes.TransactionDetail, {
         txId: tx.id,
         addresses: [accountId],
+        txType: tx.msg.type,
       });
     },
     [navigation, accountId],
@@ -57,7 +59,7 @@ export const AccountInfoScreen = observer(() => {
   );
 
   const onPressToken = useCallback(
-    (w: WalletModel, token: IToken) => {
+    (w: IWalletModel, token: IToken) => {
       navigation.navigate(HomeStackRoutes.Transaction, {
         // @ts-ignore
         screen: TransactionStackRoutes.TransactionAddress,

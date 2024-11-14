@@ -57,7 +57,10 @@ export const SssMigrateStoreScreen = observer(() => {
           null,
           entropy,
           route.params.verifier,
-          route.params.token,
+          typeof route.params.token === 'string'
+            ? route.params.token
+            : //@ts-ignore
+              route?.params?.token?.value,
           getPassword,
           storage,
           {

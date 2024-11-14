@@ -18,11 +18,8 @@ import {
 import {Loading} from '@app/components/ui';
 import {WalletCard} from '@app/components/ui/walletCard';
 import {app} from '@app/contexts';
-import {onWalletsBalanceCheck} from '@app/event-actions/on-wallets-balance-check';
-import {Events} from '@app/events';
 import {awaitForWallet, showModal} from '@app/helpers';
 import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
-import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
 import {awaitForProvider} from '@app/helpers/await-for-provider';
 import {AwaitValue, awaitForValue} from '@app/helpers/await-for-value';
@@ -46,8 +43,8 @@ import {
   SushiRoute,
 } from '@app/services/indexer';
 import {
-  HaqqCosmosAddress,
-  HaqqEthereumAddress,
+  AddressCosmosHaqq,
+  AddressEthereum,
   IToken,
   MarketingEvents,
   ModalType,
@@ -128,8 +125,8 @@ export const SwapScreen = observer(() => {
     routes: [],
     pools: [],
   });
-  const routesByToken0 = useRef<Record<HaqqEthereumAddress, SushiRoute[]>>({});
-  const routesByToken1 = useRef<Record<HaqqEthereumAddress, SushiRoute[]>>({});
+  const routesByToken0 = useRef<Record<AddressEthereum, SushiRoute[]>>({});
+  const routesByToken1 = useRef<Record<AddressEthereum, SushiRoute[]>>({});
 
   const [estimateData, setEstimateData] = useState<
     Partial<SushiPoolEstimateResponse>
@@ -167,7 +164,7 @@ export const SwapScreen = observer(() => {
   );
   const amountsIn = useSumAmount(
     START_SWAP_AMOUNT,
-    app.getAvailableBalance(currentWallet.address),
+    Wallet.getBalance(currentWallet.address, 'available'),
     MIN_SWAP_AMOUNT,
   );
   const minReceivedAmount = useMemo(() => {
@@ -246,7 +243,7 @@ export const SwapScreen = observer(() => {
 
     if (tokenIn.symbol === Provider.selectedProvider.denom) {
       logger.log(`t0 available: currency ${Provider.selectedProvider.denom}`);
-      return app.getAvailableBalance(currentWallet.address);
+      return Wallet.getBalance(currentWallet.address, 'available');
     }
 
     const tokenData = Token.tokens?.[currentWallet.address]?.find(t =>
@@ -271,7 +268,7 @@ export const SwapScreen = observer(() => {
     }
 
     if (tokenOut.symbol === Provider.selectedProvider.denom) {
-      return app.getAvailableBalance(currentWallet.address);
+      return Wallet.getBalance(currentWallet.address, 'available');
     }
 
     const tokenData = Token.tokens?.[currentWallet.address]?.find(t =>
@@ -335,10 +332,7 @@ export const SwapScreen = observer(() => {
       }
 
       if (!Token.tokens?.[currentWallet.address]) {
-        await Promise.all([
-          Token.fetchTokens(true),
-          awaitForEventDone(Events.onBalanceSync),
-        ]);
+        await Token.fetchTokens(true);
       }
       await refreshTokenBalances(currentWallet.address, t0Available);
 
@@ -452,10 +446,7 @@ export const SwapScreen = observer(() => {
             text: 'Loading token balances',
           });
           try {
-            await Promise.all([
-              Token.fetchTokens(true),
-              awaitForEventDone(Events.onBalanceSync),
-            ]);
+            await Token.fetchTokens(true);
           } catch {
           } finally {
             hide();
@@ -476,7 +467,7 @@ export const SwapScreen = observer(() => {
         const currentToken = {
           ...tokens.find(t => AddressUtils.equals(t.id, initialValue.id!))!,
           value: isToken0 ? t0Available : t1Available,
-          tag: `${currentWallet.address}_${initialValue.id}` as HaqqCosmosAddress,
+          tag: `${currentWallet.address}_${initialValue.id}` as AddressCosmosHaqq,
           id: initialValue.id,
         };
 
@@ -495,7 +486,7 @@ export const SwapScreen = observer(() => {
             if (tokenContract) {
               return {
                 ...tokenContract,
-                tag: `${currentWallet.address}_${tokenAddress}` as HaqqCosmosAddress,
+                tag: `${currentWallet.address}_${tokenAddress}` as AddressCosmosHaqq,
                 id: AddressUtils.toEth(tokenAddress),
               };
             }
@@ -511,7 +502,7 @@ export const SwapScreen = observer(() => {
             if (contract) {
               return {
                 ...contract,
-                tag: `${currentWallet.address}_${tokenAddress}` as HaqqCosmosAddress,
+                tag: `${currentWallet.address}_${tokenAddress}` as AddressCosmosHaqq,
                 image: contract.image,
                 value: new Balance(0, 0, contract?.symbol!),
                 id: AddressUtils.toEth(tokenAddress),
@@ -588,7 +579,10 @@ export const SwapScreen = observer(() => {
                     if (t.symbol === Provider.selectedProvider.denom) {
                       return {
                         ...t,
-                        value: app.getAvailableBalance(value?.wallet?.address),
+                        value: Wallet.getBalance(
+                          value?.wallet?.address,
+                          'available',
+                        ),
                       };
                     }
 
@@ -607,7 +601,7 @@ export const SwapScreen = observer(() => {
                   onPressWallet={w => {
                     logger.log('onPressWallet', {wallet: w, value});
                     value.id =
-                      `${w.address}_${initialValue.id}` as HaqqCosmosAddress;
+                      `${w.address}_${initialValue.id}` as AddressCosmosHaqq;
                     onPress(
                       value,
                       value.tokens.findIndex(
@@ -658,14 +652,14 @@ export const SwapScreen = observer(() => {
     if (!t0 || !wallet) {
       return {};
     }
-    await onWalletsBalanceCheck();
+    await Wallet.fetchBalances();
 
     const tokenValue =
       // @ts-ignore
       t0.value ||
       Token.tokens?.[wallet]?.find(t => AddressUtils.equals(t.id, tokenIn?.id!))
         ?.value;
-    const availableIslm = app.getAvailableBalance(wallet);
+    const availableIslm = Wallet.getBalance(wallet, 'available');
 
     const symbol = t0.getSymbol() || Provider.selectedProvider.denom;
     const isNativeCurrency = symbol === Provider.selectedProvider.denom;
@@ -858,16 +852,14 @@ export const SwapScreen = observer(() => {
       ];
 
       let txData = '';
-      const encodedSwapTxData = swapRouter.interface.encodeFunctionData(
-        'exactInput',
-        [swapParams],
-      ) as string;
-
       // if token1 is native, we need to unwrap it
-      if (
-        toke1IsNative &&
-        Provider.selectedProvider.config.enableUnwrapWETH9Call
-      ) {
+      if (toke1IsNative) {
+        // we need to change the recipient to the router address when use unwrapWETH9 inside multicall
+        swapParams[1] = Provider.selectedProvider.config.swapRouterV3;
+        const encodedSwapTxData = swapRouter.interface.encodeFunctionData(
+          'exactInput',
+          [swapParams],
+        ) as string;
         const encodedUnwrap = swapRouter.interface.encodeFunctionData(
           'unwrapWETH9',
           [minReceivedAmount?.toHex() || 0, currentWallet.address],
@@ -877,7 +869,9 @@ export const SwapScreen = observer(() => {
           [encodedSwapTxData, encodedUnwrap],
         ]) as string;
       } else {
-        txData = encodedSwapTxData;
+        txData = swapRouter.interface.encodeFunctionData('exactInput', [
+          swapParams,
+        ]) as string;
       }
 
       const rawTx = await awaitForJsonRpcSign({
@@ -1267,7 +1261,7 @@ export const SwapScreen = observer(() => {
       initialAddress: currentWallet.address,
     });
     setCurrentWallet(() => Wallet.getById(address)!);
-    await refreshTokenBalances(address as HaqqEthereumAddress);
+    await refreshTokenBalances(address as AddressEthereum);
     await estimate();
     amountsIn.setError('');
     navigation.setParams({
@@ -1483,7 +1477,7 @@ export const SwapScreen = observer(() => {
               async onClose() {
                 navigation.goBack();
                 const providersIDsPromises = await Promise.allSettled(
-                  Provider.getAll().map(async p => {
+                  Provider.getAllEVM().map(async p => {
                     const indexer = new Indexer(p.ethChainId);
                     const config = await indexer.getProviderConfig();
                     if (config.swap_enabled) {
@@ -1528,7 +1522,7 @@ export const SwapScreen = observer(() => {
       MarketingEvents.swapScreenClose,
       COMMON_EVENT_PARAMS,
     );
-    onWalletsBalanceCheck();
+    Wallet.fetchBalances();
     Token.fetchTokens(true);
   }, [COMMON_EVENT_PARAMS]);
 

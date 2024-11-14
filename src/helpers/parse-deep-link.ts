@@ -100,7 +100,7 @@ export const parseDeepLink = (link: string): LinkParseResult => {
         ':',
       );
 
-      if (AddressUtils.isEthAddress(key) || AddressUtils.isHaqqAddress(key)) {
+      if (AddressUtils.isValidAddress(key)) {
         return {
           type: LinkType.Address,
           params: {address: key},

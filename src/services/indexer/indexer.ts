@@ -10,18 +10,16 @@ import {Currencies} from '@app/models/currencies';
 import {NftCollectionIndexer} from '@app/models/nft';
 import {ALL_NETWORKS_ID, Provider} from '@app/models/provider';
 import {
+  ChainId,
   ContractNameMap,
-  IContract,
-  IndexerBalance,
-  IndexerTime,
-  IndexerToken,
   IndexerTransaction,
   IndexerTransactionResponse,
-  RatesResponse,
 } from '@app/types';
 import {createAsyncTask} from '@app/utils';
 
 import {
+  IndexerAddressesResponse,
+  IndexerUpdatesResponse,
   ProviderConfig,
   SushiPoolEstimateRequest,
   SushiPoolEstimateResponse,
@@ -31,26 +29,6 @@ import {
 } from './indexer.types';
 
 import {RemoteConfig} from '../remote-config';
-
-export type IndexerUpdatesResponse = {
-  addresses: IContract[];
-  balance: IndexerBalance;
-  staked: IndexerBalance;
-  total_staked: IndexerBalance;
-  vested: IndexerBalance;
-  available: IndexerBalance;
-  locked: IndexerBalance;
-  total: IndexerBalance;
-  available_for_stake: IndexerBalance;
-  // next time for unlock vested tokens
-  unlock: IndexerTime;
-  last_update: string;
-  // TODO: add types
-  nfts: unknown[];
-  tokens: IndexerToken[];
-  transactions: unknown[];
-  rates: RatesResponse;
-};
 
 const logger = Logger.create('IndexerService');
 
@@ -76,14 +54,29 @@ export class Indexer {
     this.init();
   }
 
-  private getProvidersHeader = (accounts: string[]) => {
-    return Provider.selectedProviderId === ALL_NETWORKS_ID
-      ? Provider.getAll()
-          .filter(item => item.id !== ALL_NETWORKS_ID)
-          .reduce((acc, item) => ({...acc, [item.ethChainId]: accounts}), {})
-      : {
-          [Provider.selectedProvider.ethChainId]: accounts,
-        };
+  public getProvidersHeader = (
+    accounts: string[],
+    provider = Provider.selectedProvider,
+  ) => {
+    if (provider.id === ALL_NETWORKS_ID) {
+      return Provider.getAllNetworks().reduce(
+        (acc, item) => ({
+          ...acc,
+          [item.ethChainId]: AddressUtils.convertAddressByNetwork(
+            accounts,
+            item.networkType,
+          ),
+        }),
+        {},
+      );
+    }
+
+    return {
+      [provider.ethChainId]: AddressUtils.convertAddressByNetwork(
+        accounts,
+        provider.networkType,
+      ),
+    };
   };
 
   get endpoint() {
@@ -117,7 +110,7 @@ export class Indexer {
 
       const updated = lastUpdated || new Date(0);
 
-      const result: IndexerUpdatesResponse = await jsonrpcRequest(
+      return await jsonrpcRequest<IndexerUpdatesResponse>(
         RemoteConfig.get('proxy_server')!,
         'updates_v2',
         [
@@ -126,8 +119,6 @@ export class Indexer {
           Currencies.selectedCurrency,
         ].filter(Boolean),
       );
-
-      return result;
     } catch (err) {
       if (err instanceof JSONRPCError) {
         this.captureException(err, 'Indexer:updates', err.meta);
@@ -135,6 +126,23 @@ export class Indexer {
       throw err;
     }
   });
+
+  getAddresses = async (accounts: string[] | Record<ChainId, string[]>) => {
+    try {
+      this.checkIndexerAvailability();
+
+      return await jsonrpcRequest<IndexerAddressesResponse>(
+        RemoteConfig.get('proxy_server')!,
+        'addresses',
+        [accounts],
+      );
+    } catch (err) {
+      if (err instanceof JSONRPCError) {
+        this.captureException(err, 'Indexer:addresses', err.meta);
+      }
+      throw err;
+    }
+  };
 
   async getContractNames(addresses: string[]): Promise<ContractNameMap> {
     try {
@@ -196,18 +204,25 @@ export class Indexer {
 
   getTransactions = createAsyncTask(
     async (
-      accounts: string[],
+      accounts: string[] | Record<ChainId, string[]>,
       latestBlock: string | null,
     ): Promise<IndexerTransaction[]> => {
       try {
-        if (!accounts.length) {
+        if (Array.isArray(accounts) && !accounts.length) {
+          return [];
+        }
+
+        if (
+          typeof accounts === 'object' &&
+          Object.values(accounts).every(addresses => !addresses.length)
+        ) {
           return [];
         }
 
         const response = await jsonrpcRequest<IndexerTransactionResponse>(
           RemoteConfig.get('proxy_server')!,
           'transactions_by_timestamp',
-          [this.getProvidersHeader(accounts), latestBlock ?? 'latest'],
+          [accounts, latestBlock ?? 'latest'],
         );
 
         return response?.transactions || [];

@@ -1,8 +1,10 @@
 import {app} from '@app/contexts';
 import {showModal} from '@app/helpers/modal';
 import {I18N, getText} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {Wallet, WalletModel} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
+import {HomeStackRoutes} from '@app/route-types';
 import {Eventable} from '@app/types';
 
 import {getWindowHeight} from './scaling-utils';
@@ -19,6 +21,7 @@ export interface AwaitForWalletParams {
   initialAddress?: string;
   autoSelectWallet?: boolean;
   suggestedAddress?: string;
+  chainId?: number;
   eventSuffix?: string | number;
   hideBalance?: boolean;
 }
@@ -45,6 +48,7 @@ export async function awaitForWallet({
   hideBalance,
   autoSelectWallet = true,
   eventSuffix = '',
+  chainId = Provider.selectedProvider.ethChainId,
 }: AwaitForWalletParams): Promise<string> {
   if (autoSelectWallet && wallets.length === 1) {
     return Promise.resolve(wallets[0].address);
@@ -84,10 +88,11 @@ export async function awaitForWallet({
 
     switch (type) {
       case WalletSelectType.screen: {
-        return navigator.navigate('walletSelector', {
+        return navigator.navigate(HomeStackRoutes.WalletSelector, {
           wallets,
           title: getText(title),
           initialAddress,
+          chainId,
           ...event,
         });
       }
@@ -100,6 +105,7 @@ export async function awaitForWallet({
           autoSelectWallet,
           initialAddress,
           hideBalance,
+          chainId,
           ...event,
         });
     }

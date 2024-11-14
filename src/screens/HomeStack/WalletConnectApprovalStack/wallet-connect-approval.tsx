@@ -26,6 +26,22 @@ export const WalletConnectApprovalScreen = observer(() => {
   const isApproved = useRef(false);
   const event = useMemo(() => route?.params?.event, [route?.params?.event]);
 
+  const chainId = useMemo(() => {
+    const requiredChain =
+      event?.params?.requiredNamespaces?.eip155?.chains?.[0];
+    const optionalChain =
+      event?.params?.optionalNamespaces?.eip155?.chains?.[0];
+    const chain = requiredChain || optionalChain;
+    if (!chain) {
+      return undefined;
+    }
+    const [, id] = chain.split(':');
+    if (!id) {
+      return undefined;
+    }
+    return Number(id);
+  }, [event]);
+
   const rejectSession = useCallback(
     () =>
       !isApproved.current && WalletConnect.instance.rejectSession(event?.id),
@@ -74,7 +90,9 @@ export const WalletConnectApprovalScreen = observer(() => {
       title: I18N.selectAccount,
       type: WalletSelectType.screen,
       initialAddress: selectedWallet?.address,
+      chainId,
       eventSuffix: event?.id,
+      hideBalance: true,
     });
     setSelectedWallet(Wallet.getById(address)!);
   };

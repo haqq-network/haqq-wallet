@@ -30,7 +30,7 @@ import {Wallet} from '@app/models/wallet';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {getDefaultNetwork} from '@app/network';
 import {getAppVersion} from '@app/services/version';
-import {HaqqCosmosAddress, WalletType} from '@app/types';
+import {AddressCosmosHaqq, WalletType} from '@app/types';
 import {makeID, requestQRScannerPermission} from '@app/utils';
 import {MAIN_NETWORK_ID} from '@app/variables/common';
 
@@ -98,12 +98,21 @@ const requestAccount = async ({helper}: JsonRpcMethodHandlerParams) => {
     ? session.selectedAccount
     : undefined;
 
+  let chainId = 1;
+
+  if (Provider.selectedProvider.isEVM) {
+    chainId = Provider.selectedProvider.ethChainId;
+  } else {
+    chainId = Provider.getById(MAIN_NETWORK_ID).ethChainId;
+  }
+
   const selectedAccount = await awaitForWallet({
     wallets,
     title: I18N.selectAccount,
     autoSelectWallet: false,
     initialAddress,
     hideBalance: true,
+    chainId,
   });
   return selectedAccount;
 };
@@ -157,9 +166,11 @@ const getNetworkProvier = (helper: JsonRpcHelper) => {
   if (session?.isActive) {
     provider = Provider.getByChainIdHex(session?.selectedChainIdHex!);
   } else {
-    provider = Provider.isAllNetworks
-      ? Provider.getById(MAIN_NETWORK_ID)
-      : Provider.selectedProvider;
+    if (Provider.selectedProvider.isEVM) {
+      provider = Provider.selectedProvider;
+    } else {
+      provider = Provider.getById(MAIN_NETWORK_ID);
+    }
   }
   return provider;
 };
@@ -258,6 +269,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
       const providerId = await awaitForProvider({
         initialProviderChainId: initialProvider?.ethChainId!,
         title: I18N.networks,
+        providers: Provider.getAllEVM(),
       });
 
       const selectedProvider = Provider.getById(providerId!);
@@ -507,7 +519,7 @@ export const JsonRpcMethodsHandlers: Record<string, JsonRpcMethodHandler> = {
   signAmino: async ({req, helper}) => {
     const [cosmosChainId, address, msg, _] = req.params as [
       string,
-      HaqqCosmosAddress,
+      AddressCosmosHaqq,
       object,
       {preferNoSetFee: boolean},
     ];

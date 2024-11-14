@@ -283,7 +283,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activesupport (>= 6.1.7.3, < 7.1.0)
+  activesupport (>= 6.1.7.5, < 7.1.0)
   cocoapods (~> 1.13)
   fastlane (~> 2.223.1, >= 2.223.1)
   fastlane-plugin-firebase_app_distribution

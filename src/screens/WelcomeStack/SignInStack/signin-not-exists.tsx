@@ -1,13 +1,13 @@
-import React, {memo, useCallback} from 'react';
+import {memo, useCallback} from 'react';
 
 import {SigninNotExists} from '@app/components/signin-not-exists';
 import {app} from '@app/contexts';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {
+  HomeStackRoutes,
   SignInStackParamList,
   SignInStackRoutes,
   SignUpStackRoutes,
-  WelcomeStackRoutes,
 } from '@app/route-types';
 
 export const SigninNotExistsScreen = memo(() => {
@@ -20,7 +20,7 @@ export const SigninNotExistsScreen = memo(() => {
   const onPressCreate = useCallback(() => {
     if (app.onboarded) {
       //@ts-ignore
-      navigation.replace(WelcomeStackRoutes.SignUp, {
+      navigation.navigate(HomeStackRoutes.SignUp, {
         screen: SignUpStackRoutes.SignupStoreWallet,
         params,
       });

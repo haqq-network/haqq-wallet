@@ -2,6 +2,7 @@ import React from 'react';
 
 import {StyleProp, ViewStyle} from 'react-native';
 
+import {Provider} from '@app/models/provider';
 import {WalletModel} from '@app/models/wallet';
 
 import {WalletRowVariant1} from './wallet-row-variant-1';
@@ -27,10 +28,12 @@ export type WalletRowProps = {
   disabled?: boolean;
   type?: WalletRowTypes;
   hideBalance?: boolean;
+  chainId?: number;
 };
 
 export const WalletRow = ({
   type = WalletRowTypes.variant1,
+  chainId = Provider.selectedProvider.ethChainId,
   ...props
 }: WalletRowProps) => {
   if (!props?.item) {
@@ -39,15 +42,15 @@ export const WalletRow = ({
 
   switch (type) {
     case WalletRowTypes.variant5:
-      return <WalletRowVariant5 {...props} />;
+      return <WalletRowVariant5 {...props} chainId={chainId} />;
     case WalletRowTypes.variant4:
-      return <WalletRowVariant4 {...props} />;
+      return <WalletRowVariant4 {...props} chainId={chainId} />;
     case WalletRowTypes.variant3:
-      return <WalletRowVariant3 {...props} />;
+      return <WalletRowVariant3 {...props} chainId={chainId} />;
     case WalletRowTypes.variant2:
-      return <WalletRowVariant2 {...props} />;
+      return <WalletRowVariant2 {...props} chainId={chainId} />;
     case WalletRowTypes.variant1:
     default:
-      return <WalletRowVariant1 {...props} />;
+      return <WalletRowVariant1 {...props} chainId={chainId} />;
   }
 };

@@ -11,12 +11,14 @@ import {
 import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
+import {getTronProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {getWalletsFromProvider} from '@app/helpers/get-wallets-from-provider';
 import {safeLoadBalances} from '@app/helpers/safe-load-balances';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N, getText} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {
   HomeStackRoutes,
@@ -25,7 +27,13 @@ import {
   SignInStackRoutes,
 } from '@app/route-types';
 import {Balance} from '@app/services/balance';
-import {ChooseAccountItem, ModalType, WalletType} from '@app/types';
+import {
+  AddressTron,
+  ChooseAccountItem,
+  ModalType,
+  WalletType,
+} from '@app/types';
+import {ETH_COIN_TYPE, TRON_COIN_TYPE} from '@app/variables/common';
 
 const PAGE_SIZE = 5;
 
@@ -98,16 +106,23 @@ export const ChooseAccountScreen = observer(() => {
         }
         index += 1;
       }
-      const wallets = result.map(item => item.address);
-
+      const isTron = Provider.selectedProvider.isTron;
+      const wallets = result.map(item =>
+        isTron ? item.tronAddress! : item.address,
+      );
       const balances = await safeLoadBalances(wallets);
-
       const resultWithBalances = result.map(item => ({
         ...item,
         balance: new Balance(
-          balances?.total.find(t =>
-            AddressUtils.equals(t[0], item.address),
-          )?.[2] || item.balance,
+          balances?.total.find(t => {
+            const addressKey = isTron
+              ? AddressUtils.hexToTron(t[0])
+              : AddressUtils.toHaqq(t[0]);
+            const itemAddress = isTron
+              ? item.tronAddress!
+              : AddressUtils.toHaqq(item.address);
+            return addressKey === itemAddress;
+          })?.[2] || item.balance,
         ),
       }));
       setAddresses(resultWithBalances);
@@ -159,8 +174,14 @@ export const ChooseAccountScreen = observer(() => {
         hdPath: item.path,
         publicKey: '',
         exists:
-          walletsToCreate.find(wallet => wallet.address === item.address)
-            ?.exists ||
+          walletsToCreate.find(wallet => {
+            return (
+              wallet.address === item.address ||
+              (!!wallet.tronAddress &&
+                !!item.tronAddress &&
+                wallet.tronAddress === item.tronAddress)
+            );
+          })?.exists ||
           item.exists ||
           false,
       })),
@@ -188,7 +209,7 @@ export const ChooseAccountScreen = observer(() => {
   const onAdd = useCallback(async () => {
     walletsToCreate
       .filter(_w => !Wallet.getById(_w.address))
-      .forEach(item => {
+      .forEach(async item => {
         const total = Wallet.getAll().length;
         const name =
           total === 0
@@ -202,6 +223,22 @@ export const ChooseAccountScreen = observer(() => {
           Wallet.update(item.address, {
             socialLinkEnabled: true,
             type: WalletType.sss,
+          });
+        }
+
+        // generate tron wallet address
+        const tronProvider = await getTronProviderForNewWallet(
+          item.type,
+          item.accountId!,
+        );
+
+        if (!item.tronAddress) {
+          const {address: tronAddress} = await tronProvider.getAccountInfo(
+            // for tron coin type
+            item.path?.replace?.(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
+          );
+          Wallet.update(item.address, {
+            tronAddress: tronAddress as AddressTron,
           });
         }
       });

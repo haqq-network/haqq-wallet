@@ -45,6 +45,7 @@ interface WalletConnectSignInfoProps {
   isAllowedDomain: boolean;
   ethereumSignInMessage: EthereumSignInMessage | null;
   onPressAllowOnceSignDangerousTx: () => void;
+  chainId?: number;
 }
 
 export const getMessageByRequest = (request: PartialJsonRpcRequest) => {
@@ -93,6 +94,7 @@ export const getMessageByRequest = (request: PartialJsonRpcRequest) => {
 
 export const JsonRpcSignInfo = ({
   wallet,
+  chainId,
   metadata,
   request,
   phishingTxRequest,
@@ -133,7 +135,12 @@ export const JsonRpcSignInfo = ({
 
       <Spacer height={32} />
 
-      <WalletRow hideArrow item={wallet} type={WalletRowTypes.variant2} />
+      <WalletRow
+        hideArrow
+        item={wallet}
+        type={WalletRowTypes.variant2}
+        chainId={chainId}
+      />
 
       <Spacer height={12} />
 

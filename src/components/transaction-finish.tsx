@@ -62,17 +62,26 @@ export const TransactionFinish = observer(
     };
 
     const onPressToAddress = useCallback(() => {
-      Clipboard.setString(transaction?.to ?? '');
+      Clipboard.setString(transaction?.hash ?? '');
       sendNotification(I18N.notificationCopied);
     }, [transaction]);
 
     const transactionAmount = useMemo(() => {
+      if (provider.isTron) {
+        return new Balance(
+          transaction?.value ?? 0,
+          provider.decimals,
+          token.symbol ?? provider.denom,
+        );
+      }
+
       if (amount) {
         return amount;
       }
 
       if (transaction?.value instanceof BigNumber) {
         return new Balance(
+          // @ts-ignore
           (transaction as TransactionResponse)?.value._hex ?? 0,
           undefined,
           token.symbol ?? provider.denom,
@@ -128,7 +137,7 @@ export const TransactionFinish = observer(
             selectable
             onPress={onPressToAddress}
             style={styles.address}>
-            {transaction?.to}
+            #{transaction?.hash}
           </Text>
         </View>
 

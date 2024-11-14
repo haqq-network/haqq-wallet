@@ -15,9 +15,8 @@ import {Dot} from '@app/components/wallets/dot';
 import {Plus} from '@app/components/wallets/plus';
 import {createTheme} from '@app/helpers';
 import {useWalletConnectSessions} from '@app/hooks/use-wallet-connect-sessions';
-import {WalletBalance} from '@app/hooks/use-wallets-balance';
 import {VariablesString} from '@app/models/variables-string';
-import {Wallet, WalletModel} from '@app/models/wallet';
+import {Wallet, WalletBalance, WalletModel} from '@app/models/wallet';
 import {WalletType} from '@app/types';
 import {filterWalletConnectSessionsByAddress} from '@app/utils';
 
@@ -26,7 +25,7 @@ export type WalletsProps = {
   balance: WalletBalance;
   showLockedTokens: boolean;
   onPressSend: (address: string) => void;
-  onPressQR: (address: string) => void;
+  onPressReceive: (address: string) => void;
   onPressWalletConnect: (address: string) => void;
   onPressProtection: (wallet: WalletModel) => void;
   onPressCreate: () => void;
@@ -41,7 +40,7 @@ export const Wallets = ({
   wallets,
   showLockedTokens,
   onPressSend,
-  onPressQR,
+  onPressReceive,
   onPressCreate,
   onPressHardwareWallet,
   onPressProtection,
@@ -143,7 +142,10 @@ export const Wallets = ({
           }
 
           return (
-            <CarouselItem index={i} pan={pan} key={w.address}>
+            <CarouselItem
+              index={i}
+              pan={pan}
+              key={'carousel_item_wallet_card_' + w.address}>
               <WalletCard
                 testID={`${testID}_${w.address}`}
                 wallet={w}
@@ -151,7 +153,7 @@ export const Wallets = ({
                 walletConnectSessions={walletConnectSessions[i]}
                 showLockedTokens={showLockedTokens}
                 onPressSend={onPressSend}
-                onPressQR={onPressQR}
+                onPressReceive={onPressReceive}
                 onPressProtection={onPressProtection}
                 onPressWalletConnect={onPressWalletConnect}
                 onPressAccountInfo={onPressAccountInfo}

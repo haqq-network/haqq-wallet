@@ -11,6 +11,8 @@ import {
   PopupContainer,
   Spacer,
   Text,
+  TextPosition,
+  TextVariant,
 } from '@app/components/ui';
 import {HardwareWalletButton} from '@app/components/ui/hardware-wallet-button';
 import {Terms} from '@app/components/ui/terms';
@@ -42,10 +44,15 @@ export const CreateAgreement = ({
           style={styles.animationInner}
         />
       </View>
-      <Text t4 center style={styles.title} i18n={I18N.createAgreementTitle} />
       <Text
-        t11
-        center
+        variant={TextVariant.t4}
+        position={TextPosition.center}
+        style={styles.title}
+        i18n={I18N.createAgreementTitle}
+      />
+      <Text
+        variant={TextVariant.t11}
+        position={TextPosition.center}
         style={styles.disclaimer}
         i18n={I18N.createAgreementText}
         color={Color.textBase2}

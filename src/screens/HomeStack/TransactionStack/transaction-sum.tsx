@@ -10,7 +10,6 @@ import {awaitForProvider} from '@app/helpers/await-for-provider';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
-import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {EstimationVariant} from '@app/models/fee';
@@ -38,8 +37,11 @@ export const TransactionSumScreen = observer(() => {
   >();
   const event = useMemo(() => generateUUID(), []);
   const [to, setTo] = useState(route.params.to);
+  const provider =
+    Provider.getByEthChainId(route.params.token.chain_id) ??
+    Provider.selectedProvider;
   const wallet = Wallet.getById(route.params.from);
-  const balances = useWalletsBalance([wallet!]);
+  const balances = Wallet.getBalancesByAddressList([wallet!], provider);
   const currentBalance = useMemo(
     () => balances[AddressUtils.toEth(route.params.from)],
     [balances, route],
@@ -56,15 +58,18 @@ export const TransactionSumScreen = observer(() => {
       try {
         const token = route.params.token;
         if (token.is_erc20) {
+          const contractAddress = provider?.isTron
+            ? AddressUtils.hexToTron(token.id)
+            : AddressUtils.toEth(token.id);
           return await EthNetwork.estimateERC20Transfer(
             {
               from: wallet?.address!,
               to: route.params.to,
               amount,
-              contractAddress: AddressUtils.toEth(token.id),
+              contractAddress,
             },
             EstimationVariant.average,
-            Provider.getByEthChainId(route.params.token.chain_id),
+            provider,
           );
         } else {
           return await EthNetwork.estimate(
@@ -74,7 +79,7 @@ export const TransactionSumScreen = observer(() => {
               value: amount,
             },
             EstimationVariant.average,
-            Provider.getByEthChainId(route.params.token.chain_id),
+            provider,
           );
         }
       } catch (err) {
@@ -82,7 +87,7 @@ export const TransactionSumScreen = observer(() => {
         return null;
       }
     },
-    [route.params],
+    [route.params, provider],
   );
 
   useEffect(() => {
@@ -99,17 +104,7 @@ export const TransactionSumScreen = observer(() => {
   const onPressPreview = useCallback(
     async (amount: Balance, repeated = false) => {
       setLoading(true);
-      const estimate = await getFee(amount);
-
-      if (estimate?.expectedFee.isPositive()) {
-        navigation.navigate(TransactionStackRoutes.TransactionConfirmation, {
-          calculatedFees: estimate,
-          from: route.params.from,
-          to,
-          amount,
-          token: route.params.token,
-        });
-      } else {
+      const showError = () => {
         showModal(ModalType.error, {
           title: getText(I18N.feeCalculatingRpcErrorTitle),
           description: getText(I18N.feeCalculatingRpcErrorDescription),
@@ -122,10 +117,60 @@ export const TransactionSumScreen = observer(() => {
             }
           },
         });
+      };
+      try {
+        const estimate = await getFee(amount);
+        const balance = Wallet.getBalance(
+          route.params.from,
+          'available',
+          provider,
+        );
+
+        let totalAmount = estimate?.expectedFee;
+
+        if (amount.isNativeCoin) {
+          totalAmount = totalAmount?.operate(amount, 'add');
+        }
+
+        if (totalAmount && totalAmount.compare(balance, 'gt')) {
+          return showModal(ModalType.notEnoughGas, {
+            gasLimit: estimate?.expectedFee!,
+            currentAmount: balance,
+          });
+        }
+
+        let successCondition = false;
+
+        if (provider.isTron) {
+          // fee can be zero for TRON if user has enough bandwidth (freezed TRX)
+          successCondition = !!estimate?.expectedFee ?? false;
+        } else {
+          successCondition = estimate?.expectedFee.isPositive() ?? false;
+        }
+
+        if (successCondition) {
+          navigation.navigate(TransactionStackRoutes.TransactionConfirmation, {
+            // @ts-ignore
+            calculatedFees: estimate,
+            from: route.params.from,
+            to,
+            amount,
+            token: route.params.token,
+          });
+        } else {
+          showError();
+        }
+      } catch (err) {
+        Logger.captureException(err, 'TransactionSumScreen:onPressPreview', {
+          amount,
+          provider: provider.name,
+        });
+        showError();
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     },
-    [fee, navigation, route.params.from, to],
+    [fee, navigation, route.params.from, to, provider],
   );
 
   const onContact = useCallback(() => {
@@ -151,18 +196,9 @@ export const TransactionSumScreen = observer(() => {
   }, [navigation]);
 
   useEffectAsync(async () => {
-    const b = app.getAvailableBalance(route.params.from);
-    const {expectedFee} = await EthNetwork.estimate(
-      {
-        from: route.params.from,
-        to,
-        value: b,
-      },
-      EstimationVariant.average,
-      Provider.getByEthChainId(route.params.token.chain_id),
-    );
-
-    setFee(expectedFee);
+    const b = Wallet.getBalance(route.params.from, 'available');
+    const estimate = await getFee(b);
+    setFee(estimate?.expectedFee ?? null);
   }, [to]);
 
   return (

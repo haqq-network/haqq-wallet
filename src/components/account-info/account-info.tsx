@@ -11,7 +11,7 @@ import {useShowNft} from '@app/hooks/nft';
 import {I18N} from '@app/i18n';
 import {WalletModel} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
-import {HaqqEthereumAddress, IToken, IndexerTransaction} from '@app/types';
+import {AddressEthereum, IToken, IndexerTransaction} from '@app/types';
 
 import {AccountInfoHeader} from './account-info-header';
 
@@ -33,7 +33,7 @@ export type AccountInfoProps = {
   total: Balance;
   vested: Balance;
   unlock: Date;
-  tokens: Record<HaqqEthereumAddress, IToken[]>;
+  tokens: Record<AddressEthereum, IToken[]>;
   onPressInfo: () => void;
   onSend: () => void;
   onReceive: () => void;
@@ -66,7 +66,7 @@ export const AccountInfo = observer(
     const [activeTab, setActiveTab] = useState(TabNames.tokens);
 
     const hideTransactionsContent = useMemo(
-      () => (activeTab === TabNames.transactions ? false : true),
+      () => activeTab !== TabNames.transactions,
       [activeTab],
     );
 
@@ -152,7 +152,7 @@ export const AccountInfo = observer(
           )}
         </First>
       ),
-      [activeTab],
+      [activeTab, tokens, wallet, onPressToken],
     );
 
     return (

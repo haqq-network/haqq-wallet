@@ -15,8 +15,10 @@ import {
   Text,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {ChooseAccountItem} from '@app/types';
 
@@ -36,6 +38,18 @@ export const ChooseAccountRow = ({
   }, [onPress, item]);
   const isWalletCreated = useMemo(() => !!Wallet.getById(item.address), [item]);
 
+  const address = useMemo(() => {
+    if (isWalletCreated) {
+      const w = Wallet.getById(item.address)!;
+      return Provider.selectedProvider.isTron ? w.tronAddress : w.address;
+    }
+
+    if (Provider.selectedProvider.isTron) {
+      return item.tronAddress || AddressUtils.toTron(item.address);
+    }
+    return item.address;
+  }, [item, isWalletCreated]);
+
   return (
     <View style={styles.container}>
       <View style={styles.index}>
@@ -53,7 +67,7 @@ export const ChooseAccountRow = ({
       </View>
       <DataContent
         title={item.balance.toBalanceString()}
-        subtitle={shortAddress(item.address)}
+        subtitle={shortAddress(address as string)}
         style={item.exists ? styles.selectedButton : {}}
       />
       <Spacer />

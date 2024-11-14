@@ -21,7 +21,6 @@ import {
   Platform,
 } from 'react-native';
 import {Adjust} from 'react-native-adjust';
-import Config from 'react-native-config';
 import prompt, {PromptOptions} from 'react-native-prompt-android';
 import RNRestart from 'react-native-restart';
 
@@ -35,22 +34,21 @@ import {AddressUtils} from './helpers/address-utils';
 import {getRemoteMultiplierValue} from './helpers/get-remote-balance-value';
 import {shortAddress} from './helpers/short-address';
 import {getHost, onUrlSubmit} from './helpers/web3-browser-utils';
-import {WalletBalance} from './hooks/use-wallets-balance';
 import {I18N, getText} from './i18n';
 import {Banner, BannerButtonEvent, BannerType} from './models/banner';
 import {Fee} from './models/fee';
-import {BalanceModel, WalletModel} from './models/wallet';
+import {BalanceModel, IWalletModel, WalletBalance} from './models/wallet';
 import {navigator} from './navigator';
 import {HomeStackRoutes, WelcomeStackRoutes} from './route-types';
 import {Balance} from './services/balance';
 import {EthSignError} from './services/eth-sign';
 import {
+  AddressEthereum,
   AdjustTrackingAuthorizationStatus,
   AppLanguage,
   EIPTypedData,
   EthType,
   EthTypedData,
-  HaqqEthereumAddress,
   IndexerTransaction,
   IndexerTransactionWithType,
   IndexerTxMsgType,
@@ -59,7 +57,13 @@ import {
   SendTransactionError,
   WalletConnectParsedAccount,
 } from './types';
-import {ERC20_ABI, V3SWAPROUTER_ABI, WETH_ABI} from './variables/abi';
+import {
+  DISTRIBUTION_ABI,
+  ERC20_ABI,
+  STAKING_ABI,
+  V3SWAPROUTER_ABI,
+  WETH_ABI,
+} from './variables/abi';
 import {IS_ANDROID, RTL_LANGUAGES, STORE_PAGE_URL} from './variables/common';
 import {EIP155_SIGNING_METHODS} from './variables/EIP155';
 
@@ -82,6 +86,7 @@ export function isNumber(value: string) {
 const ethAddressRegex = /(0x\w{2})(.*)(\w{4})$/gm;
 const haqqAddressRegex = /(haqq)(.*)(\w{4})$/gm;
 const haqqValidatorAddressRegex = /(haqqvaloper)(.*)(\w{4})$/gm;
+const tronAddressRegex = /(T)(.*)(\w{4})$/gm;
 
 export function splitAddress(address: string) {
   if (!address) {
@@ -89,6 +94,10 @@ export function splitAddress(address: string) {
   }
 
   let regex = ethAddressRegex;
+
+  if (AddressUtils.isTronAddress(address)) {
+    regex = tronAddressRegex;
+  }
 
   if (AddressUtils.isHaqqAddress(address)) {
     regex = haqqAddressRegex;
@@ -188,10 +197,7 @@ export const HSBToHEX = (h: number, s: number, b: number) => {
 };
 
 export function getPatternName(pattern: string) {
-  return `${RemoteConfig.get_env(
-    'pattern_source',
-    Config.PATTERNS_SOURCE,
-  )}${pattern}@3x.png`;
+  return `${RemoteConfig.get('pattern_source')}${pattern}@3x.png`;
 }
 
 export function shuffleWords(words: Map<string, string>) {
@@ -840,7 +846,7 @@ export const getTransactionFromJsonRpcRequest = (
 };
 
 export function isContractTransaction(
-  tx: {to?: HaqqEthereumAddress | string; data?: string} | undefined | null,
+  tx: {to?: AddressEthereum | string; data?: string} | undefined | null,
 ): boolean {
   if (!tx || !tx.to || !AddressUtils.isEthAddress(tx.to)) {
     return false;
@@ -855,7 +861,7 @@ export function isContractTransaction(
 
 export const calculateBalances = (
   data: WalletBalance,
-  wallets: WalletModel[],
+  wallets: IWalletModel[],
 ): BalanceModel => {
   const balance = new BalanceModel({
     staked: Balance.Empty,
@@ -1016,6 +1022,18 @@ export function parseTxDataFromHexInput(hex?: string) {
     });
   } catch (e) {}
 
+  try {
+    return new ethers.utils.Interface(DISTRIBUTION_ABI).parseTransaction({
+      data: data,
+    });
+  } catch (e) {}
+
+  try {
+    return new ethers.utils.Interface(STAKING_ABI).parseTransaction({
+      data: data,
+    });
+  } catch (e) {}
+
   return undefined;
 }
 
@@ -1131,3 +1149,11 @@ export function createAsyncTask<T>(fn: AsyncTaskFunction<T>) {
     return instance.finally(() => (instance = null));
   };
 }
+
+export const deepClone = (value?: Object) => {
+  if (!value) {
+    return value;
+  }
+
+  return JSON.parse(JSON.stringify(value));
+};

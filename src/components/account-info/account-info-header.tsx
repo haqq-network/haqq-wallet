@@ -51,8 +51,8 @@ export const AccountInfoHeader = ({
   unlock,
 }: AccountInfoProps) => {
   const formattedAddress = useMemo(
-    () => shortAddress(wallet.address, '•'),
-    [wallet.address],
+    () => shortAddress(wallet.providerSpecificAddress, '•'),
+    [wallet.providerSpecificAddress],
   );
 
   return (
@@ -71,10 +71,7 @@ export const AccountInfoHeader = ({
             variant={TextVariant.t3}
             children={total.toFiat({useDefaultCurrency: true})}
           />
-          <CopyMenu
-            value={wallet.address}
-            style={styles.copyButton}
-            withSettings>
+          <CopyMenu wallet={wallet} style={styles.copyButton} withSettings>
             <Text variant={TextVariant.t14} color={Color.textBase2}>
               {formattedAddress}
             </Text>
