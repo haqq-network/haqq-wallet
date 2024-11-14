@@ -11,7 +11,7 @@ import {
 } from '@app/components/ui';
 import {createTheme, showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
-import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useTypedNavigation} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
@@ -31,6 +31,8 @@ import {TransactionAddressContactList} from './transaction-address-contact-list'
 import {TransactionAddressInput} from './transaction-address-input';
 import {TransactionAddressWalletList} from './transaction-address-wallet-list';
 
+import {TransactionStore} from '../transaction-store';
+
 const logger = Logger.create('TransactionAddressScreen');
 const testID = 'transaction_address';
 
@@ -40,16 +42,15 @@ export const TransactionAddressScreen = observer(() => {
     navigation.goBack();
     return true;
   }, [navigation]);
-  const {from, to, nft, token} = useTypedRoute<
-    TransactionStackParamList,
-    TransactionStackRoutes.TransactionAddress
-  >().params;
+
+  const toAddress = TransactionStore.to?.address;
+  const fromAddress = TransactionStore.from?.address;
+
   const {bottom: safeAreaBottomInset} = useSafeAreaInsets();
 
-  const [address, setAddress] = useState(to ?? '');
   const [isError, setIsError] = useState(false);
 
-  const fromWallet = useMemo(() => Wallet.getById(from)!, [from]);
+  const fromWallet = useMemo(() => Wallet.getById(fromAddress)!, [fromAddress]);
 
   const [loading, setLoading] = React.useState(false);
 
@@ -61,16 +62,16 @@ export const TransactionAddressScreen = observer(() => {
     }
     const isTron = Provider.selectedProvider.isTron;
 
-    if (!address) {
+    if (!toAddress && fromAddress) {
       return wallets.filter(w => {
         if (isTron && !w.isSupportTron) {
           return false;
         }
-        return !AddressUtils.equals(w.address, from);
+        return !AddressUtils.equals(w.address, fromAddress);
       });
     }
 
-    const lowerCaseAddress = address.toLowerCase();
+    const lowerCaseAddress = toAddress!.toLowerCase();
 
     return wallets.filter(w => {
       if (isTron && !w.isSupportTron) {
@@ -81,10 +82,10 @@ export const TransactionAddressScreen = observer(() => {
           w.tronAddress?.toLowerCase?.()?.includes?.(lowerCaseAddress) ||
           w.cosmosAddress.toLowerCase().includes(lowerCaseAddress) ||
           w.name.toLowerCase().includes(lowerCaseAddress)) &&
-        !AddressUtils.equals(w.address, from)
+        !AddressUtils.equals(w.address, fromAddress)
       );
     });
-  }, [address, from]);
+  }, [toAddress, fromAddress]);
 
   const filteredContacts = useMemo(() => {
     const contacts = Contact.getAll();
@@ -93,11 +94,11 @@ export const TransactionAddressScreen = observer(() => {
       return [];
     }
 
-    if (!address) {
-      return contacts.filter(c => !AddressUtils.equals(c.account, from));
+    if (!toAddress) {
+      return contacts.filter(c => !AddressUtils.equals(c.account, fromAddress));
     }
 
-    const lowerCaseAddress = address.toLowerCase();
+    const lowerCaseAddress = toAddress.toLowerCase();
 
     return contacts.filter(c => {
       const hexAddress = AddressUtils.toEth(c.account);
@@ -107,63 +108,48 @@ export const TransactionAddressScreen = observer(() => {
         (hexAddress.includes(lowerCaseAddress) ||
           haqqAddress.includes(lowerCaseAddress) ||
           c.name?.toLowerCase().includes(lowerCaseAddress)) &&
-        !AddressUtils.equals(hexAddress, from)
+        !AddressUtils.equals(hexAddress, fromAddress)
       );
     });
-  }, [address, from]);
+  }, [toAddress, fromAddress]);
 
   const onDone = useCallback(
     async (result: string) => {
-      // const isTron = Provider.selectedProvider.isTron;
-      // if (contacts?.length === 0 && filteredWallets?.length === 1) {
-      //   return onDone(
-      //     isTron ? filteredWallets[0].tronAddress : filteredWallets[0].address,
-      //   );
-      // }
-
-      // if (contacts?.length === 1 && filteredWallets?.length === 0) {
-      //   return onDone(contacts[0].account);
-      // }
-
-      // if (AddressUtils.isValidAddress(address.trim())) {
-      //   return onDone(address.trim());
-      // }
-
       try {
         const networkType = Provider.selectedProvider.isTron
           ? NetworkProviderTypes.TRON
           : NetworkProviderTypes.EVM;
         const converter = AddressUtils.getConverterByNetwork(networkType);
         setLoading(true);
-        if (nft) {
-          return navigation.navigate(
-            TransactionStackRoutes.TransactionNftConfirmation,
-            {
-              from: converter(from),
-              to: converter(result),
-              nft,
-            },
-          );
-        } else if (token) {
-          return navigation.navigate(TransactionStackRoutes.TransactionSum, {
-            from: converter(from),
-            to: converter(result),
-            token,
+        // if (nft) {
+        //   return navigation.navigate(
+        //     TransactionStackRoutes.TransactionNftConfirmation,
+        //     {
+        //       from: converter(from),
+        //       to: converter(result),
+        //       nft,
+        //     },
+        //   );
+        // } else if (token) {
+        //   return navigation.navigate(TransactionStackRoutes.TransactionSum, {
+        //     from: converter(from),
+        //     to: converter(result),
+        //     token,
+        //   });
+        // } else {
+        if (!Token.tokens?.[AddressUtils.toEth(fromAddress)]) {
+          const hide = showModal(ModalType.loading, {
+            text: 'Loading token balances',
           });
-        } else {
-          if (!Token.tokens?.[AddressUtils.toEth(from)]) {
-            const hide = showModal(ModalType.loading, {
-              text: 'Loading token balances',
-            });
-            try {
-              await Token.fetchTokens(true, true);
-            } catch {
-            } finally {
-              hide();
-            }
+          try {
+            await Token.fetchTokens(true, true);
+          } catch {
+          } finally {
+            hide();
           }
+          // }
           navigation.navigate(TransactionStackRoutes.TransactionSelectCrypto, {
-            from: converter(from),
+            from: converter(fromAddress),
             to: converter(result),
           });
         }
@@ -173,7 +159,7 @@ export const TransactionAddressScreen = observer(() => {
         setLoading(false);
       }
     },
-    [navigation, nft, token, from],
+    [navigation, /* nft, token, */ fromAddress],
   );
 
   const doneDisabled = useMemo(() => {

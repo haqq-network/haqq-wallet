@@ -382,9 +382,10 @@ export type HomeStackParamList = {
   [HomeStackRoutes.SignUp]: undefined;
   [HomeStackRoutes.AccountInfo]: {accountId: string};
   [HomeStackRoutes.Transaction]: {
-    from?: string;
+    from: string;
     to?: string;
     nft?: NftItem;
+    token?: IToken;
   };
   [HomeStackRoutes.Nft]:
     | {
