@@ -52,8 +52,6 @@ class TokensStore implements MobXStore<IToken> {
         properties: [
           // https://github.com/quarrant/mobx-persist-store/issues/97
           // @ts-ignore
-          'fetchedUnknownTokens',
-          // @ts-ignore
           'contracts',
           {
             key: 'tokens',
@@ -89,6 +87,42 @@ class TokensStore implements MobXStore<IToken> {
                 };
               }, {});
 
+              return JSON.stringify(newValue);
+            },
+          },
+          {
+            // @ts-ignore
+            key: 'data',
+            // @ts-ignore
+            deserialize: (stringObject: string): this['data'] => {
+              const parsed = JSON.parse(stringObject) as this['data'];
+              const keys = Object.keys(parsed);
+              const newValue = keys.reduce((prev, cur) => {
+                return {
+                  ...prev,
+                  [AddressUtils.toEth(cur)]: {
+                    ...parsed[AddressUtils.toEth(cur)],
+                    value: Balance.fromJsonString(
+                      parsed[AddressUtils.toEth(cur)].value || '0x0',
+                    ),
+                  },
+                };
+              }, {});
+
+              return newValue;
+            },
+            // @ts-ignore
+            serialize: (value: this['data']) => {
+              const keys = Object.keys(value);
+              const newValue = keys.reduce((prev, cur) => {
+                return {
+                  ...prev,
+                  [AddressUtils.toEth(cur)]: {
+                    ...value[AddressUtils.toEth(cur)],
+                    value: value[AddressUtils.toEth(cur)].value.toJsonString(),
+                  },
+                };
+              }, {});
               return JSON.stringify(newValue);
             },
           },
@@ -217,7 +251,7 @@ class TokensStore implements MobXStore<IToken> {
 
       // find token with name, symbol, decimals and is_erc20
       const token = tokensForAnyChains?.find(
-        t => t.name && t.symbol && t.decimals && t.is_erc20,
+        t => t.name && (t.is_in_white_list || t.is_erc20),
       );
 
       if (token) {
