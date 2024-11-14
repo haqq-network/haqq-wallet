@@ -4,7 +4,14 @@ import {observer} from 'mobx-react';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Icon, IconsName, Spacer, Text, TextVariant} from '@app/components/ui';
+import {
+  First,
+  Icon,
+  IconsName,
+  Spacer,
+  Text,
+  TextVariant,
+} from '@app/components/ui';
 import {CopyMenu} from '@app/components/ui/copy-menu';
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
