@@ -50,7 +50,10 @@ export const TransactionNftFinish = observer(
     contact,
     fee,
   }: TransactionFinishProps) => {
-    const provider = Provider.getByEthChainId(item.chain_id)!;
+    Logger.log('transaction', JSON.stringify(transaction, null, 2));
+    const provider =
+      Provider.getByEthChainId(item.chain_id || transaction?.chainId!)! ||
+      Provider.selectedProvider;
     const onPressHash = async () => {
       const url = provider.getTxExplorerUrl(transaction?.hash!);
       await openURL(url);
