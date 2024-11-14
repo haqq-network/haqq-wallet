@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {observer} from 'mobx-react';
 
@@ -6,7 +6,6 @@ import {Color} from '@app/colors';
 import {SettingsProviders} from '@app/components/settings/settings-providers';
 import {CustomHeader} from '@app/components/ui';
 import {app} from '@app/contexts';
-import {Events} from '@app/events';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
@@ -15,24 +14,11 @@ import {ProvidersStackParamList, ProvidersStackRoutes} from '@app/route-types';
 export const SettingsProvidersScreen = observer(() => {
   const navigation = useTypedNavigation<ProvidersStackParamList>();
   const providers = Provider.getAll();
-  const [providerId, setProviderId] = useState(app.providerId);
-
-  useEffect(() => {
-    const callback = () => {
-      setProviderId(app.providerId);
-    };
-
-    app.on(Events.onProviderChanged, callback);
-
-    return () => {
-      app.off(Events.onProviderChanged, callback);
-    };
-  }, []);
 
   const onSelectProvider = useCallback(
-    (pid: string) => {
+    (chainId: number) => {
       navigation.navigate(ProvidersStackRoutes.SettingsProviderForm, {
-        id: pid,
+        id: chainId,
       });
     },
     [navigation],
@@ -70,7 +56,7 @@ export const SettingsProvidersScreen = observer(() => {
       {header}
       <SettingsProviders
         providers={providers}
-        providerId={providerId}
+        providerChainId={Provider.selectedProvider.ethChainId}
         onSelect={onSelectProvider}
       />
     </>

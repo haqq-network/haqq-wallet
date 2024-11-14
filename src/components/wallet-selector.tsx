@@ -5,13 +5,13 @@ import {StyleProp, View, ViewStyle} from 'react-native';
 import {PopupContainer} from '@app/components/ui';
 import {WalletRow, WalletRowTypes} from '@app/components/wallet-row';
 import {createTheme} from '@app/helpers';
-import {Wallet} from '@app/models/wallet';
+import {WalletModel} from '@app/models/wallet';
 
 interface Props {
   initialAddress?: string;
-  wallets: Wallet[];
+  wallets: WalletModel[];
   style?: StyleProp<ViewStyle>;
-
+  chainId?: number;
   onWalletSelected?(address: string): void;
 }
 
@@ -20,6 +20,7 @@ export const WalletSelector = ({
   onWalletSelected,
   initialAddress,
   style,
+  chainId,
 }: Props) => {
   const [selectedAddress, setSelectedAddress] = useState(initialAddress);
 
@@ -44,6 +45,7 @@ export const WalletSelector = ({
               onPress={handleWalletPress}
               checked={selectedAddress === wallet?.address}
               type={WalletRowTypes.variant5}
+              chainId={chainId}
             />
           </View>
         );

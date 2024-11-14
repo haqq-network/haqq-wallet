@@ -14,9 +14,9 @@ import {
 import {Color, getColor} from '@app/colors';
 import {Button, ButtonSize, ButtonVariant} from '@app/components/ui/button';
 import {Text, TextPosition, TextVariant} from '@app/components/ui/text';
-import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {IToken} from '@app/types';
@@ -78,7 +78,7 @@ export const SumBlock = observer(
 
     const onPressMax = useCallback(() => {
       vibrate(HapticEffects.impactLight);
-      onMax();
+      onMax?.();
     }, [onMax]);
 
     const fiatString = useMemo(() => {
@@ -100,7 +100,7 @@ export const SumBlock = observer(
           position={TextPosition.center}
           style={styles.subtitle}
           color={Color.textBase2}>
-          {currency || app.provider.denom}
+          {currency || Provider.selectedProvider.denom}
         </Text>
         <View style={styles.sum}>
           <Spacer flex={1} />

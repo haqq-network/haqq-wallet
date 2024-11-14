@@ -8,12 +8,15 @@ import Config from 'react-native-config';
 
 import {StoriesWrapper} from '@app/components/stories';
 import {createTheme, showModal} from '@app/helpers';
-import {loadAllTransactions} from '@app/helpers/load-transactions';
 import {useTypedNavigation} from '@app/hooks';
+import {Currencies} from '@app/models/currencies';
 import {Nft} from '@app/models/nft';
+import {Provider} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
+import {Transaction} from '@app/models/transaction';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesDate} from '@app/models/variables-date';
+import {Wallet} from '@app/models/wallet';
 import {HomeFeedStackParamList, HomeFeedStackRoutes} from '@app/route-types';
 import {BannersWrapper} from '@app/screens/banners';
 import {WalletsWrapper} from '@app/screens/HomeStack/HomeFeedStack/wallets';
@@ -34,9 +37,11 @@ export const HomeFeed = observer(() => {
     }
     setLastUpdate(Date.now());
     await Promise.allSettled([
-      loadAllTransactions(),
+      Currencies.fetchCurrencies(),
+      Wallet.fetchBalances(),
       Token.fetchTokens(),
       Nft.fetchNft(),
+      Transaction.fetchLatestTransactions(Wallet.addressListAllVisible(), true),
     ]);
     setRefreshing(false);
   }, []);
@@ -77,8 +82,10 @@ export const HomeFeed = observer(() => {
       {!!Config.STORIES_ENABLED && (
         <StoriesWrapper onStoryPress={onStoryPress} />
       )}
-      <LockedTokensWrapper />
-      <WalletsWrapper />
+      <React.Fragment key={Provider.selectedProviderId}>
+        <LockedTokensWrapper />
+        <WalletsWrapper />
+      </React.Fragment>
       <BannersWrapper />
       <WidgetRoot lastUpdate={lastUpdateTimestamp} />
     </ScrollView>

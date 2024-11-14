@@ -4,7 +4,6 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import {observer} from 'mobx-react';
 
 import {TransactionConfirmation} from '@app/components/transaction-confirmation';
-import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForFee} from '@app/helpers/await-for-fee';
@@ -12,10 +11,10 @@ import {getProviderInstanceForWallet} from '@app/helpers/provider-instance';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useError} from '@app/hooks/use-error';
-import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Fee} from '@app/models/fee';
+import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {
   TransactionStackParamList,
@@ -26,7 +25,7 @@ import {Balance} from '@app/services/balance';
 import {getERC20TransferData} from '@app/services/eth-network/erc20';
 import {EthSignErrorDataDetails} from '@app/services/eth-sign';
 import {EventTracker} from '@app/services/event-tracker';
-import {HaqqEthereumAddress, MarketingEvents, ModalType} from '@app/types';
+import {MarketingEvents, ModalType} from '@app/types';
 import {makeID} from '@app/utils';
 
 export const TransactionConfirmationScreen = observer(() => {
@@ -41,7 +40,7 @@ export const TransactionConfirmationScreen = observer(() => {
   >();
   const {token, calculatedFees} = route.params;
   const visible = Wallet.getAllVisible();
-  const balance = useWalletsBalance(visible);
+  const balance = Wallet.getBalancesByAddressList(visible);
 
   const [fee, setFee] = useState<Fee>(new Fee(calculatedFees!));
 
@@ -56,17 +55,21 @@ export const TransactionConfirmationScreen = observer(() => {
   const {from, to, value, data} = useMemo(() => {
     const contractAddress = AddressUtils.toEth(token.id);
 
+    const isTron = Provider.getByEthChainId(token.chain_id)?.isTron;
+
+    const txData = isTron
+      ? AddressUtils.hexToTron(contractAddress)
+      : getERC20TransferData(
+          route.params.to,
+          route.params.amount,
+          contractAddress,
+        );
+
     return {
       from: token.is_erc20 ? wallet?.address! : route.params.from,
       to: token.is_erc20 ? contractAddress : route.params.to,
       value: token.is_erc20 ? undefined : route.params.amount,
-      data: token.is_erc20
-        ? getERC20TransferData(
-            route.params.to,
-            route.params.amount,
-            contractAddress,
-          )
-        : undefined,
+      data: txData,
     };
   }, [token, wallet?.address, route.params]);
 
@@ -77,26 +80,35 @@ export const TransactionConfirmationScreen = observer(() => {
 
         const ethNetworkProvider = new EthNetwork();
 
-        const provider = await getProviderInstanceForWallet(wallet, false);
+        const walletProvider = await getProviderInstanceForWallet(
+          wallet,
+          false,
+        );
+        const networkProvider = Provider.getByEthChainId(token.chain_id);
 
         if (fee?.calculatedFees) {
           let transaction;
           if (token.is_erc20) {
+            const contractAddress = networkProvider?.isTron
+              ? AddressUtils.hexToTron(token.id)
+              : AddressUtils.toEth(token.id);
             transaction = await ethNetworkProvider.transferERC20(
               fee.calculatedFees,
-              provider,
+              walletProvider,
               wallet,
               route.params.to,
               route.params.amount,
-              AddressUtils.toEth(token.id),
+              contractAddress,
+              networkProvider,
             );
           } else {
             transaction = await ethNetworkProvider.transferTransaction(
               fee.calculatedFees,
-              provider,
+              walletProvider,
               wallet,
               route.params.to,
               route.params.amount,
+              networkProvider,
             );
           }
 
@@ -124,7 +136,7 @@ export const TransactionConfirmationScreen = observer(() => {
           walletType: wallet.type,
           token,
           contact,
-          provider: app.provider.name,
+          provider: Provider.getByEthChainId(token.chain_id)?.name,
         });
 
         const err = e as EthSignErrorDataDetails;
@@ -143,7 +155,7 @@ export const TransactionConfirmationScreen = observer(() => {
           );
           showModal(ModalType.notEnoughGas, {
             gasLimit: gasLimit,
-            currentAmount: app.getAvailableBalance(wallet!.address),
+            currentAmount: Wallet.getBalance(wallet!.address, 'available'),
           });
           return;
         }
@@ -174,6 +186,7 @@ export const TransactionConfirmationScreen = observer(() => {
         to,
         value,
         data,
+        chainId: token.chain_id,
       });
 
       setFee(result);
@@ -187,7 +200,7 @@ export const TransactionConfirmationScreen = observer(() => {
 
   return (
     <TransactionConfirmation
-      balance={balance[route.params.from as HaqqEthereumAddress]}
+      balance={balance[AddressUtils.toEth(route.params.from)]}
       disabled={disabled}
       contact={contact}
       to={route.params.to}

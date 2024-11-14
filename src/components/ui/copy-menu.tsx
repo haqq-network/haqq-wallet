@@ -1,6 +1,5 @@
 import React, {useCallback, useMemo} from 'react';
 
-import Clipboard from '@react-native-clipboard/clipboard';
 import {observer} from 'mobx-react';
 import {
   I18nManager,
@@ -20,43 +19,37 @@ import {SolidLine} from '@app/components/solid-line';
 import {Icon, IconsName} from '@app/components/ui/icon';
 import Popover from '@app/components/ui/popover';
 import {RTLReverse} from '@app/components/ui/rtl-reverse';
-import {Spacer} from '@app/components/ui/spacer';
 import {Text, TextVariant} from '@app/components/ui/text';
-import {app} from '@app/contexts';
-import {createTheme} from '@app/helpers';
-import {AddressUtils} from '@app/helpers/address-utils';
+import {createTheme, showModal} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {sendNotification} from '@app/services';
+import {WalletModel} from '@app/models/wallet';
+import {ModalType} from '@app/types';
+
+import {Spacer} from './spacer';
 
 export type CopyMenuProps = ViewProps & {
-  value: string;
+  wallet: WalletModel;
   withSettings?: boolean;
 };
 
 export const CopyMenu = observer(
-  ({children, value, style, withSettings = false}: CopyMenuProps) => {
+  ({children, wallet, style, withSettings = false}: CopyMenuProps) => {
     const navigation = useTypedNavigation();
 
     const onCopyPress = useCallback(() => {
-      Clipboard.setString(value);
-      sendNotification(I18N.notificationCopied);
-    }, [value]);
-
-    const onBech32CopyPress = useCallback(() => {
-      Clipboard.setString(AddressUtils.toHaqq(value));
-      sendNotification(I18N.notificationCopied);
-    }, [value]);
+      showModal(ModalType.copyAddressBottomSheet, {wallet});
+    }, []);
 
     const onPressSettings = useCallback(() => {
       navigation.navigate('homeSettings', {
         screen: 'settingsAccounts',
         params: {
           screen: 'settingsAccountDetail',
-          params: {address: value, fromHomePage: true},
+          params: {address: wallet.address, fromHomePage: true},
         },
       });
-    }, [value]);
+    }, [wallet.address]);
 
     const containerStyle = useMemo(() => [styles.container, style], [style]);
     const rendererProps = useMemo(
@@ -74,7 +67,9 @@ export const CopyMenu = observer(
 
     return (
       <Menu renderer={Popover} rendererProps={rendererProps}>
-        <MenuTrigger customStyles={menuTriggerCustomStyles}>
+        <MenuTrigger
+          onAlternativeAction={onCopyPress}
+          customStyles={menuTriggerCustomStyles}>
           <View style={containerStyle}>{children}</View>
         </MenuTrigger>
         <MenuOptions
@@ -83,24 +78,10 @@ export const CopyMenu = observer(
           <MenuOption onSelect={onCopyPress} style={styles.option}>
             <RTLReverse>
               <Text variant={TextVariant.t11} i18n={I18N.copyAddress} />
+              <Spacer width={32} />
               <Icon i22 name={IconsName.copy} color={Color.textBase1} />
             </RTLReverse>
           </MenuOption>
-          {app.provider.config.isBech32Enabled && (
-            <>
-              <SolidLine width="100%" color={Color.graphicSecond2} />
-              <MenuOption onSelect={onBech32CopyPress} style={styles.option}>
-                <RTLReverse>
-                  <Text
-                    variant={TextVariant.t11}
-                    i18n={I18N.copyBech32Address}
-                  />
-                  <Spacer width={16} />
-                  <Icon i22 name={IconsName.copy} color={Color.textBase1} />
-                </RTLReverse>
-              </MenuOption>
-            </>
-          )}
           {withSettings && (
             <>
               <SolidLine width="100%" color={Color.graphicSecond2} />

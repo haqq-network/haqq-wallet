@@ -1,24 +1,36 @@
 import {useCallback, useEffect} from 'react';
 
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {
+  ProviderSSSBase,
+  ProviderSSSEvm,
+  ProviderSSSTron,
+} from '@haqq/rn-wallet-providers';
 import {observer} from 'mobx-react';
 
 import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
-import {getProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet';
+import {
+  getProviderForNewWallet,
+  getTronProviderForNewWallet,
+} from '@app/helpers/get-provider-for-new-wallet';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {
+  HomeStackRoutes,
   SignInStackRoutes,
   SignUpStackParamList,
   SignUpStackRoutes,
   WelcomeStackRoutes,
 } from '@app/route-types';
 import {SssProviders} from '@app/services/provider-sss';
-import {ModalType, WalletType} from '@app/types';
-import {ETH_HD_SHORT_PATH, MAIN_ACCOUNT_NAME} from '@app/variables/common';
+import {AddressTron, ModalType, WalletType} from '@app/types';
+import {
+  ETH_COIN_TYPE,
+  ETH_HD_SHORT_PATH,
+  TRON_COIN_TYPE,
+} from '@app/variables/common';
 
 export const SignUpStoreWalletScreen = observer(() => {
   const navigation = useTypedNavigation<SignUpStackParamList>();
@@ -29,7 +41,12 @@ export const SignUpStoreWalletScreen = observer(() => {
 
   const goBack = useCallback(() => {
     hideModal(ModalType.loading);
-    navigation.replace(WelcomeStackRoutes.SignUp);
+    if (app.onboarded) {
+      // @ts-ignore
+      navigation.replace(HomeStackRoutes.SignUp);
+    } else {
+      navigation.replace(WelcomeStackRoutes.SignUp);
+    }
   }, [navigation]);
 
   useEffect(() => {
@@ -52,7 +69,11 @@ export const SignUpStoreWalletScreen = observer(() => {
       //@ts-ignore
       route.params.sssPrivateKey ||
       //@ts-ignore
-      route.params.provider instanceof ProviderSSSReactNative ||
+      route.params.provider instanceof ProviderSSSBase ||
+      //@ts-ignore
+      route.params.provider instanceof ProviderSSSEvm ||
+      //@ts-ignore
+      route.params.provider instanceof ProviderSSSTron ||
       //@ts-ignore
       Object.values(SssProviders).includes(route.params.provider)
     ) {
@@ -76,6 +97,10 @@ export const SignUpStoreWalletScreen = observer(() => {
     setTimeout(async () => {
       try {
         const provider = await getCurrentProvider();
+        const tronProvider = await getTronProviderForNewWallet(
+          getWalletType(),
+          provider.getIdentifier(),
+        );
 
         // sssLimitReached
         if (!provider || typeof provider?.getIdentifier !== 'function') {
@@ -115,19 +140,23 @@ export const SignUpStoreWalletScreen = observer(() => {
         const total = Wallet.getAll().length;
         const name =
           walletsTotalCount === 0
-            ? MAIN_ACCOUNT_NAME
+            ? getText(I18N.mainAccount)
             : getText(I18N.signupStoreWalletAccountNumber, {
                 number: `${total + 1}`,
               });
 
         try {
           const {address} = await provider.getAccountInfo(hdPath);
+          const {address: tronAddress} = await tronProvider.getAccountInfo(
+            hdPath.replace?.(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
+          );
           const type = getWalletType();
 
           await Wallet.create(name, {
             address: AddressUtils.toEth(address),
+            tronAddress: tronAddress as AddressTron,
             accountId: provider.getIdentifier(),
-            path: hdPath,
+            path: hdPath.replace?.(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
             type,
             socialLinkEnabled: type === WalletType.sss,
             mnemonicSaved: !!accountWallets.find(

@@ -6,7 +6,7 @@ import {WalletConnectApproval} from '@app/components/wallet-connect-approval';
 import {WalletSelectType, awaitForWallet} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {Wallet} from '@app/models/wallet';
+import {Wallet, WalletModel} from '@app/models/wallet';
 import {
   WalletConnectApprovalStackParamList,
   WalletConnectApprovalStackRoutes,
@@ -20,9 +20,27 @@ export const WalletConnectApprovalScreen = observer(() => {
     WalletConnectApprovalStackRoutes.WalletConnectApproval
   >();
   const wallets = Wallet.getAllVisible();
-  const [selectedWallet, setSelectedWallet] = useState<Wallet>(wallets?.[0]);
+  const [selectedWallet, setSelectedWallet] = useState<WalletModel>(
+    wallets?.[0],
+  );
   const isApproved = useRef(false);
   const event = useMemo(() => route?.params?.event, [route?.params?.event]);
+
+  const chainId = useMemo(() => {
+    const requiredChain =
+      event?.params?.requiredNamespaces?.eip155?.chains?.[0];
+    const optionalChain =
+      event?.params?.optionalNamespaces?.eip155?.chains?.[0];
+    const chain = requiredChain || optionalChain;
+    if (!chain) {
+      return undefined;
+    }
+    const [, id] = chain.split(':');
+    if (!id) {
+      return undefined;
+    }
+    return Number(id);
+  }, [event]);
 
   const rejectSession = useCallback(
     () =>
@@ -72,7 +90,9 @@ export const WalletConnectApprovalScreen = observer(() => {
       title: I18N.selectAccount,
       type: WalletSelectType.screen,
       initialAddress: selectedWallet?.address,
+      chainId,
       eventSuffix: event?.id,
+      hideBalance: true,
     });
     setSelectedWallet(Wallet.getById(address)!);
   };

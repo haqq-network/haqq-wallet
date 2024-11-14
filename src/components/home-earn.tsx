@@ -5,10 +5,10 @@ import {RefreshControl, ScrollView, TouchableOpacity, View} from 'react-native';
 import {RiveRef} from 'rive-react-native';
 
 import {Color} from '@app/colors';
-import {app} from '@app/contexts';
 import {cleanNumber, createTheme} from '@app/helpers';
 import {useThemeSelector} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {Raffle} from '@app/types';
 import {SHADOW_L} from '@app/variables/shadows';
 
@@ -114,7 +114,7 @@ export const HomeEarn = observer(
                   variant={TextVariant.t14}
                   color={Color.textBase2}
                   i18n={I18N.earnStakingDescription}
-                  i18params={{symbol: app.provider.denom}}
+                  i18params={{symbol: Provider.selectedProvider.denom}}
                 />
               </View>
             </View>
@@ -129,7 +129,7 @@ export const HomeEarn = observer(
                   <Text variant={TextVariant.t14} i18n={I18N.earnRewards} />
                   <Spacer width={5} />
                   <Text variant={TextVariant.t13} color={Color.textGreen1}>
-                    {`${formattedRewardAmount} ${app.provider.denom}`}
+                    {`${formattedRewardAmount} ${Provider.selectedProvider.denom}`}
                   </Text>
                   <Spacer flex={1} />
                   {showStakingGetRewardsButtons && (

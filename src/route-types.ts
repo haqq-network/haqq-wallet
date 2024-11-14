@@ -1,21 +1,22 @@
 import {Proposal as ProposalProvider} from '@evmos/provider';
 import {Proposal as ProposalGovProvider} from '@evmos/provider/dist/rest/gov';
-import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {ProviderMnemonicBase, ProviderSSSBase} from '@haqq/rn-wallet-providers';
 import {SessionTypes} from '@walletconnect/types';
 
 import {TotalValueTabNames} from '@app/components/total-value-info';
 import {AwaitValue} from '@app/helpers/await-for-value';
 import {NftCollection, NftItem} from '@app/models/nft';
-import {Provider} from '@app/models/provider';
-import {Wallet} from '@app/models/wallet';
+import {ProviderModel} from '@app/models/provider';
+import {IWalletModel, WalletModel} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {SssProviders} from '@app/services/provider-sss';
 import {
   BiometryType,
+  ChainId,
   Eventable,
   IStory,
   IToken,
+  IndexerTxMsgType,
   JsonRpcMetadata,
   LedgerWalletInitialData,
   MarketingEvents,
@@ -31,7 +32,9 @@ import {
 import {WalletConnectApproveConnectionEvent} from '@app/types/wallet-connect';
 
 import {Fee} from './models/fee';
+import {SecureValue} from './modifiers/secure-value';
 import {CalculatedFees} from './services/eth-network/types';
+import {SushiPoolEstimateResponse} from './services/indexer';
 
 export type AnyRouteFromParent =
   | SignInStackRoutes
@@ -170,7 +173,7 @@ export type SssMigrateStackParamList = HomeStackParamList & {
   [SssMigrateStackRoutes.SssMigrateNetworks]: {accountId: string};
   [SssMigrateStackRoutes.SssMigrateRewrite]: {
     accountId: string;
-    privateKey: string;
+    privateKey: SecureValue<string>;
     provider: SssProviders;
     email?: string;
     verifier: string;
@@ -178,7 +181,7 @@ export type SssMigrateStackParamList = HomeStackParamList & {
   };
   [SssMigrateStackRoutes.SssMigrateStore]: {
     accountId: string;
-    privateKey: string | null;
+    privateKey: SecureValue<string | null>;
     provider?: SssProviders;
     email?: string;
     verifier: string;
@@ -257,14 +260,14 @@ export enum BackupStackRoutes {
 
 export type BackupStackParamList = HomeStackParamList & {
   [BackupStackRoutes.BackupWarning]: {
-    wallet: Wallet;
+    wallet: IWalletModel;
     pinEnabled?: boolean;
   };
   [BackupStackRoutes.BackupCreate]: {
-    wallet: Wallet;
+    wallet: IWalletModel;
   };
   [BackupStackRoutes.BackupVerify]: {
-    wallet: Wallet;
+    wallet: IWalletModel;
   };
   [BackupStackRoutes.BackupFinish]: undefined;
 };
@@ -291,8 +294,8 @@ export type SettingsStackParamList = HomeStackParamList & {
   [SettingsStackRoutes.Home]?: {
     screen: SettingsStackRoutes.SettingsProviderForm;
     params: {
-      id?: string;
-      data?: Partial<Provider>;
+      id?: number;
+      data?: Partial<ProviderModel>;
     };
   };
   [SettingsStackRoutes.SettingsAccounts]: undefined;
@@ -319,8 +322,8 @@ export enum ProvidersStackRoutes {
 export type ProvidersStackParamList = {
   [ProvidersStackRoutes.SettingsProviders]: undefined;
   [ProvidersStackRoutes.SettingsProviderForm]: {
-    id?: string;
-    data?: Partial<Provider>;
+    id?: number;
+    data?: Partial<ProviderModel>;
   };
 };
 
@@ -347,7 +350,8 @@ export enum HomeStackRoutes {
   AccountInfo = 'accountInfo',
   Transaction = 'transaction',
   Nft = 'Nft',
-  AccountDetail = 'accountDetail',
+  SelectNetwork = 'selectNetwork',
+  Receive = 'receive',
   Backup = 'backup',
   WalletProtectionPopup = 'walletProtectionPopup',
   WalletConnectApplicationDetailsPopup = 'walletConnectApplicationDetailsPopup',
@@ -371,6 +375,7 @@ export enum HomeStackRoutes {
   Swap = '_swap',
   NewsDetailPushNotification = 'newsDetailsPushNotification',
   FeeSettings = 'feeSettings',
+  SignUp = 'SignUp',
 }
 
 export type HomeStackParamList = {
@@ -379,6 +384,7 @@ export type HomeStackParamList = {
   [HomeStackRoutes.Ledger]: undefined;
   [HomeStackRoutes.Device]: undefined;
   [HomeStackRoutes.SignIn]: undefined;
+  [HomeStackRoutes.SignUp]: undefined;
   [HomeStackRoutes.AccountInfo]: {accountId: string};
   [HomeStackRoutes.Transaction]: {
     from?: string;
@@ -394,13 +400,14 @@ export type HomeStackParamList = {
         initScreen: NftStackRoutes.NftCollectionDetails;
         item: NftCollection;
       };
-  [HomeStackRoutes.AccountDetail]: {address: string};
+  [HomeStackRoutes.SelectNetwork]: {address: string};
+  [HomeStackRoutes.Receive]: {address: string; chainId: ChainId};
   [HomeStackRoutes.Backup]: {
-    wallet: Wallet;
+    wallet: IWalletModel;
     pinEnabled?: boolean;
   };
   [HomeStackRoutes.WalletProtectionPopup]: {
-    wallet: Wallet;
+    wallet: IWalletModel;
     pinEnabled?: boolean;
   };
   [HomeStackRoutes.WalletConnectApplicationDetailsPopup]: {
@@ -411,7 +418,11 @@ export type HomeStackParamList = {
     address: string;
     isPopup?: boolean;
   };
-  [HomeStackRoutes.TransactionDetail]: {txId: string; addresses: string[]};
+  [HomeStackRoutes.TransactionDetail]: {
+    txId: string;
+    addresses: string[];
+    txType: IndexerTxMsgType;
+  };
   [HomeStackRoutes.InAppBrowser]: {
     url: string;
     title?: string;
@@ -426,7 +437,7 @@ export type HomeStackParamList = {
     accountId: string;
     pinEnabled?: boolean;
   };
-  [HomeStackRoutes.BackupNotification]: {wallet: Wallet};
+  [HomeStackRoutes.BackupNotification]: {wallet: IWalletModel};
   [HomeStackRoutes.JsonRpcSign]: {
     request: PartialJsonRpcRequest;
     metadata: JsonRpcMetadata;
@@ -444,9 +455,10 @@ export type HomeStackParamList = {
   [HomeStackRoutes.PopupTrackActivity]: {bannerId: string};
   [HomeStackRoutes.Web3BrowserPopup]: {url: string; popup?: boolean};
   [HomeStackRoutes.WalletSelector]: Eventable & {
-    wallets: Wallet[];
+    wallets: WalletModel[];
     title: string;
     initialAddress?: string;
+    chainId?: number;
   };
   [HomeStackRoutes.TotalValueInfo]?: {
     tab?: TotalValueTabNames;
@@ -538,8 +550,9 @@ export enum TransactionStackRoutes {
 export type TransactionStackParamList = HomeFeedStackParamList & {
   [TransactionStackRoutes.TransactionAddress]: {
     from: string;
-    to?: string;
-    nft?: NftItem;
+    to?: string | undefined;
+    nft?: NftItem | undefined;
+    token?: IToken | undefined;
   };
   [TransactionStackRoutes.TransactionSum]: {
     from: string;
@@ -674,14 +687,14 @@ export enum OnboardingStackRoutes {
 
 export type OnboardingStackParamList = WelcomeStackParamList & {
   [OnboardingStackRoutes.OnboardingSetupPin]: WalletInitialData & {
-    provider?: ProviderMnemonicReactNative;
-    currentPin: string;
+    provider?: ProviderMnemonicBase;
+    currentPin: SecureValue<string>;
     nextScreen: AnyRouteFromParent;
     errorText?: string;
   };
   [OnboardingStackRoutes.OnboardingRepeatPin]: WalletInitialData & {
-    provider?: ProviderMnemonicReactNative;
-    currentPin: string;
+    provider?: ProviderMnemonicBase;
+    currentPin: SecureValue<string>;
     nextScreen: AnyRouteFromParent;
   };
   [OnboardingStackRoutes.OnboardingBiometry]: {
@@ -748,17 +761,14 @@ export type SignInStackParamList = WelcomeStackParamList & {
   [SignInStackRoutes.SigninPin]: WalletInitialData;
   [SignInStackRoutes.SigninSharesNotFound]: undefined;
   [SignInStackRoutes.OnboardingSetupPin]: WalletInitialData & {
-    provider?:
-      | ProviderMnemonicReactNative
-      | ProviderSSSReactNative
-      | SssProviders;
+    provider?: ProviderMnemonicBase | ProviderSSSBase | SssProviders;
     biometryType?: BiometryType;
   };
   [SignInStackRoutes.SigninStoreWallet]: WalletInitialData & {
     nextScreen?: SignInStackRoutes;
   };
   [SignInStackRoutes.SigninNotExists]: WalletInitialData & {
-    provider: ProviderMnemonicReactNative | ProviderSSSReactNative;
+    provider: ProviderMnemonicBase | ProviderSSSBase;
     email?: string;
   };
   [SignInStackRoutes.SigninNotRecovery]: WalletInitialData;
@@ -768,11 +778,12 @@ export type SignInStackParamList = WelcomeStackParamList & {
   };
   [SignInStackRoutes.SigninChooseAccount]:
     | (WalletInitialData & {
-        provider: ProviderMnemonicReactNative;
+        provider: ProviderMnemonicBase;
         nextScreen?: SignInStackRoutes;
+        mnemonic: SecureValue<string>;
       })
     | {
-        provider: ProviderSSSReactNative;
+        provider: ProviderSSSBase;
         nextScreen?: SignInStackRoutes;
         sssProvider: string;
       };
@@ -878,7 +889,17 @@ export type SwapStackParamList = {
   Preview: {
     address: string;
   };
-  Finish: undefined;
+  Finish: {
+    token0: IToken;
+    token1: IToken;
+    txHash: string;
+    estimateData: SushiPoolEstimateResponse;
+    isWrapTx: boolean;
+    isUnwrapTx: boolean;
+    rate: string;
+    amountIn: string;
+    amountOut: string;
+  };
 };
 
 export enum SwapStackRoutes {

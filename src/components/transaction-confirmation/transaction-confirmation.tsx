@@ -16,13 +16,14 @@ import {
   TextPosition,
   TextVariant,
 } from '@app/components/ui';
-import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Fee} from '@app/models/fee';
+import {Provider} from '@app/models/provider';
+import {BalanceModel} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
-import {BalanceData, IToken} from '@app/types';
+import {IToken} from '@app/types';
 import {splitAddress} from '@app/utils';
 import {LONG_NUM_PRECISION} from '@app/variables/common';
 
@@ -39,7 +40,7 @@ interface TransactionConfirmationProps {
   onPressToAddress: () => void;
   fee: Fee | null;
   token: IToken;
-  balance: BalanceData;
+  balance: BalanceModel;
 }
 
 export const TransactionConfirmation = observer(
@@ -63,7 +64,17 @@ export const TransactionConfirmation = observer(
         return null;
       }
 
-      if (amount.isNativeCoin) {
+      const provider = Provider.getByEthChainId(token.chain_id);
+      const isNativeCoin = amount.getSymbol() === provider?.denom;
+      const isTron = provider?.isTron;
+
+      if (isNativeCoin) {
+        if (isTron) {
+          return fee.calculatedFees.expectedFee.operate(
+            amount.toFloat(),
+            'add',
+          );
+        }
         return fee.calculatedFees.expectedFee.operate(amount, 'add');
       }
 
@@ -77,7 +88,7 @@ export const TransactionConfirmation = observer(
 
       // When sanding native token than calculation includes
       // amount + fee - availablebalance
-      if (amount.getSymbol() === app.provider.denom) {
+      if (amount.getSymbol() === Provider.selectedProvider.denom) {
         return (
           fee.calculatedFees.expectedFee
             .operate(amount, 'add')
@@ -179,7 +190,7 @@ export const TransactionConfirmation = observer(
             </DataView>
             <DataView i18n={I18N.transactionDetailNetwork}>
               <Text variant={TextVariant.t11} color={Color.textBase1}>
-                <Text>{app.provider.name}</Text>
+                <Text>{Provider.getByEthChainId(token.chain_id)?.name}</Text>
               </Text>
             </DataView>
             <DataView i18n={I18N.transactionDetailAmount}>
@@ -197,17 +208,28 @@ export const TransactionConfirmation = observer(
                   <Text
                     variant={TextVariant.t11}
                     color={
-                      transactionSumError ? Color.graphicRed1 : Color.textGreen1
+                      transactionSumError
+                        ? Color.graphicRed1
+                        : Provider.selectedProvider.isEVM
+                        ? Color.textGreen1
+                        : Color.textBase1
                     }
+                    disabled={Provider.getByEthChainId(token.chain_id)?.isTron}
                     onPress={onFeePress}>
-                    {fee.expectedFeeString}
+                    {Provider.getByEthChainId(token.chain_id)?.isTron
+                      ? fee.expectedFee?.toBalanceString()
+                      : fee.expectedFeeString}
                   </Text>
-                  <Icon
-                    name={IconsName.tune}
-                    color={
-                      transactionSumError ? Color.graphicRed1 : Color.textGreen1
-                    }
-                  />
+                  {Provider.selectedProvider.isEVM && (
+                    <Icon
+                      name={IconsName.tune}
+                      color={
+                        transactionSumError
+                          ? Color.graphicRed1
+                          : Color.textGreen1
+                      }
+                    />
+                  )}
                 </View>
               )}
             </DataView>
@@ -217,7 +239,7 @@ export const TransactionConfirmation = observer(
               position={TextPosition.center}
               color={Color.graphicRed1}
               i18n={I18N.transactionSumError}
-              i18params={{symbol: app.provider.weiDenom}}
+              i18params={{symbol: Provider.selectedProvider.weiDenom}}
             />
           )}
         </Spacer>

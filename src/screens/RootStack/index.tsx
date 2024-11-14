@@ -1,10 +1,9 @@
-import React, {memo, useMemo} from 'react';
+import React from 'react';
 
+import {observer} from 'mobx-react';
 import {StyleSheet, View} from 'react-native';
 
 import {ModalProvider} from '@app/components/modal-provider';
-import {getWelcomeScreen} from '@app/helpers/get-welcome-screen';
-import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {HomeStack} from '@app/screens/HomeStack';
 import {ModalsScreen} from '@app/screens/modals-screen';
 import {WelcomeStack} from '@app/screens/WelcomeStack';
@@ -15,28 +14,13 @@ type Props = {
   isReady: boolean;
 };
 
-const RootStack = memo(({onboarded, isPinReseted, isReady}: Props) => {
-  const initialRouteName = useMemo(() => {
-    return getWelcomeScreen();
-  }, []);
-
-  const CurrentStack = useMemo(() => {
-    if (onboarded && !isPinReseted) {
-      return <HomeStack />;
-    }
-
-    return <WelcomeStack initialRouteName={initialRouteName} />;
-  }, [onboarded, isPinReseted, initialRouteName]);
-
-  const WrappedModals = useMemo(() => {
-    const Modals = themeUpdaterHOC(ModalsScreen);
-    return <Modals initialModal={!isReady ? {type: 'splash'} : undefined} />;
-  }, [isReady]);
-
+const RootStack = observer(({onboarded, isPinReseted, isReady}: Props) => {
   return (
     <View style={styles.container}>
-      {CurrentStack}
-      <ModalProvider>{WrappedModals}</ModalProvider>
+      {onboarded && !isPinReseted ? <HomeStack /> : <WelcomeStack />}
+      <ModalProvider>
+        <ModalsScreen initialModal={!isReady ? {type: 'splash'} : undefined} />
+      </ModalProvider>
     </View>
   );
 });

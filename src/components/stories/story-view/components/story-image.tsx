@@ -116,8 +116,9 @@ const StoryImage: FC<StoryImageProps> = memo(
                 width={WIDTH}
                 style={imageStyles ?? {}}
                 resizeMode="cover"
+                // @ts-ignore
                 testID="storyImageComponent"
-                onLayout={e =>
+                onLayout={(e: any) =>
                   onImageLayout(Math.min(HEIGHT, e.nativeEvent.layout.height))
                 }
                 onLoad={() => onContentLoad()}

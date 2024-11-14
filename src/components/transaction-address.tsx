@@ -22,6 +22,7 @@ import {
   Spacer,
   Text,
   TextField,
+  TextVariant,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
@@ -31,7 +32,8 @@ import {withActionsContactItem} from '@app/hocs';
 import {useKeyboard} from '@app/hooks/use-keyboard';
 import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
-import {Wallet} from '@app/models/wallet';
+import {Provider} from '@app/models/provider';
+import {WalletModel} from '@app/models/wallet';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {showUnrecognizedDataAttention} from '@app/utils';
 
@@ -42,9 +44,10 @@ export type TransactionAddressProps = {
   testID?: string;
   initial?: string;
   loading?: boolean;
-  filteredWallets?: Wallet[];
+  filteredWallets?: WalletModel[];
   contacts?: Contact[];
   address: string;
+  fromWallet: WalletModel;
   onAddress: (address: string) => void;
   setAddress: (address: string) => void;
 };
@@ -61,13 +64,30 @@ export const TransactionAddress = ({
   contacts,
   onAddress,
   testID,
+  fromWallet,
 }: TransactionAddressProps) => {
   const {keyboardShown} = useKeyboard();
   const [error, setError] = useState(false);
 
   const doneDisabled = useMemo(() => {
-    return !address?.trim() || error || !AddressUtils.isValidAddress(address);
-  }, [error, address]);
+    if (!address?.trim() || error) {
+      return true;
+    }
+    Logger.log('fromWallet', fromWallet);
+
+    if (Provider.selectedProvider.isTron) {
+      return (
+        // can't send to the same wallet
+        fromWallet.tronAddress?.toLowerCase() === address?.toLowerCase() ||
+        !AddressUtils.isTronAddress(address)
+      );
+    }
+    return (
+      fromWallet.address?.toLowerCase() === address?.toLowerCase() ||
+      fromWallet.cosmosAddress?.toLowerCase() === address?.toLowerCase() ||
+      !AddressUtils.isValidAddress(address)
+    );
+  }, [error, address, fromWallet]);
 
   const onDone = useCallback(async () => {
     onAddress(address.trim());
@@ -75,7 +95,7 @@ export const TransactionAddress = ({
 
   const onPressQR = useCallback(async () => {
     const data = await awaitForScanQr();
-    const {type, params} = await parseDeepLink(data);
+    const {type, params} = parseDeepLink(data);
 
     switch (type) {
       case LinkType.Haqq:
@@ -94,13 +114,16 @@ export const TransactionAddress = ({
     if (!address) {
       return;
     }
+    const isTron = Provider.selectedProvider.isTron;
 
     if (AddressUtils.isValidAddress(address.trim())) {
       return onDone();
     }
 
     if (contacts?.length === 0 && filteredWallets?.length === 1) {
-      return onAddress(filteredWallets[0].address);
+      return onAddress(
+        isTron ? filteredWallets[0].tronAddress : filteredWallets[0].address,
+      );
     }
 
     if (contacts?.length === 1 && filteredWallets?.length === 0) {
@@ -130,11 +153,11 @@ export const TransactionAddress = ({
   );
 
   const myAccountsKeyExtractor = useCallback(
-    (item: Wallet) => item.address,
+    (item: WalletModel) => item.address,
     [],
   );
 
-  const myAccountsRenderItem: ListRenderItem<Wallet> = useCallback(
+  const myAccountsRenderItem: ListRenderItem<WalletModel> = useCallback(
     ({item}) => (
       <>
         <WalletRow
@@ -206,7 +229,7 @@ export const TransactionAddress = ({
 
         {Boolean(filteredWallets?.length) && (
           <View style={styles.marginHorizontal}>
-            <Text t6 i18n={I18N.transactionMyAccounts} />
+            <Text variant={TextVariant.t6} i18n={I18N.transactionMyAccounts} />
             <Spacer height={12} />
             <FlatList
               horizontal
@@ -224,7 +247,10 @@ export const TransactionAddress = ({
           <>
             <Spacer height={12} />
             <View style={styles.marginHorizontal}>
-              <Text t6 i18n={I18N.transactionMyContacts} />
+              <Text
+                variant={TextVariant.t6}
+                i18n={I18N.transactionMyContacts}
+              />
             </View>
             <ListOfContacts
               // @ts-ignore

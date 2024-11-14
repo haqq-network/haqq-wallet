@@ -2,14 +2,18 @@ import {useEffect, useState} from 'react';
 
 import {autorun} from 'mobx';
 
-import {app} from '@app/contexts';
+import {Provider} from '@app/models/provider';
 
 export const useShowNft = () => {
-  const [showNft, setShowNft] = useState(app.provider.config.isNftEnabled);
+  const [showNft, setShowNft] = useState(
+    Provider.isAllNetworks || Provider.selectedProvider.config.isNftEnabled,
+  );
 
   useEffect(() => {
     const disposer = autorun(() => {
-      setShowNft(app.provider.config.isNftEnabled);
+      setShowNft(
+        Provider.isAllNetworks || Provider.selectedProvider.config.isNftEnabled,
+      );
     });
 
     return () => {

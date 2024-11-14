@@ -4,14 +4,14 @@ import {observer} from 'mobx-react';
 
 import {TokenViewer} from '@app/components/token-viewer';
 import {TransactionEmpty} from '@app/components/transaction-empty';
-import {First, PopupContainer, Spacer} from '@app/components/ui';
+import {First, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useShowNft} from '@app/hooks/nft';
 import {I18N} from '@app/i18n';
-import {Wallet} from '@app/models/wallet';
+import {WalletModel} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
-import {HaqqEthereumAddress, IToken, IndexerTransaction} from '@app/types';
+import {AddressEthereum, IToken, IndexerTransaction} from '@app/types';
 
 import {AccountInfoHeader} from './account-info-header';
 
@@ -26,18 +26,19 @@ enum TabNames {
 }
 
 export type AccountInfoProps = {
-  wallet: Wallet;
-  onPressInfo: () => void;
-  onSend: () => void;
-  onReceive: () => void;
-  onPressTxRow: (tx: IndexerTransaction) => void;
+  wallet: WalletModel;
   available: Balance;
   locked: Balance;
   staked: Balance;
   total: Balance;
   vested: Balance;
   unlock: Date;
-  tokens: Record<HaqqEthereumAddress, IToken[]>;
+  tokens: Record<AddressEthereum, IToken[]>;
+  onPressInfo: () => void;
+  onSend: () => void;
+  onReceive: () => void;
+  onPressTxRow: (tx: IndexerTransaction) => void;
+  onPressToken?: (wallet: WalletModel, token: IToken) => void;
 };
 
 const TAB_INDEX_MAP = {
@@ -55,16 +56,17 @@ export const AccountInfo = observer(
     total,
     unlock,
     vested,
+    tokens,
     onPressInfo,
     onSend,
     onReceive,
     onPressTxRow,
-    tokens,
+    onPressToken,
   }: AccountInfoProps) => {
     const [activeTab, setActiveTab] = useState(TabNames.tokens);
 
     const hideTransactionsContent = useMemo(
-      () => (activeTab === TabNames.transactions ? false : true),
+      () => activeTab !== TabNames.transactions,
       [activeTab],
     );
 
@@ -133,6 +135,7 @@ export const AccountInfo = observer(
               <TokenViewer
                 wallet={wallet}
                 data={tokens}
+                onPressToken={onPressToken}
                 style={styles.nftViewerContainer}
               />
             </>
@@ -149,19 +152,18 @@ export const AccountInfo = observer(
           )}
         </First>
       ),
-      [activeTab],
+      [activeTab, tokens, wallet, onPressToken],
     );
 
     return (
-      <PopupContainer plain>
-        <TransactionList
-          addresses={[wallet.address]}
-          hideContent={hideTransactionsContent}
-          onTransactionPress={onPressTxRow}
-          ListHeaderComponent={renderListHeader}
-          ListEmptyComponent={renderListEmptyComponent}
-        />
-      </PopupContainer>
+      <TransactionList
+        key={activeTab}
+        addresses={[wallet.address]}
+        hideContent={hideTransactionsContent}
+        onTransactionPress={onPressTxRow}
+        ListHeaderComponent={renderListHeader}
+        ListEmptyComponent={renderListEmptyComponent}
+      />
     );
   },
 );

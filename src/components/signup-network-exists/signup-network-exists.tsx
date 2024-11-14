@@ -10,6 +10,8 @@ import {
   PopupContainer,
   Spacer,
   Text,
+  TextPosition,
+  TextVariant,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
@@ -45,8 +47,8 @@ export const SignupNetworkExists = ({
       />
       <Spacer height={44} />
       <Text
-        t4
-        center
+        variant={TextVariant.t4}
+        position={TextPosition.center}
         i18n={
           email
             ? I18N.signupNetworkExitsTitle
@@ -56,16 +58,16 @@ export const SignupNetworkExists = ({
       />
       <Spacer height={4} />
       <Text
-        t11
+        variant={TextVariant.t11}
         color={Color.textBase2}
-        center
+        position={TextPosition.center}
         i18n={I18N.signupNetworkExitsDescription1}
       />
       <Spacer height={4} />
       <Text
-        t11
+        variant={TextVariant.t11}
         color={Color.textRed1}
-        center
+        position={TextPosition.center}
         i18n={I18N.signupNetworkExitsDescription2}
       />
       <Spacer />
@@ -91,10 +93,10 @@ export const SignupNetworkExists = ({
             i18n={I18N.sssReplaceAccountDescription1}
             i18params={{provider: capitalize(provider)}}
             color={Color.textBase2}
-            t11
+            variant={TextVariant.t11}
             showChildren>
             <Text
-              t9
+              variant={TextVariant.t9}
               i18n={I18N.sssReplaceAccountDescription2}
               color={Color.textBase2}
             />

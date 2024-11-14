@@ -1,9 +1,10 @@
-import {TransactionRequest} from '@haqq/provider-base';
+import {TransactionRequest} from '@haqq/rn-wallet-providers';
 
 import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
-import {Wallet} from '@app/models/wallet';
+import {Provider} from '@app/models/provider';
+import {IWalletModel} from '@app/models/wallet';
 import {EIPTypedData} from '@app/types';
 import {stringToHex} from '@app/utils';
 import {HAQQ_METADATA, ZERO_HEX_NUMBER} from '@app/variables/common';
@@ -53,7 +54,7 @@ export class EthSignError extends Error {
   }
 }
 
-const getWalletAddress = (wallet: Wallet | string) =>
+const getWalletAddress = (wallet: IWalletModel | string) =>
   typeof wallet === 'string' ? AddressUtils.toEth(wallet) : wallet.address;
 
 const prepareTransaction = async (from: string, tx: TransactionRequest) => {
@@ -63,7 +64,7 @@ const prepareTransaction = async (from: string, tx: TransactionRequest) => {
     tx.value = ZERO_HEX_NUMBER;
   }
 
-  if (!tx.nonce) {
+  if (!tx.nonce && Provider.selectedProvider.isEVM) {
     const rpcProvider = await app.getRpcProvider();
     tx.nonce = await rpcProvider.getTransactionCount(from, 'latest');
   }
@@ -72,7 +73,7 @@ const prepareTransaction = async (from: string, tx: TransactionRequest) => {
 };
 
 export class EthSign {
-  static async personalSign(wallet: Wallet | string, message: string) {
+  static async personalSign(wallet: IWalletModel | string, message: string) {
     if (!wallet || !message) {
       throw new EthSignError('Invalid params', {
         method: EIP155_SIGNING_METHODS.PERSONAL_SIGN,
@@ -81,7 +82,7 @@ export class EthSign {
     const address = getWalletAddress(wallet);
     return await awaitForJsonRpcSign({
       metadata: HAQQ_METADATA,
-      chainId: app.provider.ethChainId,
+      chainId: Provider.selectedProvider.ethChainId,
       request: {
         method: EIP155_SIGNING_METHODS.PERSONAL_SIGN,
         params: [address, stringToHex(message)],
@@ -91,7 +92,7 @@ export class EthSign {
   }
 
   static async signTransaction(
-    wallet: Wallet | string,
+    wallet: IWalletModel | string,
     tx: TransactionRequest,
   ) {
     if (!wallet || !tx) {
@@ -106,7 +107,7 @@ export class EthSign {
     try {
       return await awaitForJsonRpcSign({
         metadata: HAQQ_METADATA,
-        chainId: app.provider.ethChainId,
+        chainId: Provider.selectedProvider.ethChainId,
         request: {
           method: EIP155_SIGNING_METHODS.ETH_SIGN_TRANSACTION,
           params: [preparedTx],
@@ -124,7 +125,7 @@ export class EthSign {
   }
 
   static async sendTransaction(
-    wallet: Wallet | string,
+    wallet: IWalletModel | string,
     tx: TransactionRequest,
   ) {
     if (!wallet || !tx) {
@@ -139,7 +140,7 @@ export class EthSign {
     try {
       return await awaitForJsonRpcSign({
         metadata: HAQQ_METADATA,
-        chainId: app.provider.ethChainId,
+        chainId: Provider.selectedProvider.ethChainId,
         request: {
           method: EIP155_SIGNING_METHODS.ETH_SEND_TRANSACTION,
           params: [preparedTx],
@@ -173,7 +174,10 @@ export class EthSign {
     }
   }
 
-  static async signTypedData(wallet: Wallet | string, typedData: EIPTypedData) {
+  static async signTypedData(
+    wallet: IWalletModel | string,
+    typedData: EIPTypedData,
+  ) {
     if (!wallet || !typedData) {
       throw new EthSignError('Invalid params', {
         method: EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA,
@@ -185,7 +189,7 @@ export class EthSign {
     try {
       return await awaitForJsonRpcSign({
         metadata: HAQQ_METADATA,
-        chainId: app.provider.ethChainId,
+        chainId: Provider.selectedProvider.ethChainId,
         request: {
           method: EIP155_SIGNING_METHODS.ETH_SIGN_TYPED_DATA,
           params: [address, typedData],

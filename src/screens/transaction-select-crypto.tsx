@@ -4,10 +4,10 @@ import {computed} from 'mobx';
 import {observer} from 'mobx-react';
 
 import {TransactionSelectCrypto} from '@app/components/transaction-select-crypto';
-import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
+import {Provider} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {
   TransactionStackParamList,
@@ -28,12 +28,10 @@ export const TransactionSelectCryptoScreen = observer(() => {
         () =>
           Token.tokens[AddressUtils.toEth(params.from)]?.filter(
             item =>
-              !!item.is_in_white_list &&
-              // FIXME: only erc20 tokens or native currency (ISLM)
-              (item.is_erc20 || item.symbol === app.provider.denom),
+              !!item.is_in_white_list && !item.is_erc721 && !item.is_erc1155,
           ) ?? [],
       ),
-    [params.from, app.provider.denom],
+    [params.from, Provider.selectedProvider.denom],
   ).get();
 
   useAndroidBackHandler(() => {

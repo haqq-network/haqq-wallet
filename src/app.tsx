@@ -10,7 +10,13 @@ import {
 } from '@react-navigation/native';
 import * as Sentry from '@sentry/react-native';
 import PostHog, {PostHogProvider} from 'posthog-react-native';
-import {AppState, Dimensions, Linking, StyleSheet} from 'react-native';
+import {
+  AppState,
+  Dimensions,
+  InteractionManager,
+  Linking,
+  StyleSheet,
+} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {MenuProvider} from 'react-native-popup-menu';
 import {Metrics, SafeAreaProvider} from 'react-native-safe-area-context';
@@ -29,15 +35,12 @@ import {Contact} from '@app/models/contact';
 import {Language} from '@app/models/language';
 import {Stories} from '@app/models/stories';
 import {VariablesBool} from '@app/models/variables-bool';
-import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 import {
-  HomeStackRoutes,
   KeystoneStackRoutes,
   LedgerStackRoutes,
   OnboardingStackRoutes,
   SssMigrateStackRoutes,
-  WelcomeStackRoutes,
 } from '@app/route-types';
 import {RootStack} from '@app/screens/RootStack';
 import {AppTheme, ModalType} from '@app/types';
@@ -79,15 +82,6 @@ const SAFE_AREA_INTIAL_METRICS: Metrics = {
   },
 };
 
-// We need to log some screens with params
-// be careful with this list to avoid capturing sensitive data
-const ALLOWED_SCREEN_TO_LOG_PARAMS = [
-  HomeStackRoutes.TransactionDetail,
-  HomeStackRoutes.Web3BrowserPopup,
-  HomeStackRoutes.InAppBrowser,
-  WelcomeStackRoutes.InAppBrowser,
-];
-
 export const App = () => {
   const [initialized, setInitialized] = useState(false);
   const [isPinReseted, setPinReseted] = useState(false);
@@ -109,7 +103,10 @@ export const App = () => {
 
   useEffect(() => {
     const sub = (value: boolean) => {
-      setOnboarded(value);
+      InteractionManager.setDeadline(1000);
+      InteractionManager.runAfterInteractions(() => {
+        setOnboarded(value);
+      });
     };
 
     app.addListener(Events.onOnboardedChanged, sub);
@@ -125,7 +122,7 @@ export const App = () => {
     sleep(150)
       .then(async () => await app.awaitForInitialization())
       .then(() => SplashScreen.hide())
-      .then(() => awaitForEventDone(Events.onAppInitialized))
+      .then(async () => await awaitForEventDone(Events.onAppInitialized))
       .then(async () => await Language.init())
       .then(async () => {
         await Stories.fetch(true);
@@ -133,7 +130,7 @@ export const App = () => {
           await app.init();
           await migrationWallets();
           // MobX stores migration
-          await Promise.allSettled([Contact.migrate(), Wallet.migrate()]);
+          await Promise.allSettled([Contact.migrate()]);
 
           // We need reopen app for start SSS check
           // because we are working with cloud snapshots
@@ -249,11 +246,7 @@ export const App = () => {
                   captureScreens: true,
                   navigation: {
                     routeToProperties: (name, params) => {
-                      // @ts-ignore
-                      if (ALLOWED_SCREEN_TO_LOG_PARAMS.includes(name)) {
-                        return params;
-                      }
-                      return undefined;
+                      return params;
                     },
                   },
                 }}>

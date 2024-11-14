@@ -26,21 +26,20 @@ import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
 import {shortAddress} from '@app/helpers/short-address';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N} from '@app/i18n';
-import {Contracts} from '@app/models/contracts';
 import {Currencies} from '@app/models/currencies';
 import {Fee} from '@app/models/fee';
-import {Provider} from '@app/models/provider';
+import {ProviderModel} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {Indexer, SushiPoolEstimateResponse} from '@app/services/indexer';
 import {
+  IContract,
   JsonRpcMetadata,
   JsonRpcTransactionRequest,
-  VerifyAddressResponse,
 } from '@app/types';
-import {formatNumberString, openInAppBrowser, sleep} from '@app/utils';
-import {STRINGS} from '@app/variables/common';
+import {openInAppBrowser, parseTxDataFromHexInput, sleep} from '@app/utils';
+import {LONG_NUM_PRECISION, STRINGS} from '@app/variables/common';
 
 import {ImageWrapper} from '../image-wrapper';
 import {
@@ -50,14 +49,14 @@ import {
 
 export interface JsonRpcSwapTransactionProps {
   metadata: JsonRpcMetadata;
-  provider: Provider | undefined;
+  provider: ProviderModel | undefined;
   isFeeLoading: boolean;
   functionName: string;
   fee: Fee | null | undefined;
   tx: Partial<JsonRpcTransactionRequest> | undefined;
   parsedInput: ethers.utils.TransactionDescription | undefined;
   chainId: string | number;
-  verifyAddressResponse: VerifyAddressResponse | null;
+  verifyAddressResponse: IContract | null;
 
   onFeePress: () => void;
   onError: () => void;
@@ -131,9 +130,9 @@ export const JsonRpcSwapTransaction = observer(
       const symbol = tokenIn?.amount?.getSymbol()!;
       const decimals = tokenIn?.amount?.getPrecission()!;
       if (!estimateData?.fee) {
-        return new Balance(Balance.Empty, decimals, symbol);
+        return new Balance('0x0', decimals, symbol);
       }
-      return new Balance(estimateData?.fee.amount || '0', decimals, symbol);
+      return new Balance(estimateData?.fee.amount || '0x0', decimals, symbol);
     }, [tokenIn, estimateData]);
 
     const onPressRoutingSource = useCallback(() => {
@@ -177,33 +176,6 @@ export const JsonRpcSwapTransaction = observer(
             route: path.slice(2),
             currency_id: Currencies.currency?.id,
             abortSignal: estimateAbortController.current?.signal,
-          });
-        }
-
-        if (functionName === 'exactInput') {
-          const [path, recipient, _, amountIn, _amountOutMinimum] = parsedInput
-            ?.args[0]! as [
-            string, // path
-            string, // recipient
-            number, // deadline
-            BigNumber, // amountIn
-            BigNumber, //  amountOutMinimum
-          ];
-          amountOutMinimum = _amountOutMinimum._hex;
-          const matchArray = path.match(
-            /^0x([a-fA-F0-9]{40}).*([a-fA-F0-9]{40})$/,
-          );
-
-          // first 40 characters of path doesn't include the '0x' prefix
-          tokenInAddress = `0x${matchArray?.[1]}`;
-          // last 40 characters of path
-          tokenOutAddress = `0x${matchArray?.[2]}`;
-
-          response = await indexer.sushiPoolEstimate({
-            amount: amountIn._hex,
-            sender: recipient,
-            route: path.slice(2),
-            currency_id: Currencies.currency?.id,
           });
         }
 
@@ -265,6 +237,44 @@ export const JsonRpcSwapTransaction = observer(
           };
         }
 
+        // swap to native token and unwrap
+        // https://github.com/haqq-network/haqq-wallet/blob/6a64d63a20686fc1a711737784ad9e0514723d6d/src/screens/SwapStack/swap-screen.tsx#L855
+        if (functionName === 'multicall') {
+          const [swapTxData, _unwrapWETH9TxData] = parsedInput?.args[0]! as [
+            string,
+            string,
+          ];
+
+          estimateAbortController?.current?.abort();
+          estimateAbortController.current = new AbortController();
+
+          const [path, recipient, _, amountIn, _amountOutMinimum] =
+            parseTxDataFromHexInput(swapTxData)?.args[0]! as [
+              string, // path
+              string, // recipient
+              number, // deadline
+              BigNumber, // amountIn
+              BigNumber, //  amountOutMinimum
+            ];
+          amountOutMinimum = _amountOutMinimum._hex;
+          const matchArray = path.match(
+            /^0x([a-fA-F0-9]{40}).*([a-fA-F0-9]{40})$/,
+          );
+
+          // first 40 characters of path doesn't include the '0x' prefix
+          tokenInAddress = `0x${matchArray?.[1]}`;
+          // last 40 characters of path
+          tokenOutAddress = NATIVE_TOKEN_ADDRESS;
+
+          response = await indexer.sushiPoolEstimate({
+            amount: amountIn._hex,
+            sender: recipient,
+            route: path.slice(2),
+            currency_id: Currencies.currency?.id,
+            abortSignal: estimateAbortController.current?.signal,
+          });
+        }
+
         const recipientWallet = Wallet.getById(tx?.from)!;
         const tokenInIsNativeCoin = new Balance(tx?.value!).isPositive();
         const tokenOutIsNativeCoin = AddressUtils.equals(
@@ -289,7 +299,7 @@ export const JsonRpcSwapTransaction = observer(
           ),
           image:
             tokenInContract?.image ??
-            Contracts.getById(tokenInAddress)?.icon ??
+            Token.getById(tokenInAddress)?.image ??
             require('@assets/images/empty-icon.png'),
         }));
 
@@ -302,7 +312,7 @@ export const JsonRpcSwapTransaction = observer(
           ),
           image:
             tokenOutContract?.image ??
-            Contracts.getById(tokenOutAddress)?.icon ??
+            Token.getById(tokenOutAddress)?.image ??
             require('@assets/images/empty-icon.png'),
         }));
 
@@ -391,19 +401,32 @@ export const JsonRpcSwapTransaction = observer(
           contentContainerStyle={styles.infoContentContainer}
           showsVerticalScrollIndicator={false}>
           <DataView i18n={I18N.swapScreenRate}>
-            <Text variant={TextVariant.t11} color={Color.textBase1}>
-              {`1${STRINGS.NBSP}${tokenIn?.amount?.getSymbol()}${
-                STRINGS.NBSP
-              }≈${STRINGS.NBSP}${rate}`}
-            </Text>
+            <View style={styles.row}>
+              <Text variant={TextVariant.t11} color={Color.textBase1}>
+                {'1'}
+              </Text>
+              <Text variant={TextVariant.t11} color={Color.textBase1}>
+                {STRINGS.NBSP}
+                {tokenIn?.amount?.getSymbol()}
+                {STRINGS.NBSP}
+              </Text>
+              <Text variant={TextVariant.t11} color={Color.textBase1}>
+                {STRINGS.NBSP}≈{STRINGS.NBSP}
+              </Text>
+              <Text variant={TextVariant.t11} color={Color.textBase1}>
+                {rate}
+              </Text>
+            </View>
           </DataView>
           {!isWETHInteraction && (
             <>
               <DataView i18n={I18N.swapScreenPriceImpact}>
                 <Text variant={TextVariant.t11} color={priceImpactColor}>
-                  {`${formatNumberString(
-                    estimateData?.s_price_impact ?? '0',
-                  )}%`}
+                  {parseFloat(estimateData?.s_price_impact!).toFixed(
+                    LONG_NUM_PRECISION,
+                  )}
+                  {STRINGS.NBSP}
+                  {'%'}
                 </Text>
               </DataView>
               <DataView i18n={I18N.swapScreenProviderFee}>
@@ -443,7 +466,7 @@ export const JsonRpcSwapTransaction = observer(
               onPress={onPressRoutingSource}
               variant={TextVariant.t11}
               color={Color.textGreen1}>
-              {Contracts.getById(tx?.to!)?.name}
+              {Token.getById(tx?.to!)?.name}
               {STRINGS.NBSP}
               {shortAddress(tx?.to!, '•', true)}
             </Text>
@@ -462,6 +485,9 @@ export const JsonRpcSwapTransaction = observer(
 );
 
 const styles = createTheme({
+  row: {
+    flexDirection: 'row',
+  },
   info: {
     width: '100%',
     flex: 1,

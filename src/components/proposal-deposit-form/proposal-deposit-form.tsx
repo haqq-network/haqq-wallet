@@ -27,7 +27,9 @@ export const ProposalDepositForm = ({
   balance,
 }: ProposalDepositFormProps) => {
   const transactionFee = useMemo(() => {
-    const maximumFee = fee.compare(FEE_AMOUNT, 'gt') ? fee : FEE_AMOUNT;
+    const maximumFee = fee.compare(new Balance(FEE_AMOUNT), 'gt')
+      ? fee
+      : new Balance(FEE_AMOUNT);
     return new Balance(maximumFee);
   }, [fee]);
   const amounts = useSumAmount(

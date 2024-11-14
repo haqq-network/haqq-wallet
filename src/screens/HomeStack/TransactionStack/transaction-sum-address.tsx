@@ -26,6 +26,10 @@ export const TransactionSumAddressScreen = observer(() => {
   >();
   const wallets = Wallet.getAllVisible();
   const contacts = useRef(Contact.getAll()).current;
+  const fromWallet = useMemo(
+    () => Wallet.getById(route.params.from)!,
+    [route.params.from],
+  );
 
   const [address, setAddress] = useState(route.params?.to || '');
   const filteredWallets = useMemo(() => {
@@ -92,6 +96,7 @@ export const TransactionSumAddressScreen = observer(() => {
       filteredWallets={filteredWallets}
       contacts={filteredContacts}
       onAddress={onDone}
+      fromWallet={fromWallet}
     />
   );
 });

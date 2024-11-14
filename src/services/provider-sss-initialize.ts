@@ -1,12 +1,11 @@
-import {ProviderBaseOptions} from '@haqq/provider-base';
-import {
-  Polynomial,
-  ProviderSSSReactNative,
-  StorageInterface,
-  lagrangeInterpolation,
-} from '@haqq/provider-sss-react-native';
-import {ITEM_KEY} from '@haqq/provider-sss-react-native/dist/constants';
 import {accountInfo, generateEntropy} from '@haqq/provider-web3-utils';
+import {
+  ProviderBaseOptions,
+  ProviderSSSBase,
+  StorageInterface,
+  constants,
+  utils,
+} from '@haqq/rn-wallet-providers';
 import {
   encryptShare,
   jsonrpcRequest,
@@ -38,7 +37,7 @@ export async function providerSssInitialize(
     metadataUrl: string;
     generateSharesUrl: string;
   },
-): Promise<ProviderSSSReactNative> {
+): Promise<ProviderSSSBase> {
   let keyPK = socialPrivateKey;
   let shares = [];
 
@@ -66,7 +65,7 @@ export async function providerSssInitialize(
       ? Buffer.from(privateKey, 'hex')
       : await generateEntropy(32);
 
-    const p = await Polynomial.initialize(pk, 2);
+    const p = await utils.Polynomial.initialize(pk, 2);
 
     for (let i = 0; i < 2; i++) {
       const index = await generateEntropy(16);
@@ -74,13 +73,13 @@ export async function providerSssInitialize(
     }
   }
 
-  const poly = await Polynomial.fromShares(shares);
+  const poly = await utils.Polynomial.fromShares(shares);
 
   if (!socialPrivateKey || privateKey) {
     const index = await generateEntropy(16);
     const tmpSocialShare = poly.getShare(index.toString('hex'));
 
-    const p = await Polynomial.initialize(
+    const p = await utils.Polynomial.initialize(
       new BN(tmpSocialShare.share, 'hex'),
       3,
     );
@@ -115,7 +114,7 @@ export async function providerSssInitialize(
       throw new Error('not enough shares');
     }
 
-    const newPk = lagrangeInterpolation(
+    const newPk = utils.lagrangeInterpolation(
       sharesTmp2.map(s => new BN(s[0], 'hex')),
       sharesTmp2.map(s => new BN(s[1], 'hex')),
     );
@@ -152,7 +151,7 @@ export async function providerSssInitialize(
     );
 
     if (stored) {
-      await ProviderSSSReactNative.setStorageForAccount(
+      await ProviderSSSBase.setStorageForAccount(
         address.toLowerCase(),
         storage,
       );
@@ -167,18 +166,18 @@ export async function providerSssInitialize(
   const sqStore = await encryptShare(deviceShare, pass);
 
   await EncryptedStorage.setItem(
-    `${ITEM_KEY}_${address.toLowerCase()}`,
+    `${constants.ITEM_KEYS[constants.WalletType.sss]}_${address.toLowerCase()}`,
     JSON.stringify(sqStore),
   );
 
-  const accounts = await ProviderSSSReactNative.getAccounts();
+  const accounts = await ProviderSSSBase.getAccounts();
 
   await EncryptedStorage.setItem(
-    `${ITEM_KEY}_accounts`,
+    `${constants.ITEM_KEYS[constants.WalletType.sss]}_accounts`,
     JSON.stringify(accounts.concat(address.toLowerCase())),
   );
 
-  return new ProviderSSSReactNative({
+  return new ProviderSSSBase({
     ...options,
     getPassword,
     storage,

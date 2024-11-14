@@ -1,16 +1,15 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
-import {ProviderLedgerReactNative} from '@haqq/provider-ledger-react-native';
+import {ProviderLedgerEvm} from '@haqq/rn-wallet-providers';
 import _ from 'lodash';
 import {observer} from 'mobx-react';
 
 import {StakingDelegateForm} from '@app/components/staking-delegate-form';
-import {app} from '@app/contexts';
 import {getProviderInstanceForWallet} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useLayoutEffectAsync} from '@app/hooks/use-effect-async';
-import {useWalletsBalance} from '@app/hooks/use-wallets-balance';
+import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {
   StakingDelegateStackParamList,
@@ -27,7 +26,7 @@ export const StakingDelegateFormScreen = observer(() => {
     StakingDelegateStackRoutes.StakingDelegateForm
   >().params;
   const wallet = Wallet.getById(account);
-  const balances = useWalletsBalance([wallet!]);
+  const balances = Wallet.getBalancesByAddressList([wallet!]);
   const currentBalance = useMemo(
     () => balances[AddressUtils.toEth(account)],
     [balances, account],
@@ -41,7 +40,7 @@ export const StakingDelegateFormScreen = observer(() => {
 
   const setFee = useCallback(
     _.debounce(async (amount?: string) => {
-      const cosmos = new Cosmos(app.provider);
+      const cosmos = new Cosmos(Provider.selectedProvider);
       const instance = await getProviderInstanceForWallet(wallet!, true);
 
       try {
@@ -55,7 +54,7 @@ export const StakingDelegateFormScreen = observer(() => {
         Logger.log('f.amount', f.amount);
         _setFee(new Balance(f.amount));
       } catch (err) {
-        if (instance instanceof ProviderLedgerReactNative) {
+        if (instance instanceof ProviderLedgerEvm) {
           instance.abort();
           setDefaultFee();
         }

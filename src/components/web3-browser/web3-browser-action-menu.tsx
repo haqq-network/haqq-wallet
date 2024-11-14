@@ -7,7 +7,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Provider} from '@app/models/provider';
+import {ProviderModel} from '@app/models/provider';
 import {IS_IOS} from '@app/variables/common';
 import {SHADOW_L} from '@app/variables/shadows';
 
@@ -20,7 +20,7 @@ interface Web3BrowserActionMenuProps {
   walletAddress?: string;
   showActionMenu: boolean;
   isSiteInBookmarks: boolean;
-  currentProvider: Provider;
+  currentProvider: ProviderModel;
   currentSessionOrigin?: string;
   moreIconLayout: Partial<LayoutRectangle>;
   popup?: boolean;
@@ -71,18 +71,15 @@ export const Web3BrowserActionMenu = ({
   const insets = useSafeAreaInsets();
   const isRTL = useMemo(() => I18nManager.isRTL, []);
   const actionMenuStyle = useMemo(() => {
-    const x1 =
+    const x =
       moreIconLayout.x! -
       ACTION_MENU_WIDTH +
       moreIconLayout.width! * (IS_IOS ? 2 : 4);
-    const x2 =
-      moreIconLayout.x! +
-      ACTION_MENU_WIDTH -
-      moreIconLayout.width! * (IS_IOS ? 2 : 4);
+
     const y = moreIconLayout.height! + moreIconLayout.y! + 5 + insets.top;
 
     return {
-      left: isRTL ? x2 : x1,
+      left: isRTL ? -x : x,
       top: isRTL ? y + 5 : y,
     };
   }, [isRTL, moreIconLayout]);
@@ -217,7 +214,13 @@ export const Web3BrowserActionMenu = ({
 const styles = createTheme({
   moreButtonSeparator: {
     width: ACTION_MENU_WIDTH,
-    transform: [{translateX: -ACTION_MENU_PADDING_HORIZONTAL}],
+    transform: [
+      {
+        translateX: I18nManager.isRTL
+          ? ACTION_MENU_PADDING_HORIZONTAL
+          : -ACTION_MENU_PADDING_HORIZONTAL,
+      },
+    ],
     backgroundColor: Color.graphicSecond2,
     height: 1,
     opacity: 0.5,

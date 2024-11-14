@@ -38,18 +38,16 @@ import {
   signatureToWeb3Extension,
 } from '@evmos/transactions';
 import {Sender} from '@evmos/transactions/dist/messages/common';
-import {ProviderInterface, base64PublicKey} from '@haqq/provider-base';
-import {normalize0x} from '@haqq/provider-keystone-react-native';
+import {ProviderInterface, utils} from '@haqq/rn-wallet-providers';
 import Decimal from 'decimal.js';
 
-import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {
   getRemoteBalanceValue,
   getRemoteMultiplierValue,
 } from '@app/helpers/get-remote-balance-value';
 import {ledgerTransportCbWrapper} from '@app/helpers/ledger-transport-wrapper';
-import {Provider} from '@app/models/provider';
+import {Provider, ProviderModel} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
 import {
   DepositResponse,
@@ -93,9 +91,9 @@ export class Cosmos {
   };
 
   public stop = false;
-  private _provider: Provider;
+  private _provider: ProviderModel;
 
-  constructor(provider: Provider) {
+  constructor(provider: ProviderModel) {
     this._provider = provider;
   }
 
@@ -126,8 +124,8 @@ export class Cosmos {
   async postQuery<T>(path: string, data: string, account?: Sender): Promise<T> {
     const params = {
       type: 'cosmos',
-      network: app.provider.name,
-      chainId: `${app.provider.ethChainId}`,
+      network: Provider.selectedProvider.name,
+      chainId: `${Provider.selectedProvider.ethChainId}`,
       address: account?.accountAddress ?? 'unknown',
     };
     try {
@@ -318,7 +316,7 @@ export class Cosmos {
       accountAddress: account.base_account.address,
       sequence: parseInt(account.base_account.sequence as string, 10),
       accountNumber: parseInt(account.base_account.account_number, 10),
-      pubkey: base64PublicKey(publicKey),
+      pubkey: utils.base64PublicKey(publicKey),
     };
   }
 
@@ -336,7 +334,7 @@ export class Cosmos {
       types,
     });
 
-    return normalize0x(signature);
+    return utils.normalize0x(signature);
   }
 
   async sendMsg(

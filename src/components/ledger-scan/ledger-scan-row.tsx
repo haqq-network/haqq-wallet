@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 
-import {Device} from '@haqq/provider-ledger-react-native';
+import {Device} from '@haqq/rn-wallet-providers';
 import {ActivityIndicator, TouchableOpacity} from 'react-native';
 
 import {Color} from '@app/colors';

@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 
 import {
+  KeyboardAvoidingView,
   Platform,
   StyleProp,
   StyleSheet,
@@ -33,7 +34,6 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color, getColor} from '@app/colors';
-import {ModalProvider} from '@app/components/modal-provider';
 import {
   First,
   Icon,
@@ -41,6 +41,7 @@ import {
   Spacer,
   SwiperIcon,
   Text,
+  TextVariant,
 } from '@app/components/ui';
 import {createTheme, getWindowWidth} from '@app/helpers';
 import {I18N} from '@app/i18n';
@@ -70,6 +71,7 @@ export type BottomSheetProps = {
   scrollable?: boolean;
   contentContainerStyle?: StyleProp<ViewStyle>;
   titleContainerStyle?: StyleProp<ViewStyle>;
+  renderContentHeader?: () => React.ReactNode;
   fullscreen?: boolean;
 } & TitleProp;
 
@@ -93,6 +95,7 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
       contentContainerStyle,
       titleContainerStyle,
       fullscreen,
+      renderContentHeader,
     },
     ref,
   ) => {
@@ -245,19 +248,15 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
       open: onOpenPopup,
     }));
 
-    const FullscreenWrapper = fullscreen ? ModalProvider : React.Fragment;
-
     return (
-      <View style={[StyleSheet.absoluteFillObject, page.container]}>
-        <View style={page.wrap}>
-          <FullscreenWrapper>
-            <Animated.View
-              style={[
-                StyleSheet.absoluteFillObject,
-                page.background,
-                backgroundAnimatedStyle,
-              ]}
-            />
+      <Animated.View
+        style={[
+          StyleSheet.absoluteFillObject,
+          page.background,
+          backgroundAnimatedStyle,
+        ]}>
+        <KeyboardAvoidingView behavior="padding" style={page.wrap}>
+          <View style={page.container}>
             <TouchableWithoutFeedback onPress={onClosePopup}>
               <View style={page.space} />
             </TouchableWithoutFeedback>
@@ -278,13 +277,21 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
                       {!!renderTitle && renderTitle?.()}
                       {!!i18nTitle && (
                         <>
-                          <Text t6 color={Color.textBase1} i18n={i18nTitle} />
+                          <Text
+                            variant={TextVariant.t6}
+                            color={Color.textBase1}
+                            i18n={i18nTitle}
+                          />
                           <Spacer />
                         </>
                       )}
                       {!!title && (
                         <>
-                          <Text t6 color={Color.textBase1} children={title} />
+                          <Text
+                            variant={TextVariant.t6}
+                            color={Color.textBase1}>
+                            {title}
+                          </Text>
                           <Spacer />
                         </>
                       )}
@@ -299,6 +306,7 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
                   </View>
                 </Animated.View>
               </GestureDetector>
+              {renderContentHeader && renderContentHeader()}
               <GestureDetector
                 gesture={Gesture.Simultaneous(panGesture, scrollViewGesture)}>
                 <Animated.ScrollView
@@ -316,23 +324,23 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
                 </Animated.ScrollView>
               </GestureDetector>
             </Animated.View>
-          </FullscreenWrapper>
-        </View>
-      </View>
+          </View>
+        </KeyboardAvoidingView>
+      </Animated.View>
     );
   },
 );
+
 const page = createTheme({
   wrap: {flex: 1},
   container: {
     justifyContent: 'flex-end',
     zIndex: 5,
+    flex: 1,
   },
   space: {flex: 1},
   background: {
     backgroundColor: Color.bg9,
-    bottom: -150,
-    right: -150,
   },
   animateView: {
     justifyContent: 'flex-end',

@@ -3,17 +3,18 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 
 import {WalletRow} from '@app/components/wallet-row';
-import {Wallet} from '@app/models/wallet';
+import {WalletModel} from '@app/models/wallet';
 
 interface WalletConnectWalletListProps {
-  wallets: Wallet[];
-
+  wallets: WalletModel[];
+  chainId?: number;
   handleWalletPress(address: string): void;
 }
 
 export const WalletConnectWalletList = ({
-  handleWalletPress,
   wallets,
+  chainId,
+  handleWalletPress,
 }: WalletConnectWalletListProps) => {
   return (
     <View style={styles.container}>
@@ -23,6 +24,7 @@ export const WalletConnectWalletList = ({
             key={item.address}
             onPress={handleWalletPress}
             item={item}
+            chainId={chainId}
           />
         );
       })}

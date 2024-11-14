@@ -19,11 +19,11 @@ import {
   TextPosition,
   TextVariant,
 } from '@app/components/ui';
-import {app} from '@app/contexts';
 import {createTheme, openURL} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Fee} from '@app/models/fee';
+import {Provider} from '@app/models/provider';
 import {sendNotification} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {IToken, TransactionResponse} from '@app/types';
@@ -55,34 +55,44 @@ export const TransactionFinish = observer(
     fee,
   }: TransactionFinishProps) => {
     const name = token?.name || contact?.name;
+    const provider = Provider.getByEthChainId(token.chain_id)!;
     const onPressHash = async () => {
-      const url = app.provider.getTxExplorerUrl(transaction?.hash!);
+      const url = provider.getTxExplorerUrl(transaction?.hash!);
       await openURL(url);
     };
 
     const onPressToAddress = useCallback(() => {
-      Clipboard.setString(transaction?.to ?? '');
+      Clipboard.setString(transaction?.hash ?? '');
       sendNotification(I18N.notificationCopied);
     }, [transaction]);
 
     const transactionAmount = useMemo(() => {
+      if (provider.isTron) {
+        return new Balance(
+          transaction?.value ?? 0,
+          provider.decimals,
+          token.symbol ?? provider.denom,
+        );
+      }
+
       if (amount) {
         return amount;
       }
 
       if (transaction?.value instanceof BigNumber) {
         return new Balance(
+          // @ts-ignore
           (transaction as TransactionResponse)?.value._hex ?? 0,
           undefined,
-          token.symbol ?? app.provider.denom,
+          token.symbol ?? provider.denom,
         );
       }
       return new Balance(
         transaction?.value ?? 0,
         undefined,
-        token.symbol ?? app.provider.denom,
+        token.symbol ?? provider.denom,
       );
-    }, [transaction, token, amount, app.provider.denom]);
+    }, [transaction, token, amount, provider.denom]);
 
     return (
       <PopupContainer style={styles.container} testID={testID}>
@@ -118,7 +128,7 @@ export const TransactionFinish = observer(
               position={TextPosition.center}
               style={styles.address}>
               {name}
-              {STRINGS.NBSP}({token.symbol || app.provider.denom})
+              {STRINGS.NBSP}({token.symbol || provider.denom})
             </Text>
           )}
           <Text
@@ -127,7 +137,7 @@ export const TransactionFinish = observer(
             selectable
             onPress={onPressToAddress}
             style={styles.address}>
-            {transaction?.to}
+            #{transaction?.hash}
           </Text>
         </View>
 
@@ -135,10 +145,10 @@ export const TransactionFinish = observer(
 
         <View style={styles.providerContainer}>
           <Text variant={TextVariant.t14} color={Color.textBase2}>
-            {app.provider.name}
+            {provider.name}
           </Text>
           <Text variant={TextVariant.t14} color={Color.textBase2}>
-            {`${STRINGS.NBSP}(${app.provider.denom})`}
+            {`${STRINGS.NBSP}(${provider.denom})`}
           </Text>
         </View>
 

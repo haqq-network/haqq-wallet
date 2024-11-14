@@ -81,7 +81,7 @@ export const parseDeepLink = (link: string): LinkParseResult => {
       return {type: LinkType.Address, params: {address: link}, rawData: link};
     }
 
-    if (link.startsWith(`${DeeplinkProtocol.etherium}:`)) {
+    if (link.startsWith(`${DeeplinkProtocol.ethereum}:`)) {
       const to = link.split(':')[1];
       if (AddressUtils.isEthAddress(to)) {
         return {type: LinkType.Etherium, params: {address: to}, rawData: link};
@@ -100,7 +100,7 @@ export const parseDeepLink = (link: string): LinkParseResult => {
         ':',
       );
 
-      if (AddressUtils.isEthAddress(key) || AddressUtils.isHaqqAddress(key)) {
+      if (AddressUtils.isValidAddress(key)) {
         return {
           type: LinkType.Address,
           params: {address: key},

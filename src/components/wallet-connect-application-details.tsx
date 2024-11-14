@@ -16,13 +16,13 @@ import {
 import {WalletRow, WalletRowTypes} from '@app/components/wallet-row';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Wallet} from '@app/models/wallet';
+import {WalletModel} from '@app/models/wallet';
 import {WalletConnectSessionMetadata} from '@app/models/wallet-connect-session-metadata';
 import {WalletConnectSessionType} from '@app/types/wallet-connect';
 import {getHostnameFromUrl} from '@app/utils';
 
 interface WalletConnectApplicationDetailsProps {
-  linkedWallet: Wallet;
+  linkedWallet: WalletModel;
   session: WalletConnectSessionType;
   sessionMetadata: WalletConnectSessionMetadata;
 
@@ -57,6 +57,20 @@ export const WalletConnectApplicationDetails = ({
     [sessionMetadata?.createdAt],
   );
 
+  const chainId = useMemo(() => {
+    const requiredChain = session?.requiredNamespaces?.eip155?.chains?.[0];
+    const optionalChain = session?.optionalNamespaces?.eip155?.chains?.[0];
+    const chain = requiredChain || optionalChain;
+    if (!chain) {
+      return undefined;
+    }
+    const [, id] = chain.split(':');
+    if (!id) {
+      return undefined;
+    }
+    return Number(id);
+  }, [session]);
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -83,6 +97,7 @@ export const WalletConnectApplicationDetails = ({
           disabled
           type={WalletRowTypes.variant2}
           item={linkedWallet!}
+          chainId={chainId}
         />
 
         <Spacer height={28} />

@@ -4,25 +4,22 @@ import {
 } from '@haqq/shared-react-native/src/jsonrpc-request';
 import _ from 'lodash';
 
-import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
-import {Whitelist} from '@app/helpers/whitelist';
 import {I18N, getText} from '@app/i18n';
+import {Currencies} from '@app/models/currencies';
 import {NftCollectionIndexer} from '@app/models/nft';
-import {Provider} from '@app/models/provider';
+import {ALL_NETWORKS_ID, Provider} from '@app/models/provider';
 import {
+  ChainId,
   ContractNameMap,
-  IContract,
-  IndexerBalance,
-  IndexerTime,
-  IndexerToken,
   IndexerTransaction,
   IndexerTransactionResponse,
-  RatesResponse,
 } from '@app/types';
 import {createAsyncTask} from '@app/utils';
 
 import {
+  IndexerAddressesResponse,
+  IndexerUpdatesResponse,
   ProviderConfig,
   SushiPoolEstimateRequest,
   SushiPoolEstimateResponse,
@@ -32,26 +29,6 @@ import {
 } from './indexer.types';
 
 import {RemoteConfig} from '../remote-config';
-
-export type IndexerUpdatesResponse = {
-  addresses: IContract[];
-  balance: IndexerBalance;
-  staked: IndexerBalance;
-  total_staked: IndexerBalance;
-  vested: IndexerBalance;
-  available: IndexerBalance;
-  locked: IndexerBalance;
-  total: IndexerBalance;
-  available_for_stake: IndexerBalance;
-  // next time for unlock vested tokens
-  unlock: IndexerTime;
-  last_update: string;
-  // TODO: add types
-  nfts: unknown[];
-  tokens: IndexerToken[];
-  transactions: unknown[];
-  rates: RatesResponse;
-};
 
 const logger = Logger.create('IndexerService');
 
@@ -68,7 +45,7 @@ export class Indexer {
   captureException = logger.captureException;
 
   /**
-   * @param chainId - Chain ID of the network for get endpoint by default get from app.provider
+   * @param chainId - Chain ID of the network for get endpoint by default get from Provider.selectedProvider
    */
   constructor(public chainId?: number | string) {
     if (chainId && !Provider.getByEthChainId(chainId)) {
@@ -77,12 +54,37 @@ export class Indexer {
     this.init();
   }
 
+  public getProvidersHeader = (
+    accounts: string[],
+    provider = Provider.selectedProvider,
+  ) => {
+    if (provider.id === ALL_NETWORKS_ID) {
+      return Provider.getAllNetworks().reduce(
+        (acc, item) => ({
+          ...acc,
+          [item.ethChainId]: AddressUtils.convertAddressByNetwork(
+            accounts,
+            item.networkType,
+          ),
+        }),
+        {},
+      );
+    }
+
+    return {
+      [provider.ethChainId]: AddressUtils.convertAddressByNetwork(
+        accounts,
+        provider.networkType,
+      ),
+    };
+  };
+
   get endpoint() {
     if (this.chainId) {
       return Provider.getByEthChainId(this.chainId)?.indexer!;
     }
 
-    return app.provider.indexer;
+    return Provider.selectedProvider.indexer;
   }
 
   checkIndexerAvailability = (): void => {
@@ -102,37 +104,45 @@ export class Indexer {
     );
   }
 
-  updates = createAsyncTask(
-    async (
-      accounts: string[],
-      lastUpdated: Date | undefined,
-      selectedCurrency?: string,
-    ) => {
-      try {
-        this.checkIndexerAvailability();
+  updates = createAsyncTask(async (accounts: string[], lastUpdated?: Date) => {
+    try {
+      this.checkIndexerAvailability();
 
-        const updated = lastUpdated || new Date(0);
+      const updated = lastUpdated || new Date(0);
 
-        const result: IndexerUpdatesResponse = await jsonrpcRequest(
-          this.endpoint,
-          'updates',
-          [accounts, updated, selectedCurrency].filter(Boolean),
-        );
-
-        return result;
-      } catch (err) {
-        if (err instanceof JSONRPCError) {
-          this.captureException(err, 'Indexer:updates', err.meta);
-        }
-        throw err;
+      return await jsonrpcRequest<IndexerUpdatesResponse>(
+        RemoteConfig.get('proxy_server')!,
+        'updates_v2',
+        [
+          this.getProvidersHeader(accounts),
+          updated,
+          Currencies.selectedCurrency,
+        ].filter(Boolean),
+      );
+    } catch (err) {
+      if (err instanceof JSONRPCError) {
+        this.captureException(err, 'Indexer:updates', err.meta);
       }
-    },
-  );
+      throw err;
+    }
+  });
 
-  async getContractName(address: string): Promise<string> {
-    const info = await Whitelist.verifyAddress(address);
-    return info?.name ?? getText(I18N.transactionContractDefaultName);
-  }
+  getAddresses = async (accounts: string[] | Record<ChainId, string[]>) => {
+    try {
+      this.checkIndexerAvailability();
+
+      return await jsonrpcRequest<IndexerAddressesResponse>(
+        RemoteConfig.get('proxy_server')!,
+        'addresses',
+        [accounts],
+      );
+    } catch (err) {
+      if (err instanceof JSONRPCError) {
+        this.captureException(err, 'Indexer:addresses', err.meta);
+      }
+      throw err;
+    }
+  };
 
   async getContractNames(addresses: string[]): Promise<ContractNameMap> {
     try {
@@ -168,27 +178,9 @@ export class Indexer {
     }
   }
 
-  async getBalances(accounts: string[]): Promise<Record<string, string>> {
-    try {
-      this.checkIndexerAvailability();
-
-      const response = await jsonrpcRequest<IndexerUpdatesResponse>(
-        this.endpoint,
-        'balances',
-        [accounts],
-      );
-      return response.balance || {};
-    } catch (err) {
-      if (err instanceof JSONRPCError) {
-        this.captureException(err, 'Indexer:getBalances', err.meta);
-      }
-      throw err;
-    }
-  }
-
   async getTransaction(
     accounts: string[],
-    tx_hash: string,
+    latestBlock: string = 'latest',
   ): Promise<IndexerTransaction | null> {
     try {
       if (!accounts.length) {
@@ -198,43 +190,52 @@ export class Indexer {
       const haqqAddresses = accounts.filter(a => !!a).map(AddressUtils.toHaqq);
       const response = await jsonrpcRequest<IndexerTransactionResponse>(
         this.endpoint,
-        'transaction',
-        [haqqAddresses, tx_hash],
-      );
-      return response?.txs[0] || {};
-    } catch (err) {
-      if (err instanceof JSONRPCError) {
-        this.captureException(err, 'Indexer:getTransactions', err.meta);
-      }
-      throw err;
-    }
-  }
-
-  async getTransactions(
-    accounts: string[],
-    latestBlock: string = 'latest',
-  ): Promise<IndexerTransaction[]> {
-    try {
-      if (!accounts.length) {
-        return [];
-      }
-
-      const haqqAddresses = accounts.filter(a => !!a).map(AddressUtils.toHaqq);
-      const response = await jsonrpcRequest<IndexerTransactionResponse>(
-        this.endpoint,
         'transactions',
         [haqqAddresses, latestBlock],
       );
-      return response?.txs || {};
+      return response?.txs?.[0] ?? null;
     } catch (err) {
       if (err instanceof JSONRPCError) {
-        this.captureException(err, 'Indexer:getTransactions', err.meta);
+        this.captureException(err, 'Indexer:getTransaction', err.meta);
       }
       throw err;
     }
   }
 
-  async getNfts(accounts: string[]): Promise<NftCollectionIndexer[]> {
+  getTransactions = createAsyncTask(
+    async (
+      accounts: string[] | Record<ChainId, string[]>,
+      latestBlock: string | null,
+    ): Promise<IndexerTransaction[]> => {
+      try {
+        if (Array.isArray(accounts) && !accounts.length) {
+          return [];
+        }
+
+        if (
+          typeof accounts === 'object' &&
+          Object.values(accounts).every(addresses => !addresses.length)
+        ) {
+          return [];
+        }
+
+        const response = await jsonrpcRequest<IndexerTransactionResponse>(
+          RemoteConfig.get('proxy_server')!,
+          'transactions_by_timestamp',
+          [accounts, latestBlock ?? 'latest'],
+        );
+
+        return response?.transactions || [];
+      } catch (err) {
+        if (err instanceof JSONRPCError) {
+          this.captureException(err, 'Indexer:getTransactions', err.meta);
+        }
+        throw err;
+      }
+    },
+  );
+
+  getNfts = createAsyncTask(async (accounts: string[]) => {
     try {
       this.checkIndexerAvailability();
 
@@ -242,11 +243,10 @@ export class Indexer {
         return [];
       }
 
-      const haqqAddresses = accounts.filter(a => !!a).map(AddressUtils.toHaqq);
       const response = await jsonrpcRequest<NftCollectionIndexer[]>(
-        this.endpoint,
-        'nft',
-        [haqqAddresses],
+        RemoteConfig.get('proxy_server')!,
+        'nfts',
+        [this.getProvidersHeader(accounts)],
       );
 
       return response || [];
@@ -256,7 +256,7 @@ export class Indexer {
       }
       throw err;
     }
-  }
+  });
 
   async sushiPools(): Promise<SushiPoolResponse> {
     try {

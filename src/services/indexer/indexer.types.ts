@@ -1,20 +1,50 @@
-import {HaqqCosmosAddress, IContract} from '@app/types';
+import {
+  AddressCosmosHaqq,
+  ChainId,
+  IContract,
+  IndexerBalance,
+  IndexerTime,
+  IndexerToken,
+  RatesResponse,
+} from '@app/types';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
+
+export type IndexerUpdatesResponse = {
+  addresses: IContract[];
+  balance: IndexerBalance;
+  staked: IndexerBalance;
+  total_staked: IndexerBalance;
+  vested: IndexerBalance;
+  available: IndexerBalance;
+  locked: IndexerBalance;
+  total: IndexerBalance;
+  available_for_stake: IndexerBalance;
+  // next time for unlock vested tokens
+  unlock: IndexerTime;
+  last_update: string;
+  // TODO: add types
+  nfts: unknown[];
+  tokens: IndexerToken[];
+  transactions: unknown[];
+  rates: RatesResponse;
+};
+
+export type IndexerAddressesResponse = Record<ChainId, IContract[]>;
 
 export type SushiRoute = {
   fee: number;
   liquidity: string; // number liquidity for the pool
-  route: HaqqCosmosAddress[];
-  pools: HaqqCosmosAddress[];
+  route: AddressCosmosHaqq[];
+  pools: AddressCosmosHaqq[];
   route_hex: string; // hex route for SwapRouterV3
-  token0: HaqqCosmosAddress;
-  token1: HaqqCosmosAddress;
+  token0: AddressCosmosHaqq;
+  token1: AddressCosmosHaqq;
 };
 
 export type SushiPool = {
   fee: string;
   name: string;
-  pool: HaqqCosmosAddress;
+  pool: AddressCosmosHaqq;
 };
 
 export type SushiPoolResponse = {
@@ -55,6 +85,7 @@ export type SushiPoolEstimateRequest = {
 };
 
 export type ProviderConfig = {
+  enable_unwrapWETH9_call?: boolean;
   nft_exists?: boolean;
   bech32_exists?: boolean;
   swap_enabled: boolean;
@@ -66,6 +97,8 @@ export type ProviderConfig = {
   explorer_token_url: string;
   explorer_tx_url: string;
   explorer_token_id_url: string;
+  swap_default_token0: string;
+  swap_default_token1: string;
 };
 
 export type VerifyContractRequest = {

@@ -1,13 +1,20 @@
-import {
-  getDefaultBalanceValue,
-  getDefaultMultiplierValue,
-} from '@app/helpers/get-remote-balance-value';
+import Config from 'react-native-config';
 
-import {RemoteConfigTypes} from './remote-config-types';
+import {
+  BALANCE_MULTIPLIER,
+  COSMOS_MIN_AMOUNT,
+  COSMOS_MIN_GAS_LIMIT,
+  MIN_AMOUNT,
+  MIN_GAS_LIMIT,
+  MIN_STAKING_REWARD,
+} from '@app/variables/balance';
+
+import {RemoteConfigTypes} from './remote-config.types';
 
 import {getAppVersion} from '../version';
 
 export const REMOTE_CONFIG_DEFAULT_VALUES: Required<RemoteConfigTypes> = {
+  proxy_server: 'https://proxy.indexer.haqq.network',
   cosmos_commission_multilplier: 1.35,
   currency: {
     created_at: '2024-02-12T06:24:48.111998Z',
@@ -83,20 +90,14 @@ export const REMOTE_CONFIG_DEFAULT_VALUES: Required<RemoteConfigTypes> = {
   airdrop_gasdrop_secret: 'NX2HLGSlACcc2DWSNfVETLr5OzxxTcv5',
   airdrop_gasdrop_campaign_id: '19851c43f2e9da721e0c8356019190b6',
   pattern_source: 'https://storage.googleapis.com/mobile-static/',
-  cosmos_min_amount: getDefaultBalanceValue('cosmos_min_amount').toHex(),
-  cosmos_min_gas_limit: getDefaultBalanceValue('cosmos_min_gas_limit').toHex(),
-  cosmos_commission_multiplier: getDefaultMultiplierValue(
-    'cosmos_commission_multiplier',
-  ),
-  eth_min_amount: getDefaultBalanceValue('eth_min_amount').toHex(),
-  eth_min_gas_limit: getDefaultBalanceValue('eth_min_gas_limit').toHex(),
-  eth_commission_multiplier: getDefaultMultiplierValue(
-    'eth_commission_multiplier',
-  ),
-  transfer_min_amount: getDefaultBalanceValue('transfer_min_amount').toHex(),
-  staking_reward_min_amount: getDefaultBalanceValue(
-    'staking_reward_min_amount',
-  ).toHex(),
+  cosmos_min_amount: COSMOS_MIN_AMOUNT,
+  cosmos_min_gas_limit: COSMOS_MIN_GAS_LIMIT,
+  cosmos_commission_multiplier: BALANCE_MULTIPLIER,
+  eth_min_amount: MIN_AMOUNT,
+  eth_min_gas_limit: MIN_GAS_LIMIT,
+  eth_commission_multiplier: BALANCE_MULTIPLIER,
+  transfer_min_amount: MIN_AMOUNT,
+  staking_reward_min_amount: MIN_STAKING_REWARD,
   keystone_tutorial_url: 'https://keyst.one/mmm',
   web3_browser_bookmarks: [
     {
@@ -126,7 +127,9 @@ export const REMOTE_CONFIG_DEFAULT_VALUES: Required<RemoteConfigTypes> = {
   tx_timestamp_headers: true,
   enable_eth_commission_multiplier: false,
   indexer_sentry_capture_exeption_throttle_ms: 2 * 60 * 1000, // 2 min,
-  ws_updates: '',
+  ws_updates: 'wss://websocket.wallet.testedge2.haqq.network/ws',
   contests_url: '',
   local_captcha_url: '',
+  wallet_connect_project_id: Config.WALLET_CONNECT_PROJECT_ID,
+  wallet_connect_relay_url: Config.WALLET_CONNECT_RELAY_URL,
 };

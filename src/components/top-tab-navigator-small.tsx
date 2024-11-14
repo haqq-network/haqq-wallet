@@ -48,7 +48,7 @@ export const TopTabNavigatorSmall = ({
             return (
               <TouchableOpacity
                 disabled={disabled}
-                key={`${tab.props.title}_${index}`}
+                key={`tab_${tab.props.title}_${index}`}
                 testID={tab.props.testID}
                 onPress={() => onTabPress(tab, index)}>
                 <Text

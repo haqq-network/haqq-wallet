@@ -19,10 +19,10 @@ import {
   TextVariant,
 } from '@app/components/ui';
 import {NetworkFee} from '@app/components/ui/network-fee';
-import {app} from '@app/contexts';
 import {createTheme, openURL} from '@app/helpers';
 import {cleanNumber} from '@app/helpers/clean-number';
 import {I18N} from '@app/i18n';
+import {Provider} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
 
 export type ProposalDepositFinishProps = {
@@ -65,7 +65,7 @@ export const ProposalDepositFinish = observer(
           variant={TextVariant.t3}
           position={TextPosition.center}
           style={styles.sum}>
-          {`${cleanNumber(amount)} ${app.provider.denom}`}
+          {`${cleanNumber(amount)} ${Provider.selectedProvider.denom}`}
         </Text>
         <Text
           variant={TextVariant.t13}

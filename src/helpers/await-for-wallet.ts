@@ -1,8 +1,10 @@
 import {app} from '@app/contexts';
 import {showModal} from '@app/helpers/modal';
 import {I18N, getText} from '@app/i18n';
-import {Wallet} from '@app/models/wallet';
+import {Provider} from '@app/models/provider';
+import {Wallet, WalletModel} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
+import {HomeStackRoutes} from '@app/route-types';
 import {Eventable} from '@app/types';
 
 import {getWindowHeight} from './scaling-utils';
@@ -13,12 +15,13 @@ export enum WalletSelectType {
 }
 
 export interface AwaitForWalletParams {
-  wallets: Wallet[];
+  wallets: WalletModel[];
   title: I18N;
   type?: WalletSelectType;
   initialAddress?: string;
   autoSelectWallet?: boolean;
   suggestedAddress?: string;
+  chainId?: number;
   eventSuffix?: string | number;
   hideBalance?: boolean;
 }
@@ -45,6 +48,7 @@ export async function awaitForWallet({
   hideBalance,
   autoSelectWallet = true,
   eventSuffix = '',
+  chainId = Provider.selectedProvider.ethChainId,
 }: AwaitForWalletParams): Promise<string> {
   if (autoSelectWallet && wallets.length === 1) {
     return Promise.resolve(wallets[0].address);
@@ -84,22 +88,24 @@ export async function awaitForWallet({
 
     switch (type) {
       case WalletSelectType.screen: {
-        return navigator.navigate('walletSelector', {
+        return navigator.navigate(HomeStackRoutes.WalletSelector, {
           wallets,
           title: getText(title),
           initialAddress,
+          chainId,
           ...event,
         });
       }
       case WalletSelectType.bottomSheet:
       default:
         return showModal('walletsBottomSheet', {
-          wallets: wallets as Wallet[],
+          wallets: wallets as WalletModel[],
           closeDistance: () => getWindowHeight() / 6,
           title,
           autoSelectWallet,
           initialAddress,
           hideBalance,
+          chainId,
           ...event,
         });
     }

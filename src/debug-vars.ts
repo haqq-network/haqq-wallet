@@ -8,6 +8,7 @@ interface DebugVars {
   enableCaptchaLogger: boolean;
   enableSkipPinOnLogin: boolean;
   enableWeb3BrowserLogger: boolean;
+  enableKeystoneMockSync: boolean;
   allowAnySourcesForWalletConnectLogin: boolean;
   disableWeb3DomainBlocking: boolean;
   enableMockWallets: boolean;
@@ -28,6 +29,7 @@ const production: DebugVars = {
   enableAsyncEventEmitterLogs: true,
   enableMockWallets: false,
   mockWalletsAddresses: [],
+  enableKeystoneMockSync: false,
 };
 
 const debug: DebugVars = {
@@ -44,11 +46,18 @@ const debug: DebugVars = {
   enableAwaitJsonRpcSignLogger: true,
   enableMockWallets: false,
   mockWalletsAddresses: [
+    '0xc1e706995a7936380991473f4571939542fffa56',
     '0xa69babef1ca67a37ffaf7a485dfff3382056e78c',
     '0x887Fa9cd8427eF96aFB5376a60Ceb8904514bBe9',
     '0x65221cede3abdd03e377e3a4ce84e14fcd497919',
     '0x98ed1f5d1e0ca514c390b7e08cbb8d769fc87ac5',
+    '0xbe4cc5565a43e34489d2f02ed9680b436e596383',
+    '0x4c794408a9929918193e9160287d58f6d3bc772a',
+    '0x81fd1c90d2d3356a131c5c60d7bf8ce263671cc9',
+    '0x6bfc630da6d0e1ab0053d236c0d6c7702c0c0cc0',
+    '0x1ae9970e3c9955134cf1c42803ce48fa9c661015',
   ],
+  enableKeystoneMockSync: true,
 };
 
 export const DEBUG_VARS = __DEV__ ? debug : production;

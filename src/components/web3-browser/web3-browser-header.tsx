@@ -1,7 +1,17 @@
 import React, {useCallback, useMemo, useRef} from 'react';
 
-import {LayoutChangeEvent, TouchableOpacity, View} from 'react-native';
-import Animated, {SlideInRight, SlideOutRight} from 'react-native-reanimated';
+import {
+  I18nManager,
+  LayoutChangeEvent,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import Animated, {
+  SlideInLeft,
+  SlideInRight,
+  SlideOutLeft,
+  SlideOutRight,
+} from 'react-native-reanimated';
 import {WebViewNavigation} from 'react-native-webview';
 
 import {Color} from '@app/colors';
@@ -23,6 +33,7 @@ interface Web3BrowserHeaderProps {
   webviewNavigationData: WebViewNavigation;
   siteUrl: string;
   popup: boolean;
+  chainId: number;
 
   onPressMore(): void;
 
@@ -41,6 +52,7 @@ interface Web3BrowserHeaderProps {
 
 export const Web3BrowserHeader = ({
   walletAddress,
+  chainId,
   webviewNavigationData,
   siteUrl,
   onPressMore,
@@ -72,14 +84,14 @@ export const Web3BrowserHeader = ({
   const walletEnteringAnimation = useMemo(() => {
     if (!prevWalletAddress.current && walletAddress) {
       prevWalletAddress.current = walletAddress;
-      return SlideInRight;
+      return I18nManager.isRTL ? SlideInLeft : SlideInRight;
     }
     return undefined;
   }, [walletAddress]);
   const walletExitingAnimation = useMemo(() => {
     if (prevWalletAddress.current && !walletAddress) {
       prevWalletAddress.current = walletAddress;
-      return SlideOutRight;
+      return I18nManager.isRTL ? SlideOutLeft : SlideOutRight;
     }
     return undefined;
   }, [walletAddress]);
@@ -147,6 +159,7 @@ export const Web3BrowserHeader = ({
               type={WalletRowTypes.variant3}
               item={Wallet.getById(walletAddress)!}
               onPress={handlePressHeaderWallet}
+              chainId={chainId}
             />
           </Animated.View>
         </>

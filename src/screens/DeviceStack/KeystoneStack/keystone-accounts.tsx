@@ -1,9 +1,6 @@
 import React, {memo, useCallback, useMemo, useRef, useState} from 'react';
 
-import {
-  KeyringAccountEnum,
-  ProviderKeystoneReactNative,
-} from '@haqq/provider-keystone-react-native';
+import {ProviderKeystoneBase, constants} from '@haqq/rn-wallet-providers';
 import {makeID} from '@haqq/shared-react-native';
 
 import {KeystoneAccounts} from '@app/components/keystone/keystone-accounts';
@@ -38,7 +35,7 @@ export const KeystoneAccountsScreen = memo(() => {
     KeystoneStackRoutes.KeystoneAccounts
   >().params;
   const provider = useRef(
-    new ProviderKeystoneReactNative({
+    new ProviderKeystoneBase({
       qrCBORHex,
       awaitForSign: Promise.resolve,
     }),
@@ -91,7 +88,9 @@ export const KeystoneAccountsScreen = memo(() => {
         const resultWithBalances = result.map(item => ({
           ...item,
           balance: new Balance(
-            balances.total[AddressUtils.toHaqq(item.address)] || item.balance,
+            balances.total.find(t =>
+              AddressUtils.equals(t[0], item.address),
+            )?.[2] || item.balance,
           ),
         }));
         setAddresses(resultWithBalances);
@@ -100,7 +99,7 @@ export const KeystoneAccountsScreen = memo(() => {
 
         if (
           provider.current.getKeyringAccount() ===
-          KeyringAccountEnum.ledger_live
+          constants.KeyringAccountEnum.ledger_live
         ) {
           showError(errorId, getText(I18N.keystoneWalletSyncPathError));
         } else {
@@ -211,7 +210,7 @@ export const KeystoneAccountsScreen = memo(() => {
       .forEach((item, index) => {
         const name = getText(I18N.keystoneWalletAccountNumber, {
           walletCount: `${index + lastIndex}`,
-          deviceName,
+          deviceName: deviceName.replace(STRINGS.NBSP, ' '),
         });
         Wallet.create(name, {...item, isImported: true});
       });

@@ -1,5 +1,5 @@
-import {app} from '@app/contexts';
 import {getExplorerInstanceForProvider} from '@app/helpers/explorer-instance';
+import {Provider} from '@app/models/provider';
 import {Transaction} from '@app/models/transaction';
 import {IndexerTransactionStatus} from '@app/types';
 
@@ -20,7 +20,9 @@ export async function onTransactionStatusLoad(txHash: string) {
 const loadStatus = async (tx: Transaction) => {
   try {
     if (tx) {
-      const explorer = getExplorerInstanceForProvider(app.providerId);
+      const explorer = getExplorerInstanceForProvider(
+        Provider.selectedProviderId,
+      );
       const receipt = await explorer.transactionReceiptStatus(tx.hash);
       const status = await explorer.transactionStatus(tx.hash);
 

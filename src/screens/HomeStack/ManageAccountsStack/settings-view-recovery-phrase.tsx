@@ -1,7 +1,6 @@
 import React, {memo, useCallback, useState} from 'react';
 
-import {ProviderMnemonicReactNative} from '@haqq/provider-mnemonic-react-native';
-import {ProviderSSSReactNative} from '@haqq/provider-sss-react-native';
+import {ProviderMnemonicBase, ProviderSSSBase} from '@haqq/rn-wallet-providers';
 
 import {SettingsViewRecoveryPhrase} from '@app/components/settings/settings-view-recovery-phrase';
 import {CustomHeader, Loading} from '@app/components/ui';
@@ -30,7 +29,7 @@ export const SettingsViewRecoveryPhraseScreen = memo(() => {
   const onEnter = useCallback(async () => {
     switch (type) {
       case WalletType.mnemonic:
-        const providerMnemonic = new ProviderMnemonicReactNative({
+        const providerMnemonic = new ProviderMnemonicBase({
           account: accountId,
           getPassword: app.getPassword.bind(app),
         });
@@ -39,7 +38,7 @@ export const SettingsViewRecoveryPhraseScreen = memo(() => {
         break;
       case WalletType.sss:
         const storage = await getProviderStorage(accountId);
-        const providerSss = new ProviderSSSReactNative({
+        const providerSss = new ProviderSSSBase({
           storage,
           getPassword: app.getPassword.bind(app),
           account: accountId,

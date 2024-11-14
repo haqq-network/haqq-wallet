@@ -2,30 +2,30 @@ import React from 'react';
 
 import {FlatList, StyleSheet} from 'react-native';
 
-import {Provider} from '@app/models/provider';
+import {ProviderModel} from '@app/models/provider';
 
 import {SettingsProvidersRow} from './settings-providers-row';
 
 export type SettingsProvidersProps = {
-  providers: Provider[];
-  providerId: string;
-  onSelect: (providerId: string) => void;
+  providers: ProviderModel[];
+  providerChainId: number;
+  onSelect: (providerChainId: number) => void;
 };
 
 export const SettingsProviders = ({
   providers,
-  providerId,
+  providerChainId,
   onSelect,
 }: SettingsProvidersProps) => {
   return (
     <FlatList
-      key={providerId}
+      key={providerChainId}
       data={providers}
       renderItem={({item}) => (
         <SettingsProvidersRow
           item={item}
           onPress={onSelect}
-          providerId={providerId}
+          providerChainId={providerChainId}
         />
       )}
       keyExtractor={item => item.id}

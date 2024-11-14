@@ -21,18 +21,16 @@ import {
   Text,
   TextVariant,
 } from '@app/components/ui';
-import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
-import {AddressUtils} from '@app/helpers/address-utils';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N} from '@app/i18n';
-import {Wallet} from '@app/models/wallet';
+import {WalletModel} from '@app/models/wallet';
 import {sendNotification} from '@app/services';
 import {WalletType} from '@app/types';
 
 type SettingsAccountDetailProps = {
-  wallet: Wallet;
+  wallet: WalletModel;
   onPressRename: () => void;
   onPressStyle: () => void;
   onToggleIsHidden: () => void;
@@ -116,40 +114,11 @@ export const SettingsAccountDetail = observer(
                 <Icon name="copy" color={Color.textBase2} i16 />
               </View>
 
-              <Text variant={TextVariant.t14}>{wallet?.address}</Text>
+              <Text variant={TextVariant.t14}>
+                {wallet?.providerSpecificAddress}
+              </Text>
             </TouchableOpacity>
           </View>
-
-          <Spacer height={4} />
-
-          {app.provider.config.isBech32Enabled && (
-            <View style={styles.row}>
-              <View style={styles.hDevider} />
-              <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={() => {
-                  onCopy(AddressUtils.toHaqq(wallet?.address));
-                }}>
-                <View style={styles.row}>
-                  <Text
-                    variant={TextVariant.t14}
-                    color={Color.textBase2}
-                    i18n={I18N.bech32Title}
-                  />
-                  <Text
-                    variant={TextVariant.t14}
-                    color={Color.textBase2}
-                    style={styles.copyText}
-                    i18n={I18N.copy}
-                  />
-                  <Icon name="copy" color={Color.textBase2} i16 />
-                </View>
-                <Text variant={TextVariant.t14}>
-                  {AddressUtils.toHaqq(wallet?.address)}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
         </View>
         {isFeatureEnabled(Feature.sss) && (
           <First>

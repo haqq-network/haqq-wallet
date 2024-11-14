@@ -10,7 +10,8 @@ import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {useShowNft} from '@app/hooks/nft';
 import {I18N} from '@app/i18n';
 import {Transaction} from '@app/models/transaction';
-import {BalanceData, HaqqEthereumAddress, IToken} from '@app/types';
+import {BalanceModel, IWalletModel} from '@app/models/wallet';
+import {AddressEthereum, IToken} from '@app/types';
 
 import {TotalValueInfoHeader} from './total-value-info-header';
 
@@ -31,12 +32,13 @@ const TabIndexMap = {
 };
 
 export type TotalValueInfoProps = {
-  balance: BalanceData;
+  balance: BalanceModel;
   addressList: string[];
-  tokens: Record<HaqqEthereumAddress, IToken[]>;
+  tokens: Record<AddressEthereum, IToken[]>;
   initialTab?: TotalValueTabNames;
   onPressTxRow: (tx: Transaction) => void;
   onPressInfo: () => void;
+  onPressToken?: (wallet: IWalletModel, token: IToken) => void;
 };
 
 export const TotalValueInfo = observer(
@@ -47,8 +49,10 @@ export const TotalValueInfo = observer(
     initialTab = TotalValueTabNames.tokens,
     onPressTxRow,
     onPressInfo,
+    onPressToken,
   }: TotalValueInfoProps) => {
     const showNft = useShowNft();
+
     const initialTabName = useMemo(() => {
       if (
         initialTab === TotalValueTabNames.tokens &&
@@ -57,16 +61,18 @@ export const TotalValueInfo = observer(
         return TotalValueTabNames.tokens;
       }
 
-      if (showNft) {
+      if (initialTab === TotalValueTabNames.nft && showNft) {
         return TotalValueTabNames.nft;
       }
 
       return TotalValueTabNames.transactions;
-    }, [showNft]);
+    }, [showNft, initialTab]);
+
     const initialTabIndex = useMemo(
       () => TabIndexMap[initialTabName] ?? 0,
       [initialTabName],
     );
+
     const [activeTab, setActiveTab] = useState(initialTabName);
 
     const hideTransactionsContent = useMemo(
@@ -77,6 +83,7 @@ export const TotalValueInfo = observer(
     const onTabChange = useCallback((tabName: TotalValueTabNames) => {
       setActiveTab(tabName);
     }, []);
+
     const renderListHeader = () => (
       <>
         <TotalValueInfoHeader balance={balance} onPressInfo={onPressInfo} />
@@ -110,6 +117,7 @@ export const TotalValueInfo = observer(
         </TopTabNavigator>
       </>
     );
+
     const renderListEmptyComponent = useCallback(
       () => (
         <First>
@@ -128,7 +136,11 @@ export const TotalValueInfo = observer(
           {activeTab === TotalValueTabNames.tokens && (
             <>
               <Spacer height={4} />
-              <TokenViewer data={tokens} style={styles.nftViewerContainer} />
+              <TokenViewer
+                data={tokens}
+                style={styles.nftViewerContainer}
+                onPressToken={onPressToken}
+              />
             </>
           )}
         </First>

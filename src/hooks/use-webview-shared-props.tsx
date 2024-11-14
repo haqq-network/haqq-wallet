@@ -21,6 +21,7 @@ import {BrowserError} from '@app/components/browser-error';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {WebviewAjustMiddleware} from '@app/helpers/webview-adjust-middleware';
 import {WebViewGeolocation} from '@app/helpers/webview-geolocation';
+import {Language} from '@app/models/language';
 import {VariablesString} from '@app/models/variables-string';
 import {EventTracker} from '@app/services/event-tracker';
 import {getUserAgent} from '@app/services/version';
@@ -142,12 +143,14 @@ export const useWebViewSharedProps = (
       useWebkit: true,
       sendCookies: true,
       javascriptEnabled: true,
+      accessibilityLanguage: Language.current,
       injectedJavaScriptBeforeContentLoaded: `
         ${propsToMerge.injectedJavaScriptBeforeContentLoaded || ''}
         /* injected properties */
         window.platformOS = '${Platform.OS}';
+        window.HaqqWalletLanguage = '${Language.current}';
         window.__HAQQWALLET__ = {
-          POSTHOG_DISTINCT_ID: '${distinctId}'
+          POSTHOG_DISTINCT_ID: '${distinctId}',
         };
 
         ${WebViewGeolocation.script}

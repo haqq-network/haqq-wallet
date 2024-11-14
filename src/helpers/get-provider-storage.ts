@@ -1,7 +1,4 @@
-import {
-  ProviderSSSReactNative,
-  StorageInterface,
-} from '@haqq/provider-sss-react-native';
+import {ProviderSSSBase, StorageInterface} from '@haqq/rn-wallet-providers';
 
 import {AsyncLocalStorage} from '@app/services/async-local-storage';
 import {Cloud} from '@app/services/cloud';
@@ -13,7 +10,7 @@ export async function getProviderStorage(
 ): Promise<StorageInterface> {
   const storages = storage
     ? [storage]
-    : await ProviderSSSReactNative.getStoragesForAccount(accountId);
+    : await ProviderSSSBase.getStoragesForAccount(accountId);
 
   const cloudEnabled = await Cloud.isEnabled();
   if (
