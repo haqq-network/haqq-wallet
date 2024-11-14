@@ -46,6 +46,7 @@ export const DataContent = ({
         reversed && styles.reverse,
         short && styles.short,
         style,
+        styles.flexOne,
       ]}>
       <View style={styles.titleContainer}>
         <Text
@@ -90,6 +91,9 @@ const styles = createTheme({
     alignItems: 'center',
     minHeight: 22,
     flexDirection: 'row',
+  },
+  flexOne: {
+    flex: 1,
   },
   reverse: {flexDirection: 'column-reverse'},
   boldTitle: {fontSize: 16, fontWeight: 'bold', marginBottom: 2},

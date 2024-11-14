@@ -39,6 +39,7 @@ export type TotalValueInfoProps = {
   onPressTxRow: (tx: Transaction) => void;
   onPressInfo: () => void;
   onPressToken?: (wallet: IWalletModel, token: IToken) => void;
+  onPressWallet?: (wallet: IWalletModel) => void;
 };
 
 export const TotalValueInfo = observer(
@@ -50,6 +51,7 @@ export const TotalValueInfo = observer(
     onPressTxRow,
     onPressInfo,
     onPressToken,
+    onPressWallet,
   }: TotalValueInfoProps) => {
     const showNft = useShowNft();
 
@@ -140,6 +142,7 @@ export const TotalValueInfo = observer(
                 data={tokens}
                 style={styles.nftViewerContainer}
                 onPressToken={onPressToken}
+                onPressWallet={onPressWallet}
               />
             </>
           )}
