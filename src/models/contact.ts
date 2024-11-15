@@ -4,7 +4,6 @@ import {isHydrated, makePersistable} from 'mobx-persist-store';
 import {awaitForRealm} from '@app/helpers/await-for-realm';
 import {realm} from '@app/models';
 import {ContactRealmObject} from '@app/models/realm-object-for-migration';
-import {storage} from '@app/services/mmkv';
 import {MobXStoreFromRealm} from '@app/types';
 import {STORE_REHYDRATION_TIMEOUT_MS} from '@app/variables/common';
 
@@ -30,7 +29,6 @@ class ContactStore implements MobXStoreFromRealm {
       makePersistable(this, {
         name: this.constructor.name,
         properties: ['contacts'],
-        storage: storage,
       });
     }
   }

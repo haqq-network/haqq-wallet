@@ -6,7 +6,6 @@ import {Socket} from '@app/models/socket';
 import {IWalletModel, Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {Indexer, IndexerAddressesResponse} from '@app/services/indexer';
-import {storage} from '@app/services/mmkv';
 import {
   AddressEthereum,
   AddressType,
@@ -127,7 +126,6 @@ class TokensStore implements MobXStore<IToken> {
             },
           },
         ],
-        storage: storage,
       }).then(() => {
         // Logger.log('TokensStore data', JSON.stringify(this.data, null, 2));
       });
