@@ -6,6 +6,7 @@ import {awaitForWallet, showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {Url} from '@app/helpers/url';
 import {I18N} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {Whitelist} from '@app/models/whitelist';
@@ -26,7 +27,7 @@ const BROWSERS_FN = {
 };
 
 const logger = Logger.create('on-deep-link', {
-  enabled: __DEV__ || app.isDeveloper || app.isTesterMode,
+  enabled: __DEV__ || AppStore.isDeveloperModeEnabled || app.isTesterMode,
   stringifyJson: true,
 });
 
@@ -151,7 +152,7 @@ export async function onDeepLink(
           Alert.alert('Referral code', params[0]);
           return true;
         case DeeplinkUrlKey.enableDeveloperMode:
-          app.isDeveloper = true;
+          AppStore.isDeveloperModeEnabled = true;
           return true;
       }
     }

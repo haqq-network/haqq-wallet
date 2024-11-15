@@ -5,11 +5,12 @@ import {app} from '@app/contexts';
 import {cleanGoogle, getGoogleTokens} from '@app/helpers/get-google-tokens';
 import {verifyCloud} from '@app/helpers/verify-cloud';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {AppStore} from '@app/models/app';
 import {SignInStackParamList, SignInStackRoutes} from '@app/route-types';
 import {SssProviders} from '@app/services/provider-sss';
 
 const logger = Logger.create('CloudProblemsScreen', {
-  enabled: __DEV__ || app.isTesterMode || app.isDeveloper,
+  enabled: __DEV__ || app.isTesterMode || AppStore.isDeveloperModeEnabled,
 });
 
 export const CloudProblemsScreen = memo(() => {

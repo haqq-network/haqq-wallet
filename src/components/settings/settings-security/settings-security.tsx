@@ -20,6 +20,7 @@ import {
 } from '@app/components/ui';
 import {app} from '@app/contexts';
 import {I18N, getText} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {BiometryType} from '@app/types';
 
 const biometryName = {
@@ -84,7 +85,7 @@ export const SettingsSecurity = ({
         <Switch value={blindSignEnabled} onChange={onToggleBlindSign} />
       </MenuNavigationButton>
       <Spacer height={8} />
-      {(app.isTesterMode || app.isDeveloper) && (
+      {(app.isTesterMode || AppStore.isDeveloperModeEnabled) && (
         <View>
           <Spacer height={10} />
           <Text

@@ -1,5 +1,6 @@
 import {makeAutoObservable} from 'mobx';
 import {isHydrated, makePersistable} from 'mobx-persist-store';
+import Config from 'react-native-config';
 
 class AppStore {
   // App session properties
@@ -7,6 +8,7 @@ class AppStore {
 
   // Hydrated properties
   isOnboarded = false;
+  isDeveloperModeEnabled = Config.IS_DEVELOPMENT === 'true';
 
   constructor() {
     makeAutoObservable(this);

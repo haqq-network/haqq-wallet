@@ -8,12 +8,13 @@ import {
 
 import {app} from '@app/contexts';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
+import {AppStore} from '@app/models/app';
 import {ErrorHandler} from '@app/models/error-handler';
 import {RemoteConfig} from '@app/services/remote-config';
 import {WalletInitialData, WalletType} from '@app/types';
 
 const logger = Logger.create('getProviderForNewWallet', {
-  enabled: __DEV__ || app.isTesterMode || app.isDeveloper,
+  enabled: __DEV__ || app.isTesterMode || AppStore.isDeveloperModeEnabled,
 });
 
 export async function getProviderForNewWallet(params?: WalletInitialData) {

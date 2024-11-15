@@ -16,6 +16,7 @@ import {CopyMenu} from '@app/components/ui/copy-menu';
 import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
+import {AppStore} from '@app/models/app';
 import {Wallet, WalletModel} from '@app/models/wallet';
 
 type CardNameProps = {
@@ -47,7 +48,7 @@ export const CardName = observer(
         </Spacer>
 
         <First>
-          {(app.isTesterMode || app.isDeveloper) && (
+          {(app.isTesterMode || AppStore.isDeveloperModeEnabled) && (
             <Spacer flex={1}>
               <Text variant={TextVariant.t15} color={Color.textBase3}>
                 [{wallet.type[0].toUpperCase()}] {wallet.path}

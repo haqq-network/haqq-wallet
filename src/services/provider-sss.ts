@@ -8,6 +8,7 @@ import {app} from '@app/contexts';
 import {awaitForPopupClosed} from '@app/helpers';
 import {getGoogleTokens} from '@app/helpers/get-google-tokens';
 import {parseJwt} from '@app/helpers/parse-jwt';
+import {AppStore} from '@app/models/app';
 import {RemoteConfig} from '@app/services/remote-config';
 import {ModalType} from '@app/types';
 import {getHttpResponse} from '@app/utils';
@@ -19,7 +20,7 @@ export enum SssProviders {
 }
 
 const loggerCustom = Logger.create('onLoginCustom', {
-  enabled: __DEV__ || app.isTesterMode || app.isDeveloper,
+  enabled: __DEV__ || app.isTesterMode || AppStore.isDeveloperModeEnabled,
 });
 
 export async function onLoginCustom() {
@@ -83,7 +84,7 @@ export async function onLoginCustom() {
 }
 
 const loggerGoogle = Logger.create('onLoginGoogle', {
-  enabled: __DEV__ || app.isTesterMode || app.isDeveloper,
+  enabled: __DEV__ || app.isTesterMode || AppStore.isDeveloperModeEnabled,
 });
 
 export async function onLoginGoogle() {
@@ -122,7 +123,7 @@ export async function onLoginGoogle() {
 }
 
 const loggerApple = Logger.create('onLoginApple', {
-  enabled: __DEV__ || app.isTesterMode || app.isDeveloper,
+  enabled: __DEV__ || app.isTesterMode || AppStore.isDeveloperModeEnabled,
 });
 
 export async function onLoginApple() {
@@ -179,7 +180,7 @@ export type Creds = {
 };
 
 const loggerAuthorized = Logger.create('onAuthorized', {
-  enabled: __DEV__ || app.isTesterMode || app.isDeveloper,
+  enabled: __DEV__ || app.isTesterMode || AppStore.isDeveloperModeEnabled,
 });
 /**
  * Fetch private key from shares

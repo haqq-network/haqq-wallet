@@ -35,7 +35,7 @@ export const realm = new Realm({
     RssNews,
     VestingMetadata,
   ],
-  schemaVersion: 73,
+  schemaVersion: 74,
   onMigration: (oldRealm, newRealm) => {
     logger.log('onMigration', {
       oldRealmVersion: oldRealm.schemaVersion,
@@ -129,11 +129,6 @@ export const realm = new Realm({
         logger.log('user', user.toJSON());
 
         newRealm.create('VariablesBool', {
-          id: 'isDeveloper',
-          value: !!user.isDeveloper,
-        });
-
-        newRealm.create('VariablesBool', {
           id: 'biometry',
           value: !!user.biometry,
         });
@@ -182,6 +177,24 @@ export const realm = new Realm({
         newObject.eventName = '';
       }
     }
+
+    if (oldRealm.schemaVersion < 74) {
+      const oldObjects = oldRealm.objects('VariablesBool');
+      const newObjects = newRealm.objects<{isDeveloper?: boolean}>(
+        'VariablesBool',
+      );
+
+      logger.log({
+        oldObjects: oldObjects.toJSON(),
+        newObjects: newObjects.toJSON(),
+      });
+
+      for (const objectIndex in oldObjects) {
+        const newObject = newObjects[objectIndex];
+        delete newObject.isDeveloper;
+      }
+    }
+
     logger.log('realm migration finished');
   },
 });

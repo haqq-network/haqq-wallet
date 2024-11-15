@@ -13,6 +13,7 @@ import {
 import {useTesterModeEnabled} from '@app/hooks/use-tester-mode-enabled';
 import {useWalletConnectAccounts} from '@app/hooks/use-wallet-connect-accounts';
 import {I18N, getText} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {Currencies} from '@app/models/currencies';
 import {Language} from '@app/models/language';
 import {VariablesString} from '@app/models/variables-string';
@@ -171,7 +172,7 @@ export const HomeSettings = observer(() => {
         />
       )}
 
-      {app.isDeveloper && (
+      {AppStore.isDeveloperModeEnabled && (
         <SettingsButton
           icon={IconsName.settings}
           title={I18N.homeSettingsTest}

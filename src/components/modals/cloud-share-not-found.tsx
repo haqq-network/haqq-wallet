@@ -19,6 +19,7 @@ import {decryptLocalShare} from '@app/helpers/decrypt-local-share';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {getMetadataValueWrapped} from '@app/helpers/wrappers/get-metadata-value';
 import {I18N} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {ErrorHandler} from '@app/models/error-handler';
 import {Wallet} from '@app/models/wallet';
 import {HapticEffects, vibrate} from '@app/services/haptic';
@@ -27,7 +28,7 @@ import {RemoteConfig} from '@app/services/remote-config';
 import {ModalType, Modals} from '@app/types';
 
 const logger = Logger.create('CloudShareNotFound', {
-  enabled: __DEV__ || app.isTesterMode || app.isDeveloper,
+  enabled: __DEV__ || app.isTesterMode || AppStore.isDeveloperModeEnabled,
 });
 
 export const CloudShareNotFound = observer(

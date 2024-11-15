@@ -33,7 +33,7 @@ import {AddressTron, ModalType, WalletType} from '@app/types';
 import {ETH_COIN_TYPE, TRON_COIN_TYPE} from '@app/variables/common';
 
 const logger = Logger.create('SignInStoreWalletScreen', {
-  enabled: __DEV__ || app.isTesterMode || app.isDeveloper,
+  enabled: __DEV__ || app.isTesterMode || AppStore.isDeveloperModeEnabled,
 });
 
 export const SignInStoreWalletScreen = observer(() => {

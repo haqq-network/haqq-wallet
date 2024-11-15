@@ -2,10 +2,11 @@ import {getMetadataValue} from '@haqq/shared-react-native';
 import BN from 'bn.js';
 
 import {app} from '@app/contexts';
+import {AppStore} from '@app/models/app';
 import {ErrorHandler} from '@app/models/error-handler';
 
 const logger = Logger.create('getMetadataValueWrapped', {
-  enabled: __DEV__ || app.isTesterMode || app.isDeveloper,
+  enabled: __DEV__ || app.isTesterMode || AppStore.isDeveloperModeEnabled,
 });
 
 export const getMetadataValueWrapped = async (

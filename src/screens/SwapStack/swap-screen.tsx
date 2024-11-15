@@ -29,6 +29,7 @@ import {useBackNavigationHandler} from '@app/hooks/use-back-navigation-handler';
 import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {usePrevious} from '@app/hooks/use-previous';
 import {I18N, getText} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {Currencies} from '@app/models/currencies';
 import {Provider} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
@@ -60,7 +61,7 @@ import {
 
 const logger = Logger.create('SwapScreen', {
   emodjiPrefix: '🟠',
-  stringifyJson: __DEV__ || app.isDeveloper || app.isTesterMode,
+  stringifyJson: __DEV__ || AppStore.isDeveloperModeEnabled || app.isTesterMode,
 });
 
 const START_SWAP_AMOUNT = new Balance(0, 0);

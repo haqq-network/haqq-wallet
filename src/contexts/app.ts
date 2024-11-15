@@ -4,7 +4,6 @@ import dynamicLinks from '@react-native-firebase/dynamic-links';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {subMinutes} from 'date-fns';
 import {Alert, AppState, Appearance, Platform, StatusBar} from 'react-native';
-import Config from 'react-native-config';
 import Keychain, {
   STORAGE_TYPE,
   getGenericPassword,
@@ -113,7 +112,6 @@ class App extends AsyncEventEmitter {
       .then(() => {
         EthNetwork.init(Provider.selectedProvider);
 
-        this.checkBalance = this.checkBalance.bind(this);
         this.checkBalance();
 
         this.handleDynamicLink = this.handleDynamicLink.bind(this);
@@ -128,9 +126,6 @@ class App extends AsyncEventEmitter {
         this.listenTheme();
         AppState.addEventListener('change', this.onAppStatusChanged.bind(this));
 
-        if (!VariablesBool.exists('isDeveloper')) {
-          VariablesBool.set('isDeveloper', Config.IS_DEVELOPMENT === 'true');
-        }
         this.setEnabledLoggersForTestMode(this.isTesterMode);
         this.stopInitialization();
       });
@@ -187,7 +182,7 @@ class App extends AsyncEventEmitter {
       this.isGoogleSigninSupported ||
       this.isCustomSigninSupported ||
       this.isAppleSigninSupported ||
-      this.isDeveloper
+      AppStore.isDeveloperModeEnabled
     );
   }
 
@@ -257,14 +252,6 @@ class App extends AsyncEventEmitter {
 
   get pinAttempts() {
     return this.user?.pinAttempts ?? 0;
-  }
-
-  get isDeveloper() {
-    return VariablesBool.get('isDeveloper') ?? false;
-  }
-
-  set isDeveloper(value) {
-    VariablesBool.set('isDeveloper', value);
   }
 
   get isTesterMode() {
@@ -571,11 +558,11 @@ class App extends AsyncEventEmitter {
     }
   }
 
-  checkBalance() {
+  checkBalance = () => {
     if (AppState.currentState === 'active') {
       Wallet.fetchBalances();
     }
-  }
+  };
 
   handleDynamicLink(link: DynamicLink | null) {
     this.emit(Events.onDynamicLink, link);
