@@ -12,6 +12,7 @@ import {verifyCloud} from '@app/helpers/verify-cloud';
 import {getMetadataValueWrapped} from '@app/helpers/wrappers/get-metadata-value';
 import {useTypedNavigation} from '@app/hooks';
 import {ErrorHandler} from '@app/models/error-handler';
+import {Wallet} from '@app/models/wallet';
 import {
   HomeStackParamList,
   HomeStackRoutes,
@@ -181,6 +182,9 @@ export const SignInNetworksScreen = memo(() => {
 
   const onSkip = useCallback(() => {
     logger.log('Skip button pressed, navigating to SigninAgreement');
+    if (!app.onboarded) {
+      Wallet.removeAll();
+    }
     navigation.navigate(SignInStackRoutes.SigninAgreement);
   }, [navigation]);
 

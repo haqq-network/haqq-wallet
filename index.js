@@ -67,7 +67,7 @@ if (Config.SENTRY_DSN && DEBUG_VARS.enableSentry) {
   }
 }
 
-const Wrapped = Sentry.wrap(App);
+const Wrapped = DEBUG_VARS.enableSentry ? Sentry.wrap(App) : App;
 
 AppRegistry.registerComponent(appName, () => Wrapped);
 
