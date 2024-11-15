@@ -84,7 +84,7 @@ export const SettingsSecurity = ({
         <Switch value={blindSignEnabled} onChange={onToggleBlindSign} />
       </MenuNavigationButton>
       <Spacer height={8} />
-      {(AppStore.isTesterModeEnabled || AppStore.isDeveloperModeEnabled) && (
+      {AppStore.isAdditionalFeaturesEnabled && (
         <View>
           <Spacer height={10} />
           <Text

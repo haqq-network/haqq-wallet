@@ -25,6 +25,13 @@ class AppStore {
   set isInitialized(value: boolean) {
     this._isInitialized = value;
   }
+
+  get isAdditionalFeaturesEnabled() {
+    return this.isDeveloperModeEnabled || this.isTesterModeEnabled;
+  }
+  get isLogsEnabled() {
+    return __DEV__ || this.isAdditionalFeaturesEnabled;
+  }
 }
 
 const instance = new AppStore();

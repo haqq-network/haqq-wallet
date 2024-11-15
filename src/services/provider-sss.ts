@@ -19,8 +19,7 @@ export enum SssProviders {
 }
 
 const loggerCustom = Logger.create('onLoginCustom', {
-  enabled:
-    __DEV__ || AppStore.isTesterModeEnabled || AppStore.isDeveloperModeEnabled,
+  enabled: AppStore.isLogsEnabled,
 });
 
 export async function onLoginCustom() {
@@ -84,8 +83,7 @@ export async function onLoginCustom() {
 }
 
 const loggerGoogle = Logger.create('onLoginGoogle', {
-  enabled:
-    __DEV__ || AppStore.isTesterModeEnabled || AppStore.isDeveloperModeEnabled,
+  enabled: AppStore.isLogsEnabled,
 });
 
 export async function onLoginGoogle() {
@@ -124,8 +122,7 @@ export async function onLoginGoogle() {
 }
 
 const loggerApple = Logger.create('onLoginApple', {
-  enabled:
-    __DEV__ || AppStore.isTesterModeEnabled || AppStore.isDeveloperModeEnabled,
+  enabled: AppStore.isLogsEnabled,
 });
 
 export async function onLoginApple() {
@@ -182,8 +179,7 @@ export type Creds = {
 };
 
 const loggerAuthorized = Logger.create('onAuthorized', {
-  enabled:
-    __DEV__ || AppStore.isTesterModeEnabled || AppStore.isDeveloperModeEnabled,
+  enabled: AppStore.isLogsEnabled,
 });
 /**
  * Fetch private key from shares

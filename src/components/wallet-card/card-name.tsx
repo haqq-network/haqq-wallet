@@ -47,8 +47,7 @@ export const CardName = observer(
         </Spacer>
 
         <First>
-          {(AppStore.isTesterModeEnabled ||
-            AppStore.isDeveloperModeEnabled) && (
+          {AppStore.isAdditionalFeaturesEnabled && (
             <Spacer flex={1}>
               <Text variant={TextVariant.t15} color={Color.textBase3}>
                 [{wallet.type[0].toUpperCase()}] {wallet.path}

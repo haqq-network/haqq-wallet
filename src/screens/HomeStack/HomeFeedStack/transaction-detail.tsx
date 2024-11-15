@@ -70,7 +70,7 @@ export const TransactionDetailScreen = observer(() => {
   }, []);
 
   useEffect(() => {
-    if (AppStore.isTesterModeEnabled || AppStore.isDeveloperModeEnabled) {
+    if (AppStore.isAdditionalFeaturesEnabled) {
       Logger.log(
         '===================== [ TRANSACTION DETAILS ] =====================',
       );

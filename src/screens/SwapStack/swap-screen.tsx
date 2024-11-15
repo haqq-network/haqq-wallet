@@ -60,8 +60,7 @@ import {
 
 const logger = Logger.create('SwapScreen', {
   emodjiPrefix: '🟠',
-  stringifyJson:
-    __DEV__ || AppStore.isDeveloperModeEnabled || AppStore.isTesterModeEnabled,
+  stringifyJson: AppStore.isLogsEnabled,
 });
 
 const START_SWAP_AMOUNT = new Balance(0, 0);

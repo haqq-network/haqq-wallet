@@ -5,8 +5,7 @@ import {AppStore} from '@app/models/app';
 import {ErrorHandler} from '@app/models/error-handler';
 
 const logger = Logger.create('getMetadataValueWrapped', {
-  enabled:
-    __DEV__ || AppStore.isTesterModeEnabled || AppStore.isDeveloperModeEnabled,
+  enabled: AppStore.isLogsEnabled,
 });
 
 export const getMetadataValueWrapped = async (

@@ -10,8 +10,7 @@ import {sleep} from '@app/utils';
 const TEST_FILE_SIZE_BYTES = 256;
 
 const logger = Logger.create('VerifyCloud', {
-  enabled:
-    __DEV__ || AppStore.isTesterModeEnabled || AppStore.isDeveloperModeEnabled,
+  enabled: AppStore.isLogsEnabled,
 });
 
 export const verifyCloud = async (sssProvider: SssProviders) => {

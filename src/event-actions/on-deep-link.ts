@@ -27,8 +27,7 @@ const BROWSERS_FN = {
 };
 
 const logger = Logger.create('on-deep-link', {
-  enabled:
-    __DEV__ || AppStore.isDeveloperModeEnabled || AppStore.isTesterModeEnabled,
+  enabled: AppStore.isLogsEnabled,
   stringifyJson: true,
 });
 

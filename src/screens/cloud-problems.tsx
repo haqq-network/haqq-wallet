@@ -9,8 +9,7 @@ import {SignInStackParamList, SignInStackRoutes} from '@app/route-types';
 import {SssProviders} from '@app/services/provider-sss';
 
 const logger = Logger.create('CloudProblemsScreen', {
-  enabled:
-    __DEV__ || AppStore.isTesterModeEnabled || AppStore.isDeveloperModeEnabled,
+  enabled: AppStore.isLogsEnabled,
 });
 
 export const CloudProblemsScreen = memo(() => {
