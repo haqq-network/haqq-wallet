@@ -8,7 +8,6 @@ import {
   ChooseAccount,
   ChooseAccountTabNames,
 } from '@app/components/choose-account/choose-account';
-import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {getTronProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet';
@@ -18,6 +17,7 @@ import {safeLoadBalances} from '@app/helpers/safe-load-balances';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N, getText} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {
@@ -250,11 +250,11 @@ export const ChooseAccountScreen = observer(() => {
       await ProviderSSSBase.setStorageForAccount(accountID, storage);
     }
 
-    if (isMnemonicProvider && !app.onboarded) {
+    if (isMnemonicProvider && !AppStore.isOnboarded) {
       //@ts-ignore
       navigation.navigate(SignInStackRoutes.OnboardingSetupPin, params);
     } else {
-      if (app.onboarded) {
+      if (AppStore.isOnboarded) {
         //@ts-ignore
         navigation.navigate(HomeStackRoutes.Home);
         return;

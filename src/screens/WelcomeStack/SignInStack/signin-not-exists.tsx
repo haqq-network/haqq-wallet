@@ -1,8 +1,8 @@
 import {memo, useCallback} from 'react';
 
 import {SigninNotExists} from '@app/components/signin-not-exists';
-import {app} from '@app/contexts';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {AppStore} from '@app/models/app';
 import {
   HomeStackRoutes,
   SignInStackParamList,
@@ -18,7 +18,7 @@ export const SigninNotExistsScreen = memo(() => {
   >().params;
 
   const onPressCreate = useCallback(() => {
-    if (app.onboarded) {
+    if (AppStore.isOnboarded) {
       //@ts-ignore
       navigation.navigate(HomeStackRoutes.SignUp, {
         screen: SignUpStackRoutes.SignupStoreWallet,

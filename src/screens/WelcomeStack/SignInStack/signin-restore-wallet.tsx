@@ -6,6 +6,7 @@ import {utils} from 'ethers';
 import {SignInRestore} from '@app/components/singin-restore-wallet';
 import {app} from '@app/contexts';
 import {useTypedNavigation} from '@app/hooks';
+import {AppStore} from '@app/models/app';
 import {SecureValue} from '@app/modifiers/secure-value';
 import {SignInStackParamList, SignInStackRoutes} from '@app/route-types';
 import {makeID} from '@app/utils';
@@ -15,7 +16,7 @@ export const SignInRestoreScreen = memo(() => {
 
   const onDoneTry = useCallback(
     async (seed: string) => {
-      const nextScreen = app.onboarded
+      const nextScreen = AppStore.isOnboarded
         ? SignInStackRoutes.SigninStoreWallet
         : SignInStackRoutes.OnboardingSetupPin;
 
@@ -41,7 +42,7 @@ export const SignInRestoreScreen = memo(() => {
 
         const provider = await ProviderMnemonicBase.initialize(
           seed.trim().toLowerCase(),
-          app.onboarded ? app.getPassword.bind(app) : passwordPromise,
+          AppStore.isOnboarded ? app.getPassword.bind(app) : passwordPromise,
           {},
         );
 
@@ -56,7 +57,7 @@ export const SignInRestoreScreen = memo(() => {
 
       throw new Error('unknown key');
     },
-    [navigation, app.getPassword, app.onboarded],
+    [navigation, app.getPassword, AppStore.isOnboarded],
   );
 
   return <SignInRestore onDoneTry={onDoneTry} testID="signin_restore" />;

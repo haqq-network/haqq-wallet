@@ -11,6 +11,7 @@ import {SssError} from '@app/helpers/sss-error';
 import {verifyCloud} from '@app/helpers/verify-cloud';
 import {getMetadataValueWrapped} from '@app/helpers/wrappers/get-metadata-value';
 import {useTypedNavigation} from '@app/hooks';
+import {AppStore} from '@app/models/app';
 import {ErrorHandler} from '@app/models/error-handler';
 import {
   HomeStackParamList,
@@ -142,7 +143,7 @@ export const SignInNetworksScreen = memo(() => {
           }
 
           logger.log('Determining next screen');
-          const nextScreen = app.onboarded
+          const nextScreen = AppStore.isOnboarded
             ? SignInStackRoutes.SigninStoreWallet
             : SignInStackRoutes.OnboardingSetupPin;
 
@@ -187,8 +188,7 @@ export const SignInNetworksScreen = memo(() => {
   const onPressHardwareWallet = useCallback(() => {
     logger.log('Hardware wallet button pressed');
     navigation.replace(
-      // @ts-ignore
-      app.onboarded ? HomeStackRoutes.Device : WelcomeStackRoutes.Device,
+      AppStore.isOnboarded ? HomeStackRoutes.Device : WelcomeStackRoutes.Device,
     );
   }, [navigation]);
 

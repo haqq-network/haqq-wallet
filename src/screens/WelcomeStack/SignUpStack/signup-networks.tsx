@@ -12,6 +12,7 @@ import {verifyCloud} from '@app/helpers/verify-cloud';
 import {getMetadataValueWrapped} from '@app/helpers/wrappers/get-metadata-value';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {ErrorHandler} from '@app/models/error-handler';
 import {
   SignInStackRoutes,
@@ -78,7 +79,7 @@ export const SignupNetworksScreen = memo(() => {
       if (!cloudShare) {
         nextScreen = SignUpStackRoutes.SignUpPin;
       } else {
-        nextScreen = app.onboarded
+        nextScreen = AppStore.isOnboarded
           ? SignUpStackRoutes.SignupStoreWallet
           : SignUpStackRoutes.OnboardingSetupPin;
       }
@@ -140,7 +141,7 @@ export const SignupNetworksScreen = memo(() => {
 
         if (creds) {
           logger.log('Credentials obtained successfully');
-          let nextScreen = app.onboarded
+          let nextScreen = AppStore.isOnboarded
             ? SignUpStackRoutes.SignupStoreWallet
             : SignUpStackRoutes.OnboardingSetupPin;
           logger.log('Determined next screen:', nextScreen);

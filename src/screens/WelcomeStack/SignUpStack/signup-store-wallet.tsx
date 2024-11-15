@@ -7,7 +7,6 @@ import {
 } from '@haqq/rn-wallet-providers';
 import {observer} from 'mobx-react';
 
-import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {
@@ -16,6 +15,7 @@ import {
 } from '@app/helpers/get-provider-for-new-wallet';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {Wallet} from '@app/models/wallet';
 import {
   HomeStackRoutes,
@@ -40,7 +40,7 @@ export const SignUpStoreWalletScreen = observer(() => {
 
   const goBack = useCallback(() => {
     hideModal(ModalType.loading);
-    if (app.onboarded) {
+    if (AppStore.isOnboarded) {
       // @ts-ignore
       navigation.replace(HomeStackRoutes.SignUp);
     } else {

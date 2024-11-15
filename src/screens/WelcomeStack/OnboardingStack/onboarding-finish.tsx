@@ -6,6 +6,7 @@ import {Events} from '@app/events';
 import {hideModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {
   HomeStackRoutes,
   OnboardingStackParamList,
@@ -33,14 +34,14 @@ export const OnboardingFinishScreen = memo(() => {
 
   const onEnd = useCallback(() => {
     if (route.params.onboarding) {
-      if (app.onboarded) {
+      if (AppStore.isOnboarded) {
         //@ts-ignore
         navigation.navigate(HomeStackRoutes.Home);
         return;
       }
 
       WalletConnect.instance.init();
-      app.onboarded = true;
+      AppStore.isOnboarded = true;
 
       app.emit(Events.onBlockRequestCheck);
 
@@ -50,7 +51,7 @@ export const OnboardingFinishScreen = memo(() => {
     } else {
       navigation.getParent()?.goBack();
     }
-  }, [route, navigation, app.onboarded]);
+  }, [route, navigation, AppStore.isOnboarded]);
 
   useEffect(() => {
     EventTracker.instance.trackEvent(route.params.event);

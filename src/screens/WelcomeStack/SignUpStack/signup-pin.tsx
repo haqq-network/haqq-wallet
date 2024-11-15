@@ -10,6 +10,7 @@ import {getMetadataValueWrapped} from '@app/helpers/wrappers/get-metadata-value'
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N, getText} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {SignUpStackParamList, SignUpStackRoutes} from '@app/route-types';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {RemoteConfig} from '@app/services/remote-config';
@@ -50,7 +51,7 @@ export const SignupPinScreen = memo(() => {
 
           await decryptShare(securityQuestion, password);
 
-          const nextScreen = app.onboarded
+          const nextScreen = AppStore.isOnboarded
             ? SignUpStackRoutes.SignupStoreWallet
             : SignUpStackRoutes.OnboardingSetupPin;
 
@@ -78,7 +79,7 @@ export const SignupPinScreen = memo(() => {
           }
         }
       } else {
-        const nextScreen = app.onboarded
+        const nextScreen = AppStore.isOnboarded
           ? SignUpStackRoutes.SignupStoreWallet
           : SignUpStackRoutes.OnboardingSetupPin;
 

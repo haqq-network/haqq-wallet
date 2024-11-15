@@ -1,8 +1,8 @@
 import React, {memo, useCallback} from 'react';
 
 import {CreateAgreement} from '@app/components/create-agreement';
-import {app} from '@app/contexts';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {AppStore} from '@app/models/app';
 import {
   HomeStackParamList,
   HomeStackRoutes,
@@ -29,8 +29,8 @@ export const SignUpAgreementScreen = memo(() => {
 
   const onPressHardwareWallet = () => {
     navigation.replace(
-      // @ts-ignore
-      app.onboarded ? HomeStackRoutes.Device : WelcomeStackRoutes.Device,
+      //@ts-ignore
+      AppStore.isOnboarded ? HomeStackRoutes.Device : WelcomeStackRoutes.Device,
     );
   };
 

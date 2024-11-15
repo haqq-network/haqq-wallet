@@ -4,7 +4,6 @@ import {ProviderKeystoneBase, constants} from '@haqq/rn-wallet-providers';
 import {makeID} from '@haqq/shared-react-native';
 
 import {KeystoneAccounts} from '@app/components/keystone/keystone-accounts';
-import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {getWalletsFromProvider} from '@app/helpers/get-wallets-from-provider';
@@ -13,6 +12,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useError} from '@app/hooks/use-error';
 import {I18N, getText} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {Wallet} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 import {
@@ -215,7 +215,7 @@ export const KeystoneAccountsScreen = memo(() => {
         Wallet.create(name, {...item, isImported: true});
       });
 
-    if (!app.onboarded) {
+    if (!AppStore.isOnboarded) {
       //@ts-ignore
       navigator.navigate(KeystoneStackRoutes.OnboardingSetupPin, params);
     } else {
@@ -228,7 +228,7 @@ export const KeystoneAccountsScreen = memo(() => {
     navigation,
     provider.current,
     qrCBORHex,
-    app.onboarded,
+    AppStore.isOnboarded,
   ]);
 
   return (

@@ -8,6 +8,7 @@ import {SssError} from '@app/helpers/sss-error';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N, getText} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {SignInStackParamList, SignInStackRoutes} from '@app/route-types';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {PIN_BANNED_ATTEMPTS} from '@app/variables/common';
@@ -40,7 +41,7 @@ export const SignInPinScreen = memo(() => {
             password,
           );
 
-          if (app.onboarded) {
+          if (AppStore.isOnboarded) {
             navigation.navigate(SignInStackRoutes.SigninStoreWallet, {
               ...route.params,
               type: 'sss',
@@ -80,7 +81,7 @@ export const SignInPinScreen = memo(() => {
           }
         }
       } else {
-        const nextScreen = app.onboarded
+        const nextScreen = AppStore.isOnboarded
           ? SignInStackRoutes.SigninStoreWallet
           : SignInStackRoutes.OnboardingSetupPin;
 

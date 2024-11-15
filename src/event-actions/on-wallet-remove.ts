@@ -1,5 +1,5 @@
-import {app} from '@app/contexts';
 import {Events} from '@app/events';
+import {AppStore} from '@app/models/app';
 import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
@@ -16,7 +16,7 @@ export async function onWalletRemove(address: string) {
 
     // last wallet removed
     if (wallets.length === 0) {
-      app.onboarded = false;
+      AppStore.isOnboarded = false;
       await onAppReset();
       await onWalletReset();
     }

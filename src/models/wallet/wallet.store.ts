@@ -40,6 +40,7 @@ import {
   WalletCardStyleT,
   WalletType,
 } from '../../types';
+import {AppStore} from '../app';
 import {Currencies} from '../currencies';
 import {ALL_NETWORKS_ID, Provider, ProviderModel} from '../provider';
 import {Token} from '../tokens';
@@ -211,7 +212,7 @@ class WalletStore implements RPCObserver {
     forceUpdateRates = false,
   ) => {
     try {
-      if (!app.onboarded) {
+      if (!AppStore.isOnboarded) {
         return;
       }
 
