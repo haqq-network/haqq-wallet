@@ -1,6 +1,7 @@
-import React, {memo, useCallback, useRef} from 'react';
+import React, {useCallback, useRef} from 'react';
 
 import {decryptShare} from '@haqq/shared-react-native';
+import {observer} from 'mobx-react';
 
 import {PinInterface} from '@app/components/pin';
 import {SssPin} from '@app/components/sss-pin';
@@ -16,7 +17,7 @@ import {HapticEffects, vibrate} from '@app/services/haptic';
 import {RemoteConfig} from '@app/services/remote-config';
 import {PIN_BANNED_ATTEMPTS} from '@app/variables/common';
 
-export const SignupPinScreen = memo(() => {
+export const SignupPinScreen = observer(() => {
   const pinRef = useRef<PinInterface>();
   const navigation = useTypedNavigation<SignUpStackParamList>();
   const route = useTypedRoute<

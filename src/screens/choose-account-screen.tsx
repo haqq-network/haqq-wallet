@@ -60,7 +60,7 @@ export const ChooseAccountScreen = observer(() => {
 
   const walletsToCreateFiltered = useMemo(
     () =>
-      app.onboarded
+      AppStore.isOnboarded
         ? walletsToCreate.filter(_w => !Wallet.getById(_w.address))
         : walletsToCreate,
     [walletsToCreate],
@@ -112,7 +112,7 @@ export const ChooseAccountScreen = observer(() => {
           const item = (await generator.current.next()).value;
           // if not onboarded, remove wallet if it already exists
           // this wallets appear when user has already created wallet but not finished onboarding
-          if (!app.onboarded && item.exists) {
+          if (!AppStore.isOnboarded && item.exists) {
             item.exists = false;
             Wallet.remove(item.address);
           }

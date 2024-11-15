@@ -11,7 +11,7 @@ import {onWalletReset} from './on-wallet-reset';
 
 export async function onWalletRemove(address: string) {
   try {
-    if (!app.onboarded) {
+    if (!AppStore.isOnboarded) {
       return;
     }
     WalletConnect.instance.onWalletRemove(address);

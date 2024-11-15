@@ -1,4 +1,6 @@
-import React, {memo, useCallback} from 'react';
+import React, {useCallback} from 'react';
+
+import {observer} from 'mobx-react';
 
 import {CreateAgreement} from '@app/components/create-agreement';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
@@ -11,7 +13,7 @@ import {
   WelcomeStackRoutes,
 } from '@app/route-types';
 
-export const SignUpAgreementScreen = memo(() => {
+export const SignUpAgreementScreen = observer(() => {
   const navigation = useTypedNavigation<SignUpStackParamList>();
   const params = useTypedRoute<
     SignUpStackParamList & HomeStackParamList,

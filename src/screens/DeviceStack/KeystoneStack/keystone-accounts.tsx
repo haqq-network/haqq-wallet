@@ -80,7 +80,7 @@ export const KeystoneAccountsScreen = memo(() => {
             const item = (await generator.current.next()).value;
             // if not onboarded, remove wallet if it already exists
             // this wallets appear when user has already created wallet but not finished onboarding
-            if (!app.onboarded && item.exists) {
+            if (!AppStore.isOnboarded && item.exists) {
               item.exists = false;
               Wallet.remove(item.address);
             }
