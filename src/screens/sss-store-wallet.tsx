@@ -17,7 +17,8 @@ import {ModalType, WalletType} from '@app/types';
 import {ETH_HD_SHORT_PATH} from '@app/variables/common';
 
 const logger = Logger.create('SssStoreWalletScreen', {
-  enabled: __DEV__ || app.isTesterMode || AppStore.isDeveloperModeEnabled,
+  enabled:
+    __DEV__ || AppStore.isTesterModeEnabled || AppStore.isDeveloperModeEnabled,
 });
 
 export const SssStoreWalletScreen = observer(() => {

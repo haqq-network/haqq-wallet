@@ -9,6 +9,7 @@ class AppStore {
   // Hydrated properties
   isOnboarded = false;
   isDeveloperModeEnabled = Config.IS_DEVELOPMENT === 'true';
+  isTesterModeEnabled = Config.IS_TESTMODE === 'true';
 
   constructor() {
     makeAutoObservable(this);

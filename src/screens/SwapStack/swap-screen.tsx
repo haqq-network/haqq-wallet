@@ -17,7 +17,6 @@ import {
 } from '@app/components/swap';
 import {Loading} from '@app/components/ui';
 import {WalletCard} from '@app/components/ui/walletCard';
-import {app} from '@app/contexts';
 import {awaitForWallet, showModal} from '@app/helpers';
 import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
@@ -61,7 +60,8 @@ import {
 
 const logger = Logger.create('SwapScreen', {
   emodjiPrefix: '🟠',
-  stringifyJson: __DEV__ || AppStore.isDeveloperModeEnabled || app.isTesterMode,
+  stringifyJson:
+    __DEV__ || AppStore.isDeveloperModeEnabled || AppStore.isTesterModeEnabled,
 });
 
 const START_SWAP_AMOUNT = new Balance(0, 0);
@@ -412,7 +412,7 @@ export const SwapScreen = observer(() => {
             {
               text: 'Ok',
               onPress() {
-                if (app.isTesterMode) {
+                if (AppStore.isTesterModeEnabled) {
                   Alert.alert(
                     'error context',
                     JSON.stringify(errCtx, null, 2),

@@ -4,7 +4,6 @@ import {jsonrpcRequest} from '@haqq/shared-react-native';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
 import BN from 'bn.js';
 
-import {app} from '@app/contexts';
 import {awaitForPopupClosed} from '@app/helpers';
 import {getGoogleTokens} from '@app/helpers/get-google-tokens';
 import {parseJwt} from '@app/helpers/parse-jwt';
@@ -20,7 +19,8 @@ export enum SssProviders {
 }
 
 const loggerCustom = Logger.create('onLoginCustom', {
-  enabled: __DEV__ || app.isTesterMode || AppStore.isDeveloperModeEnabled,
+  enabled:
+    __DEV__ || AppStore.isTesterModeEnabled || AppStore.isDeveloperModeEnabled,
 });
 
 export async function onLoginCustom() {
@@ -84,7 +84,8 @@ export async function onLoginCustom() {
 }
 
 const loggerGoogle = Logger.create('onLoginGoogle', {
-  enabled: __DEV__ || app.isTesterMode || AppStore.isDeveloperModeEnabled,
+  enabled:
+    __DEV__ || AppStore.isTesterModeEnabled || AppStore.isDeveloperModeEnabled,
 });
 
 export async function onLoginGoogle() {
@@ -123,7 +124,8 @@ export async function onLoginGoogle() {
 }
 
 const loggerApple = Logger.create('onLoginApple', {
-  enabled: __DEV__ || app.isTesterMode || AppStore.isDeveloperModeEnabled,
+  enabled:
+    __DEV__ || AppStore.isTesterModeEnabled || AppStore.isDeveloperModeEnabled,
 });
 
 export async function onLoginApple() {
@@ -180,7 +182,8 @@ export type Creds = {
 };
 
 const loggerAuthorized = Logger.create('onAuthorized', {
-  enabled: __DEV__ || app.isTesterMode || AppStore.isDeveloperModeEnabled,
+  enabled:
+    __DEV__ || AppStore.isTesterModeEnabled || AppStore.isDeveloperModeEnabled,
 });
 /**
  * Fetch private key from shares

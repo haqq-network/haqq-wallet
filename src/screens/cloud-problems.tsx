@@ -1,7 +1,6 @@
 import React, {memo} from 'react';
 
 import {CloudProblems} from '@app/components/cloud-problems';
-import {app} from '@app/contexts';
 import {cleanGoogle, getGoogleTokens} from '@app/helpers/get-google-tokens';
 import {verifyCloud} from '@app/helpers/verify-cloud';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
@@ -10,7 +9,8 @@ import {SignInStackParamList, SignInStackRoutes} from '@app/route-types';
 import {SssProviders} from '@app/services/provider-sss';
 
 const logger = Logger.create('CloudProblemsScreen', {
-  enabled: __DEV__ || app.isTesterMode || AppStore.isDeveloperModeEnabled,
+  enabled:
+    __DEV__ || AppStore.isTesterModeEnabled || AppStore.isDeveloperModeEnabled,
 });
 
 export const CloudProblemsScreen = memo(() => {

@@ -38,6 +38,7 @@ import {awaitForProvider} from '@app/helpers/await-for-provider';
 import {AppInfo, getAppInfo} from '@app/helpers/get-app-info';
 import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {I18N} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {Language} from '@app/models/language';
 import {Provider} from '@app/models/provider';
 import {VariablesBool} from '@app/models/variables-bool';
@@ -104,7 +105,7 @@ export const SettingsDeveloperTools = observer(() => {
   );
 
   const onTurnOffDeveloper = useCallback(() => {
-    app.isTesterMode = false;
+    AppStore.isTesterModeEnabled = false;
     navigator.goBack();
   }, []);
 

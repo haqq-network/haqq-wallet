@@ -14,7 +14,8 @@ import {RemoteConfig} from '@app/services/remote-config';
 import {WalletInitialData, WalletType} from '@app/types';
 
 const logger = Logger.create('getProviderForNewWallet', {
-  enabled: __DEV__ || app.isTesterMode || AppStore.isDeveloperModeEnabled,
+  enabled:
+    __DEV__ || AppStore.isTesterModeEnabled || AppStore.isDeveloperModeEnabled,
 });
 
 export async function getProviderForNewWallet(params?: WalletInitialData) {

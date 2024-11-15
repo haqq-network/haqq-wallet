@@ -159,7 +159,7 @@ export class WalletConnect extends Initializable {
         `WalletConnect:init duration in ${initDuration}ms, attempts: ${this._initAttempts}`,
       );
 
-      if (app.isTesterMode || AppStore.isDeveloperModeEnabled) {
+      if (AppStore.isTesterModeEnabled || AppStore.isDeveloperModeEnabled) {
         sendMessage(
           `WC init: ${initDuration}ms, , attempts: ${this._initAttempts}`,
         );

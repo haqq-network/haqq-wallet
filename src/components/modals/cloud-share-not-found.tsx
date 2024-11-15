@@ -28,7 +28,8 @@ import {RemoteConfig} from '@app/services/remote-config';
 import {ModalType, Modals} from '@app/types';
 
 const logger = Logger.create('CloudShareNotFound', {
-  enabled: __DEV__ || app.isTesterMode || AppStore.isDeveloperModeEnabled,
+  enabled:
+    __DEV__ || AppStore.isTesterModeEnabled || AppStore.isDeveloperModeEnabled,
 });
 
 export const CloudShareNotFound = observer(

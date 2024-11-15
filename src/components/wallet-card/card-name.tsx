@@ -13,7 +13,6 @@ import {
   TextVariant,
 } from '@app/components/ui';
 import {CopyMenu} from '@app/components/ui/copy-menu';
-import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {AppStore} from '@app/models/app';
@@ -48,7 +47,8 @@ export const CardName = observer(
         </Spacer>
 
         <First>
-          {(app.isTesterMode || AppStore.isDeveloperModeEnabled) && (
+          {(AppStore.isTesterModeEnabled ||
+            AppStore.isDeveloperModeEnabled) && (
             <Spacer flex={1}>
               <Text variant={TextVariant.t15} color={Color.textBase3}>
                 [{wallet.type[0].toUpperCase()}] {wallet.path}

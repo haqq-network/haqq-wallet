@@ -32,7 +32,8 @@ import {
 import {RemoteConfig} from '@app/services/remote-config';
 
 const logger = Logger.create('SignupNetworksScreen', {
-  enabled: __DEV__ || app.isTesterMode || AppStore.isDeveloperModeEnabled,
+  enabled:
+    __DEV__ || AppStore.isTesterModeEnabled || AppStore.isDeveloperModeEnabled,
 });
 
 export const SignupNetworksScreen = memo(() => {

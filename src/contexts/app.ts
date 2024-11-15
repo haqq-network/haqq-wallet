@@ -126,7 +126,7 @@ class App extends AsyncEventEmitter {
         this.listenTheme();
         AppState.addEventListener('change', this.onAppStatusChanged.bind(this));
 
-        this.setEnabledLoggersForTestMode(this.isTesterMode);
+        this.setEnabledLoggersForTestMode();
         this.stopInitialization();
       });
   }
@@ -254,18 +254,10 @@ class App extends AsyncEventEmitter {
     return this.user?.pinAttempts ?? 0;
   }
 
-  get isTesterMode() {
-    return VariablesBool.get('isTesterMode') ?? false;
-  }
-
-  set isTesterMode(value) {
-    this.onTesterModeChange(value);
-    VariablesBool.set('isTesterMode', value);
-  }
-
   get showNonWhitlistedTokens() {
     return (
-      (this.isTesterMode && VariablesBool.get(SHOW_NON_WHITELIST_TOKEN)) ??
+      (AppStore.isTesterModeEnabled &&
+        VariablesBool.get(SHOW_NON_WHITELIST_TOKEN)) ??
       false
     );
   }
@@ -308,15 +300,15 @@ class App extends AsyncEventEmitter {
   }
 
   onTesterModeChange(value: boolean) {
-    this.setEnabledLoggersForTestMode(value);
+    this.setEnabledLoggersForTestMode();
     this.emit(Events.onTesterModeChanged, value);
   }
 
-  setEnabledLoggersForTestMode(enabled: boolean) {
+  setEnabledLoggersForTestMode() {
     if (!__DEV__) {
-      DEBUG_VARS.enableWeb3BrowserLogger = enabled;
-      DEBUG_VARS.enableWalletConnectLogger = enabled;
-      DEBUG_VARS.enableAwaitJsonRpcSignLogger = enabled;
+      DEBUG_VARS.enableWeb3BrowserLogger = AppStore.isTesterModeEnabled;
+      DEBUG_VARS.enableWalletConnectLogger = AppStore.isTesterModeEnabled;
+      DEBUG_VARS.enableAwaitJsonRpcSignLogger = AppStore.isTesterModeEnabled;
     }
   }
 
