@@ -8,7 +8,6 @@ import {Icon, IconsName, Spacer, Text, TextVariant} from '@app/components/ui';
 import {CopyMenu} from '@app/components/ui/copy-menu';
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
-import {AppStore} from '@app/models/app';
 import {Wallet, WalletModel} from '@app/models/wallet';
 
 type CardNameProps = {
