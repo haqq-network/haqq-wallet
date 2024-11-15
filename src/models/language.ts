@@ -4,7 +4,6 @@ import {NativeModules, Platform} from 'react-native';
 
 import {setLanguage, supportedTranslationsMap} from '@app/i18n';
 import {Backend} from '@app/services/backend';
-import {storage} from '@app/services/mmkv';
 import {AppLanguage, Language as LanguageType} from '@app/types';
 
 class LanguageStore {
@@ -35,7 +34,6 @@ class LanguageStore {
         name: this.constructor.name,
         //@ts-ignore
         properties: ['current', 'keys', 'hash'],
-        storage: storage,
       });
     }
   }

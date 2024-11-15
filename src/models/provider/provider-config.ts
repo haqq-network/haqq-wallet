@@ -3,7 +3,6 @@ import {makePersistable} from 'mobx-persist-store';
 
 import {Indexer} from '@app/services/indexer';
 import {ProviderConfig} from '@app/services/indexer/indexer.types';
-import {storage} from '@app/services/mmkv';
 import {ChainId} from '@app/types';
 
 import {Provider} from './provider';
@@ -18,7 +17,6 @@ class ProviderConfigStore {
     makePersistable(this, {
       name: this.constructor.name,
       properties: ['_data'] as (keyof this)[],
-      storage: storage,
     });
   }
 
