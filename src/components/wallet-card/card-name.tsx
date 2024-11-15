@@ -4,7 +4,14 @@ import {observer} from 'mobx-react';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Icon, IconsName, Spacer, Text, TextVariant} from '@app/components/ui';
+import {
+  First,
+  Icon,
+  IconsName,
+  Spacer,
+  Text,
+  TextVariant,
+} from '@app/components/ui';
 import {CopyMenu} from '@app/components/ui/copy-menu';
 import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
@@ -26,7 +33,7 @@ export const CardName = observer(
 
     return (
       <View style={styles.topNav}>
-        <View>
+        <Spacer flex={1}>
           <Text
             variant={TextVariant.t12}
             style={styles.name}
@@ -35,35 +42,43 @@ export const CardName = observer(
             suppressHighlighting={true}
             disabled={Wallet.isBalancesLoading}
             onPress={onAccountInfo}>
-            {wallet.name || 'Unknown'}
+            {wallet.name}
           </Text>
-        </View>
-        {(app.isTesterMode || app.isDeveloper) && (
-          <Text variant={TextVariant.t15} color={Color.textBase3}>
-            {wallet.path} {wallet.type}
-          </Text>
-        )}
-        <Spacer flex={1} />
-        <CopyMenu style={styles.copyIcon} wallet={wallet} withSettings>
-          <Text
-            variant={TextVariant.t14}
-            color={Color.textBase3}
-            testID={`${testID}_address`}>
-            {formattedAddress}
-          </Text>
-          <Icon
-            i16
-            name={IconsName.copy}
-            color={Color.graphicBase3}
-            style={styles.marginLeft}
-          />
-          <Icon
-            i16
-            name={IconsName.more}
-            color={Color.graphicBase3}
-            style={styles.marginLeft}
-          />
-        </CopyMenu>
+        </Spacer>
+
+        <First>
+          {(app.isTesterMode || app.isDeveloper) && (
+            <Spacer flex={1}>
+              <Text variant={TextVariant.t15} color={Color.textBase3}>
+                [{wallet.type[0].toUpperCase()}] {wallet.path}
+              </Text>
+            </Spacer>
+          )}
+          <Spacer flex={1} />
+        </First>
+
+        <Spacer flex={1}>
+          <CopyMenu style={styles.copyIcon} wallet={wallet} withSettings>
+            <Text
+              variant={TextVariant.t14}
+              color={Color.textBase3}
+              testID={`${testID}_address`}>
+              {formattedAddress}
+            </Text>
+            <Icon
+              i16
+              name={IconsName.copy}
+              color={Color.graphicBase3}
+              style={styles.marginLeft}
+            />
+            <Icon
+              i16
+              name={IconsName.more}
+              color={Color.graphicBase3}
+              style={styles.marginLeft}
+            />
+          </CopyMenu>
+        </Spacer>
       </View>
     );
   },
@@ -85,6 +100,6 @@ const styles = createTheme({
   copyIcon: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginLeft: 12,
+    marginLeft: 8,
   },
 });

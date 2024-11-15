@@ -196,7 +196,7 @@ export const TransactionSumScreen = observer(() => {
   }, [navigation]);
 
   useEffectAsync(async () => {
-    const b = Wallet.getBalance(route.params.from, 'available');
+    const b = Wallet.getBalance(route.params.from, 'available', provider);
     const estimate = await getFee(b);
     setFee(estimate?.expectedFee ?? null);
   }, [to]);
@@ -215,6 +215,7 @@ export const TransactionSumScreen = observer(() => {
       testID="transaction_sum"
       token={route.params.token}
       isLoading={isLoading}
+      provider={provider}
     />
   );
 });

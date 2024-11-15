@@ -1,11 +1,11 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react';
 
-import {PhishingController} from '@metamask/phishing-controller';
 import {FlatList, ListRenderItem, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {getMMPhishingController} from '@app/helpers/get-mm-phishing-controller';
 import {useTesterModeEnabled} from '@app/hooks/use-tester-mode-enabled';
 import {I18N, getText} from '@app/i18n';
 import {Web3BrowserSearchHistory} from '@app/models/web3-browser-search-history';
@@ -50,7 +50,7 @@ export const BrowserSearchPage = ({
   const isTesterMode = useTesterModeEnabled();
 
   const [text, setText] = useState(initialSearchText || '');
-  const phishingController = useRef(new PhishingController()).current;
+  const phishingController = useRef(getMMPhishingController()).current;
   const recentLinks = useMemo(
     () =>
       text

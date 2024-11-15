@@ -50,6 +50,7 @@ export const SettingsAccountEdit = ({
       />
       <KeyboardSafeArea style={page.container}>
         <Input
+          multiline
           onChangeText={onChange}
           i18nLabel={I18N.name}
           value={inputName}
