@@ -8,7 +8,6 @@ import {hideModal, showModal} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {EthRpcEndpointAvailability} from '@app/helpers/eth-rpc-endpoint-availability';
 import {Backend, NetworkProvider} from '@app/services/backend';
-import {storage} from '@app/services/mmkv';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {ModalType} from '@app/types';
 import {createAsyncTask, sleep} from '@app/utils';
@@ -60,7 +59,6 @@ class ProviderStore {
     makePersistable(this, {
       name: this.constructor.name,
       properties: ['_selectedProviderId', '_data'],
-      storage: storage,
     });
   }
 

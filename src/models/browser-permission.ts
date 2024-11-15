@@ -4,7 +4,6 @@ import {Alert} from 'react-native';
 
 import {app} from '@app/contexts';
 import {I18N, getText} from '@app/i18n';
-import {storage} from '@app/services/mmkv';
 import {
   BrowserPermissionItem,
   BrowserPermissionStatus,
@@ -31,7 +30,6 @@ class BrowserPermissionStore {
         name: this.constructor.name,
         // @ts-ignore
         properties: ['_data'],
-        storage: storage,
       });
     }
   }
