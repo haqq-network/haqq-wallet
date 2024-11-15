@@ -2,6 +2,7 @@ import {PhishingController} from '@metamask/phishing-controller';
 
 export const getMMPhishingController = () => {
   return new PhishingController({
+    //@ts-ignore\
     messenger: {
       registerActionHandler: () => {},
       unregisterActionHandler: () => {},
@@ -25,7 +26,7 @@ export const getMMPhishingController = () => {
       ): void {
         throw new Error('Function not implemented.');
       },
-      // @ts-expect-error
+      //@ts-ignore
       '#private': undefined,
     },
   });
