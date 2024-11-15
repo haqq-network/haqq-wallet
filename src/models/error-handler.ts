@@ -7,15 +7,8 @@ import {ModalType} from '@app/types';
 type ErrorType = 'sssLimitReached';
 
 class ErrorHandlerStore {
-  constructor(shouldSkipPersisting: boolean = false) {
+  constructor() {
     makeAutoObservable(this);
-    if (!shouldSkipPersisting) {
-      // makePersistable(this, {
-      //   name: this.constructor.name,
-      //   properties: [''],
-      //   storage: storage,
-      // });
-    }
   }
 
   notifySentry = (
@@ -58,5 +51,5 @@ class ErrorHandlerStore {
   };
 }
 
-const instance = new ErrorHandlerStore(Boolean(process.env.JEST_WORKER_ID));
+const instance = new ErrorHandlerStore();
 export {instance as ErrorHandler};

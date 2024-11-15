@@ -3,7 +3,6 @@ import {makePersistable} from 'mobx-persist-store';
 
 import {AddressUtils} from '@app/helpers/address-utils';
 import {Wallet} from '@app/models/wallet';
-import {storage} from '@app/services/mmkv';
 import {RPCMessage} from '@app/types/rpc';
 
 const HEARTBEAT_INTERVAL_MS = 10_000;
@@ -22,7 +21,6 @@ class SocketStore {
         name: this.constructor.name,
         //@ts-ignore
         properties: ['data'],
-        storage: storage,
       });
     }
   }

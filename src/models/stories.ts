@@ -5,7 +5,6 @@ import BlastedImage from 'react-native-blasted-image';
 import convertToProxyURL from 'react-native-video-cache';
 
 import {Backend} from '@app/services/backend';
-import {storage} from '@app/services/mmkv';
 import {IStory} from '@app/types';
 
 class StoriesStore {
@@ -19,7 +18,6 @@ class StoriesStore {
         name: this.constructor.name,
         //@ts-ignore
         properties: ['data'],
-        storage: storage,
       });
     }
   }
