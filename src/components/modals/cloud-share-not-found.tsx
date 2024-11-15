@@ -12,12 +12,18 @@ import {
   Spacer,
   Text,
 } from '@app/components/ui';
+import {app} from '@app/contexts';
 import {createTheme, hideModal, showModal} from '@app/helpers';
 import {generateNewSharesForWallet} from '@app/helpers/sss/generate-new-shares';
 import {I18N} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {Wallet} from '@app/models/wallet';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {ModalType, Modals} from '@app/types';
+
+const logger = Logger.create('CloudShareNotFound', {
+  enabled: __DEV__ || app.isTesterMode || AppStore.isDeveloperModeEnabled,
+});
 
 export const CloudShareNotFound = observer(
   ({onClose, wallet}: Modals[ModalType.cloudShareNotFound]) => {
