@@ -21,10 +21,9 @@ import {useSumAmount} from '@app/hooks';
 import {useKeyboard} from '@app/hooks/use-keyboard';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
-import {Provider} from '@app/models/provider';
+import {ProviderModel} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
 import {IToken} from '@app/types';
-import {BALANCE_MULTIPLIER, FEE_AMOUNT} from '@app/variables/balance';
 
 import {ImageWrapper} from '../image-wrapper';
 
@@ -34,6 +33,7 @@ export type TransactionSumProps = {
   to: string;
   from: string;
   contact: Contact | null;
+  provider: ProviderModel;
   onPressPreview: (amount: Balance) => void;
   onContact: () => void;
   onToken: () => void;
@@ -51,6 +51,7 @@ export const TransactionSum = observer(
     balance,
     fee,
     contact,
+    provider,
     onPressPreview,
     onContact,
     onToken,
@@ -61,16 +62,12 @@ export const TransactionSum = observer(
   }: TransactionSumProps) => {
     const {keyboardShown} = useKeyboard();
     const transactionFee = useMemo(() => {
-      return fee !== null
-        ? fee
-            .operate(new Balance(BALANCE_MULTIPLIER, 0), 'mul')
-            .max(new Balance(FEE_AMOUNT))
-        : Balance.Empty;
+      return fee !== null ? fee : Balance.Empty;
     }, [fee]);
 
     const minAmount = useMemo(() => {
       // for network native coin
-      if (token.symbol === Provider.selectedProvider.denom) {
+      if (token.symbol === provider.denom) {
         return new Balance(0.0000001, 0);
       }
 
@@ -80,17 +77,23 @@ export const TransactionSum = observer(
         token.decimals!,
         token.symbol!,
       );
-    }, [token, Provider.selectedProvider.denom]);
+    }, [token, provider]);
 
     const maxAmount = useMemo(() => {
       // for network native coin
-      if (token.symbol === Provider.selectedProvider.denom) {
-        return balance.operate(transactionFee, 'sub');
+      if (token.symbol === provider.denom) {
+        const balanceRaw = balance.raw;
+        const transactionFeeRaw = transactionFee.raw;
+        const result = balanceRaw.sub(transactionFeeRaw);
+        if (result.isNegative()) {
+          return balance;
+        }
+        return new Balance(result, provider.decimals, provider.denom);
       }
 
       // for others tokens
       return new Balance(token.value.raw, token.decimals!, token.symbol!);
-    }, [token, balance, transactionFee, Provider.selectedProvider.denom]);
+    }, [token, balance, transactionFee, provider]);
 
     const amounts = useSumAmount(START_AMOUNT, maxAmount, minAmount);
 
@@ -167,7 +170,7 @@ export const TransactionSum = observer(
                 color={Color.textBase1}
                 numberOfLines={1}
                 ellipsizeMode="tail">
-                {Provider.getByEthChainId(token.chain_id)?.name}
+                {provider.name}
               </Text>
             </View>
           </LabeledBlock>
