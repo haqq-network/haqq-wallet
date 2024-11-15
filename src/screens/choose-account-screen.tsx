@@ -58,6 +58,14 @@ export const ChooseAccountScreen = observer(() => {
     null,
   );
 
+  const walletsToCreateFiltered = useMemo(
+    () =>
+      app.onboarded
+        ? walletsToCreate.filter(_w => !Wallet.getById(_w.address))
+        : walletsToCreate,
+    [walletsToCreate],
+  );
+
   const isMnemonicProvider =
     walletProvider.current instanceof ProviderMnemonicBase;
   const isSSSProvider = walletProvider.current instanceof ProviderSSSBase;
@@ -102,6 +110,12 @@ export const ChooseAccountScreen = observer(() => {
       while (index < PAGE_SIZE) {
         if (generator.current) {
           const item = (await generator.current.next()).value;
+          // if not onboarded, remove wallet if it already exists
+          // this wallets appear when user has already created wallet but not finished onboarding
+          if (!app.onboarded && item.exists) {
+            item.exists = false;
+            Wallet.remove(item.address);
+          }
           result.push(item);
         }
         index += 1;
@@ -289,9 +303,7 @@ export const ChooseAccountScreen = observer(() => {
       onTabChanged={onTabChanged}
       onItemPress={onItemPress}
       onAdd={onAdd}
-      walletsToCreate={walletsToCreate.filter(
-        _w => !Wallet.getById(_w.address),
-      )}
+      walletsToCreate={walletsToCreateFiltered}
     />
   );
 });
