@@ -1,6 +1,5 @@
 export enum Events {
   onWalletCreate = 'onWalletCreate',
-  onWalletReset = 'onWalletReset',
   onWalletRemove = 'onWalletRemove',
   onWalletSssCheck = 'onWalletSssCheck',
   onWalletMnemonicCheck = 'onWalletMnemonicCheck',
