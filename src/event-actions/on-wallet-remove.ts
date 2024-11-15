@@ -11,6 +11,9 @@ import {onWalletReset} from './on-wallet-reset';
 
 export async function onWalletRemove(address: string) {
   try {
+    if (!app.onboarded) {
+      return;
+    }
     WalletConnect.instance.onWalletRemove(address);
     const wallets = Wallet.addressList();
 
