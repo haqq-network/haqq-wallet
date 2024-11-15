@@ -14,7 +14,6 @@ export async function onVestingSync() {
     AddressUtils.toHaqq(w.address),
   );
   await sync(addressList, cosmos);
-  // app.emit(Events.onWalletsVestingBalanceCheck);
 }
 
 async function sync(addressList: string[], cosmos: Cosmos) {
