@@ -36,6 +36,7 @@ interface SettingsSecurityProps {
   isRecoveryButtonDisabled: boolean;
   blindSignEnabled: boolean;
   onSubmit: () => void;
+  onSssRemove: () => void;
   onToggleBiometry: () => void;
   onRecoveryPress: () => void;
   onRecoveryPinChange: (value: string) => void;
@@ -49,6 +50,7 @@ export const SettingsSecurity = ({
   isRecoveryButtonDisabled,
   blindSignEnabled,
   onSubmit,
+  onSssRemove,
   onToggleBiometry,
   onRecoveryPress,
   onRecoveryPinChange,
@@ -124,6 +126,14 @@ export const SettingsSecurity = ({
           </First>
         </View>
       )}
+      <MenuNavigationButton onPress={onSssRemove}>
+        <DataContent
+          titleI18n={I18N.deleteSssTitle}
+          titleColor={Color.textRed1}
+          subtitleI18n={I18N.deleteSssDescription}
+          subtitleI18nParams={{walletType: 'Google'}}
+        />
+      </MenuNavigationButton>
       <Spacer />
     </View>
   );

@@ -1,15 +1,26 @@
 import React, {memo, useCallback} from 'react';
 
+import {accountInfo} from '@haqq/provider-web3-utils';
+import {constants} from '@haqq/rn-wallet-providers';
 import {Alert} from 'react-native';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 import {SignupNetworks} from '@app/components/signup-networks';
 import {app} from '@app/contexts';
+import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {verifyCloud} from '@app/helpers/verify-cloud';
 import {getMetadataValueWrapped} from '@app/helpers/wrappers/get-metadata-value';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {ErrorHandler} from '@app/models/error-handler';
-import {SignUpStackParamList, SignUpStackRoutes} from '@app/route-types';
+import {
+  SignInStackRoutes,
+  SignUpStackParamList,
+  SignUpStackRoutes,
+  WelcomeStackRoutes,
+} from '@app/route-types';
+import {Cloud} from '@app/services/cloud';
+import {GoogleDrive} from '@app/services/google-drive';
 import {
   Creds,
   SssProviders,
@@ -27,6 +38,77 @@ export const SignupNetworksScreen = memo(() => {
   logger.log('Defining SignupNetworksScreen component');
   const navigation = useTypedNavigation<SignUpStackParamList>();
   logger.log('Initializing navigation with useTypedNavigation');
+
+  const restoreAccount = useCallback(
+    async (provider: SssProviders, creds?: Creds | null) => {
+      let nextScreen: string = '';
+
+      if (!creds?.privateKey) {
+        return;
+      }
+
+      const sssProvider = provider === 'apple' ? Cloud : GoogleDrive;
+      const cloud = await getProviderStorage('', provider);
+      const supported = await sssProvider.isEnabled();
+
+      if (!supported) {
+        nextScreen = SignUpStackRoutes.SignUpPin;
+      }
+
+      const account = await accountInfo(creds.privateKey);
+
+      const cloudShare = await cloud.getItem(
+        `haqq_${account.address.toLowerCase()}`,
+      );
+
+      const localShare = await EncryptedStorage.getItem(
+        `${
+          constants.ITEM_KEYS[constants.WalletType.sss]
+        }_${account.address.toLowerCase()}`,
+      );
+
+      if (!cloudShare && !localShare) {
+        // @ts-ignore
+        navigation.navigate(WelcomeStackRoutes.SignIn, {
+          screen: SignInStackRoutes.SigninSharesNotFound,
+        });
+        return;
+      }
+
+      if (!cloudShare) {
+        nextScreen = SignUpStackRoutes.SignUpPin;
+      } else {
+        nextScreen = app.onboarded
+          ? SignUpStackRoutes.SignupStoreWallet
+          : SignUpStackRoutes.OnboardingSetupPin;
+      }
+
+      if (nextScreen === SignUpStackRoutes.SignupStoreWallet) {
+        //@ts-ignore
+        navigation.navigate(SignInStackRoutes.SigninStoreWallet, {
+          type: 'sss',
+          sssPrivateKey: creds?.privateKey,
+          token: creds?.token,
+          verifier: creds?.verifier,
+          sssCloudShare: cloudShare,
+          sssLocalShare: localShare,
+        });
+        return;
+      }
+
+      //@ts-ignore
+      navigation.navigate(nextScreen, {
+        type: 'sss',
+        sssPrivateKey: creds?.privateKey,
+        token: creds?.token,
+        verifier: creds?.verifier,
+        sssCloudShare: cloudShare,
+        sssLocalShare: localShare,
+        action: 'restore',
+      });
+    },
+    [navigation],
+  );
 
   const onLogin = useCallback(
     async (provider: SssProviders, skipCheck: boolean = false) => {
@@ -87,8 +169,8 @@ export const SignupNetworksScreen = memo(() => {
             );
 
             if (walletInfo) {
-              logger.log('Wallet info found, updating next screen');
-              nextScreen = SignUpStackRoutes.SignUpNetworkExists;
+              logger.log('Wallet info found, restoring account');
+              await restoreAccount(provider, creds);
             }
           }
 
@@ -101,7 +183,7 @@ export const SignupNetworksScreen = memo(() => {
               token: creds?.token,
               verifier: creds?.verifier,
               sssCloudShare: null,
-              provider: provider,
+              provider,
               sssLocalShare: null,
             });
           };
@@ -129,7 +211,7 @@ export const SignupNetworksScreen = memo(() => {
         );
       }
     },
-    [navigation],
+    [navigation, restoreAccount],
   );
 
   const onLoginLaterPress = useCallback(() => {

@@ -371,10 +371,6 @@ export type RootStackParamList = {
   signupPin: WalletInitialData;
   signinNotExists: {provider: SssProviders; email?: string} & WalletInitialData;
   signinNotRecovery: WalletInitialData;
-  signupNetworkExists: {
-    provider: SssProviders;
-    email?: string;
-  } & WalletInitialData;
   signinNetworks: undefined;
   signinAgreement: undefined;
   signinRestoreWallet: undefined;

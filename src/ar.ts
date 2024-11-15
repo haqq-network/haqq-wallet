@@ -622,14 +622,11 @@ export const ar = {
   [I18N.locationUnauthorizedDescription]:
     'تتطلب محفظة HAQQ الحصول على إذن\nالموقع الدقيق لإقران جهازكe من خلال البلوتوث.\n\nلا تستطيع محفظة HAQQ الوصول إلى معلومات موقعك.',
   [I18N.sssMigrateAgreementAgree]: 'مفهوم',
-  [I18N.sssMigrateRewriteRewrite]: 'استبدال',
   [I18N.sssMigrateRewriteCancel]: 'تغيير تسجيل الدخول الاجتماعي',
   [I18N.sssMigrateRewriteTitle]:
     'لديك بالفعل حساب على {{provider}} تسجيل الدخول {{email}}',
   [I18N.sssMigrateRewriteDescription]:
     'يمكنك اختيار تسجيل دخول اجتماعي آخر لحسابك أو استبداله.',
-  [I18N.sssMigrateRewriteWarning]:
-    'في حالة الاستبدال, سيتم فقدان جميع بيانات الحساب',
   [I18N.settingsAccountDetailPhrase]: 'العبارة',
   [I18N.settingsAccountDetailSocial]: 'اجتماعي',
   [I18N.settingsAccountDetailCreateBackupPhrase]: 'إنشاء عبارة احتياطية',
@@ -652,8 +649,6 @@ export const ar = {
     'سيتم ربط حساب محفظة HAQQ الخاص بك بتسجيل الدخول الاجتماعي الذي اخترته. يمكنك استخدامه لاستعادة حسابك',
   [I18N.walletProtectionDescription]:
     'نحن نقدم طريقتين لحماية حسابك. يمكنك الجمع بين كليهما',
-  [I18N.signupNetworkExistsRestore]: 'استعادة الحساب',
-  [I18N.signupNetworkExistsRewrite]: 'استبدال',
   [I18N.signinNetworksSkip]: 'العبارة أو المفتاح الخاص',
   [I18N.signinPinTitle]: 'أدخل رمز PIN الخاص بك من تطبيق HAQQ',
   [I18N.signinOldPinTitle]: 'أدخل رقم التعريف الشخصي القديم لمحفظة HAQQ',

@@ -1,6 +1,7 @@
 import React, {memo, useCallback, useMemo, useState} from 'react';
 
-import {Alert, Keyboard} from 'react-native';
+import {ProviderSSSBase} from '@haqq/rn-wallet-providers';
+import {Alert, Keyboard, Platform} from 'react-native';
 
 import {SettingsSecurity} from '@app/components/settings/settings-security';
 import {CustomHeader} from '@app/components/ui';
@@ -9,9 +10,11 @@ import {hideModal, showModal} from '@app/helpers';
 import {SecurePinUtils} from '@app/helpers/secure-pin-utils';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {Wallet} from '@app/models/wallet';
 import {SecurityStackParamList, SecurityStackRoutes} from '@app/route-types';
 import {PinGuardScreen} from '@app/screens/pin-guard';
-import {ModalType} from '@app/types';
+import {HapticEffects, vibrate} from '@app/services/haptic';
+import {ModalType, WalletType} from '@app/types';
 
 export const SettingsSecurityScreen = memo(() => {
   const navigation = useTypedNavigation<SecurityStackParamList>();
@@ -101,6 +104,32 @@ export const SettingsSecurityScreen = memo(() => {
     app.blindSignEnabled = next;
   }, []);
 
+  const onSssRemove = useCallback(() => {
+    vibrate(HapticEffects.warning);
+    requestAnimationFrame(async () => {
+      const accountID = Wallet.getAll().find(w => w.type === WalletType.sss)
+        ?.accountId;
+      if (accountID) {
+        const providerArray = await ProviderSSSBase.getStoragesForAccount(
+          accountID,
+        );
+
+        const defaultProviderIfCurrentMissing =
+          Platform.OS === 'android' ? 'googleDrive' : 'cloud';
+        const provider =
+          providerArray.length === 0
+            ? defaultProviderIfCurrentMissing
+            : providerArray.includes('cloud')
+            ? 'cloud'
+            : 'googleDrive';
+        showModal(ModalType.removeSSS, {
+          accountID,
+          provider,
+        });
+      }
+    });
+  }, [navigation]);
+
   return (
     <PinGuardScreen enabled title={I18N.settingsSecurity}>
       <CustomHeader
@@ -110,6 +139,7 @@ export const SettingsSecurityScreen = memo(() => {
       />
       <SettingsSecurity
         onSubmit={onSubmit}
+        onSssRemove={onSssRemove}
         onToggleBiometry={onToggleBiometry}
         biometry={biometry}
         biometryType={app.biometryType}

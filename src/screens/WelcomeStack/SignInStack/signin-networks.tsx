@@ -156,7 +156,7 @@ export const SignInNetworksScreen = memo(() => {
             verifier: creds.verifier,
             sssCloudShare: cloudShare,
             sssLocalShare: null,
-            sssProvider: provider,
+            provider,
           });
         }
       } catch (e) {
