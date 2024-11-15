@@ -24,7 +24,6 @@ export enum Events {
   onAppReviewRequest = 'onAppReviewRequest',
   openInAppBrowserPageLoaded = 'openInAppBrowserPageLoaded',
   enterPinSuccess = 'enterPinSuccess',
-  onWalletsStakingBalanceCheck = 'onWalletsStakingBalanceCheck',
   onThemeChanged = 'onThemeChanged',
   onBlockRequestCheck = 'onBlockRequestCheck',
   onRequestMarkup = 'onRequestMarkup',
