@@ -54,7 +54,7 @@ export const SignInStoreWalletScreen = observer(() => {
       await getWalletsFromProvider(
         // @ts-ignore
         provider,
-        WalletType.mnemonic,
+        WalletType.sss,
         ChooseAccountTabNames.Basic,
       ).next()
     ).value;
