@@ -48,58 +48,55 @@ export const SignInStoreWalletScreen = observer(() => {
     params,
   });
 
-  const createSssFirstWallet = useCallback(
-    async (provider: ProviderSSSBase) => {
-      // @ts-ignore
-      const item = (
-        await getWalletsFromProvider(
-          // @ts-ignore
-          provider,
-          WalletType.mnemonic,
-          ChooseAccountTabNames.Basic,
-        ).next()
-      ).value;
+  const createSssFirstWallet = async (provider: ProviderSSSBase) => {
+    // @ts-ignore
+    const item = (
+      await getWalletsFromProvider(
+        // @ts-ignore
+        provider,
+        WalletType.mnemonic,
+        ChooseAccountTabNames.Basic,
+      ).next()
+    ).value;
 
-      const total = Wallet.getAll().length;
-      const name =
-        total === 0
-          ? getText(I18N.mainAccount)
-          : getText(I18N.signinStoreWalletAccountNumber, {
-              number: `${total + 1}`,
-            });
+    const total = Wallet.getAll().length;
+    const name =
+      total === 0
+        ? getText(I18N.mainAccount)
+        : getText(I18N.signinStoreWalletAccountNumber, {
+            number: `${total + 1}`,
+          });
 
-      Wallet.create(name, {
-        ...item,
-        socialLinkEnabled: true,
-        type: WalletType.sss,
-      });
+    Wallet.create(name, {
+      ...item,
+      socialLinkEnabled: true,
+      type: WalletType.sss,
+    });
 
-      // generate tron wallet address
-      const tronProvider = await getTronProviderForNewWallet(
-        item.type,
-        item.accountId!,
+    // generate tron wallet address
+    const tronProvider = await getTronProviderForNewWallet(
+      item.type,
+      item.accountId!,
+    );
+
+    if (!item.tronAddress) {
+      const {address: tronAddress} = await tronProvider.getAccountInfo(
+        // for tron coin type
+        item.path?.replace?.(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
       );
+      Wallet.update(item.address, {
+        tronAddress: tronAddress as AddressTron,
+      });
+    }
 
-      if (!item.tronAddress) {
-        const {address: tronAddress} = await tronProvider.getAccountInfo(
-          // for tron coin type
-          item.path?.replace?.(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
-        );
-        Wallet.update(item.address, {
-          tronAddress: tronAddress as AddressTron,
-        });
-      }
+    const accountID = item.accountId;
+    //@ts-ignore
+    const storage = await getProviderStorage(accountID, params.sssProvider);
+    await ProviderSSSBase.setStorageForAccount(accountID, storage);
 
-      const accountID = item.accountId;
-      //@ts-ignore
-      const storage = await getProviderStorage(accountID, params.sssProvider);
-      await ProviderSSSBase.setStorageForAccount(accountID, storage);
-
-      //@ts-ignore
-      navigation.navigate(OnboardingStackRoutes.OnboardingFinish);
-    },
-    [],
-  );
+    //@ts-ignore
+    navigation.navigate(OnboardingStackRoutes.OnboardingFinish);
+  };
 
   useEffect(() => {
     logger.log('SignInStoreWalletScreen: Loading modal effect triggered');
