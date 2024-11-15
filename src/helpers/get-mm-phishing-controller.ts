@@ -2,7 +2,7 @@ import {PhishingController} from '@metamask/phishing-controller';
 
 export const getMMPhishingController = () => {
   return new PhishingController({
-    //@ts-ignore\
+    //@ts-ignore
     messenger: {
       registerActionHandler: () => {},
       unregisterActionHandler: () => {},

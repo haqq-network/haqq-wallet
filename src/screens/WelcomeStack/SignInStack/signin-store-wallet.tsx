@@ -48,13 +48,13 @@ export const SignInStoreWalletScreen = observer(() => {
     params,
   });
 
-  const createSssFirstWallet = useCallback(async () => {
+  const createSssFirstWallet = async (provider: ProviderSSSBase) => {
     // @ts-ignore
     const item = (
       await getWalletsFromProvider(
         // @ts-ignore
-        params.provider,
-        WalletType.mnemonic,
+        provider,
+        WalletType.sss,
         ChooseAccountTabNames.Basic,
       ).next()
     ).value;
@@ -96,7 +96,7 @@ export const SignInStoreWalletScreen = observer(() => {
 
     //@ts-ignore
     navigation.navigate(OnboardingStackRoutes.OnboardingFinish);
-  }, []);
+  };
 
   useEffect(() => {
     logger.log('SignInStoreWalletScreen: Loading modal effect triggered');
@@ -284,7 +284,7 @@ export const SignInStoreWalletScreen = observer(() => {
             );
 
             logger.log('SignInStoreWalletScreen: Creating SSS wallet');
-            await createSssFirstWallet();
+            await createSssFirstWallet(sssProvider);
             logger.log('SignInStoreWalletScreen: SSS wallet created');
             break;
         }
