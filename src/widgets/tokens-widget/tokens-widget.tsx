@@ -14,51 +14,46 @@ import {IToken} from '@app/types';
 type Props = {
   onPress: () => void;
   tokens: IToken[];
+  visibleItemAmount: number;
 };
 
-const VISIBLE_ITEM_AMOUNT = 3;
+export const TokensWidget = observer(
+  ({onPress, tokens, visibleItemAmount}: Props) => {
+    const otherTokensAmount = useMemo(() => {
+      const leftover = tokens.length - visibleItemAmount;
+      if (leftover < 1) {
+        return null;
+      }
+      if (leftover === 1) {
+        return getText(I18N.plusOtherToken, {value: String(leftover)});
+      }
+      return getText(I18N.plusOtherTokens, {value: String(leftover)});
+    }, [tokens.length]);
 
-export const TokensWidget = observer(({onPress, tokens}: Props) => {
-  const otherTokensAmount = useMemo(() => {
-    const leftover = tokens.length - VISIBLE_ITEM_AMOUNT;
-    if (leftover < 1) {
-      return null;
-    }
-    if (leftover === 1) {
-      return getText(I18N.plusOtherToken, {value: String(leftover)});
-    }
-    return getText(I18N.plusOtherTokens, {value: String(leftover)});
-  }, [tokens.length]);
-
-  if (tokens.length === 0) {
-    return null;
-  }
-  return (
-    <ShadowCard onPress={onPress} style={styles.wrapper}>
-      <WidgetHeader title={getText(I18N.tokensWidgetTitle)} />
-      <Spacer height={8} />
-      {tokens
-        .filter(
-          item =>
-            !!item.is_in_white_list && !item.is_erc721 && !item.is_erc1155,
-        )
-        .slice(0, VISIBLE_ITEM_AMOUNT)
-        .map(item => {
+    return (
+      <ShadowCard onPress={onPress} style={styles.wrapper}>
+        <WidgetHeader title={getText(I18N.tokensWidgetTitle)} />
+        <Spacer height={8} />
+        {tokens.map(item => {
           return (
-            <TokenRow key={'tokens_widget_token_row_' + item.id} item={item} />
+            <TokenRow
+              key={'tokens_widget_token_row_' + item.id + item.symbol}
+              item={item}
+            />
           );
         })}
-      {otherTokensAmount !== null && (
-        <>
-          <Spacer height={4} />
-          <Text variant={TextVariant.t14} color={Color.textBase2}>
-            {otherTokensAmount}
-          </Text>
-        </>
-      )}
-    </ShadowCard>
-  );
-});
+        {otherTokensAmount !== null && (
+          <>
+            <Spacer height={4} />
+            <Text variant={TextVariant.t14} color={Color.textBase2}>
+              {otherTokensAmount}
+            </Text>
+          </>
+        )}
+      </ShadowCard>
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   wrapper: {paddingHorizontal: 16},
