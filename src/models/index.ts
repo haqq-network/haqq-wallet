@@ -35,7 +35,7 @@ export const realm = new Realm({
     RssNews,
     VestingMetadata,
   ],
-  schemaVersion: 73,
+  schemaVersion: 74,
   onMigration: (oldRealm, newRealm) => {
     logger.log('onMigration', {
       oldRealmVersion: oldRealm.schemaVersion,
@@ -89,24 +89,8 @@ export const realm = new Realm({
       }
     }
 
-    if (oldRealm.schemaVersion < 24) {
-      logger.log('migration step #4');
-      const oldObjects = oldRealm.objects('User');
-      const newObjects = newRealm.objects<{onboarded: boolean}>('User');
-
-      logger.log({
-        oldObjects: oldObjects.toJSON(),
-        newObjects: newObjects.toJSON(),
-      });
-
-      for (const objectIndex in oldObjects) {
-        const newObject = newObjects[objectIndex];
-        newObject.onboarded = true;
-      }
-    }
-
     if (oldRealm.schemaVersion < 25) {
-      logger.log('migration step #5');
+      logger.log('migration step #4');
       const oldObjects = oldRealm.objects('User');
       const newObjects = newRealm.objects<{theme: string}>('User');
 
@@ -122,7 +106,7 @@ export const realm = new Realm({
     }
 
     if (oldRealm.schemaVersion < 60) {
-      logger.log('migration step #6');
+      logger.log('migration step #5');
       const users = oldRealm.objects<UserType>('User');
       if (users.length) {
         const user = users[0];
@@ -143,11 +127,6 @@ export const realm = new Realm({
           value: !!user.bluetooth,
         });
 
-        newRealm.create('VariablesBool', {
-          id: 'onboarded',
-          value: !!user.onboarded,
-        });
-
         newRealm.create('VariablesString', {
           id: 'language',
           value: user.language,
@@ -166,7 +145,7 @@ export const realm = new Realm({
     }
 
     if (oldRealm.schemaVersion < 72) {
-      logger.log('migration step #7');
+      logger.log('migration step #6');
       const oldObjects = oldRealm.objects('Web3BrowserBookmark');
       const newObjects = newRealm.objects<{eventName: string}>(
         'Web3BrowserBookmark',
@@ -182,6 +161,38 @@ export const realm = new Realm({
         newObject.eventName = '';
       }
     }
+
+    if (oldRealm.schemaVersion < 74) {
+      logger.log('migration step #7');
+      const oldVariablesBoolObjects = oldRealm.objects('VariablesBool');
+      const newVariablesBoolObjects = newRealm.objects<{onboarded?: string}>(
+        'VariablesBool',
+      );
+
+      const oldUserObjects = oldRealm.objects('User');
+      const newUserObjects = newRealm.objects<{onboarded?: string}>('User');
+
+      logger.log({
+        oldVariablesBoolObjects: oldVariablesBoolObjects.toJSON(),
+        newVariablesBoolObjects: newVariablesBoolObjects.toJSON(),
+      });
+
+      logger.log({
+        oldUserObjects: oldUserObjects.toJSON(),
+        newUserObjects: newUserObjects.toJSON(),
+      });
+
+      for (const objectIndex in oldVariablesBoolObjects) {
+        const newObject = newVariablesBoolObjects[objectIndex];
+        delete newObject.onboarded;
+      }
+
+      for (const objectIndex in oldUserObjects) {
+        const newObject = newUserObjects[objectIndex];
+        delete newObject.onboarded;
+      }
+    }
+
     logger.log('realm migration finished');
   },
 });
