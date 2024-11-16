@@ -31,7 +31,6 @@ import {createTheme, hideModal, showModal} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {useTheme} from '@app/hooks';
 import {useToast} from '@app/hooks/use-toast';
-import {Contact} from '@app/models/contact';
 import {Language} from '@app/models/language';
 import {Stories} from '@app/models/stories';
 import {VariablesBool} from '@app/models/variables-bool';
@@ -129,8 +128,6 @@ export const App = () => {
         if (app.onboarded) {
           await app.init();
           await migrationWallets();
-          // MobX stores migration
-          await Promise.allSettled([Contact.migrate()]);
 
           // We need reopen app for start SSS check
           // because we are working with cloud snapshots
