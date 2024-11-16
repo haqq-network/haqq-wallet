@@ -11,6 +11,7 @@ import {VestingMetadata} from '@app/models/vesting-metadata';
 import {AppTheme} from '@app/types';
 import {TEST_NETWORK_ID} from '@app/variables/common';
 
+import {AppStore} from './app';
 import {RssNews} from './rss-news';
 import {WalletConnectSessionMetadata} from './wallet-connect-session-metadata';
 import {Web3BrowserBookmark} from './web3-browser-bookmark';
@@ -165,12 +166,12 @@ export const realm = new Realm({
     if (oldRealm.schemaVersion < 74) {
       logger.log('migration step #7');
       const oldVariablesBoolObjects = oldRealm.objects('VariablesBool');
-      const newVariablesBoolObjects = newRealm.objects<{onboarded?: string}>(
+      const newVariablesBoolObjects = newRealm.objects<{onboarded?: boolean}>(
         'VariablesBool',
       );
 
       const oldUserObjects = oldRealm.objects('User');
-      const newUserObjects = newRealm.objects<{onboarded?: string}>('User');
+      const newUserObjects = newRealm.objects<{onboarded?: boolean}>('User');
 
       logger.log({
         oldVariablesBoolObjects: oldVariablesBoolObjects.toJSON(),
@@ -184,6 +185,11 @@ export const realm = new Realm({
 
       for (const objectIndex in oldVariablesBoolObjects) {
         const newObject = newVariablesBoolObjects[objectIndex];
+
+        if (newObject.onboarded) {
+          AppStore.isOnboarded = newObject.onboarded;
+        }
+
         delete newObject.onboarded;
       }
 
