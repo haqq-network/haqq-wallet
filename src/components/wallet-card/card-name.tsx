@@ -4,16 +4,8 @@ import {observer} from 'mobx-react';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {
-  First,
-  Icon,
-  IconsName,
-  Spacer,
-  Text,
-  TextVariant,
-} from '@app/components/ui';
+import {Icon, IconsName, Spacer, Text, TextVariant} from '@app/components/ui';
 import {CopyMenu} from '@app/components/ui/copy-menu';
-import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {Wallet, WalletModel} from '@app/models/wallet';
@@ -45,17 +37,6 @@ export const CardName = observer(
             {wallet.name}
           </Text>
         </Spacer>
-
-        <First>
-          {(app.isTesterMode || app.isDeveloper) && (
-            <Spacer flex={1}>
-              <Text variant={TextVariant.t15} color={Color.textBase3}>
-                [{wallet.type[0].toUpperCase()}] {wallet.path}
-              </Text>
-            </Spacer>
-          )}
-          <Spacer flex={1} />
-        </First>
 
         <Spacer flex={1}>
           <CopyMenu style={styles.copyIcon} wallet={wallet} withSettings>
@@ -90,7 +71,6 @@ const styles = createTheme({
     justifyContent: 'flex-start',
     alignItems: 'center',
     marginBottom: 6,
-    paddingRight: 16,
   },
   marginLeft: {marginLeft: 4},
   name: {
