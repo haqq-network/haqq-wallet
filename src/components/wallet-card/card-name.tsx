@@ -90,6 +90,7 @@ const styles = createTheme({
     justifyContent: 'flex-start',
     alignItems: 'center',
     marginBottom: 6,
+    paddingRight: 16,
   },
   marginLeft: {marginLeft: 4},
   name: {
