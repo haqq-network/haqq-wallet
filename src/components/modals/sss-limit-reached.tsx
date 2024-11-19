@@ -10,6 +10,8 @@ import {
   ButtonVariant,
   Spacer,
   Text,
+  TextPosition,
+  TextVariant,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
@@ -27,9 +29,17 @@ export const SSSLimitReached = ({
     <BottomPopupContainer>
       {onCloseModal => (
         <View style={page.modalView}>
-          <Text t5 center i18n={I18N.sssLimitReachedTitle} />
+          <Text
+            variant={TextVariant.t5}
+            position={TextPosition.center}
+            i18n={I18N.sssLimitReachedTitle}
+          />
           <Spacer height={8} />
-          <Text t14 center i18n={I18N.sssLimitReachedDescription} />
+          <Text
+            variant={TextVariant.t14}
+            position={TextPosition.center}
+            i18n={I18N.sssLimitReachedDescription}
+          />
           <Spacer height={20} />
           <Image
             style={page.image}

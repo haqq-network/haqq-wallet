@@ -67,7 +67,7 @@ export const SssMigrateStoreScreen = observer(() => {
             metadataUrl: RemoteConfig.get('sss_metadata_url')!,
             generateSharesUrl: RemoteConfig.get('sss_generate_shares_url')!,
           },
-        ).catch(err => ErrorHandler.handle('sssLimitReached', err));
+        ).catch(err => ErrorHandler.handle('sss3Y', err));
 
         if (!provider || typeof provider.getIdentifier !== 'function') {
           navigation.goBack();
