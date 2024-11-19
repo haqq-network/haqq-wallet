@@ -164,17 +164,28 @@ export const SignInNetworksScreen = memo(() => {
         logger.error('Error during login process:', e);
         Logger.log('error', e, e instanceof SssError);
         if (e instanceof SssError) {
-          logger.log('Navigating to error screen:', e.message);
-          // @ts-ignore
-          navigation.navigate(e.message, {
-            type: 'sss',
-            sssPrivateKey: creds?.privateKey,
-            token: creds?.token,
-            verifier: creds?.verifier,
-            sssCloudShare: null,
-            sssLocalShare: null,
-            provider,
-          });
+          try {
+            const hasPermissions = await verifyCloud(provider);
+            if (!hasPermissions) {
+              navigation.navigate(SignInStackRoutes.SigninCloudProblems, {
+                sssProvider: provider,
+                onNext: () => onLogin(provider, true),
+              });
+              return;
+            }
+          } catch (err) {
+            logger.log('Navigating to error screen:', e.message);
+            // @ts-ignore
+            navigation.navigate(e.message, {
+              type: 'sss',
+              sssPrivateKey: creds?.privateKey,
+              token: creds?.token,
+              verifier: creds?.verifier,
+              sssCloudShare: null,
+              sssLocalShare: null,
+              provider,
+            });
+          }
         }
       }
     },
