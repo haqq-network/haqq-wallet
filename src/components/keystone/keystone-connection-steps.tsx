@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Image, View} from 'react-native';
+import {Image, ScrollView, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';
@@ -32,7 +32,7 @@ export const KeystoneConnectionSteps = ({
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.flexOne} contentContainerStyle={styles.container}>
       <Text center t4 i18n={I18N.keystoneConnectionStepsTitle} />
       <Spacer height={32} />
       <Image source={keystoneConnectFrameImg} />
@@ -81,16 +81,18 @@ export const KeystoneConnectionSteps = ({
         />
       </View>
       <Spacer height={IS_IOS ? insets.bottom : 12} />
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = createTheme({
+  flexOne: {
+    flex: 1,
+  },
   container: {
     paddingHorizontal: 20,
     paddingVertical: 10,
     alignItems: 'center',
-    flex: 1,
   },
   textContainer: {
     backgroundColor: Color.bg3,
