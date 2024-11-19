@@ -2,6 +2,7 @@ import React, {memo, useCallback, useMemo, useRef, useState} from 'react';
 
 import {ProviderKeystoneBase, constants} from '@haqq/rn-wallet-providers';
 import {makeID} from '@haqq/shared-react-native';
+import {useIsFocused} from '@react-navigation/native';
 
 import {KeystoneAccounts} from '@app/components/keystone/keystone-accounts';
 import {showModal} from '@app/helpers';
@@ -40,6 +41,7 @@ export const KeystoneAccountsScreen = memo(() => {
       awaitForSign: Promise.resolve,
     }),
   );
+  const focus = useIsFocused();
   const [loading, setLoading] = useState(false);
   const [addresses, setAddresses] = useState<ChooseAccountItem[]>([]);
   const [walletsToCreate, updateWalletsToCreate] = useState<
@@ -128,7 +130,9 @@ export const KeystoneAccountsScreen = memo(() => {
   );
 
   useEffectAsync(async () => {
-    Logger.log('🔵 useEffectAsync');
+    if (!focus) {
+      return;
+    }
     setLoading(true);
     try {
       await loadMore();
@@ -149,7 +153,7 @@ export const KeystoneAccountsScreen = memo(() => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [focus]);
 
   const data = useMemo(
     (): ChooseAccountItem[] =>
@@ -236,6 +240,10 @@ export const KeystoneAccountsScreen = memo(() => {
     qrCBORHex,
     AppStore.isOnboarded,
   ]);
+
+  if (!focus) {
+    return null;
+  }
 
   return (
     <KeystoneAccounts
