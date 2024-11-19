@@ -135,7 +135,7 @@ export const SignupNetworksScreen = memo(() => {
           }
         } catch (err) {
           logger.error('Error during login:', err);
-          ErrorHandler.handle('sssLimitReached', err);
+          ErrorHandler.handle('sss2Y', err);
           return;
         }
 
