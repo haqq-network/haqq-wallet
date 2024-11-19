@@ -720,6 +720,7 @@ export enum WalletType {
   ledgerBt = 'ledger-bt',
   sss = 'sss',
   keystone = 'keystone',
+  watchOnly = 'watch-only',
 }
 
 export enum WalletCardPattern {
