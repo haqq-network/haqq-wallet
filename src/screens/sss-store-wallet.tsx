@@ -64,7 +64,7 @@ export const SssStoreWalletScreen = observer(() => {
             'SssStoreWalletScreen: Error initializing ProviderSSSBase',
             {error: err},
           );
-          return ErrorHandler.handle('sssLimitReached', err);
+          return ErrorHandler.handle('sss1Z', err);
         });
         logger.log('SssStoreWalletScreen: ProviderSSSBase initialized');
 
