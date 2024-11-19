@@ -1,6 +1,6 @@
 import React, {memo} from 'react';
 
-import {View} from 'react-native';
+import {ScrollView} from 'react-native';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
@@ -17,7 +17,9 @@ interface DeviceSelectProps {
 export const DeviceSelect = memo(
   ({onPressKeystone, onPressLedger}: DeviceSelectProps) => {
     return (
-      <View style={styles.container}>
+      <ScrollView
+        style={styles.flexOne}
+        contentContainerStyle={styles.container}>
         <Text center t4 i18n={I18N.deviceSelectTitle} />
         <Text
           center
@@ -39,7 +41,7 @@ export const DeviceSelect = memo(
           onPress={onPressLedger}
           source={require('@assets/images/device-ledger.png')}
         />
-      </View>
+      </ScrollView>
     );
   },
 );
@@ -49,5 +51,8 @@ const styles = createTheme({
     paddingHorizontal: 20,
     paddingVertical: 10,
     alignItems: 'center',
+  },
+  flexOne: {
+    flex: 1,
   },
 });

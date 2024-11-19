@@ -6,6 +6,7 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 
 import {SigninNetworks} from '@app/components/signin-networks';
 import {app} from '@app/contexts';
+import {showModal} from '@app/helpers';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {SssError} from '@app/helpers/sss-error';
 import {verifyCloud} from '@app/helpers/verify-cloud';
@@ -28,6 +29,7 @@ import {
   onLoginGoogle,
 } from '@app/services/provider-sss';
 import {RemoteConfig} from '@app/services/remote-config';
+import {ModalType} from '@app/types';
 
 const logger = Logger.create('SignInNetworksScreen', {
   enabled: __DEV__ || app.isTesterMode || app.isDeveloper,
@@ -165,7 +167,19 @@ export const SignInNetworksScreen = memo(() => {
         if (e instanceof SssError) {
           try {
             const hasPermissions = await verifyCloud(provider);
-            if (!hasPermissions) {
+            if (hasPermissions) {
+              logger.log('Navigating to error screen:', e.message);
+              // @ts-ignore
+              navigation.navigate(e.message, {
+                type: 'sss',
+                sssPrivateKey: creds?.privateKey,
+                token: creds?.token,
+                verifier: creds?.verifier,
+                sssCloudShare: null,
+                sssLocalShare: null,
+                provider,
+              });
+            } else {
               navigation.navigate(SignInStackRoutes.SigninCloudProblems, {
                 sssProvider: provider,
                 onNext: () => onLogin(provider, true),
@@ -173,16 +187,9 @@ export const SignInNetworksScreen = memo(() => {
               return;
             }
           } catch (err) {
-            logger.log('Navigating to error screen:', e.message);
-            // @ts-ignore
-            navigation.navigate(e.message, {
-              type: 'sss',
-              sssPrivateKey: creds?.privateKey,
-              token: creds?.token,
-              verifier: creds?.verifier,
-              sssCloudShare: null,
-              sssLocalShare: null,
-              provider,
+            logger.error('Error during error handling:', err);
+            showModal(ModalType.error, {
+              message: e.message,
             });
           }
         }
