@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {ProviderMnemonicBase, ProviderSSSBase} from '@haqq/rn-wallet-providers';
-import {useFocusEffect} from '@react-navigation/native';
+import {useIsFocused} from '@react-navigation/native';
 import {observer} from 'mobx-react';
 
 import {
@@ -49,7 +49,7 @@ export const ChooseAccountScreen = observer(() => {
   const [walletsToCreate, updateWalletsToCreate] = useState<
     ChooseAccountItem[]
   >([]);
-  const [focus, setFocus] = useState(false);
+  const focus = useIsFocused();
 
   const generator = useRef<ReturnType<typeof getWalletsFromProvider> | null>(
     null,
@@ -284,12 +284,6 @@ export const ChooseAccountScreen = observer(() => {
     walletProvider.current,
     Wallet.getAll().length,
   ]);
-
-  useFocusEffect(
-    useCallback(() => {
-      setFocus(true);
-    }, []),
-  );
 
   if (!focus) {
     return null;

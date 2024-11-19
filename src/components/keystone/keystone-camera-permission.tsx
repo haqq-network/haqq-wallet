@@ -1,13 +1,11 @@
 import React from 'react';
 
-import {View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {ScrollView, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {RiveWrapper} from '@app/components/ui/rive-wrapper';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {IS_IOS} from '@app/variables/common';
 
 import {Button, ButtonVariant, First, Spacer, Text} from '../ui';
 
@@ -24,9 +22,8 @@ export const KeystoneCameraPermission = ({
   onPressContinue,
   onPressSettings,
 }: KeystoneConnectionStepsProps) => {
-  const insets = useSafeAreaInsets();
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.flexOne} contentContainerStyle={styles.container}>
       <View style={styles.animationWrapper}>
         <RiveWrapper
           width={375}
@@ -79,17 +76,20 @@ export const KeystoneCameraPermission = ({
             i18n={I18N.continue}
           />
         </First>
-        <Spacer height={IS_IOS ? insets.bottom : 12} />
       </View>
-    </View>
+      <Spacer flex={0.5} />
+    </ScrollView>
   );
 };
 
 const styles = createTheme({
-  container: {
+  flexOne: {
     flex: 1,
+  },
+  container: {
     paddingHorizontal: 20,
     alignItems: 'center',
+    flex: 1,
   },
   animationWrapper: {
     marginTop: 20,
