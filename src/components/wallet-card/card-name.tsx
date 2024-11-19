@@ -4,14 +4,7 @@ import {observer} from 'mobx-react';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {
-  First,
-  Icon,
-  IconsName,
-  Spacer,
-  Text,
-  TextVariant,
-} from '@app/components/ui';
+import {Icon, IconsName, Spacer, Text, TextVariant} from '@app/components/ui';
 import {CopyMenu} from '@app/components/ui/copy-menu';
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
@@ -79,7 +72,6 @@ const styles = createTheme({
     justifyContent: 'flex-start',
     alignItems: 'center',
     marginBottom: 6,
-    paddingRight: 16,
   },
   marginLeft: {marginLeft: 4},
   name: {
