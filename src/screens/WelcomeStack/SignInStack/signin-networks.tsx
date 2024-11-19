@@ -70,7 +70,7 @@ export const SignInNetworksScreen = observer(() => {
         }
       } catch (err) {
         logger.error('Error during login:', err);
-        ErrorHandler.handle('sssLimitReached', err);
+        ErrorHandler.handle('sss3X', err);
         return;
       }
 

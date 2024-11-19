@@ -1,7 +1,6 @@
 import Realm from 'realm';
 
 import {News} from '@app/models/news';
-import {ContactRealmObject} from '@app/models/realm-object-for-migration';
 import {Refferal} from '@app/models/refferal';
 import {UserSchema, UserType} from '@app/models/user';
 import {VariablesBool} from '@app/models/variables-bool';
@@ -27,7 +26,6 @@ export const realm = new Realm({
     Web3BrowserSearchHistory,
     WalletConnectSessionMetadata,
     UserSchema,
-    ContactRealmObject,
     Refferal,
     News,
     VariablesDate,
