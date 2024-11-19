@@ -45,7 +45,7 @@ export async function getProviderForNewWallet(params?: WalletInitialData) {
         'getProviderForNewWallet: Error in ProviderSSSBase.initialize',
         {err},
       );
-      ErrorHandler.handle('sssLimitReached', err);
+      ErrorHandler.handle('SSS1Y', err);
     });
   }
 

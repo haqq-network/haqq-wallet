@@ -249,7 +249,7 @@ export const SignInStoreWalletScreen = observer(() => {
                 'SignInStoreWalletScreen: Error in ProviderSSSBase initialization',
                 {error: err},
               );
-              return ErrorHandler.handle('sssLimitReached', err);
+              return ErrorHandler.handle('sss2Z', err);
             });
             logger.log('SignInStoreWalletScreen: ProviderSSSBase initialized');
 
