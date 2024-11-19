@@ -42,7 +42,7 @@ export const SssMigrateNetworksScreen = memo(() => {
             break;
         }
       } catch (err) {
-        ErrorHandler.handle('sssLimitReached', err);
+        ErrorHandler.handle('sss2X', err);
         return;
       }
       if (creds) {

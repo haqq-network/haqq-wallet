@@ -115,7 +115,7 @@ export const CloudShareNotFound = observer(
               'CloudShareNotFound: Error in ProviderSSSBase initialization',
               {error: err},
             );
-            ErrorHandler.handle('sssLimitReached', err);
+            ErrorHandler.handle('sss1X', err);
           });
           logger.log('CloudShareNotFound: ProviderSSSBase initialized');
 

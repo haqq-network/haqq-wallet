@@ -1,10 +1,10 @@
 import * as Sentry from '@sentry/react-native';
 import {makeAutoObservable} from 'mobx';
+import Toast from 'react-native-toast-message';
 
 import {showModal} from '@app/helpers';
+import {I18N, getText} from '@app/i18n';
 import {ModalType} from '@app/types';
-
-type ErrorType = 'sssLimitReached';
 
 class ErrorHandlerStore {
   constructor() {
@@ -37,15 +37,29 @@ class ErrorHandlerStore {
     }
   };
 
-  handle = (type: ErrorType, error: unknown) => {
+  handle = (type: string, error: unknown) => {
     Logger.log('SSS_ERROR', type, error);
     switch (type) {
-      case 'sssLimitReached': {
-        showModal(ModalType.sssLimitReached);
-        break;
-      }
+      // case 'sssLimitReached': {
+      //   showModal(ModalType.sssLimitReached);
+      //   break;
+      // }
       default: {
-        //
+        Toast.show({
+          type: 'error',
+          position: 'bottom',
+          text1: getText(I18N.errorCode, {id: type}),
+          text2: getText(I18N.errorText),
+          onPress: () => {
+            showModal(ModalType.viewErrorDetails, {
+              errorId: type,
+              errorDetails: error as string,
+            });
+          },
+        });
+        Logger.captureException(error, type, {
+          isSSS: true,
+        });
       }
     }
   };
