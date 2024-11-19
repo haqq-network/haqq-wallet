@@ -86,6 +86,7 @@ class RNCloud: NSObject {
   @objc
   public func setItem(_ key: String, value: String, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
     guard isCloudEnabled else {
+      reject("0", "[RNCloud::setItem] Cloud is not enabled", nil)
       return
     }
     
