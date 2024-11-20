@@ -19,6 +19,7 @@ import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
 import {WalletModel} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
+import {WalletType} from '@app/types';
 
 import {StackedVestedTokens} from '../stacked-vested-tokens';
 
@@ -97,7 +98,10 @@ export const AccountInfoHeader = ({
         <Spacer height={24} />
       </First>
       <Inline gap={12} style={styles.iconButtons}>
-        <IconButton onPress={onSend} style={styles.iconButton}>
+        <IconButton
+          disabled={wallet.type === WalletType.watchOnly}
+          onPress={onSend}
+          style={styles.iconButton}>
           <Icon i24 name="arrow_send" color={Color.textBase1} />
           <Text variant={TextVariant.t14} i18n={I18N.walletCardSend} />
         </IconButton>

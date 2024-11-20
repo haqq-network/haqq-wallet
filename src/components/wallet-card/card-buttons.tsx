@@ -7,6 +7,7 @@ import {BlurView, Icon, IconButton, IconsName, Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {WalletModel} from '@app/models/wallet';
+import {WalletType} from '@app/types';
 import {IS_IOS, SYSTEM_BLUR_2} from '@app/variables/common';
 
 type CardButtonsProps = {
@@ -38,6 +39,7 @@ export const CardButtons = ({
         {IS_IOS && <BlurView action="sent" cardState={cardState} />}
         <IconButton
           style={styles.spacer}
+          disabled={wallet.type === WalletType.watchOnly}
           onPress={onSend}
           testID={`${testID}_send`}>
           <Icon i24 name={IconsName.arrow_send} color={Color.graphicBase3} />
