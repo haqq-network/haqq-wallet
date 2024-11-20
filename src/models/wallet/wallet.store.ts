@@ -341,6 +341,19 @@ class WalletStore implements RPCObserver {
     return this.getBalances(address, provider)[key];
   }
 
+  async createWatchOnly(address: string) {
+    const watchWallets = this.getForAccount(WalletType.watchOnly);
+    return this.create(`Watch Wallet #${watchWallets.length + 1}`, {
+      address: AddressUtils.toEth(address),
+      tronAddress: AddressUtils.toTron(address),
+      type: WalletType.watchOnly,
+      accountId: WalletType.watchOnly,
+      path: '0',
+      isImported: true,
+      mnemonicSaved: true,
+    });
+  }
+
   async create(
     name = '',
     walletParams: AddWalletParams,
