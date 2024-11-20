@@ -6,6 +6,10 @@ import {Wallet} from '@app/models/wallet';
 import {RPCMessage} from '@app/types/rpc';
 
 const HEARTBEAT_INTERVAL_MS = 10_000;
+const FALLBACK_INTERVAL_MS = 6_000;
+const SOCKET_RECONECT_TIMER_MS = 5_000;
+
+const logger = Logger.create('SocketStore', {stringifyJson: true});
 
 class SocketStore {
   private instance: WebSocket | null = null;
@@ -43,7 +47,14 @@ class SocketStore {
     }
     this.fallbackIntervalTimer = setInterval(() => {
       Wallet.fetchBalances();
-    }, 6000);
+    }, FALLBACK_INTERVAL_MS);
+  };
+
+  private stopFallbackFetch = () => {
+    if (this.fallbackIntervalTimer) {
+      clearInterval(this.fallbackIntervalTimer);
+      this.fallbackIntervalTimer = null;
+    }
   };
 
   attach = (url?: string) => {
@@ -73,16 +84,17 @@ class SocketStore {
       });
     };
 
-    this.instance.onerror = e => {
-      Logger.log('Socket.onError', e.message);
+    const reconnect = (event?: WebSocketErrorEvent | WebSocketCloseEvent) => {
+      logger.error('reconnecting: ', event);
+
       this.detach();
-      this.fallbackToFetch();
+      setTimeout(() => {
+        this.attach(url);
+      }, SOCKET_RECONECT_TIMER_MS);
     };
 
-    this.instance.onclose = () => {
-      this.detach();
-      this.attach();
-    };
+    this.instance.onerror = reconnect;
+    this.instance.onclose = reconnect;
   };
 
   detach = () => {
@@ -90,11 +102,13 @@ class SocketStore {
       return;
     }
     this.stopHeartbeat();
+    this.stopFallbackFetch();
+
     try {
       this.instance.close();
     } catch (err) {
       if (err instanceof Error) {
-        Logger.log('Socket.detach error: ', err.message);
+        logger.error('detach error: ', err.message);
       }
     }
     this.instance = null;
@@ -137,7 +151,7 @@ class SocketStore {
         try {
           this.instance?.send(message);
         } catch (err) {
-          //
+          logger.error('ping error: ', err);
         }
       }
     },
