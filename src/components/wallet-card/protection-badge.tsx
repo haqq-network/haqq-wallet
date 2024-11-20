@@ -46,7 +46,12 @@ export const ProtectionBadge = ({
     // or Ledger / Hot
     if (
       isImported ||
-      [WalletType.ledgerBt, WalletType.hot].includes(wallet.type)
+      [
+        WalletType.ledgerBt,
+        WalletType.hot,
+        WalletType.keystone,
+        WalletType.watchOnly,
+      ].includes(wallet.type)
     ) {
       return ProtectionStatus.hidden;
     }
