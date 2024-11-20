@@ -25,6 +25,8 @@ import {useLayout} from '@app/hooks/use-layout';
 import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {I18N} from '@app/i18n';
 import {NftItem} from '@app/models/nft';
+import {Wallet} from '@app/models/wallet';
+import {WalletType} from '@app/types';
 
 import {
   NftItemDetailsAttributes,
@@ -47,6 +49,7 @@ export const NftItemDetails = ({
 }: NftItemDetailsProps) => {
   const {animate} = useLayoutAnimation();
   const [imageLayout, onImageLayout] = useLayout();
+  const wallet = useMemo(() => Wallet.getById(item.address), [item]);
   const imageUri = useNftImage(
     typeof item.cached_url === 'string'
       ? item.cached_url
@@ -143,6 +146,7 @@ export const NftItemDetails = ({
           <Button
             i18n={I18N.nftDetailsSend}
             variant={ButtonVariant.contained}
+            disabled={wallet?.type === WalletType.watchOnly}
             onPress={onPressSend}
           />
           <Spacer height={16} />

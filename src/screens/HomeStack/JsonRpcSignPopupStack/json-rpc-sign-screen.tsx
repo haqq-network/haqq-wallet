@@ -29,7 +29,7 @@ import {EthSignErrorDataDetails} from '@app/services/eth-sign';
 import {EventTracker} from '@app/services/event-tracker';
 import {Indexer} from '@app/services/indexer';
 import {SignJsonRpcRequest} from '@app/services/sign-json-rpc-request';
-import {IContract, MarketingEvents, ModalType} from '@app/types';
+import {IContract, MarketingEvents, ModalType, WalletType} from '@app/types';
 import {
   getTransactionFromJsonRpcRequest,
   getUserAddressFromJRPCRequest,
@@ -242,6 +242,15 @@ export const JsonRpcSignScreen = observer(() => {
       blindSignEnabled,
     ],
   );
+
+  useEffect(() => {
+    if (wallet && wallet.type === WalletType.watchOnly) {
+      onPressReject(
+        'Watch-only wallets do not allow signing transactions.',
+        true,
+      );
+    }
+  }, [wallet, onPressReject]);
 
   useEffectAsync(async () => {
     try {

@@ -57,6 +57,7 @@ export type ButtonProps = Omit<ViewProps, 'children'> & {
   variant?: ButtonVariant;
   size?: ButtonSize;
   onPress?: () => void | Promise<void>;
+  onLongPress?: () => void | Promise<void>;
   error?: boolean;
   loading?: boolean;
   disabled?: boolean;
@@ -116,6 +117,7 @@ export const Button = ({
   children,
   trackLoading = false,
   timer = 0,
+  onLongPress,
   ...props
 }: ButtonProps) => {
   const [loadFlag, setLoading] = React.useState(loading);
@@ -241,6 +243,7 @@ export const Button = ({
     <TouchableOpacity
       style={containerStyle as ViewStyle}
       onPress={onPressButton}
+      onLongPress={onLongPress}
       activeOpacity={Config.FOR_DETOX ? 1 : 0.7}
       disabled={disabled || loadFlag || isDisabledByTimer}
       testID={
