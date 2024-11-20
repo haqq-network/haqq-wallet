@@ -22,6 +22,8 @@ import {
   ButtonVariant,
   DataContent,
   First,
+  Icon,
+  IconButton,
   IconsName,
   Input,
   MenuNavigationButton,
@@ -35,7 +37,9 @@ import {awaitForWallet, createTheme, hideModal, showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
 import {awaitForProvider} from '@app/helpers/await-for-provider';
+import {awaitForScanQr} from '@app/helpers/await-for-scan-qr';
 import {AppInfo, getAppInfo} from '@app/helpers/get-app-info';
+import {LinkType, parseDeepLink} from '@app/helpers/parse-deep-link';
 import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {I18N} from '@app/i18n';
 import {Language} from '@app/models/language';
@@ -48,10 +52,15 @@ import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {Whitelist} from '@app/models/whitelist';
 import {navigator} from '@app/navigator';
 import {SettingsStackRoutes} from '@app/route-types';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 import {message as toastMessage} from '@app/services/toast';
 import {getUserAgent} from '@app/services/version';
-import {PartialJsonRpcRequest} from '@app/types';
-import {openInAppBrowser, openWeb3Browser} from '@app/utils';
+import {ModalType, PartialJsonRpcRequest} from '@app/types';
+import {
+  openInAppBrowser,
+  openWeb3Browser,
+  showUnrecognizedDataAttention,
+} from '@app/utils';
 import {
   DEVELOPER_MODE_DOCS,
   HAQQ_METADATA,
@@ -155,6 +164,71 @@ export const SettingsDeveloperTools = observer(() => {
     toastMessage('Cookie cleared');
   };
 
+  const [watchOnlyAddress, setWatchOnlyAddress] = useState('');
+  const watchOnlyAddressError = useMemo(() => {
+    if (!watchOnlyAddress) {
+      return undefined;
+    }
+
+    if (!AddressUtils.isValidAddress(watchOnlyAddress)) {
+      return 'Invalid address';
+    }
+
+    if (Wallet.getById(watchOnlyAddress)) {
+      return 'Wallet already exists';
+    }
+
+    return undefined;
+  }, [watchOnlyAddress]);
+
+  const onPressAddWatchOnlyWallet = async () => {
+    try {
+      await Wallet.createWatchOnly(watchOnlyAddress);
+      showModal(ModalType.info, {
+        title: 'Wallet added',
+        description: `addresses:
+EVM:\n${AddressUtils.toEth(watchOnlyAddress)}
+HAQQ:\n${AddressUtils.toHaqq(watchOnlyAddress)}
+TRON:\n${AddressUtils.toTron(watchOnlyAddress)}`,
+      });
+      vibrate(HapticEffects.success);
+      setWatchOnlyAddress('');
+    } catch (err) {
+      vibrate(HapticEffects.error);
+      showModal(ModalType.error, {
+        title: 'Error while adding wallet',
+        // @ts-ignore
+        description: err.message,
+      });
+    }
+  };
+
+  const onPressClear = useCallback(() => {
+    setWatchOnlyAddress('');
+  }, [setWatchOnlyAddress]);
+
+  const onPressPaste = useCallback(async () => {
+    vibrate(HapticEffects.impactLight);
+    const pasteString = await Clipboard.getString();
+    setWatchOnlyAddress(pasteString);
+  }, [setWatchOnlyAddress]);
+
+  const onPressQR = useCallback(async () => {
+    const data = await awaitForScanQr();
+    const {type, params} = parseDeepLink(data);
+
+    switch (type) {
+      case LinkType.Haqq:
+      case LinkType.Address:
+      case LinkType.Etherium:
+        setWatchOnlyAddress(params.address ?? '');
+        break;
+      default:
+        showUnrecognizedDataAttention();
+        break;
+    }
+  }, [setWatchOnlyAddress]);
+
   useEffect(() => {
     getAppInfo().then(setAppInfo);
   });
@@ -168,6 +242,11 @@ export const SettingsDeveloperTools = observer(() => {
               size={ButtonSize.small}
               title={'Show application info'}
               onPress={handleShowJsonViewer}
+              onLongPress={() => {
+                vibrate(HapticEffects.success);
+                Clipboard.setString(JSON.stringify(appInfo, null, 2));
+                toastMessage('Copied to clipboard');
+              }}
             />
           )}
 
@@ -207,6 +286,52 @@ export const SettingsDeveloperTools = observer(() => {
         next={SettingsStackRoutes.SettingsLanguage}
         icon={IconsName.language}
         title={I18N.homeSettingsLanguage}
+      />
+      <Spacer height={8} />
+      <Title text="Watch only wallet" />
+      <Input
+        value={watchOnlyAddress}
+        onChangeText={setWatchOnlyAddress}
+        error={!!watchOnlyAddressError}
+        label={watchOnlyAddressError}
+        placeholder="haqq... | 0x... | T..."
+        rightAction={
+          <First>
+            {watchOnlyAddress === '' && (
+              <View style={styles.inputButtonContainer}>
+                <IconButton onPress={onPressPaste}>
+                  <Icon
+                    i24
+                    name={IconsName.paste}
+                    color={Color.graphicGreen1}
+                  />
+                </IconButton>
+                <Spacer width={12} />
+                <IconButton onPress={onPressQR}>
+                  <Icon
+                    i24
+                    name={IconsName.qr_scanner}
+                    color={Color.graphicGreen1}
+                  />
+                </IconButton>
+              </View>
+            )}
+            <IconButton onPress={onPressClear}>
+              <Icon
+                i24
+                name={IconsName.close_circle}
+                color={Color.graphicBase2}
+              />
+            </IconButton>
+          </First>
+        }
+      />
+      <Spacer height={8} />
+      <Button
+        title="Add wallet"
+        disabled={!!watchOnlyAddressError || !watchOnlyAddress}
+        variant={ButtonVariant.contained}
+        onPress={onPressAddWatchOnlyWallet}
       />
       <Spacer height={8} />
       <Title text="Bench32/hex converter" />
@@ -250,7 +375,7 @@ export const SettingsDeveloperTools = observer(() => {
             'Enable to display tokens that are not included in the Haqq Network white list. These tokens may be unsafe, and their appearance in the UI is highlighted in yellow to indicate potential risk.'
           }
         />
-        <Spacer />
+        <Spacer width={24} />
         <Switch
           value={showNonWhitlistedTokens}
           onChange={onToggleShowNonWhitlistedTokens}
@@ -699,6 +824,9 @@ Issued At: 2024-02-20T12:00:00.000Z`,
 });
 
 const styles = createTheme({
+  inputButtonContainer: {
+    flexDirection: 'row',
+  },
   dataContent: {
     flex: 4,
   },
