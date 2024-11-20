@@ -1,4 +1,8 @@
-import {ProviderBaseError, ProviderInterface} from '@haqq/rn-wallet-providers';
+import {
+  ProviderBase,
+  ProviderBaseError,
+  ProviderInterface,
+} from '@haqq/rn-wallet-providers';
 
 import {awaitForLedger} from '@app/helpers/await-for-ledger';
 import {Provider} from '@app/models/provider';
@@ -14,6 +18,8 @@ const providersFactory = {
   [WalletType.ledgerBt]: ProviderFactory.getLedgerProvider,
   [WalletType.sss]: ProviderFactory.getSSSProvider,
   [WalletType.keystone]: ProviderFactory.getKeystoneProvider,
+  [WalletType.watchOnly]: () =>
+    new ProviderBase({getPassword: () => Promise.resolve('')}),
 };
 
 /**

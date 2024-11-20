@@ -1,4 +1,4 @@
-import React, {memo, useMemo} from 'react';
+import React, {memo, useEffect, useMemo} from 'react';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
@@ -8,6 +8,7 @@ import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {useTypedRoute} from '@app/hooks/use-typed-route';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {navigator} from '@app/navigator';
 import {
   HomeStackParamList,
   HomeStackRoutes,
@@ -25,7 +26,8 @@ import {TransactionNftFinishScreen} from '@app/screens/HomeStack/TransactionStac
 import {TransactionSumScreen} from '@app/screens/HomeStack/TransactionStack/transaction-sum';
 import {TransactionSumAddressScreen} from '@app/screens/HomeStack/TransactionStack/transaction-sum-address';
 import {TransactionSelectCryptoScreen} from '@app/screens/transaction-select-crypto';
-import {ScreenOptionType} from '@app/types';
+import {HapticEffects, vibrate} from '@app/services/haptic';
+import {ScreenOptionType, WalletType} from '@app/types';
 
 import {TransactionStoreContainer} from './transaction-store';
 
@@ -45,6 +47,14 @@ export const TransactionStack = memo(() => {
     headerBackHidden: from || Wallet.getAllVisible().length === 1,
     headerRight: DismissPopupButton,
   };
+
+  useEffect(() => {
+    const w = Wallet.getById(from);
+    if (w?.type === WalletType.watchOnly) {
+      vibrate(HapticEffects.error);
+      navigator.goBack();
+    }
+  }, [from]);
 
   const initialRoute = useMemo(() => {
     const condition = nft || from || Wallet.getAllVisible().length === 1;
