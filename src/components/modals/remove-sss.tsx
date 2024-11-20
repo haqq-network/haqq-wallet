@@ -1,9 +1,11 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {accountInfo} from '@haqq/provider-web3-utils';
+import {constants} from '@haqq/rn-wallet-providers';
 import {jsonrpcRequest} from '@haqq/shared-react-native';
 import {observer} from 'mobx-react';
 import {Alert, Image, Platform, View} from 'react-native';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 import {Color} from '@app/colors';
 import {BottomPopupContainer} from '@app/components/bottom-popups';
@@ -18,6 +20,7 @@ import {
 import {createTheme} from '@app/helpers';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {I18N, getText} from '@app/i18n';
+import {Wallet} from '@app/models/wallet';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {Creds, onLoginApple, onLoginGoogle} from '@app/services/provider-sss';
 import {
@@ -25,7 +28,7 @@ import {
   SharesResponse,
 } from '@app/services/provider-sss-initialize';
 import {RemoteConfig} from '@app/services/remote-config';
-import {ModalType, Modals} from '@app/types';
+import {ModalType, Modals, WalletType} from '@app/types';
 
 export const RemoveSSS = observer(
   ({onClose, accountID, provider}: Modals[ModalType.removeSSS]) => {
@@ -98,6 +101,27 @@ export const RemoveSSS = observer(
             close();
             return;
           }
+
+          Wallet.getAll().forEach(async wallet => {
+            if (wallet.type === WalletType.sss) {
+              const account = await accountInfo(creds.privateKey as string);
+              const share = await EncryptedStorage.getItem(
+                `${
+                  constants.ITEM_KEYS[constants.WalletType.sss]
+                }_${account.address.toLowerCase()}`,
+              );
+              if (share) {
+                await EncryptedStorage.setItem(
+                  `mnemonic_${wallet.accountId}`,
+                  share,
+                );
+              }
+              Wallet.update(wallet.address, {
+                socialLinkEnabled: false,
+                type: WalletType.mnemonic,
+              });
+            }
+          });
 
           await Promise.allSettled([
             removeChainShare(creds),
