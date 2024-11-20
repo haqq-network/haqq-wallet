@@ -126,6 +126,11 @@ export const SettingsAccountDetail = observer(
         </View>
         {isFeatureEnabled(Feature.sss) && (
           <First>
+            {[
+              WalletType.ledgerBt,
+              WalletType.keystone,
+              WalletType.watchOnly,
+            ].includes(wallet.type) && <></>}
             {!wallet.mnemonicSaved && wallet.type === WalletType.mnemonic && (
               <InfoBlock
                 testID="recovery_warning"
