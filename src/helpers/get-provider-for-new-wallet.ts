@@ -21,32 +21,35 @@ export async function getProviderForNewWallet(params?: WalletInitialData) {
   const getPassword = app.getPassword.bind(app);
 
   if (params && params.type === 'sss') {
-    logger.log(
-      'getProviderForNewWallet: Initializing ProviderSSSBase',
-      JSON.stringify(params, null, 2),
-    );
-    const storage = await getProviderStorage('', params.provider);
-    logger.log('getProviderForNewWallet: Provider storage retrieved', storage);
-    return await ProviderSSSBase.initialize(
-      params.action === 'restore' ? params.sssPrivateKey || null : null,
-      params.sssCloudShare || null,
-      params.sssLocalShare || null,
-      null,
-      params.verifier,
-      typeof params.token === 'string' ? params.token : params.token.value,
-      app.getPassword.bind(app),
-      storage,
-      {
-        metadataUrl: RemoteConfig.get('sss_metadata_url')!,
-        generateSharesUrl: RemoteConfig.get('sss_generate_shares_url')!,
-      },
-    ).catch(err => {
-      logger.error(
-        'getProviderForNewWallet: Error in ProviderSSSBase.initialize',
-        {err},
+    try {
+      logger.log(
+        'getProviderForNewWallet: Initializing ProviderSSSBase',
+        JSON.stringify(params, null, 2),
       );
+      const storage = await getProviderStorage('', params.provider);
+      logger.log(
+        'getProviderForNewWallet: Provider storage retrieved',
+        storage,
+      );
+      return await ProviderSSSBase.initialize(
+        params.action === 'restore' ? params.sssPrivateKey || null : null,
+        params.sssCloudShare || null,
+        params.sssLocalShare || null,
+        null,
+        params.verifier,
+        typeof params.token === 'string' ? params.token : params.token.value,
+        app.getPassword.bind(app),
+        storage,
+        {
+          metadataUrl: RemoteConfig.get('sss_metadata_url')!,
+          generateSharesUrl: RemoteConfig.get('sss_generate_shares_url')!,
+        },
+      );
+    } catch (err) {
+      Logger.captureException(err, 'getProviderForNewWallet');
       ErrorHandler.handle('SSS1Y', err);
-    });
+      return null;
+    }
   }
 
   const keysSss = await ProviderSSSBase.getAccounts();
