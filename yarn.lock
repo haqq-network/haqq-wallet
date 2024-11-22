@@ -2839,9 +2839,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@haqq/rn-wallet-providers@npm:0.0.11":
-  version: 0.0.11
-  resolution: "@haqq/rn-wallet-providers@npm:0.0.11"
+"@haqq/rn-wallet-providers@npm:0.0.12":
+  version: 0.0.12
+  resolution: "@haqq/rn-wallet-providers@npm:0.0.12"
   dependencies:
     "@ethersproject/abstract-provider": ^5.7.0
     "@ethersproject/bytes": ^5.7.0
@@ -2866,7 +2866,7 @@ __metadata:
     react-native: "*"
     react-native-ble-plx: "*"
     react-native-encrypted-storage: "*"
-  checksum: 5bb53eba13257b30e5179a3b44e9bfc4db5bf85dde01d7c42b527bd508074f4e876cd6512b8101113ea6698fd31bdaf686e661e4e26f057e6a39a29e2beb79e3
+  checksum: 8f450db90ce7150b700ef865adb26fa26b5e414ca7a445017e4e5a7640f645acc43ced26aa82a8d34d596e501ac93e5baf53966224b186b9f47e4b4e0b904439
   languageName: node
   linkType: hard
 
@@ -11425,7 +11425,7 @@ __metadata:
     "@haqq/encryption-react-native": 0.0.4
     "@haqq/format-number-with-subscript-zeros": 1.0.1
     "@haqq/provider-web3-utils": 0.0.14
-    "@haqq/rn-wallet-providers": 0.0.11
+    "@haqq/rn-wallet-providers": 0.0.12
     "@haqq/shared-react-native": 0.0.12
     "@invertase/react-native-apple-authentication": 2.2.2
     "@keystonehq/bc-ur-registry-eth": 0.21.0
