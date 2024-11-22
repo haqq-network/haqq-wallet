@@ -126,14 +126,17 @@ export const SettingsSecurity = ({
           </First>
         </View>
       )}
-      <MenuNavigationButton onPress={onSssRemove}>
-        <DataContent
-          titleI18n={I18N.deleteSssTitle}
-          titleColor={Color.textRed1}
-          subtitleI18n={I18N.deleteSssDescription}
-          subtitleI18nParams={{walletType: 'Google'}}
-        />
-      </MenuNavigationButton>
+      {/* FIXME: Enable this option into next releases when shares migration will be fixed */}
+      {false && (
+        <MenuNavigationButton onPress={onSssRemove}>
+          <DataContent
+            titleI18n={I18N.deleteSssTitle}
+            titleColor={Color.textRed1}
+            subtitleI18n={I18N.deleteSssDescription}
+            subtitleI18nParams={{walletType: 'Google'}}
+          />
+        </MenuNavigationButton>
+      )}
       <Spacer />
     </View>
   );
