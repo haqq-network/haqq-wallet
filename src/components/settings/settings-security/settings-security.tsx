@@ -19,6 +19,7 @@ import {
   TextVariant,
 } from '@app/components/ui';
 import {app} from '@app/contexts';
+import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {I18N, getText} from '@app/i18n';
 import {BiometryType} from '@app/types';
 
@@ -127,7 +128,7 @@ export const SettingsSecurity = ({
         </View>
       )}
       {/* FIXME: Enable this option into next releases when shares migration will be fixed */}
-      {false && (
+      {isFeatureEnabled(Feature.removeSss) && (
         <MenuNavigationButton onPress={onSssRemove}>
           <DataContent
             titleI18n={I18N.deleteSssTitle}
