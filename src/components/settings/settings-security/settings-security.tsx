@@ -19,6 +19,7 @@ import {
   TextVariant,
 } from '@app/components/ui';
 import {app} from '@app/contexts';
+import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {I18N, getText} from '@app/i18n';
 import {BiometryType} from '@app/types';
 
@@ -126,14 +127,17 @@ export const SettingsSecurity = ({
           </First>
         </View>
       )}
-      <MenuNavigationButton onPress={onSssRemove}>
-        <DataContent
-          titleI18n={I18N.deleteSssTitle}
-          titleColor={Color.textRed1}
-          subtitleI18n={I18N.deleteSssDescription}
-          subtitleI18nParams={{walletType: 'Google'}}
-        />
-      </MenuNavigationButton>
+      {/* FIXME: Enable this option into next releases when shares migration will be fixed */}
+      {isFeatureEnabled(Feature.removeSss) && (
+        <MenuNavigationButton onPress={onSssRemove}>
+          <DataContent
+            titleI18n={I18N.deleteSssTitle}
+            titleColor={Color.textRed1}
+            subtitleI18n={I18N.deleteSssDescription}
+            subtitleI18nParams={{walletType: 'Google'}}
+          />
+        </MenuNavigationButton>
+      )}
       <Spacer />
     </View>
   );
