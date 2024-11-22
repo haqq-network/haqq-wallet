@@ -8,6 +8,7 @@ export enum Feature {
   tokens,
   // right to left
   rtl,
+  removeSss,
 }
 
 export const isFeatureEnabled = (feature: Feature): boolean => {
@@ -21,6 +22,8 @@ export const isFeatureEnabled = (feature: Feature): boolean => {
     case Feature.tokens:
       return true;
     case Feature.rtl:
+      return false;
+    case Feature.removeSss:
       return false;
     default:
       return false;
