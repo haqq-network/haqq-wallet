@@ -3,11 +3,12 @@ import React, {memo, useCallback, useState} from 'react';
 import {ProviderMnemonicBase, ProviderSSSBase} from '@haqq/rn-wallet-providers';
 
 import {SettingsViewRecoveryPhrase} from '@app/components/settings/settings-view-recovery-phrase';
-import {CustomHeader, Loading} from '@app/components/ui';
+import {CustomHeader, First, Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useError} from '@app/hooks/use-error';
 import {I18N} from '@app/i18n';
 import {
   ManageAccountsStackParamList,
@@ -25,32 +26,44 @@ export const SettingsViewRecoveryPhraseScreen = memo(() => {
   >().params;
 
   const [mnemonic, setMnemonic] = useState<string>('');
+  const showError = useError();
 
   const onEnter = useCallback(async () => {
-    switch (type) {
-      case WalletType.mnemonic:
-        const providerMnemonic = new ProviderMnemonicBase({
-          account: accountId,
-          getPassword: app.getPassword.bind(app),
-        });
-        const phraseMnemonic = await providerMnemonic.getMnemonicPhrase();
-        setMnemonic(phraseMnemonic ?? '');
-        break;
-      case WalletType.sss:
-        const storage = await getProviderStorage(accountId);
-        const providerSss = new ProviderSSSBase({
-          storage,
-          getPassword: app.getPassword.bind(app),
-          account: accountId,
-        });
-        try {
+    try {
+      switch (type) {
+        case WalletType.mnemonic:
+          const providerMnemonic = new ProviderMnemonicBase({
+            account: accountId,
+            getPassword: app.getPassword.bind(app),
+          });
+          const phraseMnemonic = await providerMnemonic.getMnemonicPhrase();
+          setMnemonic(phraseMnemonic ?? '');
+          break;
+        case WalletType.sss:
+          const storage = await getProviderStorage(accountId);
+          const providerSss = new ProviderSSSBase({
+            storage,
+            getPassword: app.getPassword.bind(app),
+            account: accountId,
+          });
           const phraseSss = await providerSss.getMnemonicPhrase();
           setMnemonic(phraseSss ?? '');
-        } catch (err) {
+          break;
+      }
+    } catch (err) {
+      switch (type) {
+        case WalletType.mnemonic:
+          Logger.captureException(err, 'SettingsViewRecoveryPhrase', {
+            accountId,
+            type,
+          });
+          showError('SettingsViewRecoveryPhrase', (err as Error).message);
+          break;
+        case WalletType.sss:
           showModal(ModalType.cloudShareNotFound);
-          navigation.goBack();
-        }
-        break;
+          break;
+      }
+      navigation.goBack();
     }
   }, [accountId, type]);
 
@@ -64,8 +77,10 @@ export const SettingsViewRecoveryPhraseScreen = memo(() => {
         iconLeft="arrow_back"
         title={I18N.settingsViewRecoveryPhraseTitle}
       />
-      {!mnemonic && <Loading />}
-      {mnemonic && <SettingsViewRecoveryPhrase mnemonic={mnemonic} />}
+      <First>
+        {!mnemonic && <Loading />}
+        <SettingsViewRecoveryPhrase mnemonic={mnemonic} />
+      </First>
     </PinGuardScreen>
   );
 });

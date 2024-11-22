@@ -36,6 +36,7 @@ interface SettingsSecurityProps {
   recoveryPin: string;
   isRecoveryButtonDisabled: boolean;
   blindSignEnabled: boolean;
+  onPressGenerateNewShares: () => void;
   onSubmit: () => void;
   onSssRemove: () => void;
   onToggleBiometry: () => void;
@@ -56,6 +57,7 @@ export const SettingsSecurity = ({
   onRecoveryPress,
   onRecoveryPinChange,
   onToggleBlindSign,
+  onPressGenerateNewShares,
 }: SettingsSecurityProps) => {
   return (
     <View style={page.container}>
@@ -84,9 +86,27 @@ export const SettingsSecurity = ({
         <Spacer />
         <Switch value={blindSignEnabled} onChange={onToggleBlindSign} />
       </MenuNavigationButton>
-      <Spacer height={8} />
+      <MenuNavigationButton onPress={onPressGenerateNewShares}>
+        <DataContent
+          titleI18n={I18N.settingsSecurityRewriteCloudBackup}
+          subtitleI18n={I18N.settingsSecurityRewriteCloudBackupDescription}
+        />
+      </MenuNavigationButton>
+      {/* FIXME: Enable this option into next releases when shares migration will be fixed */}
+      {isFeatureEnabled(Feature.removeSss) && (
+        <MenuNavigationButton onPress={onSssRemove}>
+          <DataContent
+            titleI18n={I18N.deleteSssTitle}
+            titleColor={Color.textRed1}
+            subtitleI18n={I18N.deleteSssDescription}
+            subtitleI18nParams={{walletType: 'Google'}}
+          />
+        </MenuNavigationButton>
+      )}
+      {/* Should be last item */}
       {(app.isTesterMode || app.isDeveloper) && (
         <View>
+          <Spacer height={8} />
           <Spacer height={10} />
           <Text
             variant={TextVariant.t10}
@@ -126,17 +146,6 @@ export const SettingsSecurity = ({
             />
           </First>
         </View>
-      )}
-      {/* FIXME: Enable this option into next releases when shares migration will be fixed */}
-      {isFeatureEnabled(Feature.removeSss) && (
-        <MenuNavigationButton onPress={onSssRemove}>
-          <DataContent
-            titleI18n={I18N.deleteSssTitle}
-            titleColor={Color.textRed1}
-            subtitleI18n={I18N.deleteSssDescription}
-            subtitleI18nParams={{walletType: 'Google'}}
-          />
-        </MenuNavigationButton>
       )}
       <Spacer />
     </View>

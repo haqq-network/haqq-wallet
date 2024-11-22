@@ -1027,6 +1027,8 @@ export enum I18N {
   swapFinishUnwrapComplete = 'swapFinishUnwrapComplete',
   swapFinishWrapComplete = 'swapFinishWrapComplete',
   tronNotSupportedYet = 'tronNotSupportedYet',
+  settingsSecurityRewriteCloudBackup = 'settingsSecurityRewriteCloudBackup',
+  settingsSecurityRewriteCloudBackupDescription = 'settingsSecurityRewriteCloudBackupDescription',
 }
 
 const defaultTranslation = {en};
