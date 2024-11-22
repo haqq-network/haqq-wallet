@@ -14,6 +14,7 @@ import {
   getTronProviderForNewWallet,
 } from '@app/helpers/get-provider-for-new-wallet';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {useError} from '@app/hooks/use-error';
 import {I18N, getText} from '@app/i18n';
 import {AppStore} from '@app/models/app';
 import {Wallet} from '@app/models/wallet';
@@ -33,6 +34,7 @@ import {
 
 export const SignUpStoreWalletScreen = observer(() => {
   const navigation = useTypedNavigation<SignUpStackParamList>();
+  const showError = useError();
   const route = useTypedRoute<
     SignUpStackParamList,
     SignUpStackRoutes.SignupStoreWallet
@@ -96,6 +98,16 @@ export const SignUpStoreWalletScreen = observer(() => {
     setTimeout(async () => {
       try {
         const provider = await getCurrentProvider();
+
+        if (route.params.type === 'sss' && !provider) {
+          Logger.captureException(
+            new Error('sssLimitReached: provider not found'),
+            'createStoreWallet',
+          );
+          showModal(ModalType.sssLimitReached);
+          return goBack();
+        }
+
         const tronProvider = await getTronProviderForNewWallet(
           getWalletType(),
           provider.getIdentifier(),
@@ -148,9 +160,12 @@ export const SignUpStoreWalletScreen = observer(() => {
             ),
           });
         } catch (err) {
+          Logger.captureException(err, 'createStoreWallet');
           if (getWalletType() === WalletType.sss) {
             hideModal('loading');
-            showModal('sssLimitReached');
+            showModal(ModalType.errorCreateAccount);
+            // @ts-ignore
+            showError('createStoreWallet', err.message);
             goBack();
             return;
           } else {
