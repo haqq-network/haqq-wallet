@@ -1,6 +1,8 @@
-import {useEffect} from 'react';
+import {useEffect, useMemo} from 'react';
 
 import {Transaction} from '@app/models/transaction';
+
+import {usePrevious} from './use-previous';
 
 /**
  * @example
@@ -12,9 +14,20 @@ export function useTransactionList(addressList: string[]) {
 
   const isTransactionsLoading = Transaction.isLoading;
 
+  const prev = usePrevious(addressList) ?? [];
+
+  //Deep check addresses to prevent infinity transactions_by_timestamp fetches
+  const addresses = useMemo(
+    () =>
+      addressList.find((address, index) => address !== prev?.[index])
+        ? addressList
+        : prev,
+    [],
+  );
+
   useEffect(() => {
-    Transaction.fetchLatestTransactions(addressList, true);
-  }, [addressList]);
+    Transaction.fetchLatestTransactions(addresses, true);
+  }, [addresses]);
 
   return {transactions, isTransactionsLoading};
 }
