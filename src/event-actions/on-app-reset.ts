@@ -6,6 +6,7 @@ import RNRestart from 'react-native-restart';
 
 import {app} from '@app/contexts';
 import {AppStore} from '@app/models/app';
+import {cleanGoogle} from '@app/helpers/get-google-tokens';
 import {Contact} from '@app/models/contact';
 import {Transaction} from '@app/models/transaction';
 import {VariablesString} from '@app/models/variables-string';
@@ -47,6 +48,7 @@ export async function onAppReset() {
       await EncryptedStorage.setItem('uid', uid);
     }
     app.getUser().resetUserData();
+    cleanGoogle();
   } catch (err) {
     Logger.captureException(err, 'onAppReset');
   } finally {

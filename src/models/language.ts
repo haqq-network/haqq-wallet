@@ -33,7 +33,7 @@ class LanguageStore {
       makePersistable(this, {
         name: this.constructor.name,
         //@ts-ignore
-        properties: ['current', 'keys', 'hash'],
+        properties: ['current', 'hash'],
       });
     }
   }
