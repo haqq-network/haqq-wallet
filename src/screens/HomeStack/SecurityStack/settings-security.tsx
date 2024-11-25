@@ -134,7 +134,17 @@ export const SettingsSecurityScreen = memo(() => {
   const onPressGenerateNewShares = useCallback(async () => {
     const closeLoading = showModal(ModalType.loading);
     try {
-      await generateNewSharesForAll();
+      const hasRestored = await generateNewSharesForAll();
+      if (hasRestored) {
+        vibrate(HapticEffects.success);
+      } else {
+        vibrate(HapticEffects.error);
+        showModal(ModalType.error, {
+          title: getText(I18N.settingsSecurityRewriteCloudBackup),
+          description: getText(I18N.settingsSecurityRewriteCloudBackupNoWallet),
+          close: getText(I18N.pinErrorModalClose),
+        });
+      }
     } catch (error) {
       Logger.captureException(
         error,

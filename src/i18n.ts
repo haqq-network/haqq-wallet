@@ -1029,6 +1029,7 @@ export enum I18N {
   tronNotSupportedYet = 'tronNotSupportedYet',
   settingsSecurityRewriteCloudBackup = 'settingsSecurityRewriteCloudBackup',
   settingsSecurityRewriteCloudBackupDescription = 'settingsSecurityRewriteCloudBackupDescription',
+  settingsSecurityRewriteCloudBackupNoWallet = 'settingsSecurityRewriteCloudBackupNoWallet',
 }
 
 const defaultTranslation = {en};

@@ -1,22 +1,25 @@
 import {ProviderSSSBase} from '@haqq/rn-wallet-providers';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {Alert} from 'react-native';
 
 import {app} from '@app/contexts';
-import {showModal} from '@app/helpers';
 import {decryptLocalShare} from '@app/helpers/decrypt-local-share';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {getMetadataValueWrapped} from '@app/helpers/wrappers/get-metadata-value';
 import {I18N, getText} from '@app/i18n';
-import {ErrorHandler} from '@app/models/error-handler';
 import {IWalletModel, Wallet} from '@app/models/wallet';
 import {onLoginApple, onLoginGoogle} from '@app/services/provider-sss';
 import {RemoteConfig} from '@app/services/remote-config';
-import {ModalType, WalletType} from '@app/types';
+import {WalletType} from '@app/types';
 import {sleep} from '@app/utils';
 import {IS_ANDROID} from '@app/variables/common';
 
 import {hasGoogleToken} from '../get-google-tokens';
 
+/**
+ * @param {IWalletModel} wallet - wallet to restore
+ * restore cloud shares for the wallet
+ */
 export const generateNewSharesForWallet = async (wallet: IWalletModel) => {
   try {
     const getPassword = app.getPassword.bind(app);
@@ -24,7 +27,6 @@ export const generateNewSharesForWallet = async (wallet: IWalletModel) => {
 
     const storage = await getProviderStorage(wallet.accountId as string);
     const storageName = storage.getName();
-    Logger.log('storageName', storageName);
 
     let provider;
     if (IS_ANDROID) {
@@ -62,7 +64,15 @@ export const generateNewSharesForWallet = async (wallet: IWalletModel) => {
         throw new Error('No Wallet Info Detected');
       }
 
-      const localShare = await decryptLocalShare(creds.privateKey, password);
+      const localShare = await decryptLocalShare(
+        creds.privateKey,
+        password,
+        wallet.address,
+      );
+
+      if (!localShare) {
+        throw new Error('No Local Share found on device');
+      }
 
       await ProviderSSSBase.initialize(
         creds.privateKey,
@@ -77,28 +87,29 @@ export const generateNewSharesForWallet = async (wallet: IWalletModel) => {
           metadataUrl: RemoteConfig.get('sss_metadata_url')!,
           generateSharesUrl: RemoteConfig.get('sss_generate_shares_url')!,
         },
-      ).catch(err => {
-        ErrorHandler.handle('sss1X', err);
-      });
+      );
 
       if (wallet?.address) {
         Wallet.update(wallet.address, {socialLinkEnabled: true});
       }
     }
   } catch (err) {
+    Alert.alert(
+      getText(I18N.settingsSecurityRewriteCloudBackup),
+      (err as Error).message,
+    );
     if (wallet?.address) {
       Wallet.update(wallet.address, {socialLinkEnabled: false});
     }
     Logger.captureException(err, 'generateNewSharesForWallet', {
       wallet: wallet,
     });
-    showModal(ModalType.viewErrorDetails, {
-      errorId: getText(I18N.blockRequestErrorTitle),
-      errorDetails: (err as Error).message,
-    });
   }
 };
 
+/**
+ * @returns {boolean} - true if at least one SSS wallet was restored
+ */
 export const generateNewSharesForAll = async () => {
   const restoredWallets: string[] = [];
   for await (const wallet of Wallet.getAll()) {
@@ -111,4 +122,5 @@ export const generateNewSharesForAll = async () => {
       await sleep(1000);
     }
   }
+  return !!restoredWallets.length;
 };
