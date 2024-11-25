@@ -147,17 +147,6 @@ export const SettingsSecurity = ({
           </First>
         </View>
       )}
-      {/* FIXME: Enable this option into next releases when shares migration will be fixed */}
-      {isFeatureEnabled(Feature.removeSss) && (
-        <MenuNavigationButton onPress={onSssRemove}>
-          <DataContent
-            titleI18n={I18N.deleteSssTitle}
-            titleColor={Color.textRed1}
-            subtitleI18n={I18N.deleteSssDescription}
-            subtitleI18nParams={{walletType: 'Google'}}
-          />
-        </MenuNavigationButton>
-      )}
       <Spacer />
     </View>
   );
