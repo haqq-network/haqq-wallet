@@ -8,6 +8,7 @@ import {CustomHeader} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
 import {SecurePinUtils} from '@app/helpers/secure-pin-utils';
+import {generateNewSharesForAll} from '@app/helpers/sss/generate-new-shares';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
@@ -130,6 +131,30 @@ export const SettingsSecurityScreen = memo(() => {
     });
   }, [navigation]);
 
+  const onPressGenerateNewShares = useCallback(async () => {
+    const closeLoading = showModal(ModalType.loading);
+    try {
+      const hasRestored = await generateNewSharesForAll();
+      if (hasRestored) {
+        vibrate(HapticEffects.success);
+      } else {
+        vibrate(HapticEffects.error);
+        showModal(ModalType.error, {
+          title: getText(I18N.settingsSecurityRewriteCloudBackup),
+          description: getText(I18N.settingsSecurityRewriteCloudBackupNoWallet),
+          close: getText(I18N.pinErrorModalClose),
+        });
+      }
+    } catch (error) {
+      Logger.captureException(
+        error,
+        'SettingsSecurity.onPressGenerateNewShares',
+      );
+    } finally {
+      closeLoading();
+    }
+  }, []);
+
   return (
     <PinGuardScreen enabled title={I18N.settingsSecurity}>
       <CustomHeader
@@ -149,6 +174,7 @@ export const SettingsSecurityScreen = memo(() => {
         onRecoveryPinChange={onRecoveryPinChange}
         blindSignEnabled={blindSignEnabled}
         onToggleBlindSign={onToggleBlindSign}
+        onPressGenerateNewShares={onPressGenerateNewShares}
       />
     </PinGuardScreen>
   );
