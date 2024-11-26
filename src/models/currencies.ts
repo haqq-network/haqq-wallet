@@ -8,6 +8,7 @@ import {Wallet} from '@app/models/wallet';
 import {Backend} from '@app/services/backend';
 import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
+import {storage} from '@app/services/mmkv';
 import {RemoteConfig} from '@app/services/remote-config';
 import {ChainId, RatesResponse} from '@app/types';
 import {createAsyncTask} from '@app/utils';
@@ -32,6 +33,7 @@ class CurrenciesStore {
         name: this.constructor.name,
         //@ts-ignore
         properties: ['_currencies', '_selectedCurrency'],
+        storage,
       }).finally(() => runInAction(() => (this._isInited = true)));
     } else {
       runInAction(() => (this._isInited = true));

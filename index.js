@@ -17,21 +17,6 @@ import {App} from './src/app';
 import './src/event-actions';
 import {Jailbreak} from './src/jailbreak';
 import {Language} from '@app/models/language';
-import {configurePersistable} from 'mobx-persist-store';
-import {MMKV} from 'react-native-mmkv';
-
-const instance = new MMKV({
-  id: 'mmkv-storage',
-  encryptionKey: Config.MMKV_KEY,
-});
-
-export const storage = {
-  setItem: (key, data) => instance.set(key, data),
-  getItem: key => instance.getString(key) || null,
-  removeItem: key => instance.delete(key),
-};
-
-configurePersistable({storage});
 
 LogBox.ignoreAllLogs();
 if (!global.BigInt) {
