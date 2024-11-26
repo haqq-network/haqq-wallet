@@ -172,16 +172,6 @@ export const realm = new Realm({
       const oldUserObjects = oldRealm.objects('User');
       const newUserObjects = newRealm.objects<{onboarded?: boolean}>('User');
 
-      logger.log({
-        oldVariablesBoolObjects: oldVariablesBoolObjects.toJSON(),
-        newVariablesBoolObjects: newVariablesBoolObjects.toJSON(),
-      });
-
-      logger.log({
-        oldUserObjects: oldUserObjects.toJSON(),
-        newUserObjects: newUserObjects.toJSON(),
-      });
-
       let onboardedObject = -1;
       for (const objectIndex in oldVariablesBoolObjects) {
         const newObject = newVariablesBoolObjects[objectIndex];
@@ -200,6 +190,16 @@ export const realm = new Realm({
         const newObject = newUserObjects[objectIndex];
         delete newObject.onboarded;
       }
+
+      logger.log({
+        oldVariablesBoolObjects: oldVariablesBoolObjects.toJSON(),
+        newVariablesBoolObjects: newVariablesBoolObjects.toJSON(),
+      });
+
+      logger.log({
+        oldUserObjects: oldUserObjects.toJSON(),
+        newUserObjects: newUserObjects.toJSON(),
+      });
     }
 
     logger.log('realm migration finished');
