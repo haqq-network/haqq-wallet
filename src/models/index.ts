@@ -164,9 +164,10 @@ export const realm = new Realm({
     if (oldRealm.schemaVersion < 74) {
       logger.log('migration step #7');
       const oldVariablesBoolObjects = oldRealm.objects('VariablesBool');
-      const newVariablesBoolObjects = newRealm.objects<{onboarded?: boolean}>(
-        'VariablesBool',
-      );
+      const newVariablesBoolObjects = newRealm.objects<{
+        id: string;
+        value: boolean;
+      }>('VariablesBool');
 
       const oldUserObjects = oldRealm.objects('User');
       const newUserObjects = newRealm.objects<{onboarded?: boolean}>('User');
@@ -181,14 +182,18 @@ export const realm = new Realm({
         newUserObjects: newUserObjects.toJSON(),
       });
 
+      let onboardedObject = -1;
       for (const objectIndex in oldVariablesBoolObjects) {
         const newObject = newVariablesBoolObjects[objectIndex];
 
-        if (newObject.onboarded) {
-          AppStore.isOnboarded = newObject.onboarded;
+        if (newObject.id === 'onboarded') {
+          AppStore.isOnboarded = newObject.value;
+          onboardedObject = objectIndex as never as number;
         }
+      }
 
-        delete newObject.onboarded;
+      if (onboardedObject !== -1) {
+        newVariablesBoolObjects.slice(onboardedObject, onboardedObject + 1);
       }
 
       for (const objectIndex in oldUserObjects) {

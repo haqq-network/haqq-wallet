@@ -23,7 +23,6 @@ export const UserSchema = {
     language: 'string',
     biometry: 'bool',
     bluetooth: 'bool?',
-    onboarded: 'bool?',
     snoozeBackup: 'date?',
     pinAttempts: 'int?',
     pinBanned: 'date?',
@@ -44,7 +43,6 @@ export type UserType = {
   pinAttempts: number | null;
   pinBanned: Date | null;
   bluetooth: boolean | null;
-  onboarded: boolean | null;
   providerId: string;
   theme: AppTheme;
   notifications: boolean | null;
