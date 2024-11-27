@@ -85,45 +85,25 @@ class RNCloud: NSObject {
 
   @objc
   public func setItem(_ key: String, value: String, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
-    print("[javascript][RNCloud::setItem] Starting setItem with key: \(key), value length: \(value.count)")
-    
     guard isCloudEnabled else {
-      print("[javascript][RNCloud::setItem] Cloud is not enabled, rejecting")
       reject("0", "[RNCloud::setItem] Cloud is not enabled", nil)
       return
     }
     
-    print("[javascript][RNCloud::setItem] Cloud is enabled, proceeding")
-    print("[javascript][RNCloud::setItem] Calling ensureFileLoaded for key: \(key)")
     ensureFileLoaded(key)
     
-    print("[javascript][RNCloud::setItem] Getting iCloud documents URL")
     let nestedFolderURL = DocumentsDirectory.iCloudDocumentsURL!
-    print("[javascript][RNCloud::setItem] iCloud documents URL: \(nestedFolderURL.path)")
     
     let fileUrl = nestedFolderURL.appendingPathComponent(key)
-    print("[javascript][RNCloud::setItem] Target file URL: \(fileUrl.path)")
-    
     do {
       if self.fileManager.fileExists(atPath: fileUrl.path) {
-        print("[javascript][RNCloud::setItem] Existing file found at path, removing")
         try self.fileManager.removeItem(at: fileUrl)
-        print("[javascript][RNCloud::setItem] Successfully removed existing file")
-      } else {
-        print("[javascript][RNCloud::setItem] No existing file found at path")
       }
       
-      print("[javascript][RNCloud::setItem] Writing new value to file")
       try value.write(to: fileUrl, atomically: false, encoding: .utf8)
-      print("[javascript][RNCloud::setItem] Successfully wrote value to file")
-      
-      print("[javascript][RNCloud::setItem] Operation completed successfully")
       resolve(true)
     }
     catch {
-      print("[javascript][RNCloud::setItem] Error occurred: \(error.localizedDescription)")
-      print("[javascript][RNCloud::setItem] Error domain: \((error as NSError).domain)")
-      print("[javascript][RNCloud::setItem] Error code: \((error as NSError).code)")
       reject("0", "setItem \(error)", nil)
     }
   }
@@ -146,60 +126,31 @@ class RNCloud: NSObject {
   }
   
   func ensureFileLoaded(_ key: String) {
-    print("[javascript][RNCloud::ensureFileLoaded] Starting with key: \(key)")
-    
     let nestedFolderURL = DocumentsDirectory.iCloudDocumentsURL!
-    print("[javascript][RNCloud::ensureFileLoaded] iCloud documents URL: \(nestedFolderURL.path)")
-    
     let fileUrl = nestedFolderURL.appendingPathComponent(key)
-    print("[javascript][RNCloud::ensureFileLoaded] Target file URL: \(fileUrl.path)")
     
     do {
-      print("[javascript][RNCloud::ensureFileLoaded] Attempting to create directory at: \(nestedFolderURL.path)")
-      try fileManager.createDirectory(atPath: nestedFolderURL.path, withIntermediateDirectories: true)
-      print("[javascript][RNCloud::ensureFileLoaded] Successfully created directory")
-    } catch let error {
-      print("[javascript][RNCloud::ensureFileLoaded] Error creating directory: \(error.localizedDescription)")
-      print("[javascript][RNCloud::ensureFileLoaded] Error domain: \((error as NSError).domain)")
-      print("[javascript][RNCloud::ensureFileLoaded] Error code: \((error as NSError).code)")
+      try fileManager.createDirectory(atPath: nestedFolderURL.path, withIntermediateDirectories: true);
+    } catch {
     }
-    
-    print("[javascript][RNCloud::ensureFileLoaded] Checking if file exists at: \(fileUrl.path)")
     if fileManager.fileExists(atPath: fileUrl.path) == true {
-      print("[javascript][RNCloud::ensureFileLoaded] File already exists, returning")
-      return
+        return
     }
-    print("[javascript][RNCloud::ensureFileLoaded] File does not exist locally")
     
     let cloudFileUrl = nestedFolderURL.appendingPathComponent(".\(key).icloud")
-    print("[javascript][RNCloud::ensureFileLoaded] Checking for iCloud file at: \(cloudFileUrl.path)")
 
     if fileManager.fileExists(atPath: cloudFileUrl.path) == false {
-      print("[javascript][RNCloud::ensureFileLoaded] iCloud file does not exist, returning")
       return
     }
-    print("[javascript][RNCloud::ensureFileLoaded] Found iCloud file")
     
     do {
-      print("[javascript][RNCloud::ensureFileLoaded] Starting download of ubiquitous item from: \(cloudFileUrl.path)")
       try fileManager.startDownloadingUbiquitousItem(at: cloudFileUrl)
-      print("[javascript][RNCloud::ensureFileLoaded] Successfully initiated download")
-    } catch let error {
-      print("[javascript][RNCloud::ensureFileLoaded] Error starting download: \(error.localizedDescription)")
-      print("[javascript][RNCloud::ensureFileLoaded] Error domain: \((error as NSError).domain)")
-      print("[javascript][RNCloud::ensureFileLoaded] Error code: \((error as NSError).code)")
+    } catch {
     }
     
     let startingTime = Date()
-    print("[javascript][RNCloud::ensureFileLoaded] Starting wait loop at: \(startingTime)")
-    
-    while (!fileManager.fileExists(atPath: fileUrl.path) && (Date().timeIntervalSince(startingTime) < 5)) {
-      print("[javascript][RNCloud::ensureFileLoaded] Waiting for file to appear at: \(fileUrl.path)")
-      print("[javascript][RNCloud::ensureFileLoaded] Time elapsed: \(Date().timeIntervalSince(startingTime)) seconds")
-    }
-    
-    print("[javascript][RNCloud::ensureFileLoaded] Finished waiting. File exists: \(fileManager.fileExists(atPath: fileUrl.path))")
-    print("[javascript][RNCloud::ensureFileLoaded] Total time taken: \(Date().timeIntervalSince(startingTime)) seconds")
+    while (!fileManager.fileExists(atPath: fileUrl.path) && (Date().timeIntervalSince(startingTime) < 5)) { }
+
     return
   }
 }

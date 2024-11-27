@@ -6,7 +6,7 @@ import {SettingsViewRecoveryPhrase} from '@app/components/settings/settings-view
 import {CustomHeader, First, Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
-import {getProviderStorage} from '@app/helpers/get-provider-storage';
+import {getProviderStorage} from '@app/helpers/sss';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useError} from '@app/hooks/use-error';
 import {I18N} from '@app/i18n';

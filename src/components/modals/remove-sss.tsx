@@ -1,10 +1,10 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {accountInfo} from '@haqq/provider-web3-utils';
 import {constants} from '@haqq/rn-wallet-providers';
 import {jsonrpcRequest} from '@haqq/shared-react-native';
 import {observer} from 'mobx-react';
-import {Alert, Image, Platform, View} from 'react-native';
+import {Alert, Image, View} from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
 import {Color} from '@app/colors';
@@ -12,17 +12,21 @@ import {BottomPopupContainer} from '@app/components/bottom-popups';
 import {
   Button,
   ButtonVariant,
+  Loading,
   Spacer,
   Text,
   TextPosition,
   TextVariant,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {getProviderStorage} from '@app/helpers/get-provider-storage';
+import {
+  getProviderStorage,
+  getSocialLoginProviderForWallet,
+} from '@app/helpers/sss';
 import {I18N, getText} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {Creds, onLoginApple, onLoginGoogle} from '@app/services/provider-sss';
+import {Creds} from '@app/services/provider-sss';
 import {
   ShareCreateResponse,
   SharesResponse,
@@ -31,18 +35,21 @@ import {RemoteConfig} from '@app/services/remote-config';
 import {ModalType, Modals, WalletType} from '@app/types';
 
 export const RemoveSSS = observer(
-  ({onClose, accountID, provider}: Modals[ModalType.removeSSS]) => {
+  ({onClose, accountId, provider}: Modals[ModalType.removeSSS]) => {
     const [isLoading, setLoading] = useState(false);
     useEffect(() => {
       vibrate(HapticEffects.warning);
     }, []);
 
-    const ProviderAction = useMemo(() => {
-      if (Platform.OS === 'android') {
-        return onLoginGoogle;
+    const [ProviderAction, setProviderAction] = useState<
+      (() => Promise<Creds | null>) | null
+    >(null);
+
+    useEffect(() => {
+      if (!ProviderAction) {
+        getSocialLoginProviderForWallet({accountId}).then(setProviderAction);
       }
-      return provider === 'cloud' ? onLoginApple : onLoginGoogle;
-    }, [provider]);
+    }, [provider, accountId]);
 
     const removeChainShare = async (creds: Creds) => {
       try {
@@ -76,8 +83,8 @@ export const RemoveSSS = observer(
 
     const removeCloudShare = async () => {
       try {
-        const storage = await getProviderStorage(accountID, provider);
-        const shareKey = `haqq_${accountID.toLowerCase()}`;
+        const storage = await getProviderStorage(accountId, provider);
+        const shareKey = `haqq_${accountId.toLowerCase()}`;
         await storage.removeItem(shareKey).catch(err => {
           if (err instanceof Error) {
             Logger.warn('Remove SSS Remove Error:', err.message);
@@ -92,6 +99,9 @@ export const RemoveSSS = observer(
 
     const onPressDelete = async (close: () => void) => {
       try {
+        if (!ProviderAction) {
+          return;
+        }
         setLoading(true);
         const creds = await ProviderAction();
 
@@ -162,6 +172,10 @@ export const RemoveSSS = observer(
       },
       [onClose],
     );
+
+    if (!ProviderAction) {
+      return <Loading />;
+    }
 
     return (
       <BottomPopupContainer>

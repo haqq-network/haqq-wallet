@@ -3,7 +3,7 @@ import {isAfter} from 'date-fns';
 
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
-import {getProviderStorage} from '@app/helpers/get-provider-storage';
+import {getProviderStorage} from '@app/helpers/sss';
 import {Wallet} from '@app/models/wallet';
 import {Cloud} from '@app/services/cloud';
 import {WalletType} from '@app/types';
