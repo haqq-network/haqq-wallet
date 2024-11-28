@@ -14,7 +14,6 @@ import {AddressUtils} from '@app/helpers/address-utils';
 import {useTypedNavigation} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {I18N} from '@app/i18n';
-import {Contact} from '@app/models/contact';
 import {Provider} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {Wallet} from '@app/models/wallet';
@@ -26,7 +25,6 @@ import {NetworkProviderTypes} from '@app/services/backend';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {ModalType} from '@app/types';
 
-import {TransactionAddressAddContact} from './transaction-address-add-contact';
 import {TransactionAddressContactList} from './transaction-address-contact-list';
 import {TransactionAddressInput} from './transaction-address-input';
 import {TransactionAddressWalletList} from './transaction-address-wallet-list';
@@ -52,65 +50,6 @@ export const TransactionAddressScreen = observer(() => {
   const fromWallet = useMemo(() => Wallet.getById(fromAddress)!, [fromAddress]);
 
   const [loading, setLoading] = React.useState(false);
-
-  const filteredWallets = useMemo(() => {
-    const wallets = Wallet.getAllVisible();
-
-    if (!wallets?.length) {
-      return [];
-    }
-    const isTron = Provider.selectedProvider.isTron;
-
-    if (!toAddress && fromAddress) {
-      return wallets.filter(w => {
-        if (isTron && !w.isSupportTron) {
-          return false;
-        }
-        return !AddressUtils.equals(w.address, fromAddress);
-      });
-    }
-
-    const lowerCaseAddress = toAddress.toLowerCase();
-
-    return wallets.filter(w => {
-      if (isTron && !w.isSupportTron) {
-        return false;
-      }
-      return (
-        (w.address.toLowerCase().includes(lowerCaseAddress) ||
-          w.tronAddress?.toLowerCase?.()?.includes?.(lowerCaseAddress) ||
-          w.cosmosAddress.toLowerCase().includes(lowerCaseAddress) ||
-          w.name.toLowerCase().includes(lowerCaseAddress)) &&
-        !AddressUtils.equals(w.address, fromAddress)
-      );
-    });
-  }, [toAddress, fromAddress]);
-
-  const filteredContacts = useMemo(() => {
-    const contacts = Contact.getAll();
-
-    if (!contacts?.length) {
-      return [];
-    }
-
-    if (!toAddress) {
-      return contacts.filter(c => !AddressUtils.equals(c.account, fromAddress));
-    }
-
-    const lowerCaseAddress = toAddress.toLowerCase();
-
-    return contacts.filter(c => {
-      const hexAddress = AddressUtils.toEth(c.account);
-      const haqqAddress = AddressUtils.toHaqq(hexAddress);
-
-      return (
-        (hexAddress.includes(lowerCaseAddress) ||
-          haqqAddress.includes(lowerCaseAddress) ||
-          c.name?.toLowerCase().includes(lowerCaseAddress)) &&
-        !AddressUtils.equals(hexAddress, fromAddress)
-      );
-    });
-  }, [toAddress, fromAddress]);
 
   const onDone = useCallback(
     async (result: string) => {
@@ -200,21 +139,8 @@ export const TransactionAddressScreen = observer(() => {
         setIsError={setIsError}
         onDone={onDone}
       />
-      {Boolean(filteredWallets.length) && (
-        <TransactionAddressWalletList
-          wallets={filteredWallets}
-          onPress={onPressAddress}
-        />
-      )}
-      {Boolean(filteredContacts.length) && (
-        <TransactionAddressContactList
-          contacts={filteredContacts}
-          onPress={onPressAddress}
-        />
-      )}
-      {AddressUtils.isValidAddress(toAddress) && !filteredContacts.length && (
-        <TransactionAddressAddContact address={toAddress} />
-      )}
+      <TransactionAddressWalletList onPress={onPressAddress} />
+      <TransactionAddressContactList onPress={onPressAddress} />
       <Spacer flex={1} />
       <Button
         disabled={doneDisabled}

@@ -1,6 +1,3 @@
-import {Contact} from '@app/models/contact';
-import {WalletModel} from '@app/models/wallet';
-
 export type TransactionAddressInputProps = {
   isError: boolean;
   setIsError: (isError: boolean) => void;
@@ -11,12 +8,10 @@ export type TransactionAddressInputProps = {
 };
 
 export type TransactionAddressWalletListProps = {
-  wallets: WalletModel[];
   onPress: (address: string) => void;
 };
 
 export type TransactionAddressContactListProps = {
-  contacts: Contact[];
   onPress: (address: string) => void;
 };
 
