@@ -103,7 +103,7 @@ export const TransactionAddressScreen = observer(() => {
         setLoading(false);
       }
     },
-    [navigation, /* nft, token, */ fromAddress],
+    [navigation, nft, token, fromAddress],
   );
 
   const doneDisabled = useMemo(() => {
