@@ -19,8 +19,10 @@ export const decryptLocalShare = async (
     const shareStore = await decryptShare(JSON.parse(_value || ''), password);
 
     return JSON.stringify(shareStore);
-  } catch (error) {
-    // fallback to decrypt share for specific address
+  } catch (error) {}
+
+  // fallback to decrypt share for specific address
+  try {
     if (address) {
       const _value = await EncryptedStorage.getItem(
         `${
@@ -31,6 +33,7 @@ export const decryptLocalShare = async (
 
       return JSON.stringify(shareStore);
     }
-    return null;
-  }
+  } catch (error) {}
+
+  return null;
 };

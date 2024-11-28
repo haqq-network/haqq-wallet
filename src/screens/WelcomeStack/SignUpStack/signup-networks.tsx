@@ -7,9 +7,9 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 
 import {SignupNetworks} from '@app/components/signup-networks';
 import {app} from '@app/contexts';
-import {getProviderStorage} from '@app/helpers/get-provider-storage';
+import {getProviderStorage} from '@app/helpers';
+import {getMetadataValueWrapped} from '@app/helpers/sss';
 import {verifyCloud} from '@app/helpers/verify-cloud';
-import {getMetadataValueWrapped} from '@app/helpers/wrappers/get-metadata-value';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {ErrorHandler} from '@app/models/error-handler';
