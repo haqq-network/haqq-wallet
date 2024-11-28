@@ -1,8 +1,9 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {accountInfo} from '@haqq/provider-web3-utils';
-import {constants} from '@haqq/rn-wallet-providers';
-import {jsonrpcRequest} from '@haqq/shared-react-native';
+import {ProviderMnemonicBase, ProviderSSSBase} from '@haqq/rn-wallet-providers';
+import {encryptShare, jsonrpcRequest} from '@haqq/shared-react-native';
+import {mnemonicToEntropy} from 'bip39';
 import {observer} from 'mobx-react';
 import {Alert, Image, Platform, View} from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
@@ -17,9 +18,12 @@ import {
   TextPosition,
   TextVariant,
 } from '@app/components/ui';
+import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
+import {decryptLocalShare} from '@app/helpers/decrypt-local-share';
 import {getProviderStorage} from '@app/helpers/get-provider-storage';
 import {I18N, getText} from '@app/i18n';
+import {ErrorHandler} from '@app/models/error-handler';
 import {Wallet} from '@app/models/wallet';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {Creds, onLoginApple, onLoginGoogle} from '@app/services/provider-sss';
@@ -102,22 +106,63 @@ export const RemoveSSS = observer(
             return;
           }
 
+          const storage = await getProviderStorage('', provider);
+          const getPassword = app.getPassword.bind(app);
+          const password = await getPassword();
+
           Wallet.getAll().forEach(async wallet => {
             if (wallet.type === WalletType.sss) {
-              const account = await accountInfo(creds.privateKey as string);
-              const share = await EncryptedStorage.getItem(
-                `${
-                  constants.ITEM_KEYS[constants.WalletType.sss]
-                }_${account.address.toLowerCase()}`,
+              const localShare = await decryptLocalShare(
+                creds.privateKey!,
+                password,
+                wallet.address,
               );
+
+              const sssProvider = await ProviderSSSBase.initialize(
+                creds.privateKey,
+                null,
+                localShare,
+                null,
+                creds.verifier,
+                creds.token,
+                getPassword,
+                storage,
+                {
+                  metadataUrl: RemoteConfig.get('sss_metadata_url')!,
+                  generateSharesUrl: RemoteConfig.get(
+                    'sss_generate_shares_url',
+                  )!,
+                },
+              ).catch(err => ErrorHandler.handle('sss5Y', err));
+
+              const mnemonic = await sssProvider!.getMnemonicPhrase();
+              let entropy = mnemonicToEntropy(mnemonic);
+              if (entropy.startsWith('0x')) {
+                entropy = entropy.slice(2);
+              }
+
+              if (entropy.startsWith(''.padStart(64, '0'))) {
+                entropy = entropy.slice(64);
+              }
+
+              ProviderMnemonicBase.initialize(mnemonic, getPassword, {});
+
+              const share = await encryptShare(
+                {
+                  share: entropy.padStart(64, '0'),
+                  shareIndex: entropy.length.toString(),
+                  polynomialID: '0',
+                },
+                await getPassword(),
+              );
+
               if (share) {
                 await EncryptedStorage.setItem(
-                  `mnemonic_${wallet.accountId}`,
-                  share,
+                  `mnemonic_${wallet.accountId?.toLowerCase()}`,
+                  JSON.stringify(share),
                 );
               }
               Wallet.update(wallet.address, {
-                socialLinkEnabled: false,
                 type: WalletType.mnemonic,
               });
             }

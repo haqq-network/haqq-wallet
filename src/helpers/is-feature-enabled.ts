@@ -23,7 +23,7 @@ export const isFeatureEnabled = (feature: Feature): boolean => {
     case Feature.rtl:
       return false;
     case Feature.removeSss:
-      return false;
+      return true;
     default:
       return false;
   }
