@@ -4,7 +4,7 @@ import {
   ProviderSSSTron,
 } from '@haqq/rn-wallet-providers';
 
-import {getProviderStorage} from '@app/helpers/get-provider-storage';
+import {getProviderStorage} from '@app/helpers/sss';
 import {ETH_COIN_TYPE, TRON_COIN_TYPE} from '@app/variables/common';
 
 import {Wallet, WalletModel} from './wallet';

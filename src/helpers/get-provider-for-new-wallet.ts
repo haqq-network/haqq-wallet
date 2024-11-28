@@ -7,7 +7,7 @@ import {
 } from '@haqq/rn-wallet-providers';
 
 import {app} from '@app/contexts';
-import {getProviderStorage} from '@app/helpers/get-provider-storage';
+import {getProviderStorage} from '@app/helpers/sss';
 import {AppStore} from '@app/models/app';
 import {ErrorHandler} from '@app/models/error-handler';
 import {RemoteConfig} from '@app/services/remote-config';

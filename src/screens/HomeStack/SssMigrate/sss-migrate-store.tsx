@@ -7,7 +7,7 @@ import {observer} from 'mobx-react';
 
 import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers';
-import {getProviderStorage} from '@app/helpers/get-provider-storage';
+import {getProviderStorage} from '@app/helpers/sss';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
 import {ErrorHandler} from '@app/models/error-handler';

@@ -238,7 +238,7 @@ const getTestModals = (): TestModals => {
       details: 'test error',
     },
     removeSSS: {
-      accountID: '',
+      accountId: '',
       onClose: () => logger.log('removeSSS closed'),
       provider: 'cloud',
     },
