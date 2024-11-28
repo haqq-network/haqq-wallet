@@ -141,6 +141,7 @@ export const TransactionAddressInput = observer(
 const styles = createTheme({
   input: {
     marginBottom: 20,
+    flex: 1,
   },
   inputButtonContainer: {
     flexDirection: 'row',

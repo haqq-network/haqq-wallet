@@ -6,10 +6,11 @@ import {Color} from '@app/colors';
 import {DataContent, Icon, IconsName, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {ALL_NETWORKS_CHAIN_ID, ProviderModel} from '@app/models/provider';
+import {ChainId} from '@app/types';
 
 export type SettingsProvidersAllNetworksRowProps = {
   item: ProviderModel;
-  providerChainId: number;
+  providerChainId: ChainId;
   onPress: (providerChainId: number) => void;
 };
 export const SettingsProvidersAllNetworksRow = ({
