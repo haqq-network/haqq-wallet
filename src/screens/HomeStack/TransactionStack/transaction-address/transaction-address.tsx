@@ -12,7 +12,7 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
-import {useTypedNavigation} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
@@ -35,6 +35,10 @@ const logger = Logger.create('TransactionAddressScreen');
 const testID = 'transaction_address';
 
 export const TransactionAddressScreen = observer(() => {
+  const {nft, token} = useTypedRoute<
+    TransactionStackParamList,
+    TransactionStackRoutes.TransactionAddress
+  >().params;
   const navigation = useTypedNavigation<TransactionStackParamList>();
   useAndroidBackHandler(() => {
     navigation.goBack();
@@ -63,14 +67,14 @@ export const TransactionAddressScreen = observer(() => {
           return navigation.navigate(
             TransactionStackRoutes.TransactionNftConfirmation,
             {
-              from: converter(from),
+              from: converter(fromAddress),
               to: converter(result),
               nft,
             },
           );
         } else if (token) {
           return navigation.navigate(TransactionStackRoutes.TransactionSum, {
-            from: converter(from),
+            from: converter(fromAddress),
             to: converter(result),
             token,
           });
