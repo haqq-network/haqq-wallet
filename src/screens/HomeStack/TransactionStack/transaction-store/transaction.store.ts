@@ -1,6 +1,7 @@
 import {makeAutoObservable} from 'mobx';
 
-import {IToken} from '@app/types';
+import {Provider} from '@app/models/provider';
+import {ChainId, IToken} from '@app/types';
 
 import {TransactionParcicipant} from './transaction-store.types';
 
@@ -19,14 +20,16 @@ class TransactionStore {
     };
     this.to = {
       address: to ?? '',
-      chain_id: token?.chain_id,
+      chain_id: Provider.selectedProvider.ethChainId,
     };
   };
 
+  // from options
   get fromAddress() {
     return this.from?.address!;
   }
 
+  // to options
   get toAddress() {
     return this.to?.address ?? '';
   }
@@ -34,6 +37,18 @@ class TransactionStore {
     this.to = {
       ...(this.to ?? {}),
       address,
+    };
+  }
+
+  get toChainId() {
+    return this.to?.chain_id;
+  }
+  set toChainId(chain_id: ChainId | undefined) {
+    this.to = {
+      ...(this.to ?? {
+        address: '',
+      }),
+      chain_id,
     };
   }
 

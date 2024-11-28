@@ -6,7 +6,7 @@ import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
-import {Text} from './text';
+import {Text, TextVariant} from './text';
 
 export enum LabelBlockVariant {
   default = 'default',
@@ -61,12 +61,13 @@ export const LabeledBlock = ({
       {!!leftAction && <View style={styles.leftAction}>{leftAction}</View>}
       <View style={styles.flex}>
         {(label || i18nLabel) && (
-          <>
-            {/* @ts-expect-error */}
-            <Text t14 i18n={i18nLabel} color={placeholderColor}>
-              {label}
-            </Text>
-          </>
+          // @ts-expect-error
+          <Text
+            variant={TextVariant.t14}
+            i18n={i18nLabel}
+            color={placeholderColor}>
+            {label}
+          </Text>
         )}
         <View style={styles.inner}>{children}</View>
       </View>

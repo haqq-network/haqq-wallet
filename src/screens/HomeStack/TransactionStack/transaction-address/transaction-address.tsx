@@ -1,6 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
 import {observer} from 'mobx-react';
+import {View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {
@@ -27,6 +28,7 @@ import {ModalType} from '@app/types';
 
 import {TransactionAddressContactList} from './transaction-address-contact-list';
 import {TransactionAddressInput} from './transaction-address-input';
+import {TransactionAddressNetwork} from './transaction-address-network';
 import {TransactionAddressWalletList} from './transaction-address-wallet-list';
 
 import {TransactionStore} from '../transaction-store';
@@ -133,12 +135,16 @@ export const TransactionAddressScreen = observer(() => {
 
   return (
     <KeyboardSafeArea style={styles.keyboardAvoidingView}>
-      <TransactionAddressInput
-        testID={testID}
-        isError={isError}
-        setIsError={setIsError}
-        onDone={onDone}
-      />
+      <View style={styles.inputArea}>
+        <TransactionAddressInput
+          testID={testID}
+          isError={isError}
+          setIsError={setIsError}
+          onDone={onDone}
+        />
+        <Spacer width={8} />
+        <TransactionAddressNetwork />
+      </View>
       <TransactionAddressWalletList onPress={onPressAddress} />
       <TransactionAddressContactList onPress={onPressAddress} />
       <Spacer flex={1} />
@@ -159,5 +165,9 @@ const styles = createTheme({
   keyboardAvoidingView: {
     flex: 1,
     paddingHorizontal: 20,
+  },
+  inputArea: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });

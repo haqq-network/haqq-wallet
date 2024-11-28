@@ -1111,7 +1111,7 @@ export type Modals = {
     onClose?: () => void;
     title: I18N;
     providers?: ProviderModel[];
-    initialProviderChainId: number;
+    initialProviderChainId: ChainId;
     disableAllNetworksOption?: boolean;
     closeDistance?: () => number;
     eventSuffix?: string;
