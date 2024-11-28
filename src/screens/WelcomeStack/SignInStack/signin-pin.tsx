@@ -5,7 +5,7 @@ import {observer} from 'mobx-react';
 import {PinInterface} from '@app/components/pin';
 import {SssPin} from '@app/components/sss-pin';
 import {app} from '@app/contexts';
-import {decryptLocalShare} from '@app/helpers/decrypt-local-share';
+import {decryptLocalShare} from '@app/helpers/sss';
 import {SssError} from '@app/helpers/sss-error';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';

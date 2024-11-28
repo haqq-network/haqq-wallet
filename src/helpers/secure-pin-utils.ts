@@ -13,8 +13,8 @@ import {WalletType} from '@app/types';
 import {ETH_COIN_TYPE, TRON_COIN_TYPE} from '@app/variables/common';
 
 import {AddressUtils} from './address-utils';
-import {getProviderStorage} from './get-provider-storage';
 import {getUid} from './get-uid';
+import {getProviderStorage} from './sss';
 
 const PIN_CHANGED_PROVIDERS = 'pin-changed-providers';
 const NEW_PIN_KEY = 'new-pin-tepm-cache';

@@ -124,7 +124,7 @@ export const SettingsSecurityScreen = memo(() => {
             ? 'cloud'
             : 'googleDrive';
         showModal(ModalType.removeSSS, {
-          accountID,
+          accountId: accountID,
           provider,
         });
       }
