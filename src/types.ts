@@ -1156,7 +1156,7 @@ export type Modals = {
   };
   removeSSS: {
     onClose?: () => void;
-    accountID: string;
+    accountId: string;
     provider: 'cloud' | 'googleDrive';
   };
   popupNotification: {

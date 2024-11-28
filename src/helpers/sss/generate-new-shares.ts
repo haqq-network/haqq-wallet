@@ -1,20 +1,17 @@
 import {ProviderSSSBase} from '@haqq/rn-wallet-providers';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {Alert} from 'react-native';
 
 import {app} from '@app/contexts';
-import {decryptLocalShare} from '@app/helpers/decrypt-local-share';
-import {getProviderStorage} from '@app/helpers/get-provider-storage';
-import {getMetadataValueWrapped} from '@app/helpers/wrappers/get-metadata-value';
 import {I18N, getText} from '@app/i18n';
 import {IWalletModel, Wallet} from '@app/models/wallet';
-import {onLoginApple, onLoginGoogle} from '@app/services/provider-sss';
 import {RemoteConfig} from '@app/services/remote-config';
 import {WalletType} from '@app/types';
 import {sleep} from '@app/utils';
-import {IS_ANDROID} from '@app/variables/common';
 
-import {hasGoogleToken} from '../get-google-tokens';
+import {decryptLocalShare} from './decrypt-local-share';
+import {getMetadataValueWrapped} from './get-metadata-value';
+import {getProviderStorage} from './get-provider-storage';
+import {getSocialLoginProviderForWallet} from './get-social-login-provider-for-wallet';
 
 /**
  * @param {IWalletModel} wallet - wallet to restore
@@ -26,27 +23,8 @@ export const generateNewSharesForWallet = async (wallet: IWalletModel) => {
     const password = await getPassword();
 
     const storage = await getProviderStorage(wallet.accountId as string);
-    const storageName = storage.getName();
 
-    let provider;
-    if (IS_ANDROID) {
-      provider = onLoginGoogle;
-    } else {
-      // try to check if google token is available
-      let isGoogleSignedIn = false;
-      let isGoogleTokenAvailable = false;
-      try {
-        isGoogleSignedIn = await GoogleSignin.isSignedIn();
-      } catch (error) {
-        isGoogleTokenAvailable = await hasGoogleToken();
-      }
-      const isGoogle =
-        storageName.includes('google') ||
-        isGoogleSignedIn ||
-        isGoogleTokenAvailable;
-
-      provider = isGoogle ? onLoginGoogle : onLoginApple;
-    }
+    const provider = await getSocialLoginProviderForWallet(wallet);
     const creds = await provider();
 
     if (creds) {

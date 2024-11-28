@@ -2,7 +2,7 @@ import React, {memo, useCallback} from 'react';
 
 import {SssMigrateNetworks} from '@app/components/sss-migrate-networks';
 import {app} from '@app/contexts';
-import {getMetadataValueWrapped} from '@app/helpers/wrappers/get-metadata-value';
+import {getMetadataValueWrapped} from '@app/helpers/sss';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {ErrorHandler} from '@app/models/error-handler';
 import {SecureValue} from '@app/modifiers/secure-value';

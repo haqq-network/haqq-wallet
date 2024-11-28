@@ -21,7 +21,7 @@ import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {showModal} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
-import {getProviderStorage} from '@app/helpers/get-provider-storage';
+import {getProviderStorage} from '@app/helpers/sss';
 import {useTypedNavigation} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {VariablesBool} from '@app/models/variables-bool';
