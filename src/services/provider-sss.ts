@@ -6,7 +6,7 @@ import BN from 'bn.js';
 
 import {app} from '@app/contexts';
 import {awaitForPopupClosed} from '@app/helpers';
-import {getGoogleTokens} from '@app/helpers/get-google-tokens';
+import {cleanGoogle, getGoogleTokens} from '@app/helpers/get-google-tokens';
 import {parseJwt} from '@app/helpers/parse-jwt';
 import {RemoteConfig} from '@app/services/remote-config';
 import {ModalType} from '@app/types';
@@ -86,7 +86,7 @@ const loggerGoogle = Logger.create('onLoginGoogle', {
   enabled: __DEV__ || app.isTesterMode || app.isDeveloper,
 });
 
-export async function onLoginGoogle() {
+export async function onLoginGoogle(): Promise<Creds | null> {
   loggerGoogle.log('Starting onLoginGoogle function');
   let authState = {
     idToken: '',
@@ -125,7 +125,7 @@ const loggerApple = Logger.create('onLoginApple', {
   enabled: __DEV__ || app.isTesterMode || app.isDeveloper,
 });
 
-export async function onLoginApple() {
+export async function onLoginApple(): Promise<Creds | null> {
   loggerApple.log('Starting onLoginApple function');
   try {
     loggerApple.log('Performing Apple auth request');
@@ -159,6 +159,10 @@ export async function onLoginApple() {
       return Promise.resolve(null);
     }
 
+    // should clean google tokens after apple login
+    // for correct work of getSocialLoginProviderForWallet in src/helpers/sss/get-social-login-provider-for-wallet.ts
+    cleanGoogle();
+
     loggerApple.log(
       'Calling onAuthorized with verifier, authInfo.email, and identityToken',
     );
@@ -170,6 +174,7 @@ export async function onLoginApple() {
     }
     loggerApple.warn('Apple auth was cancelled by user', {code: e.code});
   }
+  return Promise.resolve(null);
 }
 
 export type Creds = {
