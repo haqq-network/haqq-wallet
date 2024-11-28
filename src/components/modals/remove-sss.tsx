@@ -163,6 +163,7 @@ export const RemoveSSS = observer(
                 );
               }
               Wallet.update(wallet.address, {
+                socialLinkEnabled: false,
                 type: WalletType.mnemonic,
               });
             }
