@@ -12,7 +12,7 @@ import {
 } from '@app/components/ui';
 import {createTheme, showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
-import {useTypedNavigation} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
@@ -37,6 +37,10 @@ const logger = Logger.create('TransactionAddressScreen');
 const testID = 'transaction_address';
 
 export const TransactionAddressScreen = observer(() => {
+  const {nft, token} = useTypedRoute<
+    TransactionStackParamList,
+    TransactionStackRoutes.TransactionAddress
+  >().params;
   const navigation = useTypedNavigation<TransactionStackParamList>();
   useAndroidBackHandler(() => {
     navigation.goBack();
@@ -61,38 +65,38 @@ export const TransactionAddressScreen = observer(() => {
           : NetworkProviderTypes.EVM;
         const converter = AddressUtils.getConverterByNetwork(networkType);
         setLoading(true);
-        // if (nft) {
-        //   return navigation.navigate(
-        //     TransactionStackRoutes.TransactionNftConfirmation,
-        //     {
-        //       from: converter(from),
-        //       to: converter(result),
-        //       nft,
-        //     },
-        //   );
-        // } else if (token) {
-        //   return navigation.navigate(TransactionStackRoutes.TransactionSum, {
-        //     from: converter(from),
-        //     to: converter(result),
-        //     token,
-        //   });
-        // } else {
-        if (!Token.tokens?.[AddressUtils.toEth(fromAddress)]) {
-          const hide = showModal(ModalType.loading, {
-            text: 'Loading token balances',
+        if (nft) {
+          return navigation.navigate(
+            TransactionStackRoutes.TransactionNftConfirmation,
+            {
+              from: converter(fromAddress),
+              to: converter(result),
+              nft,
+            },
+          );
+        } else if (token) {
+          return navigation.navigate(TransactionStackRoutes.TransactionSum, {
+            from: converter(fromAddress),
+            to: converter(result),
+            token,
           });
-          try {
-            await Token.fetchTokens(true, true);
-          } catch {
-          } finally {
-            hide();
+        } else {
+          if (!Token.tokens?.[AddressUtils.toEth(fromAddress)]) {
+            const hide = showModal(ModalType.loading, {
+              text: 'Loading token balances',
+            });
+            try {
+              await Token.fetchTokens(true, true);
+            } catch {
+            } finally {
+              hide();
+            }
           }
+          navigation.navigate(TransactionStackRoutes.TransactionSelectCrypto, {
+            from: converter(fromAddress),
+            to: converter(result),
+          });
         }
-        navigation.navigate(TransactionStackRoutes.TransactionSelectCrypto, {
-          from: converter(fromAddress),
-          to: converter(result),
-        });
-        // }
       } catch (e) {
         logger.error('onDone', e);
       } finally {
