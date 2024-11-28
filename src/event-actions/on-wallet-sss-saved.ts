@@ -1,7 +1,7 @@
 import {ProviderSSSBase} from '@haqq/rn-wallet-providers';
 
 import {app} from '@app/contexts';
-import {getProviderStorage} from '@app/helpers/get-provider-storage';
+import {getProviderStorage} from '@app/helpers/sss';
 import {Wallet} from '@app/models/wallet';
 import {WalletType} from '@app/types';
 

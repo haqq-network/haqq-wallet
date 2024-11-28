@@ -14,7 +14,7 @@ import {
 import BN from 'bn.js';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
-import {getMetadataValueWrapped} from '@app/helpers/wrappers/get-metadata-value';
+import {getMetadataValueWrapped} from '@app/helpers/sss';
 
 export type SharesResponse = {
   isNew: boolean;
