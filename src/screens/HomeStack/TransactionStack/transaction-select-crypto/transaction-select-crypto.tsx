@@ -46,7 +46,17 @@ export const TransactionSelectCryptoScreen = observer(() => {
       ),
     [fromAddress, Provider.selectedProvider.denom],
   ).get();
-  const data = useMemo(() => tokens, [tokens, nfts]);
+  const data = useMemo(() => {
+    switch (assetType) {
+      case TransactionSelectCryptoAssetType.Crypto:
+        return tokens;
+      case TransactionSelectCryptoAssetType.NFT:
+        //@ts-ignore
+        return nfts as IToken[];
+      default:
+        return [...tokens, ...nfts] as IToken[];
+    }
+  }, [tokens, nfts]);
 
   const onItemPress = useCallback(
     (token: IToken) => () => {
@@ -67,6 +77,7 @@ export const TransactionSelectCryptoScreen = observer(() => {
 
   useEffect(() => {
     Token.fetchTokens();
+    Nft.fetchNft();
   }, []);
 
   return (
