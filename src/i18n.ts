@@ -743,6 +743,7 @@ export enum I18N {
   lockedTokensAvailable = 'lockedTokensAvailable',
   totalAvailable = 'totalAvailable',
   earnHint = 'earnHint',
+  unsupportedNetworkError = 'unsupportedNetworkError',
   raffleAgreementDescriptionPlatform = 'raffleAgreementDescriptionPlatform',
   lockedTokensInfoTitle = 'lockedTokensInfoTitle',
   lockedTokensInfoDescription = 'lockedTokensInfoDescription',

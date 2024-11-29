@@ -16,7 +16,7 @@ export const TransactionAddressNetwork = observer(() => {
 
   const selectedProviderName = useMemo(() => {
     if (!toChainId) {
-      return '';
+      return '-';
     }
 
     return Provider.getByEthChainId(toChainId)?.name ?? '';

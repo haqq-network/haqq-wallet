@@ -8,6 +8,7 @@ import {AddressUtils} from '@app/helpers/address-utils';
 import {withActionsContactItem} from '@app/hocs';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
+import {Wallet} from '@app/models/wallet';
 
 import {TransactionAddressAddContact} from './transaction-address-add-contact';
 import {TransactionAddressContactListProps} from './transaction-address.types';
@@ -51,7 +52,10 @@ export const TransactionAddressContactList = observer(
     }, [toAddress, fromAddress]);
 
     if (!filteredContacts.length) {
-      if (AddressUtils.isValidAddress(toAddress)) {
+      if (
+        AddressUtils.isValidAddress(toAddress) &&
+        !Wallet.getById(toAddress)
+      ) {
         return <TransactionAddressAddContact address={toAddress} />;
       }
 
