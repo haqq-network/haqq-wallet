@@ -11,7 +11,11 @@ import {createTheme} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {useTypedNavigation} from '@app/hooks';
 import {Nft} from '@app/models/nft';
-import {Provider} from '@app/models/provider';
+import {
+  ALL_NETWORKS_CHAIN_ID,
+  Provider,
+  ProviderModel,
+} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {
   TransactionStackParamList,
@@ -20,6 +24,7 @@ import {
 import {IToken} from '@app/types';
 
 import {TransactionSelectCryptoSelectAssets} from './transaction-select-crypto-select-assets';
+import {TransactionSelectCryptoSelectNetwork} from './transaction-select-crypto-select-network';
 import {TransactionSelectCryptoAssetType} from './transaction-select-crypto.types';
 
 import {TransactionStore} from '../transaction-store';
@@ -33,18 +38,26 @@ export const TransactionSelectCryptoScreen = observer(() => {
   const [assetType, setAssetType] = useState<TransactionSelectCryptoAssetType>(
     TransactionSelectCryptoAssetType.Crypto,
   );
+  const [networkProvider, setNetworkProvider] = useState<ProviderModel>(
+    Provider.getByEthChainId(ALL_NETWORKS_CHAIN_ID)!,
+  );
 
   const nfts = Nft.getAll();
   const tokens = useMemo(
     () =>
       computed(
         () =>
-          Token.tokens[AddressUtils.toEth(fromAddress)]?.filter(
-            item =>
-              !!item.is_in_white_list && !item.is_erc721 && !item.is_erc1155,
-          ) ?? [],
+          Token.tokens[AddressUtils.toEth(fromAddress)]?.filter(item => {
+            const showToken =
+              !!item.is_in_white_list && !item.is_erc721 && !item.is_erc1155;
+            if (networkProvider.ethChainId === ALL_NETWORKS_CHAIN_ID) {
+              return showToken;
+            } else {
+              return showToken && item.chain_id === networkProvider.ethChainId;
+            }
+          }) ?? [],
       ),
-    [fromAddress, Provider.selectedProvider.denom],
+    [fromAddress, Provider.selectedProvider.denom, networkProvider.ethChainId],
   ).get();
   const data = useMemo(() => {
     switch (assetType) {
@@ -92,6 +105,10 @@ export const TransactionSelectCryptoScreen = observer(() => {
           <TransactionSelectCryptoSelectAssets
             assetType={assetType}
             onChange={setAssetType}
+          />
+          <TransactionSelectCryptoSelectNetwork
+            selectedProvider={networkProvider}
+            onChange={setNetworkProvider}
           />
         </View>
       }

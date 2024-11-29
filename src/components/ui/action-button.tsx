@@ -2,11 +2,13 @@ import {useMemo} from 'react';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
+import {I18N} from '@app/i18n';
 
 import {Button, ButtonProps, ButtonSize} from './button';
 
 type ActionButtonProps = ButtonProps & {
   isActive: boolean;
+  label?: I18N;
 };
 
 export const ActionButton = ({
@@ -36,11 +38,21 @@ export const ActionButton = ({
     return {};
   }, [isActive]);
 
+  const color = useMemo(
+    () => (isActive ? Color.textGreen1 : Color.bg8),
+    [isActive],
+  );
+
+  const textColor = useMemo(
+    () => (isActive ? Color.textBase3 : Color.textBase1),
+    [isActive],
+  );
+
   return (
     <Button
       size={ButtonSize.small}
-      color={isActive ? Color.textGreen1 : Color.bg8}
-      textColor={isActive ? Color.textBase3 : Color.textBase1}
+      color={color}
+      textColor={textColor}
       {...iconLeftProps}
       {...iconRightProps}
       style={[styles.button, style]}
