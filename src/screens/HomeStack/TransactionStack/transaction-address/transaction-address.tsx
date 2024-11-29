@@ -4,11 +4,14 @@ import {observer} from 'mobx-react';
 import {View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
+import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
   KeyboardSafeArea,
   Spacer,
+  Text,
+  TextVariant,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
@@ -45,7 +48,7 @@ export const TransactionAddressScreen = observer(() => {
     return true;
   }, [navigation]);
 
-  const {toAddress, fromAddress} = TransactionStore;
+  const {toAddress, fromAddress, toChainId} = TransactionStore;
 
   const {bottom: safeAreaBottomInset} = useSafeAreaInsets();
 
@@ -94,20 +97,12 @@ export const TransactionAddressScreen = observer(() => {
   );
 
   const doneDisabled = useMemo(() => {
-    if (!toAddress?.trim() || isError) {
+    if (!toAddress?.trim() || isError || !toChainId) {
       return true;
     }
 
-    if (Provider.selectedProvider.isTron) {
-      return (
-        // can't send to the same wallet
-        fromWallet.tronAddress?.toLowerCase() === toAddress?.toLowerCase() ||
-        !AddressUtils.isTronAddress(toAddress)
-      );
-    }
     return (
       fromWallet.address?.toLowerCase() === toAddress?.toLowerCase() ||
-      fromWallet.cosmosAddress?.toLowerCase() === toAddress?.toLowerCase() ||
       !AddressUtils.isValidAddress(toAddress)
     );
   }, [isError, toAddress, fromWallet]);
@@ -115,7 +110,7 @@ export const TransactionAddressScreen = observer(() => {
   const onPressAddress = useCallback(
     (item: string) => {
       vibrate(HapticEffects.impactLight);
-      onDone(item);
+      TransactionStore.toAddress = item;
     },
     [onDone],
   );
@@ -123,6 +118,11 @@ export const TransactionAddressScreen = observer(() => {
   const onPressButton = useCallback(() => {
     onDone(toAddress.trim());
   }, [toAddress, onDone]);
+
+  const showCorrectNetworkError = useMemo(
+    () => !isError && !toChainId && toAddress.length > 3,
+    [isError, toChainId, toAddress],
+  );
 
   return (
     <KeyboardSafeArea style={styles.keyboardAvoidingView}>
@@ -136,6 +136,13 @@ export const TransactionAddressScreen = observer(() => {
         <Spacer width={8} />
         <TransactionAddressNetwork />
       </View>
+      {showCorrectNetworkError && (
+        <Text
+          variant={TextVariant.t14}
+          color={Color.textRed1}
+          i18n={I18N.unsupportedNetworkError}
+        />
+      )}
       <TransactionAddressWalletList onPress={onPressAddress} />
       <TransactionAddressContactList onPress={onPressAddress} />
       <Spacer flex={1} />
