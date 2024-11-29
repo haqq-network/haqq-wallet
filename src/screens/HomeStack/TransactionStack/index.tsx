@@ -25,11 +25,11 @@ import {TransactionNftConfirmationScreen} from '@app/screens/HomeStack/Transacti
 import {TransactionNftFinishScreen} from '@app/screens/HomeStack/TransactionStack/transaction-nft-finish';
 import {TransactionSumScreen} from '@app/screens/HomeStack/TransactionStack/transaction-sum';
 import {TransactionSumAddressScreen} from '@app/screens/HomeStack/TransactionStack/transaction-sum-address';
-import {TransactionSelectCryptoScreen} from '@app/screens/transaction-select-crypto';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {ScreenOptionType, WalletType} from '@app/types';
 
 import {TransactionNetworkSelectScreen} from './transaction-network-select';
+import {TransactionSelectCryptoScreen} from './transaction-select-crypto';
 import {TransactionStoreContainer} from './transaction-store';
 
 const Stack = createNativeStackNavigator<TransactionStackParamList>();
@@ -84,18 +84,19 @@ export const TransactionStack = memo(() => {
           }}
         />
         <Stack.Screen
+          name={TransactionStackRoutes.TransactionSelectCrypto}
+          component={themeUpdaterHOC(TransactionSelectCryptoScreen)}
+          options={{
+            title: getText(I18N.selectCryptoToSend),
+            headerRight: DismissPopupButton,
+          }}
+        />
+        <Stack.Screen
           name={TransactionStackRoutes.TransactionSum}
           component={themeUpdaterHOC(TransactionSumScreen)}
           options={{
             title: getText(I18N.transactionSumSendTitle),
             ...hideBack,
-          }}
-        />
-        <Stack.Screen
-          name={TransactionStackRoutes.TransactionSelectCrypto}
-          component={themeUpdaterHOC(TransactionSelectCryptoScreen)}
-          options={{
-            title: getText(I18N.transactionSelectCryptoTitle),
           }}
         />
         <Stack.Screen

@@ -1,9 +1,13 @@
-import React, {useEffect, useMemo} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {computed} from 'mobx';
 import {observer} from 'mobx-react';
+import {ListRenderItem} from 'react-native';
+import {FlatList} from 'react-native-gesture-handler';
 
-import {TransactionSelectCrypto} from '@app/components/transaction-select-crypto';
+import {SearchInput} from '@app/components/search-input';
+import {TokenRow} from '@app/components/token';
+import {createTheme} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
@@ -50,5 +54,29 @@ export const TransactionSelectCryptoScreen = observer(() => {
     });
   };
 
-  return <TransactionSelectCrypto tokens={tokens} onItemPress={onItemPress} />;
+  const [searchValue, setSearchValue] = useState('');
+
+  const keyExtractor = useCallback((item: IToken) => item.id, []);
+  const renderItem: ListRenderItem<IToken> = useCallback(
+    ({item}) => <TokenRow item={item} onPress={() => onItemPress(item)} />,
+    [],
+  );
+
+  return (
+    <FlatList
+      data={tokens}
+      style={styles.screen}
+      keyExtractor={keyExtractor}
+      renderItem={renderItem}
+      ListHeaderComponent={
+        <SearchInput value={searchValue} onChange={setSearchValue} />
+      }
+    />
+  );
+});
+
+const styles = createTheme({
+  screen: {
+    marginHorizontal: 20,
+  },
 });
