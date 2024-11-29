@@ -131,6 +131,20 @@ export class ProviderModel {
     return this.model.stage === NetworkProviderStage.MAINNET;
   }
 
+  get supportAddresses() {
+    if (this.isHaqqNetwork) {
+      return ['haqq', '0x'];
+    }
+    if (this.isEVM) {
+      return ['0x'];
+    }
+    if (this.isTron) {
+      return ['T'];
+    }
+
+    return undefined;
+  }
+
   toJSON() {
     return {
       ethChainIdHex: this.ethChainIdHex,

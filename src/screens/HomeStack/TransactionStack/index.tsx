@@ -29,6 +29,7 @@ import {TransactionSelectCryptoScreen} from '@app/screens/transaction-select-cry
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {ScreenOptionType, WalletType} from '@app/types';
 
+import {TransactionNetworkSelectScreen} from './transaction-network-select';
 import {TransactionStoreContainer} from './transaction-store';
 
 const Stack = createNativeStackNavigator<TransactionStackParamList>();
@@ -73,6 +74,14 @@ export const TransactionStack = memo(() => {
           component={themeUpdaterHOC(TransactionAddressScreen)}
           initialParams={params}
           options={screenOptionsAddressRoute}
+        />
+        <Stack.Screen
+          name={TransactionStackRoutes.TransactionNetworkSelect}
+          component={themeUpdaterHOC(TransactionNetworkSelectScreen)}
+          options={{
+            title: getText(I18N.addressNetwork),
+            headerRight: DismissPopupButton,
+          }}
         />
         <Stack.Screen
           name={TransactionStackRoutes.TransactionSum}

@@ -14,9 +14,11 @@ import {ModalType} from '@app/types';
 import {createAsyncTask, sleep} from '@app/utils';
 import {
   DEFAULT_PROVIDERS,
+  MAINNET_ETH_CHAIN_ID,
   MAIN_NETWORK_ID,
   STORE_REHYDRATION_TIMEOUT_MS,
   TEST_NETWORK_ID,
+  TRON_CHAIN_ID,
 } from '@app/variables/common';
 
 import {RemoteProviderConfig} from './provider-config';
@@ -265,6 +267,24 @@ class ProviderStore {
     const ethChainId = parseInt(ethChainIdHex, 16);
     return this.getByEthChainId(ethChainId);
   }
+
+  getByAddress = (value: string): ProviderModel | undefined => {
+    const address = value.toLowerCase();
+
+    if (!address) {
+      return undefined;
+    }
+
+    if (address.startsWith('haqq') || address.startsWith('0x')) {
+      return this.getByEthChainId(MAINNET_ETH_CHAIN_ID);
+    }
+
+    if (address.startsWith('T')) {
+      return this.getByEthChainId(TRON_CHAIN_ID);
+    }
+
+    return undefined;
+  };
 }
 
 const instance = new ProviderStore();
