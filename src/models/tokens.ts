@@ -152,6 +152,7 @@ class TokensStore implements MobXStore<IToken> {
       contract_address: '',
     };
   }
+
   create(id: string, params: IToken) {
     const existingItem = this.getById(params.id);
 

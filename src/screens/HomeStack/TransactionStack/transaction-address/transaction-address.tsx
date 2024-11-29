@@ -86,10 +86,7 @@ export const TransactionAddressScreen = observer(() => {
             token,
           });
         } else {
-          navigation.navigate(TransactionStackRoutes.TransactionSelectCrypto, {
-            from: converter(fromAddress),
-            to: converter(result),
-          });
+          navigation.navigate(TransactionStackRoutes.TransactionSelectCrypto);
         }
       } catch (e) {
         logger.error('onDone', e);
