@@ -292,7 +292,7 @@ export const HAQQ_METADATA: JsonRpcMetadata = {
 export const TESTEDGE2_ETH_CHAIN_ID = 54211;
 export const MAINNET_ETH_CHAIN_ID = 11235;
 export const ETH_CHAIN_ID = 1;
-export const TRON_CHAIN_ID = 6;
+export const TRON_CHAIN_ID = 728126428;
 
 export const TEST_URLS: Partial<Link>[] = [
   {

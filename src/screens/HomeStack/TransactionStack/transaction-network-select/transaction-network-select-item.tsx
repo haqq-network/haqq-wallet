@@ -20,11 +20,19 @@ export const TransactionNetworkSelectItem = observer(
 
     const navigation = useTypedNavigation<TransactionStackParamList>();
 
-    const isProviderDisabled = useMemo(
-      () =>
-        !item.supportAddresses?.find(prefix => toAddress.startsWith(prefix)),
-      [item.supportAddresses],
-    );
+    const isProviderDisabled = useMemo(() => {
+      if (!item.supportAddresses) {
+        return true;
+      }
+
+      return !item.supportAddresses.find(prefix => {
+        if (prefix.length > toAddress.length) {
+          return prefix.startsWith(toAddress);
+        } else {
+          return toAddress.startsWith(prefix);
+        }
+      });
+    }, [item.supportAddresses]);
 
     const handlePress = useCallback(() => {
       if (!isProviderDisabled) {
