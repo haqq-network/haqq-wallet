@@ -722,6 +722,7 @@ export enum I18N {
   homeNewsViewAll = 'homeNewsViewAll',
   homeNewsCryptoNews = 'homeNewsCryptoNews',
   addressNetwork = 'addressNetwork',
+  selectCryptoToSend = 'selectCryptoToSend',
   onboardingTrackingUserActivityTitle = 'onboardingTrackingUserActivityTitle',
   onboardingTrackingUserActivityHint1Title = 'onboardingTrackingUserActivityHint1Title',
   onboardingTrackingUserActivityHint2Title = 'onboardingTrackingUserActivityHint2Title',

@@ -3,15 +3,20 @@ import {Icon, IconsName, TextField} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
-import {TransactionNetworkSelectSearchProps} from './transaction-network-select.types';
+export type SearchInputProps = {
+  label?: string;
+  value: string;
+  onChange: (value: string) => void;
+};
 
-export const TransactionNetworkSelectSearch = ({
+export const SearchInput = ({
+  label = I18N.browserSearch,
   value,
   onChange,
-}: TransactionNetworkSelectSearchProps) => {
+}: SearchInputProps) => {
   return (
     <TextField
-      label={I18N.browserSearch}
+      label={label}
       value={value}
       onChangeText={onChange}
       leading={<Icon i24 name={IconsName.search} color={Color.graphicBase2} />}
