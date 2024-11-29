@@ -552,12 +552,7 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
     token?: IToken | undefined;
   };
   [TransactionStackRoutes.TransactionNetworkSelect]: undefined;
-  [TransactionStackRoutes.TransactionAddress]: {
-    from: string;
-    to?: string | undefined;
-    nft?: NftItem | undefined;
-    token?: IToken | undefined;
-  };
+  [TransactionStackRoutes.TransactionSelectCrypto]: undefined;
   [TransactionStackRoutes.TransactionSum]: {
     from: string;
     to: string;
@@ -609,10 +604,6 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
   [TransactionStackRoutes.TransactionContactEdit]: {
     name: string;
     address: string;
-  };
-  [TransactionStackRoutes.TransactionSelectCrypto]: {
-    from: string;
-    to: string;
   };
 };
 
