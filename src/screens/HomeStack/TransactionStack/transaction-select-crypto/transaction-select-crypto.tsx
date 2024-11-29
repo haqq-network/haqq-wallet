@@ -1,12 +1,12 @@
-import React, {useEffect, useMemo} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {computed} from 'mobx';
 import {observer} from 'mobx-react';
-import {View} from 'react-native';
+import {ListRenderItem} from 'react-native';
+import {FlatList} from 'react-native-gesture-handler';
 
-import {TransactionSelectCrypto} from '@app/components/transaction-select-crypto';
-import {Spacer} from '@app/components/ui';
-import {Placeholder} from '@app/components/ui/placeholder';
+import {SearchInput} from '@app/components/search-input';
+import {TokenRow} from '@app/components/token';
 import {createTheme} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
@@ -54,45 +54,29 @@ export const TransactionSelectCryptoScreen = observer(() => {
     });
   };
 
-  if (Token.isLoading && !tokens.length) {
-    return Array.from({length: 6}).map((_, index) => (
-      <View key={index} style={styles.placeholderContainer}>
-        <View style={styles.placeholderLeft}>
-          <Placeholder>
-            <Placeholder.Item width={48} height={48} />
-          </Placeholder>
-          <Spacer width={20} />
-          <View style={styles.placeholderRows}>
-            <Placeholder>
-              <Placeholder.Item width={60} height={20} />
-            </Placeholder>
-            <Placeholder>
-              <Placeholder.Item width={120} height={20} />
-            </Placeholder>
-          </View>
-        </View>
-        <Placeholder>
-          <Placeholder.Item width={50} height={20} />
-        </Placeholder>
-      </View>
-    ));
-  }
+  const [searchValue, setSearchValue] = useState('');
 
-  return <TransactionSelectCrypto tokens={tokens} onItemPress={onItemPress} />;
+  const keyExtractor = useCallback((item: IToken) => item.id, []);
+  const renderItem: ListRenderItem<IToken> = useCallback(
+    ({item}) => <TokenRow item={item} onPress={() => onItemPress(item)} />,
+    [],
+  );
+
+  return (
+    <FlatList
+      data={tokens}
+      style={styles.screen}
+      keyExtractor={keyExtractor}
+      renderItem={renderItem}
+      ListHeaderComponent={
+        <SearchInput value={searchValue} onChange={setSearchValue} />
+      }
+    />
+  );
 });
 
 const styles = createTheme({
-  placeholderContainer: {
+  screen: {
     marginHorizontal: 20,
-    marginTop: 8,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  placeholderRows: {
-    height: 48,
-    justifyContent: 'space-around',
-  },
-  placeholderLeft: {
-    flexDirection: 'row',
   },
 });
