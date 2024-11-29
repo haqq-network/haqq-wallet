@@ -106,6 +106,9 @@ const A_SIGNATURE = 67;
 const SUN_PER_TRX = 1_000_000;
 const BANDWIDTH_PRICE_IN_SUN = 1000; // 1000 SUN per byte
 
+// Add new constant for minimum TRX transfer fee
+const MIN_FEE_TRX = 0.1; // 0.1 TRX minimum fee for transfers
+
 export class TronNetwork {
   static TOKEN_TRANSFER_SELECTOR = 'a9059cbb';
   static async broadcastTransaction(
@@ -204,7 +207,14 @@ export class TronNetwork {
     });
 
     try {
-      const resources = await tronWeb.trx.getAccountResources(address);
+      const tronAddress = AddressUtils.toTron(address);
+      logger.log(
+        '[getAccountBandwidth] Checking resources for address:',
+        tronAddress,
+      );
+
+      const resources = await tronWeb.trx.getAccountResources(tronAddress);
+      logger.log('[getAccountBandwidth] Raw resources:', resources);
 
       return {
         freeNetUsed: resources.freeNetUsed || 0,
@@ -213,7 +223,7 @@ export class TronNetwork {
         netLimit: resources.NetLimit || 0,
       };
     } catch (error) {
-      logger.error('getAccountBandwidth', error);
+      logger.error('[getAccountBandwidth] Error:', error);
       return {
         freeNetUsed: 0,
         freeNetLimit: 0,
@@ -240,41 +250,140 @@ export class TronNetwork {
     });
 
     try {
+      logger.log('[estimateFeeSendTRX] Starting fee estimation:', {
+        from,
+        to,
+        value: value.toString(),
+      });
+
+      // 1. Get account resources and check activation
+      const accountResources = await this.getAccountBandwidth(from, provider);
+
+      // 2. Create transaction to get actual bandwidth consumption
+      const valueSun = value.toParsedBalanceNumber() * SUN_PER_TRX;
+      logger.log('[estimateFeeSendTRX] Creating transaction with value:', {
+        valueTRX: value.toParsedBalanceNumber(),
+        valueSun,
+      });
+
       const transaction = await tronWeb.transactionBuilder.sendTrx(
         AddressUtils.toTron(to),
-        value.toParsedBalanceNumber(),
+        valueSun,
         AddressUtils.toTron(from),
       );
+      logger.log('[estimateFeeSendTRX] Created transaction:', {
+        rawDataHex: transaction.raw_data_hex,
+        rawDataLength: transaction.raw_data_hex.length,
+      });
 
-      const rawDataHex = transaction.raw_data_hex;
-      const bandwidthConsumption =
-        this.calculateBandwidthConsumption(rawDataHex);
-      const feeTRX = this.calculateFeeTRX(bandwidthConsumption);
+      // 3. Calculate total bandwidth consumption
+      const bandwidthConsumption = this.calculateBandwidthConsumption(
+        transaction.raw_data_hex,
+      );
+      logger.log('[estimateFeeSendTRX] Bandwidth consumption:', {
+        bandwidthConsumption,
+        rawDataLengthInBytes: transaction.raw_data_hex.length / 2,
+        protobufExtra: DATA_HEX_PROTOBUF_EXTRA,
+        maxResultSize: MAX_RESULT_SIZE_IN_TX,
+        signatureSize: A_SIGNATURE,
+      });
 
-      const fees = {
+      // 4. Calculate available bandwidth
+      const availableFreeBandwidth = Math.max(
+        0,
+        accountResources.freeNetLimit - accountResources.freeNetUsed,
+      );
+      const availableStakedBandwidth = Math.max(
+        0,
+        accountResources.netLimit - accountResources.netUsed,
+      );
+      const totalAvailableBandwidth =
+        availableFreeBandwidth + availableStakedBandwidth;
+
+      logger.log('[estimateFeeSendTRX] Available bandwidth:', {
+        availableFreeBandwidth,
+        availableStakedBandwidth,
+        totalAvailableBandwidth,
+        freeNetLimit: accountResources.freeNetLimit,
+        freeNetUsed: accountResources.freeNetUsed,
+        netLimit: accountResources.netLimit,
+        netUsed: accountResources.netUsed,
+      });
+
+      // 5. Calculate required bandwidth fee
+      let bandwidthFeeInTrx = 0;
+      if (bandwidthConsumption > totalAvailableBandwidth) {
+        const requiredBandwidth =
+          bandwidthConsumption - totalAvailableBandwidth;
+        const bandwidthFeeInSun = requiredBandwidth * BANDWIDTH_PRICE_IN_SUN;
+        bandwidthFeeInTrx = bandwidthFeeInSun / SUN_PER_TRX;
+
+        logger.log(
+          '[estimateFeeSendTRX] Additional bandwidth fee calculation:',
+          {
+            requiredBandwidth,
+            bandwidthFeeInSun,
+            bandwidthFeeInTrx,
+            bandwidthPriceInSun: BANDWIDTH_PRICE_IN_SUN,
+            sunPerTrx: SUN_PER_TRX,
+          },
+        );
+      } else {
+        logger.log(
+          '[estimateFeeSendTRX] No additional bandwidth fee needed - using available bandwidth',
+        );
+      }
+
+      // 6. Apply minimum fee
+      let totalFeeInTrx = Math.max(bandwidthFeeInTrx, MIN_FEE_TRX);
+
+      const accountTo = await tronWeb.trx.getAccount(AddressUtils.toTron(to));
+      const isAccountActive = !!accountTo.address;
+      if (!isAccountActive) {
+        // Activation fee 1 TRX
+        totalFeeInTrx += 1;
+      }
+
+      logger.log('[estimateFeeSendTRX] Final fee calculation:', {
+        bandwidthFeeInTrx,
+        minFeeTrx: MIN_FEE_TRX,
+        totalFeeInTrx,
+      });
+
+      const result = {
         gasLimit: Balance.Empty,
         maxBaseFee: Balance.Empty,
         maxPriorityFee: Balance.Empty,
-        expectedFee: new Balance(feeTRX, 0, provider.denom),
+        expectedFee: new Balance(totalFeeInTrx, 0, provider.denom),
       };
 
-      return fees;
+      logger.log('[estimateFeeSendTRX] Final fee estimation:', {
+        result,
+      });
+
+      return result;
     } catch (error) {
-      logger.error('estimateFeeSendTRX error:', error);
+      logger.error('[estimateFeeSendTRX] Error:', error);
 
       // Fallback fee calculation using standard TRX transfer size
-      const STANDARD_TRX_TRANSFER_SIZE = 285; // Standard size for TRX transfer in bytes
-      const fallbackBandwidthConsumption = this.calculateBandwidthConsumption(
-        '0'.repeat(STANDARD_TRX_TRANSFER_SIZE * 2), // Convert bytes to hex string length
+      const standardBandwidthConsumption = this.calculateBandwidthConsumption(
+        '0'.repeat(285 * 2), // 285 bytes is typical TRX transfer size
       );
-      const fallbackFeeTRX = this.calculateFeeTRX(fallbackBandwidthConsumption);
+      const standardFeeInTrx = Math.max(
+        (standardBandwidthConsumption * BANDWIDTH_PRICE_IN_SUN) / SUN_PER_TRX,
+        MIN_FEE_TRX,
+      );
 
-      // Return fallback fee estimation
+      logger.log('[estimateFeeSendTRX] Using fallback fee calculation:', {
+        standardBandwidthConsumption,
+        standardFeeInTrx,
+      });
+
       return {
         gasLimit: Balance.Empty,
         maxBaseFee: Balance.Empty,
         maxPriorityFee: Balance.Empty,
-        expectedFee: new Balance(fallbackFeeTRX, 0, provider.denom),
+        expectedFee: new Balance(standardFeeInTrx, 0, provider.denom),
       };
     }
   }
@@ -337,7 +446,14 @@ export class TronNetwork {
       const bandwidthFee = this.calculateFeeTRX(bandwidthConsumption);
 
       // Total fee is energy fee + bandwidth fee
-      const totalFee = energyFee * 1e-6 + bandwidthFee;
+      let totalFee = energyFee * 1e-6 + bandwidthFee;
+
+      const accountTo = await tronWeb.trx.getAccount(AddressUtils.toTron(to));
+      const isAccountActive = !!accountTo.address;
+      if (!isAccountActive) {
+        // Activation fee 1 TRX
+        totalFee += 1;
+      }
 
       const fees = {
         gasLimit: Balance.Empty,
