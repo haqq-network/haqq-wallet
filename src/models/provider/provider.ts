@@ -259,7 +259,7 @@ class ProviderStore {
       return this.getByEthChainId(MAINNET_ETH_CHAIN_ID);
     }
 
-    if (address.startsWith('T')) {
+    if (address.startsWith('t')) {
       return this.getByEthChainId(TRON_CHAIN_ID);
     }
 
