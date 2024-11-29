@@ -1,3 +1,4 @@
+import {hoursToMilliseconds} from 'date-fns';
 import {makeAutoObservable, runInAction} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 import Config from 'react-native-config';
@@ -60,6 +61,7 @@ class ProviderStore {
     makePersistable(this, {
       name: this.constructor.name,
       properties: ['_selectedProviderId', '_data'],
+      expireIn: hoursToMilliseconds(3),
       // FIXME: configurePersistable didn't define yet there because of circular dependencies issue
       storage,
     });
