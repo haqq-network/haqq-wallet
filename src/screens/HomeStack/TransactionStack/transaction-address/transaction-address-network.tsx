@@ -5,14 +5,20 @@ import {observer} from 'mobx-react';
 import {Color} from '@app/colors';
 import {LabeledBlock, Text, TextVariant} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {awaitForProvider} from '@app/helpers/await-for-provider';
+import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
+import {
+  TransactionStackParamList,
+  TransactionStackRoutes,
+} from '@app/route-types';
 
 import {TransactionStore} from '../transaction-store';
 
 export const TransactionAddressNetwork = observer(() => {
   const {toChainId} = TransactionStore;
+
+  const navigation = useTypedNavigation<TransactionStackParamList>();
 
   const selectedProviderName = useMemo(() => {
     if (!toChainId) {
@@ -23,12 +29,7 @@ export const TransactionAddressNetwork = observer(() => {
   }, [toChainId]);
 
   const onNetworkPress = useCallback(async () => {
-    const providerId = await awaitForProvider({
-      initialProviderChainId: toChainId,
-      title: I18N.networks,
-    });
-
-    TransactionStore.toChainId = Provider.getById(providerId).ethChainId;
+    navigation.navigate(TransactionStackRoutes.TransactionNetworkSelect);
   }, [toChainId]);
 
   return (

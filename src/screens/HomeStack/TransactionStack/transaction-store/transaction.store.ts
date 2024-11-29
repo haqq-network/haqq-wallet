@@ -2,7 +2,6 @@ import {makeAutoObservable} from 'mobx';
 
 import {Provider} from '@app/models/provider';
 import {ChainId, IToken} from '@app/types';
-import {MAINNET_ETH_CHAIN_ID, TRON_CHAIN_ID} from '@app/variables/common';
 
 import {TransactionParcicipant} from './transaction-store.types';
 
@@ -41,7 +40,7 @@ class TransactionStore {
   set toAddress(address: string) {
     this.to = {
       ...this.to,
-      chain_id: this.autoSelectToProviderChainId(),
+      chain_id: this.autoSelectProviderChainId(address),
       address,
     };
   }
@@ -61,39 +60,13 @@ class TransactionStore {
    */
 
   /**
-   * @name autoSelectToProviderChainId
+   * @name autoSelectProviderChainId
    * @description Check entered TO address and auto select provider for this address
    *
    * @returns ETH chain id if address format supported and undefined when its unsupported
    */
-  private autoSelectToProviderChainId = (): ChainId | undefined => {
-    const toAddress = this.to.address.toLowerCase();
-
-    if (!toAddress) {
-      return undefined;
-    }
-
-    const currentToProvider = this.to.chain_id
-      ? Provider.getByEthChainId(this.to.chain_id)
-      : null;
-
-    if (toAddress.startsWith('haqq') && !currentToProvider?.isHaqqNetwork) {
-      return MAINNET_ETH_CHAIN_ID;
-    }
-
-    if (
-      toAddress.startsWith('0x') &&
-      !currentToProvider?.isEVM &&
-      !currentToProvider?.isHaqqNetwork
-    ) {
-      return MAINNET_ETH_CHAIN_ID;
-    }
-
-    if (toAddress.startsWith('T') && !currentToProvider?.isTron) {
-      return TRON_CHAIN_ID;
-    }
-
-    return undefined;
+  private autoSelectProviderChainId = (value = ''): ChainId | undefined => {
+    return Provider.getByAddress(value)?.ethChainId;
   };
 
   clear = () => {

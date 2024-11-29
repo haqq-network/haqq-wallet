@@ -29,13 +29,12 @@ import {
 
 import {
   AddWalletParams,
-  AddressCosmosHaqq,
   AddressEthereum,
-  AddressTron,
   ChainId,
   HexNumber,
   IndexerBalance,
   IndexerBalanceData,
+  WalletAddress,
   WalletCardStyleT,
   WalletType,
 } from '../../types';
@@ -132,7 +131,7 @@ class WalletStore implements RPCObserver {
       },
       {} as {
         [key: ChainId]: {
-          [key: AddressEthereum | AddressCosmosHaqq | AddressTron]: HexNumber;
+          [key: WalletAddress]: HexNumber;
         };
       },
     );
