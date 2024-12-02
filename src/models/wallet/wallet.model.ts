@@ -22,6 +22,7 @@ export class WalletModel implements IWalletModel {
       case WalletType.mnemonic:
       case WalletType.sss:
       case WalletType.hot:
+      case WalletType.watchOnly:
         return true;
       case WalletType.ledgerBt:
       case WalletType.keystone:

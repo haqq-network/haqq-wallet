@@ -516,8 +516,8 @@ TRON:\n${AddressUtils.toTron(watchOnlyAddress)}`,
                     index === 1 ? 'eth_sendTransaction' : 'eth_signTransaction',
                   params: [
                     {
-                      value: '1',
-                      to: '0x415b829d862121f25fcdfdfadf7a705e45249dbc',
+                      value: '1000000',
+                      to: 'TXtLUKcumR3TNpCcCzr4tjjkpKpMeJ5H66',
                     },
                   ],
                 };

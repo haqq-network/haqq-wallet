@@ -64,8 +64,8 @@ export const TokenRow = ({item, checked = false, onPress}: TokenRowProps) => {
 const styles = createTheme({
   notWhiteListed: {
     backgroundColor: Color.bg6,
-    borderRadius: 12,
-    padding: 4,
+    borderRadius: 4,
+    paddingVertical: 4,
   },
   tokenName: {maxWidth: 220},
   container: {
