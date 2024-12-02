@@ -166,8 +166,8 @@ export class Balance implements IBalance, ISerializable {
 
   toParsedBalanceNumber = () => {
     const b = this.toBalanceString(
-      undefined,
-      undefined,
+      this.precission,
+      this.precission,
       false,
       true,
     ).replaceAll(' ', '');
