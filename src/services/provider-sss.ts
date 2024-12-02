@@ -215,7 +215,7 @@ export async function onAuthorized(
   }>(RemoteConfig.get('sss_generate_shares_url')!, 'shares', [
     verifier,
     token,
-    false,
+    true,
   ]);
   loggerAuthorized.log('Received node details', {
     isNew: nodeDetailsRequest.isNew,
