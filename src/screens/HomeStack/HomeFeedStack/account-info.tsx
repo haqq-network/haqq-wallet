@@ -16,7 +16,8 @@ import {
   TransactionStackParamList,
   TransactionStackRoutes,
 } from '@app/route-types';
-import {IToken, IndexerTransaction, ModalType} from '@app/types';
+import {HapticEffects, vibrate} from '@app/services/haptic';
+import {IToken, IndexerTransaction, ModalType, WalletType} from '@app/types';
 
 export const AccountInfoScreen = observer(() => {
   const route = useTypedRoute<
@@ -60,6 +61,9 @@ export const AccountInfoScreen = observer(() => {
 
   const onPressToken = useCallback(
     (w: IWalletModel, token: IToken) => {
+      if (w.type === WalletType.watchOnly) {
+        return vibrate(HapticEffects.error);
+      }
       navigation.navigate(HomeStackRoutes.Transaction, {
         // @ts-ignore
         screen: TransactionStackRoutes.TransactionAddress,
