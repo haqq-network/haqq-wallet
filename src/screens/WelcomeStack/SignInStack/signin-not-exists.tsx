@@ -1,8 +1,10 @@
-import {memo, useCallback} from 'react';
+import {useCallback} from 'react';
+
+import {observer} from 'mobx-react';
 
 import {SigninNotExists} from '@app/components/signin-not-exists';
-import {app} from '@app/contexts';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {AppStore} from '@app/models/app';
 import {
   HomeStackRoutes,
   SignInStackParamList,
@@ -10,7 +12,7 @@ import {
   SignUpStackRoutes,
 } from '@app/route-types';
 
-export const SigninNotExistsScreen = memo(() => {
+export const SigninNotExistsScreen = observer(() => {
   const navigation = useTypedNavigation<SignInStackParamList>();
   const {provider, email, ...params} = useTypedRoute<
     SignInStackParamList,
@@ -18,7 +20,7 @@ export const SigninNotExistsScreen = memo(() => {
   >().params;
 
   const onPressCreate = useCallback(() => {
-    if (app.onboarded) {
+    if (AppStore.isOnboarded) {
       //@ts-ignore
       navigation.navigate(HomeStackRoutes.SignUp, {
         screen: SignUpStackRoutes.SignupStoreWallet,

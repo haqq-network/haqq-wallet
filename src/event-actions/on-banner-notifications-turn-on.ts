@@ -1,5 +1,5 @@
-import {app} from '@app/contexts';
 import {onPushSubscriptionTransactionsSubscribe} from '@app/event-actions/on-push-subscription-transactions-subscribe';
+import {AppStore} from '@app/models/app';
 import {Banner} from '@app/models/banner';
 import {navigator} from '@app/navigator';
 import {
@@ -22,7 +22,7 @@ export async function onBannerNotificationsTurnOn(
         'notificationTopic:news',
         PushNotificationTopicsEnum.news,
       );
-    } else if (app.onboarded) {
+    } else if (AppStore.isOnboarded) {
       navigator.navigate('settingsNotification');
     }
 

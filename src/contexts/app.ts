@@ -23,6 +23,7 @@ import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {getUid} from '@app/helpers/get-uid';
 import {SecurePinUtils} from '@app/helpers/secure-pin-utils';
 import {I18N, getText} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {Currencies} from '@app/models/currencies';
 import {Provider, RemoteProviderConfig} from '@app/models/provider';
 import {VariablesBool} from '@app/models/variables-bool';
@@ -222,15 +223,6 @@ class App extends AsyncEventEmitter {
     VariablesBool.set('bluetooth', value);
   }
 
-  get onboarded() {
-    return VariablesBool.get('onboarded') || false;
-  }
-
-  set onboarded(value) {
-    this.emit(Events.onOnboardedChanged, value);
-    VariablesBool.set('onboarded', value);
-  }
-
   get hasNotifications() {
     return this.notifications && this.notificationToken !== '';
   }
@@ -360,7 +352,7 @@ class App extends AsyncEventEmitter {
   }
 
   async init(): Promise<void> {
-    if (!this.onboarded) {
+    if (!AppStore.isOnboarded) {
       return Promise.resolve();
     }
 

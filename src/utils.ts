@@ -35,6 +35,7 @@ import {getRemoteMultiplierValue} from './helpers/get-remote-balance-value';
 import {shortAddress} from './helpers/short-address';
 import {getHost, onUrlSubmit} from './helpers/web3-browser-utils';
 import {I18N, getText} from './i18n';
+import {AppStore} from './models/app';
 import {Banner, BannerButtonEvent, BannerType} from './models/banner';
 import {Fee} from './models/fee';
 import {BalanceModel, IWalletModel, WalletBalance} from './models/wallet';
@@ -717,7 +718,7 @@ export const prepareDataForInAppBrowser = (
 
   const screenName:
     | HomeStackRoutes.InAppBrowser
-    | WelcomeStackRoutes.InAppBrowser = app.onboarded
+    | WelcomeStackRoutes.InAppBrowser = AppStore.isOnboarded
     ? HomeStackRoutes.InAppBrowser
     : WelcomeStackRoutes.InAppBrowser;
 

@@ -8,7 +8,6 @@ import {
   ChooseAccount,
   ChooseAccountTabNames,
 } from '@app/components/choose-account/choose-account';
-import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {getTronProviderForNewWallet} from '@app/helpers/get-provider-for-new-wallet';
@@ -18,6 +17,7 @@ import {getProviderStorage} from '@app/helpers/sss';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N, getText} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {
@@ -60,7 +60,7 @@ export const ChooseAccountScreen = observer(() => {
 
   const walletsToCreateFiltered = useMemo(
     () =>
-      app.onboarded
+      AppStore.isOnboarded
         ? walletsToCreate.filter(_w => !Wallet.getById(_w.address))
         : walletsToCreate,
     [walletsToCreate],
@@ -112,7 +112,7 @@ export const ChooseAccountScreen = observer(() => {
           const item = (await generator.current.next()).value;
           // if not onboarded, remove wallet if it already exists
           // this wallets appear when user has already created wallet but not finished onboarding
-          if (!app.onboarded && item.exists) {
+          if (!AppStore.isOnboarded && item.exists) {
             item.exists = false;
             Wallet.remove(item.address);
           }
@@ -264,11 +264,11 @@ export const ChooseAccountScreen = observer(() => {
       await ProviderSSSBase.setStorageForAccount(accountID, storage);
     }
 
-    if (isMnemonicProvider && !app.onboarded) {
+    if (isMnemonicProvider && !AppStore.isOnboarded) {
       //@ts-ignore
       navigation.navigate(SignInStackRoutes.OnboardingSetupPin, params);
     } else {
-      if (app.onboarded) {
+      if (AppStore.isOnboarded) {
         //@ts-ignore
         navigation.navigate(HomeStackRoutes.Home);
         return;
