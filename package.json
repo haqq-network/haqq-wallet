@@ -68,7 +68,7 @@
     "@react-navigation/native": "6.1.7",
     "@react-navigation/native-stack": "6.9.13",
     "@react-navigation/stack": "6.3.17",
-    "@sentry/react-native": "5.33.1",
+    "@sentry/react-native": "5.35.0",
     "@tradle/react-native-http": "2.0.1",
     "@walletconnect/core": "2.11.2",
     "@walletconnect/react-native-compat": "2.11.2",
