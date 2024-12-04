@@ -40,72 +40,56 @@ export const realm = new Realm({
       oldRealmVersion: oldRealm.schemaVersion,
       newRealmVersion: newRealm.schemaVersion,
     });
-    if (oldRealm.schemaVersion < 10) {
+    if (oldRealm.schemaVersion < 17) {
       logger.log('migration step #1');
       const oldObjects = oldRealm.objects('User');
-      const newObjects = newRealm.objects<{language: string}>('User');
-
-      logger.log({
-        oldObjects: oldObjects.toJSON(),
-        newObjects: newObjects.toJSON(),
-      });
-
-      for (const objectIndex in oldObjects) {
-        const newObject = newObjects[objectIndex];
-        newObject.language = 'en';
-      }
-    }
-
-    if (oldRealm.schemaVersion < 17) {
-      logger.log('migration step #2');
-      const oldObjects = oldRealm.objects('User');
       const newObjects = newRealm.objects<{snoozeBackup: null}>('User');
-
-      logger.log({
-        oldObjects: oldObjects.toJSON(),
-        newObjects: newObjects.toJSON(),
-      });
 
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
         newObject.snoozeBackup = null;
       }
-    }
-
-    if (oldRealm.schemaVersion < 22) {
-      logger.log('migration step #3');
-      const oldObjects = oldRealm.objects('User');
-      const newObjects = newRealm.objects<{providerId: string}>('User');
 
       logger.log({
         oldObjects: oldObjects.toJSON(),
         newObjects: newObjects.toJSON(),
       });
+    }
+
+    if (oldRealm.schemaVersion < 22) {
+      logger.log('migration step #2');
+      const oldObjects = oldRealm.objects('User');
+      const newObjects = newRealm.objects<{providerId: string}>('User');
 
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
         newObject.providerId = TEST_NETWORK_ID;
       }
-    }
-
-    if (oldRealm.schemaVersion < 25) {
-      logger.log('migration step #4');
-      const oldObjects = oldRealm.objects('User');
-      const newObjects = newRealm.objects<{theme: string}>('User');
 
       logger.log({
         oldObjects: oldObjects.toJSON(),
         newObjects: newObjects.toJSON(),
       });
+    }
+
+    if (oldRealm.schemaVersion < 25) {
+      logger.log('migration step #3');
+      const oldObjects = oldRealm.objects('User');
+      const newObjects = newRealm.objects<{theme: string}>('User');
 
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
         newObject.theme = AppTheme.light;
       }
+
+      logger.log({
+        oldObjects: oldObjects.toJSON(),
+        newObjects: newObjects.toJSON(),
+      });
     }
 
     if (oldRealm.schemaVersion < 60) {
-      logger.log('migration step #5');
+      logger.log('migration step #4');
       const users = oldRealm.objects<UserType>('User');
       if (users.length) {
         const user = users[0];
@@ -139,25 +123,25 @@ export const realm = new Realm({
     }
 
     if (oldRealm.schemaVersion < 72) {
-      logger.log('migration step #6');
+      logger.log('migration step #5');
       const oldObjects = oldRealm.objects('Web3BrowserBookmark');
       const newObjects = newRealm.objects<{eventName: string}>(
         'Web3BrowserBookmark',
       );
 
-      logger.log({
-        oldObjects: oldObjects.toJSON(),
-        newObjects: newObjects.toJSON(),
-      });
-
       for (const objectIndex in oldObjects) {
         const newObject = newObjects[objectIndex];
         newObject.eventName = '';
       }
+
+      logger.log({
+        oldObjects: oldObjects.toJSON(),
+        newObjects: newObjects.toJSON(),
+      });
     }
 
     if (oldRealm.schemaVersion < 74) {
-      logger.log('migration step #7');
+      logger.log('migration step #6');
       const oldVariablesBoolObjects = oldRealm.objects('VariablesBool');
       const newVariablesBoolObjects = newRealm.objects<{
         id: string;
@@ -198,23 +182,26 @@ export const realm = new Realm({
     }
 
     if (oldRealm.schemaVersion < 75) {
-      logger.log('migration step #8');
+      logger.log('migration step #7');
       const oldObjects = oldRealm.objects('VariablesBool');
       const newObjects = newRealm.objects<{
-        isDeveloper?: boolean;
-        isTesterMode?: boolean;
+        id: string;
+        value: boolean;
       }>('VariablesBool');
+
+      for (const objectIndex in oldObjects) {
+        const newObject = newObjects[objectIndex];
+
+        if (newObject.id === 'isDeveloper' || newObject.id === 'isTesterMode') {
+          //@ts-ignore
+          delete newObject[objectIndex];
+        }
+      }
 
       logger.log({
         oldObjects: oldObjects.toJSON(),
         newObjects: newObjects.toJSON(),
       });
-
-      for (const objectIndex in oldObjects) {
-        const newObject = newObjects[objectIndex];
-        delete newObject.isDeveloper;
-        delete newObject.isTesterMode;
-      }
     }
     logger.log('realm migration finished');
   },
