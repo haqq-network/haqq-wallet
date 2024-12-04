@@ -1,4 +1,6 @@
-import React, {memo, useCallback, useEffect, useMemo} from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
+
+import {observer} from 'mobx-react';
 
 import {Finish} from '@app/components/finish';
 import {app} from '@app/contexts';
@@ -6,6 +8,7 @@ import {Events} from '@app/events';
 import {hideModal} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {
   HomeStackRoutes,
   OnboardingStackParamList,
@@ -16,7 +19,7 @@ import {HapticEffects, vibrate} from '@app/services/haptic';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {ModalType} from '@app/types';
 
-export const OnboardingFinishScreen = memo(() => {
+export const OnboardingFinishScreen = observer(() => {
   const navigation = useTypedNavigation<OnboardingStackParamList>();
   const route = useTypedRoute<
     OnboardingStackParamList,
@@ -33,14 +36,14 @@ export const OnboardingFinishScreen = memo(() => {
 
   const onEnd = useCallback(() => {
     if (route.params.onboarding) {
-      if (app.onboarded) {
+      if (AppStore.isOnboarded) {
         //@ts-ignore
         navigation.navigate(HomeStackRoutes.Home);
         return;
       }
 
       WalletConnect.instance.init();
-      app.onboarded = true;
+      AppStore.isOnboarded = true;
 
       app.emit(Events.onBlockRequestCheck);
 
@@ -50,7 +53,7 @@ export const OnboardingFinishScreen = memo(() => {
     } else {
       navigation.getParent()?.goBack();
     }
-  }, [route, navigation, app.onboarded]);
+  }, [route, navigation, AppStore.isOnboarded]);
 
   useEffect(() => {
     EventTracker.instance.trackEvent(route.params.event);

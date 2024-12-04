@@ -9,6 +9,7 @@ import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForBluetooth} from '@app/helpers/await-for-bluetooth';
 import {safeLoadBalances} from '@app/helpers/safe-load-balances';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {AppStore} from '@app/models/app';
 import {Wallet} from '@app/models/wallet';
 import {LedgerStackParamList, LedgerStackRoutes} from '@app/route-types';
 import {Balance} from '@app/services/balance';
@@ -132,7 +133,7 @@ export const LedgerAccountsScreen = memo(() => {
       await provider.abort();
       navigation.navigate(LedgerStackRoutes.LedgerVerify, {
         type: 'ledger',
-        nextScreen: app.onboarded
+        nextScreen: AppStore.isOnboarded
           ? LedgerStackRoutes.LedgerStoreWallet
           : LedgerStackRoutes.OnboardingSetupPin,
         address: AddressUtils.toEth(item.address),
