@@ -17,10 +17,6 @@ import {App} from './src/app';
 import './src/event-actions';
 import {Jailbreak} from './src/jailbreak';
 import {Language} from '@app/models/language';
-import {configurePersistable} from 'mobx-persist-store';
-import {storage} from '@app/services/mmkv';
-
-configurePersistable({storage});
 
 LogBox.ignoreAllLogs();
 if (!global.BigInt) {

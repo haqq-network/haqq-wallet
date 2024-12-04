@@ -1,11 +1,11 @@
 import React, {memo, useEffect} from 'react';
 
 import {HomeFeed} from '@app/components/home-feed';
-import {app} from '@app/contexts';
+import {AppStore} from '@app/models/app';
 
 export const HomeFeedScreen = memo(() => {
   useEffect(() => {
-    app.onboarded = true;
+    AppStore.isOnboarded = true;
   }, []);
 
   return <HomeFeed />;

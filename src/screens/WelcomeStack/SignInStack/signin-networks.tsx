@@ -1,7 +1,8 @@
-import React, {memo, useCallback} from 'react';
+import React, {useCallback} from 'react';
 
 import {accountInfo} from '@haqq/provider-web3-utils';
 import {constants} from '@haqq/rn-wallet-providers';
+import {observer} from 'mobx-react';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
 import {SigninNetworks} from '@app/components/signin-networks';
@@ -12,6 +13,7 @@ import {getMetadataValueWrapped} from '@app/helpers/sss';
 import {SssError} from '@app/helpers/sss-error';
 import {verifyCloud} from '@app/helpers/verify-cloud';
 import {useTypedNavigation} from '@app/hooks';
+import {AppStore} from '@app/models/app';
 import {ErrorHandler} from '@app/models/error-handler';
 import {Wallet} from '@app/models/wallet';
 import {
@@ -35,7 +37,7 @@ const logger = Logger.create('SignInNetworksScreen', {
   enabled: __DEV__ || app.isTesterMode || app.isDeveloper,
 });
 
-export const SignInNetworksScreen = memo(() => {
+export const SignInNetworksScreen = observer(() => {
   logger.log('Rendering SignInNetworksScreen component');
 
   const navigation = useTypedNavigation<
@@ -145,7 +147,7 @@ export const SignInNetworksScreen = memo(() => {
           }
 
           logger.log('Determining next screen');
-          const nextScreen = app.onboarded
+          const nextScreen = AppStore.isOnboarded
             ? SignInStackRoutes.SigninStoreWallet
             : SignInStackRoutes.OnboardingSetupPin;
 
@@ -200,7 +202,7 @@ export const SignInNetworksScreen = memo(() => {
 
   const onSkip = useCallback(() => {
     logger.log('Skip button pressed, navigating to SigninAgreement');
-    if (!app.onboarded) {
+    if (!AppStore.isOnboarded) {
       Wallet.removeAll();
     }
     navigation.navigate(SignInStackRoutes.SigninAgreement);
@@ -209,8 +211,7 @@ export const SignInNetworksScreen = memo(() => {
   const onPressHardwareWallet = useCallback(() => {
     logger.log('Hardware wallet button pressed');
     navigation.replace(
-      // @ts-ignore
-      app.onboarded ? HomeStackRoutes.Device : WelcomeStackRoutes.Device,
+      AppStore.isOnboarded ? HomeStackRoutes.Device : WelcomeStackRoutes.Device,
     );
   }, [navigation]);
 
