@@ -1,7 +1,8 @@
-import React, {memo, useCallback} from 'react';
+import React, {useCallback} from 'react';
 
 import {ProviderMnemonicBase} from '@haqq/rn-wallet-providers';
 import {utils} from 'ethers';
+import {observer} from 'mobx-react';
 
 import {SignInRestore} from '@app/components/singin-restore-wallet';
 import {app} from '@app/contexts';
@@ -11,7 +12,7 @@ import {SecureValue} from '@app/modifiers/secure-value';
 import {SignInStackParamList, SignInStackRoutes} from '@app/route-types';
 import {makeID} from '@app/utils';
 
-export const SignInRestoreScreen = memo(() => {
+export const SignInRestoreScreen = observer(() => {
   const navigation = useTypedNavigation<SignInStackParamList>();
 
   const onDoneTry = useCallback(

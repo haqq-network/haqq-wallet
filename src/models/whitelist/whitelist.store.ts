@@ -8,6 +8,7 @@ import {Provider, ProviderModel} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {Wallet} from '@app/models/wallet';
 import {Indexer} from '@app/services/indexer';
+import {storage} from '@app/services/mmkv';
 import {RemoteConfig} from '@app/services/remote-config';
 import {AddressType, IContract, VerifyAddressResponse} from '@app/types';
 import {MAINNET_ETH_CHAIN_ID} from '@app/variables/common';
@@ -39,6 +40,7 @@ class Whitelist {
     makePersistable(this, {
       name: this.constructor.name,
       properties: ['urls', 'contracts'],
+      storage,
       expireIn: CACHE_LIFE_TIME,
     });
   }

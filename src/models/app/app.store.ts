@@ -2,6 +2,8 @@ import {makeAutoObservable} from 'mobx';
 import {isHydrated, makePersistable} from 'mobx-persist-store';
 import Config from 'react-native-config';
 
+import {storage} from '@app/services/mmkv';
+
 class AppStore {
   // App session properties
   private _isInitialized = false;
@@ -16,6 +18,7 @@ class AppStore {
     makePersistable(this, {
       name: this.constructor.name,
       properties: ['isOnboarded'],
+      storage,
     });
   }
 

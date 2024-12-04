@@ -1,6 +1,8 @@
 import {makeAutoObservable} from 'mobx';
 import {isHydrated, makePersistable} from 'mobx-persist-store';
 
+import {storage} from '@app/services/mmkv';
+
 export enum ContactType {
   address = 'address',
   contract = 'contract',
@@ -22,6 +24,7 @@ class ContactStore {
       makePersistable(this, {
         name: this.constructor.name,
         properties: ['contacts'],
+        storage,
       });
     }
   }
