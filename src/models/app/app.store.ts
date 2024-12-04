@@ -17,7 +17,11 @@ class AppStore {
     makeAutoObservable(this);
     makePersistable(this, {
       name: this.constructor.name,
-      properties: ['isOnboarded'],
+      properties: [
+        'isOnboarded',
+        'isDeveloperModeEnabled',
+        'isTesterModeEnabled',
+      ],
       storage,
     });
   }
