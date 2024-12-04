@@ -2,6 +2,7 @@ import {makeAutoObservable} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
 import {Color} from '@app/colors';
+import {storage} from '@app/services/mmkv';
 
 import UUID = Realm.BSON.UUID;
 
@@ -68,6 +69,7 @@ class BannerStore {
       makePersistable(this, {
         name: this.constructor.name,
         properties: ['banners'],
+        storage,
       });
     }
   }

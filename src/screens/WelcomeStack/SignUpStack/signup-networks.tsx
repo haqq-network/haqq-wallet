@@ -1,7 +1,8 @@
-import React, {memo, useCallback} from 'react';
+import React, {useCallback} from 'react';
 
 import {accountInfo} from '@haqq/provider-web3-utils';
 import {constants} from '@haqq/rn-wallet-providers';
+import {observer} from 'mobx-react';
 import {Alert} from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
@@ -35,7 +36,7 @@ const logger = Logger.create('SignupNetworksScreen', {
   enabled: __DEV__ || app.isTesterMode || app.isDeveloper,
 });
 
-export const SignupNetworksScreen = memo(() => {
+export const SignupNetworksScreen = observer(() => {
   logger.log('Defining SignupNetworksScreen component');
   const navigation = useTypedNavigation<SignUpStackParamList>();
   logger.log('Initializing navigation with useTypedNavigation');

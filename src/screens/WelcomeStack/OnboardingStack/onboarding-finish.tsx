@@ -1,4 +1,6 @@
-import React, {memo, useCallback, useEffect, useMemo} from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
+
+import {observer} from 'mobx-react';
 
 import {Finish} from '@app/components/finish';
 import {app} from '@app/contexts';
@@ -17,7 +19,7 @@ import {HapticEffects, vibrate} from '@app/services/haptic';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {ModalType} from '@app/types';
 
-export const OnboardingFinishScreen = memo(() => {
+export const OnboardingFinishScreen = observer(() => {
   const navigation = useTypedNavigation<OnboardingStackParamList>();
   const route = useTypedRoute<
     OnboardingStackParamList,

@@ -7,6 +7,7 @@ import RNRestart from 'react-native-restart';
 import {app} from '@app/contexts';
 import {AppStore} from '@app/models/app';
 import {cleanGoogle} from '@app/helpers/get-google-tokens';
+import {AppStore} from '@app/models/app';
 import {Contact} from '@app/models/contact';
 import {Transaction} from '@app/models/transaction';
 import {VariablesString} from '@app/models/variables-string';
