@@ -189,13 +189,32 @@ export const realm = new Realm({
         value: boolean;
       }>('VariablesBool');
 
-      for (const objectIndex in oldObjects) {
+      let removeIndex = -1;
+      for (const objectIndex in newObjects) {
         const newObject = newObjects[objectIndex];
 
-        if (newObject.id === 'isDeveloper' || newObject.id === 'isTesterMode') {
-          //@ts-ignore
-          delete newObject[objectIndex];
+        if (newObject.id === 'isDeveloper') {
+          AppStore.isDeveloperModeEnabled = newObject.value;
+          removeIndex = objectIndex as never as number;
         }
+      }
+
+      if (removeIndex !== -1) {
+        newObjects.slice(removeIndex, removeIndex + 1);
+      }
+
+      removeIndex = -1;
+      for (const objectIndex in newObjects) {
+        const newObject = newObjects[objectIndex];
+
+        if (newObject.id === 'isTesterMode') {
+          AppStore.isTesterModeEnabled = newObject.value;
+          removeIndex = objectIndex as never as number;
+        }
+      }
+
+      if (removeIndex !== -1) {
+        newObjects.slice(removeIndex, removeIndex + 1);
       }
 
       logger.log({
