@@ -197,7 +197,6 @@ export const realm = new Realm({
       });
     }
 
-
     if (oldRealm.schemaVersion < 75) {
       logger.log('migration step #8');
       const oldObjects = oldRealm.objects('VariablesBool');
@@ -217,7 +216,6 @@ export const realm = new Realm({
         delete newObject.isTesterMode;
       }
     }
-
     logger.log('realm migration finished');
   },
 });
