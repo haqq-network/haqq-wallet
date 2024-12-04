@@ -1,3 +1,4 @@
+import {hoursToMilliseconds} from 'date-fns';
 import {makeAutoObservable, runInAction} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
@@ -18,6 +19,7 @@ class ProviderConfigStore {
     makePersistable(this, {
       name: this.constructor.name,
       properties: ['_data'] as (keyof this)[],
+      expireIn: hoursToMilliseconds(24),
       // FIXME: configurePersistable didn't define yet there because of circular dependencies issue
       storage,
     });
