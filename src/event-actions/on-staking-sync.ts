@@ -15,7 +15,6 @@ export async function onStakingSync() {
     AddressUtils.toHaqq(w.address),
   );
   await sync(addressList, cosmos);
-  // app.emit(Events.onWalletsStakingBalanceCheck);
 }
 
 async function sync(addressList: string[], cosmos: Cosmos) {
