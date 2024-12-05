@@ -103,6 +103,8 @@ export const TransactionAddressScreen = observer(() => {
 
     return (
       fromWallet.address?.toLowerCase() === toAddress?.toLowerCase() ||
+      fromWallet.cosmosAddress?.toLowerCase() === toAddress?.toLowerCase() ||
+      fromWallet.tronAddress?.toLowerCase() === toAddress?.toLowerCase() ||
       !AddressUtils.isValidAddress(toAddress)
     );
   }, [isError, toAddress, fromWallet]);
