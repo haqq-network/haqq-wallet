@@ -1,6 +1,6 @@
 import {getAppInfo} from '@app/helpers/get-app-info';
 import {Initializable} from '@app/helpers/initializable';
-import {VariablesBool} from '@app/models/variables-bool';
+import {AppStore} from '@app/models/app';
 import {VariablesString} from '@app/models/variables-string';
 import {Backend} from '@app/services/backend';
 import {RemoteConfigTypes} from '@app/services/remote-config';
@@ -14,7 +14,7 @@ const CONFIG_REINIT_TIMEOUT = 5 * 60 * 1000; // 5 minutes
 const logger = Logger.create('RemoteConfig', {
   emodjiPrefix: '🔴',
   stringifyJson: true,
-  enabled: !__DEV__ && VariablesBool.get('isDeveloper'),
+  enabled: !__DEV__ && AppStore.isDeveloperModeEnabled,
 });
 
 function getCachedConfig() {

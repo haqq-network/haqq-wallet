@@ -2,16 +2,18 @@ import {JSONRPCError, jsonrpcRequest} from '@haqq/shared-react-native';
 import {makeAutoObservable} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
-import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
 import {Provider, ProviderModel} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {Wallet} from '@app/models/wallet';
 import {Indexer} from '@app/services/indexer';
+import {storage} from '@app/services/mmkv';
 import {RemoteConfig} from '@app/services/remote-config';
 import {AddressType, IContract, VerifyAddressResponse} from '@app/types';
 import {MAINNET_ETH_CHAIN_ID} from '@app/variables/common';
+
+import {AppStore} from '../app';
 
 const CACHE_LIFE_TIME = 3 * 60 * 60 * 1000; // 3 hours
 
@@ -38,13 +40,14 @@ class Whitelist {
     makePersistable(this, {
       name: this.constructor.name,
       properties: ['urls', 'contracts'],
+      storage,
       expireIn: CACHE_LIFE_TIME,
     });
   }
 
   /**
    * @param url - url to check
-   * @param enableForceSkip - if true, then whitelist will be ignored if DEBUG_VARS.disableWeb3DomainBlocking or app.isTesterMode is true
+   * @param enableForceSkip - if true, then whitelist will be ignored if DEBUG_VARS.disableWeb3DomainBlocking or AppStore.isTesterModeEnabled is true
    *
    * set enableForceSkip to false if you want to check whitelist without force skip
    */
@@ -58,7 +61,7 @@ class Whitelist {
     if (
       enableForceSkip &&
       (DEBUG_VARS.disableWeb3DomainBlocking ||
-        app.isTesterMode ||
+        AppStore.isTesterModeEnabled ||
         Provider.selectedProvider.isTestnet)
     ) {
       return true;

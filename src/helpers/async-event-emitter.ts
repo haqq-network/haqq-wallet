@@ -1,5 +1,5 @@
-import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
+import {AppStore} from '@app/models/app';
 import {makeID} from '@app/utils';
 
 import {EventResolverSymbol} from './await-for-event-done';
@@ -48,7 +48,10 @@ export class AsyncEventEmitter extends Initializable {
       const tx = makeID(5);
 
       try {
-        if (app.isDeveloper && DEBUG_VARS.enableAsyncEventEmitterLogs) {
+        if (
+          AppStore.isDeveloperModeEnabled &&
+          DEBUG_VARS.enableAsyncEventEmitterLogs
+        ) {
           logger.log(new Date(), 'event started', tx, eventName, ...args);
         }
         // check if event called from `awaitForEventDone` function
@@ -63,14 +66,20 @@ export class AsyncEventEmitter extends Initializable {
               await listener(...args);
             } catch (e) {}
             // event done'
-            if (app.isDeveloper && DEBUG_VARS.enableAsyncEventEmitterLogs) {
+            if (
+              AppStore.isDeveloperModeEnabled &&
+              DEBUG_VARS.enableAsyncEventEmitterLogs
+            ) {
               logger.log(new Date(), 'async event finished', tx, eventName);
             }
             return await resolver();
           }
         }
         await listener(...args);
-        if (app.isDeveloper && DEBUG_VARS.enableAsyncEventEmitterLogs) {
+        if (
+          AppStore.isDeveloperModeEnabled &&
+          DEBUG_VARS.enableAsyncEventEmitterLogs
+        ) {
           logger.log(new Date(), 'event finished', tx, eventName);
         }
       } catch (err) {
@@ -99,7 +108,10 @@ export class AsyncEventEmitter extends Initializable {
       const tx = makeID(5);
 
       try {
-        if (app.isDeveloper && DEBUG_VARS.enableAsyncEventEmitterLogs) {
+        if (
+          AppStore.isDeveloperModeEnabled &&
+          DEBUG_VARS.enableAsyncEventEmitterLogs
+        ) {
           logger.log(new Date(), 'event started', tx, eventName, ...args);
         }
         if (args?.length) {
@@ -112,7 +124,10 @@ export class AsyncEventEmitter extends Initializable {
               await listener(...args);
             } catch (e) {}
             // event done'
-            if (app.isDeveloper && DEBUG_VARS.enableAsyncEventEmitterLogs) {
+            if (
+              AppStore.isDeveloperModeEnabled &&
+              DEBUG_VARS.enableAsyncEventEmitterLogs
+            ) {
               logger.log(new Date(), 'async event finished', tx, eventName);
             }
             // remove listeners after the event is done
@@ -125,7 +140,10 @@ export class AsyncEventEmitter extends Initializable {
         this.removeListener(eventName, listener);
         this.removeListener(eventName, wrappedListener);
         await listener(...args);
-        if (app.isDeveloper && DEBUG_VARS.enableAsyncEventEmitterLogs) {
+        if (
+          AppStore.isDeveloperModeEnabled &&
+          DEBUG_VARS.enableAsyncEventEmitterLogs
+        ) {
           logger.log(new Date(), 'event finished', tx, eventName);
         }
       } catch (err) {

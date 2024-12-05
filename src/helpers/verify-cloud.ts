@@ -1,8 +1,8 @@
 import {Alert} from 'react-native';
 
-import {app} from '@app/contexts';
 import {hideModal, showModal} from '@app/helpers/modal';
 import {I18N, getText} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {Cloud} from '@app/services/cloud';
 import {SssProviders} from '@app/services/provider-sss';
 import {sleep} from '@app/utils';
@@ -10,7 +10,7 @@ import {sleep} from '@app/utils';
 const TEST_FILE_SIZE_BYTES = 256;
 
 const logger = Logger.create('VerifyCloud', {
-  enabled: __DEV__ || app.isTesterMode || app.isDeveloper,
+  enabled: AppStore.isLogsEnabled,
 });
 
 export const verifyCloud = async (sssProvider: SssProviders) => {

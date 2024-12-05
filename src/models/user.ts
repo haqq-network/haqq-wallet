@@ -23,7 +23,6 @@ export const UserSchema = {
     language: 'string',
     biometry: 'bool',
     bluetooth: 'bool?',
-    onboarded: 'bool?',
     snoozeBackup: 'date?',
     pinAttempts: 'int?',
     pinBanned: 'date?',
@@ -31,7 +30,6 @@ export const UserSchema = {
     theme: 'string',
     notifications: 'bool?',
     subscription: 'string?',
-    isDeveloper: {type: 'bool', default: false},
   },
   primaryKey: 'username',
 };
@@ -44,12 +42,10 @@ export type UserType = {
   pinAttempts: number | null;
   pinBanned: Date | null;
   bluetooth: boolean | null;
-  onboarded: boolean | null;
   providerId: string;
   theme: AppTheme;
   notifications: boolean | null;
   subscription: string | null;
-  isDeveloper: boolean | null;
 };
 
 export class User extends EventEmitter {
@@ -105,7 +101,6 @@ export class User extends EventEmitter {
         bluetooth: false,
         language: AppLanguage.en,
         theme: AppTheme.system,
-        isDeveloper: Config.IS_DEVELOPMENT === '1',
         providerId:
           Config.ENVIRONMENT === 'production' ||
           Config.ENVIRONMENT === 'distribution'

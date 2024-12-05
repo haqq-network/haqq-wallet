@@ -1,8 +1,10 @@
-import React, {memo, useCallback} from 'react';
+import React, {useCallback} from 'react';
+
+import {observer} from 'mobx-react';
 
 import {CreateAgreement} from '@app/components/create-agreement';
-import {app} from '@app/contexts';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {AppStore} from '@app/models/app';
 import {
   HomeStackParamList,
   HomeStackRoutes,
@@ -11,7 +13,7 @@ import {
   WelcomeStackRoutes,
 } from '@app/route-types';
 
-export const SignUpAgreementScreen = memo(() => {
+export const SignUpAgreementScreen = observer(() => {
   const navigation = useTypedNavigation<SignUpStackParamList>();
   const params = useTypedRoute<
     SignUpStackParamList & HomeStackParamList,
@@ -29,8 +31,8 @@ export const SignUpAgreementScreen = memo(() => {
 
   const onPressHardwareWallet = () => {
     navigation.replace(
-      // @ts-ignore
-      app.onboarded ? HomeStackRoutes.Device : WelcomeStackRoutes.Device,
+      //@ts-ignore
+      AppStore.isOnboarded ? HomeStackRoutes.Device : WelcomeStackRoutes.Device,
     );
   };
 

@@ -18,9 +18,9 @@ import {
   TextPosition,
   TextVariant,
 } from '@app/components/ui';
-import {app} from '@app/contexts';
 import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {I18N, getText} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {BiometryType} from '@app/types';
 
 const biometryName = {
@@ -104,7 +104,7 @@ export const SettingsSecurity = ({
         </MenuNavigationButton>
       )}
       {/* Should be last item */}
-      {(app.isTesterMode || app.isDeveloper) && (
+      {AppStore.isAdditionalFeaturesEnabled && (
         <View>
           <Spacer height={8} />
           <Spacer height={10} />

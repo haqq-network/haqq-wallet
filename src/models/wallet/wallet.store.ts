@@ -9,6 +9,7 @@ import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {Socket} from '@app/models/socket';
 import {Balance} from '@app/services/balance';
 import {Indexer, IndexerUpdatesResponse} from '@app/services/indexer';
+import {storage} from '@app/services/mmkv';
 import {RPCMessage, RPCObserver} from '@app/types/rpc';
 import {deepClone} from '@app/utils';
 import {
@@ -38,6 +39,7 @@ import {
   WalletCardStyleT,
   WalletType,
 } from '../../types';
+import {AppStore} from '../app';
 import {Currencies} from '../currencies';
 import {ALL_NETWORKS_ID, Provider, ProviderModel} from '../provider';
 import {Token} from '../tokens';
@@ -89,6 +91,7 @@ class WalletStore implements RPCObserver {
             },
           },
         ],
+        storage,
       });
     }
   }
@@ -208,7 +211,7 @@ class WalletStore implements RPCObserver {
     forceUpdateRates = false,
   ) => {
     try {
-      if (!app.onboarded) {
+      if (!AppStore.isOnboarded) {
         return;
       }
 

@@ -14,9 +14,9 @@ import {
   TextVariant,
 } from '@app/components/ui';
 import {HardwareWalletButton} from '@app/components/ui/hardware-wallet-button';
-import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {Wallet} from '@app/models/wallet';
 import {SssProviders} from '@app/services/provider-sss';
 import {WalletType} from '@app/types';
@@ -86,7 +86,7 @@ export const SigninNetworks = observer(
       wallet => wallet.type === WalletType.sss,
     ).length;
 
-    const isSSSDisabled = app.onboarded
+    const isSSSDisabled = AppStore.isOnboarded
       ? mnemonicWalletsCount >= 1 || sssWalletsCount >= 1
       : false;
 

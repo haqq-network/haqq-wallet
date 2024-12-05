@@ -1,4 +1,3 @@
-import {app} from '@app/contexts';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {removeLastSlash} from '@app/helpers/url';
 import {
@@ -8,6 +7,8 @@ import {
 } from '@app/services/backend';
 
 import {RemoteProviderConfig} from './provider-config';
+
+import {AppStore} from '../app';
 
 const HAQQ_BENCH_32_PREFIX = 'haqq';
 const EXPLORER_URL_TEMPLATES = {
@@ -79,7 +80,7 @@ export class ProviderModel {
   }
 
   get isEditable() {
-    return app.isDeveloper ? true : false;
+    return !!AppStore.isDeveloperModeEnabled;
   }
 
   get decimals() {

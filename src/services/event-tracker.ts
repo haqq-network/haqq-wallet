@@ -3,8 +3,8 @@ import {Adjust, AdjustConfig, AdjustEvent} from 'react-native-adjust';
 import {AdjustOaid} from 'react-native-adjust-oaid';
 import Config from 'react-native-config';
 
-import {app} from '@app/contexts';
 import {Initializable} from '@app/helpers/initializable';
+import {AppStore} from '@app/models/app';
 import {Wallet} from '@app/models/wallet';
 import {MarketingEvents} from '@app/types';
 import {getAppTrackingAuthorizationStatus} from '@app/utils';
@@ -192,7 +192,7 @@ export class EventTracker extends Initializable {
       }
 
       Adjust.create(adjustConfig);
-      if (app.isDeveloper) {
+      if (AppStore.isDeveloperModeEnabled) {
         getAppTrackingAuthorizationStatus().then(status => {
           logger.log('Authorization status = ' + status);
         });

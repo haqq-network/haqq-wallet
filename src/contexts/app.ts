@@ -4,7 +4,6 @@ import dynamicLinks from '@react-native-firebase/dynamic-links';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {subMinutes} from 'date-fns';
 import {Alert, AppState, Appearance, Platform, StatusBar} from 'react-native';
-import Config from 'react-native-config';
 import Keychain, {
   STORAGE_TYPE,
   getGenericPassword,
@@ -23,6 +22,7 @@ import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {getUid} from '@app/helpers/get-uid';
 import {SecurePinUtils} from '@app/helpers/secure-pin-utils';
 import {I18N, getText} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {Currencies} from '@app/models/currencies';
 import {Provider, RemoteProviderConfig} from '@app/models/provider';
 import {VariablesBool} from '@app/models/variables-bool';
@@ -112,7 +112,6 @@ class App extends AsyncEventEmitter {
       .then(() => {
         EthNetwork.init(Provider.selectedProvider);
 
-        this.checkBalance = this.checkBalance.bind(this);
         this.checkBalance();
 
         this.handleDynamicLink = this.handleDynamicLink.bind(this);
@@ -127,10 +126,7 @@ class App extends AsyncEventEmitter {
         this.listenTheme();
         AppState.addEventListener('change', this.onAppStatusChanged.bind(this));
 
-        if (!VariablesBool.exists('isDeveloper')) {
-          VariablesBool.set('isDeveloper', Config.IS_DEVELOPMENT === 'true');
-        }
-        this.setEnabledLoggersForTestMode(this.isTesterMode);
+        this.setEnabledLoggersForTestMode();
         this.stopInitialization();
       });
   }
@@ -186,7 +182,7 @@ class App extends AsyncEventEmitter {
       this.isGoogleSigninSupported ||
       this.isCustomSigninSupported ||
       this.isAppleSigninSupported ||
-      this.isDeveloper
+      AppStore.isDeveloperModeEnabled
     );
   }
 
@@ -220,15 +216,6 @@ class App extends AsyncEventEmitter {
 
   set bluetooth(value) {
     VariablesBool.set('bluetooth', value);
-  }
-
-  get onboarded() {
-    return VariablesBool.get('onboarded') || false;
-  }
-
-  set onboarded(value) {
-    this.emit(Events.onOnboardedChanged, value);
-    VariablesBool.set('onboarded', value);
   }
 
   get hasNotifications() {
@@ -267,26 +254,10 @@ class App extends AsyncEventEmitter {
     return this.user?.pinAttempts ?? 0;
   }
 
-  get isDeveloper() {
-    return VariablesBool.get('isDeveloper') ?? false;
-  }
-
-  set isDeveloper(value) {
-    VariablesBool.set('isDeveloper', value);
-  }
-
-  get isTesterMode() {
-    return VariablesBool.get('isTesterMode') ?? false;
-  }
-
-  set isTesterMode(value) {
-    this.onTesterModeChange(value);
-    VariablesBool.set('isTesterMode', value);
-  }
-
   get showNonWhitlistedTokens() {
     return (
-      (this.isTesterMode && VariablesBool.get(SHOW_NON_WHITELIST_TOKEN)) ??
+      (AppStore.isTesterModeEnabled &&
+        VariablesBool.get(SHOW_NON_WHITELIST_TOKEN)) ??
       false
     );
   }
@@ -329,15 +300,15 @@ class App extends AsyncEventEmitter {
   }
 
   onTesterModeChange(value: boolean) {
-    this.setEnabledLoggersForTestMode(value);
+    this.setEnabledLoggersForTestMode();
     this.emit(Events.onTesterModeChanged, value);
   }
 
-  setEnabledLoggersForTestMode(enabled: boolean) {
+  setEnabledLoggersForTestMode() {
     if (!__DEV__) {
-      DEBUG_VARS.enableWeb3BrowserLogger = enabled;
-      DEBUG_VARS.enableWalletConnectLogger = enabled;
-      DEBUG_VARS.enableAwaitJsonRpcSignLogger = enabled;
+      DEBUG_VARS.enableWeb3BrowserLogger = AppStore.isTesterModeEnabled;
+      DEBUG_VARS.enableWalletConnectLogger = AppStore.isTesterModeEnabled;
+      DEBUG_VARS.enableAwaitJsonRpcSignLogger = AppStore.isTesterModeEnabled;
     }
   }
 
@@ -360,7 +331,7 @@ class App extends AsyncEventEmitter {
   }
 
   async init(): Promise<void> {
-    if (!this.onboarded) {
+    if (!AppStore.isOnboarded) {
       return Promise.resolve();
     }
 
@@ -579,11 +550,11 @@ class App extends AsyncEventEmitter {
     }
   }
 
-  checkBalance() {
+  checkBalance = () => {
     if (AppState.currentState === 'active') {
       Wallet.fetchBalances();
     }
-  }
+  };
 
   handleDynamicLink(link: DynamicLink | null) {
     this.emit(Events.onDynamicLink, link);
