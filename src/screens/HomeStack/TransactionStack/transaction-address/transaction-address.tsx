@@ -12,7 +12,7 @@ import {
 } from '@app/components/ui';
 import {createTheme, showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
-import {useTypedNavigation} from '@app/hooks';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
