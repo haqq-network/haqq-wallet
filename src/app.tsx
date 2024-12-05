@@ -9,14 +9,9 @@ import {
   Theme,
 } from '@react-navigation/native';
 import * as Sentry from '@sentry/react-native';
+import {observer} from 'mobx-react';
 import PostHog, {PostHogProvider} from 'posthog-react-native';
-import {
-  AppState,
-  Dimensions,
-  InteractionManager,
-  Linking,
-  StyleSheet,
-} from 'react-native';
+import {AppState, Dimensions, Linking, StyleSheet} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {MenuProvider} from 'react-native-popup-menu';
 import {Metrics, SafeAreaProvider} from 'react-native-safe-area-context';
@@ -47,6 +42,7 @@ import {sleep} from '@app/utils';
 import {SPLASH_TIMEOUT_MS} from '@app/variables/common';
 
 import {AppVersionAbsoluteView} from './components/app-version-absolute-view';
+import {AppStore} from './models/app';
 import {migrationWallets} from './models/migration-wallets';
 import {EventTracker} from './services/event-tracker';
 
@@ -81,11 +77,9 @@ const SAFE_AREA_INTIAL_METRICS: Metrics = {
   },
 };
 
-export const App = () => {
-  const [initialized, setInitialized] = useState(false);
+export const App = observer(() => {
   const [isPinReseted, setPinReseted] = useState(false);
   const [posthog, setPosthog] = useState<PostHog | null>(null);
-  const [onboarded, setOnboarded] = useState(app.onboarded);
   const theme = useTheme();
   const toast = useToast();
 
@@ -101,20 +95,6 @@ export const App = () => {
   );
 
   useEffect(() => {
-    const sub = (value: boolean) => {
-      InteractionManager.setDeadline(1000);
-      InteractionManager.runAfterInteractions(() => {
-        setOnboarded(value);
-      });
-    };
-
-    app.addListener(Events.onOnboardedChanged, sub);
-    return () => {
-      app.removeListener(Events.onOnboardedChanged, sub);
-    };
-  }, []);
-
-  useEffect(() => {
     const splashTimer = setTimeout(() => {
       hideModal(ModalType.splash);
     }, SPLASH_TIMEOUT_MS);
@@ -125,7 +105,7 @@ export const App = () => {
       .then(async () => await Language.init())
       .then(async () => {
         await Stories.fetch(true);
-        if (app.onboarded) {
+        if (AppStore.isOnboarded) {
           await app.init();
           await migrationWallets();
 
@@ -135,7 +115,6 @@ export const App = () => {
         }
       })
       .then(() => {
-        setOnboarded(app.onboarded);
         awaitForEventDone(Events.onAppLoggedId);
       })
       .then(() => {
@@ -147,7 +126,7 @@ export const App = () => {
       })
       .finally(async () => {
         await awaitForEventDone(Events.onAppStarted);
-        setInitialized(true);
+        AppStore.isInitialized = true;
         hideModal(ModalType.splash);
       });
 
@@ -157,7 +136,7 @@ export const App = () => {
   }, []);
 
   useEffect(() => {
-    if (initialized) {
+    if (AppStore.isInitialized) {
       const subscription = ({isConnected}: NetInfoState) => {
         isConnected
           ? hideModal(ModalType.noInternet)
@@ -189,7 +168,7 @@ export const App = () => {
         unsubscribeLinking.remove();
       };
     }
-  }, [initialized]);
+  }, [AppStore.isInitialized]);
 
   useEffect(() => {
     EventTracker.instance.initialize();
@@ -242,16 +221,12 @@ export const App = () => {
                   captureLifecycleEvents: true,
                   captureScreens: true,
                   navigation: {
-                    routeToProperties: (name, params) => {
+                    routeToProperties: (_, params) => {
                       return params;
                     },
                   },
                 }}>
-                <RootStack
-                  onboarded={onboarded}
-                  isPinReseted={isPinReseted}
-                  isReady={initialized}
-                />
+                <RootStack isPinReseted={isPinReseted} />
                 <AppScreenSecurityOverview />
                 {toast}
                 <AppVersionAbsoluteView />
@@ -263,7 +238,7 @@ export const App = () => {
       <SocketHandler />
     </GestureHandlerRootView>
   );
-};
+});
 
 const styles = StyleSheet.create({
   rootView: {

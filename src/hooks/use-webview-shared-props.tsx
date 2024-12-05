@@ -21,13 +21,13 @@ import {BrowserError} from '@app/components/browser-error';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {WebviewAjustMiddleware} from '@app/helpers/webview-adjust-middleware';
 import {WebViewGeolocation} from '@app/helpers/webview-geolocation';
+import {AppStore} from '@app/models/app';
 import {Language} from '@app/models/language';
 import {VariablesString} from '@app/models/variables-string';
 import {EventTracker} from '@app/services/event-tracker';
 import {getUserAgent} from '@app/services/version';
 
 import {useEffectAsync} from './use-effect-async';
-import {useTesterModeEnabled} from './use-tester-mode-enabled';
 
 export const useWebViewSharedProps = (
   ref: React.RefObject<WebView | null>,
@@ -39,7 +39,7 @@ export const useWebViewSharedProps = (
 ): Partial<WebViewProps> => {
   const instanceId = useRef(makeID(5)).current;
   const userAgent = useRef(getUserAgent()).current;
-  const isTesterMode = useTesterModeEnabled();
+
   const [distinctId, setDistinctId] = useState('');
 
   const renderError = useCallback(
@@ -109,7 +109,7 @@ export const useWebViewSharedProps = (
   const props = useMemo<WebViewProps>(
     () => ({
       contentMode: 'mobile',
-      webviewDebuggingEnabled: __DEV__ || isTesterMode,
+      webviewDebuggingEnabled: __DEV__ || AppStore.isTesterModeEnabled,
       incognito: DEBUG_VARS.enableWeb3BrowserIncognito,
       pullToRefreshEnabled: true,
       javaScriptCanOpenWindowsAutomatically: true,
@@ -161,7 +161,14 @@ export const useWebViewSharedProps = (
       renderError: renderError,
       onFileDownload: onFileDownload,
     }),
-    [isTesterMode, onFileDownload, onMessage, renderError, userAgent, ...deps],
+    [
+      AppStore.isTesterModeEnabled,
+      onFileDownload,
+      onMessage,
+      renderError,
+      userAgent,
+      ...deps,
+    ],
   );
 
   return props;

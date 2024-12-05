@@ -14,13 +14,13 @@ import {
   WindowInfoEvent,
 } from '@app/components/web3-browser';
 import {Web3BrowserPressHeaderEvent} from '@app/components/web3-browser/web3-browser-header';
-import {app} from '@app/contexts';
 import {awaitForProvider} from '@app/helpers/await-for-provider';
 import {getOriginFromUrl} from '@app/helpers/web3-browser-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useWeb3BrowserBookmark} from '@app/hooks/use-web3-browser-bookmark';
 import {useWeb3BrowserSessions} from '@app/hooks/use-web3-browser-sessions';
 import {I18N} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {Provider} from '@app/models/provider';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
@@ -50,7 +50,7 @@ export const Web3BrowserScreen = observer(() => {
   const [isLoading, setLoading] = useState(true);
   const onPressHeaderUrl = useCallback(
     ({}: Web3BrowserPressHeaderEvent) => {
-      if (app.isTesterMode) {
+      if (AppStore.isTesterModeEnabled) {
         navigation.navigate('browserSearchPage', {
           initialSearchText: helper.current?.currentUrl || url,
         });

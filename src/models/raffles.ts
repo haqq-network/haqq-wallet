@@ -1,6 +1,7 @@
 import {makeAutoObservable, toJS} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
+import {storage} from '@app/services/mmkv';
 import {MobXStore, Raffle} from '@app/types';
 
 class RafflesStore implements MobXStore<Raffle> {
@@ -11,6 +12,7 @@ class RafflesStore implements MobXStore<Raffle> {
         name: this.constructor.name,
         // @ts-ignore
         properties: ['_data'],
+        storage,
       });
     }
   }

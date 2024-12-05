@@ -19,6 +19,7 @@ import {getWalletsFromProvider} from '@app/helpers/get-wallets-from-provider';
 import {getProviderStorage} from '@app/helpers/sss';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {ErrorHandler} from '@app/models/error-handler';
 import {Wallet} from '@app/models/wallet';
 import {
@@ -32,7 +33,7 @@ import {AddressTron, ModalType, WalletType} from '@app/types';
 import {ETH_COIN_TYPE, TRON_COIN_TYPE} from '@app/variables/common';
 
 const logger = Logger.create('SignInStoreWalletScreen', {
-  enabled: __DEV__ || app.isTesterMode || app.isDeveloper,
+  enabled: AppStore.isLogsEnabled,
 });
 
 export const SignInStoreWalletScreen = observer(() => {
@@ -291,7 +292,7 @@ export const SignInStoreWalletScreen = observer(() => {
 
         if (params.type !== 'sss') {
           logger.log('SignInStoreWalletScreen: Handling non-sss navigation');
-          if (app.onboarded) {
+          if (AppStore.isOnboarded) {
             logger.log(
               'SignInStoreWalletScreen: App is onboarded, navigating to OnboardingSetupPin',
             );

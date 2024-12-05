@@ -12,8 +12,8 @@ import {
   LottieWrap,
 } from '@app/components/ui';
 import {useThemeSelector} from '@app/hooks';
-import {useTesterModeEnabled} from '@app/hooks/use-tester-mode-enabled';
 import {I18N, getText} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {Link} from '@app/types';
 
 import {BrowserHomePageLinkList} from './browser-home-page-link-list';
@@ -45,8 +45,6 @@ export const BrowserHomePage = ({
   onClearRecentPress,
   onEditFavouritePress,
 }: BrowserHomePageProps) => {
-  const isTesterMode = useTesterModeEnabled();
-
   const animation = useThemeSelector({
     light: require('@assets/animations/islm-logo-dotted-circle-light.json'),
     dark: require('@assets/animations/islm-logo-dotted-circle-dark.json'),
@@ -87,7 +85,7 @@ export const BrowserHomePage = ({
         )}
       </View>
       <View style={styles.searchContainer}>
-        {isTesterMode && (
+        {AppStore.isTesterModeEnabled && (
           <TouchableOpacity onPress={onSearchPress}>
             <Input
               leftAction={

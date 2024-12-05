@@ -20,6 +20,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useBackNavigationHandler} from '@app/hooks/use-back-navigation-handler';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
+import {AppStore} from '@app/models/app';
 import {Fee} from '@app/models/fee';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
@@ -139,7 +140,7 @@ export const JsonRpcSignScreen = observer(() => {
           !isAllowed &&
           !(
             DEBUG_VARS.disableWeb3DomainBlocking ||
-            app.isTesterMode ||
+            AppStore.isTesterModeEnabled ||
             Provider.getByEthChainId(chainId!)!.isTestnet
           )
         ) {
@@ -289,7 +290,7 @@ export const JsonRpcSignScreen = observer(() => {
       setVerifyAddressResponse(contract);
 
       // disable domain validation for developer mode
-      if (app.isTesterMode) {
+      if (AppStore.isTesterModeEnabled) {
         setIsAllowed(true);
       } else {
         setIsAllowed(domain_in_whitelist);

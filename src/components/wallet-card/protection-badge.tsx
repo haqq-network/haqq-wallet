@@ -39,7 +39,10 @@ export const ProtectionBadge = ({
   onPressWalletConnect,
   walletConnectSessions,
 }: ProtectionBadgeProps) => {
-  const isImported = wallet.isImported || isSecondMnemonic;
+  const isImported =
+    wallet.isImported ||
+    isSecondMnemonic ||
+    wallet.type === WalletType.watchOnly;
 
   const protectionStatus = useMemo(() => {
     // Wallet is 2nd mnemonic (imported) or user have imported this wallet after SSS
