@@ -26,9 +26,9 @@ import {
   TextPosition,
 } from '@app/components/ui';
 import {ShadowCard} from '@app/components/ui/shadow-card';
-import {app} from '@app/contexts';
 import {onDeepLink} from '@app/event-actions/on-deep-link';
 import {getWindowDimensions} from '@app/helpers';
+import {AppStore} from '@app/models/app';
 import {BannerButtonEvent} from '@app/models/banner';
 import {EventTracker} from '@app/services/event-tracker';
 import {IAdWidget, MarketingEvents} from '@app/types';
@@ -72,7 +72,7 @@ export const AdWidget = ({banner, style}: HomeBannerProps) => {
     if (!link) {
       return;
     }
-    if (app.isTesterMode) {
+    if (AppStore.isTesterModeEnabled) {
       Alert.alert(
         'Banner link',
         `${link}\n\n You see this message because you are in developer mode.`,

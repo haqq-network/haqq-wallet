@@ -5,9 +5,9 @@ import {observer} from 'mobx-react';
 import {Color} from '@app/colors';
 import {SettingsProviders} from '@app/components/settings/settings-providers';
 import {CustomHeader} from '@app/components/ui';
-import {app} from '@app/contexts';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {Provider} from '@app/models/provider';
 import {ProvidersStackParamList, ProvidersStackRoutes} from '@app/route-types';
 
@@ -29,7 +29,7 @@ export const SettingsProvidersScreen = observer(() => {
   }, [navigation]);
 
   const header = useMemo(() => {
-    if (app.isDeveloper) {
+    if (AppStore.isDeveloperModeEnabled) {
       return (
         <CustomHeader
           onPressLeft={navigation.goBack}

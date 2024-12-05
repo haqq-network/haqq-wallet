@@ -1,5 +1,6 @@
 import {makeAutoObservable} from 'mobx';
 import {isHydrated, makePersistable} from 'mobx-persist-store';
+import Config from 'react-native-config';
 
 import {storage} from '@app/services/mmkv';
 
@@ -9,12 +10,18 @@ class AppStore {
 
   // Hydrated properties
   isOnboarded = false;
+  isDeveloperModeEnabled = Config.IS_DEVELOPMENT === 'true';
+  isTesterModeEnabled = Config.IS_TESTMODE === 'true';
 
   constructor() {
     makeAutoObservable(this);
     makePersistable(this, {
       name: this.constructor.name,
-      properties: ['isOnboarded'],
+      properties: [
+        'isOnboarded',
+        'isDeveloperModeEnabled',
+        'isTesterModeEnabled',
+      ],
       storage,
     });
   }
@@ -24,6 +31,13 @@ class AppStore {
   }
   set isInitialized(value: boolean) {
     this._isInitialized = value;
+  }
+
+  get isAdditionalFeaturesEnabled() {
+    return this.isDeveloperModeEnabled || this.isTesterModeEnabled;
+  }
+  get isLogsEnabled() {
+    return __DEV__ || this.isAdditionalFeaturesEnabled;
   }
 }
 

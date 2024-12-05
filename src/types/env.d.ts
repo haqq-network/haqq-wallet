@@ -37,6 +37,7 @@ declare module 'react-native-config' {
     STORIES_ENABLED: boolean; // Flag to enable Stories feature
     ENVIRONMENT: string; // Application environment
     IS_DEVELOPMENT: string; // Flag indicating if the app is in development
+    IS_TESTMODE: string; // Flag indicating if the app is in test mode
     APP_VERSION: string; // Current version of the app
     POSTHOG_API_KEY: string; // API key for PostHog
     POSTHOG_HOST: string; // Host URL for PostHog
