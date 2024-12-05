@@ -257,13 +257,13 @@ export function callbackWrapper<T extends Array<any>>(
 
     const tx = makeID(5);
 
-    if (app.isDeveloper) {
+    if (AppStore.isDeveloperModeEnabled) {
       Logger.log(new Date(), 'event started', tx, func.name, ...args);
     }
 
     func(...args).then(() => {
       callback();
-      if (app.isDeveloper) {
+      if (AppStore.isDeveloperModeEnabled) {
         Logger.log(new Date(), 'event finished', tx, func.name);
       }
     });

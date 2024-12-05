@@ -10,9 +10,9 @@ import {
   checkNeedUpdate,
   getRemoteVersion,
 } from '@app/helpers/check-app-version';
-import {useTesterModeEnabled} from '@app/hooks/use-tester-mode-enabled';
 import {useWalletConnectAccounts} from '@app/hooks/use-wallet-connect-accounts';
 import {I18N, getText} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {Currencies} from '@app/models/currencies';
 import {Language} from '@app/models/language';
 import {VariablesString} from '@app/models/variables-string';
@@ -35,7 +35,6 @@ import {
 export const HomeSettings = observer(() => {
   const [appVersionHidden, setAppVersionHidden] = useState(false);
   const {accounts} = useWalletConnectAccounts();
-  const isTesterMode = useTesterModeEnabled();
   const selectedCurrency = Currencies.selectedCurrency;
   const isUpdateNeeded = appVersionHidden ? false : checkNeedUpdate();
   const onHide = () => {
@@ -163,7 +162,7 @@ export const HomeSettings = observer(() => {
         style={page.button}
       />
 
-      {isTesterMode && (
+      {AppStore.isTesterModeEnabled && (
         <SettingsButton
           icon={IconsName.settings}
           title={I18N.homeSettingsDeveloperTools}
@@ -171,7 +170,7 @@ export const HomeSettings = observer(() => {
         />
       )}
 
-      {app.isDeveloper && (
+      {AppStore.isDeveloperModeEnabled && (
         <SettingsButton
           icon={IconsName.settings}
           title={I18N.homeSettingsTest}

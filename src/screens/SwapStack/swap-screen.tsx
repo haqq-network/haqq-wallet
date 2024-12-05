@@ -17,7 +17,6 @@ import {
 } from '@app/components/swap';
 import {Loading} from '@app/components/ui';
 import {WalletCard} from '@app/components/ui/walletCard';
-import {app} from '@app/contexts';
 import {awaitForWallet, showModal} from '@app/helpers';
 import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
 import {awaitForJsonRpcSign} from '@app/helpers/await-for-json-rpc-sign';
@@ -29,6 +28,7 @@ import {useBackNavigationHandler} from '@app/hooks/use-back-navigation-handler';
 import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {usePrevious} from '@app/hooks/use-previous';
 import {I18N, getText} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {Currencies} from '@app/models/currencies';
 import {Provider} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
@@ -60,7 +60,7 @@ import {
 
 const logger = Logger.create('SwapScreen', {
   emodjiPrefix: '🟠',
-  stringifyJson: __DEV__ || app.isDeveloper || app.isTesterMode,
+  stringifyJson: AppStore.isLogsEnabled,
 });
 
 const START_SWAP_AMOUNT = new Balance(0, 0);
@@ -411,7 +411,7 @@ export const SwapScreen = observer(() => {
             {
               text: 'Ok',
               onPress() {
-                if (app.isTesterMode) {
+                if (AppStore.isTesterModeEnabled) {
                   Alert.alert(
                     'error context',
                     JSON.stringify(errCtx, null, 2),

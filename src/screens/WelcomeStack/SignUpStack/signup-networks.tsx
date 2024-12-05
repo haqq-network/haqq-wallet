@@ -33,7 +33,7 @@ import {
 import {RemoteConfig} from '@app/services/remote-config';
 
 const logger = Logger.create('SignupNetworksScreen', {
-  enabled: __DEV__ || app.isTesterMode || app.isDeveloper,
+  enabled: AppStore.isLogsEnabled,
 });
 
 export const SignupNetworksScreen = observer(() => {

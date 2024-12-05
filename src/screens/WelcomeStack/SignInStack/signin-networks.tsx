@@ -34,7 +34,7 @@ import {RemoteConfig} from '@app/services/remote-config';
 import {ModalType} from '@app/types';
 
 const logger = Logger.create('SignInNetworksScreen', {
-  enabled: __DEV__ || app.isTesterMode || app.isDeveloper,
+  enabled: AppStore.isLogsEnabled,
 });
 
 export const SignInNetworksScreen = observer(() => {
