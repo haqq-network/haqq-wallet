@@ -7,6 +7,7 @@ import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {ALL_NETWORKS_ID, Provider} from '@app/models/provider';
 import {ModalType, Modals} from '@app/types';
 
@@ -15,7 +16,7 @@ import {SettingsProvidersRow} from '../settings/settings-providers/settings-prov
 
 const logger = Logger.create('ProvidersBottomSheet', {
   stringifyJson: true,
-  enabled: app.isTesterMode,
+  enabled: AppStore.isTesterModeEnabled,
 });
 export function ProvidersBottomSheet({
   title,

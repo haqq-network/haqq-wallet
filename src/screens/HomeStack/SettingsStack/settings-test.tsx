@@ -51,6 +51,7 @@ import {SecurePinUtils} from '@app/helpers/secure-pin-utils';
 import {useTypedNavigation} from '@app/hooks';
 import {useError} from '@app/hooks/use-error';
 import {I18N} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {Banner} from '@app/models/banner';
 import {News} from '@app/models/news';
 import {Provider} from '@app/models/provider';
@@ -428,7 +429,7 @@ export const SettingsTestScreen = observer(() => {
   }, []);
 
   const onTurnOffDeveloper = useCallback(() => {
-    app.isDeveloper = false;
+    AppStore.isDeveloperModeEnabled = false;
     navigation.goBack();
   }, [navigation]);
 

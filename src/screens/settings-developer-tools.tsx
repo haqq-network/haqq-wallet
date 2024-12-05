@@ -42,6 +42,7 @@ import {AppInfo, getAppInfo} from '@app/helpers/get-app-info';
 import {LinkType, parseDeepLink} from '@app/helpers/parse-deep-link';
 import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {I18N} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {Language} from '@app/models/language';
 import {Provider} from '@app/models/provider';
 import {VariablesBool} from '@app/models/variables-bool';
@@ -113,7 +114,7 @@ export const SettingsDeveloperTools = observer(() => {
   );
 
   const onTurnOffDeveloper = useCallback(() => {
-    app.isTesterMode = false;
+    AppStore.isTesterModeEnabled = false;
     navigator.goBack();
   }, []);
 
@@ -516,8 +517,8 @@ TRON:\n${AddressUtils.toTron(watchOnlyAddress)}`,
                     index === 1 ? 'eth_sendTransaction' : 'eth_signTransaction',
                   params: [
                     {
-                      value: '1',
-                      to: '0x415b829d862121f25fcdfdfadf7a705e45249dbc',
+                      value: '1000000',
+                      to: 'TXtLUKcumR3TNpCcCzr4tjjkpKpMeJ5H66',
                     },
                   ],
                 };

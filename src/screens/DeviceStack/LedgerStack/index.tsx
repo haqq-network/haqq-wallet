@@ -2,7 +2,6 @@ import React, {memo, useCallback} from 'react';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import {app} from '@app/contexts';
 import {hideBack, hideHeader, popupScreenOptions} from '@app/helpers';
 import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {I18N, getText} from '@app/i18n';
@@ -47,7 +46,7 @@ const LedgerStack = memo(() => {
         title={title}
       />
     ),
-    [app.onboarded],
+    [],
   );
 
   return (

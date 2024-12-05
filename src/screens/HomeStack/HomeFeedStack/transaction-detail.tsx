@@ -6,11 +6,11 @@ import {observer} from 'mobx-react';
 
 import {TransactionDetail} from '@app/components/transaction-detail';
 import {Loading} from '@app/components/ui';
-import {app} from '@app/contexts';
 import {shortAddress} from '@app/helpers/short-address';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useTransaction} from '@app/hooks/use-transaction';
 import {I18N} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {Provider} from '@app/models/provider';
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {sendNotification} from '@app/services';
@@ -70,7 +70,7 @@ export const TransactionDetailScreen = observer(() => {
   }, []);
 
   useEffect(() => {
-    if (app.isTesterMode || app.isDeveloper) {
+    if (AppStore.isAdditionalFeaturesEnabled) {
       Logger.log(
         '===================== [ TRANSACTION DETAILS ] =====================',
       );

@@ -4,22 +4,23 @@ import {observer} from 'mobx-react';
 import {StyleSheet, View} from 'react-native';
 
 import {ModalProvider} from '@app/components/modal-provider';
+import {AppStore} from '@app/models/app';
 import {HomeStack} from '@app/screens/HomeStack';
 import {ModalsScreen} from '@app/screens/modals-screen';
 import {WelcomeStack} from '@app/screens/WelcomeStack';
 
 type Props = {
-  onboarded: boolean;
   isPinReseted: boolean;
-  isReady: boolean;
 };
 
-const RootStack = observer(({onboarded, isPinReseted, isReady}: Props) => {
+const RootStack = observer(({isPinReseted}: Props) => {
   return (
     <View style={styles.container}>
-      {onboarded && !isPinReseted ? <HomeStack /> : <WelcomeStack />}
+      {AppStore.isOnboarded && !isPinReseted ? <HomeStack /> : <WelcomeStack />}
       <ModalProvider>
-        <ModalsScreen initialModal={!isReady ? {type: 'splash'} : undefined} />
+        <ModalsScreen
+          initialModal={!AppStore.isInitialized ? {type: 'splash'} : undefined}
+        />
       </ModalProvider>
     </View>
   );

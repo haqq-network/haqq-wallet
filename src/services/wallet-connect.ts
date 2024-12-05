@@ -18,6 +18,7 @@ import {getLeadingAccount} from '@app/helpers/get-leading-account';
 import {Initializable} from '@app/helpers/initializable';
 import {Url} from '@app/helpers/url';
 import {I18N, getText} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {Provider} from '@app/models/provider';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
@@ -158,7 +159,7 @@ export class WalletConnect extends Initializable {
         `WalletConnect:init duration in ${initDuration}ms, attempts: ${this._initAttempts}`,
       );
 
-      if (app.isTesterMode || app.isDeveloper) {
+      if (AppStore.isAdditionalFeaturesEnabled) {
         sendMessage(
           `WC init: ${initDuration}ms, , attempts: ${this._initAttempts}`,
         );

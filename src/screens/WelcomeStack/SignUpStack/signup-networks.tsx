@@ -1,7 +1,8 @@
-import React, {memo, useCallback} from 'react';
+import React, {useCallback} from 'react';
 
 import {accountInfo} from '@haqq/provider-web3-utils';
 import {constants} from '@haqq/rn-wallet-providers';
+import {observer} from 'mobx-react';
 import {Alert} from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
@@ -12,6 +13,7 @@ import {getMetadataValueWrapped} from '@app/helpers/sss';
 import {verifyCloud} from '@app/helpers/verify-cloud';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {ErrorHandler} from '@app/models/error-handler';
 import {
   SignInStackRoutes,
@@ -31,10 +33,10 @@ import {
 import {RemoteConfig} from '@app/services/remote-config';
 
 const logger = Logger.create('SignupNetworksScreen', {
-  enabled: __DEV__ || app.isTesterMode || app.isDeveloper,
+  enabled: AppStore.isLogsEnabled,
 });
 
-export const SignupNetworksScreen = memo(() => {
+export const SignupNetworksScreen = observer(() => {
   logger.log('Defining SignupNetworksScreen component');
   const navigation = useTypedNavigation<SignUpStackParamList>();
   logger.log('Initializing navigation with useTypedNavigation');
@@ -78,7 +80,7 @@ export const SignupNetworksScreen = memo(() => {
       if (!cloudShare) {
         nextScreen = SignUpStackRoutes.SignUpPin;
       } else {
-        nextScreen = app.onboarded
+        nextScreen = AppStore.isOnboarded
           ? SignUpStackRoutes.SignupStoreWallet
           : SignUpStackRoutes.OnboardingSetupPin;
       }
@@ -140,7 +142,7 @@ export const SignupNetworksScreen = memo(() => {
 
         if (creds) {
           logger.log('Credentials obtained successfully');
-          let nextScreen = app.onboarded
+          let nextScreen = AppStore.isOnboarded
             ? SignUpStackRoutes.SignupStoreWallet
             : SignUpStackRoutes.OnboardingSetupPin;
           logger.log('Determined next screen:', nextScreen);
