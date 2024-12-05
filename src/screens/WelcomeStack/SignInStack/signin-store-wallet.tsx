@@ -340,7 +340,7 @@ export const SignInStoreWalletScreen = observer(() => {
         hideModal('loading');
       }
     }, 350);
-  }, [navigation, nextScreen, params]);
+  }, [navigation, nextScreen, params, createSssFirstWallet]);
 
   logger.log('SignInStoreWalletScreen: Rendering null');
   return null;
