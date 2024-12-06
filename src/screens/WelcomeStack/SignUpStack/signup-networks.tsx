@@ -21,8 +21,6 @@ import {
   SignUpStackRoutes,
   WelcomeStackRoutes,
 } from '@app/route-types';
-import {Cloud} from '@app/services/cloud';
-import {GoogleDrive} from '@app/services/google-drive';
 import {
   Creds,
   SssProviders,
@@ -49,14 +47,7 @@ export const SignupNetworksScreen = observer(() => {
         return;
       }
 
-      const sssProvider = provider === 'apple' ? Cloud : GoogleDrive;
       const cloud = await getProviderStorage('', provider);
-      const supported = await sssProvider.isEnabled();
-
-      if (!supported) {
-        nextScreen = SignUpStackRoutes.SignUpPin;
-      }
-
       const account = await accountInfo(creds.privateKey);
 
       const cloudShare = await cloud.getItem(
