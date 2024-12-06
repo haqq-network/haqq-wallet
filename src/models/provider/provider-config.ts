@@ -68,7 +68,11 @@ class ProviderConfigStore {
   };
 
   getConfig = (chainId: ChainId) => {
-    return new ProviderConfigModel(this.data[chainId]);
+    const data = this.data[chainId];
+    if (!data) {
+      this.lazyLoadOtherConfig();
+    }
+    return new ProviderConfigModel(data || {});
   };
 }
 

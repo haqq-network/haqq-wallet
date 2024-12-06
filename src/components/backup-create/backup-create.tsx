@@ -1,12 +1,9 @@
-import React, {useState} from 'react';
-
-import {View} from 'react-native';
+import React from 'react';
 
 import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
-  Checkbox,
   InfoBlock,
   MnemonicTable,
   PopupContainer,
@@ -15,7 +12,6 @@ import {
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {HapticEffects, vibrate} from '@app/services/haptic';
 
 interface BackupCreateProps {
   onSubmit: () => void;
@@ -28,13 +24,6 @@ export const BackupCreate = ({
   onSubmit,
   testID,
 }: BackupCreateProps) => {
-  const [checked, setChecked] = useState(false);
-
-  const onClickCheck = (val: boolean) => {
-    vibrate(HapticEffects.impactLight);
-    setChecked(val);
-  };
-
   return (
     <PopupContainer style={page.container} testID={testID}>
       <Text t4 style={page.t4} i18n={I18N.backupCreateRecoveryPhrase} />
@@ -52,23 +41,10 @@ export const BackupCreate = ({
         warning
         style={page.marginBottom}
       />
-      <View style={page.agree}>
-        <Checkbox
-          value={checked}
-          onPress={onClickCheck}
-          testID={`${testID}_checkbox`}>
-          <Text
-            t13
-            style={page.agreeText}
-            i18n={I18N.backupCreateRecoveryAgreement}
-          />
-        </Checkbox>
-      </View>
       <Button
         i18n={I18N.continue}
         style={page.submit}
         variant={ButtonVariant.contained}
-        disabled={!checked}
         onPress={onSubmit}
         testID={`${testID}_next`}
       />
@@ -83,13 +59,6 @@ const page = createTheme({
   },
   marginBottom: {marginBottom: 20},
   space: {justifyContent: 'center'},
-  agree: {marginBottom: 4, flexDirection: 'row'},
-  agreeText: {
-    flex: 1,
-    color: Color.textBase2,
-    marginLeft: 12,
-    marginBottom: 4,
-  },
   submit: {marginVertical: 16},
   t4: {
     alignSelf: 'center',

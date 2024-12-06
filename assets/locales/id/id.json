@@ -16,7 +16,7 @@
   "amount": "{{amount}} {{symbol}}",
   "apply": "Terapkan",
   "average": "Rata-rata",
-  "backupCreateRecoveryAgreement": "Saya mengerti bahwa jika saya kehilangan frasa pemulihan saya, saya tidak akan dapat mengembalikan akses ke akun saya",
+  "backupCreateRecoveryAgreement": "Frasa rahasia adalah kunci pribadi saya, dan saya tidak akan membagikannya kepada siapa pun.",
   "backupCreateRecoveryPhrase": "Frasa pemulihan Anda",
   "backupCreateRecoverySaveWords": "Tuliskan atau salin kata-kata ini dalam urutan yang benar dan simpan di tempat yang aman.",
   "backupCreateRecoveryWarningMessage": "Jika Anda kehilangan frasa pemulihan Anda, Anda tidak akan dapat mengakses dana Anda, karena tidak ada yang dapat mengembalikannya.",

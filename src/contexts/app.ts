@@ -352,7 +352,7 @@ class App extends AsyncEventEmitter {
       }
     }
 
-    await Wallet.fetchBalances();
+    Wallet.fetchBalances();
 
     this.authenticated = true;
 

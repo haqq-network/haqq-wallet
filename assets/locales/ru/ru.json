@@ -1,7 +1,7 @@
 {
   "StakingInfoUnDelegationDay": " ({{day}} день остался)",
   "StakingInfoUnDelegationDays": " ({{days}} дней осталось)",
-  "_hash": "e1781c9b1fc0e6483d4eb504c9d2746470c5e35be033966652dc20b37db38068",
+  "_hash": "d908fe8d695b4d964b3950be27fb3e789b30136003ff9185dfab3be3a9a2c6cd",
   "accept": "Принять",
   "accountInfoTokensTabTitle": "Токены",
   "accountInfoTransactionTabTitle": "Транзакции",
@@ -10,7 +10,7 @@
   "actionSheetMessage": "Вы уверены, что хотите отменить изменения?",
   "address": "Адрес",
   "apply": "Применить",
-  "backupCreateRecoveryAgreement": "Я понимаю, что если я потеряю фразу восстановления, я не смогу восстановить доступ к своей учетной записи",
+  "backupCreateRecoveryAgreement": "Секретная фраза — моя тайна, и я не буду делиться ею ни с кем.",
   "backupFinishCongratulation": "Поздравляем!",
   "backupFinishFinish": "Продолжить",
   "backupNotificationAlertTitle": "Продолжить без резервной копии? ",
