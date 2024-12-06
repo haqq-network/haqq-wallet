@@ -6,7 +6,7 @@ import {ChainId, IToken} from '@app/types';
 import {TransactionParcicipant} from './transaction-store.types';
 
 class TransactionStore {
-  private initialData = {
+  private readonly initialData = {
     address: '',
     chain_id: Provider.selectedProvider.ethChainId,
   };
@@ -65,7 +65,9 @@ class TransactionStore {
    *
    * @returns ETH chain id if address format supported and undefined when its unsupported
    */
-  private autoSelectProviderChainId = (value = ''): ChainId | undefined => {
+  private readonly autoSelectProviderChainId = (
+    value = '',
+  ): ChainId | undefined => {
     return Provider.getByAddress(value)?.ethChainId;
   };
 
