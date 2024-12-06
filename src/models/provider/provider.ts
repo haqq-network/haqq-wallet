@@ -276,11 +276,15 @@ class ProviderStore {
     }
 
     if (address.startsWith('haqq') || address.startsWith('0x')) {
-      return this.getByEthChainId(MAINNET_ETH_CHAIN_ID);
+      return this.selectedProvider.isHaqqNetwork || this.selectedProvider.isEVM
+        ? this.selectedProvider
+        : this.getByEthChainId(MAINNET_ETH_CHAIN_ID);
     }
 
     if (address.startsWith('t')) {
-      return this.getByEthChainId(TRON_CHAIN_ID);
+      return this.selectedProvider.isTron
+        ? this.selectedProvider
+        : this.getByEthChainId(TRON_CHAIN_ID);
     }
 
     return undefined;

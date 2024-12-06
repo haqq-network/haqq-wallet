@@ -6,7 +6,7 @@ import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 
-import {Box, DataContent, Text} from './ui';
+import {Box, DataContent, Text, TextVariant} from './ui';
 
 import {Contact} from '../models/contact';
 
@@ -22,7 +22,7 @@ export const AddressRow = ({item, onPress}: AddressRowProps) => {
       }}>
       <View style={page.container}>
         <Box style={page.badge}>
-          <Text t13 color={Color.textBase2}>
+          <Text variant={TextVariant.t13} color={Color.textBase2}>
             {item.name.slice(0, 1)}
           </Text>
         </Box>
