@@ -62,8 +62,12 @@ export const TransactionAddressScreen = observer(() => {
 
   const onDone = useCallback(
     async (result: string) => {
+      if (!toChainId || !toAddress || !fromAddress) {
+        return;
+      }
+
       try {
-        const networkType = Provider.selectedProvider.isTron
+        const networkType = Provider.getByEthChainId(toChainId)?.isTron
           ? NetworkProviderTypes.TRON
           : NetworkProviderTypes.EVM;
         const converter = AddressUtils.getConverterByNetwork(networkType);
@@ -106,7 +110,7 @@ export const TransactionAddressScreen = observer(() => {
         setLoading(false);
       }
     },
-    [navigation, nft, token, fromAddress],
+    [navigation, nft, token, fromAddress, toAddress, toChainId],
   );
 
   const doneDisabled = useMemo(() => {

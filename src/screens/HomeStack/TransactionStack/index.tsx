@@ -64,8 +64,12 @@ export const TransactionStack = memo(() => {
       : TransactionStackRoutes.TransactionAccount;
   }, [nft, from]);
 
+  // FIXME: For some reason when navigate from stack to stack params stored inside params like params.params
+  //@ts-ignore
+  const initialParams = params?.params ?? params;
+
   return (
-    <TransactionStoreContainer initialParams={params}>
+    <TransactionStoreContainer initialParams={initialParams}>
       <Stack.Navigator
         screenOptions={popupScreenOptions}
         initialRouteName={initialRoute}>
