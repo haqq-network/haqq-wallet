@@ -98,7 +98,6 @@ export const TransactionAddressInput = observer(
         error={isError}
         errorText={getText(I18N.transactionAddressError)}
         autoFocus
-        multiline
         onKeyPress={onKeyPress}
         numberOfLines={10}
         placeholder={I18N.transactionAddressPlaceholder}
