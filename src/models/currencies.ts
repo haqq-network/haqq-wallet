@@ -19,6 +19,8 @@ import {
 
 import {Provider} from './provider';
 
+export const RATE_DECIMALS = 18;
+
 class CurrenciesStore {
   private _selectedCurrency: string = '';
   private _currencies: Record<string, Currency> = {};
@@ -82,8 +84,7 @@ class CurrenciesStore {
               ...acc,
               [tokenKey?.toLocaleLowerCase()]: {
                 amount: rate?.amount
-                  ? parseFloat(rate.amount) /
-                    10 ** Provider.getByEthChainId(chainId)!.decimals
+                  ? parseFloat(rate.amount) / 10 ** RATE_DECIMALS
                   : 0,
                 denom: rate?.denom,
               } as CurrencyRate,
