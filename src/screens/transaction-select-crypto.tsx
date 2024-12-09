@@ -55,8 +55,8 @@ export const TransactionSelectCryptoScreen = observer(() => {
   };
 
   if (Token.isLoading) {
-    return (
-      <View style={styles.placeholderContainer}>
+    return Array.from({length: 6}).map((_, index) => (
+      <View key={index} style={styles.placeholderContainer}>
         <View style={styles.placeholderLeft}>
           <Placeholder>
             <Placeholder.Item width={48} height={48} />
@@ -75,7 +75,7 @@ export const TransactionSelectCryptoScreen = observer(() => {
           <Placeholder.Item width={50} height={20} />
         </Placeholder>
       </View>
-    );
+    ));
   }
 
   return <TransactionSelectCrypto tokens={tokens} onItemPress={onItemPress} />;
