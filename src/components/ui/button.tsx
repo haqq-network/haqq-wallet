@@ -45,14 +45,6 @@ export type ButtonValue =
       i18params?: undefined;
     };
 
-export type ButtonRightIconProps =
-  | {iconRight: IconProps['name']; iconRightColor: IconProps['color']}
-  | {iconRight?: undefined; iconRightColor?: undefined};
-
-export type ButtonLeftIconProps =
-  | {iconLeft: IconProps['name']; iconLeftColor: IconProps['color']}
-  | {iconLeft?: undefined; iconLeftColor?: undefined};
-
 export type ButtonProps = Omit<ViewProps, 'children'> & {
   variant?: ButtonVariant;
   size?: ButtonSize;
@@ -70,9 +62,11 @@ export type ButtonProps = Omit<ViewProps, 'children'> & {
   circleBorders?: boolean;
   trackLoading?: boolean;
   timer?: number;
-} & ButtonValue &
-  ButtonRightIconProps &
-  ButtonLeftIconProps;
+  iconRight?: IconProps['name'];
+  iconRightColor?: IconProps['color'];
+  iconLeft?: IconProps['name'];
+  iconLeftColor?: IconProps['color'];
+} & ButtonValue;
 
 export enum ButtonVariant {
   text = 'text',
@@ -261,7 +255,11 @@ export const Button = ({
         <>
           {iconLeft && (
             <View style={iconLeftStyle}>
-              <Icon name={iconLeft} color={iconLeftColor} style={styles.icon} />
+              <Icon
+                name={iconLeft}
+                color={iconLeftColor ?? Color.transparent}
+                style={styles.icon}
+              />
             </View>
           )}
           <First>
@@ -282,7 +280,7 @@ export const Button = ({
             <View style={iconRightStyle}>
               <Icon
                 name={iconRight}
-                color={iconRightColor}
+                color={iconRightColor ?? Color.transparent}
                 style={styles.icon}
               />
             </View>
