@@ -1,11 +1,12 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
 
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
+  Checkbox,
   Icon,
   InfoBlock,
   LottieWrap,
@@ -18,18 +19,32 @@ import {
 import {useTheme} from '@app/hooks';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
+import {HapticEffects, vibrate} from '@app/services/haptic';
 import {AppTheme, WalletType} from '@app/types';
 
 interface BackupWarningProps {
   onPressBackup: () => void;
   testID?: string;
+  isSSS?: boolean;
 }
 
-export function BackupWarning({onPressBackup, testID}: BackupWarningProps) {
+export function BackupWarning({
+  onPressBackup,
+  testID,
+  isSSS,
+}: BackupWarningProps) {
+  const [checked, setChecked] = useState(false);
+
+  const onClickCheck = (val: boolean) => {
+    vibrate(HapticEffects.impactLight);
+    setChecked(val);
+  };
+
   const theme = useTheme();
-  const isSSSWallet = Boolean(
-    Wallet.getAll().find(w => w.type === WalletType.sss),
-  );
+  const isSSSWallet =
+    typeof isSSS === 'boolean'
+      ? isSSS
+      : Boolean(Wallet.getAll().find(w => w.type === WalletType.sss));
 
   const animation = useMemo(() => {
     if (theme === AppTheme.dark) {
@@ -73,7 +88,7 @@ export function BackupWarning({onPressBackup, testID}: BackupWarningProps) {
         position={TextPosition.center}
       />
       <InfoBlock
-        warning
+        error
         style={styles.infoBlock1}
         icon={<Icon name="warning" color={Color.textYellow1} i24 />}
         i18n={infoBlock1}
@@ -84,12 +99,25 @@ export function BackupWarning({onPressBackup, testID}: BackupWarningProps) {
         icon={<Icon name="warning" color={Color.textYellow1} i24 />}
         i18n={infoBlock2}
       />
+      <View style={styles.agree}>
+        <Checkbox
+          value={checked}
+          onPress={onClickCheck}
+          testID={`${testID}_checkbox`}>
+          <Text
+            t13
+            style={styles.agreeText}
+            i18n={I18N.backupCreateRecoveryAgreement}
+          />
+        </Checkbox>
+      </View>
       <Button
         variant={ButtonVariant.contained}
         style={styles.submit}
         i18n={I18N.backupWarningButton}
         onPress={onPressBackup}
         testID={`${testID}_next`}
+        disabled={!checked}
       />
     </PopupContainer>
   );
@@ -106,4 +134,11 @@ const styles = StyleSheet.create({
   infoBlock1: {marginBottom: 20},
   infoBlock2: {marginBottom: 34},
   submit: {marginVertical: 16},
+  agree: {marginBottom: 4, flexDirection: 'row'},
+  agreeText: {
+    flex: 1,
+    color: Color.textBase2,
+    marginLeft: 12,
+    marginBottom: 4,
+  },
 });
