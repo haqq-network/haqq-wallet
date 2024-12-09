@@ -2,8 +2,12 @@ import React, {useEffect, useMemo} from 'react';
 
 import {computed} from 'mobx';
 import {observer} from 'mobx-react';
+import {View} from 'react-native';
 
 import {TransactionSelectCrypto} from '@app/components/transaction-select-crypto';
+import {Spacer} from '@app/components/ui';
+import {Placeholder} from '@app/components/ui/placeholder';
+import {createTheme} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
@@ -50,5 +54,45 @@ export const TransactionSelectCryptoScreen = observer(() => {
     });
   };
 
+  if (Token.isLoading) {
+    return (
+      <View style={styles.placeholderContainer}>
+        <View style={styles.placeholderLeft}>
+          <Placeholder>
+            <Placeholder.Item width={48} height={48} />
+          </Placeholder>
+          <Spacer width={20} />
+          <View style={styles.placeholderRows}>
+            <Placeholder>
+              <Placeholder.Item width={60} height={20} />
+            </Placeholder>
+            <Placeholder>
+              <Placeholder.Item width={120} height={20} />
+            </Placeholder>
+          </View>
+        </View>
+        <Placeholder>
+          <Placeholder.Item width={50} height={20} />
+        </Placeholder>
+      </View>
+    );
+  }
+
   return <TransactionSelectCrypto tokens={tokens} onItemPress={onItemPress} />;
+});
+
+const styles = createTheme({
+  placeholderContainer: {
+    marginHorizontal: 20,
+    marginTop: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  placeholderRows: {
+    height: 48,
+    justifyContent: 'space-around',
+  },
+  placeholderLeft: {
+    flexDirection: 'row',
+  },
 });
