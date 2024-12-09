@@ -2,7 +2,6 @@ import React, {
   memo,
   useCallback,
   useEffect,
-  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -10,8 +9,6 @@ import React, {
 
 import {
   I18nManager,
-  InteractionManager,
-  Keyboard,
   LayoutChangeEvent,
   NativeSyntheticEvent,
   Pressable,
@@ -37,8 +34,7 @@ import {Spacer} from '@app/components/ui/spacer';
 import {Text, TextProps, TextVariant} from '@app/components/ui/text';
 import {createTheme, showModal} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
-import {sleep} from '@app/utils';
-import {IS_ANDROID, IS_IOS} from '@app/variables/common';
+import {IS_IOS} from '@app/variables/common';
 
 import {Button, ButtonSize} from './button';
 import {First} from './first';
@@ -145,32 +141,8 @@ export const TextField: React.FC<TextFieldProps> = memo(
       });
     }, [value, focusAnim, isFocused]);
 
-    useLayoutEffect(() => {
-      if (!autoFocus || IS_ANDROID) {
-        return;
-      }
-
-      const interaction = InteractionManager.runAfterInteractions(async () => {
-        if (!inputRef.current?.isFocused()) {
-          Keyboard.dismiss();
-          await sleep(100);
-          inputRef.current?.focus();
-        }
-      });
-
-      return () => {
-        interaction.cancel();
-        if (inputRef.current?.isFocused()) {
-          inputRef.current?.blur();
-        }
-      };
-    }, [autoFocus]);
-
     const enableAutoFocus = useMemo(() => {
-      if (IS_ANDROID) {
-        return autoFocus;
-      }
-      return false;
+      return autoFocus;
     }, [autoFocus]);
 
     let color = getColor(error ? Color.textRed1 : Color.textBase2);
