@@ -3,7 +3,6 @@ import {makeAutoObservable, runInAction} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 import Config from 'react-native-config';
 
-import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {hideModal, showModal} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
@@ -28,6 +27,7 @@ import {
   ProviderID,
 } from './provider.types';
 
+import {AppStore} from '../app';
 import {Currencies} from '../currencies';
 import {Nft} from '../nft';
 import {Stories} from '../stories';
@@ -129,7 +129,10 @@ class ProviderStore {
 
     await Promise.allSettled([
       Currencies.setSelectedCurrency(),
-      awaitForEventDone(Events.onTesterModeChanged, app.isTesterMode),
+      awaitForEventDone(
+        Events.onTesterModeChanged,
+        AppStore.isTesterModeEnabled,
+      ),
       EthRpcEndpointAvailability.checkEthRpcEndpointAvailability(),
       Stories.fetch(true),
     ]);

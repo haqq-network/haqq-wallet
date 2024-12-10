@@ -2,6 +2,7 @@ import React, {memo, useCallback, useState} from 'react';
 
 import {ProviderMnemonicBase, ProviderSSSBase} from '@haqq/rn-wallet-providers';
 
+import {BackupWarning} from '@app/components/backup-warning';
 import {SettingsViewRecoveryPhrase} from '@app/components/settings/settings-view-recovery-phrase';
 import {CustomHeader, First, Loading} from '@app/components/ui';
 import {app} from '@app/contexts';
@@ -9,6 +10,7 @@ import {showModal} from '@app/helpers';
 import {getProviderStorage} from '@app/helpers/sss';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useError} from '@app/hooks/use-error';
+import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {I18N} from '@app/i18n';
 import {
   ManageAccountsStackParamList,
@@ -20,12 +22,14 @@ import {PinGuardScreen} from '../../pin-guard';
 
 export const SettingsViewRecoveryPhraseScreen = memo(() => {
   const navigation = useTypedNavigation<ManageAccountsStackParamList>();
+  const {animate} = useLayoutAnimation();
   const {accountId, type} = useTypedRoute<
     ManageAccountsStackParamList,
     ManageAccountsStackRoutes.SettingsViewRecoveryPhrase
   >().params;
 
   const [mnemonic, setMnemonic] = useState<string>('');
+  const [showWarning, setShowWarning] = useState(true);
   const showError = useError();
 
   const onEnter = useCallback(async () => {
@@ -67,6 +71,11 @@ export const SettingsViewRecoveryPhraseScreen = memo(() => {
     }
   }, [accountId, type]);
 
+  const handleHideWarning = () => {
+    animate();
+    setShowWarning(false);
+  };
+
   return (
     <PinGuardScreen
       enabled
@@ -79,6 +88,9 @@ export const SettingsViewRecoveryPhraseScreen = memo(() => {
       />
       <First>
         {!mnemonic && <Loading />}
+        {showWarning && (
+          <BackupWarning isSSS={false} onPressBackup={handleHideWarning} />
+        )}
         <SettingsViewRecoveryPhrase mnemonic={mnemonic} />
       </First>
     </PinGuardScreen>

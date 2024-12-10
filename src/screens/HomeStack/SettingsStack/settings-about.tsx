@@ -3,8 +3,8 @@ import React, {useCallback} from 'react';
 import {Alert} from 'react-native';
 
 import {SettingsAbout} from '@app/components/settings-about';
-import {app} from '@app/contexts';
 import {I18N, getText} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {navigator} from '@app/navigator';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 
@@ -19,7 +19,7 @@ export const SettingsAboutScreen = () => {
           text: getText(I18N.developerModeAttentionEnable),
           style: 'destructive',
           onPress: () => {
-            app.isTesterMode = true;
+            AppStore.isTesterModeEnabled = true;
             vibrate(HapticEffects.success);
             navigator.goBack();
           },

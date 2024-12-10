@@ -37,7 +37,7 @@ class ContactStore {
     account: Contact['account'],
     params: Omit<Partial<Contact>, 'account'>,
   ) {
-    const id = account.toLowerCase();
+    const id = account;
     const existingContact = this.getById(id);
     const newContact = {
       ...existingContact,
@@ -74,9 +74,10 @@ class ContactStore {
   }
 
   getById(account: string) {
+    const lowerCaseAccount = account.toLowerCase();
     return (
       this.contacts.find(
-        contact => contact.account === account.toLowerCase(),
+        contact => contact.account.toLowerCase() === lowerCaseAccount,
       ) ?? null
     );
   }

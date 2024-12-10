@@ -1,4 +1,5 @@
 import {app} from '@app/contexts';
+import {AppStore} from '@app/models/app';
 
 export enum Feature {
   sss,
@@ -17,7 +18,7 @@ export const isFeatureEnabled = (feature: Feature): boolean => {
     case Feature.earn:
       return true;
     case Feature.governanceAndStaking:
-      return app.isDeveloper;
+      return AppStore.isDeveloperModeEnabled;
     case Feature.tokens:
       return true;
     case Feature.rtl:
