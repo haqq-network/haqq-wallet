@@ -3,11 +3,11 @@ import {useCallback, useMemo, useState} from 'react';
 import {ListRenderItem} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 
+import {SearchInput} from '@app/components/search-input';
 import {createTheme} from '@app/helpers';
 import {Provider, ProviderModel} from '@app/models/provider';
 
 import {TransactionNetworkSelectItem} from './transaction-network-select-item';
-import {TransactionNetworkSelectSearch} from './transaction-network-select-search';
 
 export const TransactionNetworkSelectScreen = () => {
   const [searchProviderValue, setSearchProviderValue] = useState('');
@@ -53,7 +53,7 @@ export const TransactionNetworkSelectScreen = () => {
       keyExtractor={keyExtractor}
       renderItem={renderItem}
       ListHeaderComponent={
-        <TransactionNetworkSelectSearch
+        <SearchInput
           value={searchProviderValue}
           onChange={setSearchProviderValue}
         />

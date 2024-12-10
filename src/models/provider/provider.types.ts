@@ -24,7 +24,7 @@ export const ALL_NETWORKS_PROVIDER: NetworkProvider = {
   entry_point: 'https://rpc.eth.haqq.network/',
   explorer_url: undefined,
   indexer_url: RemoteConfig.get('proxy_server')!,
-  network_type: NetworkProviderTypes.EVM,
+  network_type: NetworkProviderTypes.ALL,
   stage: NetworkProviderStage.MAINNET,
   status: NetworkProviderStatus.PUBLISHED,
   wei_denom: '',
