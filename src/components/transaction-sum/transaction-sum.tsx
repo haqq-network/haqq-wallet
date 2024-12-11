@@ -13,13 +13,14 @@ import {
   Spacer,
   SumBlock,
   Text,
+  TextPosition,
   TextVariant,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {useSumAmount} from '@app/hooks';
 import {useKeyboard} from '@app/hooks/use-keyboard';
-import {I18N} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {ProviderModel} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
@@ -188,9 +189,24 @@ export const TransactionSum = observer(
           />
         </Spacer>
         <Spacer minHeight={16} />
+        {!!transactionFee && (
+          <View style={styles.feeContainer}>
+            <Text
+              position={TextPosition.center}
+              color={Color.textBase2}
+              variant={TextVariant.t15}
+              testID={`${testID}_fee`}>
+              {getText(I18N.transactionDetailNetworkFee)}:{' '}
+              <Text variant={TextVariant.t15} color={Color.textGreen1}>
+                {transactionFee?.toBalanceString('auto')}
+              </Text>
+            </Text>
+          </View>
+        )}
+        <Spacer minHeight={16} />
         <Button
           loading={isLoading}
-          disabled={!amounts.isValid || isLoading}
+          disabled={isLoading}
           variant={ButtonVariant.contained}
           i18n={I18N.transactionSumPreview}
           onPress={onDone}
@@ -234,5 +250,12 @@ const styles = createTheme({
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingBottom: 16,
+  },
+  feeContainer: {
+    backgroundColor: Color.bg8,
+    borderRadius: 6,
+    paddingVertical: 4,
+    width: '45%',
+    alignSelf: 'center',
   },
 });

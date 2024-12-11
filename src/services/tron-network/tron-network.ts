@@ -307,7 +307,11 @@ export class TronNetwork {
         gasLimit: Balance.Empty,
         maxBaseFee: Balance.Empty,
         maxPriorityFee: Balance.Empty,
-        expectedFee: new Balance(totalFeeInTrx, 0, provider.denom),
+        expectedFee: new Balance(
+          `${totalFeeInTrx * 10 ** provider.decimals}`,
+          provider.decimals,
+          provider.denom,
+        ),
       };
 
       return result;
@@ -332,7 +336,11 @@ export class TronNetwork {
         gasLimit: Balance.Empty,
         maxBaseFee: Balance.Empty,
         maxPriorityFee: Balance.Empty,
-        expectedFee: new Balance(standardFeeInTrx, 0, provider.denom),
+        expectedFee: new Balance(
+          `${standardFeeInTrx * 10 ** provider.decimals}`,
+          provider.decimals,
+          provider.denom,
+        ),
       };
     }
   }
@@ -417,7 +425,11 @@ export class TronNetwork {
         gasLimit: Balance.Empty,
         maxBaseFee: Balance.Empty,
         maxPriorityFee: Balance.Empty,
-        expectedFee: new Balance(totalFeeInTrx, 0, provider.denom),
+        expectedFee: new Balance(
+          `${totalFeeInTrx * 10 ** provider.decimals}`,
+          provider.decimals,
+          provider.denom,
+        ),
       };
 
       return fees;
@@ -448,8 +460,11 @@ export class TronNetwork {
         maxBaseFee: Balance.Empty,
         maxPriorityFee: Balance.Empty,
         expectedFee: new Balance(
-          bandwidthConsumption / BANDWIDTH_PRICE_IN_SUN,
-          0,
+          `${
+            (bandwidthConsumption / BANDWIDTH_PRICE_IN_SUN) *
+            10 ** provider.decimals
+          }`,
+          provider.decimals,
           provider.denom,
         ),
       };
