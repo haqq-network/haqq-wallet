@@ -219,12 +219,10 @@ export class TronNetwork {
       const tronAddress = AddressUtils.toTron(address);
 
       const resources = await tronWeb.trx.getAccountResources(tronAddress);
-      const freeNetRemaining = Math.max(
-        resources.freeNetLimit - resources.freeNetUsed || 0,
-      );
-      const netRemaining = Math.max(
-        resources.NetLimit - resources.NetUsed || 0,
-      );
+      const freeNetRemaining =
+        (resources.freeNetLimit ?? 0) - (resources.freeNetUsed ?? 0) ?? 0;
+      const netRemaining =
+        (resources.NetLimit ?? 0) - (resources.NetUsed ?? 0) ?? 0;
 
       return {
         freeNetUsed: resources.freeNetUsed || 0,
@@ -378,7 +376,7 @@ export class TronNetwork {
 
       // Calculate fee based on energy required
       const energyFee = energyEstimate.energy_required * ENERGY_FEE_RATE;
-
+      logger.log('[estimateFeeSendTRC20] Energy fee:', energyFee);
       // Get transaction structure for bandwidth estimation
       const transaction = await tronWeb.transactionBuilder.triggerSmartContract(
         contractAddress,
@@ -390,20 +388,25 @@ export class TronNetwork {
         parameter,
         fromAddress,
       );
-
+      logger.log('[estimateFeeSendTRC20] Transaction:', transaction);
       const accountResources = await this.getAccountBandwidth(from, provider);
+      logger.log('[estimateFeeSendTRC20] Account resources:', accountResources);
       // Calculate bandwidth fee
       const bandwidthConsumption = this.calculateBandwidthConsumption(
         transaction?.transaction?.raw_data_hex ?? '',
       );
-
+      logger.log(
+        '[estimateFeeSendTRC20] Bandwidth consumption:',
+        bandwidthConsumption,
+      );
       // 5. Calculate required bandwidth fee
-      let totalFeeInTrx = 0; // fee can be 0 if no bandwidth is consumed
+      let totalFeeInTrx = energyFee / 10 ** 6;
       if (bandwidthConsumption > accountResources.totalBandwidth) {
         totalFeeInTrx = bandwidthConsumption / BANDWIDTH_PRICE_IN_SUN;
       }
-
+      logger.log('[estimateFeeSendTRC20] Total fee in TRX:', totalFeeInTrx);
       const accountTo = await tronWeb.trx.getAccount(AddressUtils.toTron(to));
+      logger.log('[estimateFeeSendTRC20] Account to:', accountTo);
       const isAccountActive = !!accountTo.address;
       if (!isAccountActive) {
         totalFeeInTrx += 1; // Add 1 TRX activation fee
@@ -436,7 +439,10 @@ export class TronNetwork {
       const bandwidthConsumption = this.calculateBandwidthConsumption(
         transaction?.transaction?.raw_data_hex ?? '',
       );
-
+      logger.log(
+        '[estimateFeeSendTRC20] Fallback Bandwidth consumption:',
+        bandwidthConsumption,
+      );
       const fees = {
         gasLimit: Balance.Empty,
         maxBaseFee: Balance.Empty,
