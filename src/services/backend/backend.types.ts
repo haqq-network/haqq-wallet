@@ -1,4 +1,5 @@
 export enum NetworkProviderTypes {
+  ALL = 'All',
   EVM = 'evm',
   HAQQ = 'haqq',
   TRON = 'tron',
