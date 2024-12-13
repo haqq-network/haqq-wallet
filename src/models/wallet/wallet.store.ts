@@ -14,11 +14,12 @@ import {RPCMessage, RPCObserver} from '@app/types/rpc';
 import {deepClone} from '@app/utils';
 import {
   ETH_COIN_TYPE,
+  STORE_REHYDRATION_TIMEOUT_MS,
   TRON_COIN_TYPE,
   ZERO_HEX_NUMBER,
 } from '@app/variables/common';
 
-import {BalanceModel} from './balance.model';
+import {BalanceDataJson, BalanceModel} from './balance.model';
 import {getMockWallets} from './wallet.mock';
 import {WalletModel} from './wallet.model';
 import {IWalletModel} from './wallet.types';
@@ -45,14 +46,22 @@ import {Currencies} from '../currencies';
 import {ALL_NETWORKS_ID, Provider, ProviderModel} from '../provider';
 import {Token} from '../tokens';
 
+type TBalances = Record<ChainId, Record<AddressEthereum, BalanceModel>>;
+type TBalancesSerialized = Record<
+  ChainId,
+  Record<AddressEthereum, BalanceDataJson>
+>;
+
+const logger = Logger.create('WalletStore');
+
 class WalletStore implements RPCObserver {
   wallets: WalletModel[] = [];
 
   lastBalanceUpdate: Date = new Date(0);
-  balances: Record<ChainId, Record<AddressEthereum, BalanceModel>> = {};
+  balances: TBalances = {};
 
   constructor(shouldSkipPersisting: boolean = false) {
-    makeAutoObservable(this);
+    makeAutoObservable(this, {}, {autoBind: true});
 
     when(
       () => Socket.lastMessage.type === 'balance',
@@ -77,7 +86,6 @@ class WalletStore implements RPCObserver {
                 originalWallets = value;
                 return getMockWallets().map(w => new WalletModel(w));
               }
-
               return value
                 .sort(
                   (a: IWalletModel, b: IWalletModel) => a.position - b.position,
@@ -88,7 +96,64 @@ class WalletStore implements RPCObserver {
               if (isMockEnabled) {
                 return originalWallets;
               }
+
               return value.map(w => w.toJSON());
+            },
+          },
+          {
+            key: 'balances',
+            deserialize: (value: TBalancesSerialized) => {
+              try {
+                const deserialized: TBalances = {};
+
+                for (const chainId of Object.keys(value)) {
+                  const walletsBalances = Object.entries(value[chainId]) as [
+                    AddressEthereum,
+                    BalanceDataJson,
+                  ][];
+
+                  if (!deserialized[chainId]) {
+                    deserialized[chainId] = {};
+                  }
+
+                  for (const [wallet, balance] of walletsBalances) {
+                    deserialized[chainId][wallet] =
+                      BalanceModel.fromJSON(balance);
+                  }
+                }
+
+                return deserialized;
+              } catch (err) {
+                logger.captureException(err, 'balances deserialize', {value});
+                return {};
+              }
+            },
+            serialize: (value: TBalances) => {
+              try {
+                const serialized: TBalancesSerialized = {};
+
+                for (const chainId of Object.keys(value)) {
+                  const walletsBalances = Object.entries(value[chainId]) as [
+                    AddressEthereum,
+                    BalanceModel,
+                  ][];
+
+                  if (!serialized[chainId]) {
+                    serialized[chainId] = {};
+                  }
+
+                  for (const [wallet, balance] of walletsBalances) {
+                    serialized[chainId][wallet] = balance.toJSON();
+                  }
+                }
+
+                return serialized;
+              } catch (err) {
+                logger.captureException(err, 'balances serialize', {
+                  value,
+                });
+                return {};
+              }
             },
           },
         ],
@@ -101,7 +166,11 @@ class WalletStore implements RPCObserver {
     return isHydrated(this);
   }
 
-  private _prepareIndexerBalances = (data: IndexerBalance) => {
+  private _prepareIndexerBalances = (data: IndexerBalance = []) => {
+    if (!data?.length) {
+      return undefined;
+    }
+
     const TRON_CHAIN_IDS = Provider.getAllNetworks()
       .filter(p => p.isTron)
       .map(p => p.ethChainId as ChainId);
@@ -143,68 +212,114 @@ class WalletStore implements RPCObserver {
 
   private parseIndexerBalances = (
     data: IndexerUpdatesResponse,
-  ): IndexerBalanceData => {
-    const providers = Provider.getAll().filter(p => p.id !== ALL_NETWORKS_ID);
+  ): IndexerBalanceData | undefined => {
+    try {
+      const providers = Provider.getAll().filter(p => p.id !== ALL_NETWORKS_ID);
 
-    const staked = this._prepareIndexerBalances(data.total_staked);
-    const vested = this._prepareIndexerBalances(data.vested);
-    const available = this._prepareIndexerBalances(data.available);
-    const total = this._prepareIndexerBalances(data.total);
-    const lock = this._prepareIndexerBalances(data.locked);
-    const availableForStake = this._prepareIndexerBalances(
-      data.available_for_stake,
-    );
+      const staked = this._prepareIndexerBalances(data.total_staked);
+      const vested = this._prepareIndexerBalances(data.vested);
+      const available = this._prepareIndexerBalances(data.available);
+      const total = this._prepareIndexerBalances(data.total);
+      const lock = this._prepareIndexerBalances(data.locked);
+      const availableForStake = this._prepareIndexerBalances(
+        data.available_for_stake,
+      );
 
-    return providers.reduce((acc, p) => {
-      return {
-        ...acc,
-        [p.ethChainId]: {
-          ...this.wallets.reduce((ac, w) => {
-            const cosmosAddress = AddressUtils.toHaqq(w.address);
-            const unlock = Number(data?.unlock?.[cosmosAddress]) ?? 0;
-            const ADDRESS_KEY = AddressUtils.toEth(w.address);
+      if (!available) {
+        return undefined;
+      }
 
-            return {
-              ...ac,
-              [ADDRESS_KEY]: new BalanceModel({
-                staked: new Balance(
-                  staked[p.ethChainId]?.[ADDRESS_KEY] ?? ZERO_HEX_NUMBER,
-                  p.decimals,
-                  p.denom,
-                ),
-                vested: new Balance(
-                  vested[p.ethChainId]?.[ADDRESS_KEY] ?? ZERO_HEX_NUMBER,
-                  p.decimals,
-                  p.denom,
-                ),
-                available: new Balance(
-                  available[p.ethChainId]?.[ADDRESS_KEY] ?? ZERO_HEX_NUMBER,
-                  p.decimals,
-                  p.denom,
-                ),
-                total: new Balance(
-                  total[p.ethChainId]?.[ADDRESS_KEY] ?? ZERO_HEX_NUMBER,
-                  p.decimals,
-                  p.denom,
-                ),
-                locked: new Balance(
-                  lock[p.ethChainId]?.[ADDRESS_KEY] ?? ZERO_HEX_NUMBER,
-                  p.decimals,
-                  p.denom,
-                ),
-                availableForStake: new Balance(
-                  availableForStake[p.ethChainId]?.[ADDRESS_KEY] ??
-                    ZERO_HEX_NUMBER,
-                  p.decimals,
-                  p.denom,
-                ),
-                unlock: new Date(unlock * 1000),
-              }),
-            };
-          }, {}),
-        },
-      };
-    }, {});
+      return providers.reduce((acc, p) => {
+        try {
+          return {
+            ...acc,
+            [p.ethChainId]: {
+              ...this.wallets.reduce((ac, w) => {
+                try {
+                  const cosmosAddress = AddressUtils.toHaqq(w.address);
+                  const unlock = Number(data?.unlock?.[cosmosAddress] ?? 0);
+                  const ADDRESS_KEY = AddressUtils.toEth(w.address);
+                  const cachedBalances =
+                    this.balances?.[p.ethChainId]?.[ADDRESS_KEY] || {};
+
+                  const availableValue =
+                    available?.[p.ethChainId]?.[ADDRESS_KEY] ??
+                    cachedBalances.available;
+
+                  // for correct balance placrholders work
+                  if (!availableValue) {
+                    return ac;
+                  }
+
+                  const stakedValue =
+                    staked?.[p.ethChainId]?.[ADDRESS_KEY] ??
+                    cachedBalances.staked ??
+                    ZERO_HEX_NUMBER;
+
+                  const vestedValue =
+                    vested?.[p.ethChainId]?.[ADDRESS_KEY] ??
+                    cachedBalances.vested ??
+                    ZERO_HEX_NUMBER;
+
+                  const totalValue =
+                    total?.[p.ethChainId]?.[ADDRESS_KEY] ??
+                    cachedBalances.total ??
+                    ZERO_HEX_NUMBER;
+
+                  const lockedValue =
+                    lock?.[p.ethChainId]?.[ADDRESS_KEY] ??
+                    cachedBalances.locked ??
+                    ZERO_HEX_NUMBER;
+
+                  const availableForStakeValue =
+                    availableForStake?.[p.ethChainId]?.[ADDRESS_KEY] ??
+                    cachedBalances.availableForStake ??
+                    ZERO_HEX_NUMBER;
+
+                  return {
+                    ...ac,
+                    [ADDRESS_KEY]: new BalanceModel({
+                      staked: new Balance(stakedValue, p.decimals, p.denom),
+                      vested: new Balance(vestedValue, p.decimals, p.denom),
+                      available: new Balance(
+                        availableValue,
+                        p.decimals,
+                        p.denom,
+                      ),
+                      total: new Balance(totalValue, p.decimals, p.denom),
+                      locked: new Balance(lockedValue, p.decimals, p.denom),
+                      availableForStake: new Balance(
+                        availableForStakeValue,
+                        p.decimals,
+                        p.denom,
+                      ),
+                      unlock: new Date(unlock),
+                    }),
+                  };
+                } catch (err) {
+                  logger.error(
+                    'parseIndexerBalances 1',
+                    err,
+                    JSON.stringify({data, ac, acc, w}, null, 2),
+                  );
+                  return ac;
+                }
+              }, {}),
+            },
+          };
+        } catch (err) {
+          logger.log(
+            'parseIndexerBalances 2',
+            err,
+            JSON.stringify({data, acc, p}, null, 2),
+          );
+          return acc;
+        }
+      }, {});
+    } catch (err) {
+      logger.error('parseIndexerBalances 3', err, data);
+      return undefined;
+    }
   };
 
   fetchBalances = async (
@@ -212,9 +327,14 @@ class WalletStore implements RPCObserver {
     forceUpdateRates = false,
   ) => {
     try {
-      if (!AppStore.isOnboarded) {
+      if (!AppStore.isOnboarded || !this.isHydrated) {
         return;
       }
+
+      // Request rates based on current currency
+      await when(() => this.isHydrated, {
+        timeout: STORE_REHYDRATION_TIMEOUT_MS,
+      });
 
       let updates = deepClone(indexerUpdates);
       if (!updates) {
@@ -224,15 +344,20 @@ class WalletStore implements RPCObserver {
           this.lastBalanceUpdate,
         );
       }
-
+      const newBalances = this.parseIndexerBalances(updates);
       runInAction(() => {
-        this.lastBalanceUpdate = new Date(updates.last_update);
-        this.balances = this.parseIndexerBalances(updates);
+        if (newBalances) {
+          this.lastBalanceUpdate = new Date(updates.last_update);
+          this.balances = newBalances;
+        }
       });
 
       Currencies.setRates(updates.rates, forceUpdateRates);
-    } catch (e) {
-      Logger.error('Fetch balances error', e);
+    } catch (err) {
+      logger.captureException(err, 'fetchBalances', {
+        indexerUpdates,
+        forceUpdateRates,
+      });
     }
   };
 
@@ -242,7 +367,8 @@ class WalletStore implements RPCObserver {
   get isBalancesLoaded() {
     return (
       Provider.isAllNetworks ||
-      Boolean(this.balances[Provider.selectedProvider.ethChainId])
+      Object.keys(this.balances[Provider.selectedProvider.ethChainId] || {})
+        .length === this.wallets.length
     );
   }
 
