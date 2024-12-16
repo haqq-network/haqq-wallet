@@ -121,16 +121,33 @@ export class Balance implements IBalance, ISerializable {
   };
 
   static fromJsonString = (obj: string | Balance) => {
-    const serializedValue: {
-      value: HexNumber;
-      precision: number;
-      symbol: string;
-    } = JSON.parse(String(obj));
-    return new Balance(
-      serializedValue.value,
-      serializedValue.precision,
-      serializedValue.symbol,
-    );
+    try {
+      const serializedValue: {
+        value: HexNumber;
+        precision: number;
+        symbol: string;
+      } = typeof obj === 'string' ? JSON.parse(String(obj)) : obj;
+      return new Balance(
+        serializedValue.value,
+        serializedValue.precision,
+        serializedValue.symbol,
+      );
+    } catch (err) {
+      // "Hex: 0x0, Ether: 0 ISLM, Wei: 0 aISLM, Precision: 18, Symbol: ISLM"
+      if (typeof obj === 'string') {
+        const values = Object.fromEntries(
+          obj.split(', ').map(i => i.split(':').map(j => j.trim())),
+        ) as {
+          Hex: string;
+          Ether: string;
+          Wei: string;
+          Precision: string;
+          Symbol: string;
+        };
+        return new Balance(values.Hex, Number(values.Precision), values.Symbol);
+      }
+      throw err;
+    }
   };
 
   /**

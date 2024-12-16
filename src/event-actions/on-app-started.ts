@@ -107,7 +107,7 @@ export async function onAppStarted() {
 
     await onUpdatesSync();
     await onAppBackup();
-    await Wallet.fetchBalances();
+    Wallet.fetchBalances();
     await initDeepLinks();
     app.checkUpdate();
   } catch (err) {

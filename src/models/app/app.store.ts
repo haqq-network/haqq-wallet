@@ -1,4 +1,4 @@
-import {makeAutoObservable} from 'mobx';
+import {makeAutoObservable, runInAction} from 'mobx';
 import {isHydrated, makePersistable} from 'mobx-persist-store';
 import Config from 'react-native-config';
 
@@ -9,7 +9,7 @@ class AppStore {
   private _isInitialized = false;
 
   // Hydrated properties
-  isOnboarded = false;
+  private _isOnboarded = false;
   isDeveloperModeEnabled = Config.IS_DEVELOPMENT === 'true';
   isTesterModeEnabled = Config.IS_TESTMODE === 'true';
 
@@ -18,11 +18,22 @@ class AppStore {
     makePersistable(this, {
       name: this.constructor.name,
       properties: [
-        'isOnboarded',
+        // @ts-ignore
+        '_isOnboarded',
         'isDeveloperModeEnabled',
         'isTesterModeEnabled',
       ],
       storage,
+    });
+  }
+
+  get isOnboarded() {
+    return this._isOnboarded;
+  }
+
+  set isOnboarded(value: boolean) {
+    runInAction(() => {
+      this._isOnboarded = value;
     });
   }
 

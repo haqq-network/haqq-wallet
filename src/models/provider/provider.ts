@@ -103,15 +103,15 @@ class ProviderStore {
       Currencies.clear();
 
       await RemoteProviderConfig.init();
-      await Wallet.fetchBalances(undefined, true);
+      Wallet.fetchBalances(undefined, true);
       if (requestMarkup) {
         await awaitForEventDone(Events.onRequestMarkup);
       }
-      await Token.fetchTokens(true);
+      Token.fetchTokens(true);
       await Currencies.fetchCurrencies();
 
       if (this.isAllNetworks || this.selectedProvider.config.isNftEnabled) {
-        await Nft.fetchNft();
+        Nft.fetchNft();
       }
       this.fetchProviders();
 

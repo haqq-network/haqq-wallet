@@ -130,7 +130,7 @@
     "react-native-localization": "2.3.2",
     "react-native-markdown-display": "7.0.0-alpha.2",
     "react-native-markdown-package": "1.8.2",
-    "react-native-mmkv": "2.11.0",
+    "react-native-mmkv": "2.12.2",
     "react-native-network-info": "5.2.1",
     "react-native-os": "https://github.com/aprock/react-native-os#938676ebd92d58b8928168a7e78cbe216838ed17",
     "react-native-permissions": "5.0.1",

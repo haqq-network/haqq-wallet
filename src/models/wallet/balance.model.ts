@@ -11,6 +11,17 @@ type BalanceData = {
   unlock: Date;
 };
 
+export type BalanceDataJson = {
+  vested: string;
+  staked: string;
+  available: string;
+  total: string;
+  locked: string;
+  availableForStake: string;
+  // next time to unlock vested tokens
+  unlock: string;
+};
+
 export class BalanceModel {
   constructor(public model: BalanceData) {}
 
@@ -82,5 +93,39 @@ export class BalanceModel {
   }
   setNextVestingUnlockDate(unlock?: Date) {
     this.model.unlock = unlock ?? new Date(0);
+  }
+
+  toJSON = (): BalanceDataJson => {
+    return {
+      staked: JSON.parse(this.staked.toJsonString()),
+      vested: JSON.parse(this.vested.toJsonString()),
+      available: JSON.parse(this.available.toJsonString()),
+      total: JSON.parse(this.total.toJsonString()),
+      locked: JSON.parse(this.locked.toJsonString()),
+      availableForStake: JSON.parse(this.availableForStake.toJsonString()),
+      unlock: this.nextVestingUnlockDate.toISOString(),
+    };
+  };
+
+  static fromJSON(data: string | BalanceDataJson): BalanceModel {
+    let parsed = {} as BalanceDataJson;
+
+    if (typeof data === 'string') {
+      parsed = JSON.parse(data);
+    }
+
+    if (typeof data === 'object' && ('available' in data || 'total' in data)) {
+      parsed = data;
+    }
+
+    return new BalanceModel({
+      staked: Balance.fromJsonString(parsed.staked),
+      vested: Balance.fromJsonString(parsed.vested),
+      available: Balance.fromJsonString(parsed.available),
+      total: Balance.fromJsonString(parsed.total),
+      locked: Balance.fromJsonString(parsed.locked),
+      availableForStake: Balance.fromJsonString(parsed.availableForStake),
+      unlock: new Date(parsed.unlock),
+    });
   }
 }
