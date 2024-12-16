@@ -6,6 +6,7 @@ import {Provider, ProviderModel} from '@app/models/provider';
 
 import {Balance} from '../balance';
 import {TxEstimationParams} from '../eth-network/types';
+import {Indexer} from '../indexer';
 
 type TronSignedTransaction = {
   visible: boolean;
@@ -251,51 +252,67 @@ export class TronNetwork {
     {from, to, value = Balance.Empty}: TxEstimationParams,
     provider = Provider.selectedProvider,
   ): Promise<CalculatedFees> {
-    const tronWeb = new tron.TronWeb({
-      fullHost: provider.ethRpcEndpoint,
-    });
-
     try {
-      logger.log('[estimateFeeSendTRX] Starting fee estimation:', {
-        from,
-        to,
-        value: value.toString(),
+      const tronWeb = new tron.TronWeb({
+        fullHost: provider.ethRpcEndpoint,
       });
+      if (provider.config.indexerGasEstimateEnabled) {
+        try {
+          const gasEstimateResponse = await Indexer.instance.gasEstimate(
+            {
+              from: AddressUtils.toTron(from),
+              to: AddressUtils.toTron(to),
+              value: String(
+                value.toParsedBalanceNumber() * 10 ** provider.decimals,
+              ),
+            },
+            Number(provider.ethChainId),
+          );
+
+          return {
+            gasLimit: Balance.Empty,
+            maxBaseFee: Balance.Empty,
+            maxPriorityFee: Balance.Empty,
+            expectedFee: new Balance(
+              gasEstimateResponse.expected_fee,
+              provider.decimals,
+              provider.denom,
+            ),
+          };
+        } catch (err) {
+          Logger.captureException(err, 'indexer gas estimate failed', {
+            request: {
+              from: AddressUtils.toTron(from),
+              to: AddressUtils.toTron(to),
+              value: String(
+                value.toParsedBalanceNumber() * 10 ** provider.decimals,
+              ),
+            },
+            chain_id: provider.ethChainId,
+          });
+        }
+      }
 
       // 1. Get account resources and check activation
       const accountResources = await this.getAccountBandwidth(from, provider);
-      logger.log('[estimateFeeSendTRX] Account resources:', accountResources);
-
       // 2. Create transaction to get actual bandwidth consumption
       const valueSun = value.toParsedBalanceNumber() * SUN_PER_TRX;
-      logger.log('[estimateFeeSendTRX] Creating transaction with value:', {
-        valueTRX: value.toParsedBalanceNumber(),
-        valueSun,
-      });
-
       const transaction = await tronWeb.transactionBuilder.sendTrx(
         AddressUtils.toTron(to),
         valueSun,
         AddressUtils.toTron(from),
       );
-
       // 3. Calculate total bandwidth consumption
       const bandwidthConsumption = this.calculateBandwidthConsumption(
         transaction.raw_data_hex,
-      );
-      logger.log(
-        '[estimateFeeSendTRX] Bandwidth consumption:',
-        bandwidthConsumption,
       );
       // 5. Calculate required bandwidth fee
       let totalFeeInTrx = 0; // fee can be 0 if no bandwidth is consumed
       if (bandwidthConsumption > accountResources.totalBandwidth) {
         totalFeeInTrx = bandwidthConsumption / BANDWIDTH_PRICE_IN_SUN;
       }
-
       // 6. Check account activation and calculate total fee
       const accountTo = await tronWeb.trx.getAccount(AddressUtils.toTron(to));
-
       const isAccountActive = !!accountTo.address;
 
       if (!isAccountActive) {
@@ -326,11 +343,6 @@ export class TronNetwork {
         (standardBandwidthConsumption * BANDWIDTH_PRICE_IN_SUN) / SUN_PER_TRX,
         MIN_FEE_TRX,
       );
-
-      logger.log('[estimateFeeSendTRX] Using fallback fee calculation:', {
-        standardBandwidthConsumption,
-        standardFeeInTrx,
-      });
 
       return {
         gasLimit: Balance.Empty,
@@ -384,9 +396,8 @@ export class TronNetwork {
 
       // Calculate fee based on energy required
       const energyFee = energyEstimate.energy_required * ENERGY_FEE_RATE;
-      logger.log('[estimateFeeSendTRC20] Energy fee:', energyFee);
       // Get transaction structure for bandwidth estimation
-      const transaction = await tronWeb.transactionBuilder.triggerSmartContract(
+      const txWrapper = await tronWeb.transactionBuilder.triggerSmartContract(
         contractAddress,
         functionSelector,
         {
@@ -396,25 +407,60 @@ export class TronNetwork {
         parameter,
         fromAddress,
       );
-      logger.log('[estimateFeeSendTRC20] Transaction:', transaction);
+
+      if (provider.config.indexerGasEstimateEnabled) {
+        try {
+          const gasEstimateResponse = await Indexer.instance.gasEstimate(
+            {
+              from: fromAddress,
+              to: contractAddress,
+              value: String(
+                value.toParsedBalanceNumber() * 10 ** provider.decimals,
+              ),
+              data: txWrapper.transaction.raw_data.contract[0].parameter.value
+                .data,
+            },
+            Number(provider.ethChainId),
+          );
+
+          return {
+            gasLimit: Balance.Empty,
+            maxBaseFee: Balance.Empty,
+            maxPriorityFee: Balance.Empty,
+            expectedFee: new Balance(
+              gasEstimateResponse.expected_fee,
+              provider.decimals,
+              provider.denom,
+            ),
+          };
+        } catch (err) {
+          Logger.captureException(err, 'indexer gas estimate failed', {
+            request: {
+              from: fromAddress,
+              to: contractAddress,
+              value: String(
+                value.toParsedBalanceNumber() * 10 ** provider.decimals,
+              ),
+              data: txWrapper.transaction.raw_data.contract[0].parameter.value
+                .data,
+            },
+            chain_id: provider.ethChainId,
+          });
+        }
+      }
+
       const accountResources = await this.getAccountBandwidth(from, provider);
-      logger.log('[estimateFeeSendTRC20] Account resources:', accountResources);
       // Calculate bandwidth fee
       const bandwidthConsumption = this.calculateBandwidthConsumption(
-        transaction?.transaction?.raw_data_hex ?? '',
+        txWrapper?.transaction?.raw_data_hex ?? '',
       );
-      logger.log(
-        '[estimateFeeSendTRC20] Bandwidth consumption:',
-        bandwidthConsumption,
-      );
+
       // 5. Calculate required bandwidth fee
       let totalFeeInTrx = energyFee / 10 ** 6;
       if (bandwidthConsumption > accountResources.totalBandwidth) {
         totalFeeInTrx = bandwidthConsumption / BANDWIDTH_PRICE_IN_SUN;
       }
-      logger.log('[estimateFeeSendTRC20] Total fee in TRX:', totalFeeInTrx);
       const accountTo = await tronWeb.trx.getAccount(AddressUtils.toTron(to));
-      logger.log('[estimateFeeSendTRC20] Account to:', accountTo);
       const isAccountActive = !!accountTo.address;
       if (!isAccountActive) {
         totalFeeInTrx += 1; // Add 1 TRX activation fee

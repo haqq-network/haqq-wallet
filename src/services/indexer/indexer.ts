@@ -18,6 +18,8 @@ import {
 import {createAsyncTask} from '@app/utils';
 
 import {
+  GasEstimateRequest,
+  GasEstimateResponce,
   IndexerAddressesResponse,
   IndexerUpdatesResponse,
   ProviderConfig,
@@ -360,6 +362,25 @@ export class Indexer {
       return response.domain_in_whitelist;
     } catch (err) {
       return false;
+    }
+  }
+
+  async gasEstimate(params: GasEstimateRequest, chainId: number) {
+    try {
+      this.checkIndexerAvailability();
+
+      const response = await jsonrpcRequest<GasEstimateResponce>(
+        RemoteConfig.get('proxy_server')!,
+        'gasEstimate',
+        [params, chainId],
+      );
+
+      return response ?? {};
+    } catch (err) {
+      if (err instanceof JSONRPCError) {
+        this.captureException(err, 'Indexer:gasEstimate', err.meta);
+      }
+      throw err;
     }
   }
 }

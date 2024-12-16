@@ -99,6 +99,7 @@ export type ProviderConfig = {
   explorer_token_id_url: string;
   swap_default_token0: string;
   swap_default_token1: string;
+  indexer_gas_estimate_enabled: boolean;
 };
 
 export type VerifyContractRequest = {
@@ -114,4 +115,18 @@ export type VerifyContractResponse = {
   input_is_valid: boolean;
   is_eip4361: boolean;
   contract: IContract | null;
+};
+
+export type GasEstimateResponce = {
+  base_fee: string;
+  expected_fee: string;
+  gas_limit: string;
+  priority_fee: string;
+};
+
+export type GasEstimateRequest = {
+  from: string;
+  to: string;
+  value: string;
+  data?: string;
 };
