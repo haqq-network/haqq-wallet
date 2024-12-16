@@ -94,7 +94,10 @@ export class Balance implements IBalance, ISerializable {
    * Is current Balance instance is native network Coin
    */
   get isNativeCoin() {
-    return this.symbol === Provider.selectedProvider.denom;
+    return (
+      this.symbol?.toLowerCase?.() ===
+      Provider.selectedProvider?.denom?.toLowerCase?.()
+    );
   }
 
   getPrecission() {
