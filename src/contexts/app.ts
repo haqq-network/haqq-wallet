@@ -331,7 +331,7 @@ class App extends AsyncEventEmitter {
   }
 
   async init(): Promise<void> {
-    if (!AppStore.isOnboarded) {
+    if (!Wallet.getAll().length) {
       return Promise.resolve();
     }
 

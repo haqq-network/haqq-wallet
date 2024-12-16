@@ -8,14 +8,12 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import {SigninNetworks} from '@app/components/signin-networks';
 import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
-import {getProviderStorage} from '@app/helpers/sss';
-import {getMetadataValueWrapped} from '@app/helpers/sss';
+import {getMetadataValueWrapped, getProviderStorage} from '@app/helpers/sss';
 import {SssError} from '@app/helpers/sss-error';
 import {verifyCloud} from '@app/helpers/verify-cloud';
 import {useTypedNavigation} from '@app/hooks';
 import {AppStore} from '@app/models/app';
 import {ErrorHandler} from '@app/models/error-handler';
-import {Wallet} from '@app/models/wallet';
 import {
   HomeStackParamList,
   HomeStackRoutes,
@@ -202,9 +200,6 @@ export const SignInNetworksScreen = observer(() => {
 
   const onSkip = useCallback(() => {
     logger.log('Skip button pressed, navigating to SigninAgreement');
-    if (!AppStore.isOnboarded) {
-      Wallet.removeAll();
-    }
     navigation.navigate(SignInStackRoutes.SigninAgreement);
   }, [navigation]);
 

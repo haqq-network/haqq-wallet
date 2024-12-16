@@ -327,7 +327,7 @@ class WalletStore implements RPCObserver {
     forceUpdateRates = false,
   ) => {
     try {
-      if (!AppStore.isOnboarded || !this.isHydrated) {
+      if (!AppStore.isOnboarded) {
         return;
       }
 

@@ -9,6 +9,7 @@ import {
   Theme,
 } from '@react-navigation/native';
 import * as Sentry from '@sentry/react-native';
+import {when} from 'mobx';
 import {observer} from 'mobx-react';
 import PostHog, {PostHogProvider} from 'posthog-react-native';
 import {AppState, Dimensions, Linking, StyleSheet} from 'react-native';
@@ -44,6 +45,7 @@ import {SPLASH_TIMEOUT_MS} from '@app/variables/common';
 import {AppVersionAbsoluteView} from './components/app-version-absolute-view';
 import {AppStore} from './models/app';
 import {migrationWallets} from './models/migration-wallets';
+import {Wallet} from './models/wallet';
 import {EventTracker} from './services/event-tracker';
 
 const appTheme = createTheme({
@@ -79,6 +81,7 @@ const SAFE_AREA_INTIAL_METRICS: Metrics = {
 
 export const App = observer(() => {
   const [isPinReseted, setPinReseted] = useState(false);
+
   const [posthog, setPosthog] = useState<PostHog | null>(null);
   const theme = useTheme();
   const toast = useToast();
@@ -104,8 +107,9 @@ export const App = observer(() => {
       .then(async () => await awaitForEventDone(Events.onAppInitialized))
       .then(async () => await Language.init())
       .then(async () => {
+        await when(() => Wallet.isHydrated);
         await Stories.fetch(true);
-        if (AppStore.isOnboarded) {
+        if (AppStore.isOnboarded || Wallet.getAll().length > 0) {
           await app.init();
           await migrationWallets();
 
