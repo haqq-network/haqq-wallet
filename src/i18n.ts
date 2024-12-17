@@ -1030,6 +1030,7 @@ export enum I18N {
   settingsSecurityRewriteCloudBackup = 'settingsSecurityRewriteCloudBackup',
   settingsSecurityRewriteCloudBackupDescription = 'settingsSecurityRewriteCloudBackupDescription',
   settingsSecurityRewriteCloudBackupNoWallet = 'settingsSecurityRewriteCloudBackupNoWallet',
+  networkLoggerTitle = 'networkLoggerTitle',
 }
 
 const defaultTranslation = {en};

@@ -14,8 +14,10 @@ import {observer} from 'mobx-react';
 import PostHog, {PostHogProvider} from 'posthog-react-native';
 import {AppState, Dimensions, Linking, StyleSheet} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {startNetworkLogging} from 'react-native-network-logger';
 import {MenuProvider} from 'react-native-popup-menu';
 import {Metrics, SafeAreaProvider} from 'react-native-safe-area-context';
+import RNShake from 'react-native-shake';
 import SplashScreen from 'react-native-splash-screen';
 
 import {Color} from '@app/colors';
@@ -32,6 +34,7 @@ import {Stories} from '@app/models/stories';
 import {VariablesBool} from '@app/models/variables-bool';
 import {navigator} from '@app/navigator';
 import {
+  HomeStackRoutes,
   KeystoneStackRoutes,
   LedgerStackRoutes,
   OnboardingStackRoutes,
@@ -47,6 +50,7 @@ import {AppStore} from './models/app';
 import {migrationWallets} from './models/migration-wallets';
 import {Wallet} from './models/wallet';
 import {EventTracker} from './services/event-tracker';
+import {HapticEffects, vibrate} from './services/haptic';
 
 const appTheme = createTheme({
   colors: {
@@ -98,9 +102,29 @@ export const App = observer(() => {
   );
 
   useEffect(() => {
+    if (AppStore.networkLoggerEnabled && !__DEV__) {
+      const subscription = RNShake.addListener(() => {
+        vibrate(HapticEffects.success);
+        navigator.navigate(HomeStackRoutes.NetworkLogger);
+      });
+
+      return () => {
+        subscription.remove();
+      };
+    }
+  }, [AppStore.networkLoggerEnabled]);
+
+  useEffect(() => {
     const splashTimer = setTimeout(() => {
       hideModal(ModalType.splash);
     }, SPLASH_TIMEOUT_MS);
+    if (AppStore.networkLoggerEnabled) {
+      startNetworkLogging({
+        forceEnable: true,
+        ignoredPatterns: [/posthog\.com/, /google\.com/],
+        maxRequests: AppStore.networkLogsCacheSize,
+      });
+    }
     sleep(150)
       .then(async () => await app.awaitForInitialization())
       .then(() => SplashScreen.hide())

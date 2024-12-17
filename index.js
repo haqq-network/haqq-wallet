@@ -7,6 +7,7 @@ import './src/modifiers/json-rpc-provider.modifier';
 
 import {DEBUG_VARS} from '@app/debug-vars';
 import {enableBatchedStateUpdates} from '@app/hooks/batched-set-state';
+import {Language} from '@app/models/language';
 import {IS_IOS, RTL_LANGUAGES} from '@app/variables/common';
 import messaging from '@react-native-firebase/messaging';
 import * as Sentry from '@sentry/react-native';
@@ -16,7 +17,6 @@ import {name as appName} from './app.json';
 import {App} from './src/app';
 import './src/event-actions';
 import {Jailbreak} from './src/jailbreak';
-import {Language} from '@app/models/language';
 
 LogBox.ignoreAllLogs();
 if (!global.BigInt) {

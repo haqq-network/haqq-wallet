@@ -348,6 +348,7 @@ export enum HomeStackRoutes {
   SelectNetwork = 'selectNetwork',
   Receive = 'receive',
   Backup = 'backup',
+  NetworkLogger = 'networkLogger',
   WalletProtectionPopup = 'walletProtectionPopup',
   WalletConnectApplicationDetailsPopup = 'walletConnectApplicationDetailsPopup',
   WalletConnectApplicationListPopup = 'walletConnectApplicationListPopup',
@@ -380,6 +381,7 @@ export type HomeStackParamList = {
   [HomeStackRoutes.Device]: undefined;
   [HomeStackRoutes.SignIn]: undefined;
   [HomeStackRoutes.SignUp]: undefined;
+  [HomeStackRoutes.NetworkLogger]: undefined;
   [HomeStackRoutes.AccountInfo]: {accountId: string};
   [HomeStackRoutes.Transaction]: {
     from?: string;

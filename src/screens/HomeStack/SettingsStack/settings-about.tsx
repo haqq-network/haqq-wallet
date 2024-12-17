@@ -1,12 +1,13 @@
 import React, {useCallback} from 'react';
 
 import {Alert} from 'react-native';
+import RNRestart from 'react-native-restart';
 
 import {SettingsAbout} from '@app/components/settings-about';
 import {I18N, getText} from '@app/i18n';
 import {AppStore} from '@app/models/app';
-import {navigator} from '@app/navigator';
 import {HapticEffects, vibrate} from '@app/services/haptic';
+import {sleep} from '@app/utils';
 
 export const SettingsAboutScreen = () => {
   const onEnableDevMode = useCallback(() => {
@@ -18,10 +19,11 @@ export const SettingsAboutScreen = () => {
         {
           text: getText(I18N.developerModeAttentionEnable),
           style: 'destructive',
-          onPress: () => {
+          onPress: async () => {
             AppStore.isTesterModeEnabled = true;
             vibrate(HapticEffects.success);
-            navigator.goBack();
+            await sleep(200);
+            RNRestart.restart();
           },
         },
         {

@@ -16,7 +16,7 @@ import {AppStore} from '@app/models/app';
 import {Currencies} from '@app/models/currencies';
 import {Language} from '@app/models/language';
 import {VariablesString} from '@app/models/variables-string';
-import {SettingsStackRoutes} from '@app/route-types';
+import {HomeStackRoutes, SettingsStackRoutes} from '@app/route-types';
 import {AppTheme} from '@app/types';
 import {openStorePage} from '@app/utils';
 
@@ -167,6 +167,14 @@ export const HomeSettings = observer(() => {
           icon={IconsName.settings}
           title={I18N.homeSettingsDeveloperTools}
           next={SettingsStackRoutes.SettingsDeveloperTools}
+        />
+      )}
+
+      {AppStore.networkLoggerEnabled && (
+        <SettingsButton
+          icon={IconsName.browser}
+          title={I18N.networkLoggerTitle}
+          next={HomeStackRoutes.NetworkLogger}
         />
       )}
 

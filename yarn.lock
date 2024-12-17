@@ -11547,6 +11547,7 @@ __metadata:
     react-native-markdown-package: 1.8.2
     react-native-mmkv: 2.12.2
     react-native-network-info: 5.2.1
+    react-native-network-logger: ^1.17.0
     react-native-os: "https://github.com/aprock/react-native-os#938676ebd92d58b8928168a7e78cbe216838ed17"
     react-native-permissions: 5.0.1
     react-native-play-install-referrer: 1.1.8
@@ -11560,6 +11561,7 @@ __metadata:
     react-native-restart: 0.0.27
     react-native-safe-area-context: 4.11.1
     react-native-screens: 3.29.0
+    react-native-shake: ^6.0.0-beta.3
     react-native-skeleton-placeholder: 5.2.4
     react-native-splash-screen: 3.3.0
     react-native-svg: 13.10.0
@@ -16596,6 +16598,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-network-logger@npm:^1.17.0":
+  version: 1.17.0
+  resolution: "react-native-network-logger@npm:1.17.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 3024fb8b091483130186d47a6570bd5a66e0bc207a6a5ca78608b94609d4b02ff52462327bbd1b135f9b5b56a9b221849c1ddcf1703c4238e952d48d1fb98d73
+  languageName: node
+  linkType: hard
+
 "react-native-os@https://github.com/aprock/react-native-os#938676ebd92d58b8928168a7e78cbe216838ed17":
   version: 1.2.7
   resolution: "react-native-os@https://github.com/aprock/react-native-os.git#commit=938676ebd92d58b8928168a7e78cbe216838ed17"
@@ -16763,6 +16775,16 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: c1879eea8386f32c2655fedd79d41d8e25d2f4e7f883abbcad2c747ea7ac859f4a7f469475a519948e7c5ea317a7ebd8df92c6365627f6a5da1e4a208cece7e1
+  languageName: node
+  linkType: hard
+
+"react-native-shake@npm:^6.0.0-beta.3":
+  version: 6.0.0-beta.3
+  resolution: "react-native-shake@npm:6.0.0-beta.3"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: a58fa713039808192d318cf336f21e00826c1114db4ea9d4010591c3ca65ec32ef05d4970eeda5474ff692c496be038ce0bbd6625126a4a3f8fa8e077f25d3f6
   languageName: node
   linkType: hard
 
