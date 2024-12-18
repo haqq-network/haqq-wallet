@@ -6,7 +6,6 @@ import {
 } from '@react-navigation/native-stack';
 import {StatusBar} from 'react-native';
 import Config from 'react-native-config';
-import NetworkLogger from 'react-native-network-logger';
 
 import {Color} from '@app/colors';
 import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
@@ -47,6 +46,7 @@ import {NewsDetailScreen} from './HomeNewsStack/news-detail';
 import {ReceiveScreen, SelectNetworkScreen} from './ReceiveStack';
 import {FeeSettingsScreen} from './TransactionStack/fee-settings';
 
+import {NetworkLoggerScreen} from '../network-logger';
 import {SwapStack} from '../SwapStack';
 import {SignUpStack} from '../WelcomeStack/SignUpStack';
 
@@ -130,7 +130,7 @@ const HomeStack = memo(() => {
 
       <Stack.Screen
         name={HomeStackRoutes.NetworkLogger}
-        component={NetworkLogger}
+        component={NetworkLoggerScreen}
         options={modalOptions}
       />
 
