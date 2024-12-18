@@ -266,7 +266,7 @@ export type RootStackParamList = {
   backup: {
     accountId: string;
   };
-
+  networkLogger: undefined;
   sssMigrate: {
     accountId: string;
   };

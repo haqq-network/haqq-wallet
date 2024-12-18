@@ -273,6 +273,7 @@ export const HAQQ_DYNAMIC_LINKS_HOSTNAME = [
   'haqq.page.link',
   'preview.page.link',
 ];
+export const SHOW_NON_WHITELIST_TOKEN = 'SHOW_NON_WHITELIST_TOKEN';
 
 export const TRANSACTION_TOPIC_VARIABLE_NAME = `notificationsTopic:${PushNotificationTopicsEnum.transactions}`;
 export const NEWS_TOPIC_VARIABLE_NAME = `notificationsTopic:${PushNotificationTopicsEnum.news}`;
