@@ -22,6 +22,7 @@ import {Balance} from '@app/services/balance';
 import {WalletType} from '@app/types';
 
 import {StackedVestedTokens} from '../stacked-vested-tokens';
+import {Placeholder} from '../ui/placeholder';
 
 const CARD_WIDTH = 78;
 const CARD_RADIUS = 8;
@@ -34,6 +35,7 @@ export type AccountInfoProps = {
   total: Balance;
   vested: Balance;
   unlock: Date;
+  isBalanceLoading: boolean;
   onPressInfo: () => void;
   onSend: () => void;
   onReceive: () => void;
@@ -46,10 +48,11 @@ export const AccountInfoHeader = ({
   total,
   vested,
   available,
+  unlock,
+  isBalanceLoading,
   onPressInfo,
   onSend,
   onReceive,
-  unlock,
 }: AccountInfoProps) => {
   const formattedAddress = useMemo(
     () => shortAddress(wallet.providerSpecificAddress, '•'),
@@ -68,10 +71,20 @@ export const AccountInfoHeader = ({
           colorPattern={wallet.colorPattern}
         />
         <View style={styles.headerContent}>
-          <Text
-            variant={TextVariant.t3}
-            children={total.toFiat({useDefaultCurrency: true})}
-          />
+          <First>
+            {isBalanceLoading && (
+              <>
+                <Placeholder opacity={0.8}>
+                  <Placeholder.Item width={140} height={28} />
+                </Placeholder>
+                <Spacer height={10} />
+              </>
+            )}
+            <Text
+              variant={TextVariant.t3}
+              children={total.toFiat({useDefaultCurrency: true})}
+            />
+          </First>
           <CopyMenu wallet={wallet} style={styles.copyButton} withSettings>
             <Text variant={TextVariant.t14} color={Color.textBase2}>
               {formattedAddress}
@@ -85,18 +98,16 @@ export const AccountInfoHeader = ({
           </CopyMenu>
         </View>
       </View>
-      <First>
-        <StackedVestedTokens
-          totalBalance={total}
-          availableBalance={available}
-          lockedBalance={locked}
-          vestedBalance={vested}
-          stakingBalance={staked}
-          onPressInfo={onPressInfo}
-          unlock={unlock}
-        />
-        <Spacer height={24} />
-      </First>
+      <StackedVestedTokens
+        totalBalance={total}
+        availableBalance={available}
+        lockedBalance={locked}
+        vestedBalance={vested}
+        stakingBalance={staked}
+        unlock={unlock}
+        isBalanceLoading={isBalanceLoading}
+        onPressInfo={onPressInfo}
+      />
       <Inline gap={12} style={styles.iconButtons}>
         <IconButton
           disabled={wallet.type === WalletType.watchOnly}

@@ -28,6 +28,8 @@ export const AccountInfoScreen = observer(() => {
   const accountId = useMemo(() => route.params.accountId, [route]);
   const wallet = useWallet(accountId);
   const balances = Wallet.getBalancesByAddressList([wallet!]);
+  const isBalanceLoading = Wallet.checkWalletBalanceLoading(wallet);
+
   const {available, locked, staked, total, nextVestingUnlockDate, vested} =
     useMemo(() => balances[wallet?.address!], [balances, wallet]);
 
@@ -95,6 +97,7 @@ export const AccountInfoScreen = observer(() => {
       unlock={nextVestingUnlockDate}
       vested={vested}
       tokens={Token.tokens}
+      isBalanceLoading={isBalanceLoading}
     />
   );
 });

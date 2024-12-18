@@ -6,7 +6,7 @@ import {Color} from '@app/colors';
 import {First, Spacer, Text, TextVariant} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {BalanceModel} from '@app/models/wallet';
+import {BalanceModel, Wallet} from '@app/models/wallet';
 
 import {StackedVestedTokens} from '../stacked-vested-tokens';
 
@@ -49,6 +49,7 @@ export const TotalValueInfoHeader = ({
           stakingBalance={balance?.staked}
           onPressInfo={onPressInfo}
           unlock={balance?.nextVestingUnlockDate}
+          isBalanceLoading={Wallet.isBalancesLoading}
         />
       </First>
     </>

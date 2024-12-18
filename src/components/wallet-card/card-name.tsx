@@ -8,16 +8,17 @@ import {Icon, IconsName, Spacer, Text, TextVariant} from '@app/components/ui';
 import {CopyMenu} from '@app/components/ui/copy-menu';
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
-import {Wallet, WalletModel} from '@app/models/wallet';
+import {WalletModel} from '@app/models/wallet';
 
 type CardNameProps = {
   wallet: WalletModel;
   onAccountInfo: () => void;
   testID?: string;
+  isBalanceLoading: boolean;
 };
 
 export const CardName = observer(
-  ({wallet, onAccountInfo, testID}: CardNameProps) => {
+  ({wallet, onAccountInfo, testID, isBalanceLoading}: CardNameProps) => {
     const formattedAddress = useMemo(
       () => shortAddress(wallet?.providerSpecificAddress ?? '', '•'),
       [wallet?.providerSpecificAddress],
@@ -32,7 +33,7 @@ export const CardName = observer(
             ellipsizeMode="tail"
             numberOfLines={1}
             suppressHighlighting={true}
-            disabled={Wallet.isBalancesLoading}
+            disabled={isBalanceLoading}
             onPress={onAccountInfo}>
             {wallet.name}
           </Text>

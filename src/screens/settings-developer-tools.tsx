@@ -295,7 +295,7 @@ TRON:\n${AddressUtils.toTron(watchOnlyAddress)}`,
       />
 
       <Spacer height={8} />
-      <Title text="Network tools" />
+
       <MenuNavigationButton hideArrow onPress={() => {}}>
         <DataContent
           style={styles.dataContent}
@@ -621,6 +621,16 @@ TRON:\n${AddressUtils.toTron(watchOnlyAddress)}`,
       <Button
         title="Developer mode docs"
         onPress={() => openWeb3Browser(DEVELOPER_MODE_DOCS)}
+        variant={ButtonVariant.second}
+      />
+      <Spacer height={8} />
+      <Button
+        title="Clear balance cache"
+        onPress={() => {
+          Wallet.balances = {};
+          Wallet.lastBalanceUpdate = new Date(0);
+          RNRestart.restart();
+        }}
         variant={ButtonVariant.second}
       />
       <Spacer height={8} />

@@ -115,6 +115,9 @@ export const App = observer(() => {
   }, [AppStore.networkLoggerEnabled]);
 
   useEffect(() => {
+    if (AppStore.isInitialized) {
+      return;
+    }
     const splashTimer = setTimeout(() => {
       hideModal(ModalType.splash);
     }, SPLASH_TIMEOUT_MS);

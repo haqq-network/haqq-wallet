@@ -34,6 +34,7 @@ export type AccountInfoProps = {
   vested: Balance;
   unlock: Date;
   tokens: Record<AddressEthereum, IToken[]>;
+  isBalanceLoading: boolean;
   onPressInfo: () => void;
   onSend: () => void;
   onReceive: () => void;
@@ -57,6 +58,7 @@ export const AccountInfo = observer(
     unlock,
     vested,
     tokens,
+    isBalanceLoading,
     onPressInfo,
     onSend,
     onReceive,
@@ -87,6 +89,7 @@ export const AccountInfo = observer(
             total={total}
             unlock={unlock}
             vested={vested}
+            isBalanceLoading={isBalanceLoading}
             onPressInfo={onPressInfo}
             onSend={onSend}
             onReceive={onReceive}
