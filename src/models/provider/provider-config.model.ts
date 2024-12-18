@@ -89,4 +89,12 @@ export class ProviderConfigModel {
       AddressUtils.toEth('0x4FEBDDe47Ab9a76200e57eFcC80b212a07b3e6cE')
     );
   }
+
+  get indexerGasEstimateEnabled() {
+    return this.config?.indexer_gas_estimate_enabled ?? false;
+  }
+
+  toJSON() {
+    return this.config;
+  }
 }

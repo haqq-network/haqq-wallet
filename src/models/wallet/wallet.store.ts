@@ -408,24 +408,23 @@ class WalletStore implements RPCObserver {
       return balance;
     };
 
-    const balanceModel = new BalanceModel(
-      useEmptyFallback
-        ? {
-            staked: Balance.Empty,
-            vested: Balance.Empty,
-            available: Balance.Empty,
-            total: Balance.Empty,
-            locked: Balance.Empty,
-            availableForStake: Balance.Empty,
-            unlock: new Date(0),
-          }
-        : ({} as any),
-    );
+    const balanceModel = new BalanceModel({
+      staked: Balance.Empty,
+      vested: Balance.Empty,
+      available: Balance.Empty,
+      total: Balance.Empty,
+      locked: Balance.Empty,
+      availableForStake: Balance.Empty,
+      unlock: new Date(0),
+    });
+
+    let emptyBalancesCount = 0;
 
     Provider.getAllNetworks().forEach(p => {
       const balance = getBalanceData(p);
 
       if (!balance) {
+        emptyBalancesCount++;
         return;
       }
 
@@ -451,6 +450,13 @@ class WalletStore implements RPCObserver {
         Currencies.convert(availableForStake ?? Balance.Empty, p.ethChainId),
       );
     });
+
+    if (
+      emptyBalancesCount === Provider.getAllNetworks().length &&
+      !useEmptyFallback
+    ) {
+      return new BalanceModel({} as any);
+    }
 
     return balanceModel;
   };
