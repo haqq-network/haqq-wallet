@@ -6,6 +6,7 @@ import {
 } from '@react-navigation/native-stack';
 import {StatusBar} from 'react-native';
 import Config from 'react-native-config';
+import NetworkLogger from 'react-native-network-logger';
 
 import {Color} from '@app/colors';
 import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
@@ -124,6 +125,12 @@ const HomeStack = memo(() => {
       <Stack.Screen
         name={HomeStackRoutes.Backup}
         component={BackupStack}
+        options={modalOptions}
+      />
+
+      <Stack.Screen
+        name={HomeStackRoutes.NetworkLogger}
+        component={NetworkLogger}
         options={modalOptions}
       />
 

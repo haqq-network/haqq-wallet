@@ -28,7 +28,6 @@ import {Provider, RemoteProviderConfig} from '@app/models/provider';
 import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
 import {Wallet} from '@app/models/wallet';
-import {SHOW_NON_WHITELIST_TOKEN} from '@app/screens/settings-developer-tools';
 import {EthNetwork} from '@app/services';
 import {Backend} from '@app/services/backend';
 import {Cosmos} from '@app/services/cosmos';
@@ -45,7 +44,10 @@ import {
   MarketingEvents,
   ModalType,
 } from '../types';
-import {LIGHT_GRAPHIC_GREEN_1} from '../variables/common';
+import {
+  LIGHT_GRAPHIC_GREEN_1,
+  SHOW_NON_WHITELIST_TOKEN,
+} from '../variables/common';
 
 const optionalConfigObject = {
   title: 'Fingerprint Login', // Android

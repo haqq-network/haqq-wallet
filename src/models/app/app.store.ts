@@ -10,6 +10,8 @@ class AppStore {
 
   // Hydrated properties
   private _isOnboarded = false;
+  private _networkLoggerEnabled = false;
+  private _networkLogsCacheSize = 500; // count of stored http request
   isDeveloperModeEnabled = Config.IS_DEVELOPMENT === 'true';
   isTesterModeEnabled = Config.IS_TESTMODE === 'true';
 
@@ -22,6 +24,10 @@ class AppStore {
         '_isOnboarded',
         'isDeveloperModeEnabled',
         'isTesterModeEnabled',
+        // @ts-ignore
+        '_networkLoggerEnabled',
+        // @ts-ignore
+        '_networkLogsCacheSize',
       ],
       storage,
     });
@@ -49,6 +55,30 @@ class AppStore {
   }
   get isLogsEnabled() {
     return __DEV__ || this.isAdditionalFeaturesEnabled;
+  }
+
+  get networkLoggerEnabled() {
+    // only for developer mode
+    if (!this.isAdditionalFeaturesEnabled) {
+      return false;
+    }
+    return this._networkLoggerEnabled ?? false;
+  }
+
+  set networkLoggerEnabled(value: boolean) {
+    runInAction(() => {
+      this._networkLoggerEnabled = value;
+    });
+  }
+
+  get networkLogsCacheSize() {
+    return this._networkLogsCacheSize;
+  }
+
+  set networkLogsCacheSize(value: number) {
+    runInAction(() => {
+      this._networkLogsCacheSize = value;
+    });
   }
 }
 

@@ -6,7 +6,11 @@ import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N} from '@app/i18n';
-import {SettingsStackParamList, SettingsStackRoutes} from '@app/route-types';
+import {
+  HomeStackRoutes,
+  SettingsStackParamList,
+  SettingsStackRoutes,
+} from '@app/route-types';
 
 import {
   DataContent,
@@ -19,7 +23,7 @@ import {
 } from '../ui';
 
 export type SettingsButtonProps = {
-  next: SettingsStackRoutes;
+  next: SettingsStackRoutes | HomeStackRoutes;
   icon: IconsName | keyof typeof IconsName;
   title: I18N;
   rightTitle?: string;
