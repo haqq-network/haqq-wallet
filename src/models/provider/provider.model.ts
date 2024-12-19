@@ -127,6 +127,10 @@ export class ProviderModel {
     return this.model.stage === NetworkProviderStage.TESTNET;
   }
 
+  get isMainnet() {
+    return this.model.stage === NetworkProviderStage.MAINNET;
+  }
+
   toJSON() {
     return {
       ethChainIdHex: this.ethChainIdHex,

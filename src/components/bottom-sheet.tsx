@@ -249,16 +249,13 @@ export const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
     }));
 
     return (
-      <Animated.View
-        style={[
-          StyleSheet.absoluteFillObject,
-          page.background,
-          backgroundAnimatedStyle,
-        ]}>
+      <Animated.View style={StyleSheet.absoluteFillObject}>
         <KeyboardAvoidingView behavior="padding" style={page.wrap}>
           <View style={page.container}>
             <TouchableWithoutFeedback onPress={onClosePopup}>
-              <View style={page.space} />
+              <Animated.View
+                style={[page.background, backgroundAnimatedStyle]}
+              />
             </TouchableWithoutFeedback>
             <Animated.View
               style={[
@@ -338,9 +335,10 @@ const page = createTheme({
     zIndex: 5,
     flex: 1,
   },
-  space: {flex: 1},
   background: {
+    flex: 1,
     backgroundColor: Color.bg9,
+    ...StyleSheet.absoluteFillObject,
   },
   animateView: {
     justifyContent: 'flex-end',

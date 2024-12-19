@@ -25,8 +25,10 @@ export const ModalsScreen = observer(({initialModal}: ModalProps) => {
     }
   }, [initialModal]);
 
-  const onClose = useCallback((event: ModalState) => {
-    hideModal(event.type);
+  const onClose = useCallback(async (event: ModalState) => {
+    // @ts-ignore
+    event?.onClose?.();
+    await hideModal(event.type);
   }, []);
 
   return (

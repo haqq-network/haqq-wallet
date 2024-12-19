@@ -171,7 +171,7 @@ class WalletStore implements RPCObserver {
       return undefined;
     }
 
-    const TRON_CHAIN_IDS = Provider.getAllNetworks()
+    const TRON_CHAIN_IDS = Provider.getAll()
       .filter(p => p.isTron)
       .map(p => p.ethChainId as ChainId);
 
