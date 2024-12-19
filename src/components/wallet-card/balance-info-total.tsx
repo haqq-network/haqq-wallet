@@ -15,53 +15,59 @@ import {
 import {Placeholder} from '@app/components/ui/placeholder';
 import {createTheme} from '@app/helpers';
 import {Currencies} from '@app/models/currencies';
-import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {CARD_ACTION_CONTAINER_BG} from '@app/variables/common';
 
 type BalanceInfoTotalProps = {
   total?: Balance;
+  isBalanceLoading: boolean;
 };
 
-export const BalanceInfoTotal = observer(({total}: BalanceInfoTotalProps) => {
-  const parsedTotal = useMemo(() => {
-    let result = total;
+export const BalanceInfoTotal = observer(
+  ({total, isBalanceLoading}: BalanceInfoTotalProps) => {
+    const parsedTotal = useMemo(() => {
+      let result = total;
 
-    if (!result) {
-      result = Balance.Empty;
-    }
+      if (!result) {
+        result = Balance.Empty;
+      }
 
-    return result.toBalanceString('auto');
-  }, [total, Currencies.selectedCurrency, Currencies.isRatesAvailable]);
+      return result.toBalanceString('auto');
+    }, [total, Currencies.selectedCurrency, Currencies.isRatesAvailable]);
 
-  return (
-    <First>
-      {Wallet.isBalancesLoading && (
-        <>
-          <Placeholder opacity={0.6}>
-            <Placeholder.Item width={110} height={38} />
-          </Placeholder>
-          <Spacer height={10} />
-        </>
-      )}
-      <View style={styles.row}>
-        <Text
-          testID="current-total"
-          variant={TextVariant.t0}
-          color={Color.textBase3}
-          numberOfLines={1}
-          adjustsFontSizeToFit
-          suppressHighlighting={true}>
-          {parsedTotal}
-        </Text>
+    return (
+      <First>
+        {isBalanceLoading && (
+          <>
+            <Placeholder opacity={0.6}>
+              <Placeholder.Item width={110} height={38} />
+            </Placeholder>
+            <Spacer height={10} />
+          </>
+        )}
+        <View style={styles.row}>
+          <Text
+            testID="current-total"
+            variant={TextVariant.t0}
+            color={Color.textBase3}
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            suppressHighlighting={true}>
+            {parsedTotal}
+          </Text>
 
-        <View style={styles.openDetailsIconContainer}>
-          <Icon i16 name={IconsName.arrow_forward} color={Color.graphicBase3} />
+          <View style={styles.openDetailsIconContainer}>
+            <Icon
+              i16
+              name={IconsName.arrow_forward}
+              color={Color.graphicBase3}
+            />
+          </View>
         </View>
-      </View>
-    </First>
-  );
-});
+      </First>
+    );
+  },
+);
 
 const styles = createTheme({
   row: {

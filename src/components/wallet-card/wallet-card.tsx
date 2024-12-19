@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 
 import {SessionTypes} from '@walletconnect/types';
+import {observer} from 'mobx-react';
 import {
   StyleSheet,
   TouchableWithoutFeedback,
@@ -19,7 +20,7 @@ import {
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
-import {BalanceModel, WalletModel} from '@app/models/wallet';
+import {BalanceModel, Wallet, WalletModel} from '@app/models/wallet';
 import {addOpacityToColor} from '@app/utils';
 import {SHADOW_L} from '@app/variables/shadows';
 
@@ -43,81 +44,94 @@ export type BalanceProps = {
   isSecondMnemonic: boolean;
 };
 
-export const WalletCard = ({
-  testID,
-  wallet,
-  walletConnectSessions,
-  showLockedTokens,
-  onPressSend,
-  onPressReceive,
-  onPressWalletConnect,
-  onPressProtection,
-  onPressAccountInfo,
-  balance,
-  isSecondMnemonic,
-}: BalanceProps) => {
-  const {locked, total} = balance ?? {};
-  const [cardState, setCardState] = useState('loading');
-  const screenWidth = useWindowDimensions().width;
+export const WalletCard = observer(
+  ({
+    testID,
+    wallet,
+    walletConnectSessions,
+    showLockedTokens,
+    onPressSend,
+    onPressReceive,
+    onPressWalletConnect,
+    onPressProtection,
+    onPressAccountInfo,
+    balance,
+    isSecondMnemonic,
+  }: BalanceProps) => {
+    const {locked, total} = balance ?? {};
+    const [cardState, setCardState] = useState('loading');
+    const screenWidth = useWindowDimensions().width;
 
-  const onAccountInfo = () => {
-    onPressAccountInfo(wallet?.address);
-  };
+    const onAccountInfo = () => {
+      onPressAccountInfo(wallet?.address);
+    };
 
-  return (
-    <Card
-      testID={`${testID}_card`}
-      colorFrom={wallet?.colorFrom}
-      colorTo={wallet?.colorTo}
-      colorPattern={wallet?.colorPattern}
-      pattern={wallet?.pattern}
-      style={styles.container}
-      width={screenWidth - 40}
-      onLoad={() => {
-        setCardState('laded');
-      }}>
-      <CardName onAccountInfo={onAccountInfo} testID={testID} wallet={wallet} />
-      <ProtectionBadge
-        wallet={wallet}
-        isSecondMnemonic={isSecondMnemonic}
-        walletConnectSessions={walletConnectSessions}
-        onPressProtection={onPressProtection}
-        onPressWalletConnect={onPressWalletConnect}
-      />
-      <TouchableWithoutFeedback
-        testID="accountInfoButton"
-        onPress={onAccountInfo}>
-        <View>
-          <BalanceInfoTotal total={total} />
-          <BalanceInfoDetails
-            showLockedTokens={showLockedTokens}
-            total={total}
-            locked={locked}
-          />
-        </View>
-      </TouchableWithoutFeedback>
-      <Spacer height={12} />
-      <CardButtons
-        testID={testID}
-        wallet={wallet}
-        cardState={cardState}
-        onPressReceive={onPressReceive}
-        onPressSend={onPressSend}
-      />
-      {/* TODO: add tron support */}
-      {Provider.selectedProvider.isTron && !wallet.isSupportTron && (
-        <View style={styles.tronNotSupportContainer}>
-          <Text
-            color={Color.textBase3}
-            variant={TextVariant.t10}
-            position={TextPosition.center}
-            i18n={I18N.tronNotSupportedYet}
-          />
-        </View>
-      )}
-    </Card>
-  );
-};
+    const isBalanceLoading = Wallet.checkWalletBalanceLoading(wallet);
+
+    return (
+      <Card
+        testID={`${testID}_card`}
+        colorFrom={wallet?.colorFrom}
+        colorTo={wallet?.colorTo}
+        colorPattern={wallet?.colorPattern}
+        pattern={wallet?.pattern}
+        style={styles.container}
+        width={screenWidth - 40}
+        onLoad={() => {
+          setCardState('laded');
+        }}>
+        <CardName
+          onAccountInfo={onAccountInfo}
+          testID={testID}
+          wallet={wallet}
+          isBalanceLoading={isBalanceLoading}
+        />
+        <ProtectionBadge
+          wallet={wallet}
+          isSecondMnemonic={isSecondMnemonic}
+          walletConnectSessions={walletConnectSessions}
+          onPressProtection={onPressProtection}
+          onPressWalletConnect={onPressWalletConnect}
+        />
+        <TouchableWithoutFeedback
+          testID="accountInfoButton"
+          onPress={onAccountInfo}>
+          <View>
+            <BalanceInfoTotal
+              total={total}
+              isBalanceLoading={isBalanceLoading}
+            />
+            <BalanceInfoDetails
+              showLockedTokens={showLockedTokens}
+              total={total}
+              locked={locked}
+              isBalanceLoading={isBalanceLoading}
+            />
+          </View>
+        </TouchableWithoutFeedback>
+        <Spacer height={12} />
+        <CardButtons
+          testID={testID}
+          wallet={wallet}
+          cardState={cardState}
+          onPressReceive={onPressReceive}
+          onPressSend={onPressSend}
+        />
+        {/* TODO: add tron support */}
+        {Provider.selectedProvider.isTron && !wallet.isSupportTron && (
+          <View style={styles.tronNotSupportContainer}>
+            <Text
+              color={Color.textBase3}
+              variant={TextVariant.t10}
+              position={TextPosition.center}
+              i18n={I18N.tronNotSupportedYet}
+            />
+          </View>
+        )}
+      </Card>
+    );
+  },
+);
 
 const styles = createTheme({
   container: {

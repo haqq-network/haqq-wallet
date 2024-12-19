@@ -15,21 +15,26 @@ import {
 import {Placeholder} from '@app/components/ui/placeholder';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 
 type BalanceInfoDetailsProps = {
   total?: Balance;
   locked?: Balance;
   showLockedTokens: boolean;
+  isBalanceLoading: boolean;
 };
 
 export const BalanceInfoDetails = observer(
-  ({total, locked, showLockedTokens}: BalanceInfoDetailsProps) => {
+  ({
+    total,
+    locked,
+    showLockedTokens,
+    isBalanceLoading,
+  }: BalanceInfoDetailsProps) => {
     return (
       <View style={styles.row}>
         <First>
-          {Wallet.isBalancesLoading && (
+          {isBalanceLoading && (
             <>
               <Spacer height={8} />
               <Placeholder opacity={0.6}>
@@ -50,7 +55,7 @@ export const BalanceInfoDetails = observer(
         {!!total?.toFiat() && <Spacer width={10} />}
         {showLockedTokens && (
           <First>
-            {Wallet.isBalancesLoading && (
+            {isBalanceLoading && (
               <>
                 <Spacer height={8} />
                 <Placeholder opacity={0.6}>

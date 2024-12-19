@@ -189,7 +189,12 @@ class TokensStore implements MobXStore<IToken> {
   }
 
   getAll() {
-    return Object.values(this.data);
+    const allowedChains = Provider.getAllNetworks().map(p =>
+      Number(p.ethChainId),
+    );
+    return Object.values(this.data).filter(t =>
+      allowedChains.includes(Number(t.chain_id)),
+    );
   }
 
   getByAddress(address?: string) {

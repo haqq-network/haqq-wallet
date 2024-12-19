@@ -17,6 +17,7 @@ import {
   PlayInstallReferrerError,
   PlayInstallReferrerInfo,
 } from 'react-native-play-install-referrer';
+import RNRestart from 'react-native-restart';
 import shajs from 'sha.js';
 
 import {CaptchaType} from '@app/components/captcha';
@@ -85,6 +86,7 @@ import {
   makeID,
   openInAppBrowser,
   openWeb3Browser,
+  sleep,
 } from '@app/utils';
 import {MIN_GAS_LIMIT} from '@app/variables/balance';
 import {HAQQ_METADATA, STRINGS, TEST_URLS} from '@app/variables/common';
@@ -553,6 +555,7 @@ export const SettingsTestScreen = observer(() => {
       if (typeof index === 'number' && BACKENDS[index]) {
         app.backend = BACKENDS[index][1];
         setBackend(app.backend);
+        sleep(100).then(() => RNRestart.restart());
       }
     });
   }, [showActionSheetWithOptions]);
