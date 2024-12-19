@@ -207,7 +207,8 @@ const getTestModals = (): TestModals => {
       onClose: () => logger.log('lockedTokensInfo closed'),
     },
     notEnoughGas: {
-      currentAmount: Wallet.getBalances(firstWalletAddress).available,
+      currentAmount:
+        Wallet.getBalances(firstWalletAddress)?.available || Balance.Empty,
       gasLimit: new Balance(MIN_GAS_LIMIT, 0),
       onClose: () => logger.log('notEnoughGas closed'),
     },

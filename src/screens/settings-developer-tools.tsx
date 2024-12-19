@@ -50,6 +50,7 @@ import {I18N} from '@app/i18n';
 import {AppStore} from '@app/models/app';
 import {Language} from '@app/models/language';
 import {Provider} from '@app/models/provider';
+import {Token} from '@app/models/tokens';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {Web3BrowserBookmark} from '@app/models/web3-browser-bookmark';
@@ -628,6 +629,7 @@ TRON:\n${AddressUtils.toTron(watchOnlyAddress)}`,
         title="Clear balance cache"
         onPress={() => {
           Wallet.balances = {};
+          Token.tokens = {};
           Wallet.lastBalanceUpdate = new Date(0);
           RNRestart.restart();
         }}

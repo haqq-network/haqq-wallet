@@ -14,6 +14,7 @@ type CardButtonsProps = {
   wallet: WalletModel;
   cardState: string;
   testID?: string;
+  isBalanceLoading: boolean;
   onPressSend: (address: string) => void;
   onPressReceive: (address: string) => void;
 };
@@ -22,6 +23,7 @@ export const CardButtons = ({
   wallet,
   cardState,
   testID,
+  isBalanceLoading,
   onPressReceive,
   onPressSend,
 }: CardButtonsProps) => {
@@ -39,7 +41,7 @@ export const CardButtons = ({
         {IS_IOS && <BlurView action="sent" cardState={cardState} />}
         <IconButton
           style={styles.spacer}
-          disabled={wallet.type === WalletType.watchOnly}
+          disabled={wallet.type === WalletType.watchOnly || isBalanceLoading}
           onPress={onSend}
           testID={`${testID}_send`}>
           <Icon i24 name={IconsName.arrow_send} color={Color.graphicBase3} />
