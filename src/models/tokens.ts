@@ -313,7 +313,6 @@ class TokensStore implements MobXStore<IToken> {
 
     runInAction(() => {
       this._isLoading = true;
-      this.tokens = {};
     });
 
     const wallets = Wallet.getAll();
@@ -335,9 +334,12 @@ class TokensStore implements MobXStore<IToken> {
     const contracts = await Indexer.instance.getAddresses(
       updates.tokens.reduce(
         (prev, cur) => {
+          const tokens = Array.from(
+            new Set([...(prev[cur.chain_id] || []), cur.contract]),
+          );
           return {
             ...prev,
-            [cur.chain_id]: [...(prev[cur.chain_id] || []), cur.contract],
+            [cur.chain_id]: tokens,
           };
         },
         {} as Record<ChainId, string[]>,
