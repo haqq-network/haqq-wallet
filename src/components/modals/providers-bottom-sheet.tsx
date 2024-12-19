@@ -34,7 +34,7 @@ export function ProvidersBottomSheet({
     }
 
     if (disableAllNetworksOption) {
-      return Provider.getAllNetworks();
+      return Provider.getAll().filter(p => p.id !== ALL_NETWORKS_ID);
     }
 
     return Provider.getAll();
