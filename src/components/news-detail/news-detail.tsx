@@ -9,11 +9,11 @@ import SimpleMarkdown from 'simple-markdown';
 
 import {Color} from '@app/colors';
 import {PopupContainer, Spacer, Text} from '@app/components/ui';
-import {createTheme, openURL} from '@app/helpers';
+import {createTheme} from '@app/helpers';
 import {News} from '@app/models/news';
 import {EventTracker} from '@app/services/event-tracker';
 import {MarketingEvents} from '@app/types';
-import {makeID} from '@app/utils';
+import {makeID, openWeb3Browser} from '@app/utils';
 
 type NodeImage = {
   alt: string;
@@ -213,7 +213,7 @@ const rules = {
           url: node.target,
         });
 
-        await openURL(node.target);
+        await openWeb3Browser(node.target);
       };
       return (
         <Text
@@ -260,7 +260,7 @@ export const NewsDetail = ({
         url,
       });
 
-      await openURL(url);
+      await openWeb3Browser(url);
     },
     [linkEvent],
   );

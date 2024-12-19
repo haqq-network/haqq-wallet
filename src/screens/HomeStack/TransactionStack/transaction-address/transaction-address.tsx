@@ -9,14 +9,13 @@ import {
   KeyboardSafeArea,
   Spacer,
 } from '@app/components/ui';
-import {createTheme, showModal} from '@app/helpers';
+import {createTheme} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {I18N} from '@app/i18n';
 import {Contact} from '@app/models/contact';
 import {Provider} from '@app/models/provider';
-import {Token} from '@app/models/tokens';
 import {Wallet} from '@app/models/wallet';
 import {
   TransactionStackParamList,
@@ -24,7 +23,6 @@ import {
 } from '@app/route-types';
 import {NetworkProviderTypes} from '@app/services/backend';
 import {HapticEffects, vibrate} from '@app/services/haptic';
-import {ModalType} from '@app/types';
 
 import {TransactionAddressAddContact} from './transaction-address-add-contact';
 import {TransactionAddressContactList} from './transaction-address-contact-list';
@@ -151,17 +149,6 @@ export const TransactionAddressScreen = observer(() => {
             token,
           });
         } else {
-          if (!Token.tokens?.[AddressUtils.toEth(from)]) {
-            const hide = showModal(ModalType.loading, {
-              text: 'Loading token balances',
-            });
-            try {
-              await Token.fetchTokens(true, true);
-            } catch {
-            } finally {
-              hide();
-            }
-          }
           navigation.navigate(TransactionStackRoutes.TransactionSelectCrypto, {
             from: converter(from),
             to: converter(result),

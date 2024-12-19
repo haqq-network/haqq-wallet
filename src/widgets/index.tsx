@@ -1,15 +1,9 @@
-import React, {
-  ReactNode,
-  memo,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, {ReactNode, memo, useCallback, useEffect, useState} from 'react';
 
 import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {getAppInfo} from '@app/helpers/get-app-info';
+import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {VariablesString} from '@app/models/variables-string';
 import {Backend} from '@app/services/backend';
 import {IWidget} from '@app/types';
@@ -75,13 +69,16 @@ const WidgetMap: IWidgetMap = {
 };
 
 export const WidgetRoot = memo(({lastUpdate}: {lastUpdate: number}) => {
-  const dataCached = useRef(
-    VariablesString.get('widget_blocks') || '[]',
-  ).current;
-
-  const [data, setData] = useState<IWidget[]>(JSON.parse(dataCached));
+  const {animate} = useLayoutAnimation();
+  const [data, setData] = useState<IWidget[] | null>(null);
 
   const requestMarkup = useCallback(async () => {
+    const cached = VariablesString.get('widget_blocks');
+    if (cached && !data) {
+      animate();
+      setData(JSON.parse(cached));
+    }
+
     const appInfo = await getAppInfo();
     const response = await Backend.instance.markup('home', appInfo);
 
@@ -94,10 +91,11 @@ export const WidgetRoot = memo(({lastUpdate}: {lastUpdate: number}) => {
     const blocksAreEqual = JSON.stringify(blocks) === JSON.stringify(data);
 
     if (!blocksAreEqual) {
+      animate();
       setData(blocks);
       VariablesString.set('widget_blocks', JSON.stringify(blocks));
     }
-  }, [data]);
+  }, [data, animate]);
 
   useEffect(() => {
     requestMarkup();

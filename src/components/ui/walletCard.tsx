@@ -10,6 +10,7 @@ import {TokenRow} from '@app/components/token';
 import {
   CardSmall,
   DataContent,
+  First,
   Icon,
   IconsName,
   Spacer,
@@ -141,13 +142,15 @@ export const WalletCard = observer(
             />
           );
         })}
-        {tokens.length > 0 && !isLast ? (
-          <SolidLine
-            style={styles.line}
-            width={width - 40}
-            color={Color.graphicSecond1}
-          />
-        ) : (
+        <First>
+          {isLast && <Spacer height={24} />}
+          {tokens.length > 0 && (
+            <SolidLine
+              style={styles.line}
+              width={width - 40}
+              color={Color.graphicSecond1}
+            />
+          )}
           <View style={styles.footer}>
             <Icon name={IconsName.coin} color={Color.textSecond1} />
             <Spacer width={4} />
@@ -157,7 +160,7 @@ export const WalletCard = observer(
               i18n={I18N.noTokens}
             />
           </View>
-        )}
+        </First>
       </View>
     );
   },

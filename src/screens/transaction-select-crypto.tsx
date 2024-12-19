@@ -54,7 +54,7 @@ export const TransactionSelectCryptoScreen = observer(() => {
     });
   };
 
-  if (Token.isLoading) {
+  if (Token.isLoading && !tokens.length) {
     return Array.from({length: 6}).map((_, index) => (
       <View key={index} style={styles.placeholderContainer}>
         <View style={styles.placeholderLeft}>
