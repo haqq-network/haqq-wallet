@@ -104,7 +104,6 @@ class WalletStore implements RPCObserver {
             key: 'balances',
             deserialize: (value: TBalancesSerialized) => {
               try {
-                Logger.log(JSON.stringify(value, null, 2));
                 const deserialized: TBalances = {};
 
                 for (const chainId of Object.keys(value)) {
@@ -172,33 +171,26 @@ class WalletStore implements RPCObserver {
       return undefined;
     }
 
-    const TRON_CHAIN_IDS = Provider.getAllNetworks()
+    const TRON_CHAIN_IDS = Provider.getAll()
       .filter(p => p.isTron)
       .map(p => p.ethChainId as ChainId);
 
     return data.reduce(
-      (acc, [address, chainId, value]) => {
-        const isTron = TRON_CHAIN_IDS.includes(chainId);
-        let ADDRESS_KEY = '';
+      (acc, [address, chain_id, value]) => {
+        const isTron = TRON_CHAIN_IDS.includes(chain_id);
 
-        // convert TRX address to ETH address
-        if (isTron) {
-          const wallet = AddressUtils.getWalletByAddress(address);
-          if (wallet) {
-            ADDRESS_KEY = wallet.address;
-          } else {
-            ADDRESS_KEY = address.startsWith('0x')
-              ? address
-              : AddressUtils.tronToHex(address);
-          }
-        } else {
-          ADDRESS_KEY = AddressUtils.toEth(address);
+        let parsedAddress: string = address;
+
+        if (isTron && address.startsWith('0x')) {
+          parsedAddress = AddressUtils.hexToTron(address);
         }
 
+        const wallet = this.getById(parsedAddress)!;
+        const ADDRESS_KEY = wallet?.address;
         return {
           ...acc,
-          [chainId]: {
-            ...acc[chainId],
+          [chain_id]: {
+            ...acc[chain_id],
             [ADDRESS_KEY]: value,
           },
         };
@@ -215,8 +207,6 @@ class WalletStore implements RPCObserver {
     data: IndexerUpdatesResponse,
   ): IndexerBalanceData | undefined => {
     try {
-      const providers = Provider.getAll().filter(p => p.id !== ALL_NETWORKS_ID);
-
       const staked = this._prepareIndexerBalances(data.total_staked);
       const vested = this._prepareIndexerBalances(data.vested);
       const available = this._prepareIndexerBalances(data.available);
@@ -230,6 +220,13 @@ class WalletStore implements RPCObserver {
         return undefined;
       }
 
+      const requestedChains = Object.keys(available);
+      const providers = Provider.getAll().filter(
+        p =>
+          p.id !== ALL_NETWORKS_ID &&
+          requestedChains.includes(String(p.ethChainId)),
+      );
+
       return providers.reduce((acc, p) => {
         try {
           return {
@@ -237,9 +234,9 @@ class WalletStore implements RPCObserver {
             [p.ethChainId]: {
               ...this.wallets.reduce((ac, w) => {
                 try {
+                  const ADDRESS_KEY = w.address;
                   const cosmosAddress = AddressUtils.toHaqq(w.address);
                   const unlock = Number(data?.unlock?.[cosmosAddress] ?? 0);
-                  const ADDRESS_KEY = AddressUtils.toEth(w.address);
                   const cachedBalances =
                     this.balances?.[p.ethChainId]?.[ADDRESS_KEY] || {};
 
@@ -309,7 +306,7 @@ class WalletStore implements RPCObserver {
             },
           };
         } catch (err) {
-          logger.log(
+          logger.error(
             'parseIndexerBalances 2',
             err,
             JSON.stringify({data, acc, p}, null, 2),
@@ -345,11 +342,12 @@ class WalletStore implements RPCObserver {
           this.lastBalanceUpdate,
         );
       }
+
       const newBalances = this.parseIndexerBalances(updates);
       runInAction(() => {
         if (newBalances) {
           this.lastBalanceUpdate = new Date(updates.last_update);
-          this.balances = newBalances;
+          this.balances = {...this.balances, ...newBalances};
         }
       });
 
@@ -361,21 +359,6 @@ class WalletStore implements RPCObserver {
       });
     }
   };
-
-  get isBalancesLoading() {
-    return !this.isBalancesLoaded;
-  }
-
-  get isBalancesLoaded() {
-    if (Provider.isAllNetworks) {
-      return this.getBalances(
-        this.wallets[0]?.address,
-        Provider.selectedProvider,
-        false,
-      )?.total;
-    }
-    return this.balances[Provider.selectedProvider.ethChainId];
-  }
 
   /**
    * @returns {boolean} true if balance not loaded
@@ -389,42 +372,27 @@ class WalletStore implements RPCObserver {
   }
 
   private _calculateAllNetworksBalance = (
-    address: string,
+    address: AddressEthereum,
     useEmptyFallback = true,
   ) => {
     const getBalanceData = (p: ProviderModel) => {
-      const ADDRESS_KEY = p.isTron
-        ? AddressUtils.toTron(address)
-        : AddressUtils.toEth(address);
-
-      // @ts-ignore
-      const balance = this.balances[p.ethChainId]?.[ADDRESS_KEY];
+      const balance = this.balances[p.ethChainId]?.[address];
 
       if (!balance && useEmptyFallback) {
-        // @ts-ignore
-        return Balance.emptyBalances[ADDRESS_KEY];
+        return BalanceModel.Empty;
       }
 
       return balance;
     };
 
-    const balanceModel = new BalanceModel({
-      staked: Balance.Empty,
-      vested: Balance.Empty,
-      available: Balance.Empty,
-      total: Balance.Empty,
-      locked: Balance.Empty,
-      availableForStake: Balance.Empty,
-      unlock: new Date(0),
-    });
-
-    let emptyBalancesCount = 0;
+    const balanceModel = BalanceModel.Empty;
+    let hasEmptyBalance = false;
 
     Provider.getAllNetworks().forEach(p => {
       const balance = getBalanceData(p);
 
       if (!balance) {
-        emptyBalancesCount++;
+        hasEmptyBalance = true;
         return;
       }
 
@@ -451,11 +419,8 @@ class WalletStore implements RPCObserver {
       );
     });
 
-    if (
-      emptyBalancesCount === Provider.getAllNetworks().length &&
-      !useEmptyFallback
-    ) {
-      return new BalanceModel({} as any);
+    if (hasEmptyBalance && !useEmptyFallback) {
+      return undefined;
     }
 
     return balanceModel;
@@ -464,24 +429,24 @@ class WalletStore implements RPCObserver {
   getBalances = (
     address: string,
     provider = Provider.selectedProvider,
-    useEmptyFallback = true,
+    useEmptyFallback = true, // used for balance placeholders check
   ) => {
+    const wallet = this.getById(address);
+
+    if (!wallet) {
+      return undefined;
+    }
+
+    const ADDRESS_KEY = wallet.address;
+
     if (provider.id === ALL_NETWORKS_ID) {
-      return this._calculateAllNetworksBalance(address, useEmptyFallback);
+      return this._calculateAllNetworksBalance(ADDRESS_KEY, useEmptyFallback);
     }
 
-    let ADDRESS_KEY = '' as AddressEthereum;
-
-    if (provider.isTron) {
-      const wallet = this.getById(address);
-      ADDRESS_KEY = wallet?.address ?? AddressUtils.tronToHex(address);
-    } else {
-      ADDRESS_KEY = AddressUtils.toEth(address);
-    }
     const result = this.balances[provider.ethChainId]?.[ADDRESS_KEY];
 
     if (!result && useEmptyFallback) {
-      return Balance.emptyBalances[ADDRESS_KEY];
+      return BalanceModel.Empty;
     }
 
     return result;
@@ -493,7 +458,9 @@ class WalletStore implements RPCObserver {
   ): Record<AddressEthereum, BalanceModel> => {
     return addresses.reduce(
       (acc, wallet) => {
-        acc[wallet.address] = this.getBalances(wallet.address, provider);
+        const balance = this.getBalances(wallet.address, provider);
+        acc[wallet.address] = balance || BalanceModel.Empty;
+
         return acc;
       },
       {} as Record<AddressEthereum, BalanceModel>,
@@ -511,7 +478,7 @@ class WalletStore implements RPCObserver {
       | 'locked',
     provider = Provider.selectedProvider,
   ): Balance {
-    return this.getBalances(address, provider)[key];
+    return this.getBalances(address, provider)?.[key] ?? Balance.Empty;
   }
 
   async createWatchOnly(address: string) {

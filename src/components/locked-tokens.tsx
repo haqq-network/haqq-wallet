@@ -34,6 +34,9 @@ export const LockedTokens = observer(
       [Provider.selectedProvider.denom],
     );
     const defaultTotalValueUSD = useMemo(() => '$0', []);
+    const isBalancesLoading = Wallet.checkWalletBalanceLoading(
+      Wallet.getAll()[0],
+    );
 
     return (
       <View style={styles.container}>
@@ -43,7 +46,7 @@ export const LockedTokens = observer(
           i18n={I18N.lockedTokensTotalValue}
         />
         <First>
-          {Wallet.isBalancesLoading && (
+          {isBalancesLoading && (
             <Placeholder opacity={0.9}>
               <Placeholder.Item height={20} width={100} />
             </Placeholder>
@@ -73,7 +76,7 @@ export const LockedTokens = observer(
         </First>
         <Spacer height={4} />
         <First>
-          {Wallet.isBalancesLoading && (
+          {isBalancesLoading && (
             <>
               <Spacer height={4} />
               <Placeholder opacity={0.9}>

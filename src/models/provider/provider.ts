@@ -103,7 +103,13 @@ class ProviderStore {
       Currencies.clear();
 
       await RemoteProviderConfig.init();
-      Wallet.fetchBalances(undefined, true);
+      // for all networks we need for await
+      if (id === ALL_NETWORKS_ID) {
+        await Wallet.fetchBalances(undefined, true);
+      } else {
+        // for others chains no need await for fastest change
+        Wallet.fetchBalances(undefined, true);
+      }
       if (requestMarkup) {
         await awaitForEventDone(Events.onRequestMarkup);
       }
@@ -196,11 +202,14 @@ class ProviderStore {
 
   getAllNetworks() {
     return Object.values(this._data).filter(p => {
-      if (AppStore.isAdditionalFeaturesEnabled) {
+      if (
+        AppStore.isAdditionalFeaturesEnabled &&
+        AppStore.testnetsEnabledForAllNetworks
+      ) {
         return p.id !== ALL_NETWORKS_ID;
       }
       // disable testnet chains for non-dev mode
-      return p.id !== ALL_NETWORKS_ID && !p.isTestnet;
+      return p.id !== ALL_NETWORKS_ID && p.isMainnet;
     });
   }
 

@@ -95,6 +95,7 @@ export const WalletCard = observer(
         />
         <TouchableWithoutFeedback
           testID="accountInfoButton"
+          disabled={isBalanceLoading}
           onPress={onAccountInfo}>
           <View>
             <BalanceInfoTotal
@@ -116,6 +117,7 @@ export const WalletCard = observer(
           cardState={cardState}
           onPressReceive={onPressReceive}
           onPressSend={onPressSend}
+          isBalanceLoading={isBalanceLoading}
         />
         {/* TODO: add tron support */}
         {Provider.selectedProvider.isTron && !wallet.isSupportTron && (

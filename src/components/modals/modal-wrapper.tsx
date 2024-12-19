@@ -30,7 +30,7 @@ import {SSSLimitReached} from '@app/components/modals/sss-limit-reached';
 import {TransactionError} from '@app/components/modals/transaction-error';
 import {ViewErrorDetails} from '@app/components/modals/view-error-details';
 import {WalletsBottomSheet} from '@app/components/modals/wallets-bottom-sheet';
-import {createTheme, hideModal} from '@app/helpers';
+import {createTheme} from '@app/helpers';
 import {useTheme} from '@app/hooks';
 import {PopupInfoScreen} from '@app/screens/popup-info';
 import {PopupNotificationScreen} from '@app/screens/popup-notification';
@@ -79,9 +79,8 @@ export const ModalWrapper = ({
   }, [modal, onClose]);
 
   const onCloseModalPress = useCallback(() => {
-    modal.onClose?.();
-    hideModal(type);
-  }, [modal, type]);
+    onClose(modal);
+  }, [modal]);
 
   const theme = useTheme();
   const dimensions = useWindowDimensions();

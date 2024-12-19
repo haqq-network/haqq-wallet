@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {Color} from '@app/colors';
 import {BottomSheet} from '@app/components/bottom-sheet';
@@ -7,17 +7,12 @@ import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N} from '@app/i18n';
-import {AppStore} from '@app/models/app';
 import {ALL_NETWORKS_ID, Provider} from '@app/models/provider';
 import {ModalType, Modals} from '@app/types';
 
 import {SettingsProvidersAllNetworksRow} from '../settings/settings-providers/settings-providers-all-networks-row';
 import {SettingsProvidersRow} from '../settings/settings-providers/settings-providers-row';
 
-const logger = Logger.create('ProvidersBottomSheet', {
-  stringifyJson: true,
-  enabled: AppStore.isTesterModeEnabled,
-});
 export function ProvidersBottomSheet({
   title,
   providers: outProviders,
@@ -28,6 +23,8 @@ export function ProvidersBottomSheet({
   disableAllNetworksOption,
 }: Modals[ModalType.providersBottomSheet]) {
   const [searchProviderValue, setSearchProviderValue] = useState('');
+  const selectedProvider = useRef(0);
+
   const providers = useMemo(() => {
     if (outProviders?.length) {
       return outProviders;
@@ -40,14 +37,12 @@ export function ProvidersBottomSheet({
     return Provider.getAll();
   }, [disableAllNetworksOption, outProviders]);
 
-  logger.log('providers', {providers});
-
   const closeDistanceCalculated = useCalculatedDimensionsValue(
     () => closeDistance?.(),
     [closeDistance],
   );
   const onPressProvider = useCallback(
-    (providerChainId: number) => {
+    async (providerChainId: number) => {
       if (
         !!initialProviderChainId &&
         providerChainId === initialProviderChainId
@@ -55,11 +50,10 @@ export function ProvidersBottomSheet({
         // close if selected same provider
         return onCloseModal();
       }
+      // if you call app.emit('provider-selected') event here
+      // it crash app.
+      selectedProvider.current = providerChainId;
       onClose?.();
-      app.emit(
-        `provider-selected${eventSuffix}`,
-        Provider.getByEthChainId(providerChainId)?.id,
-      );
     },
     [eventSuffix, onClose],
   );
@@ -71,7 +65,14 @@ export function ProvidersBottomSheet({
 
   useEffect(() => {
     return () => {
-      app.emit(`provider-selected-reject${eventSuffix}`);
+      if (selectedProvider.current) {
+        app.emit(
+          `provider-selected${eventSuffix}`,
+          Provider.getByEthChainId(selectedProvider.current)?.id,
+        );
+      } else {
+        app.emit(`provider-selected-reject${eventSuffix}`);
+      }
     };
   }, [onPressProvider, eventSuffix]);
 

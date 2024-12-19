@@ -1,11 +1,12 @@
 import {makeAutoObservable} from 'mobx';
 import {Keyboard} from 'react-native';
 
-import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {ModalState} from '@app/screens/modals-screen';
 import {Modals} from '@app/types';
 import {makeID} from '@app/utils';
+
+import {awaitForEventDone} from './await-for-event-done';
 
 export type ModalName = Extract<keyof Modals, string>;
 
@@ -43,8 +44,9 @@ class ModalStore {
   hideModal = (type: ModalName) => {
     if (this.isExist(type)) {
       this.removeByType(type);
-      app.emit(Events.onCloseModal, type);
+      return awaitForEventDone(Events.onCloseModal, type);
     }
+    return Promise.resolve();
   };
 
   setCollapsed = (type: ModalName, collapsed: boolean) => {

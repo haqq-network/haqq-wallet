@@ -19,6 +19,7 @@ export const TotalValueInfoHeader = ({
   balance,
   onPressInfo,
 }: TotalValueInfoProps) => {
+  const isBalanceLoading = Wallet.checkWalletBalanceLoading(Wallet.getAll()[0]);
   return (
     <>
       <View style={styles.header}>
@@ -49,7 +50,7 @@ export const TotalValueInfoHeader = ({
           stakingBalance={balance?.staked}
           onPressInfo={onPressInfo}
           unlock={balance?.nextVestingUnlockDate}
-          isBalanceLoading={Wallet.isBalancesLoading}
+          isBalanceLoading={isBalanceLoading}
         />
       </First>
     </>

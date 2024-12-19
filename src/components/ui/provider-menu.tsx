@@ -19,7 +19,7 @@ export const ProviderMenu = observer(() => {
     });
 
     if (providerId) {
-      Provider.setSelectedProviderId(providerId);
+      Provider.setSelectedProviderId(providerId, {requestMarkup: true});
     }
   }, []);
 

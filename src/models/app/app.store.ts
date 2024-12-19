@@ -12,6 +12,7 @@ class AppStore {
   private _isOnboarded = false;
   private _networkLoggerEnabled = false;
   private _networkLogsCacheSize = 500; // count of stored http request
+  private _testnetsEnabledForAllNetworks = true;
   isDeveloperModeEnabled = Config.IS_DEVELOPMENT === 'true';
   isTesterModeEnabled = Config.IS_TESTMODE === 'true';
 
@@ -26,6 +27,8 @@ class AppStore {
         'isTesterModeEnabled',
         // @ts-ignore
         '_networkLoggerEnabled',
+        // @ts-ignore
+        '_testnetsEnabledForAllNetworks',
         // @ts-ignore
         '_networkLogsCacheSize',
       ],
@@ -78,6 +81,16 @@ class AppStore {
   set networkLogsCacheSize(value: number) {
     runInAction(() => {
       this._networkLogsCacheSize = value;
+    });
+  }
+
+  get testnetsEnabledForAllNetworks() {
+    return this._testnetsEnabledForAllNetworks;
+  }
+
+  set testnetsEnabledForAllNetworks(value: boolean) {
+    runInAction(() => {
+      this._testnetsEnabledForAllNetworks = value;
     });
   }
 }
