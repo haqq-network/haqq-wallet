@@ -195,7 +195,13 @@ class ProviderStore {
   }
 
   getAllNetworks() {
-    return Object.values(this._data).filter(p => p.id !== ALL_NETWORKS_ID);
+    return Object.values(this._data).filter(p => {
+      if (AppStore.isAdditionalFeaturesEnabled) {
+        return p.id !== ALL_NETWORKS_ID;
+      }
+      // disable testnet chains for non-dev mode
+      return p.id !== ALL_NETWORKS_ID && !p.isTestnet;
+    });
   }
 
   getAllEVM() {
