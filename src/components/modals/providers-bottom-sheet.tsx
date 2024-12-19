@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {Color} from '@app/colors';
-import {BottomSheet} from '@app/components/bottom-sheet';
+import {BottomSheet, BottomSheetRef} from '@app/components/bottom-sheet';
 import {Icon, IconsName, Spacer, TextField} from '@app/components/ui';
 import {app} from '@app/contexts';
 import {createTheme} from '@app/helpers';
@@ -23,6 +23,7 @@ export function ProvidersBottomSheet({
   disableAllNetworksOption,
 }: Modals[ModalType.providersBottomSheet]) {
   const [searchProviderValue, setSearchProviderValue] = useState('');
+  const bsRef = useRef<BottomSheetRef>(null);
   const selectedProvider = useRef(0);
 
   const providers = useMemo(() => {
@@ -102,6 +103,7 @@ export function ProvidersBottomSheet({
 
   return (
     <BottomSheet
+      ref={bsRef}
       onClose={onCloseModal}
       contentContainerStyle={styles.container}
       closeDistance={closeDistanceCalculated}

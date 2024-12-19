@@ -1,14 +1,13 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useMemo, useRef} from 'react';
 
 import {TouchableOpacity, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {BottomSheet} from '@app/components/bottom-sheet';
+import {BottomSheet, BottomSheetRef} from '@app/components/bottom-sheet';
 import {ImageWrapper} from '@app/components/image-wrapper';
 import {Spacer, Text, TextVariant} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
-import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N} from '@app/i18n';
 import {ALL_NETWORKS_ID, Provider} from '@app/models/provider';
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
@@ -17,6 +16,7 @@ import {ChainId} from '@app/types';
 import {SelectNetworkItemType} from './receive-stack.types';
 
 export function SelectNetworkScreen() {
+  const bsRef = useRef<BottomSheetRef>(null);
   const navigation = useTypedNavigation<HomeStackParamList>();
   const route = useTypedRoute<
     HomeStackParamList,
@@ -24,8 +24,9 @@ export function SelectNetworkScreen() {
   >();
 
   const onSelect = useCallback(
-    (chainId: ChainId) => () => {
-      navigation.replace(HomeStackRoutes.Receive, {
+    (chainId: ChainId) => async () => {
+      await bsRef.current?.close();
+      navigation.navigate(HomeStackRoutes.Receive, {
         address: route.params.address,
         chainId,
       });
@@ -48,13 +49,12 @@ export function SelectNetworkScreen() {
       }));
   }, []);
 
-  const closeDistance = useCalculatedDimensionsValue(({height}) => height / 2);
-
   return (
     <BottomSheet
+      ref={bsRef}
       onClose={onClose}
       scrollable
-      closeDistance={closeDistance}
+      contentContainerStyle={styles.container}
       i18nTitle={I18N.yourAddresses}>
       <View>
         {networks.map(item => (
@@ -82,6 +82,7 @@ export function SelectNetworkScreen() {
 }
 
 const styles = createTheme({
+  container: {height: '100%'},
   item: {flexDirection: 'row', alignItems: 'center'},
   addressBlock: {justifyContent: 'center', flex: 1},
   icon: {width: 42, height: 42, marginRight: 12, marginVertical: 16},
