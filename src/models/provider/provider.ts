@@ -196,7 +196,10 @@ class ProviderStore {
 
   getAllNetworks() {
     return Object.values(this._data).filter(p => {
-      if (AppStore.isAdditionalFeaturesEnabled) {
+      if (
+        AppStore.isAdditionalFeaturesEnabled &&
+        AppStore.testnetsEnabledForAllNetworks
+      ) {
         return p.id !== ALL_NETWORKS_ID;
       }
       // disable testnet chains for non-dev mode
