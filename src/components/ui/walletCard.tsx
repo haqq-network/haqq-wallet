@@ -22,6 +22,8 @@ import {I18N} from '@app/i18n';
 import {Wallet, WalletModel} from '@app/models/wallet';
 import {IToken} from '@app/types';
 
+import {Placeholder} from './placeholder';
+
 export type Props = {
   wallet: WalletModel;
   tokens: IToken[];
@@ -51,7 +53,7 @@ export const WalletCard = observer(
     isLast,
   }: Props) => {
     const {width} = useWindowDimensions();
-    const {available, locked} = Wallet.getBalances(wallet.address);
+    const balance = Wallet.getBalances(wallet.address);
 
     if (tokensOnly) {
       return tokens.map((token, idx) => {
@@ -69,6 +71,17 @@ export const WalletCard = observer(
       });
     }
 
+    if (!balance) {
+      return (
+        <>
+          <Placeholder opacity={0.9}>
+            <Placeholder.Item height={40} />
+          </Placeholder>
+          <Spacer height={8} />
+        </>
+      );
+    }
+
     return (
       <View style={styles.column}>
         <TouchableOpacity
@@ -84,7 +97,7 @@ export const WalletCard = observer(
           />
           <DataContent
             style={styles.info}
-            title={available.toEtherString()}
+            title={balance?.available?.toEtherString()}
             subtitleProps={{
               numberOfLines: 1,
               ellipsizeMode: 'tail',
@@ -100,7 +113,7 @@ export const WalletCard = observer(
           color={Color.graphicSecond2}
         />
 
-        {locked?.isPositive() && hideWalletSummary === false && (
+        {balance?.locked?.isPositive() && hideWalletSummary === false && (
           <>
             <View style={styles.row}>
               <Icon i18 color={Color.graphicBase1} name={IconsName.coin} />
@@ -109,7 +122,7 @@ export const WalletCard = observer(
                 variant={TextVariant.t14}
                 color={Color.textBase1}
                 i18n={I18N.lockedTokensAvailable}
-                i18params={{count: available?.toFloatString() ?? '0'}}
+                i18params={{count: balance?.available?.toFloatString() ?? '0'}}
               />
               <Spacer width={8} />
               <Icon i18 color={Color.graphicBase1} name={IconsName.lock} />
@@ -118,7 +131,7 @@ export const WalletCard = observer(
                 variant={TextVariant.t14}
                 color={Color.textBase1}
                 i18n={I18N.lockedTokensLocked}
-                i18params={{count: locked?.toFloatString() ?? '0'}}
+                i18params={{count: balance?.locked?.toFloatString() ?? '0'}}
               />
             </View>
             <DashedLine
@@ -142,15 +155,7 @@ export const WalletCard = observer(
             />
           );
         })}
-        <First>
-          {isLast && <Spacer height={24} />}
-          {tokens.length > 0 && (
-            <SolidLine
-              style={styles.line}
-              width={width - 40}
-              color={Color.graphicSecond1}
-            />
-          )}
+        {!tokens.length && (
           <View style={styles.footer}>
             <Icon name={IconsName.coin} color={Color.textSecond1} />
             <Spacer width={4} />
@@ -160,6 +165,16 @@ export const WalletCard = observer(
               i18n={I18N.noTokens}
             />
           </View>
+        )}
+        <First>
+          {isLast && <Spacer height={24} />}
+          {tokens.length > 0 && (
+            <SolidLine
+              style={styles.line}
+              width={width - 40}
+              color={Color.graphicSecond1}
+            />
+          )}
         </First>
       </View>
     );
