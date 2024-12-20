@@ -137,7 +137,6 @@ const styles = StyleSheet.create({
   agree: {marginBottom: 4, flexDirection: 'row'},
   agreeText: {
     flex: 1,
-    color: Color.textBase2,
     marginLeft: 12,
     marginBottom: 4,
   },

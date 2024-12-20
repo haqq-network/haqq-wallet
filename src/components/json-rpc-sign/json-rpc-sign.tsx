@@ -64,7 +64,7 @@ export const JsonRpcSign = ({
       return true;
     }
 
-    if (ethereumSignInMessage && Object.values(ethereumSignInMessage).length) {
+    if (ethereumSignInMessage) {
       return false;
     }
 
@@ -129,7 +129,7 @@ export const JsonRpcSign = ({
         <Spacer height={4} />
         <Button
           loading={signLoading || isFeeLoading}
-          disabled={signButtonDisabled || isFeeLoading}
+          disabled={signButtonDisabled}
           variant={ButtonVariant.contained}
           onPress={handleSignPress}
           i18n={I18N.walletConnectSignApproveButton}

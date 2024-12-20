@@ -1,5 +1,4 @@
-import {EventEmitter} from 'events';
-
+import {IWalletKit, WalletKit} from '@reown/walletkit';
 import {Core} from '@walletconnect/core';
 import {ICore, SignClientTypes} from '@walletconnect/types';
 import {
@@ -7,7 +6,6 @@ import {
   getSdkError,
   parseUri,
 } from '@walletconnect/utils';
-import {IWeb3Wallet, Web3Wallet} from '@walletconnect/web3wallet';
 import Config from 'react-native-config';
 
 import {app} from '@app/contexts';
@@ -43,11 +41,12 @@ export const WC_PAIRING_URLS_KEY = 'wallet_connect_pairing_urls';
 
 export class WalletConnect extends Initializable {
   static instance = new WalletConnect();
-  private _client: IWeb3Wallet | null = null;
+  private _client: IWalletKit | null = null;
   private _core: ICore | null = null;
   private _initAttempts = 0;
   private _initStartTime = 0;
   private _handledJsonRpcEvents = new Map<string, boolean>();
+  private _handledUri: string[] = [];
 
   public getActiveSessions() {
     return this._client?.engine?.signClient?.session?.getAll?.() || [];
@@ -82,10 +81,9 @@ export class WalletConnect extends Initializable {
       this._core = new Core({
         logger: DEBUG_VARS.enableWalletConnectLogger ? 'debug' : 'error',
         projectId: Config.WALLET_CONNECT_PROJECT_ID,
-        relayUrl: Config.WALLET_CONNECT_RELAY_URL,
       });
 
-      this._client = await Web3Wallet.init({
+      this._client = await WalletKit.init({
         core: this._core,
         metadata: {
           name: 'HAQQ Wallet',
@@ -97,38 +95,35 @@ export class WalletConnect extends Initializable {
 
       this._emitActiveSessions();
 
-      this
-        // https://docs.walletconnect.com/2.0/javascript/web3wallet/wallet-usage#responding-to-session-requests
-        ._walletConnectOnEvent('session_proposal', proposal => {
-          logger.log('🟢 session_proposal', proposal);
-          app.emit(Events.onWalletConnectApproveConnection, proposal);
-        })
-        // https://docs.walletconnect.com/2.0/javascript/web3wallet/wallet-usage#responding-to-session-requests
-        .on('session_request', async event => {
-          const handledKey = `${event.id}-${event.topic}`;
-          if (this._handledJsonRpcEvents.get(handledKey)) {
-            return logger.log('🟣 session_request already in progress', event);
-          }
-          this._handledJsonRpcEvents.set(handledKey, true);
-          logger.log('🟢 session_request', event);
-          app.emit(Events.onWalletConnectSignTransaction, event);
-        })
-        // https://docs.walletconnect.com/2.0/javascript/web3wallet/wallet-usage#extend-a-session
-        .on('session_update', async event => {
-          logger.log('🟢 session_update', JSON.stringify(event, null, 2));
-          await this._client?.extendSession?.({topic: event?.topic});
-          this._emitActiveSessions();
-        })
-        .on('session_expire', this._emitActiveSessions.bind(this))
-        .on('session_delete', this._emitActiveSessions.bind(this))
-        .on('session_request_expire', async ({id}) => {
-          try {
-            await this.rejectSession(id, 'Session request expired');
-          } catch (err) {
-            logger.error('session_request_expire', err);
-          }
-          this._emitActiveSessions.bind(this);
-        });
+      this._client.on('session_proposal', proposal => {
+        logger.log('🟢 session_proposal', proposal);
+        app.emit(Events.onWalletConnectApproveConnection, proposal);
+      });
+
+      this._client.on('session_request', async event => {
+        logger.log('🟢 session_request', event);
+        const handledKey = `${event.id}-${event.topic}`;
+        if (this._handledJsonRpcEvents.get(handledKey)) {
+          return logger.log('🟣 session_request already in progress', event);
+        }
+        this._handledJsonRpcEvents.set(handledKey, true);
+        app.emit(Events.onWalletConnectSignTransaction, event);
+      });
+      // @ts-ignore
+      this._client.on('session_update', async event => {
+        logger.log('🟢 session_update', JSON.stringify(event, null, 2));
+        this._emitActiveSessions();
+      });
+
+      this._client.on('session_delete', this._emitActiveSessions.bind(this));
+      this._client.on('session_request_expire', async ({id}) => {
+        try {
+          await this.rejectSession(id, 'Session request expired');
+        } catch (err) {
+          logger.error('session_request_expire', err);
+        }
+        this._emitActiveSessions.bind(this);
+      });
 
       this._core.relayer.on('relayer_connect', async () => {
         // connection to the relay server is established
@@ -192,7 +187,7 @@ export class WalletConnect extends Initializable {
         chainId: `eip155:${chainId}`,
       });
     } catch (err) {
-      logger.error('emitChainChange', {topic}, err);
+      Logger.error('emitChainChange', {topic, chainId}, err);
     }
   }
 
@@ -251,6 +246,10 @@ export class WalletConnect extends Initializable {
 
   public async pair(uri: string) {
     try {
+      if (this._handledUri.includes(uri)) {
+        return;
+      }
+      this._handledUri.push(uri);
       await this.awaitForInitialization();
       const pairedUrls = this.getPairedUrls();
       if (!uri?.startsWith('wc:')) {
@@ -457,19 +456,5 @@ export class WalletConnect extends Initializable {
     this._core = null;
     this._client = null;
     await this.init();
-  }
-
-  // typed fix for `Web3Wallet.on`
-  private _walletConnectOnEvent<EventName extends WalletConnectEventTypes>(
-    eventName: EventName,
-    cb: (event: SignClientTypes.EventArguments[EventName]) => void,
-  ) {
-    // @ts-ignore
-    return this._client?.on?.(eventName, cb) as unknown as Omit<
-      EventEmitter,
-      'on'
-    > & {
-      on: typeof WalletConnect.instance._walletConnectOnEvent;
-    };
   }
 }
