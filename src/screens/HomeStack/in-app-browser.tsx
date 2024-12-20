@@ -1,10 +1,9 @@
 import React, {memo, useCallback, useRef} from 'react';
 
-import {Share} from 'react-native';
+import {Linking, Share} from 'react-native';
 import WebView from 'react-native-webview';
 
 import {InAppBrowser} from '@app/components/in-app-browser';
-import {openURL} from '@app/helpers';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 
@@ -33,7 +32,7 @@ export const InAppBrowserScreen = memo(() => {
   }, []);
 
   const onPressBrowser = useCallback((url: string) => {
-    openURL(url);
+    Linking.openURL(url);
   }, []);
 
   return (
