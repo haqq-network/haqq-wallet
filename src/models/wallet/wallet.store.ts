@@ -390,6 +390,8 @@ class WalletStore implements RPCObserver {
     let hasEmptyBalance = false;
 
     Provider.getAllNetworks().forEach(p => {
+      // TODO: remove when add support
+      // skip balance check for unsupported tron wallets
       if (p.isTron && !wallet?.isSupportTron) {
         return;
       }
