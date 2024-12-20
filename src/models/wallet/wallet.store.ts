@@ -385,12 +385,16 @@ class WalletStore implements RPCObserver {
       return balance;
     };
 
+    const wallet = this.getById(address);
     const balanceModel = BalanceModel.Empty;
     let hasEmptyBalance = false;
 
     Provider.getAllNetworks().forEach(p => {
-      const balance = getBalanceData(p);
+      if (p.isTron && !wallet?.isSupportTron) {
+        return;
+      }
 
+      const balance = getBalanceData(p);
       if (!balance) {
         hasEmptyBalance = true;
         return;
