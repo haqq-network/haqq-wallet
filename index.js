@@ -1,6 +1,6 @@
+import '@walletconnect/react-native-compat';
 import 'node-libs-react-native/globals';
 import '@ethersproject/shims';
-import '@walletconnect/react-native-compat';
 import {AppRegistry, I18nManager, LogBox} from 'react-native';
 import './global';
 import './src/modifiers/json-rpc-provider.modifier';

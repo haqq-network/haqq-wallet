@@ -196,8 +196,22 @@ export const TransactionSumScreen = observer(() => {
   }, [navigation]);
 
   useEffectAsync(async () => {
-    const b = Wallet.getBalance(route.params.from, 'available', provider);
-    const estimate = await getFee(b);
+    const getMinAmount = () => {
+      const token = route.params.token;
+      // for network native coin
+      if (token.symbol === provider.denom) {
+        return new Balance(0.0000001, 0);
+      }
+
+      // for others tokens
+      return new Balance(
+        Number(`0.${'0'.repeat(token.decimals! - 1)}1`),
+        token.decimals!,
+        token.symbol!,
+      );
+    };
+
+    const estimate = await getFee(getMinAmount());
     setFee(estimate?.expectedFee ?? null);
   }, [to]);
 

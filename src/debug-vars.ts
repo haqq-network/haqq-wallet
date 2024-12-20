@@ -35,7 +35,7 @@ const production: DebugVars = {
 const debug: DebugVars = {
   enableSentry: false,
   enableWeb3BrowserIncognito: false,
-  enableWalletConnectLogger: false,
+  enableWalletConnectLogger: true,
   enableCaptchaLogger: true,
   enableSkipPinOnLogin: false,
   enableWeb3BrowserLogger: true,

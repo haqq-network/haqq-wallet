@@ -125,23 +125,6 @@ export const ProtectionBadge = ({
             <Spacer width={8} />
           </>
         )}
-        {!!walletConnectSessions?.length && (
-          <>
-            <IconButton
-              onPress={onWalletConnect}
-              style={[styles.protection, styles.walletConnectApps]}>
-              <Icon i16 name={IconsName.link} color={Color.graphicBase3} />
-              <Spacer width={4} />
-              <Text
-                variant={TextVariant.t15}
-                i18n={I18N.walletCardConnectedApps}
-                i18params={{count: `${walletConnectSessions?.length}`}}
-                color={Color.textBase3}
-              />
-            </IconButton>
-            <Spacer width={8} />
-          </>
-        )}
         {protectionStatus === ProtectionStatus.full && (
           <>
             <IconButton style={styles.protection}>
@@ -170,6 +153,23 @@ export const ProtectionBadge = ({
           <Spacer width={8} />
         </>
       </First>
+      {!!walletConnectSessions?.length && (
+        <>
+          <IconButton
+            onPress={onWalletConnect}
+            style={[styles.protection, styles.walletConnectApps]}>
+            <Icon i16 name={IconsName.link} color={Color.graphicBase3} />
+            <Spacer width={4} />
+            <Text
+              variant={TextVariant.t15}
+              i18n={I18N.walletCardConnectedApps}
+              i18params={{count: `${walletConnectSessions?.length}`}}
+              color={Color.textBase3}
+            />
+          </IconButton>
+          <Spacer width={8} />
+        </>
+      )}
     </View>
   );
 };
