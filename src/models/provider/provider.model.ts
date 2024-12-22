@@ -145,6 +145,20 @@ export class ProviderModel {
     return undefined;
   }
 
+  isAddressSupported = (address: string) => {
+    if (!this.supportAddresses) {
+      return true;
+    }
+
+    return !this.supportAddresses.find(prefix => {
+      if (prefix.length > address.length) {
+        return prefix.startsWith(address);
+      } else {
+        return address.startsWith(prefix);
+      }
+    });
+  };
+
   toJSON() {
     return {
       ethChainIdHex: this.ethChainIdHex,

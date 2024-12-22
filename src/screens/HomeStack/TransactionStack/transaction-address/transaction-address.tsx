@@ -19,13 +19,12 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
-import {Wallet} from '@app/models/wallet';
+import {Wallet, WalletModel} from '@app/models/wallet';
 import {
   TransactionStackParamList,
   TransactionStackRoutes,
 } from '@app/route-types';
 import {NetworkProviderTypes} from '@app/services/backend';
-import {HapticEffects, vibrate} from '@app/services/haptic';
 
 import {TransactionAddressContactList} from './transaction-address-contact-list';
 import {TransactionAddressInput} from './transaction-address-input';
@@ -110,13 +109,14 @@ export const TransactionAddressScreen = observer(() => {
     );
   }, [isError, toAddress, fromWallet]);
 
-  const onPressAddress = useCallback(
-    (item: string) => {
-      vibrate(HapticEffects.impactLight);
-      TransactionStore.toAddress = item;
-    },
-    [onDone],
-  );
+  const onPressAddress = useCallback((wallet: WalletModel) => {
+    TransactionStore.toWallet = wallet;
+    navigation.navigate(TransactionStackRoutes.TransactionNetworkSelect);
+  }, []);
+
+  const onPressContact = useCallback((item: string) => {
+    TransactionStore.toAddress = item;
+  }, []);
 
   const onPressButton = useCallback(() => {
     onDone(toAddress.trim());
@@ -147,7 +147,7 @@ export const TransactionAddressScreen = observer(() => {
         />
       )}
       <TransactionAddressWalletList onPress={onPressAddress} />
-      <TransactionAddressContactList onPress={onPressAddress} />
+      <TransactionAddressContactList onPress={onPressContact} />
       <Spacer flex={1} />
       <Button
         disabled={doneDisabled}

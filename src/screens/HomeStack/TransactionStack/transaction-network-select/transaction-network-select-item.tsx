@@ -16,7 +16,7 @@ import {TransactionStore} from '../transaction-store';
 
 export const TransactionNetworkSelectItem = observer(
   ({item}: TransactionNetworkSelectItemProps) => {
-    const {toChainId, toAddress} = TransactionStore;
+    const {toChainId, toAddress, toWallet} = TransactionStore;
 
     const navigation = useTypedNavigation<TransactionStackParamList>();
 
@@ -36,6 +36,11 @@ export const TransactionNetworkSelectItem = observer(
 
     const handlePress = useCallback(() => {
       if (!isProviderDisabled) {
+        if (toWallet) {
+          TransactionStore.toAddress = toWallet.getAddressByProviderChainId(
+            item.ethChainId,
+          );
+        }
         TransactionStore.toChainId = item.ethChainId;
         navigation.goBack();
       }

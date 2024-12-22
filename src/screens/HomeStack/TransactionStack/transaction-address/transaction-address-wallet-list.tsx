@@ -59,7 +59,7 @@ export const TransactionAddressWalletList = observer(
         <>
           <WalletRow
             item={item}
-            onPress={() => onPress(item.providerSpecificAddress)}
+            onPress={() => onPress(item)}
             type={WalletRowTypes.variant4}
           />
           <Spacer width={8} />
