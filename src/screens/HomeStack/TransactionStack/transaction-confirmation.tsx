@@ -79,12 +79,12 @@ export const TransactionConfirmationScreen = observer(() => {
         setDisabled(true);
 
         const ethNetworkProvider = new EthNetwork();
-
+        const networkProvider = Provider.getByEthChainId(token.chain_id);
         const walletProvider = await getProviderInstanceForWallet(
           wallet,
           false,
+          networkProvider,
         );
-        const networkProvider = Provider.getByEthChainId(token.chain_id);
 
         if (fee?.calculatedFees) {
           let transaction;
