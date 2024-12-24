@@ -41,7 +41,7 @@ export const TransactionSumScreen = observer(() => {
     Provider.selectedProvider;
   const wallet = Wallet.getById(route.params.from);
   const [to, setTo] = useState(
-    provider.isTron ? AddressUtils.hexToTron(route.params.to) : route.params.to,
+    provider.isTron ? AddressUtils.toTron(route.params.to) : route.params.to,
   );
   const balances = Wallet.getBalancesByAddressList([wallet!], provider);
   const currentBalance = useMemo(
