@@ -55,8 +55,8 @@ export const AccountInfoHeader = ({
   onReceive,
 }: AccountInfoProps) => {
   const formattedAddress = useMemo(
-    () => shortAddress(wallet.providerSpecificAddress, '•'),
-    [wallet.providerSpecificAddress],
+    () => shortAddress(wallet.getProviderSpecificAddress(), '•'),
+    [wallet],
   );
 
   return (

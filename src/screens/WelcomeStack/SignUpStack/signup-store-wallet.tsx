@@ -122,7 +122,7 @@ export const SignUpStoreWalletScreen = observer(() => {
 
         const accountWallets = Wallet.getForAccount(provider.getIdentifier());
         const nextHdPathIndex = accountWallets.reduce((memo, wallet) => {
-          const segments = wallet.path?.split('/') ?? ['0'];
+          const segments = wallet.getPath(provider)?.split('/') ?? ['0'];
           return Math.max(
             memo,
             parseInt(segments[segments.length - 1], 10) + 1,

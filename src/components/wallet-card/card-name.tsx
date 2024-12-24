@@ -20,8 +20,8 @@ type CardNameProps = {
 export const CardName = observer(
   ({wallet, onAccountInfo, testID, isBalanceLoading}: CardNameProps) => {
     const formattedAddress = useMemo(
-      () => shortAddress(wallet?.providerSpecificAddress ?? '', '•'),
-      [wallet?.providerSpecificAddress],
+      () => shortAddress(wallet?.getProviderSpecificAddress() ?? '', '•'),
+      [wallet],
     );
 
     return (
