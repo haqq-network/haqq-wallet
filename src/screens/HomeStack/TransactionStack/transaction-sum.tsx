@@ -36,11 +36,13 @@ export const TransactionSumScreen = observer(() => {
     TransactionStackRoutes.TransactionSum
   >();
   const event = useMemo(() => generateUUID(), []);
-  const [to, setTo] = useState(route.params.to);
   const provider =
     Provider.getByEthChainId(route.params.token.chain_id) ??
     Provider.selectedProvider;
   const wallet = Wallet.getById(route.params.from);
+  const [to, setTo] = useState(
+    provider.isTron ? AddressUtils.hexToTron(route.params.to) : route.params.to,
+  );
   const balances = Wallet.getBalancesByAddressList([wallet!], provider);
   const currentBalance = useMemo(
     () => balances[AddressUtils.toEth(route.params.from)],

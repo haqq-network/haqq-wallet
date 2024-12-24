@@ -21,7 +21,7 @@ export const TransactionAddressWalletList = ({
       <>
         <WalletRow
           item={item}
-          onPress={() => onPress(item.address)}
+          onPress={() => onPress(item.getProviderSpecificAddress())}
           type={WalletRowTypes.variant4}
         />
         <Spacer width={8} />

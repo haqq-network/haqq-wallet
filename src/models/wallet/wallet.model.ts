@@ -43,8 +43,8 @@ export class WalletModel implements IWalletModel {
     return AddressUtils.toTron(this.model.tronAddress);
   }
 
-  get providerSpecificAddress() {
-    if (Provider.selectedProvider.isTron) {
+  getProviderSpecificAddress(provider = Provider.selectedProvider) {
+    if (provider.isTron) {
       return this.tronAddress;
     }
     return this.address;

@@ -16,7 +16,10 @@ export type Props = {
 };
 
 export const TransactionSelectCrypto = ({tokens, onItemPress}: Props) => {
-  const keyExtractor = useCallback((item: IToken) => item.id, []);
+  const keyExtractor = useCallback(
+    (item: IToken) => `${item.id}_${item.chain_id}`,
+    [],
+  );
   const renderItem = useCallback(({item}: {item: IToken}) => {
     if (!item?.id) {
       return null;
