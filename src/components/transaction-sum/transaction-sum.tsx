@@ -38,7 +38,6 @@ export type TransactionSumProps = {
   onPressPreview: (amount: Balance) => void;
   onContact: () => void;
   onToken: () => void;
-  onNetworkPress: () => void;
   testID?: string;
   token: IToken;
   isLoading: boolean;
@@ -56,7 +55,6 @@ export const TransactionSum = observer(
     onPressPreview,
     onContact,
     onToken,
-    onNetworkPress,
     testID,
     token,
     isLoading,
@@ -159,22 +157,6 @@ export const TransactionSum = observer(
               </Text>
             </View>
           </LabeledBlock>
-          <Spacer width={8} />
-          <LabeledBlock
-            i18nLabel={I18N.transactionNetwork}
-            style={styles.labeledBlock}
-            onPress={onNetworkPress}>
-            <View style={styles.cryptoBlockWrapper}>
-              <Text
-                style={styles.cryptoBlockTitle}
-                variant={TextVariant.t11}
-                color={Color.textBase1}
-                numberOfLines={1}
-                ellipsizeMode="tail">
-                {provider.name}
-              </Text>
-            </View>
-          </LabeledBlock>
         </View>
         <Spacer centered>
           <SumBlock
@@ -233,9 +215,6 @@ const styles = createTheme({
     overflow: 'hidden',
     alignSelf: 'center',
     marginRight: 4,
-  },
-  cryptoBlockTitle: {
-    marginRight: 8,
   },
   cryptoBlockWrapper: {
     flexDirection: 'row',

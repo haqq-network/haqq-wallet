@@ -384,9 +384,10 @@ export type HomeStackParamList = {
   [HomeStackRoutes.NetworkLogger]: undefined;
   [HomeStackRoutes.AccountInfo]: {accountId: string};
   [HomeStackRoutes.Transaction]: {
-    from?: string;
+    from: string;
     to?: string;
     nft?: NftItem;
+    token?: IToken;
   };
   [HomeStackRoutes.Nft]:
     | {
@@ -532,6 +533,7 @@ export type ProposalDepositStackParamList = GovernanceStackParamList & {
 
 export enum TransactionStackRoutes {
   TransactionAddress = 'transactionAddress',
+  TransactionNetworkSelect = 'transactionNetworkSelect',
   TransactionSum = 'transactionSum',
   TransactionConfirmation = 'transactionConfirmation',
   TransactionNftConfirmation = 'transactionNftConfirmation',
@@ -551,6 +553,8 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
     nft?: NftItem | undefined;
     token?: IToken | undefined;
   };
+  [TransactionStackRoutes.TransactionNetworkSelect]: undefined;
+  [TransactionStackRoutes.TransactionSelectCrypto]: undefined;
   [TransactionStackRoutes.TransactionSum]: {
     from: string;
     to: string;
@@ -602,10 +606,6 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
   [TransactionStackRoutes.TransactionContactEdit]: {
     name: string;
     address: string;
-  };
-  [TransactionStackRoutes.TransactionSelectCrypto]: {
-    from: string;
-    to: string;
   };
 };
 

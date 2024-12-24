@@ -6,7 +6,6 @@ import {TransactionSum} from '@app/components/transaction-sum';
 import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
-import {awaitForProvider} from '@app/helpers/await-for-provider';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
@@ -186,15 +185,6 @@ export const TransactionSumScreen = observer(() => {
     navigation.goBack();
   }, [navigation]);
 
-  const onNetworkPress = useCallback(async () => {
-    const providerId = await awaitForProvider({
-      initialProviderChainId: route.params.token.chain_id,
-      title: I18N.networks,
-    });
-    Provider.setSelectedProviderId(providerId);
-    navigation.goBack();
-  }, [navigation]);
-
   useEffectAsync(async () => {
     const getMinAmount = () => {
       const token = route.params.token;
@@ -225,7 +215,6 @@ export const TransactionSumScreen = observer(() => {
       onPressPreview={onPressPreview}
       onContact={onContact}
       onToken={onToken}
-      onNetworkPress={onNetworkPress}
       testID="transaction_sum"
       token={route.params.token}
       isLoading={isLoading}

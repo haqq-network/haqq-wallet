@@ -42,7 +42,7 @@ export const TokenRow = ({item, checked = false, onPress}: TokenRowProps) => {
           </Text>
           <Spacer />
           <Text variant={TextVariant.t11}>
-            {item?.value?.toBalanceString?.('auto')}
+            {item?.value?.toBalanceString?.('auto', undefined, true, true)}
           </Text>
         </View>
         <View style={styles.row}>

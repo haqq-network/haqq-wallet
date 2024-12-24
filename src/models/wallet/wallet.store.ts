@@ -31,13 +31,12 @@ import {
 
 import {
   AddWalletParams,
-  AddressCosmosHaqq,
   AddressEthereum,
-  AddressTron,
   ChainId,
   HexNumber,
   IndexerBalance,
   IndexerBalanceData,
+  WalletAddress,
   WalletCardStyleT,
   WalletType,
 } from '../../types';
@@ -197,7 +196,7 @@ class WalletStore implements RPCObserver {
       },
       {} as {
         [key: ChainId]: {
-          [key: AddressEthereum | AddressCosmosHaqq | AddressTron]: HexNumber;
+          [key: WalletAddress]: HexNumber;
         };
       },
     );
@@ -560,14 +559,8 @@ class WalletStore implements RPCObserver {
       this.wallets.find(wallet => {
         if (
           wallet.address.toLowerCase() === id.toLowerCase() ||
-          wallet.cosmosAddress.toLowerCase() === id.toLowerCase()
-        ) {
-          return wallet;
-        }
-
-        if (
-          !!wallet.tronAddress &&
-          wallet.tronAddress.toLowerCase() === id.toLowerCase()
+          wallet.cosmosAddress.toLowerCase() === id.toLowerCase() ||
+          wallet.tronAddress?.toLowerCase() === id.toLowerCase()
         ) {
           return wallet;
         }
