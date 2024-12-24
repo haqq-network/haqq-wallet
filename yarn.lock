@@ -9183,9 +9183,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"detox@npm:20.18.4":
-  version: 20.18.4
-  resolution: "detox@npm:20.18.4"
+"detox-copilot@npm:^0.0.23":
+  version: 0.0.23
+  resolution: "detox-copilot@npm:0.0.23"
+  checksum: ae209f519b1f7b97b657de49e752f1fc18292ed049d26056682010231203b3c07bdb61a06d610ffead2a75cdf5b11849cdab03ae2670debe5e2f8b0191006635
+  languageName: node
+  linkType: hard
+
+"detox@npm:20.27.4":
+  version: 20.27.4
+  resolution: "detox@npm:20.27.4"
   dependencies:
     ajv: ^8.6.3
     bunyan: ^1.8.12
@@ -9193,13 +9200,14 @@ __metadata:
     caf: ^15.0.1
     chalk: ^4.0.0
     child-process-promise: ^2.2.0
+    detox-copilot: ^0.0.23
     execa: ^5.1.1
     find-up: ^5.0.0
     fs-extra: ^11.0.0
     funpermaproxy: ^1.1.0
     glob: ^8.0.3
     ini: ^1.3.4
-    jest-environment-emit: ^1.0.5
+    jest-environment-emit: ^1.0.8
     json-cycle: ^1.3.0
     lodash: ^4.17.11
     multi-sort-stream: ^1.0.3
@@ -9229,7 +9237,7 @@ __metadata:
       optional: true
   bin:
     detox: local-cli/cli.js
-  checksum: 9527990fc2145445506434b149a72b7ec0b050095afc581eb98986acd14215514e486bd65822add1d991d88514efede6113f4779b2a0fc912f1379f61b25bcf2
+  checksum: a47b1f949ee92656ee09194dc2bb3e2569ab714790bfd9ec6da3c363ae35b7fa4a588190fe5f6c251900a6d9d103f9237ad2f6f7990319c7f07759f3dd521450
   languageName: node
   linkType: hard
 
@@ -11375,7 +11383,7 @@ __metadata:
     date-fns: 2.30.0
     decimal.js: 10.4.3
     deprecated-react-native-prop-types: 4.1.0
-    detox: 20.18.4
+    detox: 20.27.4
     dotenv: 16.4.5
     eslint: 8.45.0
     eslint-plugin-import: 2.27.5
@@ -12671,7 +12679,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-environment-emit@npm:^1.0.5":
+"jest-environment-emit@npm:^1.0.8":
   version: 1.0.8
   resolution: "jest-environment-emit@npm:1.0.8"
   dependencies:
