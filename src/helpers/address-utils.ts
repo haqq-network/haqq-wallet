@@ -93,7 +93,7 @@ export class AddressUtils {
         return address as AddressTron;
       }
 
-      // we should use tronAddress for existings wallet addres from Wallet store
+      // we should use tronAddress for existings wallet address from Wallet store
       // because this wallet use tron address for different HD path
       const wallet = AddressUtils.getWalletByAddress(address);
       if (wallet) {
