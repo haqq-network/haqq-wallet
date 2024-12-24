@@ -203,7 +203,7 @@ export const SignInStoreWalletScreen = observer(() => {
                 });
                 const tronMnemonicAccountInfo =
                   await tronMnemonicProvider.getAccountInfo(
-                    wallet.path?.replace?.(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
+                    wallet.getPath()?.replace?.(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
                   );
                 Wallet.update(wallet.address, {
                   tronAddress: tronMnemonicAccountInfo.address as AddressTron,
@@ -276,7 +276,7 @@ export const SignInStoreWalletScreen = observer(() => {
                 });
 
                 const tronSSSAccountInfo = await tronSSSProvider.getAccountInfo(
-                  wallet.path?.replace?.(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
+                  wallet.getPath()?.replace?.(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
                 );
                 Wallet.update(wallet.address, {
                   tronAddress: tronSSSAccountInfo.address as AddressTron,

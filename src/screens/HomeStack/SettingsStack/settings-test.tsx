@@ -508,7 +508,10 @@ export const SettingsTestScreen = observer(() => {
       data,
     });
 
-    const signedTx = await transport.signTransaction(wallet.path!, unsignedTx);
+    const signedTx = await transport.signTransaction(
+      wallet.getPath()!,
+      unsignedTx,
+    );
     Logger.log('signedTx', signedTx);
 
     const resp = await EthNetwork.sendTransaction(signedTx);
@@ -898,7 +901,7 @@ export const SettingsTestScreen = observer(() => {
             if (!provider) {
               throw new Error('provider not found');
             }
-            const {address} = await provider.getAccountInfo(wallet.path!);
+            const {address} = await provider.getAccountInfo(wallet.getPath()!);
             if (!AddressUtils.equals(address, wallet.address)) {
               throw new Error('address not match');
             }

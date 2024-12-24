@@ -61,7 +61,7 @@ const _migrateHotWallet = async (
     });
 
     const {address} = await tronProvider.getAccountInfo(
-      wallet.path?.replace(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
+      wallet.getPath()?.replace(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
     );
 
     Wallet.update(wallet.address, {
@@ -84,7 +84,7 @@ const _migrateMnemonicWallet = async (
     });
 
     const {address} = await tronProvider.getAccountInfo(
-      wallet.path?.replace(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
+      wallet.getPath()?.replace(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
     );
 
     Wallet.update(wallet.address, {
@@ -110,7 +110,7 @@ const _migrateSssWallet = async (
     });
 
     const {address} = await tronProvider.getAccountInfo(
-      wallet.path?.replace(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
+      wallet.getPath()?.replace(ETH_COIN_TYPE, TRON_COIN_TYPE)!,
     );
 
     Wallet.update(wallet.address, {

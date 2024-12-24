@@ -58,7 +58,7 @@ export const ProposalScreen = observer(() => {
 
         await cosmos.vote(
           transport,
-          wallet.path!,
+          wallet.getPath()!,
           item.proposal_id,
           opinion?.value || 0,
         );

@@ -116,24 +116,6 @@ export class WalletModel implements IWalletModel {
     return this.model.deviceId;
   }
 
-  // FIXME: Remove it when fully moved to getPath method
-  get path() {
-    if (this.isSupportTron && Provider.selectedProvider.isTron) {
-      switch (this.type) {
-        case WalletType.hot:
-        case WalletType.sss:
-        case WalletType.mnemonic:
-          return this.model?.path?.replace(ETH_COIN_TYPE, TRON_COIN_TYPE);
-        // TODO: add support for ledger and keystone
-        case WalletType.ledgerBt:
-        case WalletType.keystone:
-        default:
-          return '';
-      }
-    }
-    return this.model.path;
-  }
-
   getPath(provider = Provider.selectedProvider) {
     if (this.isSupportTron && provider.isTron) {
       switch (this.type) {
