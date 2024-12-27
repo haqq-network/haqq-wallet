@@ -196,6 +196,7 @@ export async function onAuthorized(
   verifier: string,
   verifierId: string,
   token: string,
+  isResetShares = false,
 ): Promise<Creds> {
   loggerAuthorized.log('Starting onAuthorized function', {
     verifier,
@@ -215,7 +216,7 @@ export async function onAuthorized(
   }>(RemoteConfig.get('sss_generate_shares_url')!, 'shares', [
     verifier,
     token,
-    true,
+    isResetShares,
   ]);
   loggerAuthorized.log('Received node details', {
     isNew: nodeDetailsRequest.isNew,
