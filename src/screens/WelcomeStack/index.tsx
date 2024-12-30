@@ -7,6 +7,7 @@ import {
 import {observer} from 'mobx-react';
 import Config from 'react-native-config';
 
+import {hideBack} from '@app/helpers';
 import {getModalScreenOptions} from '@app/helpers/get-modal-screen-options';
 import {getWelcomeScreen} from '@app/helpers/get-welcome-screen';
 import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
@@ -20,6 +21,8 @@ import {WelcomeScreen} from '@app/screens/welcome';
 import {WelcomeNewsScreen} from '@app/screens/welcome-news';
 import {SignInStack} from '@app/screens/WelcomeStack/SignInStack';
 import {SignUpStack} from '@app/screens/WelcomeStack/SignUpStack';
+
+import {SignUpAgreementScreen} from './signup-agreement';
 
 const Stack = createNativeStackNavigator<WelcomeStackParamList>();
 
@@ -60,6 +63,11 @@ const WelcomeStack = observer(() => {
         component={themeUpdaterHOC(NewsDetailScreen)}
         name={WelcomeStackRoutes.NewsDetail}
         options={newsDetailOptions}
+      />
+      <Stack.Screen
+        name={WelcomeStackRoutes.SignUpAgreement}
+        component={themeUpdaterHOC(SignUpAgreementScreen)}
+        options={hideBack}
       />
       <Stack.Screen
         component={SignUpStack}

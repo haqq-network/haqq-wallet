@@ -7,6 +7,7 @@ import {storage} from '@app/services/mmkv';
 class AppStore {
   // App session properties
   private _isInitialized = false;
+  private _isOathEnabled = false;
 
   // Hydrated properties
   private _isOnboarded = false;
@@ -39,7 +40,6 @@ class AppStore {
   get isOnboarded() {
     return this._isOnboarded;
   }
-
   set isOnboarded(value: boolean) {
     runInAction(() => {
       this._isOnboarded = value;

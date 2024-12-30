@@ -45,10 +45,12 @@ export type AnyRouteFromParent =
 export enum WelcomeStackRoutes {
   Welcome = 'welcome',
   WelcomeNews = 'welcomeNews',
+  NewsDetail = 'newsDetail',
+  SignUpAgreement = 'signUpAgreement',
+
   SignUp = 'signup',
   Ledger = 'ledger',
   SignIn = 'signin',
-  NewsDetail = 'newsDetail',
   InAppBrowser = 'inAppBrowser',
   Device = 'device',
 }
@@ -56,6 +58,7 @@ export enum WelcomeStackRoutes {
 export type WelcomeStackParamList = {
   [WelcomeStackRoutes.Welcome]: undefined;
   [WelcomeStackRoutes.WelcomeNews]: undefined;
+  [WelcomeStackRoutes.SignUpAgreement]: undefined;
   [WelcomeStackRoutes.SignUp]?: {
     screen: SignUpStackRoutes.SignupStoreWallet;
     params: SignUpStackParamList[SignUpStackRoutes.SignupStoreWallet];
@@ -73,7 +76,6 @@ export type WelcomeStackParamList = {
 };
 
 export enum SignUpStackRoutes {
-  SignUpAgreement = 'signupAgreement',
   SignUpNetworks = 'signupNetworks',
   SignUpPin = 'signupPin',
   OnboardingSetupPin = 'onboardingSetupPin',
@@ -83,11 +85,6 @@ export enum SignUpStackRoutes {
 }
 
 export type SignUpStackParamList = WelcomeStackParamList & {
-  [SignUpStackRoutes.SignUpAgreement]: {
-    nextScreen:
-      | SignUpStackRoutes.OnboardingSetupPin
-      | SignUpStackRoutes.SignUpNetworks;
-  };
   [SignUpStackRoutes.SignUpNetworks]: WalletInitialData;
   [SignUpStackRoutes.SignUpPin]: WalletInitialData;
   [SignUpStackRoutes.OnboardingSetupPin]: WalletInitialData;

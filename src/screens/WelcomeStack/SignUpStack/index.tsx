@@ -1,9 +1,8 @@
-import React, {memo, useCallback, useMemo} from 'react';
+import React, {memo, useCallback} from 'react';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {hideBack, popupScreenOptions} from '@app/helpers';
-import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
 import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
 import {I18N, getText} from '@app/i18n';
 import {
@@ -13,7 +12,6 @@ import {
 } from '@app/route-types';
 import {CloudProblemsScreen} from '@app/screens/cloud-problems';
 import {OnboardingStack} from '@app/screens/WelcomeStack/OnboardingStack';
-import {SignUpAgreementScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-agreement';
 import {SignUpImportantInfoScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-important-info';
 import {SignupNetworksScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-networks';
 import {SignupPinScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-pin';
@@ -23,12 +21,6 @@ import {MarketingEvents} from '@app/types';
 const Stack = createNativeStackNavigator<SignUpStackParamList>();
 
 const SignUpStack = memo(() => {
-  const nextScreen = useMemo(() => {
-    return isFeatureEnabled(Feature.sss)
-      ? SignUpStackRoutes.SignUpNetworks
-      : SignUpStackRoutes.OnboardingSetupPin;
-  }, []);
-
   const OnboardingStackGenerated = useCallback(
     //@ts-ignore
     props => (
@@ -59,12 +51,6 @@ const SignUpStack = memo(() => {
 
   return (
     <Stack.Navigator screenOptions={popupScreenOptions}>
-      <Stack.Screen
-        name={SignUpStackRoutes.SignUpAgreement}
-        component={themeUpdaterHOC(SignUpAgreementScreen)}
-        options={hideBack}
-        initialParams={{nextScreen: nextScreen}}
-      />
       <Stack.Screen
         name={SignUpStackRoutes.SignUpNetworks}
         component={themeUpdaterHOC(SignupNetworksScreen)}

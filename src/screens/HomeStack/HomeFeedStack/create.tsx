@@ -6,7 +6,7 @@ import {hideBack, popupScreenOptions} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {basicScreenOptions} from '@app/screens';
 import {OnboardingFinishScreen} from '@app/screens/WelcomeStack/OnboardingStack/onboarding-finish';
-import {SignUpAgreementScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-agreement';
+import {SignUpAgreementScreen} from '@app/screens/WelcomeStack/signup-agreement';
 import {SignUpStoreWalletScreen} from '@app/screens/WelcomeStack/SignUpStack/signup-store-wallet';
 import {MarketingEvents} from '@app/types';
 

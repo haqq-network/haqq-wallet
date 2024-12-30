@@ -3,10 +3,10 @@ import React, {useCallback} from 'react';
 import {observer} from 'mobx-react';
 
 import {CreateAgreement} from '@app/components/create-agreement';
-import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {Feature, isFeatureEnabled} from '@app/helpers/is-feature-enabled';
+import {useTypedNavigation} from '@app/hooks';
 import {AppStore} from '@app/models/app';
 import {
-  HomeStackParamList,
   HomeStackRoutes,
   SignUpStackParamList,
   SignUpStackRoutes,
@@ -15,19 +15,19 @@ import {
 
 export const SignUpAgreementScreen = observer(() => {
   const navigation = useTypedNavigation<SignUpStackParamList>();
-  const params = useTypedRoute<
-    SignUpStackParamList & HomeStackParamList,
-    SignUpStackRoutes.SignUpAgreement
-  >().params;
+
   const onPressRegularWallet = useCallback(() => {
-    //@ts-ignore
-    return navigation.navigate(params.nextScreen, {
+    const nextScreen = isFeatureEnabled(Feature.sss)
+      ? SignUpStackRoutes.SignUpNetworks
+      : SignUpStackRoutes.OnboardingSetupPin;
+
+    return navigation.navigate(nextScreen, {
       //@ts-ignore
       type: params.type || 'empty',
       //@ts-ignore
       provider: params.provider || undefined,
     });
-  }, [navigation, params.nextScreen]);
+  }, [navigation]);
 
   const onPressHardwareWallet = () => {
     navigation.replace(
