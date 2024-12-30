@@ -1,7 +1,5 @@
 import {decryptPassworder, encryptPassworder} from '@haqq/shared-react-native';
-import {appleAuth} from '@invertase/react-native-apple-authentication';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {subMinutes} from 'date-fns';
 import {Alert, AppState, Appearance, Platform, StatusBar} from 'react-native';
 import Keychain, {
@@ -74,12 +72,6 @@ class App extends AsyncEventEmitter {
   private user: User;
   private _authenticated: boolean = DEBUG_VARS.enableSkipPinOnLogin;
   private appStatus: AppStatus = AppStatus.inactive;
-  private _googleSigninSupported: boolean = false;
-  private _appleSigninSupported: boolean =
-    Platform.select({
-      android: false,
-      ios: appleAuth.isSupported,
-    }) || false;
   private _systemTheme: AppTheme = Appearance.getColorScheme() as AppTheme;
   public passwordCorrupted: boolean = false;
 
@@ -100,12 +92,6 @@ class App extends AsyncEventEmitter {
       .catch(() => {
         this._biometryType = null;
       });
-
-    GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: false}).then(
-      (result: boolean) => {
-        this._googleSigninSupported = result;
-      },
-    );
 
     this.user = User.getOrCreate();
 
@@ -159,33 +145,6 @@ class App extends AsyncEventEmitter {
 
   get biometryType() {
     return this._biometryType;
-  }
-
-  get isGoogleSigninSupported() {
-    return (
-      Boolean(RemoteConfig.get('sss_google_provider')) &&
-      this._googleSigninSupported
-    );
-  }
-
-  get isAppleSigninSupported() {
-    return (
-      Boolean(RemoteConfig.get('sss_apple_provider')) &&
-      this._appleSigninSupported
-    );
-  }
-
-  get isCustomSigninSupported() {
-    return Boolean(RemoteConfig.get('sss_custom_provider'));
-  }
-
-  get isOathSigninSupported() {
-    return (
-      this.isGoogleSigninSupported ||
-      this.isCustomSigninSupported ||
-      this.isAppleSigninSupported ||
-      AppStore.isDeveloperModeEnabled
-    );
   }
 
   get cosmos() {

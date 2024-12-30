@@ -6,7 +6,6 @@ import {observer} from 'mobx-react';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
 import {SigninNetworks} from '@app/components/signin-networks';
-import {app} from '@app/contexts';
 import {showModal} from '@app/helpers';
 import {getMetadataValueWrapped, getProviderStorage} from '@app/helpers/sss';
 import {SssError} from '@app/helpers/sss-error';
@@ -215,9 +214,9 @@ export const SignInNetworksScreen = observer(() => {
     <SigninNetworks
       onLogin={onLogin}
       onSkip={onSkip}
-      isAppleSupported={app.isAppleSigninSupported}
-      isGoogleSupported={app.isGoogleSigninSupported}
-      isCustomSupported={app.isCustomSigninSupported}
+      isAppleSupported={AppStore.isAppleSigninSupported}
+      isGoogleSupported={AppStore.isGoogleSigninSupported}
+      isCustomSupported={AppStore.isCustomSigninSupported}
       onPressHardwareWallet={onPressHardwareWallet}
     />
   );

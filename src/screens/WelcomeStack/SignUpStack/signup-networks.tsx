@@ -7,7 +7,6 @@ import {Alert} from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
 import {SignupNetworks} from '@app/components/signup-networks';
-import {app} from '@app/contexts';
 import {getProviderStorage} from '@app/helpers';
 import {getMetadataValueWrapped} from '@app/helpers/sss';
 import {verifyCloud} from '@app/helpers/verify-cloud';
@@ -244,9 +243,9 @@ export const SignupNetworksScreen = observer(() => {
     <SignupNetworks
       onLogin={onLogin}
       onLoginLaterPress={onLoginLaterPress}
-      isAppleSupported={app.isAppleSigninSupported}
-      isGoogleSupported={app.isGoogleSigninSupported}
-      isCustomSupported={app.isCustomSigninSupported}
+      isAppleSupported={AppStore.isAppleSigninSupported}
+      isGoogleSupported={AppStore.isGoogleSigninSupported}
+      isCustomSupported={AppStore.isCustomSigninSupported}
     />
   );
 });

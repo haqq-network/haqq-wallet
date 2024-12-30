@@ -1,9 +1,11 @@
-import React, {memo, useCallback} from 'react';
+import React, {useCallback} from 'react';
+
+import {observer} from 'mobx-react';
 
 import {SssMigrateNetworks} from '@app/components/sss-migrate-networks';
-import {app} from '@app/contexts';
 import {getMetadataValueWrapped} from '@app/helpers/sss';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {AppStore} from '@app/models/app';
 import {ErrorHandler} from '@app/models/error-handler';
 import {SecureValue} from '@app/modifiers/secure-value';
 import {
@@ -19,7 +21,7 @@ import {
 } from '@app/services/provider-sss';
 import {RemoteConfig} from '@app/services/remote-config';
 
-export const SssMigrateNetworksScreen = memo(() => {
+export const SssMigrateNetworksScreen = observer(() => {
   const navigation = useTypedNavigation<SssMigrateStackParamList>();
   const route = useTypedRoute<
     SssMigrateStackParamList,
@@ -97,9 +99,9 @@ export const SssMigrateNetworksScreen = memo(() => {
   return (
     <SssMigrateNetworks
       onLogin={onLogin}
-      isAppleSupported={app.isAppleSigninSupported}
-      isGoogleSupported={app.isGoogleSigninSupported}
-      isCustomSupported={app.isCustomSigninSupported}
+      isAppleSupported={AppStore.isAppleSigninSupported}
+      isGoogleSupported={AppStore.isGoogleSigninSupported}
+      isCustomSupported={AppStore.isCustomSigninSupported}
     />
   );
 });
