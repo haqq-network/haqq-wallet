@@ -706,8 +706,6 @@
   "signupNetworkExitsAlertTitle": "Hesabınızı değiştirmek istediğinizden emin misiniz?",
   "signupNetworkExitsDescription1": "Hesabınızı geri yükleyebilir veya değiştirebilirsiniz.",
   "signupNetworkExitsDescription2": "Değiştirilmesi durumunda tüm hesap verileri kaybolacaktır",
-  "signupNetworkExitsTitle": "{{provider}} giriş {{email}} ile zaten bir hesabınız var",
-  "signupNetworkExitsTitleWithoutEmail": "{{provider}} giriş ile zaten bir hesabınız var",
   "signupStoreWalletAccountNumber": "Hesap #{{number}}",
   "signupStoreWalletCreatingAccount": "Hesabınız oluşturuluyor",
   "sliderCaptchaDragText": "Sürgüyü sürükle",

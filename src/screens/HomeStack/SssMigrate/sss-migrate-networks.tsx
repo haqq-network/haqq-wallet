@@ -2,7 +2,6 @@ import React, {memo, useCallback} from 'react';
 
 import {SssMigrateNetworks} from '@app/components/sss-migrate-networks';
 import {app} from '@app/contexts';
-import {getMetadataValueWrapped} from '@app/helpers/sss';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {ErrorHandler} from '@app/models/error-handler';
 import {SecureValue} from '@app/modifiers/secure-value';
@@ -17,7 +16,6 @@ import {
   onLoginCustom,
   onLoginGoogle,
 } from '@app/services/provider-sss';
-import {RemoteConfig} from '@app/services/remote-config';
 
 export const SssMigrateNetworksScreen = memo(() => {
   const navigation = useTypedNavigation<SssMigrateStackParamList>();
@@ -47,40 +45,23 @@ export const SssMigrateNetworksScreen = memo(() => {
       }
       if (creds) {
         if (creds.privateKey) {
-          const walletInfo = await getMetadataValueWrapped(
-            RemoteConfig.get('sss_metadata_url')!,
-            creds.privateKey,
-            'socialShareIndex',
-          );
-
           const onNext = () => {
-            const nextScreen = walletInfo
-              ? SssMigrateStackRoutes.SssMigrateRewrite
-              : SssMigrateStackRoutes.SssMigrateStore;
-
-            //@ts-ignore
-            navigation.navigate(nextScreen, {
+            navigation.navigate(SssMigrateStackRoutes.SssMigrateStore, {
               accountId: route.params.accountId,
-              privateKey: new SecureValue<string | null | undefined>(
-                creds?.privateKey,
-              ),
-              token: creds?.token,
-              verifier: creds?.verifier,
+              privateKey: new SecureValue<string | null>(creds!.privateKey),
+              token: creds!.token,
+              verifier: creds!.verifier,
               provider,
               email: '',
             });
           };
 
-          if (walletInfo) {
-            onNext();
-          } else {
-            navigation.navigate(
-              SssMigrateStackRoutes.SssMigrateSignupImportantInfo,
-              {
-                onNext,
-              },
-            );
-          }
+          navigation.navigate(
+            SssMigrateStackRoutes.SssMigrateSignupImportantInfo,
+            {
+              onNext,
+            },
+          );
         } else {
           navigation.navigate(SssMigrateStackRoutes.SssMigrateStore, {
             accountId: route.params.accountId,
