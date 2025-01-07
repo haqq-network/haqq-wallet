@@ -706,8 +706,6 @@
   "signupNetworkExitsAlertTitle": "هل أنت متأكد من أنك تريد استبدال حسابك؟",
   "signupNetworkExitsDescription1": "يمكنك استعادة حسابك أو استبداله.",
   "signupNetworkExitsDescription2": "في حالة الاستبدال، ستفقد جميع بيانات الحساب",
-  "signupNetworkExitsTitle": "لديك حساب بالفعل على {{provider}} تسجيل الدخول {{email}}",
-  "signupNetworkExitsTitleWithoutEmail": "لديك حساب بالفعل على {{provider}}",
   "signupStoreWalletAccountNumber": "حساب #{{number}}",
   "signupStoreWalletCreatingAccount": "جارٍ إنشاء حسابك",
   "sliderCaptchaDragText": "اسحب الشريط",

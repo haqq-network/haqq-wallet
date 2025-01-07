@@ -41,43 +41,32 @@ export const SigninNetworks = observer(
     isCustomSupported,
     onPressHardwareWallet,
   }: SssNetworksProps) => {
-    const [isApple, setIsApple] = useState(false);
-    const [isGoogle, setIsGoogle] = useState(false);
-    const [isCustom, setIsCustom] = useState(false);
-    const isLoading = useMemo(
-      () => isApple || isGoogle || isCustom,
-      [isApple, isGoogle, isCustom],
+    const [isLoading, setIsLoading] = useState<SssProviders | null>(null);
+
+    const isApple = useMemo(
+      () => isLoading === SssProviders.apple,
+      [isLoading],
+    );
+    const isGoogle = useMemo(
+      () => isLoading === SssProviders.google,
+      [isLoading],
+    );
+    const isCustom = useMemo(
+      () => isLoading === SssProviders.custom,
+      [isLoading],
     );
 
-    const onPressLoginCustom = useCallback(async () => {
-      try {
-        setIsCustom(true);
-
-        await onLogin(SssProviders.custom);
-      } finally {
-        setIsCustom(false);
-      }
-    }, [onLogin]);
-
-    const onPressLoginGoogle = useCallback(async () => {
-      try {
-        setIsGoogle(true);
-
-        await onLogin(SssProviders.google);
-      } finally {
-        setIsGoogle(false);
-      }
-    }, [onLogin]);
-
-    const onPressLoginApple = useCallback(async () => {
-      try {
-        setIsApple(true);
-
-        await onLogin(SssProviders.apple);
-      } finally {
-        setIsApple(false);
-      }
-    }, [onLogin]);
+    const onPressLogin = useCallback(
+      (sssProvider: SssProviders) => async () => {
+        try {
+          setIsLoading(sssProvider);
+          await onLogin(sssProvider);
+        } finally {
+          setIsLoading(null);
+        }
+      },
+      [onLogin],
+    );
 
     const mnemonicWalletsCount = Wallet.getAll().filter(
       wallet => wallet.type === WalletType.mnemonic,
@@ -105,8 +94,8 @@ export const SigninNetworks = observer(
             <Spacer height={10} />
             <SocialButton
               loading={isApple}
-              disabled={isLoading && !isApple}
-              onPress={onPressLoginApple}
+              disabled={Boolean(isLoading && !isApple)}
+              onPress={onPressLogin(SssProviders.apple)}
               variant={SocialButtonVariant.apple}
               testID="sss_login_apple"
             />
@@ -117,8 +106,8 @@ export const SigninNetworks = observer(
             <Spacer height={10} />
             <SocialButton
               loading={isGoogle}
-              disabled={isLoading && !isGoogle}
-              onPress={onPressLoginGoogle}
+              disabled={Boolean(isLoading && !isGoogle)}
+              onPress={onPressLogin(SssProviders.google)}
               variant={SocialButtonVariant.google}
               testID="sss_login_google"
             />
@@ -129,8 +118,8 @@ export const SigninNetworks = observer(
             <Spacer height={10} />
             <Button
               loading={isCustom}
-              disabled={isLoading && !isCustom}
-              onPress={onPressLoginCustom}
+              disabled={Boolean(isLoading && !isCustom)}
+              onPress={onPressLogin(SssProviders.custom)}
               i18n={I18N.customNetwork}
               variant={ButtonVariant.contained}
               testID="sss_login_custom"
