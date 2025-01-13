@@ -7,6 +7,7 @@ import {FlatList} from 'react-native-gesture-handler';
 import {
   ActionButton,
   ButtonVariant,
+  IconsName,
   Spacer,
   Text,
   TextVariant,
@@ -20,6 +21,11 @@ import {TransactionSelectCryptoSelectNetworkProps} from './transaction-select-cr
 export const TransactionSelectCryptoSelectNetwork = observer(
   ({selectedProvider, onChange}: TransactionSelectCryptoSelectNetworkProps) => {
     const providers = Provider.getAll();
+
+    const getTestnetIcon = useCallback(
+      (item: ProviderModel) => (item.isTestnet ? IconsName.info : undefined),
+      [],
+    );
 
     const handlePress = useCallback(
       (provider: ProviderModel) => () => {
@@ -38,12 +44,13 @@ export const TransactionSelectCryptoSelectNetwork = observer(
           <ActionButton
             isActive={selectedProvider.ethChainId === item.ethChainId}
             title={item.networkType.toUpperCase()}
+            iconRight={getTestnetIcon(item)}
             variant={ButtonVariant.contained}
             onPress={handlePress(item)}
           />
         );
       },
-      [handlePress, selectedProvider.ethChainId],
+      [handlePress, getTestnetIcon, selectedProvider.ethChainId],
     );
 
     const renderItemSeparator = useCallback(() => <Spacer width={8} />, []);

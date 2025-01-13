@@ -52,14 +52,12 @@ class TransactionStore {
   }
   set toAddress(address: string) {
     let chain_id = this.to.chain_id;
-    if (this.to.chain_id) {
-      const isAddressSupported = Provider.getByEthChainId(
-        this.to.chain_id,
-      )?.isAddressSupported(address);
+    const isAddressSupported = this.to.chain_id
+      ? Provider.getByEthChainId(this.to.chain_id)?.isAddressSupported(address)
+      : true;
 
-      if (!isAddressSupported) {
-        chain_id = this.autoSelectProviderChainId(address);
-      }
+    if (isAddressSupported) {
+      chain_id = this.autoSelectProviderChainId(address);
     }
     this.to = {
       ...this.to,

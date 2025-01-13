@@ -59,6 +59,7 @@ export const TransactionSelectCryptoScreen = observer(() => {
       ),
     [fromAddress, Provider.selectedProvider.denom, networkProvider.ethChainId],
   ).get();
+
   const data = useMemo(() => {
     switch (assetType) {
       case TransactionSelectCryptoAssetType.Crypto:

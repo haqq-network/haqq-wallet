@@ -97,7 +97,7 @@ export const TransactionAddressScreen = observer(() => {
   );
 
   const doneDisabled = useMemo(() => {
-    if (!toAddress?.trim() || isError || !toChainId) {
+    if (!toAddress || isError || !toChainId) {
       return true;
     }
 
@@ -107,7 +107,7 @@ export const TransactionAddressScreen = observer(() => {
       fromWallet.tronAddress?.toLowerCase() === toAddress?.toLowerCase() ||
       !AddressUtils.isValidAddress(toAddress)
     );
-  }, [isError, toAddress, fromWallet]);
+  }, [isError, toAddress, fromWallet, toChainId]);
 
   const onPressAddress = useCallback((wallet: WalletModel) => {
     TransactionStore.toWallet = wallet;
