@@ -43,8 +43,8 @@ export class WalletModel implements IWalletModel {
     return AddressUtils.toTron(this.model.tronAddress);
   }
 
-  get providerSpecificAddress() {
-    if (Provider.selectedProvider.isTron) {
+  getProviderSpecificAddress(provider = Provider.selectedProvider) {
+    if (provider.isTron) {
       return this.tronAddress;
     }
     return this.address;
@@ -116,8 +116,8 @@ export class WalletModel implements IWalletModel {
     return this.model.deviceId;
   }
 
-  get path() {
-    if (this.isSupportTron && Provider.selectedProvider.isTron) {
+  getPath(provider = Provider.selectedProvider) {
+    if (this.isSupportTron && provider.isTron) {
       switch (this.type) {
         case WalletType.hot:
         case WalletType.sss:

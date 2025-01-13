@@ -8,8 +8,9 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 
 import {SignupNetworks} from '@app/components/signup-networks';
 import {app} from '@app/contexts';
-import {getProviderStorage} from '@app/helpers';
+import {getProviderStorage, showModal} from '@app/helpers';
 import {getMetadataValueWrapped} from '@app/helpers/sss';
+import {SssError} from '@app/helpers/sss-error';
 import {verifyCloud} from '@app/helpers/verify-cloud';
 import {useTypedNavigation} from '@app/hooks';
 import {I18N, getText} from '@app/i18n';
@@ -21,14 +22,15 @@ import {
   SignUpStackRoutes,
   WelcomeStackRoutes,
 } from '@app/route-types';
+import {Cloud} from '@app/services/cloud';
 import {
-  Creds,
   SssProviders,
   onLoginApple,
   onLoginCustom,
   onLoginGoogle,
 } from '@app/services/provider-sss';
 import {RemoteConfig} from '@app/services/remote-config';
+import {ModalType} from '@app/types';
 
 const logger = Logger.create('SignupNetworksScreen', {
   enabled: AppStore.isLogsEnabled,
@@ -39,104 +41,70 @@ export const SignupNetworksScreen = observer(() => {
   const navigation = useTypedNavigation<SignUpStackParamList>();
   logger.log('Initializing navigation with useTypedNavigation');
 
-  const restoreAccount = useCallback(
-    async (provider: SssProviders, creds?: Creds | null) => {
-      let nextScreen: string = '';
-
-      if (!creds?.privateKey) {
-        return;
-      }
-
-      const cloud = await getProviderStorage('', provider);
-      const account = await accountInfo(creds.privateKey);
-
-      const cloudShare = await cloud.getItem(
-        `haqq_${account.address.toLowerCase()}`,
-      );
-
-      const localShare = await EncryptedStorage.getItem(
-        `${
-          constants.ITEM_KEYS[constants.WalletType.sss]
-        }_${account.address.toLowerCase()}`,
-      );
-
-      if (!cloudShare && !localShare) {
-        // @ts-ignore
-        navigation.navigate(WelcomeStackRoutes.SignIn, {
-          screen: SignInStackRoutes.SigninSharesNotFound,
-        });
-        return;
-      }
-
-      if (!cloudShare) {
-        nextScreen = SignUpStackRoutes.SignUpPin;
-      } else {
-        nextScreen = AppStore.isOnboarded
-          ? SignUpStackRoutes.SignupStoreWallet
-          : SignUpStackRoutes.OnboardingSetupPin;
-      }
-
-      if (nextScreen === SignUpStackRoutes.SignupStoreWallet) {
-        //@ts-ignore
-        navigation.navigate(SignInStackRoutes.SigninStoreWallet, {
-          type: 'sss',
-          sssPrivateKey: creds?.privateKey,
-          token: creds?.token,
-          verifier: creds?.verifier,
-          sssCloudShare: cloudShare,
-          sssLocalShare: localShare,
-        });
-        return;
-      }
-
-      //@ts-ignore
-      navigation.navigate(nextScreen, {
-        type: 'sss',
-        sssPrivateKey: creds?.privateKey,
-        token: creds?.token,
-        verifier: creds?.verifier,
-        sssCloudShare: cloudShare,
-        sssLocalShare: localShare,
-        action: 'restore',
-      });
-    },
-    [navigation],
-  );
-
   const onLogin = useCallback(
     async (provider: SssProviders, skipCheck: boolean = false) => {
-      logger.log('onLogin callback function called', {provider, skipCheck});
+      logger.log(
+        'onLogin callback called with provider:',
+        provider,
+        'and skipCheck:',
+        skipCheck,
+      );
+      let creds;
       try {
-        let creds: Creds | null | undefined;
-        logger.log('Initializing creds variable');
-        try {
-          logger.log('Attempting to login based on provider');
-          switch (provider) {
-            case SssProviders.apple:
-              logger.log('Logging in with Apple');
-              creds = await onLoginApple();
-              break;
-            case SssProviders.google:
-              logger.log('Logging in with Google');
-              creds = await onLoginGoogle();
-              break;
-            case SssProviders.custom:
-              logger.log('Logging in with Custom provider');
-              creds = await onLoginCustom();
-              break;
-          }
-        } catch (err) {
-          logger.error('Error during login:', err);
-          ErrorHandler.handle('sss2Y', err);
-          return;
+        logger.log('Attempting to login based on provider');
+        switch (provider) {
+          case SssProviders.apple:
+            logger.log('Logging in with Apple');
+            creds = await onLoginApple();
+            break;
+          case SssProviders.google:
+            logger.log('Logging in with Google');
+            creds = await onLoginGoogle();
+            break;
+          case SssProviders.custom:
+            logger.log('Logging in with Custom provider');
+            creds = await onLoginCustom();
+            break;
         }
+      } catch (err) {
+        logger.error('Error during login:', err);
+        ErrorHandler.handle('sss3X', err);
+        return;
+      }
 
+      try {
+        logger.log('Checking if credentials were obtained');
         if (creds) {
-          logger.log('Credentials obtained successfully');
-          let nextScreen = AppStore.isOnboarded
-            ? SignUpStackRoutes.SignupStoreWallet
-            : SignUpStackRoutes.OnboardingSetupPin;
-          logger.log('Determined next screen:', nextScreen);
+          logger.log('Credentials obtained:', creds);
+          if (!creds.privateKey) {
+            logger.warn('Private key not found in credentials');
+            throw new SssError('signinNotExists');
+          }
+
+          logger.log('Fetching wallet info from metadata');
+          const walletInfo = await getMetadataValueWrapped(
+            RemoteConfig.get('sss_metadata_url')!,
+            creds.privateKey,
+            'socialShareIndex',
+          );
+
+          if (!walletInfo) {
+            logger.warn('Wallet info not found');
+            throw new SssError('signinNotExists');
+          }
+
+          logger.log('Getting provider storage');
+          const cloud = await getProviderStorage('', provider);
+          logger.log('Checking if Cloud is enabled');
+          const supported = await Cloud.isEnabled();
+
+          if (!supported) {
+            logger.warn('Cloud not supported');
+            throw new SssError('signinNotExists');
+          }
+
+          logger.log('Fetching account info');
+          const account = await accountInfo(creds.privateKey as string);
 
           if (!skipCheck) {
             logger.log('Verifying cloud permissions');
@@ -153,58 +121,83 @@ export const SignupNetworksScreen = observer(() => {
             }
           }
 
-          if (creds.privateKey) {
-            logger.log('Private key exists, checking wallet info');
-            const walletInfo = await getMetadataValueWrapped(
-              RemoteConfig.get('sss_metadata_url')!,
-              creds.privateKey,
-              'socialShareIndex',
-            );
+          logger.log('Fetching cloud share');
+          const cloudShare = await cloud.getItem(
+            `haqq_${account.address.toLowerCase()}`,
+          );
 
-            if (walletInfo) {
-              logger.log('Wallet info found, restoring account');
-              await restoreAccount(provider, creds);
-            }
-          }
+          logger.log('Fetching local share');
+          const localShare = await EncryptedStorage.getItem(
+            `${
+              constants.ITEM_KEYS[constants.WalletType.sss]
+            }_${account.address.toLowerCase()}`,
+          );
 
-          const onNext = () => {
-            logger.log('Navigating to next screen:', nextScreen);
-            //@ts-ignore
-            navigation.navigate(nextScreen, {
+          const nextStack = cloudShare
+            ? WelcomeStackRoutes.SignIn
+            : WelcomeStackRoutes.SignUp;
+          const onboardedSignScreen = cloudShare
+            ? SignInStackRoutes.SigninStoreWallet
+            : SignUpStackRoutes.SignupStoreWallet;
+          const signScreen = cloudShare
+            ? SignInStackRoutes.OnboardingSetupPin
+            : SignUpStackRoutes.OnboardingSetupPin;
+
+          logger.log('Determining next screen');
+          const nextScreen = AppStore.isOnboarded
+            ? onboardedSignScreen
+            : signScreen;
+
+          logger.log('Navigating to next screen:', nextScreen);
+          //@ts-ignore
+          navigation.replace(nextStack, {
+            screen: nextScreen,
+            params: {
               type: 'sss',
-              sssPrivateKey: creds?.privateKey,
-              token: creds?.token,
-              verifier: creds?.verifier,
-              sssCloudShare: null,
+              sssPrivateKey: creds.privateKey,
+              token: creds.token,
+              verifier: creds.verifier,
+              sssCloudShare: cloudShare,
+              sssLocalShare: localShare,
               provider,
-              sssLocalShare: null,
+            },
+          });
+        }
+      } catch (e) {
+        logger.error('Error during login process:', e);
+        Logger.log('error', e, e instanceof SssError);
+        if (e instanceof SssError) {
+          try {
+            const hasPermissions = await verifyCloud(provider);
+            if (hasPermissions) {
+              logger.log('Navigating to error screen:', e.message);
+              // @ts-ignore
+              navigation.navigate(e.message, {
+                type: 'sss',
+                sssPrivateKey: creds?.privateKey,
+                token: creds?.token,
+                verifier: creds?.verifier,
+                sssCloudShare: null,
+                sssLocalShare: null,
+                provider,
+              });
+            } else {
+              navigation.navigate(SignUpStackRoutes.SignupCloudProblems, {
+                sssProvider: provider,
+                onNext: () => onLogin(provider, true),
+              });
+              return;
+            }
+          } catch (err) {
+            logger.error('Error during error handling:', err);
+            showModal(ModalType.error, {
+              message: e.message,
             });
-          };
-
-          if (
-            [
-              SignUpStackRoutes.SignupStoreWallet,
-              SignUpStackRoutes.OnboardingSetupPin,
-            ].includes(nextScreen)
-          ) {
-            logger.log('Navigating to SignupImportantInfo');
-            navigation.navigate(SignUpStackRoutes.SignupImportantInfo, {
-              onNext,
-            });
-          } else {
-            logger.log('Proceeding to next screen');
-            onNext();
           }
         }
-      } catch (err) {
-        logger.error('Error in onLogin:', err);
-        Alert.alert(
-          getText(I18N.verifyCloudProblemsTitle),
-          getText(I18N.verifyCloudProblemsRestartPhone),
-        );
       }
     },
-    [navigation, restoreAccount],
+    [navigation],
   );
 
   const onLoginLaterPress = useCallback(() => {

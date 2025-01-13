@@ -677,10 +677,6 @@ export const ar = {
     'لا توجد حسابات مرتبطة في شبكتنا لتسجيل الدخول الاجتماعي الذي اخترته. قم بإنشاء حساب جديد بناءً على تسجيل الدخول الاجتماعي هذا أو اختر تسجيل دخول اجتماعي آخر',
   [I18N.signNotExitsTitle]:
     'لم نجد الحساب متصلاً بتسجيل الدخول {{provider}} {{email}}',
-  [I18N.signupNetworkExitsTitle]:
-    'لديك بالفعل حساب على {{provider}} تسجيل الدخول {{email}}',
-  [I18N.signupNetworkExitsTitleWithoutEmail]:
-    'لديك بالفعل حساب على {{provider}} تسجيل الدخول',
   [I18N.signupNetworkExitsDescription1]: 'يمكنك استعادة حسابك أو استبداله.',
   [I18N.signupNetworkExitsDescription2]:
     'في حالة الاستبدال, سيتم فقدان جميع بيانات الحساب',

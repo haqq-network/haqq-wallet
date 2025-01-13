@@ -8,7 +8,7 @@ import {AddressUtils} from '@app/helpers/address-utils';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {EstimationVariant} from '@app/models/fee';
 import {Provider, ProviderModel} from '@app/models/provider';
-import {IWalletModel} from '@app/models/wallet';
+import {WalletModel} from '@app/models/wallet';
 import {getDefaultChainId} from '@app/network';
 import {Balance} from '@app/services/balance';
 import {getERC1155TransferData} from '@app/services/eth-network/erc1155';
@@ -335,18 +335,21 @@ export class EthNetwork {
   async transferTransaction(
     estimate: CalculatedFees,
     transport: ProviderInterface,
-    wallet: IWalletModel,
+    wallet: WalletModel,
     to: string,
     value: Balance,
     provider = Provider.selectedProvider,
   ) {
     try {
       if (provider.isTron) {
-        const signedTx = await transport.signTransaction(wallet.path!, {
-          from: wallet.tronAddress,
-          to: AddressUtils.toTron(to),
-          value: value.toParsedBalanceNumber(),
-        });
+        const signedTx = await transport.signTransaction(
+          wallet.getPath(provider)!,
+          {
+            from: wallet.tronAddress,
+            to: AddressUtils.toTron(to),
+            value: value.toParsedBalanceNumber(),
+          },
+        );
         return await TronNetwork.broadcastTransaction(signedTx, provider);
       }
       const transaction = await EthNetwork.populateTransaction(
@@ -359,7 +362,7 @@ export class EthNetwork {
         provider,
       );
       const signedTx = await transport.signTransaction(
-        wallet.path!,
+        wallet.getPath(provider)!,
         transaction,
       );
 
@@ -372,7 +375,7 @@ export class EthNetwork {
         value,
         walletType: wallet.type,
         from: wallet.address,
-        hdPath: wallet.path ?? 'null',
+        hdPath: wallet.getPath(provider) ?? 'null',
         to,
       });
       throw error;
@@ -416,7 +419,7 @@ export class EthNetwork {
   async transferERC20(
     estimate: CalculatedFees,
     transport: ProviderInterface,
-    from: IWalletModel,
+    from: WalletModel,
     to: string,
     amount: Balance,
     contractAddress: string,
@@ -424,12 +427,15 @@ export class EthNetwork {
   ) {
     try {
       if (provider.isTron) {
-        const signedTx = await transport.signTransaction(from.path!, {
-          from: from.tronAddress,
-          to: AddressUtils.toTron(to),
-          data: contractAddress,
-          value: amount.toParsedBalanceNumber(),
-        });
+        const signedTx = await transport.signTransaction(
+          from.getPath(provider)!,
+          {
+            from: from.tronAddress,
+            to: AddressUtils.toTron(to),
+            data: contractAddress,
+            value: amount.toParsedBalanceNumber(),
+          },
+        );
 
         return await TronNetwork.broadcastTransaction(signedTx, provider);
       } else {
@@ -445,7 +451,7 @@ export class EthNetwork {
           provider,
         );
         const signedTx = await transport.signTransaction(
-          from.path!,
+          from.getPath(provider)!,
           unsignedTx,
         );
 
@@ -457,7 +463,7 @@ export class EthNetwork {
         contractAddress,
         from: from.address,
         to,
-        hdPath: from.path ?? 'null',
+        hdPath: from.getPath(provider) ?? 'null',
       });
       throw error;
     }
@@ -466,7 +472,7 @@ export class EthNetwork {
   async transferERC721(
     estimate: CalculatedFees,
     transport: ProviderInterface,
-    from: IWalletModel,
+    from: WalletModel,
     to: string,
     tokenId: number,
     contractAddress: string,
@@ -485,7 +491,10 @@ export class EthNetwork {
         provider,
       );
 
-      const signedTx = await transport.signTransaction(from.path!, unsignedTx);
+      const signedTx = await transport.signTransaction(
+        from.getPath(provider)!,
+        unsignedTx,
+      );
 
       return await EthNetwork.sendTransaction(signedTx, provider);
     } catch (error) {
@@ -494,7 +503,7 @@ export class EthNetwork {
         contractAddress,
         from: from.address,
         to,
-        hdPath: from.path ?? 'null',
+        hdPath: from.getPath(provider) ?? 'null',
       });
       throw error;
     }
@@ -503,7 +512,7 @@ export class EthNetwork {
   async transferERC1155(
     estimate: CalculatedFees,
     transport: ProviderInterface,
-    from: IWalletModel,
+    from: WalletModel,
     to: string,
     tokenId: number,
     contractAddress: string,
@@ -522,7 +531,10 @@ export class EthNetwork {
         provider,
       );
 
-      const signedTx = await transport.signTransaction(from.path!, unsignedTx);
+      const signedTx = await transport.signTransaction(
+        from.getPath(provider)!,
+        unsignedTx,
+      );
 
       return await EthNetwork.sendTransaction(signedTx, provider);
     } catch (error) {
@@ -531,7 +543,7 @@ export class EthNetwork {
         contractAddress,
         from: from.address,
         to,
-        hdPath: from.path ?? 'null',
+        hdPath: from.getPath(provider) ?? 'null',
       });
       throw error;
     }

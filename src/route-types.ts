@@ -76,9 +76,9 @@ export enum SignUpStackRoutes {
   SignUpAgreement = 'signupAgreement',
   SignUpNetworks = 'signupNetworks',
   SignUpPin = 'signupPin',
-  OnboardingSetupPin = 'onboardingSetupPin',
+  OnboardingSetupPin = 'signupOnboardingSetupPin',
   SignupStoreWallet = 'signupStoreWallet',
-  SignupCloudProblems = 'cloudProblems',
+  SignupCloudProblems = 'signupCloudProblems',
   SignupImportantInfo = 'signupImportantInfo',
 }
 
@@ -742,12 +742,12 @@ export enum SignInStackRoutes {
   SigninAgreement = 'signinAgreement',
   SigninRestoreWallet = 'signinRestoreWallet',
   SigninPin = 'signinPin',
-  OnboardingSetupPin = 'onboardingSetupPin',
+  OnboardingSetupPin = 'signinOnboardingSetupPin',
   SigninStoreWallet = 'signinStoreWallet',
   SigninNotExists = 'signinNotExists',
   SigninNotRecovery = 'signinNotRecovery',
-  SigninCloudProblems = 'cloudProblems',
-  SigninChooseAccount = 'chooseAccount',
+  SigninCloudProblems = 'signinCloudProblems',
+  SigninChooseAccount = 'signinChooseAccount',
   SigninSharesNotFound = 'signinSharesNotFound',
 }
 

@@ -32,7 +32,7 @@ export async function onStakingRewards() {
     const provider = await getProviderInstanceForWallet(w);
     await cosmos.multipleWithdrawDelegatorReward(
       provider,
-      w.path!,
+      w.getPath()!,
       delegators[w.cosmosAddress],
     );
 

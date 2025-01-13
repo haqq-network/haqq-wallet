@@ -584,8 +584,6 @@ export enum I18N {
   sssMigrateRewriteDescription = 'sssMigrateRewriteDescription',
   sssMigrateRewriteAlertTitle = 'sssMigrateRewriteAlertTitle',
   sssMigrateRewriteAlertDescription = 'sssMigrateRewriteAlertDescription',
-  signupNetworkExitsTitle = 'signupNetworkExitsTitle',
-  signupNetworkExitsTitleWithoutEmail = 'signupNetworkExitsTitleWithoutEmail',
   signupNetworkExitsDescription1 = 'signupNetworkExitsDescription1',
   signupNetworkExitsDescription2 = 'signupNetworkExitsDescription2',
   signupNetworkExitsAlertTitle = 'signupNetworkExitsAlertTitle',

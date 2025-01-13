@@ -52,7 +52,7 @@ export const StakingUnDelegatePreviewScreen = observer(() => {
 
         const resp = await cosmos.unDelegate(
           transport,
-          wallet.path!,
+          wallet.getPath()!,
           validator.operator_address,
           amount,
         );
