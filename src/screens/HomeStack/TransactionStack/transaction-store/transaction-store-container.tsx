@@ -26,7 +26,7 @@ export const TransactionStoreContainer = observer(
       }, []),
     );
 
-    if (!TransactionStore.from?.address) {
+    if (!TransactionStore.fromAddress) {
       return null;
     }
 

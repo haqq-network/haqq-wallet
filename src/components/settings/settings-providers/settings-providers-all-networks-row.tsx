@@ -11,7 +11,7 @@ import {ChainId} from '@app/types';
 export type SettingsProvidersAllNetworksRowProps = {
   item: ProviderModel;
   providerChainId: ChainId;
-  onPress: (providerChainId: number) => void;
+  onPress: (providerChainId: ChainId) => void;
 };
 export const SettingsProvidersAllNetworksRow = ({
   item,

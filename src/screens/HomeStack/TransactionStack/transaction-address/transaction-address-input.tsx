@@ -47,7 +47,6 @@ export const TransactionAddressInput = observer(
 
     const onPressClear = useCallback(() => {
       TransactionStore.toAddress = '';
-      TransactionStore.toWallet = null;
     }, []);
 
     const onPressPaste = useCallback(async () => {

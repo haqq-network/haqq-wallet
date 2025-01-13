@@ -6,7 +6,6 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Color} from '@app/colors';
 import {CardSmall, Text, TextVariant} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {Provider} from '@app/models/provider';
 import {splitAddress} from '@app/utils';
 
 import {WalletRowProps} from './wallet-row';
@@ -22,7 +21,6 @@ export const WalletRowVariant4 = ({
   style,
   chainId,
 }: Omit<WalletRowProps, 'type'>) => {
-  const provider = useMemo(() => Provider.getByEthChainId(chainId!), [chainId]);
   const containerStyle = useMemo(
     () =>
       StyleSheet.flatten([
@@ -38,11 +36,8 @@ export const WalletRowVariant4 = ({
   );
 
   const addressString = useMemo(() => {
-    if (provider?.isTron) {
-      return `•••${splitAddress(item.tronAddress)[2]}`;
-    }
-    return `•••${splitAddress(item.address)[2]}`;
-  }, [item, provider]);
+    return `•••${splitAddress(item.getAddressByProviderChainId(chainId!))[2]}`;
+  }, [item, chainId]);
 
   return (
     <TouchableOpacity style={containerStyle} onPress={pressCard}>

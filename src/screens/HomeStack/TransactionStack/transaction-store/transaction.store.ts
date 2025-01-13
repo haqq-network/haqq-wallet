@@ -13,14 +13,16 @@ class TransactionStore {
     wallet: null,
   };
 
-  from: TransactionParcicipant = {...this.initialData};
-  to: TransactionParcicipant = {...this.initialData};
+  private from: TransactionParcicipant = {...this.initialData};
+  private to: TransactionParcicipant = {...this.initialData};
+  private _asset: IToken | null = null;
 
   constructor() {
     makeAutoObservable(this);
   }
 
   init = (from: string, to?: string, token?: IToken) => {
+    this._asset = token ?? null;
     this.from = {
       address: from,
       chain_id: token?.chain_id ?? this.from.chain_id,
@@ -33,9 +35,28 @@ class TransactionStore {
     };
   };
 
+  // asset options
+  get asset() {
+    return this._asset;
+  }
+  set asset(asset: IToken | null) {
+    this._asset = asset;
+    this.from = {
+      ...this.from,
+      chain_id: asset!.chain_id,
+    };
+  }
+
   // from options
   get fromAddress() {
     return this.from.address;
+  }
+  set fromAddress(from: string) {
+    this.from = {
+      ...this.from,
+      address: from,
+      wallet: Wallet.getById(from),
+    };
   }
 
   get fromWallet() {
@@ -101,6 +122,7 @@ class TransactionStore {
   };
 
   clear = () => {
+    this._asset = null;
     this.from = {...this.initialData};
     this.to = {...this.initialData};
   };

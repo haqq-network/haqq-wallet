@@ -14,6 +14,7 @@ import {Balance} from '@app/services/balance';
 import {getERC1155TransferData} from '@app/services/eth-network/erc1155';
 import {getERC721TransferData} from '@app/services/eth-network/erc721';
 import {storage} from '@app/services/mmkv';
+import {ChainId} from '@app/types';
 
 import {getERC20TransferData} from './erc20';
 import {
@@ -26,7 +27,7 @@ import {
 import {TronNetwork} from '../tron-network';
 
 export class EthNetwork {
-  static chainId: number = getDefaultChainId();
+  static chainId: ChainId = getDefaultChainId();
   static explorer: string | undefined;
 
   static init(provider: ProviderModel) {

@@ -79,11 +79,7 @@ export const TransactionAddressScreen = observer(() => {
             },
           );
         } else if (token) {
-          return navigation.navigate(TransactionStackRoutes.TransactionSum, {
-            from: converter(fromAddress),
-            to: converter(result),
-            token,
-          });
+          return navigation.navigate(TransactionStackRoutes.TransactionAmount);
         } else {
           navigation.navigate(TransactionStackRoutes.TransactionSelectCrypto);
         }

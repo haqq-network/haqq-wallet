@@ -23,11 +23,11 @@ import {TransactionFinishScreen} from '@app/screens/HomeStack/TransactionStack/t
 import {TransactionLedgerScreen} from '@app/screens/HomeStack/TransactionStack/transaction-ledger';
 import {TransactionNftConfirmationScreen} from '@app/screens/HomeStack/TransactionStack/transaction-nft-confirmation';
 import {TransactionNftFinishScreen} from '@app/screens/HomeStack/TransactionStack/transaction-nft-finish';
-import {TransactionSumScreen} from '@app/screens/HomeStack/TransactionStack/transaction-sum';
 import {TransactionSumAddressScreen} from '@app/screens/HomeStack/TransactionStack/transaction-sum-address';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {ScreenOptionType, WalletType} from '@app/types';
 
+import {TransactionAmountScreen} from './transaction-amount';
 import {TransactionNetworkSelectScreen} from './transaction-network-select';
 import {TransactionSelectCryptoScreen} from './transaction-select-crypto';
 import {TransactionStoreContainer} from './transaction-store';
@@ -41,7 +41,10 @@ export const TransactionStack = memo(() => {
     HomeStackParamList,
     HomeStackRoutes.Transaction
   >();
-  const {from, to, nft} = params;
+  // FIXME: For some reason when navigate from stack to stack params stored inside params like params.params
+  //@ts-ignore
+  const initialParams = params?.params ?? params;
+  const {from, to, nft} = initialParams;
 
   const screenOptionsAddressRoute: ScreenOptionType = {
     title: getText(I18N.transactionSumAddressTitle),
@@ -63,10 +66,6 @@ export const TransactionStack = memo(() => {
       ? TransactionStackRoutes.TransactionAddress
       : TransactionStackRoutes.TransactionAccount;
   }, [nft, from]);
-
-  // FIXME: For some reason when navigate from stack to stack params stored inside params like params.params
-  //@ts-ignore
-  const initialParams = params?.params ?? params;
 
   return (
     <TransactionStoreContainer initialParams={initialParams}>
@@ -96,8 +95,8 @@ export const TransactionStack = memo(() => {
           }}
         />
         <Stack.Screen
-          name={TransactionStackRoutes.TransactionSum}
-          component={themeUpdaterHOC(TransactionSumScreen)}
+          name={TransactionStackRoutes.TransactionAmount}
+          component={themeUpdaterHOC(TransactionAmountScreen)}
           options={{
             title: getText(I18N.transactionSumSendTitle),
             ...hideBack,

@@ -456,7 +456,7 @@ export type HomeStackParamList = {
     wallets: WalletModel[];
     title: string;
     initialAddress?: string;
-    chainId?: number;
+    chainId?: ChainId;
   };
   [HomeStackRoutes.TotalValueInfo]?: {
     tab?: TotalValueTabNames;
@@ -534,7 +534,8 @@ export type ProposalDepositStackParamList = GovernanceStackParamList & {
 export enum TransactionStackRoutes {
   TransactionAddress = 'transactionAddress',
   TransactionNetworkSelect = 'transactionNetworkSelect',
-  TransactionSum = 'transactionSum',
+  TransactionSelectCrypto = 'transactionSelectCrypto',
+  TransactionAmount = 'transactionAmount',
   TransactionConfirmation = 'transactionConfirmation',
   TransactionNftConfirmation = 'transactionNftConfirmation',
   TransactionFinish = 'transactionFinish',
@@ -543,7 +544,6 @@ export enum TransactionStackRoutes {
   TransactionLedger = 'transactionLedger',
   TransactionSumAddress = 'transactionSumAddress',
   TransactionContactEdit = 'transactionContactEdit',
-  TransactionSelectCrypto = 'transactionSelectCrypto',
 }
 
 export type TransactionStackParamList = HomeFeedStackParamList & {
@@ -555,11 +555,7 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
   };
   [TransactionStackRoutes.TransactionNetworkSelect]: undefined;
   [TransactionStackRoutes.TransactionSelectCrypto]: undefined;
-  [TransactionStackRoutes.TransactionSum]: {
-    from: string;
-    to: string;
-    token: IToken;
-  };
+  [TransactionStackRoutes.TransactionAmount]: undefined;
   [TransactionStackRoutes.TransactionConfirmation]: {
     from: string;
     to: string;

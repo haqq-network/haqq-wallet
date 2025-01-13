@@ -50,11 +50,10 @@ export const WalletRowVariant5 = observer(
     );
 
     const addressString = useMemo(() => {
-      if (provider?.isTron) {
-        return `•••${splitAddress(item.tronAddress)[2]}`;
-      }
-      return `•••${splitAddress(item.address)[2]}`;
-    }, [item, provider]);
+      return `•••${
+        splitAddress(item.getAddressByProviderChainId(chainId!))[2]
+      }`;
+    }, [item, chainId]);
 
     return (
       <MenuNavigationButton
