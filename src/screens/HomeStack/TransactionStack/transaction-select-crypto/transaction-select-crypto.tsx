@@ -2,11 +2,10 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {computed} from 'mobx';
 import {observer} from 'mobx-react';
-import {ListRenderItem, View} from 'react-native';
-import {FlatList} from 'react-native-gesture-handler';
+import {View} from 'react-native';
 
+import {NftViewerCollectionPreviewList} from '@app/components/nft-viewer/nft-viewer-collection-preview-list';
 import {SearchInput} from '@app/components/search-input';
-import {TokenRow} from '@app/components/token';
 import {createTheme} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {useTypedNavigation} from '@app/hooks';
@@ -23,6 +22,7 @@ import {
 } from '@app/route-types';
 import {IToken} from '@app/types';
 
+import {TransactionSelectCryptoAssetList} from './transaction-select-crypto-asset-list';
 import {TransactionSelectCryptoSelectAssets} from './transaction-select-crypto-select-assets';
 import {TransactionSelectCryptoSelectNetwork} from './transaction-select-crypto-select-network';
 import {TransactionSelectCryptoAssetType} from './transaction-select-crypto.types';
@@ -83,10 +83,21 @@ export const TransactionSelectCryptoScreen = observer(() => {
     [fromAddress, toAddress],
   );
 
-  const keyExtractor = useCallback((item: IToken) => item.id, []);
-  const renderItem: ListRenderItem<IToken> = useCallback(
-    ({item}) => <TokenRow item={item} onPress={onItemPress(item)} />,
-    [onItemPress],
+  const renderListHeaderComponent = useCallback(
+    () => (
+      <View>
+        <SearchInput value={searchValue} onChange={setSearchValue} />
+        <TransactionSelectCryptoSelectAssets
+          assetType={assetType}
+          onChange={setAssetType}
+        />
+        <TransactionSelectCryptoSelectNetwork
+          selectedProvider={networkProvider}
+          onChange={setNetworkProvider}
+        />
+      </View>
+    ),
+    [searchValue, assetType, networkProvider],
   );
 
   useEffect(() => {
@@ -94,27 +105,26 @@ export const TransactionSelectCryptoScreen = observer(() => {
     Nft.fetchNft();
   }, []);
 
-  return (
-    <FlatList
-      data={data}
-      style={styles.screen}
-      keyExtractor={keyExtractor}
-      renderItem={renderItem}
-      ListHeaderComponent={
-        <View>
-          <SearchInput value={searchValue} onChange={setSearchValue} />
-          <TransactionSelectCryptoSelectAssets
-            assetType={assetType}
-            onChange={setAssetType}
-          />
-          <TransactionSelectCryptoSelectNetwork
-            selectedProvider={networkProvider}
-            onChange={setNetworkProvider}
-          />
-        </View>
-      }
-    />
-  );
+  switch (assetType) {
+    case TransactionSelectCryptoAssetType.NFT:
+      return (
+        <NftViewerCollectionPreviewList
+          onPress={() => {}}
+          style={styles.screen}
+          ListHeaderComponent={renderListHeaderComponent()}
+        />
+      );
+    case TransactionSelectCryptoAssetType.Crypto:
+    default:
+      return (
+        <TransactionSelectCryptoAssetList
+          data={data}
+          style={styles.screen}
+          onItemPress={onItemPress}
+          ListHeaderComponent={renderListHeaderComponent()}
+        />
+      );
+  }
 });
 
 const styles = createTheme({

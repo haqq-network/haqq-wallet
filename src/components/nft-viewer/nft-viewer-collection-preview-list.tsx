@@ -1,17 +1,23 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
-import {FlatListProps, ListRenderItem, StyleSheet} from 'react-native';
+import {
+  FlatListProps,
+  ListRenderItem,
+  StyleSheet,
+  ViewStyle,
+} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 
-import {NftCollection} from '@app/models/nft';
+import {Nft, NftCollection} from '@app/models/nft';
 
 import {NftViewerCollectionPreview} from './nft-viewer-collection-preview';
 
 import {Spacer} from '../ui';
 
 export type NftViewerCollectionPreviewListProps = {
-  data: NftCollection[];
+  data?: NftCollection[];
   scrollEnabled?: boolean;
+  style?: ViewStyle;
 
   onPress(item: NftCollection): void;
 } & Pick<FlatListProps<any>, 'ListHeaderComponent'>;
@@ -21,7 +27,9 @@ export const NftViewerCollectionPreviewList = ({
   onPress,
   scrollEnabled = true,
   ListHeaderComponent,
+  style,
 }: NftViewerCollectionPreviewListProps) => {
+  const renderData = useMemo(() => data ?? Nft.getAllCollections(), [data]);
   const keyExtractor = useCallback((item: NftCollection) => item.address, []);
 
   const renderItemSeparatorComponent = useCallback(
@@ -36,8 +44,9 @@ export const NftViewerCollectionPreviewList = ({
 
   return (
     <FlatList
-      data={data}
+      data={renderData}
       numColumns={2}
+      style={style}
       keyExtractor={keyExtractor}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
