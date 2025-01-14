@@ -1,12 +1,13 @@
 import {makeAutoObservable} from 'mobx';
 
 import {Provider} from '@app/models/provider';
+import {Token} from '@app/models/tokens';
 import {Wallet, WalletModel} from '@app/models/wallet';
 import {ChainId, IToken} from '@app/types';
 
 import {
-  TransactionParcicipant,
   TransactionParcicipantFrom,
+  TransactionParcicipantTo,
 } from './transaction-store.types';
 
 class TransactionStore {
@@ -14,15 +15,13 @@ class TransactionStore {
     wallet: null,
     asset: null,
   };
-  private readonly initialData = {
+  private readonly initialDataTo = {
     address: '',
-    chain_id: null,
-    wallet: null,
     asset: null,
   };
 
   private from: TransactionParcicipantFrom = {...this.initialDataFrom};
-  private to: TransactionParcicipant = {...this.initialData};
+  private to: TransactionParcicipantTo = {...this.initialDataTo};
 
   constructor() {
     makeAutoObservable(this);
@@ -70,38 +69,49 @@ class TransactionStore {
     return this.to.address.trim();
   }
   set toAddress(address: string) {
-    let chain_id = this.to.chain_id;
-    const isAddressSupported = this.to.chain_id
-      ? Provider.getByEthChainId(this.to.chain_id)?.isAddressSupported(address)
+    let chain_id = this.to.asset?.chain_id ?? null;
+    const isAddressSupported = chain_id
+      ? Provider.getByEthChainId(chain_id)?.isAddressSupported(address)
       : true;
 
     if (isAddressSupported) {
       chain_id = this.autoSelectProviderChainId(address);
     }
-    this.to = {
-      ...this.to,
-      chain_id,
-      address,
-    };
-  }
 
-  get toWallet() {
-    return this.to.wallet;
-  }
-  set toWallet(wallet: WalletModel | null) {
-    this.to = {
-      ...this.to,
-      wallet,
-    };
+    if (chain_id) {
+      const provider = Provider.getByEthChainId(chain_id);
+      const asset = Token.generateNativeToken(this.from.wallet!, provider);
+
+      this.to = {
+        ...this.to,
+        asset,
+        address,
+      };
+    }
   }
 
   get toChainId() {
-    return this.to.chain_id;
+    return this.to.asset?.chain_id ?? null;
   }
   set toChainId(chain_id: ChainId | null) {
+    if (chain_id) {
+      const provider = Provider.getByEthChainId(chain_id);
+      const asset = Token.generateNativeToken(this.from.wallet!, provider);
+
+      this.to = {
+        ...this.to,
+        asset,
+      };
+    }
+  }
+
+  get toAsset() {
+    return this.to.asset;
+  }
+  set toAsset(asset: IToken | null) {
     this.to = {
       ...this.to,
-      chain_id,
+      asset,
     };
   }
 
@@ -121,7 +131,7 @@ class TransactionStore {
 
   clear = () => {
     this.from = {...this.initialDataFrom};
-    this.to = {...this.initialData};
+    this.to = {...this.initialDataTo};
   };
 }
 

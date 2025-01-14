@@ -77,6 +77,7 @@ export const TransactionSelectCryptoScreen = observer(() => {
   const onItemPress = useCallback(
     (token: IToken) => () => {
       TransactionStore.fromAsset = token;
+      TransactionStore.toAsset = token;
       navigation.navigate(TransactionStackRoutes.TransactionAmount);
     },
     [toAddress],

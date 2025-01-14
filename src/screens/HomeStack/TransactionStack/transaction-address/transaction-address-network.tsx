@@ -30,7 +30,7 @@ export const TransactionAddressNetwork = observer(() => {
 
   const onNetworkPress = useCallback(async () => {
     navigation.navigate(TransactionStackRoutes.TransactionNetworkSelect);
-  }, [toChainId]);
+  }, []);
 
   return (
     <LabeledBlock

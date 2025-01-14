@@ -50,7 +50,7 @@ export const TransactionAddressWalletList = observer(
           !AddressUtils.equals(w.address, wallet.address)
         );
       });
-    }, [toAddress, wallet.address]);
+    }, [toAddress, wallet.address, toChainId]);
 
     const keyExtractor = useCallback((item: WalletModel) => item.address, []);
 
