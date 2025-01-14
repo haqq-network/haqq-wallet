@@ -1,3 +1,4 @@
+import {toJS} from 'mobx';
 import {Image, View} from 'react-native';
 
 import {Color} from '@app/colors';
@@ -19,7 +20,7 @@ export const TransactionAmountCoin = ({asset}: TransactionAmountCoinProps) => {
   return (
     <ActionsContainer>
       <View style={styles.imageContainer}>
-        <Image source={asset.image} style={styles.image} />
+        <Image source={toJS(asset.image)} style={styles.image} />
         <Image source={providerIconSource} style={styles.icon} />
       </View>
       <Text variant={TextVariant.t9} style={styles.coinName}>

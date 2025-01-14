@@ -64,6 +64,16 @@ class TransactionStore {
     };
   }
 
+  get fromAmount() {
+    return this.from.amount;
+  }
+  set fromAmount(amount: string | undefined) {
+    this.from = {
+      ...this.from,
+      amount,
+    };
+  }
+
   // to options
   get toAddress() {
     return this.to.address.trim();
