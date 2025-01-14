@@ -6,20 +6,26 @@ import {useTypedNavigation} from '@app/hooks';
 import {TransactionStackParamList} from '@app/route-types';
 
 import {TransactionAmountRightHeaderOptions} from './transaction-amount-right-header-options';
+import {TransactionAmountSingleChain} from './transaction-amount-single-chain';
 
 import {TransactionStore} from '../transaction-store';
 
 export const TransactionAmountScreen = observer(() => {
   const navigation = useTypedNavigation<TransactionStackParamList>();
-  const {asset} = TransactionStore;
+  const {fromChainId, toChainId} = TransactionStore;
 
   useEffect(() => {
     navigation.setOptions({
       headerRight: props => <TransactionAmountRightHeaderOptions {...props} />,
     });
-  }, [asset]);
+  }, []);
 
-  return null;
+  switch (fromChainId) {
+    case toChainId:
+      return <TransactionAmountSingleChain />;
+    default:
+      return null;
+  }
 
   // useAndroidBackHandler(() => {
   //   navigation.goBack();

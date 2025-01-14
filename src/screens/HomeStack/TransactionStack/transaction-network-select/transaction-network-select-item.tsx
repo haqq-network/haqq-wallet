@@ -7,8 +7,11 @@ import {Color} from '@app/colors';
 import {ImageWrapper} from '@app/components/image-wrapper';
 import {Icon, Spacer, Text, TextVariant} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {useTypedNavigation} from '@app/hooks';
-import {TransactionStackParamList} from '@app/route-types';
+import {useTypedNavigation, useTypedRoute} from '@app/hooks';
+import {
+  TransactionStackParamList,
+  TransactionStackRoutes,
+} from '@app/route-types';
 
 import {TransactionNetworkSelectItemProps} from './transaction-network-select.types';
 
@@ -16,7 +19,12 @@ import {TransactionStore} from '../transaction-store';
 
 export const TransactionNetworkSelectItem = observer(
   ({item}: TransactionNetworkSelectItemProps) => {
-    const {toChainId, toAddress, toWallet} = TransactionStore;
+    const params = useTypedRoute<
+      TransactionStackParamList,
+      TransactionStackRoutes.TransactionNetworkSelect
+    >().params;
+
+    const {toChainId, toAddress} = TransactionStore;
 
     const navigation = useTypedNavigation<TransactionStackParamList>();
 
@@ -36,10 +44,9 @@ export const TransactionNetworkSelectItem = observer(
 
     const handlePress = useCallback(() => {
       if (!isProviderDisabled) {
-        if (toWallet) {
-          TransactionStore.toAddress = toWallet.getAddressByProviderChainId(
-            item.ethChainId,
-          );
+        if (params?.wallet) {
+          TransactionStore.toAddress =
+            params.wallet.getAddressByProviderChainId(item.ethChainId);
         }
         TransactionStore.toChainId = item.ethChainId;
         navigation.goBack();

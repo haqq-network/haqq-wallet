@@ -3,6 +3,8 @@ import {PropsWithChildren, useCallback} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 import {observer} from 'mobx-react';
 
+import {KeyboardSafeArea} from '@app/components/ui';
+import {createTheme} from '@app/helpers';
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 
 import {TransactionStore} from './transaction.store';
@@ -26,10 +28,21 @@ export const TransactionStoreContainer = observer(
       }, []),
     );
 
-    if (!TransactionStore.fromAddress) {
+    if (!TransactionStore.wallet) {
       return null;
     }
 
-    return children;
+    return (
+      <KeyboardSafeArea style={styles.keyboardAvoidingView}>
+        {children}
+      </KeyboardSafeArea>
+    );
   },
 );
+
+const styles = createTheme({
+  keyboardAvoidingView: {
+    flex: 1,
+    paddingHorizontal: 20,
+  },
+});

@@ -4,67 +4,65 @@ import {Provider} from '@app/models/provider';
 import {Wallet, WalletModel} from '@app/models/wallet';
 import {ChainId, IToken} from '@app/types';
 
-import {TransactionParcicipant} from './transaction-store.types';
+import {
+  TransactionParcicipant,
+  TransactionParcicipantFrom,
+} from './transaction-store.types';
 
 class TransactionStore {
+  private readonly initialDataFrom = {
+    wallet: null,
+    asset: null,
+  };
   private readonly initialData = {
     address: '',
     chain_id: null,
     wallet: null,
+    asset: null,
   };
 
-  private from: TransactionParcicipant = {...this.initialData};
+  private from: TransactionParcicipantFrom = {...this.initialDataFrom};
   private to: TransactionParcicipant = {...this.initialData};
-  private _asset: IToken | null = null;
 
   constructor() {
     makeAutoObservable(this);
   }
 
   init = (from: string, to?: string, token?: IToken) => {
-    this._asset = token ?? null;
     this.from = {
-      address: from,
-      chain_id: token?.chain_id ?? this.from.chain_id,
+      ...this.from,
       wallet: Wallet.getById(from),
+      asset: token ?? null,
     };
     this.to = {
+      ...this.to,
       address: to ?? '',
-      chain_id: null,
-      wallet: null,
     };
   };
 
-  // asset options
-  get asset() {
-    return this._asset;
-  }
-  set asset(asset: IToken | null) {
-    this._asset = asset;
-    this.from = {
-      ...this.from,
-      chain_id: asset!.chain_id,
-    };
-  }
-
   // from options
-  get fromAddress() {
-    return this.from.address;
+  get wallet() {
+    return this.from.wallet!;
   }
-  set fromAddress(from: string) {
+  set wallet(wallet: WalletModel) {
     this.from = {
       ...this.from,
-      address: from,
-      wallet: Wallet.getById(from),
+      wallet,
     };
-  }
-
-  get fromWallet() {
-    return this.from.wallet;
   }
 
   get fromChainId() {
-    return this.from.chain_id;
+    return this.from.asset?.chain_id;
+  }
+
+  get fromAsset() {
+    return this.from.asset;
+  }
+  set fromAsset(asset: IToken | null) {
+    this.from = {
+      ...this.from,
+      asset,
+    };
   }
 
   // to options
@@ -122,8 +120,7 @@ class TransactionStore {
   };
 
   clear = () => {
-    this._asset = null;
-    this.from = {...this.initialData};
+    this.from = {...this.initialDataFrom};
     this.to = {...this.initialData};
   };
 }

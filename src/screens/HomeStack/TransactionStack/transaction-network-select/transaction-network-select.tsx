@@ -4,7 +4,6 @@ import {ListRenderItem} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 
 import {SearchInput} from '@app/components/search-input';
-import {createTheme} from '@app/helpers';
 import {Provider, ProviderModel} from '@app/models/provider';
 
 import {TransactionNetworkSelectItem} from './transaction-network-select-item';
@@ -49,7 +48,6 @@ export const TransactionNetworkSelectScreen = () => {
   return (
     <FlatList
       data={visibleProviders}
-      style={styles.screen}
       keyExtractor={keyExtractor}
       renderItem={renderItem}
       ListHeaderComponent={
@@ -61,9 +59,3 @@ export const TransactionNetworkSelectScreen = () => {
     />
   );
 };
-
-const styles = createTheme({
-  screen: {
-    marginHorizontal: 20,
-  },
-});

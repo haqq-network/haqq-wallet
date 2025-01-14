@@ -6,8 +6,6 @@ import {View} from 'react-native';
 
 import {NftViewerCollectionPreviewList} from '@app/components/nft-viewer/nft-viewer-collection-preview-list';
 import {SearchInput} from '@app/components/search-input';
-import {createTheme} from '@app/helpers';
-import {AddressUtils} from '@app/helpers/address-utils';
 import {useTypedNavigation} from '@app/hooks';
 import {Nft} from '@app/models/nft';
 import {
@@ -30,7 +28,7 @@ import {TransactionSelectCryptoAssetType} from './transaction-select-crypto.type
 import {TransactionStore} from '../transaction-store';
 
 export const TransactionSelectCryptoScreen = observer(() => {
-  const {fromAddress, toAddress} = TransactionStore;
+  const {wallet, toAddress} = TransactionStore;
 
   const navigation = useTypedNavigation<TransactionStackParamList>();
 
@@ -47,7 +45,7 @@ export const TransactionSelectCryptoScreen = observer(() => {
     () =>
       computed(
         () =>
-          Token.tokens[AddressUtils.toEth(fromAddress)]?.filter(item => {
+          Token.tokens[wallet.address]?.filter(item => {
             const showToken =
               !!item.is_in_white_list && !item.is_erc721 && !item.is_erc1155;
             if (networkProvider.ethChainId === ALL_NETWORKS_CHAIN_ID) {
@@ -57,7 +55,11 @@ export const TransactionSelectCryptoScreen = observer(() => {
             }
           }) ?? [],
       ),
-    [fromAddress, Provider.selectedProvider.denom, networkProvider.ethChainId],
+    [
+      wallet.address,
+      Provider.selectedProvider.denom,
+      networkProvider.ethChainId,
+    ],
   ).get();
 
   const data = useMemo(() => {
@@ -74,10 +76,10 @@ export const TransactionSelectCryptoScreen = observer(() => {
 
   const onItemPress = useCallback(
     (token: IToken) => () => {
-      TransactionStore.asset = token;
+      TransactionStore.fromAsset = token;
       navigation.navigate(TransactionStackRoutes.TransactionAmount);
     },
-    [fromAddress, toAddress],
+    [toAddress],
   );
 
   const renderListHeaderComponent = useCallback(
@@ -107,7 +109,6 @@ export const TransactionSelectCryptoScreen = observer(() => {
       return (
         <NftViewerCollectionPreviewList
           onPress={() => {}}
-          style={styles.screen}
           ListHeaderComponent={renderListHeaderComponent()}
         />
       );
@@ -116,16 +117,9 @@ export const TransactionSelectCryptoScreen = observer(() => {
       return (
         <TransactionSelectCryptoAssetList
           data={data}
-          style={styles.screen}
           onItemPress={onItemPress}
           ListHeaderComponent={renderListHeaderComponent()}
         />
       );
   }
-});
-
-const styles = createTheme({
-  screen: {
-    marginHorizontal: 20,
-  },
 });

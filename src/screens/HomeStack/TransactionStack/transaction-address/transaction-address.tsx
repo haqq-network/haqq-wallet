@@ -8,7 +8,6 @@ import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
-  KeyboardSafeArea,
   Spacer,
   Text,
   TextVariant,
@@ -19,7 +18,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
-import {Wallet, WalletModel} from '@app/models/wallet';
+import {WalletModel} from '@app/models/wallet';
 import {
   TransactionStackParamList,
   TransactionStackRoutes,
@@ -47,19 +46,17 @@ export const TransactionAddressScreen = observer(() => {
     return true;
   }, [navigation]);
 
-  const {toAddress, fromAddress, toChainId} = TransactionStore;
+  const {toAddress, wallet, toChainId} = TransactionStore;
 
   const {bottom: safeAreaBottomInset} = useSafeAreaInsets();
 
   const [isError, setIsError] = useState(false);
 
-  const fromWallet = useMemo(() => Wallet.getById(fromAddress)!, [fromAddress]);
-
   const [loading, setLoading] = React.useState(false);
 
   const onDone = useCallback(
     async (result: string) => {
-      if (!toChainId || !toAddress || !fromAddress) {
+      if (!toChainId || !toAddress || !wallet) {
         return;
       }
 
@@ -73,7 +70,7 @@ export const TransactionAddressScreen = observer(() => {
           return navigation.navigate(
             TransactionStackRoutes.TransactionNftConfirmation,
             {
-              from: converter(fromAddress),
+              from: converter(wallet.address),
               to: converter(result),
               nft,
             },
@@ -89,7 +86,7 @@ export const TransactionAddressScreen = observer(() => {
         setLoading(false);
       }
     },
-    [navigation, nft, token, fromAddress, toAddress, toChainId],
+    [navigation, nft, token, wallet.address, toAddress, toChainId],
   );
 
   const doneDisabled = useMemo(() => {
@@ -98,20 +95,21 @@ export const TransactionAddressScreen = observer(() => {
     }
 
     return (
-      fromWallet.address?.toLowerCase() === toAddress?.toLowerCase() ||
-      fromWallet.cosmosAddress?.toLowerCase() === toAddress?.toLowerCase() ||
-      fromWallet.tronAddress?.toLowerCase() === toAddress?.toLowerCase() ||
+      wallet.address?.toLowerCase() === toAddress?.toLowerCase() ||
+      wallet.cosmosAddress?.toLowerCase() === toAddress?.toLowerCase() ||
+      wallet.tronAddress?.toLowerCase() === toAddress?.toLowerCase() ||
       !AddressUtils.isValidAddress(toAddress)
     );
-  }, [isError, toAddress, fromWallet, toChainId]);
+  }, [isError, toAddress, wallet, toChainId]);
 
-  const onPressAddress = useCallback((wallet: WalletModel) => {
-    TransactionStore.toWallet = wallet;
-    navigation.navigate(TransactionStackRoutes.TransactionNetworkSelect);
+  const onPressAddress = useCallback((w: WalletModel) => {
+    navigation.navigate(TransactionStackRoutes.TransactionNetworkSelect, {
+      wallet: w,
+    });
   }, []);
 
-  const onPressContact = useCallback((item: string) => {
-    TransactionStore.toAddress = item;
+  const onPressContact = useCallback((address: string) => {
+    TransactionStore.toAddress = address;
   }, []);
 
   const onPressButton = useCallback(() => {
@@ -124,7 +122,7 @@ export const TransactionAddressScreen = observer(() => {
   );
 
   return (
-    <KeyboardSafeArea style={styles.keyboardAvoidingView}>
+    <>
       <View style={styles.inputArea}>
         <TransactionAddressInput
           testID={testID}
@@ -154,15 +152,11 @@ export const TransactionAddressScreen = observer(() => {
         testID={`${testID}_next`}
       />
       <Spacer height={safeAreaBottomInset} />
-    </KeyboardSafeArea>
+    </>
   );
 });
 
 const styles = createTheme({
-  keyboardAvoidingView: {
-    flex: 1,
-    paddingHorizontal: 20,
-  },
   inputArea: {
     flexDirection: 'row',
     justifyContent: 'space-between',

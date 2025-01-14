@@ -17,7 +17,7 @@ import {TransactionStore} from '../transaction-store';
 
 export const TransactionAddressWalletList = observer(
   ({onPress}: TransactionAddressWalletListProps) => {
-    const {toAddress, fromAddress, toChainId} = TransactionStore;
+    const {toAddress, wallet, toChainId} = TransactionStore;
 
     const filteredWallets = useMemo(() => {
       const wallets = Wallet.getAllVisible();
@@ -27,12 +27,12 @@ export const TransactionAddressWalletList = observer(
       }
       const isTron = toChainId && Provider.getByEthChainId(toChainId)?.isTron;
 
-      if (!toAddress && fromAddress) {
+      if (!toAddress && wallet) {
         return wallets.filter(w => {
           if (isTron && !w.isSupportTron) {
             return false;
           }
-          return !AddressUtils.equals(w.address, fromAddress);
+          return !AddressUtils.equals(w.address, wallet.address);
         });
       }
 
@@ -47,10 +47,10 @@ export const TransactionAddressWalletList = observer(
             w.cosmosAddress.toLowerCase().includes(lowerCaseAddress) ||
             w.tronAddress?.toLowerCase?.()?.includes?.(lowerCaseAddress) ||
             w.name.toLowerCase().includes(lowerCaseAddress)) &&
-          !AddressUtils.equals(w.address, fromAddress)
+          !AddressUtils.equals(w.address, wallet.address)
         );
       });
-    }, [toAddress, fromAddress]);
+    }, [toAddress, wallet.address]);
 
     const keyExtractor = useCallback((item: WalletModel) => item.address, []);
 

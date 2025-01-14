@@ -553,7 +553,11 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
     nft?: NftItem | undefined;
     token?: IToken | undefined;
   };
-  [TransactionStackRoutes.TransactionNetworkSelect]: undefined;
+  [TransactionStackRoutes.TransactionNetworkSelect]:
+    | {
+        wallet: WalletModel;
+      }
+    | undefined;
   [TransactionStackRoutes.TransactionSelectCrypto]: undefined;
   [TransactionStackRoutes.TransactionAmount]: undefined;
   [TransactionStackRoutes.TransactionConfirmation]: {

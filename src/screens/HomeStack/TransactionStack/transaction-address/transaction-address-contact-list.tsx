@@ -21,7 +21,7 @@ const ListOfContacts = withActionsContactItem(ListContact, {
 
 export const TransactionAddressContactList = observer(
   ({onPress}: TransactionAddressContactListProps) => {
-    const {toAddress, fromAddress} = TransactionStore;
+    const {toAddress, wallet} = TransactionStore;
 
     const filteredContacts = useMemo(() => {
       const contacts = Contact.getAll();
@@ -32,7 +32,7 @@ export const TransactionAddressContactList = observer(
 
       if (!toAddress) {
         return contacts.filter(
-          c => !AddressUtils.equals(c.account, fromAddress),
+          c => !AddressUtils.equals(c.account, wallet.address),
         );
       }
 
@@ -46,10 +46,10 @@ export const TransactionAddressContactList = observer(
           (hexAddress.includes(lowerCaseAddress) ||
             haqqAddress.includes(lowerCaseAddress) ||
             c.name?.toLowerCase().includes(lowerCaseAddress)) &&
-          !AddressUtils.equals(hexAddress, fromAddress)
+          !AddressUtils.equals(hexAddress, wallet.address)
         );
       });
-    }, [toAddress, fromAddress]);
+    }, [toAddress, wallet.address]);
 
     if (!filteredContacts.length) {
       if (

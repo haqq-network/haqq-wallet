@@ -19,10 +19,10 @@ type TransactionAmountRightHeaderOptionsProps = HeaderButtonProps & {
 
 export const TransactionAmountRightHeaderOptions = observer(
   (props: TransactionAmountRightHeaderOptionsProps) => {
-    const {fromWallet, fromChainId} = TransactionStore;
+    const {wallet, fromChainId} = TransactionStore;
 
     const onPressWallet = useCallback(async (accountId: string) => {
-      TransactionStore.fromAddress = await awaitForWallet({
+      const address = await awaitForWallet({
         wallets: Wallet.getAllVisible(),
         title: I18N.selectAccount,
         autoSelectWallet: false,
@@ -30,13 +30,17 @@ export const TransactionAmountRightHeaderOptions = observer(
         hideBalance: true,
         chainId: fromChainId!,
       });
+      const w = Wallet.getById(address);
+      if (w) {
+        TransactionStore.wallet = w;
+      }
     }, []);
 
     return (
       <View style={styles.container}>
         <WalletRow
           type={WalletRowTypes.variant3}
-          item={fromWallet!}
+          item={wallet}
           onPress={onPressWallet}
           chainId={fromChainId!}
         />
