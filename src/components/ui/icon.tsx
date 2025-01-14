@@ -17,6 +17,7 @@ export enum IconsName {
   arrow_forward = 'arrow_forward',
   arrow_receive = 'arrow_receive',
   arrow_send = 'arrow_send',
+  arrow_down_tail = 'arrow_down_tail',
   bell = 'bell',
   block = 'block',
   brush = 'brush',

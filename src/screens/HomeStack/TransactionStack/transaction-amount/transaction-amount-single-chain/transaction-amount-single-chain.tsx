@@ -4,6 +4,7 @@ import {KeyboardAvoidingView, View} from 'react-native';
 import {Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 
+import {TransactionAmountSingleChainDivider} from './transaction-amount-single-chain-divider';
 import {TransactionAmountSingleChainInput} from './transaction-amount-single-chain-input';
 
 import {TransactionStore} from '../../transaction-store';
@@ -25,6 +26,9 @@ export const TransactionAmountSingleChain = observer(() => {
           <TransactionAmountCoin asset={fromAsset} />
         </View>
         <TransactionAmountSingleChainInput />
+        <Spacer height={8} />
+        <TransactionAmountSingleChainDivider />
+        <Spacer height={8} />
         <View style={styles.directionContainer}>
           <TransactionAmountTo />
           <Spacer width={8} />

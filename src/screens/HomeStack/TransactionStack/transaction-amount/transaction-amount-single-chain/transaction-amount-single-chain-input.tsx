@@ -64,7 +64,6 @@ const styles = createTheme({
   container: {
     alignItems: 'center',
     marginTop: 16,
-    marginBottom: 12,
   },
   input: {
     justifyContent: 'center',
