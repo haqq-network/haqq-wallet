@@ -122,6 +122,9 @@ export class Balance implements IBalance, ISerializable {
 
   static fromJsonString = (obj: string | Balance) => {
     try {
+      if (obj instanceof Balance) {
+        return obj;
+      }
       const serializedValue: {
         value: HexNumber;
         precision: number;
