@@ -9,11 +9,7 @@ import {Easing} from 'react-native-reanimated';
 import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
-import {
-  LONG_NUM_PRECISION,
-  NUM_PRECISION,
-  STRINGS,
-} from '@app/variables/common';
+import {LONG_NUM_PRECISION, STRINGS} from '@app/variables/common';
 
 import {First, Spacer, Text, TextVariant} from '../ui';
 
@@ -67,13 +63,7 @@ export const EstimatedValue = observer(
                       value={v}
                       useGrouping
                       toFixed={
-                        v === 0
-                          ? undefined
-                          : v >= 1
-                          ? // for numbers greater than or equal to 1, we need to show 2 digits after the decimal point
-                            NUM_PRECISION
-                          : // for numbers less than 1, we need to show more digits
-                            LONG_NUM_PRECISION
+                        String(v).substring(0, LONG_NUM_PRECISION).length
                       }
                       textStyle={{color: getColor(valueColor)}}
                       spinningAnimationConfig={{

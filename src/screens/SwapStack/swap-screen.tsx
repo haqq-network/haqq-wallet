@@ -93,7 +93,7 @@ function findToken(wallet: string, token_address: string) {
     return tokenForWallet;
   }
 
-  const token = Token.data?.[AddressUtils.toEth(token_address)];
+  const token = Token.getById(token_address);
 
   if (!token) {
     return null;
@@ -588,9 +588,7 @@ export const SwapScreen = observer(() => {
 
                     return {
                       ...t,
-                      value:
-                        tokens.find(c => c.id === t.tag?.split?.('_')[1])
-                          ?.value ?? new Balance(0, 0, t?.symbol!),
+                      value: Balance.fromJsonString(t.value),
                     };
                   })}
                   onPressToken={(w, newValue, idx) => {
@@ -642,7 +640,14 @@ export const SwapScreen = observer(() => {
         logger.captureException(err, 'awaitForToken');
       }
     },
-    [poolsData, setCurrentWallet, currentWallet],
+    [
+      poolsData,
+      setCurrentWallet,
+      currentWallet,
+      t0Available,
+      t1Available,
+      currentRoute,
+    ],
   );
 
   const refreshTokenBalances = async (
@@ -1429,8 +1434,6 @@ export const SwapScreen = observer(() => {
             ...data,
             contracts: tokens,
           }));
-
-          // setPoolsData(() => data);
 
           routesByToken0.current = {};
           routesByToken1.current = {};
