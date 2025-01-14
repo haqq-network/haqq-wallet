@@ -7,7 +7,7 @@ import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {I18N, getText} from '@app/i18n';
 import {EstimationVariant} from '@app/models/fee';
 import {Provider} from '@app/models/provider';
-import {IWalletModel, Wallet} from '@app/models/wallet';
+import {IWalletModel, Wallet, WalletModel} from '@app/models/wallet';
 import {getDefaultNetwork} from '@app/network';
 import {Cosmos} from '@app/services/cosmos';
 import {PartialJsonRpcRequest, WalletType} from '@app/types';
@@ -16,7 +16,6 @@ import {
   getSignTypedDataParamsData,
   isEthTypedData,
 } from '@app/utils';
-import {ETH_COIN_TYPE, TRON_COIN_TYPE} from '@app/variables/common';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 import {Balance} from './balance';
@@ -91,23 +90,24 @@ export class SignJsonRpcRequest {
     request: PartialJsonRpcRequest,
     chainId?: number,
   ) {
+    let walletModel: WalletModel;
     if (typeof wallet === 'string') {
-      wallet = Wallet.getById(wallet)!;
+      walletModel = Wallet.getById(wallet)!;
+    } else {
+      walletModel = Wallet.getById(wallet.address)!;
     }
 
-    if (!wallet) {
+    if (!walletModel) {
       throw new Error(getText(I18N.jsonRpcErrorInvalidWallet));
     }
 
     const provider =
       Provider.getByEthChainId(chainId!) || Provider.selectedProvider;
     const instanceProvider = await getProviderInstanceForWallet(
-      wallet,
+      walletModel,
       false,
       provider,
     );
-    Logger.log('Wallet Provider', instanceProvider.constructor.name);
-    Logger.log('Network Provider', JSON.stringify(provider, null, 2));
 
     if (!instanceProvider) {
       throw new Error(getText(I18N.jsonRpcErrorInvalidProvider));
@@ -117,7 +117,7 @@ export class SignJsonRpcRequest {
       ? await getRpcProvider(provider)
       : getDefaultNetwork();
 
-    const path = wallet.path?.replace(TRON_COIN_TYPE, ETH_COIN_TYPE)!;
+    const path = walletModel.getPath(provider)!;
     let result: string | undefined;
 
     switch (request.method) {
@@ -156,7 +156,7 @@ export class SignJsonRpcRequest {
         };
 
         const signedTransaction = await SignJsonRpcRequest.signEIP155Request(
-          wallet,
+          walletModel,
           signRequest,
           chainId,
         );
@@ -238,7 +238,7 @@ export class SignJsonRpcRequest {
         throw getSdkError('UNSUPPORTED_METHODS', request.method);
     }
 
-    if (wallet.type === WalletType.ledgerBt) {
+    if (walletModel.type === WalletType.ledgerBt) {
       hideModal('ledgerAttention');
     }
 
