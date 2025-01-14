@@ -12,10 +12,7 @@ import {
   SwitchChangeEvent,
   View,
 } from 'react-native';
-import {
-  startNetworkLogging,
-  stopNetworkLogging,
-} from 'react-native-network-logger';
+import {stopNetworkLogging} from 'react-native-network-logger';
 import RNRestart from 'react-native-restart';
 
 import {Color} from '@app/colors';
@@ -305,15 +302,6 @@ TRON:\n${AddressUtils.toTron(watchOnlyAddress)}`,
               value={AppStore.networkLoggerEnabled}
               onChange={({nativeEvent: {value}}) => {
                 AppStore.networkLoggerEnabled = value;
-                if (value) {
-                  startNetworkLogging({
-                    forceEnable: true,
-                    ignoredPatterns: [/posthog\.com/, /google\.com/],
-                    maxRequests: AppStore.networkLogsCacheSize,
-                  });
-                } else {
-                  stopNetworkLogging();
-                }
               }}
             />
           </MenuNavigationButton>
