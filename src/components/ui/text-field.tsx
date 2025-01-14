@@ -34,7 +34,7 @@ import {Spacer} from '@app/components/ui/spacer';
 import {Text, TextProps, TextVariant} from '@app/components/ui/text';
 import {createTheme, showModal} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
-import {IS_IOS} from '@app/variables/common';
+import {IS_IOS, LONG_NUM_PRECISION} from '@app/variables/common';
 
 import {Button, ButtonSize} from './button';
 import {First} from './first';
@@ -224,6 +224,9 @@ export const TextField: React.FC<TextFieldProps> = memo(
                   value={value as unknown as number}
                   useGrouping
                   textStyle={[styles.inputRolling, {color: getColor(color)}]}
+                  toFixed={
+                    String(value).substring(0, LONG_NUM_PRECISION).length
+                  }
                   spinningAnimationConfig={{
                     duration: 500,
                     easing: Easing.bounce,

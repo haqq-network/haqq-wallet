@@ -12,7 +12,12 @@ import {I18N, getText} from '@app/i18n';
 import {Currencies} from '@app/models/currencies';
 import {Balance} from '@app/services/balance';
 import {IToken} from '@app/types';
-import {SPACE_OR_NBSP, STRINGS, WEI_PRECISION} from '@app/variables/common';
+import {
+  LONG_NUM_PRECISION,
+  SPACE_OR_NBSP,
+  STRINGS,
+  WEI_PRECISION,
+} from '@app/variables/common';
 
 import {ImageWrapper} from '../image-wrapper';
 import {
@@ -87,7 +92,7 @@ export const SwapInput = observer(
         return [0, availableBalance.getSymbol()];
       }
 
-      return [parseFloat(balance!), availableBalance.getSymbol()];
+      return [parsed, availableBalance.getSymbol()];
     }, [availableBalance]);
 
     const handleOnChangeText = useCallback(
@@ -177,6 +182,7 @@ export const SwapInput = observer(
             textStyle={styles.inputRolling}
             containerStyle={styles.inputRollingContainer}
             value={amount}
+            toFixed={String(amount).substring(0, LONG_NUM_PRECISION).length}
             spinningAnimationConfig={{
               duration: 500,
               easing: Easing.bounce,
@@ -192,13 +198,13 @@ export const SwapInput = observer(
               currentFiatAmount: '',
               availableAmount: '',
             }).replace('≈', '')}
-            {STRINGS.NBSP}
           </Text>
           <AnimatedRollingNumber
             useGrouping
             textStyle={styles.inputRolling}
             containerStyle={styles.inputRollingContainer}
             value={available}
+            toFixed={String(available).substring(0, LONG_NUM_PRECISION).length}
             spinningAnimationConfig={{
               duration: 500,
               easing: Easing.bounce,
