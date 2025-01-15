@@ -702,8 +702,6 @@
   "signupNetworkExitsAlertTitle": "Apakah Anda yakin ingin mengganti akun Anda?",
   "signupNetworkExitsDescription1": "Anda dapat memulihkan akun Anda atau menggantinya.",
   "signupNetworkExitsDescription2": "Dalam kasus penggantian, semua data akun akan hilang",
-  "signupNetworkExitsTitle": "Anda sudah memiliki akun di login {{provider}} {{email}}",
-  "signupNetworkExitsTitleWithoutEmail": "Anda sudah memiliki akun di login {{provider}}",
   "signupStoreWalletAccountNumber": "Akun #{{number}}",
   "signupStoreWalletCreatingAccount": "Membuat akun Anda",
   "sliderCaptchaDragText": "Geser penggeser",

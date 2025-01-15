@@ -54,7 +54,7 @@ export const WalletRowVariant5 = observer(
         return `•••${splitAddress(item.tronAddress)[2]}`;
       }
       return `•••${splitAddress(item.address)[2]}`;
-    }, [item.providerSpecificAddress, provider]);
+    }, [item, provider]);
 
     return (
       <MenuNavigationButton

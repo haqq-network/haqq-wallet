@@ -61,11 +61,9 @@ export const SssMigrateNetworksScreen = memo(() => {
             //@ts-ignore
             navigation.navigate(nextScreen, {
               accountId: route.params.accountId,
-              privateKey: new SecureValue<string | null | undefined>(
-                creds?.privateKey,
-              ),
-              token: creds?.token,
-              verifier: creds?.verifier,
+              privateKey: new SecureValue<string | null>(creds!.privateKey),
+              token: creds!.token,
+              verifier: creds!.verifier,
               provider,
               email: '',
             });

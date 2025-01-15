@@ -723,8 +723,6 @@
   "signupNetworkExitsAlertTitle": "Are you sure you want to replace this account?",
   "signupNetworkExitsDescription1": "You can choose to restore or replace your account.",
   "signupNetworkExitsDescription2": "If you replace this account, all data will be lost.",
-  "signupNetworkExitsTitle": "You already have an account on {{provider}} login {{email}}",
-  "signupNetworkExitsTitleWithoutEmail": "You already have an account on {{provider}} login",
   "signupStoreWalletAccountNumber": "Account #{{number}}",
   "signupStoreWalletCreatingAccount": "Creating your account",
   "sliderCaptchaDragText": "Drag the slider",

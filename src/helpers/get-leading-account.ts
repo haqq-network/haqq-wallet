@@ -31,7 +31,7 @@ export function getLeadingAccount() {
     const wallet = wallets
       .filter(w => w.type === walletType && !w.isHidden)
       // if path undefined for some reason then function equals strings
-      .sort((a, b) => a.path?.localeCompare(b.path || '') || 0);
+      .sort((a, b) => a.getPath()?.localeCompare(b.getPath() || '') || 0);
     if (wallet.length) {
       leadingAccount = wallet[0].address;
     }

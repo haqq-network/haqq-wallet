@@ -375,7 +375,7 @@ export class EthNetwork {
         value,
         walletType: wallet.type,
         from: wallet.address,
-        hdPath: wallet.path ?? 'null',
+        hdPath: wallet.getPath(provider) ?? 'null',
         to,
       });
       throw error;
@@ -463,7 +463,7 @@ export class EthNetwork {
         contractAddress,
         from: from.address,
         to,
-        hdPath: from.path ?? 'null',
+        hdPath: from.getPath(provider) ?? 'null',
       });
       throw error;
     }
@@ -503,7 +503,7 @@ export class EthNetwork {
         contractAddress,
         from: from.address,
         to,
-        hdPath: from.path ?? 'null',
+        hdPath: from.getPath(provider) ?? 'null',
       });
       throw error;
     }
@@ -543,7 +543,7 @@ export class EthNetwork {
         contractAddress,
         from: from.address,
         to,
-        hdPath: from.path ?? 'null',
+        hdPath: from.getPath(provider) ?? 'null',
       });
       throw error;
     }

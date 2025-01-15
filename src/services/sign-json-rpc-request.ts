@@ -7,7 +7,7 @@ import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {I18N, getText} from '@app/i18n';
 import {EstimationVariant} from '@app/models/fee';
 import {Provider} from '@app/models/provider';
-import {IWalletModel, Wallet} from '@app/models/wallet';
+import {IWalletModel, Wallet, WalletModel} from '@app/models/wallet';
 import {getDefaultNetwork} from '@app/network';
 import {Cosmos} from '@app/services/cosmos';
 import {PartialJsonRpcRequest, WalletType} from '@app/types';
@@ -16,7 +16,6 @@ import {
   getSignTypedDataParamsData,
   isEthTypedData,
 } from '@app/utils';
-import {ETH_COIN_TYPE, TRON_COIN_TYPE} from '@app/variables/common';
 import {EIP155_SIGNING_METHODS} from '@app/variables/EIP155';
 
 import {Balance} from './balance';
@@ -86,28 +85,30 @@ export class SignJsonRpcRequest {
    *  "{\"domain\":{\"chainId\":\"344593\",\"name\":\"Ether Mail\",\"verifyingContract\":\"0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC\",\"version\":\"1\"},\"message\":{\"contents\":\"Hello, Bob!\",\"from\":{\"name\":\"Cow\",\"wallets\":[\"0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826\",\"0xDeaDbeefdEAdbeefdEadbEEFdeadbeEFdEaDbeeF\"]},\"to\":[{\"name\":\"Bob\",\"wallets\":[\"0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB\",\"0xB0BdaBea57B0BDABeA57b0bdABEA57b0BDabEa57\",\"0xB0B0b0b0b0b0B000000000000000000000000000\"]}]},\"primaryType\":\"Mail\",\"types\":{\"EIP712Domain\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"version\",\"type\":\"string\"},{\"name\":\"chainId\",\"type\":\"uint256\"},{\"name\":\"verifyingContract\",\"type\":\"address\"}],\"Group\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"members\",\"type\":\"Person[]\"}],\"Mail\":[{\"name\":\"from\",\"type\":\"Person\"},{\"name\":\"to\",\"type\":\"Person[]\"},{\"name\":\"contents\",\"type\":\"string\"}],\"Person\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"wallets\",\"type\":\"address[]\"}]}}"
    * ]
    */
+
   public static async signEIP155Request(
     wallet: IWalletModel | string,
     request: PartialJsonRpcRequest,
     chainId?: number,
   ) {
+    let walletModel: WalletModel;
     if (typeof wallet === 'string') {
-      wallet = Wallet.getById(wallet)!;
+      walletModel = Wallet.getById(wallet)!;
+    } else {
+      walletModel = Wallet.getById(wallet.address)!;
     }
 
-    if (!wallet) {
+    if (!walletModel) {
       throw new Error(getText(I18N.jsonRpcErrorInvalidWallet));
     }
 
     const provider =
       Provider.getByEthChainId(chainId!) || Provider.selectedProvider;
     const instanceProvider = await getProviderInstanceForWallet(
-      wallet,
+      walletModel,
       false,
       provider,
     );
-    Logger.log('Wallet Provider', instanceProvider.constructor.name);
-    Logger.log('Network Provider', JSON.stringify(provider, null, 2));
 
     if (!instanceProvider) {
       throw new Error(getText(I18N.jsonRpcErrorInvalidProvider));
@@ -117,7 +118,7 @@ export class SignJsonRpcRequest {
       ? await getRpcProvider(provider)
       : getDefaultNetwork();
 
-    const path = wallet.path?.replace(TRON_COIN_TYPE, ETH_COIN_TYPE)!;
+    const path = walletModel.getPath(provider)!;
     let result: string | undefined;
 
     switch (request.method) {
@@ -156,7 +157,7 @@ export class SignJsonRpcRequest {
         };
 
         const signedTransaction = await SignJsonRpcRequest.signEIP155Request(
-          wallet,
+          walletModel,
           signRequest,
           chainId,
         );
@@ -238,7 +239,7 @@ export class SignJsonRpcRequest {
         throw getSdkError('UNSUPPORTED_METHODS', request.method);
     }
 
-    if (wallet.type === WalletType.ledgerBt) {
+    if (walletModel.type === WalletType.ledgerBt) {
       hideModal('ledgerAttention');
     }
 

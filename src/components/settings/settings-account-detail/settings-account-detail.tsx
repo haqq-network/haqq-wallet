@@ -119,7 +119,7 @@ export const SettingsAccountDetail = observer(
               </View>
 
               <Text variant={TextVariant.t14}>
-                {wallet?.providerSpecificAddress}
+                {wallet?.getProviderSpecificAddress()}
               </Text>
             </TouchableOpacity>
           </View>

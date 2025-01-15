@@ -59,7 +59,7 @@ export const StakingUnDelegateFormScreen = observer(() => {
         _setFee(null);
         const f = await cosmos.simulateUndelegate(
           instance,
-          wallet?.path!,
+          wallet?.getPath()!,
           validator.operator_address,
           amount ? new Balance(amount) : balance,
         );
@@ -72,7 +72,7 @@ export const StakingUnDelegateFormScreen = observer(() => {
         }
       }
     }, 500),
-    [wallet?.path, validator.operator_address, balance, setDefaultFee],
+    [wallet, validator.operator_address, balance, setDefaultFee],
   );
 
   useLayoutEffectAsync(async () => {

@@ -84,7 +84,7 @@ export const StakingInfoScreen = observer(() => {
           const provider = await getProviderInstanceForWallet(w);
           await cosmos.withdrawDelegatorReward(
             provider,
-            w.path!,
+            w.getPath()!,
             operator_address,
           );
           return [w.cosmosAddress, operator_address];
@@ -99,13 +99,11 @@ export const StakingInfoScreen = observer(() => {
           const transport = await getProviderInstanceForWallet(current);
 
           try {
-            // await awaitForBluetooth();
-
             queue.push(
               cosmos
                 .withdrawDelegatorReward(
                   transport,
-                  current.path!,
+                  current.getPath()!,
                   operator_address,
                 )
                 .then(() => [current.cosmosAddress, operator_address]),

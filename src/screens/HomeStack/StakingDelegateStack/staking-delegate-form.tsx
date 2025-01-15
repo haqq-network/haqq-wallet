@@ -47,7 +47,7 @@ export const StakingDelegateFormScreen = observer(() => {
         _setFee(null);
         const f = await cosmos.simulateDelegate(
           instance,
-          wallet!.path!,
+          wallet!.getPath()!,
           validator.operator_address,
           amount ? new Balance(amount) : currentBalance.availableForStake,
         );
@@ -61,7 +61,7 @@ export const StakingDelegateFormScreen = observer(() => {
       }
     }, 500),
     [
-      wallet?.path,
+      wallet,
       validator.operator_address,
       currentBalance.availableForStake,
       setDefaultFee,

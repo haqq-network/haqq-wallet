@@ -34,7 +34,7 @@ export const ProposalDepositPreviewScreen = observer(() => {
         const provider = await getProviderInstanceForWallet(wallet);
         const resp = await cosmos.deposit(
           provider,
-          wallet.path!,
+          wallet.getPath()!,
           proposal.proposal_id,
           amount,
         );

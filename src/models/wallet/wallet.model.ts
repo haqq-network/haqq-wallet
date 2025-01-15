@@ -43,8 +43,8 @@ export class WalletModel implements IWalletModel {
     return AddressUtils.toTron(this.model.tronAddress);
   }
 
-  get providerSpecificAddress() {
-    if (Provider.selectedProvider.isTron) {
+  getProviderSpecificAddress(provider = Provider.selectedProvider) {
+    if (provider.isTron) {
       return this.tronAddress;
     }
     return this.address;
@@ -114,24 +114,6 @@ export class WalletModel implements IWalletModel {
 
   get deviceId() {
     return this.model.deviceId;
-  }
-
-  // FIXME: Remove it when fully moved to getPath method
-  get path() {
-    if (this.isSupportTron && Provider.selectedProvider.isTron) {
-      switch (this.type) {
-        case WalletType.hot:
-        case WalletType.sss:
-        case WalletType.mnemonic:
-          return this.model?.path?.replace(ETH_COIN_TYPE, TRON_COIN_TYPE);
-        // TODO: add support for ledger and keystone
-        case WalletType.ledgerBt:
-        case WalletType.keystone:
-        default:
-          return '';
-      }
-    }
-    return this.model.path;
   }
 
   getPath(provider = Provider.selectedProvider) {

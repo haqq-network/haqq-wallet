@@ -62,7 +62,7 @@ export async function onBannerClaimAirdrop(claimCode: string) {
 
     const walletProvider = await getProviderInstanceForWallet(wallet!);
     const signature = await walletProvider.signPersonalMessage(
-      wallet.path!,
+      wallet.getPath()!,
       claimCode,
     );
     const uid = await getUid();
