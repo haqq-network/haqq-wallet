@@ -12,7 +12,13 @@ import * as Sentry from '@sentry/react-native';
 import {when} from 'mobx';
 import {observer} from 'mobx-react';
 import PostHog, {PostHogProvider} from 'posthog-react-native';
-import {AppState, Dimensions, Linking, StyleSheet} from 'react-native';
+import {
+  AppState,
+  DevSettings,
+  Dimensions,
+  Linking,
+  StyleSheet,
+} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {startNetworkLogging} from 'react-native-network-logger';
 import {MenuProvider} from 'react-native-popup-menu';
@@ -102,11 +108,13 @@ export const App = observer(() => {
   );
 
   useEffect(() => {
+    const openNetworkLogger = () => {
+      vibrate(HapticEffects.success);
+      navigator.navigate(HomeStackRoutes.NetworkLogger);
+    };
+    DevSettings.addMenuItem('Open network logger', openNetworkLogger);
     if (AppStore.networkLoggerEnabled && !__DEV__) {
-      const subscription = RNShake.addListener(() => {
-        vibrate(HapticEffects.success);
-        navigator.navigate(HomeStackRoutes.NetworkLogger);
-      });
+      const subscription = RNShake.addListener(openNetworkLogger);
 
       return () => {
         subscription.remove();

@@ -1,6 +1,10 @@
 import {makeAutoObservable, runInAction} from 'mobx';
 import {isHydrated, makePersistable} from 'mobx-persist-store';
 import Config from 'react-native-config';
+import {
+  startNetworkLogging,
+  stopNetworkLogging,
+} from 'react-native-network-logger';
 
 import {storage} from '@app/services/mmkv';
 
@@ -72,6 +76,16 @@ class AppStore {
     runInAction(() => {
       this._networkLoggerEnabled = value;
     });
+
+    if (value) {
+      startNetworkLogging({
+        forceEnable: true,
+        ignoredPatterns: [/posthog\.com/, /google\.com/],
+        maxRequests: this.networkLogsCacheSize,
+      });
+    } else {
+      stopNetworkLogging();
+    }
   }
 
   get networkLogsCacheSize() {
