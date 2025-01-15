@@ -13,7 +13,7 @@ import {TransactionsShortWidget} from '@app/widgets/transactions-short-widget/tr
 /**
  * Shows total spend and received amounts for all wallets
  *
- * TODO: requst "spend" and "received" from indexer
+ * TODO: request "spend" and "received" from indexer
  */
 export const TransactionsShortWidgetWrapper = observer(() => {
   const addressList = useWalletsAddressList();
