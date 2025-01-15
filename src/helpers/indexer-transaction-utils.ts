@@ -5,7 +5,6 @@ import {Token} from '@app/models/tokens';
 import {ParsedTransactionData, Transaction} from '@app/models/transaction';
 import {Balance} from '@app/services/balance';
 import {
-  ChainId,
   IToken,
   IndexerProtoMsgTxType,
   IndexerTransaction,
@@ -38,7 +37,7 @@ const getNativeToken = (
 
 export function parseTransaction(
   tx: IndexerTransaction,
-  addressesMap: Record<ChainId, string[]>,
+  addressesMap: Record<string, string[]>,
 ): Transaction {
   let addresses = addressesMap[tx.chain_id];
 

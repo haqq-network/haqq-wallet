@@ -30,7 +30,7 @@ import {Wallet} from '@app/models/wallet';
 import {Web3BrowserSession} from '@app/models/web3-browser-session';
 import {getDefaultNetwork} from '@app/network';
 import {getAppVersion} from '@app/services/version';
-import {AddressCosmosHaqq, WalletType} from '@app/types';
+import {AddressCosmosHaqq, ChainId, WalletType} from '@app/types';
 import {makeID, requestQRScannerPermission} from '@app/utils';
 import {MAIN_NETWORK_ID} from '@app/variables/common';
 
@@ -98,7 +98,7 @@ const requestAccount = async ({helper}: JsonRpcMethodHandlerParams) => {
     ? session.selectedAccount
     : undefined;
 
-  let chainId = 1;
+  let chainId: ChainId = 1;
 
   if (Provider.selectedProvider.isEVM) {
     chainId = Provider.selectedProvider.ethChainId;

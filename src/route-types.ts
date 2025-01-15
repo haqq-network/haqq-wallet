@@ -384,9 +384,10 @@ export type HomeStackParamList = {
   [HomeStackRoutes.NetworkLogger]: undefined;
   [HomeStackRoutes.AccountInfo]: {accountId: string};
   [HomeStackRoutes.Transaction]: {
-    from?: string;
+    from: string;
     to?: string;
     nft?: NftItem;
+    token?: IToken;
   };
   [HomeStackRoutes.Nft]:
     | {
@@ -455,7 +456,7 @@ export type HomeStackParamList = {
     wallets: WalletModel[];
     title: string;
     initialAddress?: string;
-    chainId?: number;
+    chainId?: ChainId;
   };
   [HomeStackRoutes.TotalValueInfo]?: {
     tab?: TotalValueTabNames;
@@ -532,7 +533,9 @@ export type ProposalDepositStackParamList = GovernanceStackParamList & {
 
 export enum TransactionStackRoutes {
   TransactionAddress = 'transactionAddress',
-  TransactionSum = 'transactionSum',
+  TransactionNetworkSelect = 'transactionNetworkSelect',
+  TransactionSelectCrypto = 'transactionSelectCrypto',
+  TransactionAmount = 'transactionAmount',
   TransactionConfirmation = 'transactionConfirmation',
   TransactionNftConfirmation = 'transactionNftConfirmation',
   TransactionFinish = 'transactionFinish',
@@ -541,7 +544,6 @@ export enum TransactionStackRoutes {
   TransactionLedger = 'transactionLedger',
   TransactionSumAddress = 'transactionSumAddress',
   TransactionContactEdit = 'transactionContactEdit',
-  TransactionSelectCrypto = 'transactionSelectCrypto',
 }
 
 export type TransactionStackParamList = HomeFeedStackParamList & {
@@ -551,11 +553,13 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
     nft?: NftItem | undefined;
     token?: IToken | undefined;
   };
-  [TransactionStackRoutes.TransactionSum]: {
-    from: string;
-    to: string;
-    token: IToken;
-  };
+  [TransactionStackRoutes.TransactionNetworkSelect]:
+    | {
+        wallet: WalletModel;
+      }
+    | undefined;
+  [TransactionStackRoutes.TransactionSelectCrypto]: undefined;
+  [TransactionStackRoutes.TransactionAmount]: undefined;
   [TransactionStackRoutes.TransactionConfirmation]: {
     from: string;
     to: string;
@@ -602,10 +606,6 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
   [TransactionStackRoutes.TransactionContactEdit]: {
     name: string;
     address: string;
-  };
-  [TransactionStackRoutes.TransactionSelectCrypto]: {
-    from: string;
-    to: string;
   };
 };
 

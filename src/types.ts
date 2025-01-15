@@ -572,7 +572,7 @@ export type RootStackParamList = {
     wallets: IWalletModel[];
     title: string;
     initialAddress?: string;
-    chainId?: number;
+    chainId?: ChainId;
   };
   valueSelector: {
     title: string;
@@ -607,7 +607,7 @@ export type RootStackParamList = {
   jsonRpcSign: {
     request: PartialJsonRpcRequest;
     metadata: JsonRpcMetadata;
-    chainId?: number;
+    chainId?: ChainId;
     selectedAccount?: string;
     hideContractAttention?: boolean;
   };
@@ -1098,7 +1098,7 @@ export type Modals = {
     autoSelectWallet?: boolean;
     initialAddress?: string;
     hideBalance?: boolean;
-    chainId?: number;
+    chainId?: ChainId;
   };
   transactionError: {
     onClose?: () => void;
@@ -1111,7 +1111,7 @@ export type Modals = {
     onClose?: () => void;
     title: I18N;
     providers?: ProviderModel[];
-    initialProviderChainId: number;
+    initialProviderChainId: ChainId;
     disableAllNetworksOption?: boolean;
     closeDistance?: () => number;
     eventSuffix?: string;
@@ -1377,6 +1377,7 @@ export type ContractNameMap = Record<string, {name: string; symbol: string}>;
 export type AddressCosmosHaqq = `haqq${string}`;
 export type AddressEthereum = `0x${string}`;
 export type AddressTron = `T${string}`;
+export type WalletAddress = AddressCosmosHaqq | AddressEthereum | AddressTron;
 export type HexNumber = `0x${string}`;
 
 export type IndexerBalanceItem = [
@@ -1932,7 +1933,7 @@ export type IndexerTransactionResponse = {
   transactions?: IndexerTransaction[];
 };
 
-export type ChainId = string | number;
+export type ChainId = number;
 
 export type IndexerTxParsedTokenInfo = {
   name: string;

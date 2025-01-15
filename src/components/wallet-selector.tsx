@@ -6,12 +6,13 @@ import {PopupContainer} from '@app/components/ui';
 import {WalletRow, WalletRowTypes} from '@app/components/wallet-row';
 import {createTheme} from '@app/helpers';
 import {WalletModel} from '@app/models/wallet';
+import {ChainId} from '@app/types';
 
 interface Props {
   initialAddress?: string;
   wallets: WalletModel[];
   style?: StyleProp<ViewStyle>;
-  chainId?: number;
+  chainId?: ChainId;
   onWalletSelected?(address: string): void;
 }
 

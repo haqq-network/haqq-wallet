@@ -4,6 +4,7 @@ import {StyleProp, ViewStyle} from 'react-native';
 
 import {Provider} from '@app/models/provider';
 import {WalletModel} from '@app/models/wallet';
+import {ChainId} from '@app/types';
 
 import {WalletRowVariant1} from './wallet-row-variant-1';
 import {WalletRowVariant2} from './wallet-row-variant-2';
@@ -28,7 +29,7 @@ export type WalletRowProps = {
   disabled?: boolean;
   type?: WalletRowTypes;
   hideBalance?: boolean;
-  chainId?: number;
+  chainId?: ChainId;
 };
 
 export const WalletRow = ({

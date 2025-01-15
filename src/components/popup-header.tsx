@@ -8,7 +8,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Color} from '@app/colors';
 import {GoBackPopupButton} from '@app/components/popup/go-back-popup-button';
 import {SpacerPopupButton} from '@app/components/popup/spacer-popup-button';
-import {Text} from '@app/components/ui';
+import {Text, TextPosition, TextVariant} from '@app/components/ui';
 import {createTheme} from '@app/helpers/create-theme';
 import {ScreenOptionType} from '@app/types';
 import {IS_ANDROID} from '@app/variables/common';
@@ -69,8 +69,8 @@ export const PopupHeader = ({options, back, navigation}: PopupHeaderProps) => {
         {!!HeaderCustomComponent && <HeaderCustomComponent children={''} />}
         {!!options.title && (
           <Text
-            t8
-            center
+            variant={TextVariant.t8}
+            position={TextPosition.center}
             color={Color.textBase1}
             numberOfLines={1}
             ellipsizeMode="tail"

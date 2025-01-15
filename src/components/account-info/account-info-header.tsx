@@ -8,6 +8,7 @@ import {
   First,
   Icon,
   IconButton,
+  IconsName,
   Inline,
   Spacer,
   Text,
@@ -113,7 +114,7 @@ export const AccountInfoHeader = ({
           disabled={wallet.type === WalletType.watchOnly}
           onPress={onSend}
           style={styles.iconButton}>
-          <Icon i24 name="arrow_send" color={Color.textBase1} />
+          <Icon i24 name={IconsName.arrow_send} color={Color.textBase1} />
           <Text variant={TextVariant.t14} i18n={I18N.walletCardSend} />
         </IconButton>
         <IconButton onPress={onReceive} style={styles.iconButton}>

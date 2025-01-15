@@ -25,7 +25,12 @@ import {ProviderModel} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
-import {IToken, JsonRpcMetadata, JsonRpcTransactionRequest} from '@app/types';
+import {
+  ChainId,
+  IToken,
+  JsonRpcMetadata,
+  JsonRpcTransactionRequest,
+} from '@app/types';
 import {getHostnameFromUrl, openInAppBrowser} from '@app/utils';
 import {STRINGS} from '@app/variables/common';
 
@@ -41,7 +46,7 @@ export interface JsonRpcCommonTransactionProps {
   fee: Fee | null | undefined;
   tx: Partial<JsonRpcTransactionRequest> | undefined;
   parsedInput: ethers.utils.TransactionDescription | undefined;
-  chainId: number;
+  chainId: ChainId;
   onFeePress: () => void;
 }
 
