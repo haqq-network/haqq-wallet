@@ -112,7 +112,9 @@ export const App = observer(() => {
       vibrate(HapticEffects.success);
       navigator.navigate(HomeStackRoutes.NetworkLogger);
     };
-    DevSettings.addMenuItem('Open network logger', openNetworkLogger);
+    if (__DEV__) {
+      DevSettings.addMenuItem('Open network logger', openNetworkLogger);
+    }
     if (AppStore.networkLoggerEnabled && !__DEV__) {
       const subscription = RNShake.addListener(openNetworkLogger);
 
