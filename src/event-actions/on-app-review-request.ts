@@ -33,7 +33,7 @@ export async function onAppReviewRequest() {
     //      matter the result, we continue our app flow.
     //
     //  - for ios:
-    //      the flow lanuched successfully, The API does not indicate whether the user
+    //      the flow launched successfully, The API does not indicate whether the user
     //      reviewed or not, or he/she closed flow yet as android, Thus, no
     //      matter the result, we continue our app flow.
     const hasFlowFinishedSuccessfully = await InAppReview.RequestInAppReview();
