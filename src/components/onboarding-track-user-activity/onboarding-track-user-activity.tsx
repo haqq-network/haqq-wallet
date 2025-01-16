@@ -22,7 +22,7 @@ interface OnboardingBiometryProps {
 }
 
 export const OnboardingTrackUserActivity = ({
-  onClickSkip,
+  // onClickSkip,
   onClickEnable,
 }: OnboardingBiometryProps) => {
   return (
@@ -76,12 +76,12 @@ export const OnboardingTrackUserActivity = ({
         testID="onboarding_tracking_enable"
         onPress={onClickEnable}
       />
-      <Button
+      {/* <Button
         style={[style.margin, style.width100]}
         i18n={I18N.onboardingTrackingUserActivityNotNow}
         testID="onboarding_tracking_skip"
         onPress={onClickSkip}
-      />
+      /> */}
     </PopupContainer>
   );
 };

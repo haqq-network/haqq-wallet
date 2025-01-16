@@ -35,6 +35,7 @@ export const OnboardingTrackUserActivityScreen = memo(() => {
       await onBannerAnalyticsEnable('trackActivity');
       navigateToNextScreen();
     } catch (e) {
+      navigateToNextScreen();
       Logger.captureException(e, 'onClickEnableUserTrackingActivity');
     }
   }, [navigateToNextScreen]);
