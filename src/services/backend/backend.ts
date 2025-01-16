@@ -3,6 +3,7 @@ import Config from 'react-native-config';
 import {AppInfo} from '@app/helpers/get-app-info';
 import {Currency} from '@app/models/types';
 import {VariablesString} from '@app/models/variables-string';
+import {ChangellyCurrency} from '@app/screens/HomeStack/TransactionStack/transaction-store';
 import {
   AppLanguage,
   LanguagesResponse,
@@ -435,4 +436,18 @@ export class Backend {
       throw error;
     }
   }
+
+  fetchCurrencies = async (): Promise<ChangellyCurrency[]> => {
+    const response = await fetch(
+      `${this.getRemoteUrl()}cross-chain-swaps/v1/changelly/currencies/full`,
+      {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+        },
+      },
+    );
+
+    return response.json();
+  };
 }

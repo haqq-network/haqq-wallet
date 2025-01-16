@@ -1,11 +1,13 @@
-import {makeAutoObservable} from 'mobx';
+import {makeAutoObservable, runInAction} from 'mobx';
 
 import {Provider} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {Wallet, WalletModel} from '@app/models/wallet';
+import {Backend} from '@app/services/backend';
 import {ChainId, IToken} from '@app/types';
 
 import {
+  ChangellyCurrency,
   TransactionParcicipantFrom,
   TransactionParcicipantTo,
 } from './transaction-store.types';
@@ -22,21 +24,29 @@ class TransactionStore {
 
   private from: TransactionParcicipantFrom = {...this.initialDataFrom};
   private to: TransactionParcicipantTo = {...this.initialDataTo};
+  private availableCurrencies: ChangellyCurrency[] = [];
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  init = (from: string, to?: string, token?: IToken) => {
-    this.from = {
-      ...this.from,
-      wallet: Wallet.getById(from),
-      asset: token ?? null,
-    };
-    this.to = {
-      ...this.to,
-      address: to ?? '',
-    };
+  init = async (from: string, to?: string, token?: IToken) => {
+    runInAction(() => {
+      this.from = {
+        ...this.from,
+        wallet: Wallet.getById(from),
+        asset: token ?? null,
+      };
+      this.to = {
+        ...this.to,
+        address: to ?? '',
+      };
+    });
+
+    const availableCurrencies = await Backend.instance.fetchCurrencies();
+    runInAction(() => {
+      this.availableCurrencies = availableCurrencies;
+    });
   };
 
   // from options

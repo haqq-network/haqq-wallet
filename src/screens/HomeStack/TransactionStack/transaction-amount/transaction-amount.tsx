@@ -6,6 +6,7 @@ import {useTypedNavigation} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {TransactionStackParamList} from '@app/route-types';
 
+import {TransactionAmountCrossChain} from './transaction-amount-cross-chain';
 import {TransactionAmountRightHeaderOptions} from './transaction-amount-right-header-options';
 import {TransactionAmountSingleChain} from './transaction-amount-single-chain';
 
@@ -30,7 +31,7 @@ export const TransactionAmountScreen = observer(() => {
     case toChainId:
       return <TransactionAmountSingleChain />;
     default:
-      return <TransactionAmountSingleChain />;
+      return <TransactionAmountCrossChain />;
   }
 
   // const event = useMemo(() => generateUUID(), []);
