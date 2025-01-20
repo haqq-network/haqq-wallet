@@ -85,10 +85,10 @@ export function isNumber(value: string) {
   return value.match(numbersRegExp);
 }
 
-const ethAddressRegex = /(0x\w{2})(.*)(\w{4})$/gm;
-const haqqAddressRegex = /(haqq)(.*)(\w{4})$/gm;
-const haqqValidatorAddressRegex = /(haqqvaloper)(.*)(\w{4})$/gm;
-const tronAddressRegex = /(T)(.*)(\w{4})$/gm;
+const ethAddressRegex = /(0x\w{2})(.*)(\w{4})$/m;
+const cosmosAddressRegex = /(haqq|cosmos|kava|atom|axelar|evmos)(.*)(\w{4})$/m;
+const haqqValidatorAddressRegex = /(haqqvaloper)(.*)(\w{4})$/m;
+const tronAddressRegex = /(T)(.*)(\w{4})$/m;
 
 export function splitAddress(address: string) {
   if (!address) {
@@ -102,7 +102,7 @@ export function splitAddress(address: string) {
   }
 
   if (AddressUtils.isHaqqAddress(address)) {
-    regex = haqqAddressRegex;
+    regex = cosmosAddressRegex;
   }
 
   if (AddressUtils.isHaqqValidatorAddress(address)) {
@@ -112,7 +112,16 @@ export function splitAddress(address: string) {
   regex.lastIndex = 0;
   const result = regex.exec(address);
   if (!result) {
-    return [];
+    const comsosResult = cosmosAddressRegex.exec(address);
+    if (comsosResult) {
+      return [comsosResult[1], comsosResult[2], comsosResult[3]];
+    }
+    const length = address.length;
+    const firstPart = address.slice(0, 4);
+    const middlePart = address.slice(4, length - 4);
+    const lastPart = address.slice(length - 4, length);
+
+    return [firstPart, middlePart, lastPart];
   }
 
   return [result[1], result[2], result[3]];
