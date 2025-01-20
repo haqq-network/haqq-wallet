@@ -7,6 +7,7 @@ import {Balance} from '@app/services/balance';
 import {
   ChainId,
   IToken,
+  IbcRecvPacket,
   IndexerProtoMsgTxType,
   IndexerTransaction,
   IndexerTransactionParticipantRole,
@@ -71,6 +72,13 @@ export function parseTransaction(
           return parseMsgProtoTx(tx as any, addresses);
         case IndexerTxMsgType.msgEventTx:
           return parseMsgEventTx(tx as any, addresses);
+        case IndexerTxMsgType.msgIbcCoreChannelV1MsgRecvPacket:
+          return parseMsgIbcCoreChannelV1MsgRecvPacket(tx as any, addresses);
+        case IndexerTxMsgType.msgIbcApplicationsTransferV1MsgTransfer:
+          return parseMsgIbcApplicationsTransferV1MsgTransfer(
+            tx as any,
+            addresses,
+          );
         // TODO: implement other tx types
         case IndexerTxMsgType.unknown:
         case IndexerTxMsgType.msgVote:
@@ -97,6 +105,84 @@ export function parseTransaction(
     ...tx,
     parsed: parse(),
   } as Transaction;
+}
+
+function parseMsgIbcCoreChannelV1MsgRecvPacket(
+  tx: IndexerTransactionWithType<IndexerTxMsgType.msgIbcCoreChannelV1MsgRecvPacket>,
+  _: string[],
+) {
+  const packet: IbcRecvPacket = JSON.parse(
+    Buffer.from(tx.msg.packet, 'base64').toString(),
+  );
+  const tokenContract =
+    Token.getById(AddressUtils.toHaqq(packet.contract_address)) ||
+    Token.UNKNOWN_TOKEN;
+
+  return {
+    from: packet.sender,
+    to: packet.receiver,
+    amount: [
+      new Balance(
+        packet.amount,
+        tokenContract.decimals!,
+        tokenContract.symbol!,
+      ),
+    ],
+    isContractInteraction: false,
+    isIncoming: true,
+    isOutcoming: false,
+    tokens: [
+      {
+        name: tokenContract.name,
+        symbol: tokenContract.symbol,
+        icon: tokenContract.image,
+        decimals: tokenContract.decimals,
+        contract_address: tokenContract.id,
+      },
+    ],
+    isCosmosTx: true,
+    isEthereumTx: false,
+    icon: IconsName.arrow_receive,
+    title: getText(I18N.transactionIBCReceiveTitle),
+    subtitle: 'from ' + shortAddress(packet.sender, '•'),
+  };
+}
+
+function parseMsgIbcApplicationsTransferV1MsgTransfer(
+  tx: IndexerTransactionWithType<IndexerTxMsgType.msgIbcApplicationsTransferV1MsgTransfer>,
+  _: string[],
+): ParsedTransactionData {
+  const tokenContract =
+    Token.getById(AddressUtils.toHaqq(tx.msg.contract_address)) ||
+    Token.UNKNOWN_TOKEN;
+  return {
+    from: tx.msg.sender,
+    to: tx.msg.receiver,
+    amount: [
+      new Balance(
+        tx.msg.amount.amount,
+        tokenContract.decimals!,
+        tokenContract.symbol!,
+      ),
+    ],
+    isContractInteraction: false,
+    isIncoming: false,
+    isOutcoming: true,
+    tokens: [
+      {
+        name: tokenContract.name!,
+        symbol: tokenContract.symbol!,
+        icon: tokenContract.image,
+        decimals: tokenContract.decimals!,
+        contract_address: tokenContract.id,
+      },
+    ],
+    isCosmosTx: true,
+    isEthereumTx: false,
+    icon: IconsName.arrow_send,
+    title: getText(I18N.transactionIBCSendTitle),
+    subtitle: 'to ' + shortAddress(tx.msg.receiver, '•'),
+  };
 }
 
 function parseMsgBeginRedelegate(
@@ -671,7 +757,9 @@ function parseMsgEthereumErc20TransferTx(
   };
 }
 
-// IBC transfer
+/** IBC transfer
+ * @deprecated
+ **/
 function parseMsgSend(
   tx: IndexerTransactionWithType<IndexerTxMsgType.msgSend>,
   addresses: string[],
