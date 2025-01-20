@@ -29,7 +29,9 @@ export const TransactionAddressNetwork = observer(() => {
   }, [toChainId]);
 
   const onNetworkPress = useCallback(async () => {
-    navigation.navigate(TransactionStackRoutes.TransactionNetworkSelect);
+    if (Provider.selectedProvider.isMainnet) {
+      navigation.navigate(TransactionStackRoutes.TransactionNetworkSelect);
+    }
   }, []);
 
   return (
