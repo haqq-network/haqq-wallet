@@ -1,3 +1,5 @@
+import {useState} from 'react';
+
 import {observer} from 'mobx-react';
 import {View} from 'react-native';
 
@@ -17,6 +19,8 @@ import {TransactionAmountInputFrom} from '../transaction-amount-input-from';
 export const TransactionAmountSingleChain = observer(() => {
   const {fromAsset, toAsset} = TransactionStore;
 
+  const [error, setError] = useState('');
+
   return (
     <Spacer centered>
       <View style={styles.directionContainer}>
@@ -24,7 +28,7 @@ export const TransactionAmountSingleChain = observer(() => {
         <Spacer width={8} />
         <TransactionAmountCoin asset={fromAsset} />
       </View>
-      <TransactionAmountInputFrom />
+      <TransactionAmountInputFrom error={error} setError={setError} />
       <Spacer height={8} />
       <TransactionAmountSingleChainDivider />
       <Spacer height={8} />

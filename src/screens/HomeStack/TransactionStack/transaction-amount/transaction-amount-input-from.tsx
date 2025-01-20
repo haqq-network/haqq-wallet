@@ -4,9 +4,9 @@ import {observer} from 'mobx-react';
 import {TextInput, View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Text} from '@app/components/ui';
+import {Text, TextPosition, TextVariant} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {I18N} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 
@@ -15,30 +15,49 @@ import {TransactionAmountInputFromProps} from './transaction-amount.types';
 import {TransactionStore} from '../transaction-store';
 
 export const TransactionAmountInputFrom = observer(
-  ({alignItems = 'center'}: TransactionAmountInputFromProps) => {
+  ({
+    alignItems = 'center',
+    error,
+    setError,
+  }: TransactionAmountInputFromProps) => {
     const {fromAmount} = TransactionStore;
     const {wallet, fromChainId} = TransactionStore;
     const provider = Provider.getByEthChainId(fromChainId!);
     const balances = Wallet.getBalancesByAddressList([wallet!], provider);
-    const currentBalance = useMemo(
-      () => balances[wallet.address],
+    const availableAmount = useMemo(
+      () => balances[wallet.address].available,
       [balances, wallet.address],
     );
 
-    const handleChangeText = useCallback((value: string) => {
-      const v = value.replace(',', '.');
-      if (isNaN(Number(v))) {
-        return;
-      }
-      TransactionStore.fromAmount = v;
-    }, []);
+    const handleChangeText = useCallback(
+      (value: string) => {
+        const v = value.replace(',', '.');
+
+        if (isNaN(Number(v))) {
+          return;
+        }
+
+        if (Number(v) > availableAmount.toFloat() && !error) {
+          setError?.(
+            getText(I18N.sumAmountNotEnough, {
+              symbol: provider?.denom ?? '',
+            }),
+          );
+        } else {
+          error && setError('');
+        }
+
+        TransactionStore.fromAmount = v;
+      },
+      [error],
+    );
 
     return (
       <View style={[styles.container, {alignItems}]}>
         <Text
           i18n={I18N.availableAmount}
           i18params={{
-            amount: currentBalance.available.toBalanceString(),
+            amount: availableAmount.toBalanceString(),
           }}
           color={Color.textBase2}
         />
@@ -56,10 +75,18 @@ export const TransactionAmountInputFrom = observer(
         <Text
           i18n={I18N.approximatelyFiatAmount}
           i18params={{
-            fiat: currentBalance.available.toFiat(),
+            fiat: availableAmount.toFiat(),
           }}
           color={Color.textBase2}
         />
+        {error && (
+          <Text
+            position={TextPosition.center}
+            color={Color.textRed1}
+            variant={TextVariant.t14}>
+            {error}
+          </Text>
+        )}
       </View>
     );
   },

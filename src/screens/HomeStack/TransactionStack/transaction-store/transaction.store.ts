@@ -135,6 +135,16 @@ class TransactionStore {
     };
   }
 
+  get toAmount() {
+    return this.to.amount;
+  }
+  set toAmount(amount: string | undefined) {
+    this.to = {
+      ...this.to,
+      amount,
+    };
+  }
+
   /**
    * private helpers
    */

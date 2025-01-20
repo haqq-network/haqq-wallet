@@ -10,13 +10,13 @@ import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 
-import {TransactionAmountInputFromProps} from './transaction-amount.types';
+import {TransactionAmountInputToProps} from './transaction-amount.types';
 
 import {TransactionStore} from '../transaction-store';
 
 export const TransactionAmountInputTo = observer(
-  ({alignItems = 'center'}: TransactionAmountInputFromProps) => {
-    const {fromAmount} = TransactionStore;
+  ({alignItems = 'center'}: TransactionAmountInputToProps) => {
+    const {toAmount} = TransactionStore;
     const {wallet, fromChainId} = TransactionStore;
     const provider = Provider.getByEthChainId(fromChainId!);
     const balances = Wallet.getBalancesByAddressList([wallet!], provider);
@@ -38,7 +38,7 @@ export const TransactionAmountInputTo = observer(
         <TextInput
           allowFontScaling={false}
           style={styles.input}
-          value={fromAmount}
+          value={toAmount}
           placeholder="0"
           onChangeText={handleChangeText}
           keyboardType="decimal-pad"
