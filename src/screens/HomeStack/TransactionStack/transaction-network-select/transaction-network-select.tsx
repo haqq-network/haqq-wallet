@@ -4,6 +4,8 @@ import {ListRenderItem} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 
 import {SearchInput} from '@app/components/search-input';
+import {KeyboardSafeArea} from '@app/components/ui';
+import {createTheme} from '@app/helpers';
 import {Provider, ProviderModel} from '@app/models/provider';
 
 import {TransactionNetworkSelectItem} from './transaction-network-select-item';
@@ -46,16 +48,25 @@ export const TransactionNetworkSelectScreen = () => {
   }, []);
 
   return (
-    <FlatList
-      data={visibleProviders}
-      keyExtractor={keyExtractor}
-      renderItem={renderItem}
-      ListHeaderComponent={
-        <SearchInput
-          value={searchProviderValue}
-          onChange={setSearchProviderValue}
-        />
-      }
-    />
+    <KeyboardSafeArea style={styles.screen}>
+      <FlatList
+        data={visibleProviders}
+        keyExtractor={keyExtractor}
+        renderItem={renderItem}
+        ListHeaderComponent={
+          <SearchInput
+            value={searchProviderValue}
+            onChange={setSearchProviderValue}
+          />
+        }
+      />
+    </KeyboardSafeArea>
   );
 };
+
+const styles = createTheme({
+  screen: {
+    flex: 1,
+    paddingHorizontal: 20,
+  },
+});

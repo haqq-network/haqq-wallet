@@ -6,6 +6,8 @@ import {View} from 'react-native';
 
 import {NftViewerCollectionPreviewList} from '@app/components/nft-viewer/nft-viewer-collection-preview-list';
 import {SearchInput} from '@app/components/search-input';
+import {KeyboardSafeArea} from '@app/components/ui';
+import {createTheme} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
 import {Nft} from '@app/models/nft';
 import {
@@ -107,19 +109,30 @@ export const TransactionSelectCryptoScreen = observer(() => {
   switch (assetType) {
     case TransactionSelectCryptoAssetType.NFT:
       return (
-        <NftViewerCollectionPreviewList
-          onPress={() => {}}
-          ListHeaderComponent={renderListHeaderComponent()}
-        />
+        <KeyboardSafeArea style={styles.screen}>
+          <NftViewerCollectionPreviewList
+            onPress={() => {}}
+            ListHeaderComponent={renderListHeaderComponent()}
+          />
+        </KeyboardSafeArea>
       );
     case TransactionSelectCryptoAssetType.Crypto:
     default:
       return (
-        <TransactionSelectCryptoAssetList
-          data={data}
-          onItemPress={onItemPress}
-          ListHeaderComponent={renderListHeaderComponent()}
-        />
+        <KeyboardSafeArea style={styles.screen}>
+          <TransactionSelectCryptoAssetList
+            data={data}
+            onItemPress={onItemPress}
+            ListHeaderComponent={renderListHeaderComponent()}
+          />
+        </KeyboardSafeArea>
       );
   }
+});
+
+const styles = createTheme({
+  screen: {
+    flex: 1,
+    paddingHorizontal: 20,
+  },
 });

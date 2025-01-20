@@ -3,7 +3,7 @@ import {useState} from 'react';
 import {observer} from 'mobx-react';
 import {View} from 'react-native';
 
-import {Spacer} from '@app/components/ui';
+import {KeyboardSafeArea, Spacer} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 
 import {TransactionStore} from '../../transaction-store';
@@ -21,33 +21,39 @@ export const TransactionAmountCrossChain = observer(() => {
   const [error, setError] = useState('');
 
   return (
-    <Spacer centered>
-      <View style={styles.directionContainer}>
-        <View style={styles.actions}>
-          <TransactionAmountFrom />
-          <Spacer height={8} />
-          <TransactionAmountCoin asset={fromAsset} />
+    <KeyboardSafeArea style={styles.screen}>
+      <Spacer centered>
+        <View style={styles.directionContainer}>
+          <View style={styles.actions}>
+            <TransactionAmountFrom />
+            <Spacer height={8} />
+            <TransactionAmountCoin asset={fromAsset} />
+          </View>
+          <TransactionAmountInputFrom
+            alignItems="flex-end"
+            error={error}
+            setError={setError}
+          />
         </View>
-        <TransactionAmountInputFrom
-          alignItems="flex-end"
-          error={error}
-          setError={setError}
-        />
-      </View>
-      <Spacer height={8} />
-      <View style={styles.directionContainer}>
-        <View style={styles.actions}>
-          <TransactionAmountTo />
-          <Spacer height={8} />
-          <TransactionAmountCoin asset={toAsset} />
+        <Spacer height={8} />
+        <View style={styles.directionContainer}>
+          <View style={styles.actions}>
+            <TransactionAmountTo />
+            <Spacer height={8} />
+            <TransactionAmountCoin asset={toAsset} />
+          </View>
+          <TransactionAmountInputTo alignItems="flex-end" />
         </View>
-        <TransactionAmountInputTo alignItems="flex-end" />
-      </View>
-    </Spacer>
+      </Spacer>
+    </KeyboardSafeArea>
   );
 });
 
 const styles = createTheme({
+  screen: {
+    flex: 1,
+    paddingHorizontal: 20,
+  },
   directionContainer: {
     width: '100%',
     flexDirection: 'row',

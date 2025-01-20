@@ -8,6 +8,7 @@ import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
+  KeyboardSafeArea,
   Spacer,
   Text,
   TextVariant,
@@ -103,9 +104,15 @@ export const TransactionAddressScreen = observer(() => {
   }, [isError, toAddress, wallet, toChainId]);
 
   const onPressAddress = useCallback((w: WalletModel) => {
-    navigation.navigate(TransactionStackRoutes.TransactionNetworkSelect, {
-      wallet: w,
-    });
+    if (Provider.selectedProvider.isTestnet) {
+      TransactionStore.toAddress = w.getAddressByProviderChainId(
+        Provider.selectedProvider.ethChainId,
+      );
+    } else {
+      navigation.navigate(TransactionStackRoutes.TransactionNetworkSelect, {
+        wallet: w,
+      });
+    }
   }, []);
 
   const onPressContact = useCallback((address: string) => {
@@ -122,7 +129,7 @@ export const TransactionAddressScreen = observer(() => {
   );
 
   return (
-    <>
+    <KeyboardSafeArea style={styles.screen}>
       <View style={styles.inputArea}>
         <TransactionAddressInput
           testID={testID}
@@ -152,11 +159,15 @@ export const TransactionAddressScreen = observer(() => {
         testID={`${testID}_next`}
       />
       <Spacer height={safeAreaBottomInset} />
-    </>
+    </KeyboardSafeArea>
   );
 });
 
 const styles = createTheme({
+  screen: {
+    flex: 1,
+    paddingHorizontal: 20,
+  },
   inputArea: {
     flexDirection: 'row',
     justifyContent: 'space-between',
