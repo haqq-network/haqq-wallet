@@ -9,6 +9,7 @@ import {createTheme} from '@app/helpers';
 import {I18N, getText} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
+import {Balance} from '@app/services/balance';
 
 import {TransactionAmountInputFromProps} from './transaction-amount.types';
 
@@ -75,7 +76,12 @@ export const TransactionAmountInputFrom = observer(
         <Text
           i18n={I18N.approximatelyFiatAmount}
           i18params={{
-            fiat: availableAmount.toFiat(),
+            fiat:
+              new Balance(
+                Number(fromAmount ?? 0),
+                provider?.decimals,
+                provider?.denom,
+              ).toFiat() || '0',
           }}
           color={Color.textBase2}
         />
