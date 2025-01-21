@@ -25,16 +25,12 @@ class AppStore {
     makePersistable(this, {
       name: this.constructor.name,
       properties: [
-        // @ts-ignore
-        '_isOnboarded',
+        'isOnboarded',
         'isDeveloperModeEnabled',
         'isTesterModeEnabled',
-        // @ts-ignore
-        '_networkLoggerEnabled',
-        // @ts-ignore
-        '_testnetsEnabledForAllNetworks',
-        // @ts-ignore
-        '_networkLogsCacheSize',
+        'networkLoggerEnabled',
+        'testnetsEnabledForAllNetworks',
+        'networkLogsCacheSize',
       ],
       storage,
     });
