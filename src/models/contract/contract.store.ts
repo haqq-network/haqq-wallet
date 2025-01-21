@@ -68,10 +68,6 @@ class Contract {
     }
   };
 
-  get data() {
-    return this._data;
-  }
-
   /**
    * Fetch contract information and update this._data with it
    *
@@ -86,13 +82,24 @@ class Contract {
     let contract: IndexerContract | null = null;
 
     if (!chainId) {
-      const headers = Indexer.instance.getProvidersHeader(
-        [contractAddress],
-        Provider.getById(ALL_NETWORKS_ID),
+      // Check already fetched contracts
+      const fetchedContractFlatMap = Object.entries(this._data).flatMap(
+        ([_, v]) => Object.entries(v).flatMap(([__, c]) => c),
       );
-      const contracts = await Indexer.instance.getAddresses(headers);
-      const contractFlatMap = Object.entries(contracts).flatMap(([_, v]) => v);
-      contract = contractFlatMap?.find(t => t.name) ?? null;
+      contract = fetchedContractFlatMap?.find(t => t.name) ?? null;
+
+      // If fetched contract doesn't exists than fetch and find contract from all chains
+      if (!contract) {
+        const headers = Indexer.instance.getProvidersHeader(
+          [contractAddress],
+          Provider.getById(ALL_NETWORKS_ID),
+        );
+        const contracts = await Indexer.instance.getAddresses(headers);
+        const contractFlatMap = Object.entries(contracts).flatMap(
+          ([_, v]) => v,
+        );
+        contract = contractFlatMap?.find(t => t.name) ?? null;
+      }
     } else {
       contract = this._data[chainId][contractAddress] ?? null;
       if (!contract) {
