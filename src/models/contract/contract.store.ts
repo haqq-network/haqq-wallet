@@ -1,6 +1,7 @@
 import {makeAutoObservable, runInAction} from 'mobx';
 import {makePersistable} from 'mobx-persist-store';
 
+import {AddressUtils} from '@app/helpers/address-utils';
 import {Indexer, IndexerAddressesResponse} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
 import {ChainId} from '@app/types';
@@ -11,6 +12,17 @@ import {ALL_NETWORKS_ID, Provider} from '../provider';
 
 class Contract {
   _data: ContractStoreData = {};
+
+  private _searchContract = (contractAddress: string) => {
+    const fetchedContractFlatMap = Object.entries(this._data).flatMap(
+      ([_, v]) => Object.entries(v).flatMap(([__, c]) => c),
+    );
+    return (
+      fetchedContractFlatMap?.find(t =>
+        AddressUtils.equals(t.id, contractAddress),
+      ) ?? null
+    );
+  };
 
   constructor(shouldSkipPersisting: boolean = false) {
     makeAutoObservable(this);
@@ -83,10 +95,7 @@ class Contract {
 
     if (!chainId) {
       // Check already fetched contracts
-      const fetchedContractFlatMap = Object.entries(this._data).flatMap(
-        ([_, v]) => Object.entries(v).flatMap(([__, c]) => c),
-      );
-      contract = fetchedContractFlatMap?.find(t => t.name) ?? null;
+      contract = this._searchContract(contractAddress);
 
       // If fetched contract doesn't exists than fetch and find contract from all chains
       if (!contract) {
