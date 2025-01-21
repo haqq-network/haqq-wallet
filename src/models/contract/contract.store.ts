@@ -50,7 +50,7 @@ class Contract {
           const reducedContracts = data.reduce(
             (prev, contract) => ({
               ...prev,
-              [contract.eth_address]: contract,
+              [contract.id]: contract,
             }),
             {} as Record<string, IndexerContract>,
           );
