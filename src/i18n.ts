@@ -1038,6 +1038,8 @@ export enum I18N {
   settingsSecurityRewriteCloudBackupDescription = 'settingsSecurityRewriteCloudBackupDescription',
   settingsSecurityRewriteCloudBackupNoWallet = 'settingsSecurityRewriteCloudBackupNoWallet',
   networkLoggerTitle = 'networkLoggerTitle',
+  transactionIBCSendTitle = 'transactionIBCSendTitle',
+  transactionIBCReceiveTitle = 'transactionIBCReceiveTitle',
 }
 
 const defaultTranslation = {en};

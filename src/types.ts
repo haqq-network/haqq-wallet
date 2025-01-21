@@ -1826,6 +1826,48 @@ export type IndexerTxMsgEventTx = {
   txId: string;
 };
 
+export type IbcRecvPacket = {
+  amount: string;
+  contract_address: string;
+  denom: string;
+  receiver: string;
+  sender: string;
+};
+
+/**
+ * Represents a message received packet in the IBC core channel.
+ *
+ * @property {IndexerTxMsgType.msgIbcCoreChannelV1MsgRecvPacket} type - The type of the message.
+ * @property {string} packet - A base64 encoded JSON string containing the packet details.
+ * The decoded JSON string has the following structure:
+ * ```json
+ * {
+ *   "amount": "2663",
+ *   "contract_address": "haqq1lg7z9srfh92k5je00m8paca5v7gf7jry8hj08z",
+ *   "denom": "ibc/A4DB47A9D3CF9A068D454513891B526702455D3EF08FB9EB558C561F9DC2B701",
+ *   "receiver": "haqq10msrwkss4nrapc7d78ppe9qfheafmlmmrtgqvq",
+ *   "sender": "cosmos1c7hlqfl5a3tz38dwrhc03gzcyv7wnj8003wema"
+ * }
+ * ```
+ * @property {string} signer - The signer of the message.
+ */
+export type IndexerTxMsgIbcCoreChannelV1MsgRecvPacket = {
+  type: IndexerTxMsgType.msgIbcCoreChannelV1MsgRecvPacket;
+  packet: string; // base64 encoded json string
+  signer: string;
+};
+
+export type IndexerTxMsgIbcApplicationsTransferV1MsgTransfer = {
+  type: IndexerTxMsgType.msgIbcApplicationsTransferV1MsgTransfer;
+  amount: {
+    amount: string;
+    denom: string; // ibc/00000000000000000
+  };
+  receiver: string;
+  sender: string;
+  contract_address: string;
+};
+
 export type IndexerTxMsgProtoTx = {
   type: IndexerTxMsgType.msgProtoTx;
   transferContract?: {
@@ -1867,6 +1909,8 @@ export enum IndexerTxMsgType {
   msgEthereumApprovalTx = 'msgEthereumApprovalTx',
   msgProtoTx = 'msgProtoTx',
   msgEventTx = 'msgEventTx',
+  msgIbcCoreChannelV1MsgRecvPacket = 'msgIbcCoreChannelV1MsgRecvPacket', // IBC incoming transaction (receive)
+  msgIbcApplicationsTransferV1MsgTransfer = 'msgIbcApplicationsTransferV1MsgTransfer', // IBC outgoing transaction (send)
 }
 
 export type IndexerTxMsgUnion =
@@ -1889,7 +1933,9 @@ export type IndexerTxMsgUnion =
   | {msg: IndexerTxMsgEditValidatorTx}
   | {msg: IndexerTxMsgApproval}
   | {msg: IndexerTxMsgProtoTx}
-  | {msg: IndexerTxMsgEventTx};
+  | {msg: IndexerTxMsgEventTx}
+  | {msg: IndexerTxMsgIbcCoreChannelV1MsgRecvPacket}
+  | {msg: IndexerTxMsgIbcApplicationsTransferV1MsgTransfer};
 
 export enum IndexerTransactionStatus {
   inProgress = -1,
