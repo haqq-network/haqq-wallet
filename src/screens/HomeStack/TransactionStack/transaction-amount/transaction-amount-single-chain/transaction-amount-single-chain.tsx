@@ -3,8 +3,14 @@ import {useState} from 'react';
 import {observer} from 'mobx-react';
 import {View} from 'react-native';
 
-import {KeyboardSafeArea, Spacer} from '@app/components/ui';
+import {
+  Button,
+  ButtonVariant,
+  KeyboardSafeArea,
+  Spacer,
+} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
+import {I18N} from '@app/i18n';
 
 import {TransactionAmountSingleChainDivider} from './transaction-amount-single-chain-divider';
 
@@ -17,7 +23,7 @@ import {
 import {TransactionAmountInputFrom} from '../transaction-amount-input-from';
 
 export const TransactionAmountSingleChain = observer(() => {
-  const {fromAsset, toAsset} = TransactionStore;
+  const {fromAmount, fromAsset, toAsset} = TransactionStore;
 
   const [error, setError] = useState('');
 
@@ -39,6 +45,13 @@ export const TransactionAmountSingleChain = observer(() => {
           <TransactionAmountCoin asset={toAsset} />
         </View>
       </Spacer>
+      <Button
+        disabled={Boolean(error || !fromAmount)}
+        variant={ButtonVariant.contained}
+        i18n={I18N.transactionSumPreview}
+        onPress={() => {}}
+        style={styles.submit}
+      />
     </KeyboardSafeArea>
   );
 });
@@ -51,5 +64,8 @@ const styles = createTheme({
   directionContainer: {
     flexDirection: 'row',
     alignSelf: 'center',
+  },
+  submit: {
+    marginVertical: 16,
   },
 });

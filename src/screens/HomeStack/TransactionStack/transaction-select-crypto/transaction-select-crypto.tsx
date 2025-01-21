@@ -50,11 +50,19 @@ export const TransactionSelectCryptoScreen = observer(() => {
           Token.tokens[wallet.address]?.filter(item => {
             const showToken =
               !!item.is_in_white_list && !item.is_erc721 && !item.is_erc1155;
+
+            if (Provider.selectedProvider.isTestnet) {
+              return (
+                showToken &&
+                item.chain_id === Provider.selectedProvider.ethChainId
+              );
+            }
+
             if (networkProvider.ethChainId === ALL_NETWORKS_CHAIN_ID) {
               return showToken;
-            } else {
-              return showToken && item.chain_id === networkProvider.ethChainId;
             }
+
+            return showToken && item.chain_id === networkProvider.ethChainId;
           }) ?? [],
       ),
     [
@@ -92,10 +100,12 @@ export const TransactionSelectCryptoScreen = observer(() => {
           assetType={assetType}
           onChange={setAssetType}
         />
-        <TransactionSelectCryptoSelectNetwork
-          selectedProvider={networkProvider}
-          onChange={setNetworkProvider}
-        />
+        {Provider.selectedProvider.isMainnet && (
+          <TransactionSelectCryptoSelectNetwork
+            selectedProvider={networkProvider}
+            onChange={setNetworkProvider}
+          />
+        )}
       </View>
     ),
     [searchValue, assetType, networkProvider],
