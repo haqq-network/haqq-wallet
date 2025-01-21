@@ -5,7 +5,7 @@ import {Provider} from '@app/models/provider';
 import {Wallet, WalletModel} from '@app/models/wallet';
 import {navigator} from '@app/navigator';
 import {HomeStackRoutes} from '@app/route-types';
-import {Eventable} from '@app/types';
+import {ChainId, Eventable} from '@app/types';
 
 import {getWindowHeight} from './scaling-utils';
 
@@ -21,7 +21,7 @@ export interface AwaitForWalletParams {
   initialAddress?: string;
   autoSelectWallet?: boolean;
   suggestedAddress?: string;
-  chainId?: number;
+  chainId?: ChainId;
   eventSuffix?: string | number;
   hideBalance?: boolean;
 }

@@ -10,13 +10,14 @@ import {I18N} from '@app/i18n';
 import {AppStore} from '@app/models/app';
 import {Provider} from '@app/models/provider';
 import {ProvidersStackParamList, ProvidersStackRoutes} from '@app/route-types';
+import {ChainId} from '@app/types';
 
 export const SettingsProvidersScreen = observer(() => {
   const navigation = useTypedNavigation<ProvidersStackParamList>();
   const providers = Provider.getAll();
 
   const onSelectProvider = useCallback(
-    (chainId: number) => {
+    (chainId: ChainId) => {
       navigation.navigate(ProvidersStackRoutes.SettingsProviderForm, {
         id: chainId,
       });

@@ -221,9 +221,8 @@ export class TronNetwork {
 
       const resources = await tronWeb.trx.getAccountResources(tronAddress);
       const freeNetRemaining =
-        (resources.freeNetLimit ?? 0) - (resources.freeNetUsed ?? 0) ?? 0;
-      const netRemaining =
-        (resources.NetLimit ?? 0) - (resources.NetUsed ?? 0) ?? 0;
+        (resources.freeNetLimit ?? 0) - (resources.freeNetUsed ?? 0);
+      const netRemaining = (resources.NetLimit ?? 0) - (resources.NetUsed ?? 0);
 
       return {
         freeNetUsed: resources.freeNetUsed || 0,

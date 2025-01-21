@@ -145,7 +145,7 @@ export const TransactionSumScreen = observer(() => {
 
         if (provider.isTron) {
           // fee can be zero for TRON if user has enough bandwidth (freezed TRX)
-          successCondition = !!estimate?.expectedFee ?? false;
+          successCondition = !!estimate?.expectedFee;
         } else {
           successCondition = estimate?.expectedFee.isPositive() ?? false;
         }

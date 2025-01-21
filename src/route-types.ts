@@ -317,7 +317,7 @@ export enum ProvidersStackRoutes {
 export type ProvidersStackParamList = {
   [ProvidersStackRoutes.SettingsProviders]: undefined;
   [ProvidersStackRoutes.SettingsProviderForm]: {
-    id?: number;
+    id?: ChainId;
     data?: Partial<ProviderModel>;
   };
 };
@@ -455,7 +455,7 @@ export type HomeStackParamList = {
     wallets: WalletModel[];
     title: string;
     initialAddress?: string;
-    chainId?: number;
+    chainId?: ChainId;
   };
   [HomeStackRoutes.TotalValueInfo]?: {
     tab?: TotalValueTabNames;

@@ -22,7 +22,7 @@ import {VariablesBool} from '@app/models/variables-bool';
 import {VariablesString} from '@app/models/variables-string';
 import {WalletConnectSessionMetadata} from '@app/models/wallet-connect-session-metadata';
 import {message as sendMessage, sendNotification} from '@app/services/toast';
-import {ModalType} from '@app/types';
+import {ChainId, ModalType} from '@app/types';
 import {filterWalletConnectSessionsByAddress, isError, sleep} from '@app/utils';
 
 import {AppUtils} from './app-utils';
@@ -176,7 +176,7 @@ export class WalletConnect extends Initializable {
     }
   }
 
-  public async emitChainChange(chainId: number | `${number}`, topic: string) {
+  public async emitChainChange(chainId: ChainId, topic: string) {
     try {
       await this._client?.emitSessionEvent({
         topic,
