@@ -14,7 +14,7 @@ import {TransactionStore} from '../transaction-store';
 
 export const TransactionAmountScreen = observer(() => {
   const navigation = useTypedNavigation<TransactionStackParamList>();
-  const {fromChainId, toChainId} = TransactionStore;
+  const {fromChainId, toChainId, fromAsset, toAsset} = TransactionStore;
 
   useAndroidBackHandler(() => {
     navigation.goBack();
@@ -27,12 +27,11 @@ export const TransactionAmountScreen = observer(() => {
     });
   }, []);
 
-  switch (fromChainId) {
-    case toChainId:
-      return <TransactionAmountSingleChain />;
-    default:
-      return <TransactionAmountCrossChain />;
+  if (fromChainId === toChainId && fromAsset!.id === toAsset!.id) {
+    return <TransactionAmountSingleChain />;
   }
+
+  return <TransactionAmountCrossChain />;
 
   // const event = useMemo(() => generateUUID(), []);
   // const [fee, setFee] = useState<Balance | null>(null);

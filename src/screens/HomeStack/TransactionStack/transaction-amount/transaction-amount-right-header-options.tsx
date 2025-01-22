@@ -7,6 +7,7 @@ import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
 import {Spacer} from '@app/components/ui';
 import {WalletRow, WalletRowTypes} from '@app/components/wallet-row';
 import {awaitForWallet, createTheme} from '@app/helpers';
+import {AddressUtils} from '@app/helpers/address-utils';
 import {I18N} from '@app/i18n';
 import {Wallet} from '@app/models/wallet';
 import {HeaderButtonProps} from '@app/types';
@@ -19,11 +20,14 @@ type TransactionAmountRightHeaderOptionsProps = HeaderButtonProps & {
 
 export const TransactionAmountRightHeaderOptions = observer(
   (props: TransactionAmountRightHeaderOptionsProps) => {
-    const {wallet, fromChainId} = TransactionStore;
+    const {wallet, fromChainId, toAddress} = TransactionStore;
 
     const onPressWallet = useCallback(async (accountId: string) => {
       const address = await awaitForWallet({
-        wallets: Wallet.getAllVisible(),
+        // If user send coins into his own wallet than this wallet must be excleded from list
+        wallets: Wallet.getAllVisible().filter(
+          w => !AddressUtils.equals(w.address, toAddress),
+        ),
         title: I18N.selectAccount,
         autoSelectWallet: false,
         initialAddress: accountId,

@@ -21,14 +21,20 @@ export const TransactionAmountInputFrom = observer(
     error,
     setError,
   }: TransactionAmountInputFromProps) => {
-    const {fromAmount} = TransactionStore;
+    const {fromAmount, fromAsset} = TransactionStore;
     const {wallet, fromChainId} = TransactionStore;
     const provider = Provider.getByEthChainId(fromChainId!);
     const balances = Wallet.getBalancesByAddressList([wallet!], provider);
-    const availableAmount = useMemo(
-      () => balances[wallet.address].available,
-      [balances, wallet.address],
-    );
+    const availableAmount = useMemo(() => {
+      return (
+        fromAsset?.value ||
+        new Balance(
+          0,
+          fromAsset?.decimals ?? undefined,
+          fromAsset?.symbol ?? undefined,
+        )
+      );
+    }, [balances, wallet.address]);
 
     const handleChangeText = useCallback(
       (value: string) => {
@@ -45,7 +51,7 @@ export const TransactionAmountInputFrom = observer(
             }),
           );
         } else {
-          error && setError('');
+          Number(v) <= availableAmount.toFloat() && error && setError('');
         }
 
         TransactionStore.fromAmount = v;
@@ -79,8 +85,8 @@ export const TransactionAmountInputFrom = observer(
             fiat:
               new Balance(
                 Number(fromAmount ?? 0),
-                provider?.decimals,
-                provider?.denom,
+                fromAsset?.decimals ?? undefined,
+                fromAsset?.symbol ?? undefined,
               ).toFiat() || '0',
           }}
           color={Color.textBase2}
