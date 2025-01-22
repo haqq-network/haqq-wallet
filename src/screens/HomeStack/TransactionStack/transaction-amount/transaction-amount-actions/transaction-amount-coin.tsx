@@ -1,10 +1,6 @@
-import {toJS} from 'mobx';
-import {Image, View} from 'react-native';
-
-import {Color} from '@app/colors';
+import {TokenIcon} from '@app/components';
 import {Text, TextVariant} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {Provider} from '@app/models/provider';
 
 import {ActionsContainer} from './actions-container';
 import {TransactionAmountCoinProps} from './actions.types';
@@ -14,15 +10,9 @@ export const TransactionAmountCoin = ({asset}: TransactionAmountCoinProps) => {
     return null;
   }
 
-  const providerIcon = Provider.getByEthChainId(asset.chain_id)?.icon;
-  const providerIconSource = providerIcon ? {uri: providerIcon} : undefined;
-
   return (
     <ActionsContainer>
-      <View style={styles.imageContainer}>
-        <Image source={toJS(asset.image)} style={styles.image} />
-        <Image source={providerIconSource} style={styles.icon} />
-      </View>
+      <TokenIcon asset={asset} width={38} height={38} />
       <Text variant={TextVariant.t9} style={styles.coinName}>
         {asset.symbol}
       </Text>
@@ -31,23 +21,6 @@ export const TransactionAmountCoin = ({asset}: TransactionAmountCoinProps) => {
 };
 
 const styles = createTheme({
-  imageContainer: {
-    position: 'absolute',
-  },
-  image: {
-    width: 38,
-    height: 38,
-  },
-  icon: {
-    width: 18,
-    height: 18,
-    borderRadius: 9,
-    borderWidth: 2,
-    borderColor: Color.bg1,
-    position: 'absolute',
-    top: 0,
-    right: -7,
-  },
   coinName: {
     marginLeft: 38,
   },

@@ -889,6 +889,7 @@
   "tokensSortingByAvailable": "By Available",
   "tokensWidgetTitle": "Tokens",
   "tokensZeroBalance": " Zero Balance",
+  "totalAmountFrom": "Total Amount from",
   "totalAvailable": "Total: {{count}}",
   "totalValueAccount": "Total balance",
   "totalValueScreenTitle": "Transactions",

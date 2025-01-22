@@ -425,12 +425,6 @@ export type RootStackParamList = {
     nft: NftItem;
     fee?: number;
   };
-  transactionLedger: {
-    from: string;
-    to: string;
-    amount: Balance;
-    fee?: Balance;
-  };
   transactionSumAddress: {
     to: string;
     event: string;

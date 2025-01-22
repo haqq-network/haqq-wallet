@@ -17,10 +17,8 @@ import {
 } from '@app/route-types';
 import {TransactionAccountScreen} from '@app/screens/HomeStack/TransactionStack/transaction-account';
 import {TransactionAddressScreen} from '@app/screens/HomeStack/TransactionStack/transaction-address';
-import {TransactionConfirmationScreen} from '@app/screens/HomeStack/TransactionStack/transaction-confirmation';
 import {TransactionContactEditScreen} from '@app/screens/HomeStack/TransactionStack/transaction-contact-edit';
 import {TransactionFinishScreen} from '@app/screens/HomeStack/TransactionStack/transaction-finish';
-import {TransactionLedgerScreen} from '@app/screens/HomeStack/TransactionStack/transaction-ledger';
 import {TransactionNftConfirmationScreen} from '@app/screens/HomeStack/TransactionStack/transaction-nft-confirmation';
 import {TransactionNftFinishScreen} from '@app/screens/HomeStack/TransactionStack/transaction-nft-finish';
 import {TransactionSumAddressScreen} from '@app/screens/HomeStack/TransactionStack/transaction-sum-address';
@@ -29,6 +27,7 @@ import {ScreenOptionType, WalletType} from '@app/types';
 
 import {TransactionAmountScreen} from './transaction-amount';
 import {TransactionNetworkSelectScreen} from './transaction-network-select';
+import {TransactionPreviewScreen} from './transaction-preview';
 import {TransactionSelectCryptoScreen} from './transaction-select-crypto';
 import {TransactionStoreContainer} from './transaction-store';
 
@@ -103,8 +102,8 @@ export const TransactionStack = memo(() => {
           }}
         />
         <Stack.Screen
-          name={TransactionStackRoutes.TransactionConfirmation}
-          component={themeUpdaterHOC(TransactionConfirmationScreen)}
+          name={TransactionStackRoutes.TransactionPreview}
+          component={themeUpdaterHOC(TransactionPreviewScreen)}
           options={{
             title: getText(I18N.transactionConfirmationPreviewTitle),
           }}
@@ -133,13 +132,6 @@ export const TransactionStack = memo(() => {
           options={{
             title: getText(I18N.transactionAccountSendFundsTitle),
             ...hideBack,
-          }}
-        />
-        <Stack.Screen
-          name={TransactionStackRoutes.TransactionLedger}
-          component={themeUpdaterHOC(TransactionLedgerScreen)}
-          options={{
-            title: getText(I18N.transactionLedgerConfirmationTitle),
           }}
         />
         <Stack.Screen

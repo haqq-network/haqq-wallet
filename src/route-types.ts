@@ -33,7 +33,6 @@ import {WalletConnectApproveConnectionEvent} from '@app/types/wallet-connect';
 
 import {Fee} from './models/fee';
 import {SecureValue} from './modifiers/secure-value';
-import {CalculatedFees} from './services/eth-network/types';
 import {SushiPoolEstimateResponse} from './services/indexer';
 
 export type AnyRouteFromParent =
@@ -536,12 +535,11 @@ export enum TransactionStackRoutes {
   TransactionNetworkSelect = 'transactionNetworkSelect',
   TransactionSelectCrypto = 'transactionSelectCrypto',
   TransactionAmount = 'transactionAmount',
-  TransactionConfirmation = 'transactionConfirmation',
+  TransactionPreview = 'transactionPreview',
   TransactionNftConfirmation = 'transactionNftConfirmation',
   TransactionFinish = 'transactionFinish',
   TransactionNftFinish = 'transactionNftFinish',
   TransactionAccount = 'transactionAccount',
-  TransactionLedger = 'transactionLedger',
   TransactionSumAddress = 'transactionSumAddress',
   TransactionContactEdit = 'transactionContactEdit',
 }
@@ -560,14 +558,7 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
     | undefined;
   [TransactionStackRoutes.TransactionSelectCrypto]: undefined;
   [TransactionStackRoutes.TransactionAmount]: undefined;
-  [TransactionStackRoutes.TransactionConfirmation]: {
-    from: string;
-    to: string;
-    amount: Balance;
-    estimatedFee?: CalculatedFees;
-    calculatedFees?: CalculatedFees;
-    token: IToken;
-  };
+  [TransactionStackRoutes.TransactionPreview]: undefined;
   [TransactionStackRoutes.TransactionFinish]: {
     fee: Fee;
     transaction: TransactionResponse;
@@ -591,12 +582,6 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
   [TransactionStackRoutes.TransactionAccount]: {
     from: string;
     to: string;
-  };
-  [TransactionStackRoutes.TransactionLedger]: {
-    from: string;
-    to: string;
-    amount: number;
-    fee?: Balance;
   };
   [TransactionStackRoutes.TransactionSumAddress]: {
     to: string;

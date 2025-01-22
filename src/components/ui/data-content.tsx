@@ -1,9 +1,14 @@
 import React from 'react';
 
-import {TextProps, View, ViewStyle} from 'react-native';
+import {View, ViewStyle} from 'react-native';
 
 import {Color} from '@app/colors';
-import {Text, TextPosition, TextVariant} from '@app/components/ui/text';
+import {
+  Text,
+  TextPosition,
+  TextProps,
+  TextVariant,
+} from '@app/components/ui/text';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
@@ -21,7 +26,7 @@ export type DataContentProps = {
   titleI18nParams?: Record<string, string>;
   onPress?: () => void;
   bold?: boolean;
-  subtitleProps?: TextProps;
+  subtitleProps?: Partial<TextProps>;
 };
 export const DataContent = ({
   title,
@@ -45,8 +50,8 @@ export const DataContent = ({
         !bold && styles.container,
         reversed && styles.reverse,
         short && styles.short,
-        style,
         styles.flexOne,
+        style,
       ]}>
       <View style={styles.titleContainer}>
         <Text
