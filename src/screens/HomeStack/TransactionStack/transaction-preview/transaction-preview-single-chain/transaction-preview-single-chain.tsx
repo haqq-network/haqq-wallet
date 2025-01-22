@@ -1,8 +1,10 @@
+import {useCallback} from 'react';
+
 import {observer} from 'mobx-react';
-import {View} from 'react-native';
+import {ScrollView, View} from 'react-native';
 
 import {AddressHighlight, TokenIcon} from '@app/components';
-import {KeyboardSafeArea, Spacer, TextVariant} from '@app/components/ui';
+import {Button, ButtonVariant, Spacer, TextVariant} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
@@ -14,36 +16,49 @@ import {TransactionStore} from '../../transaction-store';
 export const TransactionPreviewSingleChain = observer(() => {
   const {fromAsset, toAddress} = TransactionStore;
 
+  const onSendPress = useCallback(() => {}, []);
+
   return (
-    <KeyboardSafeArea style={styles.screen}>
-      <TokenIcon
-        asset={fromAsset}
-        width={64}
-        height={64}
-        viewStyle={styles.icon}
-      />
-      <TransactionPreviewSingleChainFrom />
-      <Spacer height={16} />
-      <View style={styles.sendToContainer}>
-        <AddressHighlight
-          title={I18N.transactionAddressSendTo}
-          address={toAddress}
-          centered
-          subtitleProps={{
-            variant: TextVariant.t11,
-          }}
+    <View style={styles.screen}>
+      <ScrollView contentContainerStyle={styles.scrollView}>
+        <TokenIcon
+          asset={fromAsset}
+          width={64}
+          height={64}
+          viewStyle={styles.icon}
         />
-      </View>
-      <Spacer height={24} />
-      <TransactionPreviewSingleChainInfo />
-    </KeyboardSafeArea>
+        <TransactionPreviewSingleChainFrom />
+        <Spacer height={16} />
+        <View style={styles.sendToContainer}>
+          <AddressHighlight
+            title={I18N.transactionAddressSendTo}
+            address={toAddress}
+            centered
+            subtitleProps={{
+              variant: TextVariant.t11,
+            }}
+          />
+        </View>
+        <Spacer height={24} />
+        <TransactionPreviewSingleChainInfo />
+      </ScrollView>
+      <Button
+        variant={ButtonVariant.contained}
+        i18n={I18N.transactionSumSendTitle}
+        onPress={onSendPress}
+        style={styles.submit}
+      />
+    </View>
   );
 });
 
 const styles = createTheme({
   screen: {
-    flex: 1,
     paddingHorizontal: 20,
+    flex: 1,
+    paddingBottom: 16,
+  },
+  scrollView: {
     alignItems: 'center',
   },
   icon: {
