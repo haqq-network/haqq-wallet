@@ -1,2 +1,2 @@
-export * from './nft-store';
-export * from './nft-types';
+export * from './nft.store';
+export * from './nft.types';

@@ -5,7 +5,7 @@ import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
 import {Socket} from '@app/models/socket';
 import {IWalletModel, Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
-import {Indexer, IndexerAddressesResponse} from '@app/services/indexer';
+import {Indexer} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
 import {
   AddressEthereum,
@@ -20,6 +20,7 @@ import {
 import {RPCMessage} from '@app/types/rpc';
 import {createAsyncTask} from '@app/utils';
 
+import {Contract} from './contract';
 import {Provider, ProviderModel} from './provider';
 
 const logger = Logger.create('TokensStore', {
@@ -241,38 +242,28 @@ class TokensStore implements MobXStore<IToken> {
    */
   private _safeLoadUnknownToken = createAsyncTask(async (id: string) => {
     try {
-      if (this.fetchedUnknownTokens[id]) {
-        return;
-      }
-
-      const headers = Indexer.instance.getProvidersHeader([id]);
-      const contracts = await Indexer.instance.getAddresses(headers);
-      const tokensForAnyChains = Object.entries(contracts).flatMap(
-        ([chain_id, v]) => v.map(c => ({...c, chain_id: Number(chain_id)})),
-      ) as (IContract & {chain_id: number})[];
-
-      runInAction(() => {
-        this.fetchedUnknownTokens[id] = true;
-      });
-
-      // find token with name, symbol, decimals and is_erc20
-      const token = tokensForAnyChains?.find(
-        t => t.name && (t.is_in_white_list || t.is_erc20),
-      );
-
-      if (token) {
+      if (!this.fetchedUnknownTokens[id]) {
         runInAction(() => {
-          this.data[AddressUtils.toEth(token.id)] = {
-            ...token,
-            contract_created_at: token.created_at,
-            contract_updated_at: token.updated_at,
-            value: new Balance('0x0', token.decimals!, token.symbol!),
-            chain_id: token.chain_id!,
-            image: token.icon
-              ? {uri: token.icon}
-              : require('@assets/images/empty-icon.png'),
-          };
+          this.fetchedUnknownTokens[id] = true;
         });
+
+        // find token with name, symbol, decimals and is_erc20
+        const contract = await Contract.getById(id);
+
+        if (contract) {
+          runInAction(() => {
+            this.data[AddressUtils.toEth(contract.id)] = {
+              ...contract,
+              contract_created_at: contract.created_at,
+              contract_updated_at: contract.updated_at,
+              value: new Balance('0x0', contract.decimals!, contract.symbol!),
+              chain_id: contract.chain_id!,
+              image: contract.icon
+                ? {uri: contract.icon}
+                : require('@assets/images/empty-icon.png'),
+            };
+          });
+        }
       }
     } catch (e) {
       Logger.error('TokensStore: _safeLoadUnknownToken: error', {
@@ -332,19 +323,22 @@ class TokensStore implements MobXStore<IToken> {
       .filter(p => p.isTron)
       .map(p => p.ethChainId as ChainId);
 
-    const contracts = await Indexer.instance.getAddresses(
-      updates.tokens.reduce(
-        (prev, cur) => {
-          const tokens = Array.from(
-            new Set([...(prev[cur.chain_id] || []), cur.contract]),
-          );
-          return {
-            ...prev,
-            [cur.chain_id]: tokens,
-          };
-        },
-        {} as Record<ChainId, string[]>,
-      ),
+    const contractMap = updates.tokens.reduce(
+      (prev, cur) => {
+        const tokens = Array.from(
+          new Set([...(prev[cur.chain_id] || []), cur.contract]),
+        );
+        return {
+          ...prev,
+          [cur.chain_id]: tokens,
+        };
+      },
+      {} as Record<ChainId, string[]>,
+    );
+    await Promise.allSettled(
+      Object.entries(contractMap).map(([chainId, contracts]) => {
+        Contract.fetch(contracts, Number(chainId));
+      }),
     );
 
     for await (const t of updates.tokens) {
@@ -354,7 +348,7 @@ class TokensStore implements MobXStore<IToken> {
           continue;
         }
 
-        const token = await this.parseIToken(t, contracts);
+        const token = await this.parseIToken(t);
 
         if (!token) {
           logger.error('fetchTokens: skipping token', {
@@ -477,46 +471,35 @@ class TokensStore implements MobXStore<IToken> {
     };
   };
 
-  private parseIToken = async (
-    token: IndexerToken,
-    contracts: IndexerAddressesResponse,
-  ) => {
-    const contratsForChainId = contracts[token.chain_id] || [];
-    const contract = contratsForChainId.find(c => c.id === token.contract);
-
-    if (!contract) {
-      logger.error('parseIToken: Contract not found', {
-        token,
-        contratsForChainId,
-      });
-      return null;
+  private parseIToken = async (token: IndexerToken): Promise<IToken | null> => {
+    const contract = await Contract.getById(token.contract, token.chain_id);
+    if (contract) {
+      return {
+        id: AddressUtils.toHaqq(contract.id),
+        contract_created_at: contract.created_at,
+        contract_updated_at: contract.updated_at,
+        value: new Balance(
+          token.value,
+          contract.decimals || Provider.selectedProvider.decimals,
+          contract.symbol || Provider.selectedProvider.denom,
+        ),
+        decimals: contract.decimals,
+        is_erc20: contract.is_erc20,
+        is_erc721: contract.is_erc721,
+        is_erc1155: contract.is_erc1155,
+        is_in_white_list: contract.is_in_white_list,
+        name: contract.name,
+        symbol: contract.symbol,
+        created_at: token.created_at,
+        updated_at: token.updated_at,
+        chain_id: token.chain_id,
+        image: contract.icon
+          ? {uri: contract.icon}
+          : require('@assets/images/empty-icon.png'),
+      } as IToken;
     }
 
-    const result: IToken = {
-      id: AddressUtils.toHaqq(contract.id),
-      contract_created_at: contract.created_at,
-      contract_updated_at: contract.updated_at,
-      value: new Balance(
-        token.value,
-        contract.decimals || Provider.selectedProvider.decimals,
-        contract.symbol || Provider.selectedProvider.denom,
-      ),
-      decimals: contract.decimals,
-      is_erc20: contract.is_erc20,
-      is_erc721: contract.is_erc721,
-      is_erc1155: contract.is_erc1155,
-      is_in_white_list: contract.is_in_white_list,
-      name: contract.name,
-      symbol: contract.symbol,
-      created_at: token.created_at,
-      updated_at: token.updated_at,
-      chain_id: token.chain_id,
-      image: contract.icon
-        ? {uri: contract.icon}
-        : require('@assets/images/empty-icon.png'),
-    };
-
-    return result;
+    return null;
   };
 
   onMessage = async (message: RPCMessage) => {
@@ -525,13 +508,7 @@ class TokensStore implements MobXStore<IToken> {
     }
     const tokenData = message.data;
 
-    const contracts = await Indexer.instance.getAddresses({
-      [tokenData.chain_id || Provider.selectedProvider.ethChainId]: [
-        tokenData.contract,
-      ],
-    });
-
-    const token = await this.parseIToken(tokenData, contracts);
+    const token = await this.parseIToken(tokenData);
     if (token) {
       this.update(token.id, token);
     }

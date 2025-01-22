@@ -129,14 +129,14 @@ export class Indexer {
     }
   });
 
-  getAddresses = async (accounts: string[] | Record<ChainId, string[]>) => {
+  getAddresses = async (accountsMap: Record<ChainId, string[]>) => {
     try {
       this.checkIndexerAvailability();
 
       return await jsonrpcRequest<IndexerAddressesResponse>(
         RemoteConfig.get('proxy_server')!,
         'addresses',
-        [accounts],
+        [accountsMap],
       );
     } catch (err) {
       if (err instanceof JSONRPCError) {

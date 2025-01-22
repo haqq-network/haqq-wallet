@@ -5,6 +5,7 @@ import {
   NetworkProviderStage,
   NetworkProviderTypes,
 } from '@app/services/backend';
+import {ChainId} from '@app/types';
 
 import {RemoteProviderConfig} from './provider-config';
 
@@ -52,7 +53,7 @@ export class ProviderModel {
     return this.model.entry_point;
   }
 
-  get ethChainId() {
+  get ethChainId(): ChainId {
     return this.model.chain_id;
   }
 

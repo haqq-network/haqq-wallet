@@ -1569,7 +1569,7 @@ export type IToken = {
   symbol: IContract['symbol'];
   created_at: string;
   updated_at: string;
-  chain_id: number;
+  chain_id: ChainId;
 
   image: ImageSourcePropType;
 };

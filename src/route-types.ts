@@ -316,7 +316,7 @@ export enum ProvidersStackRoutes {
 export type ProvidersStackParamList = {
   [ProvidersStackRoutes.SettingsProviders]: undefined;
   [ProvidersStackRoutes.SettingsProviderForm]: {
-    id?: number;
+    id?: ChainId;
     data?: Partial<ProviderModel>;
   };
 };

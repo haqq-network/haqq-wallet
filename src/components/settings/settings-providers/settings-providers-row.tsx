@@ -13,7 +13,7 @@ import {SettingsProvidersAllNetworksRow} from './settings-providers-all-networks
 export type SettingsProvidersRowProps = {
   item: ProviderModel;
   providerChainId: ChainId;
-  onPress: (providerChainId: number) => void;
+  onPress: (providerChainId: ChainId) => void;
 };
 export const SettingsProvidersRow = ({
   item,
