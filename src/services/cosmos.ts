@@ -99,7 +99,7 @@ export class Cosmos {
 
   get haqqChain(): Chain {
     return {
-      chainId: this._provider.ethChainId,
+      chainId: this._provider.ethChainId as number,
       cosmosChainId: this._provider.cosmosChainId,
     };
   }

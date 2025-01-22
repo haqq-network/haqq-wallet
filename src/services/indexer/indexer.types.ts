@@ -1,3 +1,4 @@
+import {IndexerContract} from '@app/models/contract';
 import {
   AddressCosmosHaqq,
   ChainId,
@@ -29,7 +30,7 @@ export type IndexerUpdatesResponse = {
   rates: RatesResponse;
 };
 
-export type IndexerAddressesResponse = Record<ChainId, IContract[]>;
+export type IndexerAddressesResponse = Record<ChainId, IndexerContract[]>;
 
 export type SushiRoute = {
   fee: number;

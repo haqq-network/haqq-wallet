@@ -7,7 +7,7 @@ import {EthRpcEndpointAvailability} from './eth-rpc-endpoint-availability';
 export async function getRpcProvider(provider: ProviderModel) {
   await EthRpcEndpointAvailability.awaitForInitialization();
   return new ethers.providers.StaticJsonRpcProvider(provider.ethRpcEndpoint, {
-    chainId: provider.ethChainId,
+    chainId: provider.ethChainId as number,
     name: provider.name,
   });
 }

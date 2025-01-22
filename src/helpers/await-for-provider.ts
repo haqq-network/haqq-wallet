@@ -2,14 +2,14 @@ import {app} from '@app/contexts';
 import {showModal} from '@app/helpers/modal';
 import {I18N} from '@app/i18n';
 import {ProviderModel} from '@app/models/provider';
-import {ModalType} from '@app/types';
+import {ChainId, ModalType} from '@app/types';
 
 import {getWindowHeight} from './scaling-utils';
 
 export interface AwaitProviderParams {
   title: I18N;
   providers?: ProviderModel[];
-  initialProviderChainId?: number;
+  initialProviderChainId?: ChainId;
   disableAllNetworksOption?: boolean;
 }
 
