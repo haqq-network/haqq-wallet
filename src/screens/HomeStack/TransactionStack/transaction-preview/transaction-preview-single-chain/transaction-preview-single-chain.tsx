@@ -7,6 +7,7 @@ import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
 
 import {TransactionPreviewSingleChainFrom} from './transaction-preview-single-chain-from';
+import {TransactionPreviewSingleChainInfo} from './transaction-preview-single-chain-info';
 
 import {TransactionStore} from '../../transaction-store';
 
@@ -33,6 +34,8 @@ export const TransactionPreviewSingleChain = observer(() => {
           }}
         />
       </View>
+      <Spacer height={24} />
+      <TransactionPreviewSingleChainInfo />
     </KeyboardSafeArea>
   );
 });
