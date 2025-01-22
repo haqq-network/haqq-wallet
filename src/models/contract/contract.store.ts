@@ -92,10 +92,11 @@ class Contract {
     chainId?: ChainId,
   ): Promise<IndexerContract | null> => {
     let contract: IndexerContract | null = null;
+    const contractId = AddressUtils.toHaqq(contractAddress);
 
     if (!chainId) {
       // Check already fetched contracts
-      contract = this._searchContract(contractAddress);
+      contract = this._searchContract(contractId);
 
       // If fetched contract doesn't exists than fetch and find contract from all chains
       if (!contract) {
@@ -110,10 +111,10 @@ class Contract {
         contract = contractFlatMap?.find(t => t.name) ?? null;
       }
     } else {
-      contract = this._data[chainId][contractAddress] ?? null;
+      contract = this._data[chainId][contractId] ?? null;
       if (!contract) {
         await this.fetch([contractAddress], chainId);
-        contract = this._data[chainId][contractAddress] ?? null;
+        contract = this._data[chainId][contractId] ?? null;
       }
     }
 

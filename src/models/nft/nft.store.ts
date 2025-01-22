@@ -14,7 +14,6 @@ import {AddressCosmosHaqq} from '@app/types';
 import {RPCMessage} from '@app/types/rpc';
 
 import {Contract, IndexerContract} from '../contract';
-import {ALL_NETWORKS_ID, Provider} from '../provider';
 
 class NftStore {
   data: Record<AddressCosmosHaqq, NftCollection> = {};
@@ -162,7 +161,8 @@ class NftStore {
     this.data = {};
 
     data.forEach(async item => {
-      const contract = await this.getContract(item.address);
+      const contract = await Contract.getById(item.address, item.chain_id);
+
       if (contract) {
         const contractType = contract.is_erc721
           ? ContractType.erc721
@@ -182,16 +182,6 @@ class NftStore {
         });
       }
     });
-  };
-
-  private readonly getContract = async (contractAddress: string) => {
-    const _providerEthChainId = (
-      Provider.selectedProviderId === ALL_NETWORKS_ID
-        ? Provider.defaultProvider
-        : Provider.selectedProvider
-    ).ethChainId;
-
-    return await Contract.getById(contractAddress, _providerEthChainId);
   };
 
   private readonly parseIndexerNft = (
@@ -222,7 +212,10 @@ class NftStore {
       return;
     }
 
-    const contract = await this.getContract(message.data.contract);
+    const contract = await Contract.getById(
+      message.data.contract,
+      message.data.chain_id,
+    );
     this.update(this.parseIndexerNft(message.data, contract));
   };
 
