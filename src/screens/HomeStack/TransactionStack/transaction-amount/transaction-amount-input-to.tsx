@@ -16,7 +16,7 @@ import {TransactionStore} from '../transaction-store';
 
 export const TransactionAmountInputTo = observer(
   ({alignItems = 'center'}: TransactionAmountInputToProps) => {
-    const {toAmount} = TransactionStore;
+    const {toAmount, isCrossChain} = TransactionStore;
     const {wallet, fromChainId} = TransactionStore;
     const provider = Provider.getByEthChainId(fromChainId!);
     const balances = Wallet.getBalancesByAddressList([wallet!], provider);
@@ -30,7 +30,11 @@ export const TransactionAmountInputTo = observer(
       if (isNaN(Number(v))) {
         return;
       }
-      TransactionStore.fromAmount = v;
+      TransactionStore.toAmount = v;
+
+      if (isCrossChain) {
+        TransactionStore.fromAmount = String(Number(v) / 2);
+      }
     }, []);
 
     return (

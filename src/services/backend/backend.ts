@@ -437,9 +437,23 @@ export class Backend {
     }
   }
 
-  fetchCurrencies = async (): Promise<ChangellyCurrency[]> => {
+  fetchCrossChainCurrencies = async (): Promise<ChangellyCurrency[]> => {
     const response = await fetch(
       `${this.getRemoteUrl()}cross-chain-swaps/v1/changelly/currencies/full`,
+      {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+        },
+      },
+    );
+
+    return response.json();
+  };
+
+  fetchCrossChainQuote = async (): Promise<ChangellyCurrency[]> => {
+    const response = await fetch(
+      `${this.getRemoteUrl()}cross-chain-swaps/v1/changelly/quote`,
       {
         method: 'GET',
         headers: {

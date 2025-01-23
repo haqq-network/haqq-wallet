@@ -1,10 +1,13 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 
 import {observer} from 'mobx-react';
 
 import {useTypedNavigation} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
-import {TransactionStackParamList} from '@app/route-types';
+import {
+  TransactionStackParamList,
+  TransactionStackRoutes,
+} from '@app/route-types';
 
 import {TransactionAmountCrossChain} from './transaction-amount-cross-chain';
 import {TransactionAmountRightHeaderOptions} from './transaction-amount-right-header-options';
@@ -14,7 +17,11 @@ import {TransactionStore} from '../transaction-store';
 
 export const TransactionAmountScreen = observer(() => {
   const navigation = useTypedNavigation<TransactionStackParamList>();
-  const {fromChainId, toChainId, fromAsset, toAsset} = TransactionStore;
+  const {isCrossChain} = TransactionStore;
+
+  const onPreviewPress = useCallback(() => {
+    navigation.navigate(TransactionStackRoutes.TransactionPreview);
+  }, []);
 
   useAndroidBackHandler(() => {
     navigation.goBack();
@@ -27,11 +34,11 @@ export const TransactionAmountScreen = observer(() => {
     });
   }, []);
 
-  if (fromChainId === toChainId && fromAsset!.id === toAsset!.id) {
-    return <TransactionAmountSingleChain />;
+  if (isCrossChain) {
+    return <TransactionAmountCrossChain onPreviewPress={onPreviewPress} />;
   }
 
-  return <TransactionAmountCrossChain />;
+  return <TransactionAmountSingleChain onPreviewPress={onPreviewPress} />;
 
   // const event = useMemo(() => generateUUID(), []);
   // const [fee, setFee] = useState<Balance | null>(null);

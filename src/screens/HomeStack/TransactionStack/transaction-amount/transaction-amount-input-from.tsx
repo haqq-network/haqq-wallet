@@ -21,7 +21,7 @@ export const TransactionAmountInputFrom = observer(
     error,
     setError,
   }: TransactionAmountInputFromProps) => {
-    const {fromAmount, fromAsset} = TransactionStore;
+    const {fromAmount, fromAsset, isCrossChain} = TransactionStore;
     const {wallet, fromChainId} = TransactionStore;
     const provider = Provider.getByEthChainId(fromChainId!);
     const balances = Wallet.getBalancesByAddressList([wallet!], provider);
@@ -55,6 +55,10 @@ export const TransactionAmountInputFrom = observer(
         }
 
         TransactionStore.fromAmount = v;
+
+        if (isCrossChain) {
+          TransactionStore.toAmount = String(Number(v) / 2);
+        }
       },
       [error],
     );
@@ -107,7 +111,6 @@ export const TransactionAmountInputFrom = observer(
 const styles = createTheme({
   container: {
     justifyContent: 'flex-end',
-    marginTop: 16,
   },
   input: {
     justifyContent: 'center',

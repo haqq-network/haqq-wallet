@@ -24,7 +24,10 @@ class TransactionStore {
 
   private from: TransactionParcicipantFrom = {...this.initialDataFrom};
   private to: TransactionParcicipantTo = {...this.initialDataTo};
+
+  // api
   private availableCurrencies: ChangellyCurrency[] = [];
+  // private quote;
 
   constructor() {
     makeAutoObservable(this);
@@ -43,7 +46,8 @@ class TransactionStore {
       };
     });
 
-    const availableCurrencies = await Backend.instance.fetchCurrencies();
+    const availableCurrencies =
+      await Backend.instance.fetchCrossChainCurrencies();
     runInAction(() => {
       this.availableCurrencies = availableCurrencies;
     });
@@ -71,6 +75,7 @@ class TransactionStore {
     this.from = {
       ...this.from,
       asset,
+      amount: undefined,
     };
   }
 
@@ -78,6 +83,7 @@ class TransactionStore {
     return this.from.amount;
   }
   set fromAmount(amount: string | undefined) {
+    this.getQuote();
     this.from = {
       ...this.from,
       amount,
@@ -132,6 +138,7 @@ class TransactionStore {
     this.to = {
       ...this.to,
       asset,
+      amount: undefined,
     };
   }
 
@@ -143,6 +150,14 @@ class TransactionStore {
       ...this.to,
       amount,
     };
+  }
+
+  // common options
+  get isCrossChain() {
+    return (
+      this.from.asset?.chain_id !== this.to.asset?.chain_id ||
+      this.from.asset?.id !== this.to.asset?.id
+    );
   }
 
   /**
@@ -157,6 +172,10 @@ class TransactionStore {
    */
   private readonly autoSelectProviderChainId = (value = ''): ChainId | null => {
     return Provider.getByAddress(value)?.ethChainId ?? null;
+  };
+
+  private readonly getQuote = async () => {
+    // console.log(await Backend.instance.fetchCrossChainQuote());
   };
 
   clear = () => {

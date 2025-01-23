@@ -1,5 +1,9 @@
 import {ViewStyle} from 'react-native';
 
+export type TransactionAmountProps = {
+  onPreviewPress: () => void;
+};
+
 export type TransactionAmountInputFromProps = {
   alignItems?: ViewStyle['alignItems'];
   error: string;
@@ -8,4 +12,10 @@ export type TransactionAmountInputFromProps = {
 
 export type TransactionAmountInputToProps = {
   alignItems?: ViewStyle['alignItems'];
+};
+
+export type TransactionAmountCrossChainSwapProvider = {
+  id: number;
+  title: string;
+  impact: number;
 };
