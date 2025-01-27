@@ -41,7 +41,10 @@ class Contract {
    * @param contractAddresses Array of contract's addresses which shoul be fetched
    * @param chainId Chain id in which contracts will be fetched. If no chainId provided then contracts will be fetched for all chains
    */
-  fetch = async (contractAddresses: string[], chainId?: ChainId) => {
+  fetch = async (
+    contractAddresses: string[],
+    chainId?: ChainId,
+  ): Promise<IndexerAddressesResponse> => {
     let contracts: IndexerAddressesResponse | null = null;
 
     if (!chainId) {
@@ -78,6 +81,8 @@ class Contract {
         }, {} as ContractStoreData);
       });
     }
+
+    return contracts;
   };
 
   /**
@@ -91,15 +96,13 @@ class Contract {
     contractAddress: AddressWallet,
     chainId?: ChainId,
   ): Promise<IndexerContract | null> => {
-    let contract: IndexerContract | null = null;
+    // Check already fetched contracts
     const contractId = AddressUtils.toEth(contractAddress);
+    let contract = this._searchContract(contractId);
 
-    if (!chainId) {
-      // Check already fetched contracts
-      contract = this._searchContract(contractId);
-
-      // If fetched contract doesn't exists than fetch and find contract from all chains
-      if (!contract) {
+    if (!contract) {
+      if (!chainId) {
+        // If fetched contract doesn't exists than fetch and find contract from all chains
         const headers = Indexer.instance.getProvidersHeader(
           [contractId],
           Provider.getById(ALL_NETWORKS_ID),
@@ -109,12 +112,12 @@ class Contract {
           ([_, v]) => v,
         );
         contract = contractFlatMap?.find(t => t.name) ?? null;
-      }
-    } else {
-      contract = this._data[chainId][contractId] ?? null;
-      if (!contract) {
-        await this.fetch([contractId], chainId);
-        contract = this._data[chainId][contractId] ?? null;
+      } else {
+        const fetchedContracts = await this.fetch([contractId], chainId);
+        contract =
+          (fetchedContracts[chainId] ?? []).find(c =>
+            AddressUtils.equals(c.id, contractId),
+          ) ?? null;
       }
     }
 
