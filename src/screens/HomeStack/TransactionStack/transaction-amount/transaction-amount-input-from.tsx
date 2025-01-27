@@ -21,7 +21,7 @@ export const TransactionAmountInputFrom = observer(
     error,
     setError,
   }: TransactionAmountInputFromProps) => {
-    const {fromAmount, fromAsset, isCrossChain} = TransactionStore;
+    const {fromAmount, fromAsset, isCrossChain, quoteError} = TransactionStore;
     const {wallet, fromChainId} = TransactionStore;
     const provider = Provider.getByEthChainId(fromChainId!);
     const balances = Wallet.getBalancesByAddressList([wallet!], provider);
@@ -95,12 +95,12 @@ export const TransactionAmountInputFrom = observer(
           }}
           color={Color.textBase2}
         />
-        {error && (
+        {(error || quoteError) && (
           <Text
             position={TextPosition.center}
             color={Color.textRed1}
             variant={TextVariant.t14}>
-            {error}
+            {error || quoteError}
           </Text>
         )}
       </View>
@@ -111,6 +111,7 @@ export const TransactionAmountInputFrom = observer(
 const styles = createTheme({
   container: {
     justifyContent: 'flex-end',
+    flex: 1,
   },
   input: {
     justifyContent: 'center',

@@ -1561,6 +1561,7 @@ export type IToken = {
   is_erc20: IContract['is_erc20'];
   is_erc721: IContract['is_erc721'];
   is_erc1155: IContract['is_erc1155'];
+  isNativeToken?: boolean;
   /**
    * Should be visible or not
    */

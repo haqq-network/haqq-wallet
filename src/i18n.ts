@@ -443,6 +443,7 @@ export enum I18N {
   yourAddresses = 'yourAddresses',
   typeAssets = 'typeAssets',
   totalAmountFrom = 'totalAmountFrom',
+  rateInfo = 'rateInfo',
   settingsAccountStyleChoseColor = 'settingsAccountStyleChoseColor',
   settingsAccountStyleChosePattern = 'settingsAccountStyleChosePattern',
   settingsAccountStyleGenerate = 'settingsAccountStyleGenerate',

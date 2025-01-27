@@ -1,4 +1,4 @@
-import {useCallback, useMemo} from 'react';
+import {useCallback} from 'react';
 
 import {observer} from 'mobx-react';
 import {TextInput, View} from 'react-native';
@@ -7,8 +7,7 @@ import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
-import {Provider} from '@app/models/provider';
-import {Wallet} from '@app/models/wallet';
+import {Balance} from '@app/services/balance';
 
 import {TransactionAmountInputToProps} from './transaction-amount.types';
 
@@ -16,14 +15,7 @@ import {TransactionStore} from '../transaction-store';
 
 export const TransactionAmountInputTo = observer(
   ({alignItems = 'center'}: TransactionAmountInputToProps) => {
-    const {toAmount, isCrossChain} = TransactionStore;
-    const {wallet, fromChainId} = TransactionStore;
-    const provider = Provider.getByEthChainId(fromChainId!);
-    const balances = Wallet.getBalancesByAddressList([wallet!], provider);
-    const currentBalance = useMemo(
-      () => balances[wallet.address],
-      [balances, wallet.address],
-    );
+    const {toAmount, toAsset, isCrossChain} = TransactionStore;
 
     const handleChangeText = useCallback((value: string) => {
       const v = value.replace(',', '.');
@@ -53,7 +45,12 @@ export const TransactionAmountInputTo = observer(
         <Text
           i18n={I18N.approximatelyFiatAmount}
           i18params={{
-            fiat: currentBalance.available.toFiat(),
+            fiat:
+              new Balance(
+                Number(toAmount ?? 0),
+                toAsset?.decimals ?? undefined,
+                toAsset?.symbol ?? undefined,
+              ).toFiat() || '0',
           }}
           color={Color.textBase2}
         />

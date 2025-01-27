@@ -1,5 +1,5 @@
 import {WalletModel} from '@app/models/wallet';
-import {IToken} from '@app/types';
+import {ChainId, IToken} from '@app/types';
 
 export type TransactionParcicipantFrom = {
   asset: IToken | null;
@@ -30,4 +30,22 @@ export type ChangellyCurrency = {
   protocol: string;
   ticker: string;
   transaction_url: string;
+  chain_id: ChainId;
+};
+
+export type ChangellyQuote = {
+  amount_from: string;
+  amount_to: string;
+  fee: string;
+  from: string;
+  max: string;
+  max_from: string;
+  max_to: string;
+  min: string;
+  min_from: string;
+  min_to: string;
+  network_fee: string;
+  rate: string;
+  to: string;
+  visible_amount: string;
 };

@@ -3,14 +3,18 @@ import {useMemo, useState} from 'react';
 import {observer} from 'mobx-react';
 import {View} from 'react-native';
 
+import {Color} from '@app/colors';
 import {
   Button,
   ButtonVariant,
   KeyboardSafeArea,
   Spacer,
+  Text,
+  TextVariant,
 } from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {Balance} from '@app/services/balance';
 
 import {TransactionAmountCrossChainDivider} from './transaction-amount-cross-chain-divider';
 
@@ -26,13 +30,22 @@ import {TransactionAmountProps} from '../transaction-amount.types';
 
 export const TransactionAmountCrossChain = observer(
   ({onPreviewPress}: TransactionAmountProps) => {
-    const {fromAmount, fromAsset, toAsset} = TransactionStore;
+    const {fromAmount, fromAsset, toAsset, quoteError} = TransactionStore;
 
     const [error, setError] = useState('');
 
+    const rateBalance = useMemo(
+      () =>
+        new Balance(
+          1,
+          fromAsset?.decimals ?? undefined,
+          fromAsset?.symbol ?? undefined,
+        ),
+      [fromAsset],
+    );
     const disabled = useMemo(
-      () => Boolean(error || !fromAmount),
-      [error, fromAmount],
+      () => Boolean(error || quoteError || !fromAmount),
+      [error, quoteError, fromAmount],
     );
 
     return (
@@ -61,6 +74,16 @@ export const TransactionAmountCrossChain = observer(
             </View>
             <TransactionAmountInputTo alignItems="flex-end" />
           </View>
+          <Spacer height={20} />
+          <Text
+            variant={TextVariant.t14}
+            color={Color.textBase2}
+            i18n={I18N.rateInfo}
+            i18params={{
+              token: rateBalance.toBalanceString(),
+              fiat: rateBalance.toFiat(),
+            }}
+          />
         </Spacer>
         <Button
           disabled={disabled}

@@ -49,7 +49,10 @@ export const TransactionSelectCryptoScreen = observer(() => {
         () =>
           Token.tokens[wallet.address]?.filter(item => {
             const showToken =
-              !!item.is_in_white_list && !item.is_erc721 && !item.is_erc1155;
+              !!item.is_in_white_list &&
+              !item.is_erc721 &&
+              !item.is_erc1155 &&
+              TransactionStore.isCurrencyAvailable(item);
 
             if (Provider.selectedProvider.isTestnet) {
               return (

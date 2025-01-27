@@ -1,5 +1,7 @@
+import debounce from 'lodash.debounce';
 import {makeAutoObservable, runInAction} from 'mobx';
 
+import {AddressUtils} from '@app/helpers/address-utils';
 import {Provider} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {Wallet, WalletModel} from '@app/models/wallet';
@@ -8,6 +10,7 @@ import {ChainId, IToken} from '@app/types';
 
 import {
   ChangellyCurrency,
+  ChangellyQuote,
   TransactionParcicipantFrom,
   TransactionParcicipantTo,
 } from './transaction-store.types';
@@ -26,8 +29,10 @@ class TransactionStore {
   private to: TransactionParcicipantTo = {...this.initialDataTo};
 
   // api
-  private availableCurrencies: ChangellyCurrency[] = [];
-  // private quote;
+  private controllers: Record<string, AbortController> = {};
+  private _availableCurrencies: ChangellyCurrency[] = [];
+  private _quote: ChangellyQuote | null = null;
+  private _quoteError: string = '';
 
   constructor() {
     makeAutoObservable(this);
@@ -46,10 +51,11 @@ class TransactionStore {
       };
     });
 
+    const controller = this.setAbortController('init');
     const availableCurrencies =
-      await Backend.instance.fetchCrossChainCurrencies();
+      await Backend.instance.fetchCrossChainCurrencies(controller.signal);
     runInAction(() => {
-      this.availableCurrencies = availableCurrencies;
+      this._availableCurrencies = availableCurrencies;
     });
   };
 
@@ -83,11 +89,12 @@ class TransactionStore {
     return this.from.amount;
   }
   set fromAmount(amount: string | undefined) {
-    this.getQuote();
     this.from = {
       ...this.from,
       amount,
     };
+
+    this.isCrossChain && this.getQuote();
   }
 
   // to options
@@ -160,6 +167,33 @@ class TransactionStore {
     );
   }
 
+  get quote() {
+    return this._quote;
+  }
+
+  get quoteError() {
+    return this._quoteError;
+  }
+
+  isCurrencyAvailable = (token: IToken) => {
+    if (token.isNativeToken) {
+      return Boolean(
+        this._availableCurrencies.find(
+          currency =>
+            currency.chain_id === token.chain_id && !currency.contract_address,
+        ),
+      );
+    }
+
+    return Boolean(
+      this._availableCurrencies.find(
+        currency =>
+          currency.chain_id === token.chain_id &&
+          AddressUtils.equals(currency.contract_address, token.id),
+      ),
+    );
+  };
+
   /**
    * private helpers
    */
@@ -174,8 +208,45 @@ class TransactionStore {
     return Provider.getByAddress(value)?.ethChainId ?? null;
   };
 
-  private readonly getQuote = async () => {
-    // console.log(await Backend.instance.fetchCrossChainQuote());
+  /**
+   * @name getQuote
+   * @description Calculate quote for swap
+   */
+  private readonly getQuote = debounce(async (): Promise<void> => {
+    try {
+      const controller = this.setAbortController('getQuote');
+      if (this.fromAsset?.symbol && this.toAsset?.symbol && this.fromAmount) {
+        const response = await Backend.instance.fetchCrossChainQuote(
+          {
+            from: this.fromAsset?.symbol.toLowerCase(),
+            to: this.toAsset?.symbol.toLowerCase(),
+            amount: this.fromAmount,
+          },
+          controller.signal,
+        );
+
+        runInAction(() => {
+          this._quote = response;
+        });
+      }
+    } catch (e) {
+      runInAction(() => {
+        this._quote = null;
+        this._quoteError = (e as unknown as Error).message;
+      });
+    }
+  }, 500);
+
+  /**
+   * @name setAbortController
+   * @param name Controller's name
+   * @returns AbortController
+   */
+  private readonly setAbortController = (name: string) => {
+    const controller = this.controllers[name];
+    controller && controller.abort();
+    this.controllers[name] = new AbortController();
+    return this.controllers[name];
   };
 
   clear = () => {

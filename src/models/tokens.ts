@@ -403,11 +403,7 @@ class TokensStore implements MobXStore<IToken> {
   });
 
   private generateNativeTokens = (w: IWalletModel) => {
-    if (Provider.isAllNetworks) {
-      return Provider.getAllNetworks().map(p => this.generateNativeToken(w, p));
-    }
-
-    return [this.generateNativeToken(w)];
+    return Provider.getAllNetworks().map(p => this.generateNativeToken(w, p));
   };
 
   public generateNativeToken = (
@@ -418,6 +414,7 @@ class TokensStore implements MobXStore<IToken> {
 
     return {
       id: AddressUtils.toHaqq(NATIVE_TOKEN_ADDRESS),
+      isNativeToken: true,
       contract_created_at: '',
       contract_updated_at: '',
       value: balance,
@@ -438,13 +435,9 @@ class TokensStore implements MobXStore<IToken> {
   };
 
   public generateNativeTokenContracts = () => {
-    if (Provider.isAllNetworks) {
-      return Provider.getAllNetworks().map(p =>
-        this.generateNativeTokenContract(p),
-      );
-    }
-
-    return [this.generateNativeTokenContract()];
+    return Provider.getAllNetworks().map(p =>
+      this.generateNativeTokenContract(p),
+    );
   };
 
   public generateNativeTokenContract = (
