@@ -4,7 +4,7 @@ import {makePersistable} from 'mobx-persist-store';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {Indexer, IndexerAddressesResponse} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
-import {ChainId} from '@app/types';
+import {AddressEthereum, AddressWallet, ChainId} from '@app/types';
 
 import {ContractStoreData, IndexerContract} from './contract.types';
 
@@ -13,7 +13,7 @@ import {ALL_NETWORKS_ID, Provider} from '../provider';
 class Contract {
   _data: ContractStoreData = {};
 
-  private _searchContract = (contractAddress: string) => {
+  private _searchContract = (contractAddress: AddressEthereum) => {
     const fetchedContractFlatMap = Object.entries(this._data).flatMap(
       ([_, v]) => Object.entries(v).flatMap(([__, c]) => c),
     );
@@ -88,11 +88,11 @@ class Contract {
    * @returns Contract for {contractAddress}
    */
   getById = async (
-    contractAddress: string,
+    contractAddress: AddressWallet,
     chainId?: ChainId,
   ): Promise<IndexerContract | null> => {
     let contract: IndexerContract | null = null;
-    const contractId = AddressUtils.toHaqq(contractAddress);
+    const contractId = AddressUtils.toEth(contractAddress);
 
     if (!chainId) {
       // Check already fetched contracts
@@ -101,7 +101,7 @@ class Contract {
       // If fetched contract doesn't exists than fetch and find contract from all chains
       if (!contract) {
         const headers = Indexer.instance.getProvidersHeader(
-          [contractAddress],
+          [contractId],
           Provider.getById(ALL_NETWORKS_ID),
         );
         const contracts = await Indexer.instance.getAddresses(headers);
@@ -113,7 +113,7 @@ class Contract {
     } else {
       contract = this._data[chainId][contractId] ?? null;
       if (!contract) {
-        await this.fetch([contractAddress], chainId);
+        await this.fetch([contractId], chainId);
         contract = this._data[chainId][contractId] ?? null;
       }
     }

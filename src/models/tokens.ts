@@ -10,6 +10,7 @@ import {storage} from '@app/services/mmkv';
 import {
   AddressEthereum,
   AddressType,
+  AddressWallet,
   ChainId,
   IContract,
   IToken,
@@ -239,7 +240,7 @@ class TokensStore implements MobXStore<IToken> {
    * Load unknown token by id
    * @param id - token id
    */
-  private _safeLoadUnknownToken = createAsyncTask(async (id: string) => {
+  private _safeLoadUnknownToken = createAsyncTask(async (id: AddressWallet) => {
     try {
       if (!this.fetchedUnknownTokens[id]) {
         runInAction(() => {
@@ -416,7 +417,7 @@ class TokensStore implements MobXStore<IToken> {
     const balance = Wallet.getBalance(wallet.address, 'available', provider);
 
     return {
-      id: AddressUtils.toHaqq(NATIVE_TOKEN_ADDRESS),
+      id: NATIVE_TOKEN_ADDRESS,
       contract_created_at: '',
       contract_updated_at: '',
       value: balance,
@@ -474,7 +475,7 @@ class TokensStore implements MobXStore<IToken> {
     const contract = await Contract.getById(token.contract, token.chain_id);
     if (contract) {
       return {
-        id: AddressUtils.toHaqq(contract.id),
+        id: contract.id,
         contract_created_at: contract.created_at,
         contract_updated_at: contract.updated_at,
         value: new Balance(

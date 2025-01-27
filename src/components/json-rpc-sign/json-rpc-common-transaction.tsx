@@ -26,6 +26,7 @@ import {ProviderModel} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {Balance} from '@app/services/balance';
 import {
+  AddressWallet,
   ChainId,
   IToken,
   JsonRpcMetadata,
@@ -156,7 +157,7 @@ export const JsonRpcCommonTransaction = ({
   }, [provider, parsedInput, delegatorAddress]);
 
   useEffectAsync(async () => {
-    const contract = await Contract.getById(tx?.to!, chainId);
+    const contract = await Contract.getById(tx?.to! as AddressWallet, chainId);
     const t = contract ?? Token.UNKNOWN_TOKEN;
     setToken(t as unknown as IToken);
   }, [tx, chainId]);
