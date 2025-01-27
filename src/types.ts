@@ -1382,7 +1382,7 @@ export type IndexerBalanceItem = [
 export type IndexerBalance = Array<IndexerBalanceItem>;
 export type IndexerToken = {
   address: AddressCosmosHaqq;
-  contract: AddressCosmosHaqq;
+  contract: AddressEthereum;
   created_at: string;
   updated_at: string;
   value: string;
@@ -1552,7 +1552,7 @@ export type IToken = {
   /**
    * Token contract address
    */
-  id: AddressCosmosHaqq;
+  id: AddressEthereum;
   contract_created_at: IContract['created_at'];
   contract_updated_at: IContract['updated_at'];
   value: Balance;

@@ -1416,7 +1416,7 @@ export const SwapScreen = observer(() => {
                     decimals: contract.decimals!,
                     name: contract.name!,
                     symbol: contract.symbol!,
-                    id: contract.id!,
+                    id: AddressUtils.toEth(contract.id!),
                     is_erc20: true,
                     is_erc1155: false,
                     is_erc721: false,
