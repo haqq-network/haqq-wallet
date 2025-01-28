@@ -1,4 +1,4 @@
-import {AddressCosmosHaqq, AddressEthereum, ChainId} from '@app/types';
+import {AddressEthereum, ChainId} from '@app/types';
 
 export type ContractStoreData = Record<
   ChainId,
@@ -13,7 +13,7 @@ export type IndexerContract = {
   eth_address: AddressEthereum;
   ibc: null;
   icon: string | null;
-  id: AddressCosmosHaqq;
+  id: AddressEthereum;
   is_coingecko_watch: boolean | null;
   is_erc1155: boolean | null;
   is_erc20: boolean | null;

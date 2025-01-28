@@ -1377,6 +1377,7 @@ export type ContractNameMap = Record<string, {name: string; symbol: string}>;
 export type AddressCosmosHaqq = `haqq${string}`;
 export type AddressEthereum = `0x${string}`;
 export type AddressTron = `T${string}`;
+export type AddressWallet = AddressCosmosHaqq | AddressEthereum | AddressTron;
 export type HexNumber = `0x${string}`;
 
 export type IndexerBalanceItem = [
@@ -1387,7 +1388,7 @@ export type IndexerBalanceItem = [
 export type IndexerBalance = Array<IndexerBalanceItem>;
 export type IndexerToken = {
   address: AddressCosmosHaqq;
-  contract: AddressCosmosHaqq;
+  contract: AddressEthereum;
   created_at: string;
   updated_at: string;
   value: string;
@@ -1557,7 +1558,7 @@ export type IToken = {
   /**
    * Token contract address
    */
-  id: AddressCosmosHaqq;
+  id: AddressEthereum;
   contract_created_at: IContract['created_at'];
   contract_updated_at: IContract['updated_at'];
   value: Balance;
