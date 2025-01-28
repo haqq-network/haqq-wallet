@@ -111,7 +111,7 @@ export const TransactionAmountInputFrom = observer(
 const styles = createTheme({
   container: {
     justifyContent: 'flex-end',
-    flex: 1,
+    flexShrink: 1,
   },
   input: {
     justifyContent: 'center',

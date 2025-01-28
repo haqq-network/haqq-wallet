@@ -29,7 +29,7 @@ class TransactionStore {
   private to: TransactionParcicipantTo = {...this.initialDataTo};
 
   // api
-  private controllers: Record<string, AbortController> = {};
+  private _controllers: Record<string, AbortController> = {};
   private _availableCurrencies: ChangellyCurrency[] = [];
   private _quote: ChangellyQuote | null = null;
   private _quoteError: string = '';
@@ -51,7 +51,7 @@ class TransactionStore {
       };
     });
 
-    const controller = this.setAbortController('init');
+    const controller = this._setAbortController('init');
     const availableCurrencies =
       await Backend.instance.fetchCrossChainCurrencies(controller.signal);
     runInAction(() => {
@@ -94,7 +94,7 @@ class TransactionStore {
       amount,
     };
 
-    this.isCrossChain && this.getQuote();
+    this.isCrossChain && this._getQuote();
   }
 
   // to options
@@ -108,7 +108,7 @@ class TransactionStore {
       : true;
 
     if (isAddressSupported) {
-      chain_id = this.autoSelectProviderChainId(address);
+      chain_id = this._autoSelectProviderChainId(address);
     }
 
     if (chain_id) {
@@ -199,22 +199,24 @@ class TransactionStore {
    */
 
   /**
-   * @name autoSelectProviderChainId
+   * @name _autoSelectProviderChainId
    * @description Check entered TO address and auto select provider for this address
    *
    * @returns ETH chain id if address format supported and undefined when its unsupported
    */
-  private readonly autoSelectProviderChainId = (value = ''): ChainId | null => {
+  private readonly _autoSelectProviderChainId = (
+    value = '',
+  ): ChainId | null => {
     return Provider.getByAddress(value)?.ethChainId ?? null;
   };
 
   /**
-   * @name getQuote
+   * @name _getQuote
    * @description Calculate quote for swap
    */
-  private readonly getQuote = debounce(async (): Promise<void> => {
+  private readonly _getQuote = debounce(async (): Promise<void> => {
     try {
-      const controller = this.setAbortController('getQuote');
+      const controller = this._setAbortController('getQuote');
       if (this.fromAsset?.symbol && this.toAsset?.symbol && this.fromAmount) {
         const response = await Backend.instance.fetchCrossChainQuote(
           {
@@ -238,20 +240,35 @@ class TransactionStore {
   }, 500);
 
   /**
-   * @name setAbortController
+   * @name _setAbortController
+   * @description Setup AbortController by name to be able to resend some requests without additional network cost
    * @param name Controller's name
    * @returns AbortController
    */
-  private readonly setAbortController = (name: string) => {
-    const controller = this.controllers[name];
+  private readonly _setAbortController = (name: string) => {
+    const controller = this._controllers[name];
     controller && controller.abort();
-    this.controllers[name] = new AbortController();
-    return this.controllers[name];
+    this._controllers[name] = new AbortController();
+    return this._controllers[name];
+  };
+
+  /**
+   * @name _abortAllRequests
+   * @description Abort all not completed requests to prevent unexpected crashes and issues
+   */
+  private readonly _abortAllRequests = () => {
+    Object.values(this._controllers).forEach(controller => controller.abort());
+    this._controllers = {};
   };
 
   clear = () => {
     this.from = {...this.initialDataFrom};
     this.to = {...this.initialDataTo};
+
+    // api
+    this._abortAllRequests();
+    this._quote = null;
+    this._quoteError = '';
   };
 }
 
