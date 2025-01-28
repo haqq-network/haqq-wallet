@@ -1,4 +1,7 @@
+import {ChainId} from '@app/types';
+
 export enum NetworkProviderTypes {
+  ALL = 'All',
   EVM = 'evm',
   HAQQ = 'haqq',
   TRON = 'tron',
@@ -18,7 +21,7 @@ export interface NetworkProvider {
   name: string;
   icon: string;
   denom: string;
-  chain_id: number;
+  chain_id: ChainId;
   decimals: number;
   wei_denom: string;
   coin_name: string;

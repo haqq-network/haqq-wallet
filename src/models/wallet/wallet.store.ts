@@ -31,9 +31,8 @@ import {
 
 import {
   AddWalletParams,
-  AddressCosmosHaqq,
   AddressEthereum,
-  AddressTron,
+  AddressWallet,
   ChainId,
   HexNumber,
   IndexerBalance,
@@ -107,17 +106,16 @@ class WalletStore implements RPCObserver {
                 const deserialized: TBalances = {};
 
                 for (const chainId of Object.keys(value)) {
-                  const walletsBalances = Object.entries(value[chainId]) as [
-                    AddressEthereum,
-                    BalanceDataJson,
-                  ][];
+                  const walletsBalances = Object.entries(
+                    value[Number(chainId)],
+                  ) as [AddressEthereum, BalanceDataJson][];
 
-                  if (!deserialized[chainId]) {
-                    deserialized[chainId] = {};
+                  if (!deserialized[Number(chainId)]) {
+                    deserialized[Number(chainId)] = {};
                   }
 
                   for (const [wallet, balance] of walletsBalances) {
-                    deserialized[chainId][wallet] =
+                    deserialized[Number(chainId)][wallet] =
                       BalanceModel.fromJSON(balance);
                   }
                 }
@@ -133,17 +131,16 @@ class WalletStore implements RPCObserver {
                 const serialized: TBalancesSerialized = {};
 
                 for (const chainId of Object.keys(value)) {
-                  const walletsBalances = Object.entries(value[chainId]) as [
-                    AddressEthereum,
-                    BalanceModel,
-                  ][];
+                  const walletsBalances = Object.entries(
+                    value[Number(chainId)],
+                  ) as [AddressEthereum, BalanceModel][];
 
-                  if (!serialized[chainId]) {
-                    serialized[chainId] = {};
+                  if (!serialized[Number(chainId)]) {
+                    serialized[Number(chainId)] = {};
                   }
 
                   for (const [wallet, balance] of walletsBalances) {
-                    serialized[chainId][wallet] = balance.toJSON();
+                    serialized[Number(chainId)][wallet] = balance.toJSON();
                   }
                 }
 
@@ -197,7 +194,7 @@ class WalletStore implements RPCObserver {
       },
       {} as {
         [key: ChainId]: {
-          [key: AddressEthereum | AddressCosmosHaqq | AddressTron]: HexNumber;
+          [key: AddressWallet]: HexNumber;
         };
       },
     );
@@ -560,14 +557,8 @@ class WalletStore implements RPCObserver {
       this.wallets.find(wallet => {
         if (
           wallet.address.toLowerCase() === id.toLowerCase() ||
-          wallet.cosmosAddress.toLowerCase() === id.toLowerCase()
-        ) {
-          return wallet;
-        }
-
-        if (
-          !!wallet.tronAddress &&
-          wallet.tronAddress.toLowerCase() === id.toLowerCase()
+          wallet.cosmosAddress.toLowerCase() === id.toLowerCase() ||
+          wallet.tronAddress?.toLowerCase() === id.toLowerCase()
         ) {
           return wallet;
         }

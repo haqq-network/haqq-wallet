@@ -132,6 +132,34 @@ export class ProviderModel {
     return this.model.stage === NetworkProviderStage.MAINNET;
   }
 
+  get supportAddresses() {
+    if (this.isHaqqNetwork) {
+      return ['haqq', '0x'];
+    }
+    if (this.isEVM) {
+      return ['0x'];
+    }
+    if (this.isTron) {
+      return ['T'];
+    }
+
+    return undefined;
+  }
+
+  isAddressSupported = (address: string) => {
+    if (!this.supportAddresses) {
+      return true;
+    }
+
+    return !this.supportAddresses.find(prefix => {
+      if (prefix.length > address.length) {
+        return prefix.startsWith(address);
+      } else {
+        return address.startsWith(prefix);
+      }
+    });
+  };
+
   toJSON() {
     return {
       ethChainIdHex: this.ethChainIdHex,

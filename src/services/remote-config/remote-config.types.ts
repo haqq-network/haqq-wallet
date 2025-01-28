@@ -1,7 +1,7 @@
 import {SessionTypes} from '@walletconnect/types';
 
 import {Currency} from '@app/models/types';
-import {ChainId, Link, RootStackParamList} from '@app/types';
+import {Link, RootStackParamList} from '@app/types';
 
 export type WalletConnectNamespace = Omit<SessionTypes.Namespace, 'accounts'>;
 
@@ -25,7 +25,7 @@ export type RemoteConfigMultiplierTypes = {
   enable_eth_commission_multiplier: boolean;
 };
 
-export type ExplorerUrlsMap = Record<ChainId, string>;
+export type ExplorerUrlsMap = Record<string, string>;
 
 export type WalletConnectTypes = {
   wallet_connect_project_id: string;

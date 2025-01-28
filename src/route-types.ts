@@ -33,7 +33,6 @@ import {WalletConnectApproveConnectionEvent} from '@app/types/wallet-connect';
 
 import {Fee} from './models/fee';
 import {SecureValue} from './modifiers/secure-value';
-import {CalculatedFees} from './services/eth-network/types';
 import {SushiPoolEstimateResponse} from './services/indexer';
 
 export type AnyRouteFromParent =
@@ -384,9 +383,10 @@ export type HomeStackParamList = {
   [HomeStackRoutes.NetworkLogger]: undefined;
   [HomeStackRoutes.AccountInfo]: {accountId: string};
   [HomeStackRoutes.Transaction]: {
-    from?: string;
+    from: string;
     to?: string;
     nft?: NftItem;
+    token?: IToken;
   };
   [HomeStackRoutes.Nft]:
     | {
@@ -532,16 +532,16 @@ export type ProposalDepositStackParamList = GovernanceStackParamList & {
 
 export enum TransactionStackRoutes {
   TransactionAddress = 'transactionAddress',
-  TransactionSum = 'transactionSum',
-  TransactionConfirmation = 'transactionConfirmation',
+  TransactionNetworkSelect = 'transactionNetworkSelect',
+  TransactionSelectCrypto = 'transactionSelectCrypto',
+  TransactionAmount = 'transactionAmount',
+  TransactionPreview = 'transactionPreview',
   TransactionNftConfirmation = 'transactionNftConfirmation',
   TransactionFinish = 'transactionFinish',
   TransactionNftFinish = 'transactionNftFinish',
   TransactionAccount = 'transactionAccount',
-  TransactionLedger = 'transactionLedger',
   TransactionSumAddress = 'transactionSumAddress',
   TransactionContactEdit = 'transactionContactEdit',
-  TransactionSelectCrypto = 'transactionSelectCrypto',
 }
 
 export type TransactionStackParamList = HomeFeedStackParamList & {
@@ -551,19 +551,14 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
     nft?: NftItem | undefined;
     token?: IToken | undefined;
   };
-  [TransactionStackRoutes.TransactionSum]: {
-    from: string;
-    to: string;
-    token: IToken;
-  };
-  [TransactionStackRoutes.TransactionConfirmation]: {
-    from: string;
-    to: string;
-    amount: Balance;
-    estimatedFee?: CalculatedFees;
-    calculatedFees?: CalculatedFees;
-    token: IToken;
-  };
+  [TransactionStackRoutes.TransactionNetworkSelect]:
+    | {
+        wallet: WalletModel;
+      }
+    | undefined;
+  [TransactionStackRoutes.TransactionSelectCrypto]: undefined;
+  [TransactionStackRoutes.TransactionAmount]: undefined;
+  [TransactionStackRoutes.TransactionPreview]: undefined;
   [TransactionStackRoutes.TransactionFinish]: {
     fee: Fee;
     transaction: TransactionResponse;
@@ -588,12 +583,6 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
     from: string;
     to: string;
   };
-  [TransactionStackRoutes.TransactionLedger]: {
-    from: string;
-    to: string;
-    amount: number;
-    fee?: Balance;
-  };
   [TransactionStackRoutes.TransactionSumAddress]: {
     to: string;
     from: string;
@@ -602,10 +591,6 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
   [TransactionStackRoutes.TransactionContactEdit]: {
     name: string;
     address: string;
-  };
-  [TransactionStackRoutes.TransactionSelectCrypto]: {
-    from: string;
-    to: string;
   };
 };
 

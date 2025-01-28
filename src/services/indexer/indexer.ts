@@ -116,7 +116,7 @@ export class Indexer {
         RemoteConfig.get('proxy_server')!,
         'updates_v2',
         [
-          this.getProvidersHeader(accounts),
+          this.getProvidersHeader(accounts, Provider.getById(ALL_NETWORKS_ID)),
           updated,
           Currencies.selectedCurrency,
         ].filter(Boolean),

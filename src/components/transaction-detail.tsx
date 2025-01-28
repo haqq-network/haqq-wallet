@@ -25,15 +25,14 @@ import {Balance} from '@app/services/balance';
 import {IndexerTxMsgType} from '@app/types';
 import {IS_IOS, LONG_NUM_PRECISION, STRINGS} from '@app/variables/common';
 
+import {AddressHighlight} from './address-highlight';
 import {ImageWrapper} from './image-wrapper';
 
 type TransactionDetailProps = {
   tx: Transaction;
-  splitted: string[];
   timestamp: string;
   fee: Balance;
   total: Balance;
-  onPressAddress: () => void;
   onCloseBottomSheet: () => void;
   onPressInfo: () => void;
   onPressSpenderAddress: (address: string) => void;
@@ -42,11 +41,9 @@ type TransactionDetailProps = {
 export const TransactionDetail = observer(
   ({
     tx,
-    splitted,
     timestamp,
     fee,
     total,
-    onPressAddress,
     onPressInfo,
     onCloseBottomSheet,
     onPressSpenderAddress,
@@ -110,23 +107,13 @@ export const TransactionDetail = observer(
             title={<TransactionStatus status={tx.code} hasTitle />}
           />
           {!tx.parsed.isContractInteraction && (
-            <DataContent
+            <AddressHighlight
               title={
-                <>
-                  {splitted[0]}
-                  <Text color={Color.textBase2}>{splitted[1]}</Text>
-                  {splitted[2]}
-                </>
-              }
-              numberOfLines={2}
-              subtitleI18n={
                 tx.parsed.isOutcoming
                   ? I18N.transactionDetailSentTo
                   : I18N.transactionDetailReciveFrom
               }
-              reversed
-              short
-              onPress={onPressAddress}
+              address={tx.parsed.isOutcoming ? tx.parsed.to : tx.parsed.from}
             />
           )}
           {!!contractTo && (

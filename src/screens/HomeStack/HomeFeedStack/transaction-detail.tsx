@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useMemo} from 'react';
 
-import Clipboard from '@react-native-clipboard/clipboard';
 import {format} from 'date-fns';
 import {observer} from 'mobx-react';
 
@@ -9,13 +8,11 @@ import {Loading} from '@app/components/ui';
 import {shortAddress} from '@app/helpers/short-address';
 import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useTransaction} from '@app/hooks/use-transaction';
-import {I18N} from '@app/i18n';
 import {AppStore} from '@app/models/app';
 import {Provider} from '@app/models/provider';
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
-import {sendNotification} from '@app/services';
 import {Balance} from '@app/services/balance';
-import {openInAppBrowser, splitAddress} from '@app/utils';
+import {openInAppBrowser} from '@app/utils';
 
 export const TransactionDetailScreen = observer(() => {
   const navigation = useTypedNavigation<HomeStackParamList>();
@@ -34,11 +31,6 @@ export const TransactionDetailScreen = observer(() => {
     [tx.ts],
   );
 
-  const splitted = useMemo(
-    () => splitAddress(tx.parsed.isOutcoming ? tx.parsed.to : tx.parsed.from),
-    [tx],
-  );
-
   const fee = useMemo(
     () => new Balance(`${tx.fee}`, provider?.decimals, provider?.denom),
     [tx.fee],
@@ -53,11 +45,6 @@ export const TransactionDetailScreen = observer(() => {
     if (url) {
       openInAppBrowser(url);
     }
-  }, [tx]);
-
-  const onPressAddress = useCallback(() => {
-    Clipboard.setString(tx.parsed.isOutcoming ? tx.parsed.to : tx.parsed.from);
-    sendNotification(I18N.notificationCopied);
   }, [tx]);
 
   const onCloseBottomSheet = useCallback(() => {
@@ -90,10 +77,8 @@ export const TransactionDetailScreen = observer(() => {
     <TransactionDetail
       tx={tx}
       timestamp={timestamp}
-      splitted={splitted}
       fee={fee}
       total={total}
-      onPressAddress={onPressAddress}
       onCloseBottomSheet={onCloseBottomSheet}
       onPressInfo={onPressInfo}
       onPressSpenderAddress={onPressSpenderAddress}

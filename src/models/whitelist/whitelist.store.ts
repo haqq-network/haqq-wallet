@@ -40,8 +40,8 @@ class Whitelist {
     makePersistable(this, {
       name: this.constructor.name,
       properties: ['urls', 'contracts'],
-      storage,
       expireIn: CACHE_LIFE_TIME,
+      storage,
     });
   }
 

@@ -4,6 +4,10 @@ import {AppInfo} from '@app/helpers/get-app-info';
 import {Currency} from '@app/models/types';
 import {VariablesString} from '@app/models/variables-string';
 import {
+  ChangellyCurrency,
+  ChangellyQuote,
+} from '@app/screens/HomeStack/TransactionStack/transaction-store';
+import {
   AppLanguage,
   LanguagesResponse,
   MarkupResponse,
@@ -27,6 +31,12 @@ export type CaptchaRequestResponse = {
 
 export type CaptchaSessionResponse = {
   key: string;
+};
+
+type CrossChainQuoteParams = {
+  from: string;
+  to: string;
+  amount: string;
 };
 
 export class Backend {
@@ -435,4 +445,48 @@ export class Backend {
       throw error;
     }
   }
+
+  fetchCrossChainCurrencies = async (
+    signal?: AbortController['signal'],
+  ): Promise<ChangellyCurrency[]> => {
+    const response = await fetch(
+      `${this.getRemoteUrl()}cross-chain-swaps/v1/changelly/currencies/full`,
+      {
+        method: 'GET',
+        headers: Backend.headers,
+        signal,
+      },
+    );
+
+    return response.json();
+  };
+
+  fetchCrossChainQuote = async (
+    params: CrossChainQuoteParams,
+    signal?: AbortController['signal'],
+  ): Promise<ChangellyQuote> => {
+    const queryString = new URLSearchParams(params).toString();
+    const response = await fetch(
+      `${this.getRemoteUrl()}cross-chain-swaps/v1/changelly/quote?${queryString}`,
+      {
+        method: 'GET',
+        headers: Backend.headers,
+        signal,
+      },
+    );
+
+    if (!response.ok) {
+      let error = (await response.text()).replaceAll('\\', '');
+      const msgIndex = error.indexOf('"message":"');
+      if (msgIndex !== -1) {
+        const startMsgIndex = msgIndex + 11;
+        const endMsgIndex = error.indexOf('"', startMsgIndex);
+        error = error.slice(startMsgIndex, endMsgIndex);
+      }
+
+      throw new Error(error);
+    }
+
+    return response.json();
+  };
 }
