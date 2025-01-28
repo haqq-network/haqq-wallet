@@ -11,13 +11,13 @@ import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {sendNotification} from '@app/services';
-import {ModalType, Modals, WalletAddress} from '@app/types';
+import {AddressWallet, ModalType, Modals} from '@app/types';
 import {ETH_CHAIN_ID, MAINNET_ETH_CHAIN_ID} from '@app/variables/common';
 
 import {ImageWrapper} from '../image-wrapper';
 
 type AddressItem = {
-  address: WalletAddress;
+  address: AddressWallet;
   icon: string;
   providerName: string;
 };

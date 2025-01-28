@@ -1371,7 +1371,7 @@ export type ContractNameMap = Record<string, {name: string; symbol: string}>;
 export type AddressCosmosHaqq = `haqq${string}`;
 export type AddressEthereum = `0x${string}`;
 export type AddressTron = `T${string}`;
-export type WalletAddress = AddressCosmosHaqq | AddressEthereum | AddressTron;
+export type AddressWallet = AddressCosmosHaqq | AddressEthereum | AddressTron;
 export type HexNumber = `0x${string}`;
 
 export type IndexerBalanceItem = [

@@ -32,11 +32,11 @@ import {
 import {
   AddWalletParams,
   AddressEthereum,
+  AddressWallet,
   ChainId,
   HexNumber,
   IndexerBalance,
   IndexerBalanceData,
-  WalletAddress,
   WalletCardStyleT,
   WalletType,
 } from '../../types';
@@ -194,7 +194,7 @@ class WalletStore implements RPCObserver {
       },
       {} as {
         [key: ChainId]: {
-          [key: WalletAddress]: HexNumber;
+          [key: AddressWallet]: HexNumber;
         };
       },
     );
