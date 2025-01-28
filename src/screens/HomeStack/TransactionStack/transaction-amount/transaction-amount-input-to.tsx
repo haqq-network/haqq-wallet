@@ -1,7 +1,7 @@
-import {useCallback} from 'react';
+import {useMemo} from 'react';
 
 import {observer} from 'mobx-react';
-import {TextInput, View} from 'react-native';
+import {View} from 'react-native';
 
 import {Color} from '@app/colors';
 import {Text} from '@app/components/ui';
@@ -15,43 +15,26 @@ import {TransactionStore} from '../transaction-store';
 
 export const TransactionAmountInputTo = observer(
   ({alignItems = 'center'}: TransactionAmountInputToProps) => {
-    const {toAmount, toAsset, isCrossChain} = TransactionStore;
+    const {toAmount, toAsset} = TransactionStore;
 
-    const handleChangeText = useCallback((value: string) => {
-      const v = value.replace(',', '.');
-      if (isNaN(Number(v))) {
-        return;
-      }
-      TransactionStore.toAmount = v;
-
-      if (isCrossChain) {
-        TransactionStore.fromAmount = String(Number(v) / 2);
-      }
-    }, []);
+    const amount = useMemo(
+      () =>
+        new Balance(
+          Number(Number(toAmount) ?? 0),
+          toAsset?.decimals ?? undefined,
+          toAsset?.symbol ?? undefined,
+        ),
+      [toAmount, toAsset],
+    );
 
     return (
       <View style={[styles.container, {alignItems}]}>
-        <TextInput
-          allowFontScaling={false}
-          style={styles.input}
-          value={toAmount}
-          placeholder="0"
-          onChangeText={handleChangeText}
-          keyboardType="decimal-pad"
-          inputMode="decimal"
-          textAlign="right"
-          selectionColor={Color.textGreen1}
-        />
+        <Text style={styles.input} selectionColor={Color.textGreen1}>
+          {amount.toFloatString() || 0}
+        </Text>
         <Text
           i18n={I18N.approximatelyFiatAmount}
-          i18params={{
-            fiat:
-              new Balance(
-                Number(toAmount ?? 0),
-                toAsset?.decimals ?? undefined,
-                toAsset?.symbol ?? undefined,
-              ).toFiat() || '0',
-          }}
+          i18params={{fiat: amount.toFiat()}}
           color={Color.textBase2}
         />
       </View>

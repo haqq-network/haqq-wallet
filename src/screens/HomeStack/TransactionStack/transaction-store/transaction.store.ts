@@ -170,6 +170,13 @@ class TransactionStore {
   get quote() {
     return this._quote;
   }
+  set quote(value: ChangellyQuote | null) {
+    if (value) {
+      this._quoteError = '';
+    }
+    this._quote = value;
+    this.toAmount = value?.amount_to || '0';
+  }
 
   get quoteError() {
     return this._quoteError;
@@ -228,12 +235,12 @@ class TransactionStore {
         );
 
         runInAction(() => {
-          this._quote = response;
+          this.quote = response;
         });
       }
     } catch (e) {
       runInAction(() => {
-        this._quote = null;
+        this.quote = null;
         this._quoteError = (e as unknown as Error).message;
       });
     }
@@ -267,7 +274,7 @@ class TransactionStore {
 
     // api
     this._abortAllRequests();
-    this._quote = null;
+    this.quote = null;
     this._quoteError = '';
   };
 }
