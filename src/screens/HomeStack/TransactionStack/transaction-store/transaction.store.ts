@@ -2,10 +2,13 @@ import debounce from 'lodash.debounce';
 import {makeAutoObservable, runInAction} from 'mobx';
 
 import {AddressUtils} from '@app/helpers/address-utils';
+import {EstimationVariant} from '@app/models/fee';
 import {Provider} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {Wallet, WalletModel} from '@app/models/wallet';
+import {EthNetwork} from '@app/services';
 import {Backend} from '@app/services/backend';
+import {Balance} from '@app/services/balance';
 import {ChainId, IToken} from '@app/types';
 
 import {
@@ -94,7 +97,11 @@ class TransactionStore {
       amount,
     };
 
-    this.isCrossChain && this._getQuote();
+    if (this.isCrossChain) {
+      this._getQuote();
+    } else {
+      this._getFee();
+    }
   }
 
   // to options
@@ -243,6 +250,62 @@ class TransactionStore {
         this.quote = null;
         this._quoteError = (e as unknown as Error).message;
       });
+    }
+  }, 500);
+
+  /**
+   * @name _getFee
+   * @description Calculate quote for swap
+   */
+  private readonly _getFee = debounce(async (): Promise<any> => {
+    if (
+      this.fromAsset?.symbol &&
+      this.toAsset?.symbol &&
+      this.fromAmount &&
+      this.fromChainId
+    ) {
+      try {
+        const provider = Provider.getByEthChainId(this.fromChainId);
+        if (this.fromAsset?.is_erc20) {
+          const contractAddress = provider?.isTron
+            ? AddressUtils.hexToTron(this.fromAsset.id)
+            : AddressUtils.toEth(this.fromAsset.id);
+
+          return await EthNetwork.estimateERC20Transfer(
+            {
+              from: this.wallet.address,
+              to: this.toAddress,
+              amount: new Balance(
+                this.fromAmount,
+                provider?.decimals,
+                provider?.denom,
+              ),
+              contractAddress,
+            },
+            EstimationVariant.average,
+            provider,
+          );
+        } else {
+          return await EthNetwork.estimate(
+            {
+              from: this.wallet.address,
+              to: this.toAddress,
+              value: new Balance(
+                this.fromAmount,
+                provider?.decimals,
+                provider?.denom,
+              ),
+            },
+            EstimationVariant.average,
+            provider,
+          );
+        }
+      } catch (e) {
+        runInAction(() => {
+          this.quote = null;
+          this._quoteError = (e as unknown as Error).message;
+        });
+      }
     }
   }, 500);
 

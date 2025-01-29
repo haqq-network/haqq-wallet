@@ -45,42 +45,6 @@ export const TransactionAmountScreen = observer(() => {
   // const contact = useMemo(() => Contact.getById(toAddress), [toAddress]);
   // const [isLoading, setLoading] = useState(false);
 
-  // const getFee = useCallback(
-  //   async (amount: Balance) => {
-  //     try {
-  //       if (asset?.is_erc20) {
-  //         const contractAddress = provider?.isTron
-  //           ? AddressUtils.hexToTron(asset.id)
-  //           : AddressUtils.toEth(asset.id);
-  //         return await EthNetwork.estimateERC20Transfer(
-  //           {
-  //             from: fromWallet!.address!,
-  //             to: toAddress,
-  //             amount,
-  //             contractAddress,
-  //           },
-  //           EstimationVariant.average,
-  //           provider,
-  //         );
-  //       } else {
-  //         return await EthNetwork.estimate(
-  //           {
-  //             from: fromAddress,
-  //             to: toAddress,
-  //             value: amount,
-  //           },
-  //           EstimationVariant.average,
-  //           provider,
-  //         );
-  //       }
-  //     } catch (err) {
-  //       Logger.log('tx sum err getFee', err);
-  //       return null;
-  //     }
-  //   },
-  //   [fromAddress, toAddress, asset, provider, fromWallet],
-  // );
-
   // const onPressPreview = useCallback(
   //   async (amount: Balance, repeated = false) => {
   //     setLoading(true);
