@@ -1,9 +1,14 @@
 import {by, device, element, expect, waitFor} from 'detox';
 
+import {getText} from './i18n';
+
 export const createWallet = async (PIN: string, attempt: number = 1) => {
   const isAndroid = device.getPlatform() === 'android';
 
-  await expect(element(by.id('welcome'))).toBeVisible();
+  await waitFor(element(by.id('welcome')))
+    .toBeVisible()
+    .withTimeout(120_000);
+
   await expect(element(by.id('welcome_signup'))).toBeVisible();
 
   await element(by.id('welcome_signup')).tap();
@@ -14,7 +19,9 @@ export const createWallet = async (PIN: string, attempt: number = 1) => {
 
   await element(by.id('sss_login_later')).tap();
   // Modal window
-  await element(by.label('Accept')).atIndex(0).tap();
+  await element(by.label(getText('accept')))
+    .atIndex(0)
+    .tap();
   await expect(element(by.id('onboarding_setup_pin_set'))).toBeVisible();
 
   await device.disableSynchronization();
@@ -23,7 +30,9 @@ export const createWallet = async (PIN: string, attempt: number = 1) => {
   }
   await device.enableSynchronization();
 
-  await expect(element(by.text('Please repeat pin code'))).toBeVisible();
+  await expect(
+    element(by.text(getText('onboardingRepeatPinRepeat'))),
+  ).toBeVisible();
 
   await device.disableSynchronization();
   for (const num of PIN.split('')) {
@@ -39,11 +48,6 @@ export const createWallet = async (PIN: string, attempt: number = 1) => {
     await expect(element(by.id('onboarding_biometry_title'))).toBeVisible();
 
     await element(by.id('onboarding_biometry_skip')).tap();
-    await waitFor(element(by.id('onboarding_track_user_activity')))
-      .toBeVisible()
-      .withTimeout(5000);
-
-    await element(by.id('onboarding_tracking_skip')).tap();
 
     if (attempt === 1) {
       await waitFor(element(by.id('onboarding_finish_title')))
@@ -56,5 +60,8 @@ export const createWallet = async (PIN: string, attempt: number = 1) => {
 
   if (attempt === 1) {
     await element(by.id('onboarding_finish_finish')).tap();
+    await waitFor(element(by.id('home-feed-container')))
+      .toBeVisible()
+      .withTimeout(10_000);
   }
 };

@@ -1,17 +1,17 @@
 import React, {useCallback, useMemo, useRef} from 'react';
 
+import Animated, {
+  SlideInLeft,
+  SlideInRight,
+  SlideOutLeft,
+  SlideOutRight,
+} from '@override/react-native-reanimated';
 import {
   I18nManager,
   LayoutChangeEvent,
   TouchableOpacity,
   View,
 } from 'react-native';
-import Animated, {
-  SlideInLeft,
-  SlideInRight,
-  SlideOutLeft,
-  SlideOutRight,
-} from 'react-native-reanimated';
 import {WebViewNavigation} from 'react-native-webview';
 
 import {Color} from '@app/colors';

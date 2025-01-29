@@ -1,20 +1,18 @@
+import {makePersistable} from '@override/mobx-persist-store';
 import {makeAutoObservable, toJS} from 'mobx';
-import {makePersistable} from 'mobx-persist-store';
 
 import {storage} from '@app/services/mmkv';
 import {MobXStore, Raffle} from '@app/types';
 
 class RafflesStore implements MobXStore<Raffle> {
-  constructor(shouldSkipPersisting: boolean = false) {
+  constructor() {
     makeAutoObservable(this);
-    if (!shouldSkipPersisting) {
-      makePersistable(this, {
-        name: this.constructor.name,
-        // @ts-ignore
-        properties: ['_data'],
-        storage,
-      });
-    }
+    makePersistable(this, {
+      name: this.constructor.name,
+      // @ts-ignore
+      properties: ['_data'],
+      storage,
+    });
   }
 
   private _data: Record<string, Raffle> = {};

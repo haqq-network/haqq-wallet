@@ -1,5 +1,5 @@
+import {makePersistable} from '@override/mobx-persist-store';
 import {makeAutoObservable, runInAction} from 'mobx';
-import {makePersistable} from 'mobx-persist-store';
 import {NativeModules, Platform} from 'react-native';
 
 import {setLanguage, supportedTranslationsMap} from '@app/i18n';
@@ -12,7 +12,7 @@ class LanguageStore {
   keys: Object;
   hash: string;
 
-  constructor(shouldSkipPersisting: boolean = false) {
+  constructor() {
     if (!this.current) {
       // Use system language or English as default if user doesn't select another one
       let current = this.getDeviceLanguage();
@@ -30,14 +30,12 @@ class LanguageStore {
     this.hash = this.keys._hash;
 
     makeAutoObservable(this);
-    if (!shouldSkipPersisting) {
-      makePersistable(this, {
-        name: this.constructor.name,
-        //@ts-ignore
-        properties: ['current', 'hash'],
-        storage,
-      });
-    }
+    makePersistable(this, {
+      name: this.constructor.name,
+      //@ts-ignore
+      properties: ['current', 'hash'],
+      storage,
+    });
   }
 
   init = async () => {
@@ -81,5 +79,5 @@ class LanguageStore {
   };
 }
 
-const instance = new LanguageStore(Boolean(process.env.JEST_WORKER_ID));
+const instance = new LanguageStore();
 export {instance as Language};

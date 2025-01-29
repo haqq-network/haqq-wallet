@@ -1,6 +1,6 @@
 import {JSONRPCError, jsonrpcRequest} from '@haqq/shared-react-native';
+import {makePersistable} from '@override/mobx-persist-store';
 import {makeAutoObservable} from 'mobx';
-import {makePersistable} from 'mobx-persist-store';
 
 import {DEBUG_VARS} from '@app/debug-vars';
 import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';

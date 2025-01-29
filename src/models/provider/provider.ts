@@ -1,6 +1,6 @@
+import {makePersistable} from '@override/mobx-persist-store';
 import {hoursToMilliseconds} from 'date-fns';
 import {makeAutoObservable, runInAction} from 'mobx';
-import {makePersistable} from 'mobx-persist-store';
 import Config from 'react-native-config';
 
 import {Events} from '@app/events';

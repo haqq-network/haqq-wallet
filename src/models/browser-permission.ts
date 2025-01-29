@@ -1,5 +1,5 @@
+import {makePersistable} from '@override/mobx-persist-store';
 import {makeAutoObservable, toJS} from 'mobx';
-import {makePersistable} from 'mobx-persist-store';
 import {Alert} from 'react-native';
 
 import {app} from '@app/contexts';
@@ -24,16 +24,14 @@ export const PERMISSION_EXPIRATION_TIME = 5 * 60 * 1000; // 5 min
 export type BrowserPermissionTuple = [Hostname, PermissionMap];
 
 class BrowserPermissionStore {
-  constructor(shouldSkipPersisting: boolean = false) {
+  constructor() {
     makeAutoObservable(this);
-    if (!shouldSkipPersisting) {
-      makePersistable(this, {
-        name: this.constructor.name,
-        // @ts-ignore
-        properties: ['_data'],
-        storage,
-      });
-    }
+    makePersistable(this, {
+      name: this.constructor.name,
+      // @ts-ignore
+      properties: ['_data'],
+      storage,
+    });
   }
 
   /**

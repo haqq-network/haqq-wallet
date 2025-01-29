@@ -31,6 +31,7 @@ describe('Routine', () => {
       .toBeVisible()
       .whileElement(by.id('backup_warning'))
       .scroll(50, 'down');
+    await element(by.id('backup_warning_checkbox')).tap();
     await element(by.id('backup_warning_next')).tap();
 
     for (let i = 1; i <= 12; i++) {
@@ -42,11 +43,10 @@ describe('Routine', () => {
       mnemonic_words.push(text);
     }
 
-    await waitFor(element(by.id('backup_create_checkbox')))
+    await waitFor(element(by.id('backup_create_next')))
       .toBeVisible()
       .whileElement(by.id('backup_create'))
       .scroll(50, 'down');
-    await element(by.id('backup_create_checkbox')).tap();
     await element(by.id('backup_create_next')).tap();
 
     await waitFor(element(by.id('backup_verify')))
@@ -138,6 +138,7 @@ describe('Routine', () => {
       .toBeVisible()
       .whileElement(by.id('backup_warning'))
       .scroll(50, 'down');
+    await element(by.id('backup_warning_checkbox')).tap();
     await element(by.id('backup_warning_next')).tap();
 
     for (let i = 1; i <= 12; i++) {

@@ -1,5 +1,5 @@
+import {isHydrated} from '@override/mobx-persist-store';
 import {makeAutoObservable, runInAction, when} from 'mobx';
-import {isHydrated} from 'mobx-persist-store';
 
 import {IconProps} from '@app/components/ui';
 import {parseTransaction} from '@app/helpers/indexer-transaction-utils';

@@ -1,11 +1,11 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
-import {View, useWindowDimensions} from 'react-native';
 import Animated, {
   runOnJS,
   useAnimatedScrollHandler,
   useSharedValue,
-} from 'react-native-reanimated';
+} from '@override/react-native-reanimated';
+import {View, useWindowDimensions} from 'react-native';
 
 import {Color} from '@app/colors';
 import {EmptyCell} from '@app/components/backup-verify/empty-cell';

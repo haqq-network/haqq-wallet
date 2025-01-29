@@ -1,16 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
-import {
-  ActivityIndicator,
-  Image,
-  View,
-  useWindowDimensions,
-} from 'react-native';
-import {ImageURISource} from 'react-native/Libraries/Image/ImageSource';
-import {
-  PanGestureHandler,
-  PanGestureHandlerGestureEvent,
-} from 'react-native-gesture-handler';
 import Animated, {
   Easing,
   FadeIn,
@@ -23,7 +12,18 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-} from 'react-native-reanimated';
+} from '@override/react-native-reanimated';
+import {
+  ActivityIndicator,
+  Image,
+  View,
+  useWindowDimensions,
+} from 'react-native';
+import {ImageURISource} from 'react-native/Libraries/Image/ImageSource';
+import {
+  PanGestureHandler,
+  PanGestureHandlerGestureEvent,
+} from 'react-native-gesture-handler';
 import {useTiming} from 'react-native-redash';
 
 import {Color, getColor} from '@app/colors';

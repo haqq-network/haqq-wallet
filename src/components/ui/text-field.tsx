@@ -7,6 +7,15 @@ import React, {
   useState,
 } from 'react';
 
+import Animated, {
+  Easing,
+  FadeIn,
+  FadeOut,
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from '@override/react-native-reanimated';
 import {
   I18nManager,
   LayoutChangeEvent,
@@ -19,15 +28,6 @@ import {
   View,
 } from 'react-native';
 import AnimatedRollingNumber from 'react-native-animated-rolling-numbers';
-import Animated, {
-  Easing,
-  FadeIn,
-  FadeOut,
-  interpolate,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
 
 import {Color, getColor} from '@app/colors';
 import {Spacer} from '@app/components/ui/spacer';

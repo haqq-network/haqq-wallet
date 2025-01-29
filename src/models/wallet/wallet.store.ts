@@ -1,5 +1,5 @@
+import {isHydrated, makePersistable} from '@override/mobx-persist-store';
 import {makeAutoObservable, runInAction, when} from 'mobx';
-import {isHydrated, makePersistable} from 'mobx-persist-store';
 
 import {app} from '@app/contexts';
 import {DEBUG_VARS} from '@app/debug-vars';
@@ -60,7 +60,7 @@ class WalletStore implements RPCObserver {
   lastBalanceUpdate: Date = new Date(0);
   balances: TBalances = {};
 
-  constructor(shouldSkipPersisting: boolean = false) {
+  constructor() {
     makeAutoObservable(this, {}, {autoBind: true});
 
     when(
@@ -68,98 +68,96 @@ class WalletStore implements RPCObserver {
       () => this.onMessage(Socket.lastMessage),
     );
 
-    if (!shouldSkipPersisting) {
-      const isMockEnabled =
-        __DEV__ &&
-        DEBUG_VARS.enableMockWallets &&
-        DEBUG_VARS.mockWalletsAddresses.length;
+    const isMockEnabled =
+      __DEV__ &&
+      DEBUG_VARS.enableMockWallets &&
+      DEBUG_VARS.mockWalletsAddresses.length;
 
-      let originalWallets: IWalletModel[] = [];
+    let originalWallets: IWalletModel[] = [];
 
-      makePersistable(this, {
-        name: this.constructor.name,
-        properties: [
-          {
-            key: 'wallets',
-            deserialize: (value: IWalletModel[]) => {
-              if (isMockEnabled) {
-                originalWallets = value;
-                return getMockWallets().map(w => new WalletModel(w));
-              }
-              return value
-                .sort(
-                  (a: IWalletModel, b: IWalletModel) => a.position - b.position,
-                )
-                .map(w => new WalletModel(w));
-            },
-            serialize: (value: WalletModel[]) => {
-              if (isMockEnabled) {
-                return originalWallets;
-              }
-
-              return value.map(w => w.toJSON());
-            },
+    makePersistable(this, {
+      name: this.constructor.name,
+      properties: [
+        {
+          key: 'wallets',
+          deserialize: (value: IWalletModel[]) => {
+            if (isMockEnabled) {
+              originalWallets = value;
+              return getMockWallets().map(w => new WalletModel(w));
+            }
+            return value
+              .sort(
+                (a: IWalletModel, b: IWalletModel) => a.position - b.position,
+              )
+              .map(w => new WalletModel(w));
           },
-          {
-            key: 'balances',
-            deserialize: (value: TBalancesSerialized) => {
-              try {
-                const deserialized: TBalances = {};
+          serialize: (value: WalletModel[]) => {
+            if (isMockEnabled) {
+              return originalWallets;
+            }
 
-                for (const chainId of Object.keys(value)) {
-                  const walletsBalances = Object.entries(value[chainId]) as [
-                    AddressEthereum,
-                    BalanceDataJson,
-                  ][];
+            return value.map(w => w.toJSON());
+          },
+        },
+        {
+          key: 'balances',
+          deserialize: (value: TBalancesSerialized) => {
+            try {
+              const deserialized: TBalances = {};
 
-                  if (!deserialized[chainId]) {
-                    deserialized[chainId] = {};
-                  }
+              for (const chainId of Object.keys(value)) {
+                const walletsBalances = Object.entries(value[chainId]) as [
+                  AddressEthereum,
+                  BalanceDataJson,
+                ][];
 
-                  for (const [wallet, balance] of walletsBalances) {
-                    deserialized[chainId][wallet] =
-                      BalanceModel.fromJSON(balance);
-                  }
+                if (!deserialized[chainId]) {
+                  deserialized[chainId] = {};
                 }
 
-                return deserialized;
-              } catch (err) {
-                logger.captureException(err, 'balances deserialize', {value});
-                return {};
+                for (const [wallet, balance] of walletsBalances) {
+                  deserialized[chainId][wallet] =
+                    BalanceModel.fromJSON(balance);
+                }
               }
-            },
-            serialize: (value: TBalances) => {
-              try {
-                const serialized: TBalancesSerialized = {};
 
-                for (const chainId of Object.keys(value)) {
-                  const walletsBalances = Object.entries(value[chainId]) as [
-                    AddressEthereum,
-                    BalanceModel,
-                  ][];
+              return deserialized;
+            } catch (err) {
+              logger.captureException(err, 'balances deserialize', {value});
+              return {};
+            }
+          },
+          serialize: (value: TBalances) => {
+            try {
+              const serialized: TBalancesSerialized = {};
 
-                  if (!serialized[chainId]) {
-                    serialized[chainId] = {};
-                  }
+              for (const chainId of Object.keys(value)) {
+                const walletsBalances = Object.entries(value[chainId]) as [
+                  AddressEthereum,
+                  BalanceModel,
+                ][];
 
-                  for (const [wallet, balance] of walletsBalances) {
-                    serialized[chainId][wallet] = balance.toJSON();
-                  }
+                if (!serialized[chainId]) {
+                  serialized[chainId] = {};
                 }
 
-                return serialized;
-              } catch (err) {
-                logger.captureException(err, 'balances serialize', {
-                  value,
-                });
-                return {};
+                for (const [wallet, balance] of walletsBalances) {
+                  serialized[chainId][wallet] = balance.toJSON();
+                }
               }
-            },
+
+              return serialized;
+            } catch (err) {
+              logger.captureException(err, 'balances serialize', {
+                value,
+              });
+              return {};
+            }
           },
-        ],
-        storage,
-      });
-    }
+        },
+      ],
+      storage,
+    });
   }
 
   get isHydrated() {
@@ -676,5 +674,5 @@ class WalletStore implements RPCObserver {
   };
 }
 
-const instance = new WalletStore(Boolean(process.env.JEST_WORKER_ID));
+const instance = new WalletStore();
 export {instance as Wallet};

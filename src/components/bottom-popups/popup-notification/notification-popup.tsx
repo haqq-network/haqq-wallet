@@ -70,6 +70,7 @@ export const NotificationPopup = ({
         loading={inProgress}
       />
       <Button
+        testID="notification-popup-not-now"
         i18n={I18N.popupNotificationNotNow}
         variant={ButtonVariant.text}
         size={ButtonSize.middle}

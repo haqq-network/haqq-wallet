@@ -1,6 +1,5 @@
 import React, {forwardRef, memo, useImperativeHandle, useState} from 'react';
 
-import {View} from 'react-native';
 import Animated, {
   WithTimingConfig,
   interpolateColor,
@@ -8,7 +7,8 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-} from 'react-native-reanimated';
+} from '@override/react-native-reanimated';
+import {View} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
 import {Text} from '@app/components/ui';

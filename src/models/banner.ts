@@ -1,5 +1,5 @@
+import {makePersistable} from '@override/mobx-persist-store';
 import {makeAutoObservable} from 'mobx';
-import {makePersistable} from 'mobx-persist-store';
 
 import {Color} from '@app/colors';
 import {storage} from '@app/services/mmkv';
@@ -63,15 +63,13 @@ export type Banner = {
 class BannerStore {
   banners: Banner[] = [];
 
-  constructor(shouldSkipPersisting: boolean = false) {
+  constructor() {
     makeAutoObservable(this);
-    if (!shouldSkipPersisting) {
-      makePersistable(this, {
-        name: this.constructor.name,
-        properties: ['banners'],
-        storage,
-      });
-    }
+    makePersistable(this, {
+      name: this.constructor.name,
+      properties: ['banners'],
+      storage,
+    });
   }
 
   create(params: Banner) {
@@ -140,5 +138,5 @@ class BannerStore {
   }
 }
 
-const instance = new BannerStore(Boolean(process.env.JEST_WORKER_ID));
+const instance = new BannerStore();
 export {instance as Banner};

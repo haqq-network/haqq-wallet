@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, {FC, memo, useMemo, useRef, useState} from 'react';
 
-import {runOnJS, useAnimatedReaction} from 'react-native-reanimated';
+import {runOnJS, useAnimatedReaction} from '@override/react-native-reanimated';
 import Video from 'react-native-video';
 
 import {HEIGHT, WIDTH} from '../core/constants';

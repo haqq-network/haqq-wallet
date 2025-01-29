@@ -1,7 +1,5 @@
 import React, {useEffect} from 'react';
 
-import {Keyboard, StyleSheet, View, useWindowDimensions} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import Animated, {
   Easing,
   WithTimingConfig,
@@ -10,7 +8,9 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-} from 'react-native-reanimated';
+} from '@override/react-native-reanimated';
+import {Keyboard, StyleSheet, View, useWindowDimensions} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';

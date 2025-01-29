@@ -1,13 +1,17 @@
-require('dotenv').config();
+const {FOR_DETOX} = require('dotenv').config();
 const path = require('path');
 const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
 const blacklist = require('metro-config/src/defaults/exclusionList');
+
+const IS_DETOX_RUNNIG = FOR_DETOX || !!process.env.FOR_DETOX || !!process.env.JEST_WORKER_ID;
 
 // used for local development
 const devpkg = require('./.devpkg.js');
 
 const defaultModuleResolver =
   getDefaultConfig(__dirname).resolver.resolveRequest;
+  
+const defaultSourceExts = require('metro-config/src/defaults/defaults').sourceExts;
 
 const config = {
   resetCache: true,
@@ -23,6 +27,9 @@ const config = {
     // plugins: ['@babel/plugin-proposal-numeric-separator'],
   },
   resolver: {
+    sourceExts: IS_DETOX_RUNNIG
+      ? ['.mock.ts', '.mock.js', ...defaultSourceExts]
+      : defaultSourceExts,
     extraNodeModules: {
       ...require('node-libs-react-native'),
       ...devpkg.extraNodeModules,

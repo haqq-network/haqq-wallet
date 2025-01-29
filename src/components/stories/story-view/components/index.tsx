@@ -7,8 +7,8 @@ import React, {
   useState,
 } from 'react';
 
+import {useSharedValue} from '@override/react-native-reanimated';
 import {Image} from 'react-native';
-import {useSharedValue} from 'react-native-reanimated';
 
 import {StoryContainer} from './story-container';
 

@@ -1,7 +1,7 @@
 import React, {memo, useEffect, useState} from 'react';
 
+import Animated, {FadeIn} from '@override/react-native-reanimated';
 import {View} from 'react-native';
-import Animated, {FadeIn} from 'react-native-reanimated';
 
 import {Color} from '@app/colors';
 import {Text, Waiting} from '@app/components/ui';

@@ -1,7 +1,7 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
+import Animated, {FadeIn} from '@override/react-native-reanimated';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
-import Animated, {FadeIn} from 'react-native-reanimated';
 import {SvgUri} from 'react-native-svg';
 
 import {Color} from '@app/colors';

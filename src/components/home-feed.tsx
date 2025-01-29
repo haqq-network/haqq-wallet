@@ -9,6 +9,7 @@ import Config from 'react-native-config';
 import {StoriesWrapper} from '@app/components/stories';
 import {createTheme, showModal} from '@app/helpers';
 import {useTypedNavigation} from '@app/hooks';
+import {AppStore} from '@app/models/app';
 import {Currencies} from '@app/models/currencies';
 import {Nft} from '@app/models/nft';
 import {Provider} from '@app/models/provider';
@@ -53,6 +54,9 @@ export const HomeFeed = observer(() => {
   );
 
   useEffect(() => {
+    if (AppStore.isDetoxRunning) {
+      return;
+    }
     const snoozed = VariablesDate.get('snoozeNotifications');
     if (!VariablesBool.exists('notifications')) {
       if (snoozed && isAfter(snoozed, new Date())) {

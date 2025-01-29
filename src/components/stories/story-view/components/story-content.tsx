@@ -1,7 +1,7 @@
 import React, {FC, memo, useMemo, useState} from 'react';
 
+import {runOnJS, useAnimatedReaction} from '@override/react-native-reanimated';
 import {StyleSheet, View} from 'react-native';
-import {runOnJS, useAnimatedReaction} from 'react-native-reanimated';
 
 import {StoryContentProps} from '../core/dto/componentsDTO';
 

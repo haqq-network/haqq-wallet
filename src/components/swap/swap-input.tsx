@@ -1,9 +1,9 @@
 import React, {useCallback, useMemo} from 'react';
 
+import {Easing} from '@override/react-native-reanimated';
 import {observer} from 'mobx-react';
 import {Platform, View} from 'react-native';
 import AnimatedRollingNumber from 'react-native-animated-rolling-numbers';
-import {Easing} from 'react-native-reanimated';
 
 import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';

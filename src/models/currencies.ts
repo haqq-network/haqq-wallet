@@ -1,6 +1,6 @@
+import {makePersistable} from '@override/mobx-persist-store';
 import {hashMessage} from '@walletconnect/utils';
 import {makeAutoObservable, runInAction, when} from 'mobx';
-import {makePersistable} from 'mobx-persist-store';
 
 import {Currency, CurrencyRate} from '@app/models/types';
 import {VariablesDate} from '@app/models/variables-date';
@@ -28,18 +28,14 @@ class CurrenciesStore {
   private _isInited = false;
   private _prevRatesHash = '';
 
-  constructor(shouldSkipPersisting: boolean = false) {
+  constructor() {
     makeAutoObservable(this);
-    if (!shouldSkipPersisting) {
-      makePersistable(this, {
-        name: this.constructor.name,
-        //@ts-ignore
-        properties: ['_currencies', '_selectedCurrency'],
-        storage,
-      }).finally(() => runInAction(() => (this._isInited = true)));
-    } else {
-      runInAction(() => (this._isInited = true));
-    }
+    makePersistable(this, {
+      name: this.constructor.name,
+      //@ts-ignore
+      properties: ['_currencies', '_selectedCurrency'],
+      storage,
+    }).finally(() => runInAction(() => (this._isInited = true)));
 
     this.fetchCurrencies();
   }
@@ -198,5 +194,5 @@ class CurrenciesStore {
   }
 }
 
-const instance = new CurrenciesStore(Boolean(process.env.JEST_WORKER_ID));
+const instance = new CurrenciesStore();
 export {instance as Currencies};

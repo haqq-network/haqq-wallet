@@ -1,11 +1,11 @@
 import React, {useEffect, useMemo, useState} from 'react';
 
-import {SessionTypes} from '@walletconnect/types';
-import {View, useWindowDimensions} from 'react-native';
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
-} from 'react-native-reanimated';
+} from '@override/react-native-reanimated';
+import {SessionTypes} from '@walletconnect/types';
+import {View, useWindowDimensions} from 'react-native';
 
 import {Spacer} from '@app/components/ui';
 import {WalletCard} from '@app/components/wallet-card';

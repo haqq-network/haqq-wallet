@@ -12,7 +12,7 @@ import {IS_ANDROID} from '@app/variables/common';
 
 const logger = Logger.create('EventTracker');
 
-const DISABLED = __DEV__ || Config.FOR_DETOX;
+const DISABLED = __DEV__ || AppStore.isDetoxRunning;
 
 const EventsNameMap: Record<MarketingEvents, string> = {
   [MarketingEvents.accountCreated]: 'account created',

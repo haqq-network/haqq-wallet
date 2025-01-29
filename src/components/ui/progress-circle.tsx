@@ -1,11 +1,11 @@
 import React, {forwardRef, useImperativeHandle} from 'react';
 
-import {View} from 'react-native';
 import Animated, {
   useAnimatedProps,
   useSharedValue,
   withTiming,
-} from 'react-native-reanimated';
+} from '@override/react-native-reanimated';
+import {View} from 'react-native';
 import Svg, {Circle} from 'react-native-svg';
 
 import {Color, getColor} from '@app/colors';

@@ -1,8 +1,8 @@
 import React, {useMemo} from 'react';
 
+import Animated, {FadeIn, FadeOut} from '@override/react-native-reanimated';
 import {observer} from 'mobx-react';
 import {KeyboardAvoidingView, View} from 'react-native';
-import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color} from '@app/colors';

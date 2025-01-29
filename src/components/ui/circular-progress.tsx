@@ -1,12 +1,12 @@
 import React, {useEffect, useMemo} from 'react';
 
-import _ from 'lodash';
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import Animated, {
   useAnimatedProps,
   useSharedValue,
   withTiming,
-} from 'react-native-reanimated';
+} from '@override/react-native-reanimated';
+import _ from 'lodash';
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import Svg, {Circle, CircleProps} from 'react-native-svg';
 
 import {Color} from '@app/colors';

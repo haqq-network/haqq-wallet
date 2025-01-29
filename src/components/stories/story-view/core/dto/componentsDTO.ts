@@ -1,5 +1,5 @@
+import {SharedValue} from '@override/react-native-reanimated';
 import {ImageStyle, TextStyle, ViewStyle} from 'react-native';
-import {SharedValue} from 'react-native-reanimated';
 
 import {ProgressStorageProps} from './helpersDTO';
 import {StoriesViewStoryProps} from './storiesViewDTO';

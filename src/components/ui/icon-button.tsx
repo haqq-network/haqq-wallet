@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   ViewProps,
 } from 'react-native';
-import Config from 'react-native-config';
+
+import {AppStore} from '@app/models/app';
 
 export type IconButtonProps = ViewProps & {
   onPress?: () => void | Promise<void>;
@@ -48,7 +49,7 @@ export const IconButton = ({
   return (
     <TouchableOpacity
       style={containerStyle}
-      activeOpacity={Config.FOR_DETOX ? 1 : 0.2}
+      activeOpacity={AppStore.isDetoxRunning ? 1 : 0.2}
       {...props}
       disabled={disabled || !onPress}
       onPress={onPressButton}>

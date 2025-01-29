@@ -1,10 +1,12 @@
 import '@walletconnect/react-native-compat';
 import 'node-libs-react-native/globals';
 import '@ethersproject/shims';
-import {AppRegistry, I18nManager, LogBox} from 'react-native';
 import './global';
 import './src/modifiers/json-rpc-provider.modifier';
 
+import {App} from './src/app';
+import './src/event-actions';
+import {AppRegistry, I18nManager, LogBox} from 'react-native';
 import {DEBUG_VARS} from '@app/debug-vars';
 import {enableBatchedStateUpdates} from '@app/hooks/batched-set-state';
 import {Language} from '@app/models/language';
@@ -14,11 +16,12 @@ import * as Sentry from '@sentry/react-native';
 import Config from 'react-native-config';
 import {enableFreeze, enableScreens} from 'react-native-screens';
 import {name as appName} from './app.json';
-import {App} from './src/app';
-import './src/event-actions';
 import {Jailbreak} from './src/jailbreak';
 
-LogBox.ignoreAllLogs();
+if(IS_DETOX) {
+  LogBox.ignoreAllLogs();
+}
+
 if (!global.BigInt) {
   const BigInt = require('big-integer');
 
@@ -68,5 +71,5 @@ const Wrapped = DEBUG_VARS.enableSentry ? Sentry.wrap(App) : App;
 AppRegistry.registerComponent(appName, () => Wrapped);
 
 AppRegistry.registerComponent('jailbreak', () =>
-  Config.FOR_DETOX ? Wrapped : Jailbreak,
+  IS_DETOX ? Wrapped : Jailbreak,
 );

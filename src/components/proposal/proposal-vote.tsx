@@ -1,7 +1,10 @@
 import React from 'react';
 
+import Animated, {
+  useAnimatedStyle,
+  withTiming,
+} from '@override/react-native-reanimated';
 import {StyleSheet, useWindowDimensions} from 'react-native';
-import Animated, {useAnimatedStyle, withTiming} from 'react-native-reanimated';
 
 import {PopupProposalVote} from '@app/components/bottom-popups';
 import {VoteNamesType} from '@app/types';

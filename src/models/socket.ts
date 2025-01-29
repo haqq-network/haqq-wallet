@@ -1,5 +1,5 @@
+import {makePersistable} from '@override/mobx-persist-store';
 import {makeAutoObservable, runInAction} from 'mobx';
-import {makePersistable} from 'mobx-persist-store';
 
 import {AddressUtils} from '@app/helpers/address-utils';
 import {Wallet} from '@app/models/wallet';
@@ -19,16 +19,14 @@ class SocketStore {
   private fallbackIntervalTimer: ReturnType<typeof setInterval> | null = null;
   lastMessage: RPCMessage = {data: {}, type: ''};
 
-  constructor(shouldSkipPersisting: boolean = false) {
+  constructor() {
     makeAutoObservable(this);
-    if (!shouldSkipPersisting) {
-      makePersistable(this, {
-        name: this.constructor.name,
-        //@ts-ignore
-        properties: ['data'],
-        storage,
-      });
-    }
+    makePersistable(this, {
+      name: this.constructor.name,
+      //@ts-ignore
+      properties: ['data'],
+      storage,
+    });
   }
 
   private startHeartbeat = () => {
@@ -160,5 +158,5 @@ class SocketStore {
   };
 }
 
-const instance = new SocketStore(Boolean(process.env.JEST_WORKER_ID));
+const instance = new SocketStore();
 export {instance as Socket};

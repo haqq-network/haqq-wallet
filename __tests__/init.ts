@@ -5,6 +5,7 @@ jest.mock('react-native-reanimated', () => {
     Easing: {
       bezierFn: jest.fn,
     },
+    useAnimatedStyle: jest.fn,
   };
 });
 
