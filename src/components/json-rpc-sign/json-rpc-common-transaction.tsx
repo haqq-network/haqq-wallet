@@ -20,12 +20,18 @@ import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {I18N} from '@app/i18n';
+import {Contract} from '@app/models/contract';
 import {Fee} from '@app/models/fee';
 import {ProviderModel} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {Balance} from '@app/services/balance';
-import {Indexer} from '@app/services/indexer';
-import {IToken, JsonRpcMetadata, JsonRpcTransactionRequest} from '@app/types';
+import {
+  AddressWallet,
+  ChainId,
+  IToken,
+  JsonRpcMetadata,
+  JsonRpcTransactionRequest,
+} from '@app/types';
 import {getHostnameFromUrl, openInAppBrowser} from '@app/utils';
 import {STRINGS} from '@app/variables/common';
 
@@ -41,7 +47,7 @@ export interface JsonRpcCommonTransactionProps {
   fee: Fee | null | undefined;
   tx: Partial<JsonRpcTransactionRequest> | undefined;
   parsedInput: ethers.utils.TransactionDescription | undefined;
-  chainId: number;
+  chainId: ChainId;
   onFeePress: () => void;
 }
 
@@ -151,10 +157,8 @@ export const JsonRpcCommonTransaction = ({
   }, [provider, parsedInput, delegatorAddress]);
 
   useEffectAsync(async () => {
-    const resp = await Indexer.instance.getAddresses({
-      [chainId]: [tx?.to!],
-    });
-    const t = resp[chainId]?.[0] ?? Token.UNKNOWN_TOKEN;
+    const contract = await Contract.getById(tx?.to! as AddressWallet, chainId);
+    const t = contract ?? Token.UNKNOWN_TOKEN;
     setToken(t as unknown as IToken);
   }, [tx, chainId]);
 

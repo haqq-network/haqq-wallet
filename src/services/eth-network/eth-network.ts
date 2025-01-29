@@ -1,6 +1,5 @@
-import {TransactionRequest} from '@ethersproject/abstract-provider';
 import {Deferrable} from '@ethersproject/properties';
-import {ProviderInterface} from '@haqq/rn-wallet-providers';
+import {ProviderInterface, TransactionRequest} from '@haqq/rn-wallet-providers';
 import Decimal from 'decimal.js';
 import {BigNumber, utils} from 'ethers';
 
@@ -14,6 +13,7 @@ import {Balance} from '@app/services/balance';
 import {getERC1155TransferData} from '@app/services/eth-network/erc1155';
 import {getERC721TransferData} from '@app/services/eth-network/erc721';
 import {storage} from '@app/services/mmkv';
+import {ChainId} from '@app/types';
 
 import {getERC20TransferData} from './erc20';
 import {
@@ -26,7 +26,7 @@ import {
 import {TronNetwork} from '../tron-network';
 
 export class EthNetwork {
-  static chainId: number = getDefaultChainId();
+  static chainId: ChainId = getDefaultChainId();
   static explorer: string | undefined;
 
   static init(provider: ProviderModel) {
@@ -38,7 +38,7 @@ export class EthNetwork {
     estimate: CalculatedFees,
     {from, to, value = Balance.Empty, data = '0x'}: TxEstimationParams,
     provider = Provider.selectedProvider,
-  ) {
+  ): Promise<TransactionRequest> {
     try {
       if (!AddressUtils.isEthAddress(to)) {
         throw new Error('Invalid "from" address');
@@ -68,7 +68,7 @@ export class EthNetwork {
       const tx = await utils.resolveProperties(transaction);
 
       return {
-        chainId: tx.chainId || undefined,
+        chainId: (tx.chainId as number) || undefined,
         data: tx.data || undefined,
         gasLimit: tx.gasLimit || undefined,
         type: tx.type,

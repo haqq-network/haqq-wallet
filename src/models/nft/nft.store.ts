@@ -10,10 +10,10 @@ import {
 import {Socket} from '@app/models/socket';
 import {Wallet} from '@app/models/wallet';
 import {Indexer} from '@app/services/indexer';
-import {AddressCosmosHaqq, IContract} from '@app/types';
+import {AddressCosmosHaqq} from '@app/types';
 import {RPCMessage} from '@app/types/rpc';
 
-import {ALL_NETWORKS_ID, Provider} from '../provider';
+import {Contract, IndexerContract} from '../contract';
 
 class NftStore {
   data: Record<AddressCosmosHaqq, NftCollection> = {};
@@ -106,43 +106,47 @@ class NftStore {
     );
   }
 
-  update(item: NftItem) {
-    const itemToUpdate = this.getNftById(item.contract, item.tokenId);
+  update(item: NftItem | null) {
+    if (item) {
+      const itemToUpdate = this.getNftById(item.contract, item.tokenId);
 
-    const existingCollection = this.getCollectionById(item.contract);
+      const existingCollection = this.getCollectionById(item.contract);
 
-    if (!existingCollection) {
-      this.fetchNft();
-    } else {
-      const existingNftIndex =
-        existingCollection?.nfts.findIndex(
-          nft => nft.tokenId === itemToUpdate?.tokenId,
-        ) ?? -1;
+      if (!existingCollection) {
+        this.fetchNft();
+      } else {
+        const existingNftIndex =
+          existingCollection?.nfts.findIndex(
+            nft => nft.tokenId === itemToUpdate?.tokenId,
+          ) ?? -1;
 
-      const newItem = {
-        ...(itemToUpdate ?? {}),
-        ...item,
-      };
+        const newItem = {
+          ...(itemToUpdate ?? {}),
+          ...item,
+        };
 
-      const nfts =
-        existingNftIndex !== -1
-          ? (existingCollection?.nfts ?? []).splice(
-              existingNftIndex,
-              1,
-              newItem,
-            )
-          : [newItem];
+        const nfts =
+          existingNftIndex !== -1
+            ? (existingCollection?.nfts ?? []).splice(
+                existingNftIndex,
+                1,
+                newItem,
+              )
+            : [newItem];
 
-      this.data = {
-        ...this.data,
-        [item.contract]: {
-          ...(existingCollection ?? {}),
-          nfts,
-        },
-      };
+        this.data = {
+          ...this.data,
+          [item.contract]: {
+            ...(existingCollection ?? {}),
+            nfts,
+          },
+        };
+      }
+
+      return true;
     }
 
-    return true;
+    return false;
   }
 
   fetchNft = async () => {
@@ -157,54 +161,50 @@ class NftStore {
     this.data = {};
 
     data.forEach(async item => {
-      const contract = await this.getContract(item.address);
-      const contractType = contract.is_erc721
-        ? ContractType.erc721
-        : ContractType.erc1155;
+      const contract = await Contract.getById(item.address, item.chain_id);
 
-      runInAction(() => {
-        this.data[item.id] = {
-          ...item,
-          description: item.description || '',
-          created_at: Date.now(),
-          contractType: contractType,
-          is_transfer_prohibinden: Boolean(contract.is_transfer_prohibinden),
-          nfts: item.nfts.map(nft => this.parseIndexerNft(nft, contract)),
-        };
-      });
+      if (contract) {
+        const contractType = contract.is_erc721
+          ? ContractType.erc721
+          : ContractType.erc1155;
+
+        runInAction(() => {
+          this.data[item.id] = {
+            ...item,
+            description: item.description || '',
+            created_at: Date.now(),
+            contractType: contractType,
+            is_transfer_prohibinden: Boolean(contract.is_transfer_prohibinden),
+            nfts: item.nfts
+              .map(nft => this.parseIndexerNft(nft, contract))
+              .filter(i => i !== null),
+          };
+        });
+      }
     });
-  };
-
-  private readonly getContract = async (contractAddress: string) => {
-    const _providerEthChainId = (
-      Provider.selectedProviderId === ALL_NETWORKS_ID
-        ? Provider.defaultProvider
-        : Provider.selectedProvider
-    ).ethChainId;
-
-    const contracts = await Indexer.instance.getAddresses({
-      [_providerEthChainId]: [contractAddress],
-    });
-    return contracts[_providerEthChainId][0];
   };
 
   private readonly parseIndexerNft = (
     data: NftItemIndexer,
-    contract: IContract,
-  ): NftItem => {
-    const contractType = contract.is_erc721
-      ? ContractType.erc721
-      : ContractType.erc1155;
+    contract: IndexerContract | null,
+  ): NftItem | null => {
+    if (contract) {
+      const contractType = contract.is_erc721
+        ? ContractType.erc721
+        : ContractType.erc1155;
 
-    return {
-      ...data,
-      contractType: contractType,
-      name: data.name || 'Unknown',
-      description: data.description || '-',
-      tokenId: Number(data.token_id),
-      price: undefined, // FIXME Calculate price by token
-      is_transfer_prohibinden: Boolean(contract.is_transfer_prohibinden),
-    };
+      return {
+        ...data,
+        contractType: contractType,
+        name: data.name || 'Unknown',
+        description: data.description || '-',
+        tokenId: Number(data.token_id),
+        price: undefined, // FIXME Calculate price by token
+        is_transfer_prohibinden: Boolean(contract.is_transfer_prohibinden),
+      };
+    }
+
+    return null;
   };
 
   onMessage = async (message: RPCMessage) => {
@@ -212,7 +212,10 @@ class NftStore {
       return;
     }
 
-    const contract = await this.getContract(message.data.contract);
+    const contract = await Contract.getById(
+      message.data.contract,
+      message.data.chain_id,
+    );
     this.update(this.parseIndexerNft(message.data, contract));
   };
 

@@ -8,7 +8,7 @@ import {createTheme} from '@app/helpers';
 import {useCalculatedDimensionsValue} from '@app/hooks/use-calculated-dimensions-value';
 import {I18N} from '@app/i18n';
 import {ALL_NETWORKS_ID, Provider} from '@app/models/provider';
-import {ModalType, Modals} from '@app/types';
+import {ChainId, ModalType, Modals} from '@app/types';
 
 import {SettingsProvidersAllNetworksRow} from '../settings/settings-providers/settings-providers-all-networks-row';
 import {SettingsProvidersRow} from '../settings/settings-providers/settings-providers-row';
@@ -24,7 +24,7 @@ export function ProvidersBottomSheet({
 }: Modals[ModalType.providersBottomSheet]) {
   const [searchProviderValue, setSearchProviderValue] = useState('');
   const bsRef = useRef<BottomSheetRef>(null);
-  const selectedProvider = useRef(0);
+  const selectedProvider = useRef<ChainId>(0);
 
   const providers = useMemo(() => {
     if (outProviders?.length) {
@@ -43,7 +43,7 @@ export function ProvidersBottomSheet({
     [closeDistance],
   );
   const onPressProvider = useCallback(
-    async (providerChainId: number) => {
+    async (providerChainId: ChainId) => {
       if (
         !!initialProviderChainId &&
         providerChainId === initialProviderChainId

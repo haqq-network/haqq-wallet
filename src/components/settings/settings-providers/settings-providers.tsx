@@ -3,13 +3,14 @@ import React from 'react';
 import {FlatList, StyleSheet} from 'react-native';
 
 import {ProviderModel} from '@app/models/provider';
+import {ChainId} from '@app/types';
 
 import {SettingsProvidersRow} from './settings-providers-row';
 
 export type SettingsProvidersProps = {
   providers: ProviderModel[];
-  providerChainId: number;
-  onSelect: (providerChainId: number) => void;
+  providerChainId: ChainId;
+  onSelect: (providerChainId: ChainId) => void;
 };
 
 export const SettingsProviders = ({

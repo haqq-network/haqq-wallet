@@ -13,10 +13,10 @@ class AppStore {
   private _isInitialized = false;
 
   // Hydrated properties
-  private _isOnboarded = false;
-  private _networkLoggerEnabled = false;
-  private _networkLogsCacheSize = 500; // count of stored http request
-  private _testnetsEnabledForAllNetworks = true;
+  _isOnboarded = false;
+  _networkLoggerEnabled = false;
+  _networkLogsCacheSize = 500; // count of stored http request
+  _testnetsEnabledForAllNetworks = true;
   isDeveloperModeEnabled = Config.IS_DEVELOPMENT === 'true';
   isTesterModeEnabled = Config.IS_TESTMODE === 'true';
 
@@ -25,16 +25,12 @@ class AppStore {
     makePersistable(this, {
       name: this.constructor.name,
       properties: [
-        // @ts-ignore
         '_isOnboarded',
+        '_networkLoggerEnabled',
+        '_testnetsEnabledForAllNetworks',
+        '_networkLogsCacheSize',
         'isDeveloperModeEnabled',
         'isTesterModeEnabled',
-        // @ts-ignore
-        '_networkLoggerEnabled',
-        // @ts-ignore
-        '_testnetsEnabledForAllNetworks',
-        // @ts-ignore
-        '_networkLogsCacheSize',
       ],
       storage,
     });

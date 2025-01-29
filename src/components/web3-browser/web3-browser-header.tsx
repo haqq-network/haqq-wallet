@@ -17,6 +17,7 @@ import {WebViewNavigation} from 'react-native-webview';
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {Wallet} from '@app/models/wallet';
+import {ChainId} from '@app/types';
 import {IS_ANDROID} from '@app/variables/common';
 
 import {clearUrl} from '../../helpers/web3-browser-utils';
@@ -33,7 +34,7 @@ interface Web3BrowserHeaderProps {
   webviewNavigationData: WebViewNavigation;
   siteUrl: string;
   popup: boolean;
-  chainId: number;
+  chainId: ChainId;
 
   onPressMore(): void;
 
