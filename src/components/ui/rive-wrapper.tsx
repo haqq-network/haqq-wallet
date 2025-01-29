@@ -16,6 +16,8 @@ import Rive, {
 } from 'rive-react-native';
 import {XOR} from 'rive-react-native/src/helpers';
 
+import {AppStore} from '@app/models/app';
+
 type RiveWrapperProps = {
   width: DimensionValue;
   height: DimensionValue;
@@ -61,12 +63,14 @@ export const RiveWrapper = React.forwardRef<RiveRef, RiveWrapperProps>(
         <Rive
           ref={ref}
           style={{width, height}}
-          autoplay={autoplay}
+          autoplay={AppStore.isDetoxRunning ? false : autoplay}
           {...props}
         />
         {/* if you unmount the component while clicking on the animation, the application will crash */}
         {/* View component below prevent click  */}
-        {!enableClickToAnimation && <View style={styles.overlay} />}
+        {(!enableClickToAnimation || AppStore.isDetoxRunning) && (
+          <View style={styles.overlay} />
+        )}
       </View>
     );
   },

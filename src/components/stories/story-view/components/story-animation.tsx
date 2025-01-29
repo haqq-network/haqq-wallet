@@ -1,11 +1,11 @@
 import React, {FC, memo} from 'react';
 
-import {Platform, StyleSheet} from 'react-native';
 import Animated, {
   Extrapolation,
   interpolate,
   useAnimatedStyle,
-} from 'react-native-reanimated';
+} from '@override/react-native-reanimated';
+import {Platform, StyleSheet} from 'react-native';
 
 import {createTheme} from '@app/helpers';
 

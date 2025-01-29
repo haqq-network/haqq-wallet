@@ -1,7 +1,5 @@
 import React, {memo, useCallback} from 'react';
 
-import {I18nManager, View} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import Animated, {
   Easing,
   FadeIn,
@@ -11,7 +9,9 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-} from 'react-native-reanimated';
+} from '@override/react-native-reanimated';
+import {I18nManager, View} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';

@@ -1,10 +1,10 @@
 import React, {useCallback} from 'react';
 
-import {StyleSheet, useWindowDimensions} from 'react-native';
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
-} from 'react-native-reanimated';
+} from '@override/react-native-reanimated';
+import {StyleSheet, useWindowDimensions} from 'react-native';
 
 import {BaseNewsItem} from '@app/types';
 

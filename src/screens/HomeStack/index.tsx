@@ -5,7 +5,6 @@ import {
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
 import {StatusBar} from 'react-native';
-import Config from 'react-native-config';
 
 import {Color} from '@app/colors';
 import {DismissPopupButton} from '@app/components/popup/dismiss-popup-button';
@@ -14,6 +13,7 @@ import {popupScreenOptionsWithMargin} from '@app/helpers';
 import {getNewsDetailAppTitle} from '@app/helpers/get-news-detail-title';
 import {getWalletTitle} from '@app/helpers/get-wallet-title';
 import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
+import {AppStore} from '@app/models/app';
 import {HomeStackParamList, HomeStackRoutes} from '@app/route-types';
 import {basicScreenOptions} from '@app/screens';
 import {DeviceStack} from '@app/screens/DeviceStack';
@@ -53,8 +53,8 @@ import {SignUpStack} from '../WelcomeStack/SignUpStack';
 const navigatorOptions: NativeStackNavigationOptions = {
   gestureEnabled: false,
   freezeOnBlur: true,
-  animation: Config.FOR_DETOX ? 'none' : 'default',
-  animationDuration: Config.FOR_DETOX ? 0 : 350,
+  animation: AppStore.isDetoxRunning ? 'none' : 'default',
+  animationDuration: AppStore.isDetoxRunning ? 0 : 350,
 };
 
 const modalOptions: NativeStackNavigationOptions = {

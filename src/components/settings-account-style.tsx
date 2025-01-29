@@ -1,11 +1,11 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
-import {useWindowDimensions} from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-} from 'react-native-reanimated';
+} from '@override/react-native-reanimated';
+import {useWindowDimensions} from 'react-native';
 
 import {Color} from '@app/colors';
 import {

@@ -12,12 +12,12 @@ import {
   ViewProps,
   ViewStyle,
 } from 'react-native';
-import Config from 'react-native-config';
 import {useTimer} from 'use-timer';
 
 import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';
 import {I18N} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {ColorType} from '@app/types';
 import {sleep} from '@app/utils';
 
@@ -244,7 +244,7 @@ export const Button = ({
       style={containerStyle as ViewStyle}
       onPress={onPressButton}
       onLongPress={onLongPress}
-      activeOpacity={Config.FOR_DETOX ? 1 : 0.7}
+      activeOpacity={AppStore.isDetoxRunning ? 1 : 0.7}
       disabled={disabled || loadFlag || isDisabledByTimer}
       testID={
         loadFlag

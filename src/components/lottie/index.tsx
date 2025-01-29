@@ -4,7 +4,8 @@ import {useAppState} from '@react-native-community/hooks';
 import type AnimatedLottieView from 'lottie-react-native';
 import Lottie, {LottieViewProps} from 'lottie-react-native';
 import {StyleProp, ViewStyle} from 'react-native';
-import Config from 'react-native-config';
+
+import {AppStore} from '@app/models/app';
 
 export type LottieWrapRef = {
   play: () => void;
@@ -26,14 +27,34 @@ export const LottieWrap = React.forwardRef<LottieWrapRef, AnimatedLottie>(
     const appState = useAppState();
 
     React.useImperativeHandle(ref, () => ({
-      play: async () => lottieRef.current?.play?.(),
-      reset: () => lottieRef?.current?.reset?.(),
-      pause: () => lottieRef?.current?.pause?.(),
-      resume: () => lottieRef?.current?.resume?.(),
+      play: async () => {
+        if (AppStore.isDetoxRunning) {
+          return;
+        }
+        lottieRef.current?.play?.();
+      },
+      reset: () => {
+        if (AppStore.isDetoxRunning) {
+          return;
+        }
+        lottieRef?.current?.reset?.();
+      },
+      pause: () => {
+        if (AppStore.isDetoxRunning) {
+          return;
+        }
+        lottieRef?.current?.pause?.();
+      },
+      resume: () => {
+        if (AppStore.isDetoxRunning) {
+          return;
+        }
+        lottieRef?.current?.resume?.();
+      },
     }));
 
     useEffect(() => {
-      if (Config.FOR_DETOX) {
+      if (AppStore.isDetoxRunning) {
         return;
       }
       if (appState === 'active') {
@@ -44,7 +65,7 @@ export const LottieWrap = React.forwardRef<LottieWrapRef, AnimatedLottie>(
     return (
       <Lottie
         {...props}
-        autoPlay={props?.autoPlay ?? !Config.FOR_DETOX ?? false}
+        autoPlay={AppStore.isDetoxRunning ? false : props?.autoPlay}
         ref={lottieRef}
         cacheComposition
       />

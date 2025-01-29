@@ -1,12 +1,12 @@
 import React, {forwardRef, useImperativeHandle} from 'react';
 
-import {observer} from 'mobx-react';
-import {View} from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-} from 'react-native-reanimated';
+} from '@override/react-native-reanimated';
+import {observer} from 'mobx-react';
+import {View} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
 import {Spacer, Text, TextVariant} from '@app/components/ui';

@@ -6,6 +6,14 @@ import React, {
   useState,
 } from 'react';
 
+import Animated, {
+  interpolate,
+  runOnJS,
+  useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
+  withTiming,
+} from '@override/react-native-reanimated';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -23,14 +31,6 @@ import {
   GestureDetector,
   PanGestureHandlerEventPayload,
 } from 'react-native-gesture-handler';
-import Animated, {
-  interpolate,
-  runOnJS,
-  useAnimatedStyle,
-  useDerivedValue,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {Color, getColor} from '@app/colors';

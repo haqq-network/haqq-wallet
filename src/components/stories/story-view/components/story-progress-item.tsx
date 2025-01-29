@@ -1,7 +1,7 @@
 import React, {FC, memo} from 'react';
 
+import Animated, {useAnimatedStyle} from '@override/react-native-reanimated';
 import {View} from 'react-native';
-import Animated, {useAnimatedStyle} from 'react-native-reanimated';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';

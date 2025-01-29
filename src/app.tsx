@@ -108,6 +108,20 @@ export const App = observer(() => {
   );
 
   useEffect(() => {
+    if (AppStore.isDetoxRunning) {
+      Logger.log(`
+        \x1b[91m
+        ╔══════════════════════════════════════════════════╗
+        ║\x1b[1m\x1b[97m                                                  \x1b[91m║
+        ║\x1b[1m\x1b[97m  ⚠️   R U N N I N G   D E T O X   T E S T S   ⚠️   \x1b[91m║
+        ║\x1b[1m\x1b[97m                                                  \x1b[91m║
+        ╚══════════════════════════════════════════════════╝
+        \x1b[0m
+        `);
+    }
+  }, []);
+
+  useEffect(() => {
     const openNetworkLogger = () => {
       vibrate(HapticEffects.success);
       navigator.navigate(HomeStackRoutes.NetworkLogger);

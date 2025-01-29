@@ -42,14 +42,11 @@ export const OnboardingFinishScreen = observer(() => {
         return;
       }
 
-      WalletConnect.instance.init();
       AppStore.isOnboarded = true;
 
       app.emit(Events.onBlockRequestCheck);
-
-      requestAnimationFrame(() => {
-        app.emit(Events.onAppStarted);
-      });
+      app.emit(Events.onAppStarted);
+      WalletConnect.instance.init();
     } else {
       navigation.getParent()?.goBack();
     }

@@ -7,13 +7,6 @@ import React, {
   useState,
 } from 'react';
 
-import _ from 'lodash';
-import {GestureResponderEvent, Pressable, StyleSheet} from 'react-native';
-import {
-  Directions,
-  Gesture,
-  GestureDetector,
-} from 'react-native-gesture-handler';
 import Animated, {
   cancelAnimation,
   runOnJS,
@@ -21,7 +14,14 @@ import Animated, {
   useDerivedValue,
   useSharedValue,
   withTiming,
-} from 'react-native-reanimated';
+} from '@override/react-native-reanimated';
+import _ from 'lodash';
+import {GestureResponderEvent, Pressable, StyleSheet} from 'react-native';
+import {
+  Directions,
+  Gesture,
+  GestureDetector,
+} from 'react-native-gesture-handler';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';

@@ -1,5 +1,5 @@
+import {isHydrated, makePersistable} from '@override/mobx-persist-store';
 import {makeAutoObservable} from 'mobx';
-import {isHydrated, makePersistable} from 'mobx-persist-store';
 
 import {storage} from '@app/services/mmkv';
 
@@ -18,15 +18,13 @@ export type Contact = {
 class ContactStore {
   contacts: Contact[] = [];
 
-  constructor(shouldSkipPersisting: boolean = false) {
+  constructor() {
     makeAutoObservable(this);
-    if (!shouldSkipPersisting) {
-      makePersistable(this, {
-        name: this.constructor.name,
-        properties: ['contacts'],
-        storage,
-      });
-    }
+    makePersistable(this, {
+      name: this.constructor.name,
+      properties: ['contacts'],
+      storage,
+    });
   }
 
   get isHydrated() {
@@ -108,5 +106,5 @@ class ContactStore {
   }
 }
 
-const instance = new ContactStore(Boolean(process.env.JEST_WORKER_ID));
+const instance = new ContactStore();
 export {instance as Contact};

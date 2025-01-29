@@ -1,7 +1,7 @@
 import DefaultProvidersJson from '@assets/migrations/providers.json';
+import {Easing} from '@override/react-native-reanimated';
 import {Platform} from 'react-native';
 import Config from 'react-native-config';
-import {Easing} from 'react-native-reanimated';
 
 import {NetworkProviderResponse} from '@app/services/backend';
 import {PushNotificationTopicsEnum} from '@app/services/push-notifications';

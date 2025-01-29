@@ -5,11 +5,11 @@ import {
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
 import {observer} from 'mobx-react';
-import Config from 'react-native-config';
 
 import {getModalScreenOptions} from '@app/helpers/get-modal-screen-options';
 import {getWelcomeScreen} from '@app/helpers/get-welcome-screen';
 import {themeUpdaterHOC} from '@app/helpers/theme-updater-hoc';
+import {AppStore} from '@app/models/app';
 import {WelcomeStackParamList, WelcomeStackRoutes} from '@app/route-types';
 import {basicScreenOptions} from '@app/screens';
 import {DeviceStack} from '@app/screens/DeviceStack';
@@ -45,8 +45,8 @@ const WelcomeStack = observer(() => {
       initialRouteName={initialRouteName}
       screenOptions={{
         ...basicScreenOptions,
-        animation: Config.FOR_DETOX ? 'none' : 'default',
-        animationDuration: Config.FOR_DETOX ? 0 : 350,
+        animation: AppStore.isDetoxRunning ? 'none' : 'default',
+        animationDuration: AppStore.isDetoxRunning ? 0 : 350,
       }}>
       <Stack.Screen
         component={themeUpdaterHOC(WelcomeScreen)}

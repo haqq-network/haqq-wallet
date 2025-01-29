@@ -1,5 +1,5 @@
+import {isHydrated, makePersistable} from '@override/mobx-persist-store';
 import {makeAutoObservable, runInAction} from 'mobx';
-import {isHydrated, makePersistable} from 'mobx-persist-store';
 import Config from 'react-native-config';
 import {
   startNetworkLogging,
@@ -102,6 +102,10 @@ class AppStore {
     runInAction(() => {
       this._testnetsEnabledForAllNetworks = value;
     });
+  }
+
+  get isDetoxRunning() {
+    return IS_DETOX;
   }
 }
 

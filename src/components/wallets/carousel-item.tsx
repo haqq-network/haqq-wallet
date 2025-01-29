@@ -1,11 +1,11 @@
 import React from 'react';
 
-import {I18nManager, Platform} from 'react-native';
 import Animated, {
   SharedValue,
   interpolate,
   useAnimatedStyle,
-} from 'react-native-reanimated';
+} from '@override/react-native-reanimated';
+import {I18nManager, Platform} from 'react-native';
 
 import {createTheme} from '@app/helpers';
 

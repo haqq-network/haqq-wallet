@@ -4,7 +4,7 @@ import Animated, {
   Extrapolation,
   interpolate,
   useAnimatedStyle,
-} from 'react-native-reanimated';
+} from '@override/react-native-reanimated';
 
 import {Color} from '@app/colors';
 import {Icon} from '@app/components/ui';

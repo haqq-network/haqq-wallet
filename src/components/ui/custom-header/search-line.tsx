@@ -1,12 +1,12 @@
 import React, {useCallback, useEffect, useRef} from 'react';
 
-import {TextInput, View} from 'react-native';
 import Animated, {
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-} from 'react-native-reanimated';
+} from '@override/react-native-reanimated';
+import {TextInput, View} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';

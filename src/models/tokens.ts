@@ -1,5 +1,5 @@
+import {makePersistable} from '@override/mobx-persist-store';
 import {makeAutoObservable, runInAction, when} from 'mobx';
-import {makePersistable} from 'mobx-persist-store';
 
 import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
 import {Socket} from '@app/models/socket';
@@ -46,94 +46,90 @@ class TokensStore implements MobXStore<IToken> {
   private lastUpdate = new Date(0);
   private _isLoading = false;
 
-  constructor(shouldSkipPersisting: boolean = false) {
+  constructor() {
     makeAutoObservable(this);
-    if (!shouldSkipPersisting) {
-      makePersistable(this, {
-        name: this.constructor.name,
-        properties: [
-          // https://github.com/quarrant/mobx-persist-store/issues/97
+    makePersistable(this, {
+      name: this.constructor.name,
+      properties: [
+        // https://github.com/quarrant/@override/mobx-persist-store/issues/97
+        // @ts-ignore
+        'contracts',
+        {
+          key: 'tokens',
+          deserialize: (stringObject: string): this['tokens'] => {
+            const value = JSON.parse(stringObject) as this['tokens'];
+            const keys = Object.keys(value);
+            const newValue = keys.reduce((prev, cur) => {
+              return {
+                ...prev,
+                [AddressUtils.toEth(cur)]: value[AddressUtils.toEth(cur)].map(
+                  item => ({
+                    ...item,
+                    value: Balance.fromJsonString(item.value),
+                  }),
+                ),
+              };
+            }, {});
+
+            return newValue;
+          },
           // @ts-ignore
-          'contracts',
-          {
-            key: 'tokens',
-            deserialize: (stringObject: string): this['tokens'] => {
-              const value = JSON.parse(stringObject) as this['tokens'];
-              const keys = Object.keys(value);
-              const newValue = keys.reduce((prev, cur) => {
-                return {
-                  ...prev,
-                  [AddressUtils.toEth(cur)]: value[AddressUtils.toEth(cur)].map(
-                    item => ({
-                      ...item,
-                      value: Balance.fromJsonString(item.value),
-                    }),
-                  ),
-                };
-              }, {});
+          serialize: (value: this['tokens']) => {
+            const keys = Object.keys(value);
+            const newValue = keys.reduce((prev, cur) => {
+              return {
+                ...prev,
+                [AddressUtils.toEth(cur)]: value[AddressUtils.toEth(cur)].map(
+                  item => ({
+                    ...item,
+                    value: item.value.toJsonString(),
+                  }),
+                ),
+              };
+            }, {});
 
-              return newValue;
-            },
-            // @ts-ignore
-            serialize: (value: this['tokens']) => {
-              const keys = Object.keys(value);
-              const newValue = keys.reduce((prev, cur) => {
-                return {
-                  ...prev,
-                  [AddressUtils.toEth(cur)]: value[AddressUtils.toEth(cur)].map(
-                    item => ({
-                      ...item,
-                      value: item.value.toJsonString(),
-                    }),
-                  ),
-                };
-              }, {});
-
-              return JSON.stringify(newValue);
-            },
+            return JSON.stringify(newValue);
           },
-          {
-            // @ts-ignore
-            key: 'data',
-            // @ts-ignore
-            deserialize: (stringObject: string): this['data'] => {
-              const parsed = JSON.parse(stringObject) as this['data'];
-              const keys = Object.keys(parsed);
-              const newValue = keys.reduce((prev, cur) => {
-                return {
-                  ...prev,
-                  [AddressUtils.toEth(cur)]: {
-                    ...parsed[AddressUtils.toEth(cur)],
-                    value: Balance.fromJsonString(
-                      parsed[AddressUtils.toEth(cur)].value || '0x0',
-                    ),
-                  },
-                };
-              }, {});
+        },
+        {
+          // @ts-ignore
+          key: 'data',
+          // @ts-ignore
+          deserialize: (stringObject: string): this['data'] => {
+            const parsed = JSON.parse(stringObject) as this['data'];
+            const keys = Object.keys(parsed);
+            const newValue = keys.reduce((prev, cur) => {
+              return {
+                ...prev,
+                [AddressUtils.toEth(cur)]: {
+                  ...parsed[AddressUtils.toEth(cur)],
+                  value: Balance.fromJsonString(
+                    parsed[AddressUtils.toEth(cur)].value || '0x0',
+                  ),
+                },
+              };
+            }, {});
 
-              return newValue;
-            },
-            // @ts-ignore
-            serialize: (value: this['data']) => {
-              const keys = Object.keys(value);
-              const newValue = keys.reduce((prev, cur) => {
-                return {
-                  ...prev,
-                  [AddressUtils.toEth(cur)]: {
-                    ...value[AddressUtils.toEth(cur)],
-                    value: value[AddressUtils.toEth(cur)].value.toJsonString(),
-                  },
-                };
-              }, {});
-              return JSON.stringify(newValue);
-            },
+            return newValue;
           },
-        ],
-        storage,
-      }).then(() => {
-        // Logger.log('TokensStore data', JSON.stringify(this.data, null, 2));
-      });
-    }
+          // @ts-ignore
+          serialize: (value: this['data']) => {
+            const keys = Object.keys(value);
+            const newValue = keys.reduce((prev, cur) => {
+              return {
+                ...prev,
+                [AddressUtils.toEth(cur)]: {
+                  ...value[AddressUtils.toEth(cur)],
+                  value: value[AddressUtils.toEth(cur)].value.toJsonString(),
+                },
+              };
+            }, {});
+            return JSON.stringify(newValue);
+          },
+        },
+      ],
+      storage,
+    });
 
     when(
       () => Socket.lastMessage.type === 'token',
@@ -523,5 +519,5 @@ class TokensStore implements MobXStore<IToken> {
   }
 }
 
-const instance = new TokensStore(Boolean(process.env.JEST_WORKER_ID));
+const instance = new TokensStore();
 export {instance as Token};

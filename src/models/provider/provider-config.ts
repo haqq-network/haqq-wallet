@@ -1,6 +1,6 @@
+import {makePersistable} from '@override/mobx-persist-store';
 import {hoursToMilliseconds} from 'date-fns';
 import {makeAutoObservable, runInAction} from 'mobx';
-import {makePersistable} from 'mobx-persist-store';
 
 import {Indexer} from '@app/services/indexer';
 import {ProviderConfig} from '@app/services/indexer/indexer.types';

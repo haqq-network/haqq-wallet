@@ -1,13 +1,13 @@
 import React, {FC, memo, useState} from 'react';
 
-import {Image, View} from 'react-native';
-import BlastedImage from 'react-native-blasted-image';
 import {
   runOnJS,
   useAnimatedReaction,
   useDerivedValue,
   useSharedValue,
-} from 'react-native-reanimated';
+} from '@override/react-native-reanimated';
+import {Image, View} from 'react-native';
+import BlastedImage from 'react-native-blasted-image';
 
 import {Color} from '@app/colors';
 import {StoryLoader} from '@app/components/stories/story-view/components/loader';

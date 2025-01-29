@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect} from 'react';
 
-import {Pressable, StyleSheet, View, useWindowDimensions} from 'react-native';
 import Animated, {
   WithTimingConfig,
   interpolate,
@@ -8,7 +7,8 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-} from 'react-native-reanimated';
+} from '@override/react-native-reanimated';
+import {Pressable, StyleSheet, View, useWindowDimensions} from 'react-native';
 
 import {Color} from '@app/colors';
 import {createTheme} from '@app/helpers';

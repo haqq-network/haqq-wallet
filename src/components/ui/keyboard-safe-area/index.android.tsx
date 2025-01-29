@@ -1,12 +1,12 @@
 import React, {useCallback, useRef} from 'react';
 
-import {useFocusEffect} from '@react-navigation/native';
-import {Keyboard} from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-} from 'react-native-reanimated';
+} from '@override/react-native-reanimated';
+import {useFocusEffect} from '@react-navigation/native';
+import {Keyboard} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {createTheme} from '@app/helpers';

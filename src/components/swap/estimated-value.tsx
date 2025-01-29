@@ -1,10 +1,10 @@
 import React, {useMemo, useRef} from 'react';
 
 import {uuidv4} from '@haqq/rn-wallet-providers/dist/utils';
+import {Easing} from '@override/react-native-reanimated';
 import {observer} from 'mobx-react';
 import {View} from 'react-native';
 import AnimatedRollingNumber from 'react-native-animated-rolling-numbers';
-import {Easing} from 'react-native-reanimated';
 
 import {Color, getColor} from '@app/colors';
 import {createTheme} from '@app/helpers';

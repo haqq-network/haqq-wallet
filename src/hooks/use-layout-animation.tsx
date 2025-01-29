@@ -2,9 +2,14 @@ import {useCallback, useEffect} from 'react';
 
 import {LayoutAnimation, UIManager} from 'react-native';
 
+import {AppStore} from '@app/models/app';
+
 export const useLayoutAnimation = () => {
   useEffect(() => {
-    if (!UIManager.setLayoutAnimationEnabledExperimental) {
+    if (
+      !UIManager.setLayoutAnimationEnabledExperimental ||
+      AppStore.isDetoxRunning
+    ) {
       return;
     }
 

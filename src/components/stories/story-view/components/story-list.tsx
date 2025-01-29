@@ -4,7 +4,7 @@ import Animated, {
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
-} from 'react-native-reanimated';
+} from '@override/react-native-reanimated';
 
 import {StoryAnimation} from './story-animation';
 import {StoryContent} from './story-content';

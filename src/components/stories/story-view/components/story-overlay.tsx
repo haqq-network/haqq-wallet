@@ -1,11 +1,11 @@
 import React, {ReactNode, memo, useCallback, useState} from 'react';
 
-import {View} from 'react-native';
 import {
   SharedValue,
   runOnJS,
   useAnimatedReaction,
-} from 'react-native-reanimated';
+} from '@override/react-native-reanimated';
+import {View} from 'react-native';
 
 import {StoryItemProps} from '@app/components/stories/story-view/core/dto/storiesViewDTO';
 import {Button, Spacer, Text} from '@app/components/ui';
