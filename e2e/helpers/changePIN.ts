@@ -1,5 +1,7 @@
 import {by, element, expect} from 'detox';
 
+import {getElementByText} from './i18n';
+
 import {PIN} from '../test-variables';
 
 export const changePIN = async (newPin: string) => {
@@ -20,7 +22,7 @@ export const changePIN = async (newPin: string) => {
   }
   await device.enableSynchronization();
 
-  await expect(element(by.text('Please repeat pin code'))).toBeVisible();
+  await expect(getElementByText('onboardingRepeatPinRepeat')).toBeVisible();
 
   await device.disableSynchronization();
   for (const num of newPin.split('')) {

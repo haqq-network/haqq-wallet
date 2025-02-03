@@ -5,7 +5,11 @@ export const launchApp = async () => {
     newInstance: true,
     permissions: {
       notifications: 'YES',
-      userTracking: 'NO',
+      userTracking: 'unset',
+    },
+    languageAndLocale: {
+      language: 'en',
+      locale: 'en',
     },
   });
 };

@@ -144,12 +144,12 @@ export const SigninNetworks = observer(
           onPress={onSkip}
           i18n={I18N.signinNetworksSkip}
           variant={ButtonVariant.contained}
-          testID="signin_network_skip"
+          testID="signin_network_phrase_or_private_key"
         />
         <Spacer height={16} />
         <HardwareWalletButton
           onPress={onPressHardwareWallet}
-          testID="signin_network_skip"
+          testID="signin_network_hardware_wallet"
         />
         <Spacer height={16} />
       </PopupContainer>

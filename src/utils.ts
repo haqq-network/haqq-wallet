@@ -748,6 +748,11 @@ export const openWeb3Browser = (url: string) => {
 };
 
 export const requestTrackingAuthorization = () => {
+  if (IS_DETOX) {
+    return Promise.resolve(
+      AdjustTrackingAuthorizationStatus.userDeviceRestricted,
+    );
+  }
   return new Promise<AdjustTrackingAuthorizationStatus>(resolve => {
     if (IS_ANDROID) {
       return resolve(AdjustTrackingAuthorizationStatus.statusNotAvailable);

@@ -1,13 +1,13 @@
-import {by, element, expect, log, waitFor} from 'detox';
+import {by, element, expect, log} from 'detox';
 
 import {isVisible} from './isVisibile';
+import {onboardingSetup} from './onboardingSetup';
 
 export const restorePrivateKey = async (
   privateKey: string,
   PIN: string,
   attempt: number = 1,
 ) => {
-  const isAndroid = device.getPlatform() === 'android';
   const isFirstTry = attempt === 1;
 
   if (isFirstTry) {
@@ -17,7 +17,7 @@ export const restorePrivateKey = async (
     await element(by.id('welcome_signin')).tap();
   }
 
-  await element(by.id('signin_network_skip')).tap();
+  await element(by.id('signin_network_phrase_or_private_key')).tap();
   await expect(element(by.id('signin_agreement'))).toBeVisible();
 
   await element(by.id('signin_agreement_agree')).tap();
@@ -37,55 +37,9 @@ export const restorePrivateKey = async (
   }
 
   if (isFirstTry) {
-    await expect(element(by.id('onboarding_setup_pin_set'))).toBeVisible();
-
-    // First tap after restoring PRIVATE KEY ONLY (crazy) is missing
-    await element(by.id('onboarding_setup_pin_set')).tap();
-    await expect(element(by.id('onboarding_setup_pin_set'))).toBeVisible();
-
-    await device.disableSynchronization();
-    for (const num of PIN.split('')) {
-      await element(by.id(`numeric_keyboard_${num}`)).tap();
-    }
-    await device.enableSynchronization();
-
-    await expect(element(by.text('Please repeat pin code'))).toBeVisible();
-
-    await device.disableSynchronization();
-    for (const num of PIN.split('')) {
-      await element(by.id(`numeric_keyboard_${num}`)).tap();
-    }
-    await device.enableSynchronization();
-
-    if (!isAndroid) {
-      await waitFor(element(by.id('onboarding_biometry_title')))
-        .toBeVisible()
-        .withTimeout(5000);
-
-      await expect(element(by.id('onboarding_biometry_title'))).toBeVisible();
-
-      await element(by.id('onboarding_biometry_skip')).tap();
-      await waitFor(element(by.id('onboarding_track_user_activity')))
-        .toBeVisible()
-        .withTimeout(5000);
-
-      await element(by.id('onboarding_tracking_skip')).tap();
-
-      if (isFirstTry) {
-        await waitFor(element(by.id('onboarding_finish_title')))
-          .toBeVisible()
-          .withTimeout(15000);
-
-        await expect(element(by.id('onboarding_finish_title'))).toBeVisible();
-      }
-    }
+    await onboardingSetup(PIN);
   }
-  await waitFor(element(by.id('onboarding_finish_finish')))
-    .toBeVisible()
-    .withTimeout(3000);
-  await element(by.id('onboarding_finish_finish')).tap();
 
-  // Android: sometimes finish button should be pressed twice
   if (await isVisible('onboarding_finish_finish')) {
     await element(by.id('onboarding_finish_finish')).tap();
   }

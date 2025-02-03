@@ -27,7 +27,7 @@ describe('Signin', () => {
     await launchApp();
   });
 
-  it('should restore privateKey wallet and import mnemonic wallet', async () => {
+  it('1) should restore privateKey wallet and import mnemonic wallet', async () => {
     await restorePrivateKey(privateKey, PIN);
     await ensureWalletIsVisible(privateKeyMnemonic);
 
@@ -41,7 +41,7 @@ describe('Signin', () => {
     await ensureWalletIsVisible(mnemonic);
   });
 
-  it('should restore mnemonic wallet and import privateKey wallet', async () => {
+  it('2) should restore mnemonic wallet and import privateKey wallet', async () => {
     await resetApp();
     await restoreWallet(mnemonic, PIN);
     await ensureWalletIsVisible(mnemonic);
@@ -56,7 +56,7 @@ describe('Signin', () => {
     await ensureWalletIsVisible(privateKeyMnemonic);
   });
 
-  it('should restore random wallet and more random wallets', async () => {
+  it('3) should restore random wallet and more random wallets', async () => {
     await resetApp();
     const generateRandomWallet = (): {
       wallet: string;

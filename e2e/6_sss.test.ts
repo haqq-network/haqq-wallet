@@ -2,6 +2,7 @@ import {expect as jestExpect} from '@jest/globals';
 import {by, device, element, expect, waitFor} from 'detox';
 
 import {getTimeStamp} from './helpers/getTimeStamp';
+import {getText} from './helpers/i18n';
 import {launchApp} from './helpers/launchApp';
 import {PIN} from './test-variables';
 
@@ -45,7 +46,9 @@ describe.skip('SSS Wallet', () => {
       await element(by.id(`numeric_keyboard_${num}`)).tap();
     }
 
-    await expect(element(by.text('Please repeat pin code'))).toBeVisible();
+    await expect(
+      element(by.text(getText('onboardingRepeatPinRepeat'))),
+    ).toBeVisible();
 
     for (const num of PIN.split('')) {
       await element(by.id(`numeric_keyboard_${num}`)).tap();
@@ -146,7 +149,9 @@ describe.skip('SSS Wallet', () => {
       await element(by.id(`numeric_keyboard_${num}`)).tap();
     }
 
-    await expect(element(by.text('Please repeat pin code'))).toBeVisible();
+    await expect(
+      element(by.text(getText('onboardingRepeatPinRepeat'))),
+    ).toBeVisible();
 
     for (const num of PIN.split('')) {
       await element(by.id(`numeric_keyboard_${num}`)).tap();
