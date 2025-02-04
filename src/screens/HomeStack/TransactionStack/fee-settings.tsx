@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {observer} from 'mobx-react';
 import {ActivityIndicator, View} from 'react-native';
@@ -36,6 +36,13 @@ type ResetValues = {
   priorityFee: Balance;
 } | null;
 
+const TABS_INDEXES_MAP = {
+  [EstimationVariant.low]: 0,
+  [EstimationVariant.average]: 1,
+  [EstimationVariant.high]: 2,
+  [EstimationVariant.custom]: 3,
+};
+
 export const FeeSettingsScreen = observer(() => {
   const navigation = useTypedNavigation<HomeStackParamList>();
   const {fee, from, to, value, data, successEventName, chainId} = useTypedRoute<
@@ -63,56 +70,33 @@ export const FeeSettingsScreen = observer(() => {
     async (estimationType: EstimationVariant) => {
       setEstimating(true);
       let calculatedData: CalculatedFees | null = null;
-      if (estimationType === EstimationVariant.custom) {
-        if (
-          amountsGasLimit.amount &&
-          amountsMaxBaseFee.amount &&
-          amountsMaxPriorityFee.amount
-        ) {
-          calculatedData = await EthNetwork.customEstimate(
-            {
-              from,
-              to,
-              value,
-              data,
-            },
-            {
-              gasLimit: Number(amountsGasLimit.amount),
-              maxBaseFee: Number(amountsMaxBaseFee.amount),
-              maxPriorityFee: Number(amountsMaxPriorityFee.amount),
-            },
-            Provider.getByEthChainId(chainId!),
-          );
 
-          calculatedData && setExpectedFee(calculatedData.expectedFee);
-          setEstimating(false);
-        }
-      } else {
-        calculatedData = await EthNetwork.estimate(
-          {
-            from,
-            to,
-            value,
-            data,
-          },
-          estimationType,
-          Provider.getByEthChainId(chainId!),
-        );
+      calculatedData = await EthNetwork.estimate(
+        {
+          from,
+          to,
+          value,
+          data,
+          priority_fee: amountsMaxPriorityFee.amount,
+        },
+        estimationType,
+        Provider.getByEthChainId(chainId!),
+      );
 
-        setResetValues({
-          gasLimit: calculatedData.gasLimit,
-          maxBaseFee: calculatedData.maxBaseFee,
-          priorityFee: calculatedData.maxPriorityFee,
-        });
+      setResetValues({
+        gasLimit: calculatedData.gasLimit,
+        maxBaseFee: calculatedData.maxBaseFee,
+        priorityFee: calculatedData.maxPriorityFee,
+      });
 
-        amountsGasLimit.setAmount(String(calculatedData.gasLimit.toWei()), 0);
-        amountsMaxBaseFee.setAmount(String(calculatedData.maxBaseFee.toGWei()));
-        amountsMaxPriorityFee.setAmount(
-          String(calculatedData.maxPriorityFee.toGWei()),
-        );
-        setExpectedFee(calculatedData.expectedFee);
-        setEstimating(false);
-      }
+      amountsGasLimit.setAmount(String(calculatedData.gasLimit.toWei()), 0);
+      amountsMaxBaseFee.setAmount(String(calculatedData.maxBaseFee.toGWei()));
+      amountsMaxPriorityFee.setAmount(
+        String(calculatedData.maxPriorityFee.toGWei()),
+      );
+
+      setExpectedFee(calculatedData.expectedFee);
+      setEstimating(false);
     },
     [
       amountsGasLimit.amount,
@@ -164,6 +148,8 @@ export const FeeSettingsScreen = observer(() => {
     }
   };
 
+  const activeTabIndex: number = useMemo(() => TABS_INDEXES_MAP[type], [type]);
+
   return (
     <View style={styles.container}>
       <View>
@@ -173,13 +159,13 @@ export const FeeSettingsScreen = observer(() => {
             variant={TopTabNavigatorVariant.large}
             disabled={isEstimating}
             onTabChange={onTabChange}
-            activeTabIndex={type}
-            initialTabIndex={type}>
+            activeTabIndex={activeTabIndex}
+            initialTabIndex={1}>
             {TABS.map((tab, index) => (
               <TopTabNavigator.Tab
                 key={getText(tab)}
                 testID={`FeeSettings${getText(tab)}Tab`}
-                name={EstimationVariant[index]}
+                name={TABS[index]}
                 title={tab}
                 component={null}
               />

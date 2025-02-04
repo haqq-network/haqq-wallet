@@ -70,8 +70,9 @@ export const TransactionSelectCryptoScreen = observer(() => {
       ),
     [
       wallet.address,
-      Provider.selectedProvider.denom,
-      networkProvider.ethChainId,
+      Provider.selectedProvider,
+      networkProvider,
+      Token.tokens[wallet.address],
     ],
   ).get();
 

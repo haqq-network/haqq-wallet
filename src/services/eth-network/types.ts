@@ -104,5 +104,5 @@ export type TxEstimationParams = {
   to: string;
   value?: Balance;
   data?: string;
-  minGas?: Balance;
+  priority_fee?: string;
 };

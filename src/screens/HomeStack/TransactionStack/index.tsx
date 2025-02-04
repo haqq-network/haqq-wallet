@@ -25,6 +25,7 @@ import {TransactionSumAddressScreen} from '@app/screens/HomeStack/TransactionSta
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {ScreenOptionType, WalletType} from '@app/types';
 
+import {FeeSettingsScreen} from './fee-settings';
 import {TransactionAmountScreen} from './transaction-amount';
 import {TransactionNetworkSelectScreen} from './transaction-network-select';
 import {TransactionPreviewScreen} from './transaction-preview';
@@ -107,6 +108,10 @@ export const TransactionStack = memo(() => {
           options={{
             title: getText(I18N.transactionConfirmationPreviewTitle),
           }}
+        />
+        <Stack.Screen
+          name={TransactionStackRoutes.TransactionFeeSettings}
+          component={themeUpdaterHOC(FeeSettingsScreen)}
         />
         <Stack.Screen
           name={TransactionStackRoutes.TransactionNftConfirmation}

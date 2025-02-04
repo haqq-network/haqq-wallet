@@ -1,10 +1,10 @@
 import {Balance} from '@app/services/balance';
 
 export enum EstimationVariant {
-  low,
-  average,
-  high,
-  custom,
+  low = 'low',
+  average = 'average',
+  high = 'fast',
+  custom = 'custom',
 }
 
 export type CalculatedFees = {

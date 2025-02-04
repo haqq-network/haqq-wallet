@@ -186,8 +186,6 @@ export class SignJsonRpcRequest {
         if (provider.isEVM) {
           nonce = await rpcProvider.getTransactionCount(address, 'latest');
 
-          const minGas = new Balance(signTransactionRequest.gasLimit ?? 0);
-
           const {gasLimit, maxBaseFee, maxPriorityFee} =
             await EthNetwork.estimate(
               {
@@ -199,7 +197,6 @@ export class SignJsonRpcRequest {
                   provider?.denom,
                 ),
                 data: signTransactionRequest.data?.toString()!,
-                minGas,
               },
               EstimationVariant.average,
               provider,

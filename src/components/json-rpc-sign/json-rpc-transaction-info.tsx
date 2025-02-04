@@ -8,7 +8,10 @@ import {useEffectAsync} from '@app/hooks/use-effect-async';
 import {EstimationVariant, Fee} from '@app/models/fee';
 import {Provider} from '@app/models/provider';
 import {WalletModel} from '@app/models/wallet';
-import {JsonRpcSignPopupStackParamList} from '@app/route-types';
+import {
+  JsonRpcSignPopupStackParamList,
+  TransactionStackRoutes,
+} from '@app/route-types';
 import {EthNetwork} from '@app/services';
 import {Balance} from '@app/services/balance';
 import {
@@ -150,18 +153,21 @@ export const JsonRpcTransactionInfo = observer(
       }
 
       if (fee) {
-        const result = await awaitForFee({
-          fee,
-          from: tx.from! || wallet.address,
-          to: tx.to!,
-          value: new Balance(
-            tx.value! || '0x0',
-            provider?.decimals,
-            provider?.denom,
-          ),
-          data: tx.data,
-          chainId: provider?.ethChainId ? provider.ethChainId : undefined,
-        });
+        const result = await awaitForFee(
+          {
+            fee,
+            from: tx.from! || wallet.address,
+            to: tx.to!,
+            value: new Balance(
+              tx.value! || '0x0',
+              provider?.decimals,
+              provider?.denom,
+            ),
+            data: tx.data,
+            chainId: provider?.ethChainId ? provider.ethChainId : undefined,
+          },
+          TransactionStackRoutes.TransactionFeeSettings,
+        );
         setFee(result);
       }
     }, [navigation, tx, fee, provider, wallet]);

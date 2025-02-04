@@ -37,27 +37,6 @@ export const TransactionPreviewScreen = observer(() => {
   // const showError = useError();
   // const [disabled, setDisabled] = useState(false);
 
-  // const {from, to, value, data} = useMemo(() => {
-  //   const contractAddress = AddressUtils.toEth(token.id);
-
-  //   const isTron = Provider.getByEthChainId(token.chain_id)?.isTron;
-
-  //   const txData = isTron
-  //     ? AddressUtils.hexToTron(contractAddress)
-  //     : getERC20TransferData(
-  //         route.params.to,
-  //         route.params.amount,
-  //         contractAddress,
-  //       );
-
-  //   return {
-  //     from: token.is_erc20 ? wallet?.address! : route.params.from,
-  //     to: token.is_erc20 ? contractAddress : route.params.to,
-  //     value: token.is_erc20 ? undefined : route.params.amount,
-  //     data: txData,
-  //   };
-  // }, [token, wallet?.address, route.params]);
-
   // const onConfirmTransaction = useCallback(async () => {
   //   if (wallet) {
   //     try {
@@ -162,21 +141,6 @@ export const TransactionPreviewScreen = observer(() => {
   //   wallet,
   //   fee,
   // ]);
-
-  // const onFeePress = useCallback(async () => {
-  //   if (fee) {
-  //     const result = await awaitForFee({
-  //       fee,
-  //       from,
-  //       to,
-  //       value,
-  //       data,
-  //       chainId: token.chain_id,
-  //     });
-
-  //     setFee(result);
-  //   }
-  // }, [fee, from, to, value, data]);
 
   // const onPressToAddress = useCallback(() => {
   //   Clipboard.setString(route.params.to);

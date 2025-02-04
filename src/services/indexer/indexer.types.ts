@@ -130,4 +130,6 @@ export type GasEstimateRequest = {
   to: string;
   value: string;
   data?: string;
+  priority?: string;
+  priority_fee?: string;
 };

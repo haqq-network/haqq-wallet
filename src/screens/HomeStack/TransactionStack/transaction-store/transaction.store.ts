@@ -2,7 +2,7 @@ import debounce from 'lodash.debounce';
 import {makeAutoObservable, runInAction} from 'mobx';
 
 import {AddressUtils} from '@app/helpers/address-utils';
-import {EstimationVariant} from '@app/models/fee';
+import {CalculatedFees, EstimationVariant, Fee} from '@app/models/fee';
 import {Provider} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {Wallet, WalletModel} from '@app/models/wallet';
@@ -36,6 +36,7 @@ class TransactionStore {
   private _availableCurrencies: ChangellyCurrency[] = [];
   private _quote: ChangellyQuote | null = null;
   private _quoteError: string = '';
+  private _fee: Fee | null = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -189,6 +190,13 @@ class TransactionStore {
     return this._quoteError;
   }
 
+  get fee() {
+    return this._fee;
+  }
+  set fee(fee: Fee | null) {
+    this._fee = fee;
+  }
+
   isCurrencyAvailable = (token: IToken) => {
     if (token.isNativeToken) {
       return Boolean(
@@ -257,7 +265,7 @@ class TransactionStore {
    * @name _getFee
    * @description Calculate quote for swap
    */
-  private readonly _getFee = debounce(async (): Promise<any> => {
+  private readonly _getFee = debounce(async (): Promise<void> => {
     if (
       this.fromAsset?.symbol &&
       this.toAsset?.symbol &&
@@ -266,12 +274,14 @@ class TransactionStore {
     ) {
       try {
         const provider = Provider.getByEthChainId(this.fromChainId);
+
+        let fee: CalculatedFees | null = null;
         if (this.fromAsset?.is_erc20) {
           const contractAddress = provider?.isTron
             ? AddressUtils.hexToTron(this.fromAsset.id)
             : AddressUtils.toEth(this.fromAsset.id);
 
-          return await EthNetwork.estimateERC20Transfer(
+          fee = await EthNetwork.estimateERC20Transfer(
             {
               from: this.wallet.address,
               to: this.toAddress,
@@ -286,7 +296,7 @@ class TransactionStore {
             provider,
           );
         } else {
-          return await EthNetwork.estimate(
+          fee = await EthNetwork.estimate(
             {
               from: this.wallet.address,
               to: this.toAddress,
@@ -300,6 +310,8 @@ class TransactionStore {
             provider,
           );
         }
+
+        this.fee = new Fee(fee);
       } catch (e) {
         runInAction(() => {
           this.quote = null;
@@ -338,6 +350,7 @@ class TransactionStore {
     // api
     this._abortAllRequests();
     this.quote = null;
+    this._fee = null;
     this._quoteError = '';
   };
 }

@@ -23,6 +23,7 @@ import {
   TxEstimationParams,
 } from './types';
 
+import {Indexer} from '../indexer';
 import {TronNetwork} from '../tron-network';
 
 export class EthNetwork {
@@ -248,84 +249,69 @@ export class EthNetwork {
     calculationType: EstimationVariant = EstimationVariant.average,
     provider = Provider.selectedProvider,
   ): Promise<CalculatedFees> {
+    const {from, to, value = Balance.Empty, data = '0x'} = txParams;
+    const fromAddress = provider.isTron
+      ? AddressUtils.toTron(from)
+      : AddressUtils.toEth(from);
+    const toAddress = provider.isTron
+      ? AddressUtils.toTron(to)
+      : AddressUtils.toEth(to);
+    const ethData = provider.isTron ? undefined : data;
+    const priority = provider.isTron ? undefined : calculationType;
+    const priority_fee = provider.isTron ? undefined : txParams.priority_fee;
+
     try {
-      Logger.log('txParams', JSON.stringify(txParams, null, 2));
-      const {from, to, value = Balance.Empty, data = '0x', minGas} = txParams;
-      if (provider.isTron) {
-        return await TronNetwork.estimateFeeSendTRX(
-          {from, to, value, data},
-          provider,
-        );
-      }
-      txParams = {
-        ...txParams,
-        from: AddressUtils.toEth(from),
-        to: AddressUtils.toEth(to),
-      };
-      const rpcProvider = await getRpcProvider(provider);
-      const {maxFeePerGas, maxPriorityFeePerGas} =
-        await rpcProvider.getFeeData();
-      const block = await rpcProvider.getBlock('latest');
-
-      if (!block) {
-        throw new Error(
-          "Tx estimation failed: Can't get latest block in chain",
-        );
-      }
-
-      if (!block.baseFeePerGas) {
-        throw new Error(
-          "Tx estimation failed: Can't get baseFeePerGas from latest block in chain",
-        );
-      }
-
-      if (!maxFeePerGas) {
-        throw new Error("Tx estimation failed: Can't get maxFeePerGas");
-      }
-
-      if (!maxPriorityFeePerGas) {
-        throw new Error("Tx estimation failed: Can't get maxPriorityFeePerGas");
-      }
-
-      const gasLimit = await rpcProvider.estimateGas({
-        from,
-        to,
-        data,
-        value: value.toHex(),
-      } as Deferrable<TransactionRequest>);
-
-      const maxBaseFee = block.baseFeePerGas;
-
-      let priorityFee = maxBaseFee;
-
-      switch (calculationType) {
-        case EstimationVariant.average:
-          priorityFee = maxBaseFee.div(2);
-          break;
-        case EstimationVariant.low:
-          priorityFee = maxBaseFee.div(20);
-          break;
-      }
+      const gasEstimateResponse = await Indexer.instance.gasEstimate(
+        {
+          from: fromAddress,
+          to: toAddress,
+          value: String(
+            value.toParsedBalanceNumber() * 10 ** provider.decimals,
+          ),
+          data: ethData,
+          priority,
+          priority_fee: String(Number(priority_fee) * 10 ** 9),
+        },
+        Number(provider.ethChainId),
+      );
 
       return {
-        gasLimit: new Balance(gasLimit, provider.decimals, provider.denom).max(
-          minGas,
+        gasLimit: new Balance(
+          gasEstimateResponse.gas_limit,
+          provider.decimals,
+          provider.denom,
         ),
-        maxBaseFee: new Balance(maxBaseFee, provider.decimals, provider.denom),
+        maxBaseFee: new Balance(
+          gasEstimateResponse.base_fee,
+          provider.decimals,
+          provider.denom,
+        ),
         maxPriorityFee: new Balance(
-          priorityFee,
+          gasEstimateResponse.priority_fee,
           provider.decimals,
           provider.denom,
         ),
         expectedFee: new Balance(
-          gasLimit.mul(maxBaseFee.add(priorityFee)),
+          gasEstimateResponse.expected_fee,
           provider.decimals,
           provider.denom,
         ),
       };
-    } catch (error) {
-      Logger.captureException(error, 'EthNetwork.estimateTransaction error');
-      throw error;
+    } catch (err) {
+      Logger.captureException(err, 'indexer gas estimate failed', {
+        request: {
+          from: fromAddress,
+          to: toAddress,
+          value: String(
+            value.toParsedBalanceNumber() * 10 ** provider.decimals,
+          ),
+          data: ethData,
+          priority,
+          priority_fee,
+        },
+        chain_id: provider.ethChainId,
+      });
+      throw err;
     }
   }
 

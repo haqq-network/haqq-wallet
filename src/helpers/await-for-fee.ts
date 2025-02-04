@@ -26,7 +26,10 @@ const event: Eventable = {
   errorEventName: AwaitForFeeEvents.error,
 };
 
-export async function awaitForFee(props: AwaitForFeeParams): Promise<Fee> {
+export async function awaitForFee(
+  props: AwaitForFeeParams,
+  route: string = HomeStackRoutes.FeeSettings,
+): Promise<Fee> {
   return new Promise((resolve, reject) => {
     const removeAllListeners = () => {
       app.removeListener(event.successEventName, onAction);
@@ -46,7 +49,8 @@ export async function awaitForFee(props: AwaitForFeeParams): Promise<Fee> {
     app.addListener(event.successEventName, onAction);
     app.addListener(event.errorEventName, onReject);
 
-    return navigator.navigate(HomeStackRoutes.FeeSettings, {
+    // @ts-ignore
+    return navigator.navigate(route, {
       ...props,
       ...event,
     });

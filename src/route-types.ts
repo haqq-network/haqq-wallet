@@ -52,6 +52,15 @@ export enum WelcomeStackRoutes {
   Device = 'device',
 }
 
+export type FeeSettingsParams = {
+  fee: Fee;
+  from: string;
+  to: string;
+  value?: Balance;
+  data?: string;
+  chainId?: string;
+};
+
 export type WelcomeStackParamList = {
   [WelcomeStackRoutes.Welcome]: undefined;
   [WelcomeStackRoutes.WelcomeNews]: undefined;
@@ -485,14 +494,7 @@ export type HomeStackParamList = {
     linkEvent: MarketingEvents;
     scrollEvent: MarketingEvents;
   };
-  [HomeStackRoutes.FeeSettings]: Eventable & {
-    fee: Fee;
-    from: string;
-    to: string;
-    value?: Balance;
-    data?: string;
-    chainId?: string;
-  };
+  [HomeStackRoutes.FeeSettings]: Eventable & FeeSettingsParams;
 };
 
 export enum NftStackRoutes {
@@ -536,6 +538,7 @@ export enum TransactionStackRoutes {
   TransactionSelectCrypto = 'transactionSelectCrypto',
   TransactionAmount = 'transactionAmount',
   TransactionPreview = 'transactionPreview',
+  TransactionFeeSettings = 'transactionFeeSettings',
   TransactionNftConfirmation = 'transactionNftConfirmation',
   TransactionFinish = 'transactionFinish',
   TransactionNftFinish = 'transactionNftFinish',
@@ -559,6 +562,7 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
   [TransactionStackRoutes.TransactionSelectCrypto]: undefined;
   [TransactionStackRoutes.TransactionAmount]: undefined;
   [TransactionStackRoutes.TransactionPreview]: undefined;
+  [TransactionStackRoutes.TransactionFeeSettings]: FeeSettingsParams;
   [TransactionStackRoutes.TransactionFinish]: {
     fee: Fee;
     transaction: TransactionResponse;
@@ -624,12 +628,7 @@ export type JsonRpcSignPopupStackParamList = HomeStackParamList & {
     chainId?: number;
     selectedAccount?: string;
   };
-  [JsonRpcSignPopupStackRoutes.JsonRpcSignFeeSettings]: {
-    from: string;
-    to: string;
-    amount: Balance;
-    data?: string;
-  };
+  [JsonRpcSignPopupStackRoutes.JsonRpcSignFeeSettings]: FeeSettingsParams;
 };
 
 export enum ManageAccountsStackRoutes {

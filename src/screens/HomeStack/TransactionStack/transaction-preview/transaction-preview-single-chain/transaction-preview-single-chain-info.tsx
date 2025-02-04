@@ -1,19 +1,23 @@
-import {useMemo} from 'react';
+import {useCallback, useMemo} from 'react';
 
 import {observer} from 'mobx-react';
 import {View} from 'react-native';
 
 import {Color} from '@app/colors';
-import {DataView, Text, TextVariant} from '@app/components/ui';
+import {DataView, Icon, IconsName, Text, TextVariant} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
-import {I18N} from '@app/i18n';
+import {AddressUtils} from '@app/helpers/address-utils';
+import {awaitForFee} from '@app/helpers/await-for-fee';
+import {I18N, getText} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
+import {getERC20TransferData} from '@app/services/eth-network/erc20';
 
 import {TransactionStore} from '../../transaction-store';
 
 export const TransactionPreviewSingleChainInfo = observer(() => {
-  const {fromAmount, fromAsset, fromChainId} = TransactionStore;
+  const {fromAmount, fromAsset, fromChainId, wallet, toAddress, fee} =
+    TransactionStore;
 
   const provider = useMemo(
     () => Provider.getByEthChainId(fromChainId!),
@@ -36,6 +40,37 @@ export const TransactionPreviewSingleChainInfo = observer(() => {
     () => new Balance(Number(fromAmount), provider?.decimals, provider?.denom),
     [provider, fromAmount],
   );
+
+  const {from, to, value, data} = useMemo(() => {
+    const contractAddress = AddressUtils.toEth(fromAsset!.id);
+    const isTron = Provider.getByEthChainId(fromChainId!)?.isTron;
+
+    const txData = isTron
+      ? AddressUtils.hexToTron(contractAddress)
+      : getERC20TransferData(toAddress, amount, contractAddress);
+
+    return {
+      from: wallet.address,
+      to: fromAsset!.is_erc20 ? contractAddress : toAddress,
+      value: fromAsset!.is_erc20 ? undefined : amount,
+      data: txData,
+    };
+  }, [fromAsset, wallet?.address, amount, toAddress, fromChainId]);
+
+  const onFeePress = useCallback(async () => {
+    if (fee) {
+      const result = await awaitForFee({
+        fee,
+        from,
+        to,
+        value,
+        data,
+        chainId: fromChainId,
+      });
+
+      TransactionStore.fee = result;
+    }
+  }, [fee, from, to, value, data, fromChainId]);
 
   return (
     <View style={styles.info}>
@@ -60,7 +95,7 @@ export const TransactionPreviewSingleChainInfo = observer(() => {
         </Text>
       </DataView>
       <DataView i18n={I18N.transactionDetailNetworkFee}>
-        {/* {!fee?.calculatedFees ? (
+        {!fee ? (
           <Text variant={TextVariant.t11} color={Color.textBase1}>
             {getText(I18N.estimatingGas)}
           </Text>
@@ -68,29 +103,15 @@ export const TransactionPreviewSingleChainInfo = observer(() => {
           <View style={styles.feeContainer}>
             <Text
               variant={TextVariant.t11}
-              color={
-                transactionSumError
-                  ? Color.graphicRed1
-                  : Provider.selectedProvider.isEVM
-                  ? Color.textGreen1
-                  : Color.textBase1
-              }
-              disabled={Provider.getByEthChainId(token.chain_id)?.isTron}
+              color={provider?.isEVM ? Color.textGreen1 : Color.textBase1}
               onPress={onFeePress}>
-              {Provider.getByEthChainId(token.chain_id)?.isTron
-                ? fee.expectedFee?.toBalanceString()
-                : fee.expectedFeeString}
+              {fee.expectedFee?.toBalanceString()}
             </Text>
-            {Provider.selectedProvider.isEVM && (
-              <Icon
-                name={IconsName.tune}
-                color={
-                  transactionSumError ? Color.graphicRed1 : Color.textGreen1
-                }
-              />
+            {provider?.isEVM && (
+              <Icon name={IconsName.tune} color={Color.textGreen1} />
             )}
           </View>
-        )} */}
+        )}
       </DataView>
     </View>
   );
