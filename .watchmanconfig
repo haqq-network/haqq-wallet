@@ -7,7 +7,6 @@
     ".git",
     ".yarn",
     ".github",
-    "e2e",
     "vendor"
    ],
    "ignore_vcs": [".git", ".hg", ".svn", ".md", ".DS_Store"]

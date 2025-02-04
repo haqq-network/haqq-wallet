@@ -176,7 +176,7 @@ class App extends AsyncEventEmitter {
   }
 
   get isCustomSigninSupported() {
-    return Boolean(RemoteConfig.get('sss_custom_provider'));
+    return IS_DETOX;
   }
 
   get isOathSigninSupported() {
