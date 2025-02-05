@@ -10,6 +10,7 @@ import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForFee} from '@app/helpers/await-for-fee';
 import {I18N, getText} from '@app/i18n';
 import {Provider} from '@app/models/provider';
+import {TransactionStackRoutes} from '@app/route-types';
 import {Balance} from '@app/services/balance';
 import {getERC20TransferData} from '@app/services/eth-network/erc20';
 
@@ -59,14 +60,17 @@ export const TransactionPreviewSingleChainInfo = observer(() => {
 
   const onFeePress = useCallback(async () => {
     if (fee) {
-      const result = await awaitForFee({
-        fee,
-        from,
-        to,
-        value,
-        data,
-        chainId: fromChainId,
-      });
+      const result = await awaitForFee(
+        {
+          fee,
+          from,
+          to,
+          value,
+          data,
+          chainId: fromChainId,
+        },
+        TransactionStackRoutes.TransactionFeeSettings,
+      );
 
       TransactionStore.fee = result;
     }

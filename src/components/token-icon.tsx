@@ -12,6 +12,8 @@ type TokenIconProps = {
   asset: IToken | null;
   width: number;
   height: number;
+  iconWidth?: number;
+  iconHeight?: number;
   viewStyle?: ViewStyle;
 };
 
@@ -19,6 +21,8 @@ export const TokenIcon = ({
   asset,
   width,
   height,
+  iconWidth,
+  iconHeight,
   viewStyle,
 }: TokenIconProps) => {
   const imageStyle: ImageStyle = useMemo(
@@ -27,9 +31,11 @@ export const TokenIcon = ({
   );
   const iconStyle: ImageStyle = useMemo(
     () => ({
-      width: width / 2.5,
-      height: height / 2.5,
+      width: iconWidth ?? width / 2.5,
+      height: iconHeight ?? height / 2.5,
       borderRadius: (width / 2.5) * 0.8,
+      marginLeft: -8,
+      marginBottom: width - height * 0.3,
     }),
     [width, height],
   );
@@ -51,7 +57,8 @@ export const TokenIcon = ({
 
 const styles = createTheme({
   imageContainer: {
-    position: 'absolute',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   image: {
     width: 38,
@@ -63,8 +70,5 @@ const styles = createTheme({
     borderRadius: 10,
     borderWidth: 2,
     borderColor: Color.bg1,
-    position: 'absolute',
-    top: 0,
-    right: -8,
   },
 });

@@ -539,8 +539,8 @@ export enum TransactionStackRoutes {
   TransactionAmount = 'transactionAmount',
   TransactionPreview = 'transactionPreview',
   TransactionFeeSettings = 'transactionFeeSettings',
+  TransactionResult = 'transactionResult',
   TransactionNftConfirmation = 'transactionNftConfirmation',
-  TransactionFinish = 'transactionFinish',
   TransactionNftFinish = 'transactionNftFinish',
   TransactionAccount = 'transactionAccount',
   TransactionSumAddress = 'transactionSumAddress',
@@ -563,14 +563,8 @@ export type TransactionStackParamList = HomeFeedStackParamList & {
   [TransactionStackRoutes.TransactionAmount]: undefined;
   [TransactionStackRoutes.TransactionPreview]: undefined;
   [TransactionStackRoutes.TransactionFeeSettings]: FeeSettingsParams;
-  [TransactionStackRoutes.TransactionFinish]: {
-    fee: Fee;
+  [TransactionStackRoutes.TransactionResult]: {
     transaction: TransactionResponse;
-    to?: string;
-    hash: string;
-    hideContact?: boolean;
-    token: IToken;
-    amount?: Balance;
   };
   [TransactionStackRoutes.TransactionNftConfirmation]: {
     from: string;

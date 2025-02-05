@@ -444,6 +444,7 @@ export enum I18N {
   typeAssets = 'typeAssets',
   totalAmountFrom = 'totalAmountFrom',
   rateInfo = 'rateInfo',
+  youSentFrom = 'youSentFrom',
   settingsAccountStyleChoseColor = 'settingsAccountStyleChoseColor',
   settingsAccountStyleChosePattern = 'settingsAccountStyleChosePattern',
   settingsAccountStyleGenerate = 'settingsAccountStyleGenerate',

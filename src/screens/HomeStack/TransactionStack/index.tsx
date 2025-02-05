@@ -18,7 +18,6 @@ import {
 import {TransactionAccountScreen} from '@app/screens/HomeStack/TransactionStack/transaction-account';
 import {TransactionAddressScreen} from '@app/screens/HomeStack/TransactionStack/transaction-address';
 import {TransactionContactEditScreen} from '@app/screens/HomeStack/TransactionStack/transaction-contact-edit';
-import {TransactionFinishScreen} from '@app/screens/HomeStack/TransactionStack/transaction-finish';
 import {TransactionNftConfirmationScreen} from '@app/screens/HomeStack/TransactionStack/transaction-nft-confirmation';
 import {TransactionNftFinishScreen} from '@app/screens/HomeStack/TransactionStack/transaction-nft-finish';
 import {TransactionSumAddressScreen} from '@app/screens/HomeStack/TransactionStack/transaction-sum-address';
@@ -29,6 +28,7 @@ import {FeeSettingsScreen} from './fee-settings';
 import {TransactionAmountScreen} from './transaction-amount';
 import {TransactionNetworkSelectScreen} from './transaction-network-select';
 import {TransactionPreviewScreen} from './transaction-preview';
+import {TransactionResultScreen} from './transaction-result';
 import {TransactionSelectCryptoScreen} from './transaction-select-crypto';
 import {TransactionStoreContainer} from './transaction-store';
 
@@ -114,16 +114,16 @@ export const TransactionStack = memo(() => {
           component={themeUpdaterHOC(FeeSettingsScreen)}
         />
         <Stack.Screen
+          name={TransactionStackRoutes.TransactionResult}
+          component={themeUpdaterHOC(TransactionResultScreen)}
+          options={screenOptions}
+        />
+        <Stack.Screen
           name={TransactionStackRoutes.TransactionNftConfirmation}
           component={themeUpdaterHOC(TransactionNftConfirmationScreen)}
           options={{
             title: getText(I18N.transactionConfirmationPreviewTitle),
           }}
-        />
-        <Stack.Screen
-          name={TransactionStackRoutes.TransactionFinish}
-          component={themeUpdaterHOC(TransactionFinishScreen)}
-          options={screenOptions}
         />
         <Stack.Screen
           name={TransactionStackRoutes.TransactionNftFinish}

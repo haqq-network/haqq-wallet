@@ -3,7 +3,7 @@
   "StakingInfoUnDelegationDay": " ({{day}} day left)",
   "StakingInfoUnDelegationDays": " ({{days}} days left)",
   "Welcome_haqq_pin": "Welcome to HAQQ Wallet",
-  "_hash": "a6601c6e6f9fb0139429a541926d327a8fd73fbc21a406425dbb6886dc6c7304",
+  "_hash": "eb5af911058fecdc73ac1f648770eb5d9b92850a2ee39766383ef63731466b25",
   "accept": "Accept",
   "accountInfoNftTabTitle": "NFTs",
   "accountInfoTokensTabTitle": "Tokens",
@@ -1088,6 +1088,7 @@
   "welcomeSocialWallet": "Social login",
   "welcomeTitle": "No account is connected",
   "yes": "Yes",
+  "youSentFrom": "You Sent from",
   "yourAddresses": "Your addresses",
   "yourAppVersion": "Your version: {{version}}"
 }
