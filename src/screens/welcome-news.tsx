@@ -24,14 +24,8 @@ export const WelcomeNewsScreen = memo(() => {
     });
   }, []);
 
-  const onPressSignup = () => {
-    Logger.log('Sign Up (create account)');
-    navigation.navigate(WelcomeStackRoutes.SignUp);
-  };
-  const onPressSignIn = () => {
-    Logger.log('Sign In (already have account)');
-    navigation.navigate(WelcomeStackRoutes.SignIn);
-  };
+  const onPressSignup = () => navigation.navigate(WelcomeStackRoutes.SignUp);
+  const onPressSignIn = () => navigation.navigate(WelcomeStackRoutes.SignIn);
 
   const onPressRow = useCallback(
     (id: string) => {

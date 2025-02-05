@@ -1638,6 +1638,7 @@ export enum DeeplinkUrlKey {
   web3browser = 'web3browser',
   back9test = 'back9test',
   enableDeveloperMode = 'enableDeveloperMode',
+  enableNetworkLogger = 'enableNetworkLogger',
 }
 
 export type Eventable = Required<{

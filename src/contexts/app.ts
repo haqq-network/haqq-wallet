@@ -4,6 +4,7 @@ import dynamicLinks from '@react-native-firebase/dynamic-links';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {subMinutes} from 'date-fns';
 import {Alert, AppState, Appearance, Platform, StatusBar} from 'react-native';
+import Config from 'react-native-config';
 import Keychain, {
   STORAGE_TYPE,
   getGenericPassword,
@@ -176,7 +177,7 @@ class App extends AsyncEventEmitter {
   }
 
   get isCustomSigninSupported() {
-    return IS_DETOX;
+    return IS_DETOX || Config.IS_DEVELOPMENT === 'true';
   }
 
   get isOathSigninSupported() {
