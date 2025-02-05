@@ -1,0 +1,13 @@
+diff --git a/node_modules/react-native-screens/ios/RNSFullWindowOverlay.mm b/node_modules/react-native-screens/ios/RNSFullWindowOverlay.mm
+index 74f1804..a45f1a1 100644
+--- a/node_modules/react-native-screens/ios/RNSFullWindowOverlay.mm
++++ b/node_modules/react-native-screens/ios/RNSFullWindowOverlay.mm
+@@ -18,7 +18,7 @@ @implementation RNSFullWindowOverlayContainer
+ - (instancetype)initWithFrame:(CGRect)frame
+ {
+   if (self = [super initWithFrame:frame]) {
+-    self.accessibilityViewIsModal = YES;
++    self.accessibilityViewIsModal = NO; // Maestro test doesn't recognize elements if set to YES
+   }
+   return self;
+ }
