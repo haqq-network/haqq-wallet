@@ -189,11 +189,12 @@ export const Text = ({
   }, [position]);
 
   return clean ? (
-    <RNText style={style} allowFontScaling={false} {...props}>
+    <RNText accessible style={style} allowFontScaling={false} {...props}>
       {children}
     </RNText>
   ) : (
     <RNText
+      accessible
       allowFontScaling={false}
       style={[
         t0 && StyleSheet.flatten([page.t0Style, style]),
