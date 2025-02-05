@@ -38,7 +38,8 @@
     "env:update": "yarn zx ./scripts/update-version.mjs",
     "locales:update": "yarn zx ./scripts/pull-locales.mjs",
     "pin": "sh ./scripts/adb-enter-pin.sh",
-    "devpkg:update": "yarn zx ./scripts/update-devpkg.mjs"
+    "devpkg:update": "yarn zx ./scripts/update-devpkg.mjs",
+    "format-network-logs": "yarn zx ./scripts/format-network-logs.mjs"
   },
   "dependencies": {
     "@birdwingo/react-native-spinning-numbers": "1.0.5",
