@@ -22,8 +22,25 @@ const loggerCustom = Logger.create('onLoginCustom', {
   enabled: AppStore.isLogsEnabled,
 });
 
-export async function onLoginCustom() {
+export type SSSLoginOptions = {
+  resetShares: boolean;
+};
+
+function extractLoginOptions(
+  opts: SSSLoginOptions | undefined,
+): SSSLoginOptions {
+  const {resetShares} = opts || {
+    resetShares: false,
+  };
+
+  return {
+    resetShares,
+  } as SSSLoginOptions;
+}
+
+export async function onLoginCustom(opts?: SSSLoginOptions) {
   loggerCustom.log('Starting onLoginCustom function');
+  const {resetShares} = extractLoginOptions(opts);
 
   const email = await new Promise(resolve => {
     loggerCustom.log('Awaiting for popup to be closed');
@@ -79,15 +96,24 @@ export async function onLoginCustom() {
   loggerCustom.log(
     'Calling onAuthorized with verifier, authInfo.sub, and idToken',
   );
-  return await onAuthorized(verifier, authInfo.sub, authState.idToken);
+  return await onAuthorized(
+    verifier,
+    authInfo.sub,
+    authState.idToken,
+    resetShares,
+  );
 }
 
 const loggerGoogle = Logger.create('onLoginGoogle', {
   enabled: AppStore.isLogsEnabled,
 });
 
-export async function onLoginGoogle(): Promise<Creds | null> {
+export async function onLoginGoogle(
+  opts?: SSSLoginOptions,
+): Promise<Creds | null> {
   loggerGoogle.log('Starting onLoginGoogle function');
+  const {resetShares} = extractLoginOptions(opts);
+
   let authState = {
     idToken: '',
   };
@@ -118,15 +144,24 @@ export async function onLoginGoogle(): Promise<Creds | null> {
   loggerGoogle.log(
     'Calling onAuthorized with verifier, authInfo.email, and idToken',
   );
-  return await onAuthorized(verifier, authInfo.email, authState.idToken);
+  return await onAuthorized(
+    verifier,
+    authInfo.email,
+    authState.idToken,
+    resetShares,
+  );
 }
 
 const loggerApple = Logger.create('onLoginApple', {
   enabled: AppStore.isLogsEnabled,
 });
 
-export async function onLoginApple(): Promise<Creds | null> {
+export async function onLoginApple(
+  opts?: SSSLoginOptions,
+): Promise<Creds | null> {
   loggerApple.log('Starting onLoginApple function');
+  const {resetShares} = extractLoginOptions(opts);
+
   try {
     loggerApple.log('Performing Apple auth request');
     const appleAuthRequestResponse = await appleAuth.performRequest({
@@ -166,7 +201,12 @@ export async function onLoginApple(): Promise<Creds | null> {
     loggerApple.log(
       'Calling onAuthorized with verifier, authInfo.email, and identityToken',
     );
-    return await onAuthorized(verifier, authInfo.email, identityToken);
+    return await onAuthorized(
+      verifier,
+      authInfo.email,
+      identityToken,
+      resetShares,
+    );
   } catch (e: any) {
     if (e.code.toString() !== '1001') {
       loggerApple.error('Error in Apple login', {error: e});

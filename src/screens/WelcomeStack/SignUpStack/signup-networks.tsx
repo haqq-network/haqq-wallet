@@ -55,15 +55,15 @@ export const SignupNetworksScreen = observer(() => {
         switch (provider) {
           case SssProviders.apple:
             logger.log('Logging in with Apple');
-            creds = await onLoginApple();
+            creds = await onLoginApple({resetShares: true});
             break;
           case SssProviders.google:
             logger.log('Logging in with Google');
-            creds = await onLoginGoogle();
+            creds = await onLoginGoogle({resetShares: true});
             break;
           case SssProviders.custom:
             logger.log('Logging in with Custom provider');
-            creds = await onLoginCustom();
+            creds = await onLoginCustom({resetShares: true});
             break;
         }
       } catch (err) {
