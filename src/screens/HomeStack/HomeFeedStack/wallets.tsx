@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import {
   ProviderMnemonicBase,
@@ -19,7 +19,10 @@ import {filterWalletConnectSessionsByAddress} from '@app/utils';
 export const WalletsWrapper = observer(() => {
   const navigation = useTypedNavigation<HomeFeedStackParamList>();
   const visible = Wallet.getAllVisible();
-  const balance = Wallet.getBalancesByAddressList(visible);
+  const balance = useMemo(
+    () => Wallet.getBalancesByAddressList(visible),
+    [visible, Wallet.balances],
+  );
 
   const onPressSend = useCallback(
     (address: string) => {

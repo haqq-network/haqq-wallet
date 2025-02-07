@@ -183,6 +183,7 @@ export const Icon = ({name, style, color, ...props}: IconProps) => {
   );
   return (
     <Image
+      accessible
       source={icon}
       style={[
         I18nManager.isRTL &&

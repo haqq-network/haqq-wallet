@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import * as process from 'process';
 
+import {device} from 'detox';
 import {ethers} from 'ethers';
 
 export const PIN = '123456';
@@ -12,3 +13,6 @@ export const PROVIDER = new ethers.providers.StaticJsonRpcProvider(
     name: process.env.DETOX_PROVIDER!,
   },
 );
+
+export const isAndroid = () => device.getPlatform() === 'android';
+export const isIOS = () => device.getPlatform() === 'ios';
