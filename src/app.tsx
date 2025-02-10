@@ -52,6 +52,7 @@ import {sleep} from '@app/utils';
 import {SPLASH_TIMEOUT_MS} from '@app/variables/common';
 
 import {AppVersionAbsoluteView} from './components/app-version-absolute-view';
+import {createExportBannerIfNotExists} from './helpers/export';
 import {AppStore} from './models/app';
 import {migrationWallets} from './models/migration-wallets';
 import {Wallet} from './models/wallet';
@@ -183,6 +184,7 @@ export const App = observer(() => {
         await awaitForEventDone(Events.onAppStarted);
         AppStore.isInitialized = true;
         hideModal(ModalType.splash);
+        createExportBannerIfNotExists();
       });
 
     return () => {

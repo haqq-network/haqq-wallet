@@ -19,6 +19,7 @@ export enum BannerButtonEvent {
   test = 'test',
   empty = '',
   none = 'none',
+  export = 'export',
 }
 
 export enum BannerType {
@@ -27,6 +28,7 @@ export enum BannerType {
   notificationsTopic = 'notificationsTopic',
   trackActivity = 'trackActivity',
   test = 'test',
+  export = 'export',
 }
 
 export type BannerButton = {
