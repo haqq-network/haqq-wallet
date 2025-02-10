@@ -62,7 +62,10 @@ const encryptWithKey = async (
 /**
  * Function to decrypt encrypted data using the given key.
  */
-const decryptWithKey = async (encryptedData: any, keyBase64: string) => {
+const decryptWithKey = async (
+  encryptedData: {cipher: string; iv: string},
+  keyBase64: string,
+) => {
   try {
     return await Aes.decrypt(
       encryptedData.cipher,
@@ -101,11 +104,10 @@ export const decryptMnemonic = async (
 };
 
 // haqqabi wallet support only mnemonic import
-export function getWalletsForExport() {
-  return Wallet.getAll().filter(
+export const getWalletsForExport = () =>
+  Wallet.getAll().filter(
     it => it.type === WalletType.mnemonic || it.type === WalletType.sss,
   );
-}
 
 export async function exportWallet() {
   const wallet = await awaitForWallet({
@@ -171,8 +173,6 @@ const generateExportBanner = (): Banner => {
     type: BannerType.export,
     title: 'Export to Haqqabi',
     description: 'Export your mnemonic wallet to Haqqabi',
-    // titleColor: 'textBase1',
-    // descriptionColor: 'textBase1',
     backgroundColorFrom: '#1B6EE5',
     backgroundColorTo: '#2C8EEB',
     isUsed: false,
