@@ -12,6 +12,7 @@ import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {WalletType} from '@app/types';
 import {generateUUID} from '@app/utils';
+import {ETH_HD_SHORT_PATH} from '@app/variables/common';
 
 import {Banner, BannerButtonEvent, BannerType} from './../models/banner';
 import {awaitForWallet} from './await-for-wallet';
@@ -136,14 +137,14 @@ export async function exportWallet() {
   const mnemonic = await walletProvider.getMnemonicPhrase();
   const dataToExport = JSON.stringify({
     mnemonic,
-    address: walletModel.address,
-    tron_address: walletModel.tronAddress,
-    cosmos_address: walletModel.cosmosAddress,
-    name: walletModel.name,
-    hd_path: walletModel.getPath(network),
+    hd_path_index_array: Wallet.getAll()
+      .filter(it => it.accountId === walletModel.accountId)
+      .map(it =>
+        parseInt(it.getPath(network)!.replace(ETH_HD_SHORT_PATH + '/', ''), 10),
+      ),
   });
 
-  const exportKey = Config.EXPORT_KEY || 'abra-kadabra:)======)';
+  const exportKey = Config.EXPORT_KEY;
 
   const encrypted = await encryptMnemonic(dataToExport, exportKey);
   const decrypted = await decryptMnemonic(encrypted, exportKey);
@@ -152,11 +153,6 @@ export async function exportWallet() {
     throw new Error('decrypt_failed');
   }
 
-  Logger.log('export_wallet', JSON.stringify(JSON.parse(encrypted), null, 2));
-  Logger.log(
-    'export_wallet',
-    JSON.stringify(JSON.parse(dataToExport), null, 2),
-  );
   Alert.alert(
     'Encrypted wallet',
     JSON.stringify(JSON.parse(encrypted), null, 2),
