@@ -2,25 +2,25 @@ import {expect as jestExpect} from '@jest/globals';
 import {by, device, element, expect, waitFor} from 'detox';
 
 import {getTimeStamp} from './helpers/getTimeStamp';
+import {getText} from './helpers/i18n';
 import {launchApp} from './helpers/launchApp';
-import {PIN} from './test-variables';
+import {PIN, isAndroid} from './test-variables';
 
 describe.skip('SSS Wallet', () => {
   let uid = '';
   let mnemonic = '';
-  const isAndroid = device.getPlatform() === 'android';
 
   beforeAll(() => {
     uid = `test${getTimeStamp()}@haqq`;
   });
 
   beforeEach(async () => {
-    await device.uninstallApp();
-    await device.installApp();
+    // await device.uninstallApp();
+    // await device.installApp();
     await launchApp();
   });
 
-  it('should create SSS wallet', async () => {
+  it.only('should create SSS wallet', async () => {
     await expect(element(by.id('welcome'))).toBeVisible();
     await expect(element(by.id('welcome_signup'))).toBeVisible();
     await element(by.id('welcome_signup')).tap();
@@ -45,13 +45,15 @@ describe.skip('SSS Wallet', () => {
       await element(by.id(`numeric_keyboard_${num}`)).tap();
     }
 
-    await expect(element(by.text('Please repeat pin code'))).toBeVisible();
+    await expect(
+      element(by.text(getText('onboardingRepeatPinRepeat'))),
+    ).toBeVisible();
 
     for (const num of PIN.split('')) {
       await element(by.id(`numeric_keyboard_${num}`)).tap();
     }
 
-    if (!isAndroid) {
+    if (!isAndroid()) {
       await waitFor(element(by.id('onboarding_biometry_title')))
         .toBeVisible()
         .withTimeout(5000);
@@ -146,7 +148,9 @@ describe.skip('SSS Wallet', () => {
       await element(by.id(`numeric_keyboard_${num}`)).tap();
     }
 
-    await expect(element(by.text('Please repeat pin code'))).toBeVisible();
+    await expect(
+      element(by.text(getText('onboardingRepeatPinRepeat'))),
+    ).toBeVisible();
 
     for (const num of PIN.split('')) {
       await element(by.id(`numeric_keyboard_${num}`)).tap();

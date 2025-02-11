@@ -43,7 +43,7 @@ module.exports = {
       device: {
         name: 'HAQQ_e2e',
       },
-      headless: true
+      headless: true,
     },
     attached: {
       type: 'android.attached',

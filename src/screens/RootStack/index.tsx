@@ -26,7 +26,7 @@ const RootStack = observer(({isPinReseted}: Props) => {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View accessible={false} style={styles.container}>
       {showHomeStack ? <HomeStack /> : <WelcomeStack />}
       <ModalProvider>
         <ModalsScreen

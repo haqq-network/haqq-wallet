@@ -241,6 +241,7 @@ export const Button = ({
 
   return (
     <TouchableOpacity
+      accessible
       style={containerStyle as ViewStyle}
       onPress={onPressButton}
       onLongPress={onLongPress}

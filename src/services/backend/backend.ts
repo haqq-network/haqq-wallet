@@ -40,6 +40,10 @@ export class Backend {
   };
 
   getRemoteUrl() {
+    if (IS_DETOX || Config.IS_DEVELOPMENT === 'true') {
+      return Config.HAQQ_BACKEND_DEV;
+    }
+
     if (!VariablesString.exists('backend')) {
       return Config.HAQQ_BACKEND;
     }

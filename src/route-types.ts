@@ -51,6 +51,7 @@ export enum WelcomeStackRoutes {
   NewsDetail = 'newsDetail',
   InAppBrowser = 'inAppBrowser',
   Device = 'device',
+  NetworkLogger = 'networkLogger',
 }
 
 export type WelcomeStackParamList = {
@@ -69,6 +70,7 @@ export type WelcomeStackParamList = {
     scrollEvent: MarketingEvents;
   };
   [WelcomeStackRoutes.Device]: undefined;
+  [WelcomeStackRoutes.NetworkLogger]: undefined;
   [WelcomeStackRoutes.InAppBrowser]: HomeStackParamList[HomeStackRoutes.InAppBrowser];
 };
 

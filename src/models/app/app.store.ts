@@ -61,6 +61,9 @@ class AppStore {
   }
 
   get networkLoggerEnabled() {
+    if (Config.IS_DEVELOPMENT === 'true') {
+      return true;
+    }
     // only for developer mode
     if (!this.isAdditionalFeaturesEnabled) {
       return false;

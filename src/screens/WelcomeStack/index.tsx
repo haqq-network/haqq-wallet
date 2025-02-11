@@ -21,6 +21,8 @@ import {WelcomeNewsScreen} from '@app/screens/welcome-news';
 import {SignInStack} from '@app/screens/WelcomeStack/SignInStack';
 import {SignUpStack} from '@app/screens/WelcomeStack/SignUpStack';
 
+import {NetworkLoggerScreen} from '../network-logger';
+
 const Stack = createNativeStackNavigator<WelcomeStackParamList>();
 
 const modalOptions: NativeStackNavigationOptions = {
@@ -80,6 +82,12 @@ const WelcomeStack = observer(() => {
         name={WelcomeStackRoutes.InAppBrowser}
         component={themeUpdaterHOC(InAppBrowserScreen)}
         options={inAppBrowserOptions}
+      />
+
+      <Stack.Screen
+        name={WelcomeStackRoutes.NetworkLogger}
+        component={NetworkLoggerScreen}
+        options={modalOptions}
       />
     </Stack.Navigator>
   );

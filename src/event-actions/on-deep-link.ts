@@ -154,6 +154,9 @@ export async function onDeepLink(
         case DeeplinkUrlKey.enableDeveloperMode:
           AppStore.isDeveloperModeEnabled = true;
           return true;
+        case DeeplinkUrlKey.enableNetworkLogger:
+          AppStore.networkLoggerEnabled = true;
+          return true;
       }
     }
   } catch (error) {

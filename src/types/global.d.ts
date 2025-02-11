@@ -4,6 +4,7 @@ declare module 'react-native-markdown-package';
 
 declare const Logger: import('@app/services/logger').LoggerService;
 declare const IS_DETOX: boolean;
+declare const IS_JEST: boolean;
 
 declare module 'react-timer-mixin';
 
