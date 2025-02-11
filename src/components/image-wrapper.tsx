@@ -117,7 +117,11 @@ export function ImageWrapper({source, style, ...props}: ImageWrapperProps) {
       )}
       {!fixedSource && false}
       {isError && (
-        <Image {...(props as ImageProps)} style={style} source={fixedSource!} />
+        <Image
+          {...(props as ImageProps)}
+          style={StyleSheet.flatten(style)}
+          source={fixedSource!}
+        />
       )}
       <BlastedImage
         {...props}

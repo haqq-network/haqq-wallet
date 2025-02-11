@@ -1,13 +1,14 @@
 import {ProviderMnemonicEvm, ProviderSSSEvm} from '@haqq/rn-wallet-providers';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {ethers} from 'ethers';
-import {Alert, NativeModules} from 'react-native';
+import {Alert, Linking, NativeModules} from 'react-native';
 import Config from 'react-native-config';
 
 import {I18N} from '@app/i18n';
 import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
-import {WalletType} from '@app/types';
+import {EventTracker} from '@app/services/event-tracker';
+import {MarketingEvents, WalletType} from '@app/types';
 import {generateUUID} from '@app/utils';
 import {ETH_HD_SHORT_PATH} from '@app/variables/common';
 
@@ -83,53 +84,77 @@ export const getWalletsForExport = () =>
     it => it.type === WalletType.mnemonic || it.type === WalletType.sss,
   );
 
+export async function isHaqqabiInstalled() {
+  try {
+    // TODO: check scheme for haqqabi app
+    return await Linking.canOpenURL('haqqabi://');
+  } catch {
+    return false;
+  }
+}
+
 export async function exportWallet() {
-  const wallet = await awaitForWallet({
-    wallets: getWalletsForExport(),
-    title: I18N.selectAccount,
-  });
+  try {
+    EventTracker.instance.trackEvent(MarketingEvents.exportWalletStart);
+    const wallet = await awaitForWallet({
+      wallets: getWalletsForExport(),
+      title: I18N.selectAccount,
+    });
 
-  const network = Provider.getAll().find(
-    it => it.isHaqqNetwork && it.isMainnet,
-  );
+    const network = Provider.getAll().find(
+      it => it.isHaqqNetwork && it.isMainnet,
+    );
 
-  const walletModel = Wallet.getById(wallet)!;
-  const walletProvider = await getProviderInstanceForWallet(
-    walletModel,
-    true,
-    network,
-  );
+    const walletModel = Wallet.getById(wallet)!;
+    const walletProvider = await getProviderInstanceForWallet(
+      walletModel,
+      true,
+      network,
+    );
 
-  if (
-    !(walletProvider instanceof ProviderMnemonicEvm) &&
-    !(walletProvider instanceof ProviderSSSEvm)
-  ) {
-    throw new Error('wallet_not_supported');
+    if (
+      !(walletProvider instanceof ProviderMnemonicEvm) &&
+      !(walletProvider instanceof ProviderSSSEvm)
+    ) {
+      throw new Error('wallet_not_supported');
+    }
+
+    const mnemonic = await walletProvider.getMnemonicPhrase();
+    const dataToExport = JSON.stringify({
+      mnemonic,
+      hd_path_index_array: Wallet.getAll()
+        .filter(it => it.accountId === walletModel.accountId)
+        .map(it => it.getPath(network)!.replace(`${ETH_HD_SHORT_PATH}/`, '')),
+    });
+
+    const exportKey = Config.EXPORT_KEY;
+
+    const encrypted = await encryptMnemonic(dataToExport, exportKey);
+    const decrypted = await decryptMnemonic(encrypted, exportKey);
+
+    if (decrypted !== dataToExport) {
+      throw new Error('decrypt_failed');
+    }
+
+    Alert.alert(
+      'Encrypted wallet',
+      JSON.stringify(JSON.parse(encrypted), null, 2),
+      [{text: 'Copy', onPress: () => Clipboard.setString(encrypted)}],
+    );
+
+    if (await isHaqqabiInstalled()) {
+      // open haqqabi app via deeplink to export wallet
+    } else {
+      // open dynamic link to download haqqabi app
+      EventTracker.instance.trackEvent(MarketingEvents.installHaqqabi);
+    }
+
+    EventTracker.instance.trackEvent(MarketingEvents.exportWalletSuccess);
+  } catch (err) {
+    EventTracker.instance.trackEvent(MarketingEvents.exportWalletFail, {
+      error: (err as any)?.message || err,
+    });
   }
-
-  const mnemonic = await walletProvider.getMnemonicPhrase();
-  const dataToExport = JSON.stringify({
-    mnemonic,
-    hd_path_index_array: Wallet.getAll()
-      .filter(it => it.accountId === walletModel.accountId)
-      .map(it => it.getPath(network)!.replace(`${ETH_HD_SHORT_PATH}/`, '')),
-  });
-
-  const exportKey = Config.EXPORT_KEY;
-
-  const encrypted = await encryptMnemonic(dataToExport, exportKey);
-  const decrypted = await decryptMnemonic(encrypted, exportKey);
-
-  if (decrypted !== dataToExport) {
-    throw new Error('decrypt_failed');
-  }
-
-  Alert.alert(
-    'Encrypted wallet',
-    JSON.stringify(JSON.parse(encrypted), null, 2),
-    [{text: 'Copy', onPress: () => Clipboard.setString(encrypted)}],
-  );
-  return encrypted;
 }
 
 const generateExportBanner = (): Banner => {
@@ -140,13 +165,12 @@ const generateExportBanner = (): Banner => {
     type: BannerType.export,
     title: 'Export to Haqqabi',
     description: 'Export your mnemonic wallet to Haqqabi',
-    backgroundColorFrom: '#1B6EE5',
-    backgroundColorTo: '#2C8EEB',
     isUsed: false,
     snoozedUntil: new Date(),
     defaultEvent: BannerButtonEvent.export,
     defaultParams: {banner_id: id, type: 'export_wallet'},
     closeEvent: BannerButtonEvent.none,
+    backgroundImage: require('@assets/images/export-banner-bg.png'),
     priority: 10,
   };
 };

@@ -1,5 +1,5 @@
 import {makePersistable} from '@override/mobx-persist-store';
-import {makeAutoObservable} from 'mobx';
+import {makeAutoObservable, runInAction} from 'mobx';
 
 import {Color} from '@app/colors';
 import {storage} from '@app/services/mmkv';
@@ -86,7 +86,9 @@ class BannerStore {
     if (existingBanner) {
       this.update(existingBanner.id, params);
     } else {
-      this.banners.push(newBanner);
+      runInAction(() => {
+        this.banners = [...this.banners, newBanner];
+      });
     }
 
     return params.id;
@@ -135,7 +137,12 @@ class BannerStore {
     const bannersWithoutOldValue = this.banners.filter(
       banner => banner.id !== bannerToUpdate.id,
     );
-    this.banners = [...bannersWithoutOldValue, {...bannerToUpdate, ...params}];
+    runInAction(() => {
+      this.banners = [
+        ...bannersWithoutOldValue,
+        {...bannerToUpdate, ...params},
+      ];
+    });
     return true;
   }
 }

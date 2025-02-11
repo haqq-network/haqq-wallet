@@ -118,6 +118,11 @@ export enum MarketingEvents {
   jsonRpcSignFail = 'jsonRpcSignFail',
   jsonRpcSignUserReject = 'jsonRpcSignUserReject',
   swapScreenClose = 'swapScreenClose',
+
+  exportWalletStart = 'exportWalletStart',
+  exportWalletSuccess = 'exportWalletSuccess',
+  exportWalletFail = 'exportWalletFail',
+  installHaqqabi = 'installHaqqabi',
 }
 
 export enum PopupNotificationBannerTypes {
