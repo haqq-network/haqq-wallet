@@ -131,7 +131,8 @@ class App extends AsyncEventEmitter {
 
         this.setEnabledLoggersForTestMode();
         this.stopInitialization();
-      });
+      })
+      .catch(this.stopInitialization);
   }
 
   private _startUpTime: number;

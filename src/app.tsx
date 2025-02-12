@@ -93,6 +93,7 @@ export const App = observer(() => {
   const [isPinReseted, setPinReseted] = useState(false);
 
   const [posthog, setPosthog] = useState<PostHog | null>(null);
+  const [isOnline, setIsOnline] = useState(true);
   const theme = useTheme();
   const toast = useToast();
 
@@ -152,85 +153,77 @@ export const App = observer(() => {
         maxRequests: AppStore.networkLogsCacheSize,
       });
     }
-    sleep(150)
-      .then(async () => await app.awaitForInitialization())
-      .then(() => SplashScreen.hide())
-      .then(async () => await awaitForEventDone(Events.onAppInitialized))
-      .then(async () => await Language.init())
-      .then(async () => {
-        await when(() => Wallet.isHydrated);
-        await Stories.fetch(true);
-        if (AppStore.isOnboarded || Wallet.getAll().length > 0) {
-          await app.init();
-          await migrationWallets();
 
-          // We need reopen app for start SSS check
-          // because we are working with cloud snapshots
-          VariablesBool.set('isReadyForSSSVerification', true);
-        }
-      })
-      .then(() => {
-        awaitForEventDone(Events.onAppLoggedId);
-      })
-      .then(() => {
-        clearTimeout(splashTimer);
-        hideModal(ModalType.splash);
-      })
-      .catch(async e => {
-        Logger.captureException(e, 'app init');
-      })
-      .finally(async () => {
-        await awaitForEventDone(Events.onAppStarted);
-        AppStore.isInitialized = true;
-        hideModal(ModalType.splash);
-      });
+    const subscription = ({isConnected}: NetInfoState) => {
+      setIsOnline(!!isConnected);
+      isConnected
+        ? hideModal(ModalType.noInternet)
+        : showModal(ModalType.noInternet);
+    };
+
+    const linkingSubscription = ({url}: {url: string}) => {
+      if (url) {
+        app.emit(Events.onDeepLink, url);
+      }
+    };
+
+    const unsubscribeLinking = Linking.addListener('url', linkingSubscription);
+    const unsubscribeNet = NetInfo.addEventListener(subscription);
+    const unsubscribeApp = AppState.addEventListener('change', () => {
+      if (AppState.currentState === 'active') {
+        NetInfo.fetch().then(subscription);
+      }
+    });
+
+    NetInfo.fetch().then(subscription);
+
+    if (isOnline) {
+      sleep(150)
+        .then(async () => await app.awaitForInitialization())
+        .then(() => SplashScreen.hide())
+        .then(async () => await awaitForEventDone(Events.onAppInitialized))
+        .then(async () => await Language.init())
+        .then(async () => {
+          await when(() => Wallet.isHydrated);
+          await Stories.fetch(true);
+          if (AppStore.isOnboarded || Wallet.getAll().length > 0) {
+            await app.init();
+            await migrationWallets();
+
+            // We need reopen app for start SSS check
+            // because we are working with cloud snapshots
+            VariablesBool.set('isReadyForSSSVerification', true);
+          }
+        })
+        .then(() => {
+          awaitForEventDone(Events.onAppLoggedId);
+        })
+        .then(() => {
+          clearTimeout(splashTimer);
+          hideModal(ModalType.splash);
+        })
+        .catch(async e => {
+          Logger.captureException(e, 'app init');
+        })
+        .finally(async () => {
+          await awaitForEventDone(Events.onAppStarted);
+          AppStore.isInitialized = true;
+          hideModal(ModalType.splash);
+        });
+    } else {
+      AppStore.isInitialized = true;
+    }
+
+    EventTracker.instance.initialize();
 
     return () => {
       clearTimeout(splashTimer);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (AppStore.isInitialized) {
-      const subscription = ({isConnected}: NetInfoState) => {
-        isConnected
-          ? hideModal(ModalType.noInternet)
-          : showModal(ModalType.noInternet);
-      };
-
-      const linkingSubscription = ({url}: {url: string}) => {
-        if (url) {
-          app.emit(Events.onDeepLink, url);
-        }
-      };
-
-      NetInfo.fetch().then(subscription);
-
-      const unsubscribeLinking = Linking.addListener(
-        'url',
-        linkingSubscription,
-      );
-      const unsubscribeNet = NetInfo.addEventListener(subscription);
-      const unsubscribeApp = AppState.addEventListener('change', () => {
-        if (AppState.currentState === 'active') {
-          NetInfo.fetch().then(subscription);
-        }
-      });
-
-      return () => {
-        unsubscribeNet();
-        unsubscribeApp.remove();
-        unsubscribeLinking.remove();
-      };
-    }
-  }, [AppStore.isInitialized]);
-
-  useEffect(() => {
-    EventTracker.instance.initialize();
-    return () => {
+      unsubscribeNet();
+      unsubscribeApp.remove();
+      unsubscribeLinking.remove();
       EventTracker.instance.dispose();
     };
-  }, []);
+  }, [isOnline]);
 
   const onStateChange = useCallback(async () => {
     Sentry.addBreadcrumb({
