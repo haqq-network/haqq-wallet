@@ -11,11 +11,10 @@ import {Backend, NetworkProvider} from '@app/services/backend';
 import {storage} from '@app/services/mmkv';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {ModalType} from '@app/types';
-import {createAsyncTask, sleep} from '@app/utils';
+import {createAsyncTask} from '@app/utils';
 import {
   DEFAULT_PROVIDERS,
   MAIN_NETWORK_ID,
-  STORE_REHYDRATION_TIMEOUT_MS,
   TEST_NETWORK_ID,
 } from '@app/variables/common';
 
@@ -157,8 +156,6 @@ class ProviderStore {
       } catch (err) {
         logger.error('init', err);
         logger.captureException(err, 'init');
-        await sleep(STORE_REHYDRATION_TIMEOUT_MS);
-        return this.init();
       }
 
       if (!resolved) {
