@@ -93,7 +93,7 @@ export const App = observer(() => {
   const [isPinReseted, setPinReseted] = useState(false);
 
   const [posthog, setPosthog] = useState<PostHog | null>(null);
-  // const [isOnline, setIsOnline] = useState(true);
+  const [isOnline, setIsOnline] = useState(true);
   const theme = useTheme();
   const toast = useToast();
 
@@ -155,6 +155,7 @@ export const App = observer(() => {
     }
 
     const subscription = ({isConnected}: NetInfoState) => {
+      setIsOnline(!!isConnected);
       isConnected
         ? hideModal(ModalType.noInternet)
         : showModal(ModalType.noInternet);
@@ -174,45 +175,44 @@ export const App = observer(() => {
       }
     });
 
-    sleep(150)
-      .then(() => NetInfo.fetch())
-      .then(info => {
-        subscription(info);
-        return !!info.isConnected;
-      })
-      .then(async isConnected => {
-        isConnected && (await app.awaitForInitialization());
-      })
-      .then(() => SplashScreen.hide())
-      .then(async () => await awaitForEventDone(Events.onAppInitialized))
-      .then(async () => await Language.init())
-      .then(async () => {
-        await when(() => Wallet.isHydrated);
-        await Stories.fetch(true);
-        if (AppStore.isOnboarded || Wallet.getAll().length > 0) {
-          await app.init();
-          await migrationWallets();
+    NetInfo.fetch().then(subscription);
 
-          // We need reopen app for start SSS check
-          // because we are working with cloud snapshots
-          VariablesBool.set('isReadyForSSSVerification', true);
-        }
-      })
-      .then(() => {
-        awaitForEventDone(Events.onAppLoggedId);
-      })
-      .then(() => {
-        clearTimeout(splashTimer);
-        hideModal(ModalType.splash);
-      })
-      .catch(async e => {
-        Logger.captureException(e, 'app init');
-      })
-      .finally(async () => {
-        await awaitForEventDone(Events.onAppStarted);
-        AppStore.isInitialized = true;
-        hideModal(ModalType.splash);
-      });
+    if (isOnline) {
+      sleep(150)
+        .then(async () => await app.awaitForInitialization())
+        .then(() => SplashScreen.hide())
+        .then(async () => await awaitForEventDone(Events.onAppInitialized))
+        .then(async () => await Language.init())
+        .then(async () => {
+          await when(() => Wallet.isHydrated);
+          await Stories.fetch(true);
+          if (AppStore.isOnboarded || Wallet.getAll().length > 0) {
+            await app.init();
+            await migrationWallets();
+
+            // We need reopen app for start SSS check
+            // because we are working with cloud snapshots
+            VariablesBool.set('isReadyForSSSVerification', true);
+          }
+        })
+        .then(() => {
+          awaitForEventDone(Events.onAppLoggedId);
+        })
+        .then(() => {
+          clearTimeout(splashTimer);
+          hideModal(ModalType.splash);
+        })
+        .catch(async e => {
+          Logger.captureException(e, 'app init');
+        })
+        .finally(async () => {
+          await awaitForEventDone(Events.onAppStarted);
+          AppStore.isInitialized = true;
+          hideModal(ModalType.splash);
+        });
+    } else {
+      AppStore.isInitialized = true;
+    }
 
     EventTracker.instance.initialize();
 
@@ -223,7 +223,7 @@ export const App = observer(() => {
       unsubscribeLinking.remove();
       EventTracker.instance.dispose();
     };
-  }, []);
+  }, [isOnline]);
 
   const onStateChange = useCallback(async () => {
     Sentry.addBreadcrumb({
