@@ -85,7 +85,8 @@
 		<string>ha</string>
 		<string>yammer</string>
 		<string>discord</string>
-		<string>cydia</string>
+    <string>cydia</string>
+		<string>haqabi</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>

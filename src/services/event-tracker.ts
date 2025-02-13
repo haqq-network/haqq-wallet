@@ -77,6 +77,10 @@ const EventsNameMap: Record<MarketingEvents, string> = {
   [MarketingEvents.jsonRpcSignSuccess]: 'sign operation success',
   [MarketingEvents.jsonRpcSignFail]: 'sign operation fail',
   [MarketingEvents.jsonRpcSignUserReject]: 'sign operation user reject',
+  [MarketingEvents.exportWalletFail]: 'export wallet fail',
+  [MarketingEvents.exportWalletStart]: 'export wallet start',
+  [MarketingEvents.exportWalletSuccess]: 'export wallet success',
+  [MarketingEvents.installHaqqabi]: 'install haqqabi',
 };
 
 export class EventTracker extends Initializable {

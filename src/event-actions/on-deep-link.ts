@@ -4,6 +4,7 @@ import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {awaitForWallet, showModal} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
+import {exportWallet} from '@app/helpers/export';
 import {Url} from '@app/helpers/url';
 import {I18N} from '@app/i18n';
 import {AppStore} from '@app/models/app';
@@ -156,6 +157,9 @@ export async function onDeepLink(
           return true;
         case DeeplinkUrlKey.enableNetworkLogger:
           AppStore.networkLoggerEnabled = true;
+          return true;
+        case DeeplinkUrlKey.export:
+          await exportWallet();
           return true;
       }
     }

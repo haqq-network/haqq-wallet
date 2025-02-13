@@ -44,6 +44,7 @@ declare module 'react-native-config' {
     SENTRY_DSN: string; // DSN for Sentry error tracking
     ADJUST_TOKEN: string; // Token for Adjust integration
     ADJUST_ENVIRONMENT: 'sandbox' | 'production'; // Environment for Adjust
+    EXPORT_KEY: string; // Key for encrypt exporting wallet
   }
 
   export const Config: NativeConfig;

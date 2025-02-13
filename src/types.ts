@@ -118,6 +118,11 @@ export enum MarketingEvents {
   jsonRpcSignFail = 'jsonRpcSignFail',
   jsonRpcSignUserReject = 'jsonRpcSignUserReject',
   swapScreenClose = 'swapScreenClose',
+
+  exportWalletStart = 'exportWalletStart',
+  exportWalletSuccess = 'exportWalletSuccess',
+  exportWalletFail = 'exportWalletFail',
+  installHaqqabi = 'installHaqqabi',
 }
 
 export enum PopupNotificationBannerTypes {
@@ -1639,6 +1644,7 @@ export enum DeeplinkUrlKey {
   back9test = 'back9test',
   enableDeveloperMode = 'enableDeveloperMode',
   enableNetworkLogger = 'enableNetworkLogger',
+  export = 'export',
 }
 
 export type Eventable = Required<{
