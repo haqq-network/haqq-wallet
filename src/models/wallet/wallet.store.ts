@@ -6,9 +6,10 @@ import {DEBUG_VARS} from '@app/debug-vars';
 import {Events} from '@app/events';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
+import {safeLoadBalances} from '@app/helpers/safe-load-balances';
 import {Socket} from '@app/models/socket';
 import {Balance} from '@app/services/balance';
-import {Indexer, IndexerUpdatesResponse} from '@app/services/indexer';
+import {IndexerUpdatesResponse} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
 import {RPCMessage, RPCObserver} from '@app/types/rpc';
 import {deepClone} from '@app/utils';
@@ -335,12 +336,8 @@ class WalletStore implements RPCObserver {
       let updates = deepClone(indexerUpdates);
       if (!updates) {
         let addresses = this.getAllVisible().map(w => w.address);
-        updates = await Indexer.instance.updates(
-          addresses,
-          this.lastBalanceUpdate,
-        );
+        updates = await safeLoadBalances(addresses);
       }
-
       const newBalances = this.parseIndexerBalances(updates);
       runInAction(() => {
         if (newBalances) {
