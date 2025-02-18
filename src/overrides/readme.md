@@ -11,10 +11,9 @@ import * as Reanimated from 'react-native-reanimated';
 export default ReanimatedDefault;
 export * from 'react-native-reanimated';
 
-export const useAnimatedStyle: typeof Reanimated.useAnimatedStyle =
-  IS_JEST
-    ? factory => {
-        return factory();
-      }
-    : Reanimated.useAnimatedStyle;
+export const useAnimatedStyle: typeof Reanimated.useAnimatedStyle = IS_JEST
+  ? factory => {
+      return factory();
+    }
+  : Reanimated.useAnimatedStyle;
 ```
