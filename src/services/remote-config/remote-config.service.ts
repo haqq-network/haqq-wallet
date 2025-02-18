@@ -1,8 +1,6 @@
-import {getAppInfo} from '@app/helpers/get-app-info';
 import {Initializable} from '@app/helpers/initializable';
 import {AppStore} from '@app/models/app';
 import {VariablesString} from '@app/models/variables-string';
-import {Backend} from '@app/services/backend';
 import {RemoteConfigTypes} from '@app/services/remote-config';
 import {isValidJSON} from '@app/utils';
 
@@ -42,8 +40,7 @@ export class RemoteConfigService extends Initializable {
         return RemoteConfigService.instance.getAll();
       }
       this.startInitialization();
-      const appInfo = await getAppInfo();
-      const config = await Backend.instance.getRemoteConfig(appInfo);
+      const config = getCachedConfig();
       logger.log('config', config);
       if (Object.keys(config).length) {
         VariablesString.set(KEY, JSON.stringify(config));

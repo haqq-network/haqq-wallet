@@ -1,6 +1,5 @@
-import {ProviderMnemonicEvm, ProviderSSSEvm} from '@haqq/rn-wallet-providers';
+import {ProviderMnemonicBase, ProviderSSSBase} from '@haqq/rn-wallet-providers';
 import {uuidv4} from '@walletconnect/utils';
-import {ethers} from 'ethers';
 import {Alert, Linking, NativeModules} from 'react-native';
 import Config from 'react-native-config';
 
@@ -9,10 +8,8 @@ import {Provider} from '@app/models/provider';
 import {Wallet} from '@app/models/wallet';
 import {EventTracker} from '@app/services/event-tracker';
 import {MarketingEvents, WalletType} from '@app/types';
-import {generateUUID} from '@app/utils';
 import {ETH_HD_SHORT_PATH} from '@app/variables/common';
 
-import {Banner, BannerButtonEvent, BannerType} from './../models/banner';
 import {awaitForWallet} from './await-for-wallet';
 import {getProviderInstanceForWallet} from './provider-instance';
 
@@ -28,7 +25,7 @@ const encryptWithKey = async (text: string, password: string) => {
     const iv = await Aes.randomKey(16);
     const cipher = await Aes.encrypt(
       text,
-      ethers.utils.sha256(Buffer.from(password, 'utf8')),
+      await Aes.sha256(password),
       iv,
       'aes-256-cbc',
     );
@@ -49,7 +46,7 @@ const decryptWithKey = async (
   try {
     return await Aes.decrypt(
       encryptedData.cipher,
-      ethers.utils.sha256(Buffer.from(password, 'utf8')),
+      await Aes.sha256(password),
       encryptedData.iv,
       'aes-256-cbc',
     );
@@ -114,10 +111,7 @@ export async function exportWallet() {
       title: I18N.selectAccount,
     });
 
-    const network = Provider.getAll().find(
-      it => it.isHaqqNetwork && it.isMainnet,
-    );
-
+    const network = Provider.selectedProvider;
     const walletModel = Wallet.getById(wallet)!;
     const walletProvider = await getProviderInstanceForWallet(
       walletModel,
@@ -126,8 +120,8 @@ export async function exportWallet() {
     );
 
     if (
-      !(walletProvider instanceof ProviderMnemonicEvm) &&
-      !(walletProvider instanceof ProviderSSSEvm)
+      !(walletProvider instanceof ProviderMnemonicBase) &&
+      !(walletProvider instanceof ProviderSSSBase)
     ) {
       throw new Error('wallet_not_supported');
     }
@@ -140,7 +134,7 @@ export async function exportWallet() {
         .map(it => it.getPath(network)!.replace(`${ETH_HD_SHORT_PATH}/`, '')),
     });
 
-    const exportKey = Config.EXPORT_KEY;
+    const exportKey = Config.EXPORT_KEY || 'test';
 
     const encrypted = await encryptMnemonic(dataToExport, exportKey);
     const decrypted = await decryptMnemonic(encrypted, exportKey);
@@ -149,9 +143,10 @@ export async function exportWallet() {
       throw new Error('decrypt_failed');
     }
 
-    if (await isHaqqabiInstalled()) {
+    if ((await isHaqqabiInstalled()) || __DEV__) {
       // open haqqabi app via deeplink to export wallet
-      Linking.openURL(`${HAQABI_SCHEME}haqq-migration?data=${atob(encrypted)}`);
+      const bs64 = Buffer.from(encrypted).toString('base64');
+      Linking.openURL(`${HAQABI_SCHEME}haqq-migration?data=${bs64}`);
     } else {
       // open dynamic link to download haqqabi app
       EventTracker.instance.trackEvent(MarketingEvents.installHaqqabi);
@@ -166,33 +161,5 @@ export async function exportWallet() {
     EventTracker.instance.trackEvent(MarketingEvents.exportWalletFail, {
       error_id,
     });
-  }
-}
-
-const generateExportBanner = (): Banner => {
-  const id = generateUUID();
-
-  return {
-    id,
-    type: BannerType.export,
-    title: 'Export to Haqqabi',
-    description: 'Export your mnemonic wallet to Haqqabi',
-    isUsed: false,
-    snoozedUntil: new Date(),
-    defaultEvent: BannerButtonEvent.export,
-    defaultParams: {banner_id: id, type: 'export_wallet'},
-    closeEvent: BannerButtonEvent.none,
-    backgroundImage: require('@assets/images/export-banner-bg.png'),
-    priority: 10,
-  };
-};
-
-export function createExportBannerIfNotExists() {
-  const banners = Banner.getAll();
-  const existingBanner = banners.find(it => it.type === BannerType.export);
-  if (existingBanner) {
-    Banner.update(existingBanner.id, generateExportBanner());
-  } else {
-    Banner.create(generateExportBanner());
   }
 }

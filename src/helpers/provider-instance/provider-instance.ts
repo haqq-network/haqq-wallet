@@ -12,7 +12,7 @@ import {WalletType} from '@app/types';
 import {wrapWalletProvider} from './provider-event-tracker-wrapper';
 import {ProviderFactory} from './provider-factory';
 
-const providersFactory = {
+export const providersFactory = {
   [WalletType.mnemonic]: ProviderFactory.getMnemonicProvider,
   [WalletType.hot]: ProviderFactory.getHotProvider,
   [WalletType.ledgerBt]: ProviderFactory.getLedgerProvider,

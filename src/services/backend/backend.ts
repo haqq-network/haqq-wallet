@@ -2,7 +2,6 @@ import Config from 'react-native-config';
 
 import {AppInfo} from '@app/helpers/get-app-info';
 import {Currency} from '@app/models/types';
-import {VariablesString} from '@app/models/variables-string';
 import {
   AppLanguage,
   LanguagesResponse,
@@ -29,6 +28,8 @@ export type CaptchaSessionResponse = {
   key: string;
 };
 
+const IS_MOCK = true;
+
 export class Backend {
   static instance = new Backend();
 
@@ -40,15 +41,7 @@ export class Backend {
   };
 
   getRemoteUrl() {
-    if (IS_DETOX || Config.IS_DEVELOPMENT === 'true') {
-      return Config.HAQQ_BACKEND_DEV;
-    }
-
-    if (!VariablesString.exists('backend')) {
-      return Config.HAQQ_BACKEND;
-    }
-
-    return VariablesString.get('backend') || Config.HAQQ_BACKEND;
+    return Config.HAQQ_BACKEND;
   }
 
   async blockRequest(
@@ -56,6 +49,9 @@ export class Backend {
     wallets: string[],
     uid: string,
   ): Promise<{result: boolean; error?: string}> {
+    if (IS_MOCK) {
+      return {result: true};
+    }
     const request = await fetch(`${this.getRemoteUrl()}block/request`, {
       method: 'POST',
       headers: Backend.headers,
@@ -76,6 +72,9 @@ export class Backend {
   }
 
   async contests(accounts: string[], uid: string): Promise<Raffle[]> {
+    if (IS_MOCK) {
+      return [];
+    }
     const request = await fetch(`${RemoteConfig.get('contests_url')}`, {
       method: 'POST',
       headers: Backend.headers,
@@ -101,6 +100,9 @@ export class Backend {
     signature: string,
     address: string,
   ): Promise<Raffle> {
+    if (IS_MOCK) {
+      return {} as Raffle;
+    }
     const request = await fetch(
       `${RemoteConfig.get('contests_url')}/${contest}`,
       {
@@ -137,6 +139,14 @@ export class Backend {
     deadline: number;
     tx_hash: string;
   }> {
+    if (IS_MOCK) {
+      return {
+        signature: '',
+        participant: '',
+        deadline: 0,
+        tx_hash: '',
+      };
+    }
     const request = await fetch(
       `${RemoteConfig.get('contests_url')}/${contest}/participate`,
       {
@@ -166,6 +176,13 @@ export class Backend {
     signature: string,
     tx_hash: string | null,
   ): Promise<{signature: string; participant: string; deadline: number}> {
+    if (IS_MOCK) {
+      return {
+        signature: '',
+        participant: '',
+        deadline: 0,
+      };
+    }
     const request = await fetch(
       `${RemoteConfig.get('contests_url')}/${contest}/result`,
       {
@@ -193,6 +210,13 @@ export class Backend {
     uid: string,
     signal?: AbortController['signal'],
   ): Promise<CaptchaRequestResponse> {
+    if (IS_MOCK) {
+      return {
+        id: '',
+        back: '',
+        puzzle: '',
+      };
+    }
     const request = await fetch(`${this.getRemoteUrl()}captcha/request`, {
       method: 'POST',
       headers: Backend.headers,
@@ -217,6 +241,11 @@ export class Backend {
     code: string,
     signal?: AbortController['signal'],
   ): Promise<CaptchaSessionResponse> {
+    if (IS_MOCK) {
+      return {
+        key: '',
+      };
+    }
     const request = await fetch(`${this.getRemoteUrl()}captcha/session`, {
       method: 'POST',
       headers: Backend.headers,
@@ -237,6 +266,9 @@ export class Backend {
   }
 
   async getRemoteConfig(appInfo: AppInfo): Promise<RemoteConfigTypes> {
+    if (IS_MOCK) {
+      return {} as RemoteConfigTypes;
+    }
     const response = await fetch(`${this.getRemoteUrl()}config`, {
       method: 'POST',
       headers: Backend.headers,
@@ -247,6 +279,9 @@ export class Backend {
   }
 
   async news_row(item_id: string): Promise<NewsRow> {
+    if (IS_MOCK) {
+      return {} as NewsRow;
+    }
     const newsDetailResp = await fetch(
       `${this.getRemoteUrl()}news/${item_id}`,
       {
@@ -257,6 +292,9 @@ export class Backend {
   }
 
   async news(lastSyncNews: Date | undefined): Promise<NewsRow[]> {
+    if (IS_MOCK) {
+      return [];
+    }
     const sync = lastSyncNews ? `?timestamp=${lastSyncNews.toISOString()}` : '';
 
     const newsResp = await fetch(`${this.getRemoteUrl()}news${sync}`, {
@@ -266,6 +304,9 @@ export class Backend {
   }
 
   async rss_feed(before: Date | undefined): Promise<RssNewsRow[]> {
+    if (IS_MOCK) {
+      return [];
+    }
     const sync = before ? `?before=${before.toISOString()}` : '';
 
     const newsResp = await fetch(`${this.getRemoteUrl()}rss_feed${sync}`, {
@@ -277,6 +318,9 @@ export class Backend {
   async updates(
     lastSyncUpdates: Date | undefined,
   ): Promise<NewsUpdatesResponse> {
+    if (IS_MOCK) {
+      return {} as NewsUpdatesResponse;
+    }
     const sync = lastSyncUpdates
       ? `?timestamp=${lastSyncUpdates.toISOString()}`
       : '';
@@ -292,6 +336,9 @@ export class Backend {
     token: string,
     uid: string,
   ): Promise<{id: string}> {
+    if (IS_MOCK) {
+      return {id: ''};
+    }
     const req = await fetch(
       `${this.getRemoteUrl()}notification_token/${subscribtionId}`,
       {
@@ -311,6 +358,9 @@ export class Backend {
     token: string,
     uid: string,
   ): Promise<{id: string}> {
+    if (IS_MOCK) {
+      return {id: ''};
+    }
     const req = await fetch(`${this.getRemoteUrl()}notification_token`, {
       method: 'POST',
       headers: Backend.headers,
@@ -327,6 +377,9 @@ export class Backend {
     token_id: string,
     address: string,
   ) {
+    if (IS_MOCK) {
+      return {} as T;
+    }
     const req = await fetch(`${this.getRemoteUrl()}notification_subscription`, {
       method: 'POST',
       headers: Backend.headers,
@@ -340,6 +393,9 @@ export class Backend {
   }
 
   async removeNotificationToken<T extends object>(token_id: string) {
+    if (IS_MOCK) {
+      return {} as T;
+    }
     const req = await fetch(
       `${this.getRemoteUrl()}notification_token/${token_id}`,
       {
@@ -355,6 +411,9 @@ export class Backend {
     token_id: string,
     address: string,
   ) {
+    if (IS_MOCK) {
+      return {} as T;
+    }
     const req = await fetch(
       `${this.getRemoteUrl()}notification_subscription/${token_id}/${address}`,
       {
@@ -367,6 +426,9 @@ export class Backend {
   }
 
   async unsubscribeByToken<T extends object>(token_id: string) {
+    if (IS_MOCK) {
+      return {} as T;
+    }
     const req = await fetch(
       `${this.getRemoteUrl()}notification_subscription/${token_id}`,
       {
@@ -379,6 +441,9 @@ export class Backend {
   }
 
   async markup(screen: string, appInfo: AppInfo): Promise<MarkupResponse> {
+    if (IS_MOCK) {
+      return {} as MarkupResponse;
+    }
     const response = await fetch(`${this.getRemoteUrl()}markups`, {
       method: 'POST',
       headers: Backend.headers,
@@ -391,6 +456,9 @@ export class Backend {
   }
 
   async stories(): Promise<StoriesResponse> {
+    if (IS_MOCK) {
+      return {} as StoriesResponse;
+    }
     const response = await fetch(`${this.getRemoteUrl()}stories`, {
       method: 'GET',
       headers: Backend.headers,
@@ -399,6 +467,9 @@ export class Backend {
   }
 
   async availableCurrencies(): Promise<Currency[]> {
+    if (IS_MOCK) {
+      return [];
+    }
     const response = await fetch(`${this.getRemoteUrl()}currencies`, {
       method: 'GET',
       headers: Backend.headers,
@@ -408,6 +479,50 @@ export class Backend {
   }
 
   async languages(): Promise<LanguagesResponse> {
+    if (IS_MOCK) {
+      return [
+        {
+          id: AppLanguage.en,
+          title: 'English',
+          created_at: '',
+          updated_at: '',
+          hash: '01234156789abcdef',
+          local_title: 'English',
+          status: 'published',
+          ...require('@assets/locales/en/en.json'),
+        },
+        {
+          id: AppLanguage.ar,
+          title: 'Arabic',
+          created_at: '',
+          updated_at: '',
+          hash: '0123456789sabcdef',
+          local_title: 'العربية',
+          status: 'published',
+          ...require('@assets/locales/ar/ar.json'),
+        },
+        {
+          id: AppLanguage.id,
+          title: 'Indonesian',
+          created_at: '',
+          updated_at: '',
+          hash: '01234d56789abcdef',
+          local_title: 'Bahasa Indonesia',
+          status: 'published',
+          ...require('@assets/locales/id/id.json'),
+        },
+        {
+          id: AppLanguage.tr,
+          title: 'Turkish',
+          created_at: '',
+          updated_at: '',
+          hash: '012345678a9abcdef',
+          local_title: 'Türkçe',
+          status: 'published',
+          ...require('@assets/locales/tr/tr.json'),
+        },
+      ];
+    }
     const response = await fetch(`${this.getRemoteUrl()}languages`, {
       headers: Backend.headers,
     });
@@ -415,6 +530,9 @@ export class Backend {
   }
 
   async language(language: AppLanguage): Promise<Object> {
+    if (IS_MOCK) {
+      return {};
+    }
     const response = await fetch(
       `${this.getRemoteUrl()}languages/${language}.json`,
       {
@@ -425,6 +543,9 @@ export class Backend {
   }
 
   async providers() {
+    if (IS_MOCK) {
+      return [];
+    }
     try {
       const response = await fetch(`${this.getRemoteUrl()}provider`, {
         headers: Backend.headers,

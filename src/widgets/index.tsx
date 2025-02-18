@@ -70,7 +70,26 @@ const WidgetMap: IWidgetMap = {
 
 export const WidgetRoot = memo(({lastUpdate}: {lastUpdate: number}) => {
   const {animate} = useLayoutAnimation();
-  const [data, setData] = useState<IWidget[] | null>(null);
+  const [data, setData] = useState<IWidget[] | null>([
+    {
+      component: 'Layout',
+      direction: 'vertical',
+      child: [
+        {
+          component: 'TransactionsShort',
+        },
+        {
+          component: 'TokenList',
+        },
+        {
+          component: 'Transactions',
+        },
+        {
+          component: 'Governance',
+        },
+      ],
+    },
+  ]);
 
   const requestMarkup = useCallback(async () => {
     const cached = VariablesString.get('widget_blocks');

@@ -1,5 +1,4 @@
 import {makePersistable} from '@override/mobx-persist-store';
-import {hoursToMilliseconds} from 'date-fns';
 import {makeAutoObservable, runInAction} from 'mobx';
 import Config from 'react-native-config';
 
@@ -7,7 +6,7 @@ import {Events} from '@app/events';
 import {hideModal, showModal} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {EthRpcEndpointAvailability} from '@app/helpers/eth-rpc-endpoint-availability';
-import {Backend, NetworkProvider} from '@app/services/backend';
+import {NetworkProvider} from '@app/services/backend';
 import {storage} from '@app/services/mmkv';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {ModalType} from '@app/types';
@@ -21,11 +20,7 @@ import {
 
 import {RemoteProviderConfig} from './provider-config';
 import {ProviderModel} from './provider.model';
-import {
-  ALL_NETWORKS_ID,
-  ALL_NETWORKS_PROVIDER,
-  ProviderID,
-} from './provider.types';
+import {ALL_NETWORKS_ID, ProviderID} from './provider.types';
 
 import {AppStore} from '../app';
 import {Currencies} from '../currencies';
@@ -60,11 +55,10 @@ class ProviderStore {
     makeAutoObservable(this);
     makePersistable(this, {
       name: this.constructor.name,
-      properties: ['_selectedProviderId', '_data'],
-      expireIn: hoursToMilliseconds(3),
-      // FIXME: configurePersistable didn't define yet there because of circular dependencies issue
+      properties: ['_selectedProviderId'],
       storage,
     });
+    this.fetchProviders();
   }
 
   get selectedProviderId() {
@@ -168,23 +162,15 @@ class ProviderStore {
   };
 
   fetchProviders = createAsyncTask(async () => {
-    const providers = [ALL_NETWORKS_PROVIDER];
-    const remoteProviders = await Backend.instance.providers();
+    // const providers = [ALL_NETWORKS_PROVIDER];
 
-    if (remoteProviders?.length) {
-      providers.push(...remoteProviders);
-    } else {
-      providers.push(...DEFAULT_PROVIDERS);
-    }
-
-    const parsed = providers.reduce(
+    const parsed = DEFAULT_PROVIDERS.reduce(
       (prev, item) => ({
         ...prev,
         [item.id]: new ProviderModel(item),
       }),
       {} as Record<ProviderID, ProviderModel>,
     );
-
     runInAction(() => {
       this._data = parsed;
       if (!parsed[this._selectedProviderId]) {
@@ -254,7 +240,7 @@ class ProviderStore {
       return undefined;
     }
     return Object.values(this._data).find(
-      provider => provider.model.chain_id === Number(ethChainId),
+      provider => provider?.model?.chain_id === Number(ethChainId),
     );
   }
 

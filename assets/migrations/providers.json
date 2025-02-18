@@ -1,38 +1,36 @@
 [
   {
-    "id": "97a661f1-6698-4600-855d-834599046650",
-    "name": "HAQQ TestEdge2",
-    "icon": "https://storage.googleapis.com/mobile-backend-static/be121507-7aab-467e-b36b-adcaacff28a3.png",
-    "chain_id": 54211,
-    "decimals": 18,
-    "indexer_url": "https://jsonrpc.indexer.testedge2.haqq.network",
-    "entry_point": "https://rpc.eth.testedge2.haqq.network/",
-    "cosmos_entry_point": "https://rest.cosmos.testedge2.haqq.network",
-    "cosmos_chain_id": "haqq_54211-3",
-    "network_type": "evm",
-    "stage": "testnet",
-    "status": "published",
-    "denom": "ISLM",
-    "wei_denom": "aISLM",
-    "updated_at": "2024-07-19T08:39:17.253593Z",
-    "created_at": "2024-07-18T07:38:27.403474Z"
-  },
-  {
     "id": "153dbb79-9f04-4591-add6-202fe8163de1",
     "name": "HAQQ Mainnet",
     "icon": "https://storage.googleapis.com/mobile-backend-static/20f0531f-fbe3-45c7-8642-9ab809b098f2.png",
     "chain_id": 11235,
     "decimals": 18,
-    "indexer_url": "https://jsonrpc.indexer.haqq.network",
+    "indexer_url": "",
     "entry_point": "https://rpc.eth.haqq.network/",
     "cosmos_entry_point": "https://rest.cosmos.haqq.network",
     "cosmos_chain_id": "haqq_11235-1",
-    "network_type": "evm",
+    "network_type": "haqq",
     "stage": "mainnet",
     "status": "published",
     "denom": "ISLM",
     "wei_denom": "aISLM",
-    "updated_at": "2024-07-19T08:39:24.565107Z",
-    "created_at": "2024-07-18T07:37:23.053052Z"
+    "coin_name": "ISLM"
+  },
+  {
+    "id": "97a661f1-6698-4600-855d-834599046650",
+    "name": "HAQQ TestEdge2",
+    "icon": "https://storage.googleapis.com/mobile-backend-static/be121507-7aab-467e-b36b-adcaacff28a3.png",
+    "chain_id": 54211,
+    "decimals": 18,
+    "indexer_url": "",
+    "entry_point": "https://rpc.eth.testedge2.haqq.network/",
+    "cosmos_entry_point": "https://rest.cosmos.testedge2.haqq.network",
+    "cosmos_chain_id": "haqq_54211-3",
+    "network_type": "haqq",
+    "stage": "testnet",
+    "status": "published",
+    "denom": "ISLM",
+    "wei_denom": "aISLM",
+    "coin_name": "ISLM"
   }
 ]

@@ -1,8 +1,8 @@
 import {Provider} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
-import {Indexer} from '@app/services/indexer';
 import {IndexerBalance} from '@app/types';
 
+import {IndexerBalanceItem} from './../types';
 import {AddressUtils} from './address-utils';
 import {getRpcProvider} from './get-rpc-provider';
 
@@ -12,7 +12,7 @@ export const safeLoadBalances = async (wallets: string[]) => {
   let balances: {total: IndexerBalance} | null = null;
 
   try {
-    balances = await Indexer.instance.updates(wallets, new Date());
+    // balances = await Indexer.instance.updates(wallets, new Date());
   } catch (e) {
     logger.error('Failed to load balances from indexer', e);
   }
@@ -45,4 +45,26 @@ export const safeLoadBalances = async (wallets: string[]) => {
   }
 
   return balances;
+};
+
+export const safeLoadBalancesFromRpc = async (wallets: string[]) => {
+  try {
+    const rpcProvider = await getRpcProvider(Provider.selectedProvider);
+    const balancesFromRpc = await Promise.all(
+      wallets.map(async w => {
+        let balance = '0x00';
+        try {
+          balance = (await rpcProvider.getBalance(w))._hex;
+        } catch {}
+        return [
+          AddressUtils.toEth(w),
+          Provider.selectedProvider.ethChainId,
+          balance,
+        ] as IndexerBalanceItem;
+      }),
+    );
+    return balancesFromRpc;
+  } catch (e) {
+    logger.error('Failed to load balances from rpc', e);
+  }
 };

@@ -8,8 +8,10 @@ import Config from 'react-native-config';
 
 import {StoriesWrapper} from '@app/components/stories';
 import {createTheme, showModal} from '@app/helpers';
+import {exportWallet} from '@app/helpers/export';
 import {useTypedNavigation} from '@app/hooks';
 import {AppStore} from '@app/models/app';
+import {BannerButtonEvent, BannerType} from '@app/models/banner';
 import {Currencies} from '@app/models/currencies';
 import {Nft} from '@app/models/nft';
 import {Provider} from '@app/models/provider';
@@ -24,6 +26,10 @@ import {WalletsWrapper} from '@app/screens/HomeStack/HomeFeedStack/wallets';
 import {LockedTokensWrapper} from '@app/screens/locked-tokens';
 import {ModalType} from '@app/types';
 import {WidgetRoot} from '@app/widgets';
+import {LayoutWidget} from '@app/widgets/layout-widget/layout-widget';
+
+import {HomeBanner} from './home-banner';
+import {Spacer} from './ui';
 
 export const HomeFeed = observer(() => {
   const ref = useRef(null);
@@ -91,6 +97,28 @@ export const HomeFeed = observer(() => {
         <WalletsWrapper />
       </React.Fragment>
       <BannersWrapper />
+      <Spacer height={12} />
+      <LayoutWidget
+        direction="vertical"
+        deep={true}
+        children={[
+          <HomeBanner
+            onPress={exportWallet}
+            banner={{
+              id: 'export_wallet',
+              type: BannerType.export,
+              title: 'Export to Haqqabi',
+              description: 'Export your mnemonic wallet to Haqqabi',
+              isUsed: false,
+              snoozedUntil: new Date(),
+              defaultEvent: BannerButtonEvent.export,
+              closeEvent: BannerButtonEvent.none,
+              backgroundImage: require('@assets/images/export-banner-bg.png'),
+              priority: 10,
+            }}
+          />,
+        ]}
+      />
       <WidgetRoot lastUpdate={lastUpdateTimestamp} />
     </ScrollView>
   );

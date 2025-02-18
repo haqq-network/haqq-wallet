@@ -375,7 +375,7 @@ const abi = [
 
 const BACKENDS = [
   ['production', Config.HAQQ_BACKEND],
-  ['development', Config.HAQQ_BACKEND_DEV],
+  // ['development', Config.HAQQ_BACKEND_DEV],
 ];
 
 async function callContract(to: string, func: string, ...params: any[]) {

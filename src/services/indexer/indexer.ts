@@ -5,6 +5,7 @@ import {
 import _ from 'lodash';
 
 import {AddressUtils} from '@app/helpers/address-utils';
+import {safeLoadBalancesFromRpc} from '@app/helpers/safe-load-balances';
 import {I18N, getText} from '@app/i18n';
 import {Currencies} from '@app/models/currencies';
 import {NftCollectionIndexer} from '@app/models/nft';
@@ -33,6 +34,8 @@ import {
 import {RemoteConfig} from '../remote-config';
 
 const logger = Logger.create('IndexerService');
+
+const IS_MOCK = true;
 
 export class Indexer {
   static instance = new Indexer();
@@ -107,6 +110,25 @@ export class Indexer {
   }
 
   updates = createAsyncTask(async (accounts: string[], lastUpdated?: Date) => {
+    if (IS_MOCK) {
+      const balances = await safeLoadBalancesFromRpc(accounts);
+      return {
+        balance: balances,
+        staked: [],
+        total_staked: [],
+        vested: [],
+        available: balances,
+        locked: [],
+        total: balances,
+        available_for_stake: [],
+        last_update: new Date().toISOString(),
+        rates: {},
+        transactions: [],
+        tokens: [],
+        nfts: [],
+        unlock: {},
+      };
+    }
     try {
       this.checkIndexerAvailability();
 
@@ -130,6 +152,9 @@ export class Indexer {
   });
 
   getAddresses = async (accountsMap: Record<ChainId, string[]>) => {
+    if (IS_MOCK) {
+      return {};
+    }
     try {
       this.checkIndexerAvailability();
 
@@ -147,6 +172,12 @@ export class Indexer {
   };
 
   async getContractNames(addresses: string[]): Promise<ContractNameMap> {
+    if (IS_MOCK) {
+      return addresses.reduce((acc, address) => {
+        acc[address] = {name: '', symbol: ''};
+        return acc;
+      }, {} as ContractNameMap);
+    }
     try {
       this.checkIndexerAvailability();
 
@@ -184,6 +215,9 @@ export class Indexer {
     accounts: string[],
     latestBlock: string = 'latest',
   ): Promise<IndexerTransaction | null> {
+    if (IS_MOCK) {
+      return {txs: [], accounts, latestBlock} as unknown as IndexerTransaction;
+    }
     try {
       if (!accounts.length) {
         return null;
@@ -209,6 +243,9 @@ export class Indexer {
       accounts: string[] | Record<ChainId, string[]>,
       latestBlock: string | null,
     ): Promise<IndexerTransaction[]> => {
+      if (IS_MOCK) {
+        return [];
+      }
       try {
         if (Array.isArray(accounts) && !accounts.length) {
           return [];
@@ -238,6 +275,9 @@ export class Indexer {
   );
 
   getNfts = createAsyncTask(async (accounts: string[]) => {
+    if (IS_MOCK) {
+      return [];
+    }
     try {
       this.checkIndexerAvailability();
 
@@ -261,6 +301,13 @@ export class Indexer {
   });
 
   async sushiPools(): Promise<SushiPoolResponse> {
+    if (IS_MOCK) {
+      return {
+        contracts: [],
+        pools: [],
+        routes: [],
+      };
+    }
     try {
       this.checkIndexerAvailability();
 
@@ -286,6 +333,14 @@ export class Indexer {
     currency_id,
     abortSignal,
   }: SushiPoolEstimateRequest): Promise<SushiPoolEstimateResponse> {
+    if (IS_MOCK) {
+      return {
+        amount,
+        sender,
+        route,
+        currency_id,
+      } as unknown as SushiPoolEstimateResponse;
+    }
     try {
       this.checkIndexerAvailability();
 
@@ -306,6 +361,29 @@ export class Indexer {
   }
 
   async getProviderConfig(): Promise<ProviderConfig> {
+    if (IS_MOCK) {
+      return {
+        // @ts-ignore
+        chain_id: Provider.selectedProvider.ethChainId,
+        bech32_exists: true,
+        swap_default_token0: '0x0',
+        swap_default_token1: '0x0',
+        swap_enabled: false,
+        swap_router_v3: '0x0',
+        weth_address: '0x0',
+        weth_symbol: '-',
+        enable_unwrapWETH9_call: false,
+        explorer_address_url:
+          'https://explorer.haqq.network/address/{{address}}',
+        explorer_cosmos_tx_url: 'https://testnet.ping.pub/haqq/tx/{{tx_hash}}',
+        explorer_token_id_url:
+          'https://explorer.haqq.network/token/{{address}}/instance/{{token_id}}',
+        explorer_token_url: 'https://explorer.haqq.network/token/{{address}}',
+        explorer_tx_url: 'https://explorer.haqq.network/tx/{{tx_hash}}',
+        indexer_gas_estimate_enabled: false,
+        nft_exists: false,
+      };
+    }
     try {
       this.checkIndexerAvailability();
 
@@ -330,6 +408,14 @@ export class Indexer {
     message_or_input,
     address,
   }: VerifyContractRequest): Promise<VerifyContractResponse> {
+    if (IS_MOCK) {
+      return {
+        method_name,
+        domain,
+        message_or_input,
+        address,
+      } as unknown as VerifyContractResponse;
+    }
     try {
       this.checkIndexerAvailability();
       const params = [method_name, domain, message_or_input ?? '0x0'];
@@ -354,6 +440,9 @@ export class Indexer {
   }
 
   async validateDappDomain(domain: string): Promise<boolean> {
+    if (IS_MOCK) {
+      return true;
+    }
     try {
       const response = await this.verifyContract({
         method_name: 'eth_signTypedData_v4',
@@ -366,6 +455,9 @@ export class Indexer {
   }
 
   async gasEstimate(params: GasEstimateRequest, chainId: number) {
+    if (IS_MOCK) {
+      return {params, chainId} as unknown as GasEstimateResponce;
+    }
     try {
       this.checkIndexerAvailability();
 

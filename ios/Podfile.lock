@@ -2145,7 +2145,7 @@ SPEC CHECKSUMS:
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   QrCode: 2daa9df3b0c309db370888fb207714acdadc4aa4
-  RCT-Folly: 045d6ecaa59d826c5736dfba0b2f4083ff8d79df
+  RCT-Folly: 5f972de9f7d384c7d0e7380dd7da506228e568f5
   RCTDeprecation: 3ca8b6c36bfb302e1895b72cfe7db0de0c92cd47
   RCTRequired: 9fc183af555fd0c89a366c34c1ae70b7e03b1dc5
   RCTTypeSafety: db1dd5ad1081a5e160d30bb29ef922693d5ac4b1
