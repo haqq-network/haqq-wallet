@@ -12,42 +12,31 @@ export const safeLoadBalances = async (wallets: string[]) => {
   let balances: {total: IndexerBalance} | null = null;
 
   try {
-    // balances = await Indexer.instance.updates(wallets, new Date());
-  } catch (e) {
-    logger.error('Failed to load balances from indexer', e);
-  }
-
-  if (!balances) {
-    try {
-      const rpcProvider = await getRpcProvider(Provider.selectedProvider);
-      const balancesFromRpc = await Promise.all(
-        wallets.map(async w => {
-          let balance = '0x00';
-          try {
-            balance = (await rpcProvider.getBalance(w))._hex;
-          } catch {}
-          return [AddressUtils.toHaqq(w), balance];
-        }),
-      );
-      balances = {
-        total: Object.fromEntries(balancesFromRpc),
-      };
-    } catch (e) {
-      logger.error('Failed to load balances from rpc', e);
-    }
-  }
-
-  if (!balances) {
-    const emptyBalances = wallets.map(w => [w, Balance.Empty]);
     balances = {
-      total: Object.fromEntries(emptyBalances),
+      total: (await loadBalancesFromRpc(wallets))!,
+    };
+  } catch (e) {
+    logger.error('Failed to load balances from rpc', e);
+  }
+
+  if (!balances?.total) {
+    const emptyBalances = wallets.map(
+      w =>
+        [
+          w,
+          Provider.selectedProvider.ethChainId,
+          Balance.Empty,
+        ] as unknown as IndexerBalanceItem,
+    );
+    balances = {
+      total: emptyBalances,
     };
   }
 
   return balances;
 };
 
-export const safeLoadBalancesFromRpc = async (wallets: string[]) => {
+export const loadBalancesFromRpc = async (wallets: string[]) => {
   try {
     const rpcProvider = await getRpcProvider(Provider.selectedProvider);
     const balancesFromRpc = await Promise.all(

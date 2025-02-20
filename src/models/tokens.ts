@@ -455,26 +455,92 @@ class TokensStore implements MobXStore<IToken> {
 const instance = new TokensStore();
 export {instance as Token};
 
-const STATIC_TOKEN_ADDRESS: Record<ChainId, string[]> = {
+const STATIC_TOKEN_ADDRESS: Record<
+  ChainId,
+  {address: string; icon?: string}[]
+> = {
   // TestEdge2
   54211: [
-    '0xd567B3d7B8FE3C79a1AD8dA978812cfC4Fa05e75', // AXL
-    '0x80b5a32E4F032B2a058b4F29EC95EEfEEB87aDcd', // axlUSDC
-    '0x3452e23F9c4cC62c70B7ADAd699B264AF3549C19', // axlUSDC from axelar faucet
-    '0x5db67696C3c088DfBf588d3dd849f44266ff0ffa', // AXL from axelar faucet
+    // AXL
+    {
+      address: '0xd567B3d7B8FE3C79a1AD8dA978812cfC4Fa05e75',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/axelar/images/axl.png?raw=true',
+    },
+    // axlUSDC
+    {
+      address: '0x80b5a32E4F032B2a058b4F29EC95EEfEEB87aDcd',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/osmosis/images/usdc.axl.png?raw=true',
+    },
+    // axlUSDC from axelar faucet
+    {
+      address: '0x3452e23F9c4cC62c70B7ADAd699B264AF3549C19',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/osmosis/images/usdc.axl.png?raw=true',
+    },
+    // AXL from axelar faucet
+    {
+      address: '0x5db67696C3c088DfBf588d3dd849f44266ff0ffa',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/axelar/images/axl.png?raw=true',
+    },
   ],
   // Mainnet
   11235: [
-    '0xC5e00D3b04563950941f7137B5AfA3a534F0D6d6', // axlDAI
-    '0xc03345448969Dd8C00e9E4A85d2d9722d093aF8E', // OSMO
-    '0x80b5a32E4F032B2a058b4F29EC95EEfEEB87aDcd', // axlUSDC
-    '0xd567B3d7B8FE3C79a1AD8dA978812cfC4Fa05e75', // axlUSDT
-    '0xFA3C22C069B9556A4B2f7EcE1Ee3B467909f4864', // ATOM
-    '0x5FD55A1B9FC24967C4dB09C513C3BA0DFa7FF687', // axlWBTC
-    '0x0CE35b0D42608Ca54Eb7bcc8044f7087C18E7717', // USDC
-    '0xecEEEfCEE421D8062EF8d6b4D814efe4dc898265', // axlWETH
-    '0x1D54EcB8583Ca25895c512A8308389fFD581F9c9', // AXL
-    '0x5aD523d94Efb56C400941eb6F34393b84c75ba39', // USDT on Kava
+    // axlDAI
+    {
+      address: '0xC5e00D3b04563950941f7137B5AfA3a534F0D6d6',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/axelar/images/axldai.png?raw=true',
+    },
+    // OSMO
+    {
+      address: '0xc03345448969Dd8C00e9E4A85d2d9722d093aF8E',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/osmosis/images/osmo.png?raw=true',
+    },
+    // axlUSDC
+    {
+      address: '0x80b5a32E4F032B2a058b4F29EC95EEfEEB87aDcd',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/osmosis/images/usdc.axl.png?raw=true',
+    },
+    // axlUSDT
+    {
+      address: '0xd567B3d7B8FE3C79a1AD8dA978812cfC4Fa05e75',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/osmosis/images/usdt.axl.png?raw=true',
+    },
+    // ATOM
+    {
+      address: '0xFA3C22C069B9556A4B2f7EcE1Ee3B467909f4864',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/cosmoshub/images/atom.png?raw=true',
+    },
+    // axlWBTC
+    {
+      address: '0x5FD55A1B9FC24967C4dB09C513C3BA0DFa7FF687',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/axelar/images/axlwbtc.png?raw=true',
+    },
+    // USDC
+    {
+      address: '0x0CE35b0D42608Ca54Eb7bcc8044f7087C18E7717',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/noble/images/USDCoin.png?raw=true',
+    },
+    // axlWETH
+    {
+      address: '0xecEEEfCEE421D8062EF8d6b4D814efe4dc898265',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/axelar/images/axlweth.png?raw=true',
+    },
+    // AXL
+    {
+      address: '0x1D54EcB8583Ca25895c512A8308389fFD581F9c9',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/axelar/images/axl.png?raw=true',
+    },
+    // wISLM
+    {
+      address: '0xeC8CC083787c6e5218D86f9FF5f28d4cC377Ac54',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/haqq/images/islm.png?raw=true',
+    },
+    // DEEN
+    {
+      address: '0x4FEBDDe47Ab9a76200e57eFcC80b212a07b3e6cE',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/haqq/images/deen.png?raw=true',
+    },
+    // stlISLM
+    {address: '0x12fEFEAc0568503F7C0D934c149f29a42B05C48f', icon: ''},
   ],
 };
 
@@ -495,12 +561,12 @@ export async function getHardcodedTokens(provider = Provider.selectedProvider) {
             ...(
               await Promise.all(
                 contracts
-                  .map(async contract => {
+                  .map(async ({address, icon}) => {
                     const etherProvider = new ethers.providers.JsonRpcProvider(
                       provider.ethRpcEndpoint,
                     );
                     const contractInterface = new ethers.Contract(
-                      contract,
+                      address,
                       ERC20_ABI,
                       etherProvider,
                     );
@@ -527,10 +593,9 @@ export async function getHardcodedTokens(provider = Provider.selectedProvider) {
                     // https://github.com/cosmos/chain-registry/tree/master/noble/images
                     // https://github.com/cosmos/chain-registry/tree/master/haqq/images
                     // https://hackmd.io/@6nuUr0-iSbe6nfJoRcuqJg/B1p_HM6Kp
-                    const imageUri = '';
 
                     return {
-                      id: AddressUtils.toEth(contract),
+                      id: AddressUtils.toEth(address),
                       contract_created_at: '',
                       contract_updated_at: '',
                       value: balance,
@@ -544,8 +609,8 @@ export async function getHardcodedTokens(provider = Provider.selectedProvider) {
                       symbol: symbol,
                       created_at: '',
                       updated_at: '',
-                      image: imageUri
-                        ? {uri: imageUri}
+                      image: icon
+                        ? {uri: icon}
                         : require('@assets/images/empty-icon.png'),
                     } as IToken;
                   })

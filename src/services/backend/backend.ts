@@ -1,3 +1,7 @@
+import AR from '@assets/locales/ar/ar.json';
+import EN from '@assets/locales/en/en.json';
+import ID from '@assets/locales/id/id.json';
+import TR from '@assets/locales/tr/tr.json';
 import Config from 'react-native-config';
 
 import {AppInfo} from '@app/helpers/get-app-info';
@@ -489,7 +493,7 @@ export class Backend {
           hash: '01234156789abcdef',
           local_title: 'English',
           status: 'published',
-          ...require('@assets/locales/en/en.json'),
+          ...EN,
         },
         {
           id: AppLanguage.ar,
@@ -499,7 +503,7 @@ export class Backend {
           hash: '0123456789sabcdef',
           local_title: 'العربية',
           status: 'published',
-          ...require('@assets/locales/ar/ar.json'),
+          ...AR,
         },
         {
           id: AppLanguage.id,
@@ -509,7 +513,7 @@ export class Backend {
           hash: '01234d56789abcdef',
           local_title: 'Bahasa Indonesia',
           status: 'published',
-          ...require('@assets/locales/id/id.json'),
+          ...ID,
         },
         {
           id: AppLanguage.tr,
@@ -519,7 +523,7 @@ export class Backend {
           hash: '012345678a9abcdef',
           local_title: 'Türkçe',
           status: 'published',
-          ...require('@assets/locales/tr/tr.json'),
+          ...TR,
         },
       ];
     }

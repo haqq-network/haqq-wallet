@@ -5,7 +5,7 @@ import {
 import _ from 'lodash';
 
 import {AddressUtils} from '@app/helpers/address-utils';
-import {safeLoadBalancesFromRpc} from '@app/helpers/safe-load-balances';
+import {loadBalancesFromRpc} from '@app/helpers/safe-load-balances';
 import {I18N, getText} from '@app/i18n';
 import {Currencies} from '@app/models/currencies';
 import {NftCollectionIndexer} from '@app/models/nft';
@@ -111,7 +111,7 @@ export class Indexer {
 
   updates = createAsyncTask(async (accounts: string[], lastUpdated?: Date) => {
     if (IS_MOCK) {
-      const balances = await safeLoadBalancesFromRpc(accounts);
+      const balances = await loadBalancesFromRpc(accounts);
       return {
         balance: balances,
         staked: [],

@@ -53,11 +53,12 @@ class LanguageStore {
   };
 
   private verify = async () => {
-    const languages = await Backend.instance.languages();
-    const currentFromRemote = languages.find(item => item.id === this.current);
-    if (currentFromRemote && this.hash !== currentFromRemote?.hash) {
-      await this.update(currentFromRemote);
-    }
+    return Promise.resolve(true);
+    // const languages = await Backend.instance.languages();
+    // const currentFromRemote = languages.find(item => item.id === this.current);
+    // if (currentFromRemote && this.hash !== currentFromRemote?.hash) {
+    //   await this.update(currentFromRemote);
+    // }
   };
 
   private getKeys = async (language: LanguageType) => {

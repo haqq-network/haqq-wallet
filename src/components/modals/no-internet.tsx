@@ -1,7 +1,5 @@
-import React, {useCallback} from 'react';
+import React from 'react';
 
-import {ProviderMnemonicBase} from '@haqq/rn-wallet-providers';
-import Clipboard from '@react-native-clipboard/clipboard';
 import {View} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
@@ -9,60 +7,17 @@ import {
   Button,
   ButtonVariant,
   NoInternetIcon,
-  Spacer,
   Text,
   TextPosition,
   TextVariant,
 } from '@app/components/ui';
-import {
-  awaitForWallet,
-  createTheme,
-  getProviderInstanceForWallet,
-  hideModal,
-} from '@app/helpers';
-import {I18N} from '@app/i18n';
-import {Provider} from '@app/models/provider';
-import {Wallet} from '@app/models/wallet';
-import {sendNotification} from '@app/services';
-import {HapticEffects, vibrate} from '@app/services/haptic';
-import {ModalType, Modals, WalletType} from '@app/types';
+import {createTheme, hideModal} from '@app/helpers';
+import {I18N, getText} from '@app/i18n';
+import {ModalType, Modals} from '@app/types';
 
 import {BottomPopupContainer} from '../bottom-popups';
 
-export const NoInternet = ({
-  showClose = false,
-}: Modals[ModalType.noInternet]) => {
-  const copyMnemonic = useCallback(async () => {
-    const wallets = Wallet.getAll().filter(
-      it => it.type === WalletType.mnemonic,
-    );
-
-    const wallet = await awaitForWallet({
-      wallets,
-      title: I18N.selectAccount,
-    });
-
-    const network = Provider.getAll().find(
-      it => it.isHaqqNetwork && it.isMainnet,
-    );
-
-    const walletModel = Wallet.getById(wallet)!;
-    const walletProvider = await getProviderInstanceForWallet(
-      walletModel,
-      true,
-      network,
-    );
-
-    if (!(walletProvider instanceof ProviderMnemonicBase)) {
-      throw new Error('wallet_not_supported');
-    }
-
-    const mnemonic = await walletProvider.getMnemonicPhrase();
-    Clipboard.setString(mnemonic);
-    vibrate(HapticEffects.success);
-    sendNotification(I18N.notificationCopied);
-  }, []);
-
+export const NoInternet = ({}: Modals[ModalType.noInternet]) => {
   return (
     <BottomPopupContainer>
       {() => (
@@ -82,20 +37,11 @@ export const NoInternet = ({
             color={getColor(Color.graphicSecond4)}
             style={page.icon}
           />
-          {showClose && (
-            <Button
-              variant={ButtonVariant.second}
-              title="OK"
-              onPress={() => hideModal(ModalType.noInternet)}
-              style={page.closeButton}
-            />
-          )}
-          <Spacer height={32} />
           <Button
-            variant={ButtonVariant.contained}
-            title="Export mnemonic"
-            onPress={copyMnemonic}
-            style={page.button}
+            variant={ButtonVariant.second}
+            title={getText(I18N.cancel)}
+            onPress={() => hideModal(ModalType.noInternet)}
+            style={page.closeButton}
           />
         </View>
       )}
@@ -114,9 +60,6 @@ const page = createTheme({
   },
   icon: {
     marginTop: 24,
-  },
-  button: {
-    width: '100%',
   },
   modalView: {
     backgroundColor: Color.bg1,

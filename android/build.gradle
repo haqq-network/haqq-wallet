@@ -26,6 +26,7 @@ buildscript {
 
 allprojects {
     repositories {
+        maven { url 'https://jitpack.io' }
         maven { url("$rootDir/../node_modules/detox/Detox-android") }
         maven { url "$rootDir/../node_modules/react-native-video-cache/android/libs" }
     }

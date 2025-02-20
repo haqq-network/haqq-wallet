@@ -69,7 +69,16 @@ class BannerStore {
     makeAutoObservable(this);
     makePersistable(this, {
       name: this.constructor.name,
-      properties: ['banners'],
+      properties: [
+        {
+          key: 'banners',
+          serialize: value => JSON.stringify(value),
+          deserialize: value =>
+            ((JSON.parse(value) || []) as Banner[]).filter(
+              it => it.type !== BannerType.export,
+            ),
+        },
+      ],
       storage,
     });
   }
