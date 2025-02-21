@@ -6,7 +6,7 @@ import {Events} from '@app/events';
 import {hideModal, showModal} from '@app/helpers';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {EthRpcEndpointAvailability} from '@app/helpers/eth-rpc-endpoint-availability';
-import {NetworkProvider} from '@app/services/backend';
+import {Backend, NetworkProvider} from '@app/services/backend';
 import {storage} from '@app/services/mmkv';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {ModalType} from '@app/types';
@@ -19,7 +19,11 @@ import {
 
 import {RemoteProviderConfig} from './provider-config';
 import {ProviderModel} from './provider.model';
-import {ALL_NETWORKS_ID, ProviderID} from './provider.types';
+import {
+  ALL_NETWORKS_ID,
+  ALL_NETWORKS_PROVIDER,
+  ProviderID,
+} from './provider.types';
 
 import {AppStore} from '../app';
 import {Currencies} from '../currencies';
@@ -159,21 +163,45 @@ class ProviderStore {
   };
 
   fetchProviders = createAsyncTask(async () => {
-    // const providers = [ALL_NETWORKS_PROVIDER];
+    if (AppStore.isRpcOnly) {
+      const parsed = DEFAULT_PROVIDERS.reduce(
+        (prev, item) => ({
+          ...prev,
+          [item.id]: new ProviderModel(item),
+        }),
+        {} as Record<ProviderID, ProviderModel>,
+      );
+      runInAction(() => {
+        this._data = parsed;
+        if (!parsed[this._selectedProviderId]) {
+          this._selectedProviderId = this._defaultProviderId;
+        }
+      });
+    } else {
+      const providers = [ALL_NETWORKS_PROVIDER];
+      const remoteProviders = await Backend.instance.providers();
 
-    const parsed = DEFAULT_PROVIDERS.reduce(
-      (prev, item) => ({
-        ...prev,
-        [item.id]: new ProviderModel(item),
-      }),
-      {} as Record<ProviderID, ProviderModel>,
-    );
-    runInAction(() => {
-      this._data = parsed;
-      if (!parsed[this._selectedProviderId]) {
-        this._selectedProviderId = this._defaultProviderId;
+      if (remoteProviders?.length) {
+        providers.push(...remoteProviders);
+      } else {
+        providers.push(...DEFAULT_PROVIDERS);
       }
-    });
+
+      const parsed = providers.reduce(
+        (prev, item) => ({
+          ...prev,
+          [item.id]: new ProviderModel(item),
+        }),
+        {} as Record<ProviderID, ProviderModel>,
+      );
+
+      runInAction(() => {
+        this._data = parsed;
+        if (!parsed[this._selectedProviderId]) {
+          this._selectedProviderId = this._defaultProviderId;
+        }
+      });
+    }
   });
 
   getById(id: string) {

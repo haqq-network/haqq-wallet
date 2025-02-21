@@ -2042,3 +2042,8 @@ export type Language = {
   hash: string;
 };
 export type LanguagesResponse = Language[];
+
+export enum DataFetchSource {
+  Backend = 'Backend',
+  Rpc = 'Rpc',
+}

@@ -7,6 +7,7 @@ import {Provider} from '@app/models/provider';
 import {Socket} from '@app/models/socket';
 import {IWalletModel, Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
+import {Indexer} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
 import {
   AddressEthereum,
@@ -23,6 +24,7 @@ import {RPCMessage} from '@app/types/rpc';
 import {createAsyncTask} from '@app/utils';
 import {ERC20_ABI} from '@app/variables/abi';
 
+import {AppStore} from './app';
 import {Contract} from './contract';
 import {ProviderModel} from './provider';
 
@@ -307,34 +309,129 @@ class TokensStore implements MobXStore<IToken> {
 
     const wallets = Wallet.getAll();
 
-    const _tokens = await getHardcodedTokens();
-    const _data = {} as Record<AddressEthereum, IToken>;
+    if (AppStore.isRpcOnly) {
+      const _tokens = await getHardcodedTokens();
+      const _data = {} as Record<AddressEthereum, IToken>;
 
-    logger.log('fetchTokens', _tokens);
+      logger.log('fetchTokens', _tokens);
 
-    wallets.forEach(wallet => {
-      const nativeTokens = this.generateNativeTokens(wallet);
-      _tokens[wallet.address] = [...nativeTokens, ..._tokens[wallet.address]];
-    });
+      wallets.forEach(wallet => {
+        const nativeTokens = this.generateNativeTokens(wallet);
+        _tokens[wallet.address] = [...nativeTokens, ..._tokens[wallet.address]];
+      });
 
-    for await (const t of Object.values(_tokens).flat()) {
-      _data[t.id] = t;
+      for await (const t of Object.values(_tokens).flat()) {
+        _data[t.id] = t;
+      }
+
+      runInAction(() => {
+        this.tokens = _tokens;
+        this.data = {
+          ...this.data,
+          ..._data,
+        };
+        this._isLoading = false;
+      });
+    } else {
+      const accounts = wallets.map(w => w.cosmosAddress);
+      const updates = await Indexer.instance.updates(accounts, this.lastUpdate);
+
+      const _tokens = {} as Record<AddressEthereum, IToken[]>;
+      const _data = {} as Record<AddressEthereum, IToken>;
+
+      wallets.forEach(wallet => {
+        const nativeTokens = this.generateNativeTokens(wallet);
+        _tokens[AddressUtils.toEth(wallet.cosmosAddress)] = [...nativeTokens];
+      });
+
+      const TRON_PROVIDER_CHAIN_IDS = Provider.getAll()
+        .filter(p => p.isTron)
+        .map(p => p.ethChainId as ChainId);
+
+      const contractMap = updates.tokens.reduce(
+        (prev, cur) => {
+          const tokens = Array.from(
+            new Set([...(prev[cur.chain_id] || []), cur.contract]),
+          );
+          return {
+            ...prev,
+            [cur.chain_id]: tokens,
+          };
+        },
+        {} as Record<ChainId, string[]>,
+      );
+      await Promise.allSettled(
+        Object.entries(contractMap).map(([chainId, contracts]) => {
+          Contract.fetch(contracts, chainId);
+        }),
+      );
+
+      for await (const t of updates.tokens) {
+        try {
+          const isPositive = new Balance(t.value).isPositive();
+          if (!isPositive) {
+            continue;
+          }
+
+          const token = await this.parseIToken(t);
+
+          if (!token) {
+            logger.error('fetchTokens: skipping token', {
+              token,
+            });
+            continue;
+          }
+
+          const isTron = TRON_PROVIDER_CHAIN_IDS.includes(t.chain_id);
+
+          let walletAddress = '' as AddressEthereum;
+
+          if (isTron) {
+            const w = AddressUtils.getWalletByAddress(t.address);
+            if (w) {
+              walletAddress = w.address;
+            } else {
+              walletAddress = t.address.startsWith('0x')
+                ? (t.address as AddressEthereum)
+                : AddressUtils.tronToHex(t.address);
+            }
+          } else {
+            walletAddress = AddressUtils.toEth(t.address);
+          }
+
+          if (!_tokens[walletAddress]?.length) {
+            const wallet = Wallet.getById(walletAddress);
+            const nativeTokens = this.generateNativeTokens(wallet!);
+
+            _tokens[walletAddress] = [...nativeTokens];
+          }
+
+          _tokens[walletAddress].push(token);
+          _data[AddressUtils.toEth(token.id)] = token;
+        } catch (e) {
+          logger.error('fetchTokens: error during parsing tokens', {
+            error: e,
+            tokenAddress: t.address,
+            chainId: t.chain_id,
+          });
+        }
+      }
+
+      runInAction(() => {
+        this.tokens = _tokens;
+        this.data = {
+          ...this.data,
+          ..._data,
+        };
+        this._isLoading = false;
+      });
     }
-
-    runInAction(() => {
-      this.tokens = _tokens;
-      this.data = {
-        ...this.data,
-        ..._data,
-      };
-      this._isLoading = false;
-    });
   });
 
   private generateNativeTokens = (w: IWalletModel) => {
-    // if (Provider.isAllNetworks) {
-    //   return Provider.getAllNetworks().map(p => this.generateNativeToken(w, p));
-    // }
+    if (Provider.isAllNetworks && !AppStore.isRpcOnly) {
+      return Provider.getAllNetworks().map(p => this.generateNativeToken(w, p));
+    }
 
     return [this.generateNativeToken(w)];
   };

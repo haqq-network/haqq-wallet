@@ -4,6 +4,7 @@ import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {getAppInfo} from '@app/helpers/get-app-info';
 import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
+import {AppStore} from '@app/models/app';
 import {VariablesString} from '@app/models/variables-string';
 import {Backend} from '@app/services/backend';
 import {IWidget} from '@app/types';
@@ -18,6 +19,27 @@ import {RafflesWidgetWrapper} from '@app/widgets/raffles.widget';
 import {StakingWidgetWrapper} from '@app/widgets/staking-widget';
 import {TokensWidgetWrapper} from '@app/widgets/tokens-widget';
 import {TransactionsWidgetWrapper} from '@app/widgets/transactions-widget';
+
+const MOCK_MARKUP: IWidget[] = [
+  {
+    component: 'Layout',
+    direction: 'vertical',
+    child: [
+      {
+        component: 'TransactionsShort',
+      },
+      {
+        component: 'TokenList',
+      },
+      {
+        component: 'Transactions',
+      },
+      {
+        component: 'Governance',
+      },
+    ],
+  },
+];
 
 type IWidgetMap = {
   [key in IWidget['component']]: (
@@ -70,28 +92,13 @@ const WidgetMap: IWidgetMap = {
 
 export const WidgetRoot = memo(({lastUpdate}: {lastUpdate: number}) => {
   const {animate} = useLayoutAnimation();
-  const [data, setData] = useState<IWidget[] | null>([
-    {
-      component: 'Layout',
-      direction: 'vertical',
-      child: [
-        {
-          component: 'TransactionsShort',
-        },
-        {
-          component: 'TokenList',
-        },
-        {
-          component: 'Transactions',
-        },
-        {
-          component: 'Governance',
-        },
-      ],
-    },
-  ]);
+  const [data, setData] = useState<IWidget[] | null>();
 
   const requestMarkup = useCallback(async () => {
+    if (AppStore.isRpcOnly) {
+      return setData(MOCK_MARKUP);
+    }
+
     const cached = VariablesString.get('widget_blocks');
     if (cached && !data) {
       animate();

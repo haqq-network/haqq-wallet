@@ -7,16 +7,18 @@ import {
 } from 'react-native-network-logger';
 
 import {storage} from '@app/services/mmkv';
+import {DataFetchSource} from '@app/types';
 
 class AppStore {
   // App session properties
   private _isInitialized = false;
 
   // Hydrated properties
-  _isOnboarded = false;
-  _networkLoggerEnabled = false;
-  _networkLogsCacheSize = 500; // count of stored http request
-  _testnetsEnabledForAllNetworks = true;
+  private _isOnboarded = false;
+  private _networkLoggerEnabled = false;
+  private _networkLogsCacheSize = 500; // count of stored http request
+  private _testnetsEnabledForAllNetworks = true;
+  private _dataFetchMode: DataFetchSource = DataFetchSource.Backend;
   isDeveloperModeEnabled = Config.IS_DEVELOPMENT === 'true';
   isTesterModeEnabled = Config.IS_TESTMODE === 'true';
 
@@ -25,10 +27,11 @@ class AppStore {
     makePersistable(this, {
       name: this.constructor.name,
       properties: [
-        '_isOnboarded',
-        '_networkLoggerEnabled',
-        '_testnetsEnabledForAllNetworks',
-        '_networkLogsCacheSize',
+        '_isOnboarded' as keyof this,
+        '_networkLoggerEnabled' as keyof this,
+        '_testnetsEnabledForAllNetworks' as keyof this,
+        '_networkLogsCacheSize' as keyof this,
+        '_dataFetchMode' as keyof this,
         'isDeveloperModeEnabled',
         'isTesterModeEnabled',
       ],
@@ -44,6 +47,20 @@ class AppStore {
     runInAction(() => {
       this._isOnboarded = value;
     });
+  }
+
+  get dataFetchMode() {
+    return this._dataFetchMode;
+  }
+
+  set dataFetchMode(value: DataFetchSource) {
+    runInAction(() => {
+      this._dataFetchMode = value;
+    });
+  }
+
+  get isRpcOnly() {
+    return this.dataFetchMode === DataFetchSource.Rpc;
   }
 
   get isInitialized() {

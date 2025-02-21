@@ -5,6 +5,7 @@ import TR from '@assets/locales/tr/tr.json';
 import Config from 'react-native-config';
 
 import {AppInfo} from '@app/helpers/get-app-info';
+import {AppStore} from '@app/models/app';
 import {Currency} from '@app/models/types';
 import {
   AppLanguage,
@@ -32,8 +33,6 @@ export type CaptchaSessionResponse = {
   key: string;
 };
 
-const IS_MOCK = true;
-
 export class Backend {
   static instance = new Backend();
 
@@ -53,7 +52,7 @@ export class Backend {
     wallets: string[],
     uid: string,
   ): Promise<{result: boolean; error?: string}> {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return {result: true};
     }
     const request = await fetch(`${this.getRemoteUrl()}block/request`, {
@@ -76,7 +75,7 @@ export class Backend {
   }
 
   async contests(accounts: string[], uid: string): Promise<Raffle[]> {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return [];
     }
     const request = await fetch(`${RemoteConfig.get('contests_url')}`, {
@@ -104,7 +103,7 @@ export class Backend {
     signature: string,
     address: string,
   ): Promise<Raffle> {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return {} as Raffle;
     }
     const request = await fetch(
@@ -143,7 +142,7 @@ export class Backend {
     deadline: number;
     tx_hash: string;
   }> {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return {
         signature: '',
         participant: '',
@@ -180,7 +179,7 @@ export class Backend {
     signature: string,
     tx_hash: string | null,
   ): Promise<{signature: string; participant: string; deadline: number}> {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return {
         signature: '',
         participant: '',
@@ -214,7 +213,7 @@ export class Backend {
     uid: string,
     signal?: AbortController['signal'],
   ): Promise<CaptchaRequestResponse> {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return {
         id: '',
         back: '',
@@ -245,7 +244,7 @@ export class Backend {
     code: string,
     signal?: AbortController['signal'],
   ): Promise<CaptchaSessionResponse> {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return {
         key: '',
       };
@@ -270,7 +269,7 @@ export class Backend {
   }
 
   async getRemoteConfig(appInfo: AppInfo): Promise<RemoteConfigTypes> {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return {} as RemoteConfigTypes;
     }
     const response = await fetch(`${this.getRemoteUrl()}config`, {
@@ -283,7 +282,7 @@ export class Backend {
   }
 
   async news_row(item_id: string): Promise<NewsRow> {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return {} as NewsRow;
     }
     const newsDetailResp = await fetch(
@@ -296,7 +295,7 @@ export class Backend {
   }
 
   async news(lastSyncNews: Date | undefined): Promise<NewsRow[]> {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return [];
     }
     const sync = lastSyncNews ? `?timestamp=${lastSyncNews.toISOString()}` : '';
@@ -308,7 +307,7 @@ export class Backend {
   }
 
   async rss_feed(before: Date | undefined): Promise<RssNewsRow[]> {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return [];
     }
     const sync = before ? `?before=${before.toISOString()}` : '';
@@ -322,7 +321,7 @@ export class Backend {
   async updates(
     lastSyncUpdates: Date | undefined,
   ): Promise<NewsUpdatesResponse> {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return {} as NewsUpdatesResponse;
     }
     const sync = lastSyncUpdates
@@ -340,7 +339,7 @@ export class Backend {
     token: string,
     uid: string,
   ): Promise<{id: string}> {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return {id: ''};
     }
     const req = await fetch(
@@ -362,7 +361,7 @@ export class Backend {
     token: string,
     uid: string,
   ): Promise<{id: string}> {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return {id: ''};
     }
     const req = await fetch(`${this.getRemoteUrl()}notification_token`, {
@@ -381,7 +380,7 @@ export class Backend {
     token_id: string,
     address: string,
   ) {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return {} as T;
     }
     const req = await fetch(`${this.getRemoteUrl()}notification_subscription`, {
@@ -397,7 +396,7 @@ export class Backend {
   }
 
   async removeNotificationToken<T extends object>(token_id: string) {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return {} as T;
     }
     const req = await fetch(
@@ -415,7 +414,7 @@ export class Backend {
     token_id: string,
     address: string,
   ) {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return {} as T;
     }
     const req = await fetch(
@@ -430,7 +429,7 @@ export class Backend {
   }
 
   async unsubscribeByToken<T extends object>(token_id: string) {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return {} as T;
     }
     const req = await fetch(
@@ -445,7 +444,7 @@ export class Backend {
   }
 
   async markup(screen: string, appInfo: AppInfo): Promise<MarkupResponse> {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return {} as MarkupResponse;
     }
     const response = await fetch(`${this.getRemoteUrl()}markups`, {
@@ -460,7 +459,7 @@ export class Backend {
   }
 
   async stories(): Promise<StoriesResponse> {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return {} as StoriesResponse;
     }
     const response = await fetch(`${this.getRemoteUrl()}stories`, {
@@ -471,7 +470,7 @@ export class Backend {
   }
 
   async availableCurrencies(): Promise<Currency[]> {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return [];
     }
     const response = await fetch(`${this.getRemoteUrl()}currencies`, {
@@ -483,7 +482,7 @@ export class Backend {
   }
 
   async languages(): Promise<LanguagesResponse> {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return [
         {
           id: AppLanguage.en,
@@ -534,7 +533,7 @@ export class Backend {
   }
 
   async language(language: AppLanguage): Promise<Object> {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return {};
     }
     const response = await fetch(
@@ -547,7 +546,7 @@ export class Backend {
   }
 
   async providers() {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return [];
     }
     try {
