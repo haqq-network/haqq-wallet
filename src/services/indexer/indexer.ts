@@ -5,8 +5,8 @@ import {
 import _ from 'lodash';
 
 import {AddressUtils} from '@app/helpers/address-utils';
-import {loadBalancesFromRpc} from '@app/helpers/safe-load-balances';
 import {I18N, getText} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {Currencies} from '@app/models/currencies';
 import {NftCollectionIndexer} from '@app/models/nft';
 import {ALL_NETWORKS_ID, Provider} from '@app/models/provider';
@@ -32,10 +32,11 @@ import {
 } from './indexer.types';
 
 import {RemoteConfig} from '../remote-config';
+import {FetchRpcBalance} from '../rpc-balance';
 
 const logger = Logger.create('IndexerService');
 
-const IS_MOCK = true;
+const IS_MOCK = AppStore.isRpcOnly;
 
 export class Indexer {
   static instance = new Indexer();
@@ -111,23 +112,44 @@ export class Indexer {
 
   updates = createAsyncTask(async (accounts: string[], lastUpdated?: Date) => {
     if (IS_MOCK) {
-      const balances = await loadBalancesFromRpc(accounts);
-      return {
-        balance: balances,
-        staked: [],
-        total_staked: [],
-        vested: [],
-        available: balances,
-        locked: [],
-        total: balances,
-        available_for_stake: [],
-        last_update: new Date().toISOString(),
-        rates: {},
-        transactions: [],
-        tokens: [],
-        nfts: [],
-        unlock: {},
-      };
+      if (Provider.selectedProvider.isHaqqNetwork) {
+        const balances = await FetchRpcBalance.cosmos(accounts);
+
+        return {
+          balance: balances.available,
+          staked: balances.staked,
+          total_staked: balances.totalStaked,
+          vested: balances.vested,
+          available: balances.available,
+          locked: balances.locked,
+          total: balances.total,
+          available_for_stake: balances.availableForStake,
+          last_update: new Date().toISOString(),
+          rates: {},
+          transactions: [],
+          tokens: [],
+          nfts: [],
+          unlock: {},
+        };
+      } else {
+        const balances = await FetchRpcBalance.evm(accounts);
+        return {
+          balance: balances,
+          staked: [],
+          total_staked: [],
+          vested: [],
+          available: balances,
+          locked: [],
+          total: balances,
+          available_for_stake: [],
+          last_update: new Date().toISOString(),
+          rates: {},
+          transactions: [],
+          tokens: [],
+          nfts: [],
+          unlock: {},
+        };
+      }
     }
     try {
       this.checkIndexerAvailability();
