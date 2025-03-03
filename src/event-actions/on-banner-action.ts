@@ -9,6 +9,7 @@ import {onBannerNotificationsSnooze} from '@app/event-actions/on-banner-notifica
 import {onBannerNotificationsTopicSnooze} from '@app/event-actions/on-banner-notifications-topic-snooze';
 import {onBannerNotificationsTopicSubscribe} from '@app/event-actions/on-banner-notifications-topic-subscribe';
 import {onBannerSnoozeUntil} from '@app/event-actions/on-banner-snooze-until';
+import {exportWallet} from '@app/helpers/export';
 import {BannerButtonEvent} from '@app/models/banner';
 
 export async function onBannerAction(
@@ -21,6 +22,9 @@ export async function onBannerAction(
   }
 
   switch (event) {
+    case BannerButtonEvent.export:
+      await exportWallet();
+      break;
     case BannerButtonEvent.claimCode:
       await onBannerClaimAirdrop(id);
       break;

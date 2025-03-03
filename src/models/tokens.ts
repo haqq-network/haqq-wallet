@@ -1,7 +1,9 @@
 import {makePersistable} from '@override/mobx-persist-store';
+import {ethers} from 'ethers';
 import {makeAutoObservable, runInAction, when} from 'mobx';
 
 import {AddressUtils, NATIVE_TOKEN_ADDRESS} from '@app/helpers/address-utils';
+import {Provider} from '@app/models/provider';
 import {Socket} from '@app/models/socket';
 import {IWalletModel, Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
@@ -20,9 +22,11 @@ import {
 } from '@app/types';
 import {RPCMessage} from '@app/types/rpc';
 import {createAsyncTask} from '@app/utils';
+import {ERC20_ABI} from '@app/variables/abi';
 
+import {AppStore} from './app';
 import {Contract} from './contract';
-import {Provider, ProviderModel} from './provider';
+import {ProviderModel} from './provider';
 
 const logger = Logger.create('TokensStore', {
   emodjiPrefix: '🟢',
@@ -304,102 +308,128 @@ class TokensStore implements MobXStore<IToken> {
     });
 
     const wallets = Wallet.getAll();
-    const accounts = wallets.map(w => w.cosmosAddress);
-    const updates = await Indexer.instance.updates(accounts, this.lastUpdate);
 
-    const _tokens = {} as Record<AddressEthereum, IToken[]>;
-    const _data = {} as Record<AddressEthereum, IToken>;
+    if (AppStore.isRpcOnly) {
+      const _tokens = await getHardcodedTokens();
+      const _data = {} as Record<AddressEthereum, IToken>;
 
-    wallets.forEach(wallet => {
-      const nativeTokens = this.generateNativeTokens(wallet);
-      _tokens[AddressUtils.toEth(wallet.cosmosAddress)] = [...nativeTokens];
-    });
+      // logger.log('fetchTokens', _tokens);
 
-    const TRON_PROVIDER_CHAIN_IDS = Provider.getAll()
-      .filter(p => p.isTron)
-      .map(p => p.ethChainId as ChainId);
+      wallets.forEach(wallet => {
+        const nativeTokens = this.generateNativeTokens(wallet);
+        _tokens[wallet.address] = [...nativeTokens, ..._tokens[wallet.address]];
+      });
 
-    const contractMap = updates.tokens.reduce(
-      (prev, cur) => {
-        const tokens = Array.from(
-          new Set([...(prev[cur.chain_id] || []), cur.contract]),
-        );
-        return {
-          ...prev,
-          [cur.chain_id]: tokens,
-        };
-      },
-      {} as Record<ChainId, string[]>,
-    );
-    await Promise.allSettled(
-      Object.entries(contractMap).map(([chainId, contracts]) => {
-        Contract.fetch(contracts, chainId);
-      }),
-    );
-
-    for await (const t of updates.tokens) {
-      try {
-        const isPositive = new Balance(t.value).isPositive();
-        if (!isPositive) {
-          continue;
-        }
-
-        const token = await this.parseIToken(t);
-
-        if (!token) {
-          logger.error('fetchTokens: skipping token', {
-            token,
-          });
-          continue;
-        }
-
-        const isTron = TRON_PROVIDER_CHAIN_IDS.includes(t.chain_id);
-
-        let walletAddress = '' as AddressEthereum;
-
-        if (isTron) {
-          const w = AddressUtils.getWalletByAddress(t.address);
-          if (w) {
-            walletAddress = w.address;
-          } else {
-            walletAddress = t.address.startsWith('0x')
-              ? (t.address as AddressEthereum)
-              : AddressUtils.tronToHex(t.address);
-          }
-        } else {
-          walletAddress = AddressUtils.toEth(t.address);
-        }
-
-        if (!_tokens[walletAddress]?.length) {
-          const wallet = Wallet.getById(walletAddress);
-          const nativeTokens = this.generateNativeTokens(wallet!);
-
-          _tokens[walletAddress] = [...nativeTokens];
-        }
-
-        _tokens[walletAddress].push(token);
-        _data[AddressUtils.toEth(token.id)] = token;
-      } catch (e) {
-        logger.error('fetchTokens: error during parsing tokens', {
-          error: e,
-          tokenAddress: t.address,
-          chainId: t.chain_id,
-        });
+      for await (const t of Object.values(_tokens).flat()) {
+        _data[t.id] = t;
       }
-    }
 
-    runInAction(() => {
-      this.tokens = _tokens;
-      this.data = {
-        ...this.data,
-        ..._data,
-      };
-      this._isLoading = false;
-    });
+      runInAction(() => {
+        this.tokens = _tokens;
+        this.data = {
+          ...this.data,
+          ..._data,
+        };
+        this._isLoading = false;
+      });
+    } else {
+      const accounts = wallets.map(w => w.cosmosAddress);
+      const updates = await Indexer.instance.updates(accounts, this.lastUpdate);
+
+      const _tokens = {} as Record<AddressEthereum, IToken[]>;
+      const _data = {} as Record<AddressEthereum, IToken>;
+
+      wallets.forEach(wallet => {
+        const nativeTokens = this.generateNativeTokens(wallet);
+        _tokens[AddressUtils.toEth(wallet.cosmosAddress)] = [...nativeTokens];
+      });
+
+      const TRON_PROVIDER_CHAIN_IDS = Provider.getAll()
+        .filter(p => p.isTron)
+        .map(p => p.ethChainId as ChainId);
+
+      const contractMap = updates.tokens.reduce(
+        (prev, cur) => {
+          const tokens = Array.from(
+            new Set([...(prev[cur.chain_id] || []), cur.contract]),
+          );
+          return {
+            ...prev,
+            [cur.chain_id]: tokens,
+          };
+        },
+        {} as Record<ChainId, string[]>,
+      );
+      await Promise.allSettled(
+        Object.entries(contractMap).map(([chainId, contracts]) => {
+          Contract.fetch(contracts, chainId);
+        }),
+      );
+
+      for await (const t of updates.tokens) {
+        try {
+          const isPositive = new Balance(t.value).isPositive();
+          if (!isPositive) {
+            continue;
+          }
+
+          const token = await this.parseIToken(t);
+
+          if (!token) {
+            logger.error('fetchTokens: skipping token', {
+              token,
+            });
+            continue;
+          }
+
+          const isTron = TRON_PROVIDER_CHAIN_IDS.includes(t.chain_id);
+
+          let walletAddress = '' as AddressEthereum;
+
+          if (isTron) {
+            const w = AddressUtils.getWalletByAddress(t.address);
+            if (w) {
+              walletAddress = w.address;
+            } else {
+              walletAddress = t.address.startsWith('0x')
+                ? (t.address as AddressEthereum)
+                : AddressUtils.tronToHex(t.address);
+            }
+          } else {
+            walletAddress = AddressUtils.toEth(t.address);
+          }
+
+          if (!_tokens[walletAddress]?.length) {
+            const wallet = Wallet.getById(walletAddress);
+            const nativeTokens = this.generateNativeTokens(wallet!);
+
+            _tokens[walletAddress] = [...nativeTokens];
+          }
+
+          _tokens[walletAddress].push(token);
+          _data[AddressUtils.toEth(token.id)] = token;
+        } catch (e) {
+          logger.error('fetchTokens: error during parsing tokens', {
+            error: e,
+            tokenAddress: t.address,
+            chainId: t.chain_id,
+          });
+        }
+      }
+
+      runInAction(() => {
+        this.tokens = _tokens;
+        this.data = {
+          ...this.data,
+          ..._data,
+        };
+        this._isLoading = false;
+      });
+    }
   });
 
   private generateNativeTokens = (w: IWalletModel) => {
-    if (Provider.isAllNetworks) {
+    if (Provider.isAllNetworks && !AppStore.isRpcOnly) {
       return Provider.getAllNetworks().map(p => this.generateNativeToken(w, p));
     }
 
@@ -521,3 +551,178 @@ class TokensStore implements MobXStore<IToken> {
 
 const instance = new TokensStore();
 export {instance as Token};
+
+export const STATIC_TOKEN_ADDRESS: Record<
+  ChainId,
+  {address: string; icon?: string}[]
+> = {
+  // TestEdge2
+  54211: [
+    // AXL
+    {
+      address: '0xd567B3d7B8FE3C79a1AD8dA978812cfC4Fa05e75',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/axelar/images/axl.png?raw=true',
+    },
+    // axlUSDC
+    {
+      address: '0x80b5a32E4F032B2a058b4F29EC95EEfEEB87aDcd',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/osmosis/images/usdc.axl.png?raw=true',
+    },
+    // axlUSDC from axelar faucet
+    {
+      address: '0x3452e23F9c4cC62c70B7ADAd699B264AF3549C19',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/osmosis/images/usdc.axl.png?raw=true',
+    },
+    // AXL from axelar faucet
+    {
+      address: '0x5db67696C3c088DfBf588d3dd849f44266ff0ffa',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/axelar/images/axl.png?raw=true',
+    },
+  ],
+  // Mainnet
+  11235: [
+    // axlDAI
+    {
+      address: '0xC5e00D3b04563950941f7137B5AfA3a534F0D6d6',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/axelar/images/axldai.png?raw=true',
+    },
+    // OSMO
+    {
+      address: '0xc03345448969Dd8C00e9E4A85d2d9722d093aF8E',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/osmosis/images/osmo.png?raw=true',
+    },
+    // axlUSDC
+    {
+      address: '0x80b5a32E4F032B2a058b4F29EC95EEfEEB87aDcd',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/osmosis/images/usdc.axl.png?raw=true',
+    },
+    // axlUSDT
+    {
+      address: '0xd567B3d7B8FE3C79a1AD8dA978812cfC4Fa05e75',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/osmosis/images/usdt.axl.png?raw=true',
+    },
+    // ATOM
+    {
+      address: '0xFA3C22C069B9556A4B2f7EcE1Ee3B467909f4864',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/cosmoshub/images/atom.png?raw=true',
+    },
+    // axlWBTC
+    {
+      address: '0x5FD55A1B9FC24967C4dB09C513C3BA0DFa7FF687',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/axelar/images/axlwbtc.png?raw=true',
+    },
+    // USDC
+    {
+      address: '0x0CE35b0D42608Ca54Eb7bcc8044f7087C18E7717',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/noble/images/USDCoin.png?raw=true',
+    },
+    // axlWETH
+    {
+      address: '0xecEEEfCEE421D8062EF8d6b4D814efe4dc898265',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/axelar/images/axlweth.png?raw=true',
+    },
+    // AXL
+    {
+      address: '0x1D54EcB8583Ca25895c512A8308389fFD581F9c9',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/axelar/images/axl.png?raw=true',
+    },
+    // wISLM
+    {
+      address: '0xeC8CC083787c6e5218D86f9FF5f28d4cC377Ac54',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/haqq/images/islm.png?raw=true',
+    },
+    // DEEN
+    {
+      address: '0x4FEBDDe47Ab9a76200e57eFcC80b212a07b3e6cE',
+      icon: 'https://github.com/cosmos/chain-registry/blob/master/haqq/images/deen.png?raw=true',
+    },
+    // stlISLM
+    {address: '0x12fEFEAc0568503F7C0D934c149f29a42B05C48f', icon: ''},
+  ],
+};
+
+export async function getHardcodedTokens(provider = Provider.selectedProvider) {
+  const wallets = Wallet.addressList();
+  const contracts = STATIC_TOKEN_ADDRESS[provider.ethChainId];
+
+  if (!contracts.length) {
+    return {} as IndexerTokensData;
+  }
+
+  const tokens = await Promise.all(
+    wallets
+      .map(async wallet => {
+        return [
+          wallet,
+          [
+            ...(
+              await Promise.all(
+                contracts
+                  .map(async ({address, icon}) => {
+                    const etherProvider = new ethers.providers.JsonRpcProvider(
+                      provider.ethRpcEndpoint,
+                    );
+                    const contractInterface = new ethers.Contract(
+                      address,
+                      ERC20_ABI,
+                      etherProvider,
+                    );
+
+                    const balanceResult = await contractInterface.balanceOf(
+                      wallet,
+                    );
+
+                    let symbol = await contractInterface.symbol();
+                    let decimals = await contractInterface.decimals();
+                    let name = await contractInterface.name();
+
+                    const balance = new Balance(
+                      balanceResult,
+                      decimals,
+                      symbol,
+                    );
+
+                    if (!balance.isPositive()) {
+                      return;
+                    }
+
+                    // todo: get image uri
+                    // https://github.com/cosmos/chain-registry/tree/master/noble/images
+                    // https://github.com/cosmos/chain-registry/tree/master/haqq/images
+                    // https://hackmd.io/@6nuUr0-iSbe6nfJoRcuqJg/B1p_HM6Kp
+
+                    return {
+                      id: AddressUtils.toEth(address),
+                      contract_created_at: '',
+                      contract_updated_at: '',
+                      value: balance,
+                      decimals: decimals,
+                      is_erc20: true,
+                      is_erc721: false,
+                      is_erc1155: false,
+                      is_in_white_list: true,
+                      chain_id: provider.ethChainId,
+                      name: name,
+                      symbol: symbol,
+                      created_at: '',
+                      updated_at: '',
+                      image: icon
+                        ? {uri: icon}
+                        : require('@assets/images/empty-icon.png'),
+                    } as IToken;
+                  })
+                  .filter(Boolean),
+              )
+            ).filter(Boolean),
+          ].filter(
+            // remove duplicates
+            (token, index, self) =>
+              self.findIndex(t => AddressUtils.equals(t?.id!, token?.id!)) ===
+              index,
+          ),
+        ].filter(Boolean);
+      })
+      .filter(Boolean),
+  );
+  return Object.fromEntries(tokens) as IndexerTokensData;
+}

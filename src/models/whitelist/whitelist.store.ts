@@ -1,5 +1,6 @@
 import {JSONRPCError, jsonrpcRequest} from '@haqq/shared-react-native';
 import {makePersistable} from '@override/mobx-persist-store';
+import {ethers} from 'ethers';
 import {makeAutoObservable} from 'mobx';
 
 import {DEBUG_VARS} from '@app/debug-vars';
@@ -11,15 +12,15 @@ import {Indexer} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
 import {RemoteConfig} from '@app/services/remote-config';
 import {AddressType, IContract, VerifyAddressResponse} from '@app/types';
+import {ERC20_ABI} from '@app/variables/abi';
 import {MAINNET_ETH_CHAIN_ID} from '@app/variables/common';
 
 import {AppStore} from '../app';
-
 const CACHE_LIFE_TIME = 3 * 60 * 60 * 1000; // 3 hours
 
 const logger = Logger.create('Whitelist', {stringifyJson: true});
 
-const getParsedAddressList = (address: string | string[]): string[] => {
+export const getParsedAddressList = (address: string | string[]): string[] => {
   if (typeof address === 'string') {
     return [AddressUtils.toHaqq(address)];
   }
@@ -52,6 +53,10 @@ class Whitelist {
    * set enableForceSkip to false if you want to check whitelist without force skip
    */
   checkUrl = async (url?: string, enableForceSkip = true): Promise<boolean> => {
+    if (AppStore.isRpcOnly) {
+      return true;
+    }
+
     if (!url) {
       return false;
     }
@@ -83,9 +88,7 @@ class Whitelist {
     force = false,
   ): Promise<IContract | null> => {
     provider = provider ?? Provider.selectedProvider;
-    const chainId = Provider.isAllNetworks
-      ? MAINNET_ETH_CHAIN_ID
-      : provider.ethChainId;
+
     const isWallet = Wallet.getAll().some(wallet =>
       AddressUtils.equals(wallet.address, address),
     );
@@ -110,24 +113,57 @@ class Whitelist {
     }
 
     try {
-      const params: (string | number)[] = getParsedAddressList(address);
-      if (!Provider.isAllNetworks) {
-        params.push(provider.ethChainId);
+      if (AppStore.isRpcOnly) {
+        const etherProvider = new ethers.providers.JsonRpcProvider(
+          provider.ethRpcEndpoint,
+        );
+        const contractInterface = new ethers.Contract(
+          address,
+          ERC20_ABI,
+          etherProvider,
+        );
+
+        let symbol = (await contractInterface.symbol()) as string;
+        let decimals = (await contractInterface.decimals()) as number;
+        let name = (await contractInterface.name()) as string;
+
+        return {
+          address_type: AddressType.contract,
+          eth_address: AddressUtils.toEth(address),
+          id: AddressUtils.toHaqq(address),
+          decimals: decimals,
+          is_erc20: true,
+          is_erc721: false,
+          is_erc1155: false,
+          is_in_white_list: true,
+          chain_id: provider.ethChainId,
+          name: name,
+          symbol: symbol,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          icon: '',
+          min_input_amount: '0',
+          is_skip_eth_tx: false,
+        } as IContract;
+      } else {
+        const params: (string | number)[] = getParsedAddressList(address);
+        if (!Provider.isAllNetworks) {
+          params.push(provider.ethChainId);
+        }
+        const response = await jsonrpcRequest<VerifyAddressResponse | null>(
+          RemoteConfig.get('proxy_server')!,
+          'address',
+          params,
+        );
+        const chainId = Provider.isAllNetworks
+          ? MAINNET_ETH_CHAIN_ID
+          : provider.ethChainId;
+        const contract = response?.address[chainId];
+        if (contract) {
+          this.contracts.set(address, contract);
+        }
+        return contract ?? null;
       }
-
-      const response = await jsonrpcRequest<VerifyAddressResponse | null>(
-        RemoteConfig.get('proxy_server')!,
-        'address',
-        params,
-      );
-
-      const contract = response?.address[chainId];
-
-      if (contract) {
-        this.contracts.set(address, contract);
-      }
-
-      return contract ?? null;
     } catch (err) {
       if (err instanceof JSONRPCError) {
         Logger.captureException(err, 'Whitelist:verifyAddress', err.meta);

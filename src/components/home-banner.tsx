@@ -1,7 +1,6 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
 import {
-  Image,
   StyleProp,
   StyleSheet,
   TouchableOpacity,
@@ -11,14 +10,17 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 
 import {Color, getColor} from '@app/colors';
+import {useLayout} from '@app/hooks/use-layout';
 import {Banner, BannerButton, BannerButtonEvent} from '@app/models/banner';
 import {sleep} from '@app/utils';
 import {GRADIENT_END, GRADIENT_START} from '@app/variables/common';
 
+import {ImageWrapper} from './image-wrapper';
 import {
   Button,
   ButtonSize,
   ButtonVariant,
+  First,
   Icon,
   IconButton,
   Inline,
@@ -83,16 +85,23 @@ export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
     return {};
   }, [banner]);
 
+  const [layout, onLayout] = useLayout();
+
   const elem = useMemo(
     () => (
-      <View style={[styles.container, borderStyle, style]}>
-        {banner.backgroundImage ? (
-          <Image
-            resizeMode="cover"
-            style={styles.inner}
-            source={{uri: banner.backgroundImage}}
-          />
-        ) : (
+      <View onLayout={onLayout} style={[styles.container, borderStyle, style]}>
+        <First>
+          {!!banner.backgroundImage && (
+            <ImageWrapper
+              resizeMode="cover"
+              style={[
+                styles.inner,
+                {width: layout.width, height: layout.height},
+              ]}
+              source={banner.backgroundImage}
+            />
+          )}
+
           <LinearGradient
             colors={[
               banner.backgroundColorFrom || '',
@@ -102,7 +111,7 @@ export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
             end={GRADIENT_END}
             style={styles.inner}
           />
-        )}
+        </First>
         <Text color={banner.titleColor ?? Color.textBase3} t10>
           {banner.title}
         </Text>
@@ -142,7 +151,7 @@ export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
         )}
       </View>
     ),
-    [borderStyle, style, banner, onPressClose, loading, onPressBanner],
+    [borderStyle, style, banner, onPressClose, loading, onPressBanner, layout],
   );
 
   if (!isVisible) {
@@ -162,7 +171,6 @@ const styles = StyleSheet.create({
     padding: 16,
     marginHorizontal: 5,
     minHeight: 100,
-    position: 'relative',
     flex: 1,
   },
   inner: {

@@ -4,7 +4,6 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import {
   Alert,
   I18nManager,
-  Image,
   StyleProp,
   StyleSheet,
   View,
@@ -13,6 +12,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 
 import {Color, getColor} from '@app/colors';
+import {ImageWrapper} from '@app/components/image-wrapper';
 import {
   Button,
   ButtonSize,
@@ -100,7 +100,7 @@ export const BannerWidget = ({banner, style}: HomeBannerProps) => {
     () => (
       <View style={[styles.container, borderStyle, style]}>
         {banner.backgroundImage ? (
-          <Image
+          <ImageWrapper
             resizeMode="cover"
             style={styles.inner}
             source={{uri: banner.backgroundImage}}

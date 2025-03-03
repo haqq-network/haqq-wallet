@@ -21,11 +21,13 @@ const EXPLORER_URL_TEMPLATES = {
 
 export class ProviderModel {
   #logger;
+  model = {} as NetworkProvider;
 
-  constructor(public model: NetworkProvider) {
+  constructor(model: NetworkProvider) {
     this.#logger = Logger.create(`NetworkProvider:${model.name}`, {
       stringifyJson: true,
     });
+    this.model = model;
   }
 
   get ethChainIdHex() {

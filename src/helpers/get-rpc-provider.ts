@@ -1,13 +1,27 @@
+import {JsonRpcProvider} from '@ethersproject/providers';
 import {ethers} from 'ethers';
 
 import {ProviderModel} from '@app/models/provider';
 
 import {EthRpcEndpointAvailability} from './eth-rpc-endpoint-availability';
 
-export async function getRpcProvider(provider: ProviderModel) {
+const cache: Record<string, JsonRpcProvider> = {};
+
+export async function getRpcProvider(network: ProviderModel) {
   await EthRpcEndpointAvailability.awaitForInitialization();
-  return new ethers.providers.StaticJsonRpcProvider(provider.ethRpcEndpoint, {
-    chainId: provider.ethChainId as number,
-    name: provider.name,
-  });
+
+  if (cache[network.id]) {
+    return cache[network.id];
+  }
+
+  const provider = new ethers.providers.StaticJsonRpcProvider(
+    network.ethRpcEndpoint,
+    {
+      chainId: network.ethChainId as number,
+      name: network.name,
+    },
+  );
+  cache[network.id] = provider;
+
+  return provider;
 }

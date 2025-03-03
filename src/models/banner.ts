@@ -1,5 +1,5 @@
 import {makePersistable} from '@override/mobx-persist-store';
-import {makeAutoObservable} from 'mobx';
+import {makeAutoObservable, runInAction} from 'mobx';
 
 import {Color} from '@app/colors';
 import {storage} from '@app/services/mmkv';
@@ -19,6 +19,7 @@ export enum BannerButtonEvent {
   test = 'test',
   empty = '',
   none = 'none',
+  export = 'export',
 }
 
 export enum BannerType {
@@ -27,6 +28,7 @@ export enum BannerType {
   notificationsTopic = 'notificationsTopic',
   trackActivity = 'trackActivity',
   test = 'test',
+  export = 'export',
 }
 
 export type BannerButton = {
@@ -67,7 +69,16 @@ class BannerStore {
     makeAutoObservable(this);
     makePersistable(this, {
       name: this.constructor.name,
-      properties: ['banners'],
+      properties: [
+        {
+          key: 'banners',
+          serialize: value => JSON.stringify(value),
+          deserialize: value =>
+            ((JSON.parse(value) || []) as Banner[]).filter(
+              it => it.type !== BannerType.export,
+            ),
+        },
+      ],
       storage,
     });
   }
@@ -84,7 +95,9 @@ class BannerStore {
     if (existingBanner) {
       this.update(existingBanner.id, params);
     } else {
-      this.banners.push(newBanner);
+      runInAction(() => {
+        this.banners = [...this.banners, newBanner];
+      });
     }
 
     return params.id;
@@ -133,7 +146,12 @@ class BannerStore {
     const bannersWithoutOldValue = this.banners.filter(
       banner => banner.id !== bannerToUpdate.id,
     );
-    this.banners = [...bannersWithoutOldValue, {...bannerToUpdate, ...params}];
+    runInAction(() => {
+      this.banners = [
+        ...bannersWithoutOldValue,
+        {...bannerToUpdate, ...params},
+      ];
+    });
     return true;
   }
 }

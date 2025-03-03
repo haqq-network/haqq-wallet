@@ -4,6 +4,7 @@ import {app} from '@app/contexts';
 import {Events} from '@app/events';
 import {getProviderInstanceForWallet} from '@app/helpers';
 import {AddressUtils} from '@app/helpers/address-utils';
+import {AppStore} from '@app/models/app';
 import {IWalletModel, Wallet} from '@app/models/wallet';
 import {Backend} from '@app/services/backend';
 import {WalletType} from '@app/types';
@@ -11,7 +12,7 @@ import {WalletType} from '@app/types';
 export async function onWalletCreate(wallet: IWalletModel) {
   try {
     let subscription = app.notificationToken;
-    if (subscription) {
+    if (subscription && !AppStore.isRpcOnly) {
       await Backend.instance.createNotificationSubscription(
         subscription,
         AddressUtils.toHaqq(wallet.address),

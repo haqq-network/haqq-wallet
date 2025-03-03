@@ -1144,7 +1144,7 @@ export type AsyncTaskFunction<T> = (...args: any) => Promise<T>;
  *   return 'Task Result';
  * };
  *
- * const singletonTask = createSingletonTask(task);
+ * const singletonTask = createAsyncTask(task);
  *
  * // Calling multiple times in quick succession will only execute the task once.
  * singletonTask().then(console.log); // Output: 'Task executed', 'Task Result'

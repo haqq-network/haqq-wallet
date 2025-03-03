@@ -93,6 +93,7 @@ export const App = observer(() => {
   const [isPinReseted, setPinReseted] = useState(false);
 
   const [posthog, setPosthog] = useState<PostHog | null>(null);
+  const [_, setIsOnline] = useState(true);
   const theme = useTheme();
   const toast = useToast();
 
@@ -152,8 +153,34 @@ export const App = observer(() => {
         maxRequests: AppStore.networkLogsCacheSize,
       });
     }
+
+    const subscription = ({isConnected}: NetInfoState) => {
+      setIsOnline(!!isConnected);
+      isConnected
+        ? hideModal(ModalType.noInternet)
+        : showModal(ModalType.noInternet);
+    };
+
+    const linkingSubscription = ({url}: {url: string}) => {
+      if (url) {
+        app.emit(Events.onDeepLink, url);
+      }
+    };
+
+    const unsubscribeLinking = Linking.addListener('url', linkingSubscription);
+    const unsubscribeNet = NetInfo.addEventListener(subscription);
+    const unsubscribeApp = AppState.addEventListener('change', () => {
+      if (AppState.currentState === 'active') {
+        NetInfo.fetch().then(subscription);
+      }
+    });
+
     sleep(150)
-      .then(async () => await app.awaitForInitialization())
+      .then(() => NetInfo.fetch())
+      .then(
+        async ({isConnected}) =>
+          isConnected && (await app.awaitForInitialization()),
+      )
       .then(() => SplashScreen.hide())
       .then(async () => await awaitForEventDone(Events.onAppInitialized))
       .then(async () => await Language.init())
@@ -185,49 +212,13 @@ export const App = observer(() => {
         hideModal(ModalType.splash);
       });
 
+    EventTracker.instance.initialize();
+
     return () => {
       clearTimeout(splashTimer);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (AppStore.isInitialized) {
-      const subscription = ({isConnected}: NetInfoState) => {
-        isConnected
-          ? hideModal(ModalType.noInternet)
-          : showModal(ModalType.noInternet);
-      };
-
-      const linkingSubscription = ({url}: {url: string}) => {
-        if (url) {
-          app.emit(Events.onDeepLink, url);
-        }
-      };
-
-      NetInfo.fetch().then(subscription);
-
-      const unsubscribeLinking = Linking.addListener(
-        'url',
-        linkingSubscription,
-      );
-      const unsubscribeNet = NetInfo.addEventListener(subscription);
-      const unsubscribeApp = AppState.addEventListener('change', () => {
-        if (AppState.currentState === 'active') {
-          NetInfo.fetch().then(subscription);
-        }
-      });
-
-      return () => {
-        unsubscribeNet();
-        unsubscribeApp.remove();
-        unsubscribeLinking.remove();
-      };
-    }
-  }, [AppStore.isInitialized]);
-
-  useEffect(() => {
-    EventTracker.instance.initialize();
-    return () => {
+      unsubscribeNet();
+      unsubscribeApp.remove();
+      unsubscribeLinking.remove();
       EventTracker.instance.dispose();
     };
   }, []);
@@ -276,7 +267,7 @@ export const App = observer(() => {
                   captureLifecycleEvents: true,
                   captureScreens: true,
                   navigation: {
-                    routeToProperties: (_, params) => {
+                    routeToProperties: (__, params) => {
                       return params;
                     },
                   },

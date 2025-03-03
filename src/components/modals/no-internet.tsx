@@ -3,24 +3,33 @@ import React from 'react';
 import {View} from 'react-native';
 
 import {Color, getColor} from '@app/colors';
-import {Button, ButtonVariant, NoInternetIcon, Text} from '@app/components/ui';
+import {
+  Button,
+  ButtonVariant,
+  NoInternetIcon,
+  Text,
+  TextPosition,
+  TextVariant,
+} from '@app/components/ui';
 import {createTheme, hideModal} from '@app/helpers';
-import {I18N} from '@app/i18n';
+import {I18N, getText} from '@app/i18n';
 import {ModalType, Modals} from '@app/types';
 
 import {BottomPopupContainer} from '../bottom-popups';
 
-export const NoInternet = ({
-  showClose = false,
-}: Modals[ModalType.noInternet]) => {
+export const NoInternet = ({}: Modals[ModalType.noInternet]) => {
   return (
     <BottomPopupContainer>
       {() => (
         <View style={page.modalView}>
-          <Text t5 center i18n={I18N.noInternetPopupTitle} />
           <Text
-            t14
-            center
+            variant={TextVariant.t5}
+            position={TextPosition.center}
+            i18n={I18N.noInternetPopupTitle}
+          />
+          <Text
+            variant={TextVariant.t14}
+            position={TextPosition.center}
             style={page.descriptionText}
             i18n={I18N.noInternetPopupDescription}
           />
@@ -28,14 +37,12 @@ export const NoInternet = ({
             color={getColor(Color.graphicSecond4)}
             style={page.icon}
           />
-          {showClose && (
-            <Button
-              variant={ButtonVariant.second}
-              title={'OK'}
-              onPress={() => hideModal(ModalType.noInternet)}
-              style={page.closeButton}
-            />
-          )}
+          <Button
+            variant={ButtonVariant.second}
+            title={getText(I18N.cancel)}
+            onPress={() => hideModal(ModalType.noInternet)}
+            style={page.closeButton}
+          />
         </View>
       )}
     </BottomPopupContainer>

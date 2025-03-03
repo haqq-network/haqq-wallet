@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useMemo} from 'react';
 
+import {useFocusEffect} from '@react-navigation/native';
 import {observer} from 'mobx-react';
 import {
   ActivityIndicator,
@@ -87,6 +88,8 @@ export const TransactionList = observer(
     onTransactionPress,
     ...sectionListProps
   }: TransactionListProps) => {
+    Logger.log('TransactionList', 'render', {addresses});
+
     /* HOOKS */
     const {transactions, isTransactionsLoading} = useTransactionList(addresses);
     const txTimestampHeadersEnabled = useRemoteConfigVar(
@@ -121,6 +124,12 @@ export const TransactionList = observer(
     useEffect(() => {
       Transaction.fetchLatestTransactions(addresses);
     }, [addresses]);
+
+    useFocusEffect(
+      useCallback(() => {
+        Transaction.fetchLatestTransactions(addresses, true);
+      }, [addresses]),
+    );
 
     /* CALLBACKS */
     const onEndReached = useCallback(async () => {

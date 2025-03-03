@@ -18,6 +18,10 @@ import RNRestart from 'react-native-restart';
 import {Color} from '@app/colors';
 import {JsonViewer} from '@app/components/json-viewer';
 import {
+  TopTabNavigator,
+  TopTabNavigatorVariant,
+} from '@app/components/top-tab-navigator';
+import {
   Button,
   ButtonSize,
   ButtonVariant,
@@ -57,7 +61,7 @@ import {Whitelist} from '@app/models/whitelist';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {message as toastMessage} from '@app/services/toast';
 import {getUserAgent} from '@app/services/version';
-import {ModalType, PartialJsonRpcRequest} from '@app/types';
+import {DataFetchSource, ModalType, PartialJsonRpcRequest} from '@app/types';
 import {
   openInAppBrowser,
   openWeb3Browser,
@@ -78,6 +82,8 @@ const Title = ({text = ''}) => (
   </>
 );
 
+const DATA_FETCH_SOURCES = [DataFetchSource.Backend, DataFetchSource.Rpc];
+
 export const SettingsDeveloperTools = observer(() => {
   const actionSheetProps = useActionSheet();
   const {animate} = useLayoutAnimation();
@@ -90,6 +96,8 @@ export const SettingsDeveloperTools = observer(() => {
   const [verifyAddress, setVerifyAddress] = useState('');
   const [appInfo, setAppInfo] = useState<AppInfo | null>();
   const [isAppInfoHidden, setAppInfoHidden] = useState(true);
+  const [isDataFetchSourceSwitching, setDataFetchSourceSwitching] =
+    useState(false);
 
   const [showNonWhitlistedTokens, setShowNonWhitlistedTokens] = useState(
     VariablesBool.get(SHOW_NON_WHITELIST_TOKEN),
@@ -285,6 +293,30 @@ TRON:\n${AddressUtils.toTron(watchOnlyAddress)}`,
             }}>
             {getUserAgent()}
           </Text>
+        </View>
+      </ShadowCard>
+
+      <ShadowCard>
+        <View style={styles.block}>
+          <Title text="Data fetch source" />
+          <TopTabNavigator
+            disabled={isDataFetchSourceSwitching}
+            variant={TopTabNavigatorVariant.large}
+            initialTabIndex={DATA_FETCH_SOURCES.indexOf(AppStore.dataFetchMode)}
+            onTabChange={async (tab: DataFetchSource) => {
+              if (tab === AppStore.dataFetchMode) {
+                return;
+              }
+              setDataFetchSourceSwitching(true);
+              AppStore.dataFetchMode = tab;
+              await Provider.fetchProviders();
+              await Wallet.fetchBalances();
+              RNRestart.restart();
+            }}>
+            {DATA_FETCH_SOURCES.map(tab => (
+              <TopTabNavigator.Tab name={tab} title={tab} component={null} />
+            ))}
+          </TopTabNavigator>
         </View>
       </ShadowCard>
 

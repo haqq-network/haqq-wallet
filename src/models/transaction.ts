@@ -2,12 +2,19 @@ import {isHydrated} from '@override/mobx-persist-store';
 import {makeAutoObservable, runInAction, when} from 'mobx';
 
 import {IconProps} from '@app/components/ui';
+import {AddressUtils} from '@app/helpers/address-utils';
+import {indexerTransactionMock} from '@app/helpers/indexer-transaction-mock';
 import {parseTransaction} from '@app/helpers/indexer-transaction-utils';
 import {Socket} from '@app/models/socket';
 import {Wallet} from '@app/models/wallet';
 import {Balance} from '@app/services/balance';
 import {Indexer} from '@app/services/indexer';
 import {
+  TransactionRpcResult,
+  TransactionRpcStore,
+} from '@app/services/rpc/evm-transaction';
+import {
+  AddressEthereum,
   ChainId,
   IndexerTransaction,
   IndexerTxMsgType,
@@ -16,6 +23,8 @@ import {
 import {RPCMessage, RPCObserver} from '@app/types/rpc';
 import {createAsyncTask} from '@app/utils';
 
+import {AppStore} from './app';
+import {Provider} from './provider';
 import {Token} from './tokens';
 
 export enum TransactionStatus {
@@ -127,6 +136,25 @@ class TransactionStore implements RPCObserver {
     return this._transactions;
   }
 
+  getForWallets(addresses: string[]) {
+    try {
+      const addressList = addresses.map(AddressUtils.toEth);
+      return this.getAll().filter(tx => {
+        if (tx.forWallet) {
+          return tx.forWallet.some(wallet =>
+            addressList.includes(wallet as AddressEthereum),
+          );
+        }
+        return false;
+      });
+    } catch (e) {
+      Logger.captureException(e, 'TransactionStore.getForWallets', {
+        addresses,
+      });
+      return [];
+    }
+  }
+
   remove(id: string) {
     this._transactions = this._transactions.filter(
       transaction => transaction.id !== id,
@@ -134,8 +162,11 @@ class TransactionStore implements RPCObserver {
   }
 
   removeAll() {
-    this._lastSyncedTransactionTs = 'latest';
-    this._transactions = [];
+    runInAction(() => {
+      this._lastSyncedTransactionTs = 'latest';
+      this._transactions = [];
+      this._isLoading = false;
+    });
   }
 
   fetchNextTransactions = async (accounts: string[]) => {
@@ -181,10 +212,33 @@ class TransactionStore implements RPCObserver {
         runInAction(() => {
           this._isLoading = true;
         });
-        const result = await Indexer.instance.getTransactions(
-          accounts,
-          ts ?? this._lastSyncedTransactionTs,
-        );
+        let result: IndexerTransaction[];
+
+        /*
+         * FETCH TRANSACTIONS FROM RPC ONLY
+         */
+        if (AppStore.isRpcOnly) {
+          const addresses = accounts[Provider.selectedProvider.ethChainId].map(
+            AddressUtils.toEth,
+          );
+          const txExplorer = TransactionRpcStore.getInstance(addresses);
+
+          let rawTxs: TransactionRpcResult;
+          if (ts === 'latest') {
+            rawTxs = await txExplorer.getPage(1);
+          } else {
+            rawTxs = await txExplorer.nextPage();
+          }
+          result = rawTxs.getAll().map(tx => indexerTransactionMock(tx));
+        } else {
+          /*
+           * FETCH TRANSACTIONS FROM INDEXER
+           */
+          result = await Indexer.instance.getTransactions(
+            accounts,
+            ts ?? this._lastSyncedTransactionTs,
+          );
+        }
         await when(() => !Token.isLoading, {});
         const parsed = result
           .map(tx => parseTransaction(tx, accounts))
@@ -221,13 +275,6 @@ class TransactionStore implements RPCObserver {
 
     parsed.forEach(transaction => this.create(transaction, accounts));
   };
-
-  clear() {
-    runInAction(() => {
-      this._transactions = [];
-      this._isLoading = false;
-    });
-  }
 }
 
 const instance = new TransactionStore();

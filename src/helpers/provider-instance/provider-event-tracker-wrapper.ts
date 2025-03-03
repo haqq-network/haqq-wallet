@@ -2,6 +2,7 @@ import {ProviderInterface} from '@haqq/rn-wallet-providers';
 
 import {Provider} from '@app/models/provider';
 import {EventTracker} from '@app/services/event-tracker';
+import {TransactionRpcStore} from '@app/services/rpc/evm-transaction';
 import {MarketingEvents} from '@app/types';
 
 /**
@@ -37,6 +38,7 @@ function wrapProviderMethod<TMethodName extends keyof ProviderInterface>(
         ...params,
       });
       logger.log('success', methodName, result);
+      TransactionRpcStore.instance.reset();
       return result;
     } catch (error) {
       logger.error('error', methodName, error);

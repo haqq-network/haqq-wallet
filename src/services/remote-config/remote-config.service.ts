@@ -2,11 +2,12 @@ import {getAppInfo} from '@app/helpers/get-app-info';
 import {Initializable} from '@app/helpers/initializable';
 import {AppStore} from '@app/models/app';
 import {VariablesString} from '@app/models/variables-string';
-import {Backend} from '@app/services/backend';
 import {RemoteConfigTypes} from '@app/services/remote-config';
 import {isValidJSON} from '@app/utils';
 
 import {REMOTE_CONFIG_DEFAULT_VALUES} from './remote-config-default-values';
+
+import {Backend} from '../backend';
 
 const KEY = 'remote-config-cache';
 const CONFIG_REINIT_TIMEOUT = 5 * 60 * 1000; // 5 minutes
@@ -42,8 +43,17 @@ export class RemoteConfigService extends Initializable {
         return RemoteConfigService.instance.getAll();
       }
       this.startInitialization();
-      const appInfo = await getAppInfo();
-      const config = await Backend.instance.getRemoteConfig(appInfo);
+
+      let config: RemoteConfigTypes | null = null;
+
+      try {
+        config = await Backend.instance.getRemoteConfig(await getAppInfo());
+      } catch {}
+
+      if (!config) {
+        config = getCachedConfig();
+      }
+
       logger.log('config', config);
       if (Object.keys(config).length) {
         VariablesString.set(KEY, JSON.stringify(config));

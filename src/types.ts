@@ -118,6 +118,11 @@ export enum MarketingEvents {
   jsonRpcSignFail = 'jsonRpcSignFail',
   jsonRpcSignUserReject = 'jsonRpcSignUserReject',
   swapScreenClose = 'swapScreenClose',
+
+  exportWalletStart = 'exportWalletStart',
+  exportWalletSuccess = 'exportWalletSuccess',
+  exportWalletFail = 'exportWalletFail',
+  installHaqqabi = 'installHaqqabi',
 }
 
 export enum PopupNotificationBannerTypes {
@@ -1639,6 +1644,7 @@ export enum DeeplinkUrlKey {
   back9test = 'back9test',
   enableDeveloperMode = 'enableDeveloperMode',
   enableNetworkLogger = 'enableNetworkLogger',
+  export = 'export',
 }
 
 export type Eventable = Required<{
@@ -1956,6 +1962,7 @@ export type IndexerTransaction = {
   id: string;
   confirmations: number;
   msg_type: string;
+  forWallet?: string[];
   participants: {
     address: string;
     blockId: string;
@@ -2036,3 +2043,8 @@ export type Language = {
   hash: string;
 };
 export type LanguagesResponse = Language[];
+
+export enum DataFetchSource {
+  Backend = 'Backend',
+  Rpc = 'Rpc',
+}
