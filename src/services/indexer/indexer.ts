@@ -128,6 +128,18 @@ export class Indexer {
           }
         } catch {}
 
+        // Logger.log(
+        //   '🟩 /updates',
+        //   JSON.stringify(
+        //     {
+        //       balances,
+        //       evmBalances,
+        //     },
+        //     null,
+        //     2,
+        //   ),
+        // );
+
         return {
           balance: balances.available || evmBalances || [],
           staked: balances.staked || [],

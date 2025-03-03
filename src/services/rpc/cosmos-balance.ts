@@ -83,7 +83,11 @@ async function fetchCosmosBalanceForWallet(
       `/haqq/dao/v1/balances/${address}`,
     ];
     const [bals, spend, deleg, unb, rew, vest, dao] = await Promise.all(
-      endpoints.map(e => fetch(REST_URL + e).then(r => r.json())),
+      endpoints.map(e =>
+        fetch(REST_URL + e)
+          .then(r => r.json())
+          .catch(() => ({})),
+      ),
     );
 
     availableForStake = findISLM(bals.balances);
@@ -189,62 +193,62 @@ export async function fetchCosmosBalances(
       (acc, [address, balances]) => {
         acc.available.push([
           AddressUtils.toEth(address),
-          Provider.selectedProvider.cosmosChainId,
+          Provider.selectedProvider.ethChainId,
           balances.available,
         ] as IndexerBalanceItem);
         acc.availableForStake.push([
           AddressUtils.toEth(address),
-          Provider.selectedProvider.cosmosChainId,
+          Provider.selectedProvider.ethChainId,
           balances.availableForStake,
         ] as IndexerBalanceItem);
         acc.staked.push([
           AddressUtils.toEth(address),
-          Provider.selectedProvider.cosmosChainId,
+          Provider.selectedProvider.ethChainId,
           balances.staked,
         ] as IndexerBalanceItem);
         acc.unbonding.push([
           AddressUtils.toEth(address),
-          Provider.selectedProvider.cosmosChainId,
+          Provider.selectedProvider.ethChainId,
           balances.unbonding,
         ] as IndexerBalanceItem);
         acc.rewards.push([
           AddressUtils.toEth(address),
-          Provider.selectedProvider.cosmosChainId,
+          Provider.selectedProvider.ethChainId,
           balances.rewards,
         ] as IndexerBalanceItem);
         acc.totalLocked.push([
           AddressUtils.toEth(address),
-          Provider.selectedProvider.cosmosChainId,
+          Provider.selectedProvider.ethChainId,
           balances.totalLocked,
         ] as IndexerBalanceItem);
         acc.vested.push([
           AddressUtils.toEth(address),
-          Provider.selectedProvider.cosmosChainId,
+          Provider.selectedProvider.ethChainId,
           balances.vested,
         ] as IndexerBalanceItem);
         acc.stakedVested.push([
           AddressUtils.toEth(address),
-          Provider.selectedProvider.cosmosChainId,
+          Provider.selectedProvider.ethChainId,
           balances.stakedVested,
         ] as IndexerBalanceItem);
         acc.totalStaked.push([
           AddressUtils.toEth(address),
-          Provider.selectedProvider.cosmosChainId,
+          Provider.selectedProvider.ethChainId,
           balances.totalStaked,
         ] as IndexerBalanceItem);
         acc.stakedFree.push([
           AddressUtils.toEth(address),
-          Provider.selectedProvider.cosmosChainId,
+          Provider.selectedProvider.ethChainId,
           balances.stakedFree,
         ] as IndexerBalanceItem);
         acc.locked.push([
           AddressUtils.toEth(address),
-          Provider.selectedProvider.cosmosChainId,
+          Provider.selectedProvider.ethChainId,
           balances.locked,
         ] as IndexerBalanceItem);
         acc.total.push([
           AddressUtils.toEth(address),
-          Provider.selectedProvider.cosmosChainId,
+          Provider.selectedProvider.ethChainId,
           balances.total,
         ] as IndexerBalanceItem);
         return acc;
