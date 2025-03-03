@@ -225,6 +225,7 @@ class TransactionStore implements RPCObserver {
 
           let rawTxs: TransactionRpcResult;
           if (ts === 'latest') {
+            txExplorer.reset();
             rawTxs = await txExplorer.getPage(1);
           } else {
             rawTxs = await txExplorer.nextPage();

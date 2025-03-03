@@ -78,7 +78,7 @@ export class TransactionRpcStore {
 
   public static getInstance(
     addresses: string[] = [],
-    offset: number = 10,
+    offset: number = 25,
   ): TransactionRpcStore {
     if (!TransactionRpcStore.instance) {
       TransactionRpcStore.instance = new TransactionRpcStore(addresses, offset);
@@ -199,7 +199,6 @@ export class TransactionRpcStore {
     runInAction(() => {
       this.currentPage = 1;
       this.cache = {};
-      this.addresses = [];
     });
   }
 
