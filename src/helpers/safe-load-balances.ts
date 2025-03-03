@@ -1,6 +1,6 @@
 import {Provider} from '@app/models/provider';
 import {Balance} from '@app/services/balance';
-import {fetchEvmBalance} from '@app/services/rpc-balance/evm-balance';
+import {RpcFetch} from '@app/services/rpc';
 import {IndexerBalance} from '@app/types';
 
 import {IndexerBalanceItem} from './../types';
@@ -12,7 +12,7 @@ export const safeLoadBalances = async (wallets: string[]) => {
 
   try {
     balances = {
-      total: (await fetchEvmBalance(wallets))!,
+      total: (await RpcFetch.evm.balance(wallets))!,
     };
   } catch (e) {
     logger.error('Failed to load balances from rpc', e);

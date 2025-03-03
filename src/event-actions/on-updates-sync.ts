@@ -1,3 +1,4 @@
+import {AppStore} from '@app/models/app';
 import {News} from '@app/models/news';
 import {RssNews} from '@app/models/rss-news';
 import {VariablesBool} from '@app/models/variables-bool';
@@ -6,6 +7,9 @@ import {Backend} from '@app/services/backend';
 
 export async function onUpdatesSync() {
   try {
+    if (AppStore.isRpcOnly) {
+      return;
+    }
     const lastSyncUpdates = VariablesDate.get('lastSyncUpdates');
     const {news, rss_feed} =
       (await Backend.instance.updates(lastSyncUpdates)) || {};

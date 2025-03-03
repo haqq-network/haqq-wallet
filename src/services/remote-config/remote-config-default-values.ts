@@ -14,7 +14,8 @@ import {RemoteConfigTypes} from './remote-config.types';
 import {getAppVersion} from '../version';
 
 export const REMOTE_CONFIG_DEFAULT_VALUES: Required<RemoteConfigTypes> = {
-  proxy_server: 'https://proxy.indexer.haqq.network',
+  proxy_server:
+    'https://backend.wallet.production.haqq.network/api/all_networks/jsonrpc',
   cosmos_commission_multilplier: 1.35,
   currency: {
     created_at: '2024-02-12T06:24:48.111998Z',

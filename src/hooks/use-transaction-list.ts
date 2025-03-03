@@ -1,5 +1,6 @@
 import {useEffect, useMemo} from 'react';
 
+import {AppStore} from '@app/models/app';
 import {Transaction} from '@app/models/transaction';
 
 import {usePrevious} from './use-previous';
@@ -10,7 +11,9 @@ import {usePrevious} from './use-previous';
  *  const transactionsList = useTransactionList(addressList);
  */
 export function useTransactionList(addressList: string[]) {
-  const transactions = Transaction.getAll();
+  const transactions = AppStore.isRpcOnly
+    ? Transaction.getForWallets(addressList)
+    : Transaction.getAll();
 
   const isTransactionsLoading = Transaction.isLoading;
 

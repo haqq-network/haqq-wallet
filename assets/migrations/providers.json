@@ -14,7 +14,8 @@
     "status": "published",
     "denom": "ISLM",
     "wei_denom": "aISLM",
-    "coin_name": "ISLM"
+    "coin_name": "ISLM",
+    "explorer_url": "https://explorer.haqq.network"
   },
   {
     "id": "97a661f1-6698-4600-855d-834599046650",
@@ -31,6 +32,7 @@
     "status": "published",
     "denom": "ISLM",
     "wei_denom": "aISLM",
-    "coin_name": "ISLM"
+    "coin_name": "ISLM",
+    "explorer_url": "https://explorer.testedge2.haqq.network"
   }
 ]

@@ -1962,6 +1962,7 @@ export type IndexerTransaction = {
   id: string;
   confirmations: number;
   msg_type: string;
+  forWallet?: string[];
   participants: {
     address: string;
     blockId: string;

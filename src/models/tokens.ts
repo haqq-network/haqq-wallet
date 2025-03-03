@@ -552,7 +552,7 @@ class TokensStore implements MobXStore<IToken> {
 const instance = new TokensStore();
 export {instance as Token};
 
-const STATIC_TOKEN_ADDRESS: Record<
+export const STATIC_TOKEN_ADDRESS: Record<
   ChainId,
   {address: string; icon?: string}[]
 > = {

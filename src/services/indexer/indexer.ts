@@ -32,7 +32,8 @@ import {
 } from './indexer.types';
 
 import {RemoteConfig} from '../remote-config';
-import {FetchRpcBalance} from '../rpc-balance';
+import {RpcFetch} from '../rpc';
+import {fetchIndexerContractBatch} from '../rpc/evm-contract';
 
 const logger = Logger.create('IndexerService');
 
@@ -113,7 +114,7 @@ export class Indexer {
   updates = createAsyncTask(async (accounts: string[], lastUpdated?: Date) => {
     if (IS_MOCK) {
       if (Provider.selectedProvider.isHaqqNetwork) {
-        const balances = await FetchRpcBalance.cosmos(accounts);
+        const balances = await RpcFetch.cosmos.balance(accounts);
 
         return {
           balance: balances.available,
@@ -132,7 +133,7 @@ export class Indexer {
           unlock: {},
         };
       } else {
-        const balances = await FetchRpcBalance.evm(accounts);
+        const balances = await RpcFetch.evm.balance(accounts);
         return {
           balance: balances,
           staked: [],
@@ -177,6 +178,16 @@ export class Indexer {
     if (IS_MOCK) {
       return {};
     }
+
+    if (AppStore.isRpcOnly) {
+      const addressList = accountsMap[Provider.selectedProvider.ethChainId];
+      const result = await fetchIndexerContractBatch(addressList);
+
+      return {
+        [Provider.selectedProvider.ethChainId]: result,
+      } as IndexerAddressesResponse;
+    }
+
     try {
       this.checkIndexerAvailability();
 
