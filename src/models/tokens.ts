@@ -313,7 +313,7 @@ class TokensStore implements MobXStore<IToken> {
       const _tokens = await getHardcodedTokens();
       const _data = {} as Record<AddressEthereum, IToken>;
 
-      logger.log('fetchTokens', _tokens);
+      // logger.log('fetchTokens', _tokens);
 
       wallets.forEach(wallet => {
         const nativeTokens = this.generateNativeTokens(wallet);

@@ -13,6 +13,7 @@ import {ALL_NETWORKS_ID, Provider} from '@app/models/provider';
 import {
   ChainId,
   ContractNameMap,
+  IndexerBalanceItem,
   IndexerTransaction,
   IndexerTransactionResponse,
 } from '@app/types';
@@ -33,6 +34,7 @@ import {
 
 import {RemoteConfig} from '../remote-config';
 import {RpcFetch} from '../rpc';
+import {CosmosBalances} from '../rpc/cosmos-balance';
 import {fetchIndexerContractBatch} from '../rpc/evm-contract';
 
 const logger = Logger.create('IndexerService');
@@ -114,17 +116,27 @@ export class Indexer {
   updates = createAsyncTask(async (accounts: string[], lastUpdated?: Date) => {
     if (IS_MOCK) {
       if (Provider.selectedProvider.isHaqqNetwork) {
-        const balances = await RpcFetch.cosmos.balance(accounts);
+        let balances = {} as CosmosBalances;
+        try {
+          balances = await RpcFetch.cosmos.balance(accounts);
+        } catch {}
+
+        let evmBalances = [] as IndexerBalanceItem[];
+        try {
+          if (!balances.available) {
+            evmBalances = await RpcFetch.evm.balance(accounts);
+          }
+        } catch {}
 
         return {
-          balance: balances.available,
-          staked: balances.staked,
-          total_staked: balances.totalStaked,
-          vested: balances.vested,
-          available: balances.available,
-          locked: balances.locked,
-          total: balances.total,
-          available_for_stake: balances.availableForStake,
+          balance: balances.available || evmBalances || [],
+          staked: balances.staked || [],
+          total_staked: balances.totalStaked || [],
+          vested: balances.vested || [],
+          available: balances.available || evmBalances || [],
+          locked: balances.locked || [],
+          total: balances.total || [],
+          available_for_stake: balances.availableForStake || [],
           last_update: new Date().toISOString(),
           rates: {},
           transactions: [],

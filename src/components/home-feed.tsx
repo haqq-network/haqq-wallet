@@ -56,6 +56,7 @@ export const HomeFeed = observer(() => {
   useFocusEffect(
     useCallback(() => {
       onRefresh(true);
+      return () => Wallet.fetchBalances();
     }, []),
   );
 

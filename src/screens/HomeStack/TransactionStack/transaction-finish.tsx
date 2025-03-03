@@ -11,6 +11,7 @@ import {useTypedNavigation, useTypedRoute} from '@app/hooks';
 import {useAndroidBackHandler} from '@app/hooks/use-android-back-handler';
 import {I18N, getText} from '@app/i18n';
 import {Contact, ContactType} from '@app/models/contact';
+import {Wallet} from '@app/models/wallet';
 import {
   HomeFeedStackRoutes,
   TransactionStackParamList,
@@ -79,6 +80,7 @@ export const TransactionFinishScreen = observer(() => {
   }, [toAddress, contact]);
 
   useEffect(() => {
+    Wallet.fetchBalances();
     vibrate(HapticEffects.success);
   }, [hash, navigate]);
 

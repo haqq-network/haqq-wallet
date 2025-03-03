@@ -96,7 +96,7 @@ class ProviderStore {
 
       Nft.clear();
       Token.clear();
-      Transaction.clear();
+      Transaction.removeAll();
       Currencies.clear();
 
       await RemoteProviderConfig.init();

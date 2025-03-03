@@ -122,14 +122,12 @@ export const TransactionList = observer(
 
     /* EFFECTS */
     useEffect(() => {
-      Transaction.fetchLatestTransactions(addresses, true);
-      Logger.log('TransactionList', 'useEffect', {addresses});
+      Transaction.fetchLatestTransactions(addresses);
     }, [addresses]);
 
     useFocusEffect(
       useCallback(() => {
         Transaction.fetchLatestTransactions(addresses, true);
-        Logger.log('TransactionList', 'useFocusEffect', {addresses});
       }, [addresses]),
     );
 

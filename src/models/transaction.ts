@@ -162,8 +162,11 @@ class TransactionStore implements RPCObserver {
   }
 
   removeAll() {
-    this._lastSyncedTransactionTs = 'latest';
-    this._transactions = [];
+    runInAction(() => {
+      this._lastSyncedTransactionTs = 'latest';
+      this._transactions = [];
+      this._isLoading = false;
+    });
   }
 
   fetchNextTransactions = async (accounts: string[]) => {
@@ -272,13 +275,6 @@ class TransactionStore implements RPCObserver {
 
     parsed.forEach(transaction => this.create(transaction, accounts));
   };
-
-  clear() {
-    runInAction(() => {
-      this._transactions = [];
-      this._isLoading = false;
-    });
-  }
 }
 
 const instance = new TransactionStore();
