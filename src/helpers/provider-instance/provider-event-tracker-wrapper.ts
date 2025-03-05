@@ -1,5 +1,6 @@
 import {ProviderInterface} from '@haqq/rn-wallet-providers';
 
+import {AppStore} from '@app/models/app';
 import {Provider} from '@app/models/provider';
 import {EventTracker} from '@app/services/event-tracker';
 import {TransactionRpcStore} from '@app/services/rpc/evm-transaction';
@@ -38,7 +39,9 @@ function wrapProviderMethod<TMethodName extends keyof ProviderInterface>(
         ...params,
       });
       logger.log('success', methodName, result);
-      TransactionRpcStore.instance.reset();
+      if (AppStore.isRpcOnly) {
+        TransactionRpcStore.getInstance().reset();
+      }
       return result;
     } catch (error) {
       logger.error('error', methodName, error);
