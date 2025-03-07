@@ -24,6 +24,7 @@ import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {getProviderStorage} from '@app/helpers/sss';
 import {useTypedNavigation} from '@app/hooks';
 import {useEffectAsync} from '@app/hooks/use-effect-async';
+import {Provider} from '@app/models/provider';
 import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {
@@ -227,7 +228,7 @@ export const HomeScreen = observer(() => {
     };
   }, []);
 
-  if (!isAppUnlocked) {
+  if (!isAppUnlocked || !Provider.selectedProvider) {
     return <Loading />;
   }
 

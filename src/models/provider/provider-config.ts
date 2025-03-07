@@ -33,7 +33,7 @@ class ProviderConfigStore {
           this._data[Provider.selectedProvider.ethChainId] = config;
         });
       }
-      this.lazyLoadOtherConfig();
+      await this.lazyLoadOtherConfig();
       return Promise.resolve();
     } catch (error) {
       Logger.captureException(error, 'ProviderConfigStore:init');

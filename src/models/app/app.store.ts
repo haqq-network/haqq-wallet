@@ -1,13 +1,20 @@
-import {isHydrated, makePersistable} from '@override/mobx-persist-store';
+import {makePersistable} from '@override/mobx-persist-store';
 import {makeAutoObservable, runInAction} from 'mobx';
+import {Alert} from 'react-native';
 import Config from 'react-native-config';
 import {
   startNetworkLogging,
   stopNetworkLogging,
 } from 'react-native-network-logger';
+import RNRestart from 'react-native-restart';
 
 import {storage} from '@app/services/mmkv';
 import {DataFetchSource} from '@app/types';
+
+import {isHydrated} from './../../overrides/mobx-persist-store/index';
+
+import {Provider} from '../provider';
+import {Wallet} from '../wallet';
 
 class AppStore {
   // App session properties
@@ -57,15 +64,45 @@ class AppStore {
     runInAction(() => {
       this._dataFetchMode = value;
     });
+
+    (async () => {
+      try {
+        await Provider.fetchProviders();
+        await Wallet.fetchBalances();
+        RNRestart.restart();
+      } catch {
+        if (value === DataFetchSource.Backend) {
+          Alert.alert(
+            'Haqq Wallet Backend Shutdown',
+            'The backend service for Haqq Wallet is no longer maintained. Please switch to RPC mode.',
+            [
+              {
+                text: 'Switch to RPC',
+                onPress: () => {
+                  this.dataFetchMode = DataFetchSource.Rpc;
+                },
+              },
+            ],
+          );
+        } else {
+          RNRestart.restart();
+        }
+      }
+    })();
   }
 
   get isRpcOnly() {
     return this.dataFetchMode === DataFetchSource.Rpc;
   }
 
-  get isInitialized() {
-    return isHydrated(this) && this._isInitialized;
+  get isHydrated() {
+    return isHydrated(this);
   }
+
+  get isInitialized() {
+    return this.isHydrated && this._isInitialized;
+  }
+
   set isInitialized(value: boolean) {
     this._isInitialized = value;
   }

@@ -1310,6 +1310,7 @@ export interface ILayoutWidget extends IWidgetBase {
   component: 'Layout';
   direction: 'horizontal' | 'vertical';
   child: IWidget[];
+  id: string;
 }
 
 export interface IAdWidget extends IWidgetBase, Banner {
@@ -1343,7 +1344,7 @@ export interface ISwapWidget extends IWidgetBase {
   component: 'Swap';
 }
 
-export type IWidget =
+export type IWidget = {id: string} & (
   | ITransactionsWidget
   | ITransactionsShortWidget
   | IRafflesWidget
@@ -1354,7 +1355,8 @@ export type IWidget =
   | IBannerWidget
   | ITokensWidget
   | INftWidget
-  | ISwapWidget;
+  | ISwapWidget
+);
 
 export interface MarkupResponse {
   blocks: ILayoutWidget;
@@ -1645,6 +1647,8 @@ export enum DeeplinkUrlKey {
   enableDeveloperMode = 'enableDeveloperMode',
   enableNetworkLogger = 'enableNetworkLogger',
   export = 'export',
+  noBackend = 'noBackend',
+  useRpc = 'useRpc',
 }
 
 export type Eventable = Required<{

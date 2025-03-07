@@ -309,9 +309,6 @@ TRON:\n${AddressUtils.toTron(watchOnlyAddress)}`,
               }
               setDataFetchSourceSwitching(true);
               AppStore.dataFetchMode = tab;
-              await Provider.fetchProviders();
-              await Wallet.fetchBalances();
-              RNRestart.restart();
             }}>
             {DATA_FETCH_SOURCES.map(tab => (
               <TopTabNavigator.Tab name={tab} title={tab} component={null} />

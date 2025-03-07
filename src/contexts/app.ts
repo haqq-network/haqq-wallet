@@ -3,6 +3,7 @@ import {appleAuth} from '@invertase/react-native-apple-authentication';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {subMinutes} from 'date-fns';
+import {when} from 'mobx';
 import {Alert, AppState, Appearance, Platform, StatusBar} from 'react-native';
 import Config from 'react-native-config';
 import Keychain, {
@@ -10,6 +11,7 @@ import Keychain, {
   getGenericPassword,
   setGenericPassword,
 } from 'react-native-keychain';
+import SplashScreen from 'react-native-splash-screen';
 import TouchID from 'react-native-touch-id';
 
 import {DEBUG_VARS} from '@app/debug-vars';
@@ -19,6 +21,7 @@ import {Events} from '@app/events';
 import {AsyncEventEmitter} from '@app/helpers/async-event-emitter';
 import {awaitForEventDone} from '@app/helpers/await-for-event-done';
 import {checkNeedUpdate} from '@app/helpers/check-app-version';
+import {isConnected} from '@app/helpers/check-internet';
 import {getRpcProvider} from '@app/helpers/get-rpc-provider';
 import {getUid} from '@app/helpers/get-uid';
 import {SecurePinUtils} from '@app/helpers/secure-pin-utils';
@@ -35,12 +38,14 @@ import {Cosmos} from '@app/services/cosmos';
 import {EventTracker} from '@app/services/event-tracker';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {RemoteConfig} from '@app/services/remote-config';
+import {sleep} from '@app/utils';
 
 import {showModal} from '../helpers';
 import {User} from '../models/user';
 import {
   AppTheme,
   BiometryType,
+  DataFetchSource,
   DynamicLink,
   MarketingEvents,
   ModalType,
@@ -110,29 +115,77 @@ class App extends AsyncEventEmitter {
 
     this.user = User.getOrCreate();
 
-    Provider.init()
-      .then(RemoteProviderConfig.init)
-      .then(() => {
-        EthNetwork.init(Provider.selectedProvider);
+    when(
+      () => AppStore.isHydrated,
+      async () => {
+        if (AppStore.dataFetchMode === DataFetchSource.Backend) {
+          await isConnected().then(async connected => {
+            if (connected) {
+              let isBackendAvailable = true;
 
-        this.checkBalance();
+              try {
+                await Backend.instance.news(new Date());
+                Logger.log('Backend is available');
+              } catch {
+                isBackendAvailable = false;
+              }
 
-        this.handleDynamicLink = this.handleDynamicLink.bind(this);
+              Logger.log('isBackendAvailable', isBackendAvailable);
+              if (!isBackendAvailable) {
+                SplashScreen.hide();
+                await sleep(1000);
+                return new Promise(() => {
+                  Alert.alert(
+                    'Haqq Wallet Backend Shutdown',
+                    'The backend service for Haqq Wallet is no longer maintained. Please switch to RPC mode.',
+                    [
+                      {
+                        text: 'Switch to RPC',
+                        onPress: () => {
+                          AppStore.dataFetchMode = DataFetchSource.Rpc;
+                        },
+                      },
+                    ],
+                  );
+                });
+              }
+            }
+          });
+        }
 
-        dynamicLinks().onLink(this.handleDynamicLink);
-        dynamicLinks().getInitialLink().then(this.handleDynamicLink);
+        Logger.log('AppStore isHydrated done');
+        Provider.init()
+          .then(RemoteProviderConfig.init)
+          .then(() => {
+            EthNetwork.init(Provider.selectedProvider);
 
-        this.listenTheme = this.listenTheme.bind(this);
+            this.checkBalance();
 
-        Appearance.addChangeListener(this.listenTheme);
-        AppState.addEventListener('change', this.listenTheme);
-        this.listenTheme();
-        AppState.addEventListener('change', this.onAppStatusChanged.bind(this));
+            this.handleDynamicLink = this.handleDynamicLink.bind(this);
 
-        this.setEnabledLoggersForTestMode();
-        this.stopInitialization();
-      })
-      .catch(this.stopInitialization);
+            dynamicLinks().onLink(this.handleDynamicLink);
+            dynamicLinks().getInitialLink().then(this.handleDynamicLink);
+
+            this.listenTheme = this.listenTheme.bind(this);
+
+            Appearance.addChangeListener(this.listenTheme);
+            AppState.addEventListener('change', this.listenTheme);
+            this.listenTheme();
+            AppState.addEventListener(
+              'change',
+              this.onAppStatusChanged.bind(this),
+            );
+
+            this.setEnabledLoggersForTestMode();
+            this.stopInitialization();
+          })
+          .catch(e => {
+            Logger.error(e, 'App init error');
+            this.stopInitialization();
+          })
+          .finally(this.stopInitialization);
+      },
+    );
   }
 
   private _startUpTime: number;

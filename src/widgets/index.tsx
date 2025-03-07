@@ -22,20 +22,21 @@ import {TransactionsWidgetWrapper} from '@app/widgets/transactions-widget';
 
 const MOCK_MARKUP: IWidget[] = [
   {
+    id: 'home-widget',
     component: 'Layout',
     direction: 'vertical',
     child: [
       {
-        component: 'TransactionsShort',
-      },
-      {
         component: 'TokenList',
+        id: 'tokens-widget',
       },
       {
         component: 'Transactions',
+        id: 'transactions-widget',
       },
       {
         component: 'Governance',
+        id: 'governance-widget',
       },
     ],
   },

@@ -12,7 +12,12 @@ import {VariablesBool} from '@app/models/variables-bool';
 import {Wallet} from '@app/models/wallet';
 import {Whitelist} from '@app/models/whitelist';
 import {sendNotification} from '@app/services/toast';
-import {DeeplinkProtocol, DeeplinkUrlKey, ModalType} from '@app/types';
+import {
+  DataFetchSource,
+  DeeplinkProtocol,
+  DeeplinkUrlKey,
+  ModalType,
+} from '@app/types';
 import {openInAppBrowser, openWeb3Browser} from '@app/utils';
 
 import {onDynamicLink} from './on-dynamic-link';
@@ -160,6 +165,9 @@ export async function onDeepLink(
           return true;
         case DeeplinkUrlKey.export:
           await exportWallet();
+          return true;
+        case DeeplinkUrlKey.useRpc:
+          AppStore.dataFetchMode = DataFetchSource.Rpc;
           return true;
       }
     }
