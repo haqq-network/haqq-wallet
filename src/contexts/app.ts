@@ -11,7 +11,6 @@ import Keychain, {
   getGenericPassword,
   setGenericPassword,
 } from 'react-native-keychain';
-import SplashScreen from 'react-native-splash-screen';
 import TouchID from 'react-native-touch-id';
 
 import {DEBUG_VARS} from '@app/debug-vars';
@@ -38,7 +37,6 @@ import {Cosmos} from '@app/services/cosmos';
 import {EventTracker} from '@app/services/event-tracker';
 import {HapticEffects, vibrate} from '@app/services/haptic';
 import {RemoteConfig} from '@app/services/remote-config';
-import {sleep} from '@app/utils';
 
 import {showModal} from '../helpers';
 import {User} from '../models/user';
@@ -132,22 +130,7 @@ class App extends AsyncEventEmitter {
 
               Logger.log('isBackendAvailable', isBackendAvailable);
               if (!isBackendAvailable) {
-                SplashScreen.hide();
-                await sleep(1000);
-                return new Promise(() => {
-                  Alert.alert(
-                    'Haqq Wallet Backend Shutdown',
-                    'The backend service for Haqq Wallet is no longer maintained. Please switch to RPC mode.',
-                    [
-                      {
-                        text: 'Switch to RPC',
-                        onPress: () => {
-                          AppStore.dataFetchMode = DataFetchSource.Rpc;
-                        },
-                      },
-                    ],
-                  );
-                });
+                AppStore.dataFetchMode = DataFetchSource.Rpc;
               }
             }
           });

@@ -88,8 +88,6 @@ export const TransactionList = observer(
     onTransactionPress,
     ...sectionListProps
   }: TransactionListProps) => {
-    Logger.log('TransactionList', 'render', {addresses});
-
     /* HOOKS */
     const {transactions, isTransactionsLoading} = useTransactionList(addresses);
     const txTimestampHeadersEnabled = useRemoteConfigVar(

@@ -92,6 +92,9 @@ class AppStore {
   }
 
   get isRpcOnly() {
+    if (Provider?.selectedProvider?.isTestnet) {
+      return true;
+    }
     return this.dataFetchMode === DataFetchSource.Rpc;
   }
 

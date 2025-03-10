@@ -9,6 +9,8 @@ import {Provider} from '@app/models/provider';
 import {ERC20_ABI} from '@app/variables/abi';
 import {DEFAULT_PROVIDERS} from '@app/variables/common';
 
+import {explorerFetch} from './explorer-fetch';
+
 import {EventTracker} from '../event-tracker';
 
 export async function fetchERC20Contract(
@@ -93,32 +95,31 @@ export async function fetchERC20ContractBatch(addresses: string[]) {
   return contracts;
 }
 
+interface ExplorerContract {
+  name: string;
+  decimals: number;
+  icon_url: string;
+  symbol: string;
+  type: 'ERC-20' | 'ERC-721' | 'ERC-1155';
+}
+
 export async function fetchIndexerContract(
   address: string,
 ): Promise<IndexerContract> {
   const ethAddress = AddressUtils.toEth(address);
 
-  const REST_URL = DEFAULT_PROVIDERS.find(
-    it => it.id === Provider.selectedProvider.id,
-  )?.explorer_url;
-  const headers = {
-    'Content-Type': 'application/json',
-    'haqq-user-id': await EventTracker.instance.getAdid('posthog'),
-    'haqq-app-id': await getUid(),
-  };
-  const tokenUrl = `${REST_URL}/api/v2/tokens/${ethAddress}`;
-
-  const rawData = await fetch(tokenUrl, {
-    method: 'GET',
-    headers: headers,
-  }).then(res => res.json());
+  const rawData = await explorerFetch<ExplorerContract>(
+    `tokens/${ethAddress}`,
+    {useApiV2: true},
+  );
 
   if (!rawData || !rawData.name) {
-    const scUrl = `${REST_URL}/api/v2/smart-contracts/${ethAddress}`;
-    const scResponse = await fetch(scUrl, {
-      method: 'GET',
-      headers: headers,
-    }).then(res => res.json());
+    const scResponse = await explorerFetch<ExplorerContract>(
+      `smart-contracts/${ethAddress}`,
+      {
+        useApiV2: true,
+      },
+    );
 
     return {
       chain_id: Provider.selectedProvider.ethChainId,
@@ -130,9 +131,9 @@ export async function fetchIndexerContract(
       icon: null,
       id: ethAddress,
       is_coingecko_watch: null,
-      is_erc1155: null,
-      is_erc20: false,
-      is_erc721: false,
+      is_erc1155: scResponse?.type === 'ERC-1155',
+      is_erc721: scResponse?.type === 'ERC-721',
+      is_erc20: scResponse?.type === 'ERC-20',
       is_in_white_list: null,
       is_skip_eth_tx: null,
       is_transfer_prohibinden: null,
@@ -142,10 +143,6 @@ export async function fetchIndexerContract(
       updated_at: new Date().toISOString(),
     };
   }
-
-  const isErc20 = rawData.type === 'ERC-20';
-  const isErc721 = rawData.type === 'ERC-721';
-  const isErc1155 = rawData.type === 'ERC-1155';
 
   return {
     chain_id: Provider.selectedProvider.ethChainId,
@@ -157,9 +154,9 @@ export async function fetchIndexerContract(
     icon: rawData.icon_url || null,
     id: ethAddress,
     is_coingecko_watch: null,
-    is_erc1155: isErc1155 || null,
-    is_erc20: isErc20 || null,
-    is_erc721: isErc721 || null,
+    is_erc1155: rawData.type === 'ERC-1155',
+    is_erc721: rawData.type === 'ERC-721',
+    is_erc20: rawData.type === 'ERC-20',
     is_in_white_list: null,
     is_skip_eth_tx: null,
     is_transfer_prohibinden: null,
