@@ -4,10 +4,12 @@ import {makePersistable} from 'mobx-persist-store';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {Indexer, IndexerAddressesResponse} from '@app/services/indexer';
 import {storage} from '@app/services/mmkv';
+import {fetchIndexerContract} from '@app/services/rpc/evm-contract';
 import {AddressEthereum, AddressWallet, ChainId} from '@app/types';
 
 import {ContractStoreData, IndexerContract} from './contract.types';
 
+import {AppStore} from '../app';
 import {ALL_NETWORKS_ID, Provider} from '../provider';
 
 class Contract {
@@ -119,6 +121,10 @@ class Contract {
             AddressUtils.equals(c.id, contractId),
           ) ?? null;
       }
+    }
+
+    if (!contract && AppStore.isRpcOnly) {
+      return fetchIndexerContract(AddressUtils.toEth(contractAddress));
     }
 
     return contract;

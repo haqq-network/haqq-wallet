@@ -13,6 +13,7 @@ import {
 import BlastedImage, {BlastedImageProps} from 'react-native-blasted-image';
 import WebView from 'react-native-webview';
 
+import {useThemeSelector} from '@app/hooks';
 import {isValidUrl} from '@app/utils';
 
 import {First} from './ui';
@@ -26,7 +27,10 @@ const SVG_MIME_TYPE = 'data:image/svg+xml;base64,';
 
 export function ImageWrapper({source, style, ...props}: ImageWrapperProps) {
   const [isError, setError] = useState(false);
-
+  const placeholder = useThemeSelector({
+    light: require('@assets/images/nft_placeholder_light.png'),
+    dark: require('@assets/images/nft_placeholder_dark.png'),
+  });
   const fixedSource = useMemo(() => {
     if (!source) {
       return undefined;
@@ -120,7 +124,7 @@ export function ImageWrapper({source, style, ...props}: ImageWrapperProps) {
         <Image
           {...(props as ImageProps)}
           style={StyleSheet.flatten(style)}
-          source={fixedSource!}
+          source={placeholder!}
         />
       )}
       <BlastedImage

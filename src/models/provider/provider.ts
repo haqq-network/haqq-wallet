@@ -1,6 +1,5 @@
 import {makePersistable} from '@override/mobx-persist-store';
 import {makeAutoObservable, runInAction} from 'mobx';
-import Config from 'react-native-config';
 
 import {Events} from '@app/events';
 import {hideModal, showModal} from '@app/helpers';
@@ -11,11 +10,7 @@ import {storage} from '@app/services/mmkv';
 import {WalletConnect} from '@app/services/wallet-connect';
 import {ModalType} from '@app/types';
 import {createAsyncTask} from '@app/utils';
-import {
-  DEFAULT_PROVIDERS,
-  MAIN_NETWORK_ID,
-  TEST_NETWORK_ID,
-} from '@app/variables/common';
+import {DEFAULT_PROVIDERS} from '@app/variables/common';
 
 import {RemoteProviderConfig} from './provider-config';
 import {ProviderModel} from './provider.model';
@@ -46,10 +41,9 @@ class ProviderStore {
   awaitForInitialization() {
     throw new Error('Method not implemented.');
   }
-  private _defaultProviderId =
-    Config.ENVIRONMENT === 'production' || Config.ENVIRONMENT === 'distribution'
-      ? MAIN_NETWORK_ID
-      : TEST_NETWORK_ID;
+  private _defaultProviderId = DEFAULT_PROVIDERS.find(
+    it => it.stage === 'mainnet',
+  )?.id!;
 
   _selectedProviderId: ProviderID = this._defaultProviderId;
   _data: Record<ProviderID, ProviderModel> = {};

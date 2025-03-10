@@ -88,8 +88,6 @@ export const TransactionList = observer(
     onTransactionPress,
     ...sectionListProps
   }: TransactionListProps) => {
-    Logger.log('TransactionList', 'render', {addresses});
-
     /* HOOKS */
     const {transactions, isTransactionsLoading} = useTransactionList(addresses);
     const txTimestampHeadersEnabled = useRemoteConfigVar(
@@ -181,7 +179,12 @@ export const TransactionList = observer(
         return sectionListProps.ListEmptyComponent;
       }
       return renderListEmptyComponentDefault;
-    }, [hideContent, renderListEmptyComponentDefault, isTransactionsLoading]);
+    }, [
+      hideContent,
+      renderListEmptyComponentDefault,
+      isTransactionsLoading,
+      sectionListProps.ListEmptyComponent,
+    ]);
 
     const renderListFooterComponent = useCallback(
       () => (

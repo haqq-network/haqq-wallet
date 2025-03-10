@@ -16,7 +16,7 @@ export const NftViewerItemPreviewLarge = ({
   item,
   onPress,
 }: NftViewerItemPreviewExtendedProps) => {
-  const imageUri = useNftImage(item.cached_url);
+  const imageUri = useNftImage(item.metadata?.image || item?.cached_url);
   const handlePress = useCallback(() => onPress?.(item), [onPress, item]);
   const [layout, onLayout] = useLayout();
   const itemTextStyle = useMemo(

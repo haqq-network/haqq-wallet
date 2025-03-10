@@ -7,7 +7,7 @@ import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {AppStore} from '@app/models/app';
 import {VariablesString} from '@app/models/variables-string';
 import {Backend} from '@app/services/backend';
-import {IWidget} from '@app/types';
+import {IWidget, NftWidgetSize} from '@app/types';
 import {generateUUID} from '@app/utils';
 import {SwapWidget} from '@app/widgets//swap-widget';
 import {AdWidget} from '@app/widgets/ad-widget';
@@ -33,6 +33,11 @@ const MOCK_MARKUP: IWidget[] = [
       {
         component: 'Transactions',
         id: 'transactions-widget',
+      },
+      {
+        component: 'Nft',
+        id: 'nft-widget',
+        size: NftWidgetSize.small,
       },
       {
         component: 'Governance',

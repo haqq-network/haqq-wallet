@@ -63,10 +63,12 @@ class WalletStore implements RPCObserver {
   constructor() {
     makeAutoObservable(this, {}, {autoBind: true});
 
-    when(
-      () => Socket.lastMessage.type === 'balance',
-      () => this.onMessage(Socket.lastMessage),
-    );
+    if (!AppStore.isRpcOnly) {
+      when(
+        () => Socket.lastMessage.type === 'balance',
+        () => this.onMessage(Socket.lastMessage),
+      );
+    }
 
     const isMockEnabled =
       __DEV__ &&

@@ -51,7 +51,7 @@ export const TransactionNftConfirmation = observer(
     fee,
   }: TransactionConfirmationProps) => {
     const splittedTo = useMemo(() => splitAddress(to), [to]);
-    const imageUri = useNftImage(item.metadata?.image || item.cached_url);
+    const imageUri = useNftImage(item.metadata?.image || item?.cached_url);
 
     return (
       <PopupContainer style={styles.container}>

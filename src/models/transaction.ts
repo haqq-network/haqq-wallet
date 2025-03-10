@@ -21,7 +21,6 @@ import {
   IndexerTxParsedTokenInfo,
 } from '@app/types';
 import {RPCMessage, RPCObserver} from '@app/types/rpc';
-import {createAsyncTask} from '@app/utils';
 
 import {AppStore} from './app';
 import {Provider} from './provider';
@@ -60,10 +59,12 @@ class TransactionStore implements RPCObserver {
   constructor() {
     makeAutoObservable(this);
 
-    when(
-      () => Socket.lastMessage.type === 'transaction',
-      () => this.onMessage(Socket.lastMessage),
-    );
+    if (!AppStore.isRpcOnly) {
+      when(
+        () => Socket.lastMessage.type === 'transaction',
+        () => this.onMessage(Socket.lastMessage),
+      );
+    }
   }
 
   get isHydrated() {
@@ -193,12 +194,16 @@ class TransactionStore implements RPCObserver {
     if (this.isLoading && !force) {
       return;
     }
+    Logger.log('TransactionStore.fetchLatestTransactions', {
+      accounts,
+      force,
+    });
 
     const newTxs = await this._fetch(
       Indexer.instance.getProvidersHeader(accounts),
       'latest',
     );
-
+    Logger.log('tx', newTxs.length);
     runInAction(() => {
       this._transactions = newTxs;
       this._isLoading = false;
@@ -206,62 +211,60 @@ class TransactionStore implements RPCObserver {
     return newTxs;
   };
 
-  private _fetch = createAsyncTask(
-    async (accounts: Record<ChainId, string[]>, ts?: string) => {
-      try {
-        runInAction(() => {
-          this._isLoading = true;
-        });
-        let result: IndexerTransaction[];
+  private _fetch = async (accounts: Record<ChainId, string[]>, ts?: string) => {
+    try {
+      runInAction(() => {
+        this._isLoading = true;
+      });
+      let result: IndexerTransaction[];
 
-        /*
-         * FETCH TRANSACTIONS FROM RPC ONLY
-         */
-        if (AppStore.isRpcOnly) {
-          const addresses = accounts[Provider.selectedProvider.ethChainId].map(
-            AddressUtils.toEth,
-          );
-          const txExplorer = TransactionRpcStore.getInstance(addresses);
+      /*
+       * FETCH TRANSACTIONS FROM RPC ONLY
+       */
+      if (AppStore.isRpcOnly) {
+        const addresses = accounts[Provider.selectedProvider.ethChainId].map(
+          AddressUtils.toEth,
+        );
+        const txExplorer = TransactionRpcStore.getInstance(addresses);
 
-          let rawTxs: TransactionRpcResult;
-          if (ts === 'latest') {
-            txExplorer.reset();
-            rawTxs = await txExplorer.getPage(1);
-          } else {
-            rawTxs = await txExplorer.nextPage();
-          }
-          result = rawTxs.getAll().map(tx => indexerTransactionMock(tx));
+        let rawTxs: TransactionRpcResult;
+        if (ts === 'latest') {
+          txExplorer.reset();
+          rawTxs = await txExplorer.getPage(1);
         } else {
-          /*
-           * FETCH TRANSACTIONS FROM INDEXER
-           */
-          result = await Indexer.instance.getTransactions(
-            accounts,
-            ts ?? this._lastSyncedTransactionTs,
-          );
+          rawTxs = await txExplorer.nextPage();
         }
-        await when(() => !Token.isLoading, {});
-        const parsed = result
-          .map(tx => parseTransaction(tx, accounts))
-          .filter(tx => !!tx.parsed);
-
-        // If new transactions exists than _lastSyncedTransactionTs must be updated
-        // If transactions array is empty it's mean all transactions fetched and _lastSyncedTransactionTs mustn't be updated
-        if (parsed.length) {
-          this._lastSyncedTransactionTs =
-            parsed[parsed.length - 1]?.ts ?? 'latest';
-        }
-
-        return parsed;
-      } catch (e) {
-        Logger.captureException(e, 'TransactionStore._fetch', {
+        result = rawTxs.getAll().map(tx => indexerTransactionMock(tx));
+      } else {
+        /*
+         * FETCH TRANSACTIONS FROM INDEXER
+         */
+        result = await Indexer.instance.getTransactions(
           accounts,
-          transactionTs: this._lastSyncedTransactionTs,
-        });
-        return [];
+          ts ?? this._lastSyncedTransactionTs,
+        );
       }
-    },
-  );
+      await when(() => !Token.isLoading, {});
+      const parsed = result
+        .map(tx => parseTransaction(tx, accounts))
+        .filter(tx => !!tx.parsed);
+
+      // If new transactions exists than _lastSyncedTransactionTs must be updated
+      // If transactions array is empty it's mean all transactions fetched and _lastSyncedTransactionTs mustn't be updated
+      if (parsed.length) {
+        this._lastSyncedTransactionTs =
+          parsed[parsed.length - 1]?.ts ?? 'latest';
+      }
+
+      return parsed;
+    } catch (e) {
+      Logger.captureException(e, 'TransactionStore._fetch', {
+        accounts,
+        transactionTs: this._lastSyncedTransactionTs,
+      });
+      return [];
+    }
+  };
 
   onMessage = (message: RPCMessage) => {
     if (message.type !== 'transaction') {

@@ -50,11 +50,8 @@ export const NftItemDetails = ({
   const {animate} = useLayoutAnimation();
   const [imageLayout, onImageLayout] = useLayout();
   const wallet = useMemo(() => Wallet.getById(item.address), [item]);
-  const imageUri = useNftImage(
-    typeof item.cached_url === 'string'
-      ? item.cached_url
-      : item.metadata?.image,
-  );
+  const imageUri = useNftImage(item?.metadata?.image || item?.cached_url);
+
   const [isJsonHidden, setJsonHidden] = useState(true);
   const jsonData = useMemo(
     () => ({

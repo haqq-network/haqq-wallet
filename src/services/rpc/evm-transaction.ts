@@ -2,12 +2,9 @@ import {makePersistable} from '@override/mobx-persist-store';
 import {makeAutoObservable, runInAction} from 'mobx';
 
 import {AddressUtils} from '@app/helpers/address-utils';
-import {getUid} from '@app/helpers/get-uid';
-import {Provider} from '@app/models/provider';
 import {storage} from '@app/services/mmkv';
-import {DEFAULT_PROVIDERS} from '@app/variables/common';
 
-import {EventTracker} from '../event-tracker';
+import {explorerFetch} from './explorer-fetch';
 
 export interface TransactionRpc {
   blockNumber: string;
@@ -51,7 +48,6 @@ export class TransactionRpcStore {
   addresses: string[] = [];
   currentPage: number = 1;
   offset: number = 10;
-  explorerUrl: string = 'https://explorer.haqq.network';
 
   cache: TransactionRpcCache = {};
 
@@ -92,38 +88,25 @@ export class TransactionRpcStore {
     address: string,
     page: number,
   ): Promise<TransactionRpc[]> {
-    const REST_URL = DEFAULT_PROVIDERS.find(
-      it => it.id === Provider.selectedProvider.id,
-    )?.explorer_url;
-
-    const url = `${REST_URL}/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=${page}&offset=${this.offset}&sort=desc`;
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'haqq-user-id': await EventTracker.instance.getAdid('posthog'),
-        'haqq-app-id': await getUid(),
-      },
-    });
-    if (!response.ok) {
-      throw new Error(
-        `HTTP error for ${address} on page ${page}: ${response.status}`,
+    try {
+      const data: TransactionRpcResponse = await explorerFetch(
+        `module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=${page}&offset=${this.offset}&sort=desc`,
       );
-    }
-    const data: TransactionRpcResponse = await response.json();
-    if (data.status !== '1') {
-      if (data.message.toLowerCase().includes('No transactions found')) {
-        return [];
+      if (data.status !== '1') {
+        if (data.message.toLowerCase().includes('No transactions found')) {
+          return [];
+        }
+        throw new Error(`API error for ${address}: ${data.message}`);
       }
-      throw new Error(`API error for ${address}: ${data.message}`);
+      return data.result.map(tx => ({...tx, forWallet: [address]}));
+    } catch (e) {
+      Logger.error('Error fetching transactions', e, {address, page});
+      return [];
     }
-    return data.result.map(tx => ({...tx, forWallet: [address]}));
   }
 
   public async getPage(page: number): Promise<TransactionRpcResult> {
     try {
-      Logger.log('Fetching transactions for page', page, this.addresses);
-
       if (page < 1) {
         throw new Error('Number of page must be greater than 0');
       }

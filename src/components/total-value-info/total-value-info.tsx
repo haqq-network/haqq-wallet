@@ -82,9 +82,12 @@ export const TotalValueInfo = observer(
       [activeTab],
     );
 
-    const onTabChange = useCallback((tabName: TotalValueTabNames) => {
-      setActiveTab(tabName);
-    }, []);
+    const onTabChange = useCallback(
+      (tabName: TotalValueTabNames) => {
+        setActiveTab(tabName);
+      },
+      [addressList],
+    );
 
     const renderListHeader = () => (
       <>
@@ -120,9 +123,9 @@ export const TotalValueInfo = observer(
       </>
     );
 
-    const renderListEmptyComponent = useCallback(
-      () => (
-        <First>
+    const renderListEmptyComponent = useCallback(() => {
+      return (
+        <First key={`total-value-info-tab-content-${activeTab}`}>
           {activeTab === TotalValueTabNames.transactions && (
             <TransactionEmpty />
           )}
@@ -147,9 +150,8 @@ export const TotalValueInfo = observer(
             </>
           )}
         </First>
-      ),
-      [activeTab, tokens],
-    );
+      );
+    }, [activeTab, tokens]);
 
     return (
       <TransactionList

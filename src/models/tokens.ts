@@ -135,10 +135,12 @@ class TokensStore implements MobXStore<IToken> {
       storage,
     });
 
-    when(
-      () => Socket.lastMessage.type === 'token',
-      () => this.onMessage(Socket.lastMessage),
-    );
+    if (!AppStore.isRpcOnly) {
+      when(
+        () => Socket.lastMessage.type === 'token',
+        () => this.onMessage(Socket.lastMessage),
+      );
+    }
   }
 
   get isLoading() {

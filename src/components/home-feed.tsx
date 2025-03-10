@@ -44,7 +44,7 @@ export const HomeFeed = observer(() => {
     }
     setLastUpdate(Date.now());
     await Promise.allSettled([
-      Currencies.fetchCurrencies(),
+      !AppStore.isRpcOnly && Currencies.fetchCurrencies(),
       Wallet.fetchBalances(),
       Token.fetchTokens(),
       Nft.fetchNft(),
@@ -100,10 +100,12 @@ export const HomeFeed = observer(() => {
       <BannersWrapper />
       <Spacer height={12} />
       <LayoutWidget
+        key={'export-layout'}
         direction="vertical"
         deep={true}
         children={[
           <HomeBanner
+            key={'export-banner'}
             onPress={exportWallet}
             banner={{
               id: 'export_wallet',

@@ -50,6 +50,7 @@ import {LinkType, parseDeepLink} from '@app/helpers/parse-deep-link';
 import {useLayoutAnimation} from '@app/hooks/use-layout-animation';
 import {I18N} from '@app/i18n';
 import {AppStore} from '@app/models/app';
+import {Nft} from '@app/models/nft';
 import {Provider} from '@app/models/provider';
 import {Token} from '@app/models/tokens';
 import {VariablesBool} from '@app/models/variables-bool';
@@ -797,10 +798,11 @@ TRON:\n${AddressUtils.toTron(watchOnlyAddress)}`,
           />
           <Spacer height={8} />
           <Button
-            title="Clear balance cache"
+            title="Clear cache (Balance, Tokens, Nft)"
             onPress={() => {
               Wallet.balances = {};
               Token.tokens = {};
+              Nft.data = {};
               Wallet.lastBalanceUpdate = new Date(0);
               RNRestart.restart();
             }}

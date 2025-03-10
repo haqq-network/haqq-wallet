@@ -12,5 +12,9 @@ export const useNftImage = (imageUrl?: string | null): ImageURISource => {
     return placeholder;
   }
 
+  if (imageUrl.startsWith('ipfs://')) {
+    return {uri: imageUrl.replace('ipfs://', 'https://ipfs.io/ipfs/')};
+  }
+
   return {uri: imageUrl};
 };

@@ -36,10 +36,9 @@ import {RemoteConfig} from '../remote-config';
 import {RpcFetch} from '../rpc';
 import {CosmosBalances} from '../rpc/cosmos-balance';
 import {fetchIndexerContractBatch} from '../rpc/evm-contract';
+import {fetchWalletNftBatch} from '../rpc/evm-nft';
 
 const logger = Logger.create('IndexerService');
-
-const IS_MOCK = AppStore.isRpcOnly;
 
 export class Indexer {
   static instance = new Indexer();
@@ -114,7 +113,7 @@ export class Indexer {
   }
 
   updates = createAsyncTask(async (accounts: string[], lastUpdated?: Date) => {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       if (Provider.selectedProvider.isHaqqNetwork) {
         let balances = {} as CosmosBalances;
         try {
@@ -199,7 +198,7 @@ export class Indexer {
   });
 
   getAddresses = async (accountsMap: Record<ChainId, string[]>) => {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return {};
     }
 
@@ -229,7 +228,7 @@ export class Indexer {
   };
 
   async getContractNames(addresses: string[]): Promise<ContractNameMap> {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return addresses.reduce((acc, address) => {
         acc[address] = {name: '', symbol: ''};
         return acc;
@@ -272,7 +271,7 @@ export class Indexer {
     accounts: string[],
     latestBlock: string = 'latest',
   ): Promise<IndexerTransaction | null> {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return {txs: [], accounts, latestBlock} as unknown as IndexerTransaction;
     }
     try {
@@ -300,7 +299,7 @@ export class Indexer {
       accounts: string[] | Record<ChainId, string[]>,
       latestBlock: string | null,
     ): Promise<IndexerTransaction[]> => {
-      if (IS_MOCK) {
+      if (AppStore.isRpcOnly) {
         return [];
       }
       try {
@@ -332,10 +331,10 @@ export class Indexer {
   );
 
   getNfts = createAsyncTask(async (accounts: string[]) => {
-    if (IS_MOCK) {
-      return [];
-    }
     try {
+      if (AppStore.isRpcOnly) {
+        return fetchWalletNftBatch(accounts.map(AddressUtils.toEth));
+      }
       this.checkIndexerAvailability();
 
       if (!accounts.length) {
@@ -358,7 +357,7 @@ export class Indexer {
   });
 
   async sushiPools(): Promise<SushiPoolResponse> {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return {
         contracts: [],
         pools: [],
@@ -390,7 +389,7 @@ export class Indexer {
     currency_id,
     abortSignal,
   }: SushiPoolEstimateRequest): Promise<SushiPoolEstimateResponse> {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return {
         amount,
         sender,
@@ -418,7 +417,7 @@ export class Indexer {
   }
 
   async getProviderConfig(): Promise<ProviderConfig> {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return {
         // @ts-ignore
         chain_id: Provider.selectedProvider.ethChainId,
@@ -438,7 +437,7 @@ export class Indexer {
         explorer_token_url: 'https://explorer.haqq.network/token/{{address}}',
         explorer_tx_url: 'https://explorer.haqq.network/tx/{{tx_hash}}',
         indexer_gas_estimate_enabled: false,
-        nft_exists: false,
+        nft_exists: true,
       };
     }
     try {
@@ -465,7 +464,7 @@ export class Indexer {
     message_or_input,
     address,
   }: VerifyContractRequest): Promise<VerifyContractResponse> {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return {
         method_name,
         domain,
@@ -497,7 +496,7 @@ export class Indexer {
   }
 
   async validateDappDomain(domain: string): Promise<boolean> {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return true;
     }
     try {
@@ -512,7 +511,7 @@ export class Indexer {
   }
 
   async gasEstimate(params: GasEstimateRequest, chainId: number) {
-    if (IS_MOCK) {
+    if (AppStore.isRpcOnly) {
       return {params, chainId} as unknown as GasEstimateResponce;
     }
     try {

@@ -21,7 +21,7 @@ export const NftCollectionView = observer(() => {
     () => getRandomItemFromArray(collection.nfts),
     [collection],
   );
-  const imageUri = useNftImage(item.cached_url);
+  const imageUri = useNftImage(item.metadata?.image || item?.cached_url);
 
   if (!nftCollections.length) {
     return null;
