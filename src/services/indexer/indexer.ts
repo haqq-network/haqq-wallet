@@ -18,6 +18,7 @@ import {
   IndexerTransactionResponse,
 } from '@app/types';
 import {createAsyncTask} from '@app/utils';
+import {DEFAULT_PROVIDERS} from '@app/variables/common';
 
 import {
   GasEstimateRequest,
@@ -126,18 +127,6 @@ export class Indexer {
             evmBalances = await RpcFetch.evm.balance(accounts);
           }
         } catch {}
-
-        // Logger.log(
-        //   '🟩 /updates',
-        //   JSON.stringify(
-        //     {
-        //       balances,
-        //       evmBalances,
-        //     },
-        //     null,
-        //     2,
-        //   ),
-        // );
 
         return {
           balance: balances.available || evmBalances || [],
@@ -418,6 +407,15 @@ export class Indexer {
 
   async getProviderConfig(): Promise<ProviderConfig> {
     if (AppStore.isRpcOnly) {
+      const isMainnet =
+        DEFAULT_PROVIDERS.find(p => p.id === Provider.selectedProvider.id)
+          ?.stage === 'mainnet';
+      const explorerBaseUrl = isMainnet
+        ? 'https://explorer.haqq.network'
+        : 'https://explorer.testedge2.haqq.network';
+      const explorerCosmosBaseUrl = isMainnet
+        ? 'https://ping.pub'
+        : 'https://testnet.ping.pub';
       return {
         // @ts-ignore
         chain_id: Provider.selectedProvider.ethChainId,
@@ -427,15 +425,13 @@ export class Indexer {
         swap_enabled: false,
         swap_router_v3: '0x0',
         weth_address: '0x0',
-        weth_symbol: '-',
+        weth_symbol: 'ISLM',
         enable_unwrapWETH9_call: false,
-        explorer_address_url:
-          'https://explorer.haqq.network/address/{{address}}',
-        explorer_cosmos_tx_url: 'https://testnet.ping.pub/haqq/tx/{{tx_hash}}',
-        explorer_token_id_url:
-          'https://explorer.haqq.network/token/{{address}}/instance/{{token_id}}',
-        explorer_token_url: 'https://explorer.haqq.network/token/{{address}}',
-        explorer_tx_url: 'https://explorer.haqq.network/tx/{{tx_hash}}',
+        explorer_address_url: `${explorerBaseUrl}/address/{{address}}`,
+        explorer_cosmos_tx_url: `${explorerCosmosBaseUrl}/haqq/tx/{{tx_hash}}`,
+        explorer_token_id_url: `${explorerBaseUrl}/token/{{address}}/instance/{{token_id}}`,
+        explorer_token_url: `${explorerBaseUrl}/token/{{address}}`,
+        explorer_tx_url: `${explorerBaseUrl}/tx/{{tx_hash}}`,
         indexer_gas_estimate_enabled: false,
         nft_exists: true,
       };

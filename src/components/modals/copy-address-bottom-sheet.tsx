@@ -9,6 +9,7 @@ import {Icon, IconsName, Spacer, Text, TextVariant} from '@app/components/ui';
 import {createTheme} from '@app/helpers';
 import {shortAddress} from '@app/helpers/short-address';
 import {I18N} from '@app/i18n';
+import {AppStore} from '@app/models/app';
 import {Provider} from '@app/models/provider';
 import {sendNotification} from '@app/services';
 import {
@@ -54,14 +55,25 @@ export function CopyAddressBottomSheet({
       {
         address: wallet.cosmosAddress,
         icon: haqqProvider?.icon || '',
-        providerName: haqqProvider?.coinName || '',
+        providerName: `${haqqProvider?.coinName || ''} ${
+          AppStore.isRpcOnly ? '(Bech32)' : ''
+        }`,
       },
-      {
+    ];
+
+    if (AppStore.isRpcOnly) {
+      result.push({
+        address: wallet.address,
+        icon: haqqProvider?.icon || '',
+        providerName: `${haqqProvider?.coinName || ''} (EIP-55)`,
+      });
+    } else {
+      result.push({
         address: wallet.address,
         icon: ethProvider?.icon || '',
         providerName: ethProvider?.coinName || '',
-      },
-    ];
+      });
+    }
 
     if (tronProvider) {
       result.push({
