@@ -47,6 +47,24 @@ export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
     [banner],
   );
 
+  const image = useMemo(() => {
+    if (banner.backgroundImage?.startsWith?.('http')) {
+      return {
+        uri: banner.backgroundImage,
+      };
+    }
+    switch (banner.backgroundImage) {
+      case 'banner_notifications':
+        return require('@assets/images/banner_notifications.png');
+      case 'banner_news':
+        return require('@assets/images/banner_news.png');
+      case 'banner_analytics':
+        return require('@assets/images/banner_analytics.png');
+      default:
+        return require('@assets/images/export-banner-bg.png');
+    }
+  }, [banner]);
+
   const onPressClose = useCallback(async () => {
     setVisible(false);
     await onPress(
@@ -98,7 +116,7 @@ export const HomeBanner = ({banner, style, onPress}: HomeBannerProps) => {
                 styles.inner,
                 {width: layout.width, height: layout.height},
               ]}
-              source={banner.backgroundImage}
+              source={image}
             />
           )}
 

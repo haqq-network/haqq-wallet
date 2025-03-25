@@ -4,7 +4,7 @@ import {ethers} from 'ethers';
 import {Provider} from '@app/models/provider';
 import {EventTracker} from '@app/services/event-tracker';
 import {MarketingEvents} from '@app/types';
-import {parseTxDataFromHexInput} from '@app/utils';
+import {ERC20_ABI} from '@app/variables/abi';
 
 interface JsonRpcResponse {
   result?: any;
@@ -19,16 +19,167 @@ interface ERC20TokenInfo {
   decimals?: number;
   symbol?: string;
   name?: string;
+  [key: string]: any; // Add index signature for dynamic properties
 }
 
-// Constants
-const CACHED_METHODS = ['eth_chainId', 'eth_blockNumber'];
-const SEND_METHODS = ['eth_sendRawTransaction', 'eth_sendTransaction'];
-const CACHE_EXPIRY_MS = 30000; // 30 seconds
+interface CacheConfig {
+  expiryMs: number;
+  methods: string[];
+}
 
-// Cache storage
-const methodCache = new Map<string, {value: any; timestamp: number}>();
-const erc20Cache = new Map<string, ERC20TokenInfo>();
+interface CacheEntry<T> {
+  value: T;
+  timestamp: number;
+}
+
+const logger = Logger.create('JsonRpcProvider', {
+  stringifyJson: true,
+  emodjiPrefix: '🟣',
+  enabled: false,
+});
+
+// Cache configurations
+const CACHE_CONFIGS: Record<string, CacheConfig> = {
+  default: {
+    expiryMs: 60000, // 1 minute
+    methods: [
+      'eth_chainId',
+      'eth_blockNumber',
+      'eth_getBlockByNumber',
+      'eth_gasPrice',
+      'eth_estimateGas',
+    ],
+  },
+  // for caching erc20 symbol, name, decimals
+  erc20: {
+    expiryMs: -1, // No expiry
+    methods: ['eth_call'],
+  },
+  // for caching erc20 balance
+  balance: {
+    expiryMs: 30000, // 30 seconds
+    methods: ['eth_call'],
+  },
+};
+
+const SEND_METHODS = ['eth_sendRawTransaction', 'eth_sendTransaction'];
+
+// Unified cache storage
+class CacheStore {
+  private static instance: CacheStore;
+  private methodCache: Map<string, CacheEntry<any>>;
+  private erc20Cache: Map<string, ERC20TokenInfo>;
+  private erc20BalanceCache: Map<string, Map<string, CacheEntry<string>>>;
+
+  private constructor() {
+    this.methodCache = new Map();
+    this.erc20Cache = new Map();
+    this.erc20BalanceCache = new Map();
+  }
+
+  public static getInstance(): CacheStore {
+    if (!CacheStore.instance) {
+      CacheStore.instance = new CacheStore();
+    }
+    return CacheStore.instance;
+  }
+
+  public getMethodCache(method: string): any | undefined {
+    const entry = this.methodCache.get(method);
+    if (!entry) {
+      return undefined;
+    }
+
+    if (this.isExpired(entry.timestamp, CACHE_CONFIGS.default.expiryMs)) {
+      this.methodCache.delete(method);
+      return undefined;
+    }
+
+    return entry.value;
+  }
+
+  public setMethodCache(method: string, value: any): void {
+    if (CACHE_CONFIGS.default.methods.includes(method)) {
+      this.methodCache.set(method, {
+        value,
+        timestamp: Date.now(),
+      });
+    }
+  }
+
+  public getERC20Cache(tokenAddress: string): ERC20TokenInfo | undefined {
+    return this.erc20Cache.get(tokenAddress);
+  }
+
+  public setERC20Cache(tokenAddress: string, info: ERC20TokenInfo): void {
+    this.erc20Cache.set(tokenAddress, info);
+  }
+
+  public getERC20BalanceCache(
+    tokenAddress: string,
+    walletAddress: string,
+  ): string | undefined {
+    const tokenCache = this.erc20BalanceCache.get(tokenAddress);
+    if (!tokenCache) {
+      return undefined;
+    }
+
+    const balanceEntry = tokenCache.get(walletAddress);
+    if (!balanceEntry) {
+      return undefined;
+    }
+
+    if (
+      this.isExpired(balanceEntry.timestamp, CACHE_CONFIGS.balance.expiryMs)
+    ) {
+      tokenCache.delete(walletAddress);
+      return undefined;
+    }
+
+    return balanceEntry.value;
+  }
+
+  public setERC20BalanceCache(
+    tokenAddress: string,
+    walletAddress: string,
+    balance: string,
+  ): void {
+    let tokenCache = this.erc20BalanceCache.get(tokenAddress);
+    if (!tokenCache) {
+      tokenCache = new Map();
+      this.erc20BalanceCache.set(tokenAddress, tokenCache);
+    }
+
+    tokenCache.set(walletAddress, {
+      value: balance,
+      timestamp: Date.now(),
+    });
+  }
+
+  public invalidateCache(
+    method?: string,
+    tokenAddress?: string,
+    walletAddress?: string,
+  ): void {
+    if (method) {
+      this.methodCache.delete(method);
+    }
+    if (tokenAddress) {
+      this.erc20Cache.delete(tokenAddress);
+      this.erc20BalanceCache.delete(tokenAddress);
+    }
+    if (walletAddress && tokenAddress) {
+      const tokenCache = this.erc20BalanceCache.get(tokenAddress);
+      if (tokenCache) {
+        tokenCache.delete(walletAddress);
+      }
+    }
+  }
+
+  private isExpired(timestamp: number, expiryMs: number): boolean {
+    return Date.now() - timestamp > expiryMs;
+  }
+}
 
 /**
  * Extracts result from JSON-RPC response, throwing an error if one exists
@@ -43,87 +194,6 @@ function extractRpcResult(payload: JsonRpcResponse): any {
     throw error;
   }
   return payload.result;
-}
-
-/**
- * Gets cached result if valid and available
- */
-function getCachedResult(method: string): any | undefined {
-  if (!CACHED_METHODS.includes(method) || !methodCache.has(method)) {
-    return undefined;
-  }
-
-  const cachedItem = methodCache.get(method)!;
-  const now = Date.now();
-
-  // Check if cache has expired
-  if (now - cachedItem.timestamp > CACHE_EXPIRY_MS) {
-    methodCache.delete(method);
-    return undefined;
-  }
-
-  return cachedItem.value;
-}
-
-/**
- * Caches a method result
- */
-function cacheResult(method: string, result: any): void {
-  if (CACHED_METHODS.includes(method)) {
-    methodCache.set(method, {
-      value: result,
-      timestamp: Date.now(),
-    });
-  }
-}
-
-/**
- * Attempts to get ERC20 token info from cache
- */
-function getTokenInfoFromCache(
-  tokenAddress: string,
-  methodName: string,
-): any | undefined {
-  const token = erc20Cache.get(tokenAddress);
-  if (!token) {
-    return undefined;
-  }
-
-  switch (methodName) {
-    case 'name':
-      return token.name;
-    case 'symbol':
-      return token.symbol;
-    case 'decimals':
-      return token.decimals;
-    default:
-      return undefined;
-  }
-}
-
-/**
- * Updates ERC20 token cache with new information
- */
-function updateTokenCache(
-  tokenAddress: string,
-  methodName: string,
-  result: any,
-): void {
-  const token = erc20Cache.get(tokenAddress) || ({} as ERC20TokenInfo);
-
-  switch (methodName) {
-    case 'name':
-      token.name = result;
-      break;
-    case 'symbol':
-      token.symbol = result;
-      break;
-    case 'decimals':
-      token.decimals = result;
-      break;
-  }
-
-  erc20Cache.set(tokenAddress, token);
 }
 
 /**
@@ -151,25 +221,64 @@ JsonRpcProvider.prototype.send = async function (
   method: string,
   params: any[],
 ): Promise<any> {
-  // Check cache first
-  const cachedResult = getCachedResult(method);
+  logger.log('call', {
+    method,
+    params,
+    nextId: this._nextId,
+  });
+  const cacheStore = CacheStore.getInstance();
+
+  // Special case for chainId
+  if (method === 'eth_chainId') {
+    return Provider.selectedProvider.ethChainId;
+  }
+
+  // Check method cache first
+  const cachedResult = cacheStore.getMethodCache(method);
   if (cachedResult !== undefined) {
+    logger.log('method cache hit', cachedResult);
     return cachedResult;
   }
 
   // Special handling for eth_call with ERC20 methods
-  if (method === 'eth_call') {
-    const {data} = params[0] || {};
-    if (data) {
-      const parsed = parseTxDataFromHexInput(data) as {name: string} | null;
-      if (parsed?.name && params[0]?.to) {
-        const tokenAddress = params[0].to;
-        const cachedValue = getTokenInfoFromCache(tokenAddress, parsed.name);
-        if (cachedValue !== undefined) {
-          return cachedValue;
+  try {
+    if (method === 'eth_call') {
+      const {data, to} = params[0] || {};
+      if (data && to) {
+        const parsed = new ethers.utils.Interface(ERC20_ABI).parseTransaction({
+          data: data,
+        });
+
+        if (parsed.name === 'balanceOf') {
+          const wallet = parsed.args[0] as string;
+          const cachedBalance = cacheStore.getERC20BalanceCache(to, wallet);
+          if (cachedBalance !== undefined) {
+            logger.log('erc20 balance cache hit', {
+              method,
+              wallet,
+              tokenAddress: to,
+              cachedBalance,
+            });
+            return cachedBalance;
+          }
+        } else {
+          const tokenInfo = cacheStore.getERC20Cache(to);
+          if (tokenInfo) {
+            const cachedValue = tokenInfo[parsed.name];
+            if (cachedValue !== undefined) {
+              logger.log('erc20 cache hit', {
+                method,
+                tokenAddress: to,
+                cachedValue,
+              });
+              return cachedValue;
+            }
+          }
         }
       }
     }
+  } catch (e) {
+    logger.error('eth_call get cache error', e);
   }
 
   // Prepare request
@@ -220,19 +329,34 @@ JsonRpcProvider.prototype.send = async function (
     }
 
     // Update caches
-    cacheResult(method, result);
+    cacheStore.setMethodCache(method, result);
 
-    // Update token cache if applicable
-    if (method === 'eth_call') {
-      const {data} = params[0] || {};
-      if (data && params[0]?.to) {
-        const parsed = parseTxDataFromHexInput(data) as {name: string} | null;
-        if (parsed?.name) {
-          updateTokenCache(params[0].to, parsed.name, result);
+    try {
+      // Update token cache if applicable
+      if (method === 'eth_call') {
+        const {data, to} = params[0] || {};
+        if (data && to) {
+          const parsed = new ethers.utils.Interface(ERC20_ABI).parseTransaction(
+            {
+              data: data,
+            },
+          );
+
+          if (parsed.name === 'balanceOf') {
+            const wallet = parsed.args[0] as string;
+            cacheStore.setERC20BalanceCache(to, wallet, result);
+          } else {
+            const tokenInfo = cacheStore.getERC20Cache(to) || {};
+            tokenInfo[parsed.name] = result;
+            cacheStore.setERC20Cache(to, tokenInfo);
+          }
         }
       }
+    } catch (e) {
+      logger.error('eth_call set cache error', e);
     }
 
+    logger.log('common result', result);
     return result;
   } catch (error) {
     // Track failed transaction if applicable

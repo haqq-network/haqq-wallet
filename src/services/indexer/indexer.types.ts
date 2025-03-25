@@ -107,7 +107,7 @@ export type VerifyContractRequest = {
   method_name: EIP155_SIGNING_METHODS | string;
   domain: string;
   message_or_input?: string;
-  address?: string;
+  address: string;
 };
 
 export type VerifyContractResponse = {

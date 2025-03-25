@@ -7,10 +7,12 @@ import _ from 'lodash';
 import {AddressUtils} from '@app/helpers/address-utils';
 import {I18N, getText} from '@app/i18n';
 import {AppStore} from '@app/models/app';
+import {Contract} from '@app/models/contract';
 import {Currencies} from '@app/models/currencies';
 import {NftCollectionIndexer} from '@app/models/nft';
 import {ALL_NETWORKS_ID, Provider} from '@app/models/provider';
 import {
+  AddressWallet,
   ChainId,
   ContractNameMap,
   IndexerBalanceItem,
@@ -461,11 +463,13 @@ export class Indexer {
     address,
   }: VerifyContractRequest): Promise<VerifyContractResponse> {
     if (AppStore.isRpcOnly) {
+      const contract = await Contract.getById(address as AddressWallet);
       return {
-        method_name,
-        domain,
-        message_or_input,
-        address,
+        domain_in_whitelist: true,
+        message_is_valid: true,
+        input_is_valid: true,
+        is_eip4361: false,
+        contract: contract,
       } as unknown as VerifyContractResponse;
     }
     try {
@@ -499,6 +503,7 @@ export class Indexer {
       const response = await this.verifyContract({
         method_name: 'eth_signTypedData_v4',
         domain,
+        address: '',
       });
       return response.domain_in_whitelist;
     } catch (err) {

@@ -14,7 +14,7 @@ export async function getRpcProvider(network: ProviderModel) {
     return cache[network.id];
   }
 
-  const provider = new ethers.providers.StaticJsonRpcProvider(
+  const provider = new ethers.providers.JsonRpcProvider(
     network.ethRpcEndpoint,
     {
       chainId: network.ethChainId as number,
