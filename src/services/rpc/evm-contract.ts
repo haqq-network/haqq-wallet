@@ -114,7 +114,7 @@ export async function fetchIndexerContract(
       {useApiV2: true},
     );
 
-    if (!rawData || !rawData.name) {
+    if (!rawData) {
       const scResponse = await explorerFetch<ExplorerContract>(
         `smart-contracts/${ethAddress}`,
         {

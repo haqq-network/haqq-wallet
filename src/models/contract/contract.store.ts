@@ -124,7 +124,16 @@ class Contract {
     }
 
     if (!contract && AppStore.isRpcOnly) {
-      return fetchIndexerContract(AddressUtils.toEth(contractAddress));
+      const contractFromRpc = await fetchIndexerContract(
+        AddressUtils.toEth(contractAddress),
+      );
+      if (contractFromRpc) {
+        this._data[contractFromRpc.chain_id] = {
+          ...this._data[contractFromRpc.chain_id],
+          [contractFromRpc.id]: contractFromRpc,
+        };
+      }
+      return contractFromRpc;
     }
 
     return contract;

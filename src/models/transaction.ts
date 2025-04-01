@@ -194,16 +194,16 @@ class TransactionStore implements RPCObserver {
     if (this.isLoading && !force) {
       return;
     }
-    Logger.log('TransactionStore.fetchLatestTransactions', {
-      accounts,
-      force,
-    });
+    // Logger.log('TransactionStore.fetchLatestTransactions', {
+    //   accounts,
+    //   force,
+    // });
 
     const newTxs = await this._fetch(
       Indexer.instance.getProvidersHeader(accounts),
       'latest',
     );
-    Logger.log('tx', newTxs.length);
+    // Logger.log('tx', newTxs.length);
     runInAction(() => {
       this._transactions = newTxs;
       this._isLoading = false;

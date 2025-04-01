@@ -318,7 +318,7 @@ class TokensStore implements MobXStore<IToken> {
 
       wallets.forEach(wallet => {
         const nativeTokens = this.generateNativeTokens(wallet);
-        _tokens[wallet.address] = [...nativeTokens, ..._tokens[wallet.address]];
+        _tokens[wallet.address] = [..._tokens[wallet.address], ...nativeTokens];
       });
 
       for await (const t of Object.values(_tokens).flat()) {
@@ -585,71 +585,74 @@ const TOKEN_ICON_MAP: Record<string, string> = {
     'https://raw.githubusercontent.com/cosmos/chain-registry/refs/heads/master/stride/images/stislm.png',
 };
 
-export async function getHardcodedTokens(provider = Provider.selectedProvider) {
-  const wallets = Wallet.addressList();
-  const tokens: IndexerTokensData = {};
+export const getHardcodedTokens = createAsyncTask(
+  async (provider = Provider.selectedProvider) => {
+    const wallets = Wallet.addressList();
+    const tokens: IndexerTokensData = {};
 
-  for (const wallet of wallets) {
-    try {
-      const response = await explorerFetch<
-        Array<{
-          token: {
-            address: string;
-            decimals: string;
-            name: string;
-            symbol: string;
-            type: string;
-            icon_uri?: string;
-          };
-          value: string;
-        }>
-      >(`addresses/${wallet}/token-balances`, {useApiV2: true});
+    for (const wallet of wallets) {
+      try {
+        tokens[wallet] = [];
+        const response = await explorerFetch<
+          Array<{
+            token: {
+              address: string;
+              decimals: string;
+              name: string;
+              symbol: string;
+              type: string;
+              icon_uri?: string;
+            };
+            value: string;
+          }>
+        >(`addresses/${wallet}/token-balances`, {useApiV2: true});
+        Logger.log('getHardcodedTokens', wallet, response);
+        const walletTokens = response
+          .filter(item => item.token.type === 'ERC-20')
+          .map(item => {
+            const balance = new Balance(
+              item.value,
+              parseInt(item.token.decimals, 10),
+              item.token.symbol,
+            );
 
-      const walletTokens = response
-        .filter(item => item.token.type === 'ERC-20')
-        .map(item => {
-          const balance = new Balance(
-            item.value,
-            parseInt(item.token.decimals, 10),
-            item.token.symbol,
-          );
+            if (!balance.isPositive()) {
+              return null;
+            }
 
-          if (!balance.isPositive()) {
-            return null;
-          }
+            const icon =
+              item?.token?.icon_uri || TOKEN_ICON_MAP[item.token.address];
 
-          const icon =
-            item?.token?.icon_uri || TOKEN_ICON_MAP[item.token.address];
+            return {
+              id: AddressUtils.toEth(item.token.address),
+              contract_created_at: '',
+              contract_updated_at: '',
+              value: balance,
+              decimals: parseInt(item.token.decimals, 10),
+              is_erc20: true,
+              is_erc721: false,
+              is_erc1155: false,
+              is_in_white_list: true,
+              chain_id: provider.ethChainId,
+              name: item.token.name,
+              symbol: item.token.symbol,
+              created_at: '',
+              updated_at: '',
+              image: icon
+                ? {uri: icon}
+                : require('@assets/images/empty-icon.png'),
+            } as IToken;
+          })
+          .filter((token): token is IToken => token !== null);
 
-          return {
-            id: AddressUtils.toEth(item.token.address),
-            contract_created_at: '',
-            contract_updated_at: '',
-            value: balance,
-            decimals: parseInt(item.token.decimals, 10),
-            is_erc20: true,
-            is_erc721: false,
-            is_erc1155: false,
-            is_in_white_list: true,
-            chain_id: provider.ethChainId,
-            name: item.token.name,
-            symbol: item.token.symbol,
-            created_at: '',
-            updated_at: '',
-            image: icon
-              ? {uri: icon}
-              : require('@assets/images/empty-icon.png'),
-          } as IToken;
-        })
-        .filter((token): token is IToken => token !== null);
-
-      if (walletTokens.length > 0) {
-        tokens[wallet] = walletTokens;
+        if (walletTokens.length > 0) {
+          tokens[wallet] = walletTokens;
+        }
+      } catch (error) {
+        Logger.error('getHardcodedTokens error:', {error, wallet});
       }
-    } catch (error) {
-      Logger.error('getHardcodedTokens error:', {error, wallet});
     }
-  }
 
-  return tokens;
-}
+    return tokens;
+  },
+);

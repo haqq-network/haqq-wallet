@@ -1,7 +1,6 @@
 import React, {useCallback, useMemo, useState} from 'react';
 
 import {useActionSheet} from '@expo/react-native-action-sheet';
-import {computed} from 'mobx';
 import {observer} from 'mobx-react';
 import {StyleProp, View, ViewStyle} from 'react-native';
 
@@ -40,14 +39,13 @@ const MIN_LOW_AMOUNT = 0.01;
 
 export const TokenViewer = observer(
   ({
-    data: _data,
+    data,
     style,
     wallet,
     hideFilter = false,
     onPressToken,
     onPressWallet,
   }: TokenViewerProps) => {
-    const data = useMemo(() => computed(() => _data), [_data]).get();
     const wallets = useMemo(
       () =>
         Object.keys(data)

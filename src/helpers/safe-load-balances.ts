@@ -12,7 +12,7 @@ export const safeLoadBalances = async (wallets: string[]) => {
 
   try {
     balances = {
-      total: (await RpcFetch.evm.balance(wallets))!,
+      total: (await RpcFetch.cosmos.balance(wallets)).available!,
     };
   } catch (e) {
     logger.error('Failed to load balances from rpc', e);

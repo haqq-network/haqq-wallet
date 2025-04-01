@@ -80,9 +80,9 @@ async function fetchCosmosBalanceForWallet(
       `/cosmos/staking/v1beta1/delegators/${address}/unbonding_delegations`,
       `/cosmos/distribution/v1beta1/delegators/${address}/rewards`,
       `/haqq/vesting/v1/balances/${address}`,
-      `/haqq/dao/v1/balances/${address}`,
+      // `/haqq/dao/v1/balances/${address}`,
     ];
-    const [bals, spend, deleg, unb, rew, vest, dao] = await Promise.all(
+    const [bals, spend, deleg, unb, rew, vest /* dao */] = await Promise.all(
       endpoints.map(e =>
         fetch(REST_URL + e)
           .then(r => r.json())
@@ -123,14 +123,14 @@ async function fetchCosmosBalanceForWallet(
     }
     totalLocked = findISLM(vest.locked);
 
-    if (dao && dao.balances) {
-      // @ts-ignore2
-      dao.balances.forEach(x => {
-        daoLocked = new Decimal(daoLocked)
-          .add(new Decimal(x.amount))
-          .toHex() as HexNumber;
-      });
-    }
+    // if (dao && dao.balances) {
+    //   // @ts-ignore2
+    //   dao.balances.forEach(x => {
+    //     daoLocked = new Decimal(daoLocked)
+    //       .add(new Decimal(x.amount))
+    //       .toHex() as HexNumber;
+    //   });
+    // }
 
     vested = new Decimal(availableForStake)
       .minus(new Decimal(available))
