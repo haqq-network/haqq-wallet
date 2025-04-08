@@ -235,15 +235,6 @@ platform :ios do
       api_key: api_key
     )
 
-    match(
-      type: 'appstore',
-      app_identifier: app_identifier,
-      readonly: true,
-      keychain_name: keychain_name,
-      keychain_password: keychain_password,
-      api_key: api_key
-    )
-
     update_code_signing_settings(
       path: './ios/haqq.xcodeproj',
       use_automatic_signing: false,
@@ -251,6 +242,15 @@ platform :ios do
       team_id: ENV["DEVELOPER_PORTAL_TEAM_ID"],
       profile_name: provisioningProfile,
       bundle_identifier: app_identifier,
+    )
+
+    match(
+      type: 'appstore',
+      app_identifier: app_identifier,
+      readonly: true,
+      keychain_name: keychain_name,
+      keychain_password: keychain_password,
+      api_key: api_key
     )
 
     gym(
