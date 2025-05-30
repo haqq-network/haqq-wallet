@@ -217,7 +217,7 @@ platform :ios do
     current_build_number = previous_build_number + 1
 
     xcodes(
-      version: '16.3',
+      version: '16.0',
       select_for_current_build_only: true,
     )
 

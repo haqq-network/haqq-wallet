@@ -26,7 +26,6 @@ import {WalletsWrapper} from '@app/screens/HomeStack/HomeFeedStack/wallets';
 import {LockedTokensWrapper} from '@app/screens/locked-tokens';
 import {ModalType} from '@app/types';
 import {WidgetRoot} from '@app/widgets';
-import {LayoutWidget} from '@app/widgets/layout-widget/layout-widget';
 
 import {HomeBanner} from './home-banner';
 import {Spacer} from './ui';
@@ -99,28 +98,26 @@ export const HomeFeed = observer(() => {
       </React.Fragment>
       <BannersWrapper />
       <Spacer height={12} />
-      <LayoutWidget
-        key={'export-layout'}
-        direction="vertical"
-        deep={true}
-        children={[
-          <HomeBanner
-            key={'export-banner'}
-            onPress={exportWallet}
-            banner={{
-              id: 'export_wallet',
-              type: BannerType.export,
-              title: 'Export to Haqqabi',
-              description: 'Export your mnemonic wallet to Haqqabi',
-              isUsed: false,
-              snoozedUntil: new Date(),
-              defaultEvent: BannerButtonEvent.export,
-              closeEvent: BannerButtonEvent.none,
-              backgroundImage: require('@assets/images/export-banner-bg.png'),
-              priority: 10,
-            }}
-          />,
-        ]}
+      <HomeBanner
+        key={'export-banner'}
+        onPress={exportWallet}
+        // eslint-disable-next-line react-native/no-inline-styles
+        style={{
+          minHeight: 150,
+          padding: 0,
+          marginHorizontal: 0,
+        }}
+        banner={{
+          id: 'export_wallet',
+          type: BannerType.export,
+          title: '',
+          description: '',
+          isUsed: false,
+          snoozedUntil: new Date(),
+          defaultEvent: BannerButtonEvent.export,
+          closeEvent: BannerButtonEvent.none,
+          backgroundImage: require('@assets/images/export-banner-bg.png'),
+        }}
       />
       <WidgetRoot lastUpdate={lastUpdateTimestamp} />
     </ScrollView>
