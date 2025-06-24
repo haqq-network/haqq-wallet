@@ -24,7 +24,7 @@ on:
 
 jobs:
   update_version:
-    runs-on: self-hosted
+    runs-on: mobile-ci
     steps:
       - name: Show self-hosted machine infomation
         run: uname -a
