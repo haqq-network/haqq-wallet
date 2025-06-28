@@ -772,12 +772,12 @@ const styles = StyleSheet.create({
 
 // bad
 function Title({style, value}) {
-  retrun <Text style={[styles.title, style]} >{value}<Text/>
+  return <Text style={[styles.title, style]} >{value}<Text/>
 }
 
 // good
 function Title({style, value}) {
-  retrun <Text style={StyleSheet.flatten([styles.title, style])} >{value}<Text/>
+  return <Text style={StyleSheet.flatten([styles.title, style])} >{value}<Text/>
 }
 ```
 
@@ -788,7 +788,7 @@ function Title({style, value}) {
 function Title({style, value}) {
   const insets = useSafeAreaInsets()
 
-  retrun (
+  return (
     <Text
       style={{
         fontFamily: 'some_font'
@@ -807,7 +807,7 @@ const TITLE_PADDING_TOP = 15
 function Title({style, value}) {
   const insets = useSafeAreaInsets()
 
-  retrun (
+  return (
     <Text
       style={[
         styles.title,
