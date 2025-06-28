@@ -154,7 +154,7 @@ export const TokenViewer = observer(
           const _wallet = Wallet.getById(address);
           const tokens = data[address].filter(token => {
             const provider = Provider.getByEthChainId(token.chain_id);
-            // hide tokens for unsupport Tron wallets
+            // hide tokens for unsupported Tron wallets
             if (provider?.isTron && !_wallet?.isSupportTron) {
               return false;
             }
