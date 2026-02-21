@@ -85,7 +85,7 @@
     "babel-plugin-transform-inline-environment-variables": "^0.4.4",
     "bech32-converting": "1.0.9",
     "big-integer": "1.6.51",
-    "bn.js": "5.2.1",
+    "bn.js": "5.2.3",
     "buffer": "6.0.3",
     "date-fns": "2.30.0",
     "decimal.js": "10.4.3",
